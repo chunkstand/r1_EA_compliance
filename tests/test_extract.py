@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 import hashlib
 import io
@@ -11,7 +12,7 @@ import unittest
 import zipfile
 
 from usfs_r1_ea_sources.catalog import build_review_catalog
-from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 import usfs_r1_ea_sources.extract as extract_module
 from usfs_r1_ea_sources.extract import build_extraction
 from usfs_r1_ea_sources.extract import _source_derived_dir
@@ -21,6 +22,14 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+
+def legacy_config():
+    config = load_config(CONFIG)
+    return replace(
+        config,
+        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
+    )
 
 
 class ExtractionTests(unittest.TestCase):
@@ -39,7 +48,7 @@ class ExtractionTests(unittest.TestCase):
         self.assertEqual(role, "biological_assessment")
 
     def test_build_extraction_writes_html_text_chunks_and_manifest_provenance(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             body = _html_body()
@@ -91,7 +100,7 @@ class ExtractionTests(unittest.TestCase):
             )
 
     def test_build_extraction_uses_legal_xml_parser_for_xml_sources(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             body = _xml_body()
@@ -121,7 +130,7 @@ class ExtractionTests(unittest.TestCase):
             self.assertTrue(chunks[0]["section"].startswith("/ECFR"))
 
     def test_build_extraction_scopes_ecfr_section_xml_sources(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(
@@ -159,7 +168,7 @@ class ExtractionTests(unittest.TestCase):
             self.assertTrue(_check(validation, "scoped_xml_records_are_auditable")["passed"])
 
     def test_build_extraction_falls_back_for_xhtml_saved_as_xml(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             body = _xhtml_xml_body()
@@ -187,7 +196,7 @@ class ExtractionTests(unittest.TestCase):
             self.assertIn("dash entity", chunks[0]["text"])
 
     def test_build_extraction_uses_docx_zip_xml_parser_without_docling(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             body = _docx_body(["Decision notice", "This EA package contains mitigation measures."])
@@ -217,7 +226,7 @@ class ExtractionTests(unittest.TestCase):
             self.assertIn("mitigation measures", text)
 
     def test_build_extraction_fails_validation_on_artifact_hash_mismatch(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             artifact_path = _write_download_run(
@@ -248,7 +257,7 @@ class ExtractionTests(unittest.TestCase):
             self.assertEqual(hash_check["details"]["source_record_ids"], ["R1EA-001"])
 
     def test_build_extraction_replaces_prior_derived_outputs_for_source_set(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(
@@ -277,7 +286,7 @@ class ExtractionTests(unittest.TestCase):
             self.assertFalse(stale.exists())
 
     def test_build_extraction_can_merge_selected_refresh_into_existing_outputs(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run_records(
@@ -347,7 +356,7 @@ class ExtractionTests(unittest.TestCase):
             )
 
     def test_build_extraction_accepts_archived_catalog_dir(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(
@@ -384,7 +393,7 @@ class ExtractionTests(unittest.TestCase):
             self.assertEqual(manifest[0]["source_record_id"], "R1EA-001")
 
     def test_build_extraction_reuses_existing_payload_when_requested(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(
@@ -431,7 +440,7 @@ class ExtractionTests(unittest.TestCase):
             self.assertEqual(Path(second_manifest[0]["text_path"]), text_path)
 
     def test_build_extraction_reuses_prior_inventory_candidate(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             body = _html_body()
@@ -534,7 +543,7 @@ class ExtractionTests(unittest.TestCase):
             )
 
     def test_build_extraction_treats_scope_excluded_rows_as_terminal(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(
@@ -562,7 +571,7 @@ class ExtractionTests(unittest.TestCase):
             self.assertTrue(_check(validation, "all_required_rows_extracted")["passed"])
 
     def test_reuse_inventory_prevents_loose_text_reuse_for_needs_extract_rows(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(
@@ -635,7 +644,7 @@ class ExtractionTests(unittest.TestCase):
     def test_build_extraction_reports_pdf_failure_when_docling_is_unavailable(self) -> None:
         if importlib.util.find_spec("docling") is not None:
             self.skipTest("Docling is installed in this Python environment.")
-        config = load_config(CONFIG)
+        config = legacy_config()
         original_resolve_external = extract_module._resolve_external_docling_python
         original_pdf_fallback = extract_module._try_extract_pdf_text_fallback
         extract_module._resolve_external_docling_python = lambda: None
@@ -674,7 +683,7 @@ class ExtractionTests(unittest.TestCase):
     def test_build_extraction_falls_back_when_docling_is_unavailable(self) -> None:
         if importlib.util.find_spec("docling") is not None:
             self.skipTest("Docling is installed in this Python environment.")
-        config = load_config(CONFIG)
+        config = legacy_config()
         original_resolve_external = extract_module._resolve_external_docling_python
         original_pdf_fallback = extract_module._try_extract_pdf_text_fallback
         extract_module._resolve_external_docling_python = lambda: None
@@ -723,7 +732,7 @@ class ExtractionTests(unittest.TestCase):
     def test_build_extraction_uses_external_docling_when_active_python_lacks_docling(self) -> None:
         if importlib.util.find_spec("docling") is not None:
             self.skipTest("Docling is installed in this Python environment.")
-        config = load_config(CONFIG)
+        config = legacy_config()
         original_find_spec = extract_module.importlib.util.find_spec
         original_resolve_external = extract_module._resolve_external_docling_python
         original_try_external = extract_module._try_extract_docling_external
@@ -780,7 +789,7 @@ class ExtractionTests(unittest.TestCase):
             extract_module._try_extract_docling_external = original_try_external
 
     def test_build_extraction_accepts_reuse_inventory_bundle_path(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(
@@ -859,7 +868,7 @@ class ExtractionTests(unittest.TestCase):
             )
 
     def test_build_extraction_uses_pdf_text_fallback_after_docling_timeout(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         original_docling = extract_module._try_extract_docling
         original_fallback = extract_module._try_extract_pdf_text_fallback
 

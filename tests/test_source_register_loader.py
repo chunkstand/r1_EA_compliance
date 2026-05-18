@@ -7,7 +7,6 @@ import tempfile
 from openpyxl import load_workbook
 
 from usfs_r1_ea_sources.config import (
-    LEGACY_WORKBOOK_LOADER_CONTRACT,
     SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT,
     load_config,
 )
@@ -20,9 +19,9 @@ CONFIG = ROOT / "config" / "downloader.toml"
 CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
 
 
-def test_active_config_stays_on_legacy_loader_contract() -> None:
+def test_active_config_uses_canonical_source_register_loader_contract() -> None:
     config = load_config(CONFIG)
-    assert config.workbook.loader_contract == LEGACY_WORKBOOK_LOADER_CONTRACT
+    assert config.workbook.loader_contract == SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT
 
 
 def test_source_register_loader_dispatch_returns_workbook_source_compatibility_rows() -> None:
@@ -42,6 +41,16 @@ def test_source_register_loader_dispatch_returns_workbook_source_compatibility_r
     assert all(source.metadata["direct_file_readiness_class"] == "load_ready" for source in sources)
     assert all(source.metadata["authority_document_id"] for source in sources)
     assert all(source.metadata["source_authority_link_id"] for source in sources)
+
+
+def test_active_canonical_loader_ignores_legacy_override_registry() -> None:
+    config = load_config(CONFIG)
+    sources = load_canonical_sources(CANONICAL_WORKBOOK, config.workbook)
+
+    nepa_source = next(source for source in sources if source.source_record_id == "FED-001")
+    assert nepa_source.effective_url == nepa_source.original_url
+    assert "override_url" not in nepa_source.metadata
+    assert "override_reason" not in nepa_source.metadata
 
 
 def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> None:

@@ -11,14 +11,17 @@ review artifacts on top of that corpus.
 Canonical source-register refoundation status on 2026-05-18:
 
 - Active runtime workbook for `dry-run`, `preflight`, `download`, `batch-download`, and
-  `catalog-build` remains `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`
-  because `config/downloader.toml` is still pinned to `loader_contract = "legacy_v0"`.
-- The replacement workbook `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` is now
-  staged in-repo and frozen through the Phase 0 contract packet in
-  `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`.
-- The foundation layer can now also read the staged replacement workbook through
-  `loader_contract = "source_register_v1"`, which emits normalized canonical rows plus a
-  `WorkbookSource` compatibility adapter without admitting queue or audit sheets as source rows.
+  `catalog-build` is now
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` because
+  `config/downloader.toml` is pinned to `loader_contract = "source_register_v1"`.
+- Active capture and catalog commands now load only
+  `Document_Register_Master`. `Direct_File_Capture_Queue`,
+  `Removed_Not_Applicable_Final`, and audit sheets remain metadata surfaces,
+  not default source-row inputs.
+- The legacy Region 1 forest-plan source-delta register and
+  `config/url_overrides.toml` are now `legacy_v0` comparison surfaces only.
+  Active `source_register_v1` runs reject `--r1-forest-plan-register`, and
+  canonical rows must carry their active official URL directly in the workbook.
 - The repo now ships `source-register-validate`, `source-register-diff`,
   `source-register-proving-slice`, `authority-relationship-eval`,
   `citation-alias-eval`, `graph-health-eval`, and `graph-accuracy-eval` so the
@@ -28,27 +31,28 @@ Canonical source-register refoundation status on 2026-05-18:
   1.5 proving packet: `26` load-ready rows plus `5` deferred queue rows across
   statutes, regulations, directives, forest-plan materials, direct-document
   parsers, superseded lineage, and queue placeholder classes.
-- The active runtime still remains on the legacy workbook contract and no
-  full-register canonical ingestion is allowed until the Phase 1.5 proving
-  packet stays green and the later Phase 2 capture/catalog cutover lands.
+- The Phase 2 capture/catalog cutover is now implemented, but that does not
+  imply a full downloaded canonical corpus yet. Bulk canonical ingestion still
+  depends on later currentness, extraction, and downstream rebase packets.
 
-Current workbook source contract:
+Active canonical source-register contract:
 
-- Workbook: `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`
-- `Ingest_Checklist` ingest rows: `162`
-- `Scope=Baseline` rows that must be evaluated in every EA compliance review: `26`
-- `Scope=Conditional` rows loaded for trigger-based review: `136`
-- `R1_Forest_Plans` unit/overlay rows: `28`
+- Workbook: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+- Load-bearing table: `Document_Register_Master`
+- Retained load rows: `635`
+- Deferred queue rows: `51`
+- Removed-not-applicable rows: `2`
+- Direct-media rows reclassified to direct extraction: `29`
 
-Region 1 forest-plan support-document expansion is promoted as a controlled source-delta input, not
-as a replacement for the workbook contract. `config/r1_forest_plan_document_register_draft.csv`
-currently contains `189` reviewed register rows: `28` catalog-confirmed rows, `160`
-corpus-ready source-delta rows, and `1` documented official-source gap. Use
-`--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`
-with `dry-run`, `preflight`, `download`, `batch-download`, or `catalog-build` when planning,
-capturing, or cataloging only the supplemental `R1PLAN-*` source-delta rows. See
-`docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the promotion evidence, scoped
-preflight run IDs, capture run ID, and source-delta catalog gate.
+The Region 1 forest-plan support-document register remains preserved legacy
+baseline evidence, not an active supplemental lane under
+`source_register_v1`. `config/r1_forest_plan_document_register_draft.csv`
+still contains `189` reviewed rows (`28` catalog-confirmed, `160`
+source-delta-required, `1` documented official-source gap), but
+`--r1-forest-plan-register ... --source-delta-only` now requires an explicit
+`legacy_v0` config override for baseline comparison work. See
+`docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
+promotion evidence.
 
 Current generated source-library capture:
 
@@ -818,7 +822,7 @@ review-slot coverage only, and neither one by itself proves reviewer-ready or li
 
 ## Common Commands
 
-Validate the staged canonical source register before runtime cutover:
+Validate the active canonical source register:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate \
@@ -839,7 +843,7 @@ Dry-run workbook parsing without network access:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources dry-run \
-  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
   --output-dir source_library
 ```
 
@@ -847,7 +851,7 @@ Preflight URL reachability without saving artifacts:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources preflight \
-  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
   --output-dir source_library \
   --limit 10
 ```
@@ -858,7 +862,7 @@ Download a small controlled slice:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources download \
-  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
   --output-dir source_library \
   --limit 5
 ```
@@ -889,7 +893,7 @@ Run staged host pilots before the full download:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources pilot-hosts \
-  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
   --output-dir source_library \
   --run-id-prefix staged-pilot \
   --host www.ecfr.gov \
@@ -902,7 +906,7 @@ Plan controlled download batches before scaling beyond pilots:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources batch-download \
-  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
   --output-dir source_library \
   --run-id-prefix first-batch \
   --batch-size 5 \
@@ -912,15 +916,14 @@ PYTHONPATH=src python -m usfs_r1_ea_sources batch-download \
 
 Remove `--plan-only` to execute the planned batches. Each batch runs `download`, `report`, and `validate-run`, writes a parent `batch_plan.json`, `batch_ledger.json`, and `repair_queue.csv`, then stops on the first failed or repair-needed batch unless `--continue-on-failure` is passed.
 Use `--resume` to skip already passed batches under the same run prefix.
-For the promoted Region 1 forest-plan source delta, add
-`--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`
-to batch only the `160` supplemental `R1PLAN-*` rows.
+The promoted Region 1 forest-plan source-delta lane is now legacy-only and is
+rejected under the active `source_register_v1` loader contract.
 
 Run or refresh the full captured library:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources batch-download \
-  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
   --output-dir source_library \
   --run-id-prefix full-library \
   --batch-size 10 \
@@ -931,7 +934,7 @@ Build the reviewer-engine catalog from the full batch:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build \
-  --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
   --output-dir source_library \
   --batch-run-id corpus-update-2026-05-01-cg-support-batches
 ```
@@ -939,10 +942,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build \
 The catalog command writes `source_library/catalog/source_catalog.jsonl`, `source_set_manifest.json`, `catalog_validation.json`, `review_sources.sqlite`, and graph seed node/edge JSONL.
 Pass `--run-id <download-run-id>` after downloads to link artifact hashes, paths, content types, and retrieval timestamps into the same reviewer-facing catalog.
 Pass `--batch-run-id <run-id-prefix>-batches` after controlled batch downloads to link artifacts from every passed child batch through the parent batch ledger.
-For the promoted Region 1 forest-plan source delta, add
-`--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv --source-delta-only`
-to catalog only the captured supplemental rows. This rebuilds `source_library/catalog/` as a scoped
-source-delta catalog; rebuild the canonical catalog before running canonical V1 review workflows.
+Under the active canonical loader, `catalog-build` no longer accepts the
+legacy `--r1-forest-plan-register` supplemental lane. Use an explicit
+`legacy_v0` config override only when replaying the preserved baseline
+source-delta evidence.
 
 Build the verified extraction/chunk layer from the reviewer catalog:
 
@@ -1843,7 +1846,7 @@ and requires the review's `compliance_matrix.json` to exist with the expected sc
 review ID, source set, rule pack, row count, and status counts. It also requires
 `compliance_matrix.pdf` to exist and have a valid PDF header.
 
-Repair stale or blocked workbook URLs through `config/url_overrides.toml`:
+Repair stale or blocked legacy-workbook URLs through `config/url_overrides.toml`:
 
 ```toml
 [[overrides]]
@@ -1855,6 +1858,10 @@ reason = "Replaces stale workbook URL after manual source verification."
 Manifests preserve the workbook cell as `original_url` and use `effective_url` for fetching, deduplication, host pilots, and artifact paths.
 Overrides must be unique by `source_record_id`, use absolute HTTP(S) URLs with hosts, and avoid workbook scope-exclusion URLs.
 Run summaries include `override_count` and `filtered_override_count`, and `validate-run` fails if override provenance or counts drift from the manifest.
+Under the active `source_register_v1` runtime, canonical rows do not consume
+this legacy override registry; repaired official URLs must be represented
+directly in `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+until a governed canonical override surface exists.
 
 ## Development
 

@@ -5,17 +5,19 @@ These rules define the accuracy, traceability, validation, and operational guard
 ## 1. Input Contract
 
 - The workbook is the source-of-truth input.
-- Default ingest tabs are `Ingest_Checklist` and `R1_Forest_Plans`.
-- `Scope_Exclusions` is a hard blocklist. A blocked URL must not be downloaded unless an explicit override is recorded.
-- Do not treat `Audit_Trail`, `Legend`, `EA_Record_Checklist`, or `Project_AddOns` as default download targets. They may contribute metadata or optional follow-up sources only when explicitly enabled.
+- Active default ingest table is `Document_Register_Master`.
+- `Scope_Exclusions` remains a hard blocklist for the legacy workbook contract. Under the active
+  canonical register contract, queue and removed rows are modeled directly in workbook row state
+  instead of through `Scope_Exclusions`.
+- Do not treat `Direct_File_Capture_Queue`, `Removed_Not_Applicable_Final`, `Audit_Trail`,
+  `Legend`, `EA_Record_Checklist`, or `Project_AddOns` as default download targets. They may
+  contribute metadata, queue evidence, or optional follow-up sources only when explicitly enabled.
 - Read URLs from the workbook cells, not by regex over text exports.
 - Compute and record the workbook SHA256 before each run.
-- Region 1 forest-plan support-document expansion may be loaded only through the explicit
-  supplemental register option
-  `--r1-forest-plan-register config/r1_forest_plan_document_register_draft.csv`.
-  The loader emits only `source_delta_required` rows. `catalog_confirmed` rows remain de-duplicated
-  against the workbook/catalog contract, and `official_source_gap_documented` rows are reported as
-  skipped gaps, not corpus-ready download targets.
+- The historical Region 1 forest-plan support-document expansion register is now a `legacy_v0`
+  supplemental surface only. Active `source_register_v1` runs must reject
+  `--r1-forest-plan-register` so the canonical source register remains the sole active source
+  ledger.
 
 ## 2. Row Identity And Provenance
 
@@ -45,11 +47,14 @@ These rules define the accuracy, traceability, validation, and operational guard
 - Normalization may lowercase scheme and host and remove fragments, but must not rewrite path or query semantics.
 - Follow redirects, but record the full redirect chain.
 - Store both `original_url` and `final_url`.
-- Do not silently repair broken URLs. Any manually corrected URL must be recorded as `override_url` with a reason.
-- URL overrides must be unique by `source_record_id`, must use absolute HTTP(S) URLs with hosts, and
-  must not target a URL listed in `Scope_Exclusions`.
-- Overridden rows must preserve both the workbook URL and effective URL, plus `metadata.override_url`
-  and `metadata.override_reason`.
+- Do not silently repair broken URLs. Any manually corrected legacy-workbook URL must be recorded
+  as `override_url` with a reason.
+- URL overrides must be unique by `source_record_id`, must use absolute HTTP(S) URLs with hosts,
+  and must not target a URL listed in `Scope_Exclusions`.
+- Overridden legacy rows must preserve both the workbook URL and effective URL, plus
+  `metadata.override_url` and `metadata.override_reason`.
+- Under the active canonical register contract, repaired official URLs must be represented directly
+  in the workbook until a governed canonical override registry exists.
 - Reject final URLs that resolve to known challenge, block, or not-found pages, even when the HTTP status is `200`.
 
 ## 4. Blocked, Excluded, And Failed URLs
@@ -96,8 +101,9 @@ These rules define the accuracy, traceability, validation, and operational guard
 - Support resume by default. Existing validated artifacts must not be fetched again unless `--force` is passed.
 - Support `--dry-run` with no network writes.
 - Support `--limit`, `--sheet`, `--id`, and `--host` filters for controlled testing.
-- Support `--source-delta-only` with an explicit Region 1 forest-plan register when planning,
-  preflighting, downloading, batching, or cataloging only supplemental `R1PLAN-*` source-delta rows.
+- Support `--source-delta-only` only under an explicit `legacy_v0` config override when planning,
+  preflighting, downloading, batching, or cataloging preserved supplemental `R1PLAN-*`
+  source-delta rows.
 - Support repeated `catalog-build --batch-run-id` values for explicit merged catalog gates. Merged
   catalog gates must use `--catalog-dir` when they are archived evidence and must not silently
   replace the canonical `source_library/catalog/` view.

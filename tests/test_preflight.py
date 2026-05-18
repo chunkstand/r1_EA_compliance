@@ -1,20 +1,33 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 import json
 import tempfile
 import unittest
 
-from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.config import (
+    LEGACY_WORKBOOK_LOADER_CONTRACT,
+    load_config,
+)
 from usfs_r1_ea_sources.preflight import PreflightFetchResult, _classify_response
 from usfs_r1_ea_sources.preflight import _request_headers, run_preflight
 from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
+CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
+LEGACY_WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 R1_FOREST_PLAN_REGISTER = ROOT / "config" / "r1_forest_plan_document_register_draft.csv"
+
+
+def legacy_config():
+    config = load_config(CONFIG)
+    return replace(
+        config,
+        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
+    )
 
 
 def ok_result(url: str) -> PreflightFetchResult:
@@ -48,7 +61,7 @@ class PreflightTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             result = run_preflight(
-                workbook_path=WORKBOOK,
+                workbook_path=CANONICAL_WORKBOOK,
                 output_dir=Path(tmp),
                 config=config,
                 run_id="test-preflight",
@@ -61,17 +74,17 @@ class PreflightTests(unittest.TestCase):
                 for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
                 if line.strip()
             ]
-            self.assertEqual(len(records), 190)
-            self.assertEqual(len(fetcher.calls), 171)
-            self.assertEqual(result.summary["checked_url_count"], 171)
-            self.assertEqual(result.summary["preflight_ok_count"], 171)
-            self.assertEqual(result.summary["duplicate_url_count"], 18)
-            self.assertEqual(result.summary["skipped_excluded_count"], 1)
+            self.assertEqual(len(records), 635)
+            self.assertEqual(len(fetcher.calls), 635)
+            self.assertEqual(result.summary["checked_url_count"], 635)
+            self.assertEqual(result.summary["preflight_ok_count"], 635)
+            self.assertEqual(result.summary["duplicate_url_count"], 0)
+            self.assertEqual(result.summary["skipped_excluded_count"], 0)
             self.assertEqual(result.summary["failed_count"], 0)
             self.assertTrue(result.summary["validation_passed"])
 
             duplicate_records = [record for record in records if record["status"] == "duplicate_url"]
-            self.assertEqual(len(duplicate_records), 18)
+            self.assertEqual(len(duplicate_records), 0)
             self.assertTrue(all(record["duplicate_of"] for record in duplicate_records))
 
             validation = json.loads(result.validation_report_path.read_text(encoding="utf-8"))
@@ -107,11 +120,11 @@ class PreflightTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             result = run_preflight(
-                workbook_path=WORKBOOK,
+                workbook_path=CANONICAL_WORKBOOK,
                 output_dir=Path(tmp),
                 config=config,
                 run_id="test-challenge",
-                id_filter="R1EA-001",
+                id_filter="FED-001",
                 fetcher=fetcher,
                 sleep_fn=lambda _: None,
             )
@@ -132,7 +145,7 @@ class PreflightTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             result = run_preflight(
-                workbook_path=WORKBOOK,
+                workbook_path=CANONICAL_WORKBOOK,
                 output_dir=Path(tmp),
                 config=config,
                 run_id="test-host",
@@ -141,20 +154,20 @@ class PreflightTests(unittest.TestCase):
                 sleep_fn=lambda _: None,
             )
 
-            self.assertEqual(result.summary["filtered_rows"], 61)
-            self.assertEqual(result.summary["checked_url_count"], 46)
-            self.assertEqual(result.summary["preflight_ok_count"], 46)
-            self.assertEqual(result.summary["duplicate_url_count"], 15)
+            self.assertEqual(result.summary["filtered_rows"], 34)
+            self.assertEqual(result.summary["checked_url_count"], 34)
+            self.assertEqual(result.summary["preflight_ok_count"], 34)
+            self.assertEqual(result.summary["duplicate_url_count"], 0)
 
-    def test_preflight_promotes_r1_forest_plan_source_delta_only(self) -> None:
-        config = load_config(CONFIG)
+    def test_legacy_preflight_promotes_r1_forest_plan_source_delta_only(self) -> None:
+        config = legacy_config()
         fetcher = FakeFetcher()
         register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
         source_delta_ids = {source.source_record_id for source in register.source_delta_sources}
 
         with tempfile.TemporaryDirectory() as tmp:
             result = run_preflight(
-                workbook_path=WORKBOOK,
+                workbook_path=LEGACY_WORKBOOK,
                 output_dir=Path(tmp),
                 config=config,
                 run_id="r1-forest-plan-source-delta-preflight",

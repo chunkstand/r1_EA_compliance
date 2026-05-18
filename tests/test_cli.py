@@ -5,7 +5,10 @@ import tomllib
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 from usfs_r1_ea_sources import cli_compliance
+from usfs_r1_ea_sources import cli_capture
 from usfs_r1_ea_sources import cli_decision_support
 from usfs_r1_ea_sources import cli_derived
 from usfs_r1_ea_sources import cli_eval
@@ -14,6 +17,7 @@ from usfs_r1_ea_sources import cli_project_planning
 from usfs_r1_ea_sources import cli_review
 from usfs_r1_ea_sources import cli_review_packet
 from usfs_r1_ea_sources.cli import build_parser
+from usfs_r1_ea_sources.config import SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -104,6 +108,24 @@ def test_capture_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     assert args.command == "preflight"
     assert args.r1_forest_plan_register == Path("config/r1_forest_plan_document_register_draft.csv")
     assert args.source_delta_only is True
+
+
+def test_source_delta_options_reject_register_under_canonical_loader(capsys) -> None:
+    parser = argparse.ArgumentParser(prog="preflight")
+    args = SimpleNamespace(
+        r1_forest_plan_register=Path("config/r1_forest_plan_document_register_draft.csv"),
+        source_delta_only=True,
+    )
+
+    with pytest.raises(SystemExit) as exc:
+        cli_capture._source_delta_options(
+            args,
+            parser,
+            SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT,
+        )
+
+    assert exc.value.code == 2
+    assert "sole active source ledger" in capsys.readouterr().err
 
 
 def test_source_register_validate_parser_accepts_phase_zero_contract_paths() -> None:

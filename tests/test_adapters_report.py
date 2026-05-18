@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 import json
@@ -8,7 +9,7 @@ import unittest
 from unittest.mock import patch
 
 from usfs_r1_ea_sources.adapters import _ECFR_DATE_CACHE, adapt_download_url, latest_ecfr_date
-from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.download import DownloadFetchResult, run_download
 from usfs_r1_ea_sources.report import build_run_report, suggested_action
 
@@ -18,9 +19,17 @@ WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.
 CONFIG = ROOT / "config" / "downloader.toml"
 
 
+def legacy_config():
+    config = load_config(CONFIG)
+    return replace(
+        config,
+        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
+    )
+
+
 class AdapterAndReportTests(unittest.TestCase):
     def test_ecfr_adapter_uses_full_xml_endpoint_with_latest_available_date(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with patch("usfs_r1_ea_sources.adapters.latest_ecfr_date", return_value="2026-04-28"):
             adapted = adapt_download_url(
                 "https://www.ecfr.gov/current/title-7/subtitle-A/part-1b/section-1b.5",
@@ -36,7 +45,7 @@ class AdapterAndReportTests(unittest.TestCase):
         self.assertEqual(adapted.expected_content_type, "application/xml")
 
     def test_federal_register_adapter_uses_full_text_xml_endpoint(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         adapted = adapt_download_url(
             "https://www.federalregister.gov/documents/2026/04/03/2026-06537/national-environmental-policy-act",
             config.network,
@@ -50,7 +59,7 @@ class AdapterAndReportTests(unittest.TestCase):
         )
 
     def test_federal_register_short_adapter_uses_document_api(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
 
         class FakeResponse:
             status = 200
@@ -80,7 +89,7 @@ class AdapterAndReportTests(unittest.TestCase):
         self.assertEqual(adapted.expected_content_type, "text/xml")
 
     def test_box_public_file_adapter_uses_authenticated_download_token(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         stream_data = {
             "file": {
                 "authenticated_download_url": (
@@ -132,7 +141,7 @@ class AdapterAndReportTests(unittest.TestCase):
                     )
 
     def test_report_builds_repair_queue_from_failed_manifest(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
 
         def challenge_fetcher(url, network, validation):  # noqa: ANN001
             return DownloadFetchResult(
@@ -184,7 +193,7 @@ class AdapterAndReportTests(unittest.TestCase):
         self.assertIn("Repair stale Forest Service page URL", action)
 
     def test_ecfr_latest_date_is_cached_by_title(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         _ECFR_DATE_CACHE.clear()
 
         class FakeResponse:

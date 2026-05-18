@@ -11,7 +11,12 @@ import uuid
 
 from .config import DownloaderConfig
 from .records import WorkbookSource, planned_artifact_path, sha256_file
-from .workbook import load_canonical_sources, load_excluded_urls, merge_supplemental_sources
+from .workbook import (
+    ensure_supplemental_sources_allowed,
+    load_canonical_sources,
+    load_excluded_urls,
+    merge_supplemental_sources,
+)
 
 
 @dataclass(frozen=True)
@@ -86,6 +91,11 @@ def run_dry_run(
     write_event(events_path, run_id, "run_started", details={"mode": "dry-run"})
     workbook_sha256 = sha256_file(workbook_path)
     workbook_sources = load_canonical_sources(workbook_path, config.workbook)
+    ensure_supplemental_sources_allowed(
+        config.workbook,
+        supplemental_sources=supplemental_sources,
+        source_delta_input=source_delta_input,
+    )
     sources = merge_supplemental_sources(workbook_sources, supplemental_sources)
     excluded_urls = load_excluded_urls(workbook_path, config.workbook)
     write_event(

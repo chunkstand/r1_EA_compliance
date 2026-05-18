@@ -3,26 +3,60 @@
 This project is a local v1 NEPA Environmental Assessment reviewer-engine foundation for USDA
 Forest Service Region 1 source material.
 
-The workbook `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx` remains the source-of-truth
-input for the knowledge base. The generated `source_library/` is the audited local capture and
-derived reviewer corpus used by extraction, retrieval, evidence graph, source-claim extraction,
-rule-claim binding, and deterministic EA package review commands.
-
-The replacement workbook
-`usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` is now staged in
-the repo as the frozen canonical source-register candidate, but it is not yet
-the active runtime workbook. Phase 0 refoundation work now lives in
-`docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`,
-`config/source_register_*_v1.json`,
-`config/direct_file_readiness_contract_v1.json`, and
-`config/parser_admission_contract_v1.json`, while `dry-run`, `preflight`,
-`download`, `batch-download`, and `catalog-build` still consume the legacy
-workbook contract until the later capture/catalog cutover lands.
+The workbook `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+is now the active capture and catalog source-of-truth input. The generated
+`source_library/` remains the audited local evidence store used by extraction,
+retrieval, evidence graph, source-claim extraction, rule-claim binding, and
+deterministic EA package review commands, but it now contains both preserved
+legacy baseline artifacts and the first isolated canonical-register-driven
+catalog gate.
 
 Routing note: the newest operational-recovery and gold-coverage sections below supersede older
 historical lane notes when they disagree. In particular, older references to South Plateau as
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
+
+## Canonical Source Register Phase 2 Capture And Catalog Cutover
+
+Latest closeout on 2026-05-18:
+
+- `config/downloader.toml` is now pinned to
+  `loader_contract = "source_register_v1"`, so active `dry-run`,
+  `preflight`, `download`, `batch-download`, and `catalog-build` calls now
+  consume `Document_Register_Master` rather than the older
+  `Ingest_Checklist` plus `R1_Forest_Plans` contract.
+- Active capture commands now reject
+  `--r1-forest-plan-register ... --source-delta-only`. The Region 1
+  forest-plan source-delta register remains preserved `legacy_v0` baseline
+  evidence only, not a second active ledger under the canonical runtime.
+- The legacy `config/url_overrides.toml` registry is now ignored by active
+  canonical runs. Canonical rows must carry their active official URL directly
+  in the workbook until a governed canonical override surface exists.
+- Live Phase 2 verification now includes:
+  `source-register-validate` passing with `13` sheets, `635` retained load
+  rows, `51` queue rows, and `2` removed rows;
+  dry-run run `phase2-canonical-dry-run-20260518` passing with `635` planned
+  rows, `635` unique URLs, and zero duplicate or excluded rows; and
+  preflight run `phase2-canonical-preflight-20260518` passing its validation
+  gate over the first `25` canonical rows while surfacing `18` live
+  non-ready URLs and `7` `preflight_ok` rows.
+- The first isolated canonical-register-driven catalog gate now lives at
+  `source_library/runs/canonical-source-register-phase2-catalog-gate-20260518/catalog_gate/`
+  as `source-set-ae989382c52344db` with `635` planned source rows,
+  `635` unique URLs, zero artifacts, and `catalog_validation.json` passing.
+- The upstream direct-eval bundle is now refreshed to `12` required category
+  families and `24` total cases after adding the
+  `canonical_source_delta_reintroduction_blocked` capture category. The live
+  replay under `source_library/evaluations/upstream/` now passes `24/24`
+  matched cases.
+- Runtime cutover is complete, but this is not yet a full downloaded canonical
+  corpus. The preserved legacy source-set baseline and downstream derived
+  surfaces remain historical comparison points until the later currentness,
+  extraction, and downstream rebase packets land.
+- The next routed implementation packet is Phase 3 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`:
+  authority-currentness, supersession, and source-partition rebase on top of
+  the canonical register.
 
 ## Canonical Source Register Phase 1.5 Proving Slice
 
@@ -187,9 +221,10 @@ Latest closeout on 2026-05-15:
   hotspot. It remains active at `49` revisions and hotspot score `68012`, but
   `src/usfs_r1_ea_sources/evidence_graph.py` is now the top hotspot.
 
-## Legacy Active Workbook Contract
+## Legacy Workbook Baseline Lock
 
-The uploaded workbook now defines the active source contract:
+The older workbook and promoted source-delta lane remain the preserved
+`legacy_v0` baseline for comparison and replay:
 
 - `Ingest_Checklist` ingest rows: `162`
 - `Scope=Baseline` rows: `26`
@@ -209,8 +244,11 @@ CLI path is:
 ```
 
 The promotion validation is documented in
-`docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md`. The register options are accepted by
-`dry-run`, `preflight`, `download`, `batch-download`, and `catalog-build`. The live source-delta
+`docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md`. Under an explicit
+`legacy_v0` config override, the register options are still accepted by
+`dry-run`, `preflight`, `download`, `batch-download`, and `catalog-build`.
+Active `source_register_v1` runs reject that lane so the canonical workbook
+remains the sole active source ledger. The live source-delta
 capture run `r1-forest-plan-source-delta-capture-20260510-batches` passed `33/33` batches for all
 `159` emitted rows, with an empty repair queue and `158` unique artifacts. The scoped source-delta
 catalog gate is archived under
@@ -220,21 +258,26 @@ catalog gate is archived under
 
 ## Upstream Evaluation Coverage
 
-Latest closeout on 2026-05-14:
+Latest closeout on 2026-05-18:
 
 - The repo now ships a tracked upstream direct-eval contract at
   `config/upstream_evaluation_v1.json`.
 - Deterministic upstream fixtures now live under `config/fixtures/upstream_eval/` and
   `tests/fixtures/upstream_eval/`.
-- The upstream contract now requires `11` named category families across capture, catalog, and
-  extraction, with one expected-pass case plus one controlled-violation case per category for `22`
-  total aggregate cases.
+- The upstream contract now requires `12` named category families across
+  capture, catalog, and extraction, with one expected-pass case plus one
+  controlled-violation case per category for `24` total aggregate cases.
+- The new Phase 2 capture category
+  `canonical_source_delta_reintroduction_blocked` proves that active
+  `source_register_v1` runs reject the legacy source-delta lane while explicit
+  `legacy_v0` comparison runs still expose the old mixed-ledger behavior as a
+  controlled violation.
 - The promoted output family is
   `source_library/evaluations/upstream/upstream_evaluation_results.json` plus
   `source_library/evaluations/upstream/upstream_evaluation_report.md`.
-- The closeout replay on 2026-05-13 passed `22/22` matched cases with `required_category_count=11`,
-  `failed_case_ids=[]`, and lane summaries `capture`, `catalog`, and `extraction` all marked
-  `direct_eval_present`.
+- The closeout replay on 2026-05-18 passed `24/24` matched cases with
+  `required_category_count=12`, `failed_case_ids=[]`, and lane summaries
+  `capture`, `catalog`, and `extraction` all marked `direct_eval_present`.
 - `docs/EVALUATION_COVERAGE_REGISTER.md` now separates structural validation from direct-eval
   coverage. The upstream rows `preflight`, `validate_run`, `catalog_validation`, and
   `extraction_accuracy` remain tracked as `direct_eval_present`; the downstream retrieval, claim,

@@ -7,7 +7,7 @@ This audit freezes the delivered workbook
 replacement candidate for the legacy Region 1 workbook contract. It records the
 workbook identity, the frozen load-table and row-state contracts, the
 legacy-to-canonical migration baseline, and the governed adjunct contracts that
-must exist before runtime cutover.
+must exist before and after runtime cutover.
 
 ## Workbook Identity
 
@@ -112,6 +112,27 @@ Any new canonical-register run must compare against this locked mixed baseline
 rather than retroactively treating inherited legacy red or green results as
 proof of canonical-register behavior.
 
+## Phase 2 Capture And Catalog Status
+
+The Phase 2 capture/catalog cutover is now live:
+
+- `config/downloader.toml` is now pinned to `loader_contract = "source_register_v1"`
+- active `dry-run`, `preflight`, `download`, `batch-download`, and
+  `catalog-build` calls now consume `Document_Register_Master`
+- active `source_register_v1` runs reject the legacy
+  `--r1-forest-plan-register` supplemental lane so the canonical workbook
+  remains the sole active source ledger
+- the legacy `config/url_overrides.toml` registry is now a `legacy_v0`
+  comparison surface only; canonical rows must carry the active official URL
+  directly in the workbook
+- the first isolated canonical catalog gate now lives at
+  `source_library/runs/canonical-source-register-phase2-catalog-gate-20260518/catalog_gate/`
+  as `source-set-ae989382c52344db` with `635` planned rows, `635` unique URLs,
+  and `catalog_validation.json` passing
+- the upstream direct-eval aggregate now requires `12` categories and `24`
+  cases, including `canonical_source_delta_reintroduction_blocked`, and the
+  live replay passes `24/24`
+
 ## Workbook Contract Versus Adjunct Semantic Contracts
 
 The workbook now directly carries:
@@ -211,9 +232,8 @@ The repo now also ships a canonical loader path for this packet:
   seam back to `WorkbookSource` so downstream capture and catalog callers can
   migrate later without a broad rewrite in the same checkpoint
 
-This closes the Phase 1 foundation boundary without starting Phase 2 cutover.
-The active runtime remains legacy until the proving slice and capture/catalog
-packet are ready.
+This closes the Phase 1 foundation boundary and is now followed by the live
+Phase 2 runtime cutover described above.
 
 ## Phase 1.5 Proving Slice Status
 
@@ -234,9 +254,9 @@ before any canonical capture/catalog cutover:
   `config/graph_accuracy_eval_v1.json` now hold the starter graph-health and
   graph-accuracy contracts for this checkpoint
 
-The proving packet keeps the runtime in a strict pre-cutover state. The active
-runtime remains legacy and full-register canonical ingestion is still blocked
-until the later Phase 2 capture/catalog cutover is complete.
+The proving packet remains a hard gate even after runtime cutover. Full
+downloaded canonical-corpus promotion is still blocked until the later
+currentness, extraction, and downstream rebase packets are complete.
 
 ## Verification
 
@@ -250,7 +270,7 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py te
 
 ## Next Routing
 
-Phases 0, 1, and 1.5 are now explicit enough to permit the next refoundation
-step: Phase 2 capture and catalog cutover to the canonical register. Runtime
-cutover remains blocked until that Phase 2 packet is implemented; bulk
-canonical ingestion may not bypass the proving gate.
+Phases 0, 1, 1.5, and 2 are now explicit enough to permit the next
+refoundation step: Phase 3 authority-currentness, supersession, and
+source-partition rebase on top of the canonical register. Bulk canonical
+ingestion still may not bypass the proving gate.

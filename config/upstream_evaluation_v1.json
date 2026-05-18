@@ -26,10 +26,12 @@
     {
       "lane_id": "capture",
       "register_rows": [
+        "dry_run",
         "preflight",
         "validate_run"
       ],
       "required_category_ids": [
+        "canonical_source_delta_reintroduction_blocked",
         "challenge_page_http200",
         "not_found_body_http200",
         "duplicate_url_row_preservation",
@@ -75,6 +77,24 @@
       "expected_producer_passed": true,
       "fixture_path": "fixtures/upstream_eval/capture/challenge_page_http200.json",
       "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "capture-canonical-source-delta-guard-expected-pass",
+      "lane_id": "capture",
+      "category_id": "canonical_source_delta_reintroduction_blocked",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/capture/canonical_source_delta_reintroduction_blocked.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "capture-canonical-source-delta-guard-controlled-violation",
+      "lane_id": "capture",
+      "category_id": "canonical_source_delta_reintroduction_blocked",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/capture/canonical_source_delta_reintroduction_blocked.json",
+      "scenario_id": "controlled_violation"
     },
     {
       "case_id": "capture-challenge-page-controlled-violation",

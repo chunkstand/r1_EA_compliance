@@ -26,11 +26,14 @@ Current checkpoint on 2026-05-18:
   `graph-accuracy-eval`, and the proving packet now exercises a governed mixed
   slice of `26` load-ready rows plus `5` queue rows before any capture/catalog
   cutover begins.
-- The runtime is still on the legacy workbook contract because
-  `config/downloader.toml` remains pinned to `loader_contract = "legacy_v0"`.
-  Phase 2 capture/catalog cutover is now the next implementation boundary, and
-  no full-register canonical ingestion may bypass the now-live Phase 1.5
-  proving gate.
+- Phase 2 capture/catalog cutover is now live: active
+  `dry-run`, `preflight`, `download`, `batch-download`, and `catalog-build`
+  calls resolve through `loader_contract = "source_register_v1"`, the
+  canonical register is now the sole active ledger, and the first isolated
+  canonical catalog gate is `source-set-ae989382c52344db`.
+- No full-register canonical ingestion may bypass the now-live Phase 1.5
+  proving gate, and the next implementation boundary is now Phase 3:
+  authority-currentness, supersession, and source-partition rebase.
 
 Owner context: This is a fresh standalone architecture and delivery plan for
 refounding the system around
@@ -84,14 +87,11 @@ artifacts.
 
 ## Current Evidence
 
-- The current runtime still treats
-  `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx` as the
-  source-of-truth workbook because `config/downloader.toml` is still pinned to
-  `loader_contract = "legacy_v0"` with
-  `canonical_sheets = ["Ingest_Checklist", "R1_Forest_Plans"]`. The Phase 1
-  loader split is already live in
-  `src/usfs_r1_ea_sources/workbook.py`, but the active capture and catalog
-  callers still resolve through the legacy path until Phase 2 cutover lands.
+- The active capture/catalog runtime now treats
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` as the
+  source-of-truth workbook because `config/downloader.toml` is now pinned to
+  `loader_contract = "source_register_v1"`. The legacy workbook plus promoted
+  source-delta register remain preserved replay surfaces only.
 - The live legacy catalog baseline in `source_library/catalog/` remains
   `source-set-5e65d845ce77e1a0` with `350` source rows, `319` artifacts, and
   source partitions `active_review_corpus=349` and

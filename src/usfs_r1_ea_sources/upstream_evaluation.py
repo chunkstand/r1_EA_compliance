@@ -13,7 +13,12 @@ import json
 from openpyxl import Workbook
 
 from .catalog import build_review_catalog
-from .config import DEFAULT_CONFIG_PATH, load_config
+from .config import (
+    DEFAULT_CONFIG_PATH,
+    LEGACY_WORKBOOK_LOADER_CONTRACT,
+    load_config,
+)
+from .dry_run import run_dry_run
 from .extract import build_extraction
 from .extraction_accuracy import run_extraction_accuracy_audit
 from .preflight import PreflightFetchResult, _classify_response, run_preflight
@@ -443,11 +448,12 @@ def _run_capture_response_classification(scenario: dict) -> tuple[bool, bool, di
 
 
 def _run_capture_preflight(scenario: dict) -> tuple[bool, bool, dict]:
-    config = _upstream_eval_config()
+    config = _upstream_eval_config(
+        loader_contract=str(scenario.get("loader_contract") or LEGACY_WORKBOOK_LOADER_CONTRACT)
+    )
     with TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"
-        workbook_path = Path(tmp) / "workbook.xlsx"
-        _write_workbook(workbook_path, scenario["workbook"])
+        workbook_path = _scenario_workbook_path(Path(tmp), scenario)
         fetch_results = {
             url: _preflight_result_from_spec(spec)
             for url, spec in (scenario.get("fetch_results") or {}).items()
@@ -488,6 +494,64 @@ def _run_capture_preflight(scenario: dict) -> tuple[bool, bool, dict]:
         }
 
 
+def _run_capture_dry_run(scenario: dict) -> tuple[bool, bool, dict]:
+    config = _upstream_eval_config(
+        loader_contract=str(scenario.get("loader_contract") or LEGACY_WORKBOOK_LOADER_CONTRACT)
+    )
+    with TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        workbook_path = _scenario_workbook_path(Path(tmp), scenario)
+        supplemental_sources = _supplemental_sources(
+            scenario.get("supplemental_sources") or []
+        )
+        expected_error = str(scenario.get("expected_error_contains") or "")
+        try:
+            result = run_dry_run(
+                workbook_path=workbook_path,
+                output_dir=output_dir,
+                config=config,
+                run_id=str(scenario.get("run_id") or "upstream-dry-run"),
+                supplemental_sources=supplemental_sources or None,
+                source_delta_input=scenario.get("source_delta_input"),
+            )
+        except Exception as exc:  # noqa: BLE001
+            details = {"error_class": type(exc).__name__, "error_message": str(exc)}
+            if expected_error:
+                return expected_error in str(exc), True, details
+            raise
+
+        records = _read_jsonl(result.manifest_path)
+        if expected_error:
+            return False, True, {
+                "error_class": None,
+                "error_message": None,
+                "filtered_rows": result.summary.get("filtered_rows"),
+                "sheet_names": sorted({record.get("sheet") for record in records}),
+            }
+
+        assertions = scenario.get("assertions") or {}
+        actual_producer_passed = True
+        if "filtered_rows" in assertions:
+            actual_producer_passed = actual_producer_passed and (
+                result.summary.get("filtered_rows") == assertions["filtered_rows"]
+            )
+        if "unique_canonical_urls" in assertions:
+            actual_producer_passed = actual_producer_passed and (
+                result.summary.get("unique_canonical_urls")
+                == assertions["unique_canonical_urls"]
+            )
+        if "required_sheet_names" in assertions:
+            actual_producer_passed = actual_producer_passed and (
+                sorted({record.get("sheet") for record in records})
+                == sorted(assertions["required_sheet_names"])
+            )
+        return actual_producer_passed, True, {
+            "filtered_rows": result.summary.get("filtered_rows"),
+            "unique_canonical_urls": result.summary.get("unique_canonical_urls"),
+            "sheet_names": sorted({record.get("sheet") for record in records}),
+        }
+
+
 def _run_capture_validate_run(scenario: dict) -> tuple[bool, bool, dict]:
     with TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"
@@ -512,11 +576,12 @@ def _run_capture_validate_run(scenario: dict) -> tuple[bool, bool, dict]:
 
 
 def _run_catalog_build(scenario: dict) -> tuple[bool, bool, dict]:
-    config = _upstream_eval_config()
+    config = _upstream_eval_config(
+        loader_contract=str(scenario.get("loader_contract") or LEGACY_WORKBOOK_LOADER_CONTRACT)
+    )
     with TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"
-        workbook_path = Path(tmp) / "workbook.xlsx"
-        _write_workbook(workbook_path, scenario["workbook"])
+        workbook_path = _scenario_workbook_path(Path(tmp), scenario)
         supplemental_sources = _supplemental_sources(
             scenario.get("supplemental_sources") or []
         )
@@ -551,11 +616,12 @@ def _run_catalog_build(scenario: dict) -> tuple[bool, bool, dict]:
 
 
 def _run_extraction_build(scenario: dict) -> tuple[bool, bool, dict]:
-    config = _upstream_eval_config()
+    config = _upstream_eval_config(
+        loader_contract=str(scenario.get("loader_contract") or LEGACY_WORKBOOK_LOADER_CONTRACT)
+    )
     with TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"
-        workbook_path = Path(tmp) / "workbook.xlsx"
-        _write_workbook(workbook_path, scenario["workbook"])
+        workbook_path = _scenario_workbook_path(Path(tmp), scenario)
         _write_download_run(output_dir=output_dir, scenario=scenario["download_run"])
         build_review_catalog(
             workbook_path=workbook_path,
@@ -623,6 +689,7 @@ def _run_extraction_build(scenario: dict) -> tuple[bool, bool, dict]:
 
 
 _RUNNERS = {
+    "capture_dry_run": _run_capture_dry_run,
     "capture_preflight": _run_capture_preflight,
     "capture_response_classification": _run_capture_response_classification,
     "capture_validate_run": _run_capture_validate_run,
@@ -855,6 +922,18 @@ def _write_workbook(path: Path, workbook_spec: dict) -> None:
 
     path.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(path)
+
+
+def _scenario_workbook_path(temp_dir: Path, scenario: dict) -> Path:
+    workbook_path = scenario.get("workbook_path")
+    if workbook_path is not None:
+        return _resolve_case_path(REPO_ROOT, workbook_path)
+    workbook_spec = scenario.get("workbook")
+    if not isinstance(workbook_spec, dict):
+        raise ValueError("Upstream evaluation scenario must provide workbook or workbook_path")
+    path = temp_dir / "workbook.xlsx"
+    _write_workbook(path, workbook_spec)
+    return path
 
 
 def _write_sheet_headers(sheet, headers: list[str]) -> None:  # noqa: ANN001
@@ -1140,6 +1219,13 @@ def _utc_now() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def _upstream_eval_config():
+def _upstream_eval_config(*, loader_contract: str = LEGACY_WORKBOOK_LOADER_CONTRACT):
     config = load_config(REPO_ROOT / DEFAULT_CONFIG_PATH)
-    return replace(config, workbook=replace(config.workbook, overrides_path=None))
+    return replace(
+        config,
+        workbook=replace(
+            config.workbook,
+            loader_contract=loader_contract,
+            overrides_path=None,
+        ),
+    )

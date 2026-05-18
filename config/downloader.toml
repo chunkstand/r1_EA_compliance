@@ -1,5 +1,5 @@
 [workbook]
-loader_contract = "legacy_v0"
+loader_contract = "source_register_v1"
 canonical_sheets = ["Ingest_Checklist", "R1_Forest_Plans"]
 exclusion_sheet = "Scope_Exclusions"
 header_row = 4

@@ -130,8 +130,9 @@ def load_canonical_sources(workbook_path: Path, config: WorkbookConfig) -> list[
     else:
         raise ValueError(f"Unsupported workbook loader contract: {config.loader_contract!r}")
 
-    overrides = load_url_overrides(config.overrides_path)
-    sources = apply_url_overrides(sources, overrides)
+    if config.loader_contract == LEGACY_WORKBOOK_LOADER_CONTRACT:
+        overrides = load_url_overrides(config.overrides_path)
+        sources = apply_url_overrides(sources, overrides)
     validate_overrides_do_not_target_exclusions(sources, load_excluded_urls(workbook_path, config))
     return sources
 
@@ -164,6 +165,21 @@ def merge_supplemental_sources(
     if duplicate_ids:
         raise ValueError(f"Supplemental sources duplicate existing source IDs: {duplicate_ids}")
     return [*sources, *supplemental]
+
+
+def ensure_supplemental_sources_allowed(
+    config: WorkbookConfig,
+    supplemental_sources: Iterable[WorkbookSource] | None = None,
+    source_delta_input: dict | None = None,
+) -> None:
+    if config.loader_contract != SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT:
+        return
+    if list(supplemental_sources or []) or source_delta_input is not None:
+        raise ValueError(
+            "Supplemental source-delta rows are not allowed when "
+            "loader_contract='source_register_v1'; the canonical source register "
+            "must be the sole active source ledger."
+        )
 
 
 def load_r1_forest_plan_document_register(

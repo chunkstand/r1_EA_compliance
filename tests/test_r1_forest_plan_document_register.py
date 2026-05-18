@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from collections import Counter
+from dataclasses import replace
 from pathlib import Path
 from urllib.parse import urlsplit
 import csv
 import json
 
-from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.workbook import load_canonical_sources
 from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 
@@ -16,6 +17,14 @@ REGISTER = ROOT / "config" / "r1_forest_plan_document_register_draft.csv"
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 GAP_EVIDENCE = ROOT / "config" / "r1_forest_plan_official_source_gap_evidence.json"
+
+
+def legacy_config():
+    config = load_config(CONFIG)
+    return replace(
+        config,
+        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
+    )
 
 
 def _rows() -> list[dict[str, str]]:
@@ -116,7 +125,7 @@ def test_r1_forest_plan_document_register_corrects_nez_perce_clearwater_links() 
 
 
 def test_r1_forest_plan_document_register_loader_emits_source_delta_only() -> None:
-    config = load_config(CONFIG)
+    config = legacy_config()
     workbook_source_ids = {
         source.source_record_id for source in load_canonical_sources(WORKBOOK, config.workbook)
     }

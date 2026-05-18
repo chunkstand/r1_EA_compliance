@@ -12,11 +12,15 @@ import json
 import sqlite3
 import subprocess
 
-from .config import DownloaderConfig
+from .config import DownloaderConfig, LEGACY_WORKBOOK_LOADER_CONTRACT
 from .records import WorkbookSource, sha256_file, slugify
 from .report import _read_jsonl, _resolve_manifest_path
 from .source_partitions import catalog_source_partition
-from .workbook import load_canonical_sources, merge_supplemental_sources
+from .workbook import (
+    ensure_supplemental_sources_allowed,
+    load_canonical_sources,
+    merge_supplemental_sources,
+)
 
 
 @dataclass(frozen=True)
@@ -71,9 +75,19 @@ def build_review_catalog(
 
     workbook_sha256 = sha256_file(workbook_path)
     config_sha256 = sha256_file(config_path) if config_path and config_path.exists() else None
-    overrides_sha256 = _optional_sha256(config.workbook.overrides_path)
+    overrides_path = (
+        config.workbook.overrides_path
+        if config.workbook.loader_contract == LEGACY_WORKBOOK_LOADER_CONTRACT
+        else None
+    )
+    overrides_sha256 = _optional_sha256(overrides_path)
     git_commit = _git_commit(workbook_path.parent)
     workbook_sources = load_canonical_sources(workbook_path, config.workbook)
+    ensure_supplemental_sources_allowed(
+        config.workbook,
+        supplemental_sources=supplemental_sources,
+        source_delta_input=source_delta_input,
+    )
     sources = merge_supplemental_sources(workbook_sources, supplemental_sources)
     if source_record_ids is not None:
         available_source_ids = {source.source_record_id for source in sources}
@@ -123,7 +137,7 @@ def build_review_catalog(
         workbook_sha256=workbook_sha256,
         config_path=config_path,
         config_sha256=config_sha256,
-        overrides_path=config.workbook.overrides_path,
+        overrides_path=overrides_path,
         overrides_sha256=overrides_sha256,
         git_commit=git_commit,
         run_id=run_id,
@@ -1094,51 +1108,114 @@ def _source_status(manifest_record: dict | None, run_scope_present: bool) -> str
 def _document_role(source: WorkbookSource, document_type: str | None) -> str:
     metadata = source.metadata
     if metadata.get("loader_contract") == "source_register_v1":
-        authority_document_class_id = _clean(metadata.get("authority_document_class_id")) or ""
+        authority_document_class_id = (_clean(metadata.get("authority_document_class_id")) or "").lower()
+        authority_tier = (_clean(metadata.get("authority_tier")) or "").lower()
+        sub_tier = (_clean(metadata.get("sub_tier")) or "").lower()
         document_type_value = (document_type or "").lower()
         title = source.title.lower()
         currentness_notes = (_clean(metadata.get("currentness_notes")) or "").lower()
-        if authority_document_class_id == "forest_plan":
+        citation = (_clean(metadata.get("citation_or_code")) or "").lower()
+        combined = " ".join(
+            value
+            for value in (
+                authority_document_class_id,
+                authority_tier,
+                sub_tier,
+                document_type_value,
+                title,
+                currentness_notes,
+                citation,
+            )
+            if value
+        )
+
+        if "executive order" in combined:
+            return "executive_order"
+        if any(token in combined for token in ("public law", "u.s.c", "united states code", "statute")):
+            return "law"
+        if any(
+            token in combined
+            for token in (
+                "cfr",
+                "ecfr",
+                "federal register",
+                "final rule",
+                "planning rule",
+                "regulation",
+            )
+        ):
+            return "regulation"
+        if authority_tier == "state/partner":
+            return "state_requirement"
+        if (
+            authority_document_class_id == "forest_plan"
+            or authority_tier == "forest"
+            or "forest plan" in combined
+            or sub_tier == "forest plan support"
+        ):
             support_tokens = (
+                "administrative change",
+                "amendment summary",
+                "appendices",
                 "appendix",
+                "appendix maps",
                 "assessment",
                 "biological opinion",
                 "decision",
                 "eis",
+                "errata",
                 "executive summary",
                 "feis",
+                "final eis",
+                "final eis volume",
+                "map",
                 "monitoring",
-                "retained",
+                "record of decision",
+                "response-to-comments",
+                "rod",
                 "support",
                 "transmittal",
             )
-            if any(token in document_type_value or token in title for token in support_tokens):
-                return "forest_plan_support"
-            if "support document" in currentness_notes:
+            if any(token in combined for token in support_tokens):
                 return "forest_plan_support"
             return "forest_plan"
-        agency_policy_tokens = (
-            "assessment",
-            "biological opinion",
-            "chapter",
-            "consultation",
-            "crosswalk",
-            "directive",
-            "fsm",
-            "guidance",
-            "handbook",
-            "manual",
-            "planning page",
-            "policy",
-            "recovery plan",
-            "retained",
-            "species profile",
-            "supplement",
-        )
-        if any(token in document_type_value or token in title for token in agency_policy_tokens):
+        if "case" in combined or "court" in combined:
+            return "case_law"
+        if any(
+            token in combined
+            for token in (
+                "agreement",
+                "conservation strategy",
+                "directive",
+                "ecos report",
+                "field guide",
+                "forest order",
+                "fsh",
+                "fsm",
+                "guidance",
+                "handbook",
+                "implementation plan",
+                "letter",
+                "manual",
+                "monitoring guidance",
+                "order",
+                "outline",
+                "page",
+                "policy",
+                "program page",
+                "recovery plan",
+                "regional soil handbook",
+                "report",
+                "rationale",
+                "scc",
+                "standard",
+                "strategy",
+                "technical",
+            )
+        ):
             return "agency_policy"
-        if "ecfr" in document_type_value or "planning rule" in title:
-            return "regulation"
+        if authority_tier in {"federal", "programmatic", "region", "usda", "usfs", "superseded"}:
+            return "agency_policy"
     if source.metadata.get("source_input") == "r1_forest_plan_document_register":
         if source.source_record_id in _r1_forest_plan_register_primary_plan_source_record_ids():
             return "forest_plan"
@@ -1224,6 +1301,22 @@ def _r1_forest_plan_register_primary_plan_source_record_ids() -> frozenset[str]:
 
 
 def _authority_level(source: WorkbookSource, issuer: str | None, host: str) -> str:
+    if source.metadata.get("loader_contract") == "source_register_v1":
+        authority_document_class_id = (_clean(source.metadata.get("authority_document_class_id")) or "").lower()
+        authority_tier = (_clean(source.metadata.get("authority_tier")) or "").lower()
+        if authority_document_class_id == "forest_plan" or authority_tier == "forest":
+            return "forest"
+        tier_map = {
+            "federal": "federal",
+            "programmatic": "federal",
+            "region": "regional",
+            "state/partner": "state",
+            "superseded": "federal",
+            "usda": "federal",
+            "usfs": "federal",
+        }
+        if authority_tier in tier_map:
+            return tier_map[authority_tier]
     if source.metadata.get("source_input") == "r1_forest_plan_document_register":
         return "forest"
     if source.sheet == "R1_Forest_Plans":

@@ -1,17 +1,25 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 import tempfile
 import unittest
 
-from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.pilots import discover_canonical_hosts, run_host_pilots
 
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
+
+
+def legacy_config():
+    config = load_config(CONFIG)
+    return replace(
+        config,
+        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
+    )
 
 
 @dataclass(frozen=True)
@@ -33,7 +41,7 @@ class FakeValidationResult:
 
 class PilotTests(unittest.TestCase):
     def test_discover_canonical_hosts_from_workbook(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         hosts = discover_canonical_hosts(workbook_path=WORKBOOK, config=config)
 
         self.assertIn("www.ecfr.gov", hosts)
@@ -41,7 +49,7 @@ class PilotTests(unittest.TestCase):
         self.assertIn("www.fs.usda.gov", hosts)
 
     def test_run_host_pilots_marks_all_ready_when_gates_pass_and_no_failures(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         calls: list[tuple[str, str]] = []
 
         def fake_downloader(**kwargs):  # noqa: ANN003
@@ -88,7 +96,7 @@ class PilotTests(unittest.TestCase):
             self.assertTrue(result.report_path.exists())
 
     def test_run_host_pilots_blocks_host_with_failures_even_if_gate_passes(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
 
         def fake_downloader(**kwargs):  # noqa: ANN003
             return FakeDownloadResult(

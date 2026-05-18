@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from contextlib import closing
+from dataclasses import replace
 import csv
 import hashlib
 import json
@@ -9,7 +10,7 @@ import sqlite3
 import tomllib
 import unittest
 
-from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 from usfs_r1_ea_sources.workbook import load_canonical_sources
 from usfs_r1_ea_sources.workbook import merge_supplemental_sources
@@ -27,6 +28,14 @@ ACTIVE_BATCH_RUN_IDS = [FULL_BATCH_RUN_ID, SOURCE_DELTA_BATCH_RUN_ID]
 ARTIFACT_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"}
 NON_ARTIFACT_SUCCESS_STATUSES = {"skipped_excluded"}
 SUCCESS_STATUSES = ARTIFACT_STATUSES | NON_ARTIFACT_SUCCESS_STATUSES
+
+
+def legacy_config():
+    config = load_config(CONFIG)
+    return replace(
+        config,
+        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
+    )
 
 
 class CapturedLibraryIntegrityTests(unittest.TestCase):
@@ -54,7 +63,7 @@ class CapturedLibraryIntegrityTests(unittest.TestCase):
                 + ", ".join(str(path.relative_to(ROOT)) for path in missing)
             )
 
-        cls.config = load_config(CONFIG)
+        cls.config = legacy_config()
         cls.register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
         cls.canonical_sources = load_canonical_sources(WORKBOOK, cls.config.workbook)
         cls.sources = merge_supplemental_sources(

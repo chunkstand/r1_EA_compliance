@@ -6,7 +6,7 @@ import json
 
 from .catalog import build_review_catalog
 from .cli_common import print_summary
-from .config import DEFAULT_CONFIG_PATH, load_config
+from .config import DEFAULT_CONFIG_PATH, SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT, load_config
 from .download import run_download
 from .dry_run import run_dry_run
 from .batches import run_batch_downloads
@@ -202,7 +202,7 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
 
     if args.command == "dry-run":
         config = load_config(args.config)
-        source_delta_options = _source_delta_options(args, parser)
+        source_delta_options = _source_delta_options(args, parser, config.workbook.loader_contract)
         result = run_dry_run(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
@@ -219,7 +219,7 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
 
     if args.command == "preflight":
         config = load_config(args.config)
-        source_delta_options = _source_delta_options(args, parser)
+        source_delta_options = _source_delta_options(args, parser, config.workbook.loader_contract)
         result = run_preflight(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
@@ -236,7 +236,7 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
 
     if args.command == "download":
         config = load_config(args.config)
-        source_delta_options = _source_delta_options(args, parser)
+        source_delta_options = _source_delta_options(args, parser, config.workbook.loader_contract)
         result = run_download(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
@@ -281,7 +281,7 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
 
     if args.command == "batch-download":
         config = load_config(args.config)
-        source_delta_options = _source_delta_options(args, parser)
+        source_delta_options = _source_delta_options(args, parser, config.workbook.loader_contract)
         result = run_batch_downloads(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
@@ -304,7 +304,7 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         if args.run_id and batch_run_ids:
             parser.error("catalog-build accepts either --run-id or --batch-run-id, not both")
         config = load_config(args.config)
-        source_delta_options = _source_delta_options(args, parser)
+        source_delta_options = _source_delta_options(args, parser, config.workbook.loader_contract)
         batch_kwargs = {}
         if len(batch_run_ids) == 1:
             batch_kwargs["batch_run_id"] = batch_run_ids[0]
@@ -354,13 +354,23 @@ def _add_source_delta_options(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def _source_delta_options(args: argparse.Namespace, parser: argparse.ArgumentParser) -> dict:
+def _source_delta_options(
+    args: argparse.Namespace,
+    parser: argparse.ArgumentParser,
+    loader_contract: str,
+) -> dict:
     register_path = getattr(args, "r1_forest_plan_register", None)
     source_delta_only = bool(getattr(args, "source_delta_only", False))
     if source_delta_only and not register_path:
         parser.error("--source-delta-only requires --r1-forest-plan-register")
     if not register_path:
         return {}
+    if loader_contract == SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT:
+        parser.error(
+            "--r1-forest-plan-register is not allowed when "
+            "loader_contract=source_register_v1; the canonical source register "
+            "is now the sole active source ledger."
+        )
 
     register = load_r1_forest_plan_document_register(register_path)
     source_delta_sources = register.source_delta_sources

@@ -1,0 +1,47 @@
+{
+  "runner": "capture_dry_run",
+  "scenarios": {
+    "expected_pass": {
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "supplemental_sources": [
+        {
+          "source_record_id": "R1PLAN-flathead-nf-02",
+          "title": "Flathead Forest Plan",
+          "url": "https://example.test/flathead-forest-plan.pdf",
+          "forest_unit_id": "flathead-nf"
+        }
+      ],
+      "source_delta_input": {
+        "schema": "r1-forest-plan-document-register-v0",
+        "source_delta_count": 1
+      },
+      "expected_error_contains": "sole active source ledger"
+    },
+    "controlled_violation": {
+      "loader_contract": "legacy_v0",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPCAP-LEG-001",
+            "title": "Legacy Source",
+            "url": "https://example.test/legacy-source"
+          }
+        ]
+      },
+      "supplemental_sources": [
+        {
+          "source_record_id": "R1PLAN-flathead-nf-02",
+          "title": "Flathead Forest Plan",
+          "url": "https://example.test/flathead-forest-plan.pdf",
+          "forest_unit_id": "flathead-nf"
+        }
+      ],
+      "source_delta_input": {
+        "schema": "r1-forest-plan-document-register-v0",
+        "source_delta_count": 1
+      },
+      "expected_error_contains": "sole active source ledger"
+    }
+  }
+}

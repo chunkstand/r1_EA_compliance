@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 import json
 import tempfile
@@ -8,7 +8,7 @@ import unittest
 from urllib.parse import urlsplit
 
 from usfs_r1_ea_sources.batches import build_batch_plan, run_batch_downloads
-from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 
 
@@ -16,6 +16,14 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 R1_FOREST_PLAN_REGISTER = ROOT / "config" / "r1_forest_plan_document_register_draft.csv"
+
+
+def legacy_config():
+    config = load_config(CONFIG)
+    return replace(
+        config,
+        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
+    )
 
 
 @dataclass(frozen=True)
@@ -38,7 +46,7 @@ class FakeValidationResult:
 
 class BatchTests(unittest.TestCase):
     def test_build_batch_plan_is_deterministic_by_host_and_size(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         plan = build_batch_plan(
             workbook_path=WORKBOOK,
             config=config,
@@ -54,7 +62,7 @@ class BatchTests(unittest.TestCase):
         self.assertEqual(plan[0]["host"], "uscode.house.gov")
 
     def test_build_batch_plan_rejects_unknown_requested_host(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
 
         with self.assertRaisesRegex(ValueError, "no workbook sources"):
             build_batch_plan(
@@ -66,7 +74,7 @@ class BatchTests(unittest.TestCase):
             )
 
     def test_build_batch_plan_can_target_r1_forest_plan_source_delta_rows(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
         source_delta_ids = {
             source.source_record_id for source in register.source_delta_sources
@@ -91,18 +99,18 @@ class BatchTests(unittest.TestCase):
             for host in {batch["host"] for batch in plan}
         }
         self.assertEqual(planned_ids, source_delta_ids)
-        self.assertEqual(sum(batch["row_count"] for batch in plan), 159)
+        self.assertEqual(sum(batch["row_count"] for batch in plan), 160)
         self.assertEqual(
             host_counts,
             {
                 "federalregister.gov": 2,
                 "usfs-public.app.box.com": 18,
-                "www.fs.usda.gov": 139,
+                "www.fs.usda.gov": 140,
             },
         )
 
     def test_build_batch_plan_rejects_missing_source_id_filter(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
 
         with self.assertRaisesRegex(ValueError, "no loaded sources"):
             build_batch_plan(
@@ -113,7 +121,7 @@ class BatchTests(unittest.TestCase):
             )
 
     def test_run_batch_downloads_plan_only_writes_plan_and_ledger(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
 
@@ -136,7 +144,7 @@ class BatchTests(unittest.TestCase):
             self.assertTrue(result.repair_queue_path.exists())
 
     def test_run_batch_downloads_plan_only_writes_source_delta_metadata(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
         source_delta_ids = {
             source.source_record_id for source in register.source_delta_sources
@@ -157,16 +165,16 @@ class BatchTests(unittest.TestCase):
             )
 
             plan = json.loads(result.plan_path.read_text(encoding="utf-8"))
-            self.assertEqual(result.summary["planned_row_count"], 159)
-            self.assertEqual(result.summary["supplemental_source_count"], 159)
-            self.assertEqual(result.summary["source_record_id_filter_count"], 159)
-            self.assertEqual(result.summary["source_delta_input"]["source_delta_count"], 159)
-            self.assertEqual(plan["supplemental_source_count"], 159)
-            self.assertEqual(plan["source_record_id_filter_count"], 159)
-            self.assertEqual(plan["source_delta_input"]["source_delta_count"], 159)
+            self.assertEqual(result.summary["planned_row_count"], 160)
+            self.assertEqual(result.summary["supplemental_source_count"], 160)
+            self.assertEqual(result.summary["source_record_id_filter_count"], 160)
+            self.assertEqual(result.summary["source_delta_input"]["source_delta_count"], 160)
+            self.assertEqual(plan["supplemental_source_count"], 160)
+            self.assertEqual(plan["source_record_id_filter_count"], 160)
+            self.assertEqual(plan["source_delta_input"]["source_delta_count"], 160)
 
     def test_run_batch_downloads_passes_batches_and_forwards_source_ids(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         calls: list[set[str]] = []
 
         def fake_downloader(**kwargs):  # noqa: ANN003
@@ -215,7 +223,7 @@ class BatchTests(unittest.TestCase):
             self.assertEqual([len(call) for call in calls], [2, 1])
 
     def test_run_batch_downloads_forwards_source_delta_inputs_to_child_downloads(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
         source_delta_ids = {
             source.source_record_id for source in register.source_delta_sources
@@ -268,8 +276,8 @@ class BatchTests(unittest.TestCase):
             self.assertTrue(result.summary["all_passed"])
             self.assertEqual(result.summary["passed_batch_count"], 1)
             self.assertEqual(len(calls), 1)
-            self.assertEqual(len(calls[0]["supplemental_sources"]), 159)
-            self.assertEqual(calls[0]["source_delta_input"]["source_delta_count"], 159)
+            self.assertEqual(len(calls[0]["supplemental_sources"]), 160)
+            self.assertEqual(calls[0]["source_delta_input"]["source_delta_count"], 160)
             self.assertEqual(calls[0]["host_filter"], "federalregister.gov")
             self.assertEqual(
                 {
@@ -281,7 +289,7 @@ class BatchTests(unittest.TestCase):
             )
 
     def test_run_batch_downloads_summarizes_manifest_evidence(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
 
         def fake_downloader(**kwargs):  # noqa: ANN003
             run_id = kwargs["run_id"]
@@ -347,7 +355,7 @@ class BatchTests(unittest.TestCase):
             self.assertEqual(ledger["batches"][0]["browser_compatible_user_agent_count"], 1)
 
     def test_run_batch_downloads_stops_on_failed_gate(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         calls = 0
 
         def fake_downloader(**kwargs):  # noqa: ANN003

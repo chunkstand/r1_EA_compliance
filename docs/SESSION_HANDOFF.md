@@ -5,6 +5,101 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 2 Capture And Catalog Cutover
+
+This implementation slice completes the Phase 2 runtime cutover from the
+legacy workbook contract to the canonical source register.
+
+- scope:
+  `config/downloader.toml`,
+  `config/upstream_evaluation_v1.json`,
+  `config/fixtures/upstream_eval/capture/canonical_source_delta_reintroduction_blocked.json`,
+  `src/usfs_r1_ea_sources/workbook.py`,
+  `src/usfs_r1_ea_sources/dry_run.py`,
+  `src/usfs_r1_ea_sources/preflight.py`,
+  `src/usfs_r1_ea_sources/download.py`,
+  `src/usfs_r1_ea_sources/batches.py`,
+  `src/usfs_r1_ea_sources/catalog.py`,
+  `src/usfs_r1_ea_sources/cli_capture.py`,
+  `src/usfs_r1_ea_sources/upstream_evaluation.py`,
+  `tests/test_source_register_loader.py`,
+  `tests/test_dry_run.py`,
+  `tests/test_preflight.py`,
+  `tests/test_download.py`,
+  `tests/test_batches.py`,
+  `tests/test_catalog.py`,
+  `tests/test_pilots.py`,
+  `tests/test_overrides.py`,
+  `tests/test_r1_forest_plan_document_register.py`,
+  `tests/test_upstream_evaluation.py`,
+  `tests/test_cli.py`,
+  `tests/test_adapters_report.py`,
+  `tests/test_extract.py`,
+  `tests/test_extraction_accuracy.py`,
+  `README.md`,
+  `DOWNLOADER_RULES.md`,
+  `AGENTS.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- resolved boundary:
+  active `dry-run`, `preflight`, `download`, `batch-download`, and
+  `catalog-build` calls now resolve through
+  `loader_contract = "source_register_v1"` against
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`.
+- canonical-ledger truth:
+  `Document_Register_Master` is now the sole active source-row table. Active
+  `source_register_v1` runs reject
+  `--r1-forest-plan-register ... --source-delta-only`, and the preserved
+  Region 1 source-delta register is now a `legacy_v0` comparison surface only.
+- URL provenance truth:
+  the legacy `config/url_overrides.toml` registry no longer applies to active
+  canonical runs. Canonical rows must carry the active official URL directly
+  in the workbook until a governed canonical override surface exists.
+- direct-eval truth:
+  upstream evaluation now requires `12` categories and `24` cases after adding
+  `canonical_source_delta_reintroduction_blocked`, which proves that active
+  canonical runs reject the legacy mixed-ledger lane while explicit
+  `legacy_v0` replay still exposes it as a controlled violation.
+- live gate artifact:
+  the first isolated canonical-register-driven catalog gate now lives at
+  `source_library/runs/canonical-source-register-phase2-catalog-gate-20260518/catalog_gate/`
+  as `source-set-ae989382c52344db` with `635` planned rows, `635` unique URLs,
+  zero artifacts, and `catalog_validation.json` passing.
+- live capture evidence:
+  `phase2-canonical-dry-run-20260518` passes with `635` planned rows and zero
+  duplicates or exclusions. `phase2-canonical-preflight-20260518` passes its
+  validation gate over the first `25` canonical rows while surfacing `18`
+  live non-ready URLs and `7` `preflight_ok` rows.
+- residual note:
+  opportunistic replay of `tests/test_captured_library.py` still fails against
+  the current local `source_library/catalog` state because that suite assumes a
+  historical combined legacy batch baseline (`artifact_count=319` plus merged
+  `download_batch_run_ids`). It was not used as a Phase 2 closeout gate and no
+  test weakening was applied.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_loader.py tests/test_dry_run.py tests/test_preflight.py tests/test_download.py tests/test_batches.py tests/test_catalog.py tests/test_pilots.py tests/test_overrides.py tests/test_r1_forest_plan_document_register.py tests/test_upstream_evaluation.py tests/test_cli.py tests/test_architecture_contract.py -q`
+  passed with `126` tests;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_validate_run.py tests/test_extract.py tests/test_extraction_accuracy.py tests/test_adapters_report.py -q`
+  passed with `46` tests and `2` subtests;
+  `PYTHONPATH=src python - <<'PY' ...`
+  produced live canonical verification artifacts:
+  `source-register-validate` passed with `13` sheets, `635` load rows, `51`
+  queue rows, and `2` removed rows;
+  `phase2-canonical-dry-run-20260518` passed with `635` planned rows;
+  `phase2-canonical-preflight-20260518` passed with `25` checked rows and
+  `validation_passed=true`;
+  `source_library/runs/canonical-source-register-phase2-catalog-gate-20260518/catalog_gate/`
+  passed as `source-set-ae989382c52344db`; and
+  `source_library/evaluations/upstream/upstream_evaluation_results.json`
+  passed with `required_category_count=12` and `matched_case_count=24`.
+- next routing:
+  Phase 3 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is now the
+  next executable packet: authority-currentness, supersession, and
+  source-partition rebase on top of the canonical register.
+
 ## Canonical Source Register Refoundation Phase 1.5 Alignment Closeout
 
 This docs-only alignment pass closes the remaining Phase 1.5 routing and

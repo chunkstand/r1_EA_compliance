@@ -71,7 +71,7 @@ artifacts when the answer depends on live state.
 
 ## Important Paths
 
-- Active workbook: `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`
+- Active workbook: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
 - Source code: `src/usfs_r1_ea_sources/`
 - Tests: `tests/`
 - Configuration and eval seeds: `config/`
@@ -84,15 +84,19 @@ not stage it unless the user explicitly changes the repository policy.
 
 ## Workbook And Corpus Rules
 
-- The workbook is the contract. Default ingest-driving sheets are `Ingest_Checklist` and
-  `R1_Forest_Plans`.
-- `Scope_Exclusions` is a hard blocklist. Do not download excluded URLs unless the user explicitly
-  approves a documented override.
+- The workbook is the contract. The active default ingest-driving table is
+  `Document_Register_Master`.
+- `Direct_File_Capture_Queue`, `Removed_Not_Applicable_Final`, and workbook audit sheets are not
+  default download targets.
+- `Scope_Exclusions` remains a hard blocklist for the preserved legacy workbook contract. Do not
+  download excluded URLs unless the user explicitly approves a documented override.
 - Read URLs from workbook cells. Do not use regex extraction from text exports.
 - Preserve one manifest/catalog row per workbook source row. Do not collapse rows only because they
   share a URL or artifact.
-- Manual URL repairs must go through `config/url_overrides.toml` and preserve original URL,
-  effective URL, override reason, and source record ID.
+- Manual URL repairs for the legacy workbook must go through `config/url_overrides.toml` and
+  preserve original URL, effective URL, override reason, and source record ID. Under the active
+  canonical register contract, repaired URLs must be represented directly in the workbook until a
+  governed canonical override surface exists.
 - Treat live web reachability as evidence gathering, not a simple `200 OK` check. Challenge pages,
   not-found bodies, empty bodies, unsupported content types, and blocked pages must not count as
   successful downloads.
@@ -145,10 +149,10 @@ git diff --check
 Representative workflow commands:
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources dry-run --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library
-PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --limit 10
+PYTHONPATH=src python -m usfs_r1_ea_sources dry-run --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --limit 10
 PYTHONPATH=src python -m usfs_r1_ea_sources validate-run --output-dir source_library --run-id <run-id>
-PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --output-dir source_library --batch-run-id <batch-run-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --batch-run-id <batch-run-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id <review-id>
 ```
 

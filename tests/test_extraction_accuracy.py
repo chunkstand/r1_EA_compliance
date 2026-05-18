@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 import hashlib
 import json
@@ -7,7 +8,7 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.catalog import build_review_catalog
-from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.extract import build_extraction
 from usfs_r1_ea_sources.extraction_accuracy import run_extraction_accuracy_audit
 
@@ -17,9 +18,17 @@ WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.
 CONFIG = ROOT / "config" / "downloader.toml"
 
 
+def legacy_config():
+    config = load_config(CONFIG)
+    return replace(
+        config,
+        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
+    )
+
+
 class ExtractionAccuracyAuditTests(unittest.TestCase):
     def test_audit_passes_generated_html_extraction(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(output_dir, artifact_body=_html_body())
@@ -38,7 +47,7 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
             self.assertTrue(result.output_path.exists())
 
     def test_audit_fails_when_chunk_text_no_longer_matches_offsets(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(output_dir, artifact_body=_html_body())
@@ -67,7 +76,7 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
             self.assertFalse(check["passed"])
 
     def test_audit_blocks_reused_extraction_when_contract_requires_direct_parse(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(output_dir, artifact_body=_html_body())
@@ -124,7 +133,7 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
             self.assertFalse(check["passed"])
 
     def test_audit_ignores_partial_overlap_with_direct_extraction_contract(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(output_dir, artifact_body=_html_body())

@@ -12,7 +12,11 @@ from .download import run_download
 from .records import WorkbookSource, slugify
 from .report import build_run_report
 from .validate_run import validate_run
-from .workbook import load_canonical_sources, merge_supplemental_sources
+from .workbook import (
+    ensure_supplemental_sources_allowed,
+    load_canonical_sources,
+    merge_supplemental_sources,
+)
 
 
 @dataclass(frozen=True)
@@ -40,6 +44,10 @@ def build_batch_plan(
     if batch_size < 1:
         raise ValueError("batch_size must be at least 1")
     workbook_sources = load_canonical_sources(workbook_path, config.workbook)
+    ensure_supplemental_sources_allowed(
+        config.workbook,
+        supplemental_sources=supplemental_sources,
+    )
     sources = merge_supplemental_sources(workbook_sources, supplemental_sources)
     if source_record_ids is not None:
         available_source_ids = {source.source_record_id for source in sources}

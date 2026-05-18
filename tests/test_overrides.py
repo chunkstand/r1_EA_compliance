@@ -226,6 +226,10 @@ reason = "Unit test repair"
     )
     config_text = BASE_CONFIG.read_text(encoding="utf-8")
     config_text = config_text.replace(
+        'loader_contract = "source_register_v1"',
+        'loader_contract = "legacy_v0"',
+    )
+    config_text = config_text.replace(
         'overrides_path = "config/url_overrides.toml"',
         f'overrides_path = "{override_path}"',
     )

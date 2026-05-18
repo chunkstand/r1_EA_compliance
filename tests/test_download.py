@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 import hashlib
 import json
 import tempfile
 import unittest
 
-from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.download import (
     DownloadFetchResult,
     _classify_download_response,
@@ -19,6 +20,14 @@ from usfs_r1_ea_sources.download import (
 ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
+
+
+def legacy_config():
+    config = load_config(CONFIG)
+    return replace(
+        config,
+        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
+    )
 
 
 def downloaded_result(url: str) -> DownloadFetchResult:
@@ -78,7 +87,7 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(_content_type_for_suffix(".zip"), "application/zip")
 
     def test_download_writes_artifacts_hashes_and_preserves_duplicate_url_rows(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         fetcher = FakeDownloader()
 
         with tempfile.TemporaryDirectory() as tmp:
@@ -121,7 +130,7 @@ class DownloadTests(unittest.TestCase):
             self.assertTrue(validation["passed"])
 
     def test_download_reuses_existing_artifact_without_fetching_on_resume(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
 
         with tempfile.TemporaryDirectory() as tmp:
             first_fetcher = FakeDownloader()
@@ -156,7 +165,7 @@ class DownloadTests(unittest.TestCase):
             self.assertTrue(record["artifact_sha256"])
 
     def test_download_refetches_when_existing_artifact_is_invalid(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
 
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -192,7 +201,7 @@ class DownloadTests(unittest.TestCase):
             self.assertGreaterEqual(second_record["artifact_byte_size"], 128)
 
     def test_download_does_not_write_artifact_for_challenge_page(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         challenge_url = (
             "https://uscode.house.gov/view.xhtml?path=/prelim@title42/chapter55&edition=prelim"
         )
@@ -218,7 +227,7 @@ class DownloadTests(unittest.TestCase):
             self.assertIn("challenge_page", result.failures_path.read_text(encoding="utf-8"))
 
     def test_download_classifies_document_not_found_body_as_not_found(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
 
         result = _classify_download_response(
             http_status=200,
@@ -235,7 +244,7 @@ class DownloadTests(unittest.TestCase):
         self.assertFalse(result.validation["passed"])
 
     def test_download_duplicate_content_reuses_canonical_artifact(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         same_body = b"<html><body>same captured content</body></html>" + b" " * 128
 
         def same_content_fetcher(url, network, validation):  # noqa: ANN001

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from contextlib import closing
+from dataclasses import replace
 from pathlib import Path
 import hashlib
 import json
@@ -9,7 +10,10 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.catalog import build_review_catalog
-from usfs_r1_ea_sources.config import load_config
+from usfs_r1_ea_sources.config import (
+    LEGACY_WORKBOOK_LOADER_CONTRACT,
+    load_config,
+)
 from usfs_r1_ea_sources.forest_plan_inventory_build_manifest import (
     load_region1_forest_plan_inventory_build_manifest,
 )
@@ -18,9 +22,18 @@ from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
+CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
+LEGACY_WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 R1_FOREST_PLAN_REGISTER = ROOT / "config" / "r1_forest_plan_document_register_draft.csv"
+
+
+def legacy_config():
+    config = load_config(CONFIG)
+    return replace(
+        config,
+        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
+    )
 
 
 class CatalogTests(unittest.TestCase):
@@ -28,7 +41,7 @@ class CatalogTests(unittest.TestCase):
         config = load_config(CONFIG)
         with tempfile.TemporaryDirectory() as tmp:
             result = build_review_catalog(
-                workbook_path=WORKBOOK,
+                workbook_path=CANONICAL_WORKBOOK,
                 output_dir=Path(tmp),
                 config=config,
                 config_path=CONFIG,
@@ -42,31 +55,34 @@ class CatalogTests(unittest.TestCase):
             records = _read_jsonl(result.source_catalog_path)
             manifest = json.loads(result.source_set_manifest_path.read_text(encoding="utf-8"))
 
-            self.assertEqual(len(records), 190)
-            self.assertEqual(manifest["source_count"], 190)
-            self.assertEqual(manifest["unique_url_count"], 172)
-            self.assertEqual(manifest["status_counts"], {"planned": 190})
-            self.assertEqual(result.summary["source_count"], 190)
-            self.assertGreater(result.summary["review_topic_count"], 200)
+            self.assertEqual(len(records), 635)
+            self.assertEqual(manifest["source_count"], 635)
+            self.assertEqual(manifest["unique_url_count"], 635)
+            self.assertEqual(manifest["status_counts"], {"planned": 635})
+            self.assertIsNone(manifest["overrides_path"])
+            self.assertIsNone(manifest["overrides_sha256"])
+            self.assertEqual(result.summary["source_count"], 635)
+            self.assertGreater(result.summary["review_topic_count"], 0)
             self.assertTrue(result.summary["validation_passed"])
             self.assertTrue(result.validation_path.exists())
             validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
             self.assertTrue(validation["passed"])
 
-            r1ea001 = next(record for record in records if record["source_record_id"] == "R1EA-001")
-            self.assertEqual(r1ea001["document_role"], "law")
-            self.assertEqual(r1ea001["authority_level"], "federal")
-            self.assertEqual(r1ea001["source_status"], "planned")
-            self.assertEqual(r1ea001["source_partition"], "candidate_blocked_source")
+            fed001 = next(record for record in records if record["source_record_id"] == "FED-001")
+            self.assertEqual(fed001["document_role"], "law")
+            self.assertEqual(fed001["authority_level"], "federal")
+            self.assertEqual(fed001["source_status"], "planned")
+            self.assertEqual(fed001["source_partition"], "candidate_blocked_source")
             self.assertEqual(
-                r1ea001["source_partition_basis"],
+                fed001["source_partition_basis"],
                 "blocked_or_unavailable_status:planned",
             )
-            self.assertTrue(r1ea001["review_topics"])
+            self.assertTrue(fed001["review_topics"])
             self.assertEqual(
                 manifest["source_partition_counts"],
-                {"candidate_blocked_source": 190},
+                {"candidate_blocked_source": 635},
             )
+            self.assertNotIn("source_document", manifest["document_role_counts"])
 
             with closing(sqlite3.connect(result.sqlite_path)) as connection:
                 source_count = connection.execute("SELECT count(*) FROM sources").fetchone()[0]
@@ -76,19 +92,34 @@ class CatalogTests(unittest.TestCase):
                     "SELECT count(*) FROM sources WHERE source_partition = ?",
                     ("candidate_blocked_source",),
                 ).fetchone()[0]
-            self.assertEqual(source_count, 190)
-            self.assertGreater(topic_count, 200)
-            self.assertEqual(citation_count, 190)
-            self.assertEqual(partition_count, 190)
+            self.assertEqual(source_count, 635)
+            self.assertGreater(topic_count, 0)
+            self.assertEqual(citation_count, 635)
+            self.assertEqual(partition_count, 635)
+
+    def test_build_review_catalog_rejects_legacy_source_delta_when_canonical_loader_active(self) -> None:
+        config = load_config(CONFIG)
+        register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(ValueError, "sole active source ledger"):
+                build_review_catalog(
+                    workbook_path=CANONICAL_WORKBOOK,
+                    output_dir=Path(tmp),
+                    config=config,
+                    config_path=CONFIG,
+                    supplemental_sources=register.source_delta_sources,
+                    source_delta_input=register.summary(),
+                )
 
     def test_build_review_catalog_links_download_manifest_artifact(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(output_dir, "unit-download")
 
             result = build_review_catalog(
-                workbook_path=WORKBOOK,
+                workbook_path=LEGACY_WORKBOOK,
                 output_dir=output_dir,
                 config=config,
                 config_path=CONFIG,
@@ -116,7 +147,7 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(link_count, 1)
 
     def test_build_review_catalog_links_batch_download_manifests(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             manifest_001 = _write_download_run(
@@ -142,7 +173,7 @@ class CatalogTests(unittest.TestCase):
             )
 
             result = build_review_catalog(
-                workbook_path=WORKBOOK,
+                workbook_path=LEGACY_WORKBOOK,
                 output_dir=output_dir,
                 config=config,
                 config_path=CONFIG,
@@ -176,7 +207,7 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(batch_id, "unit-batches")
 
     def test_build_review_catalog_accepts_r1_forest_plan_source_delta_batch(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
         source_id = "R1PLAN-beaverhead-deerlodge-nf-03"
         source_delta_ids = {
@@ -194,7 +225,7 @@ class CatalogTests(unittest.TestCase):
             _write_batch_run(output_dir, "unit-r1-delta-batches", [("unit-r1-delta-batch-001", manifest_path)])
 
             result = build_review_catalog(
-                workbook_path=WORKBOOK,
+                workbook_path=LEGACY_WORKBOOK,
                 output_dir=output_dir,
                 config=config,
                 config_path=CONFIG,
@@ -229,12 +260,12 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(primary_record["document_role"], "forest_plan")
 
     def test_build_review_catalog_merges_canonical_and_source_delta_batch_runs(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
         source_id = "R1PLAN-beaverhead-deerlodge-nf-03"
         canonical_source_ids = [
             source.source_record_id
-            for source in load_canonical_sources(WORKBOOK, config.workbook)
+            for source in load_canonical_sources(LEGACY_WORKBOOK, config.workbook)
         ]
         source_delta_ids = [
             source.source_record_id for source in register.source_delta_sources
@@ -266,7 +297,7 @@ class CatalogTests(unittest.TestCase):
             archive_dir = output_dir / "runs" / "unit-merged-gate" / "catalog_gate"
 
             result = build_review_catalog(
-                workbook_path=WORKBOOK,
+                workbook_path=LEGACY_WORKBOOK,
                 output_dir=output_dir,
                 config=config,
                 config_path=CONFIG,
@@ -333,7 +364,7 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(link_count, 350)
 
     def test_build_review_catalog_validation_fails_for_duplicate_sources_across_batch_runs(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             first_manifest_path = _write_download_run(
@@ -358,7 +389,7 @@ class CatalogTests(unittest.TestCase):
             )
 
             result = build_review_catalog(
-                workbook_path=WORKBOOK,
+                workbook_path=LEGACY_WORKBOOK,
                 output_dir=output_dir,
                 config=config,
                 config_path=CONFIG,
@@ -375,7 +406,7 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(check["details"]["duplicate_source_record_ids"], ["R1EA-001"])
 
     def test_build_review_catalog_validation_fails_when_merged_batch_runs_leave_rows_uncovered(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -403,7 +434,7 @@ class CatalogTests(unittest.TestCase):
             )
 
             result = build_review_catalog(
-                workbook_path=WORKBOOK,
+                workbook_path=LEGACY_WORKBOOK,
                 output_dir=output_dir,
                 config=config,
                 config_path=CONFIG,
@@ -422,13 +453,13 @@ class CatalogTests(unittest.TestCase):
             self.assertGreater(check["details"]["not_in_run_count"], 300)
 
     def test_build_review_catalog_validation_fails_for_unknown_manifest_source(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             _write_download_run(output_dir, "unit-download", source_record_id="UNKNOWN-001")
 
             result = build_review_catalog(
-                workbook_path=WORKBOOK,
+                workbook_path=LEGACY_WORKBOOK,
                 output_dir=output_dir,
                 config=config,
                 config_path=CONFIG,
@@ -442,7 +473,7 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(check["details"]["unknown_source_record_ids"], ["UNKNOWN-001"])
 
     def test_build_review_catalog_validation_fails_for_unknown_batch_manifest_source(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             manifest_path = _write_download_run(
@@ -453,7 +484,7 @@ class CatalogTests(unittest.TestCase):
             _write_batch_run(output_dir, "unit-batches", [("unit-batch-unknown-001", manifest_path)])
 
             result = build_review_catalog(
-                workbook_path=WORKBOOK,
+                workbook_path=LEGACY_WORKBOOK,
                 output_dir=output_dir,
                 config=config,
                 config_path=CONFIG,
@@ -467,7 +498,7 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(check["details"]["unknown_source_record_ids"], ["UNKNOWN-001"])
 
     def test_build_review_catalog_validation_fails_for_batch_ledger_row_mismatch(self) -> None:
-        config = load_config(CONFIG)
+        config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             manifest_path = _write_download_run(
@@ -482,7 +513,7 @@ class CatalogTests(unittest.TestCase):
             ledger_path.write_text(json.dumps(ledger, sort_keys=True), encoding="utf-8")
 
             result = build_review_catalog(
-                workbook_path=WORKBOOK,
+                workbook_path=LEGACY_WORKBOOK,
                 output_dir=output_dir,
                 config=config,
                 config_path=CONFIG,
