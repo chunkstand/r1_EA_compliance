@@ -93,6 +93,12 @@ class SourceRegisterSchemaTests(unittest.TestCase):
         source_id_column = headers["Source_ID"]
         source_url_column = headers["Source_URL"]
         expected_urls = {
+            "FED-042": "https://www.archives.gov/federal-register/codification/executive-order/11988.html",
+            "FED-041": "https://www.govinfo.gov/content/pkg/FR-1999-02-08/html/99-3184.htm",
+            "FED-039": "https://www.govinfo.gov/content/pkg/FR-1996-05-29/html/96-13597.htm",
+            "FED-043": "https://www.archives.gov/federal-register/codification/executive-order/11990.html",
+            "FED-029": "https://uscode.house.gov/view.xhtml?path=/prelim@title16/chapter5A&edition=prelim",
+            "FPS-344": "https://www.federalregister.gov/d/2024-30342",
             "PROG-008": "https://www.fs.usda.gov/naturalresources/watershed/pubs/FS_National_Core_BMPs_April2012.pdf",
             "STP-015": "https://www.deq.idaho.gov/water-quality/surface-water/total-maximum-daily-loads/",
             "STP-011": "https://idfg.idaho.gov/species/",

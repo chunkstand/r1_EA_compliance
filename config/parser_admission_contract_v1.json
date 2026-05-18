@@ -59,8 +59,10 @@
       "route_id": "official_web_or_dynamic_source",
       "match": {
         "host_suffixes": [
+          "www.archives.gov",
           "www.ecfr.gov",
           "www.federalregister.gov",
+          "www.govinfo.gov",
           "uscode.house.gov",
           "www.fs.usda.gov",
           "ecos.fws.gov"

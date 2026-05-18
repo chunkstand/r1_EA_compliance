@@ -5,6 +5,62 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Federal Blocker Slice Checkpoint
+
+This implementation slice closes the routed repairable federal/challenge
+family and reduces the live Milestone 1 blocker surface again before the next
+full-master replay.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- implementation slice:
+  `config/parser_admission_contract_v1.json`,
+  `DOWNLOADER_RULES.md`,
+  `tests/test_source_register_loader.py`,
+  `tests/test_source_register_schema.py`,
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  the routed plan file.
+- workbook and parser evidence:
+  `Document_Register_Master` now carries `55` governed URL repairs total:
+  `45` earlier directive/USDA repairs,
+  `3` stale-URL repairs for `PROG-008`, `STP-015`, and `STP-011`,
+  `1` direct-artifact repair for `WILD-ESA-094`, and
+  `6` federal/challenge repairs for `FED-042`, `FED-041`, `FED-039`,
+  `FED-043`, `FED-029`, and `FPS-344`.
+  The active workbook SHA is now
+  `b1628b6a6db11d73ef20dcde027531fbc7654db236c3b38fb07f21ff30249fff`.
+  `config/parser_admission_contract_v1.json` now recognizes
+  `www.archives.gov` and `www.govinfo.gov` as official structured authority
+  hosts so the repaired federal rows stay on the structured-web path.
+- scoped replay evidence:
+  `phase2-canonical-preflight-federal-blocker-repair-validated-20260518`
+  completed with `6/6` `preflight_ok` and `failed_count=0` across
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, `FED-029`, and `FPS-344`.
+- active blocker surface:
+  the historical full-master replay
+  `phase2-canonical-preflight-full-repaired-20260518`
+  still records `28` failures, but the active unresolved blocker surface
+  before the next full-master rerun is now only the `6` residual
+  `www.usda.gov` timeout rows:
+  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and
+  `USDA-011`.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  passed with `issue_count=0`;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py tests/test_source_register_loader.py -q`
+  passed;
+  scoped replay above completed with `6/6` `preflight_ok`; and
+  `git diff --check`
+  passed.
+- next routing:
+  start the governed USDA transport/final-blocker closure packet for the `6`
+  residual timeout rows, then rerun the fresh full-master canonical preflight
+  before any full `download`, `batch-download`, or `catalog-build` for the
+  entire master sheet.
+
 ## Canonical Source Register Import Completion Milestone 1 Unsupported-Format Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after implementation

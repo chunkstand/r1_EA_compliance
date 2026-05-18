@@ -100,14 +100,21 @@ Local active import baseline on 2026-05-18:
   `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
   `preflight_ok` with `failed_count=0`.
 - The governed workbook repair lane is now live on the canonical master sheet.
-  `Document_Register_Master` now carries `49` governed URL repairs total:
+  `Document_Register_Master` now carries `55` governed URL repairs total:
   `45` earlier directive/USDA repairs,
-  `3` stale-URL repairs for `PROG-008`, `STP-015`, and `STP-011`, plus
-  `1` direct-artifact repair for `WILD-ESA-094` to the official JPG media
-  file. `source-register-validate` now passes with `issue_count=0` on workbook
-  SHA `f40d764ad2bf2f653459510d1021ad4134f85dccccb15ea30f75457a978d36eb`.
-- The live unsupported-format checkpoint for this lane is local commit
-  `cf2d5f6` (`Resolve unsupported-format canonical blocker slice`).
+  `3` stale-URL repairs for `PROG-008`, `STP-015`, and `STP-011`,
+  `1` direct-artifact repair for `WILD-ESA-094`, and
+  `6` federal/challenge repairs for `FED-042`, `FED-041`, `FED-039`,
+  `FED-043`, `FED-029`, and `FPS-344`.
+  `config/parser_admission_contract_v1.json` now also treats
+  `www.archives.gov` and `www.govinfo.gov` as official structured authority
+  hosts for this lane.
+  `source-register-validate` now passes with `issue_count=0` on workbook SHA
+  `b1628b6a6db11d73ef20dcde027531fbc7654db236c3b38fb07f21ff30249fff`.
+- The live federal-blocker checkpoint for this lane now builds on the earlier
+  unsupported-format implementation commit `cf2d5f6`
+  (`Resolve unsupported-format canonical blocker slice`) and closes the
+  repairable federal/challenge family before the remaining USDA transport lane.
 - Scoped repair replay
   `phase2-canonical-preflight-directives-repair-validated-20260518`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
@@ -132,6 +139,11 @@ Local active import baseline on 2026-05-18:
   failures are no longer active blocker rows for routing, but final
   confirmation still requires a fresh full-master replay after the remaining
   blocker families close.
+- Scoped federal replay
+  `phase2-canonical-preflight-federal-blocker-repair-validated-20260518`
+  now passes `6/6` `preflight_ok` with `failed_count=0` across the repaired
+  federal/challenge rows:
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, `FED-029`, and `FPS-344`.
 - A broader replay under
   `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
   was intentionally stopped after `105` finalized rows once a second blocker
@@ -176,17 +188,13 @@ Local active import baseline on 2026-05-18:
   `source_library/evaluations/upstream/upstream_evaluation_results.json`
   now reports `passed=true`, `case_count=38`, and `failed_case_ids=[]`.
 - Milestone 1 is still not resolved, but the active unresolved blocker surface
-  is now reduced from the historical `28`-row full replay to `12` rows before
-  the next full-master rerun:
-  `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029` remain
-  `not_found`;
-  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and `USDA-011`
-  still finalize as `timeout`; and
-  `FPS-344` still resolves to a `challenge_page`.
-- The next truthful slice is the governed remaining-blocker closure packet for
-  those `12` rows, then a fresh full-master canonical preflight replay before
-  any full `download`, `batch-download`, or `catalog-build` for the entire
-  master sheet.
+  is now reduced from the historical `28`-row full replay to the `6`
+  residual `www.usda.gov` timeout rows before the next full-master rerun:
+  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and `USDA-011`.
+- The next truthful slice is the governed USDA transport/final-blocker closure
+  packet for those `6` rows, then a fresh full-master canonical preflight
+  replay before any full `download`, `batch-download`, or `catalog-build` for
+  the entire master sheet.
 - The local non-strict `promotion-suite` artifact remains green only for the
   current-promotion lane: it reports `current_promotion_ready=true` and
   `promotion_ready=true`, but it also currently reports

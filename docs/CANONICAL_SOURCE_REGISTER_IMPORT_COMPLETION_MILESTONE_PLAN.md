@@ -1,7 +1,7 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 unsupported-format slice live at `cf2d5f6`)
+Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 federal-blocker slice live)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
 
@@ -42,11 +42,12 @@ Milestone 0 closeout summary on 2026-05-18:
 - With the live baseline now locked, the next executable slice in this packet
   is Milestone 1: canonical preflight and fetch-failure closure.
 
-Milestone 1 unsupported-format slice on 2026-05-18 after implementation
+Milestone 1 federal-blocker slice on 2026-05-18 after implementation
 commit `cf2d5f6` (`Resolve unsupported-format canonical blocker slice`), the
 earlier workbook repair slices, replay
-`phase2-canonical-preflight-full-repaired-20260518`, and the scoped
-unsupported-format direct-document validation set:
+`phase2-canonical-preflight-full-repaired-20260518`, the scoped
+unsupported-format direct-document validation set, and the scoped federal
+repair replay:
 
 - The first Milestone 1 code/config slice is now live: `ecos.fws.gov` uses
   host-level verified `curl` transport through `config/downloader.toml`,
@@ -60,13 +61,18 @@ unsupported-format direct-document validation set:
   `preflight_ok` with `failed_count=0` across the full `ecos.fws.gov`
   canonical-master host set.
 - The governed workbook repair lane is now live on the canonical master sheet.
-  `Document_Register_Master` now carries `49` governed URL repairs total:
+  `Document_Register_Master` now carries `55` governed URL repairs total:
   `45` earlier directive/USDA repairs,
-  `3` stale-URL repairs for `PROG-008`, `STP-015`, and `STP-011`, plus
-  `1` direct-artifact repair for `WILD-ESA-094` to the official JPG media
-  file.
+  `3` stale-URL repairs for `PROG-008`, `STP-015`, and `STP-011`,
+  `1` direct-artifact repair for `WILD-ESA-094`, and
+  `6` federal/challenge repairs for `FED-042`, `FED-041`, `FED-039`,
+  `FED-043`, `FED-029`, and `FPS-344`.
+- `config/parser_admission_contract_v1.json` now also treats
+  `www.archives.gov` and `www.govinfo.gov` as official structured authority
+  hosts so those repaired federal rows stay on the structured-web path rather
+  than falling through to generic fallback routing.
 - `source-register-validate` now passes with `issue_count=0` on workbook SHA
-  `f40d764ad2bf2f653459510d1021ad4134f85dccccb15ea30f75457a978d36eb`.
+  `b1628b6a6db11d73ef20dcde027531fbc7654db236c3b38fb07f21ff30249fff`.
 - Scoped repair replay
   `phase2-canonical-preflight-directives-repair-validated-20260518`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
@@ -117,6 +123,11 @@ unsupported-format direct-document validation set:
   `phase2-canonical-download-unsupported-format-replay-20260518`
   now finishes with `downloaded_count=8`, `failed_count=0`, and
   `status_counts={"downloaded": 8}`.
+- Scoped federal replay
+  `phase2-canonical-preflight-federal-blocker-repair-validated-20260518`
+  now passes `6/6` `preflight_ok` with `failed_count=0` across the repaired
+  federal/challenge rows:
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, `FED-029`, and `FPS-344`.
 - Archived scoped catalog gate
   `source_library/runs/phase2-canonical-catalog-unsupported-format-replay-20260518/catalog_gate/`
   is now live as source set `source-set-a0402de124943920` with
@@ -133,18 +144,14 @@ unsupported-format direct-document validation set:
   `source_library/evaluations/upstream/upstream_evaluation_results.json`
   now reports `passed=true`, `case_count=38`, and `failed_case_ids=[]`.
 - The historical full replay still records the `28` failed rows above, but the
-  active unresolved blocker surface is now reduced to `12` rows before the
-  next full-master rerun:
-  `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029` remain
-  `not_found`;
-  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and `USDA-011`
-  still finalize as `timeout`; and
-  `FPS-344` still resolves to a `challenge_page`.
+  active unresolved blocker surface is now reduced to the `6`
+  residual `www.usda.gov` timeout rows before the next full-master rerun:
+  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and `USDA-011`.
 - Milestone 1 is still not resolved. The next truthful slice is the governed
-  remaining-blocker closure packet for those `12` rows, then another fresh
-  full-master canonical preflight replay. Do not start full `download`,
-  `batch-download`, or `catalog-build` for the entire master sheet until those
-  remaining blocker families close or are explicitly accepted.
+  USDA transport/final-blocker closure packet for those `6` rows, then
+  another fresh full-master canonical preflight replay. Do not start full
+  `download`, `batch-download`, or `catalog-build` for the entire master sheet
+  until those remaining blocker families close or are explicitly accepted.
 
 ## Dependency And Live Refresh Rule
 

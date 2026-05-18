@@ -216,6 +216,10 @@ source_library/
 
 - eCFR and Federal Register pages may return challenge/interstitial pages. Detect and reject `unblock.federalregister.gov`.
 - For eCFR and Federal Register, prefer official structured export/API endpoints when normal HTML capture is blocked or unstable.
+- When historical Federal Register HTML/XML endpoints are blocked or missing,
+  `www.archives.gov` codification pages and `www.govinfo.gov` Federal Register
+  content pages are admissible official structured authority surfaces for
+  canonical workbook repairs.
 - For `ecos.fws.gov`, the downloader may use a host-level verified `curl`
   transport because the host currently serves an incomplete TLS chain to the
   Python/OpenSSL path in this environment. That transport must keep certificate

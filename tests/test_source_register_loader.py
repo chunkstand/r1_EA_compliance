@@ -80,6 +80,22 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     assert image_row.parser_admission_class == "direct_document"
     assert image_row.expected_parser == "image"
 
+    eo_row = rows["FED-042"]
+    assert eo_row.parser_admission_class == "structured_web_source"
+    assert eo_row.expected_parser == "html"
+
+    sacred_sites_row = rows["FED-039"]
+    assert sacred_sites_row.parser_admission_class == "structured_web_source"
+    assert sacred_sites_row.expected_parser == "html"
+
+    us_code_row = rows["FED-029"]
+    assert us_code_row.parser_admission_class == "structured_web_source"
+    assert us_code_row.expected_parser == "html"
+
+    challenge_repair_row = rows["FPS-344"]
+    assert challenge_repair_row.parser_admission_class == "structured_web_source"
+    assert challenge_repair_row.expected_parser == "html"
+
     forest_plan_row = rows["FPS-002"]
     assert forest_plan_row.authority_document_class_id == "forest_plan"
     assert forest_plan_row.jurisdiction_scope_id == "scope:region1-forest-unit"
