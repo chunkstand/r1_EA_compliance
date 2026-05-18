@@ -5,6 +5,33 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Plan Draft
+
+This routing note starts a fresh standalone follow-on packet for the remaining
+canonical import work after the resolved refoundation plan.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- live baseline:
+  the durable docs currently still describe active full-canonical truth around
+  `source-set-5e65d845ce77e1a0`, but the local active
+  `source_library/catalog/source_set_manifest.json` currently points at proving
+  source set `source-set-9dcf819bc4cca486`, and the local full-register Phase 2
+  gate under
+  `source_library/runs/canonical-source-register-phase2-catalog-gate-20260518/catalog_gate/`
+  is still planned-only with `source_count=635`, `artifact_count=0`, and
+  `candidate_blocked_source=635`.
+- import blocker baseline:
+  the local full-register dry run confirms `635` canonical master rows, while
+  the sampled Phase 2 preflight still records `18` `ssl_error` and `7`
+  `preflight_ok` across `25` checked URLs, dominated by `ecos.fws.gov` and
+  `www.fws.gov`.
+- next routing:
+  start with Milestone 0 in
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`.
+  Do not reopen `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  as a new phase.
+
 ## Canonical Source Register Refoundation Phase 8 Alignment Closeout
 
 This docs-only close-gaps pass aligns the resolved Phase 8 aggregate packet
