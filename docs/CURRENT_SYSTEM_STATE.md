@@ -16,6 +16,53 @@ historical lane notes when they disagree. In particular, older references to Sou
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
 
+## Canonical Source Register Phase 6 Applicability, Rule-Pack, And Legally Accurate Review
+
+Latest closeout on 2026-05-18:
+
+- Reviewer-facing authority explanation paths are now first-class compliance
+  review outputs. `compliance-review` writes
+  `source_library/reviews/<review_id>/authority_explanation_paths.json` and
+  threads authority-path classifications, retrieval traces, graph path IDs,
+  search-coverage certificate IDs, supporting source-record IDs, unresolved
+  issue refs, and residual legal-risk categories into
+  `compliance_review.json`, `compliance_matrix.json`,
+  `compliance_matrix.md`, and `compliance_matrix.pdf`.
+- The active reviewer-ready East Crazies review
+  `source_library/reviews/v1-cg-ecid-compliance-review/` was replayed through
+  the generated rule pack on `source-set-ba8d0feae79501b8`. The regenerated
+  review stays `reviewer_ready=true`, writes
+  `authority_explanation_paths.json`, and records `finding_count=37`,
+  `finding_path_count=37`, `all_findings_have_path_classification=true`, and
+  `all_applicable_findings_have_trace_evidence=true`.
+- `v1-ea-eval` now treats `authority_explanation_paths.json` as a required
+  broader-EA artifact. The live East Crazies gate passed at
+  `source_library/reviews/v1-cg-ecid-compliance-review/v1_ea_eval_results.json`
+  with `passed=true`, `broader_ea_passed=true`, `forest_plan_passed=true`,
+  `authority_explanation_path_count=37`, and
+  `authority_trace_coverage_rate=1.0`.
+- `compliance-review-eval` now enforces the explanation-path surface. The live
+  direct eval passed `5/5` at
+  `source_library/reviews/compliance_review_eval/compliance_review_eval_results.json`
+  with `authority_explanation_artifact_rate=1.0`,
+  `authority_path_classification_rate=1.0`, and
+  `authority_trace_coverage_rate=1.0`.
+- `applicability-eval` remains green on the same live reviewer-ready source
+  set at
+  `source_library/reviews/applicability_eval/applicability_eval_results.json`
+  with `9/9` cases passing, all `19` high-priority authority families covered
+  across positive and negative fixtures, and arbitration coverage still green
+  for positive/negative conflict, weak-positive-only, and template-specific
+  sufficiency cases.
+- The Phase 6 live reviewer verification is still routed through the active
+  East Crazies reviewer-ready lane rather than the canonical proving slice
+  `source-set-9dcf819bc4cca486`. That proving slice still carries governed
+  Phase 4 placeholder artifacts and therefore cannot yet prove
+  real-direct-document compliance review readiness.
+- The next routed implementation packet is Phase 7 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`: legally
+  defensible draft-document generation.
+
 ## Canonical Source Register Phase 5 Graph Accuracy, Provenance Completeness, And Knowledge-Graph Gating
 
 Latest closeout on 2026-05-18:

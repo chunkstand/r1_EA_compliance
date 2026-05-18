@@ -61,6 +61,9 @@ def build_compliance_matrix(
             "reviewer_ready": bool(summary.get("reviewer_ready")),
             "compliance_review_path": summary.get("compliance_review_path"),
             "compliance_validation_path": summary.get("compliance_validation_path"),
+            "authority_explanation_paths_path": summary.get(
+                "authority_explanation_paths_path"
+            ),
             "compliance_matrix_pdf_path": summary.get("compliance_matrix_pdf_path"),
             "authority_provenance_path": summary.get("authority_provenance_path"),
             "non_applicable_authority_appendix_path": summary.get(
@@ -112,10 +115,17 @@ def build_compliance_matrix(
             "candidate_authority_id",
             "applicability_decision_id",
             "candidate_authority_type",
+            "primary_authority_path_classification",
+            "authority_path_classifications",
             "status",
             "applicability_status",
             "applicability_mode",
+            "retrieval_trace_ids",
+            "graph_path_ids",
             "search_coverage_certificate_ids",
+            "supporting_source_record_ids",
+            "residual_risk_categories",
+            "unresolved_issue_refs",
             "human_adjudication_refs",
             "requirement",
             "ea_package_citation",
@@ -157,6 +167,11 @@ def matrix_markdown(matrix: dict) -> str:
             "- Non-applicable authorities source: "
             f"`{summary.get('non_applicable_authorities_path')}` "
             f"(`{summary.get('non_applicable_authority_count', 0)}` authorities)"
+        )
+    if summary.get("authority_explanation_paths_path"):
+        lines.append(
+            "- Authority explanation paths: "
+            f"`{summary.get('authority_explanation_paths_path')}`"
         )
     forest_plan_review = summary.get("forest_plan_review") or {}
     if forest_plan_review:
@@ -308,9 +323,22 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
         "candidate_authority_id": finding.get("candidate_authority_id"),
         "candidate_authority_type": finding.get("candidate_authority_type"),
         "applicability_decision_id": finding.get("applicability_decision_id"),
+        "primary_authority_path_classification": finding.get(
+            "primary_authority_path_classification"
+        ),
+        "authority_path_classifications": _strings(
+            finding.get("authority_path_classifications")
+        ),
+        "retrieval_trace_ids": _strings(finding.get("retrieval_trace_ids")),
+        "graph_path_ids": _strings(finding.get("graph_path_ids")),
         "search_coverage_certificate_ids": _strings(
             finding.get("search_coverage_certificate_ids")
         ),
+        "supporting_source_record_ids": _strings(
+            finding.get("supporting_source_record_ids")
+        ),
+        "residual_risk_categories": _strings(finding.get("residual_risk_categories")),
+        "unresolved_issue_refs": _strings(finding.get("unresolved_issue_refs")),
         "human_adjudication_refs": finding.get("human_adjudication_refs") or [],
         "question": finding.get("question"),
         "requirement": finding.get("requirement"),
@@ -473,6 +501,7 @@ def _evidence_support_cell(citation: str | None, evidence: dict) -> str:
 def _authority_basis_cell(row: dict, evidence: dict) -> str:
     family_ids = ", ".join(row.get("authority_family_ids") or []) or "none"
     citation = row.get("source_library_citation") or "No source citation recorded."
+    path_classes = ", ".join(row.get("authority_path_classifications") or []) or "none"
     parts = [
         str(citation),
         _truncate(str(evidence.get("title") or "Untitled authority source"), 100),
@@ -482,6 +511,7 @@ def _authority_basis_cell(row: dict, evidence: dict) -> str:
     if excerpt:
         parts.append(f"Authority text: {excerpt}")
     parts.append(f"Family: {_truncate(family_ids, 100)}")
+    parts.append(f"Path classes: {_truncate(path_classes, 100)}")
     return "<br>".join(parts)
 
 
@@ -499,6 +529,20 @@ def _trace_caveats_cell(row: dict) -> str:
     source_claims = row.get("source_claim_ids") or []
     if source_claims:
         parts.append("claims: " + _truncate(", ".join(str(value) for value in source_claims), 120))
+    trace_refs = _strings(row.get("retrieval_trace_ids")) + _strings(row.get("graph_path_ids"))
+    if trace_refs:
+        parts.append("traces: " + _truncate(", ".join(trace_refs), 140))
+    coverage_refs = _strings(row.get("search_coverage_certificate_ids"))
+    if coverage_refs:
+        parts.append("coverage: " + _truncate(", ".join(coverage_refs), 140))
+    risk_categories = _strings(row.get("residual_risk_categories"))
+    if risk_categories:
+        parts.append("risk: " + _truncate(", ".join(risk_categories), 140))
+    unresolved_issue_refs = _strings(row.get("unresolved_issue_refs"))
+    if unresolved_issue_refs:
+        parts.append(
+            "open issues: " + _truncate("; ".join(unresolved_issue_refs), 160)
+        )
     limitations = row.get("limitations") or []
     if limitations:
         parts.append("limitations: " + _truncate("; ".join(str(item) for item in limitations), 160))

@@ -1250,6 +1250,7 @@ writes:
 
 - `source_library/reviews/<review_id>/compliance_validation.json`
 - `source_library/reviews/<review_id>/compliance_review.json`
+- `source_library/reviews/<review_id>/authority_explanation_paths.json`
 - `source_library/reviews/<review_id>/compliance_matrix.json`
 - `source_library/reviews/<review_id>/compliance_matrix.md`
 - `source_library/reviews/<review_id>/compliance_matrix.pdf`
@@ -1285,8 +1286,12 @@ decision-support finding, EA record support, authority basis, and trace/caveat c
 Plan lane is present, the matrix also includes a separate `Forest Plan Compliance` table derived
 from component findings and applicable-standard coverage, so Forest Plan compliance is clearly
 separated from NEPA/generated-rule compliance. The full JSON matrix remains the stable traceability
-contract for evidence spans, source-claim IDs, limitations, citation requirements, and provenance
-fields. Every compliance review also renders `compliance_matrix.pdf` from the same matrix data.
+contract for evidence spans, source-claim IDs, limitations, citation requirements, provenance
+fields, authority-path classifications, retrieval/graph trace IDs, search-coverage certificate IDs,
+unresolved issue refs, and residual risk categories. Every compliance review also renders
+`compliance_matrix.pdf` from the same matrix data. The paired
+`authority_explanation_paths.json` sidecar is the governed review-time explanation contract for why
+an authority is controlling, interpretive, supporting, out-of-scope, adjudicated, or superseded.
 
 Run the final compliance review eval gate:
 
@@ -1301,7 +1306,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval \
 `compliance-review` command for each case, and scores the generated findings. It asserts expected
 statuses for every rule in the rule pack, claim types, package evidence, source-library evidence,
 source-claim links, expected source record IDs, expected source document roles, finding status
-counts, unsupported finding IDs, citation coverage, failure taxonomy, and finding-graph coverage.
+counts, unsupported finding IDs, citation coverage, authority-explanation artifact presence,
+authority-path classifications, trace/search-coverage support, failure taxonomy, and finding-graph
+coverage.
 Bad eval filters, unknown rule IDs, partial rule expectations, and mismatched status counts fail
 fast so typoed or incomplete fixtures cannot silently broaden scoring. The shipped default file
 `config/compliance_review_eval_seed.json` is a `compliance-review-eval-v1` contract with explicit

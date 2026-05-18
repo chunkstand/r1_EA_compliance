@@ -362,6 +362,7 @@ def _load_review_artifacts(review_dir: Path, require_forest_plan: bool) -> dict[
         "compliance_review": ("compliance_review.json", True, "json"),
         "compliance_matrix": ("compliance_matrix.json", True, "json"),
         "compliance_validation": ("compliance_validation.json", True, "json"),
+        "authority_explanation_paths": ("authority_explanation_paths.json", True, "json"),
         "package_chunks": ("package/package_chunks.jsonl", True, "jsonl"),
         "applicability_decisions": (
             "applicability/applicability_decisions.jsonl",
@@ -1132,6 +1133,7 @@ def _checks(
                 ],
             },
         },
+        _authority_explanation_paths_check(artifacts),
         {
             "name": "required_sections_detected",
             "passed": all(result["passed"] for result in section_results),
@@ -1167,6 +1169,57 @@ def _checks(
             "details": _check_counts(forest_plan_results),
         },
     ]
+
+
+def _authority_explanation_paths_check(artifacts: dict[str, Any]) -> dict[str, Any]:
+    payload = artifacts.get("authority_explanation_paths") or {}
+    summary = payload.get("summary") or {}
+    finding_rows = payload.get("finding_explanation_paths") or []
+    finding_rule_ids = {
+        str(finding.get("rule_id") or "")
+        for finding in (artifacts.get("compliance_review") or {}).get("findings", [])
+        if str(finding.get("rule_id") or "").strip()
+    }
+    explanation_rule_ids = {
+        str(row.get("rule_id") or "")
+        for row in finding_rows
+        if str(row.get("rule_id") or "").strip()
+    }
+    missing_rule_ids = sorted(finding_rule_ids - explanation_rule_ids)
+    classification_gaps = sorted(
+        str(row.get("rule_id") or "")
+        for row in finding_rows
+        if not row.get("authority_path_classifications")
+    )
+    trace_gaps = sorted(
+        str(row.get("rule_id") or "")
+        for row in finding_rows
+        if str(row.get("applicability_status") or "") != "not_applicable"
+        and not (row.get("retrieval_trace_ids") or row.get("graph_path_ids"))
+    )
+    passed = (
+        bool(summary.get("passed"))
+        and not missing_rule_ids
+        and not classification_gaps
+        and not trace_gaps
+    )
+    return {
+        "name": "authority_explanation_paths_ready",
+        "passed": passed,
+        "details": {
+            "path": artifacts.get("artifact_paths", {}).get("authority_explanation_paths"),
+            "finding_path_count": len(finding_rows),
+            "all_findings_have_path_classification": summary.get(
+                "all_findings_have_path_classification"
+            ),
+            "all_applicable_findings_have_trace_evidence": summary.get(
+                "all_applicable_findings_have_trace_evidence"
+            ),
+            "missing_rule_ids": missing_rule_ids,
+            "classification_gaps": classification_gaps,
+            "trace_gaps": trace_gaps,
+        },
+    }
 
 
 def _metrics(
@@ -1222,6 +1275,14 @@ def _metrics(
             sum(1 for result in rule_results if result["citation_requirements_met"]),
             len(rule_results),
         ),
+        "authority_explanation_path_count": len(
+            (artifacts.get("authority_explanation_paths") or {}).get(
+                "finding_explanation_paths",
+                [],
+            )
+        ),
+        "authority_explanation_path_rate": _authority_explanation_path_rate(artifacts),
+        "authority_trace_coverage_rate": _authority_trace_coverage_rate(artifacts),
         "conditional_expectation_count": len(conditional_results),
         "conditional_scored_count": len(conditional_scored),
         "conditional_adjudication_pending_count": sum(
@@ -1290,6 +1351,31 @@ def _metrics(
             "standard",
         ),
     }
+
+
+def _authority_explanation_path_rate(artifacts: dict[str, Any]) -> float:
+    payload = artifacts.get("authority_explanation_paths") or {}
+    rows = payload.get("finding_explanation_paths") or []
+    findings = (artifacts.get("compliance_review") or {}).get("findings", [])
+    return _rate(len(rows), len(findings))
+
+
+def _authority_trace_coverage_rate(artifacts: dict[str, Any]) -> float:
+    rows = (artifacts.get("authority_explanation_paths") or {}).get(
+        "finding_explanation_paths",
+        [],
+    )
+    applicable_rows = [
+        row for row in rows if str(row.get("applicability_status") or "") != "not_applicable"
+    ]
+    return _rate(
+        sum(
+            1
+            for row in applicable_rows
+            if row.get("retrieval_trace_ids") or row.get("graph_path_ids")
+        ),
+        len(applicable_rows),
+    )
 
 
 def _failure_category_counts(
@@ -1461,6 +1547,7 @@ def _eval_lanes(
         "rule_source_section_expectations_met",
         "conditional_source_expectations_met",
         "conditional_adjudication_policy_met",
+        "authority_explanation_paths_ready",
     ]
     broader_failed_checks = []
     for name in broader_check_names:

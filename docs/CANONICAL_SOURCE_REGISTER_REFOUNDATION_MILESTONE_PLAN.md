@@ -52,9 +52,19 @@ Current checkpoint on 2026-05-18:
   non-reviewer-ready because inherited Phase 4 placeholder artifacts continue
   to block extraction, retrieval, evidence-graph validation, and downstream
   reviewer lanes.
+- Phase 6 applicability, rule-pack, and legally accurate review is now live at
+  the review-contract boundary: `compliance-review` writes
+  `authority_explanation_paths.json`, the reviewer-facing matrix surfaces
+  authority-path classifications plus retrieval/graph/search coverage and risk
+  fields, `compliance-review-eval` enforces the new explanation-path artifact
+  and trace/classification coverage, and `v1-ea-eval` now treats that artifact
+  as a required broader-EA gate. Live green replay currently comes from the
+  active reviewer-ready East Crazies lane on `source-set-ba8d0feae79501b8`
+  because the canonical proving slice still carries Phase 4 placeholder
+  artifacts and cannot yet prove real-direct-document review readiness.
 - No full-register canonical ingestion may bypass the now-live Phase 1.5
-  proving gate, and the next implementation boundary is now Phase 6:
-  applicability, rule-pack, and legally accurate review on the new corpus.
+  proving gate, and the next implementation boundary is now Phase 7: legally
+  defensible draft-document generation.
 
 Owner context: This is a fresh standalone architecture and delivery plan for
 refounding the system around

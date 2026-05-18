@@ -10,6 +10,10 @@ from .compliance_authority_integration import (
     authority_integration_context as _authority_integration_context,
     write_authority_integration_artifacts as _write_authority_integration_artifacts,
 )
+from .compliance_explanation_paths import (
+    build_authority_explanation_context as _build_authority_explanation_context,
+    write_authority_explanation_artifact as _write_authority_explanation_artifact,
+)
 from .compliance_finding_graph import attach_forest_plan_graph as _attach_forest_plan_graph
 from .compliance_finding_graph import finding_graph as _finding_graph
 from .compliance_findings import DEFAULT_AUTHORITY_FAMILY_INVENTORY_PATH
@@ -49,6 +53,7 @@ class ComplianceReviewResult:
     compliance_matrix_pdf_path: Path
     compliance_matrix_render_manifest_path: Path
     compliance_validation_path: Path
+    authority_explanation_paths_path: Path
     authority_provenance_path: Path
     non_applicable_authority_appendix_path: Path
     non_applicable_authority_appendix_markdown_path: Path
@@ -118,6 +123,7 @@ def run_compliance_review(
         review_packet_index_dir / "compliance_matrix_render_manifest.json"
     )
     compliance_validation_path = review_dir / "compliance_validation.json"
+    authority_explanation_paths_path = review_dir / "authority_explanation_paths.json"
     authority_provenance_path = review_dir / "authority_family_provenance.json"
     non_applicable_authority_appendix_path = review_dir / "non_applicable_authority_appendix.json"
     non_applicable_authority_appendix_markdown_path = (
@@ -134,6 +140,7 @@ def run_compliance_review(
         compliance_matrix_pdf_path=compliance_matrix_pdf_path,
         compliance_matrix_render_manifest_path=compliance_matrix_render_manifest_path,
         compliance_validation_path=compliance_validation_path,
+        authority_explanation_paths_path=authority_explanation_paths_path,
         authority_provenance_path=authority_provenance_path,
         non_applicable_authority_appendix_path=non_applicable_authority_appendix_path,
         non_applicable_authority_appendix_markdown_path=non_applicable_authority_appendix_markdown_path,
@@ -225,6 +232,14 @@ def run_compliance_review(
         reviewer_resolution_report_path=reviewer_resolution_report_path,
         litigation_risk_summary_path=litigation_risk_summary_path,
     )
+    authority_explanation = _build_authority_explanation_context(
+        review_id=review_id,
+        source_set_id=source_set_id or str(ea_report["summary"].get("source_set_id") or ""),
+        findings=findings,
+        authority_integration=authority_integration,
+        authority_explanation_paths_path=authority_explanation_paths_path,
+    )
+    findings = authority_explanation["enriched_findings"]
     nodes, edges = _finding_graph(
         review_id=review_id,
         rule_pack=rule_pack,
@@ -247,6 +262,7 @@ def run_compliance_review(
         package_manifest_path=ea_result.package_manifest_path,
         package_chunks_path=ea_result.package_chunks_path,
         authority_integration=authority_integration,
+        authority_explanation=authority_explanation,
         findings=findings,
         nodes=nodes,
         edges=edges,
@@ -271,6 +287,7 @@ def run_compliance_review(
         forest_plan_result=forest_plan_result,
         applicability_gate=applicability_gate,
         authority_integration=authority_integration,
+        authority_explanation_paths_path=authority_explanation_paths_path,
         validation=validation,
         nodes=nodes,
         edges=edges,
@@ -297,6 +314,11 @@ def run_compliance_review(
     )
     _write_authority_integration_artifacts(
         context=authority_integration,
+        summary=summary,
+        validation=validation,
+    )
+    _write_authority_explanation_artifact(
+        context=authority_explanation,
         summary=summary,
         validation=validation,
     )
@@ -327,6 +349,7 @@ def run_compliance_review(
         compliance_matrix_pdf_path=compliance_matrix_pdf_path,
         compliance_matrix_render_manifest_path=compliance_matrix_render_manifest_path,
         compliance_validation_path=compliance_validation_path,
+        authority_explanation_paths_path=authority_explanation_paths_path,
         authority_provenance_path=authority_provenance_path,
         non_applicable_authority_appendix_path=non_applicable_authority_appendix_path,
         non_applicable_authority_appendix_markdown_path=non_applicable_authority_appendix_markdown_path,
@@ -350,6 +373,7 @@ def _prepare_outputs(
     compliance_matrix_pdf_path: Path,
     compliance_matrix_render_manifest_path: Path,
     compliance_validation_path: Path,
+    authority_explanation_paths_path: Path,
     authority_provenance_path: Path,
     non_applicable_authority_appendix_path: Path,
     non_applicable_authority_appendix_markdown_path: Path,
@@ -365,6 +389,7 @@ def _prepare_outputs(
         compliance_matrix_pdf_path,
         compliance_matrix_render_manifest_path,
         compliance_validation_path,
+        authority_explanation_paths_path,
         authority_provenance_path,
         non_applicable_authority_appendix_path,
         non_applicable_authority_appendix_markdown_path,

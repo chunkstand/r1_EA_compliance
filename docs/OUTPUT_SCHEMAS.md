@@ -2226,6 +2226,7 @@ The `compliance-review` command writes the base EA review outputs plus:
 
 - `compliance_validation.json`
 - `compliance_review.json`
+- `authority_explanation_paths.json`
 - `compliance_matrix.json`
 - `compliance_matrix.md`
 - `compliance_matrix.pdf`
@@ -2342,8 +2343,8 @@ record ID to be safe, unique, covered by at least one rule, and covered only by 
 - `applicability_gate`, with generated-pack validation, applicability validation,
   non-applicable-authority, search-coverage, provenance, and package-manifest gate paths/status
 - authority integration paths and summary counts for authority-family provenance,
-  non-applicable appendices, reviewer-resolution reporting, and deterministic litigation-risk
-  categories
+  non-applicable appendices, reviewer-resolution reporting, deterministic
+  litigation-risk categories, and authority explanation paths
 - validation
 - compliance findings
 
@@ -2355,6 +2356,9 @@ Each compliance finding includes:
 - candidate authority ID, applicability decision ID, candidate authority type, authority-family IDs,
   generated-applicability marker, search-coverage certificate IDs, and adjudication references when
   present
+- primary authority-path classification, authority-path classifications,
+  retrieval trace IDs, graph path IDs, supporting source-record IDs, freshness,
+  residual legal-risk categories, and unresolved issue refs when present
 - status: `pass`, `gap`, or `uncertain` for generated applicable rules; base diagnostic runs may
   still emit `not_applicable`
 - claim type: `supported_compliance_finding`, `package_evidence_gap`, or `no_compliance_claim`
@@ -2373,6 +2377,7 @@ Each compliance finding includes:
 - review ID, package path, source set, rule-pack summary, and matrix summary
 - status counts, applicability counts, applicable source records, claim row count, validation status,
   reviewer-ready status, PDF path, `applicability_gate`, authority integration paths,
+  `authority_explanation_paths.json`,
   `non_applicable_authorities.json`, `search_coverage_certificates.json`, and
   `forest_plan_review` links when present
 - row columns for authority, applicability, status, EA evidence, source evidence, source claims, and
@@ -2389,7 +2394,10 @@ Each matrix row includes:
 - rule ID, rule title, question, requirement, severity, status, claim type, confidence, and rationale
 - authority category, authority source record ID, authority document role, applicability mode,
   applicability status, candidate authority ID, applicability decision ID, authority-family IDs,
-  search-coverage certificate IDs, adjudication references, and applicability basis
+  search-coverage certificate IDs, adjudication references, primary
+  authority-path classification, authority-path classifications, retrieval
+  trace IDs, graph path IDs, supporting source-record IDs, residual risk
+  categories, unresolved issue refs, and applicability basis
 - applicability basis fields including source filters, package terms, conditional applicability
   terms, optional conditional applicability term groups, optional explicit non-applicability terms,
   source query, applied source record IDs, and applied source document roles
@@ -2419,6 +2427,24 @@ machine contract with the full compact evidence spans, claim IDs, and provenance
 Authority integration sidecars are generated for every compliance review. In diagnostic base-pack
 runs they are present but marked non-reviewer-ready through validation; in generated-pack runs they
 are required promotion artifacts.
+
+`authority_explanation_paths.json` has schema version
+`authority-explanation-paths-v0` and records:
+
+- review/source-set identity plus the paired `compliance_review.json`
+  and `compliance_matrix.json` context
+- summary counts for finding paths, path classifications, retrieval/graph trace
+  coverage, boundary-evidence coverage for non-applicable rows, and residual
+  risk category counts
+- `finding_explanation_paths` with one row per compliance finding, including
+  status, applicability status, primary and secondary authority-path
+  classifications, retrieval trace IDs, graph path IDs,
+  search-coverage certificate IDs, supporting source-record IDs,
+  adjudication refs, residual risk categories, and unresolved issue refs
+- `non_applicable_explanation_paths` for explicit non-applicability decision
+  explanations
+- `pending_resolution_paths` for unresolved reviewer/adjudication boundary rows
+- `adjudicated_authority_paths` for governed adjudicated explanation rows
 
 `authority_family_provenance.json` has schema version `authority-family-provenance-v0` and records:
 
@@ -3278,7 +3304,7 @@ from the generated pack are normalized as `not_applicable` for eval comparison, 
 coverage must still satisfy the declared minimum-finding contract without forcing omitted rules to
 appear as emitted findings.
 
-`compliance_review_eval_results.json` has schema version `compliance-review-eval-v0` and records:
+`compliance_review_eval_results.json` has schema version `compliance-review-eval-results-v1` and records:
 
 - eval file, output path, rule pack, source set, top-k values, and creation timestamp
 - eval ID, case count, passed count, failed count, hard-negative package case count,
@@ -3288,13 +3314,17 @@ appear as emitted findings.
 - gate checks for case pass/fail, coverage requirements, and metric thresholds
 - metrics for validation matching, reviewer-ready matching, status matching, claim-type matching,
   package evidence matching, source evidence matching, source-claim link matching, source-record
-  matching, source-document-role matching, citation coverage, graph coverage, unsupported finding
-  matching, unexpected-positive-finding rate, missing-required-source-rule rate, and zero-finding
-  rate
+  matching, source-document-role matching, citation coverage, graph coverage,
+  authority-explanation artifact rate, authority-path-classification rate,
+  authority-trace-coverage rate, unsupported finding matching,
+  unexpected-positive-finding rate, missing-required-source-rule rate, and
+  zero-finding rate
 - per-case generated review paths, expected and actual statuses, expected and actual claim types,
-  evidence mismatches, source-record mismatches, source-document-role mismatches, unsupported
-  finding IDs, validation failed checks, compact finding summaries, failure reasons, failure
-  taxonomy, compact reproduction paths, and pass/fail status
+  evidence mismatches, source-record mismatches, source-document-role mismatches,
+  unsupported finding IDs, validation failed checks, compact finding summaries,
+  authority explanation artifact paths, explanation/classification/trace support
+  flags, failure reasons, failure taxonomy, compact reproduction paths, and
+  pass/fail status
 
 ## V1 Real EA Review Eval Outputs
 
@@ -3307,6 +3337,7 @@ The `v1-ea-eval` command reads an existing real review directory. It does not cr
 fixtures or rerun `compliance-review`. The gate expects these review artifacts:
 
 - `compliance_review.json`
+- `authority_explanation_paths.json`
 - `compliance_matrix.json`
 - `compliance_validation.json`
 - `package/package_chunks.jsonl`
@@ -3383,10 +3414,14 @@ rule-section/source/document-role match rates, citation requirement match rate, 
 expectation match rate, conditional adjudication completion rate, accepted/missing/unexpected
 conditional adjudication counts, actual-applicable conditional source and section match rates,
 missing conditional expectation count, conditional false positive and false negative counts,
-forest-plan expectation match rate, reviewer-resolution item count, and standard reviewer-resolution
-item count. When component adjudication is present, the reviewer-resolution metrics use the
-adjudication-aware pending counts rather than the raw reviewer queue size, while the raw queue
-counts remain available as separate reviewer-resolution queue metrics.
+forest-plan expectation match rate, authority explanation path count, authority explanation path
+rate, authority trace coverage rate, reviewer-resolution item count, and standard
+reviewer-resolution item count. When component adjudication is present, the reviewer-resolution
+metrics use the adjudication-aware pending counts rather than the raw reviewer queue size, while the
+raw queue counts remain available as separate reviewer-resolution queue metrics. The broader-EA
+checks also fail closed when the required `authority_explanation_paths.json` artifact is missing,
+when a review finding lacks an explanation-path row, when a finding lacks a path classification, or
+when an applicable finding loses its trace evidence.
 
 ## Real Package Review Coverage Eval Outputs
 

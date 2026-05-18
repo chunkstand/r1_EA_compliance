@@ -214,6 +214,25 @@ class V1EAReviewEvalTests(unittest.TestCase):
                 ["R1PLAN-custer-gallatin-nf-02"],
             )
 
+    def test_v1_eval_fails_when_authority_explanation_paths_are_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            (review_dir / "authority_explanation_paths.json").unlink()
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            check = _summary_check(result.summary, "authority_explanation_paths_ready")
+            self.assertFalse(check["passed"])
+            self.assertIn("review_artifact_missing", result.summary["failure_category_counts"])
+
     def test_v1_eval_flags_conditional_false_negative_and_section_mismatch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -1223,6 +1242,45 @@ def _write_repair_baseline_failure_review(review_dir: Path) -> None:
         review_dir / "compliance_validation.json",
         {"schema_version": "compliance-validation-v0", "passed": True, "checks": []},
     )
+    _write_json(
+        review_dir / "authority_explanation_paths.json",
+        {
+            "schema_version": "authority-explanation-paths-v0",
+            "review_id": "v1-unit",
+            "source_set_id": "source-set-test",
+            "summary": {
+                "passed": True,
+                "finding_path_count": len(findings),
+                "all_findings_have_path_classification": True,
+                "all_applicable_findings_have_trace_evidence": True,
+                "all_non_applicable_paths_have_boundary_evidence": True,
+                "path_classification_counts": {
+                    "controlling": 3,
+                },
+                "risk_category_counts": {},
+            },
+            "finding_explanation_paths": [
+                {
+                    "authority_explanation_id": f"authority-explanation:{finding['rule_id']}",
+                    "rule_id": finding["rule_id"],
+                    "status": finding["status"],
+                    "applicability_status": finding["applicability_status"],
+                    "authority_path_classifications": finding[
+                        "authority_path_classifications"
+                    ],
+                    "primary_authority_path_classification": finding[
+                        "primary_authority_path_classification"
+                    ],
+                    "retrieval_trace_ids": finding["retrieval_trace_ids"],
+                    "graph_path_ids": finding["graph_path_ids"],
+                }
+                for finding in findings
+            ],
+            "non_applicable_explanation_paths": [],
+            "pending_resolution_paths": [],
+            "adjudicated_authority_paths": [],
+        },
+    )
 
 
 def _write_repair_baseline_eval_contract(root: Path, *, review_id: str) -> Path:
@@ -1452,6 +1510,52 @@ def _write_positive_review(review_dir: Path) -> None:
     _write_json(
         review_dir / "compliance_validation.json",
         {"schema_version": "compliance-validation-v0", "passed": True, "checks": []},
+    )
+    _write_json(
+        review_dir / "authority_explanation_paths.json",
+        {
+            "schema_version": "authority-explanation-paths-v0",
+            "review_id": "v1-unit",
+            "source_set_id": "source-set-test",
+            "summary": {
+                "passed": True,
+                "finding_path_count": len(findings),
+                "all_findings_have_path_classification": True,
+                "all_applicable_findings_have_trace_evidence": True,
+                "all_non_applicable_paths_have_boundary_evidence": True,
+                "path_classification_counts": {
+                    "controlling": len(findings),
+                },
+                "risk_category_counts": {},
+            },
+            "finding_explanation_paths": [
+                {
+                    "authority_explanation_id": f"authority-explanation:{finding['rule_id']}",
+                    "rule_id": finding["rule_id"],
+                    "status": finding["status"],
+                    "applicability_status": finding["applicability_status"],
+                    "authority_path_classifications": finding[
+                        "authority_path_classifications"
+                    ],
+                    "primary_authority_path_classification": finding[
+                        "primary_authority_path_classification"
+                    ],
+                    "retrieval_trace_ids": finding["retrieval_trace_ids"],
+                    "graph_path_ids": finding["graph_path_ids"],
+                    "search_coverage_certificate_ids": [],
+                    "supporting_source_record_ids": finding[
+                        "supporting_source_record_ids"
+                    ],
+                    "human_adjudication_refs": [],
+                    "residual_risk_categories": finding["residual_risk_categories"],
+                    "unresolved_issue_refs": finding["unresolved_issue_refs"],
+                }
+                for finding in findings
+            ],
+            "non_applicable_explanation_paths": [],
+            "pending_resolution_paths": [],
+            "adjudicated_authority_paths": [],
+        },
     )
     _write_json(
         review_dir / "forest_plan_context_summary.json",
@@ -1692,6 +1796,13 @@ def _finding(
         "authority_document_role": document_role,
         "package_evidence_citation": f"package:{rule_id}",
         "source_library_evidence_citation": f"source:{source_record_id}",
+        "authority_path_classifications": ["controlling"],
+        "primary_authority_path_classification": "controlling",
+        "retrieval_trace_ids": [f"retrieval:{rule_id}"],
+        "graph_path_ids": [f"graph:{rule_id}"],
+        "supporting_source_record_ids": [],
+        "residual_risk_categories": [],
+        "unresolved_issue_refs": [],
         "package_evidence": {
             "citation_label": f"package:{rule_id}",
             "title": "EA",
@@ -1725,6 +1836,15 @@ def _matrix_row(review_id: str, finding: dict) -> dict:
         "applicability_mode": finding["applicability_mode"],
         "authority_source_record_id": finding["authority_source_record_id"],
         "authority_document_role": finding["authority_document_role"],
+        "primary_authority_path_classification": finding[
+            "primary_authority_path_classification"
+        ],
+        "authority_path_classifications": finding["authority_path_classifications"],
+        "retrieval_trace_ids": finding["retrieval_trace_ids"],
+        "graph_path_ids": finding["graph_path_ids"],
+        "supporting_source_record_ids": finding["supporting_source_record_ids"],
+        "residual_risk_categories": finding["residual_risk_categories"],
+        "unresolved_issue_refs": finding["unresolved_issue_refs"],
         "ea_package_citation": finding["package_evidence_citation"],
         "ea_package_evidence": {
             "citation_label": finding["package_evidence_citation"],

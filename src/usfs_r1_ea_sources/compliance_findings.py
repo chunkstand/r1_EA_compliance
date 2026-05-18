@@ -93,7 +93,11 @@ def compliance_finding(
         "search_coverage_certificate_ids": strings(
             applicability.get("search_coverage_certificate_ids")
         ),
+        "retrieval_trace_ids": strings(applicability.get("retrieval_trace_ids")),
+        "graph_path_ids": strings(applicability.get("graph_path_ids")),
+        "supporting_source_record_ids": strings(rule.get("supporting_source_record_ids")),
         "human_adjudication_refs": applicability.get("human_adjudication_refs") or [],
+        "freshness": applicability.get("freshness") or {},
         "applicability_mode": rule.get("applicability_mode")
         or finding.get("applicability_mode"),
         "pre_review_applicability_mode": rule.get("pre_review_applicability_mode"),

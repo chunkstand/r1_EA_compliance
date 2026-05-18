@@ -36,6 +36,7 @@ def validation_report(
     package_manifest_path: Path,
     package_chunks_path: Path,
     authority_integration: dict,
+    authority_explanation: dict,
     findings: list[dict],
     nodes: list[dict],
     edges: list[dict],
@@ -86,6 +87,10 @@ def validation_report(
             findings,
             applicability_gate,
         ),
+        check_authority_explanation_paths(
+            authority_explanation,
+            applicability_gate,
+        ),
         check_non_applicable_authority_appendix(authority_integration),
         check_reviewer_resolution_report(authority_integration),
         check_litigation_risk_summary(authority_integration),
@@ -123,6 +128,7 @@ def compliance_summary(
     forest_plan_result,
     applicability_gate: dict,
     authority_integration: dict,
+    authority_explanation_paths_path: Path,
     validation: dict,
     nodes: list[dict],
     edges: list[dict],
@@ -188,6 +194,7 @@ def compliance_summary(
         "compliance_matrix_markdown_path": str(compliance_matrix_markdown_path),
         "compliance_matrix_pdf_path": str(compliance_matrix_pdf_path),
         "compliance_validation_path": str(compliance_validation_path),
+        "authority_explanation_paths_path": str(authority_explanation_paths_path),
         "authority_provenance_path": authority_integration.get("authority_provenance_path"),
         "non_applicable_authority_appendix_path": authority_integration.get(
             "non_applicable_authority_appendix_path"
@@ -308,6 +315,36 @@ def check_compliance_findings_have_applicability_provenance(
             "required": True,
             "finding_count": len(findings),
             "missing": missing,
+        },
+    }
+
+
+def check_authority_explanation_paths(
+    authority_explanation: dict,
+    applicability_gate: dict,
+) -> dict:
+    summary = authority_explanation.get("summary") or {}
+    path = authority_explanation.get("authority_explanation_paths_path")
+    return {
+        "name": "authority_explanation_paths_ready",
+        "passed": bool(summary.get("passed")),
+        "details": {
+            "mode": applicability_gate.get("mode"),
+            "generated_mode": bool(authority_explanation.get("generated_mode")),
+            "path": path,
+            "finding_path_count": summary.get("finding_path_count", 0),
+            "non_applicable_path_count": summary.get("non_applicable_path_count", 0),
+            "all_findings_have_path_classification": summary.get(
+                "all_findings_have_path_classification"
+            ),
+            "all_applicable_findings_have_trace_evidence": summary.get(
+                "all_applicable_findings_have_trace_evidence"
+            ),
+            "all_non_applicable_paths_have_boundary_evidence": summary.get(
+                "all_non_applicable_paths_have_boundary_evidence"
+            ),
+            "path_classification_counts": summary.get("path_classification_counts", {}),
+            "risk_category_counts": summary.get("risk_category_counts", {}),
         },
     }
 

@@ -211,6 +211,18 @@ def run_compliance_review_eval(
         ),
         "citation_coverage_rate": _case_rate(case_results, "citation_coverage_supported"),
         "graph_coverage_rate": _case_rate(case_results, "graph_coverage_supported"),
+        "authority_explanation_artifact_rate": _case_rate(
+            case_results,
+            "authority_explanation_artifact_present",
+        ),
+        "authority_path_classification_rate": _case_rate(
+            case_results,
+            "authority_path_classification_supported",
+        ),
+        "authority_trace_coverage_rate": _case_rate(
+            case_results,
+            "authority_trace_coverage_supported",
+        ),
         "unsupported_finding_match_rate": _case_rate(
             case_results,
             "unsupported_finding_ids_match",
@@ -841,6 +853,16 @@ def _compliance_review_eval_case_result(
     citation_coverage_supported = bool(selected_findings) and all(
         _finding_has_required_eval_citations(finding) for finding in selected_findings
     )
+    authority_explanation_path = summary.get("authority_explanation_paths_path")
+    authority_explanation_artifact_present = bool(
+        authority_explanation_path and Path(str(authority_explanation_path)).exists()
+    )
+    authority_path_classification_supported = (not selected_findings) or all(
+        _finding_has_authority_path_classification(finding) for finding in selected_findings
+    )
+    authority_trace_coverage_supported = diagnostic_base_rule_pack or (not selected_findings) or all(
+        _finding_has_graph_or_retrieval_trace(finding) for finding in selected_findings
+    )
     unexpected_positive_rule_ids = sorted(
         rule_id
         for rule_id, actual_status in (
@@ -869,6 +891,9 @@ def _compliance_review_eval_case_result(
         "unsupported_finding_ids_match": unsupported_finding_ids_match,
         "citation_coverage_supported": citation_coverage_supported,
         "graph_coverage_supported": graph_coverage_supported,
+        "authority_explanation_artifact_present": authority_explanation_artifact_present,
+        "authority_path_classification_supported": authority_path_classification_supported,
+        "authority_trace_coverage_supported": authority_trace_coverage_supported,
         "unexpected_positive_rules_absent": not unexpected_positive_rule_ids,
         "missing_required_source_rules_absent": not missing_required_source_rule_ids,
     }
@@ -902,6 +927,7 @@ def _compliance_review_eval_case_result(
         "compliance_matrix_markdown_path": str(result.compliance_matrix_markdown_path),
         "compliance_matrix_pdf_path": str(result.compliance_matrix_pdf_path),
         "compliance_validation_path": str(result.compliance_validation_path),
+        "authority_explanation_paths_path": authority_explanation_path,
         "finding_nodes_path": str(result.finding_nodes_path),
         "finding_edges_path": str(result.finding_edges_path),
         "source_top_k": source_top_k,
@@ -1098,6 +1124,18 @@ def _finding_has_required_eval_citations(finding: dict) -> bool:
     return True
 
 
+def _finding_has_authority_path_classification(finding: dict) -> bool:
+    return bool(finding.get("authority_path_classifications"))
+
+
+def _finding_has_graph_or_retrieval_trace(finding: dict) -> bool:
+    return bool(
+        finding.get("retrieval_trace_ids")
+        or finding.get("graph_path_ids")
+        or finding.get("search_coverage_certificate_ids")
+    )
+
+
 def _eval_finding_summary(finding: dict) -> dict:
     return {
         "rule_id": finding.get("rule_id"),
@@ -1108,6 +1146,10 @@ def _eval_finding_summary(finding: dict) -> dict:
         "source_claim_link_count": finding.get("source_claim_link_count", 0),
         "applied_source_record_ids": finding_source_record_ids(finding),
         "applied_source_document_roles": finding_source_document_roles(finding),
+        "authority_path_classifications": finding.get("authority_path_classifications") or [],
+        "retrieval_trace_ids": finding.get("retrieval_trace_ids") or [],
+        "graph_path_ids": finding.get("graph_path_ids") or [],
+        "search_coverage_certificate_ids": finding.get("search_coverage_certificate_ids") or [],
     }
 
 
@@ -1157,6 +1199,12 @@ def _failure_taxonomy(
                 source_record_mismatches + source_document_role_mismatches,
             )
         )
+    if not result_flags["authority_explanation_artifact_present"]:
+        taxonomy.append(_taxonomy_entry("authority_explanation_artifact_miss", []))
+    if not result_flags["authority_path_classification_supported"]:
+        taxonomy.append(_taxonomy_entry("authority_path_classification_miss", []))
+    if not result_flags["authority_trace_coverage_supported"]:
+        taxonomy.append(_taxonomy_entry("authority_trace_coverage_miss", []))
     if not result_flags["citation_coverage_supported"]:
         unsupported = [
             finding.get("rule_id")

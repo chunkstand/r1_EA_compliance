@@ -5,6 +5,86 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 6 Applicability And Review Closeout
+
+This implementation slice closes the Phase 6 review-contract packet for the
+canonical source-register refoundation while keeping the Phase 4 placeholder
+boundary explicit.
+
+- scope:
+  `src/usfs_r1_ea_sources/compliance_explanation_paths.py`,
+  `src/usfs_r1_ea_sources/compliance_findings.py`,
+  `src/usfs_r1_ea_sources/compliance_outputs.py`,
+  `src/usfs_r1_ea_sources/compliance_review.py`,
+  `src/usfs_r1_ea_sources/compliance_review_eval.py`,
+  `src/usfs_r1_ea_sources/compliance_validation.py`,
+  `src/usfs_r1_ea_sources/v1_ea_eval.py`,
+  `tests/test_compliance_review.py`,
+  `tests/test_compliance_review_eval.py`,
+  `tests/test_v1_ea_eval.py`,
+  `tests/support/compliance_review_fixtures.py`,
+  `docs/architecture_contract.toml`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- resolved boundary:
+  reviewer-facing compliance outputs now explain why an authority governs
+  rather than only which source row was cited. `compliance-review` writes
+  `authority_explanation_paths.json` and carries authority-path
+  classifications, retrieval traces, graph path IDs, search-coverage
+  certificate IDs, supporting-source references, unresolved issue refs, and
+  residual risk categories through the review JSON and matrix surfaces.
+- eval and gate alignment:
+  `compliance-review-eval` now enforces the explanation-path contract through
+  `authority_explanation_artifact_rate`,
+  `authority_path_classification_rate`, and
+  `authority_trace_coverage_rate`. Diagnostic base-rule-pack cases still
+  require the explanation artifact, but trace coverage is only enforced where
+  generated applicability review paths govern the decision. `v1-ea-eval` now
+  treats `authority_explanation_paths.json` as a required broader-EA artifact
+  and fails closed when review findings drift from the explanation rows or
+  lose trace evidence.
+- live reviewer-ready replay:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" --output-dir source_library --rule-pack source_library/reviews/v1-cg-ecid-compliance-review/applicability/generated_rule_pack.json --source-set-id source-set-ba8d0feae79501b8 --review-id v1-cg-ecid-compliance-review --reuse-package-cache --docling-timeout-seconds 180`
+  passed and rewrote
+  `source_library/reviews/v1-cg-ecid-compliance-review/authority_explanation_paths.json`
+  with `finding_path_count=37`,
+  `all_findings_have_path_classification=true`, and
+  `all_applicable_findings_have_trace_evidence=true`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --eval-file config/v1_ecid_real_ea_eval.json`
+  passed with `passed=true`, `broader_ea_passed=true`,
+  `forest_plan_passed=true`, `authority_explanation_path_count=37`, and
+  `authority_trace_coverage_rate=1.0`.
+- live direct evals:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --eval-file config/compliance_review_eval_seed.json`
+  passed `5/5` with `authority_explanation_artifact_rate=1.0`,
+  `authority_path_classification_rate=1.0`, and
+  `authority_trace_coverage_rate=1.0`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval --output-dir source_library --source-set-id source-set-ba8d0feae79501b8 --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --eval-file config/applicability_eval_seed.json`
+  passed `9/9` with all `19` high-priority family templates covered and the
+  arbitration summary still green for positive/negative conflict,
+  weak-positive-only, and template-specific-sufficiency cases.
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py tests/test_compliance_review.py tests/test_compliance_review_eval.py tests/test_v1_ea_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_architecture_contract.py -q`
+  passed with `95` tests and `3` passing subtests;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`
+  passed;
+  `PYTHONPATH=src python -m compileall src`
+  passed.
+- explicit residual boundary:
+  the canonical proving slice `source-set-9dcf819bc4cca486` still carries
+  governed Phase 4 placeholder artifacts, so this closeout does not claim that
+  the canonical proving corpus is yet reviewer-ready for live
+  direct-document-backed compliance review. Phase 6 is resolved at the
+  review-contract and live generated-review lane boundary only.
+- next routing:
+  Phase 7 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is now the
+  next executable packet: legally defensible draft-document generation.
+
 ## Canonical Source Register Refoundation Phase 5 Alignment Closeout
 
 This close-gaps pass aligns the Phase 5 semantic graph packet with the live

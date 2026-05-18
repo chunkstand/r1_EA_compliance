@@ -397,6 +397,8 @@ def _write_generated_review_gate(
                 "authority_family_id": authority_family_id,
             },
             "source_record_ids": [rule.get("authority_source_record_id")],
+            "retrieval_trace_ids": [f"retrieval:{candidate_id}"],
+            "graph_path_ids": [f"graph:{candidate_id}"],
             "document_roles": [rule.get("authority_document_role") or "regulation"],
         }
         candidate_authorities.append(authority)
@@ -418,6 +420,8 @@ def _write_generated_review_gate(
                 "non_applicability_basis": {
                     "rationale": "Unit package did not include the conditional trigger.",
                 },
+                "retrieval_trace_ids": ["retrieval:candidate:not-applicable"],
+                "graph_path_ids": ["graph:candidate:not-applicable"],
                 "search_coverage_certificate_ids": ["coverage:not-applicable"],
             }
         ]
@@ -602,6 +606,8 @@ def _write_generated_review_gate(
                 "rationale": "Unit generated gate marks baseline rule applicable.",
             },
             "source_record_ids": [rule.get("authority_source_record_id")],
+            "retrieval_trace_ids": [f"retrieval:candidate:{rule['id']}"],
+            "graph_path_ids": [f"graph:candidate:{rule['id']}"],
             "document_roles": [rule.get("authority_document_role") or "regulation"],
         }
         generated_rules.append(generated_rule)

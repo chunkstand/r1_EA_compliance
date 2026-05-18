@@ -112,6 +112,7 @@ class ComplianceReviewTests(unittest.TestCase):
                 "generated_rule_pack",
             )
             self.assertTrue(result.authority_provenance_path.exists())
+            self.assertTrue(result.authority_explanation_paths_path.exists())
             self.assertTrue(result.non_applicable_authority_appendix_path.exists())
             self.assertTrue(result.non_applicable_authority_appendix_markdown_path.exists())
             self.assertTrue(result.reviewer_resolution_report_path.exists())
@@ -126,10 +127,20 @@ class ComplianceReviewTests(unittest.TestCase):
                 matrix["summary"]["reviewer_resolution_report_path"],
                 str(result.reviewer_resolution_report_path),
             )
+            self.assertEqual(
+                matrix["summary"]["authority_explanation_paths_path"],
+                str(result.authority_explanation_paths_path),
+            )
             matrix_row = matrix["rows"][0]
             self.assertEqual(matrix_row["candidate_authority_id"], "candidate:purpose_need")
             self.assertEqual(matrix_row["applicability_decision_id"], "decision:purpose_need")
             self.assertEqual(matrix_row["authority_family_ids"], ["unit_purpose_need"])
+            self.assertEqual(
+                matrix_row["primary_authority_path_classification"],
+                "controlling",
+            )
+            self.assertTrue(matrix_row["retrieval_trace_ids"])
+            self.assertTrue(matrix_row["graph_path_ids"])
             validation = json.loads(
                 result.compliance_validation_path.read_text(encoding="utf-8")
             )
@@ -150,6 +161,9 @@ class ComplianceReviewTests(unittest.TestCase):
             )
             self.assertTrue(
                 _check(validation, "litigation_risk_summary_deterministic")["passed"]
+            )
+            self.assertTrue(
+                _check(validation, "authority_explanation_paths_ready")["passed"]
             )
 
     def test_compliance_review_emits_authority_integration_artifacts(self) -> None:
@@ -207,6 +221,23 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertEqual(
                 appendix["authorities"][0]["search_coverage_certificate_ids"],
                 ["coverage:not-applicable"],
+            )
+
+            explanation = json.loads(
+                result.authority_explanation_paths_path.read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                explanation["schema_version"],
+                "authority-explanation-paths-v0",
+            )
+            self.assertTrue(explanation["summary"]["passed"])
+            self.assertEqual(explanation["summary"]["finding_path_count"], 2)
+            self.assertEqual(explanation["summary"]["non_applicable_path_count"], 1)
+            self.assertEqual(
+                explanation["finding_explanation_paths"][0][
+                    "primary_authority_path_classification"
+                ],
+                "controlling",
             )
 
             resolution = json.loads(
