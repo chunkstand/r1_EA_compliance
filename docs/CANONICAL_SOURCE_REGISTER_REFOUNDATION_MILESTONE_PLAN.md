@@ -31,9 +31,16 @@ Current checkpoint on 2026-05-18:
   calls resolve through `loader_contract = "source_register_v1"`, the
   canonical register is now the sole active ledger, and the first isolated
   canonical catalog gate is `source-set-ae989382c52344db`.
+- Phase 3 authority-currentness, supersession, and source-partition rebase is
+  now live in commit `70a5953`: bare `authority-currentness` calls can project
+  canonical authority families and queue gaps from the active
+  `source_register_v1` catalog plus workbook queue, supersession lineage is
+  governed by `config/source_register_currentness_lineage_v1.json`, and stale
+  canonical active partitions are fail-closed back into
+  `currentness_supersession_archive`.
 - No full-register canonical ingestion may bypass the now-live Phase 1.5
-  proving gate, and the next implementation boundary is now Phase 3:
-  authority-currentness, supersession, and source-partition rebase.
+  proving gate, and the next implementation boundary is now Phase 4:
+  extraction fidelity and verified source admission.
 
 Owner context: This is a fresh standalone architecture and delivery plan for
 refounding the system around
@@ -1023,9 +1030,10 @@ Implementation tasks:
 Required implementation artifacts:
 
 - updated `authority-currentness` inputs and report logic
-- updated source-partition contract if new row states are needed
-- currentness direct-eval fixtures and reports
-- updated authority-source decision docs
+- governed canonical supersession-lineage contract
+- projected canonical authority-inventory and source-gap decision artifacts
+- updated source-partition logic for canonical historical/currentness rows
+- focused currentness regression tests and live currentness report closeout
 
 Acceptance signals:
 
@@ -1039,7 +1047,7 @@ Required verification gates:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library
-PYTHONPATH=src uv run --extra dev pytest tests/test_source_partitions.py tests/test_authority_currentness.py tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_source_partitions.py tests/test_authority_currentness.py tests/test_source_register_proving.py tests/test_architecture_contract.py tests/test_nepa_knowledge_graph_export.py
 git diff --check
 ```
 

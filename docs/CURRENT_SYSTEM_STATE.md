@@ -128,10 +128,12 @@ Latest closeout on 2026-05-18:
 - The active runtime still remains pinned to `legacy_v0`, and the no-bulk-ingest
   boundary is now explicit in code, docs, and the proving report: bulk
   canonical-register ingestion may not bypass this Phase 1.5 packet.
-- The next routed implementation packet is Phase 2 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`: cut over
-  capture and catalog commands to the canonical register while preserving the
-  proving no-bulk-ingest gate and queue discipline.
+- Historical note:
+  at that closeout the next routed implementation packet was Phase 2 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`. That
+  boundary is now implemented; see the Phase 2 and Phase 3 sections above for
+  the live runtime cutover, currentness rebase, and current next routing to
+  Phase 4.
 
 ## Canonical Source Register Phase 1 Loader Refactor
 

@@ -64,6 +64,9 @@ currentness and source-partition governance onto the canonical source register.
   `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is now the
   next executable packet: extraction fidelity and verified source admission
   for the canonical corpus.
+- routing note:
+  older Phase 2 / Phase 1.5 / Phase 1 “next executable packet” bullets below
+  are historical only after commit `70a5953`.
 
 ## Canonical Source Register Refoundation Phase 2 Capture And Catalog Cutover
 
@@ -154,7 +157,7 @@ legacy workbook contract to the canonical source register.
   passed as `source-set-ae989382c52344db`; and
   `source_library/evaluations/upstream/upstream_evaluation_results.json`
   passed with `required_category_count=12` and `matched_case_count=24`.
-- next routing:
+- historical next routing at that closeout:
   Phase 3 in
   `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is now the
   next executable packet: authority-currentness, supersession, and
