@@ -43,8 +43,9 @@ Milestone 0 closeout summary on 2026-05-18:
   is Milestone 1: canonical preflight and fetch-failure closure.
 
 Milestone 1 full-master preflight replay checkpoint on 2026-05-18 after
-implementation commit `211f0c8` and replay
-`phase2-canonical-preflight-full-repaired-20260518`:
+implementation commit `211f0c8`, replay
+`phase2-canonical-preflight-full-repaired-20260518`, and replay checkpoint
+commit `86efa46`:
 
 - The first Milestone 1 code/config slice is now live: `ecos.fws.gov` uses
   host-level verified `curl` transport through `config/downloader.toml`,
