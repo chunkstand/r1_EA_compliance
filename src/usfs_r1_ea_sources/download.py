@@ -675,6 +675,8 @@ def _artifact_path_for_hash(planned_path: Path, sha256: str, content_type: str |
 def _suffix_for_content_type(content_type: str | None) -> str:
     if content_type == "application/pdf":
         return ".pdf"
+    if content_type == "application/msword":
+        return ".doc"
     if content_type in {"text/html", "application/xhtml+xml"}:
         return ".html"
     if content_type in {"application/xml", "text/xml"}:
@@ -683,16 +685,21 @@ def _suffix_for_content_type(content_type: str | None) -> str:
         return ".zip"
     if content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         return ".docx"
+    if content_type == "image/jpeg":
+        return ".jpg"
     return ".bin"
 
 
 def _content_type_for_suffix(suffix: str) -> str | None:
     return {
+        ".doc": "application/msword",
         ".pdf": "application/pdf",
         ".html": "text/html",
         ".xml": "application/xml",
         ".zip": "application/zip",
         ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
     }.get(suffix.lower())
 
 

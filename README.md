@@ -100,15 +100,12 @@ Local active import baseline on 2026-05-18:
   `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
   `preflight_ok` with `failed_count=0`.
 - The governed workbook repair lane is now live on the canonical master sheet.
-  `Document_Register_Master` now carries `48` URL repairs total:
-  `45` earlier directive/USDA repairs plus `3` stale-URL repairs for
-  `PROG-008`, `STP-015`, and `STP-011`. `source-register-validate` now passes
-  with `issue_count=0` on workbook SHA
-  `fd40c4aa0216c10e5a1c61b93634d3e658f74a8c7cf4f06ba16a6379289159ec`, and
-  `tests/test_source_register_schema.py` plus
-  `tests/test_source_register_loader.py` pass `10/10`.
-- The live blocker-repair checkpoint for this lane is local commit `37bb0a3`
-  (`Repair stale canonical blocker URLs`).
+  `Document_Register_Master` now carries `49` governed URL repairs total:
+  `45` earlier directive/USDA repairs,
+  `3` stale-URL repairs for `PROG-008`, `STP-015`, and `STP-011`, plus
+  `1` direct-artifact repair for `WILD-ESA-094` to the official JPG media
+  file. `source-register-validate` now passes with `issue_count=0` on workbook
+  SHA `f40d764ad2bf2f653459510d1021ad4134f85dccccb15ea30f75457a978d36eb`.
 - Scoped repair replay
   `phase2-canonical-preflight-directives-repair-validated-20260518`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
@@ -144,23 +141,50 @@ Local active import baseline on 2026-05-18:
 - Despite its `full-complete` run ID, that broader replay is partial blocker
   evidence only. It must not be cited as a completed full-master Milestone 1
   replay artifact.
+- The structural unsupported-format boundary slice is now live in code and
+  workbook contract. `config/downloader.toml` now admits
+  `application/msword` and `image/jpeg`,
+  `config/parser_admission_contract_v1.json` now classifies `.doc` and
+  image suffixes as `direct_document`,
+  `download.py` plus `catalog.py` preserve those direct-artifact parser
+  routes, and `extract.py` now uses macOS `textutil` for legacy `.doc`
+  artifacts plus Docling for image artifacts.
+- Scoped replay
+  `phase2-canonical-preflight-unsupported-format-replay-20260518`
+  now passes `8/8` `preflight_ok` with `failed_count=0` across
+  `R1-021`, `R1-020`, `R1-019`, `R1-023`, `R1-022`, `R1-015`, `R1-009`, and
+  `WILD-ESA-094`.
+- Scoped download replay
+  `phase2-canonical-download-unsupported-format-replay-20260518`
+  now finishes with `downloaded_count=8`, `failed_count=0`, and
+  `status_counts={"downloaded": 8}`.
+- Archived scoped catalog gate
+  `source_library/runs/phase2-canonical-catalog-unsupported-format-replay-20260518/catalog_gate/`
+  is now live as source set `source-set-a0402de124943920` with
+  `source_count=8`,
+  `artifact_count=8`, and
+  `expected_parser_counts={"doc": 7, "image": 1}`.
+- Scoped extraction on `source-set-a0402de124943920` now passes with
+  `selected_source_count=8`,
+  `extracted_count=8`,
+  `parser_counts={"docling": 1, "macos_textutil_doc": 7}`, and
+  extraction-accuracy admits all `8` direct-document rows with
+  `knowledge_base_blocked_source_record_ids=[]`.
+- Upstream direct eval remains green after the new admission path:
+  `source_library/evaluations/upstream/upstream_evaluation_results.json`
+  now reports `passed=true`, `case_count=38`, and `failed_case_ids=[]`.
 - Milestone 1 is still not resolved, but the active unresolved blocker surface
-  is now reduced from the historical `28`-row full replay to `20` rows before
+  is now reduced from the historical `28`-row full replay to `12` rows before
   the next full-master rerun:
   `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029` remain
   `not_found`;
   `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and `USDA-011`
-  still finalize as `timeout`;
-  `R1-021`, `R1-020`, `R1-019`, `R1-023`, `R1-022`, `R1-015`, `R1-009`, and
-  `WILD-ESA-094` still hit `unsupported_content_type`; and
+  still finalize as `timeout`; and
   `FPS-344` still resolves to a `challenge_page`.
-- The next truthful slice is the structural unsupported-format boundary packet
-  for those `8` `unsupported_content_type` rows. Installed Docling rejects
-  legacy `.doc`, so do not make the Region 1 directive rows green by widening
-  content-type validation alone. Full `download`, `batch-download`, and
-  `catalog-build` for the entire master sheet remain blocked until the
-  remaining blocker families close and a fresh full-master canonical preflight
-  replay reruns.
+- The next truthful slice is the governed remaining-blocker closure packet for
+  those `12` rows, then a fresh full-master canonical preflight replay before
+  any full `download`, `batch-download`, or `catalog-build` for the entire
+  master sheet.
 - The local non-strict `promotion-suite` artifact remains green only for the
   current-promotion lane: it reports `current_promotion_ready=true` and
   `promotion_ready=true`, but it also currently reports

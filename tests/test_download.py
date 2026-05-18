@@ -87,6 +87,10 @@ class DownloadTests(unittest.TestCase):
     def test_zip_content_type_uses_zip_suffix(self) -> None:
         self.assertEqual(_suffix_for_content_type("application/zip"), ".zip")
         self.assertEqual(_content_type_for_suffix(".zip"), "application/zip")
+        self.assertEqual(_suffix_for_content_type("application/msword"), ".doc")
+        self.assertEqual(_content_type_for_suffix(".doc"), "application/msword")
+        self.assertEqual(_suffix_for_content_type("image/jpeg"), ".jpg")
+        self.assertEqual(_content_type_for_suffix(".jpg"), "image/jpeg")
 
     def test_download_writes_artifacts_hashes_and_preserves_duplicate_url_rows(self) -> None:
         config = legacy_config()

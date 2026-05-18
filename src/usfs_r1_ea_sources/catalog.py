@@ -1343,6 +1343,8 @@ def _expected_parser(source: WorkbookSource, content_type: str | None) -> str:
     if content_type:
         if content_type == "application/pdf":
             return "pdf"
+        if content_type == "application/msword":
+            return "doc"
         if content_type in {"application/xml", "text/xml"}:
             return "xml"
         if content_type in {"text/html", "application/xhtml+xml"}:
@@ -1350,14 +1352,20 @@ def _expected_parser(source: WorkbookSource, content_type: str | None) -> str:
         docx_content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         if content_type == docx_content_type:
             return "docx"
+        if content_type.startswith("image/"):
+            return "image"
     path = urlsplit(source.effective_url).path.lower()
     host = urlsplit(source.normalized_url).netloc.lower()
     if path.endswith(".pdf"):
         return "pdf"
+    if path.endswith(".doc"):
+        return "doc"
     if path.endswith(".xml"):
         return "xml"
     if path.endswith(".docx"):
         return "docx"
+    if path.endswith((".jpg", ".jpeg", ".png")):
+        return "image"
     if host in {"www.ecfr.gov", "www.federalregister.gov"}:
         return "structured_web_adapter"
     return "html"

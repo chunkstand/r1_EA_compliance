@@ -72,6 +72,14 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     assert pdf_row.parser_admission_class == "direct_document"
     assert pdf_row.expected_parser == "pdf"
 
+    doc_row = rows["R1-021"]
+    assert doc_row.parser_admission_class == "direct_document"
+    assert doc_row.expected_parser == "doc"
+
+    image_row = rows["WILD-ESA-094"]
+    assert image_row.parser_admission_class == "direct_document"
+    assert image_row.expected_parser == "image"
+
     forest_plan_row = rows["FPS-002"]
     assert forest_plan_row.authority_document_class_id == "forest_plan"
     assert forest_plan_row.jurisdiction_scope_id == "scope:region1-forest-unit"

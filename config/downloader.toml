@@ -24,12 +24,14 @@ default_host_delay_seconds = 1.0
 minimum_body_bytes = 128
 allowed_content_types = [
   "application/pdf",
+  "application/msword",
   "text/html",
   "application/xhtml+xml",
   "application/xml",
   "text/xml",
   "application/zip",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "image/jpeg",
 ]
 challenge_url_patterns = [
   "unblock.federalregister.gov",

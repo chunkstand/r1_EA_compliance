@@ -214,6 +214,27 @@ class PreflightTests(unittest.TestCase):
         self.assertEqual(result.status, "not_found")
         self.assertFalse(result.validation["passed"])
 
+    def test_preflight_accepts_supported_doc_and_image_content_types(self) -> None:
+        config = load_config(CONFIG)
+
+        for content_type in ("application/msword", "image/jpeg"):
+            with self.subTest(content_type=content_type):
+                suffix = ".doc" if content_type == "application/msword" else ".jpg"
+                result = _classify_response(
+                    http_status=200,
+                    final_url=f"https://example.com/source{suffix}",
+                    redirect_chain=[],
+                    content_type=content_type,
+                    content_length=2048,
+                    method="GET",
+                    attempt_count=1,
+                    body_sample=b"example body bytes" + b" " * 128,
+                    validation=config.validation,
+                )
+
+                self.assertEqual(result.status, "preflight_ok")
+                self.assertTrue(result.validation["passed"])
+
     def test_host_can_use_browser_compatible_user_agent(self) -> None:
         config = load_config(CONFIG)
         headers = _request_headers("https://dahp.wa.gov/project-review", config.network)

@@ -5,6 +5,102 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Unsupported-Format Slice Checkpoint
+
+This implementation slice closes the routed structural unsupported-format
+packet for the `8` direct-document blocker rows and reduces the live Milestone
+1 blocker surface again.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- implementation slice:
+  `config/downloader.toml`,
+  `config/parser_admission_contract_v1.json`,
+  `src/usfs_r1_ea_sources/download.py`,
+  `src/usfs_r1_ea_sources/catalog.py`,
+  `src/usfs_r1_ea_sources/extract.py`,
+  `tests/test_download.py`,
+  `tests/test_preflight.py`,
+  `tests/test_extract.py`,
+  `tests/test_source_register_loader.py`,
+  `tests/test_source_register_schema.py`,
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  the routed plan file.
+- code and workbook boundary:
+  `config/downloader.toml` now admits `application/msword` and
+  `image/jpeg`;
+  `config/parser_admission_contract_v1.json` now classifies `.doc` and image
+  suffixes as `direct_document`;
+  `download.py` plus `catalog.py` preserve those parser routes and content
+  types; `extract.py` now routes legacy `.doc` artifacts through macOS
+  `textutil` and image artifacts through Docling; and
+  `WILD-ESA-094` now points to the official JPG media file in
+  `Document_Register_Master`.
+- workbook evidence:
+  `Document_Register_Master` now carries `49` governed URL repairs total:
+  `45` earlier directive/USDA repairs,
+  `3` stale-URL repairs for `PROG-008`, `STP-015`, and `STP-011`, plus
+  `1` direct-artifact repair for `WILD-ESA-094`.
+  The active workbook SHA is now
+  `f40d764ad2bf2f653459510d1021ad4134f85dccccb15ea30f75457a978d36eb`.
+- scoped runtime evidence:
+  `phase2-canonical-preflight-unsupported-format-replay-20260518` completed
+  with `8/8` `preflight_ok` and `failed_count=0`;
+  `phase2-canonical-download-unsupported-format-replay-20260518` completed
+  with `downloaded_count=8`, `failed_count=0`, and
+  `status_counts={"downloaded": 8}`;
+  archived catalog gate
+  `source_library/runs/phase2-canonical-catalog-unsupported-format-replay-20260518/catalog_gate/`
+  is now source set `source-set-a0402de124943920` with
+  `artifact_count=8` and `expected_parser_counts={"doc": 7, "image": 1}`;
+  scoped extraction on `source-set-a0402de124943920` completed with
+  `selected_source_count=8`,
+  `extracted_count=8`, and
+  `parser_counts={"docling": 1, "macos_textutil_doc": 7}`; and
+  `source_library/derived/source-set-a0402de124943920/diagnostics/extraction_accuracy_audit.json`
+  passed with `knowledge_base_blocked_source_record_ids=[]`.
+- active blocker surface:
+  the historical full-master replay
+  `phase2-canonical-preflight-full-repaired-20260518`
+  still records `28` failures, but the active unresolved blocker surface
+  before the next full-master rerun is now `12` rows:
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029` remain
+  `not_found`;
+  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and `USDA-011`
+  still finalize as `timeout`; and
+  `FPS-344` still resolves to a `challenge_page`.
+- direct-eval gate:
+  `source_library/evaluations/upstream/upstream_evaluation_results.json`
+  now reports `passed=true`, `case_count=38`, and `failed_case_ids=[]`.
+- historical routing note:
+  the older `Canonical Source Register Import Completion Milestone 1 Blocker
+  Repair Alignment Closeout` and
+  `Canonical Source Register Import Completion Milestone 1 Blocker Repair
+  Slice Checkpoint` sections below are now explicit pre-unsupported-format
+  context only. Their `20`-row blocker-routing language no longer governs
+  this lane.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  passed with `issue_count=0`;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/download.py src/usfs_r1_ea_sources/catalog.py src/usfs_r1_ea_sources/extract.py tests/test_download.py tests/test_preflight.py tests/test_extract.py tests/test_source_register_loader.py tests/test_source_register_schema.py`
+  passed;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_download.py tests/test_preflight.py tests/test_extract.py tests/test_source_register_loader.py tests/test_source_register_schema.py -q`
+  passed `49` tests with `2` subtests;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`
+  passed with `case_count=38` and `failed_case_ids=[]`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  start the governed remaining-blocker closure packet for the `12`
+  unresolved rows, then rerun the fresh full-master canonical preflight
+  before any full `download`, `batch-download`, or `catalog-build` for the
+  entire master sheet.
+
 ## Canonical Source Register Import Completion Milestone 1 Blocker Repair Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after implementation

@@ -8,6 +8,7 @@ import importlib.util
 import json
 import shutil
 import tempfile
+from types import SimpleNamespace
 import unittest
 import zipfile
 
@@ -230,6 +231,96 @@ class ExtractionTests(unittest.TestCase):
                 encoding="utf-8"
             )
             self.assertIn("mitigation measures", text)
+
+    def test_build_extraction_uses_textutil_for_doc_artifacts(self) -> None:
+        config = canonical_config()
+        original_run = extract_module.subprocess.run
+
+        def fake_run(*args, **kwargs):  # noqa: ANN002, ANN003, ARG001
+            command = args[0] if args else kwargs.get("args")
+            if isinstance(command, list) and command[:2] == ["git", "rev-parse"]:
+                return original_run(*args, **kwargs)
+            return SimpleNamespace(
+                returncode=0,
+                stdout="Legacy directive body text from textutil.",
+                stderr="",
+            )
+
+        extract_module.subprocess.run = fake_run
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                output_dir = Path(tmp)
+                _write_download_run(
+                    output_dir,
+                    "unit-download",
+                    source_record_id="R1-021",
+                    artifact_body=b"fake doc bytes" + b" " * 256,
+                    content_type="application/msword",
+                    suffix=".doc",
+                )
+                build_review_catalog(
+                    workbook_path=CANONICAL_WORKBOOK,
+                    output_dir=output_dir,
+                    config=config,
+                    config_path=CONFIG,
+                    run_id="unit-download",
+                    source_record_ids={"R1-021"},
+                )
+
+                result = build_extraction(output_dir=output_dir, id_filter="R1-021")
+
+                self.assertTrue(result.summary["validation_passed"])
+                self.assertEqual(result.summary["parser_counts"], {"macos_textutil_doc": 1})
+                manifest = _read_jsonl(result.extraction_manifest_path)
+                self.assertEqual(manifest[0]["parser_name"], "macos_textutil_doc")
+                text = Path(manifest[0]["text_path"]).read_text(encoding="utf-8")
+                self.assertIn("Legacy directive body text", text)
+        finally:
+            extract_module.subprocess.run = original_run
+
+    def test_build_extraction_uses_docling_for_image_artifacts(self) -> None:
+        config = canonical_config()
+        original_try_docling = extract_module._try_extract_docling
+
+        def fake_try_docling(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202, ARG001
+            text = "Vegetation and elevation zones image text."
+            return extract_module.ExtractionPayload(
+                text=text,
+                blocks=[extract_module.TextBlock(text=text, page=1)],
+                parser_name="docling",
+                parser_version="test",
+            )
+
+        extract_module._try_extract_docling = fake_try_docling
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                output_dir = Path(tmp)
+                _write_download_run(
+                    output_dir,
+                    "unit-download",
+                    source_record_id="WILD-ESA-094",
+                    artifact_body=b"jpeg bytes" + b" " * 256,
+                    content_type="image/jpeg",
+                    suffix=".jpg",
+                )
+                build_review_catalog(
+                    workbook_path=CANONICAL_WORKBOOK,
+                    output_dir=output_dir,
+                    config=config,
+                    config_path=CONFIG,
+                    run_id="unit-download",
+                    source_record_ids={"WILD-ESA-094"},
+                )
+
+                result = build_extraction(output_dir=output_dir, id_filter="WILD-ESA-094")
+
+                self.assertTrue(result.summary["validation_passed"])
+                self.assertEqual(result.summary["parser_counts"], {"docling": 1})
+                manifest = _read_jsonl(result.extraction_manifest_path)
+                self.assertEqual(manifest[0]["parser_name"], "docling")
+                self.assertTrue(manifest[0]["direct_document_artifact_required"])
+        finally:
+            extract_module._try_extract_docling = original_try_docling
 
     def test_build_extraction_prefers_docling_for_canonical_row_instructions(self) -> None:
         config = canonical_config()

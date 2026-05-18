@@ -30,6 +30,7 @@ from .workbook import load_r1_forest_plan_document_register
 
 
 DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+DOC_CONTENT_TYPE = "application/msword"
 PDF_TEXT_FALLBACK_ERROR_CLASSES = {"docling_timeout", "docling_unavailable"}
 PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES = 512 * 1024 * 1024
 DOCLING_PYTHON_ENV_VAR = "USFS_R1_DOCLING_PYTHON"
@@ -1052,8 +1053,16 @@ def _extract_payload(
             return docling_payload
     if parser == "html":
         return _extract_html(artifact_path)
+    if parser == "doc":
+        return _extract_doc(artifact_path)
     if parser == "docx":
         return _extract_docx(artifact_path)
+    if parser == "image":
+        return _extract_image(
+            artifact_path,
+            ocr_enabled=docling_ocr,
+            timeout_seconds=docling_timeout_seconds,
+        )
     if parser == "text":
         return _extract_plain_text(artifact_path)
     raise ExtractionFailure("unsupported_parser", f"Unsupported parser: {parser}")
@@ -1063,7 +1072,7 @@ def _effective_parser(row: dict, artifact_path: Path) -> str:
     expected = (row.get("expected_parser") or "").lower()
     content_type = (row.get("content_type") or "").lower()
     suffix = artifact_path.suffix.lower()
-    if expected in {"html", "xml", "pdf", "docx"}:
+    if expected in {"html", "xml", "pdf", "docx", "doc", "image"}:
         return expected
     if expected == "structured_web_adapter":
         if content_type in {"application/xml", "text/xml"} or suffix == ".xml":
@@ -1071,12 +1080,16 @@ def _effective_parser(row: dict, artifact_path: Path) -> str:
         return "html"
     if content_type == "application/pdf" or suffix == ".pdf":
         return "pdf"
+    if content_type == DOC_CONTENT_TYPE or suffix == ".doc":
+        return "doc"
     if content_type in {"application/xml", "text/xml"} or suffix == ".xml":
         return "xml"
     if content_type in {"text/html", "application/xhtml+xml"} or suffix in {".html", ".htm"}:
         return "html"
     if content_type == DOCX_CONTENT_TYPE or suffix == ".docx":
         return "docx"
+    if content_type.startswith("image/") or suffix in {".jpg", ".jpeg", ".png"}:
+        return "image"
     if content_type.startswith("text/"):
         return "text"
     return expected or "text"
@@ -1865,6 +1878,53 @@ def _extract_docx(artifact_path: Path) -> ExtractionPayload:
         parser_name="python_docx_zip_xml",
         parser_version=sys.version.split()[0],
     )
+
+
+def _extract_doc(artifact_path: Path) -> ExtractionPayload:
+    command = ["textutil", "-convert", "txt", "-stdout", str(artifact_path)]
+    try:
+        completed = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError as error:
+        raise ExtractionFailure("doc_parse_failed", str(error)) from error
+    if completed.returncode != 0:
+        raise ExtractionFailure(
+            "doc_parse_failed",
+            (completed.stderr or completed.stdout or "textutil failed").strip(),
+        )
+    text = completed.stdout.strip()
+    if not text:
+        raise ExtractionFailure("doc_parse_failed", "textutil returned empty text.")
+    text, blocks = _blocks_from_plain_text(text)
+    return ExtractionPayload(
+        text=text,
+        blocks=blocks,
+        parser_name="macos_textutil_doc",
+        parser_version="system",
+    )
+
+
+def _extract_image(
+    artifact_path: Path,
+    *,
+    ocr_enabled: bool,
+    timeout_seconds: float | None,
+) -> ExtractionPayload:
+    payload = _try_extract_docling(
+        artifact_path,
+        ocr_enabled=True if not ocr_enabled else ocr_enabled,
+        timeout_seconds=timeout_seconds,
+    )
+    if payload is None:
+        raise ExtractionFailure(
+            "docling_unavailable",
+            "Image extraction requires Docling; set USFS_R1_DOCLING_PYTHON or run from a Docling environment.",
+        )
+    return payload
 
 
 def _extract_plain_text(artifact_path: Path) -> ExtractionPayload:

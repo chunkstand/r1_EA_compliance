@@ -24,6 +24,14 @@
       "admission_class": "direct_document"
     },
     {
+      "route_id": "doc_direct_document",
+      "match": {
+        "url_suffixes": [".doc"]
+      },
+      "expected_parser": "doc",
+      "admission_class": "direct_document"
+    },
+    {
       "route_id": "xml_structured_authority_source",
       "match": {
         "url_suffixes": [".xml"]
@@ -37,6 +45,14 @@
         "url_suffixes": [".docx"]
       },
       "expected_parser": "docx",
+      "admission_class": "direct_document"
+    },
+    {
+      "route_id": "image_direct_document",
+      "match": {
+        "url_suffixes": [".jpg", ".jpeg", ".png"]
+      },
+      "expected_parser": "image",
       "admission_class": "direct_document"
     },
     {
