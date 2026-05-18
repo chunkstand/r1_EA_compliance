@@ -11,6 +11,8 @@ import csv
 import json
 import socket
 import ssl
+import subprocess
+import tempfile
 
 from .adapters import adapt_download_url
 from .config import DownloaderConfig, NetworkConfig, ValidationConfig
@@ -49,6 +51,16 @@ class PreflightResult:
     validation_report_path: Path
     failures_path: Path
     summary: dict
+
+
+@dataclass(frozen=True)
+class CurlTransportResult:
+    http_status: int | None
+    final_url: str | None
+    redirect_chain: list[str]
+    content_type: str | None
+    content_length: int | None
+    body: bytes
 
 
 class RecordingRedirectHandler(HTTPRedirectHandler):
@@ -296,6 +308,8 @@ def _fetch_once(
     *,
     original_url: str | None = None,
 ) -> PreflightFetchResult:
+    if _uses_verified_curl_transport(url, network):
+        return _fetch_once_with_curl(url, method, network, validation, attempt_count, original_url=original_url)
     redirect_handler = RecordingRedirectHandler()
     opener = build_opener(HTTPSHandler(context=ssl.create_default_context()), redirect_handler)
     headers = _request_headers(url, network)
@@ -343,6 +357,45 @@ def _fetch_once(
         return _error_result("failed", "URLError", str(error), method, attempt_count)
     except Exception as error:
         return _error_result("failed", type(error).__name__, str(error), method, attempt_count)
+
+
+def _fetch_once_with_curl(
+    url: str,
+    method: str,
+    network: NetworkConfig,
+    validation: ValidationConfig,
+    attempt_count: int,
+    *,
+    original_url: str | None = None,
+) -> PreflightFetchResult:
+    headers = _request_headers(url, network)
+    range_bytes = "0-4095" if method == "GET" else None
+    curl_result, error = _run_curl_request(
+        url=url,
+        method=method,
+        headers=headers,
+        network=network,
+        range_bytes=range_bytes,
+    )
+    if error is not None:
+        return _error_result(error["status"], error["error_class"], error["message"], method, attempt_count)
+
+    result = _classify_response(
+        http_status=curl_result.http_status or 0,
+        final_url=curl_result.final_url or url,
+        redirect_chain=curl_result.redirect_chain,
+        content_type=curl_result.content_type,
+        content_length=curl_result.content_length,
+        method=method,
+        attempt_count=attempt_count,
+        body_sample=curl_result.body[:4096],
+        validation=validation,
+        original_url=original_url,
+    )
+    result = _with_verified_transport_metadata(result, "curl")
+    if _uses_browser_compatible_user_agent(url, network):
+        return _with_browser_compatible_metadata(result)
+    return result
 
 
 def _classify_response(
@@ -538,6 +591,23 @@ def _with_browser_compatible_metadata(result: PreflightFetchResult) -> Preflight
     )
 
 
+def _with_verified_transport_metadata(result: PreflightFetchResult, transport: str) -> PreflightFetchResult:
+    validation = dict(result.validation)
+    validation["verified_transport"] = transport
+    return PreflightFetchResult(
+        status=result.status,
+        http_status=result.http_status,
+        final_url=result.final_url,
+        redirect_chain=result.redirect_chain,
+        content_type=result.content_type,
+        content_length=result.content_length,
+        method=result.method,
+        attempt_count=result.attempt_count,
+        failure=result.failure,
+        validation=validation,
+    )
+
+
 def _request_headers(url: str, network: NetworkConfig) -> dict[str, str]:
     if _uses_browser_compatible_user_agent(url, network):
         return {
@@ -555,6 +625,11 @@ def _uses_browser_compatible_user_agent(url: str, network: NetworkConfig) -> boo
     return bool(host_config and host_config.browser_compatible_user_agent)
 
 
+def _uses_verified_curl_transport(url: str, network: NetworkConfig) -> bool:
+    host_config = network.hosts.get(urlsplit(url).netloc.lower())
+    return bool(host_config and host_config.verified_transport == "curl")
+
+
 def _respect_host_delay(
     host: str,
     host_last_fetch: dict[str, float],
@@ -569,6 +644,118 @@ def _respect_host_delay(
     remaining = delay - (monotonic() - last_fetch)
     if remaining > 0:
         sleep_fn(remaining)
+
+
+def _run_curl_request(
+    *,
+    url: str,
+    method: str,
+    headers: dict[str, str],
+    network: NetworkConfig,
+    range_bytes: str | None = None,
+) -> tuple[CurlTransportResult | None, dict | None]:
+    timeout = max(network.connect_timeout_seconds, network.read_timeout_seconds)
+    with tempfile.TemporaryDirectory(prefix="usfs-r1-curl-") as tmpdir:
+        header_path = Path(tmpdir) / "headers.txt"
+        body_path = Path(tmpdir) / "body.bin"
+        command = [
+            "curl",
+            "--silent",
+            "--show-error",
+            "--location",
+            "--connect-timeout",
+            str(network.connect_timeout_seconds),
+            "--max-time",
+            str(timeout),
+            "--dump-header",
+            str(header_path),
+            "--output",
+            str(body_path),
+            "--write-out",
+            "CURLMETA:%{http_code}\t%{content_type}\t%{url_effective}\t%{size_download}\n",
+        ]
+        if method == "HEAD":
+            command.append("--head")
+        if range_bytes:
+            command.extend(["--range", range_bytes])
+        for name, value in headers.items():
+            command.extend(["--header", f"{name}: {value}"])
+        command.append(url)
+        try:
+            completed = subprocess.run(command, capture_output=True, text=True, check=False)
+        except OSError as error:
+            return None, {
+                "status": "failed",
+                "error_class": type(error).__name__,
+                "message": str(error),
+            }
+        if completed.returncode != 0:
+            return None, _classify_curl_error(completed.returncode, completed.stderr)
+
+        meta = _parse_curl_meta(completed.stdout)
+        header_text = header_path.read_text(encoding="utf-8", errors="replace")
+        header_sections = _parse_curl_header_sections(header_text)
+        final_headers = header_sections[-1] if header_sections else {}
+        redirect_chain = [
+            section["location"]
+            for section in header_sections[:-1]
+            if section.get("location")
+        ]
+        body = body_path.read_bytes() if body_path.exists() else b""
+        return (
+            CurlTransportResult(
+                http_status=meta["http_status"],
+                final_url=meta["final_url"],
+                redirect_chain=redirect_chain,
+                content_type=_base_content_type(final_headers.get("content-type") or meta["content_type"]),
+                content_length=_int_or_none(final_headers.get("content-length")),
+                body=body,
+            ),
+            None,
+        )
+
+
+def _parse_curl_meta(stdout: str) -> dict[str, int | str | None]:
+    line = next((entry for entry in stdout.splitlines() if entry.startswith("CURLMETA:")), "")
+    _, _, payload = line.partition(":")
+    http_code, content_type, final_url, _size_download = (payload.split("\t") + ["", "", "", ""])[:4]
+    try:
+        http_status = int(http_code)
+    except ValueError:
+        http_status = None
+    return {
+        "http_status": http_status,
+        "content_type": content_type or None,
+        "final_url": final_url or None,
+    }
+
+
+def _parse_curl_header_sections(header_text: str) -> list[dict[str, str]]:
+    sections: list[dict[str, str]] = []
+    current: dict[str, str] | None = None
+    for raw_line in header_text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        if line.startswith("HTTP/"):
+            current = {}
+            sections.append(current)
+            continue
+        if current is None or ":" not in line:
+            continue
+        name, value = line.split(":", 1)
+        current[name.strip().lower()] = value.strip()
+    return sections
+
+
+def _classify_curl_error(returncode: int, stderr: str) -> dict[str, str]:
+    message = stderr.strip() or f"curl exited with status {returncode}"
+    lowered = message.lower()
+    if returncode == 28 or "timed out" in lowered:
+        return {"status": "timeout", "error_class": "TimeoutError", "message": message}
+    if returncode in {35, 51, 58, 59, 60, 64, 66} or "ssl" in lowered or "certificate" in lowered:
+        return {"status": "ssl_error", "error_class": "SSLError", "message": message}
+    return {"status": "failed", "error_class": "CurlError", "message": message}
 
 
 def _manifest_record(

@@ -1,7 +1,7 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 next)
+Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 in progress)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
 
@@ -41,6 +41,25 @@ Milestone 0 closeout summary on 2026-05-18:
   milestone explicitly restores or reruns those lanes.
 - With the live baseline now locked, the next executable slice in this packet
   is Milestone 1: canonical preflight and fetch-failure closure.
+
+Milestone 1 checkpoint on 2026-05-18:
+
+- The first Milestone 1 code/config slice is now live: `ecos.fws.gov` uses
+  host-level verified `curl` transport through `config/downloader.toml`,
+  `preflight.py`, and `download.py` because that host currently presents an
+  incomplete TLS chain to the Python/OpenSSL path in this environment.
+- The transport stays fail-closed: certificate verification remains enabled,
+  no broad TLS bypass was added, and focused coverage landed in
+  `tests/test_preflight.py` and `tests/test_download.py`.
+- The completed host replay
+  `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
+  `preflight_ok` with `failed_count=0` across the full `ecos.fws.gov`
+  canonical-master host set.
+- The next blocker family is `www.usda.gov`, not `ecos.fws.gov`. Direct probes
+  still time out for `USDA-008`, `USDA-009`, `USDA-010`, `USDA-012`, and
+  `USDA-013` under both the Python transport and verified `curl`.
+- Milestone 1 therefore remains in progress. The next truthful slice is USDA
+  host triage or blocker routing, then a fresh full-master preflight replay.
 
 ## Dependency And Live Refresh Rule
 

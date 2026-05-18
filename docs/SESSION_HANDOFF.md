@@ -5,6 +5,57 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Ecos Transport Checkpoint
+
+This implementation slice starts Milestone 1 and closes the `ecos.fws.gov`
+TLS blocker class without claiming a completed full-master preflight.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- implementation slice:
+  `config/downloader.toml`,
+  `src/usfs_r1_ea_sources/config.py`,
+  `src/usfs_r1_ea_sources/preflight.py`,
+  `src/usfs_r1_ea_sources/download.py`,
+  `tests/test_preflight.py`,
+  `tests/test_download.py`,
+  `DOWNLOADER_RULES.md`,
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  and the routed plan file.
+- resolved blocker class:
+  `ecos.fws.gov` now uses host-level verified `curl` transport because that
+  host currently presents an incomplete TLS chain to the Python/OpenSSL path in
+  this environment. The transport keeps certificate verification enabled and
+  does not use any TLS-bypass flag.
+- live replay evidence:
+  `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
+  `preflight_ok`, `failed_count=0`, and `validation_passed=true` for the full
+  `ecos.fws.gov` canonical-master host set.
+- residual blocker family:
+  the next host-level blocker set is `www.usda.gov`. Direct probes still time
+  out for `USDA-008`, `USDA-009`, `USDA-010`, `USDA-012`, and `USDA-013` under
+  both the Python transport and verified `curl`, so Milestone 1 is not closed
+  yet.
+- aborted broader replay note:
+  a broader full-master preflight replay was started to widen coverage, but it
+  was intentionally stopped once the USDA timeout family surfaced. Do not treat
+  that partial run as a completed Milestone 1 validation artifact.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_preflight.py tests/test_download.py -q`
+  passed with `15` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/preflight.py src/usfs_r1_ea_sources/download.py src/usfs_r1_ea_sources/config.py tests/test_preflight.py tests/test_download.py`
+  passed;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py -q`
+  passed with `5` tests; and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --host ecos.fws.gov --run-id phase2-canonical-preflight-ecos-replay-20260518`
+  passed with `27/27` `preflight_ok`.
+- next routing:
+  stay in Milestone 1. Triage the `www.usda.gov` timeout family and either
+  repair those official URLs or keep them as explicit blockers, then rerun the
+  full-master preflight truthfully.
+
 ## Canonical Source Register Import Completion Milestone 0 Alignment Closeout
 
 This docs-only follow-up closes the remaining routing/alignment gaps after the

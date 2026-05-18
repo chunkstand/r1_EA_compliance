@@ -64,6 +64,33 @@ Latest closeout on 2026-05-18:
   replay boundary, not the live `source_library/catalog/` import baseline
   recorded above.
 
+## Canonical Source Register Import Completion Milestone 1 Ecos Transport Checkpoint
+
+Latest checkpoint on 2026-05-18:
+
+- The first Milestone 1 code slice is now live in capture code and config:
+  `config/downloader.toml` assigns `verified_transport="curl"` to
+  `ecos.fws.gov`, `preflight.py` and `download.py` now honor that
+  host-configured verified transport without disabling certificate checks, and
+  focused coverage landed in `tests/test_preflight.py` and
+  `tests/test_download.py`.
+- This host-specific transport is intentionally narrow. It exists because
+  `ecos.fws.gov` currently presents an incomplete TLS chain to the
+  Python/OpenSSL path in this environment, while verified `curl` succeeds
+  cleanly. The repo does not use `curl -k`, does not disable TLS verification,
+  and does not broaden the override beyond the named host.
+- The completed host replay
+  `source_library/runs/phase2-canonical-preflight-ecos-replay-20260518/summary.json`
+  now passes `27/27` `preflight_ok` with `failed_count=0` across the full
+  `ecos.fws.gov` canonical-master host set.
+- The next live blocker family is `www.usda.gov`, not `ecos.fws.gov`. Direct
+  probes in this environment still time out for
+  `USDA-008`, `USDA-009`, `USDA-010`, `USDA-012`, and `USDA-013` under both the
+  Python transport and verified `curl`.
+- A broader full-master Milestone 1 replay was intentionally not closed after
+  those USDA timeouts surfaced. The next truthful slice is USDA host triage or
+  blocker routing, then a fresh full-master preflight replay.
+
 ## Canonical Source Register Phase 8 Aggregate Readiness And Legacy Contract Retirement
 
 Latest closeout on 2026-05-18 after implementation commit `5c1d45d`:

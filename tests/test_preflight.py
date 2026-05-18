@@ -2,16 +2,18 @@ from __future__ import annotations
 
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from usfs_r1_ea_sources.config import (
     LEGACY_WORKBOOK_LOADER_CONTRACT,
     load_config,
 )
 from usfs_r1_ea_sources.preflight import PreflightFetchResult, _classify_response
-from usfs_r1_ea_sources.preflight import _request_headers, run_preflight
+from usfs_r1_ea_sources.preflight import _request_headers, fetch_url_metadata, run_preflight
 from usfs_r1_ea_sources.workbook import load_r1_forest_plan_document_register
 
 
@@ -218,6 +220,57 @@ class PreflightTests(unittest.TestCase):
 
         self.assertEqual(headers["User-Agent"], "Mozilla/5.0")
         self.assertIn("application/xhtml+xml", headers["Accept"])
+
+    def test_preflight_can_use_verified_curl_transport_for_ecos(self) -> None:
+        config = load_config(CONFIG)
+        responses = [
+            {
+                "stdout": (
+                    "CURLMETA:200\tapplication/json;charset=UTF-8\t"
+                    "https://ecos.fws.gov/ecp/species/2982\t0\n"
+                ),
+                "stderr": "",
+                "headers": "HTTP/2 200\ncontent-type: application/json;charset=UTF-8\n\n",
+                "body": b"",
+            },
+            {
+                "stdout": (
+                    "CURLMETA:200\ttext/html;charset=UTF-8\t"
+                    "https://ecos.fws.gov/ecp/species/2982\t256\n"
+                ),
+                "stderr": "",
+                "headers": (
+                    "HTTP/2 200\n"
+                    "content-type: text/html;charset=UTF-8\n"
+                    "content-length: 256\n\n"
+                ),
+                "body": b"<html><body>ecos species profile</body></html>" + b" " * 256,
+            },
+        ]
+        calls: list[list[str]] = []
+
+        def fake_run(command, capture_output, text, check):  # noqa: ANN001
+            response = responses[len(calls)]
+            calls.append(command)
+            header_path = Path(command[command.index("--dump-header") + 1])
+            body_path = Path(command[command.index("--output") + 1])
+            header_path.write_text(response["headers"], encoding="utf-8")
+            body_path.write_bytes(response["body"])
+            return SimpleNamespace(returncode=0, stdout=response["stdout"], stderr=response["stderr"])
+
+        with patch("usfs_r1_ea_sources.preflight.subprocess.run", side_effect=fake_run):
+            result = fetch_url_metadata(
+                "https://ecos.fws.gov/ecp/species/2982",
+                config.network,
+                config.validation,
+            )
+
+        self.assertEqual(result.status, "preflight_ok")
+        self.assertEqual(result.method, "GET")
+        self.assertEqual(result.validation["verified_transport"], "curl")
+        self.assertEqual(len(calls), 2)
+        self.assertIn("--head", calls[0])
+        self.assertIn("--range", calls[1])
 
 
 if __name__ == "__main__":

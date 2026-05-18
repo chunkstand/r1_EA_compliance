@@ -54,6 +54,11 @@ concurrency = 1
 delay_seconds = 1.0
 concurrency = 1
 
+[hosts."ecos.fws.gov"]
+delay_seconds = 1.0
+concurrency = 1
+verified_transport = "curl"
+
 [hosts."dahp.wa.gov"]
 delay_seconds = 1.0
 concurrency = 1

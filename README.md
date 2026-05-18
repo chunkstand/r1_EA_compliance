@@ -94,6 +94,17 @@ Local active import baseline on 2026-05-18:
   `phase2-canonical-preflight-20260518` checked `25` URLs and recorded
   `7` `preflight_ok` plus `18` `ssl_error`, dominated by `ecos.fws.gov`
   (`18`) and `www.fws.gov` (`5`).
+- Milestone 1 host replay on `2026-05-18` now closes the `ecos.fws.gov` TLS
+  failure class without weakening verification: `config/downloader.toml` now
+  routes that host through verified `curl` transport, and
+  `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
+  `preflight_ok` with `failed_count=0`.
+- The next canonical-master preflight blocker family is currently five
+  `www.usda.gov` rows that time out under both the Python transport and
+  verified `curl` transport:
+  `USDA-008`, `USDA-009`, `USDA-010`, `USDA-012`, and `USDA-013`.
+  Those rows must be repaired or explicitly retained as blockers before the
+  repo can truthfully close the full-master Milestone 1 replay.
 - The local non-strict `promotion-suite` artifact remains green only for the
   current-promotion lane: it reports `current_promotion_ready=true` and
   `promotion_ready=true`, but it also currently reports

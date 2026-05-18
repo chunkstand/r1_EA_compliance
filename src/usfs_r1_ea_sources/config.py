@@ -32,6 +32,7 @@ class HostConfig:
     delay_seconds: float
     concurrency: int
     browser_compatible_user_agent: bool = False
+    verified_transport: str | None = None
 
 
 @dataclass(frozen=True)
@@ -102,6 +103,11 @@ def load_config(path: Path | str = DEFAULT_CONFIG_PATH) -> DownloaderConfig:
                     concurrency=int(values["concurrency"]),
                     browser_compatible_user_agent=bool(
                         values.get("browser_compatible_user_agent", False)
+                    ),
+                    verified_transport=(
+                        str(values["verified_transport"])
+                        if values.get("verified_transport")
+                        else None
                     ),
                 )
                 for host, values in host_data.items()

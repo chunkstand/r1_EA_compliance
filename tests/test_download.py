@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 import hashlib
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.download import (
@@ -284,6 +286,46 @@ class DownloadTests(unittest.TestCase):
             artifact_files = list((Path(tmp) / "artifacts" / "raw").rglob("*"))
             artifact_files = [path for path in artifact_files if path.is_file()]
             self.assertEqual(len(artifact_files), 1)
+
+    def test_download_can_use_verified_curl_transport_for_ecos(self) -> None:
+        config = load_config(CONFIG)
+        body = b"<html><body>ecos report payload</body></html>" + b" " * 256
+        calls: list[list[str]] = []
+
+        def fake_run(command, capture_output, text, check):  # noqa: ANN001
+            calls.append(command)
+            header_path = Path(command[command.index("--dump-header") + 1])
+            body_path = Path(command[command.index("--output") + 1])
+            header_path.write_text(
+                "HTTP/2 200\ncontent-type: text/html;charset=UTF-8\ncontent-length: 256\n\n",
+                encoding="utf-8",
+            )
+            body_path.write_bytes(body)
+            return SimpleNamespace(
+                returncode=0,
+                stdout=(
+                    "CURLMETA:200\ttext/html;charset=UTF-8\t"
+                    "https://ecos.fws.gov/ecp/species/2982\t256\n"
+                ),
+                stderr="",
+            )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch("usfs_r1_ea_sources.preflight.subprocess.run", side_effect=fake_run):
+                result = run_download(
+                    workbook_path=ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+                    output_dir=Path(tmp),
+                    config=config,
+                    run_id="ecos-curl-download",
+                    id_filter="WILD-ESA-084",
+                    sleep_fn=lambda _: None,
+                )
+
+            record = json.loads(result.manifest_path.read_text(encoding="utf-8").splitlines()[0])
+            self.assertEqual(record["status"], "downloaded")
+            self.assertEqual(record["validation"]["verified_transport"], "curl")
+            self.assertEqual(len(calls), 1)
+            self.assertTrue(Path(record["artifact_path"]).exists())
 
 
 if __name__ == "__main__":

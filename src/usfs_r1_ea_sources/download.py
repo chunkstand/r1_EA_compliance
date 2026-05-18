@@ -19,6 +19,7 @@ from .dry_run import _apply_filters, _override_count, new_run_id, utc_now, write
 from .preflight import _base_content_type, _body_looks_blocked, _body_looks_not_found
 from .preflight import _int_or_none, _is_failure_status
 from .preflight import _request_headers, _uses_browser_compatible_user_agent
+from .preflight import _uses_verified_curl_transport, _run_curl_request
 from .preflight import _respect_host_delay
 from .records import WorkbookSource, planned_artifact_path, sha256_file
 from .workbook import (
@@ -409,6 +410,8 @@ def _download_once(
     *,
     original_url: str | None = None,
 ) -> DownloadFetchResult:
+    if _uses_verified_curl_transport(url, network):
+        return _download_once_with_curl(url, network, validation, attempt_count, original_url=original_url)
     redirect_handler = RecordingRedirectHandler()
     opener = build_opener(HTTPSHandler(context=ssl.create_default_context()), redirect_handler)
     request = Request(
@@ -468,6 +471,40 @@ def _download_once(
         return _error_result("failed", None, [], None, "URLError", str(error), attempt_count)
     except Exception as error:
         return _error_result("failed", None, [], None, type(error).__name__, str(error), attempt_count)
+
+
+def _download_once_with_curl(
+    url: str,
+    network: NetworkConfig,
+    validation: ValidationConfig,
+    attempt_count: int,
+    *,
+    original_url: str | None = None,
+) -> DownloadFetchResult:
+    curl_result, error = _run_curl_request(
+        url=url,
+        method="GET",
+        headers=_request_headers(url, network),
+        network=network,
+    )
+    if error is not None:
+        return _error_result(error["status"], None, [], None, error["error_class"], error["message"], attempt_count)
+
+    result = _classify_download_response(
+        http_status=curl_result.http_status or 0,
+        final_url=curl_result.final_url or url,
+        redirect_chain=curl_result.redirect_chain,
+        content_type=curl_result.content_type,
+        content_length=curl_result.content_length,
+        body=curl_result.body,
+        validation=validation,
+        attempt_count=attempt_count,
+        original_url=original_url,
+    )
+    result = _with_verified_transport_metadata(result, "curl")
+    if _uses_browser_compatible_user_agent(url, network):
+        return _with_browser_compatible_metadata(result)
+    return result
 
 
 def _classify_download_response(
@@ -598,6 +635,23 @@ def _with_adapter_metadata(
 def _with_browser_compatible_metadata(result: DownloadFetchResult) -> DownloadFetchResult:
     validation = dict(result.validation)
     validation["browser_compatible_user_agent"] = True
+    return DownloadFetchResult(
+        status=result.status,
+        http_status=result.http_status,
+        final_url=result.final_url,
+        redirect_chain=result.redirect_chain,
+        content_type=result.content_type,
+        content_length=result.content_length,
+        body=result.body,
+        attempt_count=result.attempt_count,
+        failure=result.failure,
+        validation=validation,
+    )
+
+
+def _with_verified_transport_metadata(result: DownloadFetchResult, transport: str) -> DownloadFetchResult:
+    validation = dict(result.validation)
+    validation["verified_transport"] = transport
     return DownloadFetchResult(
         status=result.status,
         http_status=result.http_status,

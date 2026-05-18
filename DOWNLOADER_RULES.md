@@ -216,6 +216,10 @@ source_library/
 
 - eCFR and Federal Register pages may return challenge/interstitial pages. Detect and reject `unblock.federalregister.gov`.
 - For eCFR and Federal Register, prefer official structured export/API endpoints when normal HTML capture is blocked or unstable.
+- For `ecos.fws.gov`, the downloader may use a host-level verified `curl`
+  transport because the host currently serves an incomplete TLS chain to the
+  Python/OpenSSL path in this environment. That transport must keep certificate
+  verification enabled and must not use `curl -k` or any equivalent TLS bypass.
 - For `usfs-public.app.box.com` or `usfs-public.box.com` public file links, preserve the official Box share URL in workbook/register rows and let the downloader resolve the temporary BoxCloud file URL at fetch time; do not store expiring access tokens in source rows.
 - For `uscode.house.gov`, detect `docnotfound.xhtml` as invalid content.
 - For `fs.usda.gov`, preserve final redirected media URLs, especially PDF redirects from `/media/<id>`.
