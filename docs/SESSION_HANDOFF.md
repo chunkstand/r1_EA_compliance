@@ -5,6 +5,70 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Directive Workbook Repair Checkpoint
+
+This implementation slice closes the governed workbook URL-repair packet that
+the prior stop-condition checkpoint routed next.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- implementation slice:
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  and the routed plan file.
+- workbook repair evidence:
+  compared with `HEAD`, `45` `Document_Register_Master` rows now point to
+  official `www.fs.usda.gov/cgi-bin/Directives/get_dirs/...` pages instead of
+  directive wrapper pages or stale `www.usda.gov` static guidance PDFs.
+  `source-register-validate` now passes with `issue_count=0` on workbook SHA
+  `4a32e84fbaac332e873dc13b3760c486cb5eaa7ccfb2128c4670abd3637262c0`, and
+  `tests/test_source_register_schema.py` passed `4/4`.
+- scoped repair replay:
+  `phase2-canonical-preflight-directives-repair-validated-20260518`
+  passed `45/45` `preflight_ok` with `failed_count=0` across the repaired
+  directive-family rows.
+- reduced USDA blocker family:
+  `phase2-canonical-preflight-usda-post-directives-repair-validated-20260518`
+  now filters to only `6` `www.usda.gov` rows, and all `6` finalize as
+  `timeout`:
+  `USDA-008`,
+  `USDA-009`,
+  `USDA-010`,
+  `USDA-011`,
+  `USDA-012`,
+  and `USDA-013`.
+- preserved blocker evidence:
+  the older broader replay under
+  `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
+  remains partial blocker evidence only despite its run ID, and it still
+  preserves explicit `not_found` rows
+  `FED-042`,
+  `FED-041`,
+  `FED-039`,
+  `FED-043`, and
+  `FED-029`.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  passed with `issue_count=0`;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py -q`
+  passed with `4` tests;
+  scoped replay
+  `phase2-canonical-preflight-directives-repair-validated-20260518`
+  passed with `45/45` `preflight_ok`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --host www.usda.gov --run-id phase2-canonical-preflight-usda-post-directives-repair-validated-20260518`
+  completed with `0/6` `preflight_ok` and `6/6` `timeout`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  rerun the fresh full-master canonical preflight against the repaired
+  workbook, and keep the residual six-row `www.usda.gov` timeout family plus
+  the preserved `FED-*` `not_found` set explicit unless that replay or a later
+  repair packet closes them first.
+
 ## Canonical Source Register Import Completion Milestone 1 Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after the
@@ -18,12 +82,12 @@ workbook-repair stop-condition checkpoint.
   evidence only despite its `full-complete` run ID. It is not a completed
   full-master Milestone 1 validation artifact.
 - historical routing note:
-  the immediately following `Canonical Source Register Import Completion
-  Milestone 1 Workbook Repair Stop Condition` section remains the live routing
-  note for this lane. The older `Canonical Source Register Import Completion
-  Milestone 1 Ecos Transport Checkpoint` section below it is now explicit
-  historical pre-stop-condition context only; its five-row USDA blocker wording
-  and replay-first next routing no longer govern.
+  the newer `Canonical Source Register Import Completion Milestone 1 Directive
+  Workbook Repair Checkpoint` section above now supersedes this section and the
+  older `Canonical Source Register Import Completion Milestone 1 Workbook
+  Repair Stop Condition` section below it. The `Canonical Source Register
+  Import Completion Milestone 1 Ecos Transport Checkpoint` section further
+  below is historical pre-stop-condition context only.
 - verification:
   `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
   passed;

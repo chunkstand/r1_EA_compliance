@@ -99,28 +99,39 @@ Local active import baseline on 2026-05-18:
   routes that host through verified `curl` transport, and
   `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
   `preflight_ok` with `failed_count=0`.
-- Dedicated host replay `phase2-canonical-preflight-usda-replay-20260518`
-  now proves the `www.usda.gov` blocker family is `15` rows, not `5`:
-  `USDA-008`, `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, `USDA-013`,
-  and `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`, `LEX-USFS-008`,
-  `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`, `LEX-USFS-016`,
-  `LEX-USFS-017` all timed out under the Python transport.
+- The first governed workbook repair slice is now live on the canonical master
+  sheet. Compared with `HEAD`, `45` `Document_Register_Master` rows now point
+  to official `www.fs.usda.gov/cgi-bin/Directives/get_dirs/...` pages instead
+  of directive wrapper pages or stale `www.usda.gov` static guidance PDFs.
+  `source-register-validate` now passes with `issue_count=0` on workbook SHA
+  `4a32e84fbaac332e873dc13b3760c486cb5eaa7ccfb2128c4670abd3637262c0`, and
+  `tests/test_source_register_schema.py` passes `4/4`.
+- Scoped repair replay
+  `phase2-canonical-preflight-directives-repair-validated-20260518`
+  now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
+  directive-family rows.
+- Dedicated post-repair host replay
+  `phase2-canonical-preflight-usda-post-directives-repair-validated-20260518`
+  now proves the `www.usda.gov` blocker family is reduced from `15` rows to
+  `6`: only `USDA-008`, `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, and
+  `USDA-013` remain on that host, and all `6` still finalize as `timeout`.
 - A broader replay under
   `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
   was intentionally stopped after `105` finalized rows once a second blocker
   family surfaced on `www.fs.usda.gov`. The partial event log already records
   `5` timeout rows on directive wrapper pages
-  (`USFS-024`, `USFS-034`, `USFS-008`, `USFS-016`, `USFS-033`) while the live
-  workbook currently contains `38` rows on
-  `www.fs.usda.gov/about-agency/regulations-policies/manual|handbook/...`
-  wrapper URLs.
+  (`USFS-024`, `USFS-034`, `USFS-008`, `USFS-016`, `USFS-033`) from the
+  pre-repair workbook state. Those wrapper rows are now covered by the
+  `45`-row Directives CGI repair slice above.
 - Despite its `full-complete` run ID, that broader replay is partial blocker
   evidence only. It must not be cited as a completed full-master Milestone 1
   replay artifact.
-- Milestone 1 has therefore reached its workbook-repair stop condition. The
-  next truthful slice is governed workbook URL repair for the `15`
-  `www.usda.gov` rows and the `38` Forest Service directive-wrapper rows, then
-  a fresh full-master canonical preflight replay.
+- Milestone 1 is still not resolved, but the old `15` plus `38`
+  workbook-repair stop condition is no longer live. The next truthful slice is
+  a fresh full-master canonical preflight replay against the repaired workbook,
+  with the residual `www.usda.gov` timeout set and preserved `FED-042`,
+  `FED-041`, `FED-039`, `FED-043`, and `FED-029` `not_found` rows carried
+  forward as explicit blocker evidence unless later repairs close them first.
 - The local non-strict `promotion-suite` artifact remains green only for the
   current-promotion lane: it reports `current_promotion_ready=true` and
   `promotion_ready=true`, but it also currently reports
