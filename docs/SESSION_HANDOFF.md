@@ -5,10 +5,88 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Full-Master Preflight Replay Checkpoint
+
+This implementation slice closes the next routed Milestone 1 pass after the
+directive workbook repair checkpoint by completing the fresh full-master
+canonical preflight replay.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- implementation slice:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  and the routed plan file.
+- full replay evidence:
+  `phase2-canonical-preflight-full-repaired-20260518` is now complete against
+  the repaired workbook SHA
+  `4a32e84fbaac332e873dc13b3760c486cb5eaa7ccfb2128c4670abd3637262c0`.
+  It checked all `635` canonical URLs and finished with `607`
+  `preflight_ok` plus `28` failed rows:
+  `8` `not_found`,
+  `8` `timeout`,
+  `8` `unsupported_content_type`,
+  `3` `rate_limited`, and
+  `1` `challenge_page`.
+- complete live blocker inventory:
+  `FED-042`,
+  `FED-041`,
+  `FED-039`,
+  `FED-043`,
+  `FED-029`,
+  `PROG-008`,
+  `STP-015`, and
+  `STP-011` are `not_found`;
+  `USDA-012`,
+  `USDA-013`,
+  `USDA-009`,
+  `USDA-010`,
+  `USDA-008`,
+  `USDA-011`,
+  `FPS-095`, and
+  `FPS-079` timed out;
+  `R1-021`,
+  `R1-020`,
+  `R1-019`,
+  `R1-023`,
+  `R1-022`,
+  `R1-015`,
+  `R1-009`, and
+  `WILD-ESA-094` hit `unsupported_content_type`;
+  `FOR-005`,
+  `FPS-296`, and
+  `FPS-425` were `rate_limited`; and
+  `FPS-344` resolved to a `challenge_page`.
+- lane result:
+  the repaired workbook did close the old directive-wrapper blocker family, but
+  Milestone 1 is still not resolved. The full replay proves the next truthful
+  slice is not full capture yet; it is a governed blocker-closure packet for
+  the `28` failed rows above, then another fresh full-master canonical
+  preflight replay.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id phase2-canonical-preflight-full-repaired-20260518`
+  completed with `607/635` `preflight_ok` and `28/635` failed rows;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  start a governed Milestone 1 blocker-closure packet for the `28` failed
+  rows grouped by `not_found`, `timeout`, `unsupported_content_type`,
+  `rate_limited`, and `challenge_page`. Do not start full `download`,
+  `batch-download`, or `catalog-build` for the entire master sheet until that
+  packet closes or explicitly accepts the remaining failure classes.
+
 ## Canonical Source Register Import Completion Milestone 1 Workbook Repair Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after implementation
 commit `211f0c8` (`Repair directive workbook URLs for canonical preflight`).
+
+Historical note: this section is pre-`phase2-canonical-preflight-full-repaired-20260518`
+alignment context only. The newer `Canonical Source Register Import Completion
+Milestone 1 Full-Master Preflight Replay Checkpoint` section above now governs
+this lane.
 
 - routed plan:
   `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
@@ -46,6 +124,10 @@ commit `211f0c8` (`Repair directive workbook URLs for canonical preflight`).
 
 This implementation slice closes the governed workbook URL-repair packet that
 the prior stop-condition checkpoint routed next.
+
+Historical note: this section is pre-`phase2-canonical-preflight-full-repaired-20260518`
+workbook-repair context only. The newer full-master replay checkpoint above
+now governs this lane.
 
 - routed plan:
   `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`

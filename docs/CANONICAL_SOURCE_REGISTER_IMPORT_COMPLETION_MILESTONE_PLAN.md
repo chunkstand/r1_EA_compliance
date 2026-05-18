@@ -1,7 +1,7 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 directive workbook-repair checkpoint live)
+Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 full-master preflight replay checkpoint live)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
 
@@ -42,8 +42,9 @@ Milestone 0 closeout summary on 2026-05-18:
 - With the live baseline now locked, the next executable slice in this packet
   is Milestone 1: canonical preflight and fetch-failure closure.
 
-Milestone 1 directive workbook-repair checkpoint on 2026-05-18 after
-implementation commit `211f0c8`:
+Milestone 1 full-master preflight replay checkpoint on 2026-05-18 after
+implementation commit `211f0c8` and replay
+`phase2-canonical-preflight-full-repaired-20260518`:
 
 - The first Milestone 1 code/config slice is now live: `ecos.fws.gov` uses
   host-level verified `curl` transport through `config/downloader.toml`,
@@ -72,6 +73,12 @@ implementation commit `211f0c8`:
   now proves the `www.usda.gov` blocker family is reduced from `15` rows to
   `6`: only `USDA-008`, `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, and
   `USDA-013` remain on that host, and all `6` finalized as `timeout`.
+- The fresh full-master replay
+  `phase2-canonical-preflight-full-repaired-20260518`
+  is now complete against the repaired workbook. It checked all `635`
+  canonical URLs and finished with `607` `preflight_ok` plus `28` failed rows:
+  `8` `not_found`, `8` `timeout`, `8` `unsupported_content_type`,
+  `3` `rate_limited`, and `1` `challenge_page`.
 - A broader replay under
   `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
   was intentionally stopped after `105` finalized rows once a second blocker
@@ -82,14 +89,20 @@ implementation commit `211f0c8`:
 - Despite its `full-complete` run ID, that broader replay remains partial
   blocker evidence only. It must not be cited as a completed Milestone 1
   validation artifact or as a fresh full-master preflight closeout.
-- The same partial broader replay preserved explicit `not_found` blocker rows
-  for `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029`.
-- Milestone 1 is still not resolved, but the old `15` plus `38`
-  workbook-repair stop condition is no longer live. The next truthful slice is
-  a fresh full-master canonical preflight replay against the repaired workbook,
-  with the residual `www.usda.gov` timeout set and preserved `FED-042`,
-  `FED-041`, `FED-039`, `FED-043`, and `FED-029` `not_found` rows carried
-  forward as explicit blocker evidence unless later repairs close them first.
+- The full replay now pins the complete live blocker inventory:
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, `FED-029`, `PROG-008`,
+  `STP-015`, and `STP-011` are `not_found`;
+  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, `USDA-011`,
+  `FPS-095`, and `FPS-079` timed out;
+  `R1-021`, `R1-020`, `R1-019`, `R1-023`, `R1-022`, `R1-015`, `R1-009`, and
+  `WILD-ESA-094` hit `unsupported_content_type`;
+  `FOR-005`, `FPS-296`, and `FPS-425` were `rate_limited`; and
+  `FPS-344` resolved to a `challenge_page`.
+- Milestone 1 is still not resolved. The next truthful slice is a governed
+  blocker-closure packet for those `28` rows, then another fresh full-master
+  canonical preflight replay. Do not start full `download`,
+  `batch-download`, or `catalog-build` for the entire master sheet until that
+  blocker packet closes or explicitly accepts the remaining failure classes.
 
 ## Dependency And Live Refresh Rule
 

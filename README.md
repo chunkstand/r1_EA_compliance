@@ -115,6 +115,12 @@ Local active import baseline on 2026-05-18:
   now proves the `www.usda.gov` blocker family is reduced from `15` rows to
   `6`: only `USDA-008`, `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, and
   `USDA-013` remain on that host, and all `6` still finalize as `timeout`.
+- The fresh full-master replay
+  `phase2-canonical-preflight-full-repaired-20260518`
+  is now complete against the repaired workbook. It checked all `635`
+  canonical URLs and finished with `607` `preflight_ok` plus `28` failed rows:
+  `8` `not_found`, `8` `timeout`, `8` `unsupported_content_type`,
+  `3` `rate_limited`, and `1` `challenge_page`.
 - A broader replay under
   `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
   was intentionally stopped after `105` finalized rows once a second blocker
@@ -127,11 +133,21 @@ Local active import baseline on 2026-05-18:
   evidence only. It must not be cited as a completed full-master Milestone 1
   replay artifact.
 - Milestone 1 is still not resolved, but the old `15` plus `38`
-  workbook-repair stop condition is no longer live. The next truthful slice is
-  a fresh full-master canonical preflight replay against the repaired workbook,
-  with the residual `www.usda.gov` timeout set and preserved `FED-042`,
-  `FED-041`, `FED-039`, `FED-043`, and `FED-029` `not_found` rows carried
-  forward as explicit blocker evidence unless later repairs close them first.
+  workbook-repair stop condition is no longer live. The new blocker inventory
+  is explicit:
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, `FED-029`, `PROG-008`,
+  `STP-015`, and `STP-011` are `not_found`;
+  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, `USDA-011`,
+  `FPS-095`, and `FPS-079` timed out;
+  `R1-021`, `R1-020`, `R1-019`, `R1-023`, `R1-022`, `R1-015`, `R1-009`, and
+  `WILD-ESA-094` hit `unsupported_content_type`;
+  `FOR-005`, `FPS-296`, and `FPS-425` were `rate_limited`; and
+  `FPS-344` resolved to a `challenge_page`.
+- The next truthful slice is a governed Milestone 1 blocker-closure packet for
+  those `28` rows, then another fresh full-master canonical preflight replay.
+  Do not start full `download`, `batch-download`, or `catalog-build` for the
+  entire master sheet until that blocker packet closes or explicitly accepts
+  the remaining failure classes.
 - The local non-strict `promotion-suite` artifact remains green only for the
   current-promotion lane: it reports `current_promotion_ready=true` and
   `promotion_ready=true`, but it also currently reports
