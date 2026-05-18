@@ -9,6 +9,9 @@ from .applicability_eval import DEFAULT_APPLICABILITY_GOLD_EVAL_PATH
 from .applicability_eval import run_applicability_eval
 from .applicability_eval import run_applicability_gold_eval
 from .cli_common import print_summary
+from .draft_generation import DEFAULT_CONFIG_PATH as DEFAULT_DRAFT_GENERATION_CONFIG_PATH
+from .draft_generation_eval import DEFAULT_EVAL_PATH as DEFAULT_DRAFT_GENERATION_EVAL_PATH
+from .draft_generation_eval import run_draft_generation_eval
 from .forest_plan_component_retrieval_eval import (
     DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_MANIFEST_PATH,
 )
@@ -37,6 +40,7 @@ from .v1_ea_eval import run_v1_ea_review_eval
 EVAL_COMMANDS = {
     "applicability-eval",
     "applicability-gold-eval",
+    "draft-generation-eval",
     "forest-plan-component-eval-coverage",
     "forest-plan-component-retrieval-eval",
     "forest-plan-profile-eval",
@@ -97,6 +101,24 @@ def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
     )
     applicability_gold_eval.add_argument("--results-dir", type=Path)
     applicability_gold_eval.add_argument("--top-k", type=int, default=5)
+
+    draft_generation_eval = subparsers.add_parser(
+        "draft-generation-eval",
+        help="Run fail-closed draft-generation eval fixtures and validate the live draft packet.",
+    )
+    draft_generation_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    draft_generation_eval.add_argument("--review-id")
+    draft_generation_eval.add_argument(
+        "--eval-file",
+        default=DEFAULT_DRAFT_GENERATION_EVAL_PATH,
+        type=Path,
+    )
+    draft_generation_eval.add_argument(
+        "--config",
+        default=DEFAULT_DRAFT_GENERATION_CONFIG_PATH,
+        type=Path,
+    )
+    draft_generation_eval.add_argument("--results-dir", type=Path)
 
     upstream_eval = subparsers.add_parser(
         "upstream-eval",
@@ -240,6 +262,17 @@ def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParse
             source_set_id=args.source_set_id,
             results_dir=args.results_dir,
             top_k=args.top_k,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "draft-generation-eval":
+        result = run_draft_generation_eval(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            eval_path=args.eval_file,
+            config_path=args.config,
+            results_dir=args.results_dir,
         )
         print_summary(result.summary)
         return 0 if result.summary["passed"] else 1

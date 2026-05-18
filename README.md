@@ -444,7 +444,12 @@ certification replay plan that validates the promoted East Crazy review packet f
 audited artifacts without broadening the legal or Region 1 readiness claim. Sequences 0-4 are
 complete and accepted: Sequence 4 closed the final packet QA pass by making the rendered packet
 distinguish baseline replay counts from live outer-gate counts, preserving idempotent V1 eval
-hashes across unchanged reruns, and validating the final current-promotion stack. See
+hashes across unchanged reruns, and validating the final current-promotion stack. The canonical
+refoundation Phase 7 packet has also landed: `draft-generate` now writes the reviewed
+draft-generation family under `source_library/reviews/<review_id>/draft_generation/`, and
+`draft-generation-eval` now proves fail-closed handling for unsupported legal-conclusion requests,
+missing citations, stale authority traces, contradictory evidence, and reviewer-warning insertion.
+See
 `docs/OUTPUT_SCHEMAS.md` for the upstream `project-sow-package` contract that converts a structured
 proposed-action intake into resource SOW requirements and, for the East Crazies calibration fixture,
 compares proposed-action resource areas to the actual specialist/supporting reports produced through
@@ -497,7 +502,8 @@ heuristics.
 
 ## Current Inputs
 
-- `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`
+- `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+- `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx` (legacy baseline reference only)
 - `DOWNLOADER_RULES.md`
 - `config/downloader.toml`
 - `config/url_overrides.toml`
@@ -518,6 +524,8 @@ heuristics.
 - `config/nepa_3d_graph_contract_v1.json`
 - `config/region1_forest_plan_readiness_nepa_3d_v1.json`
 - `config/ea_consistency_decision_support_v1.json`
+- `config/draft_generation_v1.json`
+- `config/draft_generation_eval_v1.json`
 - `config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json`
 - `docs/schemas/project_sow_intake_v0.schema.json`
 - `config/templates/project_sow_land_exchange_intake_template.json`
@@ -555,6 +563,7 @@ Generated outputs are written under `source_library/` and ignored by git:
 - Reviewer catalog: `source_library/catalog/source_catalog.jsonl`
 - Reviewer SQLite index: `source_library/catalog/review_sources.sqlite`
 - Source-set manifest: `source_library/catalog/source_set_manifest.json`
+- Reviewed draft-generation packets: `source_library/reviews/<review_id>/draft_generation/`
 - Graph seed files:
   - `source_library/catalog/source_graph_nodes.jsonl`
   - `source_library/catalog/source_graph_edges.jsonl`

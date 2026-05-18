@@ -1093,6 +1093,43 @@ def test_decision_support_handler_propagates_validate_only(monkeypatch) -> None:
     assert captured["results_dir"] == Path("decision-output")
 
 
+def test_draft_generate_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_draft_generate(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_decision_support,
+        "run_draft_generate",
+        fake_run_draft_generate,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "draft-generate",
+            "--output-dir",
+            "library",
+            "--review-id",
+            "review-1",
+            "--config",
+            "config/custom_draft_generation.json",
+            "--results-dir",
+            "draft-output",
+        ]
+    )
+
+    result = cli_decision_support.handle_decision_support_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["review_id"] == "review-1"
+    assert captured["config_path"] == Path("config/custom_draft_generation.json")
+    assert captured["results_dir"] == Path("draft-output")
+
+
 def test_final_qa_handler_propagates_report_options(monkeypatch) -> None:
     captured = {}
 
@@ -1210,6 +1247,46 @@ def test_review_packet_index_handler_propagates_report_options(monkeypatch) -> N
     assert captured["output_dir"] == Path("library")
     assert captured["review_id"] == "review-1"
     assert captured["results_dir"] == Path("review-packet-output")
+
+
+def test_draft_generation_eval_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_draft_generation_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_eval,
+        "run_draft_generation_eval",
+        fake_run_draft_generation_eval,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "draft-generation-eval",
+            "--output-dir",
+            "library",
+            "--review-id",
+            "review-1",
+            "--eval-file",
+            "config/custom_draft_generation_eval.json",
+            "--config",
+            "config/custom_draft_generation.json",
+            "--results-dir",
+            "draft-eval-output",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["review_id"] == "review-1"
+    assert captured["eval_path"] == Path("config/custom_draft_generation_eval.json")
+    assert captured["config_path"] == Path("config/custom_draft_generation.json")
+    assert captured["results_dir"] == Path("draft-eval-output")
 
 
 def test_project_sow_package_handler_propagates_options(monkeypatch) -> None:

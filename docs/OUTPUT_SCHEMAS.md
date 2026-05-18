@@ -2682,6 +2682,118 @@ scoped `phase-eval` includes a `review_packet_index` phase when this sidecar exi
 `config/promotion_suite_v1.json` requires the row inventory, render manifest, packet index JSON/PDF,
 and validation sidecar for current East Crazies promotion.
 
+## Draft Generation Outputs
+
+Path: `source_library/reviews/<review_id>/draft_generation/`
+
+The draft-generation artifact family is the governed reviewed-draft lane over
+existing audited review artifacts. It is not a legal sufficiency
+determination, final agency decision, responsible-official approval, or line
+officer signoff. It must consume reviewed and traced artifact surfaces, not
+workbook rows, raw source files, or prompt-only instructions when equivalent
+reviewed evidence artifacts already exist.
+
+Tracked contract surfaces:
+
+- `config/draft_generation_v1.json`
+- `config/draft_generation_eval_v1.json`
+- `src/usfs_r1_ea_sources/draft_generation.py`
+- `src/usfs_r1_ea_sources/draft_generation_eval.py`
+- `src/usfs_r1_ea_sources/cli_decision_support.py`
+- `src/usfs_r1_ea_sources/cli_eval.py`
+
+Generate the reviewed draft packet with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources draft-generate \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+```
+
+Run the direct eval lane with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources draft-generation-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+```
+
+The generated artifact family includes:
+
+- `draft_generation_package.json`
+- `draft_generation.md`
+- `draft_generation_manifest.json`
+- `draft_generation_traceability.json`
+- `draft_generation_refusals.json`
+- `draft_defensibility_packet.json`
+- `draft_generation_validation.json`
+- `draft_generation_eval_results.json`
+
+`draft_generation_package.json` has schema version
+`draft-generation-package-v1`. It is the canonical reviewed-draft contract and
+must include:
+
+- review/source-set identity plus a human-review-only boundary note with
+  `legal_conclusion=false`;
+- one governed section for each configured output family:
+  issue summaries, compliance narrative, authority coverage appendix,
+  affected-environment or environmental-consequences draft text where evidence
+  is sufficient, and unresolved-issue statements;
+- per-section readiness states (`ready`, `ready_with_reviewer_warnings`, or
+  `refused`);
+- paragraph objects with text, citations, source-record IDs,
+  authority-family IDs, and reviewer-warning markers; and
+- links to the paired traceability, refusal, defensibility, and validation
+  sidecars.
+
+`draft_generation_traceability.json` has schema version
+`draft-generation-traceability-v1`. It records one paragraph-trace row per
+generated paragraph with:
+
+- source passages;
+- authority-family IDs;
+- retrieval trace IDs;
+- graph path IDs;
+- reviewed artifact selectors;
+- unresolved-issue refs;
+- residual-risk refs; and
+- missing-evidence refs when generation fails closed.
+
+`draft_generation_refusals.json` has schema version
+`draft-generation-refusals-v1`. It records governed refusals when the requested
+output is outside the allowed reviewed-draft boundary or when evidence is not
+sufficient. Refusal rows carry a stable refusal ID, output ID, category, and
+message.
+
+`draft_defensibility_packet.json` has schema version
+`draft-defensibility-packet-v1`. It summarizes the evidence and residual-risk
+boundary for each generated section, including supporting rule IDs,
+authority-family IDs, unresolved-issue refs, and residual-risk refs.
+
+`draft_generation_manifest.json` has schema version
+`draft-generation-manifest-v1`. It records the generator version, config path,
+input artifact paths and hashes, per-section dependencies, validation status,
+and the written output paths and hashes.
+
+`draft_generation_validation.json` has schema version
+`draft-generation-validation-v1`. It fails closed on:
+
+- missing or unparsable required artifacts;
+- review/source-set mismatch;
+- stale authority validation state;
+- contradictory reviewed evidence across compliance, explanation, packet, and
+  decision-support surfaces;
+- missing citations on traced evidence paragraphs;
+- unsupported legal-conclusion requests or prohibited phrases;
+- missing reviewer-warning insertion when unresolved inputs exist; and
+- missing human-review boundary declarations.
+
+`draft_generation_eval_results.json` has schema version
+`draft-generation-eval-results-v1`. The direct-eval lane runs deterministic
+mutation cases over the reviewed-draft generator and proves fail-closed
+handling for unsupported legal-conclusion requests, missing citations, stale
+authority traces, contradictory evidence, and reviewer-warning insertion.
+
 ## East Crazies Final QA And Certification Outputs
 
 Path: `source_library/reviews/<review_id>/final_qa/`

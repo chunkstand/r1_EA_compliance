@@ -1,0 +1,55 @@
+{
+  "schema_version": "draft-generation-config-v1",
+  "generator_version": "draft-generation-v1",
+  "review_id": "v1-cg-ecid-compliance-review",
+  "source_set_id": "source-set-ba8d0feae79501b8",
+  "human_review_caveat": "This generated draft supports human review. It does not replace responsible-official, line-officer, counsel, or specialist judgment, and it is not a legal sufficiency determination or final agency decision.",
+  "prohibited_phrases": [
+    "legal sufficiency certified",
+    "responsible official approved",
+    "final agency decision is complete",
+    "counsel has approved this draft"
+  ],
+  "section_order": [
+    "issue_summaries",
+    "compliance_narrative",
+    "authority_coverage_appendix",
+    "affected_environment_and_environmental_consequences",
+    "unresolved_issue_statements"
+  ],
+  "section_profiles": [
+    {
+      "output_id": "issue_summaries",
+      "section_type": "citation_bearing_issue_summary",
+      "title": "Issue Summaries And Reviewer Attention Items"
+    },
+    {
+      "output_id": "compliance_narrative",
+      "section_type": "compliance_narrative",
+      "title": "Compliance Narrative Draft"
+    },
+    {
+      "output_id": "authority_coverage_appendix",
+      "section_type": "authority_coverage_appendix",
+      "title": "Authority Coverage Appendix"
+    },
+    {
+      "output_id": "affected_environment_and_environmental_consequences",
+      "section_type": "environmental_consequences",
+      "title": "Affected Environment And Environmental Consequences Draft",
+      "minimum_findings": 5,
+      "rule_ids": [
+        "eo_11990_wetlands",
+        "eo_13186_migratory_birds",
+        "esa_section_7",
+        "montana_shpo_review",
+        "roadless_rule_36cfr_294b"
+      ]
+    },
+    {
+      "output_id": "unresolved_issue_statements",
+      "section_type": "unresolved_issue_statement",
+      "title": "Reviewer Warnings And Unresolved Issue Statements"
+    }
+  ]
+}

@@ -5,6 +5,78 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 7 Draft-Generation Closeout
+
+This implementation slice closes the Phase 7 legally defensible
+draft-generation packet for the canonical source-register refoundation while
+keeping the Phase 4 placeholder boundary explicit.
+
+- scope:
+  `config/draft_generation_v1.json`,
+  `config/draft_generation_eval_v1.json`,
+  `src/usfs_r1_ea_sources/draft_generation.py`,
+  `src/usfs_r1_ea_sources/draft_generation_eval.py`,
+  `src/usfs_r1_ea_sources/cli_decision_support.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `tests/test_draft_generation.py`,
+  `tests/test_draft_generation_eval.py`,
+  `tests/test_cli.py`,
+  `tests/support/draft_generation_fixtures.py`,
+  `docs/architecture_contract.toml`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- resolved boundary:
+  the repo now has a governed reviewed-draft generation lane under
+  `source_library/reviews/<review_id>/draft_generation/`. It can emit
+  citation-bearing issue summaries, compliance narrative, authority coverage
+  appendix material, affected-environment and environmental-consequences
+  draft text where evidence is sufficient, unresolved-issue statements,
+  paragraph-level traceability, refusal artifacts, and a defensibility packet
+  without drafting from workbook rows, raw source files, or prompt-only
+  inputs.
+- live reviewer-ready replay:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources draft-generate --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  passed and wrote the ignored draft-generation family at
+  `source_library/reviews/v1-cg-ecid-compliance-review/draft_generation/`
+  with `ready_section_count=5`, `paragraph_count=41`,
+  `warning_section_count=4`, `refusal_count=0`, and
+  `validation_passed=true`. Section states are
+  `issue_summaries=ready_with_reviewer_warnings`,
+  `compliance_narrative=ready`,
+  `authority_coverage_appendix=ready_with_reviewer_warnings`,
+  `affected_environment_and_environmental_consequences=ready_with_reviewer_warnings`,
+  and `unresolved_issue_statements=ready_with_reviewer_warnings`.
+- live direct eval:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources draft-generation-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  passed `5/5` at
+  `source_library/reviews/v1-cg-ecid-compliance-review/draft_generation/draft_generation_eval_results.json`
+  and proves fail-closed handling for unsupported legal-conclusion requests,
+  missing citations, stale authority traces, contradictory evidence, and
+  reviewer-warning insertion.
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_draft_generation.py tests/test_draft_generation_eval.py tests/test_review_packet_index.py tests/test_cli.py tests/test_architecture_contract.py -q`
+  passed with `70` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`
+  passed;
+  `PYTHONPATH=src python -m compileall src`
+  passed.
+- explicit residual boundary:
+  the live draft-generation proof is still routed through the active
+  reviewer-ready East Crazies lane on `source-set-ba8d0feae79501b8`. The
+  canonical proving slice `source-set-9dcf819bc4cca486` still carries
+  governed Phase 4 placeholder artifacts, so this closeout does not yet claim
+  direct-document-backed draft generation on that placeholder source set or
+  full aggregate canonical readiness.
+- next routing:
+  Phase 8 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is now the
+  next executable packet: aggregate readiness, real-package proving, and
+  legacy contract retirement.
+
 ## Canonical Source Register Refoundation Phase 6 Applicability And Review Closeout
 
 This implementation slice closes the Phase 6 review-contract packet for the

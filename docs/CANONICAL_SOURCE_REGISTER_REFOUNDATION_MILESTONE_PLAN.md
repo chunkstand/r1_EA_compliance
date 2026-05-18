@@ -62,9 +62,20 @@ Current checkpoint on 2026-05-18:
   active reviewer-ready East Crazies lane on `source-set-ba8d0feae79501b8`
   because the canonical proving slice still carries Phase 4 placeholder
   artifacts and cannot yet prove real-direct-document review readiness.
+- Phase 7 legally defensible draft-document generation is now live: the repo
+  ships `draft-generate`, `draft-generation-eval`,
+  `config/draft_generation_v1.json`, and
+  `config/draft_generation_eval_v1.json`, and the active reviewer-ready East
+  Crazies lane now writes a governed draft-generation family with
+  `ready_section_count=5`, `paragraph_count=41`, explicit reviewer warnings,
+  refusal artifacts, paragraph-level traceability, and a defensibility packet.
+  `draft-generation-eval` passes `5/5` on the same lane and proves
+  fail-closed handling for unsupported legal-conclusion requests, missing
+  citations, stale authority traces, contradictory evidence, and
+  reviewer-warning insertion.
 - No full-register canonical ingestion may bypass the now-live Phase 1.5
-  proving gate, and the next implementation boundary is now Phase 7: legally
-  defensible draft-document generation.
+  proving gate, and the next implementation boundary is now Phase 8:
+  aggregate readiness, real-package proving, and legacy contract retirement.
 
 Owner context: This is a fresh standalone architecture and delivery plan for
 refounding the system around

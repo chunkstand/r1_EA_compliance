@@ -16,6 +16,58 @@ historical lane notes when they disagree. In particular, older references to Sou
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
 
+## Canonical Source Register Phase 7 Legally Defensible Draft-Document Generation
+
+Latest closeout on 2026-05-18:
+
+- `draft-generate` now owns the governed reviewed-draft lane under
+  `source_library/reviews/<review_id>/draft_generation/`. The canonical output
+  family is `draft_generation_package.json`, `draft_generation.md`,
+  `draft_generation_manifest.json`, `draft_generation_traceability.json`,
+  `draft_generation_refusals.json`, `draft_defensibility_packet.json`, and
+  `draft_generation_validation.json`.
+- The generator now consumes reviewed and traced evidence surfaces only:
+  `compliance_review.json`, `compliance_validation.json`,
+  `authority_explanation_paths.json`,
+  `decision_support/ea_consistency_decision_support.json`,
+  `review_packet_index/review_packet_index.json`,
+  `non_applicable_authority_appendix.json`, and
+  `litigation_risk_summary.json`, with optional
+  `final_qa/east_crazies_final_qa_certification.json` and
+  `authority_reviewer_resolution_report.json` when present. It does not draft
+  from workbook rows, raw source files, or unreviewed prompt-only inputs.
+- The active reviewer-ready East Crazies review
+  `source_library/reviews/v1-cg-ecid-compliance-review/draft_generation/`
+  now passes with `ready_section_count=5`, `paragraph_count=41`,
+  `warning_section_count=4`, `refusal_count=0`, and
+  `validation_passed=true`. The live section states are:
+  `issue_summaries=ready_with_reviewer_warnings`,
+  `compliance_narrative=ready`,
+  `authority_coverage_appendix=ready_with_reviewer_warnings`,
+  `affected_environment_and_environmental_consequences=ready_with_reviewer_warnings`,
+  and `unresolved_issue_statements=ready_with_reviewer_warnings`.
+- Paragraph-level traceability is now first class. Every generated paragraph is
+  mapped in `draft_generation_traceability.json` to source passages,
+  authority-family IDs, retrieval trace IDs, graph path IDs, reviewed artifact
+  selectors, unresolved-issue refs, and residual-risk refs. The paired
+  `draft_defensibility_packet.json` summarizes those same boundaries section by
+  section for reviewer audit.
+- `draft-generation-eval` is now the governed direct-eval lane for reviewed
+  draft generation. The live East Crazies eval passed `5/5` at
+  `source_library/reviews/v1-cg-ecid-compliance-review/draft_generation/draft_generation_eval_results.json`
+  and proves fail-closed handling for unsupported legal-conclusion requests,
+  missing citations, stale authority traces, contradictory evidence, and
+  reviewer-warning insertion.
+- The live proving boundary is still the reviewer-ready East Crazies lane on
+  `source-set-ba8d0feae79501b8`, not the canonical proving slice
+  `source-set-9dcf819bc4cca486`. That proving slice still carries Phase 4
+  placeholder artifacts, so Phase 7 closes the reviewed-draft contract and
+  live reviewer lane only; it does not yet prove direct-document-backed
+  canonical-corpus draft generation on the placeholder source set.
+- The next routed implementation packet is now Phase 8 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`: aggregate
+  readiness, real-package proving, and legacy contract retirement.
+
 ## Canonical Source Register Phase 6 Applicability, Rule-Pack, And Legally Accurate Review
 
 Latest closeout on 2026-05-18 after implementation commit `15d117a`:
@@ -59,9 +111,8 @@ Latest closeout on 2026-05-18 after implementation commit `15d117a`:
   `source-set-9dcf819bc4cca486`. That proving slice still carries governed
   Phase 4 placeholder artifacts and therefore cannot yet prove
   real-direct-document compliance review readiness.
-- The next routed implementation packet is Phase 7 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`: legally
-  defensible draft-document generation.
+- This packet is now historical routing context only. Phase 7 has since
+  landed, and Phase 8 is now the next routed implementation packet.
 
 ## Canonical Source Register Phase 5 Graph Accuracy, Provenance Completeness, And Knowledge-Graph Gating
 

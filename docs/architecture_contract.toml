@@ -199,7 +199,12 @@ allowed_import_layers = [
 [[layers]]
 name = "decision_support"
 summary = "Supervisor-facing EA consistency report synthesis over audited review artifacts."
-modules = ["ea_consistency_decision_support", "final_qa_certification", "review_packet_index"]
+modules = [
+  "draft_generation",
+  "ea_consistency_decision_support",
+  "final_qa_certification",
+  "review_packet_index",
+]
 allowed_import_layers = [
   "foundation",
   "decision_support",
@@ -219,6 +224,7 @@ name = "eval"
 summary = "Applicability and V1 EA promotion/evaluation commands."
 modules = [
   "applicability_eval",
+  "draft_generation_eval",
   "forest_plan_component_retrieval_eval",
   "forest_plan_profile_eval",
   "gold_coverage_eval",
@@ -425,6 +431,13 @@ paths = [
 [[artifacts]]
 owner_layer = "decision_support"
 paths = [
+  "source_library/reviews/<review_id>/draft_generation/draft_generation_package.json",
+  "source_library/reviews/<review_id>/draft_generation/draft_generation.md",
+  "source_library/reviews/<review_id>/draft_generation/draft_generation_manifest.json",
+  "source_library/reviews/<review_id>/draft_generation/draft_generation_traceability.json",
+  "source_library/reviews/<review_id>/draft_generation/draft_generation_refusals.json",
+  "source_library/reviews/<review_id>/draft_generation/draft_defensibility_packet.json",
+  "source_library/reviews/<review_id>/draft_generation/draft_generation_validation.json",
   "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.json",
   "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.md",
   "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.pdf",
@@ -468,6 +481,7 @@ paths = [
   "source_library/evaluations/upstream/upstream_evaluation_report.md",
   "source_library/reviews/gold_coverage_eval/gold_coverage_eval_results.json",
   "source_library/reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json",
+  "source_library/reviews/<review_id>/draft_generation/draft_generation_eval_results.json",
   "source_library/reviews/<review_id>/v1_ea_eval_results.json",
   "source_library/reviews/compliance_review_eval/compliance_review_eval_results.json",
   "source_library/reviews/compliance_gold_eval/compliance_gold_eval_results.json",
@@ -552,7 +566,7 @@ commands = ["compliance-review", "compliance-review-eval", "compliance-gold-eval
 
 [[command_groups]]
 name = "decision_support"
-commands = ["ea-consistency-document", "final-qa-certification", "review-packet-index"]
+commands = ["draft-generate", "ea-consistency-document", "final-qa-certification", "review-packet-index"]
 
 [[command_groups]]
 name = "project_planning"
@@ -573,6 +587,7 @@ name = "eval"
 commands = [
   "applicability-eval",
   "applicability-gold-eval",
+  "draft-generation-eval",
   "forest-plan-component-eval-coverage",
   "forest-plan-component-retrieval-eval",
   "forest-plan-profile-eval",

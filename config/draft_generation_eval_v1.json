@@ -1,0 +1,36 @@
+{
+  "schema_version": "draft-generation-eval-v1",
+  "review_id": "v1-cg-ecid-compliance-review",
+  "cases": [
+    {
+      "case_id": "unsupported_legal_conclusion_rejected",
+      "mutation": "request_unsupported_legal_conclusion",
+      "required_refusal_category": "unsupported_legal_conclusion",
+      "expected_validation_passed": false
+    },
+    {
+      "case_id": "missing_citation_rejected",
+      "mutation": "drop_citations_from_first_finding",
+      "required_failure_category": "missing_citation",
+      "expected_validation_passed": false
+    },
+    {
+      "case_id": "stale_authority_rejected",
+      "mutation": "mark_authority_paths_stale",
+      "required_failure_category": "stale_authority",
+      "expected_validation_passed": false
+    },
+    {
+      "case_id": "contradictory_evidence_rejected",
+      "mutation": "conflict_first_finding_status",
+      "required_failure_category": "contradictory_evidence",
+      "expected_validation_passed": false
+    },
+    {
+      "case_id": "reviewer_warning_inserted_for_unresolved_issues",
+      "mutation": "retain_reviewer_warning_inputs",
+      "warning_required": true,
+      "expected_validation_passed": true
+    }
+  ]
+}
