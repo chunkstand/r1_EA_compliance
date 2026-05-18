@@ -52,8 +52,8 @@ Current checkpoint on 2026-05-18:
   non-reviewer-ready because inherited Phase 4 placeholder artifacts continue
   to block extraction, retrieval, evidence-graph validation, and downstream
   reviewer lanes.
-- Phase 6 applicability, rule-pack, and legally accurate review is now live at
-  the review-contract boundary: `compliance-review` writes
+- Phase 6 applicability, rule-pack, and legally accurate review is now live in
+  commit `15d117a` at the review-contract boundary: `compliance-review` writes
   `authority_explanation_paths.json`, the reviewer-facing matrix surfaces
   authority-path classifications plus retrieval/graph/search coverage and risk
   fields, `compliance-review-eval` enforces the new explanation-path artifact
@@ -1297,7 +1297,7 @@ Required verification gates:
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval --output-dir source_library --source-set-id <canonical_source_set_id> --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --eval-file config/applicability_eval_seed.json
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review-eval --output-dir source_library --source-set-id <canonical_source_set_id> --eval-file config/compliance_review_eval_seed.json
 PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id <review_id>
-PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py tests/test_compliance_review.py tests/test_v1_ea_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py tests/test_compliance_review.py tests/test_compliance_review_eval.py tests/test_v1_ea_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_architecture_contract.py
 git diff --check
 ```
 

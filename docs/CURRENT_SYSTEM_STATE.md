@@ -18,7 +18,7 @@ Milestone 5 closeout commit `94c8915`.
 
 ## Canonical Source Register Phase 6 Applicability, Rule-Pack, And Legally Accurate Review
 
-Latest closeout on 2026-05-18:
+Latest closeout on 2026-05-18 after implementation commit `15d117a`:
 
 - Reviewer-facing authority explanation paths are now first-class compliance
   review outputs. `compliance-review` writes
@@ -109,9 +109,8 @@ Latest closeout on 2026-05-18:
   by extraction, retrieval, evidence-graph, claim-extraction, rule-claim
   binding, and downstream review lanes. This packet closes the semantic graph
   boundary only; it does not widen reviewer-ready or promotion-ready claims.
-- The next routed implementation packet is Phase 6 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`:
-  applicability, rule-pack, and legally accurate review on the new corpus.
+- This packet is now historical routing context only. Phase 6 has since
+  landed, and Phase 7 is now the next routed implementation packet.
 
 ## Canonical Source Register Phase 4 Extraction Fidelity And Verified Source Admission
 
@@ -152,8 +151,8 @@ Latest closeout on 2026-05-18:
   reports, split-page PDFs, OCR/table-heavy PDFs, and direct-file wrapper-page
   negatives under `config/upstream_evaluation_v1.json`.
 - This packet is now historical routing context only. Phase 5 graph accuracy,
-  provenance completeness, and knowledge-graph gating has since landed, and
-  Phase 6 is now the next routed implementation boundary.
+  Phase 6 review-contract closure, and the newer Phase 7 routing all
+  supersede this earlier note.
 
 ## Canonical Source Register Phase 3 Currentness, Supersession, And Source-Partition Rebase
 

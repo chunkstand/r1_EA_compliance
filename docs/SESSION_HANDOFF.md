@@ -8,8 +8,8 @@ that lane supersedes older sections below when they disagree.
 ## Canonical Source Register Refoundation Phase 6 Applicability And Review Closeout
 
 This implementation slice closes the Phase 6 review-contract packet for the
-canonical source-register refoundation while keeping the Phase 4 placeholder
-boundary explicit.
+canonical source-register refoundation after implementation commit `15d117a`
+while keeping the Phase 4 placeholder boundary explicit.
 
 - scope:
   `src/usfs_r1_ea_sources/compliance_explanation_paths.py`,
@@ -123,10 +123,9 @@ repo state after implementation commit `4d24e10`.
   `git diff --check`
   passed.
 - next routing:
-  unchanged. Phase 6 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` remains the
-  next executable packet: applicability, rule-pack, and legally accurate
-  review on the new corpus.
+  historical only after Phase 6 commit `15d117a`. Phase 7 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is now the
+  next executable packet: legally defensible draft-document generation.
 - routing note:
   the older Phase 5 section below is now historical where it still implied
   starter-status contracts or omitted the focused negative semantic-graph
@@ -233,10 +232,9 @@ boundary explicit.
   `git diff --check`
   passed.
 - next routing:
-  Phase 6 in
+  historical only after Phase 6 commit `15d117a`. Phase 7 in
   `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is now the
-  next executable packet: applicability, rule-pack, and legally accurate
-  review on the new corpus.
+  next executable packet: legally defensible draft-document generation.
 - routing note:
   the Phase 4 “next executable packet is Phase 5” line below is historical
   only after this closeout.
