@@ -5,6 +5,59 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Blocker Repair Slice Checkpoint
+
+This implementation slice closes the next routed Milestone 1 pass by repairing
+the clearly stale master-sheet URLs and replaying the affected blocker subset.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- implementation slice:
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `tests/test_source_register_schema.py`,
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  the routed plan file.
+- workbook repair evidence:
+  `Document_Register_Master` now carries `48` governed URL repairs total:
+  `45` earlier directive/USDA repairs plus `3` stale-URL repairs for
+  `PROG-008`, `STP-015`, and `STP-011`.
+  The active workbook SHA is now
+  `fd40c4aa0216c10e5a1c61b93634d3e658f74a8c7cf4f06ba16a6379289159ec`.
+- scoped replay evidence:
+  `phase2-canonical-preflight-blocker-repair-slice-20260518` completed with
+  `8/8` `preflight_ok` and `failed_count=0` across the repaired stale-URL rows
+  (`PROG-008`, `STP-015`, `STP-011`) plus the `5` previously failing
+  `www.fs.usda.gov/media...` rows (`FOR-005`, `FPS-296`, `FPS-425`,
+  `FPS-095`, `FPS-079`).
+- active blocker surface:
+  the historical full-master replay `phase2-canonical-preflight-full-repaired-20260518`
+  still records `28` failures, but the active unresolved blocker surface
+  before the next full-master rerun is now `20` rows:
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029` remain
+  `not_found`;
+  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and `USDA-011`
+  still finalize as `timeout`;
+  `R1-021`, `R1-020`, `R1-019`, `R1-023`, `R1-022`, `R1-015`, `R1-009`, and
+  `WILD-ESA-094` still hit `unsupported_content_type`; and
+  `FPS-344` still resolves to a `challenge_page`.
+- structural note:
+  local Docling rejects legacy `.doc`, so do not make the Region 1 directive
+  rows green by widening content-type validation alone.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  passed with `issue_count=0`;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py tests/test_source_register_loader.py -q`
+  passed `10/10`; and
+  the scoped replay above completed with `8/8` `preflight_ok`.
+- next routing:
+  start the structural unsupported-format boundary packet for the `8`
+  `unsupported_content_type` rows. After that closes, finish the remaining
+  federal/usda/challenge blocker families and rerun the fresh full-master
+  canonical preflight before any full `download`, `batch-download`, or
+  `catalog-build` for the entire master sheet.
+
 ## Canonical Source Register Import Completion Milestone 1 Full-Master Replay Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after replay

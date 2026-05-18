@@ -99,13 +99,14 @@ Local active import baseline on 2026-05-18:
   routes that host through verified `curl` transport, and
   `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
   `preflight_ok` with `failed_count=0`.
-- The first governed workbook repair slice is now live on the canonical master
-  sheet. Compared with `HEAD`, `45` `Document_Register_Master` rows now point
-  to official `www.fs.usda.gov/cgi-bin/Directives/get_dirs/...` pages instead
-  of directive wrapper pages or stale `www.usda.gov` static guidance PDFs.
-  `source-register-validate` now passes with `issue_count=0` on workbook SHA
-  `4a32e84fbaac332e873dc13b3760c486cb5eaa7ccfb2128c4670abd3637262c0`, and
-  `tests/test_source_register_schema.py` passes `4/4`.
+- The governed workbook repair lane is now live on the canonical master sheet.
+  `Document_Register_Master` now carries `48` URL repairs total:
+  `45` earlier directive/USDA repairs plus `3` stale-URL repairs for
+  `PROG-008`, `STP-015`, and `STP-011`. `source-register-validate` now passes
+  with `issue_count=0` on workbook SHA
+  `fd40c4aa0216c10e5a1c61b93634d3e658f74a8c7cf4f06ba16a6379289159ec`, and
+  `tests/test_source_register_schema.py` plus
+  `tests/test_source_register_loader.py` pass `10/10`.
 - Scoped repair replay
   `phase2-canonical-preflight-directives-repair-validated-20260518`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
@@ -121,6 +122,15 @@ Local active import baseline on 2026-05-18:
   canonical URLs and finished with `607` `preflight_ok` plus `28` failed rows:
   `8` `not_found`, `8` `timeout`, `8` `unsupported_content_type`,
   `3` `rate_limited`, and `1` `challenge_page`.
+- Scoped blocker replay
+  `phase2-canonical-preflight-blocker-repair-slice-20260518`
+  now passes `8/8` `preflight_ok` with `failed_count=0` across the `3`
+  repaired stale-URL rows (`PROG-008`, `STP-015`, `STP-011`) plus the `5`
+  previously failing `www.fs.usda.gov/media/...` rows
+  (`FOR-005`, `FPS-296`, `FPS-425`, `FPS-095`, `FPS-079`). Those media
+  failures are no longer active blocker rows for routing, but final
+  confirmation still requires a fresh full-master replay after the remaining
+  blocker families close.
 - A broader replay under
   `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
   was intentionally stopped after `105` finalized rows once a second blocker
@@ -132,22 +142,23 @@ Local active import baseline on 2026-05-18:
 - Despite its `full-complete` run ID, that broader replay is partial blocker
   evidence only. It must not be cited as a completed full-master Milestone 1
   replay artifact.
-- Milestone 1 is still not resolved, but the old `15` plus `38`
-  workbook-repair stop condition is no longer live. The new blocker inventory
-  is explicit:
-  `FED-042`, `FED-041`, `FED-039`, `FED-043`, `FED-029`, `PROG-008`,
-  `STP-015`, and `STP-011` are `not_found`;
-  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, `USDA-011`,
-  `FPS-095`, and `FPS-079` timed out;
+- Milestone 1 is still not resolved, but the active unresolved blocker surface
+  is now reduced from the historical `28`-row full replay to `20` rows before
+  the next full-master rerun:
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029` remain
+  `not_found`;
+  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and `USDA-011`
+  still finalize as `timeout`;
   `R1-021`, `R1-020`, `R1-019`, `R1-023`, `R1-022`, `R1-015`, `R1-009`, and
-  `WILD-ESA-094` hit `unsupported_content_type`;
-  `FOR-005`, `FPS-296`, and `FPS-425` were `rate_limited`; and
-  `FPS-344` resolved to a `challenge_page`.
-- The next truthful slice is a governed Milestone 1 blocker-closure packet for
-  those `28` rows, then another fresh full-master canonical preflight replay.
-  Do not start full `download`, `batch-download`, or `catalog-build` for the
-  entire master sheet until that blocker packet closes or explicitly accepts
-  the remaining failure classes.
+  `WILD-ESA-094` still hit `unsupported_content_type`; and
+  `FPS-344` still resolves to a `challenge_page`.
+- The next truthful slice is the structural unsupported-format boundary packet
+  for those `8` `unsupported_content_type` rows. Installed Docling rejects
+  legacy `.doc`, so do not make the Region 1 directive rows green by widening
+  content-type validation alone. Full `download`, `batch-download`, and
+  `catalog-build` for the entire master sheet remain blocked until the
+  remaining blocker families close and a fresh full-master canonical preflight
+  replay reruns.
 - The local non-strict `promotion-suite` artifact remains green only for the
   current-promotion lane: it reports `current_promotion_ready=true` and
   `promotion_ready=true`, but it also currently reports

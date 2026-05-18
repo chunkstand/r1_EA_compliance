@@ -1,7 +1,7 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 full-master preflight replay checkpoint live)
+Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 blocker repair slice live)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
 
@@ -42,10 +42,9 @@ Milestone 0 closeout summary on 2026-05-18:
 - With the live baseline now locked, the next executable slice in this packet
   is Milestone 1: canonical preflight and fetch-failure closure.
 
-Milestone 1 full-master preflight replay checkpoint on 2026-05-18 after
-implementation commit `211f0c8`, replay
-`phase2-canonical-preflight-full-repaired-20260518`, and replay checkpoint
-commit `86efa46`:
+Milestone 1 blocker repair slice on 2026-05-18 after implementation commit
+`211f0c8`, replay `phase2-canonical-preflight-full-repaired-20260518`,
+replay checkpoint commit `86efa46`, and the current blocker repair slice:
 
 - The first Milestone 1 code/config slice is now live: `ecos.fws.gov` uses
   host-level verified `curl` transport through `config/downloader.toml`,
@@ -58,13 +57,14 @@ commit `86efa46`:
   `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
   `preflight_ok` with `failed_count=0` across the full `ecos.fws.gov`
   canonical-master host set.
-- The first governed workbook repair slice is now live on the canonical master
-  sheet. Compared with `HEAD`, `45` `Document_Register_Master` rows now point
-  to official `www.fs.usda.gov/cgi-bin/Directives/get_dirs/...` pages instead
-  of directive wrapper pages or stale `www.usda.gov` static guidance PDFs.
-  `source-register-validate` now passes with `issue_count=0` on workbook SHA
-  `4a32e84fbaac332e873dc13b3760c486cb5eaa7ccfb2128c4670abd3637262c0`, and
-  `tests/test_source_register_schema.py` passes `4/4`.
+- The governed workbook repair lane is now live on the canonical master sheet.
+  `Document_Register_Master` now carries `48` URL repairs total:
+  `45` earlier directive/USDA repairs plus `3` stale-URL repairs for
+  `PROG-008`, `STP-015`, and `STP-011`.
+- `source-register-validate` now passes with `issue_count=0` on workbook SHA
+  `fd40c4aa0216c10e5a1c61b93634d3e658f74a8c7cf4f06ba16a6379289159ec`, and
+  `tests/test_source_register_schema.py` plus
+  `tests/test_source_register_loader.py` pass `10/10`.
 - Scoped repair replay
   `phase2-canonical-preflight-directives-repair-validated-20260518`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
@@ -80,6 +80,14 @@ commit `86efa46`:
   canonical URLs and finished with `607` `preflight_ok` plus `28` failed rows:
   `8` `not_found`, `8` `timeout`, `8` `unsupported_content_type`,
   `3` `rate_limited`, and `1` `challenge_page`.
+- The scoped blocker replay
+  `phase2-canonical-preflight-blocker-repair-slice-20260518`
+  now passes `8/8` `preflight_ok` with `failed_count=0` across the `3`
+  repaired stale-URL rows (`PROG-008`, `STP-015`, `STP-011`) plus the `5`
+  previously failing `www.fs.usda.gov/media...` rows (`FOR-005`, `FPS-296`,
+  `FPS-425`, `FPS-095`, `FPS-079`). Those `5` media rows are no longer active
+  blocker rows for routing, but final confirmation still requires a fresh
+  full-master replay after the remaining blocker families close.
 - A broader replay under
   `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
   was intentionally stopped after `105` finalized rows once a second blocker
@@ -90,20 +98,24 @@ commit `86efa46`:
 - Despite its `full-complete` run ID, that broader replay remains partial
   blocker evidence only. It must not be cited as a completed Milestone 1
   validation artifact or as a fresh full-master preflight closeout.
-- The full replay now pins the complete live blocker inventory:
-  `FED-042`, `FED-041`, `FED-039`, `FED-043`, `FED-029`, `PROG-008`,
-  `STP-015`, and `STP-011` are `not_found`;
-  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, `USDA-011`,
-  `FPS-095`, and `FPS-079` timed out;
+- The historical full replay still records the `28` failed rows above, but the
+  active unresolved blocker surface is now reduced to `20` rows before the
+  next full-master rerun:
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029` remain
+  `not_found`;
+  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and `USDA-011`
+  still finalize as `timeout`;
   `R1-021`, `R1-020`, `R1-019`, `R1-023`, `R1-022`, `R1-015`, `R1-009`, and
-  `WILD-ESA-094` hit `unsupported_content_type`;
-  `FOR-005`, `FPS-296`, and `FPS-425` were `rate_limited`; and
-  `FPS-344` resolved to a `challenge_page`.
-- Milestone 1 is still not resolved. The next truthful slice is a governed
-  blocker-closure packet for those `28` rows, then another fresh full-master
-  canonical preflight replay. Do not start full `download`,
-  `batch-download`, or `catalog-build` for the entire master sheet until that
-  blocker packet closes or explicitly accepts the remaining failure classes.
+  `WILD-ESA-094` still hit `unsupported_content_type`; and
+  `FPS-344` still resolves to a `challenge_page`.
+- Installed Docling rejects legacy `.doc`, so the Region 1 directive rows in
+  that unsupported-format cluster must not be made green by widening
+  `allowed_content_types` alone. Milestone 1 is still not resolved. The next
+  truthful slice is the structural unsupported-format boundary packet for
+  those `8` rows, then the remaining not-found/timeout/challenge families,
+  then another fresh full-master canonical preflight replay. Do not start full
+  `download`, `batch-download`, or `catalog-build` for the entire master sheet
+  until those remaining blocker families close or are explicitly accepted.
 
 ## Dependency And Live Refresh Rule
 

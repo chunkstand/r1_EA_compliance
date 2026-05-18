@@ -86,6 +86,26 @@ class SourceRegisterSchemaTests(unittest.TestCase):
         self.assertEqual(result["canonical_only_source_ids_sample"][0], "FED-001")
         self.assertEqual(result["legacy_only_source_ids_sample"][0], "R1EA-001")
 
+    def test_known_blocker_repairs_use_current_official_urls(self) -> None:
+        workbook = load_workbook(CANONICAL_WORKBOOK, read_only=True, data_only=True)
+        worksheet = workbook["Document_Register_Master"]
+        headers = _header_map(worksheet)
+        source_id_column = headers["Source_ID"]
+        source_url_column = headers["Source_URL"]
+        expected_urls = {
+            "PROG-008": "https://www.fs.usda.gov/naturalresources/watershed/pubs/FS_National_Core_BMPs_April2012.pdf",
+            "STP-015": "https://www.deq.idaho.gov/water-quality/surface-water/total-maximum-daily-loads/",
+            "STP-011": "https://idfg.idaho.gov/species/",
+        }
+        actual_urls: dict[str, str] = {}
+
+        for row in worksheet.iter_rows(min_row=5, values_only=True):
+            source_id = row[source_id_column - 1]
+            if source_id in expected_urls:
+                actual_urls[str(source_id)] = str(row[source_url_column - 1])
+
+        self.assertEqual(actual_urls, expected_urls)
+
 
 def _header_map(worksheet) -> dict[str, int]:  # noqa: ANN001
     return {
