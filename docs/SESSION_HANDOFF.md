@@ -5,6 +5,57 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 0 Rebaseline Closeout
+
+This docs-only milestone resolves the live-state rebaseline boundary for the
+canonical import completion packet.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- chosen path:
+  Milestone 0 chose docs rebaseline, not a local restore of the older
+  documented full-canonical catalog. The active checkout already carries a
+  reproducible proving-slice catalog and a separate reproducible planned-only
+  Phase 2 full-register gate, while restoring `source-set-5e65d845ce77e1a0`
+  in a docs milestone would mutate ignored local evidence before the import
+  packet has closed its active truth boundary.
+- live baseline locked:
+  the active local `source_library/catalog/` baseline is now pinned as proving
+  source set `source-set-9dcf819bc4cca486` with `source_count=26`,
+  `artifact_count=26`,
+  `source_partition_counts={"active_review_corpus": 25, "currentness_supersession_archive": 1}`,
+  `status_counts={"downloaded_existing": 26}`, and governing download run
+  `source-register-proving-download-20260518T105620Z-08363bef`.
+  The full-register Phase 2 gate remains planned-only source set
+  `source-set-ae989382c52344db` with `source_count=635`, `artifact_count=0`,
+  `source_partition_counts={"candidate_blocked_source": 635}`,
+  `status_counts={"planned": 635}`, and `download_run_id=null`.
+- import blocker baseline:
+  the local full-register dry run still plans all `635` master-sheet rows, and
+  the sampled local preflight still records `7` `preflight_ok` plus
+  `18` `ssl_error` across `25` checked URLs, dominated by `ecos.fws.gov`
+  (`18`) and `www.fws.gov` (`5`).
+- promotion truth baseline:
+  the local non-strict `promotion-suite` artifact still reports
+  `current_promotion_ready=true` and `promotion_ready=true`, but it also
+  reports `full_canonical_corpus_ready=false`,
+  `expansion_ready=false`, and
+  `full_canonical_source_set_id=source-set-5e65d845ce77e1a0`.
+- verification:
+  the Milestone 0 slice updated
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`,
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/SESSION_HANDOFF.md`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  start with Milestone 1 in
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`:
+  canonical preflight and fetch-failure closure.
+
 ## Canonical Source Register Import Completion Plan Draft
 
 This routing note starts a fresh standalone follow-on packet for the remaining

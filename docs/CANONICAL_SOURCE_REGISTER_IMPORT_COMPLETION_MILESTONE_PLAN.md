@@ -1,9 +1,46 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Proposed
+Status: Active 2026-05-18 (Milestone 0 resolved; Milestone 1 next)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
+
+Milestone 0 closeout summary on 2026-05-18:
+
+- The docs-only Milestone 0 slice chose the rebaseline path, not a local
+  `source_library/catalog/` restore. The current checkout already carries a
+  reproducible proving-slice active catalog and a separate reproducible planned
+  Phase 2 gate, while restoring the older documented full-canonical catalog in
+  a docs milestone would require mutating ignored local evidence before the
+  import packet has closed its active truth boundary.
+- The active local catalog baseline is now pinned as proving source set
+  `source-set-9dcf819bc4cca486` with `source_count=26`,
+  `artifact_count=26`, `unique_url_count=26`,
+  `source_partition_counts={"active_review_corpus": 25,
+  "currentness_supersession_archive": 1}`,
+  `status_counts={"downloaded_existing": 26}`, and governing download run
+  `source-register-proving-download-20260518T105620Z-08363bef`.
+- The full-register Phase 2 gate baseline is now pinned as planned-only source
+  set `source-set-ae989382c52344db` with `source_count=635`,
+  `artifact_count=0`, `unique_url_count=635`,
+  `source_partition_counts={"candidate_blocked_source": 635}`,
+  `status_counts={"planned": 635}`, and `download_run_id=null`.
+- The current master-sheet import blocker baseline is now exact:
+  `phase2-canonical-dry-run-20260518` planned all `635` canonical URLs, while
+  `phase2-canonical-preflight-20260518` checked `25` URLs and recorded
+  `7` `preflight_ok` plus `18` `ssl_error`, dominated by `ecos.fws.gov`
+  (`18`) and `www.fws.gov` (`5`).
+- The current local promotion truth is now pinned exactly: non-strict
+  `promotion-suite` still reports `current_promotion_ready=true` and
+  `promotion_ready=true`, but the same local artifact also reports
+  `full_canonical_corpus_ready=false`, `expansion_ready=false`, and
+  `full_canonical_source_set_id=source-set-5e65d845ce77e1a0`.
+- `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`
+  now treat the older `source-set-5e65d845ce77e1a0` full-canonical and
+  all-green expansion claims as historical for this checkout until a later
+  milestone explicitly restores or reruns those lanes.
+- With the live baseline now locked, the next executable slice in this packet
+  is Milestone 1: canonical preflight and fetch-failure closure.
 
 ## Dependency And Milestone 0 Refresh Rule
 
@@ -361,7 +398,7 @@ for path in [
     print(json.dumps(json.loads(pathlib.Path(path).read_text()), indent=2)[:2000])
 PY
 
-rg -n "source-set-|full_canonical_corpus_ready|expansion_ready|Current generated source-library capture|Current full-corpus promotion boundary" \
+rg -n "source-set-|full_canonical_corpus_ready|expansion_ready|Local active import baseline|Historical broader capture baseline|Historical documented full-corpus promotion baseline" \
   README.md docs/CURRENT_SYSTEM_STATE.md docs/SESSION_HANDOFF.md
 
 python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict \
@@ -608,7 +645,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
   --output-dir source_library \
   --manifest config/promotion_suite_v1.json
 
-rg -n "source-set-|full_canonical_corpus_ready|expansion_ready|Current generated source-library capture|Current full-corpus promotion boundary" \
+rg -n "source-set-|full_canonical_corpus_ready|expansion_ready|Local active import baseline|Historical broader capture baseline|Historical documented full-corpus promotion baseline" \
   README.md docs/CURRENT_SYSTEM_STATE.md docs/SESSION_HANDOFF.md
 
 python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict \

@@ -75,7 +75,37 @@ source-delta-required, `1` documented official-source gap), but
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
 promotion evidence.
 
-Current generated source-library capture:
+Local active import baseline on 2026-05-18:
+
+- Active local catalog in `source_library/catalog/` is currently proving source
+  set `source-set-9dcf819bc4cca486`, created on `2026-05-18T10:56:21Z`, with
+  `26` source rows, `26` raw artifacts, `26` unique URLs,
+  `source_partition_counts={"active_review_corpus": 25, "currentness_supersession_archive": 1}`,
+  `status_counts={"downloaded_existing": 26}`, and governing download run
+  `source-register-proving-download-20260518T105620Z-08363bef`.
+- The full-register Phase 2 catalog gate in
+  `source_library/runs/canonical-source-register-phase2-catalog-gate-20260518/catalog_gate/`
+  is currently planned-only source set `source-set-ae989382c52344db`, with
+  `635` source rows, `0` artifacts, `635` unique URLs,
+  `source_partition_counts={"candidate_blocked_source": 635}`,
+  `status_counts={"planned": 635}`, and no governing download run IDs yet.
+- The local full-register dry run `phase2-canonical-dry-run-20260518` planned
+  all `635` canonical master-sheet rows, while the sampled local preflight
+  `phase2-canonical-preflight-20260518` checked `25` URLs and recorded
+  `7` `preflight_ok` plus `18` `ssl_error`, dominated by `ecos.fws.gov`
+  (`18`) and `www.fws.gov` (`5`).
+- The local non-strict `promotion-suite` artifact remains green only for the
+  current-promotion lane: it reports `current_promotion_ready=true` and
+  `promotion_ready=true`, but it also currently reports
+  `full_canonical_corpus_ready=false`,
+  `expansion_ready=false`, and
+  `full_canonical_source_set_id=source-set-5e65d845ce77e1a0`.
+- The broader `source-set-5e65d845ce77e1a0` full-canonical and all-green
+  expansion material preserved below remains useful historical baseline
+  evidence, but it is not the active local catalog truth in this checkout after
+  the Milestone 0 import rebaseline.
+
+Historical broader capture baseline:
 
 - Run ID: `corpus-update-2026-05-01-cg-support-batches`
 - Workbook rows covered: `190`
@@ -87,10 +117,12 @@ Current generated source-library capture:
 - Status counts: `downloaded=8`, `downloaded_existing=170`, `duplicate_content=2`,
   `duplicate_url=9`, `skipped_excluded=1`
 
-Current full-corpus promotion boundary:
+Historical documented full-corpus promotion baseline:
 
-- Active full canonical catalog in `source_library/catalog/` is now
-  `source-set-5e65d845ce77e1a0`.
+- The last documented full-canonical catalog baseline for this repo was
+  `source-set-5e65d845ce77e1a0`, but that source set is not the active local
+  `source_library/catalog/` baseline in this checkout after the Milestone 0
+  import rebaseline.
 - The live active catalog was rebuilt from
   `corpus-update-2026-05-01-cg-support-batches` plus
   `r1-forest-plan-source-delta-capture-20260510-refresh-batches` under the current working tree.
@@ -178,8 +210,11 @@ Current full-corpus promotion boundary:
   (`region1_forest_plan_graph_ready_profile_count>=10` and
   `region1_forest_plan_blocked_profile_count=0`) instead of the stale expectation that some
   promoted profiles must remain blocked.
-- The same fresh non-strict replay now reports `full_canonical_corpus_ready=true`,
-  `promotion_ready=true`, `full_canonical_failure_category_counts={}`, and `expansion_ready=true`.
+- That preserved non-strict replay historically reported
+  `full_canonical_corpus_ready=true`,
+  `promotion_ready=true`, `full_canonical_failure_category_counts={}`, and `expansion_ready=true`,
+  but it is not the current local non-strict promotion truth in this checkout
+  after the Milestone 0 import rebaseline.
 - Milestone `5` South Plateau strict-expansion recovery is now also closed on `2026-05-15`:
   tracked South Plateau replay-context and component-adjudication contracts plus a refreshed
   ba8d-scoped ECID expansion `phase-eval` replay now leave both non-strict and strict

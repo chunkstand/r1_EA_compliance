@@ -11,10 +11,50 @@ deterministic EA package review commands, but it now contains both preserved
 legacy baseline artifacts and the first isolated canonical-register-driven
 catalog gate.
 
-Routing note: the newest operational-recovery and gold-coverage sections below supersede older
-historical lane notes when they disagree. In particular, older references to South Plateau as
-typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
-Milestone 5 closeout commit `94c8915`.
+Routing note: the newest import-completion, operational-recovery, and
+gold-coverage sections below supersede older historical lane notes when they
+disagree. In particular, older references below that still treat
+`source-set-5e65d845ce77e1a0` as the active local catalog or that still claim
+local `full_canonical_corpus_ready=true` / `expansion_ready=true` are
+historical only after the 2026-05-18 import-completion Milestone 0 rebaseline,
+unless a later milestone explicitly restores or reruns those lanes.
+
+## Canonical Source Register Import Completion Milestone 0 Local Rebaseline
+
+Latest closeout on 2026-05-18:
+
+- Milestone 0 chose the docs-rebaseline path, not a local
+  `source_library/catalog/` restore. The current checkout already carries a
+  reproducible proving-slice active catalog plus a reproducible planned-only
+  Phase 2 full-register gate, while a restore would mutate ignored local
+  evidence before the import packet has closed its active-truth boundary.
+- The active local catalog in `source_library/catalog/` is now explicitly
+  pinned as proving source set `source-set-9dcf819bc4cca486`, created on
+  `2026-05-18T10:56:21Z`, with `source_count=26`, `artifact_count=26`,
+  `unique_url_count=26`,
+  `source_partition_counts={"active_review_corpus": 25, "currentness_supersession_archive": 1}`,
+  `status_counts={"downloaded_existing": 26}`, and governing download run
+  `source-register-proving-download-20260518T105620Z-08363bef`.
+- The full-register Phase 2 gate is now explicitly pinned as planned-only
+  source set `source-set-ae989382c52344db`, created on
+  `2026-05-18T11:32:46Z`, with `source_count=635`, `artifact_count=0`,
+  `unique_url_count=635`,
+  `source_partition_counts={"candidate_blocked_source": 635}`,
+  `status_counts={"planned": 635}`, and `download_run_id=null`.
+- The local full-register dry run `phase2-canonical-dry-run-20260518` planned
+  all `635` canonical master-sheet rows. The sampled local preflight
+  `phase2-canonical-preflight-20260518` checked `25` URLs and recorded
+  `7` `preflight_ok` plus `18` `ssl_error`, dominated by `ecos.fws.gov`
+  (`18`) and `www.fws.gov` (`5`).
+- The local non-strict `promotion-suite` artifact currently reports
+  `current_promotion_ready=true` and `promotion_ready=true`, but also
+  `full_canonical_corpus_ready=false`,
+  `expansion_ready=false`, and
+  `full_canonical_source_set_id=source-set-5e65d845ce77e1a0`.
+- Older deeper references below to `source-set-5e65d845ce77e1a0` as active full
+  canonical truth or to all-green local full-canonical / expansion readiness
+  are historical preserved baseline evidence for this checkout until a later
+  import-completion milestone explicitly restores or reruns them.
 
 ## Canonical Source Register Phase 8 Aggregate Readiness And Legacy Contract Retirement
 
