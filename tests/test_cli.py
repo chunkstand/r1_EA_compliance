@@ -248,6 +248,30 @@ def test_forest_plan_source_delta_readiness_parser_accepts_sequence_zero_inputs(
     )
 
 
+def test_incremental_graph_refresh_eval_parser_accepts_options() -> None:
+    args = build_parser().parse_args(
+        [
+            "incremental-graph-refresh-eval",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--eval-path",
+            "config/custom_incremental_graph_refresh_eval.json",
+            "--output-path",
+            "source_library/evaluations/incremental_graph_refresh/custom_results.json",
+        ]
+    )
+
+    assert args.command == "incremental-graph-refresh-eval"
+    assert args.output_dir == Path("source_library")
+    assert args.source_set_id == "source-set-test"
+    assert args.eval_path == Path("config/custom_incremental_graph_refresh_eval.json")
+    assert args.output_path == Path(
+        "source_library/evaluations/incremental_graph_refresh/custom_results.json"
+    )
+
+
 def test_extract_build_parser_accepts_archived_catalog_dir() -> None:
     args = build_parser().parse_args(
         [
@@ -1287,6 +1311,43 @@ def test_draft_generation_eval_handler_propagates_options(monkeypatch) -> None:
     assert captured["eval_path"] == Path("config/custom_draft_generation_eval.json")
     assert captured["config_path"] == Path("config/custom_draft_generation.json")
     assert captured["results_dir"] == Path("draft-eval-output")
+
+
+def test_incremental_graph_refresh_eval_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_incremental_graph_refresh_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_derived,
+        "run_incremental_graph_refresh_eval",
+        fake_run_incremental_graph_refresh_eval,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "incremental-graph-refresh-eval",
+            "--output-dir",
+            "library",
+            "--source-set-id",
+            "source-set-1",
+            "--eval-path",
+            "config/custom_incremental_graph_refresh_eval.json",
+            "--output-path",
+            "incremental-output/results.json",
+        ]
+    )
+
+    result = cli_derived.handle_derived_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["eval_path"] == Path("config/custom_incremental_graph_refresh_eval.json")
+    assert captured["output_path"] == Path("incremental-output/results.json")
 
 
 def test_project_sow_package_handler_propagates_options(monkeypatch) -> None:

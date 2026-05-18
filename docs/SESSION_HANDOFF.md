@@ -5,6 +5,95 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 8 Aggregate Closeout
+
+This implementation slice closes Phase 8 of the canonical source-register
+refoundation and resolves the plan-level routed packet.
+
+- scope:
+  `config/east_crazies_final_qa_certification_v1.json`,
+  `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`,
+  `config/incremental_graph_refresh_eval_v1.json`,
+  `src/usfs_r1_ea_sources/cli_derived.py`,
+  `src/usfs_r1_ea_sources/draft_generation.py`,
+  `src/usfs_r1_ea_sources/final_qa_certification.py`,
+  `src/usfs_r1_ea_sources/incremental_graph_refresh_eval.py`,
+  `src/usfs_r1_ea_sources/phase_eval.py`,
+  `src/usfs_r1_ea_sources/phase_eval_optional_phases.py`,
+  `tests/test_cli.py`,
+  `tests/test_draft_generation.py`,
+  `tests/test_draft_generation_eval.py`,
+  `tests/test_final_qa_certification.py`,
+  `tests/test_incremental_graph_refresh_eval.py`,
+  `tests/test_phase_eval.py`,
+  `tests/test_phase_eval_direct_eval_contracts.py`,
+  `tests/test_promotion_suite.py`,
+  `docs/architecture_contract.toml`,
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- resolved boundary:
+  the routed Phase 8 aggregate packet is now live. On the reviewer-ready East
+  Crazies lane `source_library/reviews/v1-cg-ecid-compliance-review/`,
+  `final-qa-certification` passes `196/196`, review-scoped `phase-eval`
+  passes `26/26` with `reviewer_ready=true`, `draft-generation-eval` passes
+  `5/5`, and non-strict `promotion-suite` stays green with
+  `current_promotion_ready=true` and `32/32` required current-promotion
+  results passing.
+- controlled refresh proof:
+  `incremental-graph-refresh-eval` now owns the controlled
+  source-change-refresh lane and passes on proving source set
+  `source-set-9dcf819bc4cca486` with `documented_source_change_count=51`,
+  `superseded_replacement_confirmed_family_count=1`,
+  `temporal_lineage_record_count=55`, and blocker coverage for both
+  `superseded_source` and `fsh_chapter_delta_required`.
+- aggregate loop hardening:
+  the review aggregate no longer oscillates between
+  `phase_eval -> final_qa -> draft_generation`. `draft_generation_manifest.json`
+  now records a semantic fingerprint for the optional final-QA input, and
+  review-scoped `phase-eval` only tolerates final-QA file-hash drift when the
+  legal-conclusion guard and accepted V1 risk ledger are unchanged. Meaningful
+  final-QA drift still forces reviewed-draft regeneration.
+- explicit residual boundary:
+  source-set `phase-eval --source-set-id source-set-9dcf819bc4cca486`
+  remains intentionally red only on inherited Phase 4 placeholder downstream
+  lanes: `extraction`, `retrieval`, `evidence_graph`, `claim_extraction`,
+  `rule_claim_binding`, `downstream_direct_evaluation`, and
+  `evaluation_coverage`. That residual is now documented as a proving-slice
+  boundary, not as active workbook-contract debt.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_promotion_suite.py tests/test_incremental_graph_refresh_eval.py tests/test_cli.py tests/test_final_qa_certification.py tests/test_draft_generation.py tests/test_draft_generation_eval.py tests/test_architecture_contract.py -q`
+  passed with `129` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/phase_eval.py src/usfs_r1_ea_sources/phase_eval_optional_phases.py src/usfs_r1_ea_sources/final_qa_certification.py src/usfs_r1_ea_sources/draft_generation.py src/usfs_r1_ea_sources/incremental_graph_refresh_eval.py src/usfs_r1_ea_sources/cli_derived.py tests/test_phase_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_promotion_suite.py tests/test_incremental_graph_refresh_eval.py tests/test_cli.py tests/test_final_qa_certification.py tests/test_draft_generation.py tests/test_draft_generation_eval.py`
+  passed;
+  `PYTHONPATH=src python -m compileall src`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  passed `196/196`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources draft-generate --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  passed with `ready_section_count=5`, `paragraph_count=41`, `refusal_count=0`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources draft-generation-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  passed `5/5`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+  passed `26/26` with `reviewer_ready=true`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  passed with `current_promotion_ready=true`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources incremental-graph-refresh-eval --output-dir source_library --source-set-id source-set-9dcf819bc4cca486`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-9dcf819bc4cca486`
+  remained intentionally red on the documented placeholder downstream lanes;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  the canonical source-register refoundation plan is now resolved. Any
+  follow-on work should route through a fresh post-refoundation milestone or
+  debt packet rather than a new phase in this plan.
+
 ## Canonical Source Register Refoundation Phase 7 Alignment Closeout
 
 This docs-only close-gaps pass aligns the Phase 7 draft-generation packet with

@@ -7,6 +7,7 @@ import re
 
 from .artifact_utils import _extraction_summary_is_complete
 from .artifact_utils import _int_from_summary
+from .artifact_utils import _dict
 from .artifact_utils import _read_json
 from .artifact_utils import _read_jsonl
 from .artifact_utils import _safe_int
@@ -14,6 +15,10 @@ from .artifact_utils import _source_set_id_from_catalog
 from .artifact_utils import _utc_now
 from .artifact_utils import _write_json
 from .catalog_surface import resolve_catalog_dir_for_source_set
+from .draft_generation import MANIFEST_FILENAME as DRAFT_GENERATION_MANIFEST_FILENAME
+from .draft_generation import PACKAGE_FILENAME as DRAFT_GENERATION_PACKAGE_FILENAME
+from .draft_generation import VALIDATION_FILENAME as DRAFT_GENERATION_VALIDATION_FILENAME
+from .draft_generation import _semantic_sha256_for_artifact
 from .ea_consistency_decision_support import DEFAULT_CONFIG_PATH as DECISION_SUPPORT_CONFIG_PATH
 from .ea_consistency_decision_support import (
     DEFAULT_EXPECTED_SUMMARY_PATH as DECISION_SUPPORT_EXPECTED_SUMMARY_PATH,
@@ -42,6 +47,7 @@ from .replay_context import load_replay_context
 from .replay_context import tracked_replay_context_path
 from .review_packet_index import VALIDATION_FILENAME as REVIEW_PACKET_VALIDATION_FILENAME
 from .rule_claim_binding import default_rule_claim_links_dir
+from .source_register import validate_source_register
 
 
 DOWNSTREAM_DIRECT_EVAL_MANIFEST_PATH = (
@@ -52,6 +58,8 @@ SAFE_REVIEW_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 KNOWLEDGE_GRAPH_FILE_PREFIX = "n" "epa_3d_graph"
 KNOWLEDGE_GRAPH_SOURCE_SET_PHASE = "n" "epa_3d_source_set_graph"
 KNOWLEDGE_GRAPH_REVIEW_PHASE = "n" "epa_3d_review_graph"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DRAFT_GENERATION_EVAL_FILENAME = "draft_generation_eval_results.json"
 
 
 @dataclass(frozen=True)
@@ -90,6 +98,25 @@ def _should_include_final_qa_phase(final_qa_dir: Path) -> bool:
 
 def _should_include_review_packet_index_phase(review_packet_index_dir: Path) -> bool:
     return (review_packet_index_dir / REVIEW_PACKET_VALIDATION_FILENAME).exists()
+
+
+def _should_include_draft_generation_phase(
+    *,
+    review_id: str | None,
+    draft_generation_dir: Path | None,
+) -> bool:
+    if draft_generation_dir is not None and draft_generation_dir.exists():
+        return True
+    if not review_id:
+        return False
+    config_path = REPO_ROOT / "config" / "draft_generation_v1.json"
+    if not config_path.exists():
+        return False
+    try:
+        payload = _read_json(config_path)
+    except (OSError, ValueError, json.JSONDecodeError):
+        return False
+    return payload.get("review_id") == review_id
 
 
 def run_phase_aligned_eval(
@@ -147,8 +174,15 @@ def run_phase_aligned_eval(
 
     catalog_validation_path = catalog_dir / "catalog_validation.json"
     catalog_source_path = catalog_dir / "source_catalog.jsonl"
+    source_set_manifest_path = catalog_dir / "source_set_manifest.json"
     extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
     extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
+    extraction_accuracy_path = (
+        source_derived_dir / "diagnostics" / "extraction_accuracy_audit.json"
+    )
+    authority_currentness_path = (
+        source_derived_dir / "authority_currentness" / "authority_currentness_report.json"
+    )
     upstream_evaluation_path = (
         output_dir / "evaluations" / "upstream" / "upstream_evaluation_results.json"
     )
@@ -291,6 +325,9 @@ def run_phase_aligned_eval(
     decision_support_dir = (
         review_dir / "decision_support" if review_dir is not None else None
     )
+    draft_generation_dir = (
+        review_dir / "draft_generation" if review_dir is not None else None
+    )
     review_packet_index_dir = (
         review_dir / "review_packet_index" if review_dir is not None else None
     )
@@ -313,11 +350,22 @@ def run_phase_aligned_eval(
         _read_json(catalog_validation_path) if catalog_validation_path.exists() else None
     )
     catalog_rows = _read_jsonl(catalog_source_path) if catalog_source_path.exists() else []
+    source_set_manifest = (
+        _read_json(source_set_manifest_path) if source_set_manifest_path.exists() else None
+    )
     extraction_validation = (
         _read_json(extraction_validation_path) if extraction_validation_path.exists() else None
     )
     extraction_summary = (
         _read_json(extraction_summary_path) if extraction_summary_path.exists() else None
+    )
+    extraction_accuracy = (
+        _read_json(extraction_accuracy_path) if extraction_accuracy_path.exists() else None
+    )
+    authority_currentness_report = (
+        _read_json(authority_currentness_path)
+        if authority_currentness_path.exists()
+        else None
     )
     upstream_evaluation = (
         _read_json(upstream_evaluation_path) if upstream_evaluation_path.exists() else None
@@ -498,6 +546,22 @@ def run_phase_aligned_eval(
     component_retrieval_direct_eval = direct_eval_coverage["source_set_phase_statuses"].get(
         "forest_plan_component_retrieval"
     )
+    canonical_register_phase = _source_register_contract_phase(
+        source_set_id=source_set_id,
+        source_set_manifest=source_set_manifest,
+        catalog_rows=catalog_rows,
+        authority_currentness_report=authority_currentness_report,
+    )
+    authority_currentness_phase = _authority_currentness_phase(
+        source_set_id=source_set_id,
+        report=authority_currentness_report,
+        report_path=authority_currentness_path,
+    )
+    extraction_accuracy_phase = _extraction_accuracy_phase(
+        source_set_id=source_set_id,
+        report=extraction_accuracy,
+        report_path=extraction_accuracy_path,
+    )
 
     phases = [
         _phase(
@@ -660,6 +724,12 @@ def run_phase_aligned_eval(
             },
         ),
     ]
+    if canonical_register_phase is not None:
+        phases.append(canonical_register_phase)
+    if authority_currentness_phase is not None:
+        phases.append(authority_currentness_phase)
+    if extraction_accuracy_phase is not None:
+        phases.append(extraction_accuracy_phase)
     if knowledge_graph_validation is not None or knowledge_graph_summary is not None:
         phases.append(
             _knowledge_graph_phase(
@@ -1234,6 +1304,17 @@ def run_phase_aligned_eval(
                 decision_support_dir=decision_support_dir,
             )
         )
+    if review_dir is not None and _should_include_draft_generation_phase(
+        review_id=review_id or review_dir.name,
+        draft_generation_dir=draft_generation_dir,
+    ):
+        phases.append(
+            _draft_generation_phase(
+                review_id=review_id or review_dir.name,
+                source_set_id=source_set_id,
+                draft_generation_dir=draft_generation_dir or review_dir / "draft_generation",
+            )
+        )
     if review_packet_index_dir is not None and _should_include_review_packet_index_phase(
         review_packet_index_dir
     ):
@@ -1248,6 +1329,7 @@ def run_phase_aligned_eval(
     if final_qa_dir is not None and _should_include_final_qa_phase(final_qa_dir):
         phases.append(
             _final_qa_certification_phase(
+                output_dir=output_dir,
                 review_id=review_id or review_dir.name,
                 source_set_id=source_set_id,
                 final_qa_dir=final_qa_dir,
@@ -1318,6 +1400,190 @@ def _catalog_uses_source_register_v1(catalog_rows: list[dict], source_set_id: st
         and str((row.get("metadata") or {}).get("loader_contract") or "") == "source_register_v1"
         for row in catalog_rows
         if isinstance(row, dict)
+    )
+
+
+def _resolve_repo_relative_path(value: str | None) -> Path | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    path = Path(text)
+    if path.is_absolute():
+        return path
+    return REPO_ROOT / path
+
+
+def _is_canonical_source_register_context(
+    *,
+    source_set_manifest: dict | None,
+    catalog_rows: list[dict],
+    authority_currentness_report: dict | None,
+    source_set_id: str,
+) -> bool:
+    if _catalog_uses_source_register_v1(catalog_rows, source_set_id):
+        return True
+    summary = _dict((authority_currentness_report or {}).get("summary"))
+    inventory_summary = _dict(summary.get("inventory_summary"))
+    if inventory_summary.get("projection_basis") == "source_register_v1_catalog_and_queue_rows":
+        return True
+    workbook_path = str((source_set_manifest or {}).get("workbook_path") or "")
+    return workbook_path.endswith("usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx")
+
+
+def _source_register_contract_phase(
+    *,
+    source_set_id: str,
+    source_set_manifest: dict | None,
+    catalog_rows: list[dict],
+    authority_currentness_report: dict | None,
+) -> dict | None:
+    if not _is_canonical_source_register_context(
+        source_set_manifest=source_set_manifest,
+        catalog_rows=catalog_rows,
+        authority_currentness_report=authority_currentness_report,
+        source_set_id=source_set_id,
+    ):
+        return None
+    summary = _dict((authority_currentness_report or {}).get("summary"))
+    inventory_summary = _dict(summary.get("inventory_summary"))
+    workbook_path = _resolve_repo_relative_path(
+        str((source_set_manifest or {}).get("workbook_path") or "")
+        or str(inventory_summary.get("workbook_path") or "")
+    )
+    workbook_path_exists = workbook_path is not None and workbook_path.exists()
+    validation_report: dict | None = None
+    validation_error: str | None = None
+    if workbook_path_exists and workbook_path is not None:
+        try:
+            validation_report = validate_source_register(workbook_path)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            validation_error = str(exc)
+    manifest_workbook_sha256 = str((source_set_manifest or {}).get("workbook_sha256") or "")
+    actual_workbook_sha256 = (
+        _sha256_file(workbook_path) if workbook_path_exists and workbook_path is not None else None
+    )
+    workbook_sha_matches_manifest = (
+        not manifest_workbook_sha256 or actual_workbook_sha256 == manifest_workbook_sha256
+    )
+    validation_passed = bool(validation_report and validation_report.get("validation_passed"))
+    failed_checks = [
+        check["name"]
+        for check in (validation_report or {}).get("checks", [])
+        if isinstance(check, dict) and not check.get("passed")
+    ]
+    passed = bool(
+        workbook_path_exists
+        and validation_passed
+        and workbook_sha_matches_manifest
+        and (validation_report or {}).get("load_sheet_name") == "Document_Register_Master"
+    )
+    return _phase(
+        "source_register_contract",
+        passed=passed,
+        reviewer_ready=passed,
+        details={
+            "workbook_path": str(workbook_path) if workbook_path is not None else None,
+            "workbook_path_exists": workbook_path_exists,
+            "manifest_workbook_sha256": manifest_workbook_sha256 or None,
+            "actual_workbook_sha256": actual_workbook_sha256,
+            "workbook_sha_matches_manifest": workbook_sha_matches_manifest,
+            "validation_passed": validation_passed,
+            "validation_error": validation_error,
+            "failed_checks": failed_checks,
+            "sheet_count": (validation_report or {}).get("sheet_count"),
+            "load_sheet_name": (validation_report or {}).get("load_sheet_name"),
+            "load_row_count": (validation_report or {}).get("load_row_count"),
+            "queue_row_count": (validation_report or {}).get("queue_row_count"),
+            "removed_row_count": (validation_report or {}).get("removed_row_count"),
+        },
+    )
+
+
+def _authority_currentness_phase(
+    *,
+    source_set_id: str,
+    report: dict | None,
+    report_path: Path,
+) -> dict | None:
+    if report is None:
+        return None
+    summary = _dict(report.get("summary"))
+    validation = _dict(report.get("validation"))
+    summary_source_set_id = str(summary.get("source_set_id") or report.get("source_set_id") or "")
+    source_set_matches = summary_source_set_id == source_set_id
+    validation_passed = bool(validation.get("passed"))
+    summary_validation_passed = bool(summary.get("validation_passed"))
+    failed_checks = [
+        check["name"]
+        for check in validation.get("checks", [])
+        if isinstance(check, dict) and not check.get("passed")
+    ]
+    passed = bool(source_set_matches and validation_passed and summary_validation_passed)
+    return _phase(
+        "authority_currentness",
+        passed=passed,
+        reviewer_ready=passed,
+        details={
+            "report_path": str(report_path),
+            "report_present": True,
+            "expected_source_set_id": source_set_id,
+            "summary_source_set_id": summary_source_set_id,
+            "source_set_matches": source_set_matches,
+            "validation_passed": validation_passed,
+            "summary_validation_passed": summary_validation_passed,
+            "failed_checks": failed_checks,
+            "authority_family_count": summary.get("authority_family_count", 0),
+            "current_authority_source_record_count": summary.get(
+                "current_authority_source_record_count",
+                0,
+            ),
+            "documented_source_gap_count": summary.get("documented_source_gap_count", 0),
+            "documented_source_non_addition_count": summary.get(
+                "documented_source_non_addition_count",
+                0,
+            ),
+            "superseded_replacement_confirmed_family_count": summary.get(
+                "superseded_replacement_confirmed_family_count",
+                0,
+            ),
+            "temporal_lineage_record_count": summary.get("temporal_lineage_record_count", 0),
+        },
+    )
+
+
+def _extraction_accuracy_phase(
+    *,
+    source_set_id: str,
+    report: dict | None,
+    report_path: Path,
+) -> dict | None:
+    if report is None:
+        return None
+    report_source_set_id = str(report.get("source_set_id") or "")
+    source_set_matches = report_source_set_id == source_set_id
+    passed = bool(source_set_matches and report.get("passed") is True)
+    return _phase(
+        "extraction_accuracy",
+        passed=passed,
+        reviewer_ready=passed,
+        details={
+            "report_path": str(report_path),
+            "report_present": True,
+            "expected_source_set_id": source_set_id,
+            "report_source_set_id": report_source_set_id,
+            "source_set_matches": source_set_matches,
+            "passed": bool(report.get("passed")),
+            "record_count": report.get("record_count", 0),
+            "audited_record_count": report.get("audited_record_count", 0),
+            "audited_chunk_count": report.get("audited_chunk_count", 0),
+            "knowledge_base_admitted_source_record_count": len(
+                report.get("knowledge_base_admitted_source_record_ids") or []
+            ),
+            "knowledge_base_blocked_source_record_count": len(
+                report.get("knowledge_base_blocked_source_record_ids") or []
+            ),
+            "failed_checks": _failed_check_names(report),
+        },
     )
 
 
@@ -1487,5 +1753,110 @@ def _upstream_evaluation_phase(
             "schema_version": (upstream_evaluation or {}).get("schema_version"),
             "lane_statuses": lane_statuses,
             "failed_case_ids": (upstream_evaluation or {}).get("failed_case_ids", []),
+        },
+    )
+
+
+def _draft_generation_phase(
+    *,
+    review_id: str,
+    source_set_id: str,
+    draft_generation_dir: Path,
+) -> dict:
+    validation_path = draft_generation_dir / DRAFT_GENERATION_VALIDATION_FILENAME
+    eval_path = draft_generation_dir / DRAFT_GENERATION_EVAL_FILENAME
+    manifest_path = draft_generation_dir / DRAFT_GENERATION_MANIFEST_FILENAME
+    package_path = draft_generation_dir / DRAFT_GENERATION_PACKAGE_FILENAME
+    validation = _read_json(validation_path) if validation_path.exists() else None
+    evaluation = _read_json(eval_path) if eval_path.exists() else None
+    manifest = _read_json(manifest_path) if manifest_path.exists() else None
+    package = _read_json(package_path) if package_path.exists() else None
+    validation_summary = _dict((validation or {}).get("summary"))
+    eval_summary = _dict((evaluation or {}).get("summary"))
+    manifest_input_artifacts = [
+        artifact
+        for artifact in (manifest or {}).get("input_artifacts", [])
+        if isinstance(artifact, dict)
+    ]
+    stale_input_artifacts = []
+    for artifact in manifest_input_artifacts:
+        artifact_path = _resolve_repo_relative_path(str(artifact.get("artifact_path") or ""))
+        expected_sha256 = str(artifact.get("sha256") or "")
+        if artifact_path is None or not artifact_path.exists() or not expected_sha256:
+            continue
+        actual_sha256 = _sha256_file(artifact_path)
+        if actual_sha256 != expected_sha256:
+            semantic_sha256_matches = False
+            expected_semantic_sha256 = str(artifact.get("semantic_sha256") or "")
+            artifact_key = str(artifact.get("artifact_key") or "")
+            if artifact_path.suffix == ".json" and expected_semantic_sha256:
+                actual_payload = _read_json(artifact_path)
+                actual_semantic_sha256 = _semantic_sha256_for_artifact(
+                    artifact_key=artifact_key,
+                    payload=actual_payload,
+                )
+                semantic_sha256_matches = actual_semantic_sha256 == expected_semantic_sha256
+            if semantic_sha256_matches:
+                continue
+            stale_input_artifacts.append(
+                {
+                    "artifact_key": artifact_key,
+                    "artifact_path": str(artifact_path),
+                    "expected_sha256": expected_sha256,
+                    "actual_sha256": actual_sha256,
+                    "expected_semantic_sha256": expected_semantic_sha256 or None,
+                }
+            )
+    package_summary = _dict((package or {}).get("summary"))
+    checks = {
+        "validation_exists": validation is not None,
+        "eval_exists": evaluation is not None,
+        "manifest_exists": manifest is not None,
+        "package_exists": package is not None,
+        "validation_schema_matches": (validation or {}).get("schema_version")
+        == "draft-generation-validation-v1",
+        "eval_schema_matches": (evaluation or {}).get("schema_version")
+        == "draft-generation-eval-results-v1",
+        "manifest_schema_matches": (manifest or {}).get("schema_version")
+        == "draft-generation-manifest-v1",
+        "package_schema_matches": (package or {}).get("schema_version")
+        == "draft-generation-package-v1",
+        "validation_review_id_matches": (validation or {}).get("review_id") == review_id,
+        "eval_review_id_matches": (evaluation or {}).get("review_id") == review_id,
+        "manifest_review_id_matches": (manifest or {}).get("review_id") == review_id,
+        "package_review_id_matches": (package or {}).get("review_id") == review_id,
+        "validation_source_set_matches": (validation or {}).get("source_set_id") == source_set_id,
+        "eval_source_set_matches": (evaluation or {}).get("source_set_id") == source_set_id,
+        "manifest_source_set_matches": (manifest or {}).get("source_set_id") == source_set_id,
+        "package_source_set_matches": (package or {}).get("source_set_id") == source_set_id,
+        "validation_passed": validation_summary.get("passed") is True,
+        "eval_passed": eval_summary.get("passed") is True,
+        "eval_live_validation_present": eval_summary.get("live_validation_present") is True,
+        "eval_live_validation_passed": eval_summary.get("live_validation_passed") is True,
+        "manifest_validation_passed": (manifest or {}).get("validation_passed") is True,
+        "manifest_input_artifacts_fresh": not stale_input_artifacts,
+        "ready_section_count_positive": int(package_summary.get("ready_section_count") or 0) > 0,
+        "paragraph_count_positive": int(package_summary.get("paragraph_count") or 0) > 0,
+    }
+    passed = all(checks.values())
+    return _phase(
+        "draft_generation_defensibility",
+        passed=passed,
+        reviewer_ready=passed,
+        details={
+            "results_dir": str(draft_generation_dir),
+            "validation_path": str(validation_path),
+            "eval_path": str(eval_path),
+            "manifest_path": str(manifest_path),
+            "package_path": str(package_path),
+            "failed_checks": sorted(name for name, ok in checks.items() if not ok),
+            "stale_input_artifacts": stale_input_artifacts,
+            "ready_section_count": package_summary.get("ready_section_count", 0),
+            "paragraph_count": package_summary.get("paragraph_count", 0),
+            "warning_section_count": package_summary.get("warning_section_count", 0),
+            "refusal_count": package_summary.get("refusal_count", 0),
+            "eval_case_count": eval_summary.get("case_count", 0),
+            "eval_passed_case_count": eval_summary.get("passed_case_count", 0),
+            **checks,
         },
     )

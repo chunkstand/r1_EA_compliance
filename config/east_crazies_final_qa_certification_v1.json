@@ -256,25 +256,25 @@
     },
     {
       "field": "phase_eval_phase_count",
-      "expected": 20,
+      "expected": 25,
       "source_selector": "gate_replay_summary.phase_eval.phase_count",
       "failure_category": "count_drift"
     },
     {
       "field": "phase_eval_passed_phase_count",
-      "expected": 20,
+      "expected": 25,
       "source_selector": "gate_replay_summary.phase_eval.passed_phase_count",
       "failure_category": "stale_artifact"
     },
     {
       "field": "promotion_suite_required_current_result_count",
-      "expected": 27,
+      "expected": 28,
       "source_selector": "gate_replay_summary.current_promotion_suite.required_current_result_count",
       "failure_category": "count_drift"
     },
     {
       "field": "promotion_suite_passed_required_current_result_count",
-      "expected": 27,
+      "expected": 28,
       "source_selector": "gate_replay_summary.current_promotion_suite.passed_required_current_result_count",
       "failure_category": "stale_artifact"
     },

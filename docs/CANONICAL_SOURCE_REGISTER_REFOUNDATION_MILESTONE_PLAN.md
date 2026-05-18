@@ -2,7 +2,7 @@
 
 Date: 2026-05-18
 
-Status: In Progress
+Status: Resolved
 
 Current checkpoint on 2026-05-18:
 
@@ -73,9 +73,23 @@ Current checkpoint on 2026-05-18:
   fail-closed handling for unsupported legal-conclusion requests, missing
   citations, stale authority traces, contradictory evidence, and
   reviewer-warning insertion.
+- Phase 8 aggregate readiness, real-package proving, and legacy contract
+  retirement is now live. The East Crazies reviewer-ready lane on
+  `source-set-ba8d0feae79501b8` now closes green through review-scoped
+  `phase-eval` (`26/26`), `final-qa-certification` (`196/196`),
+  `draft-generation-eval` (`5/5`), and non-strict `promotion-suite`
+  (`current_promotion_ready=true`, `32/32` required current-promotion
+  results). The controlled source-change refresh lane also now passes on
+  proving source set `source-set-9dcf819bc4cca486` with `51` documented source
+  changes and `55` temporal-lineage records.
+- The proving-slice aggregate remains intentionally red only on inherited
+  placeholder downstream lanes, and that residual is now documented as a
+  proving boundary rather than as a blocker that preserves the old workbook
+  contract as active truth.
 - No full-register canonical ingestion may bypass the now-live Phase 1.5
-  proving gate, and the next implementation boundary is now Phase 8:
-  aggregate readiness, real-package proving, and legacy contract retirement.
+  proving gate. This refoundation plan is now resolved; follow-on work must
+  route through fresh post-refoundation packets instead of a Phase 9 on this
+  plan.
 
 Owner context: This is a fresh standalone architecture and delivery plan for
 refounding the system around
@@ -1412,7 +1426,29 @@ Purpose: close the program by proving the full canonical-register-driven system
 on real package and draft-generation lanes, then retire the old workbook
 contract as active truth.
 
-Implementation tasks:
+Closeout checkpoint on 2026-05-18:
+
+- Review-scoped East Crazies `phase-eval` now passes `26/26` with
+  `reviewer_ready=true` on `source-set-ba8d0feae79501b8`.
+- `final-qa-certification` now passes `196/196`, and the governed
+  draft-generation lane stays green after the aggregate replay because
+  `draft_generation_manifest.json` now records a semantic final-QA
+  fingerprint instead of treating any final-QA JSON hash drift as draft drift.
+- `draft-generation-eval` remains green at `5/5`, and non-strict
+  `promotion-suite` stays green with `current_promotion_ready=true` and
+  `32/32` required current-promotion results passing.
+- `incremental-graph-refresh-eval` now passes on proving source set
+  `source-set-9dcf819bc4cca486` with `51` documented source changes,
+  `55` temporal-lineage records, and required blocker coverage for both
+  `superseded_source` and `fsh_chapter_delta_required`.
+- Proving-slice source-set `phase-eval` remains intentionally red only on the
+  inherited placeholder downstream lanes (`extraction`, `retrieval`,
+  `evidence_graph`, `claim_extraction`, `rule_claim_binding`,
+  `downstream_direct_evaluation`, and `evaluation_coverage`). That residual
+  boundary is explicit and does not preserve the old workbook contract as
+  active truth.
+
+Historical implementation tasks:
 
 1. Extend `phase-eval` so it includes distinct fail-closed phases for:
    - source-register contract validity;

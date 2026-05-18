@@ -37,11 +37,24 @@ Canonical source-register refoundation status on 2026-05-18:
   `authority-ontology-validate`, `authority-relationship-eval`,
   `citation-alias-eval`, `graph-health-eval`, and `graph-accuracy-eval` all
   pass against a `147`-node / `193`-edge canonical source-set graph.
-- Root `phase-eval` remains intentionally non-reviewer-ready for that proving
-  slice because Phase 4 placeholder artifacts still block extraction,
-  retrieval, evidence-graph validation, and downstream reviewer lanes. This
-  packet closes the semantic graph boundary only; it does not claim reviewer-ready
-  evidence or downstream review promotion.
+- The Phase 8 review aggregate is now live on reviewer-ready source set
+  `source-set-ba8d0feae79501b8`: East Crazies `final-qa-certification`
+  passes `196/196`, review-scoped `phase-eval` passes `26/26` with
+  `reviewer_ready=true`, `draft-generation-eval` passes `5/5`, and
+  non-strict `promotion-suite` stays green with
+  `current_promotion_ready=true` and `32/32` required current-promotion
+  results passing.
+- The controlled source-change refresh lane is now live:
+  `incremental-graph-refresh-eval` passes on proving source set
+  `source-set-9dcf819bc4cca486` with `51` documented source changes, `55`
+  temporal-lineage records, `1` superseded replacement-confirmed family, and
+  blocker coverage for both `superseded_source` and
+  `fsh_chapter_delta_required`.
+- Root proving-slice `phase-eval` remains intentionally non-reviewer-ready for
+  `source-set-9dcf819bc4cca486` because Phase 4 placeholder artifacts still
+  block extraction, retrieval, evidence-graph validation, and downstream
+  reviewer lanes. That residual proving-slice boundary is explicit; it does
+  not restore the old workbook contract as active truth.
 
 Active canonical source-register contract:
 

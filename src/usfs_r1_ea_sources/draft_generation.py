@@ -1408,6 +1408,10 @@ def _build_manifest(
                 "exists": artifact.exists,
                 "parse_ok": artifact.parse_ok,
                 "sha256": artifact.sha256,
+                "semantic_sha256": _semantic_sha256_for_artifact(
+                    artifact_key=artifact.key,
+                    payload=artifact.payload,
+                ),
             }
             for artifact in context.artifacts.values()
         ],
@@ -1422,6 +1426,38 @@ def _build_manifest(
             for section in sections
         ],
     }
+
+
+def _semantic_sha256_for_artifact(
+    *,
+    artifact_key: str,
+    payload: dict[str, Any] | None,
+) -> str | None:
+    if artifact_key != "final_qa" or not isinstance(payload, dict):
+        return None
+    semantic_projection = {
+        "decision_support_qa": {
+            "legal_conclusion": _dict(payload.get("decision_support_qa")).get(
+                "legal_conclusion"
+            )
+        },
+        "accepted_v1_risk_ledger": {
+            "policy_mode": _dict(payload.get("accepted_v1_risk_ledger")).get("policy_mode"),
+            "accepted_pending_count": _dict(payload.get("accepted_v1_risk_ledger")).get(
+                "accepted_pending_count"
+            ),
+            "actual_pending_count": _dict(payload.get("accepted_v1_risk_ledger")).get(
+                "actual_pending_count"
+            ),
+            "actual_pending_applicable_count": _dict(
+                payload.get("accepted_v1_risk_ledger")
+            ).get("actual_pending_applicable_count"),
+            "risks": _dict(payload.get("accepted_v1_risk_ledger")).get("risks") or [],
+        },
+    }
+    return hashlib.sha256(
+        json.dumps(semantic_projection, sort_keys=True).encode("utf-8")
+    ).hexdigest()
 
 
 def _build_validation(

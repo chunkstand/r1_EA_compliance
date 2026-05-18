@@ -1,0 +1,12 @@
+{
+  "allowed_source_set_ids": [],
+  "contract_id": "incremental-graph-refresh-eval-v1",
+  "minimum_documented_source_change_count": 1,
+  "minimum_superseded_replacement_confirmed_family_count": 1,
+  "minimum_temporal_lineage_record_count": 1,
+  "required_blocker_types": [
+    "superseded_source"
+  ],
+  "schema_version": "incremental-graph-refresh-eval-v1",
+  "version": "1.0.0"
+}

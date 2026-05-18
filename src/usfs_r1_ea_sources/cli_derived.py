@@ -29,6 +29,10 @@ from .graph_accuracy_eval import DEFAULT_GRAPH_ACCURACY_EVAL_PATH
 from .graph_accuracy_eval import run_graph_accuracy_eval
 from .graph_health_eval import DEFAULT_GRAPH_HEALTH_CONTRACT_PATH
 from .graph_health_eval import run_graph_health_eval
+from .incremental_graph_refresh_eval import (
+    DEFAULT_INCREMENTAL_GRAPH_REFRESH_EVAL_PATH,
+)
+from .incremental_graph_refresh_eval import run_incremental_graph_refresh_eval
 from .nepa_3d_graph_contract import DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH
 from .nepa_knowledge_graph_export import DEFAULT_AUTHORITY_FAMILY_RULE_TEMPLATES_PATH
 from .nepa_knowledge_graph_export import DEFAULT_FOREST_PLAN_PROFILES_PATH
@@ -64,6 +68,7 @@ DERIVED_COMMANDS = {
     "citation-alias-eval",
     "graph-health-eval",
     "graph-accuracy-eval",
+    "incremental-graph-refresh-eval",
     "retrieval-build",
     "retrieval-query",
     "retrieval-eval",
@@ -260,6 +265,23 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
         type=Path,
     )
     graph_accuracy_eval.add_argument("--output-path", type=Path)
+
+    incremental_graph_refresh_eval = subparsers.add_parser(
+        "incremental-graph-refresh-eval",
+        help="Validate controlled source-change and supersession visibility on the canonical graph lane.",
+    )
+    incremental_graph_refresh_eval.add_argument(
+        "--output-dir",
+        default=Path("source_library"),
+        type=Path,
+    )
+    incremental_graph_refresh_eval.add_argument("--source-set-id")
+    incremental_graph_refresh_eval.add_argument(
+        "--eval-path",
+        default=DEFAULT_INCREMENTAL_GRAPH_REFRESH_EVAL_PATH,
+        type=Path,
+    )
+    incremental_graph_refresh_eval.add_argument("--output-path", type=Path)
 
     retrieval_build = subparsers.add_parser(
         "retrieval-build",
@@ -538,6 +560,16 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         result = run_graph_accuracy_eval(
             output_dir=args.output_dir,
             report_path=args.report_path,
+            eval_path=args.eval_path,
+            output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "incremental-graph-refresh-eval":
+        result = run_incremental_graph_refresh_eval(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
             eval_path=args.eval_path,
             output_path=args.output_path,
         )

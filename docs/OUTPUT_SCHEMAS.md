@@ -2773,7 +2773,10 @@ authority-family IDs, unresolved-issue refs, and residual-risk refs.
 `draft_generation_manifest.json` has schema version
 `draft-generation-manifest-v1`. It records the generator version, config path,
 input artifact paths and hashes, per-section dependencies, validation status,
-and the written output paths and hashes.
+and the written output paths and hashes. For the optional final-QA input it
+also records a semantic fingerprint over the legal-conclusion guard and the
+accepted V1 risk ledger so review-scoped `phase-eval` can tolerate outer
+aggregate hash churn without masking meaningful final-QA drift.
 
 `draft_generation_validation.json` has schema version
 `draft-generation-validation-v1`. It fails closed on:
@@ -2856,8 +2859,8 @@ records replay status for applicability validation, generated rule-pack validati
 validation, compliance matrix, Forest Plan context, Forest Plan component eval, decision-support
 validation, review packet index validation, phase eval, V1 EA eval, and current-promotion suite.
 For the outer gates it records both baseline counts that exclude the final QA self-reference
-(`20/20` phase eval and `27/27` current-promotion results for this packet) and live integrated
-counts after gate integration (`21/21` phase eval and `31/31` current-promotion results).
+(`25/25` phase eval and `28/28` current-promotion results for this packet) and live integrated
+counts after gate integration (`26/26` phase eval and `32/32` current-promotion results).
 `artifact_freshness_ledger` records required artifact paths, schema versions where applicable,
 SHA-256 values, and selectors.
 
@@ -2924,6 +2927,20 @@ authority rows, the required four-row land-exchange applicable-authority set, a 
 Forest Plan standard, a representative decision-support residual risk row, selected Markdown/PDF
 rendering requirements, and the accepted V1 risk ledger. It does
 not pin full rendered Markdown/PDF body text.
+
+## Incremental Graph Refresh Eval Output
+
+Path: `source_library/evaluations/incremental_graph_refresh/`
+
+`incremental_graph_refresh_eval_results.json` has schema version
+`incremental-graph-refresh-eval-results-v1`. It records the proving
+source-set ID, documented source-change counts, documented gap and
+non-addition counts, observed blocker types, readiness-blocker counts,
+superseded-replacement-confirmed family count, temporal-lineage record count,
+and the pass/fail result for the controlled corpus-change resilience lane.
+The shipped contract currently requires at least one documented change, at
+least one superseded replacement-confirmed family, at least one temporal
+lineage record, and blocker coverage for `superseded_source`.
 
 The minimal test fixture at
 `tests/fixtures/final_qa/minimal_final_qa_certification_report.json` is synthetic. It proves the

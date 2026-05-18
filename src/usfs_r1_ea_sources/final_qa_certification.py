@@ -966,20 +966,29 @@ def _phase_eval_counts_for_packet(phase_eval: Any) -> dict[str, int]:
     live_phase_count = _safe_int(_selector_value(phase_eval, "phase_count"))
     live_passed_phase_count = _safe_int(_selector_value(phase_eval, "passed_phase_count"))
     phases = phase_eval.get("phases", []) if isinstance(phase_eval, Mapping) else []
-    final_qa_self_reference_count = int(any(
-        isinstance(phase, Mapping)
-        and phase.get("name") == "final_qa_certification_report"
-        and phase.get("passed")
-        for phase in phases
-    ))
-    phase_count = live_phase_count - final_qa_self_reference_count
-    passed_phase_count = live_passed_phase_count - final_qa_self_reference_count
+    final_qa_phase_present_count = int(
+        any(
+            isinstance(phase, Mapping)
+            and phase.get("name") == "final_qa_certification_report"
+            for phase in phases
+        )
+    )
+    final_qa_phase_passed_count = int(
+        any(
+            isinstance(phase, Mapping)
+            and phase.get("name") == "final_qa_certification_report"
+            and phase.get("passed")
+            for phase in phases
+        )
+    )
+    phase_count = live_phase_count - final_qa_phase_present_count
+    passed_phase_count = live_passed_phase_count - final_qa_phase_passed_count
     return {
         "phase_count": phase_count,
         "passed_phase_count": passed_phase_count,
         "live_phase_count": live_phase_count,
         "live_passed_phase_count": live_passed_phase_count,
-        "final_qa_self_reference_phase_count": final_qa_self_reference_count,
+        "final_qa_self_reference_phase_count": final_qa_phase_present_count,
     }
 
 
@@ -2260,7 +2269,7 @@ def _outer_gate_hash_drift_allowed(
     expected: Mapping[str, Any],
 ) -> bool:
     if artifact_key == "phase_eval":
-        return _phase_eval_has_only_final_qa_outer_gate(
+        return _phase_eval_self_reference_allowed(
             data,
             expected_counts=expected.get("expected_counts", {}),
         )
@@ -2299,6 +2308,54 @@ def _phase_eval_has_only_final_qa_outer_gate(
     )
 
 
+def _phase_eval_pending_only_final_qa_gate(
+    data: Mapping[str, Any] | None,
+    *,
+    expected_counts: Mapping[str, Any],
+) -> bool:
+    phases = data.get("phases") if isinstance(data, Mapping) else None
+    if not isinstance(phases, list):
+        return False
+    final_qa_phases = [
+        phase
+        for phase in phases
+        if isinstance(phase, Mapping) and phase.get("name") == "final_qa_certification_report"
+    ]
+    if len(final_qa_phases) != 1:
+        return False
+    final_qa_phase = final_qa_phases[0]
+    if final_qa_phase.get("passed") or final_qa_phase.get("reviewer_ready"):
+        return False
+    non_final_qa_phases = [
+        phase
+        for phase in phases
+        if isinstance(phase, Mapping) and phase.get("name") != "final_qa_certification_report"
+    ]
+    if any(not phase.get("passed") or not phase.get("reviewer_ready") for phase in non_final_qa_phases):
+        return False
+    expected_phase_count = _safe_int(expected_counts.get("phase_eval_phase_count"))
+    expected_passed_count = _safe_int(expected_counts.get("phase_eval_passed_phase_count"))
+    return (
+        _safe_int(data.get("phase_count")) == expected_phase_count + 1
+        and _safe_int(data.get("passed_phase_count")) == expected_passed_count
+        and _safe_int(data.get("reviewer_ready_phase_count")) == expected_passed_count
+    )
+
+
+def _phase_eval_self_reference_allowed(
+    data: Mapping[str, Any] | None,
+    *,
+    expected_counts: Mapping[str, Any],
+) -> bool:
+    return _phase_eval_has_only_final_qa_outer_gate(
+        data,
+        expected_counts=expected_counts,
+    ) or _phase_eval_pending_only_final_qa_gate(
+        data,
+        expected_counts=expected_counts,
+    )
+
+
 def _promotion_suite_has_only_final_qa_outer_gates(
     data: Mapping[str, Any] | None,
     *,
@@ -2329,6 +2386,11 @@ def _current_promotion_suite_self_reference_allowed(
     data: Mapping[str, Any],
     expected_counts: Mapping[str, Any],
 ) -> bool:
+    if gate.get("gate_name") == "phase_eval":
+        return _phase_eval_self_reference_allowed(
+            data,
+            expected_counts=expected_counts,
+        )
     if gate.get("gate_name") != "current_promotion_suite":
         return False
     if gate.get("required_pass_selector") != "current_promotion_ready":

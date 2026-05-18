@@ -71,10 +71,10 @@ EXPECTED_COUNTS = {
     "applicable_standard_count": 12,
     "applied_standard_count": 12,
     "forest_plan_component_eval_case_count": 35,
-    "phase_eval_phase_count": 20,
-    "phase_eval_passed_phase_count": 20,
-    "promotion_suite_required_current_result_count": 27,
-    "promotion_suite_passed_required_current_result_count": 27,
+    "phase_eval_phase_count": 25,
+    "phase_eval_passed_phase_count": 25,
+    "promotion_suite_required_current_result_count": 28,
+    "promotion_suite_passed_required_current_result_count": 28,
     "review_packet_index_applicable_authority_count": 37,
     "review_packet_index_non_applicable_authority_count": 340,
     "review_packet_index_forest_plan_component_row_count": 79,
@@ -547,7 +547,7 @@ def test_final_qa_validate_allows_only_outer_gate_self_reference(tmp_path) -> No
     ]
     _write_json_file(suite_path, suite)
 
-    validation = validate_final_qa_certification_report(
+    regenerated = run_final_qa_certification(
         output_dir=output_dir,
         review_id="review-test",
         config_path=config_path,
@@ -555,8 +555,15 @@ def test_final_qa_validate_allows_only_outer_gate_self_reference(tmp_path) -> No
         results_dir=results_dir,
     )
 
+    assert regenerated.summary["passed"] is True
+    validation = validate_final_qa_certification_report(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+        results_dir=results_dir,
+    )
     assert validation.summary["passed"] is True
-    assert validation.summary["failure_category_counts"] == {}
 
     regenerated = run_final_qa_certification(
         output_dir=output_dir,
@@ -588,6 +595,49 @@ def test_final_qa_validate_allows_only_outer_gate_self_reference(tmp_path) -> No
         in markdown
     )
     assert "Current promotion suite live gate: `5/6`" in markdown
+
+
+def test_final_qa_validate_allows_phase_eval_pending_only_final_qa_gate(tmp_path) -> None:
+    output_dir, config_path, expected_path = _write_sequence_2_fixture(tmp_path)
+    results_dir = tmp_path / "final-qa-output"
+
+    generated = run_final_qa_certification(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+        results_dir=results_dir,
+    )
+    assert generated.summary["passed"] is True
+
+    review_dir = output_dir / "reviews" / "review-test"
+    phase_eval = _read_json(review_dir / "phase_eval_results.json")
+    phase_eval["passed"] = False
+    phase_eval["reviewer_ready"] = False
+    phase_eval["phase_count"] = 3
+    phase_eval["passed_phase_count"] = 2
+    phase_eval["reviewer_ready_phase_count"] = 2
+    phase_eval["phases"] = [
+        {"name": "base_1", "passed": True, "reviewer_ready": True},
+        {"name": "base_2", "passed": True, "reviewer_ready": True},
+        {
+            "name": "final_qa_certification_report",
+            "passed": False,
+            "reviewer_ready": False,
+        },
+    ]
+    _write_json_file(review_dir / "phase_eval_results.json", phase_eval)
+
+    validation = validate_final_qa_certification_report(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+        results_dir=results_dir,
+    )
+
+    assert validation.summary["passed"] is True
+    assert validation.summary["failure_category_counts"] == {}
 
 
 def test_final_qa_validate_fails_when_validation_sidecar_output_hash_is_stale(

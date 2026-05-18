@@ -7,11 +7,15 @@ import shutil
 import tempfile
 import unittest
 
+from usfs_r1_ea_sources.draft_generation import run_draft_generate
+from usfs_r1_ea_sources.draft_generation_eval import run_draft_generation_eval
 from usfs_r1_ea_sources.evidence_graph import build_evidence_graph
 from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 from usfs_r1_ea_sources.replay_context import ReplayContextMismatchError
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 
+from tests.support.draft_generation_fixtures import write_minimal_draft_generation_config
+from tests.support.draft_generation_fixtures import write_minimal_draft_generation_review
 from tests.support.phase_eval_fixtures import chunk
 from tests.support.phase_eval_fixtures import direct_eval_result_payload
 from tests.support.phase_eval_fixtures import phase
@@ -28,6 +32,10 @@ from tests.support.phase_eval_fixtures import write_forest_plan_component_retrie
 from tests.support.phase_eval_fixtures import write_forest_plan_profile_eval_results
 from tests.support.phase_eval_fixtures import write_jsonl
 from tests.support.phase_eval_fixtures import write_replay_context
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_WORKBOOK = REPO_ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
 
 
 class PhaseEvalTests(unittest.TestCase):
@@ -724,6 +732,221 @@ class PhaseEvalTests(unittest.TestCase):
 
             phase_names = {item["name"] for item in result.summary["phases"]}
             self.assertNotIn("compliance_gold_eval", phase_names)
+
+    def test_phase_eval_includes_canonical_contract_currentness_and_extraction_accuracy(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            write_catalog_validation(output_dir, passed=True)
+            write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["FOR-002"],
+            )
+            write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="FOR-002",
+                        title="Canonical source",
+                        document_role="guidance",
+                        authority_level="federal_guidance",
+                        citation_label="FOR-002 | Canonical source | artifact abc123",
+                        text="Canonical source register phases should appear in phase eval.",
+                    )
+                ],
+            )
+            write_catalog_sqlite(output_dir, {"FOR-002": ["Canonical phase"]})
+            write_jsonl(
+                output_dir / "catalog" / "source_catalog.jsonl",
+                [
+                    {
+                        "source_set_id": source_set_id,
+                        "source_record_id": "FOR-002",
+                        "metadata": {"loader_contract": "source_register_v1"},
+                    }
+                ],
+            )
+            workbook_sha256 = hashlib.sha256(CANONICAL_WORKBOOK.read_bytes()).hexdigest()
+            (output_dir / "catalog" / "source_set_manifest.json").write_text(
+                json.dumps(
+                    {
+                        "source_set_id": source_set_id,
+                        "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+                        "workbook_sha256": workbook_sha256,
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            currentness_dir = output_dir / "derived" / source_set_id / "authority_currentness"
+            currentness_dir.mkdir(parents=True, exist_ok=True)
+            (currentness_dir / "authority_currentness_report.json").write_text(
+                json.dumps(
+                    {
+                        "source_set_id": source_set_id,
+                        "summary": {
+                            "source_set_id": source_set_id,
+                            "validation_passed": True,
+                            "authority_family_count": 1,
+                            "current_authority_source_record_count": 1,
+                            "documented_source_gap_count": 1,
+                            "documented_source_non_addition_count": 0,
+                            "superseded_replacement_confirmed_family_count": 1,
+                            "temporal_lineage_record_count": 1,
+                            "inventory_summary": {
+                                "projection_basis": "source_register_v1_catalog_and_queue_rows",
+                                "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+                            },
+                        },
+                        "validation": {"passed": True, "checks": []},
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            diagnostics_dir = output_dir / "derived" / source_set_id / "diagnostics"
+            (diagnostics_dir / "extraction_accuracy_audit.json").write_text(
+                json.dumps(
+                    {
+                        "source_set_id": source_set_id,
+                        "passed": True,
+                        "record_count": 1,
+                        "audited_record_count": 1,
+                        "audited_chunk_count": 1,
+                        "knowledge_base_admitted_source_record_ids": ["FOR-002"],
+                        "knowledge_base_blocked_source_record_ids": [],
+                        "checks": [],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            build_evidence_graph(output_dir=output_dir, source_set_id=source_set_id)
+
+            result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(phase(result.summary, "source_register_contract")["passed"])
+            self.assertTrue(phase(result.summary, "authority_currentness")["passed"])
+            extraction_accuracy_phase = phase(result.summary, "extraction_accuracy")
+            self.assertTrue(extraction_accuracy_phase["passed"])
+            self.assertEqual(
+                extraction_accuracy_phase["details"]["knowledge_base_admitted_source_record_count"],
+                1,
+            )
+
+    def test_review_phase_eval_marks_stale_draft_generation_inputs(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            review_id = "review-test"
+            source_set_id = "source-set-test"
+            write_catalog_validation(output_dir, passed=True)
+            write_catalog_source_set_manifest(output_dir, source_set_id)
+            review_dir = write_minimal_draft_generation_review(
+                output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+            )
+            config_path = write_minimal_draft_generation_config(
+                Path(tmp) / "draft_generation_config.json",
+                review_id=review_id,
+                source_set_id=source_set_id,
+            )
+            run_draft_generate(
+                output_dir=output_dir,
+                review_id=review_id,
+                config_path=config_path,
+            )
+            run_draft_generation_eval(
+                output_dir=output_dir,
+                review_id=review_id,
+                config_path=config_path,
+            )
+            decision_support_path = (
+                review_dir / "decision_support" / "ea_consistency_decision_support.json"
+            )
+            decision_support = json.loads(decision_support_path.read_text(encoding="utf-8"))
+            decision_support["validation_and_replay"]["replay_commands"] = [
+                "stale input mutation for phase eval"
+            ]
+            decision_support_path.write_text(
+                json.dumps(decision_support, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+            result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id=review_id,
+            )
+
+            draft_phase = phase(result.summary, "draft_generation_defensibility")
+            self.assertFalse(draft_phase["passed"])
+            self.assertFalse(draft_phase["reviewer_ready"])
+            self.assertIn(
+                "manifest_input_artifacts_fresh",
+                draft_phase["details"]["failed_checks"],
+            )
+            self.assertEqual(
+                draft_phase["details"]["stale_input_artifacts"][0]["artifact_key"],
+                "decision_support",
+            )
+
+    def test_review_phase_eval_allows_semantically_stable_final_qa_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            review_id = "review-test"
+            source_set_id = "source-set-test"
+            write_catalog_validation(output_dir, passed=True)
+            write_catalog_source_set_manifest(output_dir, source_set_id)
+            review_dir = write_minimal_draft_generation_review(
+                output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+            )
+            config_path = write_minimal_draft_generation_config(
+                Path(tmp) / "draft_generation_config.json",
+                review_id=review_id,
+                source_set_id=source_set_id,
+            )
+            run_draft_generate(
+                output_dir=output_dir,
+                review_id=review_id,
+                config_path=config_path,
+            )
+            run_draft_generation_eval(
+                output_dir=output_dir,
+                review_id=review_id,
+                config_path=config_path,
+            )
+            final_qa_path = (
+                review_dir / "final_qa" / "east_crazies_final_qa_certification.json"
+            )
+            final_qa = json.loads(final_qa_path.read_text(encoding="utf-8"))
+            final_qa["gate_replay_summary"] = {
+                "phase_eval": {"phase_count": 99, "passed_phase_count": 98}
+            }
+            final_qa_path.write_text(
+                json.dumps(final_qa, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+            result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id=review_id,
+            )
+
+            draft_phase = phase(result.summary, "draft_generation_defensibility")
+            self.assertTrue(draft_phase["passed"])
+            self.assertTrue(draft_phase["reviewer_ready"])
+            self.assertEqual(
+                draft_phase["details"]["stale_input_artifacts"],
+                [],
+            )
 
 
 if __name__ == "__main__":

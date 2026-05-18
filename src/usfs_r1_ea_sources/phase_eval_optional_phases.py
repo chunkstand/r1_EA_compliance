@@ -8,19 +8,21 @@ from typing import Any
 from .artifact_utils import _dict
 from .artifact_utils import _dict_list
 from .artifact_utils import _read_json_if_exists
-from .artifact_utils import _safe_int
-from .artifact_utils import _selector_value
 from .ea_consistency_decision_support import DEFAULT_CONFIG_PATH as DECISION_SUPPORT_CONFIG_PATH
 from .ea_consistency_decision_support import (
     DEFAULT_EXPECTED_SUMMARY_PATH as DECISION_SUPPORT_EXPECTED_SUMMARY_PATH,
 )
 from .ea_consistency_decision_support import infer_decision_support_contract_paths
 from .ea_consistency_decision_support import validate_ea_consistency_decision_support_report
+from .final_qa_certification import DEFAULT_CONFIG_PATH as FINAL_QA_CONFIG_PATH
+from .final_qa_certification import (
+    DEFAULT_EXPECTED_SUMMARY_PATH as FINAL_QA_EXPECTED_SUMMARY_PATH,
+)
 from .final_qa_certification import MANIFEST_FILENAME as FINAL_QA_MANIFEST_FILENAME
 from .final_qa_certification import PDF_FILENAME as FINAL_QA_PDF_FILENAME
 from .final_qa_certification import REPORT_FILENAME as FINAL_QA_REPORT_FILENAME
 from .final_qa_certification import VALIDATION_FILENAME as FINAL_QA_VALIDATION_FILENAME
-from .final_qa_certification import VALIDATION_SCHEMA_VERSION as FINAL_QA_VALIDATION_SCHEMA_VERSION
+from .final_qa_certification import validate_final_qa_certification_report
 from .phase_eval_support import _applicability_validation_hash_gaps
 from .phase_eval_support import _authority_partition_ids
 from .phase_eval_support import _candidate_authority_ids
@@ -172,6 +174,7 @@ def _review_packet_index_phase(
 
 def _final_qa_certification_phase(
     *,
+    output_dir: Path,
     review_id: str,
     source_set_id: str,
     final_qa_dir: Path,
@@ -181,83 +184,55 @@ def _final_qa_certification_phase(
     pdf_path = final_qa_dir / FINAL_QA_PDF_FILENAME
     validation_path = final_qa_dir / FINAL_QA_VALIDATION_FILENAME
 
-    report = _read_json_if_exists(report_path)
-    manifest = _read_json_if_exists(manifest_path)
-    validation = _read_json_if_exists(validation_path)
-    pdf_header_valid = (
-        pdf_path.exists()
-        and pdf_path.stat().st_size > 0
-        and pdf_path.read_bytes().startswith(b"%PDF-")
-    )
-    report_identity_matches = bool(
-        report
-        and report.get("review_id") == review_id
-        and report.get("source_set_id") == source_set_id
-    )
-    manifest_identity_matches = bool(
-        manifest
-        and manifest.get("review_id") == review_id
-        and manifest.get("source_set_id") == source_set_id
-    )
-    validation_identity_matches = bool(
-        validation
-        and validation.get("review_id") == review_id
-        and validation.get("source_set_id") == source_set_id
-    )
-    checks = {
-        "report_exists": report is not None,
-        "manifest_exists": manifest is not None,
-        "pdf_exists": pdf_path.exists(),
-        "validation_exists": validation is not None,
-        "report_schema_matches": (report or {}).get("schema_version")
-        == "east-crazies-final-qa-certification-report-v1",
-        "manifest_schema_matches": (manifest or {}).get("schema_version")
-        == "east-crazies-final-qa-certification-manifest-v1",
-        "validation_schema_matches": (validation or {}).get("schema_version")
-        == FINAL_QA_VALIDATION_SCHEMA_VERSION,
-        "report_identity_matches": report_identity_matches,
-        "manifest_identity_matches": manifest_identity_matches,
-        "validation_identity_matches": validation_identity_matches,
-        "report_machine_replay_passed": _selector_value(
-            report or {},
-            "gate_replay_summary.machine_replay_status",
+    try:
+        result = validate_final_qa_certification_report(
+            output_dir=output_dir,
+            review_id=review_id,
+            config_path=FINAL_QA_CONFIG_PATH,
+            expected_summary_path=FINAL_QA_EXPECTED_SUMMARY_PATH,
+            results_dir=final_qa_dir,
+            require_validation_result=True,
         )
-        == "passed",
-        "manifest_validation_status_passed": (manifest or {}).get("validation_status")
-        == "passed",
-        "validation_result_passed": (validation or {}).get("passed") is True,
-        "validation_result_no_failed_checks": (validation or {}).get("failed_check_count") == 0,
-        "validation_result_check_count_sufficient": _safe_int(
-            (validation or {}).get("check_count")
-        )
-        >= 157,
-        "pdf_header_valid": pdf_header_valid,
-        "accepted_v1_risk_visible": _selector_value(
-            report or {},
-            "accepted_v1_risk_ledger.accepted_pending_count",
-        )
-        == 14,
-        "legal_conclusion_boundary": _selector_value(
-            report or {},
-            "certification_statement.legal_conclusion",
-        )
-        is False,
-    }
-    passed = all(checks.values())
-    return _phase(
-        "final_qa_certification_report",
-        passed=passed,
-        reviewer_ready=passed,
-        details={
+        summary = result.summary
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        summary = {
+            "passed": False,
+            "failure_categories": ["stale_artifact"],
+            "failure_category_counts": {"stale_artifact": 1},
+            "failed_check_count": 1,
+            "failures": [{"name": "final_qa_validation_error", "message": str(error)}],
             "report_path": str(report_path),
             "manifest_path": str(manifest_path),
             "pdf_path": str(pdf_path),
             "validation_path": str(validation_path),
-            "failed_checks": sorted(name for name, passed in checks.items() if not passed),
-            "check_count": (validation or {}).get("check_count"),
-            "failed_check_count": (validation or {}).get("failed_check_count"),
-            "failure_category_counts": (validation or {}).get("failure_category_counts", {}),
-            **checks,
+            "check_count": 0,
+            "pdf_header_valid": False,
+        }
+    return _phase(
+        "final_qa_certification_report",
+        passed=bool(summary.get("passed")),
+        reviewer_ready=bool(summary.get("passed")),
+        details={
+            "report_path": summary.get("report_path"),
+            "manifest_path": summary.get("manifest_path"),
+            "pdf_path": summary.get("pdf_path"),
+            "validation_path": summary.get("validation_path"),
+            "check_count": summary.get("check_count"),
+            "failed_check_count": summary.get("failed_check_count"),
+            "failure_categories": summary.get("failure_categories", []),
+            "failure_category_counts": summary.get("failure_category_counts", {}),
+            "failed_checks": [
+                str(check.get("name"))
+                for check in _dict_list(summary.get("checks"))
+                if check.get("passed") is False
+            ]
+            + [
+                str(failure.get("name"))
+                for failure in _dict_list(summary.get("failures"))
+                if failure.get("name")
+            ],
+            "pdf_header_valid": bool(summary.get("pdf_header_valid")),
+            "validation_passed": bool(summary.get("passed")),
         },
     )
 

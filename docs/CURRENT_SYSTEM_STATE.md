@@ -16,6 +16,40 @@ historical lane notes when they disagree. In particular, older references to Sou
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
 
+## Canonical Source Register Phase 8 Aggregate Readiness And Legacy Contract Retirement
+
+Latest closeout on 2026-05-18:
+
+- The canonical source-register refoundation aggregate packet is now live. On
+  the active reviewer-ready East Crazies lane
+  `source_library/reviews/v1-cg-ecid-compliance-review/`, review-scoped
+  `phase-eval` now passes `26/26` with `reviewer_ready=true` on
+  `source-set-ba8d0feae79501b8`, `final-qa-certification` passes `196/196`,
+  `draft-generation-eval` passes `5/5`, and non-strict `promotion-suite`
+  stays green with `current_promotion_ready=true` and `32/32` required
+  current-promotion results passing.
+- The aggregate self-reference loop is now fail-closed instead of operationally
+  circular. `draft_generation_manifest.json` records a semantic fingerprint
+  for the optional final-QA input, so review-scoped `phase-eval` can tolerate
+  final-QA file-hash drift only when the legal-conclusion guard and accepted
+  V1 risk ledger are unchanged. Real decision-support or final-QA semantic
+  drift still forces reviewed-draft regeneration.
+- The controlled source-change refresh proof is now live on proving source set
+  `source-set-9dcf819bc4cca486`. `incremental-graph-refresh-eval` passes with
+  `documented_source_change_count=51`,
+  `superseded_replacement_confirmed_family_count=1`,
+  `temporal_lineage_record_count=55`, and required blocker coverage for both
+  `superseded_source` and `fsh_chapter_delta_required`.
+- The proving-slice aggregate boundary remains explicit. Source-set
+  `phase-eval --source-set-id source-set-9dcf819bc4cca486` is still red only
+  on inherited Phase 4 placeholder downstream lanes:
+  `extraction`, `retrieval`, `evidence_graph`, `claim_extraction`,
+  `rule_claim_binding`, `downstream_direct_evaluation`, and
+  `evaluation_coverage`. That red state is now a documented proving-slice
+  residual, not a reason to preserve the old workbook contract as active truth.
+- The canonical workbook refoundation plan is now resolved. Older top-level
+  references below that still route to “Phase 8 next” are historical only.
+
 ## Canonical Source Register Phase 7 Legally Defensible Draft-Document Generation
 
 Latest closeout on 2026-05-18:
@@ -64,9 +98,8 @@ Latest closeout on 2026-05-18:
   placeholder artifacts, so Phase 7 closes the reviewed-draft contract and
   live reviewer lane only; it does not yet prove direct-document-backed
   canonical-corpus draft generation on the placeholder source set.
-- The next routed implementation packet is now Phase 8 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`: aggregate
-  readiness, real-package proving, and legacy contract retirement.
+- This packet is now historical routing context only. Phase 8 has since
+  landed, and the canonical source-register refoundation plan is now resolved.
 
 ## Canonical Source Register Phase 6 Applicability, Rule-Pack, And Legally Accurate Review
 
