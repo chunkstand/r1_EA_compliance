@@ -107,6 +107,8 @@ Local active import baseline on 2026-05-18:
   `fd40c4aa0216c10e5a1c61b93634d3e658f74a8c7cf4f06ba16a6379289159ec`, and
   `tests/test_source_register_schema.py` plus
   `tests/test_source_register_loader.py` pass `10/10`.
+- The live blocker-repair checkpoint for this lane is local commit `37bb0a3`
+  (`Repair stale canonical blocker URLs`).
 - Scoped repair replay
   `phase2-canonical-preflight-directives-repair-validated-20260518`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired

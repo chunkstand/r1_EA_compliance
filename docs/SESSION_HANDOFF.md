@@ -5,6 +5,45 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Blocker Repair Alignment Closeout
+
+This follow-up closes the remaining routing/alignment gaps after implementation
+commit `37bb0a3` (`Repair stale canonical blocker URLs`).
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- aligned boundary:
+  the live Milestone 1 checkpoint for this lane is now the immediately
+  following `Canonical Source Register Import Completion Milestone 1 Blocker
+  Repair Slice Checkpoint` section plus the matching top sections in
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, and
+  the routed plan file.
+- historical routing note:
+  the older `Canonical Source Register Import Completion Milestone 1
+  Full-Master Replay Alignment Closeout` and
+  `Canonical Source Register Import Completion Milestone 1 Full-Master
+  Preflight Replay Checkpoint` sections below are now explicit historical
+  pre-`37bb0a3` context only. Their `28`-row blocker-routing language no
+  longer governs this lane.
+- verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed;
+  targeted `rg` routing checks across
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  start the structural unsupported-format boundary packet for the `8`
+  `unsupported_content_type` rows. After that closes, finish the remaining
+  federal/usda/challenge blocker families and rerun the fresh full-master
+  canonical preflight before any full `download`, `batch-download`, or
+  `catalog-build` for the entire master sheet.
+
 ## Canonical Source Register Import Completion Milestone 1 Blocker Repair Slice Checkpoint
 
 This implementation slice closes the next routed Milestone 1 pass by repairing
@@ -63,6 +102,11 @@ the clearly stale master-sheet URLs and replaying the affected blocker subset.
 This follow-up closes the remaining routing/alignment gaps after replay
 checkpoint commit `86efa46` (`Record full canonical preflight replay checkpoint`).
 
+Historical note: this section is pre-`37bb0a3` alignment context only. The
+newer `Canonical Source Register Import Completion Milestone 1 Blocker Repair
+Alignment Closeout` and `Canonical Source Register Import Completion Milestone
+1 Blocker Repair Slice Checkpoint` sections above now govern this lane.
+
 - routed plan:
   `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
 - aligned boundary:
@@ -91,17 +135,19 @@ checkpoint commit `86efa46` (`Record full canonical preflight replay checkpoint`
   `git diff --check`
   passed.
 - next routing:
-  start a governed Milestone 1 blocker-closure packet for the `28` failed
-  rows grouped by `not_found`, `timeout`, `unsupported_content_type`,
-  `rate_limited`, and `challenge_page`. Do not start full `download`,
-  `batch-download`, or `catalog-build` for the entire master sheet until that
-  packet closes or explicitly accepts the remaining failure classes.
+  historical only. This pre-`37bb0a3` routing was reduced by the blocker
+  repair slice; use the newer sections above for the live next slice.
 
 ## Canonical Source Register Import Completion Milestone 1 Full-Master Preflight Replay Checkpoint
 
 This implementation slice closes the next routed Milestone 1 pass after the
 directive workbook repair checkpoint by completing the fresh full-master
 canonical preflight replay.
+
+Historical note: this section is pre-`37bb0a3` replay context only. The newer
+`Canonical Source Register Import Completion Milestone 1 Blocker Repair
+Alignment Closeout` and `Canonical Source Register Import Completion Milestone
+1 Blocker Repair Slice Checkpoint` sections above now govern this lane.
 
 - routed plan:
   `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
@@ -164,11 +210,8 @@ canonical preflight replay.
   `git diff --check`
   passed.
 - next routing:
-  start a governed Milestone 1 blocker-closure packet for the `28` failed
-  rows grouped by `not_found`, `timeout`, `unsupported_content_type`,
-  `rate_limited`, and `challenge_page`. Do not start full `download`,
-  `batch-download`, or `catalog-build` for the entire master sheet until that
-  packet closes or explicitly accepts the remaining failure classes.
+  historical only. This pre-`37bb0a3` routing was reduced by the blocker
+  repair slice; use the newer sections above for the live next slice.
 
 ## Canonical Source Register Import Completion Milestone 1 Workbook Repair Alignment Closeout
 

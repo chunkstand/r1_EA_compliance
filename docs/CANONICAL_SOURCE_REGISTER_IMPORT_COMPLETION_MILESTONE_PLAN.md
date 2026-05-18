@@ -1,7 +1,7 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 blocker repair slice live)
+Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 blocker repair slice live at `37bb0a3`)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
 
@@ -42,9 +42,10 @@ Milestone 0 closeout summary on 2026-05-18:
 - With the live baseline now locked, the next executable slice in this packet
   is Milestone 1: canonical preflight and fetch-failure closure.
 
-Milestone 1 blocker repair slice on 2026-05-18 after implementation commit
-`211f0c8`, replay `phase2-canonical-preflight-full-repaired-20260518`,
-replay checkpoint commit `86efa46`, and the current blocker repair slice:
+Milestone 1 blocker repair slice on 2026-05-18 after implementation commits
+`211f0c8` and `37bb0a3`, replay
+`phase2-canonical-preflight-full-repaired-20260518`, replay checkpoint commit
+`86efa46`, and the current blocker repair slice:
 
 - The first Milestone 1 code/config slice is now live: `ecos.fws.gov` uses
   host-level verified `curl` transport through `config/downloader.toml`,
@@ -61,6 +62,8 @@ replay checkpoint commit `86efa46`, and the current blocker repair slice:
   `Document_Register_Master` now carries `48` URL repairs total:
   `45` earlier directive/USDA repairs plus `3` stale-URL repairs for
   `PROG-008`, `STP-015`, and `STP-011`.
+- The live blocker-repair checkpoint for this lane is local commit `37bb0a3`
+  (`Repair stale canonical blocker URLs`).
 - `source-register-validate` now passes with `issue_count=0` on workbook SHA
   `fd40c4aa0216c10e5a1c61b93634d3e658f74a8c7cf4f06ba16a6379289159ec`, and
   `tests/test_source_register_schema.py` plus

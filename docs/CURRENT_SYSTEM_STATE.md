@@ -64,11 +64,11 @@ Latest closeout on 2026-05-18:
   replay boundary, not the live `source_library/catalog/` import baseline
   recorded above.
 
-## Canonical Source Register Import Completion Milestone 1 Full-Master Preflight Replay Checkpoint
+## Canonical Source Register Import Completion Milestone 1 Blocker Repair Slice Checkpoint
 
-Latest checkpoint on 2026-05-18 after implementation commit `211f0c8`,
-replay `phase2-canonical-preflight-full-repaired-20260518`, and replay
-checkpoint commit `86efa46`:
+Latest checkpoint on 2026-05-18 after implementation commits `211f0c8` and
+`37bb0a3`, replay `phase2-canonical-preflight-full-repaired-20260518`, and
+replay checkpoint commit `86efa46`:
 
 - The first Milestone 1 code slice is now live in capture code and config:
   `config/downloader.toml` assigns `verified_transport="curl"` to
@@ -93,6 +93,8 @@ checkpoint commit `86efa46`:
   `fd40c4aa0216c10e5a1c61b93634d3e658f74a8c7cf4f06ba16a6379289159ec`, and
   `tests/test_source_register_schema.py` plus
   `tests/test_source_register_loader.py` pass `10/10`.
+- The live blocker-repair checkpoint for this lane is local commit `37bb0a3`
+  (`Repair stale canonical blocker URLs`).
 - Scoped repair replay
   `source_library/runs/phase2-canonical-preflight-directives-repair-validated-20260518/summary.json`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
