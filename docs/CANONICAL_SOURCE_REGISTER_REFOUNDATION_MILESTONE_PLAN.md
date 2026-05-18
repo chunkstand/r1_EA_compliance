@@ -1325,34 +1325,54 @@ Purpose: add a governed document-generation lane that can transform reviewed,
 evidence-backed NEPA findings into legally defensible draft document artifacts
 without severing citation or authority traceability.
 
-Implementation tasks:
+Latest closeout on 2026-05-18 after implementation commit `85433cc`:
 
-1. Define the supported draft outputs and their evidence requirements. At
-   minimum, govern:
-   - citation-bearing issue summaries;
-   - compliance narrative sections;
-   - authority coverage appendices;
-   - draft affected-environment or environmental-consequences sections where
-     sufficient evidence exists; and
-   - reviewer-required unresolved issue statements.
-2. Add draft-generation manifests and traceability artifacts that map every
-   generated paragraph or section to:
-   - source passages;
-   - authority families;
-   - graph or retrieval paths;
-   - review decisions; and
-   - unresolved assumptions or missing evidence.
-3. Require draft generation to consume only reviewed and traced evidence
-   surfaces. It must not draft from workbook rows, raw source files, or prompt
-   instructions alone when equivalent reviewed evidence artifacts exist.
-4. Build draft-generation eval fixtures that test:
-   - unsupported legal conclusion rejection;
-   - missing-citation rejection;
-   - stale-authority rejection;
-   - contradictory evidence rejection; and
-   - reviewer-warning insertion for unresolved issues.
-5. Add a defensibility packet artifact that summarizes the evidence and residual
-   risk behind each generated draft.
+- `draft-generate` and `draft-generation-eval` are now live. The reviewed-draft
+  lane lives under `source_library/reviews/<review_id>/draft_generation/`.
+- The governed reviewed-draft output family is now explicit:
+  `draft_generation_package.json`,
+  `draft_generation.md`,
+  `draft_generation_manifest.json`,
+  `draft_generation_traceability.json`,
+  `draft_generation_refusals.json`,
+  `draft_defensibility_packet.json`,
+  `draft_generation_validation.json`, and
+  `draft_generation_eval_results.json`.
+- The generator now consumes only reviewed and traced evidence surfaces:
+  `compliance_review.json`,
+  `compliance_validation.json`,
+  `authority_explanation_paths.json`,
+  `decision_support/ea_consistency_decision_support.json`,
+  `review_packet_index/review_packet_index.json`,
+  `non_applicable_authority_appendix.json`, and
+  `litigation_risk_summary.json`, with optional
+  `final_qa/east_crazies_final_qa_certification.json` and
+  `authority_reviewer_resolution_report.json` when present. It does not draft
+  from workbook rows, raw source files, or prompt-only instructions when
+  reviewed evidence artifacts already exist.
+- The supported governed draft outputs are now explicit and live:
+  citation-bearing issue summaries, compliance narrative sections, authority
+  coverage appendix material, affected-environment and
+  environmental-consequences draft text where sufficient evidence exists, and
+  unresolved-issue statements.
+- Paragraph-level traceability is now first class. Every generated paragraph is
+  mapped to source passages, authority families, graph or retrieval traces,
+  reviewed artifact selectors, unresolved-issue refs, and residual-risk refs.
+- The live East Crazies reviewer-ready lane now passes at
+  `source_library/reviews/v1-cg-ecid-compliance-review/draft_generation/` with
+  `ready_section_count=5`, `paragraph_count=41`,
+  `warning_section_count=4`, `refusal_count=0`, and
+  `validation_passed=true`.
+- The direct-eval lane now proves the required fail-closed cases. Live
+  `draft-generation-eval` passes `5/5` on the same East Crazies lane and
+  covers unsupported legal-conclusion rejection, missing-citation rejection,
+  stale-authority rejection, contradictory-evidence rejection, and
+  reviewer-warning insertion.
+- This phase is resolved at the reviewed-draft contract and reviewer-ready East
+  Crazies lane boundary only. The canonical proving slice
+  `source-set-9dcf819bc4cca486` still carries Phase 4 placeholder artifacts and
+  therefore does not yet prove direct-document-backed draft generation on the
+  proving source set.
 
 Required implementation artifacts:
 
@@ -1372,9 +1392,9 @@ Acceptance signals:
 Required verification gates:
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources draft-generate --output-dir source_library --review-id <review_id>
-PYTHONPATH=src python -m usfs_r1_ea_sources draft-generation-eval --output-dir source_library --review-id <review_id>
-PYTHONPATH=src uv run --extra dev pytest tests/test_draft_generation.py tests/test_draft_generation_eval.py tests/test_review_packet_index.py tests/test_architecture_contract.py
+PYTHONPATH=src python -m usfs_r1_ea_sources draft-generate --output-dir source_library --review-id v1-cg-ecid-compliance-review
+PYTHONPATH=src python -m usfs_r1_ea_sources draft-generation-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review
+PYTHONPATH=src uv run --extra dev pytest tests/test_draft_generation.py tests/test_draft_generation_eval.py tests/test_review_packet_index.py tests/test_cli.py tests/test_architecture_contract.py
 git diff --check
 ```
 

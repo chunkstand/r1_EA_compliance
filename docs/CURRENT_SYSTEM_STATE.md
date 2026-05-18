@@ -160,8 +160,8 @@ Latest closeout on 2026-05-18:
   by extraction, retrieval, evidence-graph, claim-extraction, rule-claim
   binding, and downstream review lanes. This packet closes the semantic graph
   boundary only; it does not widen reviewer-ready or promotion-ready claims.
-- This packet is now historical routing context only. Phase 6 has since
-  landed, and Phase 7 is now the next routed implementation packet.
+- This packet is now historical routing context only. Phases 6 and 7 have
+  since landed, and Phase 8 is now the next routed implementation packet.
 
 ## Canonical Source Register Phase 4 Extraction Fidelity And Verified Source Admission
 
@@ -202,8 +202,8 @@ Latest closeout on 2026-05-18:
   reports, split-page PDFs, OCR/table-heavy PDFs, and direct-file wrapper-page
   negatives under `config/upstream_evaluation_v1.json`.
 - This packet is now historical routing context only. Phase 5 graph accuracy,
-  Phase 6 review-contract closure, and the newer Phase 7 routing all
-  supersede this earlier note.
+  Phase 6 review-contract closure, Phase 7 draft-generation closeout, and the
+  newer Phase 8 routing all supersede this earlier note.
 
 ## Canonical Source Register Phase 3 Currentness, Supersession, And Source-Partition Rebase
 

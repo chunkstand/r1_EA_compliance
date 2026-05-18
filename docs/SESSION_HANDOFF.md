@@ -5,6 +5,38 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 7 Alignment Closeout
+
+This docs-only close-gaps pass aligns the Phase 7 draft-generation packet with
+the live repo state after implementation commit `85433cc`.
+
+- aligned boundary:
+  the detailed Phase 7 section in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` now matches
+  the live checkpoint instead of presenting the packet as future work. It now
+  records the governed draft-generation artifact family, the reviewed-evidence
+  input boundary, the East Crazies reviewer-ready replay counts, the `5/5`
+  direct eval, and the explicit residual placeholder-artifact boundary on the
+  canonical proving slice.
+- routing alignment:
+  `docs/CURRENT_SYSTEM_STATE.md` now rebases the older historical routing notes
+  that still implied “Phase 7 next” so the durable routing set consistently
+  points to Phase 8. Older handoff sections below that still route to Phase 7
+  are historical only after implementation commit `85433cc` and this
+  alignment closeout.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_draft_generation.py tests/test_draft_generation_eval.py tests/test_architecture_contract.py -q`
+  passed with `9` tests;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  Phase 8 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` remains the
+  next executable packet: aggregate readiness, real-package proving, and
+  legacy contract retirement.
+
 ## Canonical Source Register Refoundation Phase 7 Draft-Generation Closeout
 
 This implementation slice closes the Phase 7 legally defensible
