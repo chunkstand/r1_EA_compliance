@@ -66,9 +66,10 @@ Latest closeout on 2026-05-18:
 
 ## Canonical Source Register Import Completion Milestone 1 Unsupported-Format Slice Checkpoint
 
-Latest checkpoint on 2026-05-18 after the earlier workbook repair slices,
-replay `phase2-canonical-preflight-full-repaired-20260518`, and the scoped
-unsupported-format direct-document validation set:
+Latest checkpoint on 2026-05-18 after implementation commit `cf2d5f6`
+(`Resolve unsupported-format canonical blocker slice`), the earlier workbook
+repair slices, replay `phase2-canonical-preflight-full-repaired-20260518`, and
+the scoped unsupported-format direct-document validation set:
 
 - The first Milestone 1 code slice is now live in capture code and config:
   `config/downloader.toml` assigns `verified_transport="curl"` to
@@ -92,6 +93,8 @@ unsupported-format direct-document validation set:
   `1` direct-artifact repair for `WILD-ESA-094` to the official JPG media
   file. `source-register-validate` now passes with `issue_count=0` on workbook
   SHA `f40d764ad2bf2f653459510d1021ad4134f85dccccb15ea30f75457a978d36eb`.
+- The live unsupported-format checkpoint for this lane is local commit
+  `cf2d5f6` (`Resolve unsupported-format canonical blocker slice`).
 - Scoped repair replay
   `source_library/runs/phase2-canonical-preflight-directives-repair-validated-20260518/summary.json`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired

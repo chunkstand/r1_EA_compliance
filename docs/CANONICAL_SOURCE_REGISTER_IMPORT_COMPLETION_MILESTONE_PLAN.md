@@ -1,7 +1,7 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 unsupported-format slice live)
+Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 unsupported-format slice live at `cf2d5f6`)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
 
@@ -42,9 +42,11 @@ Milestone 0 closeout summary on 2026-05-18:
 - With the live baseline now locked, the next executable slice in this packet
   is Milestone 1: canonical preflight and fetch-failure closure.
 
-Milestone 1 unsupported-format slice on 2026-05-18 after the earlier workbook
-repair slices, replay `phase2-canonical-preflight-full-repaired-20260518`, and
-the scoped unsupported-format direct-document validation set:
+Milestone 1 unsupported-format slice on 2026-05-18 after implementation
+commit `cf2d5f6` (`Resolve unsupported-format canonical blocker slice`), the
+earlier workbook repair slices, replay
+`phase2-canonical-preflight-full-repaired-20260518`, and the scoped
+unsupported-format direct-document validation set:
 
 - The first Milestone 1 code/config slice is now live: `ecos.fws.gov` uses
   host-level verified `curl` transport through `config/downloader.toml`,

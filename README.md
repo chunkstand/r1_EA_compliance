@@ -106,6 +106,8 @@ Local active import baseline on 2026-05-18:
   `1` direct-artifact repair for `WILD-ESA-094` to the official JPG media
   file. `source-register-validate` now passes with `issue_count=0` on workbook
   SHA `f40d764ad2bf2f653459510d1021ad4134f85dccccb15ea30f75457a978d36eb`.
+- The live unsupported-format checkpoint for this lane is local commit
+  `cf2d5f6` (`Resolve unsupported-format canonical blocker slice`).
 - Scoped repair replay
   `phase2-canonical-preflight-directives-repair-validated-20260518`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
