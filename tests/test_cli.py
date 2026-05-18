@@ -247,6 +247,68 @@ def test_extract_build_parser_accepts_archived_catalog_dir() -> None:
     assert args.merge_selected_into_existing is True
 
 
+def test_source_register_proving_slice_parser_accepts_manifest_and_workbook() -> None:
+    args = build_parser().parse_args(
+        [
+            "source-register-proving-slice",
+            "--workbook",
+            "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+            "--manifest",
+            "config/source_register_proving_slice_v1.json",
+            "--output-dir",
+            "source_library",
+        ]
+    )
+
+    assert args.command == "source-register-proving-slice"
+    assert args.workbook == Path("usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx")
+    assert args.manifest == Path("config/source_register_proving_slice_v1.json")
+    assert args.output_dir == Path("source_library")
+
+
+def test_semantic_eval_parsers_accept_phase_1_5_paths() -> None:
+    relationship_args = build_parser().parse_args(
+        [
+            "authority-relationship-eval",
+            "--output-dir",
+            "source_library",
+            "--eval-path",
+            "config/authority_relationship_eval_v1.json",
+        ]
+    )
+    alias_args = build_parser().parse_args(
+        [
+            "citation-alias-eval",
+            "--output-dir",
+            "source_library",
+        ]
+    )
+    graph_health_args = build_parser().parse_args(
+        [
+            "graph-health-eval",
+            "--output-dir",
+            "source_library",
+            "--contract-path",
+            "config/graph_health_contract_v1.json",
+        ]
+    )
+    graph_accuracy_args = build_parser().parse_args(
+        [
+            "graph-accuracy-eval",
+            "--output-dir",
+            "source_library",
+            "--eval-path",
+            "config/graph_accuracy_eval_v1.json",
+        ]
+    )
+
+    assert relationship_args.command == "authority-relationship-eval"
+    assert relationship_args.eval_path == Path("config/authority_relationship_eval_v1.json")
+    assert alias_args.command == "citation-alias-eval"
+    assert graph_health_args.contract_path == Path("config/graph_health_contract_v1.json")
+    assert graph_accuracy_args.eval_path == Path("config/graph_accuracy_eval_v1.json")
+
+
 def test_extraction_accuracy_audit_parser_accepts_contract_path() -> None:
     args = build_parser().parse_args(
         [

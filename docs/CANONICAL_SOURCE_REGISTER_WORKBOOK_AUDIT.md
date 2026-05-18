@@ -215,6 +215,29 @@ This closes the Phase 1 foundation boundary without starting Phase 2 cutover.
 The active runtime remains legacy until the proving slice and capture/catalog
 packet are ready.
 
+## Phase 1.5 Proving Slice Status
+
+The repo now also ships the executable proving packet that the audit called for
+before any canonical capture/catalog cutover:
+
+- `config/source_register_proving_slice_v1.json` defines the active mixed
+  proving slice: `26` load-ready canonical rows plus `5` deferred queue rows
+- `source-register-proving-slice` now materializes the scoped proving catalog,
+  currentness inputs, semantic relationships, alias report, graph summary, and
+  justification-path export under
+  `source_library/derived/<source_set_id>/source_register_proving/`
+- `source_library/derived/source_register_proving/latest_context.json` now
+  records the latest proving source set, report path, and currentness inputs
+- `authority-relationship-eval`, `citation-alias-eval`, `graph-health-eval`,
+  and `graph-accuracy-eval` are now implemented as first-class proving gates
+- `config/graph_health_contract_v1.json` and
+  `config/graph_accuracy_eval_v1.json` now hold the starter graph-health and
+  graph-accuracy contracts for this checkpoint
+
+The proving packet keeps the runtime in a strict pre-cutover state. The active
+runtime remains legacy and full-register canonical ingestion is still blocked
+until the later Phase 2 capture/catalog cutover is complete.
+
 ## Verification
 
 The current audit is backed by:
@@ -227,7 +250,7 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py te
 
 ## Next Routing
 
-Phase 0 workbook freeze is now explicit enough to permit the next refoundation
-step: Phase 1 foundation refactor to a canonical register loader. Runtime
-cutover is still blocked until that loader exists and the Phase 1.5 proving
-slice passes.
+Phases 0, 1, and 1.5 are now explicit enough to permit the next refoundation
+step: Phase 2 capture and catalog cutover to the canonical register. Runtime
+cutover remains blocked until that Phase 2 packet is implemented; bulk
+canonical ingestion may not bypass the proving gate.

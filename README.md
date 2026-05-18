@@ -19,9 +19,18 @@ Canonical source-register refoundation status on 2026-05-18:
 - The foundation layer can now also read the staged replacement workbook through
   `loader_contract = "source_register_v1"`, which emits normalized canonical rows plus a
   `WorkbookSource` compatibility adapter without admitting queue or audit sheets as source rows.
-- The repo now ships `source-register-validate` and `source-register-diff` so the final workbook,
-  sheet contract, vocabulary contract, and migration baseline can be checked before the loader or
-  capture runtime is switched over.
+- The repo now ships `source-register-validate`, `source-register-diff`,
+  `source-register-proving-slice`, `authority-relationship-eval`,
+  `citation-alias-eval`, `graph-health-eval`, and `graph-accuracy-eval` so the
+  frozen final workbook can be validated, diffed, and proven on a governed
+  mixed slice before any bulk canonical ingestion begins.
+- `config/source_register_proving_slice_v1.json` now defines the active Phase
+  1.5 proving packet: `26` load-ready rows plus `5` deferred queue rows across
+  statutes, regulations, directives, forest-plan materials, direct-document
+  parsers, superseded lineage, and queue placeholder classes.
+- The active runtime still remains on the legacy workbook contract and no
+  full-register canonical ingestion is allowed until the Phase 1.5 proving
+  packet stays green and the later Phase 2 capture/catalog cutover lands.
 
 Current workbook source contract:
 

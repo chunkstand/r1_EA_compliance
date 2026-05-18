@@ -17,10 +17,20 @@ Current checkpoint on 2026-05-18:
   `Document_Register_Master` into normalized canonical rows with semantic
   identity and parser-routing seams, and the compatibility adapter back to
   `WorkbookSource` is in place for later runtime migration.
+- Phase 1.5 proving-slice work is now live: the repo ships
+  `config/source_register_proving_slice_v1.json`,
+  `source-register-proving-slice`,
+  `authority-relationship-eval`,
+  `citation-alias-eval`,
+  `graph-health-eval`, and
+  `graph-accuracy-eval`, and the proving packet now exercises a governed mixed
+  slice of `26` load-ready rows plus `5` queue rows before any capture/catalog
+  cutover begins.
 - The runtime is still on the legacy workbook contract because
   `config/downloader.toml` remains pinned to `loader_contract = "legacy_v0"`.
-  Phase 1.5 proving-slice work is now the next implementation boundary before
-  any canonical capture/catalog cutover can begin.
+  Phase 2 capture/catalog cutover is now the next implementation boundary, and
+  no full-register canonical ingestion may bypass the now-live Phase 1.5
+  proving gate.
 
 Owner context: This is a fresh standalone architecture and delivery plan for
 refounding the system around

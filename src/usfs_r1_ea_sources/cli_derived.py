@@ -3,9 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 import argparse
 
+from .authority_relationship_eval import DEFAULT_AUTHORITY_RELATIONSHIP_EVAL_PATH
+from .authority_relationship_eval import run_authority_relationship_eval
 from .authority_currentness import DEFAULT_AUTHORITY_INVENTORY_PATH
 from .authority_currentness import DEFAULT_SOURCE_ADDITION_DECISIONS_PATH
 from .authority_currentness import build_authority_currentness_report
+from .citation_alias_eval import run_citation_alias_eval
 from .claim_extraction import DEFAULT_CLAIM_EVAL_PATH
 from .claim_extraction import build_claim_extraction
 from .claim_extraction import default_claims_path
@@ -19,6 +22,10 @@ from .forest_plan_source_delta_readiness import DEFAULT_OFFICIAL_SOURCE_GAP_EVID
 from .forest_plan_source_delta_readiness import DEFAULT_R1_FOREST_PLAN_REGISTER_PATH
 from .forest_plan_source_delta_readiness import DEFAULT_SOURCE_DELTA_BATCH_RUN_ID
 from .forest_plan_source_delta_readiness import build_forest_plan_source_delta_readiness_report
+from .graph_accuracy_eval import DEFAULT_GRAPH_ACCURACY_EVAL_PATH
+from .graph_accuracy_eval import run_graph_accuracy_eval
+from .graph_health_eval import DEFAULT_GRAPH_HEALTH_CONTRACT_PATH
+from .graph_health_eval import run_graph_health_eval
 from .nepa_3d_graph_contract import DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH
 from .nepa_knowledge_graph_export import DEFAULT_AUTHORITY_FAMILY_RULE_TEMPLATES_PATH
 from .nepa_knowledge_graph_export import DEFAULT_FOREST_PLAN_PROFILES_PATH
@@ -34,6 +41,11 @@ from .rule_claim_binding import build_rule_claim_links
 from .rule_claim_binding import default_rule_claim_links_path
 from .rule_claim_binding import run_rule_claim_link_eval
 from .rule_packs import DEFAULT_RULE_PACK_PATH
+from .source_register_proving import (
+    DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH,
+)
+from .source_register_proving import build_source_register_proving_slice
+from .source_register_proving import resolve_authority_currentness_inputs
 from .source_partitions import DEFAULT_SOURCE_PARTITION_CONTRACT_PATH
 
 
@@ -42,7 +54,12 @@ DERIVED_COMMANDS = {
     "reuse-inventory",
     "forest-plan-source-delta-readiness",
     "extraction-accuracy-audit",
+    "source-register-proving-slice",
     "authority-currentness",
+    "authority-relationship-eval",
+    "citation-alias-eval",
+    "graph-health-eval",
+    "graph-accuracy-eval",
     "retrieval-build",
     "retrieval-query",
     "retrieval-eval",
@@ -130,6 +147,20 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
         type=Path,
     )
 
+    source_register_proving = subparsers.add_parser(
+        "source-register-proving-slice",
+        help="Run the Phase 1.5 mixed proving slice over the canonical source register.",
+    )
+    source_register_proving.add_argument("--workbook", required=True, type=Path)
+    source_register_proving.add_argument(
+        "--manifest",
+        default=DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH,
+        type=Path,
+    )
+    source_register_proving.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    source_register_proving.add_argument("--config", default=Path("config/downloader.toml"), type=Path)
+    source_register_proving.add_argument("--report-path", type=Path)
+
     authority_currentness = subparsers.add_parser(
         "authority-currentness",
         help="Build a source-currentness validation report for the authority-family inventory.",
@@ -154,6 +185,53 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     authority_currentness.add_argument("--catalog-path", type=Path)
     authority_currentness.add_argument("--source-set-manifest-path", type=Path)
     authority_currentness.add_argument("--output-path", type=Path)
+
+    authority_relationship_eval = subparsers.add_parser(
+        "authority-relationship-eval",
+        help="Validate proving-slice semantic relationship coverage and endpoint rules.",
+    )
+    authority_relationship_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    authority_relationship_eval.add_argument("--report-path", type=Path)
+    authority_relationship_eval.add_argument(
+        "--eval-path",
+        default=DEFAULT_AUTHORITY_RELATIONSHIP_EVAL_PATH,
+        type=Path,
+    )
+    authority_relationship_eval.add_argument("--output-path", type=Path)
+
+    citation_alias_eval = subparsers.add_parser(
+        "citation-alias-eval",
+        help="Validate proving-slice alias resolution and blocked-alias context handling.",
+    )
+    citation_alias_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    citation_alias_eval.add_argument("--report-path", type=Path)
+    citation_alias_eval.add_argument("--output-path", type=Path)
+
+    graph_health_eval = subparsers.add_parser(
+        "graph-health-eval",
+        help="Validate proving-slice graph health metrics and required lenses.",
+    )
+    graph_health_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    graph_health_eval.add_argument("--report-path", type=Path)
+    graph_health_eval.add_argument(
+        "--contract-path",
+        default=DEFAULT_GRAPH_HEALTH_CONTRACT_PATH,
+        type=Path,
+    )
+    graph_health_eval.add_argument("--output-path", type=Path)
+
+    graph_accuracy_eval = subparsers.add_parser(
+        "graph-accuracy-eval",
+        help="Validate proving-slice graph node classes, lenses, and justification paths.",
+    )
+    graph_accuracy_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    graph_accuracy_eval.add_argument("--report-path", type=Path)
+    graph_accuracy_eval.add_argument(
+        "--eval-path",
+        default=DEFAULT_GRAPH_ACCURACY_EVAL_PATH,
+        type=Path,
+    )
+    graph_accuracy_eval.add_argument("--output-path", type=Path)
 
     retrieval_build = subparsers.add_parser(
         "retrieval-build",
@@ -353,19 +431,77 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         print_summary(result.summary)
         return 0 if result.summary["passed"] else 1
 
+    if args.command == "source-register-proving-slice":
+        result = build_source_register_proving_slice(
+            workbook_path=args.workbook,
+            manifest_path=args.manifest,
+            output_dir=args.output_dir,
+            config_path=args.config,
+            report_path=args.report_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["validation_passed"] else 1
+
     if args.command == "authority-currentness":
-        result = build_authority_currentness_report(
+        resolved_inputs = resolve_authority_currentness_inputs(
             output_dir=args.output_dir,
             source_set_id=args.source_set_id,
             authority_inventory_path=args.authority_inventory,
             source_addition_decisions_path=args.source_addition_decisions,
-            source_partition_contract_path=args.source_partition_contract,
             catalog_path=args.catalog_path,
             source_set_manifest_path=args.source_set_manifest_path,
+        )
+        result = build_authority_currentness_report(
+            output_dir=args.output_dir,
+            source_set_id=resolved_inputs["source_set_id"],
+            authority_inventory_path=resolved_inputs["authority_inventory_path"],
+            source_addition_decisions_path=resolved_inputs["source_addition_decisions_path"],
+            source_partition_contract_path=args.source_partition_contract,
+            catalog_path=resolved_inputs["catalog_path"],
+            source_set_manifest_path=resolved_inputs["source_set_manifest_path"],
             output_path=args.output_path,
         )
         print_summary(result.summary)
         return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "authority-relationship-eval":
+        result = run_authority_relationship_eval(
+            output_dir=args.output_dir,
+            report_path=args.report_path,
+            eval_path=args.eval_path,
+            output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "citation-alias-eval":
+        result = run_citation_alias_eval(
+            output_dir=args.output_dir,
+            report_path=args.report_path,
+            output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "graph-health-eval":
+        result = run_graph_health_eval(
+            output_dir=args.output_dir,
+            report_path=args.report_path,
+            contract_path=args.contract_path,
+            output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "graph-accuracy-eval":
+        result = run_graph_accuracy_eval(
+            output_dir=args.output_dir,
+            report_path=args.report_path,
+            eval_path=args.eval_path,
+            output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
 
     if args.command == "retrieval-build":
         catalog_sqlite_path = args.catalog_sqlite_path

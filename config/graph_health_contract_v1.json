@@ -1,0 +1,16 @@
+{
+  "schema_version": "graph-health-contract-v1",
+  "contract_id": "graph-health-contract-v1",
+  "as_of_date": "2026-05-18",
+  "status": "phase-1-5-starter",
+  "required_lens_ids": [
+    "source-provenance",
+    "authority-currentness",
+    "forest-plan-lineage",
+    "package-applicability",
+    "evidence-path",
+    "readiness-blockers"
+  ],
+  "max_orphan_node_count": 0,
+  "max_disconnected_component_count": 1
+}

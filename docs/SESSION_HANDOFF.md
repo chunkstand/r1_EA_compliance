@@ -5,6 +5,88 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 1.5 Proving Slice
+
+This implementation slice completes the pre-ingestion proving packet required
+before any canonical-register capture or catalog cutover can begin.
+
+- scope:
+  `config/source_register_proving_slice_v1.json`,
+  `config/graph_health_contract_v1.json`,
+  `config/graph_accuracy_eval_v1.json`,
+  `config/authority_relationship_eval_v1.json`,
+  `src/usfs_r1_ea_sources/source_register_proving.py`,
+  `src/usfs_r1_ea_sources/authority_relationship_eval.py`,
+  `src/usfs_r1_ea_sources/citation_alias_eval.py`,
+  `src/usfs_r1_ea_sources/graph_health_eval.py`,
+  `src/usfs_r1_ea_sources/graph_accuracy_eval.py`,
+  `src/usfs_r1_ea_sources/cli_derived.py`,
+  `src/usfs_r1_ea_sources/catalog.py`,
+  `src/usfs_r1_ea_sources/source_partitions.py`,
+  `tests/test_source_register_proving.py`,
+  `tests/test_graph_accuracy_eval.py`,
+  `tests/test_cli.py`,
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/architecture_contract.toml`
+- resolved boundary:
+  the repo now has an executable Phase 1.5 proving lane instead of a plan-only
+  placeholder. `source-register-proving-slice` runs a governed mixed slice of
+  `26` load-ready canonical rows plus `5` deferred queue rows through canonical
+  loader validation, contract-based preflight, synthetic proving capture,
+  scoped cataloging, authority-currentness input generation, relationship
+  materialization, alias evaluation, graph-health assembly, and
+  justification-path export.
+- proving-context truth:
+  the proving lane now writes
+  `source_library/derived/source_register_proving/latest_context.json`, and
+  bare `authority-currentness` calls can resolve the proving slice inventory,
+  source-addition decisions, catalog, and source-set manifest from that latest
+  context when no explicit overrides are supplied.
+- semantic-eval truth:
+  the repo now ships `authority-relationship-eval`, `citation-alias-eval`,
+  `graph-health-eval`, and `graph-accuracy-eval` as first-class CLI commands.
+  `config/graph_health_contract_v1.json` and
+  `config/graph_accuracy_eval_v1.json` now hold the starter proving contracts,
+  and `config/authority_relationship_eval_v1.json` now records the minimum
+  relationship-type coverage the proving slice must materialize.
+- surfaced gap closures:
+  the proving slice exposed and closed two real issues in live code rather than
+  hiding them in the report: canonical-register catalog rows now classify more
+  canonical document types into non-generic review roles, and source-partition
+  logic no longer archives rows that say `Current unless superseded ...`.
+- no-bulk-ingest rule:
+  the active runtime still remains pinned to `legacy_v0`, and no full-register
+  canonical ingestion may begin until this proving packet stays green. The
+  proving lane is a gate, not a silent cutover.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources source-register-proving-slice --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --manifest config/source_register_proving_slice_v1.json --output-dir source_library`
+  passed with `validation_passed=true`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library`
+  passed against the proving slice context with `validation_passed=true`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources authority-relationship-eval --output-dir source_library`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources citation-alias-eval --output-dir source_library`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources graph-health-eval --output-dir source_library`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources graph-accuracy-eval --output-dir source_library`
+  passed;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_proving.py tests/test_graph_accuracy_eval.py tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_preflight.py tests/test_catalog.py tests/test_extraction_admission.py tests/test_authority_currentness.py tests/test_cli.py tests/test_architecture_contract.py -q`
+  passed;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/source_register_proving.py src/usfs_r1_ea_sources/authority_relationship_eval.py src/usfs_r1_ea_sources/citation_alias_eval.py src/usfs_r1_ea_sources/graph_health_eval.py src/usfs_r1_ea_sources/graph_accuracy_eval.py src/usfs_r1_ea_sources/cli_derived.py src/usfs_r1_ea_sources/catalog.py src/usfs_r1_ea_sources/source_partitions.py tests/test_source_register_proving.py tests/test_graph_accuracy_eval.py tests/test_cli.py tests/test_authority_currentness.py`
+  passed;
+  `PYTHONPATH=src python -m compileall src` passed; and
+  `git diff --check` passed.
+- next routing:
+  Phase 2 in `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  is now the next executable packet: move `dry-run`, `preflight`, `download`,
+  `batch-download`, `validate-run`, and `catalog-build` onto the canonical
+  register while preserving queue discipline and the proving gate.
+
 ## Canonical Source Register Refoundation Phase 1 Loader Refactor
 
 This implementation slice completes the foundation-loader half of the

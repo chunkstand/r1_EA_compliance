@@ -17,12 +17,55 @@ the active runtime workbook. Phase 0 refoundation work now lives in
 `config/direct_file_readiness_contract_v1.json`, and
 `config/parser_admission_contract_v1.json`, while `dry-run`, `preflight`,
 `download`, `batch-download`, and `catalog-build` still consume the legacy
-workbook contract until the Phase 1 loader rewrite lands.
+workbook contract until the later capture/catalog cutover lands.
 
 Routing note: the newest operational-recovery and gold-coverage sections below supersede older
 historical lane notes when they disagree. In particular, older references to South Plateau as
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
+
+## Canonical Source Register Phase 1.5 Proving Slice
+
+Latest closeout on 2026-05-18:
+
+- The Phase 1.5 mixed proving packet is now implemented. The repo now ships:
+  `config/source_register_proving_slice_v1.json`,
+  `src/usfs_r1_ea_sources/source_register_proving.py`,
+  `src/usfs_r1_ea_sources/authority_relationship_eval.py`,
+  `src/usfs_r1_ea_sources/citation_alias_eval.py`,
+  `src/usfs_r1_ea_sources/graph_health_eval.py`, and
+  `src/usfs_r1_ea_sources/graph_accuracy_eval.py`.
+- `source-register-proving-slice` now runs a governed `26`-row load-ready
+  slice plus `5` queue rows from
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` through
+  canonical loader validation, contract-based preflight, synthetic proving
+  capture, scoped cataloging, authority-currentness input generation,
+  relationship materialization, alias evaluation, graph-health assembly, and
+  justification-path export without switching the active runtime workbook.
+- The proving run now writes a latest-context pointer at
+  `source_library/derived/source_register_proving/latest_context.json`. When
+  that context exists, bare `authority-currentness` calls can resolve the
+  proving slice inventory, decisions, catalog, and source-set manifest without
+  extra flags.
+- The semantic proving bundle now has explicit contracts and eval surfaces:
+  `config/graph_health_contract_v1.json`,
+  `config/graph_accuracy_eval_v1.json`,
+  `authority-relationship-eval`,
+  `citation-alias-eval`,
+  `graph-health-eval`, and
+  `graph-accuracy-eval`.
+- The proving packet also closed two contract gaps surfaced by the slice:
+  canonical-register catalog rows now classify more source-register document
+  types into review-graph roles instead of falling through to
+  `document_role=source_document`, and source-partition logic no longer treats
+  notes like `Current unless superseded ...` as inherently historical-only.
+- The active runtime still remains pinned to `legacy_v0`, and the no-bulk-ingest
+  boundary is now explicit in code, docs, and the proving report: bulk
+  canonical-register ingestion may not bypass this Phase 1.5 packet.
+- The next routed implementation packet is Phase 2 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`: cut over
+  capture and catalog commands to the canonical register while preserving the
+  proving no-bulk-ingest gate and queue discipline.
 
 ## Canonical Source Register Phase 1 Loader Refactor
 

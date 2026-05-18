@@ -27,6 +27,15 @@
     "currentness-lineage",
     "scope-and-unit-binding"
   ],
+  "minimum_proving_slice_relationship_types": [
+    "IMPLEMENTS",
+    "REQUIRES_CONSISTENCY_WITH",
+    "IS_SUPPORTING_DOCUMENT_FOR",
+    "SUPERSEDES",
+    "APPLIES_WITHIN_SCOPE",
+    "GOVERNS_FOREST_UNIT",
+    "PROVIDES_GUIDANCE_FOR"
+  ],
   "negative_fixtures": [
     {
       "fixture_id": "wrong-edge-direction",

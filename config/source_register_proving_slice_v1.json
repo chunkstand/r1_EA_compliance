@@ -1,0 +1,281 @@
+{
+  "schema_version": "source-register-proving-slice-v1",
+  "contract_id": "source-register-proving-slice-v1",
+  "as_of_date": "2026-05-18",
+  "status": "phase-1-5-executable",
+  "description": "Representative mixed proving slice for the final canonical source register before any bulk canonical ingestion begins.",
+  "load_ready_source_record_ids": [
+    "FED-001",
+    "FED-003",
+    "FED-021",
+    "FED-023",
+    "FED-024",
+    "FED-030",
+    "LEX-USFS-001",
+    "LEX-USFS-002",
+    "LEX-USFS-008",
+    "USFS-024",
+    "R1-001",
+    "R1-016",
+    "FOR-002",
+    "FPS-002",
+    "FPS-033",
+    "FPS-044",
+    "FPS-078",
+    "FPS-241",
+    "WILD-ESA-040",
+    "WILD-ESA-063",
+    "WILD-ESA-081",
+    "WILD-ESA-085",
+    "WILD-ESA-087",
+    "STP-008",
+    "PROG-001",
+    "SUP-004"
+  ],
+  "queue_source_record_ids": [
+    "R1-SCC-Q-CGNF-RATIONALES",
+    "FOR-001",
+    "FOR-012",
+    "FOR-015",
+    "FINAL-Q-FLAT-001"
+  ],
+  "coverage_groups": [
+    {
+      "coverage_id": "federal-core-authorities",
+      "source_record_ids": [
+        "FED-001",
+        "FED-003",
+        "FED-021",
+        "FED-023",
+        "FED-024",
+        "FED-030"
+      ],
+      "expected_authority_tiers": [
+        "Federal"
+      ],
+      "expected_parser_admission_classes": [
+        "structured_web_source"
+      ],
+      "expected_expected_parsers": [
+        "html"
+      ]
+    },
+    {
+      "coverage_id": "usfs-directives",
+      "source_record_ids": [
+        "LEX-USFS-001",
+        "LEX-USFS-002",
+        "LEX-USFS-008",
+        "USFS-024"
+      ],
+      "expected_authority_tiers": [
+        "USFS"
+      ],
+      "expected_parser_admission_classes": [
+        "structured_web_source",
+        "direct_document"
+      ],
+      "expected_expected_parsers": [
+        "html",
+        "pdf"
+      ]
+    },
+    {
+      "coverage_id": "regional-directives",
+      "source_record_ids": [
+        "R1-001",
+        "R1-016"
+      ],
+      "expected_authority_tiers": [
+        "Region"
+      ],
+      "expected_parser_admission_classes": [
+        "structured_web_source",
+        "direct_document"
+      ],
+      "expected_expected_parsers": [
+        "html",
+        "docx"
+      ]
+    },
+    {
+      "coverage_id": "forest-plan-authorities",
+      "source_record_ids": [
+        "FOR-002",
+        "FPS-002",
+        "FPS-033",
+        "FPS-078"
+      ],
+      "expected_authority_tiers": [
+        "Forest"
+      ],
+      "expected_parser_admission_classes": [
+        "structured_web_source"
+      ],
+      "expected_expected_parsers": [
+        "html"
+      ]
+    },
+    {
+      "coverage_id": "forest-plan-support-docs",
+      "source_record_ids": [
+        "FPS-044",
+        "FPS-241",
+        "WILD-ESA-040",
+        "WILD-ESA-063",
+        "WILD-ESA-081"
+      ],
+      "expected_parser_admission_classes": [
+        "structured_web_source"
+      ],
+      "expected_expected_parsers": [
+        "html"
+      ]
+    },
+    {
+      "coverage_id": "direct-document-formats",
+      "source_record_ids": [
+        "WILD-ESA-087",
+        "LEX-USFS-002",
+        "LEX-USFS-008",
+        "R1-016"
+      ],
+      "expected_parser_admission_classes": [
+        "direct_document"
+      ],
+      "expected_expected_parsers": [
+        "pdf",
+        "docx"
+      ]
+    },
+    {
+      "coverage_id": "fallback-web-sources",
+      "source_record_ids": [
+        "STP-008",
+        "PROG-001"
+      ],
+      "expected_parser_admission_classes": [
+        "web_source"
+      ],
+      "expected_expected_parsers": [
+        "html"
+      ]
+    },
+    {
+      "coverage_id": "superseded-lineage",
+      "source_record_ids": [
+        "SUP-004"
+      ],
+      "expected_authority_tiers": [
+        "Superseded"
+      ],
+      "expected_parser_admission_classes": [
+        "structured_web_source"
+      ],
+      "expected_expected_parsers": [
+        "html"
+      ]
+    },
+    {
+      "coverage_id": "queue-capture-pages",
+      "row_state": "queue",
+      "source_record_ids": [
+        "R1-SCC-Q-CGNF-RATIONALES",
+        "FOR-001",
+        "FOR-012",
+        "FOR-015"
+      ],
+      "expected_url_classes": [
+        "Official FS page requiring direct file capture",
+        "Official USFS source page"
+      ]
+    },
+    {
+      "coverage_id": "queue-manual-export-placeholder",
+      "row_state": "queue",
+      "source_record_ids": [
+        "FINAL-Q-FLAT-001"
+      ],
+      "expected_url_classes": [
+        "Folder/listing/manual-export placeholder"
+      ]
+    }
+  ],
+  "alias_expectations": [
+    {
+      "source_record_id": "FOR-002",
+      "blocked_alias_term": "forest plan"
+    }
+  ],
+  "supersession_expectations": [
+    {
+      "source_record_id": "SUP-004",
+      "replacement_source_record_id": "FED-003"
+    }
+  ],
+  "relationship_expectations": [
+    {
+      "relationship_id": "proving-planning-rule-implements-nfma",
+      "relationship_type": "IMPLEMENTS",
+      "source_source_record_id": "FED-003",
+      "target_source_record_id": "FED-021",
+      "path_pattern_id": "higher-authority-to-component",
+      "evidence_basis_type": "workbook_curated",
+      "relationship_basis": "The current planning rule operationalizes NFMA planning direction for National Forest System land management plans."
+    },
+    {
+      "relationship_id": "proving-forest-plan-consistency",
+      "relationship_type": "REQUIRES_CONSISTENCY_WITH",
+      "source_source_record_id": "FPS-002",
+      "target_source_record_id": "FED-003",
+      "path_pattern_id": "higher-authority-to-component",
+      "evidence_basis_type": "workbook_curated",
+      "relationship_basis": "The selected forest plan chapter remains governed by the current planning rule."
+    },
+    {
+      "relationship_id": "proving-supporting-document-linkage",
+      "relationship_type": "IS_SUPPORTING_DOCUMENT_FOR",
+      "source_source_record_id": "FPS-044",
+      "target_source_record_id": "FPS-002",
+      "path_pattern_id": "higher-authority-to-component",
+      "evidence_basis_type": "workbook_curated",
+      "relationship_basis": "The selected biological assessment is retained as a forest-plan support document for the same plan base."
+    },
+    {
+      "relationship_id": "proving-planning-rule-currentness-lineage",
+      "relationship_type": "SUPERSEDES",
+      "source_source_record_id": "FED-003",
+      "target_source_record_id": "SUP-004",
+      "path_pattern_id": "currentness-lineage",
+      "evidence_basis_type": "currentness_adjudicated",
+      "relationship_basis": "The current planning rule replaces the older 1982 planning-rule viability citation retained only for historical/currentness lineage."
+    },
+    {
+      "relationship_id": "proving-nepa-federal-scope",
+      "relationship_type": "APPLIES_WITHIN_SCOPE",
+      "source_source_record_id": "FED-001",
+      "target_scope_id": "scope:federal-us",
+      "path_pattern_id": "scope-and-unit-binding",
+      "evidence_basis_type": "workbook_curated",
+      "relationship_basis": "NEPA is a federal authority that applies within the federal jurisdiction scope."
+    },
+    {
+      "relationship_id": "proving-beaverhead-governs-forest-unit",
+      "relationship_type": "GOVERNS_FOREST_UNIT",
+      "source_source_record_id": "FPS-002",
+      "target_forest_unit_id": "forest_unit:beaverhead-deerlodge-national-forest",
+      "path_pattern_id": "scope-and-unit-binding",
+      "evidence_basis_type": "workbook_curated",
+      "relationship_basis": "The selected forest plan chapter governs the Beaverhead-Deerlodge National Forest unit."
+    },
+    {
+      "relationship_id": "proving-handbook-guidance-for-amendment",
+      "relationship_type": "PROVIDES_GUIDANCE_FOR",
+      "source_source_record_id": "LEX-USFS-008",
+      "target_source_record_id": "FPS-033",
+      "path_pattern_id": "higher-authority-to-component",
+      "evidence_basis_type": "workbook_curated",
+      "relationship_basis": "The selected handbook chapter is a directive guidance source that informs the selected forest-plan amendment surface."
+    }
+  ]
+}

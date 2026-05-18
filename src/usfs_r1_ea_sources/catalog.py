@@ -1092,6 +1092,53 @@ def _source_status(manifest_record: dict | None, run_scope_present: bool) -> str
 
 
 def _document_role(source: WorkbookSource, document_type: str | None) -> str:
+    metadata = source.metadata
+    if metadata.get("loader_contract") == "source_register_v1":
+        authority_document_class_id = _clean(metadata.get("authority_document_class_id")) or ""
+        document_type_value = (document_type or "").lower()
+        title = source.title.lower()
+        currentness_notes = (_clean(metadata.get("currentness_notes")) or "").lower()
+        if authority_document_class_id == "forest_plan":
+            support_tokens = (
+                "appendix",
+                "assessment",
+                "biological opinion",
+                "decision",
+                "eis",
+                "executive summary",
+                "feis",
+                "monitoring",
+                "retained",
+                "support",
+                "transmittal",
+            )
+            if any(token in document_type_value or token in title for token in support_tokens):
+                return "forest_plan_support"
+            if "support document" in currentness_notes:
+                return "forest_plan_support"
+            return "forest_plan"
+        agency_policy_tokens = (
+            "assessment",
+            "biological opinion",
+            "chapter",
+            "consultation",
+            "crosswalk",
+            "directive",
+            "fsm",
+            "guidance",
+            "handbook",
+            "manual",
+            "planning page",
+            "policy",
+            "recovery plan",
+            "retained",
+            "species profile",
+            "supplement",
+        )
+        if any(token in document_type_value or token in title for token in agency_policy_tokens):
+            return "agency_policy"
+        if "ecfr" in document_type_value or "planning rule" in title:
+            return "regulation"
     if source.metadata.get("source_input") == "r1_forest_plan_document_register":
         if source.source_record_id in _r1_forest_plan_register_primary_plan_source_record_ids():
             return "forest_plan"

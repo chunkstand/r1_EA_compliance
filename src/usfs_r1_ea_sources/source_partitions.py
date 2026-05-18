@@ -473,6 +473,8 @@ def _explicit_source_partition(row: dict) -> str | None:
 
 def _has_non_current_source_marker(row: dict) -> bool:
     text = _row_text(row)
+    if re.search(r"\bcurrent\s+(?:unless|until)\s+superseded\b", text):
+        return False
     if re.search(r"\b(rescinded|revoked|repealed|superseded|not[- ]current)\b", text):
         return True
     if re.search(

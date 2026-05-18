@@ -76,7 +76,16 @@ allowed_import_layers = ["foundation", "extraction", "retrieval", "review"]
 [[layers]]
 name = "review_support"
 summary = "Cross-source-set reuse planning helpers that may inspect review-derived source-set requirements without writing review outputs."
-modules = ["authority_currentness", "forest_plan_source_delta_readiness", "reuse_inventory"]
+modules = [
+  "authority_currentness",
+  "authority_relationship_eval",
+  "citation_alias_eval",
+  "forest_plan_source_delta_readiness",
+  "graph_accuracy_eval",
+  "graph_health_eval",
+  "reuse_inventory",
+  "source_register_proving",
+]
 allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "review", "review_support"]
 
 [[layers]]
@@ -312,6 +321,15 @@ paths = [
 owner_layer = "review_support"
 paths = [
   "source_library/derived/<source_set_id>/authority_currentness/authority_currentness_report.json",
+  "source_library/derived/<source_set_id>/source_register_proving/authority_inventory.json",
+  "source_library/derived/<source_set_id>/source_register_proving/authority_relationship_eval_report.json",
+  "source_library/derived/<source_set_id>/source_register_proving/citation_alias_eval_report.json",
+  "source_library/derived/<source_set_id>/source_register_proving/graph_accuracy_eval_report.json",
+  "source_library/derived/<source_set_id>/source_register_proving/graph_health_eval_report.json",
+  "source_library/derived/<source_set_id>/source_register_proving/proving_slice_report.json",
+  "source_library/derived/<source_set_id>/source_register_proving/relationships.json",
+  "source_library/derived/<source_set_id>/source_register_proving/source_addition_decisions.json",
+  "source_library/derived/source_register_proving/latest_context.json",
   "source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory.json",
   "source_library/derived/<source_set_id>/reuse_inventory/reuse_inventory_records.jsonl",
   "source_library/derived/<source_set_id>/reuse_inventory/summary.json",
@@ -461,7 +479,12 @@ commands = [
 name = "catalog_extraction_retrieval"
 commands = [
   "catalog-build",
+  "source-register-proving-slice",
   "authority-currentness",
+  "authority-relationship-eval",
+  "citation-alias-eval",
+  "graph-health-eval",
+  "graph-accuracy-eval",
   "extract-build",
   "reuse-inventory",
   "forest-plan-source-delta-readiness",

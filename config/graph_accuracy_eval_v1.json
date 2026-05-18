@@ -1,0 +1,40 @@
+{
+  "schema_version": "graph-accuracy-eval-v1",
+  "contract_id": "graph-accuracy-eval-v1",
+  "as_of_date": "2026-05-18",
+  "status": "phase-1-5-starter",
+  "required_node_class_ids": [
+    "authority_document",
+    "forest_plan",
+    "authority_section",
+    "jurisdiction_scope",
+    "forest_unit",
+    "source_record",
+    "source_artifact",
+    "evidence_span",
+    "authority_path",
+    "justification_path"
+  ],
+  "required_lens_ids": [
+    "source-provenance",
+    "authority-currentness",
+    "forest-plan-lineage",
+    "package-applicability",
+    "evidence-path",
+    "readiness-blockers"
+  ],
+  "required_relationship_types": [
+    "IMPLEMENTS",
+    "REQUIRES_CONSISTENCY_WITH",
+    "IS_SUPPORTING_DOCUMENT_FOR",
+    "SUPERSEDES",
+    "APPLIES_WITHIN_SCOPE",
+    "GOVERNS_FOREST_UNIT",
+    "PROVIDES_GUIDANCE_FOR"
+  ],
+  "required_path_patterns": [
+    "higher-authority-to-component",
+    "currentness-lineage",
+    "scope-and-unit-binding"
+  ]
+}
