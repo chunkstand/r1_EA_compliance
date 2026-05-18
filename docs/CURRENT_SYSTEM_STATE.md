@@ -18,7 +18,7 @@ Milestone 5 closeout commit `94c8915`.
 
 ## Canonical Source Register Phase 8 Aggregate Readiness And Legacy Contract Retirement
 
-Latest closeout on 2026-05-18:
+Latest closeout on 2026-05-18 after implementation commit `5c1d45d`:
 
 - The canonical source-register refoundation aggregate packet is now live. On
   the active reviewer-ready East Crazies lane
@@ -49,6 +49,9 @@ Latest closeout on 2026-05-18:
   residual, not a reason to preserve the old workbook contract as active truth.
 - The canonical workbook refoundation plan is now resolved. Older top-level
   references below that still route to “Phase 8 next” are historical only.
+  Older deeper East Crazies aggregate references below that still state
+  `phase-eval` `21/21` or current promotion `31/31` are likewise historical
+  pre-aggregate values superseded by this Phase 8 closeout.
 
 ## Canonical Source Register Phase 7 Legally Defensible Draft-Document Generation
 

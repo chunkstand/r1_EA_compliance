@@ -327,10 +327,12 @@ The East Crazy Inspiration Divide V1 EA gate is promoted for review ID
 `26` baseline source records through the generated applicability rule pack, validates a
 `377`-candidate authority universe with `37` applicable and `340` non-applicable authorities,
 emits `37` generated compliance findings, applies `12/12` Custer Gallatin standards, passes
-review-bound `phase-eval` `21/21` with the post-V1 applicability, decision-support, review packet
-index, NEPA 3D graph, and final QA certification gates included, passes
-`v1-ea-eval` with broader EA and forest-plan lanes true, and keeps `14` conditional adjudication
-rows as explicit accepted V1 reviewer risk. The current matrix includes four first-class
+review-bound `phase-eval` `26/26` with reviewer packet, final-QA, draft-generation, and aggregate
+promotion gates included, passes `final-qa-certification` `196/196`, keeps
+`draft-generation-eval` green at `5/5`, passes `v1-ea-eval` with broader EA and forest-plan lanes
+true, and keeps `14` conditional adjudication rows as explicit accepted V1 reviewer risk. The
+current non-strict `promotion-suite` lane is also green at `32/32` required current-promotion
+results. The current matrix includes four first-class
 land-exchange authority rows: FLPMA Section 206 (`R1EA-146`), land-exchange statutory authorities
 (`R1EA-137`), land-exchange regulations (`R1EA-124`), and Forest Service land-exchange policy and
 project references (`R1EA-150`). The decision-support and final-QA packet contracts now fail closed

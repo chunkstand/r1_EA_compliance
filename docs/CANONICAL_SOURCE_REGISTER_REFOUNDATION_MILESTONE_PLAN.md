@@ -74,7 +74,8 @@ Current checkpoint on 2026-05-18:
   citations, stale authority traces, contradictory evidence, and
   reviewer-warning insertion.
 - Phase 8 aggregate readiness, real-package proving, and legacy contract
-  retirement is now live. The East Crazies reviewer-ready lane on
+  retirement is now live in commit `5c1d45d`. The East Crazies reviewer-ready
+  lane on
   `source-set-ba8d0feae79501b8` now closes green through review-scoped
   `phase-eval` (`26/26`), `final-qa-certification` (`196/196`),
   `draft-generation-eval` (`5/5`), and non-strict `promotion-suite`
@@ -1426,7 +1427,7 @@ Purpose: close the program by proving the full canonical-register-driven system
 on real package and draft-generation lanes, then retire the old workbook
 contract as active truth.
 
-Closeout checkpoint on 2026-05-18:
+Closeout checkpoint on 2026-05-18 after implementation commit `5c1d45d`:
 
 - Review-scoped East Crazies `phase-eval` now passes `26/26` with
   `reviewer_ready=true` on `source-set-ba8d0feae79501b8`.

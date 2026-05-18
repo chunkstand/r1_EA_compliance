@@ -5,6 +5,38 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 8 Alignment Closeout
+
+This docs-only close-gaps pass aligns the resolved Phase 8 aggregate packet
+with the live repo state after implementation commit `5c1d45d`.
+
+- aligned boundary:
+  the routed refoundation plan in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` now records
+  Phase 8 as resolved by commit `5c1d45d` instead of only as a live
+  checkpoint. `README.md` now upgrades the active East Crazies aggregate
+  summary from the older `21/21` review-phase-eval snapshot to the current
+  `26/26` review aggregate plus `32/32` current-promotion result counts.
+- routing alignment:
+  `docs/CURRENT_SYSTEM_STATE.md` now explicitly marks older deeper East
+  Crazies aggregate references that still say `21/21` or `31/31` as
+  historical pre-aggregate values, so the durable routing set no longer mixes
+  active Phase 8 closeout state with earlier Sequence 4 packet counts. Older
+  handoff sections below that still mention `21/21` or `31/31` remain
+  preserved history only after implementation commit `5c1d45d` and this
+  alignment closeout.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py -q`
+  passed with `5` tests;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  the canonical source-register refoundation plan remains resolved. Any
+  follow-on work should route through a fresh post-refoundation milestone or
+  debt packet.
+
 ## Canonical Source Register Refoundation Phase 8 Aggregate Closeout
 
 This implementation slice closes Phase 8 of the canonical source-register
