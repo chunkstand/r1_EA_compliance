@@ -329,12 +329,10 @@ Authority-universe completion Milestones 1 through 4 are now represented by
 `config/authority_family_rule_template_coverage_nepa_ea_v1.json`,
 `config/applicability_eval_seed.json`, `config/applicability_gold_eval_v0.json`, the expanded
 applicability fixture under `config/fixtures/applicability/`, and the `authority-currentness`
-command. The inventory has `35` authority families, `18` required authority
-requirement groups, `33` active families, all `48/48` current rule-pack rules crosswalked, and all
-`190/190` workbook source records mapped to an authority family. The currentness gate validates
-`source-set-ba8d0feae79501b8` with `207` family/source currentness records, `33` source-currentness
-confirmed families, `1` documented candidate non-addition, `1` superseded replacement-source
-confirmation, `21` Milestone 2 families closed or documented, and `0` failed families. The NEPA 3D
+command. Those legacy authority-universe inventory artifacts remain preserved for the earlier
+review lane, but the active canonical runtime now lets `authority-currentness` project authority
+families, queue capture gaps, and supersession lineage directly from the `source_register_v1`
+catalog plus the canonical workbook queue when default legacy inputs are requested. The NEPA 3D
 Milestone 2A source-partition contract is now implemented: the catalog/currentness surfaces
 distinguish active review-corpus, currentness/supersession archive, and candidate/blocked-source
 records; the live catalog partitions are `189` active review-corpus records and `1` candidate or
@@ -677,8 +675,10 @@ Generated outputs are written under `source_library/` and ignored by git:
 
 The raw artifacts are not semantic chunks. They are source bytes plus provenance. The
 `authority-currentness` command validates the authority-family inventory against the catalog source
-set before candidate or template-backed authority families are promoted. The `extract-build` command
-builds a derived text/chunk layer from the catalog. The
+set before candidate or template-backed authority families are promoted, and under the active
+canonical register it can project that inventory, queue capture gaps, and supersession lineage
+directly from the current `source_register_v1` catalog plus the workbook queue. The `extract-build`
+command builds a derived text/chunk layer from the catalog. The
 `retrieval-build` command turns those chunks into a queryable local evidence index. The
 `evidence-graph-build` command promotes document, chunk, evidence-span, topic, parser, and artifact
 links into a local graph artifact. The `claim-extract` command extracts deterministic source-text

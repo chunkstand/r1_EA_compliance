@@ -2468,7 +2468,7 @@ def _source_display_status(
             "display_status": display_status,
             "review_readiness_status": "source_currentness_only",
         }
-    if supersession_status == "superseded_replacement_source":
+    if supersession_status in {"superseded_replacement_source", "superseded_source_record"}:
         return {"display_status": "superseded", "review_readiness_status": "source_currentness_only"}
     return {"display_status": "active", "review_readiness_status": "reviewer_ready"}
 
@@ -2486,7 +2486,10 @@ def _source_readiness_blockers(
         return ["missing_source"]
     if source_partition == "candidate_blocked_source":
         return ["missing_source"]
-    if source_partition == "currentness_supersession_archive" or supersession_status == "superseded_replacement_source":
+    if source_partition == "currentness_supersession_archive" or supersession_status in {
+        "superseded_replacement_source",
+        "superseded_source_record",
+    }:
         return ["superseded_source"]
     return []
 
@@ -2498,6 +2501,8 @@ def _family_display_status(family: dict[str, Any], currentness: dict[str, Any]) 
         return {"display_status": "candidate", "review_readiness_status": "blocked"}
     if status == "superseded":
         return {"display_status": "superseded", "review_readiness_status": "source_currentness_only"}
+    if status == "out_of_scope":
+        return {"display_status": "reserved", "review_readiness_status": "source_currentness_only"}
     if currentness_status in {"missing_source_addition_decision", "source_currentness_failed"}:
         return {"display_status": "readiness_blocked", "review_readiness_status": "blocked"}
     return {"display_status": "active", "review_readiness_status": "reviewer_ready"}
@@ -2508,6 +2513,8 @@ def _family_readiness_blockers(family: dict[str, Any], currentness: dict[str, An
     if status == "candidate":
         return ["missing_source"]
     if status == "superseded":
+        return ["superseded_source"]
+    if status == "out_of_scope":
         return ["superseded_source"]
     if currentness.get("failed_source_record_count"):
         return ["missing_source"]

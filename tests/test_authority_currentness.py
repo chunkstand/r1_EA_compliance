@@ -11,6 +11,10 @@ from usfs_r1_ea_sources.authority_currentness import (
 from usfs_r1_ea_sources.authority_currentness import build_authority_currentness_report
 
 
+ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
+
+
 class AuthorityCurrentnessTests(unittest.TestCase):
     def test_report_records_required_source_currentness_fields_and_passes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -91,7 +95,7 @@ class AuthorityCurrentnessTests(unittest.TestCase):
             superseded_record = records[("superseded_family", "R1EA-002")]
             self.assertEqual(
                 superseded_record["supersession_status"],
-                "superseded_replacement_source",
+                "superseded_source_record",
             )
             self.assertFalse(superseded_record["counts_as_current_authority"])
             self.assertFalse(superseded_record["eligible_for_active_review_rules_for_family"])
@@ -461,8 +465,70 @@ class AuthorityCurrentnessTests(unittest.TestCase):
             checks = {check["name"]: check for check in report["validation"]["checks"]}
             self.assertTrue(checks["inventory_source_set_matches_manifest"]["passed"])
 
+    def test_canonical_source_register_projection_builds_projected_inputs_and_lineage(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            output_dir = tmp_path / "source_library"
+            _write_catalog(
+                output_dir,
+                rows=[
+                    _canonical_catalog_row(
+                        source_record_id="FED-003",
+                        title="National Forest System Land Management Planning",
+                        authority_document_id="authority_document:federal-planning-rule",
+                        citation_label="36 CFR part 219",
+                    ),
+                    _canonical_catalog_row(
+                        source_record_id="SUP-004",
+                        title="Older 1982 planning-rule viability citation",
+                        authority_document_id="authority_document:superseded-planning-rule-viability",
+                        authority_tier="Superseded",
+                        citation_label="36 CFR 219.19 legacy use",
+                        currentness_status="Superseded or noncurrent controlling authority",
+                    ),
+                ],
+                workbook_path=str(CANONICAL_WORKBOOK),
+            )
 
-def _write_catalog(output_dir: Path, *, rows: list[dict]) -> None:
+            result = build_authority_currentness_report(output_dir=output_dir)
+
+            report = _read_json(result.report_path)
+            self.assertTrue(report["validation"]["passed"])
+            self.assertTrue(
+                report["inputs"]["authority_inventory_path"].endswith(
+                    "authority_inventory_projected.json"
+                )
+            )
+            self.assertTrue(
+                report["inputs"]["source_addition_decisions_path"].endswith(
+                    "source_addition_decisions_projected.json"
+                )
+            )
+            self.assertGreater(result.summary["candidate_family_count"], 0)
+            self.assertGreater(result.summary["documented_source_gap_count"], 0)
+            self.assertGreater(result.summary["temporal_lineage_record_count"], 0)
+
+            superseded_family = next(
+                family for family in report["family_currentness"] if family["family_status"] == "superseded"
+            )
+            self.assertEqual(
+                superseded_family["currentness_status"],
+                "superseded_replacement_sources_confirmed",
+            )
+            lineage_record = next(
+                record
+                for record in report["temporal_lineage_records"]
+                if record.get("source_record_id") == "SUP-004"
+            )
+            self.assertEqual(lineage_record["replacement_source_record_ids"], ["FED-003"])
+
+
+def _write_catalog(
+    output_dir: Path,
+    *,
+    rows: list[dict],
+    workbook_path: str | None = None,
+) -> None:
     catalog_dir = output_dir / "catalog"
     catalog_dir.mkdir(parents=True, exist_ok=True)
     _write_json(
@@ -476,6 +542,7 @@ def _write_catalog(output_dir: Path, *, rows: list[dict]) -> None:
                 status: sum(1 for row in rows if row.get("source_status") == status)
                 for status in sorted({row.get("source_status") for row in rows})
             },
+            "workbook_path": workbook_path,
         },
     )
     _write_jsonl(catalog_dir / "source_catalog.jsonl", rows)
@@ -514,6 +581,34 @@ def _catalog_row(
     }
     if source_partition:
         row["source_partition"] = source_partition
+    return row
+
+
+def _canonical_catalog_row(
+    *,
+    source_record_id: str,
+    title: str,
+    authority_document_id: str,
+    authority_tier: str = "Federal",
+    citation_label: str,
+    currentness_status: str = "Current",
+    source_status: str = "downloaded_existing",
+) -> dict:
+    row = _catalog_row(
+        source_record_id=source_record_id,
+        title=title,
+        source_status=source_status,
+        citation_label=citation_label,
+        currentness_notes=currentness_status,
+    )
+    row["metadata"] = {
+        "loader_contract": "source_register_v1",
+        "authority_document_id": authority_document_id,
+        "authority_document_class_id": "authority_document",
+        "authority_tier": authority_tier,
+        "currentness_status": currentness_status,
+        "currentness_notes": currentness_status,
+    }
     return row
 
 

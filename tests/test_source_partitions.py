@@ -135,3 +135,58 @@ def test_catalog_source_partition_keeps_blocked_records_visible_but_not_active()
 
     assert source_partition == CANDIDATE_BLOCKED_SOURCE
     assert basis == "blocked_or_unavailable_status:challenge_page"
+
+
+def test_catalog_source_partition_archives_retained_historical_plan_amendments() -> None:
+    source_partition, basis = catalog_source_partition(
+        {
+            "source_status": "downloaded_existing",
+            "title": "Forest Plan Amendment 28",
+            "currentness_notes": "Retained/historical plan amendment; verify applicability under current LMP",
+            "metadata": {
+                "loader_contract": "source_register_v1",
+                "authority_tier": "Forest",
+                "currentness_status": "Retained/historical plan amendment; verify applicability under current LMP",
+            },
+        }
+    )
+
+    assert source_partition == CURRENTNESS_SUPERSESSION_ARCHIVE
+    assert basis == "non_current_source_marker"
+
+
+def test_catalog_source_partition_archives_historical_transition_support_rows() -> None:
+    source_partition, basis = catalog_source_partition(
+        {
+            "source_status": "downloaded_existing",
+            "title": "Monitoring Transition Letter",
+            "currentness_notes": "Historical/current transition support",
+            "metadata": {
+                "loader_contract": "source_register_v1",
+                "authority_tier": "Forest",
+                "currentness_status": "Historical/current transition support",
+            },
+        }
+    )
+
+    assert source_partition == CURRENTNESS_SUPERSESSION_ARCHIVE
+    assert basis == "non_current_source_marker"
+
+
+def test_catalog_source_partition_overrides_stale_canonical_active_partition() -> None:
+    source_partition, basis = catalog_source_partition(
+        {
+            "source_status": "downloaded_existing",
+            "source_partition": "active_review_corpus",
+            "title": "Forest Plan Amendment 1",
+            "currentness_notes": "Retained/historical plan amendment; verify applicability under current LMP",
+            "metadata": {
+                "loader_contract": "source_register_v1",
+                "authority_tier": "Forest",
+                "currentness_status": "Retained/historical plan amendment; verify applicability under current LMP",
+            },
+        }
+    )
+
+    assert source_partition == CURRENTNESS_SUPERSESSION_ARCHIVE
+    assert basis == "canonical_row_currentness_override"

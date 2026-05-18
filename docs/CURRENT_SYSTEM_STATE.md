@@ -16,6 +16,37 @@ historical lane notes when they disagree. In particular, older references to Sou
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
 
+## Canonical Source Register Phase 3 Currentness, Supersession, And Source-Partition Rebase
+
+Latest closeout on 2026-05-18:
+
+- `authority-currentness` no longer needs the old `R1EA-*`-keyed authority
+  inventory when the active catalog is canonical. If the active catalog rows
+  carry `metadata.loader_contract = "source_register_v1"` and the default
+  legacy currentness inputs are requested, the command now projects
+  `authority_inventory_projected.json` and
+  `source_addition_decisions_projected.json` directly from the active
+  canonical catalog plus the workbook `Direct_File_Capture_Queue`.
+- Canonical supersession lineage is now governed by
+  `config/source_register_currentness_lineage_v1.json`. Superseded canonical
+  rows can now prove either explicit replacement lineage or governed
+  no-replacement dispositions such as reserved, revoked, or historical-only.
+- The live root currentness gate now passes for
+  `source-set-9dcf819bc4cca486` at
+  `source_library/derived/source-set-9dcf819bc4cca486/authority_currentness/authority_currentness_report.json`
+  with `77` authority families, `26` source-currentness records, `51`
+  documented queue/source gaps, `24` catalog-confirmed current families, `1`
+  superseded replacement confirmation, `active_review_corpus=24`,
+  `currentness_supersession_archive=2`, and `validation_passed=true`.
+- Canonical partition governance now overrides stale derived `source_partition`
+  values when a `source_register_v1` row is historical, superseded, reserved,
+  or otherwise currentness-only. Historical plan-amendment and transition
+  support rows can no longer remain silently active just because an older
+  catalog artifact serialized `active_review_corpus`.
+- The next routed implementation packet is Phase 4 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`:
+  extraction fidelity and verified source admission for the canonical corpus.
+
 ## Canonical Source Register Phase 2 Capture And Catalog Cutover
 
 Latest closeout on 2026-05-18:
@@ -53,10 +84,9 @@ Latest closeout on 2026-05-18:
   corpus. The preserved legacy source-set baseline and downstream derived
   surfaces remain historical comparison points until the later currentness,
   extraction, and downstream rebase packets land.
-- The next routed implementation packet is Phase 3 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`:
-  authority-currentness, supersession, and source-partition rebase on top of
-  the canonical register.
+- This packet is now historical routing context only. Phase 3 currentness and
+  source-partition rebase has since landed, and Phase 4 is now the next routed
+  implementation packet.
 
 ## Canonical Source Register Phase 1.5 Proving Slice
 
@@ -77,10 +107,12 @@ Latest closeout on 2026-05-18:
   relationship materialization, alias evaluation, graph-health assembly, and
   justification-path export without switching the active runtime workbook.
 - The proving run now writes a latest-context pointer at
-  `source_library/derived/source_register_proving/latest_context.json`. When
-  that context exists, bare `authority-currentness` calls can resolve the
-  proving slice inventory, decisions, catalog, and source-set manifest without
-  extra flags.
+  `source_library/derived/source_register_proving/latest_context.json`.
+  Historical note:
+  Phase 3 now gives bare `authority-currentness` calls a higher-priority
+  canonical path that projects currentness inputs from the active
+  `source_register_v1` catalog and workbook queue when available. The proving
+  context remains the fallback for narrow proving-only replays.
 - The semantic proving bundle now has explicit contracts and eval surfaces:
   `config/graph_health_contract_v1.json`,
   `config/graph_accuracy_eval_v1.json`,
@@ -1009,41 +1041,50 @@ positive/negative package fixtures and adjudication-quality scoring for these ex
 
 ## Authority Currentness Gate
 
-Milestone 2 of the authority-universe completion plan is implemented by
-`config/authority_source_addition_decisions_nepa_ea_v1.json` and the `authority-currentness`
-command. The decision config documents the current non-addition for the
-`environmental_justice_civil_rights` candidate family: the system should not satisfy current
-environmental-justice/civil-rights coverage with revoked executive-order text, and a later scoped
-workbook delta should add official Title VI and USDA nondiscrimination sources if this family is
-promoted.
+Phase 3 of the canonical source-register refoundation is now the active
+currentness gate. The command still accepts explicit legacy authority-universe
+inputs, but when the active catalog rows carry
+`metadata.loader_contract = "source_register_v1"` and the default legacy
+inputs are requested it now projects:
 
-The latest local report was generated for `source-set-ba8d0feae79501b8` at:
+- `source_library/derived/<source_set_id>/authority_currentness/authority_inventory_projected.json`
+- `source_library/derived/<source_set_id>/authority_currentness/source_addition_decisions_projected.json`
+
+from the active canonical catalog plus the workbook `Direct_File_Capture_Queue`
+and applies governed supersession lineage from
+`config/source_register_currentness_lineage_v1.json`.
+
+The latest local canonical report was generated for
+`source-set-9dcf819bc4cca486` at:
 
 ```text
-source_library/derived/source-set-ba8d0feae79501b8/authority_currentness/authority_currentness_report.json
+source_library/derived/source-set-9dcf819bc4cca486/authority_currentness/authority_currentness_report.json
 ```
 
 Report summary:
 
 - Schema: `authority-currentness-report-v0`
-- Authority families checked: `35`
-- Family status counts: `active=33`, `candidate=1`, `superseded=1`
-- Family/source currentness records: `207`
-- Current authority family/source mappings confirmed from catalog: `203`
-- Excluded source mappings that do not count as current authority: `1`
-- Superseded replacement-source mappings confirmed without counting as current authority: `3`
-- Family currentness: `source_currentness_confirmed=33`,
-  `documented_source_non_addition=1`, `superseded_replacement_sources_confirmed=1`
-- Milestone 2 source-currentness families closed or documented: `21`
+- Authority families checked: `77`
+- Family status counts: `active=22`, `candidate=51`, `out_of_scope=3`,
+  `superseded=1`
+- Family/source currentness records: `26`
+- Current authority family/source mappings confirmed from catalog: `24`
+- Currentness-only archive source mappings: `1`
+- Superseded source-record confirmations: `1`
+- Family currentness: `source_currentness_confirmed=24`,
+  `documented_source_gap=51`,
+  `superseded_replacement_sources_confirmed=1`,
+  `no_current_source_record=1`
 - Failed families: `0`
 - Validation: passed
 
-This is a source-currentness and supersession gate. It proves that active families have
-catalog-confirmed current source coverage, that reserved or superseded authority cannot silently
-satisfy current authority requirements, and that the one candidate family has an explicit
-non-addition decision. Milestone 3 supplies the semantic rule-template promotion layer, and
-Milestone 4 supplies independent applicability eval/adjudication coverage for that expanded
-authority universe.
+This is now both a source-currentness and explicit source-gap gate for the
+canonical ledger. It proves that active current coverage is driven by the
+canonical register, that deferred queue rows remain visible candidate blockers
+instead of silently disappearing, and that superseded or historical rows can
+stay graph-visible without satisfying active rule coverage. The older
+`source-set-ba8d0feae79501b8` legacy authority-universe report remains a
+historical comparison surface only.
 
 ## Source Partition Contract For NEPA 3D
 
@@ -1064,18 +1105,19 @@ Current partition values:
 - `candidate_blocked_source`: candidate, blocked, excluded, failed, or unresolved source records
   visible as graph blockers but not active review authority.
 
-The live `authority-currentness` run for `source-set-ba8d0feae79501b8` now records:
+The live `authority-currentness` run for `source-set-9dcf819bc4cca486` now records:
 
-- catalog source partitions: `active_review_corpus=189`, `candidate_blocked_source=1`;
-- authority-family source roles: `active_authority_source=203`,
+- catalog source partitions: `active_review_corpus=24`,
+  `currentness_supersession_archive=2`;
+- authority-family source roles: `active_authority_source=24`,
   `candidate_blocked_or_currentness_only_source=1`, and
-  `supersession_or_replacement_source=3`;
-- passing fail-closed checks that the source-partition contract defines the required partitions,
-  active/non-active eligibility boundaries, non-active graph relationship limits, reserved
-  `36 CFR part 220` archive handling, scoped workbook/source deltas, and catalog behavior where
-  non-current sources are not in the active review corpus, superseded family sources use only
-  currentness/supersession graph relationships, and collapsed FSH 1909.15 handbook records cannot
-  satisfy chapter-level source boundaries.
+  `supersession_or_replacement_source=1`;
+- passing fail-closed checks that the source-partition contract defines the
+  required partitions, active/non-active eligibility boundaries, non-active
+  graph relationship limits, reserved `36 CFR part 220` archive handling,
+  scoped workbook/source deltas, superseded-lineage metadata, and canonical
+  catalog behavior where historical/currentness-only rows cannot remain active
+  just because an older derived partition field serialized `active_review_corpus`.
 
 The current source set does not yet add FSH 1909.15 chapter records. The contract keeps that as a
 scoped workbook/source delta before any NEPA 3D graph export claims handbook completeness.

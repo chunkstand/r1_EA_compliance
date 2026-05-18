@@ -1170,7 +1170,7 @@ represented only as a collapsed source record instead of separate chapter record
 Path:
 `source_library/derived/<source_set_id>/authority_currentness/authority_currentness_report.json`
 
-The `authority-currentness` command writes the Milestone 2 source-currentness gate for the
+The `authority-currentness` command writes the source-currentness gate for the
 authority-family inventory. It reads:
 
 - `config/authority_universe_families_nepa_ea_v1.json`, or the path passed with
@@ -1181,6 +1181,15 @@ authority-family inventory. It reads:
   `--source-partition-contract`
 - `source_library/catalog/source_catalog.jsonl`
 - `source_library/catalog/source_set_manifest.json`
+
+When the active catalog rows carry `metadata.loader_contract = "source_register_v1"` and the
+default legacy currentness inputs are requested, the command instead projects:
+
+- `source_library/derived/<source_set_id>/authority_currentness/authority_inventory_projected.json`
+- `source_library/derived/<source_set_id>/authority_currentness/source_addition_decisions_projected.json`
+
+from the active canonical catalog plus the workbook `Direct_File_Capture_Queue`, and it applies
+governed supersession lineage from `config/source_register_currentness_lineage_v1.json`.
 
 The report has schema version `authority-currentness-report-v0` and includes:
 
@@ -1193,6 +1202,7 @@ The report has schema version `authority-currentness-report-v0` and includes:
 - `catalog_source_partitions`
 - `family_currentness`
 - `source_currentness_records`
+- `temporal_lineage_records`
 - `validation`
 - `summary`
 
@@ -1217,6 +1227,10 @@ includes:
 - `authority_family_source_role`
 - `eligible_for_active_review_rules_for_family`
 - `graph_allowed_relationships_for_family`
+- `replacement_source_record_ids`
+- `replacement_authority_family_id`
+- `temporal_lineage_disposition`
+- `temporal_lineage_basis`
 - document role, authority level, issuer, scope, currentness notes, and artifact path/hash
 
 `source_status` values `downloaded`, `downloaded_existing`, `duplicate_content`, and
@@ -1224,15 +1238,18 @@ includes:
 records are reported as excluded and do not count as current authority. Live-web failure or
 unverified statuses such as `blocked`, `challenge_page`, `not_found`, `timeout`, `empty_body`, and
 `unsupported_content_type` fail validation and cannot count as current authority. Families marked
-`superseded` must carry replacement metadata and their records are reported as replacement sources,
-not as current controlling authority for the superseded family.
+`superseded` must now carry governed lineage metadata and their records are reported as superseded
+source records, not as current controlling authority for the superseded family. Canonical archive
+rows can also emit `currentness_status = currentness_archive_only`, candidate queue-gap families can
+emit `family_currentness = documented_source_gap`, and superseded families without a current
+replacement row can still pass only if they carry an explicit no-replacement lineage disposition.
 
 The validation block checks source-set identity, inventory/catalog alignment, candidate-family
 source-addition decisions, required currentness fields, successful-status-only current coverage,
-excluded-source handling, failed-capture handling, superseded replacement metadata, source
-partition presence/validity, non-current source partitioning, reserved/superseded authority
-partitioning, source-partition contract structure, FSH 1909.15 chapter boundaries, and inventory
-alignment so stale Milestone 2
+excluded-source handling, failed-capture handling, superseded lineage metadata, source partition
+presence/validity, non-current source partitioning, reserved/superseded authority partitioning,
+source-partition contract structure, FSH 1909.15 chapter boundaries, and inventory alignment so
+stale Milestone 2
 currentness gap text cannot remain after the gate passes.
 
 ## NEPA 3D Knowledge Graph Export

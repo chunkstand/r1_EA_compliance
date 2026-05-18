@@ -73,10 +73,16 @@ def load_source_partition_contract(path: Path = DEFAULT_SOURCE_PARTITION_CONTRAC
 def catalog_source_partition(row: dict, contract: dict | None = None) -> tuple[str, str]:
     contract = contract or _default_source_partition_contract()
     explicit_partition = _explicit_source_partition(row)
+    canonical_row = _is_source_register_v1_row(row)
+    source_status = str(row.get("source_status") or "")
+    if explicit_partition and canonical_row:
+        if source_status in BLOCKED_SOURCE_STATUSES:
+            return CANDIDATE_BLOCKED_SOURCE, f"canonical_row_status_override:{source_status}"
+        if explicit_partition == ACTIVE_REVIEW_CORPUS and _has_non_current_source_marker(row):
+            return CURRENTNESS_SUPERSESSION_ARCHIVE, "canonical_row_currentness_override"
     if explicit_partition:
         return explicit_partition, "explicit_source_partition"
 
-    source_status = str(row.get("source_status") or "")
     if source_status in BLOCKED_SOURCE_STATUSES:
         return CANDIDATE_BLOCKED_SOURCE, f"blocked_or_unavailable_status:{source_status}"
 
@@ -471,11 +477,22 @@ def _explicit_source_partition(row: dict) -> str | None:
     return None
 
 
+def _is_source_register_v1_row(row: dict) -> bool:
+    metadata = row.get("metadata")
+    return isinstance(metadata, dict) and metadata.get("loader_contract") == "source_register_v1"
+
+
 def _has_non_current_source_marker(row: dict) -> bool:
     text = _row_text(row)
     if re.search(r"\bcurrent\s+(?:unless|until)\s+superseded\b", text):
         return False
-    if re.search(r"\b(rescinded|revoked|repealed|superseded|not[- ]current)\b", text):
+    if re.search(
+        r"\b(retained/historical(?:\s+plan amendment)?|historical/current transition support|"
+        r"historic/current transition support)\b",
+        text,
+    ):
+        return True
+    if re.search(r"\b(rescinded|revoked|repealed|superseded|noncurrent|not[- ]current)\b", text):
         return True
     if re.search(
         r"\b(reserved\s+(?:authority|regulation|source|cfr|code|part)|"
@@ -512,6 +529,8 @@ def _row_text(row: dict) -> str:
         for field in (
             "title",
             "document_type",
+            "authority_tier",
+            "currentness_status",
             "currentness_notes",
             "source_currentness_status",
             "supersession_status",

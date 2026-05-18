@@ -5,6 +5,66 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 3 Currentness, Supersession, And Source-Partition Rebase
+
+This implementation slice completes the Phase 3 rebase of authority
+currentness and source-partition governance onto the canonical source register.
+
+- scope:
+  `config/source_register_currentness_lineage_v1.json`,
+  `src/usfs_r1_ea_sources/authority_currentness.py`,
+  `src/usfs_r1_ea_sources/source_partitions.py`,
+  `src/usfs_r1_ea_sources/source_register_proving.py`,
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`,
+  `tests/test_authority_currentness.py`,
+  `tests/test_source_partitions.py`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- resolved boundary:
+  bare `authority-currentness` calls no longer need the old
+  `R1EA-*`-keyed authority inventory when the active catalog is canonical.
+  With `source_register_v1` catalog rows and default legacy inputs, the
+  command now projects canonical authority families, queue capture gaps, and
+  authority-source decisions directly from the active catalog plus workbook
+  queue.
+- lineage truth:
+  superseded canonical rows are now governed by
+  `config/source_register_currentness_lineage_v1.json`. The Phase 3 gate now
+  accepts both explicit replacement lineage and governed no-replacement
+  dispositions such as reserved, revoked, or historical-only.
+- partition truth:
+  canonical source-partition classification now overrides stale derived
+  `source_partition=active_review_corpus` values when a `source_register_v1`
+  row is historical, superseded, reserved, or otherwise currentness-only.
+  Historical plan-amendment and transition-support rows can stay visible
+  without remaining silently active.
+- live gate artifact:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library`
+  now passes for `source-set-9dcf819bc4cca486` at
+  `source_library/derived/source-set-9dcf819bc4cca486/authority_currentness/authority_currentness_report.json`
+  with `77` authority families, `26` source-currentness records, `51`
+  documented queue/source gaps, `24` catalog-confirmed current families, `1`
+  superseded replacement confirmation, `active_review_corpus=24`,
+  `currentness_supersession_archive=2`, and `validation_passed=true`.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library`
+  passed;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_partitions.py tests/test_authority_currentness.py tests/test_source_register_proving.py tests/test_architecture_contract.py tests/test_nepa_knowledge_graph_export.py -q`
+  passed with `32` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/authority_currentness.py src/usfs_r1_ea_sources/source_partitions.py src/usfs_r1_ea_sources/source_register_proving.py src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py tests/test_authority_currentness.py tests/test_source_partitions.py`
+  passed;
+  `PYTHONPATH=src python -m compileall src`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  Phase 4 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is now the
+  next executable packet: extraction fidelity and verified source admission
+  for the canonical corpus.
+
 ## Canonical Source Register Refoundation Phase 2 Capture And Catalog Cutover
 
 This implementation slice completes the Phase 2 runtime cutover from the

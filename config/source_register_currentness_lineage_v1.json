@@ -1,0 +1,37 @@
+{
+  "lineage_rules": [
+    {
+      "lineage_basis": "Retained only as a stale-citation detector for older CEQ NEPA regulations; the canonical register does not treat it as a current controlling authority source.",
+      "lineage_disposition": "historical_no_replacement",
+      "replacement_source_record_ids": [],
+      "source_record_id": "SUP-001"
+    },
+    {
+      "lineage_basis": "36 CFR part 220 remains reserved and historical in the canonical register. It is visible for currentness lineage only and does not currently map to an active replacement row in this source set.",
+      "lineage_disposition": "reserved_without_replacement",
+      "replacement_source_record_ids": [],
+      "source_record_id": "SUP-002"
+    },
+    {
+      "lineage_basis": "The superseded Forest Service NEPA Handbook row is retained only as historical currentness evidence. Current controlling direction is carried by newer directive families outside this exact handbook source record.",
+      "lineage_disposition": "historical_no_replacement",
+      "replacement_source_record_ids": [],
+      "source_record_id": "SUP-003"
+    },
+    {
+      "lineage_basis": "The current 36 CFR part 219 planning rule replaces the older 1982 planning-rule viability citation retained only for stale-citation detection and lineage traceability.",
+      "lineage_disposition": "superseded_by_current_authority",
+      "replacement_source_record_ids": [
+        "FED-003"
+      ],
+      "source_record_id": "SUP-004"
+    },
+    {
+      "lineage_basis": "Executive Order 12898 is retained only to surface revoked environmental-justice citation lineage. The canonical register does not currently promote a replacement controlling authority row for this revoked order.",
+      "lineage_disposition": "revoked_without_replacement",
+      "replacement_source_record_ids": [],
+      "source_record_id": "SUP-005"
+    }
+  ],
+  "schema_version": "source-register-currentness-lineage-v1"
+}

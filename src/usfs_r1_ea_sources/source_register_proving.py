@@ -307,6 +307,26 @@ def resolve_authority_currentness_inputs(
             "catalog_path": catalog_path,
             "source_set_manifest_path": source_set_manifest_path,
         }
+    active_manifest_path = Path(output_dir) / "catalog" / "source_set_manifest.json"
+    active_catalog_path = Path(output_dir) / "catalog" / "source_catalog.jsonl"
+    if active_manifest_path.exists() and active_catalog_path.exists():
+        active_manifest = json.loads(active_manifest_path.read_text(encoding="utf-8"))
+        active_rows = [
+            json.loads(line)
+            for line in active_catalog_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        if any(
+            str((row.get("metadata") or {}).get("loader_contract") or "") == "source_register_v1"
+            for row in active_rows
+        ):
+            return {
+                "source_set_id": str(active_manifest.get("source_set_id") or ""),
+                "authority_inventory_path": authority_inventory_path,
+                "source_addition_decisions_path": source_addition_decisions_path,
+                "catalog_path": active_catalog_path,
+                "source_set_manifest_path": active_manifest_path,
+            }
     context = resolve_latest_proving_context(output_dir)
     return {
         "source_set_id": context["source_set_id"],
