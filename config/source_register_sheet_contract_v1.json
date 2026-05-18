@@ -1,0 +1,257 @@
+{
+  "schema_version": "source-register-sheet-contract-v1",
+  "contract_id": "source-register-sheet-contract-v1",
+  "as_of_date": "2026-05-18",
+  "status": "phase0_freeze",
+  "canonical_workbook_filename": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+  "load_sheet_name": "Document_Register_Master",
+  "queue_sheet_name": "Direct_File_Capture_Queue",
+  "removed_sheet_name": "Removed_Not_Applicable_Final",
+  "sheet_order": [
+    "Codex_Load_Index",
+    "Authority_Tier_Index",
+    "Document_Register_Master",
+    "Direct_File_Capture_Queue",
+    "Final_Audit_Log",
+    "Removed_Redundancy_Audit",
+    "Added_Patched_Audit_Final",
+    "Link_Validation_Summary",
+    "Land_Exchange_Source_Audit_2026",
+    "Land_Exchange_Additions_Log",
+    "Final_Ingest_Certification_2026",
+    "Removed_Not_Applicable_Final",
+    "Applicability_By_Tier"
+  ],
+  "sheets": [
+    {
+      "sheet_name": "Codex_Load_Index",
+      "role": "control_summary",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": ["Metric", "Value", "Notes"],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Authority_Tier_Index",
+      "role": "audit_summary",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": ["Authority_Tier", "Database_Load_Rows", "Purpose"],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Document_Register_Master",
+      "role": "load_table",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": [
+        "Source_ID",
+        "Authority_Tier",
+        "Sub_Tier",
+        "Jurisdiction_or_Unit",
+        "Resource_Area",
+        "Document_Type",
+        "Document_Title",
+        "Citation_or_Code",
+        "Issuing_Entity",
+        "Issue_or_Effective_Date",
+        "Currentness_Status",
+        "Applicability_or_Trigger",
+        "Extraction_Priority",
+        "Source_URL",
+        "Link_Status",
+        "Validation_Method",
+        "Docling_Instructions",
+        "Related_Workbook_Row",
+        "Notes",
+        "URL_Class",
+        "Database_Load",
+        "Validation_Status",
+        "Source_Fingerprint",
+        "EA_System_Applicability_Status",
+        "Criticality_Determination",
+        "Applicability_Scope",
+        "Ingest_Action"
+      ],
+      "emits_load_rows": true
+    },
+    {
+      "sheet_name": "Direct_File_Capture_Queue",
+      "role": "deferred_queue",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": [
+        "Source_ID",
+        "Authority_Tier",
+        "Sub_Tier",
+        "Jurisdiction_or_Unit",
+        "Resource_Area",
+        "Document_Type",
+        "Document_Title",
+        "Citation_or_Code",
+        "Issuing_Entity",
+        "Issue_or_Effective_Date",
+        "Currentness_Status",
+        "Applicability_or_Trigger",
+        "Extraction_Priority",
+        "Source_URL",
+        "Link_Status",
+        "Validation_Method",
+        "Docling_Instructions",
+        "Related_Workbook_Row",
+        "Notes",
+        "URL_Class",
+        "Database_Load",
+        "Validation_Status",
+        "Queue_Reason",
+        "Resolution_Required"
+      ],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Final_Audit_Log",
+      "role": "audit_summary",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": ["Check", "Result", "Details"],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Removed_Redundancy_Audit",
+      "role": "audit_detail",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": [
+        "Source_ID",
+        "Document_Title",
+        "Source_URL",
+        "Removal_Reason",
+        "Reason"
+      ],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Added_Patched_Audit_Final",
+      "role": "audit_detail",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": [
+        "Action",
+        "Source_ID",
+        "Authority_Tier",
+        "Document_Title",
+        "Source_URL",
+        "Reason"
+      ],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Link_Validation_Summary",
+      "role": "audit_summary",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": ["Category", "Count", "Notes"],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Land_Exchange_Source_Audit_2026",
+      "role": "audit_detail",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": [
+        "Coverage_ID",
+        "Land_Exchange_Document_or_Check",
+        "Required_or_Conditional",
+        "Authority_or_Source",
+        "Workbook_Source_IDs",
+        "Authority_Tier",
+        "Trigger",
+        "Coverage_Status",
+        "Notes"
+      ],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Land_Exchange_Additions_Log",
+      "role": "audit_summary",
+      "header_row": 3,
+      "data_start_row": 4,
+      "required_columns": [
+        "Metric",
+        "Value",
+        "Action",
+        "Database_Load_Impact",
+        "Notes",
+        "Pass_Date"
+      ],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Final_Ingest_Certification_2026",
+      "role": "control_summary",
+      "header_row": 4,
+      "data_start_row": 5,
+      "stop_at_blank_row": true,
+      "required_columns": ["Metric", "Value", "Status", "Notes"],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Removed_Not_Applicable_Final",
+      "role": "removed_not_applicable",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": [
+        "Source_ID",
+        "Authority_Tier",
+        "Sub_Tier",
+        "Jurisdiction_or_Unit",
+        "Resource_Area",
+        "Document_Type",
+        "Document_Title",
+        "Citation_or_Code",
+        "Issuing_Entity",
+        "Issue_or_Effective_Date",
+        "Currentness_Status",
+        "Applicability_or_Trigger",
+        "Extraction_Priority",
+        "Source_URL",
+        "Link_Status",
+        "Validation_Method",
+        "Docling_Instructions",
+        "Related_Workbook_Row",
+        "Notes",
+        "URL_Class",
+        "Database_Load",
+        "Validation_Status",
+        "Source_Fingerprint",
+        "EA_System_Applicability_Status",
+        "Removal_Reason"
+      ],
+      "emits_load_rows": false
+    },
+    {
+      "sheet_name": "Applicability_By_Tier",
+      "role": "audit_summary",
+      "header_row": 4,
+      "data_start_row": 5,
+      "required_columns": [
+        "Authority_Tier",
+        "EA_System_Applicability_Status",
+        "Row_Count",
+        "Database_Load",
+        "Notes"
+      ],
+      "emits_load_rows": false
+    }
+  ],
+  "workbook_invariants": [
+    "exact_sheet_roster",
+    "exactly_one_load_sheet",
+    "master_source_id_unique",
+    "master_source_url_unique",
+    "master_source_url_nonempty",
+    "master_source_url_http",
+    "master_applicability_complete",
+    "audit_counts_reconciled"
+  ]
+}

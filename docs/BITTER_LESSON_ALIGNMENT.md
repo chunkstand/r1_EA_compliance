@@ -81,6 +81,14 @@ The current full-library state is correctly treated as a gated v1 foundation. Th
 and evaluate the captured corpus and deterministic seed packages, but it does not claim broad EA
 review quality until adjudicated real-package eval coverage exists.
 
+The 2026-05-18 canonical source-register freeze also stays on this path. The
+replacement workbook is now governed by explicit sheet, schema, vocabulary,
+row-state, direct-file-readiness, and parser-admission contracts in `config/`
+plus a migration audit in
+`docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`. That keeps the refoundation
+data-driven: the new source contract lives in workbook rows and versioned
+config, not in hidden loader branches.
+
 ## Guardrails
 
 General reviewer runtime modules must not encode NEPA-specific review terms as logic. The allowed

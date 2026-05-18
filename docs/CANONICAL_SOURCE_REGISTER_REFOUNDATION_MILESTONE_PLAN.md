@@ -1,12 +1,24 @@
 # Canonical Source Register Refoundation Milestone Plan
 
-Date: 2026-05-15
+Date: 2026-05-18
 
-Status: Proposed
+Status: In Progress
+
+Current checkpoint on 2026-05-18:
+
+- Phase 0 workbook freeze artifacts are now live in the repo: the final
+  workbook is staged in-repo, `source-register-validate` and
+  `source-register-diff` are implemented, the sheet/schema/vocabulary/row-state
+  contracts are frozen in `config/`, the direct-file-readiness and
+  parser-admission contracts are explicit, and the workbook audit now lives in
+  `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`.
+- The runtime is still on the legacy workbook contract. Phase 1 foundation
+  loader replacement remains the next implementation boundary before any
+  canonical capture/catalog cutover can begin.
 
 Owner context: This is a fresh standalone architecture and delivery plan for
 refounding the system around
-`usfs_region1_ea_source_register_validated_codex_2026.xlsx` as the canonical
+`usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` as the canonical
 source register. It does not append to the older
 `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx` workbook
 contract or to the forest-plan-only source-delta lane except where those older
@@ -56,27 +68,57 @@ artifacts.
 
 ## Current Evidence
 
-- The current repo still treats
+- The current runtime still treats
   `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx` as the
-  source-of-truth workbook and still loads only `Ingest_Checklist` and
-  `R1_Forest_Plans`.
-- The new canonical workbook
-  `usfs_region1_ea_source_register_validated_codex_2026.xlsx` contains `11`
-  sheets. Its own load index states that `Document_Register_Master` is the only
-  source-row load table and that all other sheets are validation, QA, audit, or
-  deferred-capture metadata.
-- The new workbook currently reports:
-  - `440` load-ready source rows in `Document_Register_Master`;
-  - `39` deferred rows in `Direct_File_Capture_Queue`;
-  - `157` removed/deduped audit rows;
-  - `30` patched direct URL rows; and
-  - `17` newly added direct source rows.
-- The workbook QA claims:
-  - exactly one database-load table;
-  - zero duplicate normalized `Source_URL` values in the master load table;
-  - zero missing `Source_URL` values in the master load table;
-  - forest-level load rows are direct-file rows rather than source pages; and
-  - superseded rows are retained only for stale-citation and currentness use.
+  source-of-truth workbook. `config/downloader.toml` still pins
+  `canonical_sheets = ["Ingest_Checklist", "R1_Forest_Plans"]`, and
+  `src/usfs_r1_ea_sources/workbook.py` still supports only those two sheet
+  contracts in `load_canonical_sources(...)`.
+- The live legacy catalog baseline in `source_library/catalog/` remains
+  `source-set-5e65d845ce77e1a0` with `350` source rows, `319` artifacts, and
+  source partitions `active_review_corpus=349` and
+  `candidate_blocked_source=1`.
+- The legacy promotion surface is mixed today and must be baseline-locked
+  before migration work starts. The current-promotion suite at
+  `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
+  is green with `current_promotion_ready=true`,
+  `full_canonical_corpus_ready=true`, `expansion_ready=true`, and
+  `promotion_ready=true`, while the active full-canonical source-set artifact
+  at
+  `source_library/derived/source-set-5e65d845ce77e1a0/evidence_graph/phase_eval_results.json`
+  currently records `reviewer_ready=false`, `passed_phase_count=9`,
+  `phase_count=12`, and `threshold_failed_phase_count=1`.
+- The final canonical workbook now exists at
+  `/Users/chunkstand/Downloads/usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`.
+  Its final audit date is `2026-05-16`, and its load/certification sheets say
+  that `Document_Register_Master` is the only database-load table.
+- The final workbook contains `13` sheets and currently reports:
+  - `635` retained load-ready source rows in `Document_Register_Master`;
+  - `51` deferred rows in `Direct_File_Capture_Queue`;
+  - `2` final removed-not-applicable rows in
+    `Removed_Not_Applicable_Final`; and
+  - `29` direct-media rows reclassified from manual-export priority to direct
+    extraction.
+- The final workbook QA and certification tabs currently report:
+  - zero duplicate `Source_ID` values in the master load table;
+  - zero duplicate `Source_URL` values in the master load table;
+  - zero blank or non-HTTP(S) URLs in the master load table; and
+  - `635` rows with explicit `EA_System_Applicability_Status`.
+- `Land_Exchange_Additions_Log` shows the final workbook is materially broader
+  than the earlier candidate: `44` master load rows, `1` queue row, and `24`
+  land-exchange coverage-audit rows were added in the final pass.
+- The queue is not incidental metadata. `Direct_File_Capture_Queue` is
+  currently `51` rows and is dominated by folder/listing/manual-export
+  placeholders plus unresolved forest-plan support file URLs. Phase `1.5` and
+  Phase `2` must therefore prove queue discipline on real placeholder classes,
+  not only on easy born-digital rows.
+- The retained master corpus is concentrated in a few applicability families
+  that the proving slice and early evals must cover explicitly:
+  `238` forest/grassland plan-specific rows,
+  `208` species/ESA/wildlife trigger rows,
+  `50` land exchange trigger rows,
+  `31` federal resource/trigger rows, and
+  `5` stale-source-detector rows.
 - The repo already has durable downstream controls worth preserving:
   - `authority-currentness`;
   - source-partition contracts;
@@ -243,7 +285,7 @@ reviewer-visible artifacts.
 ### Canonical Source And Governance Artifacts
 
 - Canonical workbook:
-  `usfs_region1_ea_source_register_validated_codex_2026.xlsx`
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
 - Workbook sheet contract and schema:
   `config/source_register_sheet_contract_v1.json`,
   `config/source_register_schema_v1.json`
@@ -602,49 +644,64 @@ begins.
 
 Implementation tasks:
 
-1. Move the canonical workbook into the repo at
-   `usfs_region1_ea_source_register_validated_codex_2026.xlsx` and record its
-   SHA256 in a tracked audit note.
-2. Add `config/source_register_sheet_contract_v1.json` describing:
+1. Stage the canonical workbook in the repo at
+   `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` and record
+   its SHA256 in a tracked audit note.
+2. Write a live baseline-lock note that records:
+   - the legacy runtime contract still pinned to `Ingest_Checklist`,
+     `R1_Forest_Plans`, and
+     `config/r1_forest_plan_document_register_draft.csv`;
+   - the active legacy catalog baseline on `source-set-5e65d845ce77e1a0`; and
+   - the mixed inherited readiness state where the ba8d current-promotion
+     suite is green but the active full-canonical `source-set-5e65d845ce77e1a0`
+     `phase-eval` artifact is currently red.
+   This note is the regression boundary for the refoundation and must be
+   updated before any runtime refactor.
+3. Add `config/source_register_sheet_contract_v1.json` describing:
    - the only load table;
    - non-load sheets and their allowed purposes;
    - required header rows;
    - required columns per sheet; and
    - allowed workbook-level QA invariants.
-3. Add `config/source_register_schema_v1.json`,
+4. Add `config/source_register_schema_v1.json`,
    `config/source_register_vocabularies_v1.json`, and
    `config/source_register_row_states_v1.json` for the normalized master-table
    row contract.
-4. Add the semantic-baseline contracts needed for agent-legible authority
+5. Add the semantic-baseline contracts needed for agent-legible authority
    modeling:
    - `config/authority_document_ontology_v1.json`;
    - `config/authority_relationship_types_v1.json`;
    - `config/citation_alias_register_v1.json`; and
    - `config/jurisdiction_scope_register_v1.json`.
-5. Add the early ingest-governance contracts needed to prevent downstream
+6. Add the early ingest-governance contracts needed to prevent downstream
    refactors:
    - `config/direct_file_readiness_contract_v1.json`; and
    - `config/parser_admission_contract_v1.json`.
-6. Refresh `docs/BITTER_LESSON_ALIGNMENT.md` so it explicitly names the new
+7. Refresh `docs/BITTER_LESSON_ALIGNMENT.md` so it explicitly names the new
    canonical workbook and the anti-heuristic obligations of the refoundation.
-7. Add `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md` summarizing:
+8. Add `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md` summarizing:
    - the full sheet inventory;
    - row counts by sheet;
    - load vs non-load semantics;
-   - baseline counts (`440` load rows, `39` queue rows, `157` removed rows,
-     `30` patched rows, `17` added rows);
+   - baseline counts (`635` load rows, `51` queue rows, `2` final removed
+     rows, `29` direct-media reclassifications, `44` added master rows, and
+     `1` added queue row);
+   - queue taxonomy and required promotion paths for the real placeholder
+     classes present in `Direct_File_Capture_Queue`;
+   - applicability and authority-tier distributions needed for early proving
+     slices; and
    - migration implications for the current repo.
-8. Build a read-only diff artifact comparing the old runtime contract to the
+9. Build a read-only diff artifact comparing the old runtime contract to the
    new master register:
    - old workbook rows;
    - current supplemental forest-plan register rows;
    - new master load rows;
    - deferred queue rows; and
    - superseded/currentness-only rows.
-9. Build an ontology-gap audit showing which authority, section, lineage,
+10. Build an ontology-gap audit showing which authority, section, lineage,
    alias, and scope relationships are already representable from the workbook
    versus which ones require new governed adjunct artifacts.
-10. Write a pre-ingestion contract packet that names the final contracts that
+11. Write a pre-ingestion contract packet that names the final contracts that
    must be explicit before bulk document ingestion:
    - identity;
    - ontology;
@@ -657,6 +714,7 @@ Implementation tasks:
 Required implementation artifacts:
 
 - canonical workbook in repo
+- legacy baseline-lock summary
 - `config/source_register_sheet_contract_v1.json`
 - `config/source_register_schema_v1.json`
 - `config/source_register_vocabularies_v1.json`
@@ -669,12 +727,15 @@ Required implementation artifacts:
 - `config/parser_admission_contract_v1.json`
 - refreshed `docs/BITTER_LESSON_ALIGNMENT.md`
 - `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`
-- migration diff artifact and summary in `docs/CURRENT_SYSTEM_STATE.md`
+- migration diff artifact plus baseline-lock summary in
+  `docs/CURRENT_SYSTEM_STATE.md`
 
 Acceptance signals:
 
 - The workbook sheet contract proves that `Document_Register_Master` is the
   only source-row load table.
+- The legacy baseline lock distinguishes inherited green surfaces from
+  inherited red surfaces before runtime migration work starts.
 - The repo has a reproducible schema description for the new canonical source
   register.
 - Identity, ontology, relationship, currentness, scope, alias, and
@@ -685,8 +746,8 @@ Acceptance signals:
 Required verification gates:
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_validated_codex_2026.xlsx --mode schema
-PYTHONPATH=src python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_validated_codex_2026.xlsx
+PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --mode schema
+PYTHONPATH=src python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx
 PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py tests/test_cli.py tests/test_architecture_contract.py
 git diff --check
 ```
@@ -694,6 +755,9 @@ git diff --check
 Stop conditions:
 
 - The workbook contract cannot be expressed without ambiguous load-table rules.
+- The live legacy baseline cannot separate inherited debt from refoundation
+  regressions because the current-promotion and active full-canonical artifacts
+  do not reconcile well enough to lock the starting state.
 - The canonical workbook requires hidden manual knowledge not captured in the
   sheet contract or audit note.
 
@@ -774,7 +838,11 @@ replacement begins.
 Implementation tasks:
 
 1. Add `config/source_register_proving_slice_v1.json` that defines a
-   representative mixed slice of roughly `20-40` canonical rows spanning:
+   representative mixed slice of roughly `24-40` canonical rows spanning:
+   - at least one `Applicable - forest/grassland plan-specific` row;
+   - at least one `Applicable - species/ESA/wildlife trigger` row;
+   - at least one `Applicable - land exchange trigger` row;
+   - at least one `Applicable - stale-source detector only` row;
    - statute or code chapter;
    - CFR or Federal Register source;
    - USDA or USFS directive;
@@ -784,7 +852,9 @@ Implementation tasks:
    - OCR or scanned PDF;
    - table-dense PDF;
    - superseded/currentness-only source;
-   - deferred queue or blocked example; and
+   - deferred queue or blocked example drawn from a real
+     folder/listing/manual-export or unresolved direct-file placeholder class;
+     and
    - at least one citation-alias or identity-collision stress case.
 2. Add a proving-slice runner or equivalent governed execution path that can
    run the mixed slice through:
@@ -830,7 +900,7 @@ Acceptance signals:
 Required verification gates:
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources source-register-proving-slice --workbook usfs_region1_ea_source_register_validated_codex_2026.xlsx --manifest config/source_register_proving_slice_v1.json --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources source-register-proving-slice --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --manifest config/source_register_proving_slice_v1.json --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources authority-relationship-eval --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources citation-alias-eval --output-dir source_library
@@ -896,8 +966,8 @@ Acceptance signals:
 Required verification gates:
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources dry-run --workbook usfs_region1_ea_source_register_validated_codex_2026.xlsx --output-dir source_library
-PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_source_register_validated_codex_2026.xlsx --output-dir source_library --limit 25
+PYTHONPATH=src python -m usfs_r1_ea_sources dry-run --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --limit 25
 PYTHONPATH=src uv run --extra dev pytest tests/test_preflight.py tests/test_validate_run.py tests/test_catalog.py tests/test_upstream_evaluation.py tests/test_architecture_contract.py
 git diff --check
 ```
@@ -1469,6 +1539,12 @@ Stop and reroute before continuing if any of the following occurs:
 
 ## Local Commit Closeout Policy
 
+- `complete-after-commit` rule: no phase may be marked complete, `resolved`,
+  or `reduced` until the scoped verification stack passes, the required docs
+  and handoff updates are written, and the local atomic closeout commit exists.
+- A phase is not complete until the scoped verification stack passes, the
+  required docs and handoff updates land, and the local atomic closeout commit
+  exists.
 - Close each phase with one local atomic commit after the scoped verification
   stack passes.
 - Stage only the verified phase slice.

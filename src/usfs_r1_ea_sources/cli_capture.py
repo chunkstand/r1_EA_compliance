@@ -13,11 +13,21 @@ from .batches import run_batch_downloads
 from .pilots import run_host_pilots
 from .preflight import run_preflight
 from .report import build_run_report
+from .source_register import (
+    DEFAULT_SOURCE_REGISTER_ROW_STATES_PATH,
+    DEFAULT_SOURCE_REGISTER_SCHEMA_PATH,
+    DEFAULT_SOURCE_REGISTER_SHEET_CONTRACT_PATH,
+    DEFAULT_SOURCE_REGISTER_VOCABULARIES_PATH,
+    build_source_register_diff,
+    validate_source_register,
+)
 from .validate_run import validate_run
 from .workbook import load_r1_forest_plan_document_register
 
 
 CAPTURE_COMMANDS = {
+    "source-register-diff",
+    "source-register-validate",
     "dry-run",
     "preflight",
     "download",
@@ -30,6 +40,47 @@ CAPTURE_COMMANDS = {
 
 
 def register_capture_commands(subparsers: argparse._SubParsersAction) -> None:
+    source_register_validate = subparsers.add_parser(
+        "source-register-validate",
+        help="Validate the canonical source-register workbook against the frozen Phase 0 contracts.",
+    )
+    source_register_validate.add_argument("--workbook", required=True, type=Path)
+    source_register_validate.add_argument("--mode", choices=["schema"], default="schema")
+    source_register_validate.add_argument(
+        "--sheet-contract",
+        default=DEFAULT_SOURCE_REGISTER_SHEET_CONTRACT_PATH,
+        type=Path,
+    )
+    source_register_validate.add_argument(
+        "--schema-path",
+        default=DEFAULT_SOURCE_REGISTER_SCHEMA_PATH,
+        type=Path,
+    )
+    source_register_validate.add_argument(
+        "--vocabularies-path",
+        default=DEFAULT_SOURCE_REGISTER_VOCABULARIES_PATH,
+        type=Path,
+    )
+    source_register_validate.add_argument(
+        "--row-states-path",
+        default=DEFAULT_SOURCE_REGISTER_ROW_STATES_PATH,
+        type=Path,
+    )
+
+    source_register_diff = subparsers.add_parser(
+        "source-register-diff",
+        help="Compare the legacy workbook/register contract to the frozen canonical source register.",
+    )
+    source_register_diff.add_argument("--legacy-workbook", required=True, type=Path)
+    source_register_diff.add_argument("--legacy-register", required=True, type=Path)
+    source_register_diff.add_argument("--canonical-workbook", required=True, type=Path)
+    source_register_diff.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
+    source_register_diff.add_argument(
+        "--sheet-contract",
+        default=DEFAULT_SOURCE_REGISTER_SHEET_CONTRACT_PATH,
+        type=Path,
+    )
+
     dry_run = subparsers.add_parser(
         "dry-run",
         help="Parse workbook and write manifest/report outputs without network downloads.",
@@ -126,6 +177,29 @@ def register_capture_commands(subparsers: argparse._SubParsersAction) -> None:
 
 
 def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int | None:
+    if args.command == "source-register-validate":
+        result = validate_source_register(
+            workbook_path=args.workbook,
+            mode=args.mode,
+            sheet_contract_path=args.sheet_contract,
+            schema_path=args.schema_path,
+            vocabularies_path=args.vocabularies_path,
+            row_states_path=args.row_states_path,
+        )
+        print_summary(result)
+        return 0 if result["validation_passed"] else 1
+
+    if args.command == "source-register-diff":
+        result = build_source_register_diff(
+            legacy_workbook_path=args.legacy_workbook,
+            legacy_register_path=args.legacy_register,
+            canonical_workbook_path=args.canonical_workbook,
+            config_path=args.config,
+            sheet_contract_path=args.sheet_contract,
+        )
+        print_summary(result)
+        return 0
+
     if args.command == "dry-run":
         config = load_config(args.config)
         source_delta_options = _source_delta_options(args, parser)

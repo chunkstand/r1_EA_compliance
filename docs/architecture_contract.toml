@@ -16,6 +16,7 @@ modules = [
   "evidence_strength",
   "overrides",
   "records",
+  "source_register",
   "source_partitions",
   "workbook",
 ]
@@ -23,7 +24,7 @@ allowed_import_layers = ["foundation"]
 
 [[layers]]
 name = "capture"
-summary = "Dry-run, preflight, download, batch, report, pilot, and run validation workflows."
+summary = "Dry-run, preflight, download, batch, report, pilot, run validation, and source-register contract workflows."
 modules = ["batches", "download", "dry_run", "pilots", "preflight", "report", "validate_run"]
 allowed_import_layers = ["foundation", "capture"]
 
@@ -445,6 +446,8 @@ paths = [
 [[command_groups]]
 name = "capture"
 commands = [
+  "source-register-validate",
+  "source-register-diff",
   "dry-run",
   "preflight",
   "download",

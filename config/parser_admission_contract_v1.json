@@ -1,0 +1,87 @@
+{
+  "schema_version": "parser-admission-contract-v1",
+  "contract_id": "parser-admission-contract-v1",
+  "as_of_date": "2026-05-18",
+  "status": "phase0_freeze",
+  "parser_routes": [
+    {
+      "route_id": "pdf_direct_document",
+      "match": {
+        "url_suffixes": [".pdf"],
+        "url_classes": [
+          "Official DOJ PDF",
+          "Official FS media PDF",
+          "Official FWS document",
+          "Official Forest Service PDF",
+          "Official Forest Service directive PDF",
+          "Official Forest Service directive document",
+          "Official Forest Service/RMRS PDF",
+          "Official USDA guidance PDF",
+          "Official USFS direct file"
+        ]
+      },
+      "expected_parser": "pdf",
+      "admission_class": "direct_document"
+    },
+    {
+      "route_id": "xml_structured_authority_source",
+      "match": {
+        "url_suffixes": [".xml"]
+      },
+      "expected_parser": "xml",
+      "admission_class": "structured_authority_source"
+    },
+    {
+      "route_id": "docx_direct_document",
+      "match": {
+        "url_suffixes": [".docx"]
+      },
+      "expected_parser": "docx",
+      "admission_class": "direct_document"
+    },
+    {
+      "route_id": "official_web_or_dynamic_source",
+      "match": {
+        "host_suffixes": [
+          "www.ecfr.gov",
+          "www.federalregister.gov",
+          "uscode.house.gov",
+          "www.fs.usda.gov",
+          "ecos.fws.gov"
+        ]
+      },
+      "expected_parser": "html",
+      "admission_class": "structured_web_source"
+    },
+    {
+      "route_id": "fallback_html_source",
+      "match": {
+        "default": true
+      },
+      "expected_parser": "html",
+      "admission_class": "web_source"
+    }
+  ],
+  "admission_classes": [
+    {
+      "admission_class": "direct_document",
+      "required_capture_fields": ["Source_ID", "Source_URL", "URL_Class"],
+      "description": "Direct file or binary-like inputs that should be admitted as document-backed sources."
+    },
+    {
+      "admission_class": "structured_authority_source",
+      "required_capture_fields": ["Source_ID", "Source_URL", "URL_Class"],
+      "description": "Structured legal or policy sources whose canonical surface is XML, HTML, or another machine-readable official publication."
+    },
+    {
+      "admission_class": "structured_web_source",
+      "required_capture_fields": ["Source_ID", "Source_URL", "URL_Class"],
+      "description": "Official dynamic or page-based sources that remain admissible when they are the canonical public authority surface."
+    },
+    {
+      "admission_class": "web_source",
+      "required_capture_fields": ["Source_ID", "Source_URL", "URL_Class"],
+      "description": "General web-source fallback for current Phase 0 planning; later phases may narrow this through evals."
+    }
+  ]
+}

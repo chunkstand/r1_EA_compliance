@@ -1,0 +1,52 @@
+{
+  "schema_version": "source-register-row-states-v1",
+  "contract_id": "source-register-row-states-v1",
+  "as_of_date": "2026-05-18",
+  "status": "phase0_freeze",
+  "states": [
+    {
+      "state_id": "load_ready_master_row",
+      "sheet_name": "Document_Register_Master",
+      "sheet_role": "load_table",
+      "emits_corpus_ready_source": true,
+      "expected_database_load_values": ["Yes"],
+      "applicability_vocabulary": "load_applicability_statuses",
+      "description": "Canonical load-ready rows that may later drive capture, catalog, and downstream review."
+    },
+    {
+      "state_id": "deferred_direct_file_queue_row",
+      "sheet_name": "Direct_File_Capture_Queue",
+      "sheet_role": "deferred_queue",
+      "emits_corpus_ready_source": false,
+      "expected_database_load_values": ["No - direct file capture queue only"],
+      "required_fields": ["Queue_Reason", "Resolution_Required"],
+      "description": "Rows that remain visible governance inputs but must not leak into the active corpus until promoted."
+    },
+    {
+      "state_id": "removed_not_applicable_row",
+      "sheet_name": "Removed_Not_Applicable_Final",
+      "sheet_role": "removed_not_applicable",
+      "emits_corpus_ready_source": false,
+      "expected_applicability_statuses": ["Not applicable - removed from ingest"],
+      "description": "Rows retained for audit only after the final ingest audit removed them from the canonical load table."
+    },
+    {
+      "state_id": "audit_summary_sheet",
+      "sheet_names": [
+        "Codex_Load_Index",
+        "Authority_Tier_Index",
+        "Final_Audit_Log",
+        "Removed_Redundancy_Audit",
+        "Added_Patched_Audit_Final",
+        "Link_Validation_Summary",
+        "Land_Exchange_Source_Audit_2026",
+        "Land_Exchange_Additions_Log",
+        "Final_Ingest_Certification_2026",
+        "Applicability_By_Tier"
+      ],
+      "sheet_role": "audit_or_control_summary",
+      "emits_corpus_ready_source": false,
+      "description": "Audit, QA, and summary sheets that validate or explain the canonical register but never emit source rows."
+    }
+  ]
+}

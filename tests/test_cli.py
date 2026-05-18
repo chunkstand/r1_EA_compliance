@@ -106,6 +106,56 @@ def test_capture_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     assert args.source_delta_only is True
 
 
+def test_source_register_validate_parser_accepts_phase_zero_contract_paths() -> None:
+    args = build_parser().parse_args(
+        [
+            "source-register-validate",
+            "--workbook",
+            "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+            "--mode",
+            "schema",
+            "--sheet-contract",
+            "config/source_register_sheet_contract_v1.json",
+            "--schema-path",
+            "config/source_register_schema_v1.json",
+            "--vocabularies-path",
+            "config/source_register_vocabularies_v1.json",
+            "--row-states-path",
+            "config/source_register_row_states_v1.json",
+        ]
+    )
+
+    assert args.command == "source-register-validate"
+    assert args.workbook == Path("usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx")
+    assert args.mode == "schema"
+    assert args.sheet_contract == Path("config/source_register_sheet_contract_v1.json")
+    assert args.schema_path == Path("config/source_register_schema_v1.json")
+    assert args.vocabularies_path == Path("config/source_register_vocabularies_v1.json")
+    assert args.row_states_path == Path("config/source_register_row_states_v1.json")
+
+
+def test_source_register_diff_parser_accepts_phase_zero_inputs() -> None:
+    args = build_parser().parse_args(
+        [
+            "source-register-diff",
+            "--legacy-workbook",
+            "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx",
+            "--legacy-register",
+            "config/r1_forest_plan_document_register_draft.csv",
+            "--canonical-workbook",
+            "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+            "--sheet-contract",
+            "config/source_register_sheet_contract_v1.json",
+        ]
+    )
+
+    assert args.command == "source-register-diff"
+    assert args.legacy_workbook == Path("usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx")
+    assert args.legacy_register == Path("config/r1_forest_plan_document_register_draft.csv")
+    assert args.canonical_workbook == Path("usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx")
+    assert args.sheet_contract == Path("config/source_register_sheet_contract_v1.json")
+
+
 def test_batch_download_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     args = build_parser().parse_args(
         [

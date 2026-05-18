@@ -8,10 +8,66 @@ input for the knowledge base. The generated `source_library/` is the audited loc
 derived reviewer corpus used by extraction, retrieval, evidence graph, source-claim extraction,
 rule-claim binding, and deterministic EA package review commands.
 
+The replacement workbook
+`usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` is now staged in
+the repo as the frozen canonical source-register candidate, but it is not yet
+the active runtime workbook. Phase 0 refoundation work now lives in
+`docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`,
+`config/source_register_*_v1.json`,
+`config/direct_file_readiness_contract_v1.json`, and
+`config/parser_admission_contract_v1.json`, while `dry-run`, `preflight`,
+`download`, `batch-download`, and `catalog-build` still consume the legacy
+workbook contract until the Phase 1 loader rewrite lands.
+
 Routing note: the newest operational-recovery and gold-coverage sections below supersede older
 historical lane notes when they disagree. In particular, older references to South Plateau as
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
+
+## Canonical Source Register Phase 0 Freeze
+
+Latest closeout on 2026-05-18:
+
+- The final replacement workbook is now tracked in-repo at
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` with SHA256
+  `46006b05052e90abdc80f8d23e074f1b4649eecb603de7479ddc7d250a462f7e`.
+- `source-register-validate` and `source-register-diff` now exist as explicit
+  contract commands for the staged canonical workbook.
+- The frozen workbook-contract packet now lives in:
+  `config/source_register_sheet_contract_v1.json`,
+  `config/source_register_schema_v1.json`,
+  `config/source_register_vocabularies_v1.json`,
+  `config/source_register_row_states_v1.json`,
+  `config/direct_file_readiness_contract_v1.json`, and
+  `config/parser_admission_contract_v1.json`.
+- The staged canonical workbook currently validates with `13` sheets,
+  `635` retained load rows, `51` deferred queue rows, `2` removed rows, zero
+  duplicate `Source_ID` values, zero duplicate master URLs, zero blank or
+  non-HTTP(S) master URLs, and `5` stale-source-detector rows.
+- The migration diff now locks the replacement boundary explicitly:
+  the live runtime still owns `350` unique source rows (`190` legacy workbook
+  rows plus `160` promoted source-delta rows, with `1` documented official
+  source gap), while the staged canonical master owns `635` retained load rows
+  with zero shared `Source_ID` values against either the legacy workbook or the
+  promoted source-delta register.
+- The semantic adjunct contract packet already present in the repo remains the
+  governed baseline for normalized identity and graph semantics:
+  `config/authority_document_ontology_v1.json`,
+  `config/authority_relationship_types_v1.json`,
+  `config/authority_relationship_register_v1.json`,
+  `config/citation_alias_register_v1.json`,
+  `config/jurisdiction_scope_register_v1.json`,
+  `config/authority_ontology_eval_v1.json`, and
+  `config/authority_relationship_eval_v1.json`.
+- The baseline lock for inherited legacy behavior is now explicit:
+  the active catalog remains `source-set-5e65d845ce77e1a0` with `350` rows and
+  `319` artifacts, the current-promotion suite remains green, and the active
+  full-canonical `phase-eval` artifact remains inherited-red at `9/12` with
+  `reviewer_ready=false`.
+- The next routed implementation packet is Phase 1 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`:
+  replace the legacy workbook loader with a canonical register loader before
+  any capture or catalog cutover begins.
 
 ## Compliance Review Test Boundary
 
@@ -47,7 +103,7 @@ Latest closeout on 2026-05-15:
   hotspot. It remains active at `49` revisions and hotspot score `68012`, but
   `src/usfs_r1_ea_sources/evidence_graph.py` is now the top hotspot.
 
-## Current Workbook Contract
+## Legacy Active Workbook Contract
 
 The uploaded workbook now defines the active source contract:
 

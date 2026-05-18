@@ -1,9 +1,114 @@
 # Session Handoff
 
-Date: 2026-05-16
+Date: 2026-05-18
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
+
+## Canonical Source Register Refoundation Phase 0 Workbook Freeze
+
+This implementation slice begins the canonical workbook refoundation with a
+real Phase 0 contract freeze instead of a docs-only placeholder.
+
+- scope:
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `src/usfs_r1_ea_sources/source_register.py`,
+  `src/usfs_r1_ea_sources/cli_capture.py`,
+  `config/source_register_sheet_contract_v1.json`,
+  `config/source_register_schema_v1.json`,
+  `config/source_register_vocabularies_v1.json`,
+  `config/source_register_row_states_v1.json`,
+  `config/direct_file_readiness_contract_v1.json`,
+  `config/parser_admission_contract_v1.json`,
+  `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/BITTER_LESSON_ALIGNMENT.md`,
+  `README.md`,
+  `docs/architecture_contract.toml`,
+  `tests/test_source_register_schema.py`,
+  `tests/test_cli.py`
+- resolved boundary:
+  the final canonical workbook is now staged in-repo and frozen by executable
+  contracts before loader migration. `source-register-validate` fail-closes the
+  sheet roster, required headers, required fields, URL uniqueness, row-state
+  semantics, and audit-count reconciliation for
+  `Document_Register_Master`, `Direct_File_Capture_Queue`, and
+  `Removed_Not_Applicable_Final`. `source-register-diff` now records the actual
+  replacement boundary between the legacy runtime (`350` unique source rows) and
+  the staged canonical master (`635` retained rows, `51` queue rows, `2`
+  removed rows) instead of relying on stale workbook assumptions.
+- semantic-contract status:
+  the workbook-freeze packet now explicitly composes with the existing governed
+  ontology, relationship, alias, and jurisdiction/scope baselines already in
+  `config/`. Those semantic adjunct contracts remain starter baselines rather
+  than populated runtime rows, which is acceptable at Phase 0 because the goal
+  here is to make the seams explicit before loader/capture migration starts.
+- baseline-lock truth:
+  inherited legacy green and inherited legacy red are now separated explicitly.
+  The active catalog remains `source-set-5e65d845ce77e1a0` with `350` rows and
+  `319` artifacts; the current-promotion suite remains green; and the active
+  full-canonical `phase-eval` artifact remains inherited-red at `9/12` with
+  `reviewer_ready=false`.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  passed with `validation_passed=true`, `13` sheets, `635` retained load rows,
+  `51` queue rows, and `2` removed rows;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  passed and confirmed `350` legacy runtime rows versus `635` canonical master
+  rows with zero shared `Source_ID` values;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py tests/test_cli.py tests/test_architecture_contract.py tests/test_authority_ontology_starter.py -q`
+  passed with `67` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/source_register.py src/usfs_r1_ea_sources/cli_capture.py tests/test_source_register_schema.py tests/test_cli.py`
+  passed;
+  `PYTHONPATH=src python -m compileall src` passed; and
+  `git diff --check` passed.
+- next routing:
+  Phase 1 in `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  is now the next executable packet: replace the legacy workbook loader with a
+  canonical register loader and keep queue/audit sheets out of downstream
+  source-row emission.
+
+## Canonical Source Register Refoundation Rebaseline
+
+This docs-only rebaseline updates the refoundation packet against the live repo baselines and the
+final canonical workbook delivered on 2026-05-18.
+
+- scope:
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the plan no longer relies on the earlier candidate workbook facts. It now matches the final
+  workbook filename `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`, the live
+  workbook counts (`13` sheets, `635` load rows, `51` queue rows, `2`
+  removed-not-applicable rows, `29` direct-media reclassifications), and the real queue and
+  applicability mix that the proving slice must cover.
+- current-state alignment:
+  the packet now also locks the legacy starting state explicitly instead of assuming the whole
+  legacy lane is green. The active catalog baseline remains `source-set-5e65d845ce77e1a0` with
+  `350` rows and `319` artifacts, the current-promotion suite remains green on
+  `source-set-ba8d0feae79501b8`, and the active full-canonical
+  `source-set-5e65d845ce77e1a0` `phase-eval` artifact is currently inherited-red at `9/12` with
+  `reviewer_ready=false`.
+- supersession truth:
+  the older lower handoff section titled `Canonical Source Register Refoundation Plan` that cites
+  the `validated_codex` workbook, `11` sheets, and `440` load rows is historical only.
+- verification:
+  workbook inspection via `openpyxl` confirmed the final sheet roster, certification counts, queue
+  mix, applicability distribution, and land-exchange additions;
+  targeted reads of `config/downloader.toml`, `src/usfs_r1_ea_sources/workbook.py`,
+  `source_library/catalog/source_set_manifest.json`,
+  `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`,
+  and
+  `source_library/derived/source-set-5e65d845ce77e1a0/evidence_graph/phase_eval_results.json`
+  confirmed the live legacy baseline;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  passes; and `git diff --check` passes for this docs-only slice.
+- next routing:
+  Phase `0` in `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` remains the next
+  executable packet. The first slice is now explicit: baseline-lock the inherited legacy surfaces,
+  stage or hash the final workbook, freeze the sheet and schema contracts, and write the workbook
+  audit before any loader or capture rewrite starts.
 
 ## Phase Eval Orchestration Boundary Sequence 4 Alignment Pass
 

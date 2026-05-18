@@ -1,0 +1,61 @@
+{
+  "schema_version": "source-register-schema-v1",
+  "contract_id": "source-register-schema-v1",
+  "as_of_date": "2026-05-18",
+  "status": "phase0_freeze",
+  "master_sheet": {
+    "sheet_name": "Document_Register_Master",
+    "required_nonempty_columns": [
+      "Source_ID",
+      "Authority_Tier",
+      "Document_Title",
+      "Currentness_Status",
+      "Extraction_Priority",
+      "Source_URL",
+      "URL_Class",
+      "Database_Load",
+      "EA_System_Applicability_Status",
+      "Criticality_Determination",
+      "Applicability_Scope",
+      "Ingest_Action"
+    ],
+    "unique_columns": ["Source_ID", "Source_URL"],
+    "http_url_columns": ["Source_URL"],
+    "controlled_vocabulary_columns": {
+      "Authority_Tier": "master_authority_tier",
+      "Database_Load": "master_database_load",
+      "EA_System_Applicability_Status": "load_applicability_statuses"
+    }
+  },
+  "queue_sheet": {
+    "sheet_name": "Direct_File_Capture_Queue",
+    "required_nonempty_columns": [
+      "Source_ID",
+      "Authority_Tier",
+      "Document_Title",
+      "Source_URL",
+      "Database_Load",
+      "Queue_Reason",
+      "Resolution_Required"
+    ],
+    "controlled_vocabulary_columns": {
+      "Authority_Tier": "queue_authority_tier",
+      "Database_Load": "queue_database_load"
+    }
+  },
+  "removed_sheet": {
+    "sheet_name": "Removed_Not_Applicable_Final",
+    "required_nonempty_columns": [
+      "Source_ID",
+      "Authority_Tier",
+      "Document_Title",
+      "Source_URL",
+      "Database_Load",
+      "EA_System_Applicability_Status",
+      "Removal_Reason"
+    ],
+    "controlled_vocabulary_columns": {
+      "EA_System_Applicability_Status": "removed_applicability_statuses"
+    }
+  }
+}

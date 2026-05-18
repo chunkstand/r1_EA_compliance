@@ -1,0 +1,49 @@
+{
+  "schema_version": "direct-file-readiness-contract-v1",
+  "contract_id": "direct-file-readiness-contract-v1",
+  "as_of_date": "2026-05-18",
+  "status": "phase0_freeze",
+  "sheet_rules": [
+    {
+      "sheet_name": "Document_Register_Master",
+      "readiness_state": "load_ready",
+      "expected_database_load_values": ["Yes"],
+      "description": "Master-sheet rows are already admitted as canonical load rows, even when the underlying source is a structured official page rather than a raw PDF."
+    },
+    {
+      "sheet_name": "Direct_File_Capture_Queue",
+      "readiness_state": "deferred_direct_file_capture",
+      "expected_database_load_values": ["No - direct file capture queue only"],
+      "required_queue_reason_field": "Queue_Reason",
+      "required_resolution_field": "Resolution_Required",
+      "description": "Queue rows stay non-load until a direct file, structured export, or explicit exclusion decision promotes or resolves them."
+    }
+  ],
+  "deferred_queue_reason_values": [
+    "Box planning record cannot be represented as row-level document sources without export.",
+    "Box/Pinyon folder cannot be represented as row-level document sources without export.",
+    "Folder/listing/manual-export placeholder",
+    "Forest plan support row needs direct document file URL",
+    "JS-only Box/Pinyon folder/listing",
+    "Manual/project-record placeholder",
+    "Non-load source placeholder",
+    "Placeholder row",
+    "Reading-room widget/static page does not expose every direct file row in this environment.",
+    "SCC page lists animal and plant rationale files; direct stable file links were not exposed/verified.",
+    "SCC page lists animal and plant rationale XLSX files; direct stable file links were not exposed/verified.",
+    "SCC page lists terrestrial animal, aquatic animal, and botanical rationale files; direct stable file links were not exposed/verified.",
+    "Specific FEIS volume listed on official page but direct file URL unresolved."
+  ],
+  "deferred_resolution_patterns": [
+    "Replace source page/folder/manual placeholder with direct document/file URL; then promote to Document_Register_Master if necessary.",
+    "Use browser/Pinyon/Box/page download or manual export to capture the exact file, final URL, file type, date, and hash.",
+    "Export reading-room file list; add any remaining actual documents as direct rows or document exclusion rationale.",
+    "Download/export FEIS, ROD, BA/BO, appendices, maps/GIS, objection/decision documents, and any final support files from Pinyon/Box/widget. Promote direct files to Document_Register_Master.",
+    "Capture direct media/file URL for FEIS Volume 3 or confirm exclusion with direct source evidence.",
+    "Capture direct media/file URL for FEIS Volume 4 or confirm exclusion with direct source evidence.",
+    "Capture direct media/file URL for FEIS Volume 5 or confirm exclusion with direct source evidence.",
+    "Export Pinyon folder; add each document/data layer as direct row with date/version/hash.",
+    "Export Box planning record; add each public document/data layer as direct row with date/version/hash.",
+    "Export folder manifest and convert each public file to direct database-load source rows."
+  ]
+}

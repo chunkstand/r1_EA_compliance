@@ -8,6 +8,17 @@ canonical workbook source set into a local, auditable source library, then build
 retrieval, evidence graph, source-claim graph, rule-claim binding, and deterministic EA package
 review artifacts on top of that corpus.
 
+Canonical source-register refoundation status on 2026-05-18:
+
+- Active runtime workbook for `dry-run`, `preflight`, `download`, `batch-download`, and
+  `catalog-build` remains `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`.
+- The replacement workbook `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` is now
+  staged in-repo and frozen through the Phase 0 contract packet in
+  `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`.
+- The repo now ships `source-register-validate` and `source-register-diff` so the final workbook,
+  sheet contract, vocabulary contract, and migration baseline can be checked before the loader or
+  capture runtime is switched over.
+
 Current workbook source contract:
 
 - Workbook: `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`
@@ -793,6 +804,23 @@ source-set retrieval coverage only, the aggregate component-coverage producer pr
 review-slot coverage only, and neither one by itself proves reviewer-ready or live-package status.
 
 ## Common Commands
+
+Validate the staged canonical source register before runtime cutover:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx
+```
+
+Compare the staged canonical register against the current legacy workbook plus promoted source-delta
+register:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources source-register-diff \
+  --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx \
+  --legacy-register config/r1_forest_plan_document_register_draft.csv \
+  --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx
+```
 
 Dry-run workbook parsing without network access:
 

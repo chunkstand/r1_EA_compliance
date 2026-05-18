@@ -1,0 +1,42 @@
+{
+  "schema_version": "source-register-vocabularies-v1",
+  "contract_id": "source-register-vocabularies-v1",
+  "as_of_date": "2026-05-18",
+  "status": "phase0_freeze",
+  "controlled_values": {
+    "master_authority_tier": [
+      "Federal",
+      "Forest",
+      "Programmatic",
+      "Region",
+      "State/Partner",
+      "Superseded",
+      "USDA",
+      "USFS"
+    ],
+    "queue_authority_tier": [
+      "Example/Pinyon",
+      "Forest",
+      "Programmatic",
+      "Region",
+      "Superseded"
+    ],
+    "master_database_load": ["Yes"],
+    "queue_database_load": ["No - direct file capture queue only"],
+    "removed_applicability_statuses": ["Not applicable - removed from ingest"],
+    "load_applicability_statuses": [
+      "Applicable - Region 1 resource guidance/order",
+      "Applicable - USDA cross-cutting EA source",
+      "Applicable - USFS directive/source-control",
+      "Applicable - USFS resource directive",
+      "Applicable - core federal EA authority",
+      "Applicable - federal resource/trigger authority",
+      "Applicable - forest/grassland plan-specific",
+      "Applicable - land exchange trigger",
+      "Applicable - programmatic/tiering or consultation source",
+      "Applicable - species/ESA/wildlife trigger",
+      "Applicable - stale-source detector only",
+      "Applicable - state/partner data or permit source"
+    ]
+  }
+}
