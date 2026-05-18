@@ -1,0 +1,82 @@
+{
+  "runner": "extraction_build",
+  "scenarios": {
+    "expected_pass": {
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "source_record_id": "R1-016",
+      "download_run": {
+        "run_id": "upstream-extraction-directive-document",
+        "records": [
+          {
+            "source_record_id": "R1-016",
+            "status": "downloaded",
+            "title": "Region 1 Handbook Supplement",
+            "original_url": "https://example.test/r1-handbook-supplement.docx",
+            "artifact_path": "artifacts/raw/upstream/r1-handbook-supplement.docx",
+            "artifact": {
+              "type": "docx",
+              "paragraphs": [
+                "Region 1 Handbook Supplement",
+                "Chapter 80 Uses of Timber",
+                "This chapter preserves Region 1 forest products and non-commercial timber resource guidance."
+              ]
+            },
+            "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-18T00:00:00Z"
+          }
+        ]
+      },
+      "required_markers": [
+        "Chapter 80 Uses of Timber",
+        "non-commercial timber resource guidance"
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true,
+        "direct_document_required_records_use_document_artifacts": true
+      }
+    },
+    "controlled_violation": {
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "source_record_id": "R1-016",
+      "download_run": {
+        "run_id": "upstream-extraction-directive-document-fail",
+        "records": [
+          {
+            "source_record_id": "R1-016",
+            "status": "downloaded",
+            "title": "Region 1 Handbook Supplement",
+            "original_url": "https://example.test/r1-handbook-supplement.docx",
+            "artifact_path": "artifacts/raw/upstream/r1-handbook-supplement.docx",
+            "artifact": {
+              "type": "docx",
+              "paragraphs": [
+                "Region 1 Handbook Supplement",
+                "Chapter 80 Uses of Timber",
+                "This chapter preserves Region 1 forest products and non-commercial timber resource guidance."
+              ]
+            },
+            "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-18T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_extracted_text",
+          "text": "Supplement heading only."
+        }
+      ],
+      "required_markers": [
+        "Chapter 80 Uses of Timber",
+        "non-commercial timber resource guidance"
+      ],
+      "required_check_outcomes": {
+        "text_files_match_manifest_hashes": false
+      }
+    }
+  }
+}

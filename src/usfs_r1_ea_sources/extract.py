@@ -43,6 +43,7 @@ TERMINAL_STATUSES = {
     "no_artifact",
     "artifact_missing",
     "hash_mismatch",
+    "placeholder_artifact",
     "parser_error",
     "parser_timeout",
     "empty_text",
@@ -63,6 +64,35 @@ REQUIRED_CHUNK_PROVENANCE = {
     "char_end",
     "content_sha256",
 }
+DIRECT_DOCUMENT_URL_CLASSES = {
+    "Official DOJ PDF",
+    "Official FS media PDF",
+    "Official FWS document",
+    "Official Forest Service PDF",
+    "Official Forest Service directive PDF",
+    "Official Forest Service directive document",
+    "Official Forest Service/RMRS PDF",
+    "Official USDA guidance PDF",
+    "Official USFS direct file",
+}
+DOCLING_PRIORITY_KEYWORDS = (
+    "docling:",
+    "table",
+    "map",
+    "page labels",
+    "direct file",
+    "pdf/doc",
+    "chapter/handbook pdf/doc",
+)
+DIRECT_DOCUMENT_REQUIRED_INSTRUCTION_KEYWORDS = (
+    "first export/download the direct file",
+    "manual pinyon/box export",
+    "extract direct usfs media file",
+    "extract full direct file",
+    "chapter/handbook pdf/doc",
+)
+DOCLING_OCR_KEYWORDS = ("appendix maps", "map", "scanned", "ocr")
+PROVING_PLACEHOLDER_ARTIFACT_SCHEMA_VERSION = "source-register-proving-artifact-v1"
 
 
 @dataclass(frozen=True)
@@ -368,6 +398,8 @@ def _load_catalog_rows(
           s.host,
           s.expected_parser,
           s.source_status,
+          s.source_partition,
+          s.source_partition_basis,
           s.metadata_json,
           c.citation_label,
           c.final_url AS citation_final_url,
@@ -514,6 +546,25 @@ def _extract_row(
         )
         return record, []
 
+    placeholder_artifact = _load_proving_placeholder_artifact(artifact_path)
+    if placeholder_artifact is not None:
+        record = dict(base_record)
+        record.update(
+            {
+                "status": "placeholder_artifact",
+                "artifact_sha256_verified": True,
+                "artifact_is_proving_placeholder": True,
+                "proving_placeholder_schema_version": placeholder_artifact.get("schema_version"),
+                "parser_metadata": {
+                    "placeholder_artifact": placeholder_artifact,
+                },
+                "failure": None,
+            }
+        )
+        return record, []
+
+    row_prefer_docling = prefer_docling or _prefers_docling_for_row(row)
+    row_docling_ocr = docling_ocr or _docling_ocr_for_row(row)
     allow_current_reuse = reuse_existing and (
         not reuse_inventory_enforced
         or (reuse_inventory_record or {}).get("classification")
@@ -552,8 +603,8 @@ def _extract_row(
         payload = _extract_payload(
             row=row,
             artifact_path=artifact_path,
-            prefer_docling=prefer_docling,
-            docling_ocr=docling_ocr,
+            prefer_docling=row_prefer_docling,
+            docling_ocr=row_docling_ocr,
             docling_timeout_seconds=docling_timeout_seconds,
         )
     except ExtractionFailure as error:
@@ -809,6 +860,88 @@ def _reuse_inventory_record_matches_row(
     return artifact_check.get("passed") is not False
 
 
+def _canonical_metadata_text(row: dict, key: str) -> str:
+    return str((row.get("metadata") or {}).get(key) or "").strip()
+
+
+def _normalized_planning_text(value: object) -> str:
+    return str(value or "").strip().lower()
+
+
+def _is_source_register_v1_row(row: dict) -> bool:
+    return _canonical_metadata_text(row, "loader_contract") == "source_register_v1"
+
+
+def _load_proving_placeholder_artifact(artifact_path: Path) -> dict | None:
+    try:
+        payload = json.loads(artifact_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    if payload.get("schema_version") != PROVING_PLACEHOLDER_ARTIFACT_SCHEMA_VERSION:
+        return None
+    return payload
+
+
+def _requires_direct_document_artifact(row: dict) -> bool:
+    if not _is_source_register_v1_row(row):
+        return False
+    parser_admission_class = _canonical_metadata_text(row, "parser_admission_class")
+    if parser_admission_class == "direct_document":
+        return True
+    url_class = _canonical_metadata_text(row, "url_class")
+    if url_class in DIRECT_DOCUMENT_URL_CLASSES:
+        return True
+    instruction_text = _normalized_planning_text(_canonical_metadata_text(row, "docling_instructions"))
+    return any(keyword in instruction_text for keyword in DIRECT_DOCUMENT_REQUIRED_INSTRUCTION_KEYWORDS)
+
+
+def _prefers_docling_for_row(row: dict) -> bool:
+    if not _is_source_register_v1_row(row):
+        return False
+    if str(row.get("expected_parser") or "").lower() in {"pdf", "docx"}:
+        return True
+    if _requires_direct_document_artifact(row):
+        return True
+    docling_text = " ".join(
+        [
+            _normalized_planning_text(_canonical_metadata_text(row, "docling_instructions")),
+            _normalized_planning_text(row.get("document_type")),
+        ]
+    )
+    return any(keyword in docling_text for keyword in DOCLING_PRIORITY_KEYWORDS)
+
+
+def _docling_ocr_for_row(row: dict) -> bool:
+    if not _is_source_register_v1_row(row):
+        return False
+    docling_text = " ".join(
+        [
+            _normalized_planning_text(_canonical_metadata_text(row, "docling_instructions")),
+            _normalized_planning_text(row.get("document_type")),
+        ]
+    )
+    return any(keyword in docling_text for keyword in DOCLING_OCR_KEYWORDS)
+
+
+def _extraction_priority(row: dict) -> str:
+    if not _is_source_register_v1_row(row):
+        return "legacy_standard"
+    source_partition = str(row.get("source_partition") or "").strip()
+    currentness_status = _normalized_planning_text(_canonical_metadata_text(row, "currentness_status"))
+    parser_admission_class = _canonical_metadata_text(row, "parser_admission_class")
+    if source_partition == "currentness_supersession_archive" or "superseded" in currentness_status:
+        return "currentness_archive"
+    if _requires_direct_document_artifact(row):
+        return "direct_document_verification"
+    if parser_admission_class == "structured_web_source":
+        return "structured_authority_capture"
+    if parser_admission_class == "web_source":
+        return "web_fallback_capture"
+    return "canonical_standard"
+
+
 def _base_manifest_record(*, row: dict, extracted_at: str) -> dict:
     support_document_role = str(
         (row.get("metadata") or {}).get("document_role")
@@ -823,7 +956,21 @@ def _base_manifest_record(*, row: dict, extracted_at: str) -> dict:
         "support_document_role": support_document_role,
         "authority_level": row["authority_level"],
         "host": row["host"],
+        "document_type": row.get("document_type"),
+        "source_partition": row.get("source_partition"),
+        "source_partition_basis": row.get("source_partition_basis"),
         "expected_parser": row["expected_parser"],
+        "loader_contract": _canonical_metadata_text(row, "loader_contract") or None,
+        "currentness_status": _canonical_metadata_text(row, "currentness_status") or None,
+        "url_class": _canonical_metadata_text(row, "url_class") or None,
+        "parser_admission_class": _canonical_metadata_text(row, "parser_admission_class") or None,
+        "direct_file_readiness_class": _canonical_metadata_text(row, "direct_file_readiness_class")
+        or None,
+        "docling_instructions": _canonical_metadata_text(row, "docling_instructions") or None,
+        "extraction_priority": _extraction_priority(row),
+        "direct_document_artifact_required": _requires_direct_document_artifact(row),
+        "artifact_is_proving_placeholder": False,
+        "proving_placeholder_schema_version": None,
         "source_status": row["source_status"],
         "download_run_id": row.get("download_run_id"),
         "artifact_sha256": row.get("artifact_sha256"),
@@ -1925,6 +2072,7 @@ def _validation_report(
         _check_no_hash_mismatches(manifest_records),
         _check_no_parser_errors(manifest_records),
         _check_no_parser_timeouts(manifest_records),
+        _check_placeholder_artifacts_are_auditable(manifest_records),
         _check_fallback_records_are_auditable(manifest_records),
         _check_scoped_xml_records_are_auditable(manifest_records),
         _check_chunk_ids_unique(chunks),
@@ -1979,6 +2127,7 @@ def _check_all_required_rows_extracted(records: list[dict]) -> dict:
         record
         for record in records
         if record["status"] != "extracted"
+        and record["status"] != "placeholder_artifact"
         and record.get("source_status") not in NON_EXTRACTABLE_SOURCE_STATUSES
     ]
     skipped = [
@@ -1986,12 +2135,18 @@ def _check_all_required_rows_extracted(records: list[dict]) -> dict:
         for record in records
         if record.get("source_status") in NON_EXTRACTABLE_SOURCE_STATUSES
     ]
+    placeholders = [
+        record["source_record_id"]
+        for record in records
+        if record.get("status") == "placeholder_artifact"
+    ]
     return {
         "name": "all_required_rows_extracted",
         "passed": not failed,
         "details": {
             "status_counts": dict(Counter(record["status"] for record in records)),
             "skipped_non_extractable_source_record_ids": sorted(skipped),
+            "placeholder_source_record_ids": sorted(placeholders),
             "failed_source_record_ids": sorted(record["source_record_id"] for record in failed),
         },
     }
@@ -2045,6 +2200,36 @@ def _check_no_parser_timeouts(records: list[dict]) -> dict:
         "details": {
             "source_record_ids": sorted(record["source_record_id"] for record in timeouts),
         },
+    }
+
+
+def _check_placeholder_artifacts_are_auditable(records: list[dict]) -> dict:
+    failures = []
+    for record in records:
+        if record.get("status") != "placeholder_artifact":
+            continue
+        metadata = record.get("parser_metadata") or {}
+        placeholder = metadata.get("placeholder_artifact") if isinstance(metadata, dict) else None
+        if not isinstance(placeholder, dict):
+            failures.append(
+                {
+                    "source_record_id": record.get("source_record_id"),
+                    "reason": "missing_placeholder_artifact_metadata",
+                }
+            )
+            continue
+        if placeholder.get("schema_version") != PROVING_PLACEHOLDER_ARTIFACT_SCHEMA_VERSION:
+            failures.append(
+                {
+                    "source_record_id": record.get("source_record_id"),
+                    "reason": "unexpected_placeholder_artifact_schema_version",
+                    "schema_version": placeholder.get("schema_version"),
+                }
+            )
+    return {
+        "name": "placeholder_artifacts_are_auditable",
+        "passed": not failures,
+        "details": {"failures": failures[:50], "failure_count": len(failures)},
     }
 
 
@@ -2191,6 +2376,11 @@ def _summary(
         for record in manifest_records
         if record.get("failure")
     )
+    extraction_priority_counts = Counter(
+        record.get("extraction_priority")
+        for record in manifest_records
+        if record.get("extraction_priority")
+    )
     return {
         "source_set_id": source_set_id,
         "created_at": _utc_now(),
@@ -2207,7 +2397,8 @@ def _summary(
         "failed_count": sum(
             count
             for status, count in status_counts.items()
-            if status != "extracted" and status not in NON_EXTRACTABLE_SOURCE_STATUSES
+            if status not in {"extracted", "placeholder_artifact"}
+            and status not in NON_EXTRACTABLE_SOURCE_STATUSES
         ),
         "chunk_count": len(chunks),
         "status_counts": dict(status_counts),
@@ -2216,6 +2407,10 @@ def _summary(
         "parser_counts": dict(parser_counts),
         "fallback_counts": dict(fallback_counts),
         "reused_count": reused_count,
+        "extraction_priority_counts": dict(extraction_priority_counts),
+        "direct_document_artifact_required_count": sum(
+            1 for record in manifest_records if record.get("direct_document_artifact_required")
+        ),
         "failure_counts": {key: count for key, count in failure_counts.items() if key},
         "failed_source_examples": _failed_source_examples(manifest_records),
         "validation_passed": validation["passed"],

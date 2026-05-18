@@ -1,0 +1,68 @@
+{
+  "runner": "extraction_build",
+  "scenarios": {
+    "expected_pass": {
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "source_record_id": "FOR-002",
+      "download_run": {
+        "run_id": "upstream-extraction-direct-file-wrapper-pass",
+        "records": [
+          {
+            "source_record_id": "FOR-002",
+            "status": "downloaded",
+            "title": "Forest Plan Direct PDF",
+            "original_url": "https://example.test/forest-plan-direct.pdf",
+            "artifact_path": "artifacts/raw/upstream/forest-plan-direct.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "Beaverhead-Deerlodge Forest Plan",
+                "Project pages must be replaced by the direct plan file before knowledge-base admission.",
+                "Version and issuing forest remain part of the extracted citation context."
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-18T00:00:00Z"
+          }
+        ]
+      },
+      "required_markers": [
+        "replaced by the direct plan file",
+        "issuing forest remain part of the extracted citation context"
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true,
+        "direct_document_required_records_use_document_artifacts": true
+      }
+    },
+    "controlled_violation": {
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "source_record_id": "FOR-002",
+      "download_run": {
+        "run_id": "upstream-extraction-direct-file-wrapper-fail",
+        "records": [
+          {
+            "source_record_id": "FOR-002",
+            "status": "downloaded",
+            "title": "Forest Plan Wrapper Page",
+            "original_url": "https://example.test/forest-plan-wrapper",
+            "artifact_path": "artifacts/raw/upstream/forest-plan-wrapper.html",
+            "artifact": {
+              "type": "html",
+              "body": "<html><body><h1>Forest Plan Landing Page</h1><p>This page lists the forest plan but is not the direct PDF artifact.</p><p>Download buttons appear on the wrapper page only.</p></body></html>"
+            },
+            "content_type": "text/html",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-18T00:00:00Z"
+          }
+        ]
+      },
+      "required_check_outcomes": {
+        "direct_document_required_records_use_document_artifacts": false
+      }
+    }
+  }
+}

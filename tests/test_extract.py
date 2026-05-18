@@ -20,6 +20,7 @@ from usfs_r1_ea_sources.extract import _source_derived_dir
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
+CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
@@ -30,6 +31,11 @@ def legacy_config():
         config,
         workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
     )
+
+
+def canonical_config():
+    config = load_config(CONFIG)
+    return replace(config, workbook=replace(config.workbook, overrides_path=None))
 
 
 class ExtractionTests(unittest.TestCase):
@@ -224,6 +230,55 @@ class ExtractionTests(unittest.TestCase):
                 encoding="utf-8"
             )
             self.assertIn("mitigation measures", text)
+
+    def test_build_extraction_prefers_docling_for_canonical_row_instructions(self) -> None:
+        config = canonical_config()
+        original_try_docling = extract_module._try_extract_docling
+
+        def fake_try_docling(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202, ARG001
+            text = "Docling appendix text with preserved page labels."
+            return extract_module.ExtractionPayload(
+                text=text,
+                blocks=[extract_module.TextBlock(text=text, page=1)],
+                parser_name="docling",
+                parser_version="test",
+            )
+
+        extract_module._try_extract_docling = fake_try_docling
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                output_dir = Path(tmp)
+                _write_download_run(
+                    output_dir,
+                    "unit-download",
+                    source_record_id="FPS-021",
+                    artifact_body=_html_body(),
+                    content_type="text/html",
+                    suffix=".html",
+                )
+                build_review_catalog(
+                    workbook_path=CANONICAL_WORKBOOK,
+                    output_dir=output_dir,
+                    config=config,
+                    config_path=CONFIG,
+                    run_id="unit-download",
+                    source_record_ids={"FPS-021"},
+                )
+
+                result = build_extraction(output_dir=output_dir, id_filter="FPS-021")
+
+                self.assertTrue(result.summary["validation_passed"])
+                self.assertEqual(
+                    result.summary["extraction_priority_counts"],
+                    {"direct_document_verification": 1},
+                )
+                manifest = _read_jsonl(result.extraction_manifest_path)
+                self.assertEqual(manifest[0]["parser_name"], "docling")
+                self.assertEqual(manifest[0]["loader_contract"], "source_register_v1")
+                self.assertTrue(manifest[0]["direct_document_artifact_required"])
+                self.assertEqual(manifest[0]["parser_admission_class"], "structured_web_source")
+        finally:
+            extract_module._try_extract_docling = original_try_docling
 
     def test_build_extraction_fails_validation_on_artifact_hash_mismatch(self) -> None:
         config = legacy_config()

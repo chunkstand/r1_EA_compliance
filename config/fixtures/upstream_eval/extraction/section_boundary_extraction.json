@@ -2,21 +2,14 @@
   "runner": "extraction_build",
   "scenarios": {
     "expected_pass": {
-      "source_record_id": "UPEXT-804",
-      "workbook": {
-        "ingest_rows": [
-          {
-            "source_record_id": "UPEXT-804",
-            "title": "Scoped XML Section Source",
-            "url": "https://www.ecfr.gov/current/title-36/section-1b.6"
-          }
-        ]
-      },
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "source_record_id": "USDA-003",
       "download_run": {
         "run_id": "upstream-extraction-section",
         "records": [
           {
-            "source_record_id": "UPEXT-804",
+            "source_record_id": "USDA-003",
             "status": "downloaded",
             "title": "Scoped XML Section Source",
             "original_url": "https://www.ecfr.gov/current/title-36/section-1b.6",
@@ -27,7 +20,7 @@
             },
             "content_type": "application/xml",
             "validation_passed": true,
-            "fetch_timestamp": "2026-05-12T00:00:00Z"
+            "fetch_timestamp": "2026-05-18T00:00:00Z"
           }
         ]
       },
@@ -44,21 +37,14 @@
       }
     },
     "controlled_violation": {
-      "source_record_id": "UPEXT-804",
-      "workbook": {
-        "ingest_rows": [
-          {
-            "source_record_id": "UPEXT-804",
-            "title": "Scoped XML Section Source",
-            "url": "https://www.ecfr.gov/current/title-36/section-1b.6"
-          }
-        ]
-      },
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "source_record_id": "USDA-003",
       "download_run": {
         "run_id": "upstream-extraction-section-fail",
         "records": [
           {
-            "source_record_id": "UPEXT-804",
+            "source_record_id": "USDA-003",
             "status": "downloaded",
             "title": "Scoped XML Section Source",
             "original_url": "https://www.ecfr.gov/current/title-36/section-1b.6",
@@ -69,7 +55,7 @@
             },
             "content_type": "application/xml",
             "validation_passed": true,
-            "fetch_timestamp": "2026-05-12T00:00:00Z"
+            "fetch_timestamp": "2026-05-18T00:00:00Z"
           }
         ]
       },

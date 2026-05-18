@@ -1,6 +1,6 @@
 # Evaluation Coverage Register
 
-Updated: 2026-05-15
+Updated: 2026-05-18
 
 This register separates structural validation from direct-eval coverage.
 
@@ -17,7 +17,7 @@ Status meanings:
 | `preflight` | `src/usfs_r1_ea_sources/preflight.py` | `validation_report.json` | `direct_eval_present` | `upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream` | `challenge_page_http200`; `not_found_body_http200`; `duplicate_url_row_preservation` | Fixture-backed coverage proves tricky `200 OK` false positives and duplicate-row preservation separately from structural validation. |
 | `validate_run` | `src/usfs_r1_ea_sources/validate_run.py` | `acceptance_gate.json` | `direct_eval_present` | `upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream` | `duplicate_content_canonical_link`; `url_override_provenance_drift` | Direct eval now distinguishes acceptance-gate coverage from simple unit-test truth. |
 | `catalog_validation` | `src/usfs_r1_ea_sources/catalog.py` | `catalog_validation.json` | `direct_eval_present` | `upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream` | `batch_ledger_manifest_mismatch`; `catalog_partition_or_not_in_run_drift` | Aggregate fixture runs now make batch-ledger and merged-catalog drift visible without live corpus regeneration. |
-| `extraction_accuracy` | `src/usfs_r1_ea_sources/extract.py`; `src/usfs_r1_ea_sources/extraction_accuracy.py` | `extraction_validation.json`; `diagnostics/extraction_accuracy_audit.json` | `direct_eval_present` | `upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream` | `ocr_heavy_pdf_extraction`; `table_dense_pdf_extraction`; `appendix_content_extraction`; `section_boundary_extraction` | The aggregate lane reuses the accuracy audit where it is the structural truth producer and adds tracked category markers plus controlled violations. |
+| `extraction_accuracy` | `src/usfs_r1_ea_sources/extract.py`; `src/usfs_r1_ea_sources/extraction_accuracy.py`; `src/usfs_r1_ea_sources/extraction_admission.py` | `extraction_validation.json`; `diagnostics/extraction_accuracy_audit.json` | `direct_eval_present` | `upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream` | `ocr_heavy_pdf_extraction`; `table_dense_pdf_extraction`; `appendix_content_extraction`; `section_boundary_extraction`; `statute_code_chapter_extraction`; `directive_document_extraction`; `forest_plan_chapter_extraction`; `forest_plan_map_extraction`; `monitoring_report_extraction`; `split_page_boundary_extraction`; `direct_file_wrapper_blocked` | The aggregate lane now spans `11` extraction categories and `22` extraction cases. It covers canonical statute/code, CFR section scoping, directive DOCX/PDF, forest-plan chapter/appendix/map/monitoring families, OCR/table-heavy PDFs, split-page PDFs, and direct-file wrapper negatives while the accuracy audit continues to own the structural truth. |
 
 ## Downstream Lanes
 

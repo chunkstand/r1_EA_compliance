@@ -24,6 +24,28 @@
         "R1PLAN-flathead-nf-17"
       ],
       "require_direct_extraction": true
+    },
+    {
+      "contract_id": "canonical-source-register-active-review-admission",
+      "description": "Canonical source-register knowledge-base admission currently applies only to active-review rows that are already source_register_v1 governed and not still waiting on manual direct-file export or wrapper-page replacement.",
+      "required_record_selectors": [
+        {
+          "loader_contracts": [
+            "source_register_v1"
+          ],
+          "source_partitions": [
+            "active_review_corpus"
+          ],
+          "artifact_is_proving_placeholder": false,
+          "docling_instructions_not_contains": [
+            "first export/download the direct file",
+            "manual Pinyon/Box export",
+            "manual export",
+            "chapter/handbook PDF/DOC"
+          ]
+        }
+      ],
+      "require_direct_extraction": true
     }
   ]
 }

@@ -955,7 +955,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
 ```
 
 The extraction command reads `review_sources.sqlite`, recomputes every artifact SHA256 before
-parsing, routes by `expected_parser` and `content_type`, and writes:
+parsing, routes by `expected_parser`, `content_type`, file suffix, and canonical
+source-register planning metadata when present, and writes:
 
 - `source_library/derived/<source_set_id>/extracted_text/`
 - `source_library/derived/<source_set_id>/docling_json/`
@@ -964,6 +965,12 @@ parsing, routes by `expected_parser` and `content_type`, and writes:
 - `source_library/derived/<source_set_id>/diagnostics/extraction_validation.json`
 - `source_library/derived/<source_set_id>/diagnostics/extraction_accuracy_audit.json`
 - `source_library/derived/<source_set_id>/diagnostics/summary.json`
+
+Under `source_register_v1`, `extraction_manifest.jsonl` now preserves canonical
+planning fields such as source partition, currentness status, URL class,
+parser-admission class, direct-file-readiness class, Docling instructions,
+extraction priority, direct-document requirements, and governed
+proving-placeholder status.
 
 For delta extraction, repeat `--id` for each selected `source_record_id`. The command records the
 complete selected ID list in `diagnostics/summary.json`; retrieval remains non-reviewer-ready for a
@@ -997,7 +1004,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
 For eCFR XML records whose workbook URL points at a section or subpart, extraction scopes the text
 to that XML element and records the applied source scope in parser metadata. Run the accuracy audit
 after extraction to verify text hashes, raw artifact hashes, chunk offsets, no chunk coverage gaps,
-scoped XML text, markup/entity cleanup, and PDF token coverage against independent `pypdf` text:
+scoped XML text, markup/entity cleanup, direct-document-versus-wrapper
+admission, and PDF token coverage against independent `pypdf` text:
 
 ```bash
 PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit \
@@ -1011,6 +1019,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval \
   --manifest config/upstream_evaluation_v1.json \
   --results-dir source_library/evaluations/upstream
 ```
+
+The current upstream manifest tracks `19` required categories and `38` total
+cases, including the widened canonical extraction families and direct-file
+wrapper negatives.
 
 The command writes `source_library/evaluations/upstream/upstream_evaluation_results.json` and
 `source_library/evaluations/upstream/upstream_evaluation_report.md`. It replays tracked capture,

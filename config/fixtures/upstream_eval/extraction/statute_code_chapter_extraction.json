@@ -1,0 +1,73 @@
+{
+  "runner": "extraction_build",
+  "scenarios": {
+    "expected_pass": {
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "source_record_id": "FED-001",
+      "download_run": {
+        "run_id": "upstream-extraction-statute-code",
+        "records": [
+          {
+            "source_record_id": "FED-001",
+            "status": "downloaded",
+            "title": "NEPA Statute Chapter Source",
+            "original_url": "https://example.test/nepa-statute-chapter",
+            "artifact_path": "artifacts/raw/upstream/nepa-statute-chapter.html",
+            "artifact": {
+              "type": "html",
+              "body": "<html><body><h1>42 U.S.C. Chapter 55</h1><p>Section 4321 establishes the national environmental policy.</p><p>Section 4332 requires agencies to study, develop, and describe appropriate alternatives.</p><p>Section 4336e preserves page-level traceability for decision support.</p></body></html>"
+            },
+            "content_type": "text/html",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-18T00:00:00Z"
+          }
+        ]
+      },
+      "required_markers": [
+        "Section 4321 establishes the national environmental policy.",
+        "Section 4332 requires agencies to study, develop, and describe appropriate alternatives."
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    },
+    "controlled_violation": {
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "source_record_id": "FED-001",
+      "download_run": {
+        "run_id": "upstream-extraction-statute-code-fail",
+        "records": [
+          {
+            "source_record_id": "FED-001",
+            "status": "downloaded",
+            "title": "NEPA Statute Chapter Source",
+            "original_url": "https://example.test/nepa-statute-chapter",
+            "artifact_path": "artifacts/raw/upstream/nepa-statute-chapter.html",
+            "artifact": {
+              "type": "html",
+              "body": "<html><body><h1>42 U.S.C. Chapter 55</h1><p>Section 4321 establishes the national environmental policy.</p><p>Section 4332 requires agencies to study, develop, and describe appropriate alternatives.</p><p>Section 4336e preserves page-level traceability for decision support.</p></body></html>"
+            },
+            "content_type": "text/html",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-18T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_extracted_text",
+          "text": "NEPA chapter heading only."
+        }
+      ],
+      "required_markers": [
+        "Section 4321 establishes the national environmental policy.",
+        "Section 4332 requires agencies to study, develop, and describe appropriate alternatives."
+      ],
+      "required_check_outcomes": {
+        "text_files_match_manifest_hashes": false
+      }
+    }
+  }
+}

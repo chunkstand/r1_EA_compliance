@@ -50,7 +50,7 @@ def run_extraction_accuracy_audit(
     chunks = _read_jsonl(chunks_path)
     extraction_validation = _read_json(validation_path)
     admission_requirements = matched_verified_extraction_contracts(
-        [str(record.get("source_record_id") or "") for record in records],
+        records=records,
         contract_path=contract_path,
     )
     audited_source_record_ids = admission_requirements["required_source_record_ids"] or [
@@ -77,6 +77,7 @@ def run_extraction_accuracy_audit(
             required_source_record_ids=admission_requirements["required_source_record_ids"],
             require_direct_extraction=bool(admission_requirements["require_direct_extraction"]),
         ),
+        _check_direct_document_required_records_use_document_artifacts(scoped_records),
         _check_text_files_match_manifest(scoped_records, text_by_record),
         _check_raw_artifact_hashes_match(scoped_records, output_dir),
         _check_chunks_match_text(scoped_records, scoped_chunks, text_by_record),
@@ -215,6 +216,32 @@ def _check_required_source_records_present_and_direct(
             "failure_count": len(failures),
             "failures": failures[:50],
         },
+    }
+
+
+def _check_direct_document_required_records_use_document_artifacts(records: list[dict]) -> dict:
+    failures = []
+    for record in records:
+        if not record.get("direct_document_artifact_required"):
+            continue
+        if record.get("status") != "extracted":
+            continue
+        if _record_uses_direct_document_artifact(record):
+            continue
+        failures.append(
+            {
+                "source_record_id": record.get("source_record_id"),
+                "content_type": record.get("content_type"),
+                "artifact_path": record.get("artifact_path"),
+                "parser_name": record.get("parser_name"),
+                "url_class": record.get("url_class"),
+                "reason": "wrapper_page_not_admissible_for_direct_document_requirement",
+            }
+        )
+    return {
+        "name": "direct_document_required_records_use_document_artifacts",
+        "passed": not failures,
+        "details": {"failure_count": len(failures), "failures": failures[:50]},
     }
 
 
@@ -623,6 +650,21 @@ def _resolve_artifact_path(output_dir: Path, value: object) -> Path | None:
     if output_relative.exists():
         return output_relative
     return path
+
+
+def _record_uses_direct_document_artifact(record: dict) -> bool:
+    content_type = str(record.get("content_type") or "").lower()
+    artifact_path = str(record.get("artifact_path") or "").lower()
+    parser_name = str(record.get("parser_name") or "").lower()
+    if content_type in {
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    }:
+        return True
+    if artifact_path.endswith((".pdf", ".doc", ".docx")):
+        return True
+    return parser_name in {"docling", "python_docx_zip_xml", "pypdf_text_fallback"}
 
 
 def _per_source_failure_map(

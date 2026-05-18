@@ -15,6 +15,7 @@ from usfs_r1_ea_sources.extraction_accuracy import run_extraction_accuracy_audit
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
+CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 
 
@@ -24,6 +25,11 @@ def legacy_config():
         config,
         workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
     )
+
+
+def canonical_config():
+    config = load_config(CONFIG)
+    return replace(config, workbook=replace(config.workbook, overrides_path=None))
 
 
 class ExtractionAccuracyAuditTests(unittest.TestCase):
@@ -176,23 +182,155 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
                 ["R1EA-001"],
             )
 
+    def test_audit_blocks_wrapper_page_when_direct_document_artifact_is_required(self) -> None:
+        config = canonical_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(
+                output_dir,
+                source_record_id="FOR-002",
+                artifact_body=(
+                    b"<html><body><h1>Forest Plan Landing Page</h1>"
+                    b"<p>Download the direct file from this wrapper page.</p></body></html>"
+                ),
+                suffix=".html",
+                content_type="text/html",
+            )
+            build_review_catalog(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+                source_record_ids={"FOR-002"},
+            )
+            build_extraction(output_dir=output_dir, id_filter="FOR-002")
+            contract_path = output_dir / "contract.json"
+            contract_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "verified-extraction-admission-contract-v0",
+                        "contracts": [
+                            {
+                                "contract_id": "wrapper-direct-file",
+                                "required_source_record_ids": ["FOR-002"],
+                                "require_direct_extraction": True,
+                            }
+                        ],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
 
-def _write_download_run(output_dir: Path, *, artifact_body: bytes) -> None:
+            result = run_extraction_accuracy_audit(
+                output_dir=output_dir,
+                contract_path=contract_path,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertEqual(result.summary["knowledge_base_admitted_source_record_ids"], [])
+            self.assertEqual(
+                result.summary["knowledge_base_blocked_source_record_ids"],
+                ["FOR-002"],
+            )
+            check = _check(result.summary, "direct_document_required_records_use_document_artifacts")
+            self.assertFalse(check["passed"])
+
+    def test_audit_selector_contracts_resolve_canonical_active_review_rows(self) -> None:
+        config = canonical_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run_records(
+                output_dir,
+                records=[
+                    {
+                        "source_record_id": "FED-001",
+                        "artifact_body": _html_body(),
+                        "suffix": ".html",
+                        "content_type": "text/html",
+                    },
+                    {
+                        "source_record_id": "SUP-004",
+                        "artifact_body": _html_body(),
+                        "suffix": ".html",
+                        "content_type": "text/html",
+                    },
+                ],
+            )
+            build_review_catalog(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+                source_record_ids={"FED-001", "SUP-004"},
+            )
+            build_extraction(output_dir=output_dir, id_filters={"FED-001", "SUP-004"})
+            contract_path = output_dir / "contract.json"
+            contract_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "verified-extraction-admission-contract-v0",
+                        "contracts": [
+                            {
+                                "contract_id": "canonical-active-review-only",
+                                "required_record_selectors": [
+                                    {
+                                        "loader_contracts": ["source_register_v1"],
+                                        "source_partitions": ["active_review_corpus"],
+                                        "currentness_status_not_contains": ["Superseded"]
+                                    }
+                                ],
+                                "require_direct_extraction": True
+                            }
+                        ],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_extraction_accuracy_audit(
+                output_dir=output_dir,
+                contract_path=contract_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(
+                result.summary["audited_source_record_ids"],
+                ["FED-001"],
+            )
+            self.assertEqual(
+                result.summary["knowledge_base_admitted_source_record_ids"],
+                ["FED-001"],
+            )
+            self.assertEqual(result.summary["knowledge_base_blocked_source_record_ids"], [])
+
+
+def _write_download_run(
+    output_dir: Path,
+    *,
+    artifact_body: bytes,
+    source_record_id: str = "R1EA-001",
+    suffix: str = ".html",
+    content_type: str = "text/html",
+) -> None:
     run_dir = output_dir / "runs" / "unit-download"
     manifest_dir = output_dir / "manifests"
     run_dir.mkdir(parents=True)
     manifest_dir.mkdir(parents=True, exist_ok=True)
-    artifact = output_dir / "artifacts" / "raw" / "unit-download-R1EA-001.html"
+    artifact = output_dir / "artifacts" / "raw" / f"unit-download-{source_record_id}{suffix}"
     artifact.parent.mkdir(parents=True, exist_ok=True)
     artifact.write_bytes(artifact_body)
     record = {
         "run_id": "unit-download",
-        "source_record_id": "R1EA-001",
+        "source_record_id": source_record_id,
         "status": "downloaded",
         "artifact_path": str(artifact),
         "artifact_sha256": hashlib.sha256(artifact_body).hexdigest(),
         "artifact_byte_size": len(artifact_body),
-        "content_type": "text/html",
+        "content_type": content_type,
         "fetch_timestamp": "2026-04-30T00:00:00Z",
         "final_url": "https://example.test/final",
     }
@@ -206,6 +344,47 @@ def _write_download_run(output_dir: Path, *, artifact_body: bytes) -> None:
         "manifest_path": str(manifest_dir / "download_unit-download.jsonl"),
         "filtered_rows": 1,
         "status_counts": {"downloaded": 1},
+    }
+    (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
+
+
+def _write_download_run_records(output_dir: Path, *, records: list[dict]) -> None:
+    run_dir = output_dir / "runs" / "unit-download"
+    manifest_dir = output_dir / "manifests"
+    run_dir.mkdir(parents=True)
+    manifest_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = manifest_dir / "download_unit-download.jsonl"
+    serialized = []
+    for definition in records:
+        source_record_id = str(definition["source_record_id"])
+        suffix = str(definition.get("suffix") or ".html")
+        artifact = output_dir / "artifacts" / "raw" / f"unit-download-{source_record_id}{suffix}"
+        artifact.parent.mkdir(parents=True, exist_ok=True)
+        artifact_body = definition["artifact_body"]
+        artifact.write_bytes(artifact_body)
+        serialized.append(
+            {
+                "run_id": "unit-download",
+                "source_record_id": source_record_id,
+                "status": "downloaded",
+                "artifact_path": str(artifact),
+                "artifact_sha256": hashlib.sha256(artifact_body).hexdigest(),
+                "artifact_byte_size": len(artifact_body),
+                "content_type": str(definition.get("content_type") or "text/html"),
+                "fetch_timestamp": "2026-04-30T00:00:00Z",
+                "final_url": "https://example.test/final",
+            }
+        )
+    manifest_path.write_text(
+        "\n".join(json.dumps(record, sort_keys=True) for record in serialized) + "\n",
+        encoding="utf-8",
+    )
+    summary = {
+        "run_id": "unit-download",
+        "mode": "download",
+        "manifest_path": str(manifest_path),
+        "filtered_rows": len(serialized),
+        "status_counts": {"downloaded": len(serialized)},
     }
     (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
 

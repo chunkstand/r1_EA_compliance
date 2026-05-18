@@ -38,9 +38,15 @@ Current checkpoint on 2026-05-18:
   governed by `config/source_register_currentness_lineage_v1.json`, and stale
   canonical active partitions are fail-closed back into
   `currentness_supersession_archive`.
+- Phase 4 extraction fidelity and verified source admission is now live: the
+  extraction manifest preserves canonical planning fields, extraction planning
+  is metadata-aware, governed proving-placeholder artifacts no longer surface
+  as noisy parser failures, verified extraction admission can resolve against
+  manifest selectors, and the upstream extraction direct-eval lane now spans
+  `11` canonical category families.
 - No full-register canonical ingestion may bypass the now-live Phase 1.5
-  proving gate, and the next implementation boundary is now Phase 4:
-  extraction fidelity and verified source admission.
+  proving gate, and the next implementation boundary is now Phase 5: graph
+  accuracy, provenance completeness, and knowledge-graph gating.
 
 Owner context: This is a fresh standalone architecture and delivery plan for
 refounding the system around
@@ -1102,6 +1108,7 @@ Required verification gates:
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --reuse-existing
 PYTHONPATH=src python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream
 PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_extraction_accuracy.py tests/test_upstream_evaluation.py tests/test_architecture_contract.py
 git diff --check
 ```

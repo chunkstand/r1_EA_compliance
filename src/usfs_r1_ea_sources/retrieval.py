@@ -158,11 +158,7 @@ def build_retrieval_index(
         _read_jsonl(extraction_manifest_path) if extraction_manifest_path.exists() else []
     )
     verified_extraction_requirements = matched_verified_extraction_contracts(
-        [
-            str(record.get("source_record_id") or "")
-            for record in extraction_manifest_records
-            if record.get("status") == "extracted"
-        ]
+        records=extraction_manifest_records
     )
     extraction_accuracy = (
         _read_json(extraction_accuracy_path) if extraction_accuracy_path.exists() else None

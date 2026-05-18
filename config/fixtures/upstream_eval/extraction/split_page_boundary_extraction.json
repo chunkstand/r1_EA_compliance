@@ -1,0 +1,92 @@
+{
+  "runner": "extraction_build",
+  "scenarios": {
+    "expected_pass": {
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "source_record_id": "WILD-ESA-087",
+      "download_run": {
+        "run_id": "upstream-extraction-split-page-boundary",
+        "records": [
+          {
+            "source_record_id": "WILD-ESA-087",
+            "status": "downloaded",
+            "title": "Recovery Plan Split Page PDF",
+            "original_url": "https://example.test/recovery-plan-split-page.pdf",
+            "artifact_path": "artifacts/raw/upstream/recovery-plan-split-page.pdf",
+            "artifact": {
+              "type": "pdf",
+              "pages": [
+                [
+                  "Recovery Plan Page 1",
+                  "Habitat security remains mandatory."
+                ],
+                [
+                  "Recovery Plan Page 2",
+                  "Survey and conservation measures continue across the page boundary."
+                ]
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-18T00:00:00Z"
+          }
+        ]
+      },
+      "required_markers": [
+        "Habitat security remains mandatory.",
+        "Survey and conservation measures continue across the page boundary."
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true,
+        "direct_document_required_records_use_document_artifacts": true
+      }
+    },
+    "controlled_violation": {
+      "loader_contract": "source_register_v1",
+      "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+      "source_record_id": "WILD-ESA-087",
+      "download_run": {
+        "run_id": "upstream-extraction-split-page-boundary-fail",
+        "records": [
+          {
+            "source_record_id": "WILD-ESA-087",
+            "status": "downloaded",
+            "title": "Recovery Plan Split Page PDF",
+            "original_url": "https://example.test/recovery-plan-split-page.pdf",
+            "artifact_path": "artifacts/raw/upstream/recovery-plan-split-page.pdf",
+            "artifact": {
+              "type": "pdf",
+              "pages": [
+                [
+                  "Recovery Plan Page 1",
+                  "Habitat security remains mandatory."
+                ],
+                [
+                  "Recovery Plan Page 2",
+                  "Survey and conservation measures continue across the page boundary."
+                ]
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-18T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_extracted_text",
+          "text": "Recovery plan page 1 only."
+        }
+      ],
+      "required_markers": [
+        "Habitat security remains mandatory.",
+        "Survey and conservation measures continue across the page boundary."
+      ],
+      "required_check_outcomes": {
+        "text_files_match_manifest_hashes": false
+      }
+    }
+  }
+}

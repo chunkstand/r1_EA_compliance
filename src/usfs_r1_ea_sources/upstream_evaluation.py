@@ -629,6 +629,7 @@ def _run_extraction_build(scenario: dict) -> tuple[bool, bool, dict]:
             config=config,
             config_path=REPO_ROOT / DEFAULT_CONFIG_PATH,
             run_id=str(scenario["download_run"].get("run_id") or "upstream-extraction"),
+            source_record_ids={str(scenario["source_record_id"])},
         )
         extraction = build_extraction(
             output_dir=output_dir,
@@ -852,7 +853,11 @@ def _artifact_bytes(spec: dict) -> bytes:
     if artifact_type == "text":
         return str(spec["body"]).encode("utf-8")
     if artifact_type == "pdf":
-        return _pdf_bytes([str(line) for line in spec.get("lines", [])])
+        if spec.get("pages"):
+            return _pdf_bytes(
+                [[str(line) for line in page] for page in spec.get("pages", [])]
+            )
+        return _pdf_bytes([[str(line) for line in spec.get("lines", [])]])
     if artifact_type == "docx":
         return _docx_bytes([str(value) for value in spec.get("paragraphs", [])])
     raise ValueError(f"Unsupported artifact type: {artifact_type}")
@@ -943,25 +948,60 @@ def _write_sheet_headers(sheet, headers: list[str]) -> None:  # noqa: ANN001
         sheet.cell(4, column_index).value = header
 
 
-def _pdf_bytes(lines: list[str]) -> bytes:
-    content_lines = ["BT", "/F1 12 Tf", "72 720 Td"]
-    for index, line in enumerate(lines):
-        escaped = line.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
-        if index:
-            content_lines.append("0 -16 Td")
-        content_lines.append(f"({escaped}) Tj")
-    content_lines.append("ET")
-    stream = "\n".join(content_lines).encode("utf-8")
-    objects = [
-        b"1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n",
-        b"2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n",
-        (
-            b"3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] "
-            b"/Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj\n"
-        ),
-        b"4 0 obj << /Length " + str(len(stream)).encode("ascii") + b" >> stream\n" + stream + b"\nendstream\nendobj\n",
-        b"5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n",
-    ]
+def _pdf_bytes(pages: list[list[str]]) -> bytes:
+    if not pages:
+        pages = [[]]
+
+    objects: list[bytes] = []
+    page_object_ids: list[int] = []
+    next_object_id = 1
+
+    catalog_id = next_object_id
+    next_object_id += 1
+    pages_id = next_object_id
+    next_object_id += 1
+    font_id = next_object_id
+    next_object_id += 1
+
+    objects.append(b"")
+    objects.append(b"")
+    objects.append(b"")
+
+    for page_lines in pages:
+        content_lines = ["BT", "/F1 12 Tf", "72 720 Td"]
+        for index, line in enumerate(page_lines):
+            escaped = line.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+            if index:
+                content_lines.append("0 -16 Td")
+            content_lines.append(f"({escaped}) Tj")
+        content_lines.append("ET")
+        stream = "\n".join(content_lines).encode("utf-8")
+
+        page_id = next_object_id
+        content_id = next_object_id + 1
+        next_object_id += 2
+        page_object_ids.append(page_id)
+        objects.append(
+            (
+                f"{page_id} 0 obj << /Type /Page /Parent {pages_id} 0 R /MediaBox [0 0 612 792] "
+                f"/Contents {content_id} 0 R /Resources << /Font << /F1 {font_id} 0 R >> >> >> endobj\n"
+            ).encode("ascii")
+        )
+        objects.append(
+            f"{content_id} 0 obj << /Length {len(stream)} >> stream\n".encode("ascii")
+            + stream
+            + b"\nendstream\nendobj\n"
+        )
+
+    objects[catalog_id - 1] = f"{catalog_id} 0 obj << /Type /Catalog /Pages {pages_id} 0 R >> endobj\n".encode("ascii")
+    kids = " ".join(f"{page_id} 0 R" for page_id in page_object_ids)
+    objects[pages_id - 1] = (
+        f"{pages_id} 0 obj << /Type /Pages /Kids [{kids}] /Count {len(page_object_ids)} >> endobj\n"
+    ).encode("ascii")
+    objects[font_id - 1] = (
+        f"{font_id} 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n"
+    ).encode("ascii")
+
     pdf = bytearray(b"%PDF-1.4\n")
     offsets = [0]
     for obj in objects:
@@ -974,7 +1014,7 @@ def _pdf_bytes(lines: list[str]) -> bytes:
         pdf.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
     pdf.extend(
         (
-            f"trailer << /Size {len(objects) + 1} /Root 1 0 R >>\n"
+            f"trailer << /Size {len(objects) + 1} /Root {catalog_id} 0 R >>\n"
             f"startxref\n{xref_start}\n%%EOF\n"
         ).encode("ascii")
     )

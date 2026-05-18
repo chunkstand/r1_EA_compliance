@@ -4,22 +4,22 @@
     "expected_pass": {
       "loader_contract": "source_register_v1",
       "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
-      "source_record_id": "FPS-021",
+      "source_record_id": "FPS-049",
       "download_run": {
-        "run_id": "upstream-extraction-appendix",
+        "run_id": "upstream-extraction-monitoring-report",
         "records": [
           {
-            "source_record_id": "FPS-021",
+            "source_record_id": "FPS-049",
             "status": "downloaded",
-            "title": "Forest Plan Appendix Source",
-            "original_url": "https://example.test/forest-plan-appendix.pdf",
-            "artifact_path": "artifacts/raw/upstream/forest-plan-appendix.pdf",
+            "title": "Forest Plan Monitoring Report",
+            "original_url": "https://example.test/forest-plan-monitoring-report.pdf",
+            "artifact_path": "artifacts/raw/upstream/forest-plan-monitoring-report.pdf",
             "artifact": {
               "type": "pdf",
               "lines": [
-                "Appendix A - Monitoring Commitments",
-                "Appendix content must remain present in the extraction output.",
-                "Forest plan appendix pages remain citation-bearing."
+                "Monitoring Report",
+                "Watershed condition improved in 8 of 12 subwatersheds.",
+                "Monitoring commitments remain traceable to the forest plan source base."
               ]
             },
             "content_type": "application/pdf",
@@ -29,8 +29,8 @@
         ]
       },
       "required_markers": [
-        "Appendix A - Monitoring Commitments",
-        "Appendix content must remain present"
+        "Watershed condition improved in 8 of 12 subwatersheds.",
+        "Monitoring commitments remain traceable"
       ],
       "required_check_outcomes": {
         "required_source_records_are_present_and_direct": true,
@@ -40,22 +40,22 @@
     "controlled_violation": {
       "loader_contract": "source_register_v1",
       "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
-      "source_record_id": "FPS-021",
+      "source_record_id": "FPS-049",
       "download_run": {
-        "run_id": "upstream-extraction-appendix-fail",
+        "run_id": "upstream-extraction-monitoring-report-fail",
         "records": [
           {
-            "source_record_id": "FPS-021",
+            "source_record_id": "FPS-049",
             "status": "downloaded",
-            "title": "Forest Plan Appendix Source",
-            "original_url": "https://example.test/forest-plan-appendix.pdf",
-            "artifact_path": "artifacts/raw/upstream/forest-plan-appendix.pdf",
+            "title": "Forest Plan Monitoring Report",
+            "original_url": "https://example.test/forest-plan-monitoring-report.pdf",
+            "artifact_path": "artifacts/raw/upstream/forest-plan-monitoring-report.pdf",
             "artifact": {
               "type": "pdf",
               "lines": [
-                "Appendix A - Monitoring Commitments",
-                "Appendix content must remain present in the extraction output.",
-                "Forest plan appendix pages remain citation-bearing."
+                "Monitoring Report",
+                "Watershed condition improved in 8 of 12 subwatersheds.",
+                "Monitoring commitments remain traceable to the forest plan source base."
               ]
             },
             "content_type": "application/pdf",
@@ -67,12 +67,12 @@
       "mutations": [
         {
           "action": "overwrite_extracted_text",
-          "text": "Decision Notice only."
+          "text": "Monitoring cover page only."
         }
       ],
       "required_markers": [
-        "Appendix A - Monitoring Commitments",
-        "Appendix content must remain present"
+        "Watershed condition improved in 8 of 12 subwatersheds.",
+        "Monitoring commitments remain traceable"
       ],
       "required_check_outcomes": {
         "text_files_match_manifest_hashes": false

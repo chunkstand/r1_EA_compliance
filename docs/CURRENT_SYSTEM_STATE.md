@@ -16,6 +16,48 @@ historical lane notes when they disagree. In particular, older references to Sou
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
 
+## Canonical Source Register Phase 4 Extraction Fidelity And Verified Source Admission
+
+Latest closeout on 2026-05-18:
+
+- `extract-build` now records canonical extraction-planning truth directly in
+  `diagnostics/extraction_manifest.jsonl`. Each manifest row can now carry the
+  canonical loader contract, source partition, document type, currentness
+  status, URL class, parser-admission class, direct-file-readiness class,
+  docling instructions, extraction priority, direct-document requirement, and
+  proving-placeholder status instead of relying only on parser/output fields.
+- Canonical row planning is now metadata-aware. HTML/structured-web rows with
+  curated Docling instructions can prefer Docling without a blanket global
+  flag, while strong direct-document signals now remain explicit rather than
+  being inferred only from file suffixes.
+- The active proving slice extraction build on
+  `source-set-9dcf819bc4cca486` now passes structurally at
+  `source_library/derived/source-set-9dcf819bc4cca486/diagnostics/summary.json`
+  with `26` terminal `placeholder_artifact` rows, `0` parser errors, and
+  `validation_passed=true`. This is intentional: the proving slice currently
+  contains governed `source-register-proving-artifact-v1` placeholder bytes for
+  all `26` active rows, so Phase 4 now treats them as auditable placeholders
+  rather than trying to parse them as real PDFs/DOCX files.
+- `extraction-accuracy-audit` now understands selector-driven verified
+  extraction admission contracts. The default canonical contract can resolve
+  against manifest metadata such as `loader_contract`, `source_partition`,
+  docling-instruction phrases, and placeholder-artifact state instead of only
+  matching hard-coded source ID lists.
+- The live root audit now passes fail-closed for the same proving slice at
+  `source_library/derived/source-set-9dcf819bc4cca486/diagnostics/extraction_accuracy_audit.json`
+  with `audited_record_count=0`, `knowledge_base_admitted_source_record_ids=[]`,
+  and `knowledge_base_blocked_source_record_ids=[]`. No canonical proving-slice
+  sources are admitted downstream until real direct documents replace the
+  governed placeholder artifacts.
+- The upstream direct-eval lane now covers `19` required categories and `38`
+  cases. The extraction portion now spans statutes/code chapters, CFR section
+  scoping, directives, forest-plan chapters, appendices, maps, monitoring
+  reports, split-page PDFs, OCR/table-heavy PDFs, and direct-file wrapper-page
+  negatives under `config/upstream_evaluation_v1.json`.
+- The next routed implementation packet is Phase 5 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`: graph
+  accuracy, provenance completeness, and knowledge-graph gating.
+
 ## Canonical Source Register Phase 3 Currentness, Supersession, And Source-Partition Rebase
 
 Latest closeout on 2026-05-18:
@@ -43,9 +85,9 @@ Latest closeout on 2026-05-18:
   or otherwise currentness-only. Historical plan-amendment and transition
   support rows can no longer remain silently active just because an older
   catalog artifact serialized `active_review_corpus`.
-- The next routed implementation packet is Phase 4 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`:
-  extraction fidelity and verified source admission for the canonical corpus.
+- This packet is now historical routing context only. Phase 4 extraction
+  fidelity and verified source admission has since landed, and Phase 5 is now
+  the next routed implementation boundary.
 
 ## Canonical Source Register Phase 2 Capture And Catalog Cutover
 

@@ -5,6 +5,91 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 4 Extraction Fidelity And Verified Source Admission
+
+This implementation slice completes the Phase 4 rebase of extraction planning,
+extraction accuracy, and verified source admission onto the canonical source
+register.
+
+- scope:
+  `config/verified_extraction_admission_contract.json`,
+  `config/upstream_evaluation_v1.json`,
+  `config/fixtures/upstream_eval/extraction/*.json`,
+  `src/usfs_r1_ea_sources/extract.py`,
+  `src/usfs_r1_ea_sources/extraction_accuracy.py`,
+  `src/usfs_r1_ea_sources/extraction_admission.py`,
+  `src/usfs_r1_ea_sources/upstream_evaluation.py`,
+  `src/usfs_r1_ea_sources/retrieval.py`,
+  `tests/test_extract.py`,
+  `tests/test_extraction_accuracy.py`,
+  `tests/test_upstream_evaluation.py`,
+  `README.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- resolved boundary:
+  extraction planning is no longer just `expected_parser + content_type`.
+  Canonical manifest rows now carry loader-contract, source-partition,
+  document-type, currentness, URL-class, parser-admission, direct-file,
+  Docling-instruction, extraction-priority, and proving-placeholder truth.
+- placeholder truth:
+  the active proving slice still uses governed
+  `source-register-proving-artifact-v1` placeholders for all `26` local rows.
+  Phase 4 now records those bytes as `status=placeholder_artifact` with
+  auditable placeholder metadata instead of attempting to parse them as real
+  PDFs/DOCX files and surfacing noisy parser failures.
+- admission truth:
+  verified extraction admission contracts can now resolve against manifest
+  selectors such as `loader_contract`, `source_partition`,
+  `docling_instructions`, and placeholder-artifact state. The default
+  canonical contract is now fail-closed: the active proving slice admits no
+  downstream knowledge-base rows until real direct documents replace the
+  governed placeholders.
+- direct-eval truth:
+  `upstream-eval` now covers `19` required categories and `38` cases. The
+  extraction lane now spans statutes/code chapters, CFR scoping, directives,
+  forest-plan chapters, appendices, maps, monitoring reports, split-page PDFs,
+  OCR/table-heavy PDFs, and direct-file wrapper-page negatives.
+- live gate artifacts:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --reuse-existing`
+  now passes structurally for `source-set-9dcf819bc4cca486` with
+  `status_counts={"placeholder_artifact": 26}`,
+  `direct_document_artifact_required_count=11`, and
+  `validation_passed=true`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`
+  now passes at
+  `source_library/derived/source-set-9dcf819bc4cca486/diagnostics/extraction_accuracy_audit.json`
+  with `audited_record_count=0`, `knowledge_base_admitted_source_record_ids=[]`,
+  and `knowledge_base_blocked_source_record_ids=[]`;
+  and `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`
+  now passes with `matched_case_count=38`, `required_category_count=19`, and
+  `lane_summaries.extraction.category_count=11`.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --reuse-existing`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`
+  passed;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_extraction_accuracy.py tests/test_upstream_evaluation.py tests/test_architecture_contract.py -q`
+  passed with `35` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/extract.py src/usfs_r1_ea_sources/extraction_accuracy.py src/usfs_r1_ea_sources/extraction_admission.py src/usfs_r1_ea_sources/upstream_evaluation.py src/usfs_r1_ea_sources/retrieval.py tests/test_extract.py tests/test_extraction_accuracy.py tests/test_upstream_evaluation.py`
+  passed;
+  `PYTHONPATH=src python -m compileall src`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  Phase 5 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is now the
+  next executable packet: graph accuracy, provenance completeness, and
+  knowledge-graph gating.
+- routing note:
+  the Phase 3 “next executable packet is Phase 4” line below is historical
+  only after this closeout.
+
 ## Canonical Source Register Refoundation Phase 3 Currentness, Supersession, And Source-Partition Rebase
 
 This implementation slice completes the Phase 3 rebase of authority

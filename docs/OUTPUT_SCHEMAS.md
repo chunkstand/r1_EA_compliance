@@ -3639,12 +3639,23 @@ at an archived catalog gate so merged or scoped source-set extraction can run wi
 - falls back to `pypdf_text_fallback` for born-digital PDFs when Docling exceeds the timeout or is
   unavailable, and records that parser name/version plus fallback metadata in the manifest and
   chunks
+- records governed `source-register-proving-artifact-v1` bytes as
+  `status=placeholder_artifact` with auditable placeholder metadata instead of
+  attempting to parse them as real direct documents
 
 `extraction_manifest.jsonl` contains one terminal row per selected source:
 
 - `source_set_id`
 - `source_record_id`
 - title, role, authority, host, expected parser, and source status
+- canonical planning fields when present:
+  `document_type`, `source_partition`, `source_partition_basis`,
+  `loader_contract`, `currentness_status`, `url_class`,
+  `parser_admission_class`, `direct_file_readiness_class`,
+  `docling_instructions`, `extraction_priority`,
+  `direct_document_artifact_required`,
+  `artifact_is_proving_placeholder`, and
+  `proving_placeholder_schema_version`
 - artifact path, SHA256, byte size, and content type
 - citation label and URL provenance
 - extraction timestamp
@@ -3661,6 +3672,7 @@ Terminal extraction statuses are:
 - `no_artifact`
 - `artifact_missing`
 - `hash_mismatch`
+- `placeholder_artifact`
 - `parser_error`
 - `parser_timeout`
 - `empty_text`
@@ -3821,12 +3833,22 @@ accuracy-oriented gate for generated extraction artifacts and checks:
 - `extraction_validation.json` passed
 - extracted text files match manifest text hashes and character counts
 - raw artifact SHA256 values still match the manifest
+- direct-document-required rows are not admitted from wrapper-page artifacts
 - chunk text exactly equals the extracted-text character offset slices
 - chunks cover each extracted text without gaps
 - scoped eCFR XML records contain the target heading and do not leak sibling headings
 - extracted text has no raw markup or common escaped HTML entity leakage
 - PDF text has token coverage against independent `pypdf` extraction, with a stricter threshold for
   `pypdf_text_fallback` records
+
+The audit summary also records:
+
+- selector-resolved verified extraction contract IDs
+- `audited_source_record_ids`
+- `required_direct_source_record_ids`
+- `knowledge_base_admitted_source_record_ids`
+- `knowledge_base_blocked_source_record_ids`
+- `per_source_failures`
 
 ## Upstream Evaluation Outputs
 

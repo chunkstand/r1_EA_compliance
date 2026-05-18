@@ -62,7 +62,14 @@
         "ocr_heavy_pdf_extraction",
         "table_dense_pdf_extraction",
         "appendix_content_extraction",
-        "section_boundary_extraction"
+        "section_boundary_extraction",
+        "statute_code_chapter_extraction",
+        "directive_document_extraction",
+        "forest_plan_chapter_extraction",
+        "forest_plan_map_extraction",
+        "monitoring_report_extraction",
+        "split_page_boundary_extraction",
+        "direct_file_wrapper_blocked"
       ],
       "minimum_expected_pass_cases_per_category": 1,
       "minimum_controlled_violation_cases_per_category": 1
@@ -283,6 +290,132 @@
       "case_type": "controlled_violation",
       "expected_producer_passed": false,
       "fixture_path": "fixtures/upstream_eval/extraction/section_boundary_extraction.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-statute-code-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "statute_code_chapter_extraction",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/statute_code_chapter_extraction.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-statute-code-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "statute_code_chapter_extraction",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/statute_code_chapter_extraction.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-directive-document-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "directive_document_extraction",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/directive_document_extraction.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-directive-document-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "directive_document_extraction",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/directive_document_extraction.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-forest-plan-chapter-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "forest_plan_chapter_extraction",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/forest_plan_chapter_extraction.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-forest-plan-chapter-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "forest_plan_chapter_extraction",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/forest_plan_chapter_extraction.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-forest-plan-map-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "forest_plan_map_extraction",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/forest_plan_map_extraction.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-forest-plan-map-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "forest_plan_map_extraction",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/forest_plan_map_extraction.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-monitoring-report-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "monitoring_report_extraction",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/monitoring_report_extraction.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-monitoring-report-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "monitoring_report_extraction",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/monitoring_report_extraction.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-split-page-boundary-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "split_page_boundary_extraction",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/split_page_boundary_extraction.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-split-page-boundary-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "split_page_boundary_extraction",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/split_page_boundary_extraction.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "extraction-direct-file-wrapper-expected-pass",
+      "lane_id": "extraction",
+      "category_id": "direct_file_wrapper_blocked",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/upstream_eval/extraction/direct_file_wrapper_blocked.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "extraction-direct-file-wrapper-controlled-violation",
+      "lane_id": "extraction",
+      "category_id": "direct_file_wrapper_blocked",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/upstream_eval/extraction/direct_file_wrapper_blocked.json",
       "scenario_id": "controlled_violation"
     }
   ]
