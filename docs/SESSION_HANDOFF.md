@@ -5,6 +5,55 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 1.5 Alignment Closeout
+
+This docs-only alignment pass closes the remaining Phase 1.5 routing and
+verification drift after implementation commit `39655d3`.
+
+- scope:
+  `README.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- gap closed:
+  the active refoundation plan now describes the real live checkpoint instead
+  of the pre-Phase-1 snapshot: the loader split is already live, the legacy
+  promotion surface is already baseline-locked, and the final workbook path is
+  now the staged in-repo workbook rather than the older Downloads location.
+- verification alignment:
+  the Phase 1.5 plan and handoff verification surfaces now cite the actual
+  governed proving bundle:
+  `tests/test_source_register_proving.py`,
+  `tests/test_graph_accuracy_eval.py`,
+  `tests/test_source_register_loader.py`,
+  `tests/test_source_register_schema.py`,
+  `tests/test_preflight.py`,
+  `tests/test_catalog.py`,
+  `tests/test_extraction_accuracy.py`,
+  `tests/test_authority_currentness.py`,
+  `tests/test_cli.py`, and
+  `tests/test_architecture_contract.py`.
+  The stale reference to nonexistent `tests/test_extraction_admission.py` is
+  now retired from the active Phase 1.5 packet.
+- routing alignment:
+  `docs/CURRENT_SYSTEM_STATE.md` now marks the Phase 0 and Phase 1 "next
+  routed packet" lines as historical closeout notes so the live routed packet
+  is unambiguous: Phase 2 capture/catalog cutover remains next.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  passed;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_proving.py tests/test_graph_accuracy_eval.py tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_preflight.py tests/test_catalog.py tests/test_extraction_accuracy.py tests/test_authority_currentness.py tests/test_cli.py tests/test_architecture_contract.py -q`
+  passed;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check` passed.
+- next routing:
+  unchanged. Phase 2 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` remains the
+  next executable packet: move `dry-run`, `preflight`, `download`,
+  `batch-download`, `validate-run`, and `catalog-build` onto the canonical
+  register while preserving queue discipline and the proving gate.
+
 ## Canonical Source Register Refoundation Phase 1.5 Proving Slice
 
 This implementation slice completes the pre-ingestion proving packet required

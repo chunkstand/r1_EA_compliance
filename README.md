@@ -3,8 +3,8 @@
 Local v1 NEPA Environmental Assessment reviewer-engine foundation for USDA Forest Service Region 1
 source material.
 
-The workbook is the source-of-truth input for the knowledge base. The system captures the full
-canonical workbook source set into a local, auditable source library, then builds derived extraction,
+The workbook is the source-of-truth input for the knowledge base. The system captures
+workbook-defined source rows into a local, auditable source library, then builds derived extraction,
 retrieval, evidence graph, source-claim graph, rule-claim binding, and deterministic EA package
 review artifacts on top of that corpus.
 

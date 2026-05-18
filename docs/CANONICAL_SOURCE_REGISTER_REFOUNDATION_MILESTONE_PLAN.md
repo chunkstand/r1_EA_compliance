@@ -86,16 +86,18 @@ artifacts.
 
 - The current runtime still treats
   `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx` as the
-  source-of-truth workbook. `config/downloader.toml` still pins
-  `canonical_sheets = ["Ingest_Checklist", "R1_Forest_Plans"]`, and
-  `src/usfs_r1_ea_sources/workbook.py` still supports only those two sheet
-  contracts in `load_canonical_sources(...)`.
+  source-of-truth workbook because `config/downloader.toml` is still pinned to
+  `loader_contract = "legacy_v0"` with
+  `canonical_sheets = ["Ingest_Checklist", "R1_Forest_Plans"]`. The Phase 1
+  loader split is already live in
+  `src/usfs_r1_ea_sources/workbook.py`, but the active capture and catalog
+  callers still resolve through the legacy path until Phase 2 cutover lands.
 - The live legacy catalog baseline in `source_library/catalog/` remains
   `source-set-5e65d845ce77e1a0` with `350` source rows, `319` artifacts, and
   source partitions `active_review_corpus=349` and
   `candidate_blocked_source=1`.
-- The legacy promotion surface is mixed today and must be baseline-locked
-  before migration work starts. The current-promotion suite at
+- The legacy promotion surface is mixed today and is now baseline-locked for
+  migration work. The current-promotion suite at
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
   is green with `current_promotion_ready=true`,
   `full_canonical_corpus_ready=true`, `expansion_ready=true`, and
@@ -104,8 +106,8 @@ artifacts.
   `source_library/derived/source-set-5e65d845ce77e1a0/evidence_graph/phase_eval_results.json`
   currently records `reviewer_ready=false`, `passed_phase_count=9`,
   `phase_count=12`, and `threshold_failed_phase_count=1`.
-- The final canonical workbook now exists at
-  `/Users/chunkstand/Downloads/usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`.
+- The final canonical workbook is now staged in-repo at
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`.
   Its final audit date is `2026-05-16`, and its load/certification sheets say
   that `Document_Register_Master` is the only database-load table.
 - The final workbook contains `13` sheets and currently reports:
@@ -922,7 +924,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources authority-relationship-eval --output
 PYTHONPATH=src python -m usfs_r1_ea_sources citation-alias-eval --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources graph-health-eval --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources graph-accuracy-eval --output-dir source_library
-PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_preflight.py tests/test_catalog.py tests/test_extraction_admission.py tests/test_authority_currentness.py tests/test_graph_accuracy_eval.py tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_proving.py tests/test_graph_accuracy_eval.py tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_preflight.py tests/test_catalog.py tests/test_extraction_accuracy.py tests/test_authority_currentness.py tests/test_cli.py tests/test_architecture_contract.py -q
 git diff --check
 ```
 
@@ -1092,7 +1094,7 @@ Required verification gates:
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library --reuse-existing
 PYTHONPATH=src python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library
-PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_extraction_accuracy.py tests/test_extraction_admission.py tests/test_upstream_evaluation.py tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_extraction_accuracy.py tests/test_upstream_evaluation.py tests/test_architecture_contract.py
 git diff --check
 ```
 

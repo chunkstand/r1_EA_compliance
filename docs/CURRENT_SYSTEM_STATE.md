@@ -102,10 +102,10 @@ Latest closeout on 2026-05-18:
 - Legacy compatibility verification remained green after the refactor, and the
   stale dry-run expectation for the promoted forest-plan source-delta lane is
   now aligned to the live `160`-row, `1`-gap register baseline.
-- The next routed implementation packet is Phase 1.5 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`:
-  run the mixed proving slice before any canonical capture or catalog cutover
-  begins.
+- At that closeout, the next routed implementation packet was Phase 1.5 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`. That
+  boundary is now implemented; see the Phase 1.5 section above for the live
+  proving packet and current next routing to Phase 2.
 
 ## Canonical Source Register Phase 0 Freeze
 
@@ -147,12 +147,11 @@ Latest closeout on 2026-05-18:
   `319` artifacts, the current-promotion suite remains green, and the active
   full-canonical `phase-eval` artifact remains inherited-red at `9/12` with
   `reviewer_ready=false`.
-- The next routed implementation packet is Phase 1 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` was Phase 1:
-  replace the legacy workbook loader with a canonical register loader before
-  any capture or catalog cutover begins. That boundary is now implemented; see
-  the Phase 1 section immediately above for the live loader split and current
-  next routing.
+- At that closeout, the next routed implementation packet was Phase 1 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`. That
+  boundary is now implemented; see the Phase 1 and Phase 1.5 sections above
+  for the live loader split, proving packet, and current next routing to
+  Phase 2.
 
 ## Compliance Review Test Boundary
 
