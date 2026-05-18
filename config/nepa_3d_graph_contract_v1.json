@@ -82,6 +82,30 @@
       ]
     },
     {
+      "node_type": "authority_document",
+      "description": "A canonical authority document identity from the source register.",
+      "required_provenance_fields": [
+        "authority_document_id",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "authority_section",
+      "description": "A canonical authority section or fragment identity from the source register.",
+      "required_provenance_fields": [
+        "authority_section_id",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "jurisdiction_scope",
+      "description": "A canonical jurisdiction or applicability scope from the source register.",
+      "required_provenance_fields": [
+        "jurisdiction_scope_id",
+        "source_set_id"
+      ]
+    },
+    {
       "node_type": "source_record",
       "description": "A workbook/catalog source record with citation and currentness metadata.",
       "required_provenance_fields": [
@@ -194,6 +218,24 @@
       ]
     },
     {
+      "node_type": "authority_path",
+      "description": "A semantic authority relationship path with explicit relationship typing and provenance.",
+      "required_provenance_fields": [
+        "authority_path_id",
+        "relationship_id",
+        "source_set_id"
+      ]
+    },
+    {
+      "node_type": "justification_path",
+      "description": "A reviewer-visible justification path supporting a semantic authority path.",
+      "required_provenance_fields": [
+        "justification_path_id",
+        "relationship_id",
+        "source_set_id"
+      ]
+    },
+    {
       "node_type": "readiness_blocker",
       "description": "A reviewer-visible blocker preventing active review or graph promotion.",
       "required_provenance_fields": [
@@ -227,6 +269,33 @@
       ],
       "target_node_types": [
         "source_record"
+      ]
+    },
+    {
+      "edge_type": "CITES_AUTHORITY_DOCUMENT",
+      "source_node_types": [
+        "source_record"
+      ],
+      "target_node_types": [
+        "authority_document"
+      ]
+    },
+    {
+      "edge_type": "HAS_AUTHORITY_SECTION",
+      "source_node_types": [
+        "authority_document"
+      ],
+      "target_node_types": [
+        "authority_section"
+      ]
+    },
+    {
+      "edge_type": "HAS_JURISDICTION_SCOPE",
+      "source_node_types": [
+        "source_record"
+      ],
+      "target_node_types": [
+        "jurisdiction_scope"
       ]
     },
     {
@@ -419,6 +488,49 @@
       ]
     },
     {
+      "edge_type": "HAS_AUTHORITY_PATH",
+      "source_node_types": [
+        "authority_document",
+        "forest_plan",
+        "forest_unit",
+        "jurisdiction_scope"
+      ],
+      "target_node_types": [
+        "authority_path"
+      ]
+    },
+    {
+      "edge_type": "PATH_TARGETS",
+      "source_node_types": [
+        "authority_path"
+      ],
+      "target_node_types": [
+        "authority_document",
+        "authority_section",
+        "forest_plan",
+        "forest_unit",
+        "jurisdiction_scope"
+      ]
+    },
+    {
+      "edge_type": "JUSTIFIED_BY",
+      "source_node_types": [
+        "authority_path"
+      ],
+      "target_node_types": [
+        "justification_path"
+      ]
+    },
+    {
+      "edge_type": "SUPPORTS_JUSTIFICATION_PATH",
+      "source_node_types": [
+        "source_record"
+      ],
+      "target_node_types": [
+        "justification_path"
+      ]
+    },
+    {
       "edge_type": "HAS_READINESS_BLOCKER",
       "source_node_types": [
         "source_set",
@@ -535,6 +647,7 @@
       "forest_plan",
       "package_applicability",
       "evidence_path",
+      "semantic_relationships",
       "readiness_blockers"
     ]
   }

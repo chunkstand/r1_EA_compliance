@@ -15,6 +15,16 @@
     "authority_path",
     "justification_path"
   ],
+  "source_set_required_node_class_ids": [
+    "authority_document",
+    "authority_section",
+    "jurisdiction_scope",
+    "forest_unit",
+    "source_record",
+    "source_artifact",
+    "authority_path",
+    "justification_path"
+  ],
   "required_lens_ids": [
     "source-provenance",
     "authority-currentness",
@@ -22,6 +32,14 @@
     "package-applicability",
     "evidence-path",
     "readiness-blockers"
+  ],
+  "knowledge_graph_required_lens_ids": [
+    "authority_currentness",
+    "forest_plan",
+    "package_applicability",
+    "evidence_path",
+    "semantic_relationships",
+    "readiness_blockers"
   ],
   "required_relationship_types": [
     "IMPLEMENTS",

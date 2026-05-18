@@ -8,6 +8,7 @@ import re
 from .artifact_utils import _extraction_summary_is_complete
 from .artifact_utils import _int_from_summary
 from .artifact_utils import _read_json
+from .artifact_utils import _read_jsonl
 from .artifact_utils import _safe_int
 from .artifact_utils import _source_set_id_from_catalog
 from .artifact_utils import _utc_now
@@ -145,6 +146,7 @@ def run_phase_aligned_eval(
     )
 
     catalog_validation_path = catalog_dir / "catalog_validation.json"
+    catalog_source_path = catalog_dir / "source_catalog.jsonl"
     extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
     extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
     upstream_evaluation_path = (
@@ -163,6 +165,16 @@ def run_phase_aligned_eval(
     knowledge_graph_summary_path = (
         knowledge_graph_dir / f"{KNOWLEDGE_GRAPH_FILE_PREFIX}_summary.json"
     )
+    authority_ontology_validation_path = (
+        knowledge_graph_dir / "authority_ontology_validation_report.json"
+    )
+    authority_relationship_eval_path = (
+        knowledge_graph_dir / "authority_relationship_eval_report.json"
+    )
+    citation_alias_eval_path = knowledge_graph_dir / "citation_alias_eval_report.json"
+    graph_health_eval_path = knowledge_graph_dir / "graph_health_eval_report.json"
+    graph_accuracy_eval_path = knowledge_graph_dir / "graph_accuracy_eval_report.json"
+    proving_semantic_dir = source_derived_dir / "source_register_proving"
     claim_dir = source_derived_dir / "claims"
     claim_eval_path = claim_dir / "claim_eval_results.json"
     claim_validation_path = claim_dir / "claim_validation.json"
@@ -300,6 +312,7 @@ def run_phase_aligned_eval(
     catalog_validation = (
         _read_json(catalog_validation_path) if catalog_validation_path.exists() else None
     )
+    catalog_rows = _read_jsonl(catalog_source_path) if catalog_source_path.exists() else []
     extraction_validation = (
         _read_json(extraction_validation_path) if extraction_validation_path.exists() else None
     )
@@ -326,6 +339,27 @@ def run_phase_aligned_eval(
         _read_json(knowledge_graph_summary_path)
         if knowledge_graph_summary_path.exists()
         else None
+    )
+    authority_ontology_validation = (
+        _read_json(authority_ontology_validation_path)
+        if authority_ontology_validation_path.exists()
+        else None
+    )
+    authority_relationship_eval = _load_semantic_report(
+        primary_path=authority_relationship_eval_path,
+        fallback_path=proving_semantic_dir / "authority_relationship_eval_report.json",
+    )
+    citation_alias_eval = _load_semantic_report(
+        primary_path=citation_alias_eval_path,
+        fallback_path=proving_semantic_dir / "citation_alias_eval_report.json",
+    )
+    graph_health_eval = _load_semantic_report(
+        primary_path=graph_health_eval_path,
+        fallback_path=proving_semantic_dir / "graph_health_eval_report.json",
+    )
+    graph_accuracy_eval = _load_semantic_report(
+        primary_path=graph_accuracy_eval_path,
+        fallback_path=proving_semantic_dir / "graph_accuracy_eval_report.json",
     )
     review_knowledge_graph_validation = (
         _read_json(review_knowledge_graph_validation_path)
@@ -636,6 +670,41 @@ def run_phase_aligned_eval(
                 summary_path=knowledge_graph_summary_path,
                 expected_source_set_id=source_set_id,
             )
+        )
+    if _catalog_uses_source_register_v1(catalog_rows, source_set_id):
+        phases.extend(
+            [
+                _semantic_graph_eval_phase(
+                    "authority_ontology",
+                    report=authority_ontology_validation,
+                    report_path=authority_ontology_validation_path,
+                    expected_source_set_id=source_set_id,
+                ),
+                _semantic_graph_eval_phase(
+                    "authority_relationships",
+                    report=authority_relationship_eval,
+                    report_path=authority_relationship_eval_path,
+                    expected_source_set_id=source_set_id,
+                ),
+                _semantic_graph_eval_phase(
+                    "citation_aliases",
+                    report=citation_alias_eval,
+                    report_path=citation_alias_eval_path,
+                    expected_source_set_id=source_set_id,
+                ),
+                _semantic_graph_eval_phase(
+                    "graph_health",
+                    report=graph_health_eval,
+                    report_path=graph_health_eval_path,
+                    expected_source_set_id=source_set_id,
+                ),
+                _semantic_graph_eval_phase(
+                    "graph_accuracy",
+                    report=graph_accuracy_eval,
+                    report_path=graph_accuracy_eval_path,
+                    expected_source_set_id=source_set_id,
+                ),
+            ]
         )
     if component_retrieval_direct_eval is not None:
         phases.append(
@@ -1241,6 +1310,52 @@ def default_graph_dir(output_dir: Path, source_set_id: str | None = None) -> Pat
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
     return _source_derived_dir(output_dir / "derived", source_set_id) / "evidence_graph"
+
+
+def _catalog_uses_source_register_v1(catalog_rows: list[dict], source_set_id: str) -> bool:
+    return any(
+        str(row.get("source_set_id") or source_set_id) == source_set_id
+        and str((row.get("metadata") or {}).get("loader_contract") or "") == "source_register_v1"
+        for row in catalog_rows
+        if isinstance(row, dict)
+    )
+
+
+def _load_semantic_report(*, primary_path: Path, fallback_path: Path) -> dict | None:
+    if primary_path.exists():
+        return _read_json(primary_path)
+    if fallback_path.exists():
+        return _read_json(fallback_path)
+    return None
+
+
+def _semantic_graph_eval_phase(
+    name: str,
+    *,
+    report: dict | None,
+    report_path: Path,
+    expected_source_set_id: str,
+) -> dict:
+    report_present = isinstance(report, dict)
+    report_source_set_id = (report or {}).get("source_set_id")
+    source_set_matches = report_source_set_id == expected_source_set_id
+    report_passed = bool((report or {}).get("summary", {}).get("passed"))
+    failed_checks = _failed_check_names(report)
+    passed = report_present and source_set_matches and report_passed and not failed_checks
+    return _phase(
+        name,
+        passed=passed,
+        reviewer_ready=passed,
+        details={
+            "report_path": str(report_path),
+            "report_present": report_present,
+            "expected_source_set_id": expected_source_set_id,
+            "source_set_id": report_source_set_id,
+            "source_set_matches": source_set_matches,
+            "report_passed": report_passed,
+            "failed_checks": failed_checks,
+        },
+    )
 
 
 

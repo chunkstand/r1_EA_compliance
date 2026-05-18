@@ -9,6 +9,7 @@ from .source_register_proving import load_proving_report
 
 
 CITATION_ALIAS_EVAL_SCHEMA_VERSION = "citation-alias-eval-report-v1"
+DEFAULT_GRAPH_REPORT_FILENAME = "citation_alias_eval_report.json"
 
 
 @dataclass(frozen=True)
@@ -60,8 +61,9 @@ def run_citation_alias_eval(
         ),
     ]
     passed = all(check["passed"] for check in checks)
-    output_path = output_path or default_proving_output_path(
-        output_dir, "citation_alias_eval_report.json"
+    output_path = output_path or _default_output_path(
+        output_dir=output_dir,
+        source_set_id=report["source_set_id"],
     )
     payload = {
         "schema_version": CITATION_ALIAS_EVAL_SCHEMA_VERSION,
@@ -85,3 +87,10 @@ def _check(name: str, passed: bool, expected, actual) -> dict:
         "expected": expected,
         "actual": actual,
     }
+
+
+def _default_output_path(*, output_dir: Path, source_set_id: str) -> Path:
+    knowledge_graph_dir = output_dir / "derived" / source_set_id / "knowledge_graph"
+    if (knowledge_graph_dir / "nepa_3d_graph.json").exists():
+        return knowledge_graph_dir / DEFAULT_GRAPH_REPORT_FILENAME
+    return default_proving_output_path(output_dir, DEFAULT_GRAPH_REPORT_FILENAME)

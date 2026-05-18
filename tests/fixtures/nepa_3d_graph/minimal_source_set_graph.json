@@ -108,6 +108,35 @@
       ]
     },
     {
+      "lens_id": "semantic_relationships",
+      "label": "Semantic Relationships",
+      "description": "Display canonical authority documents, scopes, semantic paths, and justification paths.",
+      "supported_node_types": [
+        "authority_document",
+        "authority_section",
+        "jurisdiction_scope",
+        "forest_plan",
+        "forest_unit",
+        "authority_path",
+        "justification_path",
+        "source_record"
+      ],
+      "supported_edge_types": [
+        "CITES_AUTHORITY_DOCUMENT",
+        "HAS_AUTHORITY_SECTION",
+        "HAS_JURISDICTION_SCOPE",
+        "HAS_AUTHORITY_PATH",
+        "PATH_TARGETS",
+        "JUSTIFIED_BY",
+        "SUPPORTS_JUSTIFICATION_PATH"
+      ],
+      "display_status_values": [
+        "active",
+        "superseded",
+        "candidate"
+      ]
+    },
+    {
       "lens_id": "readiness_blockers",
       "label": "Readiness Blockers",
       "description": "Display missing source, stale artifact, adjudication, and readiness blockers.",

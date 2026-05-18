@@ -1263,6 +1263,11 @@ Source-set export paths:
 - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_edges.jsonl`
 - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_summary.json`
 - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_validation.json`
+- `source_library/derived/<source_set_id>/knowledge_graph/authority_ontology_validation_report.json`
+- `source_library/derived/<source_set_id>/knowledge_graph/authority_relationship_eval_report.json`
+- `source_library/derived/<source_set_id>/knowledge_graph/citation_alias_eval_report.json`
+- `source_library/derived/<source_set_id>/knowledge_graph/graph_health_eval_report.json`
+- `source_library/derived/<source_set_id>/knowledge_graph/graph_accuracy_eval_report.json`
 
 Review-specific export paths:
 
@@ -1277,7 +1282,15 @@ contract, Milestone 3 implements the source-set exporter, Milestone 4 adds the r
 Milestone 5 adds Region 1 forest-plan readiness blockers. Milestone 7 adds graph failure
 categories, phase-eval graph phases, and promotion-suite gates for source-set plus V1 review graph
 validation/summary artifacts. The graph is a visualization/export layer over audited artifacts, not
-a separate legal knowledge base.
+a separate legal knowledge base. Canonical source-register Phase 5 now also adds
+first-class authority document/section/scope/path semantics plus the five
+source-set semantic graph report artifacts listed above.
+
+When the active catalog rows carry `metadata.loader_contract = "source_register_v1"`, the
+source-set export can validate from catalog, currentness, and proving-context inputs even when
+document evidence-graph files are absent because the proving slice still contains governed
+placeholder artifacts. That canonical source-set graph does not by itself imply reviewer-ready
+extraction, retrieval, or downstream review state.
 
 Top-level graph shape:
 
@@ -1304,6 +1317,11 @@ Required node types:
 - `authority_family`
 - `source_record`
 - `artifact`
+- `authority_document`
+- `authority_section`
+- `jurisdiction_scope`
+- `authority_path`
+- `justification_path`
 - `chunk`
 - `evidence_span`
 - `source_claim`
@@ -1322,6 +1340,13 @@ Required edge types:
 - `CONTAINS_AUTHORITY_FAMILY`
 - `HAS_SOURCE_RECORD`
 - `HAS_ARTIFACT`
+- `CITES_AUTHORITY_DOCUMENT`
+- `HAS_AUTHORITY_SECTION`
+- `HAS_JURISDICTION_SCOPE`
+- `HAS_AUTHORITY_PATH`
+- `PATH_TARGETS`
+- `JUSTIFIED_BY`
+- `SUPPORTS_JUSTIFICATION_PATH`
 - `HAS_CHUNK`
 - `HAS_EVIDENCE_SPAN`
 - `SUPPORTS_SOURCE_CLAIM`
@@ -1359,6 +1384,17 @@ Validation enforces contract-required provenance for each emitted node type, edg
 types against the contract's declared endpoint rules, required lens metadata fields and lenses,
 known node, edge, and display-status values inside each lens definition, and explicit
 readiness-semantic classification for every red node and edge.
+
+The source-set semantic graph lane also emits five sibling report artifacts:
+
+- `authority_ontology_validation_report.json` with ontology-contract, eval-contract, graph-contract,
+  graph-scope, and required-node-type checks
+- `authority_relationship_eval_report.json` with required relationship-type and path-pattern checks
+- `citation_alias_eval_report.json` with blocked-alias and identity-collision checks
+- `graph_health_eval_report.json` with orphan-node, disconnected-component, and justification-support
+  checks
+- `graph_accuracy_eval_report.json` with required node classes, lenses, relationship types,
+  path-pattern, justification, and currentness-carriage checks
 
 Node example:
 

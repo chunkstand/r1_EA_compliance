@@ -120,7 +120,11 @@ allowed_import_layers = [
 [[layers]]
 name = "knowledge_graph"
 summary = "NEPA 3D graph contract and source-set/review export assembly."
-modules = ["nepa_3d_graph_contract", "nepa_knowledge_graph_export"]
+modules = [
+  "authority_ontology_validate",
+  "nepa_3d_graph_contract",
+  "nepa_knowledge_graph_export",
+]
 allowed_import_layers = [
   "foundation",
   "catalog",
@@ -357,11 +361,21 @@ paths = [
 [[artifacts]]
 owner_layer = "knowledge_graph"
 paths = [
+  "source_library/derived/<source_set_id>/knowledge_graph/authority_ontology_validation_report.json",
+  "source_library/derived/<source_set_id>/knowledge_graph/authority_relationship_eval_report.json",
+  "source_library/derived/<source_set_id>/knowledge_graph/citation_alias_eval_report.json",
+  "source_library/derived/<source_set_id>/knowledge_graph/graph_accuracy_eval_report.json",
+  "source_library/derived/<source_set_id>/knowledge_graph/graph_health_eval_report.json",
   "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph.json",
   "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_nodes.jsonl",
   "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_edges.jsonl",
   "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_summary.json",
   "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_validation.json",
+  "source_library/reviews/<review_id>/knowledge_graph/authority_ontology_validation_report.json",
+  "source_library/reviews/<review_id>/knowledge_graph/authority_relationship_eval_report.json",
+  "source_library/reviews/<review_id>/knowledge_graph/citation_alias_eval_report.json",
+  "source_library/reviews/<review_id>/knowledge_graph/graph_accuracy_eval_report.json",
+  "source_library/reviews/<review_id>/knowledge_graph/graph_health_eval_report.json",
   "source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph.json",
   "source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_nodes.jsonl",
   "source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_edges.jsonl",
@@ -481,6 +495,7 @@ commands = [
   "catalog-build",
   "source-register-proving-slice",
   "authority-currentness",
+  "authority-ontology-validate",
   "authority-relationship-eval",
   "citation-alias-eval",
   "graph-health-eval",

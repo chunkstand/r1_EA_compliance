@@ -16,6 +16,47 @@ historical lane notes when they disagree. In particular, older references to Sou
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
 
+## Canonical Source Register Phase 5 Graph Accuracy, Provenance Completeness, And Knowledge-Graph Gating
+
+Latest closeout on 2026-05-18:
+
+- `nepa-knowledge-graph-export` now writes a canonical source-set semantic
+  graph for `source_register_v1` catalogs even when document evidence-graph
+  files are absent because the active proving slice still carries governed
+  placeholder artifacts. The source-set export now emits
+  `authority_document`, `authority_section`, `jurisdiction_scope`,
+  `authority_path`, and `justification_path` nodes plus semantic relationship,
+  currentness, and support-source provenance.
+- The active proving source set `source-set-9dcf819bc4cca486` now passes at
+  `source_library/derived/source-set-9dcf819bc4cca486/knowledge_graph/nepa_3d_graph_summary.json`
+  with `147` nodes, `193` edges, `26` source records, `26` authority
+  documents, `14` authority sections, `5` jurisdiction scopes, `7`
+  authority paths, `7` justification paths, and `validation_passed=true`.
+- The five new semantic graph gates now pass on that exported graph:
+  `authority-ontology-validate` records `graph_scope=source_set` and
+  `required_graph_node_type_count=8`;
+  `authority-relationship-eval` records `relationship_count=7`;
+  `citation-alias-eval` records `alias_row_count=26` with
+  `blocked_alias_row_count=8`;
+  `graph-health-eval` records `orphan_node_count=0` and
+  `disconnected_component_count=1`; and
+  `graph-accuracy-eval` records `authority_path_count=7`,
+  `justification_path_count=7`, and `relationship_type_count=7`.
+- `phase-eval` now appends separate `authority_ontology`,
+  `authority_relationships`, `citation_aliases`, `graph_health`, and
+  `graph_accuracy` source-set phases. For `source-set-9dcf819bc4cca486`, all
+  five new semantic phases pass and `nepa_3d_source_set_graph` passes.
+- The inherited Phase 4 placeholder boundary remains explicit. Live
+  `evidence-graph-build` still exits non-green on the same proving slice with
+  `chunk_count=0`, `validation_passed=false`, `reviewer_ready=false`, and only
+  the synthetic `SourceSet` node, so overall root `phase-eval` remains blocked
+  by extraction, retrieval, evidence-graph, claim-extraction, rule-claim
+  binding, and downstream review lanes. This packet closes the semantic graph
+  boundary only; it does not widen reviewer-ready or promotion-ready claims.
+- The next routed implementation packet is Phase 6 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`:
+  applicability, rule-pack, and legally accurate review on the new corpus.
+
 ## Canonical Source Register Phase 4 Extraction Fidelity And Verified Source Admission
 
 Latest closeout on 2026-05-18:
@@ -54,9 +95,9 @@ Latest closeout on 2026-05-18:
   scoping, directives, forest-plan chapters, appendices, maps, monitoring
   reports, split-page PDFs, OCR/table-heavy PDFs, and direct-file wrapper-page
   negatives under `config/upstream_evaluation_v1.json`.
-- The next routed implementation packet is Phase 5 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`: graph
-  accuracy, provenance completeness, and knowledge-graph gating.
+- This packet is now historical routing context only. Phase 5 graph accuracy,
+  provenance completeness, and knowledge-graph gating has since landed, and
+  Phase 6 is now the next routed implementation boundary.
 
 ## Canonical Source Register Phase 3 Currentness, Supersession, And Source-Partition Rebase
 
@@ -86,8 +127,8 @@ Latest closeout on 2026-05-18:
   support rows can no longer remain silently active just because an older
   catalog artifact serialized `active_review_corpus`.
 - This packet is now historical routing context only. Phase 4 extraction
-  fidelity and verified source admission has since landed, and Phase 5 is now
-  the next routed implementation boundary.
+  fidelity, Phase 5 semantic graph gating, and the newer Phase 6 routing all
+  supersede this earlier note.
 
 ## Canonical Source Register Phase 2 Capture And Catalog Cutover
 

@@ -12,6 +12,7 @@ AUTHORITY_RELATIONSHIP_EVAL_SCHEMA_VERSION = "authority-relationship-eval-report
 DEFAULT_AUTHORITY_RELATIONSHIP_EVAL_PATH = Path("config/authority_relationship_eval_v1.json")
 DEFAULT_AUTHORITY_RELATIONSHIP_TYPES_PATH = Path("config/authority_relationship_types_v1.json")
 DEFAULT_AUTHORITY_ONTOLOGY_PATH = Path("config/authority_document_ontology_v1.json")
+DEFAULT_GRAPH_REPORT_FILENAME = "authority_relationship_eval_report.json"
 
 
 @dataclass(frozen=True)
@@ -159,8 +160,9 @@ def run_authority_relationship_eval(
         ),
     ]
     passed = all(check["passed"] for check in checks)
-    output_path = output_path or default_proving_output_path(
-        output_dir, "authority_relationship_eval_report.json"
+    output_path = output_path or _default_output_path(
+        output_dir=output_dir,
+        source_set_id=report["source_set_id"],
     )
     payload = {
         "schema_version": AUTHORITY_RELATIONSHIP_EVAL_SCHEMA_VERSION,
@@ -202,3 +204,10 @@ def _class_matches_allowed(
             return True
         current = parent_class_by_id.get(current)
     return False
+
+
+def _default_output_path(*, output_dir: Path, source_set_id: str) -> Path:
+    knowledge_graph_dir = output_dir / "derived" / source_set_id / "knowledge_graph"
+    if (knowledge_graph_dir / "nepa_3d_graph.json").exists():
+        return knowledge_graph_dir / DEFAULT_GRAPH_REPORT_FILENAME
+    return default_proving_output_path(output_dir, DEFAULT_GRAPH_REPORT_FILENAME)

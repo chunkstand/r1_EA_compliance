@@ -11,6 +11,14 @@
     "evidence-path",
     "readiness-blockers"
   ],
+  "knowledge_graph_required_lens_ids": [
+    "authority_currentness",
+    "forest_plan",
+    "package_applicability",
+    "evidence_path",
+    "semantic_relationships",
+    "readiness_blockers"
+  ],
   "max_orphan_node_count": 0,
   "max_disconnected_component_count": 1
 }

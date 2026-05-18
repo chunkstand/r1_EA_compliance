@@ -289,6 +289,17 @@ def test_source_register_proving_slice_parser_accepts_manifest_and_workbook() ->
 
 
 def test_semantic_eval_parsers_accept_phase_1_5_paths() -> None:
+    ontology_args = build_parser().parse_args(
+        [
+            "authority-ontology-validate",
+            "--output-dir",
+            "source_library",
+            "--ontology-path",
+            "config/authority_document_ontology_v1.json",
+            "--eval-path",
+            "config/authority_ontology_eval_v1.json",
+        ]
+    )
     relationship_args = build_parser().parse_args(
         [
             "authority-relationship-eval",
@@ -324,6 +335,9 @@ def test_semantic_eval_parsers_accept_phase_1_5_paths() -> None:
         ]
     )
 
+    assert ontology_args.command == "authority-ontology-validate"
+    assert ontology_args.ontology_path == Path("config/authority_document_ontology_v1.json")
+    assert ontology_args.eval_path == Path("config/authority_ontology_eval_v1.json")
     assert relationship_args.command == "authority-relationship-eval"
     assert relationship_args.eval_path == Path("config/authority_relationship_eval_v1.json")
     assert alias_args.command == "citation-alias-eval"

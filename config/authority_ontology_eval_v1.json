@@ -23,6 +23,16 @@
     "authority_path",
     "justification_path"
   ],
+  "source_set_required_class_ids": [
+    "authority_document",
+    "authority_section",
+    "forest_unit",
+    "jurisdiction_scope",
+    "source_record",
+    "source_artifact",
+    "authority_path",
+    "justification_path"
+  ],
   "required_object_property_ids": [
     "belongsToFamily",
     "issuedBy",

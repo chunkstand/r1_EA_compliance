@@ -15,6 +15,9 @@ from .nepa_3d_graph_contract import validate_nepa_3d_graph
 from .records import sha256_file
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .rule_packs import load_rule_pack
+from .source_register import DEFAULT_JURISDICTION_SCOPE_REGISTER_PATH
+from .source_register import load_jurisdiction_scope_register
+from .source_register_proving import resolve_latest_proving_context
 
 
 DEFAULT_AUTHORITY_INVENTORY_PATH = Path("config/authority_universe_families_nepa_ea_v1.json")
@@ -321,44 +324,98 @@ def build_nepa_knowledge_graph_export(
         evidence_graph_edges_path or derived_dir / "evidence_graph" / "document_graph_edges.jsonl"
     )
     claims_path = claims_path or derived_dir / "claims" / "claims.jsonl"
-
-    rule_pack = load_rule_pack(rule_pack_path)
-    rule_claim_links_path = rule_claim_links_path or (
-        derived_dir
-        / "rule_claim_links"
-        / str(rule_pack.get("rule_pack_id"))
-        / str(rule_pack.get("version"))
-        / "rule_claim_links.jsonl"
-    )
-    forest_plan_components_path = (
-        forest_plan_components_path
-        or derived_dir / "forest_plan_components" / "component_inventory.json"
-    )
-    review_artifact_paths = _review_artifact_paths(review_dir) if review_dir else {}
-
-    contract = load_nepa_3d_graph_contract(graph_contract_path)
-    inventory = _read_json(authority_inventory_path)
-    template_config = _read_json(authority_family_rule_templates_path)
-    forest_plan_profiles = _read_json(forest_plan_profiles_path)
-    region1_forest_plan_readiness = _load_region1_forest_plan_readiness(
-        region1_forest_plan_readiness_path
-    )
-    currentness = _read_json(authority_currentness_path)
     catalog_rows = [
         row
         for row in _read_jsonl(catalog_path)
         if str(row.get("source_set_id") or source_set_id) == source_set_id
     ]
-    claims = _read_jsonl(claims_path)
-    rule_claim_links = _read_jsonl(rule_claim_links_path)
-    forest_components = _read_json(forest_plan_components_path)
-    evidence_graph_node_count = _jsonl_count(evidence_graph_nodes_path)
-    evidence_graph_edge_count = _jsonl_count(evidence_graph_edges_path)
+    is_source_register_v1 = _is_source_register_v1_catalog(catalog_rows)
+    proving_context = (
+        _source_register_proving_context_for_source_set(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+        if is_source_register_v1
+        else None
+    )
+    if is_source_register_v1 and authority_inventory_path == DEFAULT_AUTHORITY_INVENTORY_PATH:
+        if proving_context is None:
+            raise FileNotFoundError(
+                "Canonical source-register graph export requires a proving context with "
+                "authority inventory for the active source set."
+            )
+        authority_inventory_path = Path(proving_context["authority_inventory_path"])
+
+    contract = load_nepa_3d_graph_contract(graph_contract_path)
+    inventory = _read_json(authority_inventory_path)
+    currentness = _read_json(authority_currentness_path)
+    jurisdiction_scope_register = load_jurisdiction_scope_register(
+        DEFAULT_JURISDICTION_SCOPE_REGISTER_PATH
+    )
+
+    if is_source_register_v1:
+        rule_pack = _empty_rule_pack()
+        template_config = _empty_template_config()
+        forest_plan_profiles = _empty_forest_plan_profiles()
+        region1_forest_plan_readiness = _empty_region1_forest_plan_readiness(
+            source_set_id=source_set_id
+        )
+        claims = _read_jsonl(claims_path) if claims_path.exists() else []
+        rule_claim_links_path = rule_claim_links_path or (
+            derived_dir / "rule_claim_links" / "canonical_semantic_graph" / "0.0.0" / "rule_claim_links.jsonl"
+        )
+        rule_claim_links = _read_jsonl(rule_claim_links_path) if rule_claim_links_path.exists() else []
+        forest_plan_components_path = (
+            forest_plan_components_path
+            or derived_dir / "forest_plan_components" / "component_inventory.json"
+        )
+        forest_components = (
+            _read_json(forest_plan_components_path)
+            if forest_plan_components_path.exists()
+            else {"schema_version": "forest-plan-component-inventory-v0", "source_set_id": source_set_id, "components": []}
+        )
+    else:
+        rule_pack = load_rule_pack(rule_pack_path)
+        rule_claim_links_path = rule_claim_links_path or (
+            derived_dir
+            / "rule_claim_links"
+            / str(rule_pack.get("rule_pack_id"))
+            / str(rule_pack.get("version"))
+            / "rule_claim_links.jsonl"
+        )
+        forest_plan_components_path = (
+            forest_plan_components_path
+            or derived_dir / "forest_plan_components" / "component_inventory.json"
+        )
+        template_config = _read_json(authority_family_rule_templates_path)
+        forest_plan_profiles = _read_json(forest_plan_profiles_path)
+        region1_forest_plan_readiness = _load_region1_forest_plan_readiness(
+            region1_forest_plan_readiness_path
+        )
+        claims = _read_jsonl(claims_path)
+        rule_claim_links = _read_jsonl(rule_claim_links_path)
+        forest_components = _read_json(forest_plan_components_path)
+
+    review_artifact_paths = _review_artifact_paths(review_dir) if review_dir else {}
+    evidence_graph_node_count = _jsonl_count_if_exists(evidence_graph_nodes_path)
+    evidence_graph_edge_count = _jsonl_count_if_exists(evidence_graph_edges_path)
     catalog_graph_node_count = _jsonl_count(catalog_graph_nodes_path)
     catalog_graph_edge_count = _jsonl_count(catalog_graph_edges_path)
     review_artifacts = (
         _load_review_artifacts(review_artifact_paths) if review_artifact_paths else {}
     )
+
+    canonical_evidence_graph_inputs: dict[str, Path] = {}
+    if not is_source_register_v1:
+        canonical_evidence_graph_inputs = {
+            "evidence_graph_nodes": evidence_graph_nodes_path,
+            "evidence_graph_edges": evidence_graph_edges_path,
+        }
+    elif evidence_graph_nodes_path.exists() or evidence_graph_edges_path.exists():
+        canonical_evidence_graph_inputs = {
+            "evidence_graph_nodes": evidence_graph_nodes_path,
+            "evidence_graph_edges": evidence_graph_edges_path,
+        }
 
     builder = _GraphBuilder()
     inputs = _input_records(
@@ -369,16 +426,21 @@ def build_nepa_knowledge_graph_export(
             "catalog_graph_edges": catalog_graph_edges_path,
             "authority_inventory": authority_inventory_path,
             "authority_currentness": authority_currentness_path,
-            "rule_pack": rule_pack_path,
-            "authority_family_rule_templates": authority_family_rule_templates_path,
-            "forest_plan_profiles": forest_plan_profiles_path,
-            "region1_forest_plan_readiness": region1_forest_plan_readiness_path,
-            "evidence_graph_nodes": evidence_graph_nodes_path,
-            "evidence_graph_edges": evidence_graph_edges_path,
-            "claims": claims_path,
-            "rule_claim_links": rule_claim_links_path,
-            "forest_plan_components": forest_plan_components_path,
+            **canonical_evidence_graph_inputs,
             "graph_contract": graph_contract_path,
+            **(
+                {}
+                if is_source_register_v1
+                else {
+                    "rule_pack": rule_pack_path,
+                    "authority_family_rule_templates": authority_family_rule_templates_path,
+                    "forest_plan_profiles": forest_plan_profiles_path,
+                    "region1_forest_plan_readiness": region1_forest_plan_readiness_path,
+                    "claims": claims_path,
+                    "rule_claim_links": rule_claim_links_path,
+                    "forest_plan_components": forest_plan_components_path,
+                }
+            ),
             **review_artifact_paths,
         }
     )
@@ -436,6 +498,16 @@ def build_nepa_knowledge_graph_export(
         source_currentness_by_id=source_currentness_by_id,
         catalog_by_id=catalog_by_id,
     )
+    if is_source_register_v1:
+        _add_source_register_semantics(
+            builder,
+            source_set_id=source_set_id,
+            catalog_rows=catalog_rows,
+            source_currentness_by_id=source_currentness_by_id,
+            catalog_partition_by_id=catalog_partition_by_id,
+            jurisdiction_scope_register=jurisdiction_scope_register,
+            proving_context=proving_context,
+        )
     base_rule_node_ids = _add_base_rules(
         builder,
         source_set_id=source_set_id,
@@ -530,6 +602,7 @@ def build_nepa_knowledge_graph_export(
         catalog_graph_edge_count=catalog_graph_edge_count,
         output_dir=output_dir,
         source_set_id=source_set_id,
+        is_source_register_v1=is_source_register_v1,
     )
     if review_id:
         checks.extend(
@@ -660,6 +733,417 @@ def _add_source_records_and_artifacts(
                 },
                 readiness_blockers=blockers,
             )
+
+
+def _add_source_register_semantics(
+    builder: _GraphBuilder,
+    *,
+    source_set_id: str,
+    catalog_rows: list[dict[str, Any]],
+    source_currentness_by_id: dict[str, dict[str, Any]],
+    catalog_partition_by_id: dict[str, dict[str, Any]],
+    jurisdiction_scope_register: dict[str, Any],
+    proving_context: dict[str, Any] | None,
+) -> None:
+    grouped_documents: dict[str, list[tuple[dict[str, Any], dict[str, Any], dict[str, Any]]]] = {}
+    grouped_sections: dict[str, list[tuple[dict[str, Any], dict[str, Any], dict[str, Any]]]] = {}
+    grouped_scopes: dict[str, list[tuple[dict[str, Any], dict[str, Any], dict[str, Any]]]] = {}
+    scope_labels = {
+        str(scope.get("scope_id") or ""): str(scope.get("label") or scope.get("name") or "")
+        for scope in _dict_list(jurisdiction_scope_register.get("scopes"))
+        if scope.get("scope_id")
+    }
+
+    for row in sorted(catalog_rows, key=lambda item: str(item.get("source_record_id") or "")):
+        source_record_id = str(row.get("source_record_id") or "")
+        metadata = _dict(row.get("metadata"))
+        currentness = source_currentness_by_id.get(source_record_id, {})
+        partition = catalog_partition_by_id.get(source_record_id, {})
+        document_id = str(metadata.get("authority_document_id") or "")
+        section_id = str(metadata.get("authority_section_id") or "")
+        scope_id = str(metadata.get("jurisdiction_scope_id") or "")
+        entry = (row, currentness, partition)
+        if document_id:
+            grouped_documents.setdefault(document_id, []).append(entry)
+        if section_id:
+            grouped_sections.setdefault(section_id, []).append(entry)
+        if scope_id:
+            grouped_scopes.setdefault(scope_id, []).append(entry)
+
+    for document_id, entries in sorted(grouped_documents.items()):
+        exemplar = entries[0][0]
+        metadata = _dict(exemplar.get("metadata"))
+        status = _source_register_semantic_status(entries)
+        builder.add_node(
+            node_id=document_id,
+            node_type="authority_document",
+            label=str(metadata.get("citation_or_code") or exemplar.get("title") or document_id),
+            display_status=status["display_status"],
+            review_readiness_status=status["review_readiness_status"],
+            provenance={
+                "source_set_id": source_set_id,
+                "authority_document_id": document_id,
+            },
+            currentness_metadata=_source_register_semantic_currentness(entries),
+            readiness_blockers=status["readiness_blockers"],
+            metadata={
+                "document_type": metadata.get("document_type"),
+                "authority_tier": metadata.get("authority_tier"),
+                "issuer": metadata.get("issuer"),
+                "jurisdiction_or_unit": metadata.get("jurisdiction_or_unit"),
+                "issue_or_effective_date": metadata.get("issue_or_effective_date"),
+                "source_record_ids": [
+                    str(row.get("source_record_id") or "") for row, _, _ in entries
+                ],
+            },
+        )
+
+    for section_id, entries in sorted(grouped_sections.items()):
+        exemplar = entries[0][0]
+        metadata = _dict(exemplar.get("metadata"))
+        document_id = str(metadata.get("authority_document_id") or "")
+        status = _source_register_semantic_status(entries)
+        builder.add_node(
+            node_id=section_id,
+            node_type="authority_section",
+            label=str(metadata.get("citation_or_code") or section_id.rsplit("#", 1)[-1]),
+            display_status=status["display_status"],
+            review_readiness_status=status["review_readiness_status"],
+            provenance={
+                "source_set_id": source_set_id,
+                "authority_section_id": section_id,
+            },
+            currentness_metadata=_source_register_semantic_currentness(entries),
+            readiness_blockers=status["readiness_blockers"],
+            metadata={
+                "authority_document_id": document_id,
+                "source_record_ids": [
+                    str(row.get("source_record_id") or "") for row, _, _ in entries
+                ],
+            },
+        )
+        if document_id:
+            builder.add_edge(
+                edge_type="HAS_AUTHORITY_SECTION",
+                source_node_id=document_id,
+                target_node_id=section_id,
+                display_status=status["display_status"],
+                review_readiness_status=status["review_readiness_status"],
+                provenance={
+                    "source_set_id": source_set_id,
+                    "authority_document_id": document_id,
+                    "authority_section_id": section_id,
+                },
+                readiness_blockers=status["readiness_blockers"],
+            )
+
+    for scope_id, entries in sorted(grouped_scopes.items()):
+        status = _source_register_semantic_status(entries)
+        builder.add_node(
+            node_id=scope_id,
+            node_type="jurisdiction_scope",
+            label=scope_labels.get(scope_id) or scope_id.replace("scope:", "").replace("-", " "),
+            display_status=status["display_status"],
+            review_readiness_status=status["review_readiness_status"],
+            provenance={
+                "source_set_id": source_set_id,
+                "jurisdiction_scope_id": scope_id,
+            },
+            currentness_metadata=_source_register_semantic_currentness(entries),
+            readiness_blockers=status["readiness_blockers"],
+            metadata={
+                "source_record_ids": [
+                    str(row.get("source_record_id") or "") for row, _, _ in entries
+                ],
+            },
+        )
+
+    for row in sorted(catalog_rows, key=lambda item: str(item.get("source_record_id") or "")):
+        source_record_id = str(row.get("source_record_id") or "")
+        metadata = _dict(row.get("metadata"))
+        currentness = source_currentness_by_id.get(source_record_id, {})
+        partition = catalog_partition_by_id.get(source_record_id, {})
+        status = _source_display_status(row=row, currentness=currentness, partition=partition)
+        blockers = _source_readiness_blockers(
+            row=row,
+            currentness=currentness,
+            partition=partition,
+        )
+        document_id = str(metadata.get("authority_document_id") or "")
+        section_id = str(metadata.get("authority_section_id") or "")
+        scope_id = str(metadata.get("jurisdiction_scope_id") or "")
+        if document_id:
+            builder.add_edge(
+                edge_type="CITES_AUTHORITY_DOCUMENT",
+                source_node_id=_source_node_id(source_record_id),
+                target_node_id=document_id,
+                display_status=status["display_status"],
+                review_readiness_status=status["review_readiness_status"],
+                provenance={
+                    "source_set_id": source_set_id,
+                    "source_record_id": source_record_id,
+                    "authority_document_id": document_id,
+                },
+                readiness_blockers=blockers,
+            )
+        if scope_id:
+            builder.add_edge(
+                edge_type="HAS_JURISDICTION_SCOPE",
+                source_node_id=_source_node_id(source_record_id),
+                target_node_id=scope_id,
+                display_status=status["display_status"],
+                review_readiness_status=status["review_readiness_status"],
+                provenance={
+                    "source_set_id": source_set_id,
+                    "source_record_id": source_record_id,
+                    "jurisdiction_scope_id": scope_id,
+                },
+                readiness_blockers=blockers,
+            )
+        if section_id and document_id:
+            builder.add_edge(
+                edge_type="HAS_AUTHORITY_SECTION",
+                source_node_id=document_id,
+                target_node_id=section_id,
+                display_status=status["display_status"],
+                review_readiness_status=status["review_readiness_status"],
+                provenance={
+                    "source_set_id": source_set_id,
+                    "source_record_id": source_record_id,
+                    "authority_document_id": document_id,
+                    "authority_section_id": section_id,
+                },
+                readiness_blockers=blockers,
+            )
+
+    relationships_path = (
+        Path(proving_context["report_path"]).parent / "relationships.json"
+        if proving_context is not None
+        else None
+    )
+    relationship_rows = (
+        _dict_list(_read_json(relationships_path).get("relationships"))
+        if relationships_path is not None and relationships_path.exists()
+        else []
+    )
+    for relationship in relationship_rows:
+        relationship_id = str(relationship.get("relationship_id") or "")
+        if not relationship_id:
+            continue
+        source_node_id = _ensure_source_register_semantic_endpoint(
+            builder,
+            source_set_id=source_set_id,
+            class_id=str(relationship.get("source_class_id") or ""),
+            semantic_id=str(relationship.get("source_id") or ""),
+        )
+        target_node_id = _ensure_source_register_semantic_endpoint(
+            builder,
+            source_set_id=source_set_id,
+            class_id=str(relationship.get("target_class_id") or ""),
+            semantic_id=str(relationship.get("target_id") or ""),
+        )
+        relationship_basis = str(relationship.get("relationship_basis") or "")
+        evidence_basis_type = str(relationship.get("evidence_basis_type") or "")
+        relationship_type = str(relationship.get("relationship_type") or "")
+        path_pattern_id = str(relationship.get("path_pattern_id") or "")
+        support_ids = _strings(relationship.get("supporting_source_record_ids"))
+        authority_path_node_id = f"authority_path:{relationship_id}"
+        justification_path_node_id = f"justification_path:{relationship_id}"
+        builder.add_node(
+            node_id=authority_path_node_id,
+            node_type="authority_path",
+            label=relationship_type.replace("_", " ").title(),
+            display_status="active",
+            review_readiness_status="not_review_specific",
+            provenance={
+                "source_set_id": source_set_id,
+                "authority_path_id": relationship_id,
+                "relationship_id": relationship_id,
+            },
+            metadata={
+                "relationship_type": relationship_type,
+                "path_pattern_id": path_pattern_id,
+                "source_class_id": relationship.get("source_class_id"),
+                "source_id": relationship.get("source_id"),
+                "target_class_id": relationship.get("target_class_id"),
+                "target_id": relationship.get("target_id"),
+                "relationship_basis": relationship_basis,
+                "evidence_basis_type": evidence_basis_type,
+                "status": relationship.get("status"),
+                "confidence": "workbook_curated"
+                if evidence_basis_type == "workbook_curated"
+                else "currentness_adjudicated",
+            },
+        )
+        builder.add_edge(
+            edge_type="HAS_AUTHORITY_PATH",
+            source_node_id=source_node_id,
+            target_node_id=authority_path_node_id,
+            display_status="active",
+            review_readiness_status="not_review_specific",
+            provenance={
+                "source_set_id": source_set_id,
+                "relationship_id": relationship_id,
+                "relationship_type": relationship_type,
+            },
+        )
+        builder.add_edge(
+            edge_type="PATH_TARGETS",
+            source_node_id=authority_path_node_id,
+            target_node_id=target_node_id,
+            display_status="active",
+            review_readiness_status="not_review_specific",
+            provenance={
+                "source_set_id": source_set_id,
+                "relationship_id": relationship_id,
+                "relationship_type": relationship_type,
+            },
+        )
+        builder.add_node(
+            node_id=justification_path_node_id,
+            node_type="justification_path",
+            label=f"Justification for {relationship_type.replace('_', ' ').title()}",
+            display_status="active",
+            review_readiness_status="not_review_specific",
+            provenance={
+                "source_set_id": source_set_id,
+                "justification_path_id": relationship_id,
+                "relationship_id": relationship_id,
+            },
+            metadata={
+                "supporting_source_record_ids": support_ids,
+                "relationship_basis": relationship_basis,
+                "evidence_basis_type": evidence_basis_type,
+                "confidence": "workbook_curated"
+                if evidence_basis_type == "workbook_curated"
+                else "currentness_adjudicated",
+            },
+        )
+        builder.add_edge(
+            edge_type="JUSTIFIED_BY",
+            source_node_id=authority_path_node_id,
+            target_node_id=justification_path_node_id,
+            display_status="active",
+            review_readiness_status="not_review_specific",
+            provenance={
+                "source_set_id": source_set_id,
+                "relationship_id": relationship_id,
+            },
+        )
+        for supporting_source_record_id in support_ids:
+            builder.add_edge(
+                edge_type="SUPPORTS_JUSTIFICATION_PATH",
+                source_node_id=_source_node_id(supporting_source_record_id),
+                target_node_id=justification_path_node_id,
+                display_status="active",
+                review_readiness_status="not_review_specific",
+                provenance={
+                    "source_set_id": source_set_id,
+                    "relationship_id": relationship_id,
+                    "source_record_id": supporting_source_record_id,
+                },
+            )
+
+
+def _ensure_source_register_semantic_endpoint(
+    builder: _GraphBuilder,
+    *,
+    source_set_id: str,
+    class_id: str,
+    semantic_id: str,
+) -> str:
+    if not semantic_id:
+        return semantic_id
+    node_type = {
+        "authority_document": "authority_document",
+        "authority_section": "authority_section",
+        "jurisdiction_scope": "jurisdiction_scope",
+        "forest_plan": "forest_plan",
+        "forest_unit": "forest_unit",
+    }.get(class_id)
+    if node_type is None:
+        return semantic_id
+    if semantic_id in builder.nodes:
+        return semantic_id
+    provenance: dict[str, Any] = {"source_set_id": source_set_id}
+    if node_type == "authority_document":
+        provenance["authority_document_id"] = semantic_id
+    elif node_type == "authority_section":
+        provenance["authority_section_id"] = semantic_id
+    elif node_type == "jurisdiction_scope":
+        provenance["jurisdiction_scope_id"] = semantic_id
+    elif node_type == "forest_unit":
+        provenance["forest_code"] = semantic_id.removeprefix("forest_unit:")
+    elif node_type == "forest_plan":
+        provenance["forest_code"] = semantic_id.removeprefix("forest_plan:")
+        provenance["source_record_id"] = semantic_id
+    builder.add_node(
+        node_id=semantic_id,
+        node_type=node_type,
+        label=_semantic_label(semantic_id),
+        display_status="active",
+        review_readiness_status="not_review_specific",
+        provenance=provenance,
+        metadata={"semantic_identity": semantic_id},
+    )
+    return semantic_id
+
+
+def _source_register_semantic_status(
+    entries: list[tuple[dict[str, Any], dict[str, Any], dict[str, Any]]]
+) -> dict[str, Any]:
+    statuses = [
+        _source_display_status(row=row, currentness=currentness, partition=partition)
+        for row, currentness, partition in entries
+    ]
+    blockers = sorted(
+        {
+            blocker
+            for row, currentness, partition in entries
+            for blocker in _source_readiness_blockers(
+                row=row,
+                currentness=currentness,
+                partition=partition,
+            )
+        }
+    )
+    for display_status in ("active", "candidate", "superseded", "reserved"):
+        for status in statuses:
+            if status["display_status"] == display_status:
+                return {**status, "readiness_blockers": blockers}
+    status = statuses[0] if statuses else {
+        "display_status": "active",
+        "review_readiness_status": "not_review_specific",
+    }
+    return {**status, "readiness_blockers": blockers}
+
+
+def _source_register_semantic_currentness(
+    entries: list[tuple[dict[str, Any], dict[str, Any], dict[str, Any]]]
+) -> dict[str, Any]:
+    return {
+        "source_record_ids": [
+            str(row.get("source_record_id") or "") for row, _, _ in entries
+        ],
+        "currentness_statuses": sorted(
+            {
+                str(_dict(row.get("metadata")).get("currentness_status") or currentness.get("currentness_status") or "")
+                for row, currentness, _ in entries
+                if str(
+                    _dict(row.get("metadata")).get("currentness_status")
+                    or currentness.get("currentness_status")
+                    or ""
+                ).strip()
+            }
+        ),
+        "source_partition_ids": sorted(
+            {
+                str(partition.get("source_partition") or "")
+                for _, _, partition in entries
+                if str(partition.get("source_partition") or "").strip()
+            }
+        ),
+    }
 
 
 def _add_authority_families(
@@ -2702,6 +3186,7 @@ def _milestone_validation_checks(
     catalog_graph_edge_count: int,
     output_dir: Path,
     source_set_id: str,
+    is_source_register_v1: bool,
 ) -> list[dict[str, Any]]:
     node_ids = {node["node_id"] for node in graph["nodes"]}
     edge_tuples = {
@@ -2840,6 +3325,86 @@ def _milestone_validation_checks(
         output_dir=output_dir,
         source_set_id=source_set_id,
     )
+    if is_source_register_v1:
+        return [
+            _check("nepa_3d_graph_inputs_exist", not input_failures, [], input_failures),
+            _check(
+                "nepa_3d_graph_reads_catalog_graph_seeds",
+                catalog_graph_node_count > 0 and catalog_graph_edge_count > 0,
+                {"catalog_graph_node_count": "> 0", "catalog_graph_edge_count": "> 0"},
+                {
+                    "catalog_graph_node_count": catalog_graph_node_count,
+                    "catalog_graph_edge_count": catalog_graph_edge_count,
+                },
+            ),
+            _check(
+                "nepa_3d_graph_reports_required_summary_count_fields",
+                not _missing_summary_count_fields(graph),
+                [
+                    "node_type_counts",
+                    "edge_type_counts",
+                    "authority_category_counts",
+                    "source_status_counts",
+                    "source_partition_counts",
+                    "applicability_status_counts",
+                    "readiness_blocker_counts",
+                ],
+                _missing_summary_count_fields(graph),
+            ),
+            _check(
+                "nepa_3d_graph_currentness_gate_passed",
+                bool(
+                    _dict(currentness.get("validation")).get("passed")
+                    or _dict(currentness.get("summary")).get("validation_passed")
+                ),
+                True,
+                {
+                    "validation": _dict(currentness.get("validation")).get("passed"),
+                    "summary": _dict(currentness.get("summary")).get("validation_passed"),
+                },
+            ),
+            _check(
+                "nepa_3d_graph_exports_all_authority_families",
+                family_ids <= exported_family_ids,
+                sorted(family_ids),
+                sorted(family_ids - exported_family_ids),
+            ),
+            _check(
+                "nepa_3d_graph_exports_all_catalog_source_records",
+                source_record_ids <= exported_source_record_ids,
+                sorted(source_record_ids),
+                sorted(source_record_ids - exported_source_record_ids),
+            ),
+            _check(
+                "nepa_3d_graph_exports_candidate_families",
+                all(
+                    display_status_by_node_id.get(_family_node_id(family_id)) == "candidate"
+                    for family_id in candidate_family_ids
+                ),
+                sorted(candidate_family_ids),
+                {
+                    family_id: display_status_by_node_id.get(_family_node_id(family_id))
+                    for family_id in sorted(candidate_family_ids)
+                },
+            ),
+            _check(
+                "nepa_3d_graph_exports_superseded_families",
+                all(
+                    display_status_by_node_id.get(_family_node_id(family_id)) == "superseded"
+                    for family_id in superseded_family_ids
+                ),
+                sorted(superseded_family_ids),
+                {
+                    family_id: display_status_by_node_id.get(_family_node_id(family_id))
+                    for family_id in sorted(superseded_family_ids)
+                },
+            ),
+            *_canonical_source_register_graph_checks(
+                graph=graph,
+                catalog_rows=catalog_rows,
+                edge_tuples=edge_tuples,
+            ),
+        ]
     return [
         _check("nepa_3d_graph_inputs_exist", not input_failures, [], input_failures),
         _check(
@@ -3028,6 +3593,155 @@ def _milestone_validation_checks(
             any(node_id.startswith("readiness_blocker:") for node_id in node_ids),
             "readiness blocker nodes present",
             sorted(node_id for node_id in node_ids if node_id.startswith("readiness_blocker:")),
+        ),
+    ]
+
+
+def _canonical_source_register_graph_checks(
+    *,
+    graph: dict[str, Any],
+    catalog_rows: list[dict[str, Any]],
+    edge_tuples: set[tuple[str, str, str]],
+) -> list[dict[str, Any]]:
+    nodes = _dict_list(graph.get("nodes"))
+    node_type_counts = Counter(str(node.get("node_type") or "") for node in nodes)
+    authority_document_ids = {
+        str(_dict(row.get("metadata")).get("authority_document_id") or "")
+        for row in catalog_rows
+        if str(_dict(row.get("metadata")).get("authority_document_id") or "").strip()
+    }
+    authority_section_ids = {
+        str(_dict(row.get("metadata")).get("authority_section_id") or "")
+        for row in catalog_rows
+        if str(_dict(row.get("metadata")).get("authority_section_id") or "").strip()
+    }
+    jurisdiction_scope_ids = {
+        str(_dict(row.get("metadata")).get("jurisdiction_scope_id") or "")
+        for row in catalog_rows
+        if str(_dict(row.get("metadata")).get("jurisdiction_scope_id") or "").strip()
+    }
+    exported_authority_document_ids = {
+        str(node.get("provenance", {}).get("authority_document_id") or "")
+        for node in nodes
+        if str(node.get("node_type") or "") == "authority_document"
+    }
+    exported_authority_section_ids = {
+        str(node.get("provenance", {}).get("authority_section_id") or "")
+        for node in nodes
+        if str(node.get("node_type") or "") == "authority_section"
+    }
+    exported_jurisdiction_scope_ids = {
+        str(node.get("provenance", {}).get("jurisdiction_scope_id") or "")
+        for node in nodes
+        if str(node.get("node_type") or "") == "jurisdiction_scope"
+    }
+    authority_path_ids = {
+        str(node.get("node_id") or "")
+        for node in nodes
+        if str(node.get("node_type") or "") == "authority_path"
+    }
+    justification_path_ids = {
+        str(node.get("node_id") or "")
+        for node in nodes
+        if str(node.get("node_type") or "") == "justification_path"
+    }
+    authority_path_source_gaps = sorted(
+        path_id
+        for path_id in authority_path_ids
+        if not any(
+            edge_type == "HAS_AUTHORITY_PATH" and target_node_id == path_id
+            for edge_type, _, target_node_id in edge_tuples
+        )
+    )
+    authority_path_target_gaps = sorted(
+        path_id
+        for path_id in authority_path_ids
+        if not any(
+            edge_type == "PATH_TARGETS" and source_node_id == path_id
+            for edge_type, source_node_id, _ in edge_tuples
+        )
+    )
+    justification_edge_gaps = sorted(
+        path_id
+        for path_id in authority_path_ids
+        if (
+            "JUSTIFIED_BY",
+            path_id,
+            f"justification_path:{path_id.removeprefix('authority_path:')}",
+        )
+        not in edge_tuples
+    )
+    supporting_source_gaps = sorted(
+        justification_id
+        for justification_id in justification_path_ids
+        if not any(
+            edge_type == "SUPPORTS_JUSTIFICATION_PATH" and target_node_id == justification_id
+            for edge_type, _, target_node_id in edge_tuples
+        )
+    )
+    forest_unit_present = node_type_counts.get("forest_unit", 0) > 0
+
+    return [
+        _check(
+            "nepa_3d_graph_exports_authority_documents",
+            authority_document_ids <= exported_authority_document_ids,
+            sorted(authority_document_ids),
+            sorted(authority_document_ids - exported_authority_document_ids),
+        ),
+        _check(
+            "nepa_3d_graph_exports_authority_sections",
+            authority_section_ids <= exported_authority_section_ids,
+            sorted(authority_section_ids),
+            sorted(authority_section_ids - exported_authority_section_ids),
+        ),
+        _check(
+            "nepa_3d_graph_exports_jurisdiction_scopes",
+            jurisdiction_scope_ids <= exported_jurisdiction_scope_ids,
+            sorted(jurisdiction_scope_ids),
+            sorted(jurisdiction_scope_ids - exported_jurisdiction_scope_ids),
+        ),
+        _check(
+            "nepa_3d_graph_exports_semantic_authority_paths",
+            bool(authority_path_ids),
+            "at least one authority_path node",
+            len(authority_path_ids),
+        ),
+        _check(
+            "nepa_3d_graph_exports_semantic_justification_paths",
+            authority_path_ids
+            == {
+                f"authority_path:{justification_id.removeprefix('justification_path:')}"
+                for justification_id in justification_path_ids
+            },
+            sorted(authority_path_ids),
+            sorted(justification_path_ids),
+        ),
+        _check(
+            "nepa_3d_graph_links_authority_paths_to_sources_and_targets",
+            not authority_path_source_gaps and not authority_path_target_gaps,
+            [],
+            {
+                "missing_source_edge_authority_paths": authority_path_source_gaps,
+                "missing_target_edge_authority_paths": authority_path_target_gaps,
+            },
+        ),
+        _check(
+            "nepa_3d_graph_links_authority_paths_to_justification_paths",
+            not justification_edge_gaps,
+            [],
+            justification_edge_gaps,
+        ),
+        _check(
+            "nepa_3d_graph_justification_paths_are_supported_by_source_records",
+            not supporting_source_gaps,
+            [],
+            supporting_source_gaps,
+        ),
+        _check(
+            "nepa_3d_graph_exports_forest_units_from_semantic_relationships",
+            forest_unit_present,
+            True,
+            forest_unit_present,
         ),
     ]
 
@@ -3498,6 +4212,70 @@ def _load_review_artifacts(paths: dict[str, Path]) -> dict[str, Any]:
     }
 
 
+def _is_source_register_v1_catalog(catalog_rows: list[dict[str, Any]]) -> bool:
+    return any(
+        str(_dict(row.get("metadata")).get("loader_contract") or "") == "source_register_v1"
+        for row in catalog_rows
+    )
+
+
+def _source_register_proving_context_for_source_set(
+    *,
+    output_dir: Path,
+    source_set_id: str,
+) -> dict[str, Any] | None:
+    try:
+        context = resolve_latest_proving_context(output_dir)
+    except (FileNotFoundError, ValueError, json.JSONDecodeError):
+        return None
+    return context if str(context.get("source_set_id") or "") == source_set_id else None
+
+
+def _empty_rule_pack() -> dict[str, Any]:
+    return {
+        "schema_version": "compliance-rule-pack-v0",
+        "rule_pack_id": "canonical-source-register-semantic-graph",
+        "version": "0.0.0",
+        "title": "Canonical semantic graph placeholder rule pack",
+        "rules": [],
+    }
+
+
+def _empty_template_config() -> dict[str, Any]:
+    return {
+        "schema_version": "authority-family-rule-templates-v1",
+        "base_rule_pack_id": "canonical-source-register-semantic-graph",
+        "base_rule_pack_version": "0.0.0",
+        "templates": [],
+    }
+
+
+def _empty_forest_plan_profiles() -> dict[str, Any]:
+    return {
+        "schema_version": "forest-plan-profiles-v0",
+        "known_other_forest_units": [],
+        "profiles": [],
+    }
+
+
+def _empty_region1_forest_plan_readiness(*, source_set_id: str) -> dict[str, Any]:
+    return {
+        "schema_version": REGION1_FOREST_PLAN_READINESS_SCHEMA_VERSION,
+        "readiness_matrix_id": "canonical-source-register-semantic-graph",
+        "source_set_id": source_set_id,
+        "region1_completeness_claim": False,
+        "field_directive_requirements": [],
+        "overlay_requirements": [],
+        "profile_rows": [],
+    }
+
+
+def _semantic_label(semantic_id: str) -> str:
+    label = semantic_id.split(":", 1)[-1]
+    label = label.replace("#section:", " section ")
+    return label.replace("-", " ").strip() or semantic_id
+
+
 def _input_records(paths_by_name: dict[str, Path]) -> list[dict[str, Any]]:
     records = []
     for name, path in sorted(paths_by_name.items()):
@@ -3535,6 +4313,7 @@ def _lens_description(lens_id: str) -> str:
         "forest_plan": "Display Region 1 forest-plan units, plans, and component inventory.",
         "package_applicability": "Display review-specific applicability states when a review overlay is exported.",
         "evidence_path": "Display source record, artifact, chunk, evidence span, claim, and rule paths.",
+        "semantic_relationships": "Display canonical authority documents, scopes, semantic paths, and justification paths.",
         "readiness_blockers": "Display missing source, stale artifact, adjudication, and readiness blockers.",
     }
     return descriptions.get(lens_id, lens_id.replace("_", " "))
@@ -3552,6 +4331,16 @@ def _lens_node_types(lens_id: str) -> list[str]:
             "evidence_span",
             "source_claim",
             "rule_template",
+        ],
+        "semantic_relationships": [
+            "authority_document",
+            "authority_section",
+            "jurisdiction_scope",
+            "forest_plan",
+            "forest_unit",
+            "authority_path",
+            "justification_path",
+            "source_record",
         ],
         "readiness_blockers": [
             "source_set",
@@ -3588,6 +4377,15 @@ def _lens_edge_types(lens_id: str) -> list[str]:
             "SUPPORTS_SOURCE_CLAIM",
             "SUPPORTS_RULE_TEMPLATE",
         ],
+        "semantic_relationships": [
+            "CITES_AUTHORITY_DOCUMENT",
+            "HAS_AUTHORITY_SECTION",
+            "HAS_JURISDICTION_SCOPE",
+            "HAS_AUTHORITY_PATH",
+            "PATH_TARGETS",
+            "JUSTIFIED_BY",
+            "SUPPORTS_JUSTIFICATION_PATH",
+        ],
         "readiness_blockers": ["HAS_READINESS_BLOCKER", "BLOCKED_BY"],
     }
     return values.get(lens_id, [])
@@ -3605,6 +4403,7 @@ def _lens_display_statuses(lens_id: str) -> list[str]:
             "readiness_blocked",
         ],
         "evidence_path": ["active", "readiness_blocked"],
+        "semantic_relationships": ["active", "superseded", "candidate"],
         "readiness_blockers": ["readiness_blocked"],
     }
     return values.get(lens_id, [])
@@ -3637,6 +4436,13 @@ def _write_jsonl(path: Path, records: list[dict[str, Any]]) -> None:
 def _jsonl_count(path: Path) -> int:
     with Path(path).open("r", encoding="utf-8") as handle:
         return sum(1 for line in handle if line.strip())
+
+
+def _jsonl_count_if_exists(path: Path) -> int:
+    path = Path(path)
+    if not path.exists():
+        return 0
+    return _jsonl_count(path)
 
 
 def _sha256_or_none(path: Path) -> str | None:

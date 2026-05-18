@@ -5,6 +5,115 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 5 Graph Accuracy, Provenance Completeness, And Knowledge-Graph Gating
+
+This implementation slice completes the Phase 5 semantic graph rebase for the
+canonical source register while keeping the inherited placeholder-artifact
+boundary explicit.
+
+- scope:
+  `config/authority_ontology_eval_v1.json`,
+  `config/graph_accuracy_eval_v1.json`,
+  `config/graph_health_contract_v1.json`,
+  `config/nepa_3d_graph_contract_v1.json`,
+  `src/usfs_r1_ea_sources/authority_ontology_validate.py`,
+  `src/usfs_r1_ea_sources/authority_relationship_eval.py`,
+  `src/usfs_r1_ea_sources/citation_alias_eval.py`,
+  `src/usfs_r1_ea_sources/cli_derived.py`,
+  `src/usfs_r1_ea_sources/graph_accuracy_eval.py`,
+  `src/usfs_r1_ea_sources/graph_health_eval.py`,
+  `src/usfs_r1_ea_sources/nepa_3d_graph_contract.py`,
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`,
+  `src/usfs_r1_ea_sources/phase_eval.py`,
+  `tests/fixtures/nepa_3d_graph/minimal_review_graph.json`,
+  `tests/fixtures/nepa_3d_graph/minimal_source_set_graph.json`,
+  `tests/test_cli.py`,
+  `tests/test_graph_accuracy_eval.py`,
+  `README.md`,
+  `docs/architecture_contract.toml`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- resolved boundary:
+  graph correctness is no longer inferred from graph build success alone.
+  Canonical source-set knowledge graphs now carry first-class authority
+  documents, authority sections, jurisdiction scopes, authority paths, and
+  justification paths, and the semantic graph lane has dedicated ontology,
+  relationship, alias, health, and accuracy gates.
+- source-set semantic truth:
+  `nepa-knowledge-graph-export` now allows canonical `source_register_v1`
+  source-set graphs to validate from catalog, currentness, and proving-context
+  inputs even when document evidence-graph files are absent because the active
+  proving slice still contains governed placeholder artifacts. Partial
+  evidence-graph input presence still fails closed.
+- live gate artifacts:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library`
+  now passes for `source-set-9dcf819bc4cca486` at
+  `source_library/derived/source-set-9dcf819bc4cca486/knowledge_graph/nepa_3d_graph_summary.json`
+  with `147` nodes, `193` edges, `26` source records, `26` authority
+  documents, `14` authority sections, `5` jurisdiction scopes, `7`
+  authority paths, `7` justification paths, and `validation_passed=true`;
+  `authority-ontology-validate` passes with `graph_scope=source_set` and
+  `required_graph_node_type_count=8`;
+  `authority-relationship-eval` passes with `relationship_count=7`;
+  `citation-alias-eval` passes with `alias_row_count=26` and
+  `blocked_alias_row_count=8`;
+  `graph-health-eval` passes with `orphan_node_count=0` and
+  `disconnected_component_count=1`; and
+  `graph-accuracy-eval` passes with `authority_path_count=7`,
+  `justification_path_count=7`, and `relationship_type_count=7`.
+- phase-eval truth:
+  root `phase-eval` now records separate `authority_ontology`,
+  `authority_relationships`, `citation_aliases`, `graph_health`, and
+  `graph_accuracy` phases for canonical source-set graphs. All five now pass
+  on `source-set-9dcf819bc4cca486`, but overall root `phase-eval` remains
+  non-reviewer-ready because extraction, retrieval, evidence-graph,
+  claim-extraction, rule-claim binding, and downstream review lanes are still
+  blocked by the inherited placeholder-artifact proving state.
+- explicit residual:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources evidence-graph-build --output-dir source_library`
+  still exits non-green for `source-set-9dcf819bc4cca486` with `chunk_count=0`,
+  `validation_passed=false`, `reviewer_ready=false`, and only the synthetic
+  `SourceSet` node. This Phase 5 closeout does not weaken that gate or claim
+  reviewer-ready evidence/path coverage.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources authority-ontology-validate --output-dir source_library`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources authority-relationship-eval --output-dir source_library`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources citation-alias-eval --output-dir source_library`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources graph-health-eval --output-dir source_library`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources graph-accuracy-eval --output-dir source_library`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-9dcf819bc4cca486`
+  confirmed the five new semantic phases as passed while the inherited
+  extraction, retrieval, evidence-graph, claim-extraction, rule-claim binding,
+  and downstream review blockers remained explicit;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_proving.py tests/test_authority_currentness.py tests/test_evidence_graph.py tests/test_graph_accuracy_eval.py tests/test_phase_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_nepa_3d_graph_contract.py tests/test_cli.py tests/test_architecture_contract.py -q`
+  passed with `105` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`
+  passed;
+  `PYTHONPATH=src python -m compileall src`
+  passed;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  Phase 6 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is now the
+  next executable packet: applicability, rule-pack, and legally accurate
+  review on the new corpus.
+- routing note:
+  the Phase 4 “next executable packet is Phase 5” line below is historical
+  only after this closeout.
+
 ## Canonical Source Register Refoundation Phase 4 Extraction Fidelity And Verified Source Admission
 
 This implementation slice completes the Phase 4 rebase of extraction planning,

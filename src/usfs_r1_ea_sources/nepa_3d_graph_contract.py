@@ -15,6 +15,9 @@ REQUIRED_NODE_TYPES = {
     "source_set",
     "review",
     "authority_family",
+    "authority_document",
+    "authority_section",
+    "jurisdiction_scope",
     "source_record",
     "artifact",
     "chunk",
@@ -27,12 +30,17 @@ REQUIRED_NODE_TYPES = {
     "forest_unit",
     "forest_plan",
     "forest_plan_component",
+    "authority_path",
+    "justification_path",
     "readiness_blocker",
     "graph_lens",
 }
 REQUIRED_EDGE_TYPES = {
     "CONTAINS_AUTHORITY_FAMILY",
     "HAS_SOURCE_RECORD",
+    "CITES_AUTHORITY_DOCUMENT",
+    "HAS_AUTHORITY_SECTION",
+    "HAS_JURISDICTION_SCOPE",
     "HAS_ARTIFACT",
     "HAS_CHUNK",
     "HAS_EVIDENCE_SPAN",
@@ -52,6 +60,10 @@ REQUIRED_EDGE_TYPES = {
     "BELONGS_TO_FOREST_UNIT",
     "HAS_FOREST_PLAN",
     "HAS_FOREST_COMPONENT",
+    "HAS_AUTHORITY_PATH",
+    "PATH_TARGETS",
+    "JUSTIFIED_BY",
+    "SUPPORTS_JUSTIFICATION_PATH",
     "HAS_READINESS_BLOCKER",
     "DISPLAYED_IN_LENS",
 }
@@ -156,6 +168,7 @@ REQUIRED_LENSES = {
     "forest_plan",
     "package_applicability",
     "evidence_path",
+    "semantic_relationships",
     "readiness_blockers",
 }
 

@@ -44,9 +44,17 @@ Current checkpoint on 2026-05-18:
   as noisy parser failures, verified extraction admission can resolve against
   manifest selectors, and the upstream extraction direct-eval lane now spans
   `11` canonical category families.
+- Phase 5 graph accuracy, provenance completeness, and knowledge-graph gating
+  is now live: `nepa-knowledge-graph-export` now emits canonical authority
+  documents, sections, scopes, authority paths, and justification paths for
+  proving source set `source-set-9dcf819bc4cca486`, and the five semantic eval
+  gates now pass on that exported graph. Root `phase-eval` still remains
+  non-reviewer-ready because inherited Phase 4 placeholder artifacts continue
+  to block extraction, retrieval, evidence-graph validation, and downstream
+  reviewer lanes.
 - No full-register canonical ingestion may bypass the now-live Phase 1.5
-  proving gate, and the next implementation boundary is now Phase 5: graph
-  accuracy, provenance completeness, and knowledge-graph gating.
+  proving gate, and the next implementation boundary is now Phase 6:
+  applicability, rule-pack, and legally accurate review on the new corpus.
 
 Owner context: This is a fresh standalone architecture and delivery plan for
 refounding the system around
@@ -1127,6 +1135,17 @@ Outcome label: resolved
 Purpose: turn graph correctness into a first-class evaluated contract rather
 than an inferred property of a successful graph build.
 
+Implementation status on 2026-05-18: live on
+`source_library/derived/source-set-9dcf819bc4cca486/knowledge_graph/`. The
+exported canonical source-set graph now passes `nepa-knowledge-graph-export`,
+`authority-ontology-validate`, `authority-relationship-eval`,
+`citation-alias-eval`, `graph-health-eval`, and `graph-accuracy-eval`, and
+`phase-eval` records the five new semantic phases as passed. The inherited
+placeholder-artifact proving slice still keeps extraction, retrieval,
+evidence-graph, claim-extraction, rule-claim binding, and downstream review
+lanes blocked, so this phase does not widen reviewer-ready or promotion-ready
+claims beyond the semantic graph boundary.
+
 Implementation tasks:
 
 1. Define a tracked authority ontology and semantic relationship contract
@@ -1175,6 +1194,11 @@ Acceptance signals:
 - Reviewer-visible justification paths exist from controlling or interpretive
   authority to review finding.
 - Controlled graph regressions fail before promotion.
+
+Closeout note for the active proving slice: `evidence-graph-build` and overall
+root `phase-eval` may remain blocked by inherited Phase 4 placeholder-artifact
+state. Phase 5 closes only when the source-set semantic graph export and the
+five semantic eval families pass without weakening those downstream gates.
 
 Required verification gates:
 

@@ -3,6 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 import argparse
 
+from .authority_ontology_validate import DEFAULT_AUTHORITY_ONTOLOGY_EVAL_PATH
+from .authority_ontology_validate import DEFAULT_AUTHORITY_ONTOLOGY_PATH
+from .authority_ontology_validate import run_authority_ontology_validate
 from .authority_relationship_eval import DEFAULT_AUTHORITY_RELATIONSHIP_EVAL_PATH
 from .authority_relationship_eval import run_authority_relationship_eval
 from .authority_currentness import DEFAULT_AUTHORITY_INVENTORY_PATH
@@ -56,6 +59,7 @@ DERIVED_COMMANDS = {
     "extraction-accuracy-audit",
     "source-register-proving-slice",
     "authority-currentness",
+    "authority-ontology-validate",
     "authority-relationship-eval",
     "citation-alias-eval",
     "graph-health-eval",
@@ -185,6 +189,30 @@ def register_derived_commands(subparsers: argparse._SubParsersAction) -> None:
     authority_currentness.add_argument("--catalog-path", type=Path)
     authority_currentness.add_argument("--source-set-manifest-path", type=Path)
     authority_currentness.add_argument("--output-path", type=Path)
+
+    authority_ontology = subparsers.add_parser(
+        "authority-ontology-validate",
+        help="Validate authority ontology coverage and canonical knowledge-graph representation.",
+    )
+    authority_ontology.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    authority_ontology.add_argument("--source-set-id")
+    authority_ontology.add_argument(
+        "--ontology-path",
+        default=DEFAULT_AUTHORITY_ONTOLOGY_PATH,
+        type=Path,
+    )
+    authority_ontology.add_argument(
+        "--eval-path",
+        default=DEFAULT_AUTHORITY_ONTOLOGY_EVAL_PATH,
+        type=Path,
+    )
+    authority_ontology.add_argument(
+        "--graph-contract-path",
+        default=DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH,
+        type=Path,
+    )
+    authority_ontology.add_argument("--graph-path", type=Path)
+    authority_ontology.add_argument("--output-path", type=Path)
 
     authority_relationship_eval = subparsers.add_parser(
         "authority-relationship-eval",
@@ -463,6 +491,19 @@ def handle_derived_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         )
         print_summary(result.summary)
         return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "authority-ontology-validate":
+        result = run_authority_ontology_validate(
+            output_dir=args.output_dir,
+            source_set_id=args.source_set_id,
+            ontology_path=args.ontology_path,
+            eval_path=args.eval_path,
+            graph_contract_path=args.graph_contract_path,
+            graph_path=args.graph_path,
+            output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
 
     if args.command == "authority-relationship-eval":
         result = run_authority_relationship_eval(

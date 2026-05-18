@@ -23,17 +23,25 @@ Canonical source-register refoundation status on 2026-05-18:
   Active `source_register_v1` runs reject `--r1-forest-plan-register`, and
   canonical rows must carry their active official URL directly in the workbook.
 - The repo now ships `source-register-validate`, `source-register-diff`,
-  `source-register-proving-slice`, `authority-relationship-eval`,
-  `citation-alias-eval`, `graph-health-eval`, and `graph-accuracy-eval` so the
-  frozen final workbook can be validated, diffed, and proven on a governed
-  mixed slice before any bulk canonical ingestion begins.
+  `source-register-proving-slice`, `authority-ontology-validate`,
+  `authority-relationship-eval`, `citation-alias-eval`, `graph-health-eval`,
+  and `graph-accuracy-eval` so the frozen final workbook can be validated,
+  diffed, and proven on a governed mixed slice before any bulk canonical
+  ingestion begins.
 - `config/source_register_proving_slice_v1.json` now defines the active Phase
   1.5 proving packet: `26` load-ready rows plus `5` deferred queue rows across
   statutes, regulations, directives, forest-plan materials, direct-document
   parsers, superseded lineage, and queue placeholder classes.
-- The Phase 2 capture/catalog cutover is now implemented, but that does not
-  imply a full downloaded canonical corpus yet. Bulk canonical ingestion still
-  depends on later currentness, extraction, and downstream rebase packets.
+- The Phase 5 semantic graph lane is now live on proving source set
+  `source-set-9dcf819bc4cca486`: `nepa-knowledge-graph-export`,
+  `authority-ontology-validate`, `authority-relationship-eval`,
+  `citation-alias-eval`, `graph-health-eval`, and `graph-accuracy-eval` all
+  pass against a `147`-node / `193`-edge canonical source-set graph.
+- Root `phase-eval` remains intentionally non-reviewer-ready for that proving
+  slice because Phase 4 placeholder artifacts still block extraction,
+  retrieval, evidence-graph validation, and downstream reviewer lanes. This
+  packet closes the semantic graph boundary only; it does not claim reviewer-ready
+  evidence or downstream review promotion.
 
 Active canonical source-register contract:
 
@@ -570,6 +578,11 @@ Generated outputs are written under `source_library/` and ignored by git:
   - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_edges.jsonl`
   - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_summary.json`
   - `source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_validation.json`
+  - `source_library/derived/<source_set_id>/knowledge_graph/authority_ontology_validation_report.json`
+  - `source_library/derived/<source_set_id>/knowledge_graph/authority_relationship_eval_report.json`
+  - `source_library/derived/<source_set_id>/knowledge_graph/citation_alias_eval_report.json`
+  - `source_library/derived/<source_set_id>/knowledge_graph/graph_health_eval_report.json`
+  - `source_library/derived/<source_set_id>/knowledge_graph/graph_accuracy_eval_report.json`
   - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph.json`
   - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_nodes.jsonl`
   - `source_library/reviews/<review_id>/knowledge_graph/nepa_3d_graph_edges.jsonl`
@@ -681,7 +694,12 @@ directly from the current `source_register_v1` catalog plus the workbook queue. 
 command builds a derived text/chunk layer from the catalog. The
 `retrieval-build` command turns those chunks into a queryable local evidence index. The
 `evidence-graph-build` command promotes document, chunk, evidence-span, topic, parser, and artifact
-links into a local graph artifact. The `claim-extract` command extracts deterministic source-text
+links into a local graph artifact. Under `source_register_v1`, the
+`nepa-knowledge-graph-export` command can now also emit a canonical source-set
+semantic graph directly from catalog, currentness, and proving-context inputs
+even when document evidence-graph artifacts remain absent on a placeholder-only
+proving slice; that source-set semantic graph does not by itself imply
+reviewer-ready extraction or retrieval state. The `claim-extract` command extracts deterministic source-text
 claims and entities with exact offsets and graph bindings. The `rule-claim-link` command binds
 versioned compliance rules to validated source claims before compliance findings rely on those
 authorities. The `ea-review` command runs deterministic package checklist reviews against
