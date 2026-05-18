@@ -5,6 +5,56 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Workbook Repair Stop Condition
+
+This docs-only checkpoint closes the next truthful Milestone 1 pass after the
+`ecos.fws.gov` transport repair and records why Milestone 1 cannot yet resolve.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- implementation slice:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  and the routed plan file.
+- completed blocker evidence:
+  `phase2-canonical-preflight-usda-replay-20260518` now proves the
+  `www.usda.gov` blocker family is `15` rows, not `5`. All `15` rows finalized
+  as `timeout`, covering the six USDA policy pages
+  `USDA-008` through `USDA-013` and the nine `LEX-USFS-*` static
+  `guidance-documents` PDFs on `www.usda.gov`.
+- expanded blocker evidence:
+  a broader replay under
+  `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
+  was intentionally stopped after `105` finalized rows once a second blocker
+  class surfaced on `www.fs.usda.gov`. The partial event log already records
+  timeout rows for `USFS-024`, `USFS-034`, `USFS-008`, `USFS-016`, and
+  `USFS-033`, and the active workbook currently contains `38`
+  `www.fs.usda.gov/about-agency/regulations-policies/manual|handbook/...`
+  wrapper URLs in that repair class.
+- preserved explicit blocker rows:
+  the same partial broader replay still records `not_found` rows
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029`.
+- stop condition:
+  Milestone 1 is still not resolved. Its workbook-repair stop condition is now
+  explicit: the remaining work is larger than a replay-only checkpoint can
+  close safely, so the next truthful slice is governed workbook URL repair for
+  the `15` `www.usda.gov` rows and the `38` Forest Service directive-wrapper
+  rows, then a fresh full-master preflight replay.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --host www.usda.gov --run-id phase2-canonical-preflight-usda-replay-20260518`
+  completed with `0/15` `preflight_ok` and `15/15` `timeout`;
+  the broader replay `phase2-canonical-preflight-full-complete-20260518` was
+  intentionally stopped after the new `www.fs.usda.gov` blocker class surfaced;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  do not start with another blind full-master preflight replay. Start with a
+  governed workbook URL repair packet for the two blocker families named
+  above.
+
 ## Canonical Source Register Import Completion Milestone 1 Ecos Transport Checkpoint
 
 This implementation slice starts Milestone 1 and closes the `ecos.fws.gov`

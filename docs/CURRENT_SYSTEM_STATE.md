@@ -64,7 +64,7 @@ Latest closeout on 2026-05-18:
   replay boundary, not the live `source_library/catalog/` import baseline
   recorded above.
 
-## Canonical Source Register Import Completion Milestone 1 Ecos Transport Checkpoint
+## Canonical Source Register Import Completion Milestone 1 Workbook Repair Stop Condition
 
 Latest checkpoint on 2026-05-18:
 
@@ -83,13 +83,28 @@ Latest checkpoint on 2026-05-18:
   `source_library/runs/phase2-canonical-preflight-ecos-replay-20260518/summary.json`
   now passes `27/27` `preflight_ok` with `failed_count=0` across the full
   `ecos.fws.gov` canonical-master host set.
-- The next live blocker family is `www.usda.gov`, not `ecos.fws.gov`. Direct
-  probes in this environment still time out for
-  `USDA-008`, `USDA-009`, `USDA-010`, `USDA-012`, and `USDA-013` under both the
-  Python transport and verified `curl`.
-- A broader full-master Milestone 1 replay was intentionally not closed after
-  those USDA timeouts surfaced. The next truthful slice is USDA host triage or
-  blocker routing, then a fresh full-master preflight replay.
+- Dedicated host replay
+  `source_library/runs/phase2-canonical-preflight-usda-replay-20260518/summary.json`
+  now proves the `www.usda.gov` blocker family is `15` rows, not `5`:
+  `USDA-008`, `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, `USDA-013`,
+  `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`, `LEX-USFS-008`,
+  `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`, `LEX-USFS-016`, and
+  `LEX-USFS-017` all finalized as `timeout`.
+- A broader replay under
+  `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
+  was intentionally stopped after `105` finalized rows once a second blocker
+  family surfaced on `www.fs.usda.gov`. The partial event log already records
+  timeout rows for `USFS-024`, `USFS-034`, `USFS-008`, `USFS-016`, and
+  `USFS-033`, and the active workbook currently contains `38`
+  `www.fs.usda.gov/about-agency/regulations-policies/manual|handbook/...`
+  wrapper URLs that belong to the same repair class.
+- The partial broader replay also preserved the earlier explicit `not_found`
+  blocker set:
+  `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029`.
+- Milestone 1 is still not resolved. Its stop condition is now explicit: the
+  remaining work is a governed workbook URL repair packet for the `15`
+  `www.usda.gov` rows plus the `38` Forest Service directive-wrapper rows, then
+  a fresh full-master preflight replay.
 
 ## Canonical Source Register Phase 8 Aggregate Readiness And Legacy Contract Retirement
 

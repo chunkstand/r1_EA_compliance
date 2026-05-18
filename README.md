@@ -99,12 +99,25 @@ Local active import baseline on 2026-05-18:
   routes that host through verified `curl` transport, and
   `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
   `preflight_ok` with `failed_count=0`.
-- The next canonical-master preflight blocker family is currently five
-  `www.usda.gov` rows that time out under both the Python transport and
-  verified `curl` transport:
-  `USDA-008`, `USDA-009`, `USDA-010`, `USDA-012`, and `USDA-013`.
-  Those rows must be repaired or explicitly retained as blockers before the
-  repo can truthfully close the full-master Milestone 1 replay.
+- Dedicated host replay `phase2-canonical-preflight-usda-replay-20260518`
+  now proves the `www.usda.gov` blocker family is `15` rows, not `5`:
+  `USDA-008`, `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, `USDA-013`,
+  and `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`, `LEX-USFS-008`,
+  `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`, `LEX-USFS-016`,
+  `LEX-USFS-017` all timed out under the Python transport.
+- A broader replay under
+  `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
+  was intentionally stopped after `105` finalized rows once a second blocker
+  family surfaced on `www.fs.usda.gov`. The partial event log already records
+  `5` timeout rows on directive wrapper pages
+  (`USFS-024`, `USFS-034`, `USFS-008`, `USFS-016`, `USFS-033`) while the live
+  workbook currently contains `38` rows on
+  `www.fs.usda.gov/about-agency/regulations-policies/manual|handbook/...`
+  wrapper URLs.
+- Milestone 1 has therefore reached its workbook-repair stop condition. The
+  next truthful slice is governed workbook URL repair for the `15`
+  `www.usda.gov` rows and the `38` Forest Service directive-wrapper rows, then
+  a fresh full-master canonical preflight replay.
 - The local non-strict `promotion-suite` artifact remains green only for the
   current-promotion lane: it reports `current_promotion_ready=true` and
   `promotion_ready=true`, but it also currently reports

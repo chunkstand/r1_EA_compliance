@@ -1,7 +1,7 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 in progress)
+Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 paused at workbook-repair stop condition)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
 
@@ -42,7 +42,7 @@ Milestone 0 closeout summary on 2026-05-18:
 - With the live baseline now locked, the next executable slice in this packet
   is Milestone 1: canonical preflight and fetch-failure closure.
 
-Milestone 1 checkpoint on 2026-05-18:
+Milestone 1 stop-condition checkpoint on 2026-05-18:
 
 - The first Milestone 1 code/config slice is now live: `ecos.fws.gov` uses
   host-level verified `curl` transport through `config/downloader.toml`,
@@ -55,11 +55,27 @@ Milestone 1 checkpoint on 2026-05-18:
   `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
   `preflight_ok` with `failed_count=0` across the full `ecos.fws.gov`
   canonical-master host set.
-- The next blocker family is `www.usda.gov`, not `ecos.fws.gov`. Direct probes
-  still time out for `USDA-008`, `USDA-009`, `USDA-010`, `USDA-012`, and
-  `USDA-013` under both the Python transport and verified `curl`.
-- Milestone 1 therefore remains in progress. The next truthful slice is USDA
-  host triage or blocker routing, then a fresh full-master preflight replay.
+- Dedicated host replay `phase2-canonical-preflight-usda-replay-20260518`
+  proves the `www.usda.gov` blocker family is `15` rows, not `5`:
+  `USDA-008`, `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, `USDA-013`,
+  `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`, `LEX-USFS-008`,
+  `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`, `LEX-USFS-016`, and
+  `LEX-USFS-017` all finalized as `timeout`.
+- A broader replay under
+  `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
+  was intentionally stopped after `105` finalized rows once a second blocker
+  class surfaced on `www.fs.usda.gov`. The partial event log records timeout
+  rows for `USFS-024`, `USFS-034`, `USFS-008`, `USFS-016`, and `USFS-033`,
+  and the active workbook currently contains `38`
+  `www.fs.usda.gov/about-agency/regulations-policies/manual|handbook/...`
+  wrapper URLs that belong to the same repair class.
+- The same partial broader replay preserved explicit `not_found` blocker rows
+  for `FED-042`, `FED-041`, `FED-039`, `FED-043`, and `FED-029`.
+- Milestone 1 stop condition is now reached. The remaining work is a governed
+  workbook URL repair packet larger than this checkpoint can close safely, not
+  another blind preflight rerun. The next truthful slice is workbook URL
+  repair for the `15` `www.usda.gov` rows and the `38` Forest Service
+  directive-wrapper rows, then a fresh full-master preflight replay.
 
 ## Dependency And Live Refresh Rule
 
