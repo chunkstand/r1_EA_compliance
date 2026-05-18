@@ -9,7 +9,11 @@ import csv
 
 from openpyxl import load_workbook
 
-from .config import WorkbookConfig
+from .config import (
+    LEGACY_WORKBOOK_LOADER_CONTRACT,
+    SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT,
+    WorkbookConfig,
+)
 from .overrides import (
     apply_url_overrides,
     load_url_overrides,
@@ -117,6 +121,22 @@ def load_excluded_urls(workbook_path: Path, config: WorkbookConfig) -> set[str]:
 
 
 def load_canonical_sources(workbook_path: Path, config: WorkbookConfig) -> list[WorkbookSource]:
+    if config.loader_contract == LEGACY_WORKBOOK_LOADER_CONTRACT:
+        sources = load_legacy_canonical_sources(workbook_path, config)
+    elif config.loader_contract == SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT:
+        from .source_register import load_source_register_workbook_sources
+
+        sources = load_source_register_workbook_sources(workbook_path)
+    else:
+        raise ValueError(f"Unsupported workbook loader contract: {config.loader_contract!r}")
+
+    overrides = load_url_overrides(config.overrides_path)
+    sources = apply_url_overrides(sources, overrides)
+    validate_overrides_do_not_target_exclusions(sources, load_excluded_urls(workbook_path, config))
+    return sources
+
+
+def load_legacy_canonical_sources(workbook_path: Path, config: WorkbookConfig) -> list[WorkbookSource]:
     workbook = load_workbook(workbook_path, read_only=False, data_only=True)
     sources: list[WorkbookSource] = []
 
@@ -129,10 +149,6 @@ def load_canonical_sources(workbook_path: Path, config: WorkbookConfig) -> list[
             sources.extend(_load_forest_plans(sheet, headers, config.header_row))
         else:
             raise ValueError(f"Unsupported canonical sheet: {sheet_name}")
-
-    overrides = load_url_overrides(config.overrides_path)
-    sources = apply_url_overrides(sources, overrides)
-    validate_overrides_do_not_target_exclusions(sources, load_excluded_urls(workbook_path, config))
     return sources
 
 

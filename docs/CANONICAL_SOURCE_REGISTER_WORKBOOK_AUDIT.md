@@ -185,6 +185,36 @@ The packet is sufficient to prevent hidden manual judgment about:
 - which parser classes are currently admitted
 - which semantic seams must stay outside raw workbook rows
 
+## Phase 1 Foundation Loader Status
+
+The repo now also ships a canonical loader path for this packet:
+
+- `WorkbookConfig.loader_contract` is now explicit, with active runtime config
+  still pinned to `legacy_v0`
+- `load_canonical_sources(...)` now dispatches by loader contract instead of
+  assuming the legacy workbook is the only workbook shape
+- `load_source_register_rows(...)` now emits a normalized canonical row object
+  carrying:
+  `authority_document_id`,
+  `authority_document_class_id`,
+  `authority_section_id`,
+  `jurisdiction_scope_id`,
+  `source_authority_link_id`,
+  `direct_file_readiness_class`,
+  `parser_route_id`,
+  `parser_admission_class`, and
+  `expected_parser`
+- the canonical loader rejects blocked alias terms without enough identity
+  context and uses the staged alias/scope contracts as explicit seams instead
+  of hiding those decisions in the old workbook parser
+- `load_source_register_workbook_sources(...)` provides the narrow compatibility
+  seam back to `WorkbookSource` so downstream capture and catalog callers can
+  migrate later without a broad rewrite in the same checkpoint
+
+This closes the Phase 1 foundation boundary without starting Phase 2 cutover.
+The active runtime remains legacy until the proving slice and capture/catalog
+packet are ready.
+
 ## Verification
 
 The current audit is backed by:

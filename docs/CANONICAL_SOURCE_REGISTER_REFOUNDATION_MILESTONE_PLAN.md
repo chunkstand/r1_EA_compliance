@@ -12,9 +12,15 @@ Current checkpoint on 2026-05-18:
   contracts are frozen in `config/`, the direct-file-readiness and
   parser-admission contracts are explicit, and the workbook audit now lives in
   `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`.
-- The runtime is still on the legacy workbook contract. Phase 1 foundation
-  loader replacement remains the next implementation boundary before any
-  canonical capture/catalog cutover can begin.
+- Phase 1 foundation loader replacement is now live: the workbook loader
+  contract is explicit, the canonical source-register loader can read
+  `Document_Register_Master` into normalized canonical rows with semantic
+  identity and parser-routing seams, and the compatibility adapter back to
+  `WorkbookSource` is in place for later runtime migration.
+- The runtime is still on the legacy workbook contract because
+  `config/downloader.toml` remains pinned to `loader_contract = "legacy_v0"`.
+  Phase 1.5 proving-slice work is now the next implementation boundary before
+  any canonical capture/catalog cutover can begin.
 
 Owner context: This is a fresh standalone architecture and delivery plan for
 refounding the system around

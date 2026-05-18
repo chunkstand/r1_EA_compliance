@@ -24,6 +24,46 @@ historical lane notes when they disagree. In particular, older references to Sou
 typed-blocked or to `expansion_ready=false` are now historical only after the 2026-05-15
 Milestone 5 closeout commit `94c8915`.
 
+## Canonical Source Register Phase 1 Loader Refactor
+
+Latest closeout on 2026-05-18:
+
+- `WorkbookConfig.loader_contract` is now explicit, and the active runtime
+  remains pinned to `legacy_v0` in `config/downloader.toml`.
+- `load_canonical_sources(...)` in `src/usfs_r1_ea_sources/workbook.py` now
+  dispatches between the legacy workbook parser and the new canonical
+  source-register loader instead of assuming the old workbook contract is the
+  only foundation path.
+- `load_source_register_rows(...)` in
+  `src/usfs_r1_ea_sources/source_register.py` now emits normalized canonical
+  rows from `Document_Register_Master` only. Queue and audit sheets remain
+  metadata surfaces and do not leak into downstream source-row emission.
+- The normalized canonical row surface now carries explicit identity and routing
+  seams:
+  `authority_document_id`,
+  `authority_document_class_id`,
+  `authority_section_id`,
+  `jurisdiction_scope_id`,
+  `source_authority_link_id`,
+  `direct_file_readiness_class`,
+  `parser_route_id`,
+  `parser_admission_class`, and
+  `expected_parser`.
+- The canonical loader now uses the staged alias and scope contracts as explicit
+  seams and fails closed on blocked alias terms that do not have enough context
+  to resolve a stable authority identity.
+- The compatibility seam remains narrow:
+  `load_source_register_workbook_sources(...)` adapts normalized canonical rows
+  back to `WorkbookSource`, while the active runtime still uses the legacy
+  workbook path until a later cutover packet changes the config.
+- Legacy compatibility verification remained green after the refactor, and the
+  stale dry-run expectation for the promoted forest-plan source-delta lane is
+  now aligned to the live `160`-row, `1`-gap register baseline.
+- The next routed implementation packet is Phase 1.5 in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`:
+  run the mixed proving slice before any canonical capture or catalog cutover
+  begins.
+
 ## Canonical Source Register Phase 0 Freeze
 
 Latest closeout on 2026-05-18:
@@ -65,9 +105,11 @@ Latest closeout on 2026-05-18:
   full-canonical `phase-eval` artifact remains inherited-red at `9/12` with
   `reviewer_ready=false`.
 - The next routed implementation packet is Phase 1 in
-  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`:
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` was Phase 1:
   replace the legacy workbook loader with a canonical register loader before
-  any capture or catalog cutover begins.
+  any capture or catalog cutover begins. That boundary is now implemented; see
+  the Phase 1 section immediately above for the live loader split and current
+  next routing.
 
 ## Compliance Review Test Boundary
 

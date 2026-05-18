@@ -6,10 +6,13 @@ import tomllib
 
 
 DEFAULT_CONFIG_PATH = Path("config/downloader.toml")
+LEGACY_WORKBOOK_LOADER_CONTRACT = "legacy_v0"
+SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT = "source_register_v1"
 
 
 @dataclass(frozen=True)
 class WorkbookConfig:
+    loader_contract: str
     canonical_sheets: tuple[str, ...]
     exclusion_sheet: str
     header_row: int
@@ -71,6 +74,9 @@ def load_config(path: Path | str = DEFAULT_CONFIG_PATH) -> DownloaderConfig:
 
     return DownloaderConfig(
         workbook=WorkbookConfig(
+            loader_contract=str(
+                workbook.get("loader_contract", LEGACY_WORKBOOK_LOADER_CONTRACT)
+            ),
             canonical_sheets=tuple(workbook["canonical_sheets"]),
             exclusion_sheet=workbook["exclusion_sheet"],
             header_row=int(workbook["header_row"]),

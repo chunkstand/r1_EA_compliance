@@ -11,10 +11,14 @@ review artifacts on top of that corpus.
 Canonical source-register refoundation status on 2026-05-18:
 
 - Active runtime workbook for `dry-run`, `preflight`, `download`, `batch-download`, and
-  `catalog-build` remains `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`.
+  `catalog-build` remains `usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx`
+  because `config/downloader.toml` is still pinned to `loader_contract = "legacy_v0"`.
 - The replacement workbook `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` is now
   staged in-repo and frozen through the Phase 0 contract packet in
   `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`.
+- The foundation layer can now also read the staged replacement workbook through
+  `loader_contract = "source_register_v1"`, which emits normalized canonical rows plus a
+  `WorkbookSource` compatibility adapter without admitting queue or audit sheets as source rows.
 - The repo now ships `source-register-validate` and `source-register-diff` so the final workbook,
   sheet contract, vocabulary contract, and migration baseline can be checked before the loader or
   capture runtime is switched over.

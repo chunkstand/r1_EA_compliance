@@ -107,16 +107,16 @@ class DryRunTests(unittest.TestCase):
                 if line.strip()
             ]
             self.assertEqual(result.summary["workbook_rows"], 190)
-            self.assertEqual(result.summary["canonical_rows"], 349)
-            self.assertEqual(result.summary["supplemental_source_count"], 159)
-            self.assertEqual(result.summary["filtered_rows"], 159)
-            self.assertEqual(result.summary["planned_count"], 159)
+            self.assertEqual(result.summary["canonical_rows"], 350)
+            self.assertEqual(result.summary["supplemental_source_count"], 160)
+            self.assertEqual(result.summary["filtered_rows"], 160)
+            self.assertEqual(result.summary["planned_count"], 160)
             self.assertEqual(result.summary["duplicate_url_count"], 0)
             self.assertTrue(result.summary["validation_passed"])
-            self.assertEqual(result.summary["source_delta_input"]["gap_count"], 2)
+            self.assertEqual(result.summary["source_delta_input"]["gap_count"], 1)
             self.assertEqual(
                 result.summary["source_delta_input"]["skipped_gap_source_record_ids"],
-                ["R1PLAN-kootenai-nf-18", "R1PLAN-nez-perce-clearwater-nfs-18"],
+                ["R1PLAN-kootenai-nf-18"],
             )
             self.assertEqual({record["source_record_id"] for record in records}, source_delta_ids)
             self.assertTrue(

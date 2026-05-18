@@ -5,6 +5,68 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Refoundation Phase 1 Loader Refactor
+
+This implementation slice completes the foundation-loader half of the
+canonical source-register refoundation without switching the active runtime to
+the new workbook yet.
+
+- scope:
+  `config/downloader.toml`,
+  `src/usfs_r1_ea_sources/config.py`,
+  `src/usfs_r1_ea_sources/workbook.py`,
+  `src/usfs_r1_ea_sources/source_register.py`,
+  `tests/test_source_register_loader.py`,
+  `tests/test_dry_run.py`,
+  `README.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_WORKBOOK_AUDIT.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- resolved boundary:
+  the foundation layer no longer assumes the legacy workbook is the only source
+  contract. `WorkbookConfig.loader_contract` is explicit, the active runtime
+  remains pinned to `legacy_v0`, and the new `source_register_v1` path can read
+  `Document_Register_Master` into normalized canonical rows with explicit
+  identity and routing seams before adapting them back to `WorkbookSource`.
+- canonical-loader truth:
+  `load_source_register_rows(...)` now exposes
+  `authority_document_id`,
+  `authority_document_class_id`,
+  `authority_section_id`,
+  `jurisdiction_scope_id`,
+  `source_authority_link_id`,
+  `direct_file_readiness_class`,
+  `parser_route_id`,
+  `parser_admission_class`, and
+  `expected_parser` on canonical rows.
+  Queue and audit sheets remain metadata-only and do not leak into source-row
+  emission.
+- identity gate:
+  the canonical loader now uses the staged alias and scope registers as explicit
+  seams and fails closed on blocked alias terms that do not have enough context
+  to resolve a stable authority identity.
+- compatibility truth:
+  active legacy loader behavior remains green after the dispatch refactor, and
+  the stale dry-run test expectations for the promoted forest-plan source-delta
+  lane are now aligned to the live `160`-row, `1`-gap register baseline.
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_cli.py tests/test_architecture_contract.py -q`
+  passed with `66` tests;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_dry_run.py tests/test_r1_forest_plan_document_register.py tests/test_catalog.py -q`
+  passed with `19` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/source_register.py src/usfs_r1_ea_sources/workbook.py src/usfs_r1_ea_sources/config.py tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_cli.py`
+  passed;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  passed;
+  `PYTHONPATH=src python -m compileall src` passed; and
+  `git diff --check` passed.
+- next routing:
+  Phase 1.5 in `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`
+  is now the next executable packet: prove a deliberately mixed canonical slice
+  end to end before the runtime switches `dry-run`, `preflight`, `download`,
+  `batch-download`, `validate-run`, or `catalog-build` to the new workbook.
+
 ## Canonical Source Register Refoundation Phase 0 Workbook Freeze
 
 This implementation slice begins the canonical workbook refoundation with a
