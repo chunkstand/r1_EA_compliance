@@ -119,21 +119,25 @@ Historical broader capture baseline:
 
 Historical documented full-corpus promotion baseline:
 
+- Every `active`, `current`, and readiness-green phrase in this preserved
+  section refers to the historical `source-set-5e65d845ce77e1a0`
+  full-canonical replay boundary, not the active local
+  `source_library/catalog/` baseline after the Milestone 0 import rebaseline.
 - The last documented full-canonical catalog baseline for this repo was
   `source-set-5e65d845ce77e1a0`, but that source set is not the active local
   `source_library/catalog/` baseline in this checkout after the Milestone 0
   import rebaseline.
-- The live active catalog was rebuilt from
+- That historical full-canonical catalog was rebuilt from
   `corpus-update-2026-05-01-cg-support-batches` plus
   `r1-forest-plan-source-delta-capture-20260510-refresh-batches` under the current working tree.
-- Active catalog counts are `350` source rows, `319` unique artifacts, `332` unique URLs,
+- Historical full-canonical catalog counts are `350` source rows, `319` unique artifacts, `332` unique URLs,
   `349` `active_review_corpus` rows, `1` `candidate_blocked_source` row, and `160` supplemental
   source-delta rows.
 - The preserved Kootenai gap remains explicit through
   `source_delta_input.skipped_gap_source_record_ids=["R1PLAN-kootenai-nf-18"]` and
   `config/r1_forest_plan_official_source_gap_evidence.json`; it is not silently treated as a
   downloaded source row.
-- The active full-canonical derived lane is now materially refreshed on
+- The preserved full-canonical derived lane was materially refreshed on
   `source-set-5e65d845ce77e1a0`. That source set now owns fresh
   `authority_currentness`, `forest_plan_components`, `retrieval`, `evidence_graph`, `claims`,
   `rule_claim_links`, and `knowledge_graph` artifact families under

@@ -51,10 +51,18 @@ Latest closeout on 2026-05-18:
   `full_canonical_corpus_ready=false`,
   `expansion_ready=false`, and
   `full_canonical_source_set_id=source-set-5e65d845ce77e1a0`.
+- Milestone 0 is closed through local commit `6a949ae`
+  (`Resolve Milestone 0 canonical import rebaseline`), so the next live
+  executable slice for this packet is Milestone 1 in
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`.
 - Older deeper references below to `source-set-5e65d845ce77e1a0` as active full
   canonical truth or to all-green local full-canonical / expansion readiness
   are historical preserved baseline evidence for this checkout until a later
   import-completion milestone explicitly restores or reruns them.
+- In those preserved lower sections, phrases like `active`, `current`, or
+  readiness-green refer to the historical `source-set-5e65d845ce77e1a0`
+  replay boundary, not the live `source_library/catalog/` import baseline
+  recorded above.
 
 ## Canonical Source Register Phase 8 Aggregate Readiness And Legacy Contract Retirement
 

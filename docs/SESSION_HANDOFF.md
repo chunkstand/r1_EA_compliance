@@ -5,6 +5,45 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 0 Alignment Closeout
+
+This docs-only follow-up closes the remaining routing/alignment gaps after the
+Milestone 0 rebaseline commit.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- aligned boundary:
+  the active import-completion plan now records Milestone 0 as resolved through
+  local commit `6a949ae` and refreshes its "Current Evidence" section to the
+  post-rebaseline truth. The live routing gap is no longer "docs versus
+  manifest"; it is that the active local catalog is still the proving slice and
+  the full-register gate is still planned-only.
+- historical routing note:
+  the immediately following `Canonical Source Register Import Completion Plan
+  Draft` section is now explicit historical pre-`6a949ae` context only. It is
+  preserved because this handoff is append-only, but it is no longer the live
+  routing note for this lane.
+- historical baseline note:
+  preserved `source-set-5e65d845ce77e1a0`,
+  `full_canonical_corpus_ready=true`, and `expansion_ready=true` language in
+  older sections below remains historical baseline evidence only unless a later
+  import milestone explicitly restores or reruns those lanes.
+- verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed;
+  targeted `rg` routing checks across
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  start with Milestone 1 in
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`:
+  canonical preflight and fetch-failure closure.
+
 ## Canonical Source Register Import Completion Milestone 0 Rebaseline Closeout
 
 This docs-only milestone resolves the live-state rebaseline boundary for the

@@ -1,7 +1,7 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Active 2026-05-18 (Milestone 0 resolved; Milestone 1 next)
+Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 next)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
 
@@ -42,7 +42,7 @@ Milestone 0 closeout summary on 2026-05-18:
 - With the live baseline now locked, the next executable slice in this packet
   is Milestone 1: canonical preflight and fetch-failure closure.
 
-## Dependency And Milestone 0 Refresh Rule
+## Dependency And Live Refresh Rule
 
 This is a fresh standalone follow-on packet after the resolved
 `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` packet. It does
@@ -50,15 +50,17 @@ not reopen the refoundation phases. It exists to finish the remaining import
 work that the resolved refoundation packet intentionally left outside its
 implementation boundary.
 
-- Start with Milestone 0.
+- Milestone 0 is now resolved through local commit `6a949ae`
+  (`Resolve Milestone 0 canonical import rebaseline`). Start implementation
+  from Milestone 1 unless the live baseline drifts first.
 - If `source_library/catalog/`, the active promotion-suite artifacts, or the
-  final workbook SHA drift before implementation starts, Milestone 0 must adopt
-  the live baseline and rewrite later milestone counts, source-set IDs, and run
-  IDs before code or workbook changes begin.
-- If the documented full-canonical catalog can be restored reproducibly from
-  existing run evidence without hidden manual steps, Milestone 0 may choose that
-  path. Otherwise it must rebaseline the durable docs to the actual local
-  `source_library` truth first and continue from there.
+  final workbook SHA drift before Milestone 1 starts, rerun the
+  Milestone 0-style rebaseline and rewrite later milestone counts, source-set
+  IDs, and run IDs before code or workbook changes begin.
+- If a later session proves that the documented full-canonical catalog can be
+  restored reproducibly from existing run evidence without hidden manual steps,
+  pause Milestone 1, refresh this packet to that restored baseline, and record
+  the change explicitly instead of silently reverting the docs-only rebaseline.
 - If later milestones prove that direct-document queue promotion or downstream
   derived-lane replay is larger than this packet can close truthfully, this
   packet must stop after import truth is established and route the remaining
@@ -91,12 +93,12 @@ catalog gate, and not stale docs.
   and says the refoundation packet is complete, the canonical register is the
   sole active ledger, and the proving gate is in place.
 - `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`
-  still describe the active full canonical catalog as
-  `source-set-5e65d845ce77e1a0` and the review aggregate as fully aligned, but
-  the local active `source_library/catalog/source_set_manifest.json` currently
-  points at proving source set `source-set-9dcf819bc4cca486` with `26` sources,
-  `26` artifacts, and source partitions
-  `active_review_corpus=25` and `currentness_supersession_archive=1`.
+  now pin the active local import baseline to proving source set
+  `source-set-9dcf819bc4cca486` and treat the older
+  `source-set-5e65d845ce77e1a0` full-canonical lane as historical preserved
+  baseline evidence for this checkout. The remaining truth gap is no longer a
+  doc-versus-manifest disagreement; it is that the active local import baseline
+  is still a proving slice rather than a real full-register import.
 - The local Phase 2 canonical catalog gate under
   `source_library/runs/canonical-source-register-phase2-catalog-gate-20260518/catalog_gate/`
   proves loader and row-shape readiness for all `635` master rows, but it is
@@ -121,8 +123,8 @@ catalog gate, and not stale docs.
   `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
   currently reports `current_promotion_ready=true` but also
   `full_canonical_corpus_ready=false` and `expansion_ready=false`. That local
-  artifact disagrees with the current top-level docs and must be reconciled
-  rather than ignored.
+  artifact remains an explicit downstream-truth boundary that later milestones
+  must either rerun or keep marked historical rather than ignoring.
 
 ## Goal
 
@@ -348,6 +350,9 @@ proving slice or planned-only Phase 2 gate as if it were the imported corpus.
 ### Milestone 0 - Live Rebaseline And Active Import Baseline Lock
 
 Outcome label: resolved
+
+Closed on 2026-05-18 by local commit `6a949ae`
+(`Resolve Milestone 0 canonical import rebaseline`).
 
 Purpose: settle the durable-doc versus local-artifact mismatch and record the
 exact active baseline this import packet will replace or continue from.
