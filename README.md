@@ -100,32 +100,35 @@ Local active import baseline on 2026-05-18:
   `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
   `preflight_ok` with `failed_count=0`.
 - The governed workbook repair lane is now live on the canonical master sheet.
-  `Document_Register_Master` now carries `55` governed URL repairs total:
+  `Document_Register_Master` now carries `61` governed URL repairs total:
   `45` earlier directive/USDA repairs,
   `3` stale-URL repairs for `PROG-008`, `STP-015`, and `STP-011`,
-  `1` direct-artifact repair for `WILD-ESA-094`, and
+  `1` direct-artifact repair for `WILD-ESA-094`,
   `6` federal/challenge repairs for `FED-042`, `FED-041`, `FED-039`,
-  `FED-043`, `FED-029`, and `FPS-344`.
+  `FED-043`, `FED-029`, and `FPS-344`, plus
+  `6` USDA-family host repairs for `USDA-008`, `USDA-009`, `USDA-010`,
+  `USDA-011`, `USDA-012`, and `USDA-013`.
   `config/parser_admission_contract_v1.json` now also treats
-  `www.archives.gov` and `www.govinfo.gov` as official structured authority
-  hosts for this lane.
+  `www.archives.gov`, `www.govinfo.gov`, `www.ams.usda.gov`,
+  `securefoia.usda.gov`, `www.rma.usda.gov`, and `www.ers.usda.gov` as
+  official structured web/authority hosts for the repaired federal and
+  USDA-family lanes.
   `source-register-validate` now passes with `issue_count=0` on workbook SHA
-  `b1628b6a6db11d73ef20dcde027531fbc7654db236c3b38fb07f21ff30249fff`.
-- The live federal-blocker checkpoint for this lane now builds on the earlier
-  unsupported-format implementation commit `cf2d5f6`
-  (`Resolve unsupported-format canonical blocker slice`) and closes the
-  repairable federal/challenge family before the remaining USDA transport lane.
-  The active checkpoint commit for that routed slice is now `c1dc100`
-  (`Repair federal canonical blocker rows`).
+  `659463445ec6fb02a8669744d0318988b404a68f6f39c8069d21f95f13ad52d8`.
+- The earlier federal-blocker checkpoint built on the unsupported-format
+  implementation commit `cf2d5f6`
+  (`Resolve unsupported-format canonical blocker slice`) and the federal
+  blocker repair commit `c1dc100` (`Repair federal canonical blocker rows`).
+  The new USDA-family repair slice now closes the last known host-specific
+  blocker family before the fresh full-master replay.
 - Scoped repair replay
   `phase2-canonical-preflight-directives-repair-validated-20260518`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
   directive-family rows.
-- Dedicated post-repair host replay
-  `phase2-canonical-preflight-usda-post-directives-repair-validated-20260518`
-  now proves the `www.usda.gov` blocker family is reduced from `15` rows to
-  `6`: only `USDA-008`, `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, and
-  `USDA-013` remain on that host, and all `6` still finalize as `timeout`.
+- Scoped USDA-family replay
+  `phase2-canonical-preflight-usda-final-blocker-repair-validated-20260518`
+  now passes `6/6` `preflight_ok` with `failed_count=0` across `USDA-008`,
+  `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, and `USDA-013`.
 - The fresh full-master replay
   `phase2-canonical-preflight-full-repaired-20260518`
   is now complete against the repaired workbook. It checked all `635`
@@ -189,14 +192,13 @@ Local active import baseline on 2026-05-18:
 - Upstream direct eval remains green after the new admission path:
   `source_library/evaluations/upstream/upstream_evaluation_results.json`
   now reports `passed=true`, `case_count=38`, and `failed_case_ids=[]`.
-- Milestone 1 is still not resolved, but the active unresolved blocker surface
-  is now reduced from the historical `28`-row full replay to the `6`
-  residual `www.usda.gov` timeout rows before the next full-master rerun:
-  `USDA-012`, `USDA-013`, `USDA-009`, `USDA-010`, `USDA-008`, and `USDA-011`.
-- The next truthful slice is the governed USDA transport/final-blocker closure
-  packet for those `6` rows, then a fresh full-master canonical preflight
-  replay before any full `download`, `batch-download`, or `catalog-build` for
-  the entire master sheet.
+- Milestone 1 is still not resolved, but the known USDA-family blocker lane is
+  now closed in scoped evidence. The historical full replay still records the
+  earlier `28` failed rows, but its USDA timeout family is now pre-repair
+  evidence only and must not be treated as the live blocker truth.
+- The next truthful slice is a fresh full-master canonical preflight replay
+  against the repaired workbook before any full `download`, `batch-download`,
+  or `catalog-build` for the entire master sheet.
 - The local non-strict `promotion-suite` artifact remains green only for the
   current-promotion lane: it reports `current_promotion_ready=true` and
   `promotion_ready=true`, but it also currently reports

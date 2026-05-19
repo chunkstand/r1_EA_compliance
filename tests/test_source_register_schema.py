@@ -102,6 +102,12 @@ class SourceRegisterSchemaTests(unittest.TestCase):
             "PROG-008": "https://www.fs.usda.gov/naturalresources/watershed/pubs/FS_National_Core_BMPs_April2012.pdf",
             "STP-015": "https://www.deq.idaho.gov/water-quality/surface-water/total-maximum-daily-loads/",
             "STP-011": "https://idfg.idaho.gov/species/",
+            "USDA-008": "https://www.fs.usda.gov/im/directives/",
+            "USDA-009": "https://www.ams.usda.gov/about-ams/accessibility",
+            "USDA-010": "https://securefoia.usda.gov/",
+            "USDA-011": "https://www.fs.usda.gov/spf/tribalrelations/documents/policy/consultation/Final_DR.pdf",
+            "USDA-012": "https://www.rma.usda.gov/about-rma/website-policies-important-links/nondiscrimination-statement",
+            "USDA-013": "https://www.ers.usda.gov/about-ers/policies-and-standards/information-quality",
             "WILD-ESA-094": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/lynx%20mgmt%20dir%20veg%20small%20map.jpg",
         }
         actual_urls: dict[str, str] = {}

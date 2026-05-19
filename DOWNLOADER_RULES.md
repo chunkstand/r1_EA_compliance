@@ -220,6 +220,11 @@ source_library/
   `www.archives.gov` codification pages and `www.govinfo.gov` Federal Register
   content pages are admissible official structured authority surfaces for
   canonical workbook repairs.
+- For repaired USDA-family workbook rows, `www.ams.usda.gov`,
+  `securefoia.usda.gov`, `www.rma.usda.gov`, and `www.ers.usda.gov` are
+  admissible official structured web surfaces when they provide the current
+  public-facing policy or portal replacement for an otherwise unreachable
+  `www.usda.gov` source row.
 - For `ecos.fws.gov`, the downloader may use a host-level verified `curl`
   transport because the host currently serves an incomplete TLS chain to the
   Python/OpenSSL path in this environment. That transport must keep certificate

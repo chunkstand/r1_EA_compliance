@@ -63,8 +63,12 @@
           "www.ecfr.gov",
           "www.federalregister.gov",
           "www.govinfo.gov",
+          "www.ams.usda.gov",
+          "www.ers.usda.gov",
           "uscode.house.gov",
+          "securefoia.usda.gov",
           "www.fs.usda.gov",
+          "www.rma.usda.gov",
           "ecos.fws.gov"
         ]
       },

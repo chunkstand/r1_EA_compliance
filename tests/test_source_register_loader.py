@@ -96,6 +96,30 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     assert challenge_repair_row.parser_admission_class == "structured_web_source"
     assert challenge_repair_row.expected_parser == "html"
 
+    directives_row = rows["USDA-008"]
+    assert directives_row.parser_admission_class == "structured_web_source"
+    assert directives_row.expected_parser == "html"
+
+    accessibility_row = rows["USDA-009"]
+    assert accessibility_row.parser_admission_class == "structured_web_source"
+    assert accessibility_row.expected_parser == "html"
+
+    foia_row = rows["USDA-010"]
+    assert foia_row.parser_admission_class == "structured_web_source"
+    assert foia_row.expected_parser == "html"
+
+    tribal_row = rows["USDA-011"]
+    assert tribal_row.parser_admission_class == "direct_document"
+    assert tribal_row.expected_parser == "pdf"
+
+    nondiscrimination_row = rows["USDA-012"]
+    assert nondiscrimination_row.parser_admission_class == "structured_web_source"
+    assert nondiscrimination_row.expected_parser == "html"
+
+    info_quality_row = rows["USDA-013"]
+    assert info_quality_row.parser_admission_class == "structured_web_source"
+    assert info_quality_row.expected_parser == "html"
+
     forest_plan_row = rows["FPS-002"]
     assert forest_plan_row.authority_document_class_id == "forest_plan"
     assert forest_plan_row.jurisdiction_scope_id == "scope:region1-forest-unit"
