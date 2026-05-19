@@ -27,6 +27,8 @@ Latest closeout on 2026-05-19:
 
 - Routed implementation packet:
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
+- The Milestone 1 reduced closeout commit is
+  `7dd4fb5` (`Reduce identity reconciliation Milestone 1 source-record mix`).
 - Milestone 0 remains resolved through
   `d3606ad` (`Close identity reconciliation Milestone 0 baseline`).
 - Milestone 1 is now reduced through governed source-record rebinds in
@@ -52,6 +54,17 @@ Latest closeout on 2026-05-19:
   in `custer-gallatin-nf`, `beaverhead-deerlodge-nf`,
   `dakota-prairie-grasslands`, `helena-lewis-and-clark-nf`, `kootenai-nf`,
   and `lolo-nf`.
+- Focused verification for the reduced closeout passed:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py -q`
+  (`38/38`);
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`;
+  and `git diff --check`.
+- Historical note:
+  older forest-plan sections below that still mention the pre-registry
+  `23`/`76` blocker split are preserved Milestone 3 evidence only and are
+  superseded by the governed Milestone 0/1 `74`/`25` identity-reconciliation
+  census above.
 - The next routed slice is no longer the already-bound `74` rows. Stay in the
   active identity-reconciliation packet, but work only the unresolved
   `25`-row blocker family until a truthful canonical component inventory can

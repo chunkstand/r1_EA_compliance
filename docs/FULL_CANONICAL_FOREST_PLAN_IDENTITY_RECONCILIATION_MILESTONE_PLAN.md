@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19; unresolved blocker family next
+Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; unresolved blocker family next
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -219,7 +219,9 @@ Outcome label: reduced
   and canonical source-record IDs without failing fast.
 - Close the milestone only when the identity mix is reduced to the explicit unresolved set and the
   docs route the next slice to the unresolved blocker family, not to the already-bound rows.
-- Closed `2026-05-19`: the committed manifest and readiness configs now carry only the `25`
+- Closing commit hash:
+  `7dd4fb5` (`Reduce identity reconciliation Milestone 1 source-record mix`)
+- Closed `2026-05-19` through `7dd4fb5`: the committed manifest and readiness configs now carry only the `25`
   unresolved legacy `R1PLAN-*` rows, while the `74` exact URL-backed rows are rebound onto active
   canonical source-record IDs with governed `identity_reconciliation` blocker metadata.
 
@@ -263,6 +265,8 @@ Outcome label: resolved
 - `src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py`
 - `tests/test_forest_plan_identity_reconciliation.py`
 - `config/r1_forest_plan_identity_reconciliation_v1.json`
+- `config/r1_forest_plan_component_inventory_build_manifest.json`
+- `config/region1_forest_plan_readiness_nepa_3d_v1.json`
 - this plan file
 - updated routing docs and handoff state
 

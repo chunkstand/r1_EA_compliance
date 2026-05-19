@@ -163,11 +163,10 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   `plan_standard_labels_not_detected`.
 - That failure is now understood as a canonical-vs-legacy source-identity
   mismatch, not a parser regression. The active canonical catalog and chunks
-  contain `0` `R1PLAN-*` rows, while the readiness and component-inventory
-  configs still reference `99` legacy `R1PLAN-*` IDs. The preserved forest-plan
-  crosswalk accounts for all `99`; `23` are already
-  `catalog_confirmed`/mapped to an existing canonical row, and the remaining
-  `76` are still `source_delta_required`.
+  contain `0` `R1PLAN-*` rows. The governed reconciliation registry records the
+  full `99`-row legacy dependency family, and Milestone 1 now reduces the live
+  manifest/readiness identity mix to `74` canonical source-record IDs plus the
+  explicit unresolved `25`-row legacy blocker set.
 - The active implementation packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
   Milestone 0 in that packet is now resolved through
@@ -178,7 +177,9 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   `74` exact official-URL matches to active canonical source-record IDs plus
   `25` unresolved rows
   (`11` `catalog_confirmed`, `14` `source_delta_required`).
-- Milestone 1 in that packet is now reduced: the committed
+- Milestone 1 in that packet is now reduced through
+  `7dd4fb5` (`Reduce identity reconciliation Milestone 1 source-record mix`):
+  the committed
   manifest/readiness pair carries the `74` exact URL-backed rows as canonical
   source-record IDs and leaves only the explicit unresolved `25`-row legacy
   blocker set, with governed `identity_reconciliation` metadata on both

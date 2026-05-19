@@ -94,7 +94,9 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   completed truthfully.
 - This packet is no longer the active implementation surface after the reduced
   Milestone 3 closeout. The active follow-on packet is now
-  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
+  reduced through `7dd4fb5`
+  (`Reduce identity reconciliation Milestone 1 source-record mix`).
 
 ## Goal
 

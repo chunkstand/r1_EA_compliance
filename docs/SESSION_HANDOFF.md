@@ -5,6 +5,43 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Forest Plan Identity Reconciliation Milestone 1 Alignment Pass
+
+This docs-only alignment pass closes the remaining closeout-hash and routing
+drift after implementation commit `7dd4fb5`
+(`Reduce identity reconciliation Milestone 1 source-record mix`).
+
+- closing commit hash:
+  `7dd4fb5` (`Reduce identity reconciliation Milestone 1 source-record mix`)
+- routed plan:
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+- alignment scope:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`, and
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
+- alignment outcome:
+  the active routing set now records the Milestone 1 closeout hash, removes
+  the stale `23`/`76` blocker framing from the active README packet summary,
+  and routes the next slice only to the unresolved `25`-row blocker family.
+- historical interpretation:
+  the older `23`/`76` references preserved below remain pre-registry Milestone
+  3 evidence only. The active packet truth is the governed `74` canonical /
+  `25` unresolved split from the identity-reconciliation registry and
+  manifest/readiness rebind.
+- focused verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed; and targeted `rg` checks over the active routing set confirmed the
+  Milestone 1 hash and the unresolved-`25` routing story are aligned.
+- next routing:
+  unchanged from the implementation closeout. Stay in the active
+  identity-reconciliation packet, but work only the unresolved `25`-row
+  blocker family until a truthful canonical component inventory can exist
+  again for Milestone 2.
+
 ## Full Canonical Forest Plan Identity Reconciliation Milestone 1 Reduced Closeout
 
 This implementation slice rebinds the live manifest/readiness source-record
