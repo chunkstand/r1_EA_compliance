@@ -112,6 +112,41 @@ class CatalogTests(unittest.TestCase):
                     source_delta_input=register.summary(),
                 )
 
+    def test_canonical_forest_plan_rows_classify_primary_and_support_roles(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            result = build_review_catalog(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=Path(tmp),
+                config=config,
+                config_path=CONFIG,
+            )
+
+            records = _read_jsonl(result.source_catalog_path)
+            expected_roles = {
+                "FPS-130": "forest_plan",
+                "FPS-131": "forest_plan",
+                "FPS-132": "forest_plan",
+                "FPS-133": "forest_plan",
+                "FPS-134": "forest_plan",
+                "FPS-267": "forest_plan",
+                "FPS-298": "forest_plan",
+                "FPS-347": "forest_plan",
+                "FPS-165": "forest_plan_support",
+                "FINAL-KOOT-011": "forest_plan_support",
+                "FOR-033": "forest_plan_support",
+            }
+
+            for source_record_id, expected_role in expected_roles.items():
+                record = next(
+                    row for row in records if row["source_record_id"] == source_record_id
+                )
+                self.assertEqual(
+                    record["document_role"],
+                    expected_role,
+                    msg=f"{source_record_id} should classify as {expected_role}",
+                )
+
     def test_build_review_catalog_links_download_manifest_artifact(self) -> None:
         config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
@@ -251,7 +286,7 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(record["authority_level"], "forest")
             self.assertEqual(record["source_status"], "downloaded")
             self.assertEqual(record["expected_parser"], "pdf")
-            self.assertEqual(manifest["document_role_counts"], {"forest_plan": 5, "forest_plan_support": 155})
+            self.assertEqual(manifest["document_role_counts"], _source_delta_catalog_role_counts(register))
 
             for primary_source_id in _source_delta_primary_plan_source_record_ids(register):
                 primary_record = next(
@@ -332,8 +367,15 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(manifest["supplemental_source_count"], 160)
             self.assertEqual(manifest["source_delta_input"]["source_delta_count"], 160)
             self.assertEqual(manifest["source_record_id_filter_count"], None)
-            self.assertEqual(manifest["document_role_counts"]["forest_plan"], 33)
-            self.assertEqual(manifest["document_role_counts"]["forest_plan_support"], 155)
+            expected_role_counts = _merged_catalog_role_counts(register)
+            self.assertEqual(
+                manifest["document_role_counts"]["forest_plan"],
+                expected_role_counts["forest_plan"],
+            )
+            self.assertEqual(
+                manifest["document_role_counts"]["forest_plan_support"],
+                expected_role_counts["forest_plan_support"],
+            )
             self.assertEqual(r1ea001["source_status"], "downloaded")
             self.assertEqual(r1ea001["download_batch_run_id"], "unit-canonical-batches")
             self.assertEqual(source_delta["source_status"], "downloaded")
@@ -680,6 +722,23 @@ def _source_delta_primary_plan_source_record_ids(register) -> list[str]:
         for row in manifest.profile_rows
         if row.primary_plan_source_record_id in source_delta_ids
     )
+
+
+def _source_delta_catalog_role_counts(register) -> dict[str, int]:
+    primary_count = len(_source_delta_primary_plan_source_record_ids(register))
+    source_delta_count = len(register.source_delta_sources)
+    return {
+        "forest_plan": primary_count,
+        "forest_plan_support": source_delta_count - primary_count,
+    }
+
+
+def _merged_catalog_role_counts(register) -> dict[str, int]:
+    source_delta_counts = _source_delta_catalog_role_counts(register)
+    return {
+        "forest_plan": 28 + source_delta_counts["forest_plan"],
+        "forest_plan_support": source_delta_counts["forest_plan_support"],
+    }
 
 
 def _check(validation: dict, name: str) -> dict:

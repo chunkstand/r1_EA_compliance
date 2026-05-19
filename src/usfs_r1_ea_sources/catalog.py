@@ -1129,30 +1129,19 @@ def _document_role(source: WorkbookSource, document_type: str | None) -> str:
             if value
         )
 
+        if source.source_record_id in _r1_forest_plan_manifest_primary_component_source_record_ids():
+            return "forest_plan"
         if "executive order" in combined:
             return "executive_order"
-        if any(token in combined for token in ("public law", "u.s.c", "united states code", "statute")):
-            return "law"
-        if any(
-            token in combined
-            for token in (
-                "cfr",
-                "ecfr",
-                "federal register",
-                "final rule",
-                "planning rule",
-                "regulation",
-            )
-        ):
-            return "regulation"
-        if authority_tier == "state/partner":
-            return "state_requirement"
         if (
             authority_document_class_id == "forest_plan"
             or authority_tier == "forest"
             or "forest plan" in combined
             or sub_tier == "forest plan support"
         ):
+            # Canonical source-register forest-plan rows carry shared NFMA / 36 CFR
+            # source-base metadata, so role classification must resolve the forest-plan
+            # family before generic regulation tokens.
             support_tokens = (
                 "administrative change",
                 "amendment summary",
@@ -1179,6 +1168,22 @@ def _document_role(source: WorkbookSource, document_type: str | None) -> str:
             if any(token in combined for token in support_tokens):
                 return "forest_plan_support"
             return "forest_plan"
+        if any(token in combined for token in ("public law", "u.s.c", "united states code", "statute")):
+            return "law"
+        if any(
+            token in combined
+            for token in (
+                "cfr",
+                "ecfr",
+                "federal register",
+                "final rule",
+                "planning rule",
+                "regulation",
+            )
+        ):
+            return "regulation"
+        if authority_tier == "state/partner":
+            return "state_requirement"
         if "case" in combined or "court" in combined:
             return "case_law"
         if any(
@@ -1298,6 +1303,63 @@ def _r1_forest_plan_register_primary_plan_source_record_ids() -> frozenset[str]:
             )
         primary_plan_source_record_ids.append(source_record_id.strip())
     return frozenset(primary_plan_source_record_ids)
+
+
+@cache
+def _r1_forest_plan_manifest_primary_component_source_record_ids() -> frozenset[str]:
+    try:
+        payload = json.loads(
+            DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH.read_text(
+                encoding="utf-8"
+            )
+        )
+    except FileNotFoundError as exc:
+        raise ValueError(
+            "Missing Region 1 inventory build manifest for catalog role classification: "
+            f"{DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH}"
+        ) from exc
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            "Invalid Region 1 inventory build manifest JSON for catalog role classification: "
+            f"{DEFAULT_REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH}"
+        ) from exc
+    profile_rows = payload.get("profile_rows")
+    if not isinstance(profile_rows, list):
+        raise ValueError(
+            "Region 1 inventory build manifest must contain a profile_rows list for "
+            "catalog role classification."
+        )
+    primary_role_source_record_ids = []
+    for index, row in enumerate(profile_rows):
+        if not isinstance(row, dict):
+            raise ValueError(
+                "Region 1 inventory build manifest.profile_rows entries must be objects for "
+                "catalog role classification."
+            )
+        raw_source_record_ids_by_role = row.get("build_source_record_ids_by_role")
+        if not isinstance(raw_source_record_ids_by_role, dict):
+            raise ValueError(
+                "Region 1 inventory build manifest.profile_rows"
+                f"[{index}].build_source_record_ids_by_role must be an object for "
+                "catalog role classification."
+            )
+        for role in ("primary_land_management_plan", "primary_land_resource_management_plan_part"):
+            raw_source_record_ids = raw_source_record_ids_by_role.get(role) or []
+            if not isinstance(raw_source_record_ids, list):
+                raise ValueError(
+                    "Region 1 inventory build manifest.profile_rows"
+                    f"[{index}].build_source_record_ids_by_role[{role!r}] must be a list for "
+                    "catalog role classification."
+                )
+            for source_record_id in raw_source_record_ids:
+                if not isinstance(source_record_id, str) or not source_record_id.strip():
+                    raise ValueError(
+                        "Region 1 inventory build manifest.profile_rows"
+                        f"[{index}].build_source_record_ids_by_role[{role!r}] entries must be "
+                        "non-empty strings for catalog role classification."
+                    )
+                primary_role_source_record_ids.append(source_record_id.strip())
+    return frozenset(primary_role_source_record_ids)
 
 
 def _authority_level(source: WorkbookSource, issuer: str | None, host: str) -> str:

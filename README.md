@@ -154,19 +154,28 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   reports `full_canonical_corpus_ready=false` with `4/8` required
   full-canonical results passing and
   `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
-- The attempted `forest-plan-components-build` prerequisite replay on
-  `source-set-9e7d85759951c279` now fails closed with `component_count=0`,
-  `standard_count=0`, and all `10` tracked forests blocked by the same three
-  blocker classes:
-  `no_selected_forest_plan_chunks`,
-  `plan_component_labels_not_detected`, and
-  `plan_standard_labels_not_detected`.
-- That failure is now understood as a canonical-vs-legacy source-identity
-  mismatch, not a parser regression. The active canonical catalog and chunks
-  contain `0` `R1PLAN-*` rows. The governed reconciliation registry records the
-  full `99`-row legacy dependency family, and Milestone 1 now reduces the live
-  manifest/readiness identity mix to `74` canonical source-record IDs plus the
-  explicit unresolved `25`-row legacy blocker set.
+- A fresh `forest-plan-components-build` replay on
+  `source-set-9e7d85759951c279` now stops with `component_count=754`,
+  `standard_count=186`, and only `5` blocked forests:
+  `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs`.
+- That replay showed the blocker is no longer only a canonical-vs-legacy
+  source-identity mismatch. The unresolved identity family still matters for
+  `flathead-nf` and part of `nez-perce-clearwater-nfs`, but the active
+  canonical lane also had a `source_register_v1` role-classifier regression:
+  manifest-selected primary plan rows such as `FPS-130`-`FPS-134`, `FPS-267`,
+  `FPS-298`, and `FPS-347` were still entering the catalog/chunk surfaces as
+  `document_role=regulation`.
+- `src/usfs_r1_ea_sources/catalog.py` now fixes that regression by applying a
+  manifest-driven primary-plan override before the generic `regulation`
+  fallback. Canonical workbook proof now classifies `FPS-130`-`FPS-134`,
+  `FPS-267`, `FPS-298`, and `FPS-347` as `forest_plan`, while `FPS-165`,
+  `FINAL-KOOT-011`, and `FOR-033` remain `forest_plan_support`.
+- The active `source_library/catalog/` and
+  `source_library/derived/source-set-9e7d85759951c279/chunks/chunks.jsonl`
+  were built before that code fix, so a separate scoped catalog/extraction
+  refresh is still required before the live component inventory can benefit
+  from it.
 - The active implementation packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
   Milestone 0 in that packet is now resolved through
@@ -187,10 +196,10 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
   now truthful and active, but broader full-canonical downstream freshness is
-  still routed-red until the active identity-reconciliation packet clears the
-  remaining unresolved `25`-row blocker family and the blocked
-  graph/profile/component retrieval and promotion reruns can be replayed on
-  `source-set-9e7d85759951c279`.
+  still routed-red until the active full-canonical catalog/extraction replay
+  lands with the committed classifier fix, the narrowed blocker family is
+  remeasured truthfully, and the blocked graph/profile/component retrieval and
+  promotion reruns can be replayed on `source-set-9e7d85759951c279`.
 
 Historical broader capture baseline:
 

@@ -21,6 +21,38 @@ older references below that still treat `source-set-5e65d845ce77e1a0`,
 historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes.
 
+## Source-Register Forest Plan Role Classification Code Closeout
+
+Latest closeout on 2026-05-19:
+
+- The active full-canonical forest-plan blocker is no longer truthfully described as only a
+  legacy-identity problem. A fresh
+  `forest-plan-components-build --source-set-id source-set-9e7d85759951c279 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  replay now stops with `component_count=754`, `standard_count=186`, and only `5` blocked forests:
+  `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
+  `nez-perce-clearwater-nfs`.
+- That replay showed a second blocker family on the active canonical lane: canonical
+  `source_register_v1` primary-plan rows such as `FPS-130`-`FPS-134`, `FPS-267`, `FPS-298`, and
+  `FPS-347` were still entering the catalog/chunk surfaces as `document_role=regulation`, so the
+  manifest-driven inventory builder filtered them out before parsing.
+- `src/usfs_r1_ea_sources/catalog.py` now fixes that regression by applying a manifest-driven
+  primary-plan override for `source_register_v1` rows before the generic `regulation` fallback.
+  The canonical workbook proof now classifies `FPS-130`-`FPS-134`, `FPS-267`, `FPS-298`, and
+  `FPS-347` as `forest_plan`, while `FPS-165`, `FINAL-KOOT-011`, and `FOR-033` remain
+  `forest_plan_support`.
+- Focused verification for the code closeout passed:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py -q`
+  (`19/19`) and
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/catalog.py tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py`.
+- No active `source_library/` catalog or extraction refresh landed in this code-only closeout.
+  `source_library/catalog/source_catalog.jsonl` and
+  `source_library/derived/source-set-9e7d85759951c279/chunks/chunks.jsonl`
+  still reflect the pre-fix roles until a separate replay regenerates them.
+- Next routing:
+  rerun the active full-canonical catalog/extraction surfaces with the committed classifier fix,
+  replay `forest-plan-components-build`, then continue the narrower remaining blocker family that
+  survives that refresh.
+
 ## Full Canonical Forest Plan Identity Reconciliation Milestone 1 Reduced Closeout
 
 Latest closeout on 2026-05-19:

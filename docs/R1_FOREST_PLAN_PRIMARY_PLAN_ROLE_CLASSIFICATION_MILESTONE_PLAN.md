@@ -1,14 +1,36 @@
 # Region 1 Forest-Plan Primary Plan Role Classification Milestone Plan
 
-Date: 2026-05-10
+Date: 2026-05-19
 
-Status: Closed in verified working-tree state; active-source-set manifest refresh still deferred
+Status: Resolved in committed code; active-source-set catalog/extraction refresh still deferred
 
 Owner context: This is a catalog/classification milestone for the Region 1 forest-plan lane. It is
 not a parser-expansion milestone, readiness-promotion milestone, or viewer milestone. Its only job
 was to ensure the five primary plan PDFs that had been entering the active catalog as
 `forest_plan_support` are classified as `forest_plan` so the inventory builder can consume the real
 plan documents before later parser and readiness work continues.
+
+## 2026-05-19 Addendum
+
+The earlier primary-plan classifier gap recurred after the repo switched the active workbook lane
+to `loader_contract = "source_register_v1"`. Canonical forest-plan rows now carry shared NFMA /
+`36 CFR part 219` source-base metadata, so the generic `regulation` fallback could still preempt
+the forest-plan branch even after the older supplemental-register fix.
+
+- `src/usfs_r1_ea_sources/catalog.py` now applies a manifest-driven primary-plan override for the
+  canonical `source_register_v1` path before the generic `regulation` fallback.
+- Canonical workbook proof now classifies `FPS-130`-`FPS-134`, `FPS-267`, `FPS-298`, and
+  `FPS-347` as `forest_plan`, while `FPS-165`, `FINAL-KOOT-011`, and `FOR-033` remain
+  `forest_plan_support`.
+- Focused verification now passes on the current canonical lane:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py -q`
+  (`19/19`) and
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/catalog.py tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py`.
+- No active-source-set catalog or extraction refresh landed in this code-only closeout. The live
+  `source_library/catalog/` and active chunk surfaces still reflect the pre-fix `document_role`
+  values until a separate replay regenerates them.
+- Historical references below that cite the older `source-set-5e65d845ce77e1a0` working-tree
+  replay remain preserved context only.
 
 ## Purpose
 
@@ -26,8 +48,9 @@ legacy-plan parsing or readiness promotion:
 
 ## Current Implementation Status
 
-Sequences 0 through 3 are implemented in the working tree. The only remaining closeout step inside
-this milestone is the atomic commit.
+The classifier fix is now committed in repo code. The remaining deferred work is the operational
+refresh of the active `source_library/` catalog/chunk surfaces, which stays outside this
+code-focused milestone.
 
 - `catalog.py` no longer treats every `source_input="r1_forest_plan_document_register"` row as
   uniformly `forest_plan_support`.
@@ -118,6 +141,16 @@ the supplemental Region 1 support-document register.
 - Do not fix Beaverhead-Deerlodge or Bitterroot component extraction in this milestone.
 - Do not promote new readiness statuses into
   `config/region1_forest_plan_readiness_nepa_3d_v1.json` in this milestone.
+
+## Local Commit Closeout Policy
+
+- Implement and close this plan milestone by milestone.
+- `complete-after-commit` rule: no milestone in this plan may be marked complete, `resolved`, or
+  `closed` until verification passes, durable docs/handoff updates land, and the local atomic
+  commit exists. A verified but uncommitted slice is only ready-to-close.
+- Do not weaken, narrow, loosen, or delete tests just to make the role-classification lane look
+  green. Any test or gate change in this packet must preserve or strengthen coverage and make the
+  remaining blocker more explicit, not easier to bypass.
 - Do not change viewer behavior, graph lens defaults, or unrelated NEPA 3D surfaces.
 - Do not reclassify all register-sourced PDFs broadly; only the primary plan PDFs proven by the
   build manifest should move to `forest_plan`.
