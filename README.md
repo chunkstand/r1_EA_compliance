@@ -143,6 +143,12 @@ Local active import baseline on 2026-05-18 after import-completion closeout:
   still returns zero characters for `FPS-125` while `pdftoppm` can render it,
   so the remaining lane is now one upstream-invalid PDF plus one OCR-heavy
   raster recovery straggler rather than broader catalog or URL drift.
+- The extractor now includes two bounded scanned-PDF rescue paths for rows like
+  `FPS-125`: `pdf_raster_ocr` (`pdftoppm` + `RapidOCR(torch)`) first, then a
+  chunked Docling OCR fallback. Focused extraction tests now cover both rescue
+  surfaces, but the live `source-set-cac9c7d02b280825` blocker count remains
+  `633/2` because the first long targeted `FPS-125` replay under the new path
+  was interrupted without writing a merged success record.
 - Until those `2` residual extraction records are recovered or replaced, the source-set
   knowledge-graph export plus the rebased `forest_plan_profile` and
   `forest_plan_component_retrieval` eval artifacts remain missing or stale.

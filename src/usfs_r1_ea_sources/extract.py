@@ -33,6 +33,9 @@ DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessin
 DOC_CONTENT_TYPE = "application/msword"
 PDF_TEXT_FALLBACK_ERROR_CLASSES = {"docling_timeout", "docling_unavailable"}
 PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES = 512 * 1024 * 1024
+CHUNKED_DOCLING_PDF_PAGE_COUNT = 10
+CHUNKED_DOCLING_PDF_MIN_TIMEOUT_SECONDS = 180.0
+PDF_RASTER_OCR_DPI = 150
 DOCLING_PYTHON_ENV_VAR = "USFS_R1_DOCLING_PYTHON"
 DEFAULT_R1_FOREST_PLAN_REGISTER_PATH = Path("config/r1_forest_plan_document_register_draft.csv")
 SUCCESS_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"}
@@ -1109,7 +1112,26 @@ def _extract_pdf(
         )
     except ExtractionFailure as error:
         if error.error_class in PDF_TEXT_FALLBACK_ERROR_CLASSES:
-            fallback_payload = _try_extract_pdf_text_fallback(artifact_path)
+            try:
+                fallback_payload = _try_extract_pdf_text_fallback(artifact_path)
+            except ExtractionFailure as fallback_error:
+                raster_payload = _try_extract_pdf_raster_ocr(
+                    artifact_path,
+                    fallback_error_class=fallback_error.error_class,
+                    fallback_error_message=fallback_error.message,
+                )
+                if raster_payload is not None:
+                    return raster_payload
+                chunked_payload = _try_extract_chunked_docling_pdf(
+                    artifact_path,
+                    ocr_enabled=ocr_enabled,
+                    timeout_seconds=timeout_seconds,
+                    fallback_error_class=fallback_error.error_class,
+                    fallback_error_message=fallback_error.message,
+                )
+                if chunked_payload is not None:
+                    return chunked_payload
+                raise
             if fallback_payload is not None:
                 return _with_payload_metadata(
                     fallback_payload,
@@ -1120,10 +1142,38 @@ def _extract_pdf(
                         "pypdf_max_decompress_bytes": PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES,
                     },
                 )
+            chunked_payload = _try_extract_chunked_docling_pdf(
+                artifact_path,
+                ocr_enabled=ocr_enabled,
+                timeout_seconds=timeout_seconds,
+                fallback_error_class=error.error_class,
+                fallback_error_message=error.message,
+            )
+            if chunked_payload is not None:
+                return chunked_payload
         raise
     if payload is not None:
         return payload
-    fallback_payload = _try_extract_pdf_text_fallback(artifact_path)
+    try:
+        fallback_payload = _try_extract_pdf_text_fallback(artifact_path)
+    except ExtractionFailure as fallback_error:
+        raster_payload = _try_extract_pdf_raster_ocr(
+            artifact_path,
+            fallback_error_class=fallback_error.error_class,
+            fallback_error_message=fallback_error.message,
+        )
+        if raster_payload is not None:
+            return raster_payload
+        chunked_payload = _try_extract_chunked_docling_pdf(
+            artifact_path,
+            ocr_enabled=ocr_enabled,
+            timeout_seconds=timeout_seconds,
+            fallback_error_class=fallback_error.error_class,
+            fallback_error_message=fallback_error.message,
+        )
+        if chunked_payload is not None:
+            return chunked_payload
+        raise
     if fallback_payload is not None:
         return _with_payload_metadata(
             fallback_payload,
@@ -1136,6 +1186,17 @@ def _extract_pdf(
                 "pypdf_max_decompress_bytes": PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES,
             },
         )
+    chunked_payload = _try_extract_chunked_docling_pdf(
+        artifact_path,
+        ocr_enabled=ocr_enabled,
+        timeout_seconds=timeout_seconds,
+        fallback_error_class="docling_unavailable",
+        fallback_error_message=(
+            "Docling is not installed in the active Python environment."
+        ),
+    )
+    if chunked_payload is not None:
+        return chunked_payload
     raise ExtractionFailure(
         "docling_unavailable",
         "Docling is required for this parser but is not installed in the active Python "
@@ -1397,6 +1458,176 @@ def _try_extract_pdf_text_fallback(artifact_path: Path) -> ExtractionPayload | N
     )
 
 
+def _try_extract_pdf_raster_ocr(
+    artifact_path: Path,
+    *,
+    fallback_error_class: str,
+    fallback_error_message: str,
+) -> ExtractionPayload | None:
+    if shutil.which("pdftoppm") is None:
+        return None
+    if importlib.util.find_spec("rapidocr") is None:
+        return None
+    try:
+        ocr = _rapidocr_torch()
+    except Exception:
+        return None
+
+    with tempfile.TemporaryDirectory(prefix="usfs-r1-raster-ocr-") as tmp:
+        tmpdir = Path(tmp)
+        output_prefix = tmpdir / "page"
+        command = [
+            "pdftoppm",
+            "-png",
+            "-r",
+            str(PDF_RASTER_OCR_DPI),
+            str(artifact_path),
+            str(output_prefix),
+        ]
+        completed = subprocess.run(command, check=False, capture_output=True, text=True)
+        if completed.returncode != 0:
+            return None
+
+        image_paths = sorted(
+            tmpdir.glob("page-*.png"),
+            key=lambda path: int(path.stem.rsplit("-", 1)[-1]),
+        )
+        if not image_paths:
+            return None
+
+        blocks: list[TextBlock] = []
+        for page_number, image_path in enumerate(image_paths, start=1):
+            result = ocr(str(image_path))
+            page_texts = [_clean_text(text) for text in getattr(result, "txts", ()) if _clean_text(text)]
+            if not page_texts:
+                continue
+            blocks.append(TextBlock(text="\n".join(page_texts), page=page_number))
+
+    if not blocks:
+        return None
+
+    text, assembled_blocks = _assemble_blocks(blocks)
+    return ExtractionPayload(
+        text=text,
+        blocks=assembled_blocks,
+        parser_name="rapidocr_pdf_raster",
+        parser_version="torch",
+        metadata={
+            "fallback_from": "pdf_raster_ocr",
+            "fallback_error_class": fallback_error_class,
+            "fallback_error_message": fallback_error_message,
+            "pdf_raster_ocr_dpi": PDF_RASTER_OCR_DPI,
+            "pdf_raster_ocr_page_count": len(image_paths),
+        },
+    )
+
+
+def _try_extract_chunked_docling_pdf(
+    artifact_path: Path,
+    *,
+    ocr_enabled: bool,
+    timeout_seconds: float | None,
+    fallback_error_class: str,
+    fallback_error_message: str,
+) -> ExtractionPayload | None:
+    if not ocr_enabled:
+        return None
+    if importlib.util.find_spec("pypdf") is None:
+        return None
+    try:
+        from pypdf import PdfReader
+        from pypdf import PdfWriter
+    except ImportError:
+        return None
+
+    try:
+        reader = PdfReader(str(artifact_path))
+    except Exception:
+        return None
+
+    page_count = len(reader.pages)
+    if page_count <= CHUNKED_DOCLING_PDF_PAGE_COUNT:
+        return None
+
+    docling_available = importlib.util.find_spec("docling") is not None
+    chunk_timeout_seconds = (
+        None
+        if timeout_seconds is None
+        else max(timeout_seconds, CHUNKED_DOCLING_PDF_MIN_TIMEOUT_SECONDS)
+    )
+    parser_name = "docling"
+    parser_version = "unknown"
+    payload_metadata: dict = {}
+    blocks: list[TextBlock] = []
+    chunk_count = 0
+
+    for start in range(0, page_count, CHUNKED_DOCLING_PDF_PAGE_COUNT):
+        end = min(start + CHUNKED_DOCLING_PDF_PAGE_COUNT, page_count)
+        writer = PdfWriter()
+        for page_index in range(start, end):
+            writer.add_page(reader.pages[page_index])
+        with tempfile.NamedTemporaryFile(
+            prefix="usfs-r1-docling-pdf-chunk-",
+            suffix=".pdf",
+            delete=False,
+        ) as handle:
+            chunk_path = Path(handle.name)
+        try:
+            with chunk_path.open("wb") as output_handle:
+                writer.write(output_handle)
+            if docling_available:
+                chunk_payload = _convert_docling_in_process(
+                    chunk_path,
+                    ocr_enabled=ocr_enabled,
+                    timeout_seconds=None,
+                )
+            else:
+                chunk_payload = _try_extract_docling(
+                    chunk_path,
+                    ocr_enabled=ocr_enabled,
+                    timeout_seconds=chunk_timeout_seconds,
+                )
+        except ExtractionFailure:
+            return None
+        finally:
+            chunk_path.unlink(missing_ok=True)
+
+        if chunk_payload is None or not chunk_payload.text.strip():
+            return None
+
+        chunk_count += 1
+        parser_name = chunk_payload.parser_name or parser_name
+        parser_version = chunk_payload.parser_version or parser_version
+        if not payload_metadata and chunk_payload.metadata:
+            payload_metadata = dict(chunk_payload.metadata)
+        blocks.extend(
+            TextBlock(
+                text=block.text,
+                heading=block.heading,
+                section=block.section,
+                page=(block.page + start) if block.page is not None else None,
+            )
+            for block in chunk_payload.blocks
+        )
+
+    text, assembled_blocks = _assemble_blocks(blocks)
+    return ExtractionPayload(
+        text=text,
+        blocks=assembled_blocks,
+        parser_name=parser_name,
+        parser_version=parser_version,
+        metadata={
+            **payload_metadata,
+            "fallback_from": "docling_chunked_pdf",
+            "fallback_error_class": fallback_error_class,
+            "fallback_error_message": fallback_error_message,
+            "chunked_pdf_chunk_count": chunk_count,
+            "chunked_pdf_page_chunk_size": CHUNKED_DOCLING_PDF_PAGE_COUNT,
+            "chunked_pdf_page_count": page_count,
+        },
+    )
+
+
 def _with_payload_metadata(payload: ExtractionPayload, metadata: dict) -> ExtractionPayload:
     return ExtractionPayload(
         text=payload.text,
@@ -1416,6 +1647,19 @@ def _raise_pypdf_decompression_limit() -> None:
     current = getattr(filters, "ZLIB_MAX_OUTPUT_LENGTH", 0)
     if current < PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES:
         filters.ZLIB_MAX_OUTPUT_LENGTH = PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES
+
+
+@lru_cache(maxsize=1)
+def _rapidocr_torch():
+    from rapidocr import RapidOCR
+    from rapidocr.utils.typings import EngineType
+
+    params = {
+        "Det.engine_type": EngineType.TORCH,
+        "Cls.engine_type": EngineType.TORCH,
+        "Rec.engine_type": EngineType.TORCH,
+    }
+    return RapidOCR(params=params)
 
 
 def _convert_docling_in_process(
@@ -1508,14 +1752,27 @@ def _docling_converter(
     ocr_enabled: bool,
     timeout_seconds: float | None,
 ):  # noqa: ANN202
-    from docling.document_converter import DocumentConverter
-
     if artifact_path.suffix.lower() != ".pdf":
-        return DocumentConverter()
+        return _docling_default_converter()
+    return _docling_pdf_converter(ocr_enabled=ocr_enabled, timeout_seconds=timeout_seconds)
 
+
+@lru_cache(maxsize=1)
+def _docling_default_converter():  # noqa: ANN202
+    from docling.document_converter import DocumentConverter
+    return DocumentConverter()
+
+
+@lru_cache(maxsize=8)
+def _docling_pdf_converter(
+    *,
+    ocr_enabled: bool,
+    timeout_seconds: float | None,
+):  # noqa: ANN202
     from docling.datamodel.base_models import InputFormat
     from docling.datamodel.pipeline_options import PdfPipelineOptions
     from docling.document_converter import PdfFormatOption
+    from docling.document_converter import DocumentConverter
 
     pipeline_options = PdfPipelineOptions(
         document_timeout=timeout_seconds,

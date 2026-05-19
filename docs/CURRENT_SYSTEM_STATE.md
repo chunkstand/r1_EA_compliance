@@ -68,6 +68,13 @@ Latest reduced closeout on 2026-05-19:
   roughly `40` minutes and was interrupted without a merged success result.
   That narrows the remaining work to upstream PDF replacement/repair plus one
   raster/OCR recovery straggler, not broader downloader or catalog drift.
+- `src/usfs_r1_ea_sources/extract.py` now includes two explicit scanned-PDF
+  rescue surfaces after `pdf_text_fallback_empty`:
+  `pdf_raster_ocr` (`pdftoppm` + `RapidOCR(torch)`) and a chunked Docling OCR
+  fallback. Focused verification in `tests/test_extract.py` now covers both
+  rescue paths, but the live source-set state above remains unchanged because a
+  long targeted `FPS-125` replay under the new code was interrupted before it
+  wrote a merged extracted record.
 - Fresh rebased `promotion-suite --manifest config/promotion_suite_v1.json`
   now reports `current_promotion_ready=true`,
   `promotion_ready=true`,
@@ -84,7 +91,8 @@ Latest reduced closeout on 2026-05-19:
   stale `forest_plan_profile` eval source-set identity, and stale
   `forest_plan_component_retrieval` eval source-set identity.
 - Next routing:
-  recover the `4` failed extraction/parser rows first, then rerun
+  finish a green `FPS-125` replay with the new scanned-PDF rescue path,
+  route a governed repair/replacement decision for `FPS-005`, then rerun
   `nepa-knowledge-graph-export`,
   `forest-plan-profile-eval`, and
   `forest-plan-component-retrieval-eval`

@@ -1068,6 +1068,159 @@ class ExtractionTests(unittest.TestCase):
         self.assertEqual(manifest[0]["parser_metadata"]["fallback_error_class"], "docling_timeout")
         self.assertTrue(_check(validation, "fallback_records_are_auditable")["passed"])
 
+    def test_build_extraction_uses_chunked_docling_after_pdf_text_empty(self) -> None:
+        config = legacy_config()
+        original_docling = extract_module._try_extract_docling
+        original_fallback = extract_module._try_extract_pdf_text_fallback
+        original_raster = extract_module._try_extract_pdf_raster_ocr
+        original_chunked = extract_module._try_extract_chunked_docling_pdf
+
+        def timeout_docling(*args, **kwargs):  # noqa: ANN002, ANN003, ARG001
+            raise extract_module.ExtractionFailure("docling_timeout", "timeout")
+
+        def empty_pdf_text(*args, **kwargs):  # noqa: ANN002, ANN003, ARG001
+            raise extract_module.ExtractionFailure(
+                "pdf_text_fallback_empty",
+                "PDF text fallback produced no text.",
+            )
+
+        def chunked_docling(*args, **kwargs):  # noqa: ANN002, ANN003, ARG001
+            text = "Chunked Docling OCR recovered scanned appendix text."
+            return extract_module.ExtractionPayload(
+                text=text,
+                blocks=[extract_module.TextBlock(text=text, page=12)],
+                parser_name="docling",
+                parser_version="test",
+                metadata={
+                    "fallback_from": "docling_chunked_pdf",
+                    "fallback_error_class": "pdf_text_fallback_empty",
+                    "chunked_pdf_chunk_count": 2,
+                    "chunked_pdf_page_chunk_size": 10,
+                    "chunked_pdf_page_count": 20,
+                },
+            )
+
+        extract_module._try_extract_docling = timeout_docling
+        extract_module._try_extract_pdf_text_fallback = empty_pdf_text
+        extract_module._try_extract_pdf_raster_ocr = lambda *args, **kwargs: None
+        extract_module._try_extract_chunked_docling_pdf = chunked_docling
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                output_dir = Path(tmp)
+                _write_download_run(
+                    output_dir,
+                    "unit-download",
+                    source_record_id="R1EA-001",
+                    artifact_body=_pdf_body(),
+                    content_type="application/pdf",
+                    suffix=".pdf",
+                )
+                build_review_catalog(
+                    workbook_path=WORKBOOK,
+                    output_dir=output_dir,
+                    config=config,
+                    config_path=CONFIG,
+                    run_id="unit-download",
+                )
+
+                result = build_extraction(output_dir=output_dir, id_filter="R1EA-001")
+                chunks = _read_jsonl(result.chunks_path)
+                manifest = _read_jsonl(result.extraction_manifest_path)
+                validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+        finally:
+            extract_module._try_extract_docling = original_docling
+            extract_module._try_extract_pdf_text_fallback = original_fallback
+            extract_module._try_extract_pdf_raster_ocr = original_raster
+            extract_module._try_extract_chunked_docling_pdf = original_chunked
+
+        self.assertTrue(result.summary["validation_passed"])
+        self.assertEqual(result.summary["parser_counts"], {"docling": 1})
+        self.assertEqual(result.summary["fallback_counts"], {"docling_chunked_pdf": 1})
+        self.assertIn("Chunked Docling OCR", chunks[0]["text"])
+        self.assertEqual(manifest[0]["parser_name"], "docling")
+        self.assertEqual(manifest[0]["parser_metadata"]["fallback_from"], "docling_chunked_pdf")
+        self.assertEqual(
+            manifest[0]["parser_metadata"]["fallback_error_class"],
+            "pdf_text_fallback_empty",
+        )
+        self.assertTrue(_check(validation, "fallback_records_are_auditable")["passed"])
+
+    def test_build_extraction_uses_pdf_raster_ocr_after_pdf_text_empty(self) -> None:
+        config = legacy_config()
+        original_docling = extract_module._try_extract_docling
+        original_fallback = extract_module._try_extract_pdf_text_fallback
+        original_raster = extract_module._try_extract_pdf_raster_ocr
+        original_chunked = extract_module._try_extract_chunked_docling_pdf
+
+        def timeout_docling(*args, **kwargs):  # noqa: ANN002, ANN003, ARG001
+            raise extract_module.ExtractionFailure("docling_timeout", "timeout")
+
+        def empty_pdf_text(*args, **kwargs):  # noqa: ANN002, ANN003, ARG001
+            raise extract_module.ExtractionFailure(
+                "pdf_text_fallback_empty",
+                "PDF text fallback produced no text.",
+            )
+
+        def raster_ocr(*args, **kwargs):  # noqa: ANN002, ANN003, ARG001
+            text = "Raster OCR recovered scanned appendix text."
+            return extract_module.ExtractionPayload(
+                text=text,
+                blocks=[extract_module.TextBlock(text=text, page=7)],
+                parser_name="rapidocr_pdf_raster",
+                parser_version="torch",
+                metadata={
+                    "fallback_from": "pdf_raster_ocr",
+                    "fallback_error_class": "pdf_text_fallback_empty",
+                    "pdf_raster_ocr_dpi": 150,
+                    "pdf_raster_ocr_page_count": 12,
+                },
+            )
+
+        extract_module._try_extract_docling = timeout_docling
+        extract_module._try_extract_pdf_text_fallback = empty_pdf_text
+        extract_module._try_extract_pdf_raster_ocr = raster_ocr
+        extract_module._try_extract_chunked_docling_pdf = lambda *args, **kwargs: None
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                output_dir = Path(tmp)
+                _write_download_run(
+                    output_dir,
+                    "unit-download",
+                    source_record_id="R1EA-001",
+                    artifact_body=_pdf_body(),
+                    content_type="application/pdf",
+                    suffix=".pdf",
+                )
+                build_review_catalog(
+                    workbook_path=WORKBOOK,
+                    output_dir=output_dir,
+                    config=config,
+                    config_path=CONFIG,
+                    run_id="unit-download",
+                )
+
+                result = build_extraction(output_dir=output_dir, id_filter="R1EA-001")
+                chunks = _read_jsonl(result.chunks_path)
+                manifest = _read_jsonl(result.extraction_manifest_path)
+                validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+        finally:
+            extract_module._try_extract_docling = original_docling
+            extract_module._try_extract_pdf_text_fallback = original_fallback
+            extract_module._try_extract_pdf_raster_ocr = original_raster
+            extract_module._try_extract_chunked_docling_pdf = original_chunked
+
+        self.assertTrue(result.summary["validation_passed"])
+        self.assertEqual(result.summary["parser_counts"], {"rapidocr_pdf_raster": 1})
+        self.assertEqual(result.summary["fallback_counts"], {"pdf_raster_ocr": 1})
+        self.assertIn("Raster OCR recovered", chunks[0]["text"])
+        self.assertEqual(manifest[0]["parser_name"], "rapidocr_pdf_raster")
+        self.assertEqual(manifest[0]["parser_metadata"]["fallback_from"], "pdf_raster_ocr")
+        self.assertEqual(
+            manifest[0]["parser_metadata"]["fallback_error_class"],
+            "pdf_text_fallback_empty",
+        )
+        self.assertTrue(_check(validation, "fallback_records_are_auditable")["passed"])
+
     def test_source_derived_dir_rejects_unsafe_source_set_id(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaises(ValueError):

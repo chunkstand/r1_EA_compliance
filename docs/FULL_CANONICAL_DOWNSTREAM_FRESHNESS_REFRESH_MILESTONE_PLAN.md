@@ -37,6 +37,12 @@ Reduced on 2026-05-19 with the following repo-grounded outcome:
   remained compute-bound for roughly `40` minutes and was interrupted without a merged success
   result. That narrows the remaining lane to upstream PDF replacement/repair plus one OCR-heavy
   raster recovery straggler rather than broader manifest or downloader drift.
+- The extractor now ships two explicit scanned-PDF rescue paths for the remaining OCR-heavy
+  straggler lane: `pdf_raster_ocr` (`pdftoppm` + `RapidOCR(torch)`) and a chunked Docling OCR
+  fallback. Focused regression coverage now passes `25/25` in `tests/test_extract.py`, but the
+  active source-set blocker state above remains unchanged because the first long targeted live
+  `FPS-125` replay under the new rescue path was interrupted before it produced a merged success
+  record.
 - Fresh `promotion-suite --manifest config/promotion_suite_v1.json` now fails for the right reason:
   the old full-canonical stale-manifest split is gone, and the remaining full-canonical failure
   surface is narrowed to `4/8` required results passing with

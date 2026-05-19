@@ -5,6 +5,47 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Downstream Freshness OCR Rescue Update
+
+This follow-on update adds a bounded scanned-PDF rescue path to the same
+full-canonical downstream freshness packet and supersedes the routing detail
+below when they disagree.
+
+- routed plan:
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
+- code surfaces:
+  `src/usfs_r1_ea_sources/extract.py` now adds two explicit rescue paths after
+  `pdf_text_fallback_empty`: `pdf_raster_ocr` (`pdftoppm` +
+  `RapidOCR(torch)`) first, then a chunked Docling OCR fallback.
+  `tests/test_extract.py` now covers both rescue paths.
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py -q`
+  passed `25/25`;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/extract.py tests/test_extract.py`
+  passed; and
+  `git diff --check`
+  remained required before closeout.
+- live corpus truth:
+  the active extraction manifest and summary on
+  `source-set-cac9c7d02b280825` are still unchanged at `extracted_count=633`,
+  `failed_count=2`,
+  `chunk_count=97248`,
+  `validation_passed=false`, and
+  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 1}`.
+- replay evidence:
+  a targeted `FPS-125` replay under the new rescue path was started in the
+  Docling environment and reached the new `pdf_raster_ocr` branch, including a
+  fully rendered `346`-page raster temp set, but it was interrupted before it
+  wrote a merged extracted record. No durable `source_library/derived/`
+  outputs changed from that attempt.
+- next routing:
+  finish a green targeted `FPS-125` replay with the new rescue path, route a
+  governed repair/replacement decision for `FPS-005`, then rerun
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`,
+  `forest-plan-component-retrieval-eval`, and
+  `promotion-suite` on `source-set-cac9c7d02b280825`.
+
 ## Full Canonical Downstream Freshness Refresh Further Reduced Update
 
 This follow-on update reduces the same full-canonical downstream freshness
