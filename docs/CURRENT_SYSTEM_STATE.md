@@ -47,24 +47,27 @@ Latest reduced closeout on 2026-05-19:
   `source_currentness_record_count=635`, and `validation_passed=true`.
 - The first full-source-set extraction replay is now historical blocker
   evidence only. The live extraction summary has moved forward through a
-  targeted external-Docling OCR merge replay on the failed IDs plus one
-  in-environment no-timeout Docling retry on `WILD-ESA-038`.
+  targeted external-Docling OCR merge replay on the failed IDs plus three
+  in-environment no-timeout Docling retries on `WILD-ESA-038`,
+  `WILD-ESA-054`, and `FPS-241`.
 - `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json`
-  now records `extracted_count=631`,
-  `failed_count=4`,
-  `chunk_count=96633`,
+  now records `extracted_count=633`,
+  `failed_count=2`,
+  `chunk_count=97248`,
   `validation_passed=false`, and
-  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 3}`.
+  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 1}`.
 - The residual extraction blocker set is now exact:
   `FPS-005` fails with
-  `docling_conversion_failed` because the PDF structure is invalid, while
-  `FPS-125`, `FPS-241`, and `WILD-ESA-054` still fail with
-  `pdf_text_fallback_empty` after Docling-capable retries.
+  `docling_conversion_failed` because the PDF structure is invalid and a
+  fresh upstream redownload reproduces the same xref/pages corruption, while
+  `FPS-125` still fails with `pdf_text_fallback_empty` after Docling-capable
+  retries.
 - `pdftotext` continues to return parse errors on `FPS-005` and zero
-  characters on `FPS-125`, `FPS-241`, and `WILD-ESA-054`, while `pdftoppm`
-  can still render the latter three. That narrows the remaining work to
-  invalid-PDF repair plus raster/OCR recovery, not broader downloader or
-  catalog drift.
+  characters on `FPS-125`, while `pdftoppm` can still render `FPS-125`. An
+  in-environment no-timeout OCR retry on `FPS-125` remained compute-bound for
+  roughly `40` minutes and was interrupted without a merged success result.
+  That narrows the remaining work to upstream PDF replacement/repair plus one
+  raster/OCR recovery straggler, not broader downloader or catalog drift.
 - Fresh rebased `promotion-suite --manifest config/promotion_suite_v1.json`
   now reports `current_promotion_ready=true`,
   `promotion_ready=true`,

@@ -131,25 +131,26 @@ Local active import baseline on 2026-05-18 after import-completion closeout:
   `source_currentness_record_count=635`.
 - Full-canonical downstream freshness is still blocked on real extraction and
   parser recovery, but the live blocker set is now much smaller. A targeted
-  external-Docling OCR merge replay plus one in-environment no-timeout Docling
-  retry on `WILD-ESA-038` moved
+  external-Docling OCR merge replay plus three in-environment no-timeout
+  Docling retries on `WILD-ESA-038`, `WILD-ESA-054`, and `FPS-241` moved
   `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json`
-  to `extracted_count=631`, `failed_count=4`, `chunk_count=96633`, and
+  to `extracted_count=633`, `failed_count=2`, `chunk_count=97248`, and
   `validation_passed=false`.
 - The remaining extraction blockers are now exact:
-  `FPS-005` (`docling_conversion_failed`; invalid PDF structure) plus
-  `FPS-125`, `FPS-241`, and `WILD-ESA-054`
+  `FPS-005` (`docling_conversion_failed`; a fresh upstream redownload
+  reproduces the same invalid-PDF/xref corruption) plus `FPS-125`
   (`pdf_text_fallback_empty` after Docling-capable retries). `pdftotext`
-  still returns zero characters for the three residual OCR-heavy PDFs, while
-  `pdftoppm` can render them, so the remaining lane is narrowed to
-  raster/OCR recovery rather than broader catalog or URL drift.
-- Until those `4` residual extraction records are recovered, the source-set
+  still returns zero characters for `FPS-125` while `pdftoppm` can render it,
+  so the remaining lane is now one upstream-invalid PDF plus one OCR-heavy
+  raster recovery straggler rather than broader catalog or URL drift.
+- Until those `2` residual extraction records are recovered or replaced, the source-set
   knowledge-graph export plus the rebased `forest_plan_profile` and
   `forest_plan_component_retrieval` eval artifacts remain missing or stale.
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
   now truthful and active, but broader full-canonical downstream freshness is
-  still routed-red until the `4` failed extraction records are recovered and
+  still routed-red until the `2` failed extraction records are recovered or
+  replaced and
   the blocked graph/profile/component retrieval replays are rerun on
   `source-set-cac9c7d02b280825`.
 

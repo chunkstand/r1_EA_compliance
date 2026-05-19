@@ -5,6 +5,54 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Downstream Freshness Refresh Further Reduced Update
+
+This follow-on update reduces the same full-canonical downstream freshness
+packet further and supersedes the reduced update below when they disagree.
+
+- routed plan:
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
+- durable extraction progress:
+  the active extraction manifest and summary on
+  `source-set-cac9c7d02b280825` now record `extracted_count=633`,
+  `failed_count=2`,
+  `chunk_count=97248`,
+  `validation_passed=false`, and
+  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 1}`.
+- targeted recovery evidence:
+  a targeted external-Docling OCR merge replay plus in-environment
+  no-timeout Docling retries on `WILD-ESA-038`, `WILD-ESA-054`, and
+  `FPS-241` reduced the blocker set from `59` to `2`.
+- exact residual extraction blockers:
+  `FPS-005` (`docling_conversion_failed`; a fresh upstream redownload
+  reproduces the same invalid xref/pages corruption), and
+  `FPS-125` (`pdf_text_fallback_empty`).
+- system-tool probes:
+  `pdftotext` still returns parse errors on `FPS-005` and zero characters on
+  `FPS-125`, while `pdftoppm` can render `FPS-125`. A no-timeout
+  in-environment OCR retry on `FPS-125` remained compute-bound for roughly
+  `40` minutes and was interrupted without a merged success result. The
+  remaining lane is therefore narrowed to upstream PDF replacement/repair
+  plus one OCR-heavy raster recovery straggler rather than downloader/catalog
+  drift.
+- downstream truth:
+  `promotion-suite --manifest config/promotion_suite_v1.json` has not been
+  rerun since this extraction reduction because the full-canonical downstream
+  replay is still blocked on the `2` residual extraction failures. The
+  current exact downstream red surface remains the same four required
+  full-canonical failures recorded below: missing
+  `knowledge_graph/nepa_3d_graph_validation.json`,
+  missing
+  `knowledge_graph/nepa_3d_graph_summary.json`,
+  stale `forest_plan_profile` eval source-set identity, and stale
+  `forest_plan_component_retrieval` eval source-set identity.
+- next routing:
+  replace or repair `FPS-005`, recover or replace `FPS-125`, then rerun
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`,
+  `forest-plan-component-retrieval-eval`, and
+  `promotion-suite` on `source-set-cac9c7d02b280825`.
+
 ## Full Canonical Downstream Freshness Refresh Reduced Update
 
 This follow-on update reduces the same full-canonical downstream freshness
