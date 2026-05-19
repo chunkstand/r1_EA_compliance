@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved in current checkout; Milestone 1 next
+Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 next
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -182,6 +182,9 @@ Return the forest-plan downstream lane to a truthful replayable state by:
 
 Outcome label: resolved
 
+- Closing commit hash:
+  `d3606ad` (`Close identity reconciliation Milestone 0 baseline`)
+
 - Reconfirm the live blocker evidence from:
   `source_library/derived/source-set-9e7d85759951c279/forest_plan_components/summary.json`,
   `config/r1_forest_plan_component_inventory_build_manifest.json`,
@@ -194,7 +197,7 @@ Outcome label: resolved
   rows carried as separate explicit sets.
 - Add a dedicated generator/loader surface plus focused tests so future sessions can regenerate the
   registry from current repo inputs instead of hand-editing it.
-- Closed in the current checkout: the committed registry now records `99` referenced legacy
+- Closed `2026-05-19` through `d3606ad`: the committed registry now records `99` referenced legacy
   source-record IDs, `74` exact URL-backed canonical bindings, and `25` unresolved rows with
   `unresolved_status_counts={"catalog_confirmed": 11, "source_delta_required": 14}`.
 

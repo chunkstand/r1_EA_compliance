@@ -11,6 +11,8 @@ This implementation slice turns the reduced Milestone 3 forest-plan blocker
 into a governed active packet with a committed reconciliation registry instead
 of leaving the issue as a handoff-only note.
 
+- closing commit hash:
+  `d3606ad` (`Close identity reconciliation Milestone 0 baseline`)
 - routed plan:
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
 - packet routing:

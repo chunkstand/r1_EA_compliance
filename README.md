@@ -170,7 +170,8 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   `76` are still `source_delta_required`.
 - The active implementation packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
-  Milestone 0 in that packet is now resolved in the current checkout through a
+  Milestone 0 in that packet is now resolved through
+  `d3606ad` (`Close identity reconciliation Milestone 0 baseline`) and a
   governed registry artifact:
   `config/r1_forest_plan_identity_reconciliation_v1.json`.
   That registry captures the live `99` referenced legacy source-record IDs as

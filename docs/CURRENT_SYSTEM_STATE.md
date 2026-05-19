@@ -32,7 +32,9 @@ Latest closeout on 2026-05-19:
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
   packet is now reduced historical context after its Milestone 3 stop at
   `933c667`.
-- Milestone 0 in the new packet is now resolved in the current checkout
+- The Milestone 0 closeout commit for the new packet is
+  `d3606ad` (`Close identity reconciliation Milestone 0 baseline`).
+- Milestone 0 in the new packet is now resolved
   through `config/r1_forest_plan_identity_reconciliation_v1.json` and the new
   generator/test surface in
   `src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py` plus
