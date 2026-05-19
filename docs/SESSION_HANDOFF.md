@@ -5,6 +5,54 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Forest Plan Identity Reconciliation Milestone 1 Reduced Closeout
+
+This implementation slice rebinds the live manifest/readiness source-record
+surfaces onto canonical IDs wherever the governed exact official-URL proof
+already exists, then leaves only the unresolved blocker family explicit in the
+active packet.
+
+- routed plan:
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+- packet routing:
+  this packet remains the active implementation surface for the blocked
+  forest-plan lane. The already-bound `74` source-record IDs are no longer the
+  next task; the next truthful slice is only the remaining unresolved blocker
+  family.
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `tests/test_forest_plan_identity_reconciliation.py`,
+  `tests/test_forest_plan_inventory_build_manifest.py`,
+  `tests/test_forest_plan_profiles.py`, and
+  `tests/test_forest_plan_profile_eval_contracts.py`.
+- identity mix reduction:
+  the committed manifest/readiness pair now reduces the live source-record
+  identity mix to `74` canonical source-record IDs plus the explicit
+  unresolved `25`-row legacy blocker set from
+  `config/r1_forest_plan_identity_reconciliation_v1.json`
+  (`11` `catalog_confirmed`, `14` `source_delta_required`).
+- blocker metadata:
+  both configs now carry top-level and per-profile
+  `identity_reconciliation` metadata so the remaining legacy rows stay
+  explicit instead of hiding inside mixed legacy/canonical IDs.
+- remaining unresolved blocker concentration:
+  `flathead-nf=10`, `bitterroot-nf=3`, `idaho-panhandle-nfs=3`,
+  `nez-perce-clearwater-nfs=3`, and single-row planning/document-set blockers
+  in `custer-gallatin-nf`, `beaverhead-deerlodge-nf`,
+  `dakota-prairie-grasslands`, `helena-lewis-and-clark-nf`, `kootenai-nf`,
+  and `lolo-nf`.
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py -q`
+  passed `38/38`; and
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py`
+  passed.
+- next routing:
+  stay in the active identity-reconciliation packet, but route only to the
+  unresolved `25`-row blocker family until a truthful canonical component
+  inventory can exist again. Milestone 2 remains blocked until that happens.
+
 ## Full Canonical Forest Plan Identity Reconciliation Milestone 0 Closeout
 
 This implementation slice turns the reduced Milestone 3 forest-plan blocker

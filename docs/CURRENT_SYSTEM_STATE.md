@@ -21,6 +21,42 @@ older references below that still treat `source-set-5e65d845ce77e1a0`,
 historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes.
 
+## Full Canonical Forest Plan Identity Reconciliation Milestone 1 Reduced Closeout
+
+Latest closeout on 2026-05-19:
+
+- Routed implementation packet:
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
+- Milestone 0 remains resolved through
+  `d3606ad` (`Close identity reconciliation Milestone 0 baseline`).
+- Milestone 1 is now reduced through governed source-record rebinds in
+  `config/r1_forest_plan_component_inventory_build_manifest.json` and
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`, driven by
+  `src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py` plus
+  focused contract coverage in
+  `tests/test_forest_plan_identity_reconciliation.py`,
+  `tests/test_forest_plan_inventory_build_manifest.py`,
+  `tests/test_forest_plan_profiles.py`, and
+  `tests/test_forest_plan_profile_eval_contracts.py`.
+- The committed manifest/readiness pair now reduces the live identity mix to
+  `74` canonical source-record IDs plus the explicit unresolved `25`-row
+  legacy blocker set from
+  `config/r1_forest_plan_identity_reconciliation_v1.json`
+  (`11` `catalog_confirmed`, `14` `source_delta_required`).
+- Both configs now carry committed top-level and per-profile
+  `identity_reconciliation` metadata so the remaining blocker family is
+  explicit rather than hidden inside mixed legacy/canonical source IDs.
+- The remaining unresolved blocker family is concentrated in
+  `flathead-nf=10`, `bitterroot-nf=3`, `idaho-panhandle-nfs=3`,
+  `nez-perce-clearwater-nfs=3`, and single-row planning/document-set blockers
+  in `custer-gallatin-nf`, `beaverhead-deerlodge-nf`,
+  `dakota-prairie-grasslands`, `helena-lewis-and-clark-nf`, `kootenai-nf`,
+  and `lolo-nf`.
+- The next routed slice is no longer the already-bound `74` rows. Stay in the
+  active identity-reconciliation packet, but work only the unresolved
+  `25`-row blocker family until a truthful canonical component inventory can
+  exist again for Milestone 2.
+
 ## Full Canonical Forest Plan Identity Reconciliation Milestone 0 Closeout
 
 Latest closeout on 2026-05-19:

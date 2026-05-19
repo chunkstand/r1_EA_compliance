@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import Counter
 from collections import defaultdict
+from copy import deepcopy
 import csv
 import json
 from pathlib import Path
@@ -13,6 +14,9 @@ DEFAULT_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH = (
     REPO_ROOT / "config" / "r1_forest_plan_component_inventory_build_manifest.json"
 )
 DEFAULT_FOREST_PLAN_READINESS_PATH = REPO_ROOT / "config" / "region1_forest_plan_readiness_nepa_3d_v1.json"
+DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_REGISTRY_PATH = (
+    REPO_ROOT / "config" / "r1_forest_plan_identity_reconciliation_v1.json"
+)
 DEFAULT_FOREST_PLAN_LEGACY_REGISTER_PATH = REPO_ROOT / "config" / "r1_forest_plan_document_register_draft.csv"
 DEFAULT_ACTIVE_SOURCE_CATALOG_PATH = REPO_ROOT / "source_library" / "catalog" / "source_catalog.jsonl"
 DEFAULT_ACTIVE_SOURCE_SET_MANIFEST_PATH = REPO_ROOT / "source_library" / "catalog" / "source_set_manifest.json"
@@ -140,6 +144,140 @@ def write_region1_forest_plan_identity_reconciliation_registry(
     return registry
 
 
+def load_region1_forest_plan_identity_reconciliation_registry(
+    path: Path = DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_REGISTRY_PATH,
+) -> dict[str, Any]:
+    registry = _read_json(path)
+    schema_version = registry.get("schema_version")
+    if schema_version != FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION:
+        raise ValueError(
+            "Unsupported forest-plan identity reconciliation schema_version: "
+            f"{schema_version!r}; expected "
+            f"{FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION!r}"
+        )
+    return registry
+
+
+def rebind_region1_forest_plan_inventory_build_manifest(
+    *,
+    manifest_path: Path = DEFAULT_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH,
+    registry_path: Path = DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_REGISTRY_PATH,
+) -> dict[str, Any]:
+    manifest = _read_json(manifest_path)
+    registry = load_region1_forest_plan_identity_reconciliation_registry(registry_path)
+    exact_matches, unresolved_source_records, canonical_source_record_ids = _registry_indexes(registry)
+    rebound_manifest = deepcopy(manifest)
+    expected_source_record_ids = canonical_source_record_ids | set(unresolved_source_records)
+
+    for profile_row in rebound_manifest["profile_rows"]:
+        profile_row["primary_plan_source_record_id"] = _rebind_source_record_id(
+            profile_row["primary_plan_source_record_id"],
+            exact_matches=exact_matches,
+            canonical_source_record_ids=canonical_source_record_ids,
+        )
+        build_source_record_ids_by_role = profile_row.get("build_source_record_ids_by_role", {})
+        for role, source_record_ids in build_source_record_ids_by_role.items():
+            build_source_record_ids_by_role[role] = [
+                _rebind_source_record_id(
+                    source_record_id,
+                    exact_matches=exact_matches,
+                    canonical_source_record_ids=canonical_source_record_ids,
+                )
+                for source_record_id in source_record_ids
+            ]
+        profile_row["identity_reconciliation"] = _profile_identity_reconciliation_metadata(
+            forest_unit_id=profile_row["forest_unit_id"],
+            source_record_ids=_collect_manifest_profile_row_source_record_ids(profile_row),
+            unresolved_source_records=unresolved_source_records,
+        )
+
+    final_source_record_ids = collect_inventory_manifest_source_record_ids(rebound_manifest)
+    _validate_rebound_source_record_ids(
+        current_source_record_ids=final_source_record_ids,
+        expected_source_record_ids=expected_source_record_ids,
+        config_label="inventory build manifest",
+        unresolved_source_records=unresolved_source_records,
+    )
+    rebound_manifest["identity_reconciliation"] = _config_identity_reconciliation_metadata(
+        registry=registry,
+        registry_path=registry_path,
+        current_source_record_ids=final_source_record_ids,
+        unresolved_source_records=unresolved_source_records,
+    )
+    return rebound_manifest
+
+
+def rebind_region1_forest_plan_readiness(
+    *,
+    readiness_path: Path = DEFAULT_FOREST_PLAN_READINESS_PATH,
+    registry_path: Path = DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_REGISTRY_PATH,
+) -> dict[str, Any]:
+    readiness = _read_json(readiness_path)
+    registry = load_region1_forest_plan_identity_reconciliation_registry(registry_path)
+    exact_matches, unresolved_source_records, canonical_source_record_ids = _registry_indexes(registry)
+    rebound_readiness = deepcopy(readiness)
+    expected_source_record_ids = canonical_source_record_ids | set(unresolved_source_records)
+
+    for profile_row in rebound_readiness["profile_rows"]:
+        profile_row["active_plan_source_record_id"] = _rebind_source_record_id(
+            profile_row["active_plan_source_record_id"],
+            exact_matches=exact_matches,
+            canonical_source_record_ids=canonical_source_record_ids,
+        )
+        for requirement in profile_row.get("source_requirements", []):
+            source_record_id = requirement.get("source_record_id")
+            if source_record_id:
+                requirement["source_record_id"] = _rebind_source_record_id(
+                    source_record_id,
+                    exact_matches=exact_matches,
+                    canonical_source_record_ids=canonical_source_record_ids,
+                )
+            source_record_ids = requirement.get("source_record_ids")
+            if source_record_ids:
+                requirement["source_record_ids"] = [
+                    _rebind_source_record_id(
+                        value,
+                        exact_matches=exact_matches,
+                        canonical_source_record_ids=canonical_source_record_ids,
+                    )
+                    for value in source_record_ids
+                ]
+        profile_row["identity_reconciliation"] = _profile_identity_reconciliation_metadata(
+            forest_unit_id=profile_row["forest_unit_id"],
+            source_record_ids=_collect_readiness_profile_row_source_record_ids(profile_row),
+            unresolved_source_records=unresolved_source_records,
+        )
+
+    final_source_record_ids = collect_readiness_source_record_ids(rebound_readiness)
+    _validate_rebound_source_record_ids(
+        current_source_record_ids=final_source_record_ids,
+        expected_source_record_ids=expected_source_record_ids,
+        config_label="readiness matrix",
+        unresolved_source_records=unresolved_source_records,
+    )
+    rebound_readiness["identity_reconciliation"] = _config_identity_reconciliation_metadata(
+        registry=registry,
+        registry_path=registry_path,
+        current_source_record_ids=final_source_record_ids,
+        unresolved_source_records=unresolved_source_records,
+    )
+    return rebound_readiness
+
+
+def collect_inventory_manifest_source_record_ids(manifest: dict[str, Any]) -> set[str]:
+    source_record_ids = set()
+    for profile_row in manifest["profile_rows"]:
+        source_record_ids.update(_collect_manifest_profile_row_source_record_ids(profile_row))
+    return source_record_ids
+
+
+def collect_readiness_source_record_ids(readiness: dict[str, Any]) -> set[str]:
+    source_record_ids = set()
+    for profile_row in readiness["profile_rows"]:
+        source_record_ids.update(_collect_readiness_profile_row_source_record_ids(profile_row))
+    return source_record_ids
+
+
 def _collect_referenced_legacy_source_records(
     inventory_manifest: dict[str, Any], readiness: dict[str, Any]
 ) -> dict[str, set[str]]:
@@ -189,6 +327,140 @@ def _load_legacy_register(legacy_register_path: Path) -> dict[str, dict[str, str
 
 def _read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _registry_indexes(
+    registry: dict[str, Any],
+) -> tuple[dict[str, str], dict[str, dict[str, Any]], set[str]]:
+    exact_matches = {
+        row["legacy_source_record_id"]: row["canonical_source_record_id"]
+        for row in registry["exact_url_matched_source_records"]
+    }
+    unresolved_source_records = {
+        row["legacy_source_record_id"]: row for row in registry["unresolved_source_records"]
+    }
+    overlapping_ids = sorted(set(exact_matches) & set(unresolved_source_records))
+    if overlapping_ids:
+        raise ValueError(
+            "Identity reconciliation registry has overlapping exact and unresolved source_record_ids: "
+            + ", ".join(overlapping_ids)
+        )
+    canonical_source_record_ids = set(exact_matches.values())
+    if len(canonical_source_record_ids) != len(exact_matches):
+        raise ValueError(
+            "Identity reconciliation registry must map each exact legacy source_record_id to a unique "
+            "canonical source_record_id."
+        )
+    return exact_matches, unresolved_source_records, canonical_source_record_ids
+
+
+def _rebind_source_record_id(
+    source_record_id: str,
+    *,
+    exact_matches: dict[str, str],
+    canonical_source_record_ids: set[str],
+) -> str:
+    if source_record_id in exact_matches:
+        return exact_matches[source_record_id]
+    if source_record_id in canonical_source_record_ids:
+        return source_record_id
+    return source_record_id
+
+
+def _profile_identity_reconciliation_metadata(
+    *,
+    forest_unit_id: str,
+    source_record_ids: set[str],
+    unresolved_source_records: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    unresolved_rows = sorted(
+        (
+            unresolved_source_records[source_record_id]
+            for source_record_id in source_record_ids
+            if source_record_id in unresolved_source_records
+        ),
+        key=lambda row: row["legacy_source_record_id"],
+    )
+    unresolved_status_counts = Counter(row["resolution_status"] for row in unresolved_rows)
+    return {
+        "forest_unit_id": forest_unit_id,
+        "status": (
+            "unresolved_blockers_present" if unresolved_rows else "exact_url_rebound_complete"
+        ),
+        "remaining_unresolved_source_record_count": len(unresolved_rows),
+        "remaining_unresolved_source_record_ids": [
+            row["legacy_source_record_id"] for row in unresolved_rows
+        ],
+        "remaining_unresolved_status_counts": dict(sorted(unresolved_status_counts.items())),
+    }
+
+
+def _config_identity_reconciliation_metadata(
+    *,
+    registry: dict[str, Any],
+    registry_path: Path,
+    current_source_record_ids: set[str],
+    unresolved_source_records: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    remaining_unresolved_source_record_ids = sorted(
+        source_record_id
+        for source_record_id in current_source_record_ids
+        if source_record_id in unresolved_source_records
+    )
+    return {
+        "registry_path": _repo_relative(registry_path),
+        "registry_schema_version": registry["schema_version"],
+        "registry_active_source_set_id": registry["active_source_set_id"],
+        "exact_url_rebound_source_record_count": registry["exact_url_matched_source_record_count"],
+        "remaining_unresolved_source_record_count": len(remaining_unresolved_source_record_ids),
+        "remaining_unresolved_source_record_ids": remaining_unresolved_source_record_ids,
+        "remaining_unresolved_status_counts": dict(registry["unresolved_status_counts"]),
+    }
+
+
+def _validate_rebound_source_record_ids(
+    *,
+    current_source_record_ids: set[str],
+    expected_source_record_ids: set[str],
+    config_label: str,
+    unresolved_source_records: dict[str, dict[str, Any]],
+) -> None:
+    unexpected_source_record_ids = sorted(current_source_record_ids - expected_source_record_ids)
+    missing_source_record_ids = sorted(expected_source_record_ids - current_source_record_ids)
+    if unexpected_source_record_ids or missing_source_record_ids:
+        parts = []
+        if unexpected_source_record_ids:
+            parts.append("unexpected source_record_ids: " + ", ".join(unexpected_source_record_ids))
+        if missing_source_record_ids:
+            parts.append("missing source_record_ids: " + ", ".join(missing_source_record_ids))
+        raise ValueError(f"{config_label} identity rebound mismatch: " + "; ".join(parts))
+    resolved_legacy_source_record_ids = sorted(
+        source_record_id
+        for source_record_id in current_source_record_ids
+        if source_record_id.startswith("R1PLAN-") and source_record_id not in unresolved_source_records
+    )
+    if resolved_legacy_source_record_ids:
+        raise ValueError(
+            f"{config_label} still contains reboundable legacy source_record_ids: "
+            + ", ".join(resolved_legacy_source_record_ids)
+        )
+
+
+def _collect_manifest_profile_row_source_record_ids(profile_row: dict[str, Any]) -> set[str]:
+    source_record_ids = {profile_row["primary_plan_source_record_id"]}
+    for role_source_record_ids in profile_row.get("build_source_record_ids_by_role", {}).values():
+        source_record_ids.update(role_source_record_ids)
+    return source_record_ids
+
+
+def _collect_readiness_profile_row_source_record_ids(profile_row: dict[str, Any]) -> set[str]:
+    source_record_ids = {profile_row["active_plan_source_record_id"]}
+    for requirement in profile_row.get("source_requirements", []):
+        source_record_id = requirement.get("source_record_id")
+        if source_record_id:
+            source_record_ids.add(source_record_id)
+        source_record_ids.update(requirement.get("source_record_ids", []))
+    return source_record_ids
 
 
 def _repo_relative(path: Path) -> str:

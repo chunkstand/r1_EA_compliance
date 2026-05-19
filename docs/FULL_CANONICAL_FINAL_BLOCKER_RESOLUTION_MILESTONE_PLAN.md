@@ -74,10 +74,10 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   contain `0` `R1PLAN-*` rows, while
   `config/r1_forest_plan_component_inventory_build_manifest.json` plus
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`
-  still reference `99` legacy `R1PLAN-*` IDs. The preserved forest-plan
-  crosswalk accounts for all `99`; `23` are
-  `catalog_confirmed`/mapped to existing canonical rows, and the remaining
-  `76` are still `source_delta_required`.
+  now reduce that identity mix to `74` canonical source-record IDs plus the
+  explicit unresolved `25`-row legacy blocker set preserved in
+  `config/r1_forest_plan_identity_reconciliation_v1.json`
+  (`11` `catalog_confirmed`, `14` `source_delta_required`).
 - The exact remaining failed required full-canonical slots are still the same four downstream
   artifacts, but they now need regeneration against active source set `source-set-9e7d85759951c279`:
   `source_library/derived/source-set-9e7d85759951c279/knowledge_graph/nepa_3d_graph_validation.json`,
@@ -88,8 +88,10 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`: the
   extraction blocker lane is closed, the active source set is
   `source-set-9e7d85759951c279`, and the immediate next work is a dedicated
-  canonical-vs-legacy forest-plan identity reconciliation packet before the
-  four downstream reruns above can be completed truthfully.
+  canonical-vs-legacy forest-plan identity reconciliation packet. The next
+  slice inside that packet is the unresolved `25`-row blocker family, not the
+  already-bound `74` rows, before the four downstream reruns above can be
+  completed truthfully.
 - This packet is no longer the active implementation surface after the reduced
   Milestone 3 closeout. The active follow-on packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.

@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 next
+Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19; unresolved blocker family next
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -23,13 +23,17 @@ contracts onto canonical active-catalog identities before the blocked downstream
   `plan_standard_labels_not_detected`.
 - `config/r1_forest_plan_component_inventory_build_manifest.json` and
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`
-  together reference `99` distinct legacy `R1PLAN-*` source-record IDs.
+  now reduce the source-record identity mix to `74` canonical source-record IDs plus the explicit
+  unresolved `25`-row legacy blocker set recorded in
+  `config/r1_forest_plan_identity_reconciliation_v1.json`.
 - Against the active canonical catalog in `source_library/catalog/source_catalog.jsonl`, `74` of
   those `99` legacy source-record IDs already have an exact official-URL match to a current
   canonical source-record ID.
 - The remaining `25` legacy source-record IDs are not yet governably bound to a current canonical
   source-record ID. `14` remain `source_delta_required`, and `11` are `catalog_confirmed`
   planning or document-set landing pages with no exact current active-catalog row.
+- Both configs now carry committed top-level and per-profile `identity_reconciliation` metadata so
+  the unresolved blocker family stays explicit instead of hiding inside a mixed-ID manifest.
 - `config/forest_plan_component_retrieval_eval_v1.json`
   still carries legacy component IDs for the retrieval-eval cases, so source-record rebind and
   component-identity rebind must stay sequenced rather than being mixed together.
@@ -215,12 +219,16 @@ Outcome label: reduced
   and canonical source-record IDs without failing fast.
 - Close the milestone only when the identity mix is reduced to the explicit unresolved set and the
   docs route the next slice to the unresolved blocker family, not to the already-bound rows.
+- Closed `2026-05-19`: the committed manifest and readiness configs now carry only the `25`
+  unresolved legacy `R1PLAN-*` rows, while the `74` exact URL-backed rows are rebound onto active
+  canonical source-record IDs with governed `identity_reconciliation` blocker metadata.
 
 ### Milestone 2: Reconcile Retrieval Component Identities
 
 Outcome label: reduced
 
-- After Milestone 1 lands and a truthful canonical component inventory exists again, regenerate the
+- After the unresolved blocker family clears and a truthful canonical component inventory exists
+  again, regenerate the
   forest-plan component inventory on `source-set-9e7d85759951c279`.
 - Rebind `config/forest_plan_component_retrieval_eval_v1.json` away from legacy component IDs and
   onto canonical component IDs emitted by that rebuilt inventory.
@@ -270,8 +278,10 @@ Outcome label: resolved
 
 - Milestone 0 registry gate:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py -q`
+- Milestone 1 manifest/readiness contract gate:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py -q`
 - Source/test lint:
-  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py tests/test_forest_plan_identity_reconciliation.py`
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py`
 - Plan lint:
   `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
 - Docs and closeout:
@@ -283,10 +293,12 @@ Outcome label: resolved
   as `source-set-9e7d85759951c279`.
 - The committed registry records `99` referenced legacy source-record IDs, `74` exact URL-backed
   canonical bindings, and `25` unresolved rows.
+- The committed manifest/readiness pair now reduces to exactly those `74` canonical source-record
+  IDs plus the explicit unresolved `25`-row legacy blocker set.
 - The unresolved status split is explicit and preserved at
   `catalog_confirmed=11` and `source_delta_required=14`.
-- Focused tests prove the committed registry covers every legacy source-record ID currently
-  referenced by the live manifest/readiness pair.
+- Focused tests prove the committed registry and the live manifest/readiness pair stay aligned on
+  that rebound identity mix.
 - The active routing set no longer treats the reduced Milestone 3 rerun packet as the active
   implementation surface. This identity-reconciliation packet is now the active packet.
 
@@ -315,8 +327,11 @@ Outcome label: resolved
 
 ## Residual Risks And Next Milestone Routing
 
-- The main accepted residual risk after Milestone 0 is that the registry is descriptive, not yet a
-  manifest rewrite. That is intentional. The next active slice is Milestone 1 on source-record
-  manifest/readiness rebind.
+- The main accepted residual risk after Milestone 1 is that the source-record rebind is complete
+  only for the exact URL-backed `74` rows. The remaining `25` unresolved legacy rows still block a
+  truthful canonical component inventory rebuild.
+- The next active slice is the unresolved blocker family only. Milestone 2 stays blocked until
+  those rows are reconciled onto canonical source-record IDs or otherwise resolved through governed
+  repo data.
 - If a future session cannot prove a canonical binding for one of the `25` unresolved rows, it must
   keep that row explicit as unresolved rather than hiding it inside a broad rerun attempt.

@@ -178,11 +178,16 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   `74` exact official-URL matches to active canonical source-record IDs plus
   `25` unresolved rows
   (`11` `catalog_confirmed`, `14` `source_delta_required`).
+- Milestone 1 in that packet is now reduced: the committed
+  manifest/readiness pair carries the `74` exact URL-backed rows as canonical
+  source-record IDs and leaves only the explicit unresolved `25`-row legacy
+  blocker set, with governed `identity_reconciliation` metadata on both
+  configs.
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
   now truthful and active, but broader full-canonical downstream freshness is
   still routed-red until the active identity-reconciliation packet clears the
-  legacy `R1PLAN-*` dependency and the blocked
+  remaining unresolved `25`-row blocker family and the blocked
   graph/profile/component retrieval and promotion reruns can be replayed on
   `source-set-9e7d85759951c279`.
 

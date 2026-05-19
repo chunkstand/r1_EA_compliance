@@ -13,6 +13,9 @@ from usfs_r1_ea_sources.forest_plan_profiles import (
     load_forest_plan_profile,
     load_forest_plan_profiles,
 )
+from usfs_r1_ea_sources.forest_plan_identity_reconciliation import (
+    load_region1_forest_plan_identity_reconciliation_registry,
+)
 from usfs_r1_ea_sources.forest_plan_resolver import CUSTER_GALLATIN_PLAN_SOURCE_ID
 from usfs_r1_ea_sources.forest_plan_resolver import CUSTER_GALLATIN_REQUIRED_SOURCE_IDS
 from usfs_r1_ea_sources.forest_plan_resolver import SUPPORTING_PLAN_EVIDENCE_ROUTES
@@ -333,6 +336,11 @@ class ForestPlanProfileTests(unittest.TestCase):
 
     def test_non_custer_profiles_flatten_readiness_source_requirements(self) -> None:
         readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))
+        registry = load_region1_forest_plan_identity_reconciliation_registry()
+        exact_matches = {
+            row["legacy_source_record_id"]: row["canonical_source_record_id"]
+            for row in registry["exact_url_matched_source_records"]
+        }
 
         for row in readiness["profile_rows"]:
             if row["forest_unit_id"] == "custer-gallatin-nf":
@@ -345,12 +353,15 @@ class ForestPlanProfileTests(unittest.TestCase):
                 else:
                     expected_source_record_ids.extend(requirement["source_record_ids"])
             self.assertEqual(
-                set(profile.required_source_record_ids),
+                {exact_matches.get(source_record_id, source_record_id) for source_record_id in profile.required_source_record_ids},
                 set(expected_source_record_ids),
                 row["forest_unit_id"],
             )
             self.assertEqual(
-                profile.active_plan_source_record_id,
+                exact_matches.get(
+                    profile.active_plan_source_record_id,
+                    profile.active_plan_source_record_id,
+                ),
                 row["active_plan_source_record_id"],
                 row["forest_unit_id"],
             )

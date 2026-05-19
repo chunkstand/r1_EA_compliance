@@ -11,6 +11,9 @@ from usfs_r1_ea_sources.forest_plan_inventory_build_manifest import (
     REGION1_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_SCHEMA_VERSION,
     load_region1_forest_plan_inventory_build_manifest,
 )
+from usfs_r1_ea_sources.forest_plan_identity_reconciliation import (
+    load_region1_forest_plan_identity_reconciliation_registry,
+)
 
 
 class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
@@ -32,6 +35,11 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
 
     def test_loads_default_manifest_as_data(self) -> None:
         manifest = load_region1_forest_plan_inventory_build_manifest()
+        registry = load_region1_forest_plan_identity_reconciliation_registry()
+        exact_matches = {
+            row["legacy_source_record_id"]: row["canonical_source_record_id"]
+            for row in registry["exact_url_matched_source_records"]
+        }
 
         self.assertEqual(
             manifest.schema_version,
@@ -42,19 +50,25 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
             "source-set-9e7d85759951c279",
         )
         dakota = manifest.get("dakota-prairie-grasslands")
-        self.assertEqual(dakota.primary_plan_source_record_id, "R1PLAN-dakota-prairie-grasslands-03")
+        self.assertEqual(
+            dakota.primary_plan_source_record_id,
+            exact_matches["R1PLAN-dakota-prairie-grasslands-03"],
+        )
         self.assertEqual(
             dakota.build_source_record_ids_by_role["primary_land_resource_management_plan_part"],
             (
-                "R1PLAN-dakota-prairie-grasslands-03",
-                "R1PLAN-dakota-prairie-grasslands-04",
-                "R1PLAN-dakota-prairie-grasslands-05",
-                "R1PLAN-dakota-prairie-grasslands-06",
-                "R1PLAN-dakota-prairie-grasslands-07",
+                exact_matches["R1PLAN-dakota-prairie-grasslands-03"],
+                exact_matches["R1PLAN-dakota-prairie-grasslands-04"],
+                exact_matches["R1PLAN-dakota-prairie-grasslands-05"],
+                exact_matches["R1PLAN-dakota-prairie-grasslands-06"],
+                exact_matches["R1PLAN-dakota-prairie-grasslands-07"],
             ),
         )
         nez_perce = manifest.get("nez-perce-clearwater-nfs")
-        self.assertEqual(nez_perce.primary_plan_source_record_id, "R1PLAN-nez-perce-clearwater-nfs-06")
+        self.assertEqual(
+            nez_perce.primary_plan_source_record_id,
+            exact_matches["R1PLAN-nez-perce-clearwater-nfs-06"],
+        )
         self.assertIn(
             "R1PLAN-nez-perce-clearwater-nfs-02",
             nez_perce.source_record_ids,
