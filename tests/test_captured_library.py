@@ -82,6 +82,21 @@ class CapturedLibraryIntegrityTests(unittest.TestCase):
         cls.catalog_validation = _read_json(cls.catalog_dir / "catalog_validation.json")
         cls.catalog_records = _read_jsonl(cls.catalog_dir / "source_catalog.jsonl")
         cls.catalog_by_id = {record["source_record_id"]: record for record in cls.catalog_records}
+        cls.active_download_run_id = cls.catalog_manifest.get("download_run_id")
+        cls.active_download_batch_run_ids = cls.catalog_manifest.get("download_batch_run_ids") or []
+        cls.active_download_summary = None
+        cls.active_run_records: list[dict] = []
+        cls.active_run_records_by_id: dict[str, dict] = {}
+        if cls.active_download_run_id:
+            cls.active_download_summary = _read_json(
+                SOURCE_LIBRARY / "runs" / cls.active_download_run_id / "summary.json"
+            )
+            cls.active_run_records = _read_jsonl(
+                _path_from_output(cls.active_download_summary["manifest_path"])
+            )
+            cls.active_run_records_by_id = {
+                record["source_record_id"]: record for record in cls.active_run_records
+            }
         cls.batch_records = _read_batch_records(cls.ledger)
         cls.batch_records_by_id = {
             record["source_record_id"]: record for record in cls.batch_records
@@ -219,8 +234,9 @@ class CapturedLibraryIntegrityTests(unittest.TestCase):
         )
 
     def test_active_catalog_artifact_count_matches_combined_batch_manifests(self) -> None:
+        active_records = self.active_run_records or self.active_batch_records
         artifact_paths_by_sha: dict[str, set[str]] = {}
-        for record in self.active_batch_records:
+        for record in active_records:
             if record["status"] in NON_ARTIFACT_SUCCESS_STATUSES:
                 self.assertIsNone(record.get("artifact_sha256"), msg=record["source_record_id"])
                 continue
@@ -256,6 +272,38 @@ class CapturedLibraryIntegrityTests(unittest.TestCase):
     def test_reviewer_catalog_matches_batch_manifests(self) -> None:
         self.assertTrue(self.catalog_validation["passed"])
         self.assertIsNone(self.catalog_manifest["download_batch_run_id"])
+        if self.active_run_records:
+            self.assertEqual(
+                self.catalog_manifest["download_run_id"],
+                self.active_download_run_id,
+            )
+            self.assertEqual(self.catalog_manifest["download_batch_run_ids"], [])
+            self.assertEqual(self.catalog_manifest["source_count"], len(self.active_run_records))
+            self.assertEqual(self.catalog_manifest["supplemental_source_count"], 0)
+            self.assertIsNone(self.catalog_manifest["source_delta_input"])
+            self.assertEqual(
+                self.catalog_manifest["unique_url_count"],
+                len({record["normalized_url"] for record in self.active_run_records}),
+            )
+            self.assertEqual(set(self.catalog_by_id), set(self.active_run_records_by_id))
+
+            for source_id, run_record in self.active_run_records_by_id.items():
+                catalog_record = self.catalog_by_id[source_id]
+                self.assertEqual(catalog_record["source_status"], run_record["status"], msg=source_id)
+                self.assertEqual(
+                    catalog_record["artifact_sha256"],
+                    run_record["artifact_sha256"],
+                    msg=source_id,
+                )
+                self.assertEqual(catalog_record["artifact_path"], run_record["artifact_path"], msg=source_id)
+                self.assertEqual(catalog_record["original_url"], run_record["original_url"], msg=source_id)
+                self.assertEqual(catalog_record["effective_url"], run_record["effective_url"], msg=source_id)
+                self.assertEqual(catalog_record["download_run_id"], run_record["run_id"], msg=source_id)
+                self.assertIsNone(catalog_record["download_batch_run_id"], msg=source_id)
+                self.assertTrue(catalog_record["citation_label"], msg=source_id)
+                self.assertTrue(catalog_record["review_topics"], msg=source_id)
+            return
+
         self.assertEqual(
             self.catalog_manifest["download_batch_run_ids"],
             ACTIVE_BATCH_RUN_IDS,

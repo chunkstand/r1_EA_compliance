@@ -293,6 +293,53 @@ class PreflightTests(unittest.TestCase):
         self.assertIn("--head", calls[0])
         self.assertIn("--range", calls[1])
 
+    def test_preflight_retries_with_get_after_head_rate_limit(self) -> None:
+        config = load_config(CONFIG)
+        url = "https://www.fs.usda.gov/media/44634"
+        calls: list[tuple[str, int]] = []
+
+        def fake_fetch_once(
+            requested_url, method, network, validation, attempt_count, *, original_url=None
+        ):  # noqa: ANN001
+            calls.append((method, attempt_count))
+            if method == "HEAD":
+                return PreflightFetchResult(
+                    status="rate_limited",
+                    http_status=429,
+                    final_url=requested_url,
+                    redirect_chain=[],
+                    content_type="text/html",
+                    content_length=0,
+                    method=method,
+                    attempt_count=attempt_count,
+                    failure={
+                        "error_class": "rate_limited",
+                        "error_message": "HTTP 429",
+                        "attempt_count": attempt_count,
+                    },
+                    validation={"mode": "preflight", "passed": False, "reason": "HTTP 429"},
+                )
+            return PreflightFetchResult(
+                status="preflight_ok",
+                http_status=206,
+                final_url=requested_url,
+                redirect_chain=[],
+                content_type="application/pdf",
+                content_length=4096,
+                method=method,
+                attempt_count=attempt_count,
+                failure=None,
+                validation={"mode": "preflight", "passed": True, "reason": None},
+            )
+
+        with patch("usfs_r1_ea_sources.preflight._fetch_once", side_effect=fake_fetch_once):
+            result = fetch_url_metadata(url, config.network, config.validation)
+
+        self.assertEqual(result.status, "preflight_ok")
+        self.assertEqual(result.method, "GET")
+        self.assertEqual(result.http_status, 206)
+        self.assertEqual(calls, [("HEAD", 1), ("GET", 1)])
+
 
 if __name__ == "__main__":
     unittest.main()

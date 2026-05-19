@@ -4,6 +4,19 @@ Date: 2026-05-18
 
 Status: Resolved
 
+Routing note on 2026-05-19:
+
+- The follow-on import-completion packet is now also resolved. The active local
+  import truth in `source_library/catalog/` is no longer the proving slice or
+  the planned Phase 2 gate referenced in this refoundation packet's closeout
+  context; it is now full-register source set `source-set-cac9c7d02b280825`
+  built by download run
+  `phase2-canonical-download-full-post-head429-fallback-20260519`.
+- This resolved refoundation packet still stands as the architecture and
+  runtime-contract closeout. Current import execution truth now routes through
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`,
+  `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`.
+
 Current checkpoint on 2026-05-18:
 
 - Phase 0 workbook freeze artifacts are now live in the repo: the final

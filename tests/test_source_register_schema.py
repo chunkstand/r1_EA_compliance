@@ -98,6 +98,7 @@ class SourceRegisterSchemaTests(unittest.TestCase):
             "FED-039": "https://www.govinfo.gov/content/pkg/FR-1996-05-29/html/96-13597.htm",
             "FED-043": "https://www.archives.gov/federal-register/codification/executive-order/11990.html",
             "FED-029": "https://uscode.house.gov/view.xhtml?path=/prelim@title16/chapter5A&edition=prelim",
+            "FPS-117": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/custergallatin/CNF%20FPAdjustment%20001.pdf",
             "FPS-344": "https://www.federalregister.gov/d/2024-30342",
             "PROG-008": "https://www.fs.usda.gov/naturalresources/watershed/pubs/FS_National_Core_BMPs_April2012.pdf",
             "STP-015": "https://www.deq.idaho.gov/water-quality/surface-water/total-maximum-daily-loads/",

@@ -7,17 +7,78 @@ The workbook `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
 is now the active capture and catalog source-of-truth input. The generated
 `source_library/` remains the audited local evidence store used by extraction,
 retrieval, evidence graph, source-claim extraction, rule-claim binding, and
-deterministic EA package review commands, but it now contains both preserved
-legacy baseline artifacts and the first isolated canonical-register-driven
-catalog gate.
+deterministic EA package review commands, and it now contains preserved legacy
+baseline artifacts, the active full-register canonical import, and
+reviewer-ready downstream lanes.
 
-Routing note: the newest import-completion, operational-recovery, and
+Routing note: the newest import-completion closeout, operational-recovery, and
 gold-coverage sections below supersede older historical lane notes when they
 disagree. In particular, older references below that still treat
-`source-set-5e65d845ce77e1a0` as the active local catalog or that still claim
-local `full_canonical_corpus_ready=true` / `expansion_ready=true` are
-historical only after the 2026-05-18 import-completion Milestone 0 rebaseline,
-unless a later milestone explicitly restores or reruns those lanes.
+`source-set-5e65d845ce77e1a0`, `source-set-9dcf819bc4cca486`, or the planned
+Phase 2 gate `source-set-ae989382c52344db` as the active local import catalog
+are historical only after the 2026-05-19 import-completion closeout, unless a
+later milestone explicitly reruns those lanes.
+
+## Canonical Source Register Import Completion Closeout
+
+Latest closeout on 2026-05-19:
+
+- The active local catalog in `source_library/catalog/` is now full-register
+  source set `source-set-cac9c7d02b280825`, created on
+  `2026-05-19T02:35:26.205014Z`, with `source_count=635`,
+  `artifact_count=623`, `unique_url_count=635`,
+  `source_partition_counts={"active_review_corpus": 583, "currentness_supersession_archive": 52}`,
+  `status_counts={"downloaded": 615, "downloaded_existing": 8, "duplicate_content": 12}`,
+  and governing download run
+  `phase2-canonical-download-full-post-head429-fallback-20260519`.
+- The proving-slice active catalog `source-set-9dcf819bc4cca486` and the
+  planned-only Phase 2 gate `source-set-ae989382c52344db` are now explicit
+  historical pre-import baselines for this checkout, not the live
+  `source_library/catalog/` truth.
+- The canonical workbook contract remains:
+  `Document_Register_Master=635`,
+  `Direct_File_Capture_Queue=51`,
+  `Removed_Not_Applicable_Final=2`.
+  `source-register-validate` now passes with `issue_count=0` on workbook SHA
+  `4d236682fcd26c26056b142cf4f41078afb36ed52e916ef6414066132df7914f`.
+- Milestone 1 is closed through
+  `source_library/runs/phase2-canonical-preflight-full-post-head429-fallback-20260519/summary.json`:
+  `checked_url_count=635`,
+  `preflight_ok_count=635`,
+  `failed_count=0`.
+  `preflight.py` now falls through from `HEAD` `rate_limited` results to the
+  existing ranged `GET` probe, and the regression is covered in
+  `tests/test_preflight.py`.
+- Milestone 2 is closed through:
+  `source_library/runs/phase2-canonical-dry-run-post-head429-fallback-20260519/summary.json`
+  (`planned_count=635`);
+  `source_library/runs/phase2-canonical-download-full-post-head429-fallback-20260519/summary.json`
+  (`downloaded=615`, `downloaded_existing=8`, `duplicate_content=12`,
+  `failed_count=0`, `needs_review_count=0`);
+  `validate-run --run-id phase2-canonical-download-full-post-head429-fallback-20260519`
+  (`8/8` checks passed); and
+  `catalog-build --run-id phase2-canonical-download-full-post-head429-fallback-20260519`
+  (`validation_passed=true`).
+- The unsupported-format direct-document slice remains green and preserved:
+  scoped preflight passed `8/8`, scoped download passed `8/8`, scoped catalog
+  gate `source-set-a0402de124943920` records `artifact_count=8`, scoped
+  extraction admitted all `8/8`, and upstream direct eval remains green at
+  `38/38`.
+- Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
+  on `2026-05-19` now reports `current_promotion_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=true`. The same fresh artifact
+  still reports `full_canonical_corpus_ready=false`, but now only because the
+  preserved full-canonical downstream artifact family still points at
+  historical source set `source-set-5e65d845ce77e1a0` and fails with
+  `full_canonical_failure_category_counts={"stale_artifact": 2}`.
+- Current reviewer-ready downstream evidence still lives on review-oriented
+  source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
+  now truthful and active, but any later claim that the broader
+  full-canonical downstream artifact family is fresh against
+  `source-set-cac9c7d02b280825` needs its own follow-on refresh packet.
+- Older deeper references below that still describe the Milestone 0 rebaseline,
+  the single-row `FPS-117` blocker, or the proving-slice catalog as live are
+  historical pre-closeout context only.
 
 ## Canonical Source Register Import Completion Milestone 0 Local Rebaseline
 

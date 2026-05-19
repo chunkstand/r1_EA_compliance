@@ -75,155 +75,58 @@ source-delta-required, `1` documented official-source gap), but
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
 promotion evidence.
 
-Local active import baseline on 2026-05-18:
+Local active import baseline on 2026-05-18 after import-completion closeout:
 
-- Active local catalog in `source_library/catalog/` is currently proving source
-  set `source-set-9dcf819bc4cca486`, created on `2026-05-18T10:56:21Z`, with
-  `26` source rows, `26` raw artifacts, `26` unique URLs,
-  `source_partition_counts={"active_review_corpus": 25, "currentness_supersession_archive": 1}`,
-  `status_counts={"downloaded_existing": 26}`, and governing download run
-  `source-register-proving-download-20260518T105620Z-08363bef`.
-- The full-register Phase 2 catalog gate in
-  `source_library/runs/canonical-source-register-phase2-catalog-gate-20260518/catalog_gate/`
-  is currently planned-only source set `source-set-ae989382c52344db`, with
-  `635` source rows, `0` artifacts, `635` unique URLs,
-  `source_partition_counts={"candidate_blocked_source": 635}`,
-  `status_counts={"planned": 635}`, and no governing download run IDs yet.
-- The local full-register dry run `phase2-canonical-dry-run-20260518` planned
-  all `635` canonical master-sheet rows, while the sampled local preflight
-  `phase2-canonical-preflight-20260518` checked `25` URLs and recorded
-  `7` `preflight_ok` plus `18` `ssl_error`, dominated by `ecos.fws.gov`
-  (`18`) and `www.fws.gov` (`5`).
-- Milestone 1 host replay on `2026-05-18` now closes the `ecos.fws.gov` TLS
-  failure class without weakening verification: `config/downloader.toml` now
-  routes that host through verified `curl` transport, and
-  `phase2-canonical-preflight-ecos-replay-20260518` passed `27/27`
-  `preflight_ok` with `failed_count=0`.
-- The governed workbook repair lane is now live on the canonical master sheet.
-  `Document_Register_Master` now carries `61` governed URL repairs total:
-  `45` earlier directive/USDA repairs,
-  `3` stale-URL repairs for `PROG-008`, `STP-015`, and `STP-011`,
-  `1` direct-artifact repair for `WILD-ESA-094`,
-  `6` federal/challenge repairs for `FED-042`, `FED-041`, `FED-039`,
-  `FED-043`, `FED-029`, and `FPS-344`, plus
-  `6` USDA-family host repairs for `USDA-008`, `USDA-009`, `USDA-010`,
-  `USDA-011`, `USDA-012`, and `USDA-013`.
-  `config/parser_admission_contract_v1.json` now also treats
-  `www.archives.gov`, `www.govinfo.gov`, `www.ams.usda.gov`,
-  `securefoia.usda.gov`, `www.rma.usda.gov`, and `www.ers.usda.gov` as
-  official structured web/authority hosts for the repaired federal and
-  USDA-family lanes.
-  `source-register-validate` now passes with `issue_count=0` on workbook SHA
-  `659463445ec6fb02a8669744d0318988b404a68f6f39c8069d21f95f13ad52d8`.
-- The earlier federal-blocker checkpoint built on the unsupported-format
-  implementation commit `cf2d5f6`
-  (`Resolve unsupported-format canonical blocker slice`) and the federal
-  blocker repair commit `c1dc100` (`Repair federal canonical blocker rows`).
-  The new USDA-family repair slice now closes the last known host-specific
-  blocker family before the fresh full-master replay.
-  The historical USDA-family repair checkpoint commit for that routed slice is
-  `21ffc9e` (`Resolve USDA canonical blocker packet`), but the active
-  full-replay checkpoint commit is now `34f5b30`
-  (`Record post-USDA full replay checkpoint`).
-- Scoped repair replay
-  `phase2-canonical-preflight-directives-repair-validated-20260518`
-  now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
-  directive-family rows.
-- Scoped USDA-family replay
-  `phase2-canonical-preflight-usda-final-blocker-repair-validated-20260518`
-  now passes `6/6` `preflight_ok` with `failed_count=0` across `USDA-008`,
-  `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, and `USDA-013`.
-- The fresh full-master replay
-  `phase2-canonical-preflight-full-post-usda-repair-20260518`
-  is now the live Milestone 1 checkpoint. It checked all `635` canonical URLs
-  and finished with `634` `preflight_ok` plus only `1` failed row:
-  `status_counts={"preflight_ok": 634, "rate_limited": 1}`.
-- The fresh full-master replay
-  `phase2-canonical-preflight-full-repaired-20260518`
-  is now complete against the repaired workbook. It checked all `635`
-  canonical URLs and finished with `607` `preflight_ok` plus `28` failed rows:
-  `8` `not_found`, `8` `timeout`, `8` `unsupported_content_type`,
-  `3` `rate_limited`, and `1` `challenge_page`.
-- Scoped blocker replay
-  `phase2-canonical-preflight-blocker-repair-slice-20260518`
-  now passes `8/8` `preflight_ok` with `failed_count=0` across the `3`
-  repaired stale-URL rows (`PROG-008`, `STP-015`, `STP-011`) plus the `5`
-  previously failing `www.fs.usda.gov/media/...` rows
-  (`FOR-005`, `FPS-296`, `FPS-425`, `FPS-095`, `FPS-079`). Those media
-  failures are no longer active blocker rows for routing, but final
-  confirmation still requires a fresh full-master replay after the remaining
-  blocker families close.
-- Scoped federal replay
-  `phase2-canonical-preflight-federal-blocker-repair-validated-20260518`
-  now passes `6/6` `preflight_ok` with `failed_count=0` across the repaired
-  federal/challenge rows:
-  `FED-042`, `FED-041`, `FED-039`, `FED-043`, `FED-029`, and `FPS-344`.
-- A broader replay under
-  `source_library/runs/phase2-canonical-preflight-full-complete-20260518/`
-  was intentionally stopped after `105` finalized rows once a second blocker
-  family surfaced on `www.fs.usda.gov`. The partial event log already records
-  `5` timeout rows on directive wrapper pages
-  (`USFS-024`, `USFS-034`, `USFS-008`, `USFS-016`, `USFS-033`) from the
-  pre-repair workbook state. Those wrapper rows are now covered by the
-  `45`-row Directives CGI repair slice above.
-- Despite its `full-complete` run ID, that broader replay is partial blocker
-  evidence only. It must not be cited as a completed full-master Milestone 1
-  replay artifact.
-- The structural unsupported-format boundary slice is now live in code and
-  workbook contract. `config/downloader.toml` now admits
-  `application/msword` and `image/jpeg`,
-  `config/parser_admission_contract_v1.json` now classifies `.doc` and
-  image suffixes as `direct_document`,
-  `download.py` plus `catalog.py` preserve those direct-artifact parser
-  routes, and `extract.py` now uses macOS `textutil` for legacy `.doc`
-  artifacts plus Docling for image artifacts.
-- Scoped replay
-  `phase2-canonical-preflight-unsupported-format-replay-20260518`
-  now passes `8/8` `preflight_ok` with `failed_count=0` across
-  `R1-021`, `R1-020`, `R1-019`, `R1-023`, `R1-022`, `R1-015`, `R1-009`, and
-  `WILD-ESA-094`.
-- Scoped download replay
-  `phase2-canonical-download-unsupported-format-replay-20260518`
-  now finishes with `downloaded_count=8`, `failed_count=0`, and
-  `status_counts={"downloaded": 8}`.
-- Archived scoped catalog gate
-  `source_library/runs/phase2-canonical-catalog-unsupported-format-replay-20260518/catalog_gate/`
-  is now live as source set `source-set-a0402de124943920` with
-  `source_count=8`,
-  `artifact_count=8`, and
-  `expected_parser_counts={"doc": 7, "image": 1}`.
-- Scoped extraction on `source-set-a0402de124943920` now passes with
-  `selected_source_count=8`,
-  `extracted_count=8`,
-  `parser_counts={"docling": 1, "macos_textutil_doc": 7}`, and
-  extraction-accuracy admits all `8` direct-document rows with
-  `knowledge_base_blocked_source_record_ids=[]`.
-- Upstream direct eval remains green after the new admission path:
-  `source_library/evaluations/upstream/upstream_evaluation_results.json`
-  now reports `passed=true`, `case_count=38`, and `failed_case_ids=[]`.
-- Milestone 1 is still not resolved, but the known USDA-family blocker lane is
-  now closed in scoped evidence and the live remaining blocker surface is down
-  to one row: `FPS-117` finalized as `rate_limited` on
-  `https://www.fs.usda.gov/media/51967` after `3` attempts, even though the
-  response chain resolves to the direct PDF
-  `https://www.fs.usda.gov/sites/nfs/files/legacy-media/custergallatin/CNF%20FPAdjustment%20001.pdf`.
-- The historical `phase2-canonical-preflight-full-repaired-20260518` replay
-  now remains pre-USDA-repair evidence only; the live blocker truth is the new
-  `634/635` result above.
-- The next truthful slice is the governed single-row `FPS-117` rate-limit
-  closure packet, then one final confirming full-master canonical preflight
-  replay before any full `download`, `batch-download`, or `catalog-build` for
-  the entire master sheet.
-- The local non-strict `promotion-suite` artifact remains green only for the
-  current-promotion lane: it reports `current_promotion_ready=true` and
-  `promotion_ready=true`, but it also currently reports
-  `full_canonical_corpus_ready=false`,
-  `expansion_ready=false`, and
-  `full_canonical_source_set_id=source-set-5e65d845ce77e1a0`.
-- The broader `source-set-5e65d845ce77e1a0` full-canonical and all-green
-  expansion material preserved below remains useful historical baseline
-  evidence, but it is not the active local catalog truth in this checkout after
-  the Milestone 0 import rebaseline.
+- Active local catalog in `source_library/catalog/` is now full-register source
+  set `source-set-cac9c7d02b280825`, created on `2026-05-19T02:35:26Z`, with
+  `635` source rows, `623` unique raw artifacts, `635` unique URLs,
+  `source_partition_counts={"active_review_corpus": 583, "currentness_supersession_archive": 52}`,
+  `status_counts={"downloaded": 615, "downloaded_existing": 8, "duplicate_content": 12}`,
+  and governing download run
+  `phase2-canonical-download-full-post-head429-fallback-20260519`.
+- The proving-slice active catalog `source-set-9dcf819bc4cca486` and the
+  planned-only Phase 2 gate `source-set-ae989382c52344db` are now historical
+  pre-import baselines for this checkout, not the live `source_library/catalog/`
+  truth.
+- The governing workbook contract is unchanged:
+  `Document_Register_Master=635`,
+  `Direct_File_Capture_Queue=51`,
+  `Removed_Not_Applicable_Final=2`.
+  `source-register-validate` passes with `issue_count=0` on workbook SHA
+  `4d236682fcd26c26056b142cf4f41078afb36ed52e916ef6414066132df7914f`.
+- Milestone 1 is now closed through the fresh full-master replay
+  `phase2-canonical-preflight-full-post-head429-fallback-20260519`, which
+  checked all `635` canonical URLs and finished with
+  `status_counts={"preflight_ok": 635}` and `failed_count=0`.
+  `preflight.py` now falls through from `HEAD` `rate_limited` responses to the
+  existing ranged `GET` probe, with regression coverage in
+  `tests/test_preflight.py`.
+- Milestone 2 is now closed through:
+  `phase2-canonical-dry-run-post-head429-fallback-20260519`
+  (`planned_count=635`);
+  `phase2-canonical-download-full-post-head429-fallback-20260519`
+  (`downloaded=615`, `downloaded_existing=8`, `duplicate_content=12`,
+  `failed_count=0`, `needs_review_count=0`);
+  `validate-run` on that exact run ID (`8/8` checks passed); and
+  `catalog-build --run-id phase2-canonical-download-full-post-head429-fallback-20260519`
+  (`validation_passed=true`).
+- The unsupported-format direct-document slice remains green and preserved:
+  scoped preflight passed `8/8`, scoped download passed `8/8`, scoped catalog
+  gate `source-set-a0402de124943920` records `artifact_count=8`, scoped
+  extraction admitted all `8/8`, and upstream direct eval remains green at
+  `38/38`.
+- Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
+  on `2026-05-19` now reports `current_promotion_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=true`, while
+  `full_canonical_corpus_ready=false` remains explicit because the preserved
+  full-canonical downstream artifact family still points at historical source
+  set `source-set-5e65d845ce77e1a0` and now fails only with
+  `full_canonical_failure_category_counts={"stale_artifact": 2}`.
+- Current reviewer-ready downstream evidence still lives on review-oriented
+  source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
+  now truthful and active, but any future claim that the broader
+  full-canonical downstream artifact family is fresh against
+  `source-set-cac9c7d02b280825` needs a separate follow-on refresh packet.
 
 Historical broader capture baseline:
 

@@ -287,7 +287,12 @@ def fetch_url_metadata(
             if adapted and result.status == "preflight_ok":
                 result = _with_adapter_metadata(result, adapted.adapter, adapted.expected_content_type)
             last_result = result
-            if method == "HEAD" and result.status in {"blocked", "failed", "unsupported_content_type"}:
+            if method == "HEAD" and result.status in {
+                "blocked",
+                "failed",
+                "rate_limited",
+                "unsupported_content_type",
+            }:
                 continue
             if method == "HEAD" and result.http_status in {403, 405, 406}:
                 continue

@@ -1,9 +1,58 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 full replay checkpoint live; single-row `FPS-117` closure pending)
+Status: Resolved 2026-05-19 (Milestone 0 resolved at `6a949ae`; Milestones 1-3 closed through full canonical import and truth refresh)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
+
+Closeout summary on 2026-05-19:
+
+- Milestone 1 is now closed through
+  `phase2-canonical-preflight-full-post-head429-fallback-20260519`, which
+  checked all `635` canonical URLs and finished with
+  `status_counts={"preflight_ok": 635}` and `failed_count=0` on workbook SHA
+  `4d236682fcd26c26056b142cf4f41078afb36ed52e916ef6414066132df7914f`.
+  `preflight.py` now falls through from `HEAD` `rate_limited` responses to the
+  existing ranged `GET` probe, and the regression is covered in
+  `tests/test_preflight.py`.
+- Milestone 2 is now closed through:
+  `phase2-canonical-dry-run-post-head429-fallback-20260519`
+  (`planned_count=635`);
+  `phase2-canonical-download-full-post-head429-fallback-20260519`
+  (`downloaded=615`, `downloaded_existing=8`, `duplicate_content=12`,
+  `failed_count=0`, `needs_review_count=0`);
+  `validate-run --run-id phase2-canonical-download-full-post-head429-fallback-20260519`
+  (`8/8` checks passed); and
+  active `catalog-build --run-id phase2-canonical-download-full-post-head429-fallback-20260519`
+  with `source_set_id=source-set-cac9c7d02b280825`,
+  `source_count=635`,
+  `artifact_count=623`,
+  `source_partition_counts={"active_review_corpus": 583, "currentness_supersession_archive": 52}`,
+  `status_counts={"downloaded": 615, "downloaded_existing": 8, "duplicate_content": 12}`,
+  and `validation_passed=true`.
+- Milestone 3 is now closed through durable truth refresh in `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, this plan file,
+  and one narrow routing note in
+  `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`.
+- Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
+  on `2026-05-19` now reports `current_promotion_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=true`. The same fresh artifact
+  still reports `full_canonical_corpus_ready=false`, but now only because the
+  preserved full-canonical downstream artifact family still points at
+  historical source set `source-set-5e65d845ce77e1a0` and fails with
+  `full_canonical_failure_category_counts={"stale_artifact": 2}`.
+- The active local import truth is no longer the proving slice
+  `source-set-9dcf819bc4cca486` or the planned-only Phase 2 gate
+  `source-set-ae989382c52344db`. The live import boundary is now active source
+  set `source-set-cac9c7d02b280825` governed by workbook
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`.
+- This packet is resolved. The exact next packet, if needed, is a downstream
+  full-canonical freshness refresh that rebinds the preserved full-canonical
+  artifact family to the active imported catalog or explicitly retires those
+  stale pointers.
+- Older Milestone 0 and Milestone 1 summaries below are preserved
+  pre-closeout context only when they disagree with the closeout summary
+  above.
 
 Milestone 0 closeout summary on 2026-05-18:
 
@@ -42,7 +91,7 @@ Milestone 0 closeout summary on 2026-05-18:
 - With the live baseline now locked, the next executable slice in this packet
   is Milestone 1: canonical preflight and fetch-failure closure.
 
-Milestone 1 USDA final-blocker slice on 2026-05-18 after the earlier
+Historical Milestone 1 USDA final-blocker slice on 2026-05-18 after the earlier
 federal-blocker implementation commit `c1dc100`
 (`Repair federal canonical blocker rows`), the earlier unsupported-format
 implementation commit `cf2d5f6`
@@ -219,6 +268,10 @@ baseline backed by real run artifacts, not a proving slice, not a planned-only
 catalog gate, and not stale docs.
 
 ## Current Evidence
+
+This section records the pre-closeout execution baseline that drove the packet.
+When it disagrees with the closeout summary above, treat it as historical
+planning context rather than live import truth.
 
 - `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md` is resolved
   and says the refoundation packet is complete, the canonical register is the

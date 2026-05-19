@@ -5,6 +5,83 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Closeout
+
+This closeout resolves the canonical import-completion packet and supersedes
+the older proving-slice and single-row-blocker routing sections below when
+they disagree.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- live import boundary:
+  active local catalog `source_set_id=source-set-cac9c7d02b280825`,
+  `source_count=635`,
+  `artifact_count=623`,
+  `source_partition_counts={"active_review_corpus": 583, "currentness_supersession_archive": 52}`,
+  `status_counts={"downloaded": 615, "downloaded_existing": 8, "duplicate_content": 12}`,
+  and governing download run
+  `phase2-canonical-download-full-post-head429-fallback-20260519`.
+- workbook boundary:
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` remains the
+  sole active source ledger; `Document_Register_Master=635`,
+  `Direct_File_Capture_Queue=51`,
+  `Removed_Not_Applicable_Final=2`; and `source-register-validate` passed on
+  workbook SHA
+  `4d236682fcd26c26056b142cf4f41078afb36ed52e916ef6414066132df7914f`.
+- milestone evidence:
+  `phase2-canonical-preflight-full-post-head429-fallback-20260519` completed
+  `635/635 preflight_ok`;
+  `phase2-canonical-dry-run-post-head429-fallback-20260519` planned `635`;
+  `phase2-canonical-download-full-post-head429-fallback-20260519` completed
+  with `downloaded=615`, `downloaded_existing=8`, `duplicate_content=12`,
+  `failed_count=0`, `needs_review_count=0`;
+  `validate-run` passed `8/8`; and
+  active `catalog-build` completed with `validation_passed=true`.
+- code/test closeout:
+  `preflight.py` now falls through from `HEAD` `rate_limited` responses to the
+  existing ranged `GET` probe, `tests/test_preflight.py` carries the
+  regression, and `tests/test_captured_library.py` now validates either the
+  historical batch-backed active catalog or the new single-run active catalog
+  shape named by the live manifest.
+- downstream truth:
+  fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
+  on `2026-05-19` reports `current_promotion_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=true`. It still reports
+  `full_canonical_corpus_ready=false`, but now only because the preserved
+  full-canonical downstream artifact family still points at historical source
+  set `source-set-5e65d845ce77e1a0` and fails with
+  `full_canonical_failure_category_counts={"stale_artifact": 2}`.
+- historical routing note:
+  the older `Canonical Source Register Import Completion Milestone 1 Full
+  Replay Routing Closeout` section and earlier blocker-routing sections below
+  are now explicit pre-closeout context only.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  passed with `issue_count=0`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id phase2-canonical-preflight-full-post-head429-fallback-20260519`
+  passed with `635/635 preflight_ok`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources dry-run --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id phase2-canonical-dry-run-post-head429-fallback-20260519`
+  passed with `planned_count=635`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources download --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id phase2-canonical-download-full-post-head429-fallback-20260519`
+  completed with `failed_count=0`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources validate-run --output-dir source_library --run-id phase2-canonical-download-full-post-head429-fallback-20260519`
+  passed `8/8`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id phase2-canonical-download-full-post-head429-fallback-20260519`
+  passed with `validation_passed=true`;
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  passed with the downstream truth described above;
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_download.py tests/test_validate_run.py tests/test_catalog.py tests/test_captured_library.py tests/test_cli.py tests/test_architecture_contract.py -q`
+  passed `110` tests;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/preflight.py tests/test_preflight.py tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_download.py tests/test_validate_run.py tests/test_catalog.py tests/test_captured_library.py tests/test_cli.py tests/test_architecture_contract.py`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  if the user wants fresh full-canonical downstream readiness rather than just
+  truthful import completion, open one fresh follow-on packet to rebind or
+  retire the preserved full-canonical artifact family that still points at
+  `source-set-5e65d845ce77e1a0`.
+
 ## Canonical Source Register Import Completion Milestone 1 Full Replay Routing Closeout
 
 This follow-up closes the routing gaps after the fresh full-master replay
