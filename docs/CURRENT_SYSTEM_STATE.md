@@ -11,13 +11,73 @@ deterministic EA package review commands, and it now contains preserved legacy
 baseline artifacts, the active full-register canonical import, and
 reviewer-ready downstream lanes.
 
-Routing note: the newest import-completion closeout, operational-recovery, and
-gold-coverage sections below supersede older historical lane notes when they
-disagree. In particular, older references below that still treat
-`source-set-5e65d845ce77e1a0`, `source-set-9dcf819bc4cca486`, or the planned
-Phase 2 gate `source-set-ae989382c52344db` as the active local import catalog
-are historical only after the 2026-05-19 import-completion closeout, unless a
+Routing note: the newest downstream-freshness reduced closeout,
+import-completion closeout, operational-recovery, and gold-coverage sections
+below supersede older historical lane notes when they disagree. In particular,
+older references below that still treat `source-set-5e65d845ce77e1a0`,
+`source-set-9dcf819bc4cca486`, or the planned Phase 2 gate
+`source-set-ae989382c52344db` as the active local import catalog are
+historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes.
+
+## Full Canonical Downstream Freshness Refresh Reduced Closeout
+
+Latest reduced closeout on 2026-05-19:
+
+- Routed plan:
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`.
+- The active full-canonical contract surfaces in
+  `config/promotion_suite_v1.json`,
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`, and
+  `config/phase_eval_direct_eval_v1.json`
+  are now rebound to active import source set `source-set-cac9c7d02b280825`.
+- Focused contract coverage for that rebind is now green:
+  `tests/test_promotion_suite.py`,
+  `tests/test_forest_plan_inventory_build_manifest.py`,
+  `tests/test_forest_plan_profile_eval_contracts.py`,
+  `tests/test_phase_eval_direct_eval_contracts.py`, and
+  `tests/test_phase_eval.py`
+  pass `59/59`.
+- `authority-currentness --source-set-id source-set-cac9c7d02b280825`
+  now passes with `authority_family_count=454`,
+  `catalog_source_partition_counts={"active_review_corpus": 583, "currentness_supersession_archive": 52}`,
+  `source_currentness_record_count=635`, and `validation_passed=true`.
+- The first full-source-set extraction replay is now explicit blocker
+  evidence. `extract-build --output-dir source_library` completed on
+  `source-set-cac9c7d02b280825` with `extracted_count=576`,
+  `failed_count=59`,
+  `chunk_count=95928`,
+  `validation_passed=false`, and
+  `failure_counts={"docling_unavailable": 1, "pdf_text_fallback_empty": 56, "pdf_text_fallback_failed": 2}`.
+- Exploratory Docling/OCR retries were intentionally not admitted as durable
+  evidence. They were used only to confirm that the residual set is a real
+  parser/runtime blocker. Spot `pdftotext` probes on `FPS-005`, `FPS-078`,
+  and `FINAL-KOOT-009` returned either parse errors or zero extracted
+  characters.
+- Fresh rebased `promotion-suite --manifest config/promotion_suite_v1.json`
+  now reports `current_promotion_ready=true`,
+  `promotion_ready=true`,
+  `expansion_ready=true`,
+  `full_canonical_corpus_ready=false`,
+  `passed_required_full_canonical_result_count=4`,
+  `required_full_canonical_result_count=8`, and
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
+- The remaining failed required full-canonical results are now exact:
+  missing
+  `source_library/derived/source-set-cac9c7d02b280825/knowledge_graph/nepa_3d_graph_validation.json`,
+  missing
+  `source_library/derived/source-set-cac9c7d02b280825/knowledge_graph/nepa_3d_graph_summary.json`,
+  stale `forest_plan_profile` eval source-set identity, and stale
+  `forest_plan_component_retrieval` eval source-set identity.
+- Next routing:
+  recover the `59` failed extraction/parser rows first, then rerun
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`, and
+  `forest-plan-component-retrieval-eval`
+  on `source-set-cac9c7d02b280825`.
 
 ## Canonical Source Register Import Completion Closeout
 
@@ -64,18 +124,19 @@ Latest closeout on 2026-05-19:
   gate `source-set-a0402de124943920` records `artifact_count=8`, scoped
   extraction admitted all `8/8`, and upstream direct eval remains green at
   `38/38`.
-- Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
-  on `2026-05-19` now reports `current_promotion_ready=true`,
-  `promotion_ready=true`, and `expansion_ready=true`. The same fresh artifact
-  still reports `full_canonical_corpus_ready=false`, but now only because the
-  preserved full-canonical downstream artifact family still points at
-  historical source set `source-set-5e65d845ce77e1a0` and fails with
+- At import-completion closeout time, fresh non-strict
+  `promotion-suite --manifest config/promotion_suite_v1.json`
+  on `2026-05-19` still reported `current_promotion_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=true`, while
+  `full_canonical_corpus_ready=false` remained explained by preserved
+  historical full-canonical downstream artifacts and
   `full_canonical_failure_category_counts={"stale_artifact": 2}`.
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
-  now truthful and active, but any later claim that the broader
-  full-canonical downstream artifact family is fresh against
-  `source-set-cac9c7d02b280825` needs its own follow-on refresh packet.
+  now truthful and active, but that import-closeout follow-on has since been
+  routed as
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`; see
+  the reduced closeout section above for the current blocker truth.
 - Older deeper references below that still describe the Milestone 0 rebaseline,
   the single-row `FPS-117` blocker, or the proving-slice catalog as live are
   historical pre-closeout context only.

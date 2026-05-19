@@ -34,22 +34,24 @@ Closeout summary on 2026-05-19:
   `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, this plan file,
   and one narrow routing note in
   `docs/CANONICAL_SOURCE_REGISTER_REFOUNDATION_MILESTONE_PLAN.md`.
-- Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
-  on `2026-05-19` now reports `current_promotion_ready=true`,
-  `promotion_ready=true`, and `expansion_ready=true`. The same fresh artifact
-  still reports `full_canonical_corpus_ready=false`, but now only because the
-  preserved full-canonical downstream artifact family still points at
-  historical source set `source-set-5e65d845ce77e1a0` and fails with
-  `full_canonical_failure_category_counts={"stale_artifact": 2}`.
+- At import-completion closeout time, fresh non-strict
+  `promotion-suite --manifest config/promotion_suite_v1.json`
+  on `2026-05-19` reported `current_promotion_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=true`, while the same artifact
+  still reported `full_canonical_corpus_ready=false` with
+  `full_canonical_failure_category_counts={"stale_artifact": 2}` because the
+  preserved full-canonical downstream artifact family had not yet been
+  rebound.
 - The active local import truth is no longer the proving slice
   `source-set-9dcf819bc4cca486` or the planned-only Phase 2 gate
   `source-set-ae989382c52344db`. The live import boundary is now active source
   set `source-set-cac9c7d02b280825` governed by workbook
   `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`.
-- This packet is resolved. The exact next packet, if needed, is a downstream
-  full-canonical freshness refresh that rebinds the preserved full-canonical
-  artifact family to the active imported catalog or explicitly retires those
-  stale pointers.
+- This packet is resolved. The exact next packet is now
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`, which
+  rebases the active full-canonical contract to
+  `source-set-cac9c7d02b280825` and is currently reduced on real
+  extraction/parser recovery rather than stale-manifest identity drift.
 - Older Milestone 0 and Milestone 1 summaries below are preserved
   pre-closeout context only when they disagree with the closeout summary
   above.

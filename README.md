@@ -118,15 +118,31 @@ Local active import baseline on 2026-05-18 after import-completion closeout:
 - Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
   on `2026-05-19` now reports `current_promotion_ready=true`,
   `promotion_ready=true`, and `expansion_ready=true`, while
-  `full_canonical_corpus_ready=false` remains explicit because the preserved
-  full-canonical downstream artifact family still points at historical source
-  set `source-set-5e65d845ce77e1a0` and now fails only with
-  `full_canonical_failure_category_counts={"stale_artifact": 2}`.
+  `full_canonical_corpus_ready=false` now remains explicit on active
+  full-canonical source set `source-set-cac9c7d02b280825` with only `4/8`
+  required full-canonical results passing and
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
+- The active downstream follow-on is now
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`.
+  That packet has already rebound the live full-canonical manifest/test
+  contracts to `source-set-cac9c7d02b280825`, and
+  `authority-currentness --source-set-id source-set-cac9c7d02b280825` passes
+  with `authority_family_count=454` and
+  `source_currentness_record_count=635`.
+- Full-canonical downstream freshness is still blocked on real extraction and
+  parser recovery. `extract-build --output-dir source_library` on
+  `source-set-cac9c7d02b280825` completed with `extracted_count=576`,
+  `failed_count=59`, and `validation_passed=false`, dominated by
+  `pdf_text_fallback_empty=56`; until those failures are recovered, the
+  source-set knowledge-graph export plus the rebased
+  `forest_plan_profile` and `forest_plan_component_retrieval` eval artifacts
+  remain missing or stale.
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
-  now truthful and active, but any future claim that the broader
-  full-canonical downstream artifact family is fresh against
-  `source-set-cac9c7d02b280825` needs a separate follow-on refresh packet.
+  now truthful and active, but broader full-canonical downstream freshness is
+  still routed-red until the `59` failed extraction records are recovered and
+  the blocked graph/profile/component retrieval replays are rerun on
+  `source-set-cac9c7d02b280825`.
 
 Historical broader capture baseline:
 

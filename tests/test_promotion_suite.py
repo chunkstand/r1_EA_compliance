@@ -12,6 +12,8 @@ from usfs_r1_ea_sources.promotion_suite import run_promotion_suite
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 COMMITTED_PROMOTION_SUITE = REPO_ROOT / "config" / "promotion_suite_v1.json"
+FULL_CANONICAL_SOURCE_SET_ID = "source-set-cac9c7d02b280825"
+FULL_CANONICAL_DOWNLOAD_RUN_ID = "phase2-canonical-download-full-post-head429-fallback-20260519"
 
 
 def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> None:
@@ -19,19 +21,28 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
     suite_results = {result["id"]: result for result in manifest["suite_results"]}
 
     assert manifest["source_set_id"] == "source-set-ba8d0feae79501b8"
-    assert manifest["full_canonical_source_set_id"] == "source-set-5e65d845ce77e1a0"
+    assert manifest["full_canonical_source_set_id"] == FULL_CANONICAL_SOURCE_SET_ID
 
     active_catalog = suite_results["full_canonical_catalog_manifest"]
     assert active_catalog["required_for_current_promotion"] is False
     assert active_catalog["required_for_full_canonical_corpus"] is True
     active_catalog_checks = {check["name"]: check for check in active_catalog["checks"]}
     assert active_catalog_checks["full_canonical_source_set_matches"]["equals"] == (
-        "source-set-5e65d845ce77e1a0"
+        FULL_CANONICAL_SOURCE_SET_ID
     )
-    assert active_catalog_checks["full_canonical_source_count"]["equals"] == 350
-    assert active_catalog_checks["full_canonical_artifact_count"]["equals"] == 319
-    assert active_catalog_checks["full_canonical_source_delta_count"]["equals"] == 160
-    assert active_catalog_checks["full_canonical_gap_count"]["equals"] == 1
+    assert active_catalog_checks["full_canonical_download_run_id_matches"]["equals"] == (
+        FULL_CANONICAL_DOWNLOAD_RUN_ID
+    )
+    assert active_catalog_checks["full_canonical_download_batch_run_ids"]["equals"] == []
+    assert active_catalog_checks["full_canonical_source_count"]["equals"] == 635
+    assert active_catalog_checks["full_canonical_artifact_count"]["equals"] == 623
+    assert (
+        active_catalog_checks["full_canonical_currentness_supersession_archive_count"]["equals"]
+        == 52
+    )
+    assert active_catalog_checks["full_canonical_downloaded_count"]["equals"] == 615
+    assert active_catalog_checks["full_canonical_downloaded_existing_count"]["equals"] == 8
+    assert active_catalog_checks["full_canonical_duplicate_content_count"]["equals"] == 12
 
     active_validation = suite_results["full_canonical_catalog_validation"]
     assert active_validation["required_for_current_promotion"] is False
@@ -41,7 +52,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
     }
     assert active_validation_checks["full_canonical_catalog_validation_passed"]["equals"] is True
     assert active_validation_checks["full_canonical_catalog_validation_source_set"]["equals"] == (
-        "source-set-5e65d845ce77e1a0"
+        FULL_CANONICAL_SOURCE_SET_ID
     )
 
     full_canonical_currentness = suite_results["full_canonical_authority_currentness"]
@@ -58,7 +69,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         "authority-currentness-report-v0"
     )
     assert currentness_checks["full_canonical_authority_currentness_source_set"]["equals"] == (
-        "source-set-5e65d845ce77e1a0"
+        FULL_CANONICAL_SOURCE_SET_ID
     )
     assert (
         currentness_checks["full_canonical_authority_currentness_validation_passed"][
@@ -70,13 +81,13 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         currentness_checks[
             "full_canonical_authority_currentness_active_review_corpus_count"
         ]["equals"]
-        == 349
+        == 583
     )
     assert (
-        currentness_checks["full_canonical_authority_currentness_candidate_blocked_count"][
-            "equals"
-        ]
-        == 1
+        currentness_checks[
+            "full_canonical_authority_currentness_currentness_supersession_archive_count"
+        ]["equals"]
+        == 52
     )
 
     full_canonical_graph = suite_results["full_canonical_nepa_3d_source_set_graph_validation"]
@@ -109,13 +120,13 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         full_graph_summary_checks["full_canonical_source_set_graph_source_set_matches"][
             "equals"
         ]
-        == "source-set-5e65d845ce77e1a0"
+        == FULL_CANONICAL_SOURCE_SET_ID
     )
     assert (
         full_graph_summary_checks[
             "full_canonical_source_set_graph_catalog_source_record_count"
         ]["equals"]
-        == 350
+        == 635
     )
     assert (
         full_graph_summary_checks["full_canonical_source_set_graph_validation_checks"][
@@ -162,7 +173,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         full_profile_eval_checks[
             "full_canonical_forest_plan_profile_eval_source_set_matches"
         ]["equals"]
-        == ["source-set-5e65d845ce77e1a0"]
+        == [FULL_CANONICAL_SOURCE_SET_ID]
     )
     assert (
         full_profile_eval_checks["full_canonical_forest_plan_profile_eval_covered_count"][
@@ -218,13 +229,13 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         full_component_retrieval_checks[
             "full_canonical_forest_plan_component_retrieval_eval_source_set_matches"
         ]["equals"]
-        == "source-set-5e65d845ce77e1a0"
+        == FULL_CANONICAL_SOURCE_SET_ID
     )
     assert (
         full_component_retrieval_checks[
             "full_canonical_forest_plan_component_retrieval_eval_active_source_set_matches"
         ]["equals"]
-        == ["source-set-5e65d845ce77e1a0"]
+        == [FULL_CANONICAL_SOURCE_SET_ID]
     )
     assert (
         full_component_retrieval_checks[

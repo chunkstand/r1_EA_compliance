@@ -1,9 +1,76 @@
 # Session Handoff
 
-Date: 2026-05-18
+Date: 2026-05-19
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
+
+## Full Canonical Downstream Freshness Refresh Reduced Closeout
+
+This closeout reduces the full-canonical downstream freshness packet and
+supersedes the import-completion-only downstream routing below when they
+disagree.
+
+- routed plan:
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
+- active contract rebind:
+  `config/promotion_suite_v1.json`,
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`, and
+  `config/phase_eval_direct_eval_v1.json`
+  now point at active import source set `source-set-cac9c7d02b280825`
+  instead of historical `source-set-5e65d845ce77e1a0`.
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profile_eval_contracts.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py -q`
+  passed `59/59`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
+  passed;
+  `PYTHONPATH=src uv run --extra dev ruff check tests/test_promotion_suite.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profile_eval_contracts.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py`
+  passed; and
+  `git diff --check`
+  passed.
+- authority-currentness proof:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-cac9c7d02b280825`
+  passed with `authority_family_count=454`,
+  `catalog_source_partition_counts={"active_review_corpus": 583, "currentness_supersession_archive": 52}`,
+  `source_currentness_record_count=635`, and `validation_passed=true`.
+- extraction blocker evidence:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources extract-build --output-dir source_library`
+  completed on `source-set-cac9c7d02b280825` with `extracted_count=576`,
+  `failed_count=59`,
+  `chunk_count=95928`,
+  `validation_passed=false`, and
+  `failure_counts={"docling_unavailable": 1, "pdf_text_fallback_empty": 56, "pdf_text_fallback_failed": 2}`.
+- exploratory retries:
+  `.venv-docling/bin/python -m usfs_r1_ea_sources extract-build ... --prefer-docling`
+  and the targeted OCR retry were used only for blocker diagnosis and were not
+  admitted as durable closeout evidence. Spot `pdftotext` probes on
+  `FPS-005`, `FPS-078`, and `FINAL-KOOT-009` returned parse errors or zero
+  characters.
+- rebased promotion truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  now reports `current_promotion_ready=true`,
+  `promotion_ready=true`,
+  `expansion_ready=true`,
+  `full_canonical_corpus_ready=false`,
+  `passed_required_full_canonical_result_count=4`,
+  `required_full_canonical_result_count=8`, and
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
+- narrowed remaining full-canonical failures:
+  missing
+  `source_library/derived/source-set-cac9c7d02b280825/knowledge_graph/nepa_3d_graph_validation.json`,
+  missing
+  `source_library/derived/source-set-cac9c7d02b280825/knowledge_graph/nepa_3d_graph_summary.json`,
+  stale `forest_plan_profile` eval source-set identity, and stale
+  `forest_plan_component_retrieval` eval source-set identity.
+- next routing:
+  recover the `59` extraction/parser failures first, then rerun
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`, and
+  `forest-plan-component-retrieval-eval`
+  on `source-set-cac9c7d02b280825`.
 
 ## Canonical Source Register Import Completion Closeout
 
