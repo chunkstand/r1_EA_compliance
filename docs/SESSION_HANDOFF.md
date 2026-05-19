@@ -8,7 +8,7 @@ that lane supersedes older sections below when they disagree.
 ## Canonical Source Register Import Completion Milestone 1 Full Replay Routing Closeout
 
 This follow-up closes the routing gaps after the fresh full-master replay
-checkpoint.
+checkpoint commit `34f5b30` (`Record post-USDA full replay checkpoint`).
 
 - routed plan:
   `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
@@ -16,7 +16,8 @@ checkpoint.
   the live Milestone 1 checkpoint for this lane is now the immediately
   following `Canonical Source Register Import Completion Milestone 1 Full
   Replay Checkpoint` section plus the matching top sections in `README.md`,
-  `docs/CURRENT_SYSTEM_STATE.md`, and the routed plan file.
+  `docs/CURRENT_SYSTEM_STATE.md`, and the routed plan file. The active
+  checkpoint commit for that live boundary is `34f5b30`.
 - historical routing note:
   the older `Canonical Source Register Import Completion Milestone 1 USDA
   Final-Blocker Routing Closeout`,

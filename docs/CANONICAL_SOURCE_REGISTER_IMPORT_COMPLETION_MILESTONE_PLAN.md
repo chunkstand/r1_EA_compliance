@@ -157,8 +157,10 @@ federal repair replay, and the scoped USDA-family repair replay:
   historical full replay still records the earlier `28` failed rows above, but
   its USDA timeout family is now pre-repair evidence only and must not be
   treated as the live blocker truth.
-- The active checkpoint commit for this Milestone 1 slice is now `21ffc9e`
-  (`Resolve USDA canonical blocker packet`).
+- The historical USDA-family repair checkpoint commit for this Milestone 1
+  slice is `21ffc9e` (`Resolve USDA canonical blocker packet`), but the active
+  full-replay checkpoint commit is now `34f5b30`
+  (`Record post-USDA full replay checkpoint`).
 - The live remaining blocker surface is now one row:
   `FPS-117` finalized as `rate_limited` on
   `https://www.fs.usda.gov/media/51967` after `3` attempts, even though the

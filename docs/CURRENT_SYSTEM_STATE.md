@@ -110,8 +110,10 @@ the scoped unsupported-format direct-document validation set:
   blocker repair commit `c1dc100` (`Repair federal canonical blocker rows`).
   The new USDA-family repair slice now closes the last known host-specific
   blocker family before the fresh full-master replay.
-  The active checkpoint commit for that routed slice is now `21ffc9e`
-  (`Resolve USDA canonical blocker packet`).
+  The historical USDA-family repair checkpoint commit for that routed slice is
+  `21ffc9e` (`Resolve USDA canonical blocker packet`), but the active
+  full-replay checkpoint commit is now `34f5b30`
+  (`Record post-USDA full replay checkpoint`).
 - Scoped repair replay
   `source_library/runs/phase2-canonical-preflight-directives-repair-validated-20260518/summary.json`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired
