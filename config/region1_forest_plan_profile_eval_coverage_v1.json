@@ -5,7 +5,7 @@
   "readiness_path": "region1_forest_plan_readiness_nepa_3d_v1.json",
   "forest_plan_profiles_path": "forest_plan_profiles.json",
   "expected_active_source_set_ids": [
-    "source-set-9e7d85759951c279"
+    "source-set-370896a1043817f2"
   ],
   "output_schema": {
     "required_summary_fields": [

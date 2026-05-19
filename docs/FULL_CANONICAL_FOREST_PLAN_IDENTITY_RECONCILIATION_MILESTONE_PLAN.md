@@ -1,28 +1,35 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; post-classifier source-set refresh/rebind decision next before Milestone 2
+Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind landed on `source-set-370896a1043817f2`; Milestone 2 can now resume against the narrowed residual blocker
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
 
-The prior full-canonical downstream rerun packet is now blocked on a narrower issue than extraction
-or source-set freshness: the active canonical source set `source-set-9e7d85759951c279` no longer
-contains the legacy `R1PLAN-*` source-record identity family that still drives the forest-plan
-inventory, readiness, and retrieval-eval contracts. This packet exists to convert that blocker from
-an informal handoff note into governed repo data, then use that data to rebind the forest-plan
-contracts onto canonical active-catalog identities before the blocked downstream reruns resume.
+The prior full-canonical downstream rerun packet was blocked on a narrower issue than extraction:
+the active canonical import source set `source-set-9e7d85759951c279` no longer contained the
+legacy `R1PLAN-*` source-record identity family that still drove the forest-plan inventory,
+readiness, and retrieval-eval contracts. This packet converted that blocker into governed repo data,
+rebound the forest-plan contract surfaces, and now carries the refreshed archived full-canonical
+replay boundary that downstream reruns must use.
 
 ## Current Evidence
 
-- `source_library/derived/source-set-9e7d85759951c279/forest_plan_components/summary.json`
-  now records `passed=false`, `component_count=754`, `standard_count=186`, and only `5`
-  blocked forests:
-  `dakota-prairie-grasslands`,
-  `flathead-nf`,
-  `kootenai-nf`,
-  `lolo-nf`, and
-  `nez-perce-clearwater-nfs`.
+- Archived full-canonical classifier-refresh gate
+  `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`
+  now emits refreshed full-canonical source set
+  `source-set-370896a1043817f2`.
+- `source_library/derived/source-set-370896a1043817f2/forest_plan_components/summary.json`
+  now records `passed=false`, `component_count=1336`, `standard_count=377`, and only
+  `flathead-nf` blocked.
+- `source_library/derived/source-set-370896a1043817f2/authority_currentness/authority_currentness_report.json`
+  now passes with
+  `authority_family_count=454`,
+  `source_currentness_record_count=634`, and
+  `validation_passed=true`.
+- `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json`
+  now passes with
+  `active_source_set_ids=["source-set-370896a1043817f2"]`.
 - `config/r1_forest_plan_component_inventory_build_manifest.json` and
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`
   now reduce the source-record identity mix to `74` canonical source-record IDs plus the explicit
@@ -36,16 +43,14 @@ contracts onto canonical active-catalog identities before the blocked downstream
   planning or document-set landing pages with no exact current active-catalog row.
 - Both configs now carry committed top-level and per-profile `identity_reconciliation` metadata so
   the unresolved blocker family stays explicit instead of hiding inside a mixed-ID manifest.
-- `docs/R1_FOREST_PLAN_PRIMARY_PLAN_ROLE_CLASSIFICATION_MILESTONE_PLAN.md` is now resolved in code
-  through commit `f220b7a` (`Fix source-register forest plan role classification`). A scoped
-  archived
-  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
-  replay on current HEAD emits catalog gate `source-set-2b6cb7d17da08906` and classifies the
-  canonical primary-plan rows correctly, which proves the next operational slice is broader than an
-  identity-only follow-up.
+- `docs/R1_FOREST_PLAN_PRIMARY_PLAN_ROLE_CLASSIFICATION_MILESTONE_PLAN.md` is now resolved in
+  practice as well as code. The refreshed archived replay on
+  `source-set-370896a1043817f2` now proves the classifier fix all the way through the
+  full-canonical component inventory boundary for `9/10` forests.
 - `config/forest_plan_component_retrieval_eval_v1.json`
-  still carries legacy component IDs for the retrieval-eval cases, so source-record rebind and
-  component-identity rebind must stay sequenced rather than being mixed together.
+  still carries legacy component IDs for the retrieval-eval cases, so the next residual work is no
+  longer source-record rebind. It is now a narrower component-identity and Flathead-inventory
+  follow-up.
 - The prior packet
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
   is now reduced through the active-source-set rebind. Its next routing is this dedicated
@@ -65,7 +70,8 @@ Return the forest-plan downstream lane to a truthful replayable state by:
   `forest-plan-component-retrieval-eval`,
   `nepa-knowledge-graph-export`, and
   `promotion-suite`
-  on `source-set-9e7d85759951c279`.
+  on refreshed archived full-canonical source set
+  `source-set-370896a1043817f2`.
 
 ## Non-Goals
 
@@ -340,15 +346,19 @@ Outcome label: resolved
 
 ## Residual Risks And Next Milestone Routing
 
-- The main accepted residual risk after Milestone 1 is that the source-record rebind is complete
-  only for the exact URL-backed `74` rows. The remaining `25` unresolved legacy rows still block a
-  truthful canonical component inventory rebuild.
-- A current-HEAD archived catalog replay now proves the classifier fix but also mints
-  `source-set-2b6cb7d17da08906`, so promoting that proof into the live active catalog would require
-  a broader full-canonical source-set refresh/rebind decision before this packet can truthfully
-  continue to Milestone 2.
-- The next active slice is therefore not Milestone 2 and not an identity-only pass over the
-  unresolved `25` rows. First route a dedicated full-canonical source-set refresh/rebind slice,
-  then reassess the remaining identity blockers against the refreshed live artifacts.
+- The broader full-canonical source-set refresh/rebind decision is now complete through archived
+  replay source set `source-set-370896a1043817f2`. This packet no longer needs a generic refresh
+  decision before it can continue.
+- The remaining accepted residual risk is narrower than the original `25`-row unresolved family.
+  On the refreshed archived source set, `forest-plan-components-build` now validates `9/10`
+  forests and leaves only `flathead-nf` blocked.
+- The refreshed retrieval-eval contract is now truthfully red for two explicit reasons:
+  `flathead-nf` is absent from the validated component inventory, and the shipped eval still
+  expects legacy `R1PLAN-*` component IDs where the refreshed inventory now emits canonical
+  component IDs.
+- The next active slice is therefore Milestone 2 on the narrowed residual blocker family:
+  resolve the remaining Flathead inventory gap, then update the component-retrieval and downstream
+  graph lane onto the refreshed canonical component identities on
+  `source-set-370896a1043817f2`.
 - If a future session cannot prove a canonical binding for one of the `25` unresolved rows, it must
   keep that row explicit as unresolved rather than hiding it inside a broad rerun attempt.

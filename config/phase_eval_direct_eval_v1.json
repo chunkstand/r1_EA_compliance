@@ -42,7 +42,7 @@
       "phase_name": "nepa_3d_source_set_graph",
       "producer": "forest_plan_profile_evaluation",
       "required_source_set_ids": [
-        "source-set-9e7d85759951c279"
+        "source-set-370896a1043817f2"
       ],
       "results_path": "evaluations/forest_plan_profile/forest_plan_profile_eval_results.json"
     },
@@ -53,7 +53,7 @@
       "phase_name": "forest_plan_component_retrieval",
       "producer": "forest_plan_component_retrieval_evaluation",
       "required_source_set_ids": [
-        "source-set-9e7d85759951c279"
+        "source-set-370896a1043817f2"
       ],
       "results_path": "evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json"
     },

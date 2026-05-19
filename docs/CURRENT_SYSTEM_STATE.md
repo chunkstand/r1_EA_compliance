@@ -21,10 +21,72 @@ older references below that still treat `source-set-5e65d845ce77e1a0`,
 historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes.
 
+## Full Canonical Archived Forest-Plan Source-Set Refresh/Rebind
+
+Latest closeout on 2026-05-19:
+
+- The broader full-canonical source-set refresh/rebind decision now lands as
+  an archived classifier-refresh gate at
+  `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`
+  with refreshed full-canonical source set
+  `source-set-370896a1043817f2`.
+- That archived gate preserves the real canonical run lineage
+  `phase2-canonical-download-full-post-fps005-removal-20260519` while
+  carrying the committed classifier fix on current `HEAD`. It records
+  `source_count=634`, `artifact_count=622`,
+  `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  and the corrected canonical primary-plan/support split.
+- A reuse-first extraction refresh on that archived gate now passes with
+  `extracted_count=634`, `reused_count=634`, `chunk_count=98155`, and
+  `validation_passed=true` under
+  `source_library/derived/source-set-370896a1043817f2/`.
+- `authority-currentness` now passes on
+  `source-set-370896a1043817f2` with
+  `authority_family_count=454`,
+  `source_currentness_record_count=634`, and
+  `validation_passed=true`.
+- `forest-plan-profile-eval` now passes on the refreshed full-canonical
+  contract with
+  `active_source_set_ids=["source-set-370896a1043817f2"]`.
+- `forest-plan-components-build` on the refreshed archived source set now
+  builds `1336` components and `377` standards and leaves only `flathead-nf`
+  blocked by
+  `no_selected_forest_plan_chunks`,
+  `plan_component_labels_not_detected`, and
+  `plan_standard_labels_not_detected`.
+- `forest-plan-component-retrieval-eval` is now truthfully red on the
+  refreshed source set. The remaining failure is no longer broad source-set
+  drift: `flathead-nf` is absent from the validated inventory, and the shipped
+  retrieval contract still expects legacy `R1PLAN-*` component IDs where the
+  refreshed inventory now emits canonical component IDs such as
+  `FOR-009-*` and `FOR-002-*`.
+- `promotion-suite --manifest config/promotion_suite_v1.json` now points
+  `full_canonical_source_set_id=source-set-370896a1043817f2` and reports
+  `full_canonical_corpus_ready=false` with `5/8` required full-canonical
+  results passing. The only remaining full-canonical failure categories are
+  `graph_viewer_export_invalid=2` and
+  `forest_plan_component_coverage_gap=1`.
+- A direct `nepa-knowledge-graph-export --source-set-id source-set-370896a1043817f2`
+  replay still fails because
+  `source_library/derived/source-set-370896a1043817f2/claims/claims.jsonl`
+  does not exist yet. The graph lane is now blocked on missing
+  claims/rule-claim replay for the refreshed archived source set, not on stale
+  catalog lineage.
+- Next routing:
+  the broader refresh/rebind decision is complete. The remaining active slice
+  is narrower: resolve the residual `flathead-nf` inventory blocker, update
+  the component-retrieval contract to refreshed canonical component identities,
+  and replay the missing claims/rule-claim/graph artifacts on
+  `source-set-370896a1043817f2`.
+
 ## Source-Register Forest Plan Role Classification Code Closeout
 
 Latest closeout on 2026-05-19:
 
+- Historical routing note:
+  this section records the earlier code-only classifier closeout before the
+  archived full-canonical refresh/rebind landed. The section above is now the
+  active source-set truth when they disagree.
 - Closing commit hash:
   `f220b7a` (`Fix source-register forest plan role classification`).
 - Outcome label:

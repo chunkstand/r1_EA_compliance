@@ -62,16 +62,13 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   `passed_required_full_canonical_result_count=4`,
   `required_full_canonical_result_count=8`, and
   `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
-- The prerequisite forest-plan component-inventory replay on
-  `source-set-9e7d85759951c279` now fails closed. The resulting
-  `source_library/derived/source-set-9e7d85759951c279/forest_plan_components/summary.json`
-  records `passed=false`, `component_count=754`, `standard_count=186`, and only
-  `5` blocked forests:
-  `dakota-prairie-grasslands`,
-  `flathead-nf`,
-  `kootenai-nf`,
-  `lolo-nf`, and
-  `nez-perce-clearwater-nfs`.
+- The historical blocker proof on
+  `source-set-9e7d85759951c279` is now superseded by the archived
+  full-canonical classifier-refresh replay on
+  `source-set-370896a1043817f2`.
+  `source_library/derived/source-set-370896a1043817f2/forest_plan_components/summary.json`
+  now records `passed=false`, `component_count=1336`, `standard_count=377`, and only
+  `flathead-nf` blocked.
 - The blocker is now explicit: the active canonical catalog and chunk store
   contain `0` `R1PLAN-*` rows, while
   `config/r1_forest_plan_component_inventory_build_manifest.json` plus
@@ -80,22 +77,16 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   explicit unresolved `25`-row legacy blocker set preserved in
   `config/r1_forest_plan_identity_reconciliation_v1.json`
   (`11` `catalog_confirmed`, `14` `source_delta_required`).
-- The exact remaining failed required full-canonical slots are still the same four downstream
-  artifacts, but they now need regeneration against active source set `source-set-9e7d85759951c279`:
-  `source_library/derived/source-set-9e7d85759951c279/knowledge_graph/nepa_3d_graph_validation.json`,
-  `source_library/derived/source-set-9e7d85759951c279/knowledge_graph/nepa_3d_graph_summary.json`,
-  `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json`, and
-  `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`.
+- The exact remaining failed required full-canonical slots are now narrower on refreshed archived
+  source set `source-set-370896a1043817f2`: the two missing
+  `knowledge_graph/nepa_3d_graph_*` artifacts and the still-red
+  `forest_plan_component_retrieval_eval_results.json`.
 - The durable routing set is now aligned across `README.md`,
-  `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`: the
-  extraction blocker lane is closed, the active source set is
-  `source-set-9e7d85759951c279`, and the immediate next work is no longer just
-  the unresolved `25`-row identity family. A scoped current-HEAD archived
-  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
-  replay now proves the classifier fix but mints archived catalog gate
-  `source-set-2b6cb7d17da08906`, so the next truthful slice is a broader
-  full-canonical source-set refresh/rebind decision before the four downstream
-  reruns above can be completed truthfully.
+  `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`: the broader
+  refresh/rebind decision is complete, the refreshed archived full-canonical
+  contract is `source-set-370896a1043817f2`, and the next work is the narrower
+  Flathead/component-retrieval/graph residual rather than a broad identity-only
+  or source-set-refresh packet.
 - This packet is no longer the active implementation surface after the reduced
   Milestone 3 closeout. The active follow-on packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,

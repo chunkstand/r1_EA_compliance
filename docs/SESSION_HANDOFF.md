@@ -5,6 +5,65 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Archived Forest-Plan Source-Set Refresh/Rebind
+
+This implementation slice closes the broader full-canonical source-set
+refresh/rebind decision that was left open after the classifier-only closeout.
+
+- outcome label:
+  `resolved` for the archived refresh/rebind slice; broader full-canonical
+  corpus still routed red
+- refreshed archived gate:
+  `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`
+  with refreshed full-canonical source set
+  `source-set-370896a1043817f2`
+- contract surfaces now rebound:
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`,
+  `config/phase_eval_direct_eval_v1.json`, and
+  `config/promotion_suite_v1.json`
+- preserved distinction:
+  active import catalog remains
+  `source_library/catalog/` on `source-set-9e7d85759951c279`;
+  refreshed archived full-canonical forest-plan/downstream contract is now
+  `source-set-370896a1043817f2`;
+  reviewer-ready current-promotion lane remains
+  `source-set-ba8d0feae79501b8`
+- refreshed runtime evidence:
+  reuse-first extraction on `source-set-370896a1043817f2` passes with
+  `extracted_count=634`, `reused_count=634`, `chunk_count=98155`;
+  `authority-currentness` passes with `authority_family_count=454`;
+  `forest-plan-profile-eval` passes with
+  `active_source_set_ids=["source-set-370896a1043817f2"]`;
+  and
+  `forest-plan-components-build` now builds `1336` components and `377`
+  standards with only `flathead-nf` blocked
+- narrowed residual blockers:
+  `forest-plan-component-retrieval-eval` is now truthfully red on the refreshed
+  source set because `flathead-nf` is absent from the validated inventory and
+  the shipped eval contract still expects legacy `R1PLAN-*` component IDs where
+  the refreshed inventory now emits canonical component IDs such as
+  `FOR-009-*` and `FOR-002-*`
+- promotion-suite truth:
+  fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
+  now reports `full_canonical_corpus_ready=false` with `5/8` required
+  full-canonical results passing and only
+  `graph_viewer_export_invalid=2` plus
+  `forest_plan_component_coverage_gap=1`
+- graph replay boundary:
+  direct
+  `nepa-knowledge-graph-export --source-set-id source-set-370896a1043817f2`
+  still fails because
+  `source_library/derived/source-set-370896a1043817f2/claims/claims.jsonl`
+  is missing
+- next routing:
+  stay on the narrowed residual lane. Resolve the remaining Flathead inventory
+  blocker, update the component-retrieval contract to refreshed canonical
+  component identities, and replay the missing claims/rule-claim/graph
+  artifacts on `source-set-370896a1043817f2`
+
 ## Source-Register Forest Plan Role Classification Alignment Pass
 
 This docs-only alignment pass closes the remaining routing gap after classifier

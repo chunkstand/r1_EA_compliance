@@ -3,7 +3,7 @@
   "id": "post-v1-region1-ea-promotion-suite",
   "label": "Post-V1 Region 1 EA promotion suite",
   "source_set_id": "source-set-ba8d0feae79501b8",
-  "full_canonical_source_set_id": "source-set-9e7d85759951c279",
+  "full_canonical_source_set_id": "source-set-370896a1043817f2",
   "rule_pack_path": "config/compliance_rule_pack_nepa_ea_v0.json",
   "rule_pack_id": "nepa-ea-v0",
   "rule_pack_version": "0.4.0",
@@ -1528,8 +1528,8 @@
   "suite_results": [
     {
       "id": "full_canonical_catalog_manifest",
-      "label": "Active full canonical catalog manifest",
-      "path": "catalog/source_set_manifest.json",
+      "label": "Refreshed archived full canonical catalog manifest",
+      "path": "runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/source_set_manifest.json",
       "required_for_current_promotion": false,
       "required_for_full_canonical_corpus": true,
       "failure_category": "stale_artifact",
@@ -1537,7 +1537,7 @@
         {
           "name": "full_canonical_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-9e7d85759951c279"
+          "equals": "source-set-370896a1043817f2"
         },
         {
           "name": "full_canonical_download_run_id_matches",
@@ -1583,8 +1583,8 @@
     },
     {
       "id": "full_canonical_catalog_validation",
-      "label": "Active full canonical catalog validation",
-      "path": "catalog/catalog_validation.json",
+      "label": "Refreshed archived full canonical catalog validation",
+      "path": "runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/catalog_validation.json",
       "required_for_current_promotion": false,
       "required_for_full_canonical_corpus": true,
       "failure_category": "stale_artifact",
@@ -1597,13 +1597,13 @@
         {
           "name": "full_canonical_catalog_validation_source_set",
           "json_path": "source_set_id",
-          "equals": "source-set-9e7d85759951c279"
+          "equals": "source-set-370896a1043817f2"
         }
       ]
     },
     {
       "id": "full_canonical_authority_currentness",
-      "label": "Active full canonical authority-currentness report",
+      "label": "Refreshed archived full canonical authority-currentness report",
       "path": "derived/{full_canonical_source_set_id}/authority_currentness/authority_currentness_report.json",
       "required_for_current_promotion": false,
       "required_for_full_canonical_corpus": true,
@@ -1617,7 +1617,7 @@
         {
           "name": "full_canonical_authority_currentness_source_set",
           "json_path": "source_set_id",
-          "equals": "source-set-9e7d85759951c279",
+          "equals": "source-set-370896a1043817f2",
           "failure_category": "graph_stale_artifact"
         },
         {
@@ -1639,7 +1639,7 @@
     },
     {
       "id": "full_canonical_nepa_3d_source_set_graph_validation",
-      "label": "Active full canonical NEPA 3D source-set graph validation",
+      "label": "Refreshed archived full canonical NEPA 3D source-set graph validation",
       "path": "derived/{full_canonical_source_set_id}/knowledge_graph/nepa_3d_graph_validation.json",
       "required_for_current_promotion": false,
       "required_for_full_canonical_corpus": true,
@@ -1659,7 +1659,7 @@
     },
     {
       "id": "full_canonical_nepa_3d_source_set_graph_summary",
-      "label": "Active full canonical NEPA 3D source-set graph summary",
+      "label": "Refreshed archived full canonical NEPA 3D source-set graph summary",
       "path": "derived/{full_canonical_source_set_id}/knowledge_graph/nepa_3d_graph_summary.json",
       "required_for_current_promotion": false,
       "required_for_full_canonical_corpus": true,
@@ -1673,7 +1673,7 @@
         {
           "name": "full_canonical_source_set_graph_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-9e7d85759951c279",
+          "equals": "source-set-370896a1043817f2",
           "failure_category": "graph_stale_artifact"
         },
         {
@@ -1739,7 +1739,7 @@
           "name": "full_canonical_forest_plan_profile_eval_source_set_matches",
           "json_path": "active_source_set_ids",
           "equals": [
-            "source-set-9e7d85759951c279"
+            "source-set-370896a1043817f2"
           ],
           "failure_category": "stale_artifact"
         },
@@ -1792,14 +1792,14 @@
         {
           "name": "full_canonical_forest_plan_component_retrieval_eval_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-9e7d85759951c279",
+          "equals": "source-set-370896a1043817f2",
           "failure_category": "stale_artifact"
         },
         {
           "name": "full_canonical_forest_plan_component_retrieval_eval_active_source_set_matches",
           "json_path": "expected_active_source_set_ids",
           "equals": [
-            "source-set-9e7d85759951c279"
+            "source-set-370896a1043817f2"
           ],
           "failure_category": "stale_artifact"
         },

@@ -5,8 +5,8 @@
     {
       "reference_id": "active_full_canonical",
       "reference_type": "explicit_source_set_id",
-      "source_set_id": "source-set-9e7d85759951c279",
-      "description": "Active full-canonical source set that must own the canonical Region 1 multi-forest component inventory."
+      "source_set_id": "source-set-370896a1043817f2",
+      "description": "Refreshed archived full-canonical source set that currently owns the canonical Region 1 multi-forest component inventory contract."
     }
   ],
   "profile_rows": [

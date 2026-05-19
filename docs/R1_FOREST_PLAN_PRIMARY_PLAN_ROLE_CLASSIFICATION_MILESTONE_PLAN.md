@@ -2,7 +2,7 @@
 
 Date: 2026-05-19
 
-Status: Reduced 2026-05-19 through `f220b7a`; current-HEAD archived replay proves `source-set-2b6cb7d17da08906`; broader active-source-set rebind still deferred
+Status: Resolved in practice and committed code; archived full-canonical refresh now proves `source-set-370896a1043817f2`
 
 Owner context: This is a catalog/classification milestone for the Region 1 forest-plan lane. It is
 not a parser-expansion milestone, readiness-promotion milestone, or viewer milestone. Its only job
@@ -20,7 +20,7 @@ the forest-plan branch even after the older supplemental-register fix.
 - `src/usfs_r1_ea_sources/catalog.py` now applies a manifest-driven primary-plan override for the
   canonical `source_register_v1` path before the generic `regulation` fallback.
 - Outcome label:
-  `reduced`
+  `resolved`
 - Closing commit hash:
   `f220b7a` (`Fix source-register forest plan role classification`)
 - Canonical workbook proof now classifies `FPS-130`-`FPS-134`, `FPS-267`, `FPS-298`, and
@@ -29,24 +29,25 @@ the forest-plan branch even after the older supplemental-register fix.
 - A scoped archived
   `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
   replay on current HEAD now proves the fix against the real canonical run without mutating the
-  active catalog. That replay emitted archived catalog gate `source-set-2b6cb7d17da08906` with
+  active import catalog. The refreshed archived gate emitted
+  `source-set-370896a1043817f2` with
   `document_role_counts.forest_plan=33` and
   `document_role_counts.forest_plan_support=316`, and the expected canonical primary-plan/support
   split for `FPS-130`-`FPS-134`, `FPS-267`, `FPS-298`, `FPS-347`, `FPS-165`, `FINAL-KOOT-011`,
   and `FOR-033`.
+- A reuse-first extraction refresh on that archived gate now re-materializes the full-canonical
+  chunk surface with `extracted_count=634`, `reused_count=634`, and `chunk_count=98155`.
+- `forest-plan-components-build` on `source-set-370896a1043817f2` now builds `1336` components and
+  `377` standards and leaves only `flathead-nf` blocked. The earlier five-forest role starvation
+  boundary is gone.
 - Focused verification now passes on the current canonical lane:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py -q`
   (`19/19`) and
   `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/catalog.py tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py`.
-- No active-source-set catalog or extraction refresh landed in this code-only closeout. The live
-  `source_library/catalog/` and active chunk surfaces still reflect the pre-fix `document_role`
-  values until a separate replay regenerates them.
-- Because `source_set_id` is commit-sensitive, promoting that current-HEAD replay into live
-  `source_library/catalog/` would require a broader full-canonical source-set rebind rather than a
-  docs-only or chunk-only follow-up.
-- The plan's broader-promotion stop condition therefore fired:
-  the code-side classifier defect is closed, but the active-source-set proof remains deferred
-  outside this milestone's reduced closeout.
+- The active import catalog in `source_library/catalog/` remains
+  `source-set-9e7d85759951c279`, but the broader source-set refresh/rebind decision is now
+  complete for this milestone's scope: the full-canonical forest-plan/downstream contract surfaces
+  point at archived replay `source-set-370896a1043817f2`.
 - Historical references below that cite the older `source-set-5e65d845ce77e1a0` working-tree
   replay remain preserved context only.
 
@@ -66,14 +67,12 @@ legacy-plan parsing or readiness promotion:
 
 ## Current Implementation Status
 
-The classifier fix is now committed in repo code and proven on a current-HEAD archived catalog
-gate. The remaining deferred work is no longer just "rerun the live catalog"; it is a broader
-full-canonical source-set refresh/rebind decision because the current-HEAD replay mints
-`source-set-2b6cb7d17da08906`.
+The classifier fix is now committed in repo code and proven through a refreshed archived
+full-canonical replay on `source-set-370896a1043817f2`.
 
 The detailed Sequence 2/3 text below is preserved as the original intended full closeout path. The
-actual 2026-05-19 milestone outcome stopped earlier as `reduced` when the broader active-source-set
-promotion boundary became explicit.
+actual 2026-05-19 milestone outcome now closes `resolved`: the archived refresh/rebind landed and
+the promoted plan bodies now flow through the full-canonical component inventory boundary.
 
 - `catalog.py` no longer treats every `source_input="r1_forest_plan_document_register"` row as
   uniformly `forest_plan_support`.
@@ -459,21 +458,21 @@ Leave unrelated existing worktree changes alone, including the current viewer-de
 Do not batch this milestone together with parser-expansion or readiness-promotion changes.
 
 Current closeout status:
-the reduced code-side closeout is complete through `f220b7a`, and this plan's remaining active
-gap is explicitly rerouted to the broader full-canonical source-set refresh/rebind boundary.
+the classifier lane is now resolved through `f220b7a` plus archived replay
+`source-set-370896a1043817f2`. The remaining red state is no longer a role-classification gap.
 
 ## Residual Risks And Next Milestone Routing
 
-Even after this milestone's reduced closeout, the five forests may still fail component extraction
-because their plan syntax may not match the current parser. That is expected. This milestone
-removed the code-side upstream role-classification defect, but it did not yet promote a refreshed
-active source set.
+Even after this milestone's resolved closeout, residual downstream issues may still exist. That is
+expected. This milestone only owned the upstream role-classification boundary and the archived
+full-canonical proof that those plan bodies now enter the inventory builder correctly.
 
 After this milestone, the next lane should be:
 
-- a dedicated full-canonical source-set refresh/rebind slice that decides whether archived replay
-  `source-set-2b6cb7d17da08906` becomes the new live catalog contract; then
-- parser expansion or residual blocker work against that refreshed live source set.
+- resolve the residual `flathead-nf` inventory blocker on
+  `source-set-370896a1043817f2`;
+- then update the component-retrieval and graph/claims lanes to the refreshed canonical component
+  identities on that archived full-canonical source set.
 
 ## Closeout Checklist
 
@@ -481,8 +480,8 @@ After this milestone, the next lane should be:
 - [x] Sequence 1 classifier change implemented and tested
 - [x] Scoped current-HEAD archived replay proves the five canonical primary-plan/source-support IDs
   classify correctly
-- [x] Sequence 2 stop condition identified the broader active-source-set promotion boundary
+- [x] Archived full-canonical source-set refresh/rebind landed
 - [x] Docs and handoff updated
 - [x] Plan linter passes
 - [x] Verification gates pass
-- [x] Local atomic commit created for the reduced milestone slice
+- [x] Local atomic commit created for the resolved milestone slice

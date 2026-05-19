@@ -148,39 +148,43 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   `tests/test_phase_eval_direct_eval_contracts.py`, and
   `tests/test_phase_eval.py`
   pass `59/59`.
-- A fresh local non-strict
-  `promotion-suite --manifest config/promotion_suite_v1.json` rerun now points
-  `full_canonical_source_set_id=source-set-9e7d85759951c279`, but it still
-  reports `full_canonical_corpus_ready=false` with `4/8` required
-  full-canonical results passing and
-  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
-- A fresh `forest-plan-components-build` replay on
-  `source-set-9e7d85759951c279` now stops with `component_count=754`,
-  `standard_count=186`, and only `5` blocked forests:
-  `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
-  `nez-perce-clearwater-nfs`.
-- That replay showed the blocker is no longer only a canonical-vs-legacy
-  source-identity mismatch. The unresolved identity family still matters for
-  `flathead-nf` and part of `nez-perce-clearwater-nfs`, but the active
-  canonical lane also had a `source_register_v1` role-classifier regression:
-  manifest-selected primary plan rows such as `FPS-130`-`FPS-134`, `FPS-267`,
-  `FPS-298`, and `FPS-347` were still entering the catalog/chunk surfaces as
-  `document_role=regulation`.
+- Historical note:
+  the first post-import blocker replay on
+  `source-set-9e7d85759951c279` stopped at `754` components, `186` standards,
+  and `5` blocked forests, which is what exposed the canonical
+  `source_register_v1` role-classifier regression in the first place.
 - `src/usfs_r1_ea_sources/catalog.py` now fixes that regression by applying a
   manifest-driven primary-plan override before the generic `regulation`
   fallback. Canonical workbook proof now classifies `FPS-130`-`FPS-134`,
   `FPS-267`, `FPS-298`, and `FPS-347` as `forest_plan`, while `FPS-165`,
   `FINAL-KOOT-011`, and `FOR-033` remain `forest_plan_support`.
-- A scoped archived
-  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
-  replay on current HEAD now proves the same role split against the real
-  canonical run and emits archived catalog gate
-  `source-set-2b6cb7d17da08906`.
-- The active `source_library/catalog/` and
-  `source_library/derived/source-set-9e7d85759951c279/chunks/chunks.jsonl`
-  were built before that code fix, so a separate scoped catalog/extraction
-  refresh is still required before the live component inventory can benefit
-  from it.
+- A dedicated archived full-canonical classifier-refresh replay now lives at
+  `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`
+  and emits refreshed full-canonical source set
+  `source-set-370896a1043817f2`.
+- A reuse-first extraction refresh on that archived gate now re-materializes
+  the refreshed derived lane with `extracted_count=634`,
+  `reused_count=634`, `chunk_count=98155`, and
+  `validation_passed=true`.
+- `authority-currentness` now passes on
+  `source-set-370896a1043817f2`, and
+  `forest-plan-profile-eval` now passes with
+  `active_source_set_ids=["source-set-370896a1043817f2"]`.
+- `forest-plan-components-build` on the refreshed archived source set now
+  builds `1336` components and `377` standards with only `flathead-nf`
+  still blocked.
+- `forest-plan-component-retrieval-eval` is now truthfully red on the
+  refreshed source set because `flathead-nf` is still absent from the
+  validated inventory and the shipped eval contract still expects legacy
+  `R1PLAN-*` component IDs where the refreshed inventory now emits canonical
+  component IDs such as `FOR-009-*` and `FOR-002-*`.
+- A fresh local non-strict
+  `promotion-suite --manifest config/promotion_suite_v1.json`
+  now points
+  `full_canonical_source_set_id=source-set-370896a1043817f2` and reports
+  `full_canonical_corpus_ready=false` with `5/8` required full-canonical
+  results passing and
+  `full_canonical_failure_category_counts={"forest_plan_component_coverage_gap": 1, "graph_viewer_export_invalid": 2}`.
 - The active implementation packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
   Milestone 0 in that packet is now resolved through
@@ -199,13 +203,17 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   blocker set, with governed `identity_reconciliation` metadata on both
   configs.
 - Current reviewer-ready downstream evidence still lives on review-oriented
-  source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
-  now truthful and active, but broader full-canonical downstream freshness is
-  still routed-red until a broader full-canonical source-set refresh/rebind
-  decision promotes the current-HEAD classifier replay, the narrowed blocker
-  family is remeasured truthfully, and the blocked
-  graph/profile/component retrieval and promotion reruns can be replayed on
-  the resulting refreshed source set.
+  source set `source-set-ba8d0feae79501b8`. The imported canonical catalog in
+  `source_library/catalog/` remains active source set
+  `source-set-9e7d85759951c279`, but the refreshed archived full-canonical
+  forest-plan/downstream contract now points at
+  `source-set-370896a1043817f2`.
+- The next routed slice is no longer the broader refresh/rebind decision
+  itself. The remaining full-canonical work is now explicit:
+  finish the Flathead inventory blocker, update the component-retrieval
+  contract from legacy `R1PLAN-*` component IDs onto the refreshed canonical
+  component identities, and replay the missing claims/rule-claim/graph
+  artifacts on `source-set-370896a1043817f2`.
 
 Historical broader capture baseline:
 
