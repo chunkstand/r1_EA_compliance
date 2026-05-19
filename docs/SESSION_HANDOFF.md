@@ -12,6 +12,9 @@ packet by taking the governed workbook-contract removal path for `FPS-005`,
 refreshing the active catalog against that new workbook truth, and leaving the
 packet routed only to downstream reruns.
 
+- closing commit hash:
+  `4660d11` (`Close Milestone 2 FPS-005 workbook contract removal`)
+
 - routed plan:
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
 - workbook-contract outcome:

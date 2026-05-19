@@ -103,6 +103,8 @@ Local active import baseline on 2026-05-19 after Milestone 2 workbook-contract c
   `validate-run` on that exact run ID (`8/8` checks passed); and
   `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
   (`validation_passed=true`).
+- Milestone 2 closeout commit is
+  `4660d11` (`Close Milestone 2 FPS-005 workbook contract removal`).
 - `FPS-005` is now explicitly removed from the active load-bearing set. The
   workbook row moved into `Removed_Not_Applicable_Final` with a governed
   removal reason after a 2026-05-19 recheck confirmed that the official

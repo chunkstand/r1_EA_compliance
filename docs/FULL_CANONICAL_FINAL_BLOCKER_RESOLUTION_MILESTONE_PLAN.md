@@ -1,7 +1,7 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestones 0-2 resolved 2026-05-19; Milestone 3 next
+Status: Active 2026-05-19; Milestones 0-2 resolved 2026-05-19 through `4660d11`; Milestone 3 next
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
@@ -251,8 +251,8 @@ Outcome label: resolved
   `parser_metadata.pdf_raster_ocr_backend=apple_vision_swift`,
   `parser_metadata.pdf_raster_ocr_page_count=346`,
   `chunk_count=861`, and `text_char_count=1244371`. Active `summary.json` moved to
-  `extracted_count=634`, `failed_count=1`, and `chunk_count=98109`. The next active implementation
-  slice is Milestone 2 on `FPS-005`.
+  `extracted_count=634`, `failed_count=1`, and `chunk_count=98109`. This historical checkpoint
+  routed Milestone 2 on `FPS-005`, which is now also resolved below.
 
 ### Milestone 2: Resolve `FPS-005` Through Workbook-Contract Action
 
@@ -270,6 +270,8 @@ Outcome label: resolved
   silent runtime remapping,
   config-only URL repair,
   or silently substituting a different document while the workbook row still describes the old one.
+- Closing commit hash:
+  `4660d11` (`Close Milestone 2 FPS-005 workbook contract removal`)
 - Closed `2026-05-19`: Milestone 2 resolved through the explicit workbook-contract removal path.
   `FPS-005` moved into `Removed_Not_Applicable_Final`, the workbook now validates at
   `634` retained master rows / `51` queue rows / `3` removed rows, the refreshed

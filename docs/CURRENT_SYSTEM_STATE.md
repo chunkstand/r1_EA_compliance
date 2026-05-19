@@ -11,9 +11,10 @@ deterministic EA package review commands, and it now contains preserved legacy
 baseline artifacts, the active full-register canonical import, and
 reviewer-ready downstream lanes.
 
-Routing note: the newest downstream-freshness reduced closeout,
-import-completion closeout, operational-recovery, and gold-coverage sections
-below supersede older historical lane notes when they disagree. In particular,
+Routing note: the newest full-canonical final-blocker closeout,
+downstream-freshness reduced closeout, import-completion closeout,
+operational-recovery, and gold-coverage sections below supersede older
+historical lane notes when they disagree. In particular,
 older references below that still treat `source-set-5e65d845ce77e1a0`,
 `source-set-9dcf819bc4cca486`, or the planned Phase 2 gate
 `source-set-ae989382c52344db` as the active local import catalog are
@@ -26,6 +27,8 @@ Latest closeout on 2026-05-19:
 
 - Routed implementation packet:
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
+- Milestone 2 closeout commit is
+  `4660d11` (`Close Milestone 2 FPS-005 workbook contract removal`).
 - The workbook contract is now explicitly reduced to
   `Document_Register_Master=634`,
   `Direct_File_Capture_Queue=51`,
