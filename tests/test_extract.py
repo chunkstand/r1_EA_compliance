@@ -10,6 +10,7 @@ import shutil
 import tempfile
 from types import SimpleNamespace
 import unittest
+from unittest import mock
 import zipfile
 
 from usfs_r1_ea_sources.catalog import build_review_catalog
@@ -1171,7 +1172,7 @@ class ExtractionTests(unittest.TestCase):
                 metadata={
                     "fallback_from": "pdf_raster_ocr",
                     "fallback_error_class": "pdf_text_fallback_empty",
-                    "pdf_raster_ocr_dpi": 150,
+                    "pdf_raster_ocr_dpi": extract_module.PDF_RASTER_OCR_DPI,
                     "pdf_raster_ocr_page_count": 12,
                 },
             )
@@ -1220,6 +1221,51 @@ class ExtractionTests(unittest.TestCase):
             "pdf_text_fallback_empty",
         )
         self.assertTrue(_check(validation, "fallback_records_are_auditable")["passed"])
+
+    def test_pdf_raster_ocr_worker_count_caps_large_documents(self) -> None:
+        with mock.patch.object(extract_module.multiprocessing, "cpu_count", return_value=8):
+            self.assertEqual(extract_module._pdf_raster_ocr_worker_count(4), 1)
+            self.assertEqual(
+                extract_module._pdf_raster_ocr_worker_count(
+                    extract_module.PDF_RASTER_OCR_PARALLEL_MIN_PAGES
+                ),
+                extract_module.PDF_RASTER_OCR_MAX_WORKERS,
+            )
+
+    def test_collect_pdf_raster_ocr_blocks_falls_back_to_sequential_when_pool_fails(self) -> None:
+        image_paths = [Path("/tmp/page-2.png"), Path("/tmp/page-3.png")]
+        broken_context = mock.Mock()
+        broken_context.Pool.side_effect = RuntimeError("pool failed")
+
+        with (
+            mock.patch.object(extract_module, "_pdf_raster_ocr_worker_count", return_value=2),
+            mock.patch.object(
+                extract_module.multiprocessing,
+                "get_context",
+                return_value=broken_context,
+            ),
+            mock.patch.object(
+                extract_module,
+                "_ocr_pdf_raster_page",
+                side_effect=[(2, "Recovered page two text."), (3, None)],
+            ) as ocr_page,
+        ):
+            blocks = extract_module._collect_pdf_raster_ocr_blocks(image_paths)
+
+        self.assertEqual([block.page for block in blocks], [2])
+        self.assertEqual([block.text for block in blocks], ["Recovered page two text."])
+        self.assertEqual(ocr_page.call_count, 2)
+
+    def test_ocr_pdf_raster_page_uses_no_classifier_mode(self) -> None:
+        fake_ocr = mock.Mock(return_value=SimpleNamespace(txts=["  Alpha  ", "", "Beta"]))
+
+        with mock.patch.object(extract_module, "_rapidocr_torch", return_value=fake_ocr) as rapidocr:
+            page_number, text = extract_module._ocr_pdf_raster_page("/tmp/page-7.png")
+
+        rapidocr.assert_called_once_with(use_cls=False)
+        fake_ocr.assert_called_once_with("/tmp/page-7.png")
+        self.assertEqual(page_number, 7)
+        self.assertEqual(text, "Alpha\nBeta")
 
     def test_source_derived_dir_rejects_unsafe_source_set_id(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

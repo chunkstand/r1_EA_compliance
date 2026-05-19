@@ -5,6 +5,52 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Downstream Freshness Parallel OCR Reduction Update
+
+This follow-on update keeps the same downstream-freshness packet but reduces
+the raster OCR runtime lane further without claiming new corpus recovery.
+
+- routed plan:
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
+- code surfaces:
+  `src/usfs_r1_ea_sources/extract.py` now renders `pdf_raster_ocr` pages at
+  `100` DPI instead of `150`, disables the OCR classifier stage, and uses a
+  bounded `4`-worker page pool for larger scanned PDFs. `tests/test_extract.py`
+  now covers the new worker-count and sequential-fallback behavior.
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py -q`
+  passed `28/28`;
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/extract.py tests/test_extract.py`
+  passed;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- live replay evidence:
+  a targeted merged `FPS-125` replay in the Docling environment forced the new
+  raster path, rendered all `346` page PNGs, and exercised the `4`-worker OCR
+  pool, but it remained compute-bound for more than `24` minutes and was
+  interrupted without writing a merged extracted record. The active source-set
+  summary and extraction manifest therefore remained unchanged.
+- residual truth:
+  `source-set-cac9c7d02b280825` is still `extracted_count=633`,
+  `failed_count=2`,
+  `chunk_count=97248`,
+  `validation_passed=false`, and
+  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 1}`.
+  `FPS-005` also remains a real upstream-invalid PDF: local `pypdf` salvage
+  still fails even with `strict=False` because the file cannot reconstruct a
+  root catalog.
+- next routing:
+  either finish a green `FPS-125` replay under the current reduced raster path
+  or route that row to an external/manual OCR lane, then route the `FPS-005`
+  replacement or repair decision through the source-register contract before
+  rerunning
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`,
+  `forest-plan-component-retrieval-eval`, and
+  `promotion-suite` on `source-set-cac9c7d02b280825`.
+
 ## Full Canonical Downstream Freshness Rescue Alignment Closeout
 
 This follow-on update does not claim new corpus recovery. It closes the

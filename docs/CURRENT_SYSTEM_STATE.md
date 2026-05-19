@@ -75,6 +75,13 @@ Latest reduced closeout on 2026-05-19:
   rescue paths, but the live source-set state above remains unchanged because a
   long targeted `FPS-125` replay under the new code was interrupted before it
   wrote a merged extracted record.
+- The raster OCR rescue surface is now tuned for the actual `FPS-125` cost
+  profile: it renders at `100` DPI rather than `150`, disables the classifier
+  phase, and uses a bounded `4`-worker page pool on larger scanned PDFs.
+  Focused verification in `tests/test_extract.py` now passes `28/28`, but a
+  targeted merged `FPS-125` replay still remained compute-bound after all
+  `346` raster pages were rendered and the worker pool was exercised for more
+  than `24` minutes, so no durable extracted record was written.
 - That rescue-path implementation slice is now verification-complete and
   aligned across the repo docs. The remaining work is therefore not a docs,
   routing, or contract-test mismatch; it is limited to one live OCR-heavy

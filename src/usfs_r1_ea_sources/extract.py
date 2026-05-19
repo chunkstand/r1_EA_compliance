@@ -35,7 +35,9 @@ PDF_TEXT_FALLBACK_ERROR_CLASSES = {"docling_timeout", "docling_unavailable"}
 PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES = 512 * 1024 * 1024
 CHUNKED_DOCLING_PDF_PAGE_COUNT = 10
 CHUNKED_DOCLING_PDF_MIN_TIMEOUT_SECONDS = 180.0
-PDF_RASTER_OCR_DPI = 150
+PDF_RASTER_OCR_DPI = 100
+PDF_RASTER_OCR_PARALLEL_MIN_PAGES = 24
+PDF_RASTER_OCR_MAX_WORKERS = 4
 DOCLING_PYTHON_ENV_VAR = "USFS_R1_DOCLING_PYTHON"
 DEFAULT_R1_FOREST_PLAN_REGISTER_PATH = Path("config/r1_forest_plan_document_register_draft.csv")
 SUCCESS_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"}
@@ -1468,10 +1470,6 @@ def _try_extract_pdf_raster_ocr(
         return None
     if importlib.util.find_spec("rapidocr") is None:
         return None
-    try:
-        ocr = _rapidocr_torch()
-    except Exception:
-        return None
 
     with tempfile.TemporaryDirectory(prefix="usfs-r1-raster-ocr-") as tmp:
         tmpdir = Path(tmp)
@@ -1495,13 +1493,7 @@ def _try_extract_pdf_raster_ocr(
         if not image_paths:
             return None
 
-        blocks: list[TextBlock] = []
-        for page_number, image_path in enumerate(image_paths, start=1):
-            result = ocr(str(image_path))
-            page_texts = [_clean_text(text) for text in getattr(result, "txts", ()) if _clean_text(text)]
-            if not page_texts:
-                continue
-            blocks.append(TextBlock(text="\n".join(page_texts), page=page_number))
+        blocks = _collect_pdf_raster_ocr_blocks(image_paths)
 
     if not blocks:
         return None
@@ -1520,6 +1512,48 @@ def _try_extract_pdf_raster_ocr(
             "pdf_raster_ocr_page_count": len(image_paths),
         },
     )
+
+
+def _collect_pdf_raster_ocr_blocks(image_paths: list[Path]) -> list[TextBlock]:
+    worker_count = _pdf_raster_ocr_worker_count(len(image_paths))
+    image_path_strings = [str(path) for path in image_paths]
+    if worker_count == 1:
+        results = [_ocr_pdf_raster_page(path) for path in image_path_strings]
+    else:
+        try:
+            context = multiprocessing.get_context("spawn")
+            with context.Pool(processes=worker_count) as pool:
+                results = pool.map(_ocr_pdf_raster_page, image_path_strings)
+        except Exception:
+            results = [_ocr_pdf_raster_page(path) for path in image_path_strings]
+    return [
+        TextBlock(text=page_text, page=page_number)
+        for page_number, page_text in results
+        if page_text
+    ]
+
+
+def _pdf_raster_ocr_worker_count(page_count: int) -> int:
+    if page_count < PDF_RASTER_OCR_PARALLEL_MIN_PAGES:
+        return 1
+    try:
+        cpu_count = multiprocessing.cpu_count()
+    except NotImplementedError:
+        cpu_count = 1
+    return max(1, min(PDF_RASTER_OCR_MAX_WORKERS, cpu_count))
+
+
+def _ocr_pdf_raster_page(image_path: str) -> tuple[int, str | None]:
+    page_number = int(Path(image_path).stem.rsplit("-", 1)[-1])
+    try:
+        ocr = _rapidocr_torch(use_cls=False)
+    except Exception:
+        return page_number, None
+    result = ocr(image_path)
+    page_texts = [_clean_text(text) for text in getattr(result, "txts", ()) if _clean_text(text)]
+    if not page_texts:
+        return page_number, None
+    return page_number, "\n".join(page_texts)
 
 
 def _try_extract_chunked_docling_pdf(
@@ -1649,8 +1683,8 @@ def _raise_pypdf_decompression_limit() -> None:
         filters.ZLIB_MAX_OUTPUT_LENGTH = PDF_TEXT_FALLBACK_MAX_DECOMPRESS_BYTES
 
 
-@lru_cache(maxsize=1)
-def _rapidocr_torch():
+@lru_cache(maxsize=2)
+def _rapidocr_torch(*, use_cls: bool = True):
     from rapidocr import RapidOCR
     from rapidocr.utils.typings import EngineType
 
@@ -1659,6 +1693,8 @@ def _rapidocr_torch():
         "Cls.engine_type": EngineType.TORCH,
         "Rec.engine_type": EngineType.TORCH,
     }
+    if not use_cls:
+        params["Global.use_cls"] = False
     return RapidOCR(params=params)
 
 

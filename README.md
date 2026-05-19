@@ -149,6 +149,12 @@ Local active import baseline on 2026-05-18 after import-completion closeout:
   surfaces, but the live `source-set-cac9c7d02b280825` blocker count remains
   `633/2` because the first long targeted `FPS-125` replay under the new path
   was interrupted without writing a merged success record.
+- The raster OCR branch is now reduced again for large scanned PDFs:
+  `pdf_raster_ocr` renders at `100` DPI instead of `150`, disables the OCR
+  classifier stage, and uses a bounded `4`-worker page pool on larger page
+  sets. Focused extractor coverage is now `28/28`, but a targeted merged
+  `FPS-125` replay still remained compute-bound after rendering all `346`
+  raster pages and was interrupted without changing durable outputs.
 - That rescue-path implementation slice is now alignment-closed in the repo:
   the focused extractor suite, focused lint, and docs closeout all pass, so
   the remaining work is not missing repo wiring. The only unresolved lane is
