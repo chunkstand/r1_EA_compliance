@@ -21,13 +21,13 @@ older references below that still treat `source-set-5e65d845ce77e1a0`,
 historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes.
 
-## Full Canonical Final Blocker Milestone 2 Closeout
+## Full Canonical Final Blocker Milestone 3 Reduced Closeout
 
-Latest closeout on 2026-05-19:
+Latest reduced closeout on 2026-05-19:
 
 - Routed implementation packet:
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
-- Milestone 2 closeout commit is
+- Milestones 0-2 remain closed through
   `4660d11` (`Close Milestone 2 FPS-005 workbook contract removal`).
 - The workbook contract is now explicitly reduced to
   `Document_Register_Master=634`,
@@ -69,17 +69,59 @@ Latest closeout on 2026-05-19:
   passes with `authority_family_count=454`,
   `catalog_source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
   `source_currentness_record_count=634`, and `validation_passed=true`.
-- No downstream graph/profile/component/promotion reruns landed in this slice.
-  The last committed `promotion-suite` result still points at prior full
-  canonical source set `source-set-cac9c7d02b280825` and therefore remains
-  stale relative to the new active local catalog.
+- The active full-canonical contract surfaces in
+  `config/promotion_suite_v1.json`,
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`, and
+  `config/phase_eval_direct_eval_v1.json`
+  are now rebound to active import source set `source-set-9e7d85759951c279`.
+- Focused contract coverage for that rebind is now green:
+  `tests/test_promotion_suite.py`,
+  `tests/test_forest_plan_inventory_build_manifest.py`,
+  `tests/test_forest_plan_profile_eval_contracts.py`,
+  `tests/test_phase_eval_direct_eval_contracts.py`, and
+  `tests/test_phase_eval.py`
+  pass `59/59`.
+- A fresh local non-strict
+  `promotion-suite --manifest config/promotion_suite_v1.json`
+  rerun now reports
+  `current_promotion_ready=true`,
+  `promotion_ready=true`,
+  `expansion_ready=true`,
+  `full_canonical_corpus_ready=false`,
+  `passed_required_full_canonical_result_count=4`,
+  `required_full_canonical_result_count=8`, and
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`
+  against active source set `source-set-9e7d85759951c279`.
+- The attempted `forest-plan-components-build` prerequisite replay on
+  `source-set-9e7d85759951c279` failed closed. The resulting
+  `source_library/derived/source-set-9e7d85759951c279/forest_plan_components/summary.json`
+  records `passed=false`, `component_count=0`, `standard_count=0`, and all
+  `10` tracked forests blocked by
+  `no_selected_forest_plan_chunks`,
+  `plan_component_labels_not_detected`, and
+  `plan_standard_labels_not_detected`.
+- The blocker is now explicit: the active canonical catalog and chunk store
+  contain `0` `R1PLAN-*` rows, while
+  `config/r1_forest_plan_component_inventory_build_manifest.json` plus
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`
+  still reference `99` legacy `R1PLAN-*` IDs. The preserved forest-plan
+  register crosswalk accounts for all `99`; `23` are
+  `catalog_confirmed`/mapped to existing canonical rows, and the remaining
+  `76` stay `source_delta_required`.
+- No graph/profile/component-retrieval reruns landed in this reduced slice,
+  because the forest-plan identity mismatch blocks the prerequisite inventory
+  lane before those downstream artifacts can be regenerated truthfully.
 - Next routing:
-  Milestone 3 only. Rerun
+  route a dedicated canonical-vs-legacy forest-plan identity reconciliation
+  packet, then resume the blocked
   `nepa-knowledge-graph-export`,
   `forest-plan-profile-eval`,
   `forest-plan-component-retrieval-eval`, and
   `promotion-suite`
-  on `source-set-9e7d85759951c279`, then close the packet.
+  reruns on `source-set-9e7d85759951c279`.
 
 ## Full Canonical Downstream Freshness Refresh Reduced Closeout
 

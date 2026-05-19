@@ -75,7 +75,7 @@ source-delta-required, `1` documented official-source gap), but
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
 promotion evidence.
 
-Local active import baseline on 2026-05-19 after Milestone 2 workbook-contract closeout:
+Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
 
 - Active local catalog in `source_library/catalog/` is now full-register source
   set `source-set-9e7d85759951c279`, created on `2026-05-19T17:50:42Z`, with
@@ -126,28 +126,52 @@ Local active import baseline on 2026-05-19 after Milestone 2 workbook-contract c
   `reused_count=620`, and `validation_passed=true`.
 - The active downstream implementation packet is now
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
-  Milestones 0-2 are now resolved. `authority-currentness --source-set-id
-  source-set-9e7d85759951c279` passes
+  Milestones 0-2 are now resolved, and a reduced Milestone 3 pass has now
+  rebound the active full-canonical contract surfaces in
+  `config/promotion_suite_v1.json`,
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`, and
+  `config/phase_eval_direct_eval_v1.json`
+  to `source-set-9e7d85759951c279`. `authority-currentness --source-set-id
+  source-set-9e7d85759951c279` still passes
   with `authority_family_count=454` and
   `source_currentness_record_count=634`.
-- The last committed non-strict
-  `promotion-suite --manifest config/promotion_suite_v1.json` result is now
-  stale relative to the new active source set. It still points
-  `full_canonical_source_set_id=source-set-cac9c7d02b280825` and reports
-  `full_canonical_corpus_ready=false` with `4/8` required full-canonical
-  results passing and
+- Focused contract coverage for that rebind is now green:
+  `tests/test_promotion_suite.py`,
+  `tests/test_forest_plan_inventory_build_manifest.py`,
+  `tests/test_forest_plan_profile_eval_contracts.py`,
+  `tests/test_phase_eval_direct_eval_contracts.py`, and
+  `tests/test_phase_eval.py`
+  pass `59/59`.
+- A fresh local non-strict
+  `promotion-suite --manifest config/promotion_suite_v1.json` rerun now points
+  `full_canonical_source_set_id=source-set-9e7d85759951c279`, but it still
+  reports `full_canonical_corpus_ready=false` with `4/8` required
+  full-canonical results passing and
   `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
-- The current implementation slice inside that packet is now Milestone 3:
-  rerun `nepa-knowledge-graph-export`,
-  `forest-plan-profile-eval`,
-  `forest-plan-component-retrieval-eval`, and
-  `promotion-suite`
-  on `source-set-9e7d85759951c279`.
+- The attempted `forest-plan-components-build` prerequisite replay on
+  `source-set-9e7d85759951c279` now fails closed with `component_count=0`,
+  `standard_count=0`, and all `10` tracked forests blocked by the same three
+  blocker classes:
+  `no_selected_forest_plan_chunks`,
+  `plan_component_labels_not_detected`, and
+  `plan_standard_labels_not_detected`.
+- That failure is now understood as a canonical-vs-legacy source-identity
+  mismatch, not a parser regression. The active canonical catalog and chunks
+  contain `0` `R1PLAN-*` rows, while the readiness and component-inventory
+  configs still reference `99` legacy `R1PLAN-*` IDs. The preserved forest-plan
+  crosswalk accounts for all `99`; `23` are already
+  `catalog_confirmed`/mapped to an existing canonical row, and the remaining
+  `76` are still `source_delta_required`.
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
   now truthful and active, but broader full-canonical downstream freshness is
-  still routed-red until the blocked graph/profile/component retrieval and
-  promotion reruns are replayed on `source-set-9e7d85759951c279`.
+  still routed-red until a dedicated forest-plan identity-reconciliation packet
+  clears the legacy `R1PLAN-*` dependency and the blocked
+  graph/profile/component retrieval and promotion reruns can be replayed on
+  `source-set-9e7d85759951c279`.
 
 Historical broader capture baseline:
 

@@ -5,6 +5,66 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Final Blocker Milestone 3 Reduced Contract-Rebind Closeout
+
+This reduced implementation slice advanced the active full-canonical contract
+surfaces onto the new canonical source set, reran the focused contract checks,
+and then stopped at the real downstream blocker instead of fabricating a green
+full-canonical replay.
+
+- routed plan:
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+- active source-set rebind:
+  `config/promotion_suite_v1.json`,
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`, and
+  `config/phase_eval_direct_eval_v1.json`
+  now point at active full-canonical source set `source-set-9e7d85759951c279`
+  instead of the prior import-completion source set.
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py tests/test_forest_plan_profile_eval_contracts.py tests/test_forest_plan_inventory_build_manifest.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py -q`
+  passed `59/59`, and
+  `PYTHONPATH=src python -m compileall src`
+  passed.
+- promotion truth:
+  a fresh local non-strict
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  rerun now points `full_canonical_source_set_id=source-set-9e7d85759951c279`
+  and still reports
+  `full_canonical_corpus_ready=false`,
+  `passed_required_full_canonical_result_count=4`,
+  `required_full_canonical_result_count=8`, and
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
+- blocker evidence:
+  the prerequisite
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-9e7d85759951c279 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  failed closed. The resulting
+  `source_library/derived/source-set-9e7d85759951c279/forest_plan_components/summary.json`
+  records `passed=false`, `component_count=0`, `standard_count=0`, and all
+  `10` tracked forests blocked by
+  `no_selected_forest_plan_chunks`,
+  `plan_component_labels_not_detected`, and
+  `plan_standard_labels_not_detected`.
+- root cause:
+  the active canonical catalog and chunk store contain `0` `R1PLAN-*` rows,
+  while the readiness/inventory configs still reference `99` legacy
+  `R1PLAN-*` IDs. The preserved forest-plan crosswalk accounts for all `99`:
+  `23` are already `catalog_confirmed` and mapped to an existing canonical
+  row, while the remaining `76` are still `source_delta_required`.
+- downstream outcome:
+  no truthful `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`, or
+  `forest-plan-component-retrieval-eval`
+  reruns landed in this slice because the prerequisite component-inventory lane
+  is still keyed to legacy source identities absent from the active canonical
+  corpus.
+- next routing:
+  write and execute a dedicated canonical-vs-legacy forest-plan identity
+  reconciliation packet, then resume the blocked full-canonical downstream
+  reruns on `source-set-9e7d85759951c279`.
+
 ## Full Canonical Final Blocker Milestone 2 FPS-005 Workbook-Contract Closeout
 
 This implementation slice closes Milestone 2 of the standalone final-blocker

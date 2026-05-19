@@ -1,7 +1,7 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestones 0-2 resolved 2026-05-19 through `4660d11`; Milestone 3 next
+Status: Active 2026-05-19; Milestones 0-2 resolved 2026-05-19 through `4660d11`; Milestone 3 reduced on active-source-set contract rebind and blocked on canonical-vs-legacy forest-plan identity reconciliation
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
@@ -37,8 +37,24 @@ canonical corpus instead of a merely current-promotion-ready corpus.
 - A reuse-first rebuild on the new catalog classified `reuse_extraction=624` and `needs_extract=10`.
   The resulting targeted merged reextract of `USDA-002`, `USDA-003`, `USDA-004`, and `USDA-006`
   also cleared the prior scoped XML extraction-audit red on the new active source set.
-- `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  currently reports
+- The active full-canonical contract surfaces in
+  `config/promotion_suite_v1.json`,
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`, and
+  `config/phase_eval_direct_eval_v1.json`
+  are now rebound to active source set `source-set-9e7d85759951c279`, and the
+  focused contract suite in
+  `tests/test_promotion_suite.py`,
+  `tests/test_forest_plan_profile_eval_contracts.py`,
+  `tests/test_forest_plan_inventory_build_manifest.py`,
+  `tests/test_phase_eval_direct_eval_contracts.py`, and
+  `tests/test_phase_eval.py`
+  passes `59/59`.
+- A fresh local non-strict
+  `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
+  rerun now reports
   `current_promotion_ready=true`,
   `promotion_ready=true`,
   `expansion_ready=true`,
@@ -46,15 +62,34 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   `passed_required_full_canonical_result_count=4`,
   `required_full_canonical_result_count=8`, and
   `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
+- The prerequisite forest-plan component-inventory replay on
+  `source-set-9e7d85759951c279` now fails closed. The resulting
+  `source_library/derived/source-set-9e7d85759951c279/forest_plan_components/summary.json`
+  records `passed=false`, `component_count=0`, `standard_count=0`, and all
+  `10` tracked forests blocked by
+  `no_selected_forest_plan_chunks`,
+  `plan_component_labels_not_detected`, and
+  `plan_standard_labels_not_detected`.
+- The blocker is now explicit: the active canonical catalog and chunk store
+  contain `0` `R1PLAN-*` rows, while
+  `config/r1_forest_plan_component_inventory_build_manifest.json` plus
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`
+  still reference `99` legacy `R1PLAN-*` IDs. The preserved forest-plan
+  crosswalk accounts for all `99`; `23` are
+  `catalog_confirmed`/mapped to existing canonical rows, and the remaining
+  `76` are still `source_delta_required`.
 - The exact remaining failed required full-canonical slots are still the same four downstream
   artifacts, but they now need regeneration against active source set `source-set-9e7d85759951c279`:
   `source_library/derived/source-set-9e7d85759951c279/knowledge_graph/nepa_3d_graph_validation.json`,
   `source_library/derived/source-set-9e7d85759951c279/knowledge_graph/nepa_3d_graph_summary.json`,
   `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json`, and
   `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`.
-- Milestones 0-2 are now aligned across `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
-  `docs/SESSION_HANDOFF.md`: the extraction blocker lane is closed, the active source set is now
-  `source-set-9e7d85759951c279`, and the next remaining work is the four downstream reruns above.
+- The durable routing set is now aligned across `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`: the
+  extraction blocker lane is closed, the active source set is
+  `source-set-9e7d85759951c279`, and the immediate next work is a dedicated
+  canonical-vs-legacy forest-plan identity reconciliation packet before the
+  four downstream reruns above can be completed truthfully.
 
 ## Goal
 
@@ -283,7 +318,7 @@ Outcome label: resolved
 
 ### Milestone 3: Replay The Four Blocked Full-Canonical Artifacts
 
-Outcome label: resolved
+Outcome label: reduced
 
 - After both blocker rows are cleared, rerun:
   `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-9e7d85759951c279`
@@ -295,6 +330,32 @@ Outcome label: resolved
   `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
 - Close the milestone only when the two missing graph artifacts exist, the two stale eval results
   point at the active source set, and promotion reports `full_canonical_corpus_ready=true`.
+- If the rerun attempt exposes that the active canonical source set no longer
+  contains the legacy `R1PLAN-*` identity family required by the forest-plan
+  readiness and component-inventory contracts, stop and close this milestone
+  reduced rather than fabricating fresh downstream artifacts against the wrong
+  source identity.
+- Reduced `2026-05-19`: the active full-canonical config surfaces above were
+  rebound to `source-set-9e7d85759951c279`, and the focused contract suite
+  passed `59/59`. A fresh local non-strict `promotion-suite` rerun now points
+  at the active source set and still reports `4/8` required full-canonical
+  results passing. The prerequisite
+  `forest-plan-components-build --source-set-id source-set-9e7d85759951c279 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  replay then failed closed with `component_count=0`, `standard_count=0`, and
+  all `10` tracked forests blocked by
+  `no_selected_forest_plan_chunks`,
+  `plan_component_labels_not_detected`, and
+  `plan_standard_labels_not_detected`. The active canonical catalog/chunks
+  contain `0` `R1PLAN-*` rows, while the readiness/inventory contracts still
+  reference `99` legacy `R1PLAN-*` IDs; the preserved crosswalk maps `23`
+  of those IDs to an existing canonical row and leaves `76`
+  `source_delta_required`. No truthful
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`, or
+  `forest-plan-component-retrieval-eval`
+  reruns landed in this reduced slice. Next routing is a dedicated
+  canonical-vs-legacy forest-plan identity reconciliation packet before this
+  milestone can be retried.
 
 ### Milestone 4: Durable Closeout And Routing Reset
 
@@ -348,6 +409,8 @@ Outcome label: resolved
 - Active source-set freshness after any contract-changing row fix:
   `PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-9e7d85759951c279`
 - Downstream closeout gates:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py tests/test_forest_plan_profile_eval_contracts.py tests/test_forest_plan_inventory_build_manifest.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py -q`
+  `PYTHONPATH=src python -m compileall src`
   `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-9e7d85759951c279`
   `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-profile-eval --output-dir source_library --manifest config/region1_forest_plan_profile_eval_coverage_v1.json`
   `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-retrieval-eval --output-dir source_library --manifest config/forest_plan_component_retrieval_eval_v1.json`
@@ -412,3 +475,7 @@ Outcome label: resolved
   extracted record lands in the active source set.
 - If `FPS-005` lacks a governable official replacement, stop and route a dedicated workbook-contract
   policy decision rather than faking a green full-canonical corpus.
+- If the active canonical source set cannot satisfy the preserved
+  `R1PLAN-*`-keyed forest-plan readiness and component-inventory contracts,
+  stop and route a dedicated identity-reconciliation packet instead of
+  pretending the remaining downstream reruns are purely mechanical.

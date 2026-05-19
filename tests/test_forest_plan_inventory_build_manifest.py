@@ -39,7 +39,7 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
         )
         self.assertEqual(
             manifest.source_set_reference("active_full_canonical").source_set_id,
-            "source-set-cac9c7d02b280825",
+            "source-set-9e7d85759951c279",
         )
         dakota = manifest.get("dakota-prairie-grasslands")
         self.assertEqual(dakota.primary_plan_source_record_id, "R1PLAN-dakota-prairie-grasslands-03")

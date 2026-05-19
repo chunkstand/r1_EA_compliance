@@ -12,8 +12,8 @@ from usfs_r1_ea_sources.promotion_suite import run_promotion_suite
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 COMMITTED_PROMOTION_SUITE = REPO_ROOT / "config" / "promotion_suite_v1.json"
-FULL_CANONICAL_SOURCE_SET_ID = "source-set-cac9c7d02b280825"
-FULL_CANONICAL_DOWNLOAD_RUN_ID = "phase2-canonical-download-full-post-head429-fallback-20260519"
+FULL_CANONICAL_SOURCE_SET_ID = "source-set-9e7d85759951c279"
+FULL_CANONICAL_DOWNLOAD_RUN_ID = "phase2-canonical-download-full-post-fps005-removal-20260519"
 
 
 def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> None:
@@ -34,14 +34,14 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         FULL_CANONICAL_DOWNLOAD_RUN_ID
     )
     assert active_catalog_checks["full_canonical_download_batch_run_ids"]["equals"] == []
-    assert active_catalog_checks["full_canonical_source_count"]["equals"] == 635
-    assert active_catalog_checks["full_canonical_artifact_count"]["equals"] == 623
+    assert active_catalog_checks["full_canonical_source_count"]["equals"] == 634
+    assert active_catalog_checks["full_canonical_artifact_count"]["equals"] == 622
+    assert active_catalog_checks["full_canonical_active_review_corpus_count"]["equals"] == 582
     assert (
         active_catalog_checks["full_canonical_currentness_supersession_archive_count"]["equals"]
         == 52
     )
-    assert active_catalog_checks["full_canonical_downloaded_count"]["equals"] == 615
-    assert active_catalog_checks["full_canonical_downloaded_existing_count"]["equals"] == 8
+    assert active_catalog_checks["full_canonical_downloaded_existing_count"]["equals"] == 622
     assert active_catalog_checks["full_canonical_duplicate_content_count"]["equals"] == 12
 
     active_validation = suite_results["full_canonical_catalog_validation"]
@@ -81,7 +81,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         currentness_checks[
             "full_canonical_authority_currentness_active_review_corpus_count"
         ]["equals"]
-        == 583
+        == 582
     )
     assert (
         currentness_checks[
@@ -126,7 +126,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         full_graph_summary_checks[
             "full_canonical_source_set_graph_catalog_source_record_count"
         ]["equals"]
-        == 635
+        == 634
     )
     assert (
         full_graph_summary_checks["full_canonical_source_set_graph_validation_checks"][

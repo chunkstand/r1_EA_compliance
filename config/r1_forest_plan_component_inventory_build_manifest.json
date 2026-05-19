@@ -5,7 +5,7 @@
     {
       "reference_id": "active_full_canonical",
       "reference_type": "explicit_source_set_id",
-      "source_set_id": "source-set-cac9c7d02b280825",
+      "source_set_id": "source-set-9e7d85759951c279",
       "description": "Active full-canonical source set that must own the canonical Region 1 multi-forest component inventory."
     }
   ],
