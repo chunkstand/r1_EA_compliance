@@ -1,7 +1,7 @@
 # Canonical Source Register Import Completion Milestone Plan
 
 Date: 2026-05-18
-Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 USDA final-blocker slice resolved; fresh full-master replay pending)
+Status: Active 2026-05-18 (Milestone 0 resolved at `6a949ae`; Milestone 1 full replay checkpoint live; single-row `FPS-117` closure pending)
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` post-refoundation canonical
 source-register import boundary
 
@@ -88,6 +88,11 @@ federal repair replay, and the scoped USDA-family repair replay:
   now passes `6/6` `preflight_ok` with `failed_count=0` across `USDA-008`,
   `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, and `USDA-013`.
 - The fresh full-master replay
+  `phase2-canonical-preflight-full-post-usda-repair-20260518`
+  is now the live Milestone 1 checkpoint. It checked all `635` canonical URLs
+  and finished with `634` `preflight_ok` plus only `1` failed row:
+  `status_counts={"preflight_ok": 634, "rate_limited": 1}`.
+- The fresh full-master replay
   `phase2-canonical-preflight-full-repaired-20260518`
   is now complete against the repaired workbook. It checked all `635`
   canonical URLs and finished with `607` `preflight_ok` plus `28` failed rows:
@@ -154,11 +159,17 @@ federal repair replay, and the scoped USDA-family repair replay:
   treated as the live blocker truth.
 - The active checkpoint commit for this Milestone 1 slice is now `21ffc9e`
   (`Resolve USDA canonical blocker packet`).
-- Milestone 1 is still not resolved. The next truthful slice is a fresh
-  full-master canonical preflight replay against the repaired workbook. Do not
-  start full `download`, `batch-download`, or `catalog-build` for the entire
-  master sheet until that replay establishes the live post-repair blocker
-  surface.
+- The live remaining blocker surface is now one row:
+  `FPS-117` finalized as `rate_limited` on
+  `https://www.fs.usda.gov/media/51967` after `3` attempts, even though the
+  response chain resolves to the direct PDF
+  `https://www.fs.usda.gov/sites/nfs/files/legacy-media/custergallatin/CNF%20FPAdjustment%20001.pdf`.
+- Milestone 1 is still not resolved. The next truthful slice is the governed
+  single-row `FPS-117` rate-limit closure packet, then one final confirming
+  full-master canonical preflight replay. Do not start full `download`,
+  `batch-download`, or `catalog-build` for the entire master sheet until that
+  confirming replay establishes a fully green or explicitly bounded
+  post-repair blocker surface.
 
 ## Dependency And Live Refresh Rule
 

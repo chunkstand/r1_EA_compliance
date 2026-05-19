@@ -5,6 +5,91 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 Full Replay Routing Closeout
+
+This follow-up closes the routing gaps after the fresh full-master replay
+checkpoint.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- aligned boundary:
+  the live Milestone 1 checkpoint for this lane is now the immediately
+  following `Canonical Source Register Import Completion Milestone 1 Full
+  Replay Checkpoint` section plus the matching top sections in `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, and the routed plan file.
+- historical routing note:
+  the older `Canonical Source Register Import Completion Milestone 1 USDA
+  Final-Blocker Routing Closeout`,
+  `Canonical Source Register Import Completion Milestone 1 USDA
+  Final-Blocker Alignment Closeout`, and
+  `Canonical Source Register Import Completion Milestone 1 USDA
+  Final-Blocker Slice Checkpoint` sections below are now explicit pre-full-
+  replay context only. Their routing no longer reflects the live blocker
+  surface.
+- verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed;
+  targeted `rg` routing checks across
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  run the governed single-row `FPS-117` rate-limit closure packet, then one
+  final confirming full-master canonical preflight replay before any full
+  `download`, `batch-download`, or `catalog-build` for the entire master
+  sheet.
+
+## Canonical Source Register Import Completion Milestone 1 Full Replay Checkpoint
+
+This implementation slice runs the routed fresh full-master canonical
+preflight replay against the repaired workbook and establishes the live
+post-USDA-repair blocker surface.
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- implementation slice:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  the routed plan file, plus ignored run artifacts under
+  `source_library/runs/phase2-canonical-preflight-full-post-usda-repair-20260518/`
+  and
+  `source_library/manifests/preflight_phase2-canonical-preflight-full-post-usda-repair-20260518.jsonl`.
+- replay evidence:
+  `phase2-canonical-preflight-full-post-usda-repair-20260518` checked all
+  `635` canonical URLs and completed with `634` `preflight_ok`,
+  `failed_count=1`, and
+  `status_counts={"preflight_ok": 634, "rate_limited": 1}`.
+- active blocker surface:
+  the only remaining failed row is `FPS-117` (`Forest Plan Adjustment 001`),
+  which finalized as `rate_limited` on
+  `https://www.fs.usda.gov/media/51967` after `3` attempts. The replay records
+  the resolved chain to the direct PDF
+  `https://www.fs.usda.gov/sites/nfs/files/legacy-media/custergallatin/CNF%20FPAdjustment%20001.pdf`,
+  so the next slice should treat this as a governed single-row closure packet
+  rather than as a broad host-family blocker.
+- historical comparison:
+  the earlier full replay
+  `phase2-canonical-preflight-full-repaired-20260518`
+  still records `28` failures, but it is now pre-USDA-repair evidence only and
+  must not be treated as the live blocker truth.
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources preflight --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id phase2-canonical-preflight-full-post-usda-repair-20260518`
+  completed with `634/635` `preflight_ok`;
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  run the governed single-row `FPS-117` rate-limit closure packet, then one
+  final confirming full-master canonical preflight replay before any full
+  `download`, `batch-download`, or `catalog-build` for the entire master
+  sheet.
+
 ## Canonical Source Register Import Completion Milestone 1 USDA Final-Blocker Routing Closeout
 
 This follow-up closes the remaining routing gaps after implementation commit

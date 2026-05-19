@@ -121,6 +121,11 @@ the scoped unsupported-format direct-document validation set:
   now passes `6/6` `preflight_ok` with `failed_count=0` across `USDA-008`,
   `USDA-009`, `USDA-010`, `USDA-011`, `USDA-012`, and `USDA-013`.
 - The fresh full-master replay
+  `source_library/runs/phase2-canonical-preflight-full-post-usda-repair-20260518/summary.json`
+  is now the live Milestone 1 checkpoint. It checked all `635` canonical URLs
+  and finished with `634` `preflight_ok` plus only `1` failed row:
+  `status_counts={"preflight_ok": 634, "rate_limited": 1}`.
+- The fresh full-master replay
   `source_library/runs/phase2-canonical-preflight-full-repaired-20260518/summary.json`
   is now complete against the repaired workbook. It checked all `635`
   canonical URLs and finished with `607` `preflight_ok` plus `28` failed rows:
@@ -182,14 +187,18 @@ the scoped unsupported-format direct-document validation set:
 - Upstream direct eval remains green after the new admission path:
   `source_library/evaluations/upstream/upstream_evaluation_results.json`
   now reports `passed=true`, `case_count=38`, and `failed_case_ids=[]`.
-- The known USDA-family blocker lane is now closed in scoped evidence. The
-  historical full replay still records the earlier `28` failed rows above, but
-  its USDA timeout family is now pre-repair evidence only and must not be
-  treated as the live blocker truth.
-- Milestone 1 is still not resolved. The next truthful slice is a fresh
-  full-master canonical preflight replay against the repaired workbook before
-  any full `download`, `batch-download`, or `catalog-build` for the entire
-  master sheet.
+- The known USDA-family blocker lane is now closed in scoped evidence, and the
+  live remaining blocker surface is down to one row: `FPS-117` finalized as
+  `rate_limited` on `https://www.fs.usda.gov/media/51967` after `3` attempts,
+  even though the response chain resolves to the direct PDF
+  `https://www.fs.usda.gov/sites/nfs/files/legacy-media/custergallatin/CNF%20FPAdjustment%20001.pdf`.
+- The historical `phase2-canonical-preflight-full-repaired-20260518` replay
+  now remains pre-USDA-repair evidence only; the live blocker truth is the new
+  `634/635` result above.
+- Milestone 1 is still not resolved. The next truthful slice is the governed
+  single-row `FPS-117` rate-limit closure packet, then one final confirming
+  full-master canonical preflight replay before any full `download`,
+  `batch-download`, or `catalog-build` for the entire master sheet.
 
 ## Canonical Source Register Phase 8 Aggregate Readiness And Legacy Contract Retirement
 
