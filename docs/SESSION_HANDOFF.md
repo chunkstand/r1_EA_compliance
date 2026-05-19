@@ -5,6 +5,40 @@ Date: 2026-05-18
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Canonical Source Register Import Completion Milestone 1 USDA Final-Blocker Routing Closeout
+
+This follow-up closes the remaining routing gaps after implementation commit
+`21ffc9e` (`Resolve USDA canonical blocker packet`).
+
+- routed plan:
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+- aligned boundary:
+  the live Milestone 1 checkpoint for this lane is now the immediately
+  following `Canonical Source Register Import Completion Milestone 1 USDA
+  Final-Blocker Alignment Closeout` section plus the matching top sections in
+  `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and the routed plan file.
+- historical routing note:
+  the older `Canonical Source Register Import Completion Milestone 1 USDA
+  Final-Blocker Alignment Closeout` and
+  `Canonical Source Register Import Completion Milestone 1 USDA
+  Final-Blocker Slice Checkpoint` sections below remain the implementation
+  evidence, but they are now explicit pre-routing-closeout context only.
+- verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed;
+  targeted `rg` routing checks across
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed.
+- next routing:
+  rerun the fresh full-master canonical preflight against the repaired
+  workbook before any full `download`, `batch-download`, or `catalog-build`
+  for the entire master sheet.
+
 ## Canonical Source Register Import Completion Milestone 1 USDA Final-Blocker Alignment Closeout
 
 This follow-up closes the routing/alignment gaps after the Milestone 1

@@ -121,6 +121,8 @@ Local active import baseline on 2026-05-18:
   blocker repair commit `c1dc100` (`Repair federal canonical blocker rows`).
   The new USDA-family repair slice now closes the last known host-specific
   blocker family before the fresh full-master replay.
+  The active checkpoint commit for that routed slice is now `21ffc9e`
+  (`Resolve USDA canonical blocker packet`).
 - Scoped repair replay
   `phase2-canonical-preflight-directives-repair-validated-20260518`
   now passes `45/45` `preflight_ok` with `failed_count=0` across the repaired

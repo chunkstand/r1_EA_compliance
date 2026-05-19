@@ -152,6 +152,8 @@ federal repair replay, and the scoped USDA-family repair replay:
   historical full replay still records the earlier `28` failed rows above, but
   its USDA timeout family is now pre-repair evidence only and must not be
   treated as the live blocker truth.
+- The active checkpoint commit for this Milestone 1 slice is now `21ffc9e`
+  (`Resolve USDA canonical blocker packet`).
 - Milestone 1 is still not resolved. The next truthful slice is a fresh
   full-master canonical preflight replay against the repaired workbook. Do not
   start full `download`, `batch-download`, or `catalog-build` for the entire
