@@ -145,11 +145,11 @@ Historical documented full-corpus promotion baseline:
 - Every `active`, `current`, and readiness-green phrase in this preserved
   section refers to the historical `source-set-5e65d845ce77e1a0`
   full-canonical replay boundary, not the active local
-  `source_library/catalog/` baseline after the Milestone 0 import rebaseline.
+  `source_library/catalog/` baseline after the import-completion closeout.
 - The last documented full-canonical catalog baseline for this repo was
   `source-set-5e65d845ce77e1a0`, but that source set is not the active local
-  `source_library/catalog/` baseline in this checkout after the Milestone 0
-  import rebaseline.
+  `source_library/catalog/` baseline in this checkout after the import-
+  completion closeout.
 - That historical full-canonical catalog was rebuilt from
   `corpus-update-2026-05-01-cg-support-batches` plus
   `r1-forest-plan-source-delta-capture-20260510-refresh-batches` under the current working tree.
@@ -241,7 +241,7 @@ Historical documented full-corpus promotion baseline:
   `full_canonical_corpus_ready=true`,
   `promotion_ready=true`, `full_canonical_failure_category_counts={}`, and `expansion_ready=true`,
   but it is not the current local non-strict promotion truth in this checkout
-  after the Milestone 0 import rebaseline.
+  after the import-completion closeout.
 - Milestone `5` South Plateau strict-expansion recovery is now also closed on `2026-05-15`:
   tracked South Plateau replay-context and component-adjudication contracts plus a refreshed
   ba8d-scoped ECID expansion `phase-eval` replay now leave both non-strict and strict

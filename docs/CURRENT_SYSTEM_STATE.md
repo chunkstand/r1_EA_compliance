@@ -80,9 +80,9 @@ Latest closeout on 2026-05-19:
   the single-row `FPS-117` blocker, or the proving-slice catalog as live are
   historical pre-closeout context only.
 
-## Canonical Source Register Import Completion Milestone 0 Local Rebaseline
+## Historical Canonical Source Register Import Completion Milestone 0 Local Rebaseline
 
-Latest closeout on 2026-05-18:
+Historical closeout on 2026-05-18:
 
 - Milestone 0 chose the docs-rebaseline path, not a local
   `source_library/catalog/` restore. The current checkout already carries a
@@ -125,9 +125,9 @@ Latest closeout on 2026-05-18:
   replay boundary, not the live `source_library/catalog/` import baseline
   recorded above.
 
-## Canonical Source Register Import Completion Milestone 1 Federal Blocker Slice Checkpoint
+## Historical Canonical Source Register Import Completion Milestone 1 Federal Blocker Slice Checkpoint
 
-Latest checkpoint on 2026-05-18 after implementation commit `c1dc100`
+Historical checkpoint on 2026-05-18 after implementation commit `c1dc100`
 (`Repair federal canonical blocker rows`), the earlier unsupported-format
 implementation commit `cf2d5f6`
 (`Resolve unsupported-format canonical blocker slice`), the earlier workbook

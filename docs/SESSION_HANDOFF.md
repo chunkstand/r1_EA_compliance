@@ -82,7 +82,7 @@ they disagree.
   retire the preserved full-canonical artifact family that still points at
   `source-set-5e65d845ce77e1a0`.
 
-## Canonical Source Register Import Completion Milestone 1 Full Replay Routing Closeout
+## Historical Canonical Source Register Import Completion Milestone 1 Full Replay Routing Closeout
 
 This follow-up closes the routing gaps after the fresh full-master replay
 checkpoint commit `34f5b30` (`Record post-USDA full replay checkpoint`).
@@ -121,7 +121,7 @@ checkpoint commit `34f5b30` (`Record post-USDA full replay checkpoint`).
   `download`, `batch-download`, or `catalog-build` for the entire master
   sheet.
 
-## Canonical Source Register Import Completion Milestone 1 Full Replay Checkpoint
+## Historical Canonical Source Register Import Completion Milestone 1 Full Replay Checkpoint
 
 This implementation slice runs the routed fresh full-master canonical
 preflight replay against the repaired workbook and establishes the live
@@ -168,7 +168,7 @@ post-USDA-repair blocker surface.
   `download`, `batch-download`, or `catalog-build` for the entire master
   sheet.
 
-## Canonical Source Register Import Completion Milestone 1 USDA Final-Blocker Routing Closeout
+## Historical Canonical Source Register Import Completion Milestone 1 USDA Final-Blocker Routing Closeout
 
 This follow-up closes the remaining routing gaps after implementation commit
 `21ffc9e` (`Resolve USDA canonical blocker packet`).
@@ -202,7 +202,7 @@ This follow-up closes the remaining routing gaps after implementation commit
   workbook before any full `download`, `batch-download`, or `catalog-build`
   for the entire master sheet.
 
-## Canonical Source Register Import Completion Milestone 1 USDA Final-Blocker Alignment Closeout
+## Historical Canonical Source Register Import Completion Milestone 1 USDA Final-Blocker Alignment Closeout
 
 This follow-up closes the routing/alignment gaps after the Milestone 1
 USDA-family blocker-repair implementation slice.
@@ -239,7 +239,7 @@ USDA-family blocker-repair implementation slice.
   workbook before any full `download`, `batch-download`, or `catalog-build`
   for the entire master sheet.
 
-## Canonical Source Register Import Completion Milestone 1 USDA Final-Blocker Slice Checkpoint
+## Historical Canonical Source Register Import Completion Milestone 1 USDA Final-Blocker Slice Checkpoint
 
 This implementation slice closes the routed USDA-family blocker packet and
 removes the final known host-specific blocker family before the next
@@ -300,7 +300,11 @@ full-master replay.
   workbook before any full `download`, `batch-download`, or `catalog-build`
   for the entire master sheet.
 
-## Canonical Source Register Import Completion Milestone 1 Federal Blocker Alignment Closeout
+Historical note: the remaining import-completion sections below stay append-
+only preserved context unless a later packet explicitly reruns and replaces
+their evidence after the 2026-05-19 import-completion closeout.
+
+## Historical Canonical Source Register Import Completion Milestone 1 Federal Blocker Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after implementation
 commit `c1dc100` (`Repair federal canonical blocker rows`).
@@ -336,7 +340,7 @@ commit `c1dc100` (`Repair federal canonical blocker rows`).
   before any full `download`, `batch-download`, or `catalog-build` for the
   entire master sheet.
 
-## Canonical Source Register Import Completion Milestone 1 Federal Blocker Slice Checkpoint
+## Historical Canonical Source Register Import Completion Milestone 1 Federal Blocker Slice Checkpoint
 
 This implementation slice closes the routed repairable federal/challenge
 family and reduces the live Milestone 1 blocker surface again before the next
@@ -392,7 +396,7 @@ full-master replay.
   before any full `download`, `batch-download`, or `catalog-build` for the
   entire master sheet.
 
-## Canonical Source Register Import Completion Milestone 1 Unsupported-Format Alignment Closeout
+## Historical Canonical Source Register Import Completion Milestone 1 Unsupported-Format Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after implementation
 commit `cf2d5f6` (`Resolve unsupported-format canonical blocker slice`).
@@ -429,7 +433,7 @@ commit `cf2d5f6` (`Resolve unsupported-format canonical blocker slice`).
   before any full `download`, `batch-download`, or `catalog-build` for the
   entire master sheet.
 
-## Canonical Source Register Import Completion Milestone 1 Unsupported-Format Slice Checkpoint
+## Historical Canonical Source Register Import Completion Milestone 1 Unsupported-Format Slice Checkpoint
 
 This implementation slice closes the routed structural unsupported-format
 packet for the `8` direct-document blocker rows and reduces the live Milestone
@@ -525,7 +529,7 @@ packet for the `8` direct-document blocker rows and reduces the live Milestone
   before any full `download`, `batch-download`, or `catalog-build` for the
   entire master sheet.
 
-## Canonical Source Register Import Completion Milestone 1 Blocker Repair Alignment Closeout
+## Historical Canonical Source Register Import Completion Milestone 1 Blocker Repair Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after implementation
 commit `37bb0a3` (`Repair stale canonical blocker URLs`).
@@ -564,7 +568,7 @@ commit `37bb0a3` (`Repair stale canonical blocker URLs`).
   canonical preflight before any full `download`, `batch-download`, or
   `catalog-build` for the entire master sheet.
 
-## Canonical Source Register Import Completion Milestone 1 Blocker Repair Slice Checkpoint
+## Historical Canonical Source Register Import Completion Milestone 1 Blocker Repair Slice Checkpoint
 
 This implementation slice closes the next routed Milestone 1 pass by repairing
 the clearly stale master-sheet URLs and replaying the affected blocker subset.
@@ -617,7 +621,7 @@ the clearly stale master-sheet URLs and replaying the affected blocker subset.
   canonical preflight before any full `download`, `batch-download`, or
   `catalog-build` for the entire master sheet.
 
-## Canonical Source Register Import Completion Milestone 1 Full-Master Replay Alignment Closeout
+## Historical Canonical Source Register Import Completion Milestone 1 Full-Master Replay Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after replay
 checkpoint commit `86efa46` (`Record full canonical preflight replay checkpoint`).
@@ -658,7 +662,7 @@ Alignment Closeout` and `Canonical Source Register Import Completion Milestone
   historical only. This pre-`37bb0a3` routing was reduced by the blocker
   repair slice; use the newer sections above for the live next slice.
 
-## Canonical Source Register Import Completion Milestone 1 Full-Master Preflight Replay Checkpoint
+## Historical Canonical Source Register Import Completion Milestone 1 Full-Master Preflight Replay Checkpoint
 
 This implementation slice closes the next routed Milestone 1 pass after the
 directive workbook repair checkpoint by completing the fresh full-master
@@ -733,7 +737,7 @@ Alignment Closeout` and `Canonical Source Register Import Completion Milestone
   historical only. This pre-`37bb0a3` routing was reduced by the blocker
   repair slice; use the newer sections above for the live next slice.
 
-## Canonical Source Register Import Completion Milestone 1 Workbook Repair Alignment Closeout
+## Historical Canonical Source Register Import Completion Milestone 1 Workbook Repair Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after implementation
 commit `211f0c8` (`Repair directive workbook URLs for canonical preflight`).
@@ -774,7 +778,7 @@ this lane.
   historical only. This pre-`86efa46` routing was closed by the full-master
   replay checkpoint; use the newer sections above for the live next slice.
 
-## Canonical Source Register Import Completion Milestone 1 Directive Workbook Repair Checkpoint
+## Historical Canonical Source Register Import Completion Milestone 1 Directive Workbook Repair Checkpoint
 
 This implementation slice closes the governed workbook URL-repair packet that
 the prior stop-condition checkpoint routed next.
@@ -840,7 +844,7 @@ now governs this lane.
   historical only. This pre-`86efa46` routing was closed by the full-master
   replay checkpoint; use the newer sections above for the live next slice.
 
-## Canonical Source Register Import Completion Milestone 1 Alignment Closeout
+## Historical Canonical Source Register Import Completion Milestone 1 Alignment Closeout
 
 This follow-up closes the remaining routing/alignment gaps after the
 workbook-repair stop-condition checkpoint.
@@ -879,7 +883,7 @@ Alignment Closeout` and `Canonical Source Register Import Completion Milestone
   historical only. This pre-`211f0c8` routing was closed by the workbook
   repair packet; use the newer sections above for the live next slice.
 
-## Canonical Source Register Import Completion Milestone 1 Workbook Repair Stop Condition
+## Historical Canonical Source Register Import Completion Milestone 1 Workbook Repair Stop Condition
 
 This docs-only checkpoint closes the next truthful Milestone 1 pass after the
 `ecos.fws.gov` transport repair and records why Milestone 1 cannot yet resolve.
@@ -929,7 +933,7 @@ The directive workbook repair packet it routes next has since landed.
   historical only. The governed workbook URL repair packet named here has
   already landed; use the newer sections above for the live next slice.
 
-## Canonical Source Register Import Completion Milestone 1 Ecos Transport Checkpoint
+## Historical Canonical Source Register Import Completion Milestone 1 Ecos Transport Checkpoint
 
 This implementation slice starts Milestone 1 and closes the `ecos.fws.gov`
 TLS blocker class without claiming a completed full-master preflight.
@@ -989,7 +993,8 @@ Milestone 0 rebaseline commit.
   `docs/CANONICAL_SOURCE_REGISTER_IMPORT_COMPLETION_MILESTONE_PLAN.md`
 - aligned boundary:
   the active import-completion plan now records Milestone 0 as resolved through
-  local commit `6a949ae` and refreshes its "Current Evidence" section to the
+  local commit `6a949ae` and refreshes its `Historical Execution Baseline`
+  section to the
   post-rebaseline truth. The live routing gap is no longer "docs versus
   manifest"; it is that the active local catalog is still the proving slice and
   the full-register gate is still planned-only.

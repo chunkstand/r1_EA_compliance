@@ -54,7 +54,7 @@ Closeout summary on 2026-05-19:
   pre-closeout context only when they disagree with the closeout summary
   above.
 
-Milestone 0 closeout summary on 2026-05-18:
+Historical Milestone 0 closeout summary on 2026-05-18:
 
 - The docs-only Milestone 0 slice chose the rebaseline path, not a local
   `source_library/catalog/` restore. The current checkout already carries a
@@ -267,7 +267,7 @@ The repo should end this packet with one truthful active canonical import
 baseline backed by real run artifacts, not a proving slice, not a planned-only
 catalog gate, and not stale docs.
 
-## Current Evidence
+## Historical Execution Baseline
 
 This section records the pre-closeout execution baseline that drove the packet.
 When it disagrees with the closeout summary above, treat it as historical
