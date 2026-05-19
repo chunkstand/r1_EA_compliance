@@ -29,6 +29,8 @@ Latest reduced closeout on 2026-05-19:
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
 - Milestones 0-2 remain closed through
   `4660d11` (`Close Milestone 2 FPS-005 workbook contract removal`).
+- The reduced Milestone 3 closeout commit is
+  `933c667` (`Reduce Milestone 3 to forest-plan identity blocker`).
 - The workbook contract is now explicitly reduced to
   `Document_Register_Master=634`,
   `Direct_File_Capture_Queue=51`,

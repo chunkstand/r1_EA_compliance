@@ -1,7 +1,7 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestones 0-2 resolved 2026-05-19 through `4660d11`; Milestone 3 reduced on active-source-set contract rebind and blocked on canonical-vs-legacy forest-plan identity reconciliation
+Status: Active 2026-05-19; Milestones 0-2 resolved 2026-05-19 through `4660d11`; Milestone 3 reduced 2026-05-19 through `933c667` and blocked on canonical-vs-legacy forest-plan identity reconciliation
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
@@ -319,6 +319,9 @@ Outcome label: resolved
 ### Milestone 3: Replay The Four Blocked Full-Canonical Artifacts
 
 Outcome label: reduced
+
+- Closing commit hash:
+  `933c667` (`Reduce Milestone 3 to forest-plan identity blocker`)
 
 - After both blocker rows are cleared, rerun:
   `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-9e7d85759951c279`

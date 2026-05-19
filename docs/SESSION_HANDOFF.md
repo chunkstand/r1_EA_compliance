@@ -12,6 +12,8 @@ surfaces onto the new canonical source set, reran the focused contract checks,
 and then stopped at the real downstream blocker instead of fabricating a green
 full-canonical replay.
 
+- closing commit hash:
+  `933c667` (`Reduce Milestone 3 to forest-plan identity blocker`)
 - routed plan:
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
 - active source-set rebind:

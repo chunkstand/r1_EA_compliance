@@ -138,6 +138,8 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   source-set-9e7d85759951c279` still passes
   with `authority_family_count=454` and
   `source_currentness_record_count=634`.
+- The reduced Milestone 3 closeout commit is
+  `933c667` (`Reduce Milestone 3 to forest-plan identity blocker`).
 - Focused contract coverage for that rebind is now green:
   `tests/test_promotion_suite.py`,
   `tests/test_forest_plan_inventory_build_manifest.py`,
