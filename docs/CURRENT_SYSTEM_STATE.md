@@ -102,6 +102,7 @@ Latest reduced closeout on 2026-05-19:
   agree that the extraction blocker lane is down to one row and that the exact
   remaining failed required full-canonical slots are still the same four
   downstream artifacts.
+- Milestone 1 closeout commit is `d9373c4` (`Close Milestone 1 FPS-125 OCR recovery`).
 - Current implementation slice:
   Milestone 2 workbook-contract action on `FPS-005`, followed by Milestone 3
   downstream reruns once the active extraction blocker set is empty.

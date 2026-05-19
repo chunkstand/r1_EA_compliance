@@ -11,6 +11,9 @@ This implementation slice closes Milestone 1 of the standalone final-blocker
 packet by recovering `FPS-125` through a governed OCR lane and reducing the
 active extraction blocker set to one row.
 
+- closing commit hash:
+  `d9373c4` (`Close Milestone 1 FPS-125 OCR recovery`)
+
 - routed plan:
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
 - code surfaces:
@@ -23,7 +26,8 @@ active extraction blocker set to one row.
   `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py -q`
   passed `33/33`; and
   `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/extract.py tests/test_extract.py`
-  passed.
+  passed; `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+  passed; and `git diff --check` passed.
 - plan-mandated replay evidence:
   `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extract-build --output-dir source_library --id FPS-125 --docling-ocr --docling-timeout-seconds 1 --merge-selected-into-existing`
   was first rerun against the older reduced raster path and remained

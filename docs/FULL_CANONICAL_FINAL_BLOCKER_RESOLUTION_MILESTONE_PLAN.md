@@ -1,7 +1,7 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestones 0-1 resolved 2026-05-19
+Status: Active 2026-05-19; Milestones 0-1 resolved 2026-05-19; latest closeout `d9373c4`
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
