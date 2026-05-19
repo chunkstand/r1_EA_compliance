@@ -24,7 +24,7 @@ later milestone explicitly reruns those lanes.
 
 Latest reduced closeout on 2026-05-19:
 
-- Routed plan:
+- Routed reduction plan:
   `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`.
 - The active full-canonical contract surfaces in
   `config/promotion_suite_v1.json`,
@@ -111,6 +111,8 @@ Latest reduced closeout on 2026-05-19:
   `forest-plan-profile-eval`, and
   `forest-plan-component-retrieval-eval`
   on `source-set-cac9c7d02b280825`.
+- Active queued follow-on:
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
 
 ## Canonical Source Register Import Completion Closeout
 

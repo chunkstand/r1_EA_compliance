@@ -5,6 +5,35 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Final Blocker Resolution Plan Queued
+
+This docs-only follow-on writes the standalone execution packet for the exact
+remaining full-canonical work after the reduced downstream-freshness pass.
+
+- routed plan:
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+- scope:
+  resolve `FPS-125`, resolve `FPS-005` through workbook-contract action, then
+  rerun
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`,
+  `forest-plan-component-retrieval-eval`, and
+  `promotion-suite`
+  on `source-set-cac9c7d02b280825`.
+- plan shape:
+  the new plan is a fresh standalone packet rather than an append to
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`. It
+  includes a Milestone 0 freshness rebaseline, explicit weak-point prevention
+  gates, allowed terminal outcomes for `FPS-005`, and terminal acceptance
+  criteria requiring `full_canonical_corpus_ready=true`.
+- routing updates:
+  `README.md` and `docs/CURRENT_SYSTEM_STATE.md` now point future work at the
+  new final-blocker plan rather than the already reduced freshness packet.
+- focused verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+  passed, along with
+  `git diff --check`.
+
 ## Full Canonical Downstream Freshness Parallel OCR Reduction Update
 
 This follow-on update keeps the same downstream-freshness packet but reduces

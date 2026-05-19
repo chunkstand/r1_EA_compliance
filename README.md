@@ -123,7 +123,7 @@ Local active import baseline on 2026-05-18 after import-completion closeout:
   required full-canonical results passing and
   `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
 - The active downstream follow-on is now
-  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`.
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
   That packet has already rebound the live full-canonical manifest/test
   contracts to `source-set-cac9c7d02b280825`, and
   `authority-currentness --source-set-id source-set-cac9c7d02b280825` passes
