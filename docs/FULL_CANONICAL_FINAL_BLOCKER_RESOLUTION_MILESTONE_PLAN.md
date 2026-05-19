@@ -98,8 +98,9 @@ canonical corpus instead of a merely current-promotion-ready corpus.
 - This packet is no longer the active implementation surface after the reduced
   Milestone 3 closeout. The active follow-on packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
-  reduced through `7dd4fb5`
-  (`Reduce identity reconciliation Milestone 1 source-record mix`).
+  active through the archived refresh/rebind, Flathead/retrieval, and reduced
+  direct-document closeouts, with its current routed residual captured in the
+  latest handoff section and Milestone 3 reduced status.
 
 ## Goal
 
@@ -323,8 +324,8 @@ Outcome label: resolved
   `phase2-canonical-download-full-post-fps005-removal-20260519` run plus
   `catalog-build` advanced the active local catalog to `source-set-9e7d85759951c279`, and the
   reuse-first extraction/currentness rebuild now records `extracted_count=634`, `failed_count=0`,
-  `chunk_count=98155`, and `validation_passed=true`. No downstream reruns landed in this slice, so
-  the next active implementation slice is Milestone 3 on `source-set-9e7d85759951c279`.
+  `chunk_count=98155`, and `validation_passed=true`. No downstream reruns landed in this slice; the
+  later archived refresh/rebind and identity-reconciliation packet now supersede this next-step note.
 
 ### Milestone 3: Replay The Four Blocked Full-Canonical Artifacts
 
@@ -366,9 +367,11 @@ Outcome label: reduced
   `nepa-knowledge-graph-export`,
   `forest-plan-profile-eval`, or
   `forest-plan-component-retrieval-eval`
-  reruns landed in this reduced slice. Next routing is a dedicated
-  canonical-vs-legacy forest-plan identity reconciliation packet before this
-  milestone can be retried.
+  reruns landed in this reduced slice. This section is now historical only:
+  the active route moved first into the dedicated canonical-vs-legacy
+  forest-plan identity reconciliation packet and now, after the archived
+  refresh/rebind plus parser/runtime repairs, into the `11`-row
+  direct-document residual on `source-set-370896a1043817f2`.
 
 ### Milestone 4: Durable Closeout And Routing Reset
 

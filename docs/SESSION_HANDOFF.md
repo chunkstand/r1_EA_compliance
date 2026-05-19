@@ -5,6 +5,35 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Forest-Plan Identity Reconciliation Milestone 3 Alignment Pass
+
+This docs-only follow-up closes the remaining routing drift after the reduced
+Milestone 3 runtime closeout.
+
+- outcome label:
+  `resolved` for the alignment pass; runtime truth is unchanged
+- aligned packet surfaces:
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+  now records Milestone 3 as the reduced archived parser/runtime closeout
+  `9a9e012`, makes the `11`-row direct-document family the explicit Milestone
+  4 residual, and moves durable closeout/routing reset to Milestone 5
+- superseded packet cleanup:
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+  no longer routes work as if the active follow-on packet stopped at Milestone
+  1 or as if the next replay still belongs on
+  `source-set-9e7d85759951c279`
+- active routing truth:
+  the next slice remains direct-document replacement or governed rebind for
+  `FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
+  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
+  `LEX-USFS-016`, `LEX-USFS-017`, and `WILD-ESA-075`, followed by reruns of
+  retrieval, `claim-extract`, `rule-claim-link`,
+  `nepa-knowledge-graph-export`, and `promotion-suite` on
+  `source-set-370896a1043817f2`
+- verification:
+  plan lints on both forest-plan full-canonical packets plus `git diff --check`
+  passed in this alignment pass
+
 ## Full Canonical Forest-Plan Identity Reconciliation Milestone 3 Reduced Closeout
 
 This implementation slice reduced the routed archived full-canonical

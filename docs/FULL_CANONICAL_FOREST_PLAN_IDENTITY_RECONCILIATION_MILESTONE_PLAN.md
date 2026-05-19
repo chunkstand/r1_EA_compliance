@@ -271,27 +271,61 @@ Outcome label: resolved
   `397` standards; and `forest-plan-component-retrieval-eval` now passes
   `6/6` on canonical component IDs.
 
-### Milestone 3: Resume The Blocked Full-Canonical Downstream Reruns
+### Milestone 3: Reduce Archived Full-Canonical Downstream Blocker To Direct-Document Lane
+
+Outcome label: reduced
+
+- Repair the archived parser/runtime boundary first so downstream graph
+  failures are measured against the real archived source-set contract rather
+  than a mixed active-catalog fallback.
+- Close the archived extraction lane truthfully on
+  `source-set-370896a1043817f2`: keep the derived replay green at `634/634`
+  extracted rows, ship the managed `rapidocr` and `cryptography` runtime
+  dependencies, and rerun the archived audit until the remaining blocker
+  family is explicit.
+- Close the milestone only when the residual full-canonical stop condition is
+  recorded truthfully as the `11` wrapper-page direct-document rows
+  `FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
+  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
+  `LEX-USFS-016`, `LEX-USFS-017`, and `WILD-ESA-075`, with downstream
+  retrieval, claim, rule-claim, and graph failures described as consequences
+  of that admission block rather than as a standalone graph-only gap.
+- Closing commit hash:
+  `9a9e012` (`Reduce archived full-canonical graph blocker to direct-document lane`)
+- Reduced `2026-05-19` through `9a9e012`: archived extraction now remains
+  green at `634/634`, the managed `extraction` extra includes `rapidocr` and
+  `cryptography`, `extraction-accuracy-audit` now admits `332/343` required
+  active-review rows, `retrieval-build` fails only on the `11` direct-document
+  rows above, `claim-extract` now materializes `120689` claims but fails
+  validation because retrieval is not reviewer-ready, `rule-claim-link` fails
+  closed on claim validation, and `promotion-suite` remains `6/8` with
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`
+  understood as downstream of that `11`-row blocker family.
+
+### Milestone 4: Recover The Direct-Document Residual And Resume Downstream Reruns
 
 Outcome label: resolved
 
-- Materialize the missing claims/rule-claim surfaces for archived
+- Replace or governably rebind the `11` wrapper-page direct-document rows
+  still rejected by the verified-extraction admission gate on archived
   full-canonical source set `source-set-370896a1043817f2`.
-- Rerun `nepa-knowledge-graph-export` and `promotion-suite` on
-  `source-set-370896a1043817f2`.
-- Close only when the missing full-canonical graph artifacts regenerate
-  truthfully and promotion no longer reports
+- Rerun `retrieval-build`, then rerun `claim-extract`,
+  `rule-claim-link`, `nepa-knowledge-graph-export`, and
+  `promotion-suite` on `source-set-370896a1043817f2`.
+- Close only when the archived admission gate is green, retrieval is
+  reviewer-ready, validated `claims.jsonl` and `rule_claim_links.jsonl`
+  regenerate truthfully, and `promotion-suite` no longer reports
   `graph_viewer_export_invalid`.
 
-### Milestone 4: Durable Closeout And Routing Reset
+### Milestone 5: Durable Closeout And Routing Reset
 
 Outcome label: resolved
 
 - Update the durable routing set so this packet is either marked resolved or reduced with its exact
 - remaining issue named explicitly.
 - Record the closeout commit hash and verification commands in `docs/SESSION_HANDOFF.md`.
-- If the full-canonical rerun packet becomes active again after Milestone 3, route back to it
-  explicitly from this plan.
+- If the packet remains reduced after Milestone 4, route the next residual
+  explicitly from this plan instead of reverting to stale graph-only language.
 
 ## Required Implementation Artifacts
 
@@ -322,6 +356,15 @@ Outcome label: resolved
   `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py -q`
 - Milestone 2 inventory/retrieval gate:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py tests/test_forest_plan_component_retrieval_eval.py tests/test_forest_plan_components.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py tests/test_promotion_suite.py -q`
+- Milestone 3 archived parser/runtime gate:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_extraction_accuracy.py tests/test_retrieval.py tests/test_claim_extraction.py -q`
+- Milestone 4 archived direct-document and downstream rerun gate:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-370896a1043817f2`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-370896a1043817f2`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_library --source-set-id source-set-370896a1043817f2`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link --output-dir source_library --source-set-id source-set-370896a1043817f2`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-370896a1043817f2`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
 - Architecture contract gate:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py -q`
 - Source/test lint:
