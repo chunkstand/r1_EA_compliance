@@ -122,13 +122,17 @@ Local active import baseline on 2026-05-18 after import-completion closeout:
   full-canonical source set `source-set-cac9c7d02b280825` with only `4/8`
   required full-canonical results passing and
   `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
-- The active downstream follow-on is now
+- The active downstream implementation packet is now
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
   That packet has already rebound the live full-canonical manifest/test
   contracts to `source-set-cac9c7d02b280825`, and
   `authority-currentness --source-set-id source-set-cac9c7d02b280825` passes
   with `authority_family_count=454` and
   `source_currentness_record_count=635`.
+- Milestone 0 on that packet is now resolved. A fresh rebaseline across
+  `summary.json`, `extraction_manifest.jsonl`, `source_catalog.jsonl`, workbook
+  rows `FPS-005` / `FPS-125`, and the live promotion-suite result found no
+  drift from the packet baseline.
 - Full-canonical downstream freshness is still blocked on real extraction and
   parser recovery, but the live blocker set is now much smaller. A targeted
   external-Docling OCR merge replay plus three in-environment no-timeout
@@ -164,6 +168,9 @@ Local active import baseline on 2026-05-18 after import-completion closeout:
   the remaining work is not missing repo wiring. The only unresolved lane is
   bounded live recovery on `FPS-125` plus a governed replacement or repair
   decision for upstream-invalid `FPS-005`.
+- The current implementation slice inside that packet is Milestone 1:
+  finish `FPS-125` through a governed OCR completion path before the
+  workbook-contract action on `FPS-005` or any downstream reruns.
 - Until those `2` residual extraction records are recovered or replaced, the source-set
   knowledge-graph export plus the rebased `forest_plan_profile` and
   `forest_plan_component_retrieval` eval artifacts remain missing or stale.

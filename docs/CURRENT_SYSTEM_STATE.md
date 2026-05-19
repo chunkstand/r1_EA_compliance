@@ -111,8 +111,16 @@ Latest reduced closeout on 2026-05-19:
   `forest-plan-profile-eval`, and
   `forest-plan-component-retrieval-eval`
   on `source-set-cac9c7d02b280825`.
-- Active queued follow-on:
+- Active implementation packet:
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
+- Milestone 0 on that packet is now resolved: live
+  `summary.json`, `extraction_manifest.jsonl`, workbook rows `FPS-005` and
+  `FPS-125`, `source_catalog.jsonl`, and
+  `promotion_suite_results.json` all still agree on the exact two-row blocker
+  set and the exact four remaining failed required full-canonical slots.
+- Current implementation slice:
+  Milestone 1 on `FPS-125`, followed by Milestone 2 workbook-contract action
+  on `FPS-005` only after the OCR lane is closed.
 
 ## Canonical Source Register Import Completion Closeout
 

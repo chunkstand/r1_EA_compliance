@@ -5,6 +5,50 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Final Blocker Resolution Milestone 0 Rebaseline Closeout
+
+This first implementation slice closes Milestone 0 of the standalone
+final-blocker packet and confirms that the live repo state still matches the
+planned blocker baseline exactly.
+
+- routed plan:
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+- rebaseline evidence:
+  `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json`,
+  `source_library/derived/source-set-cac9c7d02b280825/diagnostics/extraction_manifest.jsonl`,
+  `source_library/catalog/source_catalog.jsonl`,
+  workbook rows `FPS-005` / `FPS-125` in
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`, and
+  `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
+  were rechecked together before any blocker edits.
+- confirmed blocker truth:
+  `source-set-cac9c7d02b280825` remains `extracted_count=633`,
+  `failed_count=2`,
+  `chunk_count=97248`,
+  `validation_passed=false`, and
+  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 1}`.
+  `FPS-005` still points at workbook/catalog URL
+  `https://www.fs.usda.gov/media/228272` and remains `status="parser_error"`
+  with `docling_conversion_failed`; `FPS-125` still points at
+  `https://www.fs.usda.gov/media/51402` and remains `status="parser_error"`
+  with `pdf_text_fallback_empty`.
+- confirmed downstream truth:
+  `promotion-suite` still reports
+  `current_promotion_ready=true`,
+  `promotion_ready=true`,
+  `expansion_ready=true`,
+  `full_canonical_corpus_ready=false`,
+  `passed_required_full_canonical_result_count=4`,
+  `required_full_canonical_result_count=8`,
+  and the exact remaining failed required full-canonical slots are the two
+  missing NEPA 3D graph artifacts plus the two stale forest-plan eval artifacts
+  still pointing at `source-set-5e65d845ce77e1a0`.
+- routing outcome:
+  the baseline packet is now active rather than merely queued. No drift
+  required a baseline rewrite, so the next implementation slice is Milestone 1
+  on `FPS-125` only. `FPS-005` workbook-contract action and the four downstream
+  reruns stay sequenced behind that OCR closure.
+
 ## Full Canonical Final Blocker Resolution Plan Queued
 
 This docs-only follow-on writes the standalone execution packet for the exact

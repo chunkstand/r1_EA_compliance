@@ -1,7 +1,7 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Proposed 2026-05-19
+Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
@@ -46,6 +46,10 @@ corpus on the active source set instead of a merely current-promotion-ready corp
   `source_library/derived/source-set-cac9c7d02b280825/knowledge_graph/nepa_3d_graph_summary.json`,
   `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json`, and
   `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`.
+- Milestone 0 rebaseline was closed on `2026-05-19` with no baseline drift. The live
+  `extraction_manifest.jsonl`, `source_catalog.jsonl`, workbook rows `FPS-005` and `FPS-125`, and
+  `promotion_suite_results.json` all still match the blocker and failed-slot truth above on active
+  source set `source-set-cac9c7d02b280825`.
 - `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md` already agree that
   the remaining work is this exact two-row blocker lane plus the four downstream reruns above.
 
@@ -214,6 +218,13 @@ Outcome label: resolved
 - If the live blocker set differs from the evidence above, update this plan’s baseline section plus
   `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md` before implementation
   proceeds.
+- Closed `2026-05-19`: no drift was found. `FPS-005` remains `status="parser_error"` with
+  `docling_conversion_failed` on active workbook/catalog row
+  `https://www.fs.usda.gov/media/228272`, `FPS-125` remains `status="parser_error"` with
+  `pdf_text_fallback_empty` on active workbook/catalog row
+  `https://www.fs.usda.gov/media/51402`, and the exact required full-canonical failures remain the
+  two missing NEPA 3D graph artifacts plus the two stale forest-plan eval artifacts. The next
+  active implementation slice is Milestone 1 on `FPS-125`.
 
 ### Milestone 1: Resolve `FPS-125` Through Governed OCR Completion
 
