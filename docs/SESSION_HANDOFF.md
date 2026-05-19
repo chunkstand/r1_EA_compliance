@@ -16,10 +16,11 @@ the raster OCR runtime lane further without claiming new corpus recovery.
   `src/usfs_r1_ea_sources/extract.py` now renders `pdf_raster_ocr` pages at
   `100` DPI instead of `150`, disables the OCR classifier stage, and uses a
   bounded `4`-worker page pool for larger scanned PDFs. `tests/test_extract.py`
-  now covers the new worker-count and sequential-fallback behavior.
+  now covers the new worker-count, fail-closed page-error, and
+  sequential-fallback behavior.
 - focused verification:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py -q`
-  passed `28/28`;
+  passed `30/30`;
   `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/extract.py tests/test_extract.py`
   passed;
   `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
@@ -32,6 +33,11 @@ the raster OCR runtime lane further without claiming new corpus recovery.
   pool, but it remained compute-bound for more than `24` minutes and was
   interrupted without writing a merged extracted record. The active source-set
   summary and extraction manifest therefore remained unchanged.
+- alignment note:
+  the raster branch no longer treats page-level OCR setup/runtime exceptions as
+  blank pages. Those failures now fail closed and return control to the
+  remaining fallback lane, which closes the main correctness gap in the reduced
+  runtime pass below.
 - residual truth:
   `source-set-cac9c7d02b280825` is still `extracted_count=633`,
   `failed_count=2`,

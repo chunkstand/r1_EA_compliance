@@ -46,9 +46,12 @@ Reduced on 2026-05-19 with the following repo-grounded outcome:
 - The raster OCR rescue path has now been reduced again around the measured `FPS-125` hotspot: it
   renders at `100` DPI instead of `150`, disables the OCR classifier stage, and uses a bounded
   `4`-worker page pool on larger scanned PDFs. Focused extractor regression coverage now passes
-  `28/28`, and a targeted merged `FPS-125` replay exercised the new pool across all `346` rendered
+  `30/30`, and a targeted merged `FPS-125` replay exercised the new pool across all `346` rendered
   raster pages, but it still remained compute-bound for more than `24` minutes and was interrupted
   without writing a merged extracted record.
+- The raster OCR branch now also fails closed on page-level OCR setup/runtime exceptions instead of
+  silently treating those pages as blank. That keeps the recovery lane auditable: raster OCR must
+  either recover page text or yield control back to the remaining fallback path.
 - The rescue-path implementation slice itself is now aligned and closed:
   focused extractor tests, focused lint, docs closeout, and `git diff --check`
   all pass. The packet remains reduced only because the live corpus still needs

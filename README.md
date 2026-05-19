@@ -152,9 +152,13 @@ Local active import baseline on 2026-05-18 after import-completion closeout:
 - The raster OCR branch is now reduced again for large scanned PDFs:
   `pdf_raster_ocr` renders at `100` DPI instead of `150`, disables the OCR
   classifier stage, and uses a bounded `4`-worker page pool on larger page
-  sets. Focused extractor coverage is now `28/28`, but a targeted merged
+  sets. Focused extractor coverage is now `30/30`, but a targeted merged
   `FPS-125` replay still remained compute-bound after rendering all `346`
   raster pages and was interrupted without changing durable outputs.
+- The raster branch now also fails closed on page-level OCR setup/runtime
+  errors instead of silently treating them as blank pages, so raster recovery
+  cannot partially succeed by dropping unreadable pages without surfacing the
+  failure back to the remaining fallback lane.
 - That rescue-path implementation slice is now alignment-closed in the repo:
   the focused extractor suite, focused lint, and docs closeout all pass, so
   the remaining work is not missing repo wiring. The only unresolved lane is

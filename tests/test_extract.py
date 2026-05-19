@@ -1267,6 +1267,46 @@ class ExtractionTests(unittest.TestCase):
         self.assertEqual(page_number, 7)
         self.assertEqual(text, "Alpha\nBeta")
 
+    def test_ocr_pdf_raster_page_propagates_ocr_setup_errors(self) -> None:
+        with mock.patch.object(
+            extract_module,
+            "_rapidocr_torch",
+            side_effect=RuntimeError("rapidocr unavailable"),
+        ):
+            with self.assertRaisesRegex(RuntimeError, "rapidocr unavailable"):
+                extract_module._ocr_pdf_raster_page("/tmp/page-7.png")
+
+    def test_try_extract_pdf_raster_ocr_returns_none_when_parallel_ocr_errors(self) -> None:
+        artifact = Path("/tmp/fake.pdf")
+        fake_completed = SimpleNamespace(returncode=0)
+        image_paths = [Path("/tmp/page-1.png")]
+
+        with (
+            mock.patch.object(extract_module.shutil, "which", return_value="/opt/homebrew/bin/pdftoppm"),
+            mock.patch.object(extract_module.importlib.util, "find_spec", return_value=object()),
+            mock.patch.object(extract_module.tempfile, "TemporaryDirectory") as tempdir,
+            mock.patch.object(extract_module.subprocess, "run", return_value=fake_completed),
+            mock.patch.object(
+                extract_module.Path,
+                "glob",
+                return_value=image_paths,
+            ),
+            mock.patch.object(
+                extract_module,
+                "_collect_pdf_raster_ocr_blocks",
+                side_effect=RuntimeError("ocr worker failed"),
+            ),
+        ):
+            tempdir.return_value.__enter__.return_value = "/tmp"
+            tempdir.return_value.__exit__.return_value = None
+            self.assertIsNone(
+                extract_module._try_extract_pdf_raster_ocr(
+                    artifact,
+                    fallback_error_class="pdf_text_fallback_empty",
+                    fallback_error_message="empty",
+                )
+            )
+
     def test_source_derived_dir_rejects_unsafe_source_set_id(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaises(ValueError):

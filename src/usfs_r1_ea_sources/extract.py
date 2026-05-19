@@ -1493,7 +1493,10 @@ def _try_extract_pdf_raster_ocr(
         if not image_paths:
             return None
 
-        blocks = _collect_pdf_raster_ocr_blocks(image_paths)
+        try:
+            blocks = _collect_pdf_raster_ocr_blocks(image_paths)
+        except Exception:
+            return None
 
     if not blocks:
         return None
@@ -1545,10 +1548,7 @@ def _pdf_raster_ocr_worker_count(page_count: int) -> int:
 
 def _ocr_pdf_raster_page(image_path: str) -> tuple[int, str | None]:
     page_number = int(Path(image_path).stem.rsplit("-", 1)[-1])
-    try:
-        ocr = _rapidocr_torch(use_cls=False)
-    except Exception:
-        return page_number, None
+    ocr = _rapidocr_torch(use_cls=False)
     result = ocr(image_path)
     page_texts = [_clean_text(text) for text in getattr(result, "txts", ()) if _clean_text(text)]
     if not page_texts:
