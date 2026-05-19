@@ -60,9 +60,9 @@ Active canonical source-register contract:
 
 - Workbook: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
 - Load-bearing table: `Document_Register_Master`
-- Retained load rows: `635`
+- Retained load rows: `634`
 - Deferred queue rows: `51`
-- Removed-not-applicable rows: `2`
+- Removed-not-applicable rows: `3`
 - Direct-media rows reclassified to direct extraction: `29`
 
 The Region 1 forest-plan support-document register remains preserved legacy
@@ -75,104 +75,77 @@ source-delta-required, `1` documented official-source gap), but
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
 promotion evidence.
 
-Local active import baseline on 2026-05-18 after import-completion closeout:
+Local active import baseline on 2026-05-19 after Milestone 2 workbook-contract closeout:
 
 - Active local catalog in `source_library/catalog/` is now full-register source
-  set `source-set-cac9c7d02b280825`, created on `2026-05-19T02:35:26Z`, with
-  `635` source rows, `623` unique raw artifacts, `635` unique URLs,
-  `source_partition_counts={"active_review_corpus": 583, "currentness_supersession_archive": 52}`,
-  `status_counts={"downloaded": 615, "downloaded_existing": 8, "duplicate_content": 12}`,
+  set `source-set-9e7d85759951c279`, created on `2026-05-19T17:50:42Z`, with
+  `634` source rows, `622` unique raw artifacts, `634` unique URLs,
+  `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  `status_counts={"downloaded_existing": 622, "duplicate_content": 12}`,
   and governing download run
-  `phase2-canonical-download-full-post-head429-fallback-20260519`.
+  `phase2-canonical-download-full-post-fps005-removal-20260519`.
 - The proving-slice active catalog `source-set-9dcf819bc4cca486` and the
   planned-only Phase 2 gate `source-set-ae989382c52344db` are now historical
   pre-import baselines for this checkout, not the live `source_library/catalog/`
   truth.
-- The governing workbook contract is unchanged:
-  `Document_Register_Master=635`,
+- The governing workbook contract is now:
+  `Document_Register_Master=634`,
   `Direct_File_Capture_Queue=51`,
-  `Removed_Not_Applicable_Final=2`.
+  `Removed_Not_Applicable_Final=3`.
   `source-register-validate` passes with `issue_count=0` on workbook SHA
-  `4d236682fcd26c26056b142cf4f41078afb36ed52e916ef6414066132df7914f`.
-- Milestone 1 is now closed through the fresh full-master replay
-  `phase2-canonical-preflight-full-post-head429-fallback-20260519`, which
-  checked all `635` canonical URLs and finished with
-  `status_counts={"preflight_ok": 635}` and `failed_count=0`.
-  `preflight.py` now falls through from `HEAD` `rate_limited` responses to the
-  existing ranged `GET` probe, with regression coverage in
-  `tests/test_preflight.py`.
+  `999c773bb5d6183a391f03b7346084f046389f7ede52d07139cee1dfc9f073f6`.
 - Milestone 2 is now closed through:
-  `phase2-canonical-dry-run-post-head429-fallback-20260519`
-  (`planned_count=635`);
-  `phase2-canonical-download-full-post-head429-fallback-20260519`
-  (`downloaded=615`, `downloaded_existing=8`, `duplicate_content=12`,
+  `phase2-canonical-dry-run-post-fps005-removal-20260519`
+  (`planned_count=634`);
+  `phase2-canonical-download-full-post-fps005-removal-20260519`
+  (`downloaded_existing=622`, `duplicate_content=12`,
   `failed_count=0`, `needs_review_count=0`);
   `validate-run` on that exact run ID (`8/8` checks passed); and
-  `catalog-build --run-id phase2-canonical-download-full-post-head429-fallback-20260519`
+  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
   (`validation_passed=true`).
+- `FPS-005` is now explicitly removed from the active load-bearing set. The
+  workbook row moved into `Removed_Not_Applicable_Final` with a governed
+  removal reason after a 2026-05-19 recheck confirmed that the official
+  Beaverhead planning page still points at `https://www.fs.usda.gov/media/228272`,
+  the served PDF remains structurally invalid across the available parsers/PDF
+  tools, and no exact official replacement chapter artifact was available.
 - The unsupported-format direct-document slice remains green and preserved:
   scoped preflight passed `8/8`, scoped download passed `8/8`, scoped catalog
   gate `source-set-a0402de124943920` records `artifact_count=8`, scoped
   extraction admitted all `8/8`, and upstream direct eval remains green at
   `38/38`.
-- Fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
-  on `2026-05-19` now reports `current_promotion_ready=true`,
-  `promotion_ready=true`, and `expansion_ready=true`, while
-  `full_canonical_corpus_ready=false` now remains explicit on active
-  full-canonical source set `source-set-cac9c7d02b280825` with only `4/8`
-  required full-canonical results passing and
-  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
+- The new active extraction lane is now green on
+  `source-set-9e7d85759951c279`. A reuse-first refresh copied `620`
+  extraction records after the reuse inventory classified
+  `reuse_extraction=624` and `needs_extract=10`, and a targeted merged
+  reextract of `USDA-002`, `USDA-003`, `USDA-004`, and `USDA-006` cleared the
+  prior scoped XML audit red. The live extraction summary now records
+  `extracted_count=634`, `failed_count=0`, `chunk_count=98155`,
+  `reused_count=620`, and `validation_passed=true`.
 - The active downstream implementation packet is now
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
-  That packet has already rebound the live full-canonical manifest/test
-  contracts to `source-set-cac9c7d02b280825`, and
-  `authority-currentness --source-set-id source-set-cac9c7d02b280825` passes
+  Milestones 0-2 are now resolved. `authority-currentness --source-set-id
+  source-set-9e7d85759951c279` passes
   with `authority_family_count=454` and
-  `source_currentness_record_count=635`.
-- Milestone 0 on that packet is now resolved. A fresh rebaseline across
-  `summary.json`, `extraction_manifest.jsonl`, `source_catalog.jsonl`, workbook
-  rows `FPS-005` / `FPS-125`, and the live promotion-suite result found no
-  drift from the packet baseline.
-- Full-canonical downstream freshness is still blocked on real extraction and
-  parser recovery, but the live blocker set is now down to one row. A targeted
-  external-Docling OCR merge replay plus three in-environment no-timeout
-  Docling retries on `WILD-ESA-038`, `WILD-ESA-054`, and `FPS-241` first moved
-  `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json`
-  to `extracted_count=633`, `failed_count=2`, `chunk_count=97248`, and
-  `validation_passed=false`.
-- The extractor now includes governed scanned-PDF rescue paths for rows like
-  `FPS-125`: `pdf_raster_ocr` at `100` DPI with a bounded `4`-worker
-  RapidOCR(torch) pool, fail-closed page-error handling, a Swift-backed Apple
-  Vision raster OCR lane for larger scanned PDFs on macOS, and then a chunked
-  Docling OCR fallback. Focused extractor coverage is now `33/33`.
-- The plan-mandated replay of the older reduced raster path on `FPS-125`
-  remained compute-bound for `163.82` real seconds with the `4`-worker
-  RapidOCR pool active and no merged record, so the new Apple Vision lane is
-  now the governed large-scan path for this checkout.
-- A follow-on targeted replay closed `FPS-125` on the active source set with
-  `parser_name=apple_vision_pdf_raster`,
-  `parser_metadata.pdf_raster_ocr_backend=apple_vision_swift`,
-  `chunk_count=861`, and `text_char_count=1244371`. The live extraction
-  summary is now `extracted_count=634`, `failed_count=1`,
-  `chunk_count=98109`, and `validation_passed=false`.
-- The only remaining extraction blocker is now `FPS-005`
-  (`docling_conversion_failed`; a fresh upstream redownload still reproduces
-  the same invalid-PDF/xref corruption). The remaining work is therefore a
-  single workbook-contract repair or replacement decision, not another OCR
-  recovery pass.
-- The current implementation slice inside that packet is Milestone 2:
-  resolve `FPS-005` through workbook-contract action before any downstream
-  reruns.
-- Until that final residual extraction record is repaired or replaced, the source-set
-  knowledge-graph export plus the rebased `forest_plan_profile` and
-  `forest_plan_component_retrieval` eval artifacts remain missing or stale.
+  `source_currentness_record_count=634`.
+- The last committed non-strict
+  `promotion-suite --manifest config/promotion_suite_v1.json` result is now
+  stale relative to the new active source set. It still points
+  `full_canonical_source_set_id=source-set-cac9c7d02b280825` and reports
+  `full_canonical_corpus_ready=false` with `4/8` required full-canonical
+  results passing and
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
+- The current implementation slice inside that packet is now Milestone 3:
+  rerun `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`,
+  `forest-plan-component-retrieval-eval`, and
+  `promotion-suite`
+  on `source-set-9e7d85759951c279`.
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
   now truthful and active, but broader full-canonical downstream freshness is
-  still routed-red until the `2` failed extraction records are recovered or
-  replaced and
-  the blocked graph/profile/component retrieval replays are rerun on
-  `source-set-cac9c7d02b280825`.
+  still routed-red until the blocked graph/profile/component retrieval and
+  promotion reruns are replayed on `source-set-9e7d85759951c279`.
 
 Historical broader capture baseline:
 

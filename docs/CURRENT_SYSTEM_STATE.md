@@ -20,6 +20,64 @@ older references below that still treat `source-set-5e65d845ce77e1a0`,
 historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes.
 
+## Full Canonical Final Blocker Milestone 2 Closeout
+
+Latest closeout on 2026-05-19:
+
+- Routed implementation packet:
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
+- The workbook contract is now explicitly reduced to
+  `Document_Register_Master=634`,
+  `Direct_File_Capture_Queue=51`,
+  `Removed_Not_Applicable_Final=3`, with
+  `source-register-validate` passing on workbook SHA
+  `999c773bb5d6183a391f03b7346084f046389f7ede52d07139cee1dfc9f073f6`.
+- `FPS-005` is no longer in the active load-bearing sheet. It now lives in
+  `Removed_Not_Applicable_Final` with a governed removal reason after a
+  2026-05-19 planning-page recheck confirmed that
+  `https://www.fs.usda.gov/media/228272` still serves a structurally invalid
+  Chapter 4 PDF and no exact official replacement chapter artifact was
+  available.
+- The active local catalog in `source_library/catalog/` is now source set
+  `source-set-9e7d85759951c279`, created on `2026-05-19T17:50:42.212832Z`,
+  with `source_count=634`, `artifact_count=622`, `unique_url_count=634`,
+  `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  `status_counts={"downloaded_existing": 622, "duplicate_content": 12}`, and
+  governing download run
+  `phase2-canonical-download-full-post-fps005-removal-20260519`.
+- The workbook-contract refresh is now proven through:
+  `phase2-canonical-dry-run-post-fps005-removal-20260519`
+  (`planned_count=634`);
+  `phase2-canonical-download-full-post-fps005-removal-20260519`
+  (`downloaded_existing=622`, `duplicate_content=12`, `failed_count=0`,
+  `needs_review_count=0`);
+  `validate-run --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  (`8/8` checks passed); and
+  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  (`validation_passed=true`).
+- A reuse-first extraction rebuild on `source-set-9e7d85759951c279` classified
+  `reuse_extraction=624` and `needs_extract=10`, reused `620` records, then
+  cleared the pre-existing scoped XML audit red with a targeted merged
+  reextract of `USDA-002`, `USDA-003`, `USDA-004`, and `USDA-006`.
+  `source_library/derived/source-set-9e7d85759951c279/diagnostics/summary.json`
+  now records `extracted_count=634`, `failed_count=0`, `chunk_count=98155`,
+  `reused_count=620`, and `validation_passed=true`.
+- `authority-currentness --source-set-id source-set-9e7d85759951c279` now
+  passes with `authority_family_count=454`,
+  `catalog_source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  `source_currentness_record_count=634`, and `validation_passed=true`.
+- No downstream graph/profile/component/promotion reruns landed in this slice.
+  The last committed `promotion-suite` result still points at prior full
+  canonical source set `source-set-cac9c7d02b280825` and therefore remains
+  stale relative to the new active local catalog.
+- Next routing:
+  Milestone 3 only. Rerun
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`,
+  `forest-plan-component-retrieval-eval`, and
+  `promotion-suite`
+  on `source-set-9e7d85759951c279`, then close the packet.
+
 ## Full Canonical Downstream Freshness Refresh Reduced Closeout
 
 Latest reduced closeout on 2026-05-19:

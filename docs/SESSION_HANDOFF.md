@@ -5,6 +5,75 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Final Blocker Milestone 2 FPS-005 Workbook-Contract Closeout
+
+This implementation slice closes Milestone 2 of the standalone final-blocker
+packet by taking the governed workbook-contract removal path for `FPS-005`,
+refreshing the active catalog against that new workbook truth, and leaving the
+packet routed only to downstream reruns.
+
+- routed plan:
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+- workbook-contract outcome:
+  `FPS-005` no longer lives in `Document_Register_Master`. It now lives in
+  `Removed_Not_Applicable_Final` with
+  `EA_System_Applicability_Status="Not applicable - removed from ingest"` and
+  a governed removal reason recording that the official Beaverhead planning
+  page still points to `https://www.fs.usda.gov/media/228272`, the served
+  Chapter 4 PDF remains structurally invalid across the available parsers/PDF
+  tools, and no exact official replacement chapter artifact was available on
+  `2026-05-19`.
+- workbook validation truth:
+  `source-register-validate` now passes on workbook SHA
+  `999c773bb5d6183a391f03b7346084f046389f7ede52d07139cee1dfc9f073f6` with
+  `load_row_count=634`,
+  `queue_row_count=51`,
+  `removed_row_count=3`, and
+  `issue_count=0`.
+- refreshed run and catalog evidence:
+  `phase2-canonical-dry-run-post-fps005-removal-20260519` planned `634` rows;
+  `phase2-canonical-download-full-post-fps005-removal-20260519` completed with
+  `downloaded_existing=622`,
+  `duplicate_content=12`,
+  `failed_count=0`, and
+  `needs_review_count=0`;
+  `validate-run` on that exact run ID passed `8/8`; and
+  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  advanced the active local catalog to
+  `source-set-9e7d85759951c279` with
+  `source_count=634`,
+  `artifact_count=622`,
+  `unique_url_count=634`,
+  `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  and `validation_passed=true`.
+- extraction and currentness truth:
+  a reuse-first extraction rebuild on `source-set-9e7d85759951c279`
+  classified `reuse_extraction=624` and `needs_extract=10`, then a targeted
+  merged reextract of `USDA-002`, `USDA-003`, `USDA-004`, and `USDA-006`
+  cleared the pre-existing scoped XML audit red. The active extraction summary
+  now records `extracted_count=634`,
+  `failed_count=0`,
+  `chunk_count=98155`,
+  `reused_count=620`, and
+  `validation_passed=true`.
+  `authority-currentness --source-set-id source-set-9e7d85759951c279`
+  also now passes with `authority_family_count=454`,
+  `catalog_source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  `source_currentness_record_count=634`, and `validation_passed=true`.
+- downstream truth:
+  no downstream graph/profile/component/promotion reruns landed in this slice.
+  The last committed `promotion-suite` result remains stale on prior full
+  canonical source set `source-set-cac9c7d02b280825` and still reports
+  `full_canonical_corpus_ready=false` with `4/8` required full-canonical
+  results passing.
+- next routing:
+  Milestone 3 only. Rerun
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`,
+  `forest-plan-component-retrieval-eval`, and
+  `promotion-suite`
+  on `source-set-9e7d85759951c279`.
+
 ## Full Canonical Final Blocker Resolution Milestone 1 FPS-125 Closeout
 
 This implementation slice closes Milestone 1 of the standalone final-blocker

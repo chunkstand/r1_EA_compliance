@@ -1,27 +1,26 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestones 0-1 resolved 2026-05-19; latest closeout `d9373c4`
+Status: Active 2026-05-19; Milestones 0-2 resolved 2026-05-19; Milestone 3 next
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
 
-The canonical source-register import and downstream-freshness reduction packets have already made
-`source-set-cac9c7d02b280825` the active local full-canonical source set and have now reduced the
-remaining red surface to one source row plus four blocked downstream artifacts. This milestone
-exists to finish that last bounded lane so the repo can truthfully claim a green full canonical
-corpus on the active source set instead of a merely current-promotion-ready corpus.
+The canonical source-register import and downstream-freshness reduction packets have already been
+carried through workbook-contract repair on `FPS-005`, which advanced the active local
+full-canonical source set to `source-set-9e7d85759951c279` and cleared the last extraction blocker.
+This packet now exists to finish the remaining bounded lane: rerun the four blocked downstream
+artifact families on the new active source set so the repo can truthfully claim a green full
+canonical corpus instead of a merely current-promotion-ready corpus.
 
 ## Current Evidence
 
-- `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json` currently records
+- `source_library/derived/source-set-9e7d85759951c279/diagnostics/summary.json` now records
   `extracted_count=634`,
-  `failed_count=1`,
-  `chunk_count=98109`,
-  `validation_passed=false`, and
-  `failure_counts={"docling_conversion_failed": 1}`.
-- The exact residual extraction blocker is now
-  `FPS-005` (`docling_conversion_failed`).
+  `failed_count=0`,
+  `chunk_count=98155`,
+  `reused_count=620`,
+  and `validation_passed=true`.
 - Milestone 1 is now closed for `FPS-125`. The plan-mandated replay of the prior reduced
   raster/Docling path stayed compute-bound for `163.82` real seconds with the bounded `4`-worker
   RapidOCR pool active and no merged record, so `src/usfs_r1_ea_sources/extract.py` now prefers a
@@ -30,9 +29,14 @@ corpus on the active source set instead of a merely current-promotion-ready corp
   for `FPS-125` with `parser_name=apple_vision_pdf_raster`,
   `parser_metadata.pdf_raster_ocr_backend=apple_vision_swift`,
   `chunk_count=861`, and `text_char_count=1244371`.
-- `FPS-005` is not currently a local parser-tuning problem. Fresh upstream redownloads reproduce
-  the same invalid xref/pages corruption, and local `pypdf` salvage still fails even with
-  `strict=False` because the file cannot reconstruct a root catalog.
+- Milestone 2 is now also closed. `FPS-005` has been moved out of
+  `Document_Register_Master` and into `Removed_Not_Applicable_Final` after a 2026-05-19 official
+  Beaverhead planning-page recheck confirmed that `https://www.fs.usda.gov/media/228272` still
+  serves a structurally invalid PDF and no exact official replacement chapter artifact was
+  available.
+- A reuse-first rebuild on the new catalog classified `reuse_extraction=624` and `needs_extract=10`.
+  The resulting targeted merged reextract of `USDA-002`, `USDA-003`, `USDA-004`, and `USDA-006`
+  also cleared the prior scoped XML extraction-audit red on the new active source set.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
   currently reports
   `current_promotion_ready=true`,
@@ -42,25 +46,22 @@ corpus on the active source set instead of a merely current-promotion-ready corp
   `passed_required_full_canonical_result_count=4`,
   `required_full_canonical_result_count=8`, and
   `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
-- The exact remaining failed required full-canonical slots are:
-  `source_library/derived/source-set-cac9c7d02b280825/knowledge_graph/nepa_3d_graph_validation.json`,
-  `source_library/derived/source-set-cac9c7d02b280825/knowledge_graph/nepa_3d_graph_summary.json`,
+- The exact remaining failed required full-canonical slots are still the same four downstream
+  artifacts, but they now need regeneration against active source set `source-set-9e7d85759951c279`:
+  `source_library/derived/source-set-9e7d85759951c279/knowledge_graph/nepa_3d_graph_validation.json`,
+  `source_library/derived/source-set-9e7d85759951c279/knowledge_graph/nepa_3d_graph_summary.json`,
   `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json`, and
   `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`.
-- Milestone 0 rebaseline was closed on `2026-05-19` with no baseline drift. The live
-  `extraction_manifest.jsonl`, `source_catalog.jsonl`, workbook rows `FPS-005` and `FPS-125`, and
-  `promotion_suite_results.json` all still match the blocker and failed-slot truth above on active
-  source set `source-set-cac9c7d02b280825`.
-- `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md` already agree that
-  the remaining work is this exact one-row blocker lane plus the four downstream reruns above.
+- Milestones 0-2 are now aligned across `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/SESSION_HANDOFF.md`: the extraction blocker lane is closed, the active source set is now
+  `source-set-9e7d85759951c279`, and the next remaining work is the four downstream reruns above.
 
 ## Goal
 
-Reach a truthful green full-canonical closeout for active source set `source-set-cac9c7d02b280825`
+Reach a truthful green full-canonical closeout for active source set `source-set-9e7d85759951c279`
 by:
 
-- clearing `FPS-125` and `FPS-005` from the active extraction blocker set through governed
-  recovery or contract action,
+- preserving the now-green extraction/currentness truth established by Milestones 1-2,
 - rerunning the exact four blocked downstream artifact families on the active source set, and
 - closing the repo with `full_canonical_corpus_ready=true` and `8/8` required full-canonical
   results passing.
@@ -89,7 +90,7 @@ by:
   `forest-plan-profile-eval`,
   `forest-plan-component-retrieval-eval`, and
   `promotion-suite`
-  on `source-set-cac9c7d02b280825`
+  on `source-set-9e7d85759951c279`
 - durable docs and handoff updates that describe the full-canonical green closeout
 
 ## Out Of Scope
@@ -106,9 +107,9 @@ by:
 - `tests/test_extract.py`
 - `source_library/catalog/source_catalog.jsonl`
 - `source_library/catalog/source_set_manifest.json`
-- `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json`
-- `source_library/derived/source-set-cac9c7d02b280825/diagnostics/extraction_manifest.jsonl`
-- `source_library/derived/source-set-cac9c7d02b280825/knowledge_graph/`
+- `source_library/derived/source-set-9e7d85759951c279/diagnostics/summary.json`
+- `source_library/derived/source-set-9e7d85759951c279/diagnostics/extraction_manifest.jsonl`
+- `source_library/derived/source-set-9e7d85759951c279/knowledge_graph/`
 - `source_library/evaluations/forest_plan_profile/`
 - `source_library/evaluations/forest_plan_component_retrieval/`
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/`
@@ -179,7 +180,7 @@ by:
   `forest_plan_component_retrieval` results, `promotion_suite` results, and the three manifest
   configs that govern those checks.
 - Prevention gate: the milestone closes only when all four previously failed required full-canonical
-  slots exist and point at `source-set-cac9c7d02b280825`, and `promotion-suite` reports
+  slots exist and point at `source-set-9e7d85759951c279`, and `promotion-suite` reports
   `full_canonical_corpus_ready=true`.
 - Fail threshold: any of the four failed slots remain missing or stale, or promotion remains
   `4/8`, `5/8`, `6/8`, or `7/8`.
@@ -269,13 +270,21 @@ Outcome label: resolved
   silent runtime remapping,
   config-only URL repair,
   or silently substituting a different document while the workbook row still describes the old one.
+- Closed `2026-05-19`: Milestone 2 resolved through the explicit workbook-contract removal path.
+  `FPS-005` moved into `Removed_Not_Applicable_Final`, the workbook now validates at
+  `634` retained master rows / `51` queue rows / `3` removed rows, the refreshed
+  `phase2-canonical-download-full-post-fps005-removal-20260519` run plus
+  `catalog-build` advanced the active local catalog to `source-set-9e7d85759951c279`, and the
+  reuse-first extraction/currentness rebuild now records `extracted_count=634`, `failed_count=0`,
+  `chunk_count=98155`, and `validation_passed=true`. No downstream reruns landed in this slice, so
+  the next active implementation slice is Milestone 3 on `source-set-9e7d85759951c279`.
 
 ### Milestone 3: Replay The Four Blocked Full-Canonical Artifacts
 
 Outcome label: resolved
 
 - After both blocker rows are cleared, rerun:
-  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-cac9c7d02b280825`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-9e7d85759951c279`
 - Rerun:
   `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-profile-eval --output-dir source_library --manifest config/region1_forest_plan_profile_eval_coverage_v1.json`
 - Rerun:
@@ -335,9 +344,9 @@ Outcome label: resolved
   `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/extract.py tests/test_extract.py`
   `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extract-build --output-dir source_library --id FPS-125 --docling-ocr --docling-timeout-seconds 1 --merge-selected-into-existing`
 - Active source-set freshness after any contract-changing row fix:
-  `PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-cac9c7d02b280825`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-9e7d85759951c279`
 - Downstream closeout gates:
-  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-cac9c7d02b280825`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-9e7d85759951c279`
   `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-profile-eval --output-dir source_library --manifest config/region1_forest_plan_profile_eval_coverage_v1.json`
   `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-retrieval-eval --output-dir source_library --manifest config/forest_plan_component_retrieval_eval_v1.json`
   `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
@@ -352,15 +361,16 @@ Outcome label: resolved
 - `FPS-005` no longer blocks the active source set, either because it extracts successfully from a
   governed workbook repair or because the workbook contract has been explicitly changed and
   revalidated.
-- `summary.json` for `source-set-cac9c7d02b280825` no longer reports `failed_count=2`.
-- `source_library/derived/source-set-cac9c7d02b280825/knowledge_graph/nepa_3d_graph_validation.json`
+- `summary.json` for `source-set-9e7d85759951c279` reports `failed_count=0` and
+  `validation_passed=true`.
+- `source_library/derived/source-set-9e7d85759951c279/knowledge_graph/nepa_3d_graph_validation.json`
   exists and validates the active source set.
-- `source_library/derived/source-set-cac9c7d02b280825/knowledge_graph/nepa_3d_graph_summary.json`
+- `source_library/derived/source-set-9e7d85759951c279/knowledge_graph/nepa_3d_graph_summary.json`
   exists and reports the active source set.
 - `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json` points at
-  `source-set-cac9c7d02b280825`.
+  `source-set-9e7d85759951c279`.
 - `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`
-  points at `source-set-cac9c7d02b280825`.
+  points at `source-set-9e7d85759951c279`.
 - `promotion-suite` reports `full_canonical_corpus_ready=true` and
   `passed_required_full_canonical_result_count=8`.
 - The durable doc set no longer routes future work through the two-blocker reduced lane.

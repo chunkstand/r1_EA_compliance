@@ -23,9 +23,9 @@ class SourceRegisterSchemaTests(unittest.TestCase):
 
         self.assertTrue(result["validation_passed"])
         self.assertEqual(result["sheet_count"], 13)
-        self.assertEqual(result["load_row_count"], 635)
+        self.assertEqual(result["load_row_count"], 634)
         self.assertEqual(result["queue_row_count"], 51)
-        self.assertEqual(result["removed_row_count"], 2)
+        self.assertEqual(result["removed_row_count"], 3)
         self.assertEqual(result["stale_source_detector_count"], 5)
 
     def test_validate_source_register_detects_duplicate_load_url(self) -> None:
@@ -75,16 +75,49 @@ class SourceRegisterSchemaTests(unittest.TestCase):
         self.assertEqual(result["legacy_register_source_delta_count"], 160)
         self.assertEqual(result["legacy_register_gap_count"], 1)
         self.assertEqual(result["legacy_runtime_unique_source_count"], 350)
-        self.assertEqual(result["canonical_master_row_count"], 635)
+        self.assertEqual(result["canonical_master_row_count"], 634)
         self.assertEqual(result["canonical_queue_row_count"], 51)
-        self.assertEqual(result["canonical_removed_row_count"], 2)
+        self.assertEqual(result["canonical_removed_row_count"], 3)
         self.assertEqual(result["canonical_stale_source_detector_count"], 5)
         self.assertEqual(result["canonical_shared_with_legacy_workbook_count"], 0)
         self.assertEqual(result["canonical_shared_with_source_delta_count"], 0)
-        self.assertEqual(result["canonical_only_source_count"], 635)
+        self.assertEqual(result["canonical_only_source_count"], 634)
         self.assertEqual(result["legacy_only_source_count"], 350)
         self.assertEqual(result["canonical_only_source_ids_sample"][0], "FED-001")
         self.assertEqual(result["legacy_only_source_ids_sample"][0], "R1EA-001")
+
+    def test_fps_005_is_removed_from_active_ingest_with_governed_reason(self) -> None:
+        workbook = load_workbook(CANONICAL_WORKBOOK, read_only=True, data_only=True)
+        master = workbook["Document_Register_Master"]
+        removed = workbook["Removed_Not_Applicable_Final"]
+        master_headers = _header_map(master)
+        removed_headers = _header_map(removed)
+
+        master_ids = {
+            str(row[master_headers["Source_ID"] - 1])
+            for row in master.iter_rows(min_row=5, values_only=True)
+            if row[master_headers["Source_ID"] - 1]
+        }
+        self.assertNotIn("FPS-005", master_ids)
+
+        removed_rows = {
+            str(row[removed_headers["Source_ID"] - 1]): row
+            for row in removed.iter_rows(min_row=5, values_only=True)
+            if row[removed_headers["Source_ID"] - 1]
+        }
+        fps_005 = removed_rows["FPS-005"]
+        self.assertEqual(
+            fps_005[removed_headers["Source_URL"] - 1],
+            "https://www.fs.usda.gov/media/228272",
+        )
+        self.assertEqual(
+            fps_005[removed_headers["EA_System_Applicability_Status"] - 1],
+            "Not applicable - removed from ingest",
+        )
+        self.assertIn(
+            "structurally invalid",
+            str(fps_005[removed_headers["Removal_Reason"] - 1]),
+        )
 
     def test_known_blocker_repairs_use_current_official_urls(self) -> None:
         workbook = load_workbook(CANONICAL_WORKBOOK, read_only=True, data_only=True)
