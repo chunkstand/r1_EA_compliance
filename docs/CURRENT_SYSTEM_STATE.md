@@ -45,18 +45,26 @@ Latest reduced closeout on 2026-05-19:
   now passes with `authority_family_count=454`,
   `catalog_source_partition_counts={"active_review_corpus": 583, "currentness_supersession_archive": 52}`,
   `source_currentness_record_count=635`, and `validation_passed=true`.
-- The first full-source-set extraction replay is now explicit blocker
-  evidence. `extract-build --output-dir source_library` completed on
-  `source-set-cac9c7d02b280825` with `extracted_count=576`,
-  `failed_count=59`,
-  `chunk_count=95928`,
+- The first full-source-set extraction replay is now historical blocker
+  evidence only. The live extraction summary has moved forward through a
+  targeted external-Docling OCR merge replay on the failed IDs plus one
+  in-environment no-timeout Docling retry on `WILD-ESA-038`.
+- `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json`
+  now records `extracted_count=631`,
+  `failed_count=4`,
+  `chunk_count=96633`,
   `validation_passed=false`, and
-  `failure_counts={"docling_unavailable": 1, "pdf_text_fallback_empty": 56, "pdf_text_fallback_failed": 2}`.
-- Exploratory Docling/OCR retries were intentionally not admitted as durable
-  evidence. They were used only to confirm that the residual set is a real
-  parser/runtime blocker. Spot `pdftotext` probes on `FPS-005`, `FPS-078`,
-  and `FINAL-KOOT-009` returned either parse errors or zero extracted
-  characters.
+  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 3}`.
+- The residual extraction blocker set is now exact:
+  `FPS-005` fails with
+  `docling_conversion_failed` because the PDF structure is invalid, while
+  `FPS-125`, `FPS-241`, and `WILD-ESA-054` still fail with
+  `pdf_text_fallback_empty` after Docling-capable retries.
+- `pdftotext` continues to return parse errors on `FPS-005` and zero
+  characters on `FPS-125`, `FPS-241`, and `WILD-ESA-054`, while `pdftoppm`
+  can still render the latter three. That narrows the remaining work to
+  invalid-PDF repair plus raster/OCR recovery, not broader downloader or
+  catalog drift.
 - Fresh rebased `promotion-suite --manifest config/promotion_suite_v1.json`
   now reports `current_promotion_ready=true`,
   `promotion_ready=true`,
@@ -73,7 +81,7 @@ Latest reduced closeout on 2026-05-19:
   stale `forest_plan_profile` eval source-set identity, and stale
   `forest_plan_component_retrieval` eval source-set identity.
 - Next routing:
-  recover the `59` failed extraction/parser rows first, then rerun
+  recover the `4` failed extraction/parser rows first, then rerun
   `nepa-knowledge-graph-export`,
   `forest-plan-profile-eval`, and
   `forest-plan-component-retrieval-eval`

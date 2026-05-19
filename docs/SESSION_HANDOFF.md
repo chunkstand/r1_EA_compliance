@@ -5,6 +5,53 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Downstream Freshness Refresh Reduced Update
+
+This follow-on update reduces the same full-canonical downstream freshness
+packet further and supersedes the earlier reduced closeout below when they
+disagree.
+
+- routed plan:
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
+- durable extraction progress:
+  the active extraction manifest and summary on
+  `source-set-cac9c7d02b280825` now record `extracted_count=631`,
+  `failed_count=4`,
+  `chunk_count=96633`,
+  `validation_passed=false`, and
+  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 3}`.
+- targeted recovery evidence:
+  a targeted external-Docling OCR merge replay first reduced the blocker set
+  from `59` to `5`, and a targeted in-environment no-timeout Docling retry on
+  `WILD-ESA-038` then reduced it from `5` to `4`.
+- exact residual extraction blockers:
+  `FPS-005` (`docling_conversion_failed`; invalid PDF structure),
+  `FPS-125` (`pdf_text_fallback_empty`),
+  `FPS-241` (`pdf_text_fallback_empty`), and
+  `WILD-ESA-054` (`pdf_text_fallback_empty`).
+- system-tool probes:
+  `pdftotext` still returns parse errors on `FPS-005` and zero characters on
+  `FPS-125`, `FPS-241`, and `WILD-ESA-054`, while `pdftoppm` can render the
+  latter three PDFs. The remaining lane is therefore narrowed to invalid-PDF
+  repair plus raster/OCR recovery rather than downloader/catalog drift.
+- downstream truth:
+  `promotion-suite --manifest config/promotion_suite_v1.json` has not been
+  rerun since this extraction reduction because the full-canonical downstream
+  replay is still blocked on the `4` residual extraction failures. The current
+  exact downstream red surface remains the same four required full-canonical
+  failures recorded below: missing
+  `knowledge_graph/nepa_3d_graph_validation.json`,
+  missing
+  `knowledge_graph/nepa_3d_graph_summary.json`,
+  stale `forest_plan_profile` eval source-set identity, and stale
+  `forest_plan_component_retrieval` eval source-set identity.
+- next routing:
+  resolve `FPS-005`, `FPS-125`, `FPS-241`, and `WILD-ESA-054`, then rerun
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`,
+  `forest-plan-component-retrieval-eval`, and
+  `promotion-suite` on `source-set-cac9c7d02b280825`.
+
 ## Full Canonical Downstream Freshness Refresh Reduced Closeout
 
 This closeout reduces the full-canonical downstream freshness packet and

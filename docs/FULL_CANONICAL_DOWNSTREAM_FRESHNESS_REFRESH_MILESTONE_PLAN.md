@@ -23,16 +23,20 @@ Reduced on 2026-05-19 with the following repo-grounded outcome:
   `authority_family_count=454`,
   `catalog_source_partition_counts={"active_review_corpus": 583, "currentness_supersession_archive": 52}`,
   `source_currentness_record_count=635`, and `validation_passed=true`.
-- The first full-source-set extraction replay is now explicit blocker evidence rather than an
-  assumed prerequisite. `extract-build --output-dir source_library` on
-  `source-set-cac9c7d02b280825` completed with `extracted=576`, `parser_error=59`,
-  `chunk_count=95928`, and `validation_passed=false`. Failure classes are dominated by
-  `pdf_text_fallback_empty=56`, with `pdf_text_fallback_failed=2` and
-  `docling_unavailable=1`.
-- Exploratory Docling and OCR retries were intentionally not admitted as closeout evidence. They
-  showed that at least part of the residual set is a real parser/runtime problem, not just a stale
-  manifest pin. Spot `pdftotext` probes on `FPS-005`, `FPS-078`, and `FINAL-KOOT-009` either
-  returned parse errors or zero extracted characters.
+- The first full-source-set extraction replay is now historical blocker evidence only. The live
+  extraction summary on `source-set-cac9c7d02b280825` has since moved to
+  `extracted=631`, `parser_error=4`, `chunk_count=96633`, and `validation_passed=false` through a
+  targeted external-Docling OCR merge replay plus one in-environment no-timeout Docling retry on
+  `WILD-ESA-038`.
+- The residual extraction blocker set is now exact:
+  `FPS-005` (`docling_conversion_failed`; invalid PDF structure),
+  `FPS-125` (`pdf_text_fallback_empty`),
+  `FPS-241` (`pdf_text_fallback_empty`), and
+  `WILD-ESA-054` (`pdf_text_fallback_empty`).
+- `pdftotext` still returns parse errors on `FPS-005` and zero characters on `FPS-125`,
+  `FPS-241`, and `WILD-ESA-054`, while `pdftoppm` can render the latter three PDFs. That narrows
+  the remaining lane to invalid-PDF repair plus raster/OCR recovery rather than broader manifest
+  or downloader drift.
 - Fresh `promotion-suite --manifest config/promotion_suite_v1.json` now fails for the right reason:
   the old full-canonical stale-manifest split is gone, and the remaining full-canonical failure
   surface is narrowed to `4/8` required results passing with
@@ -41,7 +45,7 @@ Reduced on 2026-05-19 with the following repo-grounded outcome:
   `derived/source-set-cac9c7d02b280825/knowledge_graph/*` artifacts plus the still-historical
   `forest_plan_profile` and `forest_plan_component_retrieval` eval result identities.
 - This packet is therefore reduced, not resolved. The remaining issue is a concrete extraction and
-  parser-recovery lane for the `59` failed source records, after which the source-set graph and the
+  parser-recovery lane for the `4` failed source records, after which the source-set graph and the
   two still-historical full-canonical eval artifacts can be replayed on
   `source-set-cac9c7d02b280825`.
 
@@ -64,9 +68,11 @@ Reduced on 2026-05-19 with the following repo-grounded outcome:
   `catalog_source_partition_counts={"active_review_corpus": 583, "currentness_supersession_archive": 52}`,
   `source_currentness_record_count=635`, and `validation_passed=true`.
 - `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json` now records the
-  first full-source-set extraction replay as blocker evidence with `extracted_count=576`,
-  `failed_count=59`, `chunk_count=95928`, `validation_passed=false`, and
-  `failure_counts={"docling_unavailable": 1, "pdf_text_fallback_empty": 56, "pdf_text_fallback_failed": 2}`.
+  live reduced blocker state with `extracted_count=631`,
+  `failed_count=4`,
+  `chunk_count=96633`,
+  `validation_passed=false`, and
+  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 3}`.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
   now reports `current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=true`,
   `full_canonical_corpus_ready=false`, `passed_required_full_canonical_result_count=4`,
