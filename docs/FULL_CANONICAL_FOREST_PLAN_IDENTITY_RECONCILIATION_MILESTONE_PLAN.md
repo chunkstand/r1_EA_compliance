@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind landed on `source-set-370896a1043817f2`; Milestone 2 can now resume against the narrowed residual blocker
+Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind landed on `source-set-370896a1043817f2`; Milestone 2 is now resolved locally and Milestone 3 is the remaining graph-only residual lane
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -20,8 +20,8 @@ replay boundary that downstream reruns must use.
   now emits refreshed full-canonical source set
   `source-set-370896a1043817f2`.
 - `source_library/derived/source-set-370896a1043817f2/forest_plan_components/summary.json`
-  now records `passed=false`, `component_count=1336`, `standard_count=377`, and only
-  `flathead-nf` blocked.
+  now records `passed=true`, `component_count=1416`, `standard_count=397`, and
+  `blocked_forest_unit_ids=[]`.
 - `source_library/derived/source-set-370896a1043817f2/authority_currentness/authority_currentness_report.json`
   now passes with
   `authority_family_count=454`,
@@ -32,25 +32,28 @@ replay boundary that downstream reruns must use.
   `active_source_set_ids=["source-set-370896a1043817f2"]`.
 - `config/r1_forest_plan_component_inventory_build_manifest.json` and
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`
-  now reduce the source-record identity mix to `74` canonical source-record IDs plus the explicit
-  unresolved `25`-row legacy blocker set recorded in
+  now reduce the source-record identity mix to `74` exact canonical
+  source-record IDs plus `1` governed catalog rebound and the explicit
+  unresolved `24`-row legacy blocker set recorded in
   `config/r1_forest_plan_identity_reconciliation_v1.json`.
 - Against the active canonical catalog in `source_library/catalog/source_catalog.jsonl`, `74` of
   those `99` legacy source-record IDs already have an exact official-URL match to a current
-  canonical source-record ID.
-- The remaining `25` legacy source-record IDs are not yet governably bound to a current canonical
-  source-record ID. `14` remain `source_delta_required`, and `11` are `catalog_confirmed`
+  canonical source-record ID, and `1` additional Flathead primary-plan row now has a governed
+  catalog rebound from `R1PLAN-flathead-nf-02` to `FINAL-FLAT-001`.
+- The remaining `24` legacy source-record IDs are not yet governably bound to a current canonical
+  source-record ID. `13` remain `source_delta_required`, and `11` are `catalog_confirmed`
   planning or document-set landing pages with no exact current active-catalog row.
 - Both configs now carry committed top-level and per-profile `identity_reconciliation` metadata so
   the unresolved blocker family stays explicit instead of hiding inside a mixed-ID manifest.
 - `docs/R1_FOREST_PLAN_PRIMARY_PLAN_ROLE_CLASSIFICATION_MILESTONE_PLAN.md` is now resolved in
   practice as well as code. The refreshed archived replay on
   `source-set-370896a1043817f2` now proves the classifier fix all the way through the
-  full-canonical component inventory boundary for `9/10` forests.
+  full-canonical component inventory boundary for `10/10` forests.
+- `config/forest_plan_profiles.json` now aligns the Flathead active plan and
+  supporting primary-plan role to `FINAL-FLAT-001`.
 - `config/forest_plan_component_retrieval_eval_v1.json`
-  still carries legacy component IDs for the retrieval-eval cases, so the next residual work is no
-  longer source-record rebind. It is now a narrower component-identity and Flathead-inventory
-  follow-up.
+  now carries canonical component IDs for the retrieval-eval cases, and
+  `forest-plan-component-retrieval-eval` now passes `6/6`.
 - The prior packet
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
   is now reduced through the active-source-set rebind. Its next routing is this dedicated
@@ -108,15 +111,20 @@ Return the forest-plan downstream lane to a truthful replayable state by:
 ## Owner Surfaces
 
 - `src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py`
+- `src/usfs_r1_ea_sources/forest_plan_components.py`
 - `tests/test_forest_plan_identity_reconciliation.py`
+- `tests/test_forest_plan_component_retrieval_eval.py`
+- `tests/test_forest_plan_components.py`
 - `config/r1_forest_plan_identity_reconciliation_v1.json`
 - `config/r1_forest_plan_component_inventory_build_manifest.json`
 - `config/region1_forest_plan_readiness_nepa_3d_v1.json`
 - `config/forest_plan_component_retrieval_eval_v1.json`
+- `config/forest_plan_profiles.json`
 - `config/r1_forest_plan_document_register_draft.csv`
+- `docs/architecture_contract.toml`
 - `source_library/catalog/source_catalog.jsonl`
 - `source_library/catalog/source_set_manifest.json`
-- `source_library/derived/source-set-9e7d85759951c279/forest_plan_components/summary.json`
+- `source_library/derived/source-set-370896a1043817f2/forest_plan_components/summary.json`
 - `README.md`
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`
@@ -155,8 +163,8 @@ Return the forest-plan downstream lane to a truthful replayable state by:
 
 ### Weak Point 2: unresolved rows disappear from the blocker accounting
 
-- Weak point forecast: manifest rebind work could hide the still-unresolved `25` rows by simply
-- removing them from the active accounting surface.
+- Weak point forecast: manifest rebind work could hide the still-unresolved rows by simply
+  removing them from the active accounting surface.
 - Owner surface: committed registry, state docs, and future manifest rebind milestone.
 - Prevention gate: the registry must enumerate every currently referenced legacy source-record ID
   exactly once as either `exact_url_matched` or `unresolved`.
@@ -242,28 +250,38 @@ Outcome label: reduced
 
 ### Milestone 2: Reconcile Retrieval Component Identities
 
-Outcome label: reduced
+Outcome label: resolved
 
-- After the unresolved blocker family clears and a truthful canonical component inventory exists
-  again, regenerate the
-  forest-plan component inventory on `source-set-9e7d85759951c279`.
-- Rebind `config/forest_plan_component_retrieval_eval_v1.json` away from legacy component IDs and
-  onto canonical component IDs emitted by that rebuilt inventory.
-- Keep the retrieval eval blocked if the canonical component inventory still does not exist.
+- Govern the remaining Flathead primary-plan rebind in
+  `config/r1_forest_plan_document_register_draft.csv` through
+  `existing_source_record_id=FINAL-FLAT-001`, then regenerate the committed
+  identity registry plus the bound manifest/readiness surfaces.
+- Align `config/forest_plan_profiles.json` so the Flathead active plan and
+  supporting primary-plan role both point at `FINAL-FLAT-001`.
+- Rebuild the archived full-canonical forest-plan component inventory on
+  `source-set-370896a1043817f2` and keep the retrieval contract blocked unless
+  that build becomes truthful again.
+- Rebind `config/forest_plan_component_retrieval_eval_v1.json` away from
+  legacy `R1PLAN-*` component IDs and onto the canonical component IDs emitted
+  by that rebuilt inventory.
+- Closed `2026-05-19` in the current local milestone closeout: the governed
+  Flathead rebind reduces the registry to `74` exact URL matches,
+  `1` governed catalog rebound, and `24` unresolved rows; the archived
+  `forest-plan-components-build` replay now passes with `1416` components and
+  `397` standards; and `forest-plan-component-retrieval-eval` now passes
+  `6/6` on canonical component IDs.
 
 ### Milestone 3: Resume The Blocked Full-Canonical Downstream Reruns
 
 Outcome label: resolved
 
-- Rerun
-  `forest-plan-components-build`,
-  `forest-plan-profile-eval`,
-  `forest-plan-component-retrieval-eval`,
-  `nepa-knowledge-graph-export`, and
-  `promotion-suite`
-  on `source-set-9e7d85759951c279`.
-- Close only when the missing/stale full-canonical artifacts regenerate truthfully and promotion no
-  longer reports the same forest-plan identity blocker family.
+- Materialize the missing claims/rule-claim surfaces for archived
+  full-canonical source set `source-set-370896a1043817f2`.
+- Rerun `nepa-knowledge-graph-export` and `promotion-suite` on
+  `source-set-370896a1043817f2`.
+- Close only when the missing full-canonical graph artifacts regenerate
+  truthfully and promotion no longer reports
+  `graph_viewer_export_invalid`.
 
 ### Milestone 4: Durable Closeout And Routing Reset
 
@@ -282,6 +300,9 @@ Outcome label: resolved
 - `config/r1_forest_plan_identity_reconciliation_v1.json`
 - `config/r1_forest_plan_component_inventory_build_manifest.json`
 - `config/region1_forest_plan_readiness_nepa_3d_v1.json`
+- `config/forest_plan_profiles.json`
+- `config/forest_plan_component_retrieval_eval_v1.json`
+- `docs/architecture_contract.toml`
 - this plan file
 - updated routing docs and handoff state
 
@@ -299,8 +320,12 @@ Outcome label: resolved
   `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py -q`
 - Milestone 1 manifest/readiness contract gate:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py -q`
+- Milestone 2 inventory/retrieval gate:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py tests/test_forest_plan_component_retrieval_eval.py tests/test_forest_plan_components.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py tests/test_promotion_suite.py -q`
+- Architecture contract gate:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py -q`
 - Source/test lint:
-  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py`
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py src/usfs_r1_ea_sources/forest_plan_components.py tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py tests/test_forest_plan_component_retrieval_eval.py tests/test_forest_plan_components.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py tests/test_promotion_suite.py`
 - Plan lint:
   `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
 - Docs and closeout:
@@ -311,11 +336,17 @@ Outcome label: resolved
 - `config/r1_forest_plan_identity_reconciliation_v1.json` exists and records the active source set
   as `source-set-9e7d85759951c279`.
 - The committed registry records `99` referenced legacy source-record IDs, `74` exact URL-backed
-  canonical bindings, and `25` unresolved rows.
-- The committed manifest/readiness pair now reduces to exactly those `74` canonical source-record
-  IDs plus the explicit unresolved `25`-row legacy blocker set.
+  canonical bindings, `1` governed catalog rebound, and `24` unresolved rows.
+- The committed manifest/readiness pair now reduces to exactly those `74` exact canonical
+  source-record IDs plus the `1` governed rebound and the explicit unresolved
+  `24`-row legacy blocker set.
 - The unresolved status split is explicit and preserved at
-  `catalog_confirmed=11` and `source_delta_required=14`.
+  `catalog_confirmed=11` and `source_delta_required=13`.
+- The archived full-canonical `forest-plan-components-build` replay now passes
+  with `component_count=1416`, `standard_count=397`, and
+  `blocked_forest_unit_ids=[]`.
+- `forest-plan-component-retrieval-eval` now passes `6/6` on canonical
+  component IDs for the refreshed archived source set.
 - Focused tests prove the committed registry and the live manifest/readiness pair stay aligned on
   that rebound identity mix.
 - The active routing set no longer treats the reduced Milestone 3 rerun packet as the active
@@ -346,19 +377,19 @@ Outcome label: resolved
 
 ## Residual Risks And Next Milestone Routing
 
-- The broader full-canonical source-set refresh/rebind decision is now complete through archived
-  replay source set `source-set-370896a1043817f2`. This packet no longer needs a generic refresh
-  decision before it can continue.
-- The remaining accepted residual risk is narrower than the original `25`-row unresolved family.
-  On the refreshed archived source set, `forest-plan-components-build` now validates `9/10`
-  forests and leaves only `flathead-nf` blocked.
-- The refreshed retrieval-eval contract is now truthfully red for two explicit reasons:
-  `flathead-nf` is absent from the validated component inventory, and the shipped eval still
-  expects legacy `R1PLAN-*` component IDs where the refreshed inventory now emits canonical
-  component IDs.
-- The next active slice is therefore Milestone 2 on the narrowed residual blocker family:
-  resolve the remaining Flathead inventory gap, then update the component-retrieval and downstream
-  graph lane onto the refreshed canonical component identities on
+- The broader full-canonical source-set refresh/rebind decision and the
+  narrowed Flathead/retrieval repair are now complete through archived replay
+  source set `source-set-370896a1043817f2`.
+- The remaining accepted residual risk is now narrower than the original
+  source-record and component-identity family. On the refreshed archived source
+  set, `forest-plan-components-build` now validates `10/10` forests and
+  `forest-plan-component-retrieval-eval` now passes `6/6`.
+- The only remaining full-canonical red lane is downstream graph generation:
+  `promotion-suite` is now `6/8` with only
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`.
+- The next active slice is therefore Milestone 3:
+  materialize the missing claims/rule-claim surfaces, rerun
+  `nepa-knowledge-graph-export`, and then rerun `promotion-suite` on
   `source-set-370896a1043817f2`.
-- If a future session cannot prove a canonical binding for one of the `25` unresolved rows, it must
+- If a future session cannot prove a canonical binding for one of the `24` unresolved rows, it must
   keep that row explicit as unresolved rather than hiding it inside a broad rerun attempt.

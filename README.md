@@ -171,20 +171,15 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   `forest-plan-profile-eval` now passes with
   `active_source_set_ids=["source-set-370896a1043817f2"]`.
 - `forest-plan-components-build` on the refreshed archived source set now
-  builds `1336` components and `377` standards with only `flathead-nf`
-  still blocked.
-- `forest-plan-component-retrieval-eval` is now truthfully red on the
-  refreshed source set because `flathead-nf` is still absent from the
-  validated inventory and the shipped eval contract still expects legacy
-  `R1PLAN-*` component IDs where the refreshed inventory now emits canonical
-  component IDs such as `FOR-009-*` and `FOR-002-*`.
+  passes with `1416` components, `397` standards, and
+  `blocked_forest_unit_ids=[]`.
 - A fresh local non-strict
   `promotion-suite --manifest config/promotion_suite_v1.json`
   now points
   `full_canonical_source_set_id=source-set-370896a1043817f2` and reports
-  `full_canonical_corpus_ready=false` with `5/8` required full-canonical
+  `full_canonical_corpus_ready=false` with `6/8` required full-canonical
   results passing and
-  `full_canonical_failure_category_counts={"forest_plan_component_coverage_gap": 1, "graph_viewer_export_invalid": 2}`.
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`.
 - The active implementation packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
   Milestone 0 in that packet is now resolved through
@@ -192,16 +187,23 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   governed registry artifact:
   `config/r1_forest_plan_identity_reconciliation_v1.json`.
   That registry captures the live `99` referenced legacy source-record IDs as
-  `74` exact official-URL matches to active canonical source-record IDs plus
-  `25` unresolved rows
-  (`11` `catalog_confirmed`, `14` `source_delta_required`).
+  `74` exact official-URL matches plus `1` governed catalog rebound
+  (`R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`) to active canonical
+  source-record IDs, with only `24` unresolved rows remaining
+  (`11` `catalog_confirmed`, `13` `source_delta_required`).
 - Milestone 1 in that packet is now reduced through
   `7dd4fb5` (`Reduce identity reconciliation Milestone 1 source-record mix`):
   the committed
   manifest/readiness pair carries the `74` exact URL-backed rows as canonical
-  source-record IDs and leaves only the explicit unresolved `25`-row legacy
-  blocker set, with governed `identity_reconciliation` metadata on both
-  configs.
+  source-record IDs. The current local Milestone 2 closeout adds the governed
+  Flathead primary-plan rebind to `FINAL-FLAT-001`, so the committed
+  manifest/readiness/profile surfaces now leave only the explicit unresolved
+  `24`-row legacy blocker set, with governed `identity_reconciliation`
+  metadata on the bound configs.
+- `forest-plan-component-retrieval-eval` now passes `6/6` on the refreshed
+  source set after rebinding the shipped eval contract from legacy
+  `R1PLAN-*` component IDs onto the emitted canonical component IDs such as
+  `FOR-009-*`, `FOR-002-*`, and `FINAL-FLAT-001-*`.
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog in
   `source_library/catalog/` remains active source set
@@ -210,10 +212,9 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   `source-set-370896a1043817f2`.
 - The next routed slice is no longer the broader refresh/rebind decision
   itself. The remaining full-canonical work is now explicit:
-  finish the Flathead inventory blocker, update the component-retrieval
-  contract from legacy `R1PLAN-*` component IDs onto the refreshed canonical
-  component identities, and replay the missing claims/rule-claim/graph
-  artifacts on `source-set-370896a1043817f2`.
+  materialize the missing claims/rule-claim surfaces, rerun
+  `nepa-knowledge-graph-export`, and then rerun `promotion-suite` on
+  `source-set-370896a1043817f2`.
 
 Historical broader capture baseline:
 

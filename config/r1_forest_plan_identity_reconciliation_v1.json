@@ -1070,6 +1070,26 @@
       ]
     }
   ],
+  "governed_catalog_rebound_source_record_count": 1,
+  "governed_catalog_rebound_source_records": [
+    {
+      "binding_basis": "existing_source_record_id",
+      "canonical_source_record_id": "FINAL-FLAT-001",
+      "canonical_title": "Flathead National Forest Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_management_plan",
+      "document_title": "2018 Revised Land Management Plan",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-02",
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1801300506566",
+      "referenced_by": [
+        "manifest:primary_land_management_plan",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_management_plan"
+      ]
+    }
+  ],
   "inventory_manifest_path": "config/r1_forest_plan_component_inventory_build_manifest.json",
   "legacy_register_path": "config/r1_forest_plan_document_register_draft.csv",
   "readiness_path": "config/region1_forest_plan_readiness_nepa_3d_v1.json",
@@ -1081,14 +1101,14 @@
     "bitterroot-nf": 3,
     "custer-gallatin-nf": 1,
     "dakota-prairie-grasslands": 1,
-    "flathead-nf": 10,
+    "flathead-nf": 9,
     "helena-lewis-and-clark-nf": 1,
     "idaho-panhandle-nfs": 3,
     "kootenai-nf": 1,
     "lolo-nf": 1,
     "nez-perce-clearwater-nfs": 3
   },
-  "unresolved_source_record_count": 25,
+  "unresolved_source_record_count": 24,
   "unresolved_source_records": [
     {
       "document_role": "planning_page",
@@ -1180,21 +1200,6 @@
         "readiness:planning_page"
       ],
       "resolution_status": "catalog_confirmed"
-    },
-    {
-      "document_role": "primary_land_management_plan",
-      "document_title": "2018 Revised Land Management Plan",
-      "forest_unit_id": "flathead-nf",
-      "legacy_source_record_id": "R1PLAN-flathead-nf-02",
-      "matching_canonical_source_record_ids": [],
-      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1801300506566",
-      "referenced_by": [
-        "manifest:primary_land_management_plan",
-        "primary_plan_source_record_id",
-        "readiness:active_plan_source_record_id",
-        "readiness:primary_land_management_plan"
-      ],
-      "resolution_status": "source_delta_required"
     },
     {
       "document_role": "record_of_decision",
@@ -1420,7 +1425,7 @@
   ],
   "unresolved_status_counts": {
     "catalog_confirmed": 11,
-    "source_delta_required": 14
+    "source_delta_required": 13
   },
   "version": "1.0.0"
 }

@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from difflib import SequenceMatcher
 import hashlib
 from pathlib import Path
 import json
@@ -1768,7 +1769,30 @@ def _overlapping_duplicate_group(group: list[dict]) -> bool:
     if any(not text for text in texts):
         return False
     longest = max(texts, key=len)
-    return all(text == longest or text in longest for text in texts)
+    for text in texts:
+        if text == longest or text in longest:
+            continue
+        matcher = SequenceMatcher(None, text, longest)
+        longest_match_size = matcher.find_longest_match(0, len(text), 0, len(longest)).size
+        if (
+            matcher.ratio() >= 0.9
+            or (text and (longest_match_size / len(text)) >= 0.9)
+            or _token_overlap_ratio(text, longest) >= 0.9
+        ):
+            continue
+        return False
+    return True
+
+
+def _token_overlap_ratio(text: str, longest: str) -> float:
+    text_tokens = TOKEN_RE.findall(text)
+    if not text_tokens:
+        return 0.0
+    longest_counter = Counter(TOKEN_RE.findall(longest))
+    matched_token_count = 0
+    for token, count in Counter(text_tokens).items():
+        matched_token_count += min(count, longest_counter[token])
+    return matched_token_count / len(text_tokens)
 
 
 def _primary_source_chunk_id(item: dict) -> str:

@@ -80,6 +80,7 @@ modules = [
   "authority_currentness",
   "authority_relationship_eval",
   "citation_alias_eval",
+  "forest_plan_identity_reconciliation",
   "forest_plan_source_delta_readiness",
   "graph_accuracy_eval",
   "graph_health_eval",

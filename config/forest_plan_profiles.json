@@ -1373,7 +1373,7 @@
       "ambiguous_unit_terms": [
         "Flathead"
       ],
-      "active_plan_source_record_id": "R1PLAN-flathead-nf-02",
+      "active_plan_source_record_id": "FINAL-FLAT-001",
       "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Flathead National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion, then enriched with district, geographic-area, focused-recreation, overlay, currentness, and supporting-route terms from the active local Flathead plan, ROD, FEIS, monitoring, and ESA support records.",
       "supporting_source_record_ids_by_role": {
         "planning_page": {
@@ -1381,7 +1381,7 @@
           "required_for": "currentness and document-set resolution"
         },
         "primary_land_management_plan": {
-          "source_record_id": "R1PLAN-flathead-nf-02",
+          "source_record_id": "FINAL-FLAT-001",
           "required_for": "plan component and area resolution"
         },
         "record_of_decision": {

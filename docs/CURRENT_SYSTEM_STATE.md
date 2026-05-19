@@ -49,23 +49,23 @@ Latest closeout on 2026-05-19:
   contract with
   `active_source_set_ids=["source-set-370896a1043817f2"]`.
 - `forest-plan-components-build` on the refreshed archived source set now
-  builds `1336` components and `377` standards and leaves only `flathead-nf`
-  blocked by
-  `no_selected_forest_plan_chunks`,
-  `plan_component_labels_not_detected`, and
-  `plan_standard_labels_not_detected`.
-- `forest-plan-component-retrieval-eval` is now truthfully red on the
-  refreshed source set. The remaining failure is no longer broad source-set
-  drift: `flathead-nf` is absent from the validated inventory, and the shipped
-  retrieval contract still expects legacy `R1PLAN-*` component IDs where the
-  refreshed inventory now emits canonical component IDs such as
-  `FOR-009-*` and `FOR-002-*`.
+  passes with `component_count=1416`, `standard_count=397`, and
+  `blocked_forest_unit_ids=[]`.
+- The governed identity registry in
+  `config/r1_forest_plan_identity_reconciliation_v1.json` now records
+  `74` exact official-URL matches, `1` governed catalog rebound
+  (`R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`), and only `24` unresolved
+  rows with
+  `unresolved_status_counts={"catalog_confirmed": 11, "source_delta_required": 13}`.
+- The bound manifest/readiness/profile surfaces now point the Flathead primary
+  plan at `FINAL-FLAT-001`, and `forest-plan-component-retrieval-eval` now
+  passes `6/6` on canonical component IDs including
+  `FINAL-FLAT-001-FW-STD-SOIL-01`.
 - `promotion-suite --manifest config/promotion_suite_v1.json` now points
   `full_canonical_source_set_id=source-set-370896a1043817f2` and reports
-  `full_canonical_corpus_ready=false` with `5/8` required full-canonical
-  results passing. The only remaining full-canonical failure categories are
-  `graph_viewer_export_invalid=2` and
-  `forest_plan_component_coverage_gap=1`.
+  `full_canonical_corpus_ready=false` with `6/8` required full-canonical
+  results passing. The only remaining full-canonical failure category is
+  `graph_viewer_export_invalid=2`.
 - A direct `nepa-knowledge-graph-export --source-set-id source-set-370896a1043817f2`
   replay still fails because
   `source_library/derived/source-set-370896a1043817f2/claims/claims.jsonl`
@@ -73,10 +73,10 @@ Latest closeout on 2026-05-19:
   claims/rule-claim replay for the refreshed archived source set, not on stale
   catalog lineage.
 - Next routing:
-  the broader refresh/rebind decision is complete. The remaining active slice
-  is narrower: resolve the residual `flathead-nf` inventory blocker, update
-  the component-retrieval contract to refreshed canonical component identities,
-  and replay the missing claims/rule-claim/graph artifacts on
+  the broader refresh/rebind decision and the narrowed Flathead/retrieval
+  pass are both complete. The remaining active slice is now the graph-only
+  downstream replay: materialize the missing claims/rule-claim surfaces,
+  rerun `nepa-knowledge-graph-export`, and then rerun `promotion-suite` on
   `source-set-370896a1043817f2`.
 
 ## Source-Register Forest Plan Role Classification Code Closeout

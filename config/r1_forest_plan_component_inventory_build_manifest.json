@@ -208,14 +208,14 @@
     {
       "forest_unit_id": "flathead-nf",
       "source_set_reference_id": "active_full_canonical",
-      "primary_plan_source_record_id": "R1PLAN-flathead-nf-02",
+      "primary_plan_source_record_id": "FINAL-FLAT-001",
       "plan_version": "2018",
       "build_source_record_ids_by_role": {
         "planning_page": [
           "R1PLAN-flathead-nf-01"
         ],
         "primary_land_management_plan": [
-          "R1PLAN-flathead-nf-02"
+          "FINAL-FLAT-001"
         ],
         "record_of_decision": [
           "R1PLAN-flathead-nf-03"
@@ -249,10 +249,9 @@
       "identity_reconciliation": {
         "forest_unit_id": "flathead-nf",
         "status": "unresolved_blockers_present",
-        "remaining_unresolved_source_record_count": 10,
+        "remaining_unresolved_source_record_count": 9,
         "remaining_unresolved_source_record_ids": [
           "R1PLAN-flathead-nf-01",
-          "R1PLAN-flathead-nf-02",
           "R1PLAN-flathead-nf-03",
           "R1PLAN-flathead-nf-04",
           "R1PLAN-flathead-nf-05",
@@ -264,7 +263,7 @@
         ],
         "remaining_unresolved_status_counts": {
           "catalog_confirmed": 1,
-          "source_delta_required": 9
+          "source_delta_required": 8
         }
       }
     },
@@ -539,7 +538,8 @@
     "registry_schema_version": "region1-forest-plan-identity-reconciliation-registry-v1",
     "registry_active_source_set_id": "source-set-9e7d85759951c279",
     "exact_url_rebound_source_record_count": 74,
-    "remaining_unresolved_source_record_count": 25,
+    "governed_catalog_rebound_source_record_count": 1,
+    "remaining_unresolved_source_record_count": 24,
     "remaining_unresolved_source_record_ids": [
       "R1PLAN-beaverhead-deerlodge-nf-01",
       "R1PLAN-bitterroot-nf-01",
@@ -548,7 +548,6 @@
       "R1PLAN-custer-gallatin-nf-01",
       "R1PLAN-dakota-prairie-grasslands-01",
       "R1PLAN-flathead-nf-01",
-      "R1PLAN-flathead-nf-02",
       "R1PLAN-flathead-nf-03",
       "R1PLAN-flathead-nf-04",
       "R1PLAN-flathead-nf-05",
@@ -569,7 +568,7 @@
     ],
     "remaining_unresolved_status_counts": {
       "catalog_confirmed": 11,
-      "source_delta_required": 14
+      "source_delta_required": 13
     }
   }
 }

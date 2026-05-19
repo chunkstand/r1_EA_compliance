@@ -124,10 +124,16 @@ class ForestPlanProfileTests(unittest.TestCase):
         register_rows = _forest_plan_register_rows("flathead-nf")
 
         self.assertEqual(len(register_rows), 17)
+        expected_supporting_source_record_ids = {
+            row["proposed_source_record_id"] for row in register_rows
+        }
+        expected_supporting_source_record_ids.remove("R1PLAN-flathead-nf-02")
+        expected_supporting_source_record_ids.add("FINAL-FLAT-001")
         self.assertEqual(
             {record.source_record_id for record in profile.supporting_source_records},
-            {row["proposed_source_record_id"] for row in register_rows},
+            expected_supporting_source_record_ids,
         )
+        self.assertEqual(profile.active_plan_source_record_id, "FINAL-FLAT-001")
         self.assertEqual(
             {
                 "forest_plan_monitoring_program": "R1PLAN-flathead-nf-08",

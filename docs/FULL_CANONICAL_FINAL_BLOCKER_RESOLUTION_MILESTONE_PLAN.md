@@ -1,7 +1,7 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Reduced 2026-05-19 through `933c667`; blocked on canonical-vs-legacy forest-plan identity reconciliation and superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+Status: Reduced 2026-05-19 through `933c667`; superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`, which now owns the graph-only residual after the Flathead/retrieval closeout
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
@@ -67,26 +67,29 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   full-canonical classifier-refresh replay on
   `source-set-370896a1043817f2`.
   `source_library/derived/source-set-370896a1043817f2/forest_plan_components/summary.json`
-  now records `passed=false`, `component_count=1336`, `standard_count=377`, and only
-  `flathead-nf` blocked.
+  now records `passed=true`, `component_count=1416`, and `standard_count=397`.
 - The blocker is now explicit: the active canonical catalog and chunk store
   contain `0` `R1PLAN-*` rows, while
   `config/r1_forest_plan_component_inventory_build_manifest.json` plus
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`
-  now reduce that identity mix to `74` canonical source-record IDs plus the
-  explicit unresolved `25`-row legacy blocker set preserved in
+  now reduce that identity mix to `74` exact canonical source-record IDs plus
+  `1` governed catalog rebound and the explicit unresolved `24`-row legacy
+  blocker set preserved in
   `config/r1_forest_plan_identity_reconciliation_v1.json`
-  (`11` `catalog_confirmed`, `14` `source_delta_required`).
+  (`11` `catalog_confirmed`, `13` `source_delta_required`).
+- `config/forest_plan_component_retrieval_eval_v1.json` is now rebound to the
+  emitted canonical component IDs, and
+  `forest-plan-component-retrieval-eval` now passes `6/6` on
+  `source-set-370896a1043817f2`.
 - The exact remaining failed required full-canonical slots are now narrower on refreshed archived
-  source set `source-set-370896a1043817f2`: the two missing
-  `knowledge_graph/nepa_3d_graph_*` artifacts and the still-red
-  `forest_plan_component_retrieval_eval_results.json`.
+  source set `source-set-370896a1043817f2`: only the two missing
+  `knowledge_graph/nepa_3d_graph_*` artifacts remain.
 - The durable routing set is now aligned across `README.md`,
   `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`: the broader
   refresh/rebind decision is complete, the refreshed archived full-canonical
-  contract is `source-set-370896a1043817f2`, and the next work is the narrower
-  Flathead/component-retrieval/graph residual rather than a broad identity-only
-  or source-set-refresh packet.
+  contract is `source-set-370896a1043817f2`, and the next work is the
+  graph-only residual rather than a broad identity-only, Flathead, or
+  source-set-refresh packet.
 - This packet is no longer the active implementation surface after the reduced
   Milestone 3 closeout. The active follow-on packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,

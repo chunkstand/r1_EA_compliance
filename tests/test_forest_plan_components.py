@@ -1228,6 +1228,59 @@ class ForestPlanComponentInventoryBuilderTests(unittest.TestCase):
                 ["mgmt-crazy-mountains-bca"],
             )
 
+    def test_overlapping_chunk_duplicates_merge_despite_footer_and_ocr_noise(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "FINAL-FLAT-001"
+            first_chunk = _chunk(
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                text=(
+                    "Plan Components-Forestwide Direction.\n"
+                    "Guidelines (FW-GDL-SOIL) 01 Ground-based equipment for vegetation "
+                    "management should only operate on slopes less than 40 percent to protect "
+                    "soil quality."
+                ),
+            )
+            overlap_chunk = {
+                **_chunk(
+                    source_set_id=source_set_id,
+                    source_record_id=source_record_id,
+                    text=(
+                        "Plan Components-Forestwide Direction.\n"
+                        "Guidelines (FW-GDL-SOIL) 01 Ground- based equipment for vegetation "
+                        "management should only operate on slopes less than 40 percent to protect "
+                        "soil quality. Flathead National Forest Land Management Plan 24 "
+                        "Chapter 2. Forestwide Direction"
+                    ),
+                ),
+                "chunk_id": f"chunk:{source_record_id}:overlap-noisy",
+                "chunk_index": 1,
+            }
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[first_chunk, overlap_chunk],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="flathead-nf",
+                plan_version="2018",
+                chunks_path=chunks_path,
+            )
+
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertEqual(result.summary["component_count"], 1)
+            self.assertEqual(coverage["duplicate_component_ids"], [])
+            self.assertEqual(coverage["duplicate_standard_ids"], [])
+            self.assertEqual(coverage["detected_component_count"], 1)
+            failed_checks = {check["name"] for check in coverage["checks"] if not check["passed"]}
+            self.assertNotIn("built_component_ids_are_unique", failed_checks)
+
     def test_failing_build_coverage_blocks_generated_inventory_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

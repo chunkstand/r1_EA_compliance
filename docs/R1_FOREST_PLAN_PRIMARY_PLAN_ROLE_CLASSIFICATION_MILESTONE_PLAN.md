@@ -2,7 +2,7 @@
 
 Date: 2026-05-19
 
-Status: Resolved in practice and committed code; archived full-canonical refresh now proves `source-set-370896a1043817f2`
+Status: Resolved in practice and committed code; archived full-canonical refresh now proves `source-set-370896a1043817f2`, and the former Flathead inventory follow-on is now closed
 
 Owner context: This is a catalog/classification milestone for the Region 1 forest-plan lane. It is
 not a parser-expansion milestone, readiness-promotion milestone, or viewer milestone. Its only job
@@ -37,9 +37,12 @@ the forest-plan branch even after the older supplemental-register fix.
   and `FOR-033`.
 - A reuse-first extraction refresh on that archived gate now re-materializes the full-canonical
   chunk surface with `extracted_count=634`, `reused_count=634`, and `chunk_count=98155`.
-- `forest-plan-components-build` on `source-set-370896a1043817f2` now builds `1336` components and
-  `377` standards and leaves only `flathead-nf` blocked. The earlier five-forest role starvation
-  boundary is gone.
+- `forest-plan-components-build` on `source-set-370896a1043817f2` now passes with
+  `1416` components and `397` standards. The earlier five-forest role
+  starvation boundary and the later Flathead-only residual are both gone.
+- `forest-plan-component-retrieval-eval` now also passes `6/6` on that
+  archived full-canonical contract, confirming the role fix no longer leaves a
+  hidden primary-plan identity gap downstream.
 - Focused verification now passes on the current canonical lane:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py -q`
   (`19/19`) and
@@ -114,7 +117,7 @@ catalog promotion step, not part of this classifier milestone.
   [config/r1_forest_plan_component_inventory_build_manifest.json](/Users/chunkstand/projects/usfs-r1-EA-sources/config/r1_forest_plan_component_inventory_build_manifest.json)
   declares these primary plan source IDs:
   - `dakota-prairie-grasslands` -> `R1PLAN-dakota-prairie-grasslands-03`
-  - `flathead-nf` -> `R1PLAN-flathead-nf-02`
+- `flathead-nf` -> `FINAL-FLAT-001`
   - `kootenai-nf` -> `R1PLAN-kootenai-nf-02`
   - `lolo-nf` -> `R1PLAN-lolo-nf-02`
   - `nez-perce-clearwater-nfs` -> `R1PLAN-nez-perce-clearwater-nfs-06`
@@ -469,10 +472,10 @@ full-canonical proof that those plan bodies now enter the inventory builder corr
 
 After this milestone, the next lane should be:
 
-- resolve the residual `flathead-nf` inventory blocker on
+- materialize the missing claims/rule-claim surfaces on
   `source-set-370896a1043817f2`;
-- then update the component-retrieval and graph/claims lanes to the refreshed canonical component
-  identities on that archived full-canonical source set.
+- rerun `nepa-knowledge-graph-export` and then `promotion-suite` on that
+  archived full-canonical source set.
 
 ## Closeout Checklist
 

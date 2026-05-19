@@ -68,9 +68,9 @@ def test_build_identity_reconciliation_registry_with_exact_and_unresolved_rows()
         legacy_register_path.write_text(
             "\n".join(
                 [
-                    "proposed_source_record_id,forest_unit_id,document_role,document_title,official_link,draft_status,required_for",
-                    "R1PLAN-unit-one-01,unit-one,planning_page,Planning page,https://example.com/planning,catalog_confirmed,Planning page",
-                    "R1PLAN-unit-one-02,unit-one,primary_land_management_plan,Plan PDF,https://example.com/plan.pdf,catalog_confirmed,Plan PDF",
+                    "proposed_source_record_id,forest_unit_id,document_role,document_title,official_link,existing_source_record_id,draft_status,required_for",
+                    "R1PLAN-unit-one-01,unit-one,planning_page,Planning page,https://example.com/planning,,catalog_confirmed,Planning page",
+                    "R1PLAN-unit-one-02,unit-one,primary_land_management_plan,Plan PDF,https://example.com/plan.pdf,,catalog_confirmed,Plan PDF",
                 ]
             )
             + "\n",
@@ -106,6 +106,7 @@ def test_build_identity_reconciliation_registry_with_exact_and_unresolved_rows()
         assert registry["active_source_set_id"] == "source-set-test"
         assert registry["referenced_legacy_source_record_count"] == 2
         assert registry["exact_url_matched_source_record_count"] == 1
+        assert registry["governed_catalog_rebound_source_record_count"] == 0
         assert registry["unresolved_source_record_count"] == 1
         assert registry["exact_url_matched_source_records"] == [
             {
@@ -142,6 +143,106 @@ def test_build_identity_reconciliation_registry_with_exact_and_unresolved_rows()
         ]
 
 
+def test_build_identity_reconciliation_registry_honors_governed_existing_source_record_id() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        inventory_manifest_path = tmp_path / "inventory_manifest.json"
+        readiness_path = tmp_path / "readiness.json"
+        legacy_register_path = tmp_path / "legacy_register.csv"
+        source_catalog_path = tmp_path / "source_catalog.jsonl"
+        source_set_manifest_path = tmp_path / "source_set_manifest.json"
+
+        _write_json(
+            inventory_manifest_path,
+            {
+                "profile_rows": [
+                    {
+                        "forest_unit_id": "unit-one",
+                        "primary_plan_source_record_id": "R1PLAN-unit-one-02",
+                        "build_source_record_ids_by_role": {
+                            "primary_land_management_plan": ["R1PLAN-unit-one-02"],
+                        },
+                    }
+                ]
+            },
+        )
+        _write_json(
+            readiness_path,
+            {
+                "profile_rows": [
+                    {
+                        "forest_unit_id": "unit-one",
+                        "active_plan_source_record_id": "R1PLAN-unit-one-02",
+                        "source_requirements": [
+                            {
+                                "role": "primary_land_management_plan",
+                                "source_record_id": "R1PLAN-unit-one-02",
+                            },
+                        ],
+                    }
+                ]
+            },
+        )
+        legacy_register_path.write_text(
+            "\n".join(
+                [
+                    "proposed_source_record_id,forest_unit_id,document_role,document_title,official_link,existing_source_record_id,draft_status,required_for",
+                    "R1PLAN-unit-one-02,unit-one,primary_land_management_plan,Plan PDF,https://legacy.example.com/plan.pdf,FOR-002,source_delta_required,Plan PDF",
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        source_catalog_path.write_text(
+            "\n".join(
+                [
+                    json.dumps(
+                        {
+                            "source_record_id": "FOR-002",
+                            "title": "Canonical plan PDF",
+                            "source_partition": "active_review_corpus",
+                            "effective_url": "https://canonical.example.com/plan.pdf",
+                        }
+                    )
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        _write_json(source_set_manifest_path, {"source_set_id": "source-set-test"})
+
+        registry = build_region1_forest_plan_identity_reconciliation_registry(
+            inventory_manifest_path=inventory_manifest_path,
+            readiness_path=readiness_path,
+            legacy_register_path=legacy_register_path,
+            source_catalog_path=source_catalog_path,
+            source_set_manifest_path=source_set_manifest_path,
+        )
+
+        assert registry["exact_url_matched_source_record_count"] == 0
+        assert registry["governed_catalog_rebound_source_record_count"] == 1
+        assert registry["unresolved_source_record_count"] == 0
+        assert registry["governed_catalog_rebound_source_records"] == [
+            {
+                "legacy_source_record_id": "R1PLAN-unit-one-02",
+                "canonical_source_record_id": "FOR-002",
+                "forest_unit_id": "unit-one",
+                "document_role": "primary_land_management_plan",
+                "document_title": "Plan PDF",
+                "official_link": "https://legacy.example.com/plan.pdf",
+                "canonical_title": "Canonical plan PDF",
+                "catalog_source_partition": "active_review_corpus",
+                "binding_basis": "existing_source_record_id",
+                "referenced_by": [
+                    "manifest:primary_land_management_plan",
+                    "primary_plan_source_record_id",
+                    "readiness:active_plan_source_record_id",
+                    "readiness:primary_land_management_plan",
+                ],
+            }
+        ]
+
+
 def test_committed_registry_tracks_current_identity_gap() -> None:
     registry = _read_json(COMMITTED_REGISTRY)
 
@@ -149,26 +250,32 @@ def test_committed_registry_tracks_current_identity_gap() -> None:
     assert registry["active_source_set_id"] == "source-set-9e7d85759951c279"
     assert registry["referenced_legacy_source_record_count"] == 99
     assert registry["exact_url_matched_source_record_count"] == 74
-    assert registry["unresolved_source_record_count"] == 25
+    assert registry["governed_catalog_rebound_source_record_count"] == 1
+    assert registry["unresolved_source_record_count"] == 24
     assert registry["unresolved_status_counts"] == {
         "catalog_confirmed": 11,
-        "source_delta_required": 14,
+        "source_delta_required": 13,
     }
 
     mapping = {
         row["legacy_source_record_id"]: row["canonical_source_record_id"]
         for row in registry["exact_url_matched_source_records"]
     }
+    governed_mapping = {
+        row["legacy_source_record_id"]: row["canonical_source_record_id"]
+        for row in registry["governed_catalog_rebound_source_records"]
+    }
     assert mapping["R1PLAN-beaverhead-deerlodge-nf-02"] == "FOR-002"
     assert mapping["R1PLAN-custer-gallatin-nf-02"] == "FOR-009"
     assert mapping["R1PLAN-lolo-nf-02"] == "FPS-298"
     assert mapping["R1PLAN-nez-perce-clearwater-nfs-06"] == "FPS-347"
+    assert governed_mapping["R1PLAN-flathead-nf-02"] == "FINAL-FLAT-001"
 
     unresolved = {
         row["legacy_source_record_id"]: row["resolution_status"]
         for row in registry["unresolved_source_records"]
     }
-    assert unresolved["R1PLAN-flathead-nf-02"] == "source_delta_required"
+    assert "R1PLAN-flathead-nf-02" not in unresolved
     assert unresolved["R1PLAN-custer-gallatin-nf-01"] == "catalog_confirmed"
     assert unresolved["R1PLAN-nez-perce-clearwater-nfs-04"] == "source_delta_required"
 
@@ -183,6 +290,9 @@ def test_committed_registry_still_covers_every_live_manifest_and_readiness_sourc
     ) | collect_readiness_source_record_ids(readiness)
     registry_ids = {
         row["canonical_source_record_id"] for row in registry["exact_url_matched_source_records"]
+    } | {
+        row["canonical_source_record_id"]
+        for row in registry["governed_catalog_rebound_source_records"]
     } | {row["legacy_source_record_id"] for row in registry["unresolved_source_records"]}
 
     assert registry_ids == referenced_ids
@@ -272,6 +382,7 @@ def test_rebind_manifest_and_readiness_preserve_only_unresolved_legacy_source_re
             "registry_schema_version": FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION,
             "registry_active_source_set_id": "source-set-test",
             "exact_url_rebound_source_record_count": 1,
+            "governed_catalog_rebound_source_record_count": 0,
             "remaining_unresolved_source_record_count": 1,
             "remaining_unresolved_source_record_ids": ["R1PLAN-unit-one-01"],
             "remaining_unresolved_status_counts": {"catalog_confirmed": 1},
@@ -294,6 +405,7 @@ def test_rebind_manifest_and_readiness_preserve_only_unresolved_legacy_source_re
             "registry_schema_version": FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION,
             "registry_active_source_set_id": "source-set-test",
             "exact_url_rebound_source_record_count": 1,
+            "governed_catalog_rebound_source_record_count": 0,
             "remaining_unresolved_source_record_count": 1,
             "remaining_unresolved_source_record_ids": ["R1PLAN-unit-one-01"],
             "remaining_unresolved_status_counts": {"catalog_confirmed": 1},
@@ -306,6 +418,9 @@ def test_committed_manifest_and_readiness_reduce_identity_mix_to_canonical_plus_
     readiness = _read_json(COMMITTED_READINESS)
     expected_source_record_ids = {
         row["canonical_source_record_id"] for row in registry["exact_url_matched_source_records"]
+    } | {
+        row["canonical_source_record_id"]
+        for row in registry["governed_catalog_rebound_source_records"]
     } | {row["legacy_source_record_id"] for row in registry["unresolved_source_records"]}
     unresolved_source_record_ids = {
         row["legacy_source_record_id"] for row in registry["unresolved_source_records"]
@@ -321,11 +436,12 @@ def test_committed_manifest_and_readiness_reduce_identity_mix_to_canonical_plus_
         "registry_schema_version": FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION,
         "registry_active_source_set_id": "source-set-9e7d85759951c279",
         "exact_url_rebound_source_record_count": 74,
-        "remaining_unresolved_source_record_count": 25,
+        "governed_catalog_rebound_source_record_count": 1,
+        "remaining_unresolved_source_record_count": 24,
         "remaining_unresolved_source_record_ids": sorted(unresolved_source_record_ids),
         "remaining_unresolved_status_counts": {
             "catalog_confirmed": 11,
-            "source_delta_required": 14,
+            "source_delta_required": 13,
         },
     }
     assert readiness["identity_reconciliation"] == manifest["identity_reconciliation"]
@@ -357,10 +473,9 @@ def test_committed_manifest_and_readiness_share_same_per_profile_unresolved_bloc
     assert manifest_rows["flathead-nf"]["identity_reconciliation"] == {
         "forest_unit_id": "flathead-nf",
         "status": "unresolved_blockers_present",
-        "remaining_unresolved_source_record_count": 10,
+        "remaining_unresolved_source_record_count": 9,
         "remaining_unresolved_source_record_ids": [
-            "R1PLAN-flathead-nf-01",
-            "R1PLAN-flathead-nf-02",
+          "R1PLAN-flathead-nf-01",
             "R1PLAN-flathead-nf-03",
             "R1PLAN-flathead-nf-04",
             "R1PLAN-flathead-nf-05",
@@ -372,7 +487,7 @@ def test_committed_manifest_and_readiness_share_same_per_profile_unresolved_bloc
         ],
         "remaining_unresolved_status_counts": {
             "catalog_confirmed": 1,
-            "source_delta_required": 9,
+            "source_delta_required": 8,
         },
     }
     assert manifest_rows["custer-gallatin-nf"]["identity_reconciliation"] == {
@@ -397,6 +512,7 @@ def _registry_payload() -> dict:
         "schema_version": FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION,
         "active_source_set_id": "source-set-test",
         "exact_url_matched_source_record_count": 1,
+        "governed_catalog_rebound_source_record_count": 0,
         "unresolved_source_record_count": 1,
         "unresolved_status_counts": {"catalog_confirmed": 1},
         "exact_url_matched_source_records": [
@@ -405,6 +521,7 @@ def _registry_payload() -> dict:
                 "canonical_source_record_id": "FOR-002",
             }
         ],
+        "governed_catalog_rebound_source_records": [],
         "unresolved_source_records": [
             {
                 "legacy_source_record_id": "R1PLAN-unit-one-01",

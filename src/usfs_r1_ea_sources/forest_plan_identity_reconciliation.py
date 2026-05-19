@@ -36,11 +36,20 @@ def build_region1_forest_plan_identity_reconciliation_registry(
     inventory_manifest = _read_json(inventory_manifest_path)
     readiness = _read_json(readiness_path)
     source_set_manifest = _read_json(source_set_manifest_path)
-    referenced_by = _collect_referenced_legacy_source_records(inventory_manifest, readiness)
     legacy_rows = _load_legacy_register(legacy_register_path)
     catalog_by_url = _index_catalog_urls(source_catalog_path)
+    catalog_by_source_record_id = _index_catalog_source_record_ids(source_catalog_path)
+    referenced_by = _resolve_referenced_legacy_source_records(
+        referenced_by_current_source_record_id=_collect_referenced_legacy_source_records(
+            inventory_manifest,
+            readiness,
+        ),
+        legacy_rows=legacy_rows,
+        catalog_by_source_record_id=catalog_by_source_record_id,
+    )
 
     exact_url_matched_source_records: list[dict[str, Any]] = []
+    governed_catalog_rebound_source_records: list[dict[str, Any]] = []
     unresolved_source_records: list[dict[str, Any]] = []
     missing_legacy_source_record_ids: list[str] = []
 
@@ -68,6 +77,25 @@ def build_region1_forest_plan_identity_reconciliation_registry(
                     "canonical_source_record_id": catalog_row["source_record_id"],
                     "canonical_title": catalog_row.get("title", ""),
                     "catalog_source_partition": catalog_row.get("source_partition"),
+                }
+            )
+            continue
+
+        existing_source_record_id = legacy_row.get("existing_source_record_id", "").strip()
+        if existing_source_record_id and not existing_source_record_id.startswith("R1PLAN-"):
+            catalog_row = catalog_by_source_record_id.get(existing_source_record_id)
+            if catalog_row is None:
+                raise ValueError(
+                    "Legacy forest-plan register existing_source_record_id is not present in the "
+                    f"active catalog: {legacy_source_record_id} -> {existing_source_record_id}"
+                )
+            governed_catalog_rebound_source_records.append(
+                {
+                    **base_entry,
+                    "canonical_source_record_id": existing_source_record_id,
+                    "canonical_title": catalog_row.get("title", ""),
+                    "catalog_source_partition": catalog_row.get("source_partition"),
+                    "binding_basis": "existing_source_record_id",
                 }
             )
             continue
@@ -113,6 +141,7 @@ def build_region1_forest_plan_identity_reconciliation_registry(
         "source_catalog_path": _repo_relative(source_catalog_path),
         "referenced_legacy_source_record_count": len(referenced_by),
         "exact_url_matched_source_record_count": len(exact_url_matched_source_records),
+        "governed_catalog_rebound_source_record_count": len(governed_catalog_rebound_source_records),
         "unresolved_source_record_count": len(unresolved_source_records),
         "blocked_forest_unit_ids": [
             row["forest_unit_id"] for row in inventory_manifest["profile_rows"]
@@ -120,6 +149,7 @@ def build_region1_forest_plan_identity_reconciliation_registry(
         "unresolved_status_counts": dict(sorted(unresolved_status_counts.items())),
         "unresolved_forest_unit_counts": dict(sorted(unresolved_forest_unit_counts.items())),
         "exact_url_matched_source_records": exact_url_matched_source_records,
+        "governed_catalog_rebound_source_records": governed_catalog_rebound_source_records,
         "unresolved_source_records": unresolved_source_records,
     }
 
@@ -316,6 +346,17 @@ def _index_catalog_urls(source_catalog_path: Path) -> dict[str, list[dict[str, A
     return catalog_by_url
 
 
+def _index_catalog_source_record_ids(source_catalog_path: Path) -> dict[str, dict[str, Any]]:
+    catalog_by_source_record_id: dict[str, dict[str, Any]] = {}
+    with source_catalog_path.open(encoding="utf-8") as handle:
+        for line in handle:
+            catalog_row = json.loads(line)
+            source_record_id = str(catalog_row.get("source_record_id") or "").strip()
+            if source_record_id:
+                catalog_by_source_record_id[source_record_id] = catalog_row
+    return catalog_by_source_record_id
+
+
 def _load_legacy_register(legacy_register_path: Path) -> dict[str, dict[str, str]]:
     with legacy_register_path.open(newline="", encoding="utf-8") as handle:
         return {
@@ -323,6 +364,74 @@ def _load_legacy_register(legacy_register_path: Path) -> dict[str, dict[str, str
             for row in csv.DictReader(handle)
             if row.get("proposed_source_record_id")
         }
+
+
+def _resolve_referenced_legacy_source_records(
+    *,
+    referenced_by_current_source_record_id: dict[str, set[str]],
+    legacy_rows: dict[str, dict[str, str]],
+    catalog_by_source_record_id: dict[str, dict[str, Any]],
+) -> dict[str, set[str]]:
+    referenced_by: dict[str, set[str]] = defaultdict(set)
+    unresolved_current_source_record_ids: list[str] = []
+
+    for current_source_record_id, references in referenced_by_current_source_record_id.items():
+        if current_source_record_id in legacy_rows:
+            referenced_by[current_source_record_id].update(references)
+            continue
+
+        catalog_row = catalog_by_source_record_id.get(current_source_record_id)
+        if catalog_row is None:
+            unresolved_current_source_record_ids.append(current_source_record_id)
+            continue
+
+        candidate_legacy_source_record_ids = sorted(
+            legacy_source_record_id
+            for legacy_source_record_id, legacy_row in legacy_rows.items()
+            if (
+                legacy_row.get("existing_source_record_id", "").strip() == current_source_record_id
+                or legacy_row.get("official_link", "").strip()
+                in _catalog_row_urls(catalog_row)
+            )
+        )
+        if not candidate_legacy_source_record_ids:
+            unresolved_current_source_record_ids.append(current_source_record_id)
+            continue
+        if len(candidate_legacy_source_record_ids) > 1:
+            referenced_roles = {
+                reference.split(":", 1)[1]
+                for reference in references
+                if ":" in reference
+            }
+            role_matched_candidate_legacy_source_record_ids = [
+                legacy_source_record_id
+                for legacy_source_record_id in candidate_legacy_source_record_ids
+                if legacy_rows[legacy_source_record_id].get("document_role", "").strip()
+                in referenced_roles
+            ]
+            if len(role_matched_candidate_legacy_source_record_ids) == 1:
+                candidate_legacy_source_record_ids = role_matched_candidate_legacy_source_record_ids
+        if len(candidate_legacy_source_record_ids) > 1:
+            raise ValueError(
+                "Current canonical forest-plan source_record_id resolves to multiple legacy rows: "
+                f"{current_source_record_id} -> {', '.join(candidate_legacy_source_record_ids)}"
+            )
+        referenced_by[candidate_legacy_source_record_ids[0]].update(references)
+
+    if unresolved_current_source_record_ids:
+        raise ValueError(
+            "Unable to resolve current forest-plan source_record_id values back to legacy register "
+            "rows: " + ", ".join(sorted(unresolved_current_source_record_ids))
+        )
+    return referenced_by
+
+
+def _catalog_row_urls(catalog_row: dict[str, Any]) -> set[str]:
+    return {
+        str(catalog_row.get(field) or "").strip()
+        for field in ("source_url", "effective_url", "resolved_url")
+        if str(catalog_row.get(field) or "").strip()
+    }
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -336,22 +445,27 @@ def _registry_indexes(
         row["legacy_source_record_id"]: row["canonical_source_record_id"]
         for row in registry["exact_url_matched_source_records"]
     }
+    governed_matches = {
+        row["legacy_source_record_id"]: row["canonical_source_record_id"]
+        for row in registry.get("governed_catalog_rebound_source_records", [])
+    }
     unresolved_source_records = {
         row["legacy_source_record_id"]: row for row in registry["unresolved_source_records"]
     }
-    overlapping_ids = sorted(set(exact_matches) & set(unresolved_source_records))
+    resolved_matches = {**exact_matches, **governed_matches}
+    overlapping_ids = sorted(set(resolved_matches) & set(unresolved_source_records))
     if overlapping_ids:
         raise ValueError(
-            "Identity reconciliation registry has overlapping exact and unresolved source_record_ids: "
+            "Identity reconciliation registry has overlapping resolved and unresolved source_record_ids: "
             + ", ".join(overlapping_ids)
         )
-    canonical_source_record_ids = set(exact_matches.values())
-    if len(canonical_source_record_ids) != len(exact_matches):
+    canonical_source_record_ids = set(resolved_matches.values())
+    if len(canonical_source_record_ids) != len(resolved_matches):
         raise ValueError(
-            "Identity reconciliation registry must map each exact legacy source_record_id to a unique "
+            "Identity reconciliation registry must map each resolved legacy source_record_id to a unique "
             "canonical source_record_id."
         )
-    return exact_matches, unresolved_source_records, canonical_source_record_ids
+    return resolved_matches, unresolved_source_records, canonical_source_record_ids
 
 
 def _rebind_source_record_id(
@@ -412,6 +526,10 @@ def _config_identity_reconciliation_metadata(
         "registry_schema_version": registry["schema_version"],
         "registry_active_source_set_id": registry["active_source_set_id"],
         "exact_url_rebound_source_record_count": registry["exact_url_matched_source_record_count"],
+        "governed_catalog_rebound_source_record_count": registry.get(
+            "governed_catalog_rebound_source_record_count",
+            0,
+        ),
         "remaining_unresolved_source_record_count": len(remaining_unresolved_source_record_ids),
         "remaining_unresolved_source_record_ids": remaining_unresolved_source_record_ids,
         "remaining_unresolved_status_counts": dict(registry["unresolved_status_counts"]),

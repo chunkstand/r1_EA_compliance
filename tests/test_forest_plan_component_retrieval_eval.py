@@ -12,6 +12,8 @@ from usfs_r1_ea_sources.forest_plan_component_retrieval_eval import (
 )
 
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+COMMITTED_MANIFEST = REPO_ROOT / "config" / "forest_plan_component_retrieval_eval_v1.json"
 SOURCE_SET_ID = "source-set-test-component-retrieval"
 
 
@@ -122,6 +124,21 @@ def test_component_retrieval_eval_fails_when_hard_negative_returns_components() 
         assert case["passed"] is False
         assert "hard_negative_query_returned_components" in case["failure_reasons"]
         assert result.summary["metrics"]["hard_negative_zero_match_rate"] < 1.0
+
+
+def test_committed_manifest_uses_canonical_component_ids() -> None:
+    manifest = json.loads(COMMITTED_MANIFEST.read_text(encoding="utf-8"))
+    expected_component_ids = [
+        component_id
+        for case in manifest["cases"]
+        for component_id in case.get("expected_component_ids", [])
+    ]
+
+    assert "FOR-009-FW-STD-SOIL-01" in expected_component_ids
+    assert "FOR-009-FW-GO-AQ-01" in expected_component_ids
+    assert "FINAL-FLAT-001-FW-STD-SOIL-01" in expected_component_ids
+    assert "FOR-002-COMMERCIAL-TIMBER-HARVEST-PROHIBITED-STD-11" in expected_component_ids
+    assert not any(component_id.startswith("R1PLAN-") for component_id in expected_component_ids)
 
 
 def _base_manifest() -> dict:

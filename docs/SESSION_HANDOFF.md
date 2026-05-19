@@ -5,6 +5,49 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Forest-Plan Identity Reconciliation Milestone 2 Closeout
+
+This implementation slice closes the narrowed Flathead inventory and
+component-retrieval blocker inside the active identity-reconciliation packet.
+
+- outcome label:
+  `resolved` for Milestone 2; packet remains active for graph-only Milestone 3
+- governed Flathead rebind:
+  `config/r1_forest_plan_document_register_draft.csv` now preserves
+  `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001` through
+  `existing_source_record_id`, and the committed registry now records
+  `74` exact official-URL matches, `1` governed catalog rebound, and `24`
+  unresolved rows with
+  `unresolved_status_counts={"catalog_confirmed": 11, "source_delta_required": 13}`
+- bound contract surfaces:
+  `config/r1_forest_plan_identity_reconciliation_v1.json`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `config/forest_plan_profiles.json`, and
+  `config/forest_plan_component_retrieval_eval_v1.json`
+  now align on `FINAL-FLAT-001` as the Flathead primary plan
+- refreshed runtime evidence:
+  `forest-plan-components-build --source-set-id source-set-370896a1043817f2`
+  now passes with `component_count=1416`, `standard_count=397`, and
+  `blocked_forest_unit_ids=[]`; the Flathead profile validates
+  `component_count=80` and `standard_count=20`
+- retrieval contract truth:
+  `forest-plan-component-retrieval-eval` now passes `6/6` with
+  `failure_category_counts={}`; the Flathead exact-soil case retrieves
+  `FINAL-FLAT-001-FW-STD-SOIL-01`
+- promotion-suite truth:
+  fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
+  now reports `full_canonical_corpus_ready=false` with `6/8` required
+  full-canonical results passing and only
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`
+- next routing:
+  stay on
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+  and run the graph-only downstream replay on
+  `source-set-370896a1043817f2`: materialize the missing claims/rule-claim
+  surfaces, rerun `nepa-knowledge-graph-export`, and then rerun
+  `promotion-suite`
+
 ## Full Canonical Archived Forest-Plan Source-Set Refresh/Rebind
 
 This implementation slice closes the broader full-canonical source-set

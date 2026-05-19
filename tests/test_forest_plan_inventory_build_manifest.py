@@ -40,6 +40,10 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
             row["legacy_source_record_id"]: row["canonical_source_record_id"]
             for row in registry["exact_url_matched_source_records"]
         }
+        governed_matches = {
+            row["legacy_source_record_id"]: row["canonical_source_record_id"]
+            for row in registry["governed_catalog_rebound_source_records"]
+        }
 
         self.assertEqual(
             manifest.schema_version,
@@ -73,6 +77,12 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
             "R1PLAN-nez-perce-clearwater-nfs-02",
             nez_perce.source_record_ids,
         )
+        flathead = manifest.get("flathead-nf")
+        self.assertEqual(
+            flathead.primary_plan_source_record_id,
+            governed_matches["R1PLAN-flathead-nf-02"],
+        )
+        self.assertIn("R1PLAN-flathead-nf-10", flathead.source_record_ids)
 
     def test_rejects_missing_readiness_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

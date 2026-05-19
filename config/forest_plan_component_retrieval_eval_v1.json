@@ -67,7 +67,7 @@
       "query": "new management activities shall not create detrimental soil conditions on more than 15 percent of an activity area",
       "expected_forest_unit_id": "custer-gallatin-nf",
       "expected_component_ids": [
-        "R1PLAN-custer-gallatin-nf-02-FW-STD-SOIL-01"
+        "FOR-009-FW-STD-SOIL-01"
       ],
       "applicable_standard_case": true
     },
@@ -78,7 +78,7 @@
       "query": "the custer gallatin national forest cooperates with tribal federal and state agencies to meet air quality regulations as necessary",
       "expected_forest_unit_id": "custer-gallatin-nf",
       "expected_component_ids": [
-        "R1PLAN-custer-gallatin-nf-02-FW-GO-AQ-01"
+        "FOR-009-FW-GO-AQ-01"
       ],
       "applicable_standard_case": false
     },
@@ -89,7 +89,7 @@
       "query": "vegetation management activities do not create detrimental soil conditions on more than 15 percent of an activity area",
       "expected_forest_unit_id": "flathead-nf",
       "expected_component_ids": [
-        "R1PLAN-flathead-nf-02-FW-STD-SOIL-01"
+        "FINAL-FLAT-001-FW-STD-SOIL-01"
       ],
       "applicable_standard_case": true
     },
@@ -100,7 +100,7 @@
       "query": "commercial timber harvest is prohibited in recommended wilderness",
       "expected_forest_unit_id": "beaverhead-deerlodge-nf",
       "expected_component_ids": [
-        "R1PLAN-beaverhead-deerlodge-nf-02-COMMERCIAL-TIMBER-HARVEST-PROHIBITED-STD-11"
+        "FOR-002-COMMERCIAL-TIMBER-HARVEST-PROHIBITED-STD-11"
       ],
       "applicable_standard_case": true
     },
