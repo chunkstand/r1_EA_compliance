@@ -5,6 +5,50 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Forest Plan Identity Reconciliation Milestone 0 Closeout
+
+This implementation slice turns the reduced Milestone 3 forest-plan blocker
+into a governed active packet with a committed reconciliation registry instead
+of leaving the issue as a handoff-only note.
+
+- routed plan:
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+- packet routing:
+  this new packet is now the active implementation surface for the blocked
+  forest-plan lane. The older
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+  packet is now reduced historical context after its stop at `933c667`.
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py`,
+  `tests/test_forest_plan_identity_reconciliation.py`, and
+  `config/r1_forest_plan_identity_reconciliation_v1.json`
+  now govern the legacy-to-canonical identity census for the active
+  full-canonical forest-plan lane.
+- registry truth:
+  the committed registry records
+  `active_source_set_id=source-set-9e7d85759951c279`,
+  `referenced_legacy_source_record_count=99`,
+  `exact_url_matched_source_record_count=74`,
+  `unresolved_source_record_count=25`,
+  `unresolved_status_counts={"catalog_confirmed": 11, "source_delta_required": 14}`.
+- blocker interpretation:
+  `74` legacy source-record IDs now have a governed exact official-URL match
+  to an active canonical source-record ID. The remaining `25` rows stay
+  explicit unresolved data; they are not silently dropped or guessed from
+  title similarity.
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py -q`
+  and
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py tests/test_forest_plan_identity_reconciliation.py`
+  are the new packet’s gate-first verification surface.
+- next routing:
+  Milestone 1 only. Rebind
+  `config/r1_forest_plan_component_inventory_build_manifest.json` and
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`
+  from mixed legacy `R1PLAN-*` source-record IDs onto the `74` exact
+  URL-backed canonical source-record IDs, while preserving the unresolved `25`
+  rows as explicit blockers.
+
 ## Full Canonical Final Blocker Milestone 3 Reduced Contract-Rebind Closeout
 
 This reduced implementation slice advanced the active full-canonical contract

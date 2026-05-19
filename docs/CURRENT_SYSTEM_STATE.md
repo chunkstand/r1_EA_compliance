@@ -11,7 +11,7 @@ deterministic EA package review commands, and it now contains preserved legacy
 baseline artifacts, the active full-register canonical import, and
 reviewer-ready downstream lanes.
 
-Routing note: the newest full-canonical final-blocker closeout,
+Routing note: the newest forest-plan identity-reconciliation closeout, full-canonical final-blocker closeout,
 downstream-freshness reduced closeout, import-completion closeout,
 operational-recovery, and gold-coverage sections below supersede older
 historical lane notes when they disagree. In particular,
@@ -20,6 +20,37 @@ older references below that still treat `source-set-5e65d845ce77e1a0`,
 `source-set-ae989382c52344db` as the active local import catalog are
 historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes.
+
+## Full Canonical Forest Plan Identity Reconciliation Milestone 0 Closeout
+
+Latest closeout on 2026-05-19:
+
+- Routed implementation packet:
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
+- This packet is now the active implementation surface for the blocked
+  forest-plan lane. The older
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+  packet is now reduced historical context after its Milestone 3 stop at
+  `933c667`.
+- Milestone 0 in the new packet is now resolved in the current checkout
+  through `config/r1_forest_plan_identity_reconciliation_v1.json` and the new
+  generator/test surface in
+  `src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py` plus
+  `tests/test_forest_plan_identity_reconciliation.py`.
+- The committed registry records the live identity census against active source
+  set `source-set-9e7d85759951c279`:
+  `referenced_legacy_source_record_count=99`,
+  `exact_url_matched_source_record_count=74`,
+  `unresolved_source_record_count=25`,
+  `unresolved_status_counts={"catalog_confirmed": 11, "source_delta_required": 14}`.
+- The `74` exact URL-backed bindings are the governed canonical source-record
+  IDs available for the next manifest/readiness rebind slice. The unresolved
+  `25` rows remain explicit blocker data rather than hidden manifest debt.
+- Focused verification for the new packet now passes on the new registry/test
+  surface. The next routed slice is Milestone 1 only: rebind the
+  inventory/readiness source-record IDs from legacy `R1PLAN-*` values onto the
+  `74` exact URL-backed canonical source-record IDs while preserving the
+  unresolved `25` as explicit blockers.
 
 ## Full Canonical Final Blocker Milestone 3 Reduced Closeout
 

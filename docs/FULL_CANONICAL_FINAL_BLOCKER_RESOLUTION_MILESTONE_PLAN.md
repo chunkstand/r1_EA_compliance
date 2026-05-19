@@ -1,7 +1,7 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestones 0-2 resolved 2026-05-19 through `4660d11`; Milestone 3 reduced 2026-05-19 through `933c667` and blocked on canonical-vs-legacy forest-plan identity reconciliation
+Status: Reduced 2026-05-19 through `933c667`; blocked on canonical-vs-legacy forest-plan identity reconciliation and superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
@@ -90,6 +90,9 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   `source-set-9e7d85759951c279`, and the immediate next work is a dedicated
   canonical-vs-legacy forest-plan identity reconciliation packet before the
   four downstream reruns above can be completed truthfully.
+- This packet is no longer the active implementation surface after the reduced
+  Milestone 3 closeout. The active follow-on packet is now
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
 
 ## Goal
 

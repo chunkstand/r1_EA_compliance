@@ -1,0 +1,1426 @@
+{
+  "active_source_set_id": "source-set-9e7d85759951c279",
+  "blocked_forest_unit_ids": [
+    "custer-gallatin-nf",
+    "beaverhead-deerlodge-nf",
+    "bitterroot-nf",
+    "dakota-prairie-grasslands",
+    "flathead-nf",
+    "helena-lewis-and-clark-nf",
+    "idaho-panhandle-nfs",
+    "kootenai-nf",
+    "lolo-nf",
+    "nez-perce-clearwater-nfs"
+  ],
+  "contract_id": "region1-forest-plan-identity-reconciliation",
+  "exact_url_matched_source_record_count": 74,
+  "exact_url_matched_source_records": [
+    {
+      "canonical_source_record_id": "FOR-002",
+      "canonical_title": "2009 Forest Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_management_plan",
+      "document_title": "2009 Beaverhead-Deerlodge Forest Plan PDF",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-02",
+      "official_link": "https://www.fs.usda.gov/media/228236",
+      "referenced_by": [
+        "manifest:primary_land_management_plan",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_management_plan"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-023",
+      "canonical_title": "Corrected Final Environmental Impact Statement",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement",
+      "document_title": "Corrected FEIS",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-03",
+      "official_link": "https://www.fs.usda.gov/media/43836",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement",
+        "readiness:final_environmental_impact_statement"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-024",
+      "canonical_title": "ROD 1 - Record of Decision 2009",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "record_of_decision",
+      "document_title": "ROD 1",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-04",
+      "official_link": "https://www.fs.usda.gov/media/44253",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-025",
+      "canonical_title": "ROD 2 - Record of Decision Enacting Forest Travel Plan Management Direction",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "record_of_decision",
+      "document_title": "ROD 2",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-05",
+      "official_link": "https://www.fs.usda.gov/media/44270",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-038",
+      "canonical_title": "2021 BDNF Forest Plan Canada Lynx Biological Assessment",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_assessment",
+      "document_title": "2021 BDNF Forest Plan Canada Lynx Biological Assessment",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-18",
+      "official_link": "https://www.fs.usda.gov/media/43852",
+      "referenced_by": [
+        "manifest:biological_assessment",
+        "readiness:biological_assessment"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-039",
+      "canonical_title": "2021 BDNF Forest Plan Canada Lynx Biological Opinion",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion",
+      "document_title": "2021 BDNF Forest Plan Canada Lynx Biological Opinion",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-19",
+      "official_link": "https://www.fs.usda.gov/media/44298",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-040",
+      "canonical_title": "2025 BDNF Forest Plan Grizzly Bear Assessment",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_assessment",
+      "document_title": "2025 BDNF Forest Plan Grizzly Bear Assessment",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-22",
+      "official_link": "https://www.fs.usda.gov/media/266950",
+      "referenced_by": [
+        "manifest:biological_assessment",
+        "readiness:biological_assessment"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-041",
+      "canonical_title": "2025 BDNF Forest Plan Grizzly Bear Opinion",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion",
+      "document_title": "2025 BDNF Forest Plan Grizzly Bear Opinion",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-23",
+      "official_link": "https://www.fs.usda.gov/media/266962",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-042",
+      "canonical_title": "2012 BDNF Forest Plan Biological Assessment",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_assessment",
+      "document_title": "2012 BDNF Forest Plan Biological Assessment",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-24",
+      "official_link": "https://www.fs.usda.gov/media/44146",
+      "referenced_by": [
+        "manifest:biological_assessment",
+        "readiness:biological_assessment"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-043",
+      "canonical_title": "2013 BDNF Forest Plan Grizzly Bear Biological Opinion",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion",
+      "document_title": "2013 BDNF Forest Plan Grizzly Bear Biological Opinion",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-25",
+      "official_link": "https://www.fs.usda.gov/media/44220",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FOR-005",
+      "canonical_title": "1987 Forest Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_management_plan",
+      "document_title": "1987 Bitterroot Forest Plan PDF",
+      "forest_unit_id": "bitterroot-nf",
+      "legacy_source_record_id": "R1PLAN-bitterroot-nf-02",
+      "official_link": "https://www.fs.usda.gov/media/44858",
+      "referenced_by": [
+        "manifest:primary_land_management_plan",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_management_plan"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FOR-006",
+      "canonical_title": "Forest Plan Amendments",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "forest_plan_amendments",
+      "document_title": "Bitterroot Forest Plan Amendments 1-40",
+      "forest_unit_id": "bitterroot-nf",
+      "legacy_source_record_id": "R1PLAN-bitterroot-nf-03",
+      "official_link": "https://www.fs.usda.gov/media/238203",
+      "referenced_by": [
+        "manifest:forest_plan_amendments",
+        "readiness:forest_plan_amendments"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-056",
+      "canonical_title": "Final Environmental Impact Statement - Volume I",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_volume_1",
+      "document_title": "FEIS Volume I",
+      "forest_unit_id": "bitterroot-nf",
+      "legacy_source_record_id": "R1PLAN-bitterroot-nf-04",
+      "official_link": "https://www.fs.usda.gov/media/238202",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_volume_1",
+        "readiness:final_environmental_impact_statement_volume_1"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-057",
+      "canonical_title": "Final Environmental Impact Statement - Volume II",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_volume_2",
+      "document_title": "FEIS Volume II",
+      "forest_unit_id": "bitterroot-nf",
+      "legacy_source_record_id": "R1PLAN-bitterroot-nf-05",
+      "official_link": "https://www.fs.usda.gov/media/44854",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_volume_2",
+        "readiness:final_environmental_impact_statement_volume_2"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-058",
+      "canonical_title": "Forest Plan Record of Decision",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "record_of_decision",
+      "document_title": "Record of Decision",
+      "forest_unit_id": "bitterroot-nf",
+      "legacy_source_record_id": "R1PLAN-bitterroot-nf-06",
+      "official_link": "https://www.fs.usda.gov/media/44958",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FOR-009",
+      "canonical_title": "Custer Gallatin Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_management_plan",
+      "document_title": "2022 Custer Gallatin Land Management Plan PDF",
+      "forest_unit_id": "custer-gallatin-nf",
+      "legacy_source_record_id": "R1PLAN-custer-gallatin-nf-02",
+      "official_link": "https://www.fs.usda.gov/media/51590",
+      "referenced_by": [
+        "manifest:primary_land_management_plan",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_management_plan"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FOR-010",
+      "canonical_title": "Custer Gallatin Record of Decision",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "record_of_decision",
+      "document_title": "Custer Gallatin Land Management Plan Record of Decision PDF",
+      "forest_unit_id": "custer-gallatin-nf",
+      "legacy_source_record_id": "R1PLAN-custer-gallatin-nf-03",
+      "official_link": "https://www.fs.usda.gov/media/51931",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-068",
+      "canonical_title": "FEIS Volume 1 - Purpose and Need, Alternatives, Affected Environment and Environmental Consequences",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_volume_1",
+      "document_title": "Custer Gallatin Land Management Plan Final Environmental Impact Statement Volume 1 PDF",
+      "forest_unit_id": "custer-gallatin-nf",
+      "legacy_source_record_id": "R1PLAN-custer-gallatin-nf-04",
+      "official_link": "https://www.fs.usda.gov/media/51188",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_volume_1",
+        "readiness:final_environmental_impact_statement_volume_1"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-069",
+      "canonical_title": "FEIS Volume 2 - Affected Environment Continued and Other Disclosures",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_volume_2",
+      "document_title": "Custer Gallatin Land Management Plan Final Environmental Impact Statement Volume 2 PDF",
+      "forest_unit_id": "custer-gallatin-nf",
+      "legacy_source_record_id": "R1PLAN-custer-gallatin-nf-05",
+      "official_link": "https://www.fs.usda.gov/media/51354",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_volume_2",
+        "readiness:final_environmental_impact_statement_volume_2"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-074",
+      "canonical_title": "Biological Assessment for Custer Gallatin Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_assessment",
+      "document_title": "Custer Gallatin LMP Biological Assessment - Threatened, Endangered, Proposed, and Candidate Species PDF",
+      "forest_unit_id": "custer-gallatin-nf",
+      "legacy_source_record_id": "R1PLAN-custer-gallatin-nf-06",
+      "official_link": "https://www.fs.usda.gov/media/51397",
+      "referenced_by": [
+        "manifest:biological_assessment",
+        "readiness:biological_assessment"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-073",
+      "canonical_title": "Biological Opinion for Custer Gallatin Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion",
+      "document_title": "Custer Gallatin LMP Biological Opinion PDF",
+      "forest_unit_id": "custer-gallatin-nf",
+      "legacy_source_record_id": "R1PLAN-custer-gallatin-nf-07",
+      "official_link": "https://www.fs.usda.gov/media/51509",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ]
+    },
+    {
+      "canonical_source_record_id": "R1-001",
+      "canonical_title": "Northern Region planning",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "region1_cross_check",
+      "document_title": "Region 1 planning landing page cross-check for Dakota Prairie / all units",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-02",
+      "official_link": "https://www.fs.usda.gov/r01/planning",
+      "referenced_by": [
+        "manifest:region1_cross_check",
+        "readiness:region1_cross_check"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-130",
+      "canonical_title": "Title Page",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_resource_management_plan_part",
+      "document_title": "Title Page",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-03",
+      "official_link": "https://www.fs.usda.gov/media/62318",
+      "referenced_by": [
+        "manifest:primary_land_resource_management_plan_part",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_resource_management_plan_part"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-131",
+      "canonical_title": "Preface",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_resource_management_plan_part",
+      "document_title": "Preface",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-04",
+      "official_link": "https://www.fs.usda.gov/media/62263",
+      "referenced_by": [
+        "manifest:primary_land_resource_management_plan_part",
+        "readiness:primary_land_resource_management_plan_part"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-132",
+      "canonical_title": "Chapter 1 - Grassland-Wide Direction",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_resource_management_plan_part",
+      "document_title": "Chapter 1 - Grassland-Wide Direction",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-05",
+      "official_link": "https://www.fs.usda.gov/media/238440",
+      "referenced_by": [
+        "manifest:primary_land_resource_management_plan_part",
+        "readiness:primary_land_resource_management_plan_part"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-133",
+      "canonical_title": "Chapter 2 - Geographic Area Direction",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_resource_management_plan_part",
+      "document_title": "Chapter 2 - Geographic Area Direction",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-06",
+      "official_link": "https://www.fs.usda.gov/media/238437",
+      "referenced_by": [
+        "manifest:primary_land_resource_management_plan_part",
+        "readiness:primary_land_resource_management_plan_part"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-134",
+      "canonical_title": "Chapter 3 - Management Area Direction",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_resource_management_plan_part",
+      "document_title": "Chapter 3 - Management Area Direction",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-07",
+      "official_link": "https://www.fs.usda.gov/media/238436",
+      "referenced_by": [
+        "manifest:primary_land_resource_management_plan_part",
+        "readiness:primary_land_resource_management_plan_part"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-166",
+      "canonical_title": "Final EIS - Northern Great Plains Management Plan Revision",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement",
+      "document_title": "Final Environmental Impact Statement for Northern Great Plains Management Plans Revision May 2001",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-10",
+      "official_link": "https://www.fs.usda.gov/media/246390",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement",
+        "readiness:final_environmental_impact_statement"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-167",
+      "canonical_title": "Final EIS Appendices - Northern Great Plains Management Plan Revision",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_appendices",
+      "document_title": "Appendices - Final Environmental Impact Statement Northern Great Plains Management",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-11",
+      "official_link": "https://www.fs.usda.gov/media/246391",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_appendices",
+        "readiness:final_environmental_impact_statement_appendices"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-168",
+      "canonical_title": "Dakota Prairie Final EIS Record of Decision",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement",
+      "document_title": "Dakota Prairie Grasslands Final Environmental Impact Statement July 2002",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-12",
+      "official_link": "https://www.fs.usda.gov/media/238475",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement",
+        "readiness:final_environmental_impact_statement"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-173",
+      "canonical_title": "Record of Decision - Oil and Gas Leasing",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "record_of_decision",
+      "document_title": "Record of Decision for Oil and Gas Leasing 2020",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-15",
+      "official_link": "https://www.fs.usda.gov/media/238481",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-165",
+      "canonical_title": "Elkhorn Ranchlands Administrative Change",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "administrative_change",
+      "document_title": "20240801 - DPG - Elkhorn Ranchlands - Planning Admin Change",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-16",
+      "official_link": "https://www.fs.usda.gov/media/62112",
+      "referenced_by": [
+        "manifest:administrative_change",
+        "readiness:administrative_change"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FOR-018",
+      "canonical_title": "2021 Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_management_plan",
+      "document_title": "2021 Land Management Plan PDF",
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "legacy_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-02",
+      "official_link": "https://www.fs.usda.gov/media/214540",
+      "referenced_by": [
+        "manifest:primary_land_management_plan",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_management_plan"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-192",
+      "canonical_title": "Forest Plan Record of Decision",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "record_of_decision",
+      "document_title": "Forest Plan Record of Decision",
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "legacy_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-03",
+      "official_link": "https://www.fs.usda.gov/media/244829",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-209",
+      "canonical_title": "FEIS Volume 1 - Chapter 1, Chapter 2, first half of Chapter 3, resource index/literature",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_volume_1",
+      "document_title": "FEIS Volume 1",
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "legacy_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-05",
+      "official_link": "https://www.fs.usda.gov/media/214247",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_volume_1",
+        "readiness:final_environmental_impact_statement_volume_1"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-210",
+      "canonical_title": "FEIS Volume 2 - second half of Chapter 3, glossary, preparers, appendices",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_volume_2",
+      "document_title": "FEIS Volume 2",
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "legacy_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-06",
+      "official_link": "https://www.fs.usda.gov/media/214248",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_volume_2",
+        "readiness:final_environmental_impact_statement_volume_2"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-219",
+      "canonical_title": "Revised Biological Assessment for Grizzly Bears",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_assessment",
+      "document_title": "Revised Biological Assessment for Grizzly Bears",
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "legacy_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-12",
+      "official_link": "https://www.fs.usda.gov/media/241070",
+      "referenced_by": [
+        "manifest:biological_assessment",
+        "readiness:biological_assessment"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-220",
+      "canonical_title": "Biological Opinion on Effects of 2021 Forest Plan on Grizzly Bears",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion",
+      "document_title": "Biological Opinion on the Effects of the 2021 Forest Plan on Grizzly Bears",
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "legacy_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-13",
+      "official_link": "https://www.fs.usda.gov/media/241069",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FOR-021",
+      "canonical_title": "2015 Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_management_plan",
+      "document_title": "2015 Idaho Panhandle Land Management Plan PDF",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-02",
+      "official_link": "https://www.fs.usda.gov/media/229751",
+      "referenced_by": [
+        "manifest:primary_land_management_plan",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_management_plan"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-223",
+      "canonical_title": "Final Record of Decision",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "record_of_decision",
+      "document_title": "Final Record of Decision",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-03",
+      "official_link": "https://www.fs.usda.gov/media/229750",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-238",
+      "canonical_title": "2020 BO addressing effects of IPNF Forest Plan on Grizzly Bear",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion",
+      "document_title": "BO addressing the Effects of the IPNF Forest Plan on the Grizzly Bear, August 13, 2020",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-11",
+      "official_link": "https://www.fs.usda.gov/media/229947",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-240",
+      "canonical_title": "2022 amended BO addressing IPNF LMP on Grizzly Bear",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion",
+      "document_title": "BO addressing the IPNF Land and Resource Management Plan on the Grizzly Bear",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-12",
+      "official_link": "https://www.fs.usda.gov/media/229956",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-256",
+      "canonical_title": "Forest Plan BORZ Administrative Change",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "administrative_change",
+      "document_title": "Forest Plan BORZ Administrative Change",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-16",
+      "official_link": "https://www.fs.usda.gov/media/230012",
+      "referenced_by": [
+        "manifest:administrative_change",
+        "readiness:administrative_change"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-257",
+      "canonical_title": "Administrative Change to Forest Plan standard FW-STD-TBR-04",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "administrative_change",
+      "document_title": "Administrative Change to Forest Plan standard FW-STD-TBR-04",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-17",
+      "official_link": "https://www.fs.usda.gov/media/230013",
+      "referenced_by": [
+        "manifest:administrative_change",
+        "readiness:administrative_change"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-232",
+      "canonical_title": "BO Chapter 1",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion_chapter",
+      "document_title": "Biological Opinion Chapter 1",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-18",
+      "official_link": "https://www.fs.usda.gov/media/229768",
+      "referenced_by": [
+        "manifest:biological_opinion_chapter",
+        "readiness:biological_opinion_chapter"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-233",
+      "canonical_title": "BO Chapter 2 - Grizzly Bear",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion_chapter",
+      "document_title": "Biological Opinion Chapter 2 - Grizzly Bear",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-19",
+      "official_link": "https://www.fs.usda.gov/media/229769",
+      "referenced_by": [
+        "manifest:biological_opinion_chapter",
+        "readiness:biological_opinion_chapter"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-234",
+      "canonical_title": "BO Chapter 3 - Lynx",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion_chapter",
+      "document_title": "Biological Opinion Chapter 3 - Lynx",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-20",
+      "official_link": "https://www.fs.usda.gov/media/229772",
+      "referenced_by": [
+        "manifest:biological_opinion_chapter",
+        "readiness:biological_opinion_chapter"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-235",
+      "canonical_title": "BO Chapter 4 - Aquatics",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion_chapter",
+      "document_title": "Biological Opinion Chapter 4 - Aquatics",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-21",
+      "official_link": "https://www.fs.usda.gov/media/229775",
+      "referenced_by": [
+        "manifest:biological_opinion_chapter",
+        "readiness:biological_opinion_chapter"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-236",
+      "canonical_title": "BO Chapter 5 - Caribou",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion_chapter",
+      "document_title": "Biological Opinion Chapter 5 - Caribou",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-22",
+      "official_link": "https://www.fs.usda.gov/media/229808",
+      "referenced_by": [
+        "manifest:biological_opinion_chapter",
+        "readiness:biological_opinion_chapter"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-267",
+      "canonical_title": "2015 Kootenai Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_management_plan",
+      "document_title": "2015 Forest Plan",
+      "forest_unit_id": "kootenai-nf",
+      "legacy_source_record_id": "R1PLAN-kootenai-nf-02",
+      "official_link": "https://www.fs.usda.gov/media/54624",
+      "referenced_by": [
+        "manifest:primary_land_management_plan",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_management_plan"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FOR-024",
+      "canonical_title": "2015 Forest Plan Record of Decision",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "record_of_decision",
+      "document_title": "Record of Decision",
+      "forest_unit_id": "kootenai-nf",
+      "legacy_source_record_id": "R1PLAN-kootenai-nf-03",
+      "official_link": "https://www.fs.usda.gov/media/55408",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FINAL-KOOT-001",
+      "canonical_title": "Kootenai 2015 Forest Plan Final Environmental Impact Statement",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement",
+      "document_title": "Final EIS",
+      "forest_unit_id": "kootenai-nf",
+      "legacy_source_record_id": "R1PLAN-kootenai-nf-04",
+      "official_link": "https://www.fs.usda.gov/media/54529",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement",
+        "readiness:final_environmental_impact_statement"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FINAL-KOOT-002",
+      "canonical_title": "Kootenai 2015 Forest Plan Final EIS Appendices",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_appendices",
+      "document_title": "Final EIS Appendices",
+      "forest_unit_id": "kootenai-nf",
+      "legacy_source_record_id": "R1PLAN-kootenai-nf-05",
+      "official_link": "https://www.fs.usda.gov/media/54477",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_appendices",
+        "readiness:final_environmental_impact_statement_appendices"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FINAL-KOOT-011",
+      "canonical_title": "Forest Plan Winter Range Administrative Change",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "administrative_change",
+      "document_title": "Forest Plan Winter Range Admin Change",
+      "forest_unit_id": "kootenai-nf",
+      "legacy_source_record_id": "R1PLAN-kootenai-nf-13",
+      "official_link": "https://www.fs.usda.gov/media/55143",
+      "referenced_by": [
+        "manifest:administrative_change",
+        "readiness:administrative_change"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-281",
+      "canonical_title": "BO Chapter 1",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion_chapter",
+      "document_title": "Revised Forest Plan Biological Opinion - Chapter 1",
+      "forest_unit_id": "kootenai-nf",
+      "legacy_source_record_id": "R1PLAN-kootenai-nf-14",
+      "official_link": "https://www.fs.usda.gov/media/55208",
+      "referenced_by": [
+        "manifest:biological_opinion_chapter",
+        "readiness:biological_opinion_chapter"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-282",
+      "canonical_title": "BO Chapter 2 - Grizzly Bear",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion_chapter",
+      "document_title": "Revised Forest Plan Biological Opinion - Chapter 2 Grizzly Bear",
+      "forest_unit_id": "kootenai-nf",
+      "legacy_source_record_id": "R1PLAN-kootenai-nf-15",
+      "official_link": "https://www.fs.usda.gov/media/54974",
+      "referenced_by": [
+        "manifest:biological_opinion_chapter",
+        "readiness:biological_opinion_chapter"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-283",
+      "canonical_title": "BO Chapter 3 - Lynx",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion_chapter",
+      "document_title": "Revised Forest Plan Biological Opinion - Chapter 3 Lynx",
+      "forest_unit_id": "kootenai-nf",
+      "legacy_source_record_id": "R1PLAN-kootenai-nf-16",
+      "official_link": "https://www.fs.usda.gov/media/55087",
+      "referenced_by": [
+        "manifest:biological_opinion_chapter",
+        "readiness:biological_opinion_chapter"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-284",
+      "canonical_title": "BO Chapter 4 - Aquatics",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion_chapter",
+      "document_title": "Revised Forest Plan Biological Opinion - Chapter 4 Aquatics",
+      "forest_unit_id": "kootenai-nf",
+      "legacy_source_record_id": "R1PLAN-kootenai-nf-17",
+      "official_link": "https://www.fs.usda.gov/media/55037",
+      "referenced_by": [
+        "manifest:biological_opinion_chapter",
+        "readiness:biological_opinion_chapter"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-298",
+      "canonical_title": "1986 Lolo National Forest Plan",
+      "catalog_source_partition": "currentness_supersession_archive",
+      "document_role": "primary_land_management_plan",
+      "document_title": "1986 Forest Plan and Appendices",
+      "forest_unit_id": "lolo-nf",
+      "legacy_source_record_id": "R1PLAN-lolo-nf-02",
+      "official_link": "https://www.fs.usda.gov/media/229490",
+      "referenced_by": [
+        "manifest:primary_land_management_plan",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_management_plan"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-300",
+      "canonical_title": "1986 Lolo Forest Plan Record of Decision",
+      "catalog_source_partition": "currentness_supersession_archive",
+      "document_role": "record_of_decision",
+      "document_title": "Record of Decision",
+      "forest_unit_id": "lolo-nf",
+      "legacy_source_record_id": "R1PLAN-lolo-nf-03",
+      "official_link": "https://www.fs.usda.gov/media/229489",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-299",
+      "canonical_title": "1986 Lolo Forest Plan Final EIS",
+      "catalog_source_partition": "currentness_supersession_archive",
+      "document_role": "final_environmental_impact_statement",
+      "document_title": "Final Environmental Impact Statement",
+      "forest_unit_id": "lolo-nf",
+      "legacy_source_record_id": "R1PLAN-lolo-nf-04",
+      "official_link": "https://www.fs.usda.gov/media/229492",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement",
+        "readiness:final_environmental_impact_statement"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-418",
+      "canonical_title": "Lolo 1986 Forest Plan EIS Appendices",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_appendices",
+      "document_title": "Environmental Impact Statement Appendices",
+      "forest_unit_id": "lolo-nf",
+      "legacy_source_record_id": "R1PLAN-lolo-nf-05",
+      "official_link": "https://www.fs.usda.gov/media/229491",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_appendices",
+        "readiness:final_environmental_impact_statement_appendices"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-419",
+      "canonical_title": "Lolo 1986 Forest Plan Biological Assessment",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_assessment",
+      "document_title": "Biological Assessment",
+      "forest_unit_id": "lolo-nf",
+      "legacy_source_record_id": "R1PLAN-lolo-nf-06",
+      "official_link": "https://www.fs.usda.gov/media/229497",
+      "referenced_by": [
+        "manifest:biological_assessment",
+        "readiness:biological_assessment"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-342",
+      "canonical_title": "2023 Lolo National Forest Plan Biological Opinion for Grizzly Bear",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion",
+      "document_title": "Biological Opinion",
+      "forest_unit_id": "lolo-nf",
+      "legacy_source_record_id": "R1PLAN-lolo-nf-07",
+      "official_link": "https://www.fs.usda.gov/media/229496",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-421",
+      "canonical_title": "Lolo 2023 Forest Plan Administrative Change",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "administrative_change",
+      "document_title": "Management Area Allocation to Acquired Lands - Administrative Change to the 1986 Lolo National Forest Plan",
+      "forest_unit_id": "lolo-nf",
+      "legacy_source_record_id": "R1PLAN-lolo-nf-09",
+      "official_link": "https://www.fs.usda.gov/media/229510",
+      "referenced_by": [
+        "manifest:administrative_change",
+        "readiness:administrative_change"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FOR-032",
+      "canonical_title": "Final Record of Decision",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "record_of_decision",
+      "document_title": "Final Record of Decision",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-03",
+      "official_link": "https://www.fs.usda.gov/media/59197",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FOR-033",
+      "canonical_title": "Administrative Change to Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "administrative_changes",
+      "document_title": "Administrative Changes to the 2025 Land Management Plan and Appendices August 11, 2025",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-05",
+      "official_link": "https://www.fs.usda.gov/media/253587",
+      "referenced_by": [
+        "manifest:administrative_changes",
+        "readiness:administrative_changes"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-347",
+      "canonical_title": "2025 Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "primary_land_management_plan",
+      "document_title": "Land Management Plan",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06",
+      "official_link": "https://www.fs.usda.gov/media/253588",
+      "referenced_by": [
+        "manifest:primary_land_management_plan",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_management_plan"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-365",
+      "canonical_title": "Biological Assessment",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_assessment",
+      "document_title": "Biological Assessment",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-10",
+      "official_link": "https://www.fs.usda.gov/media/202430",
+      "referenced_by": [
+        "manifest:biological_assessment",
+        "readiness:biological_assessment"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-366",
+      "canonical_title": "November 21, 2024 Supplement to the Biological Assessment",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_assessment_supplement",
+      "document_title": "November 21, 2024 Supplement to the Biological Assessment",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-11",
+      "official_link": "https://www.fs.usda.gov/media/58591",
+      "referenced_by": [
+        "manifest:biological_assessment_supplement",
+        "readiness:biological_assessment_supplement"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FOR-031",
+      "canonical_title": "Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion",
+      "document_title": "Biological Opinion - National Marine Fisheries Service",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-12",
+      "official_link": "https://www.fs.usda.gov/media/59422",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-368",
+      "canonical_title": "Biological Opinion - U.S. Fish and Wildlife Service",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "biological_opinion",
+      "document_title": "Biological Opinion - US Fish and Wildlife Service",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-13",
+      "official_link": "https://www.fs.usda.gov/media/58456",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-372",
+      "canonical_title": "Final Environmental Impact Statement",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement",
+      "document_title": "Final Environmental Impact Statement",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-15",
+      "official_link": "https://www.fs.usda.gov/media/203282",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement",
+        "readiness:final_environmental_impact_statement"
+      ]
+    },
+    {
+      "canonical_source_record_id": "FPS-373",
+      "canonical_title": "FEIS Appendices",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_appendices",
+      "document_title": "FEIS Appendices",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-16",
+      "official_link": "https://www.fs.usda.gov/media/203306",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_appendices",
+        "readiness:final_environmental_impact_statement_appendices"
+      ]
+    }
+  ],
+  "inventory_manifest_path": "config/r1_forest_plan_component_inventory_build_manifest.json",
+  "legacy_register_path": "config/r1_forest_plan_document_register_draft.csv",
+  "readiness_path": "config/region1_forest_plan_readiness_nepa_3d_v1.json",
+  "referenced_legacy_source_record_count": 99,
+  "schema_version": "region1-forest-plan-identity-reconciliation-registry-v1",
+  "source_catalog_path": "source_library/catalog/source_catalog.jsonl",
+  "unresolved_forest_unit_counts": {
+    "beaverhead-deerlodge-nf": 1,
+    "bitterroot-nf": 3,
+    "custer-gallatin-nf": 1,
+    "dakota-prairie-grasslands": 1,
+    "flathead-nf": 10,
+    "helena-lewis-and-clark-nf": 1,
+    "idaho-panhandle-nfs": 3,
+    "kootenai-nf": 1,
+    "lolo-nf": 1,
+    "nez-perce-clearwater-nfs": 3
+  },
+  "unresolved_source_record_count": 25,
+  "unresolved_source_records": [
+    {
+      "document_role": "planning_page",
+      "document_title": "Beaverhead-Deerlodge planning page",
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-01",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/beaverhead-deerlodge/planning",
+      "referenced_by": [
+        "manifest:planning_page",
+        "readiness:planning_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "planning_page",
+      "document_title": "Bitterroot planning page",
+      "forest_unit_id": "bitterroot-nf",
+      "legacy_source_record_id": "R1PLAN-bitterroot-nf-01",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/bitterroot/planning",
+      "referenced_by": [
+        "manifest:planning_page",
+        "readiness:planning_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "biological_assessment",
+      "document_title": "Biological Assessment for Grizzly Bear Re-consultation for the Bitterroot Forest Plan, Travel Management Plan, and Forest Plan Elk Amendment",
+      "forest_unit_id": "bitterroot-nf",
+      "legacy_source_record_id": "R1PLAN-bitterroot-nf-12",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/v/PinyonPublic/file/1195817909001",
+      "referenced_by": [
+        "manifest:biological_assessment",
+        "readiness:biological_assessment"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "biological_opinion",
+      "document_title": "Biological Opinion for Bitterroot Forest Plan Amendment - Grizzly Bears",
+      "forest_unit_id": "bitterroot-nf",
+      "legacy_source_record_id": "R1PLAN-bitterroot-nf-13",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/v/PinyonPublic/file/1195801545932",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "planning_page",
+      "document_title": "Custer Gallatin land management plan page",
+      "forest_unit_id": "custer-gallatin-nf",
+      "legacy_source_record_id": "R1PLAN-custer-gallatin-nf-01",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/custergallatin/planning/forest-plan/custer-gallatin-land-management-plan-forest-plan-revision",
+      "referenced_by": [
+        "manifest:planning_page",
+        "readiness:planning_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "planning_page",
+      "document_title": "Dakota Prairie Grasslands natural resources / LRMP page",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-01",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/dpg/natural-resources",
+      "referenced_by": [
+        "manifest:planning_page",
+        "readiness:planning_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "planning_page",
+      "document_title": "Flathead Forest Plan page",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-01",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/flathead/planning/forest-plan",
+      "referenced_by": [
+        "manifest:planning_page",
+        "readiness:planning_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "primary_land_management_plan",
+      "document_title": "2018 Revised Land Management Plan",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-02",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1801300506566",
+      "referenced_by": [
+        "manifest:primary_land_management_plan",
+        "primary_plan_source_record_id",
+        "readiness:active_plan_source_record_id",
+        "readiness:primary_land_management_plan"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "record_of_decision",
+      "document_title": "2018 Forest Plan Record of Decision",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-03",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1783379015826",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "final_environmental_impact_statement_volume_1_part_1",
+      "document_title": "Final EIS Volume 1 Part 1",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-04",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1783379437777",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_volume_1_part_1",
+        "readiness:final_environmental_impact_statement_volume_1_part_1"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "final_environmental_impact_statement_appendices",
+      "document_title": "Final EIS Volume 4 Appendices and Glossary excluding maps",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-05",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1783381004516",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_appendices",
+        "readiness:final_environmental_impact_statement_appendices"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "biological_assessment",
+      "document_title": "Biological Assessment for the Flathead National Forest Plan",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-06",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1800368595604",
+      "referenced_by": [
+        "manifest:biological_assessment",
+        "readiness:biological_assessment"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "biological_opinion",
+      "document_title": "Biological Opinion on the Revised Forest Plan",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-07",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1800359764158",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "administrative_change",
+      "document_title": "Administrative Change to the 2018 Revised Land Management Plan",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-10",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1801293632560",
+      "referenced_by": [
+        "manifest:administrative_change",
+        "readiness:administrative_change"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "final_environmental_impact_statement_volume_2",
+      "document_title": "Final EIS Volume 2 Response to Comments",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-12",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1783391599116",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_volume_2",
+        "readiness:final_environmental_impact_statement_volume_2"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "biological_opinion",
+      "document_title": "Revised Programmatic Biological Opinion on the Flathead National Forest Land Management Plan",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-16",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1783396592662",
+      "referenced_by": [
+        "manifest:biological_opinion",
+        "readiness:biological_opinion"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "planning_page",
+      "document_title": "2021 Forest Plan, Final EIS and ROD page",
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "legacy_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-01",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/helena-lewisclark/natural-resources/forest-management/2021-forest-plan-final-eis-and-record-0",
+      "referenced_by": [
+        "manifest:planning_page",
+        "readiness:planning_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "planning_page",
+      "document_title": "Idaho Panhandle planning page",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-01",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/idahopanhandle/planning",
+      "referenced_by": [
+        "manifest:planning_page",
+        "readiness:planning_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "final_environmental_impact_statement",
+      "document_title": "Final EIS 2013",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-04",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/media/229752",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement",
+        "readiness:final_environmental_impact_statement"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "final_environmental_impact_statement_appendices",
+      "document_title": "Final EIS Appendices 2013",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-05",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/media/229754",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_appendices",
+        "readiness:final_environmental_impact_statement_appendices"
+      ],
+      "resolution_status": "source_delta_required"
+    },
+    {
+      "document_role": "planning_page",
+      "document_title": "Kootenai planning page",
+      "forest_unit_id": "kootenai-nf",
+      "legacy_source_record_id": "R1PLAN-kootenai-nf-01",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/kootenai/planning",
+      "referenced_by": [
+        "manifest:planning_page",
+        "readiness:planning_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "planning_page",
+      "document_title": "Lolo planning page / forest plan revision page",
+      "forest_unit_id": "lolo-nf",
+      "legacy_source_record_id": "R1PLAN-lolo-nf-01",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/lolo/planning",
+      "referenced_by": [
+        "manifest:planning_page",
+        "readiness:planning_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "planning_page",
+      "document_title": "Nez Perce-Clearwater planning page",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-01",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/nezperce-clearwater/planning",
+      "referenced_by": [
+        "manifest:planning_page",
+        "readiness:planning_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "plan_document_set_page",
+      "document_title": "2025 Nez Perce-Clearwater National Forests Revised Land Management Plan",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-02",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://www.fs.usda.gov/r01/nezperce-clearwater/planning/2025-land-management-plan",
+      "referenced_by": [
+        "manifest:plan_document_set_page",
+        "readiness:plan_document_set_page"
+      ],
+      "resolution_status": "catalog_confirmed"
+    },
+    {
+      "document_role": "notice_of_plan_approval",
+      "document_title": "Notice of Plan Approval Federal Register",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-04",
+      "matching_canonical_source_record_ids": [],
+      "official_link": "https://federalregister.gov/d/2024-30342",
+      "referenced_by": [
+        "manifest:notice_of_plan_approval",
+        "readiness:notice_of_plan_approval"
+      ],
+      "resolution_status": "source_delta_required"
+    }
+  ],
+  "unresolved_status_counts": {
+    "catalog_confirmed": 11,
+    "source_delta_required": 14
+  },
+  "version": "1.0.0"
+}

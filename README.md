@@ -124,9 +124,10 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   prior scoped XML audit red. The live extraction summary now records
   `extracted_count=634`, `failed_count=0`, `chunk_count=98155`,
   `reused_count=620`, and `validation_passed=true`.
-- The active downstream implementation packet is now
-  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
-  Milestones 0-2 are now resolved, and a reduced Milestone 3 pass has now
+- The reduced downstream rerun packet
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+  is now historical blocker context, not the active implementation packet.
+  Milestones 0-2 are resolved there, and its reduced Milestone 3 pass
   rebound the active full-canonical contract surfaces in
   `config/promotion_suite_v1.json`,
   `config/region1_forest_plan_profile_eval_coverage_v1.json`,
@@ -167,11 +168,20 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   crosswalk accounts for all `99`; `23` are already
   `catalog_confirmed`/mapped to an existing canonical row, and the remaining
   `76` are still `source_delta_required`.
+- The active implementation packet is now
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
+  Milestone 0 in that packet is now resolved in the current checkout through a
+  governed registry artifact:
+  `config/r1_forest_plan_identity_reconciliation_v1.json`.
+  That registry captures the live `99` referenced legacy source-record IDs as
+  `74` exact official-URL matches to active canonical source-record IDs plus
+  `25` unresolved rows
+  (`11` `catalog_confirmed`, `14` `source_delta_required`).
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
   now truthful and active, but broader full-canonical downstream freshness is
-  still routed-red until a dedicated forest-plan identity-reconciliation packet
-  clears the legacy `R1PLAN-*` dependency and the blocked
+  still routed-red until the active identity-reconciliation packet clears the
+  legacy `R1PLAN-*` dependency and the blocked
   graph/profile/component retrieval and promotion reruns can be replayed on
   `source-set-9e7d85759951c279`.
 
