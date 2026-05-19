@@ -5,6 +5,68 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Forest-Plan Identity Reconciliation Milestone 3 Reduced Closeout
+
+This implementation slice reduced the routed archived full-canonical
+downstream blocker, but it did not resolve the lane end-to-end.
+
+- outcome label:
+  `reduced` for Milestone 3; packet remains active on the narrowed
+  direct-document blocker family rather than a graph-only replay
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/catalog_surface.py`,
+  `src/usfs_r1_ea_sources/claim_extraction.py`,
+  `src/usfs_r1_ea_sources/extract.py`,
+  `src/usfs_r1_ea_sources/extraction_accuracy.py`,
+  `pyproject.toml`,
+  `uv.lock`,
+  `tests/test_claim_extraction.py`,
+  `tests/test_extract.py`,
+  `tests/test_extraction_accuracy.py`, and
+  `tests/test_retrieval.py`
+- archived replay repair:
+  exact archived catalog resolution now prefers the real archived gate over a
+  merely source-record-compatible active catalog; the archived
+  `source-set-370896a1043817f2` parser lane now validates `634/634` extracted
+  rows after closing the prior `8` parser blockers and refreshing the stale
+  markup-leak rows `FPS-040` and `WILD-ESA-030`
+- managed runtime repair:
+  the `extraction` extra now includes `rapidocr` and `cryptography`, so the
+  Python 3.14 archived fallback lane can run raster OCR and AES PDF
+  crosschecks without ad hoc environment patching
+- truthful admission state:
+  `extraction-accuracy-audit` on
+  `source-set-370896a1043817f2` now admits `332/343` required active-review
+  rows and blocks only `11` wrapper-page direct-document rows:
+  `FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
+  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
+  `LEX-USFS-016`, `LEX-USFS-017`, and `WILD-ESA-075`
+- downstream stop condition:
+  `retrieval-build` now fails only on those `11` blocked rows with
+  `verified_extraction_admitted_source_count=332` and
+  `verified_extraction_required_source_count=343`;
+  `claim-extract` now materializes `120689` claims but fails validation
+  because retrieval is not reviewer-ready and the admitted retrieval index
+  still has `0` bound chunks;
+  `rule-claim-link` fails closed on claim validation; and direct
+  `nepa-knowledge-graph-export` now stops on missing validated
+  `rule_claim_links.jsonl`
+- promotion-suite truth:
+  fresh non-strict `promotion-suite --manifest config/promotion_suite_v1.json`
+  still reports `full_canonical_corpus_ready=false` with `6/8` required
+  full-canonical results passing and
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`;
+  that remaining red category is now understood to be downstream of the `11`
+  blocked direct-document rows, not a standalone claims/rule-claim replay gap
+- next routing:
+  stay on
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+  and route the next slice to direct-document replacement or governed rebind
+  for the `11` blocked rows above, then rerun retrieval,
+  `claim-extract`, `rule-claim-link`,
+  `nepa-knowledge-graph-export`, and `promotion-suite` on
+  `source-set-370896a1043817f2`
+
 ## Full Canonical Forest-Plan Identity Reconciliation Milestone 2 Closeout
 
 This implementation slice closes the narrowed Flathead inventory and

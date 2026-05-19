@@ -470,12 +470,18 @@ Even after this milestone's resolved closeout, residual downstream issues may st
 expected. This milestone only owned the upstream role-classification boundary and the archived
 full-canonical proof that those plan bodies now enter the inventory builder correctly.
 
-After this milestone, the next lane should be:
+After this milestone, the next lane is no longer a pure claims/rule-claim
+replay. The refreshed archived full-canonical lane now blocks first on the
+`11` wrapper-page direct-document rows rejected by the verified-extraction
+admission contract:
+`FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`, `LEX-USFS-008`,
+`LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`, `LEX-USFS-016`,
+`LEX-USFS-017`, and `WILD-ESA-075`.
 
-- materialize the missing claims/rule-claim surfaces on
-  `source-set-370896a1043817f2`;
-- rerun `nepa-knowledge-graph-export` and then `promotion-suite` on that
-  archived full-canonical source set.
+After those rows are replaced or governably rebound, rerun retrieval,
+`claim-extract`, `rule-claim-link`, `nepa-knowledge-graph-export`, and then
+`promotion-suite` on archived full-canonical source set
+`source-set-370896a1043817f2`.
 
 ## Closeout Checklist
 

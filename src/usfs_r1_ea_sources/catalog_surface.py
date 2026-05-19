@@ -22,17 +22,21 @@ def resolve_catalog_dir_for_source_set(
     if source_set_id is None:
         return active_catalog_dir
     active_source_set_id = catalog_source_set_id(active_catalog_dir)
+    exact_archived_catalog_dir = find_catalog_dir_for_source_set(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+    )
     compatible_source_record_ids = selected_source_record_ids_for_source_set(
         output_dir=output_dir,
         source_set_id=source_set_id,
     )
+    if not active_source_set_id or active_source_set_id == source_set_id:
+        return active_catalog_dir
+    if exact_archived_catalog_dir is not None:
+        return exact_archived_catalog_dir
     if (
-        not active_source_set_id
-        or active_source_set_id == source_set_id
-        or (
-            compatible_source_record_ids is not None
-            and catalog_source_record_ids(active_catalog_dir) == compatible_source_record_ids
-        )
+        compatible_source_record_ids is not None
+        and catalog_source_record_ids(active_catalog_dir) == compatible_source_record_ids
     ):
         return active_catalog_dir
     archived_catalog_dir = find_catalog_dir_for_source_set(

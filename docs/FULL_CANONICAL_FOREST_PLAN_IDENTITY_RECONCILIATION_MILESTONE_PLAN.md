@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind landed on `source-set-370896a1043817f2`; Milestone 2 is now resolved locally and Milestone 3 is the remaining graph-only residual lane
+Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind landed on `source-set-370896a1043817f2`; Milestone 2 is resolved locally; Milestone 3 is now reduced and the remaining residual is the `11`-row direct-document wrapper-page family on `source-set-370896a1043817f2`
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -384,12 +384,27 @@ Outcome label: resolved
   source-record and component-identity family. On the refreshed archived source
   set, `forest-plan-components-build` now validates `10/10` forests and
   `forest-plan-component-retrieval-eval` now passes `6/6`.
-- The only remaining full-canonical red lane is downstream graph generation:
-  `promotion-suite` is now `6/8` with only
-  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`.
-- The next active slice is therefore Milestone 3:
-  materialize the missing claims/rule-claim surfaces, rerun
-  `nepa-knowledge-graph-export`, and then rerun `promotion-suite` on
+- The archived parser/runtime gap that initially hid the downstream blocker is
+  now closed: the derived replay stays green at `634/634` extracted rows, the
+  managed `extraction` extra now carries `rapidocr` plus `cryptography`, and
+  the archived audit now admits `332/343` required active-review rows.
+- The only remaining full-canonical red lane is no longer a standalone
+  graph-only replay gap. The active blocker is the `11` direct-document
+  wrapper-page rows still rejected by
+  `direct_document_required_records_use_document_artifacts`:
+  `FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
+  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
+  `LEX-USFS-016`, `LEX-USFS-017`, and `WILD-ESA-075`.
+- `promotion-suite` remains `6/8` with only
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`,
+  but that category is now understood to be downstream of the `11` blocked
+  direct-document rows because retrieval is not reviewer-ready, claims fail
+  validation, rule-claim binding fails closed, and graph export stops on the
+  missing validated `rule_claim_links.jsonl`.
+- The next active slice is therefore Milestone 4:
+  replace or governably rebind those `11` direct-document rows, rerun
+  retrieval, then rerun `claim-extract`, `rule-claim-link`,
+  `nepa-knowledge-graph-export`, and `promotion-suite` on
   `source-set-370896a1043817f2`.
 - If a future session cannot prove a canonical binding for one of the `24` unresolved rows, it must
   keep that row explicit as unresolved rather than hiding it inside a broad rerun attempt.

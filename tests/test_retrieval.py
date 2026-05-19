@@ -740,6 +740,53 @@ class RetrievalTests(unittest.TestCase):
                 "selected_source_record_set",
             )
 
+    def test_retrieval_build_prefers_exact_archived_catalog_gate_over_compatible_active_catalog(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            archived_catalog_dir = output_dir / "runs" / "2026-05-14-replay" / "catalog_gate"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-009"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-009",
+                        title="Decision notice",
+                        document_role="project_record",
+                        authority_level="project_record",
+                        citation_label="R1EA-009 | Decision notice | artifact abc123",
+                        text="The decision notice contains enforceable mitigation measures.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    "R1EA-009": ["Active topic"],
+                },
+            )
+            _write_catalog_source_set_manifest(output_dir, "source-set-other")
+            archived_catalog_dir.mkdir(parents=True, exist_ok=True)
+            _write_catalog_source_set_manifest_for_dir(archived_catalog_dir, source_set_id)
+            _write_catalog_sqlite_for_dir(
+                archived_catalog_dir,
+                {"R1EA-009": ["Archived exact topic"]},
+            )
+
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["catalog_source_set_id"], source_set_id)
+            self.assertEqual(result.summary["catalog_dir"], str(archived_catalog_dir))
+
     def test_retrieval_build_requires_verified_flathead_extraction_audit_only_for_full_contract_match(
         self,
     ) -> None:

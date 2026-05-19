@@ -61,22 +61,43 @@ Latest closeout on 2026-05-19:
   plan at `FINAL-FLAT-001`, and `forest-plan-component-retrieval-eval` now
   passes `6/6` on canonical component IDs including
   `FINAL-FLAT-001-FW-STD-SOIL-01`.
-- `promotion-suite --manifest config/promotion_suite_v1.json` now points
+- The managed `extraction` extra now includes `rapidocr` and `cryptography`,
+  which closes the Python 3.14 fallback-runtime gap behind raster OCR and AES
+  PDF crosschecks for archived extraction/audit replays.
+- After a targeted archived direct-replay refresh, the derived lane on
+  `source-set-370896a1043817f2` remains green at `634/634` extracted rows, and
+  the stale markup-leak rows `FPS-040` and `WILD-ESA-030` were re-materialized
+  under the stricter text cleaner.
+- `extraction-accuracy-audit` on
+  `source-set-370896a1043817f2` now admits `332/343` required
+  active-review rows and blocks only `11` wrapper-page direct-document rows:
+  `FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
+  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
+  `LEX-USFS-016`, `LEX-USFS-017`, and `WILD-ESA-075`.
+- `retrieval-build` on the refreshed archived source set now fails only on
+  that `11`-row family, with
+  `verified_extraction_admitted_source_count=332` and
+  `verified_extraction_required_source_count=343`.
+- `claim-extract` now writes
+  `source_library/derived/source-set-370896a1043817f2/claims/claims.jsonl`
+  with `claim_count=120689`, but validation remains red because retrieval is
+  not reviewer-ready and the admitted retrieval index still has `0` bound
+  chunks. `rule-claim-link` therefore fails closed on claim validation, and
+  direct `nepa-knowledge-graph-export` now stops on the missing validated
+  `rule_claim_links.jsonl` artifact instead of the older missing-claims path.
+- `promotion-suite --manifest config/promotion_suite_v1.json` still points
   `full_canonical_source_set_id=source-set-370896a1043817f2` and reports
   `full_canonical_corpus_ready=false` with `6/8` required full-canonical
-  results passing. The only remaining full-canonical failure category is
-  `graph_viewer_export_invalid=2`.
-- A direct `nepa-knowledge-graph-export --source-set-id source-set-370896a1043817f2`
-  replay still fails because
-  `source_library/derived/source-set-370896a1043817f2/claims/claims.jsonl`
-  does not exist yet. The graph lane is now blocked on missing
-  claims/rule-claim replay for the refreshed archived source set, not on stale
-  catalog lineage.
+  results passing and
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`.
+  That remaining red category is downstream of the `11` blocked
+  direct-document rows, not a standalone graph-only replay gap.
 - Next routing:
-  the broader refresh/rebind decision and the narrowed Flathead/retrieval
-  pass are both complete. The remaining active slice is now the graph-only
-  downstream replay: materialize the missing claims/rule-claim surfaces,
-  rerun `nepa-knowledge-graph-export`, and then rerun `promotion-suite` on
+  the broader refresh/rebind decision, the Flathead/retrieval rebind, and the
+  archived parser/runtime repair are complete. The remaining active slice is
+  now direct-document recovery for the `11` rows above, followed by a rerun of
+  retrieval, `claim-extract`, `rule-claim-link`,
+  `nepa-knowledge-graph-export`, and `promotion-suite` on
   `source-set-370896a1043817f2`.
 
 ## Source-Register Forest Plan Role Classification Code Closeout

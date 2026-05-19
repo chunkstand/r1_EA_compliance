@@ -10,6 +10,7 @@ import unittest
 from usfs_r1_ea_sources.catalog import build_review_catalog
 from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.extract import build_extraction
+import usfs_r1_ea_sources.extraction_accuracy as extraction_accuracy_module
 from usfs_r1_ea_sources.extraction_accuracy import run_extraction_accuracy_audit
 
 
@@ -33,6 +34,29 @@ def canonical_config():
 
 
 class ExtractionAccuracyAuditTests(unittest.TestCase):
+    def test_per_source_failure_map_ignores_non_failure_metric_rows(self) -> None:
+        failures = extraction_accuracy_module._per_source_failure_map(
+            [
+                {
+                    "name": "pdf_text_crosscheck_against_pypdf",
+                    "passed": False,
+                    "details": {
+                        "failures": [{"source_record_id": "R1EA-001"}],
+                        "metrics": [
+                            {"source_record_id": "R1EA-001"},
+                            {"source_record_id": "R1EA-002"},
+                        ],
+                    },
+                }
+            ],
+            relevant_source_record_ids=["R1EA-001", "R1EA-002"],
+        )
+
+        self.assertEqual(
+            failures,
+            {"R1EA-001": ["pdf_text_crosscheck_against_pypdf"]},
+        )
+
     def test_audit_passes_generated_html_extraction(self) -> None:
         config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:

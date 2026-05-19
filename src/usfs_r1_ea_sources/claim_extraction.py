@@ -19,6 +19,7 @@ from .eval_metrics import (
     read_json_payload,
     reciprocal_rank,
 )
+from .catalog_surface import resolve_catalog_dir_for_source_set
 from .extract import _source_derived_dir
 
 
@@ -200,7 +201,11 @@ def build_claim_extraction(
     claims_dir.mkdir(parents=True, exist_ok=True)
 
     chunks_path = chunks_path or source_derived_dir / "chunks" / "chunks.jsonl"
-    catalog_sqlite_path = catalog_sqlite_path or output_dir / "catalog" / "review_sources.sqlite"
+    resolved_catalog_dir = resolve_catalog_dir_for_source_set(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+    )
+    catalog_sqlite_path = catalog_sqlite_path or resolved_catalog_dir / "review_sources.sqlite"
     extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
     extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
     retrieval_validation_path = source_derived_dir / "retrieval" / "retrieval_validation.json"

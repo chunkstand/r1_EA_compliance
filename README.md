@@ -204,16 +204,48 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   source set after rebinding the shipped eval contract from legacy
   `R1PLAN-*` component IDs onto the emitted canonical component IDs such as
   `FOR-009-*`, `FOR-002-*`, and `FINAL-FLAT-001-*`.
+- The managed `extraction` extra now includes `rapidocr` and `cryptography`,
+  so Python 3.14 archived fallback replays can run raster OCR and AES-backed
+  PDF crosschecks without ad hoc environment patching.
+- A targeted archived direct-replay pass closed the remaining parser lane on
+  `source-set-370896a1043817f2`: the derived replay still validates
+  `634/634` extracted rows, and the stale markup-leak rows `FPS-040` and
+  `WILD-ESA-030` were re-materialized under the stricter text cleaner.
+- `extraction-accuracy-audit` on
+  `source-set-370896a1043817f2` now admits `332/343` required
+  active-review rows and blocks only `11` direct-document wrapper-page rows:
+  `FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
+  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
+  `LEX-USFS-016`, `LEX-USFS-017`, and `WILD-ESA-075`.
+- `retrieval-build` now fails only on that `11`-row direct-document family,
+  with `verified_extraction_admitted_source_count=332` and
+  `verified_extraction_required_source_count=343`.
+- `claim-extract` now materializes
+  `120689` claims on `source-set-370896a1043817f2`, but the claim lane
+  remains invalid because retrieval is not reviewer-ready and the admitted
+  retrieval index still has `0` bound chunks. `rule-claim-link` therefore
+  fails closed on claim validation, and direct
+  `nepa-knowledge-graph-export` still stops on the missing validated
+  `rule_claim_links.jsonl` artifact.
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog in
   `source_library/catalog/` remains active source set
   `source-set-9e7d85759951c279`, but the refreshed archived full-canonical
   forest-plan/downstream contract now points at
   `source-set-370896a1043817f2`.
-- The next routed slice is no longer the broader refresh/rebind decision
-  itself. The remaining full-canonical work is now explicit:
-  materialize the missing claims/rule-claim surfaces, rerun
-  `nepa-knowledge-graph-export`, and then rerun `promotion-suite` on
+- A fresh local non-strict
+  `promotion-suite --manifest config/promotion_suite_v1.json`
+  still reports
+  `full_canonical_corpus_ready=false` with `6/8` required full-canonical
+  results passing and
+  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`.
+  That red category is now understood to be downstream of the `11` blocked
+  direct-document rows, not a standalone graph-only replay gap.
+- The next routed slice is no longer a pure claims/rule-claim replay.
+  The remaining full-canonical work is now explicit:
+  replace or rebind the `11` wrapper-page direct-document rows above, rerun
+  retrieval, then rerun `claim-extract`, `rule-claim-link`,
+  `nepa-knowledge-graph-export`, and `promotion-suite` on
   `source-set-370896a1043817f2`.
 
 Historical broader capture baseline:

@@ -41,6 +41,11 @@ def canonical_config():
 
 
 class ExtractionTests(unittest.TestCase):
+    def test_clean_text_strips_markup_like_tokens_from_pdf_fallback_text(self) -> None:
+        cleaned = extract_module._clean_text("VerDate 20<MAR>2000 alpha <i> beta")
+
+        self.assertEqual(cleaned, "VerDate 20 2000 alpha beta")
+
     def test_resolve_support_document_role_prefers_r1_register_override(self) -> None:
         role = extract_module._resolve_support_document_role(
             {

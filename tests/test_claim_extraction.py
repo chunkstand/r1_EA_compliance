@@ -111,6 +111,47 @@ class ClaimExtractionTests(unittest.TestCase):
             self.assertTrue(result.summary["reviewer_ready"])
             self.assertTrue(result.summary["extraction_complete"])
 
+    def test_claim_extraction_auto_resolves_exact_archived_catalog_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            chunk_record = _chunk(
+                source_set_id=source_set_id,
+                source_record_id="R1EA-003",
+                title="Level of review",
+                document_role="law",
+                authority_level="federal",
+                citation_label="R1EA-003 | Level of review | artifact abc123",
+                text="An agency shall prepare an environmental assessment.",
+            )
+            _write_catalog_validation(output_dir, passed=True)
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1EA-003"],
+            )
+            _write_chunks(output_dir, source_set_id, [chunk_record])
+            _write_catalog_sqlite(output_dir, {"R1EA-003": ["Active topic"]})
+            archived_catalog_dir = output_dir / "runs" / "2026-05-14-replay" / "catalog_gate"
+            archived_catalog_dir.mkdir(parents=True, exist_ok=True)
+            _write_catalog_source_set_manifest_for_dir(archived_catalog_dir, source_set_id)
+            _write_catalog_sqlite_for_dir(
+                archived_catalog_dir,
+                {"R1EA-003": ["Archived exact topic"]},
+            )
+            (output_dir / "catalog" / "source_set_manifest.json").write_text(
+                json.dumps({"source_set_id": "source-set-other"}, sort_keys=True),
+                encoding="utf-8",
+            )
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            result = build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["catalog_sqlite_path"], str(archived_catalog_dir / "review_sources.sqlite"))
+            claims = _read_jsonl(result.claims_path)
+            self.assertEqual(claims[0]["review_topics"], ["Archived exact topic"])
+
     def test_claim_extraction_captures_structural_definition_claims(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -656,7 +697,14 @@ def _direct_eval_result_payload(
 
 
 def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str]]) -> Path:
-    path = output_dir / "catalog" / "review_sources.sqlite"
+    return _write_catalog_sqlite_for_dir(output_dir / "catalog", topics_by_source)
+
+
+def _write_catalog_sqlite_for_dir(
+    catalog_dir: Path,
+    topics_by_source: dict[str, list[str]],
+) -> Path:
+    path = catalog_dir / "review_sources.sqlite"
     path.parent.mkdir(parents=True, exist_ok=True)
     with closing(sqlite3.connect(path)) as connection:
         connection.executescript(
@@ -693,6 +741,13 @@ def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str
                     (source_record_id, topic_id),
                 )
         connection.commit()
+    return path
+
+
+def _write_catalog_source_set_manifest_for_dir(catalog_dir: Path, source_set_id: str) -> Path:
+    path = catalog_dir / "source_set_manifest.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"source_set_id": source_set_id}, sort_keys=True), encoding="utf-8")
     return path
 
 

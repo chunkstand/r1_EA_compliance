@@ -702,7 +702,7 @@ def _source_record_ids_from_check(
         values = details.get(key)
         if isinstance(values, list):
             discovered.update(str(value) for value in values if str(value) in relevant_source_record_ids)
-    for key in ("failures", "metrics"):
+    for key in ("failures",):
         values = details.get(key)
         if not isinstance(values, list):
             continue

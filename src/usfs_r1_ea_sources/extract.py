@@ -99,6 +99,7 @@ DIRECT_DOCUMENT_REQUIRED_INSTRUCTION_KEYWORDS = (
     "chapter/handbook pdf/doc",
 )
 DOCLING_OCR_KEYWORDS = ("appendix maps", "map", "scanned", "ocr")
+MARKUP_TOKEN_RE = re.compile(r"</?[A-Za-z][A-Za-z0-9:_-]{0,30}>")
 PROVING_PLACEHOLDER_ARTIFACT_SCHEMA_VERSION = "source-register-proving-artifact-v1"
 
 
@@ -3072,7 +3073,9 @@ def _decode_bytes(body: bytes) -> str:
 
 
 def _clean_text(value: str) -> str:
-    return re.sub(r"\s+", " ", html.unescape(value)).strip()
+    text = html.unescape(value)
+    text = MARKUP_TOKEN_RE.sub(" ", text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def _utc_now() -> str:
