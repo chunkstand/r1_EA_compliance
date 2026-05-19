@@ -134,44 +134,36 @@ Local active import baseline on 2026-05-18 after import-completion closeout:
   rows `FPS-005` / `FPS-125`, and the live promotion-suite result found no
   drift from the packet baseline.
 - Full-canonical downstream freshness is still blocked on real extraction and
-  parser recovery, but the live blocker set is now much smaller. A targeted
+  parser recovery, but the live blocker set is now down to one row. A targeted
   external-Docling OCR merge replay plus three in-environment no-timeout
-  Docling retries on `WILD-ESA-038`, `WILD-ESA-054`, and `FPS-241` moved
+  Docling retries on `WILD-ESA-038`, `WILD-ESA-054`, and `FPS-241` first moved
   `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json`
   to `extracted_count=633`, `failed_count=2`, `chunk_count=97248`, and
   `validation_passed=false`.
-- The remaining extraction blockers are now exact:
-  `FPS-005` (`docling_conversion_failed`; a fresh upstream redownload
-  reproduces the same invalid-PDF/xref corruption) plus `FPS-125`
-  (`pdf_text_fallback_empty` after Docling-capable retries). `pdftotext`
-  still returns zero characters for `FPS-125` while `pdftoppm` can render it,
-  so the remaining lane is now one upstream-invalid PDF plus one OCR-heavy
-  raster recovery straggler rather than broader catalog or URL drift.
-- The extractor now includes two bounded scanned-PDF rescue paths for rows like
-  `FPS-125`: `pdf_raster_ocr` (`pdftoppm` + `RapidOCR(torch)`) first, then a
-  chunked Docling OCR fallback. Focused extraction tests now cover both rescue
-  surfaces, but the live `source-set-cac9c7d02b280825` blocker count remains
-  `633/2` because the first long targeted `FPS-125` replay under the new path
-  was interrupted without writing a merged success record.
-- The raster OCR branch is now reduced again for large scanned PDFs:
-  `pdf_raster_ocr` renders at `100` DPI instead of `150`, disables the OCR
-  classifier stage, and uses a bounded `4`-worker page pool on larger page
-  sets. Focused extractor coverage is now `30/30`, but a targeted merged
-  `FPS-125` replay still remained compute-bound after rendering all `346`
-  raster pages and was interrupted without changing durable outputs.
-- The raster branch now also fails closed on page-level OCR setup/runtime
-  errors instead of silently treating them as blank pages, so raster recovery
-  cannot partially succeed by dropping unreadable pages without surfacing the
-  failure back to the remaining fallback lane.
-- That rescue-path implementation slice is now alignment-closed in the repo:
-  the focused extractor suite, focused lint, and docs closeout all pass, so
-  the remaining work is not missing repo wiring. The only unresolved lane is
-  bounded live recovery on `FPS-125` plus a governed replacement or repair
-  decision for upstream-invalid `FPS-005`.
-- The current implementation slice inside that packet is Milestone 1:
-  finish `FPS-125` through a governed OCR completion path before the
-  workbook-contract action on `FPS-005` or any downstream reruns.
-- Until those `2` residual extraction records are recovered or replaced, the source-set
+- The extractor now includes governed scanned-PDF rescue paths for rows like
+  `FPS-125`: `pdf_raster_ocr` at `100` DPI with a bounded `4`-worker
+  RapidOCR(torch) pool, fail-closed page-error handling, a Swift-backed Apple
+  Vision raster OCR lane for larger scanned PDFs on macOS, and then a chunked
+  Docling OCR fallback. Focused extractor coverage is now `33/33`.
+- The plan-mandated replay of the older reduced raster path on `FPS-125`
+  remained compute-bound for `163.82` real seconds with the `4`-worker
+  RapidOCR pool active and no merged record, so the new Apple Vision lane is
+  now the governed large-scan path for this checkout.
+- A follow-on targeted replay closed `FPS-125` on the active source set with
+  `parser_name=apple_vision_pdf_raster`,
+  `parser_metadata.pdf_raster_ocr_backend=apple_vision_swift`,
+  `chunk_count=861`, and `text_char_count=1244371`. The live extraction
+  summary is now `extracted_count=634`, `failed_count=1`,
+  `chunk_count=98109`, and `validation_passed=false`.
+- The only remaining extraction blocker is now `FPS-005`
+  (`docling_conversion_failed`; a fresh upstream redownload still reproduces
+  the same invalid-PDF/xref corruption). The remaining work is therefore a
+  single workbook-contract repair or replacement decision, not another OCR
+  recovery pass.
+- The current implementation slice inside that packet is Milestone 2:
+  resolve `FPS-005` through workbook-contract action before any downstream
+  reruns.
+- Until that final residual extraction record is repaired or replaced, the source-set
   knowledge-graph export plus the rebased `forest_plan_profile` and
   `forest_plan_component_retrieval` eval artifacts remain missing or stale.
 - Current reviewer-ready downstream evidence still lives on review-oriented

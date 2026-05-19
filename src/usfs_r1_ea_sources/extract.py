@@ -38,6 +38,7 @@ CHUNKED_DOCLING_PDF_MIN_TIMEOUT_SECONDS = 180.0
 PDF_RASTER_OCR_DPI = 100
 PDF_RASTER_OCR_PARALLEL_MIN_PAGES = 24
 PDF_RASTER_OCR_MAX_WORKERS = 4
+APPLE_VISION_OCR_TIMEOUT_SECONDS = 600.0
 DOCLING_PYTHON_ENV_VAR = "USFS_R1_DOCLING_PYTHON"
 DEFAULT_R1_FOREST_PLAN_REGISTER_PATH = Path("config/r1_forest_plan_document_register_draft.csv")
 SUCCESS_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"}
@@ -1493,26 +1494,62 @@ def _try_extract_pdf_raster_ocr(
         if not image_paths:
             return None
 
-        try:
-            blocks = _collect_pdf_raster_ocr_blocks(image_paths)
-        except Exception:
-            return None
+        for engine in _pdf_raster_ocr_engine_order(len(image_paths)):
+            try:
+                if engine == "apple_vision":
+                    blocks = _collect_pdf_raster_apple_vision_blocks(image_paths)
+                    if blocks:
+                        return _build_pdf_raster_ocr_payload(
+                            blocks,
+                            parser_name="apple_vision_pdf_raster",
+                            parser_version="vision_swift",
+                            fallback_error_class=fallback_error_class,
+                            fallback_error_message=fallback_error_message,
+                            page_count=len(image_paths),
+                            backend="apple_vision_swift",
+                        )
+                    continue
 
-    if not blocks:
-        return None
+                blocks = _collect_pdf_raster_ocr_blocks(image_paths)
+                if blocks:
+                    return _build_pdf_raster_ocr_payload(
+                        blocks,
+                        parser_name="rapidocr_pdf_raster",
+                        parser_version="torch",
+                        fallback_error_class=fallback_error_class,
+                        fallback_error_message=fallback_error_message,
+                        page_count=len(image_paths),
+                        backend="rapidocr_torch",
+                    )
+            except Exception:
+                continue
 
+    return None
+
+
+def _build_pdf_raster_ocr_payload(
+    blocks: list[TextBlock],
+    *,
+    parser_name: str,
+    parser_version: str,
+    fallback_error_class: str,
+    fallback_error_message: str,
+    page_count: int,
+    backend: str,
+) -> ExtractionPayload:
     text, assembled_blocks = _assemble_blocks(blocks)
     return ExtractionPayload(
         text=text,
         blocks=assembled_blocks,
-        parser_name="rapidocr_pdf_raster",
-        parser_version="torch",
+        parser_name=parser_name,
+        parser_version=parser_version,
         metadata={
             "fallback_from": "pdf_raster_ocr",
             "fallback_error_class": fallback_error_class,
             "fallback_error_message": fallback_error_message,
             "pdf_raster_ocr_dpi": PDF_RASTER_OCR_DPI,
-            "pdf_raster_ocr_page_count": len(image_paths),
+            "pdf_raster_ocr_page_count": page_count,
+            "pdf_raster_ocr_backend": backend,
         },
     )
 
@@ -1554,6 +1591,112 @@ def _ocr_pdf_raster_page(image_path: str) -> tuple[int, str | None]:
     if not page_texts:
         return page_number, None
     return page_number, "\n".join(page_texts)
+
+
+def _apple_vision_ocr_available() -> bool:
+    return sys.platform == "darwin" and shutil.which("swift") is not None
+
+
+def _pdf_raster_ocr_engine_order(page_count: int) -> list[str]:
+    apple_vision_available = _apple_vision_ocr_available()
+    rapidocr_available = importlib.util.find_spec("rapidocr") is not None
+    prefer_apple_vision = apple_vision_available and page_count >= PDF_RASTER_OCR_PARALLEL_MIN_PAGES
+
+    order: list[str] = []
+    if prefer_apple_vision:
+        order.append("apple_vision")
+    if rapidocr_available:
+        order.append("rapidocr")
+    if apple_vision_available and "apple_vision" not in order:
+        order.append("apple_vision")
+    return order
+
+
+def _collect_pdf_raster_apple_vision_blocks(image_paths: list[Path]) -> list[TextBlock]:
+    if not image_paths:
+        return []
+
+    script = """
+import AppKit
+import Foundation
+import Vision
+
+func pageNumber(from path: String) -> Int {
+    let stem = URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent
+    return Int(stem.split(separator: "-").last ?? "0") ?? 0
+}
+
+func emit(page: Int, text: String) throws {
+    let payload: [String: Any] = ["page": page, "text": text]
+    let data = try JSONSerialization.data(withJSONObject: payload, options: [])
+    FileHandle.standardOutput.write(data)
+    FileHandle.standardOutput.write("\\n".data(using: .utf8)!)
+}
+
+for path in CommandLine.arguments.dropFirst() {
+    let page = pageNumber(from: path)
+    let url = URL(fileURLWithPath: path)
+    guard let image = NSImage(contentsOf: url) else {
+        fputs("load_failed:\\(page):\\(path)\\n", stderr)
+        exit(1)
+    }
+    var rect = NSRect(origin: .zero, size: image.size)
+    guard let cgImage = image.cgImage(forProposedRect: &rect, context: nil, hints: nil) else {
+        fputs("cgimage_failed:\\(page):\\(path)\\n", stderr)
+        exit(1)
+    }
+    let request = VNRecognizeTextRequest()
+    request.recognitionLevel = .accurate
+    request.usesLanguageCorrection = false
+    let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+    do {
+        try handler.perform([request])
+    } catch {
+        fputs("ocr_failed:\\(page):\\(error.localizedDescription)\\n", stderr)
+        exit(1)
+    }
+    let text = (request.results ?? []).compactMap { $0.topCandidates(1).first?.string }.joined(separator: "\\n")
+    do {
+        try emit(page: page, text: text)
+    } catch {
+        fputs("emit_failed:\\(page):\\(error.localizedDescription)\\n", stderr)
+        exit(1)
+    }
+}
+"""
+
+    with tempfile.NamedTemporaryFile(
+        prefix="usfs-r1-apple-vision-ocr-",
+        suffix=".swift",
+        delete=False,
+    ) as handle:
+        script_path = Path(handle.name)
+    try:
+        script_path.write_text(script, encoding="utf-8")
+        completed = subprocess.run(
+            ["swift", str(script_path), *[str(path) for path in image_paths]],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=APPLE_VISION_OCR_TIMEOUT_SECONDS,
+        )
+    finally:
+        script_path.unlink(missing_ok=True)
+
+    if completed.returncode != 0:
+        raise RuntimeError(completed.stderr.strip() or "Apple Vision OCR failed.")
+
+    blocks = []
+    for line in completed.stdout.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        payload = json.loads(line)
+        page_number = int(payload.get("page") or 0)
+        page_text = _clean_text(payload.get("text") or "")
+        if page_text:
+            blocks.append(TextBlock(text=page_text, page=page_number))
+    return sorted(blocks, key=lambda block: (block.page or 0, block.char_start or 0))
 
 
 def _try_extract_chunked_docling_pdf(

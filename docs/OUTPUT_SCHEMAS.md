@@ -3839,6 +3839,10 @@ at an archived catalog gate so merged or scoped source-set extraction can run wi
 - falls back to `pypdf_text_fallback` for born-digital PDFs when Docling exceeds the timeout or is
   unavailable, and records that parser name/version plus fallback metadata in the manifest and
   chunks
+- escalates to governed raster OCR when `pypdf_text_fallback` produces no text; on macOS, larger
+  scanned PDFs prefer a Swift-backed Apple Vision lane before the slower RapidOCR CPU pool and
+  record the resulting parser name/version plus `pdf_raster_ocr_backend` metadata in the manifest
+  and chunks
 - records governed `source-register-proving-artifact-v1` bytes as
   `status=placeholder_artifact` with auditable placeholder metadata instead of
   attempting to parse them as real direct documents
@@ -3861,7 +3865,8 @@ at an archived catalog gate so merged or scoped source-set extraction can run wi
 - extraction timestamp
 - terminal extraction `status`
 - parser name and version when parsing succeeded
-- parser metadata when fallback extraction or source-scoped XML extraction is used
+- parser metadata when fallback extraction or source-scoped XML extraction is used, including
+  raster OCR backend/page-count provenance when the parser route is `pdf_raster_ocr`
 - extracted text path, Docling JSON path, text SHA256, text character count, and chunk count
 - failure object when parsing did not succeed
 

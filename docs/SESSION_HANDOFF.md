@@ -5,6 +5,66 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Final Blocker Resolution Milestone 1 FPS-125 Closeout
+
+This implementation slice closes Milestone 1 of the standalone final-blocker
+packet by recovering `FPS-125` through a governed OCR lane and reducing the
+active extraction blocker set to one row.
+
+- routed plan:
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
+- code surfaces:
+  `src/usfs_r1_ea_sources/extract.py` now prefers a Swift-backed Apple Vision
+  raster OCR lane for larger scanned PDFs on macOS before the slower RapidOCR
+  CPU pool, while retaining fail-closed OCR error behavior and the existing
+  chunked Docling fallback. `tests/test_extract.py` now covers the Apple
+  Vision orchestration, output parsing, and large-document preference path.
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py -q`
+  passed `33/33`; and
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/extract.py tests/test_extract.py`
+  passed.
+- plan-mandated replay evidence:
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extract-build --output-dir source_library --id FPS-125 --docling-ocr --docling-timeout-seconds 1 --merge-selected-into-existing`
+  was first rerun against the older reduced raster path and remained
+  compute-bound for `163.82` real seconds with the bounded `4`-worker
+  RapidOCR pool active and no merged extracted record, which justified the new
+  governed external OCR lane.
+- live recovery evidence:
+  after the new lane landed, the same targeted replay wrote a durable
+  extracted record for `FPS-125` with
+  `parser_name=apple_vision_pdf_raster`,
+  `parser_metadata.fallback_from=pdf_raster_ocr`,
+  `parser_metadata.pdf_raster_ocr_backend=apple_vision_swift`,
+  `parser_metadata.pdf_raster_ocr_page_count=346`,
+  `chunk_count=861`,
+  `text_char_count=1244371`, and a non-null `text_path`.
+- current corpus truth:
+  `source-set-cac9c7d02b280825` is now `extracted_count=634`,
+  `failed_count=1`,
+  `chunk_count=98109`,
+  `validation_passed=false`, and
+  `failure_counts={"docling_conversion_failed": 1}`.
+  `FPS-005` is now the only remaining extraction blocker.
+- downstream truth:
+  no downstream reruns landed in this slice. The last promotion-suite result
+  still reports
+  `current_promotion_ready=true`,
+  `promotion_ready=true`,
+  `expansion_ready=true`,
+  `full_canonical_corpus_ready=false`,
+  `passed_required_full_canonical_result_count=4`,
+  `required_full_canonical_result_count=8`,
+  with the same two missing NEPA 3D graph artifacts plus the same two stale
+  forest-plan eval artifacts.
+- next routing:
+  Milestone 2 on `FPS-005` only. After that workbook-contract decision is
+  proven through targeted capture/catalog/extraction refresh, rerun
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`,
+  `forest-plan-component-retrieval-eval`, and
+  `promotion-suite` on `source-set-cac9c7d02b280825`.
+
 ## Full Canonical Final Blocker Resolution Milestone 0 Rebaseline Closeout
 
 This first implementation slice closes Milestone 0 of the standalone

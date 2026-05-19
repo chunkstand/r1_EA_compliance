@@ -1,34 +1,35 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19
+Status: Active 2026-05-19; Milestones 0-1 resolved 2026-05-19
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
 
 The canonical source-register import and downstream-freshness reduction packets have already made
-`source-set-cac9c7d02b280825` the active local full-canonical source set and have narrowed the
-remaining red surface to two source rows plus four blocked downstream artifacts. This milestone
+`source-set-cac9c7d02b280825` the active local full-canonical source set and have now reduced the
+remaining red surface to one source row plus four blocked downstream artifacts. This milestone
 exists to finish that last bounded lane so the repo can truthfully claim a green full canonical
 corpus on the active source set instead of a merely current-promotion-ready corpus.
 
 ## Current Evidence
 
 - `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json` currently records
-  `extracted_count=633`,
-  `failed_count=2`,
-  `chunk_count=97248`,
+  `extracted_count=634`,
+  `failed_count=1`,
+  `chunk_count=98109`,
   `validation_passed=false`, and
-  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 1}`.
-- The exact residual extraction blockers are
-  `FPS-005` (`docling_conversion_failed`) and
-  `FPS-125` (`pdf_text_fallback_empty`).
-- `FPS-125` has already exercised the current reduced raster path in
-  `src/usfs_r1_ea_sources/extract.py`: `100` DPI rasterization, classifier-disabled
-  `RapidOCR(torch)`, bounded `4`-worker page pool, and fail-closed page-error behavior. Focused
-  extractor coverage is already green at `30/30`, but the latest targeted merged replay still
-  remained compute-bound after rendering all `346` raster pages and did not write a merged
-  extracted record.
+  `failure_counts={"docling_conversion_failed": 1}`.
+- The exact residual extraction blocker is now
+  `FPS-005` (`docling_conversion_failed`).
+- Milestone 1 is now closed for `FPS-125`. The plan-mandated replay of the prior reduced
+  raster/Docling path stayed compute-bound for `163.82` real seconds with the bounded `4`-worker
+  RapidOCR pool active and no merged record, so `src/usfs_r1_ea_sources/extract.py` now prefers a
+  governed Swift-backed Apple Vision raster OCR lane for larger scanned PDFs on macOS while
+  retaining RapidOCR as fallback. The follow-on targeted replay wrote a durable extracted record
+  for `FPS-125` with `parser_name=apple_vision_pdf_raster`,
+  `parser_metadata.pdf_raster_ocr_backend=apple_vision_swift`,
+  `chunk_count=861`, and `text_char_count=1244371`.
 - `FPS-005` is not currently a local parser-tuning problem. Fresh upstream redownloads reproduce
   the same invalid xref/pages corruption, and local `pypdf` salvage still fails even with
   `strict=False` because the file cannot reconstruct a root catalog.
@@ -51,7 +52,7 @@ corpus on the active source set instead of a merely current-promotion-ready corp
   `promotion_suite_results.json` all still match the blocker and failed-slot truth above on active
   source set `source-set-cac9c7d02b280825`.
 - `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md` already agree that
-  the remaining work is this exact two-row blocker lane plus the four downstream reruns above.
+  the remaining work is this exact one-row blocker lane plus the four downstream reruns above.
 
 ## Goal
 
@@ -223,8 +224,9 @@ Outcome label: resolved
   `https://www.fs.usda.gov/media/228272`, `FPS-125` remains `status="parser_error"` with
   `pdf_text_fallback_empty` on active workbook/catalog row
   `https://www.fs.usda.gov/media/51402`, and the exact required full-canonical failures remain the
-  two missing NEPA 3D graph artifacts plus the two stale forest-plan eval artifacts. The next
-  active implementation slice is Milestone 1 on `FPS-125`.
+  two missing NEPA 3D graph artifacts plus the two stale forest-plan eval artifacts. That
+  checkpoint routed the next implementation slice to Milestone 1 on `FPS-125`, which is now
+  resolved below.
 
 ### Milestone 1: Resolve `FPS-125` Through Governed OCR Completion
 
@@ -238,6 +240,18 @@ Outcome label: resolved
   parser provenance under the existing extraction surfaces.
 - Do not accept a partial or ad hoc OCR artifact. The milestone closes only when `FPS-125` leaves
   the blocker set in the active extraction manifest and summary.
+- Closed `2026-05-19`: the plan-mandated reduced-path replay remained compute-bound for `163.82`
+  real seconds with the `4`-worker RapidOCR pool active and no merged record, so the extractor now
+  prefers a governed Apple Vision Swift raster OCR lane for larger scanned PDFs on macOS while
+  retaining RapidOCR as a fallback. Focused verification now passes `33/33`, and the follow-on
+  targeted replay wrote a durable extracted record for `FPS-125` with
+  `parser_name=apple_vision_pdf_raster`,
+  `parser_metadata.fallback_from=pdf_raster_ocr`,
+  `parser_metadata.pdf_raster_ocr_backend=apple_vision_swift`,
+  `parser_metadata.pdf_raster_ocr_page_count=346`,
+  `chunk_count=861`, and `text_char_count=1244371`. Active `summary.json` moved to
+  `extracted_count=634`, `failed_count=1`, and `chunk_count=98109`. The next active implementation
+  slice is Milestone 2 on `FPS-005`.
 
 ### Milestone 2: Resolve `FPS-005` Through Workbook-Contract Action
 

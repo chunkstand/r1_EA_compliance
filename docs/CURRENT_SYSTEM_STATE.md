@@ -51,44 +51,28 @@ Latest reduced closeout on 2026-05-19:
   in-environment no-timeout Docling retries on `WILD-ESA-038`,
   `WILD-ESA-054`, and `FPS-241`.
 - `source_library/derived/source-set-cac9c7d02b280825/diagnostics/summary.json`
-  now records `extracted_count=633`,
-  `failed_count=2`,
-  `chunk_count=97248`,
+  now records `extracted_count=634`,
+  `failed_count=1`,
+  `chunk_count=98109`,
   `validation_passed=false`, and
-  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 1}`.
+  `failure_counts={"docling_conversion_failed": 1}`.
 - The residual extraction blocker set is now exact:
-  `FPS-005` fails with
+  `FPS-005` alone fails with
   `docling_conversion_failed` because the PDF structure is invalid and a
-  fresh upstream redownload reproduces the same xref/pages corruption, while
-  `FPS-125` still fails with `pdf_text_fallback_empty` after Docling-capable
-  retries.
-- `pdftotext` continues to return parse errors on `FPS-005` and zero
-  characters on `FPS-125`, while `pdftoppm` can still render `FPS-125`. An
-  in-environment no-timeout OCR retry on `FPS-125` remained compute-bound for
-  roughly `40` minutes and was interrupted without a merged success result.
-  That narrows the remaining work to upstream PDF replacement/repair plus one
-  raster/OCR recovery straggler, not broader downloader or catalog drift.
-- `src/usfs_r1_ea_sources/extract.py` now includes two explicit scanned-PDF
-  rescue surfaces after `pdf_text_fallback_empty`:
-  `pdf_raster_ocr` (`pdftoppm` + `RapidOCR(torch)`) and a chunked Docling OCR
-  fallback. Focused verification in `tests/test_extract.py` now covers both
-  rescue paths, but the live source-set state above remains unchanged because a
-  long targeted `FPS-125` replay under the new code was interrupted before it
-  wrote a merged extracted record.
-- The raster OCR rescue surface is now tuned for the actual `FPS-125` cost
-  profile: it renders at `100` DPI rather than `150`, disables the classifier
-  phase, and uses a bounded `4`-worker page pool on larger scanned PDFs.
-  Focused verification in `tests/test_extract.py` now passes `30/30`, but a
-  targeted merged `FPS-125` replay still remained compute-bound after all
-  `346` raster pages were rendered and the worker pool was exercised for more
-  than `24` minutes, so no durable extracted record was written.
-- That raster path now also fails closed on page-level OCR setup/runtime
-  exceptions rather than silently dropping those pages from the recovered text.
-- That rescue-path implementation slice is now verification-complete and
-  aligned across the repo docs. The remaining work is therefore not a docs,
-  routing, or contract-test mismatch; it is limited to one live OCR-heavy
-  replay (`FPS-125`) plus one governed upstream repair or replacement decision
-  (`FPS-005`).
+  fresh upstream redownload still reproduces the same xref/pages corruption.
+- `src/usfs_r1_ea_sources/extract.py` now routes larger scanned PDFs through a
+  governed Swift-backed Apple Vision raster OCR lane on macOS before falling
+  back to the slower RapidOCR CPU pool, while retaining the existing
+  fail-closed page-error handling and chunked Docling OCR fallback.
+- The plan-mandated rerun of the older reduced raster path on `FPS-125`
+  remained compute-bound for `163.82` real seconds with the bounded
+  `4`-worker RapidOCR pool active and no merged record, which justified the
+  new large-scan Apple Vision lane for this checkout.
+- A follow-on targeted replay now clears `FPS-125` on the active source set
+  with `parser_name=apple_vision_pdf_raster`,
+  `parser_metadata.pdf_raster_ocr_backend=apple_vision_swift`,
+  `chunk_count=861`, and `text_char_count=1244371`.
+- Focused extractor coverage in `tests/test_extract.py` now passes `33/33`.
 - Fresh rebased `promotion-suite --manifest config/promotion_suite_v1.json`
   now reports `current_promotion_ready=true`,
   `promotion_ready=true`,
@@ -105,7 +89,6 @@ Latest reduced closeout on 2026-05-19:
   stale `forest_plan_profile` eval source-set identity, and stale
   `forest_plan_component_retrieval` eval source-set identity.
 - Next routing:
-  finish a green `FPS-125` replay with the new scanned-PDF rescue path,
   route a governed repair/replacement decision for `FPS-005`, then rerun
   `nepa-knowledge-graph-export`,
   `forest-plan-profile-eval`, and
@@ -113,14 +96,15 @@ Latest reduced closeout on 2026-05-19:
   on `source-set-cac9c7d02b280825`.
 - Active implementation packet:
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`.
-- Milestone 0 on that packet is now resolved: live
+- Milestones 0-1 on that packet are now resolved. Live
   `summary.json`, `extraction_manifest.jsonl`, workbook rows `FPS-005` and
-  `FPS-125`, `source_catalog.jsonl`, and
-  `promotion_suite_results.json` all still agree on the exact two-row blocker
-  set and the exact four remaining failed required full-canonical slots.
+  `FPS-125`, `source_catalog.jsonl`, and the last promotion-suite result now
+  agree that the extraction blocker lane is down to one row and that the exact
+  remaining failed required full-canonical slots are still the same four
+  downstream artifacts.
 - Current implementation slice:
-  Milestone 1 on `FPS-125`, followed by Milestone 2 workbook-contract action
-  on `FPS-005` only after the OCR lane is closed.
+  Milestone 2 workbook-contract action on `FPS-005`, followed by Milestone 3
+  downstream reruns once the active extraction blocker set is empty.
 
 ## Canonical Source Register Import Completion Closeout
 

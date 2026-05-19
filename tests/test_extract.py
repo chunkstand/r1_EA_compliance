@@ -1291,6 +1291,7 @@ class ExtractionTests(unittest.TestCase):
                 "glob",
                 return_value=image_paths,
             ),
+            mock.patch.object(extract_module, "_apple_vision_ocr_available", return_value=False),
             mock.patch.object(
                 extract_module,
                 "_collect_pdf_raster_ocr_blocks",
@@ -1306,6 +1307,113 @@ class ExtractionTests(unittest.TestCase):
                     fallback_error_message="empty",
                 )
             )
+
+    def test_try_extract_pdf_raster_ocr_uses_apple_vision_when_rapidocr_stalls(self) -> None:
+        artifact = Path("/tmp/fake.pdf")
+        fake_completed = SimpleNamespace(returncode=0)
+        image_paths = [Path("/tmp/page-2.png"), Path("/tmp/page-3.png")]
+
+        with (
+            mock.patch.object(extract_module.shutil, "which", return_value="/opt/homebrew/bin/pdftoppm"),
+            mock.patch.object(
+                extract_module.importlib.util,
+                "find_spec",
+                side_effect=lambda name: object() if name == "rapidocr" else None,
+            ),
+            mock.patch.object(extract_module.tempfile, "TemporaryDirectory") as tempdir,
+            mock.patch.object(extract_module.subprocess, "run", return_value=fake_completed),
+            mock.patch.object(
+                extract_module.Path,
+                "glob",
+                return_value=image_paths,
+            ),
+            mock.patch.object(
+                extract_module,
+                "_collect_pdf_raster_ocr_blocks",
+                side_effect=RuntimeError("rapidocr pool stalled"),
+            ),
+            mock.patch.object(extract_module, "_apple_vision_ocr_available", return_value=True),
+            mock.patch.object(
+                extract_module,
+                "_collect_pdf_raster_apple_vision_blocks",
+                return_value=[
+                    extract_module.TextBlock(text="Recovered page two text.", page=2),
+                    extract_module.TextBlock(text="Recovered page three text.", page=3),
+                ],
+            ),
+        ):
+            tempdir.return_value.__enter__.return_value = "/tmp"
+            tempdir.return_value.__exit__.return_value = None
+            payload = extract_module._try_extract_pdf_raster_ocr(
+                artifact,
+                fallback_error_class="pdf_text_fallback_empty",
+                fallback_error_message="empty",
+            )
+
+        assert payload is not None
+        self.assertEqual(payload.parser_name, "apple_vision_pdf_raster")
+        self.assertEqual(payload.parser_version, "vision_swift")
+        self.assertEqual(payload.metadata["fallback_from"], "pdf_raster_ocr")
+        self.assertEqual(payload.metadata["pdf_raster_ocr_backend"], "apple_vision_swift")
+        self.assertEqual(payload.metadata["pdf_raster_ocr_page_count"], 2)
+        self.assertIn("Recovered page two text.", payload.text)
+
+    def test_try_extract_pdf_raster_ocr_prefers_apple_vision_for_large_documents(self) -> None:
+        artifact = Path("/tmp/fake.pdf")
+        fake_completed = SimpleNamespace(returncode=0)
+        image_paths = [
+            Path(f"/tmp/page-{index}.png")
+            for index in range(1, extract_module.PDF_RASTER_OCR_PARALLEL_MIN_PAGES + 1)
+        ]
+
+        with (
+            mock.patch.object(extract_module.shutil, "which", return_value="/opt/homebrew/bin/pdftoppm"),
+            mock.patch.object(
+                extract_module.importlib.util,
+                "find_spec",
+                side_effect=lambda name: object() if name == "rapidocr" else None,
+            ),
+            mock.patch.object(extract_module.tempfile, "TemporaryDirectory") as tempdir,
+            mock.patch.object(extract_module.subprocess, "run", return_value=fake_completed),
+            mock.patch.object(
+                extract_module.Path,
+                "glob",
+                return_value=image_paths,
+            ),
+            mock.patch.object(extract_module, "_apple_vision_ocr_available", return_value=True),
+            mock.patch.object(
+                extract_module,
+                "_collect_pdf_raster_apple_vision_blocks",
+                return_value=[extract_module.TextBlock(text="Recovered first page.", page=1)],
+            ),
+            mock.patch.object(extract_module, "_collect_pdf_raster_ocr_blocks") as rapidocr_blocks,
+        ):
+            tempdir.return_value.__enter__.return_value = "/tmp"
+            tempdir.return_value.__exit__.return_value = None
+            payload = extract_module._try_extract_pdf_raster_ocr(
+                artifact,
+                fallback_error_class="pdf_text_fallback_empty",
+                fallback_error_message="empty",
+            )
+
+        assert payload is not None
+        self.assertEqual(payload.parser_name, "apple_vision_pdf_raster")
+        rapidocr_blocks.assert_not_called()
+
+    def test_collect_pdf_raster_apple_vision_blocks_parses_json_output(self) -> None:
+        completed = SimpleNamespace(
+            returncode=0,
+            stdout='{"page":10,"text":"  Ten  "}\n{"page":2,"text":"Two"}\n{"page":7,"text":"   "}\n',
+            stderr="",
+        )
+
+        with mock.patch.object(extract_module.subprocess, "run", return_value=completed):
+            blocks = extract_module._collect_pdf_raster_apple_vision_blocks(
+                [Path("/tmp/page-10.png"), Path("/tmp/page-2.png"), Path("/tmp/page-7.png")]
+            )
+
+        self.assertEqual([block.page for block in blocks], [2, 10])
+        self.assertEqual([block.text for block in blocks], ["Two", "Ten"])
 
     def test_source_derived_dir_rejects_unsafe_source_set_id(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
