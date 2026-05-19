@@ -5,9 +5,56 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Source-Register Forest Plan Role Classification Alignment Pass
+
+This docs-only alignment pass closes the remaining routing gap after classifier
+closeout commit `f220b7a`
+(`Fix source-register forest plan role classification`).
+
+- outcome label:
+  `reduced`
+- alignment scope:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`, and
+  `docs/R1_FOREST_PLAN_PRIMARY_PLAN_ROLE_CLASSIFICATION_MILESTONE_PLAN.md`
+- alignment evidence:
+  the live
+  `source_library/derived/source-set-9e7d85759951c279/forest_plan_components/summary.json`
+  now records `component_count=754`, `standard_count=186`, and only `5`
+  blocked forests; and a scoped archived
+  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  replay on current HEAD emitted catalog gate `source-set-2b6cb7d17da08906`
+  with the corrected canonical primary-plan/support role split
+- alignment outcome:
+  the active routing set no longer says the next slice is only the unresolved
+  `25`-row identity family. The committed classifier fix is closed in code, but
+  promoting the current-HEAD replay would require a broader full-canonical
+  source-set refresh/rebind decision because catalog identity is commit-sensitive
+- operational boundary:
+  no live `source_library/catalog/` promotion landed in this pass; the active
+  catalog and chunk surfaces still reflect pre-fix roles until a broader
+  refresh/rebind slice is intentionally executed
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py -q`
+  passed `19/19`; and
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/R1_FOREST_PLAN_PRIMARY_PLAN_ROLE_CLASSIFICATION_MILESTONE_PLAN.md`
+  passed; and
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+  passed; and
+  `git diff --check`
+  passed
+- next routing:
+  do not start Milestone 2 inside the identity-reconciliation packet yet and
+  do not assume the unresolved `25` rows are the only remaining blocker. First
+  route a dedicated full-canonical source-set refresh/rebind slice, then
+  remeasure the live blocker family from the refreshed artifacts
+
 ## Source-Register Forest Plan Role Classification Code Closeout
 
-This implementation slice closes the active code-side classifier regression on the full-canonical
+This implementation slice reduces the active code-side classifier regression on the full-canonical
 forest-plan lane without pretending the already-built `source_library/` artifacts have refreshed
 yet.
 

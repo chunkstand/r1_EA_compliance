@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; unresolved blocker family next
+Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; post-classifier source-set refresh/rebind decision next before Milestone 2
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -16,11 +16,13 @@ contracts onto canonical active-catalog identities before the blocked downstream
 ## Current Evidence
 
 - `source_library/derived/source-set-9e7d85759951c279/forest_plan_components/summary.json`
-  currently records `passed=false`, `component_count=0`, `standard_count=0`, and all `10`
-  tracked forests blocked by
-  `no_selected_forest_plan_chunks`,
-  `plan_component_labels_not_detected`, and
-  `plan_standard_labels_not_detected`.
+  now records `passed=false`, `component_count=754`, `standard_count=186`, and only `5`
+  blocked forests:
+  `dakota-prairie-grasslands`,
+  `flathead-nf`,
+  `kootenai-nf`,
+  `lolo-nf`, and
+  `nez-perce-clearwater-nfs`.
 - `config/r1_forest_plan_component_inventory_build_manifest.json` and
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`
   now reduce the source-record identity mix to `74` canonical source-record IDs plus the explicit
@@ -34,6 +36,13 @@ contracts onto canonical active-catalog identities before the blocked downstream
   planning or document-set landing pages with no exact current active-catalog row.
 - Both configs now carry committed top-level and per-profile `identity_reconciliation` metadata so
   the unresolved blocker family stays explicit instead of hiding inside a mixed-ID manifest.
+- `docs/R1_FOREST_PLAN_PRIMARY_PLAN_ROLE_CLASSIFICATION_MILESTONE_PLAN.md` is now resolved in code
+  through commit `f220b7a` (`Fix source-register forest plan role classification`). A scoped
+  archived
+  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  replay on current HEAD emits catalog gate `source-set-2b6cb7d17da08906` and classifies the
+  canonical primary-plan rows correctly, which proves the next operational slice is broader than an
+  identity-only follow-up.
 - `config/forest_plan_component_retrieval_eval_v1.json`
   still carries legacy component IDs for the retrieval-eval cases, so source-record rebind and
   component-identity rebind must stay sequenced rather than being mixed together.
@@ -85,7 +94,7 @@ Return the forest-plan downstream lane to a truthful replayable state by:
 ## Out Of Scope
 
 - workbook changes
-- downloader, catalog, extraction, or currentness changes
+- downloader, catalog, extraction, or currentness changes inside this packet itself
 - broad multi-forest source-delta capture
 - direct downstream reruns while the forest-plan identity contracts are still mixed
 - review-ready East Crazies or expansion-slot work
@@ -334,8 +343,12 @@ Outcome label: resolved
 - The main accepted residual risk after Milestone 1 is that the source-record rebind is complete
   only for the exact URL-backed `74` rows. The remaining `25` unresolved legacy rows still block a
   truthful canonical component inventory rebuild.
-- The next active slice is the unresolved blocker family only. Milestone 2 stays blocked until
-  those rows are reconciled onto canonical source-record IDs or otherwise resolved through governed
-  repo data.
+- A current-HEAD archived catalog replay now proves the classifier fix but also mints
+  `source-set-2b6cb7d17da08906`, so promoting that proof into the live active catalog would require
+  a broader full-canonical source-set refresh/rebind decision before this packet can truthfully
+  continue to Milestone 2.
+- The next active slice is therefore not Milestone 2 and not an identity-only pass over the
+  unresolved `25` rows. First route a dedicated full-canonical source-set refresh/rebind slice,
+  then reassess the remaining identity blockers against the refreshed live artifacts.
 - If a future session cannot prove a canonical binding for one of the `25` unresolved rows, it must
   keep that row explicit as unresolved rather than hiding it inside a broad rerun attempt.

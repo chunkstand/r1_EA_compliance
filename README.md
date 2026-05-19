@@ -171,6 +171,11 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
   fallback. Canonical workbook proof now classifies `FPS-130`-`FPS-134`,
   `FPS-267`, `FPS-298`, and `FPS-347` as `forest_plan`, while `FPS-165`,
   `FINAL-KOOT-011`, and `FOR-033` remain `forest_plan_support`.
+- A scoped archived
+  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  replay on current HEAD now proves the same role split against the real
+  canonical run and emits archived catalog gate
+  `source-set-2b6cb7d17da08906`.
 - The active `source_library/catalog/` and
   `source_library/derived/source-set-9e7d85759951c279/chunks/chunks.jsonl`
   were built before that code fix, so a separate scoped catalog/extraction
@@ -196,10 +201,11 @@ Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
 - Current reviewer-ready downstream evidence still lives on review-oriented
   source set `source-set-ba8d0feae79501b8`. The imported canonical catalog is
   now truthful and active, but broader full-canonical downstream freshness is
-  still routed-red until the active full-canonical catalog/extraction replay
-  lands with the committed classifier fix, the narrowed blocker family is
-  remeasured truthfully, and the blocked graph/profile/component retrieval and
-  promotion reruns can be replayed on `source-set-9e7d85759951c279`.
+  still routed-red until a broader full-canonical source-set refresh/rebind
+  decision promotes the current-HEAD classifier replay, the narrowed blocker
+  family is remeasured truthfully, and the blocked
+  graph/profile/component retrieval and promotion reruns can be replayed on
+  the resulting refreshed source set.
 
 Historical broader capture baseline:
 

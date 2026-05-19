@@ -25,6 +25,10 @@ later milestone explicitly reruns those lanes.
 
 Latest closeout on 2026-05-19:
 
+- Closing commit hash:
+  `f220b7a` (`Fix source-register forest plan role classification`).
+- Outcome label:
+  `reduced`
 - The active full-canonical forest-plan blocker is no longer truthfully described as only a
   legacy-identity problem. A fresh
   `forest-plan-components-build --source-set-id source-set-9e7d85759951c279 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
@@ -40,6 +44,13 @@ Latest closeout on 2026-05-19:
   The canonical workbook proof now classifies `FPS-130`-`FPS-134`, `FPS-267`, `FPS-298`, and
   `FPS-347` as `forest_plan`, while `FPS-165`, `FINAL-KOOT-011`, and `FOR-033` remain
   `forest_plan_support`.
+- A scoped archived
+  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  replay on current HEAD now proves the same role split against the real canonical run without
+  mutating the live active catalog. That archived gate emitted
+  `source-set-2b6cb7d17da08906` with
+  `document_role_counts.forest_plan=33` and
+  `document_role_counts.forest_plan_support=316`.
 - Focused verification for the code closeout passed:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py -q`
   (`19/19`) and
@@ -49,9 +60,10 @@ Latest closeout on 2026-05-19:
   `source_library/derived/source-set-9e7d85759951c279/chunks/chunks.jsonl`
   still reflect the pre-fix roles until a separate replay regenerates them.
 - Next routing:
-  rerun the active full-canonical catalog/extraction surfaces with the committed classifier fix,
-  replay `forest-plan-components-build`, then continue the narrower remaining blocker family that
-  survives that refresh.
+  the next slice is broader than an in-place active-catalog refresh. Because catalog identity is
+  commit-sensitive, promoting the current-HEAD replay would require a broader full-canonical
+  source-set refresh/rebind decision before the narrowed remaining blocker family can be remeasured
+  truthfully.
 
 ## Full Canonical Forest Plan Identity Reconciliation Milestone 1 Reduced Closeout
 
@@ -97,10 +109,12 @@ Latest closeout on 2026-05-19:
   `23`/`76` blocker split are preserved Milestone 3 evidence only and are
   superseded by the governed Milestone 0/1 `74`/`25` identity-reconciliation
   census above.
-- The next routed slice is no longer the already-bound `74` rows. Stay in the
-  active identity-reconciliation packet, but work only the unresolved
-  `25`-row blocker family until a truthful canonical component inventory can
-  exist again for Milestone 2.
+- Historical routing note:
+  at the Milestone 1 reduced closeout, the next slice was the unresolved
+  `25`-row blocker family only. That routing is now superseded by the
+  source-register role-classification closeout above: a broader full-canonical
+  source-set refresh/rebind decision must land before the remaining blocker
+  family can be remeasured truthfully.
 
 ## Full Canonical Forest Plan Identity Reconciliation Milestone 0 Closeout
 

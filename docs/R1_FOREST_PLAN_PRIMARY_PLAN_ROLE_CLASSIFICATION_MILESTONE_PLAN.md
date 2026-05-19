@@ -2,7 +2,7 @@
 
 Date: 2026-05-19
 
-Status: Resolved in committed code; active-source-set catalog/extraction refresh still deferred
+Status: Reduced 2026-05-19 through `f220b7a`; current-HEAD archived replay proves `source-set-2b6cb7d17da08906`; broader active-source-set rebind still deferred
 
 Owner context: This is a catalog/classification milestone for the Region 1 forest-plan lane. It is
 not a parser-expansion milestone, readiness-promotion milestone, or viewer milestone. Its only job
@@ -19,9 +19,21 @@ the forest-plan branch even after the older supplemental-register fix.
 
 - `src/usfs_r1_ea_sources/catalog.py` now applies a manifest-driven primary-plan override for the
   canonical `source_register_v1` path before the generic `regulation` fallback.
+- Outcome label:
+  `reduced`
+- Closing commit hash:
+  `f220b7a` (`Fix source-register forest plan role classification`)
 - Canonical workbook proof now classifies `FPS-130`-`FPS-134`, `FPS-267`, `FPS-298`, and
   `FPS-347` as `forest_plan`, while `FPS-165`, `FINAL-KOOT-011`, and `FOR-033` remain
   `forest_plan_support`.
+- A scoped archived
+  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  replay on current HEAD now proves the fix against the real canonical run without mutating the
+  active catalog. That replay emitted archived catalog gate `source-set-2b6cb7d17da08906` with
+  `document_role_counts.forest_plan=33` and
+  `document_role_counts.forest_plan_support=316`, and the expected canonical primary-plan/support
+  split for `FPS-130`-`FPS-134`, `FPS-267`, `FPS-298`, `FPS-347`, `FPS-165`, `FINAL-KOOT-011`,
+  and `FOR-033`.
 - Focused verification now passes on the current canonical lane:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py -q`
   (`19/19`) and
@@ -29,6 +41,12 @@ the forest-plan branch even after the older supplemental-register fix.
 - No active-source-set catalog or extraction refresh landed in this code-only closeout. The live
   `source_library/catalog/` and active chunk surfaces still reflect the pre-fix `document_role`
   values until a separate replay regenerates them.
+- Because `source_set_id` is commit-sensitive, promoting that current-HEAD replay into live
+  `source_library/catalog/` would require a broader full-canonical source-set rebind rather than a
+  docs-only or chunk-only follow-up.
+- The plan's broader-promotion stop condition therefore fired:
+  the code-side classifier defect is closed, but the active-source-set proof remains deferred
+  outside this milestone's reduced closeout.
 - Historical references below that cite the older `source-set-5e65d845ce77e1a0` working-tree
   replay remain preserved context only.
 
@@ -48,9 +66,14 @@ legacy-plan parsing or readiness promotion:
 
 ## Current Implementation Status
 
-The classifier fix is now committed in repo code. The remaining deferred work is the operational
-refresh of the active `source_library/` catalog/chunk surfaces, which stays outside this
-code-focused milestone.
+The classifier fix is now committed in repo code and proven on a current-HEAD archived catalog
+gate. The remaining deferred work is no longer just "rerun the live catalog"; it is a broader
+full-canonical source-set refresh/rebind decision because the current-HEAD replay mints
+`source-set-2b6cb7d17da08906`.
+
+The detailed Sequence 2/3 text below is preserved as the original intended full closeout path. The
+actual 2026-05-19 milestone outcome stopped earlier as `reduced` when the broader active-source-set
+promotion boundary became explicit.
 
 - `catalog.py` no longer treats every `source_input="r1_forest_plan_document_register"` row as
   uniformly `forest_plan_support`.
@@ -435,27 +458,31 @@ Leave unrelated existing worktree changes alone, including the current viewer-de
 
 Do not batch this milestone together with parser-expansion or readiness-promotion changes.
 
-Current closeout status: implementation, alignment, and milestone commit are complete once this
-verified slice is staged and landed without the unrelated viewer lane.
+Current closeout status:
+the reduced code-side closeout is complete through `f220b7a`, and this plan's remaining active
+gap is explicitly rerouted to the broader full-canonical source-set refresh/rebind boundary.
 
 ## Residual Risks And Next Milestone Routing
 
-Even after this milestone closes, the five forests may still fail component extraction because their
-plan syntax may not match the current parser. That is expected. This milestone only removes the
-upstream role-classification blocker.
+Even after this milestone's reduced closeout, the five forests may still fail component extraction
+because their plan syntax may not match the current parser. That is expected. This milestone
+removed the code-side upstream role-classification defect, but it did not yet promote a refreshed
+active source set.
 
 After this milestone, the next lane should be:
 
-- parser expansion for legacy or non-2012-rule plan formats now exposed as `forest_plan` inputs; or
-- active-source-set manifest/reference refresh if the user explicitly wants the transient replayed
-  active catalog promoted before parser work continues.
+- a dedicated full-canonical source-set refresh/rebind slice that decides whether archived replay
+  `source-set-2b6cb7d17da08906` becomes the new live catalog contract; then
+- parser expansion or residual blocker work against that refreshed live source set.
 
 ## Closeout Checklist
 
 - [x] Sequence 0 gate added and failing/baselined
 - [x] Sequence 1 classifier change implemented and tested
-- [x] Sequence 2 active replay proves the five source IDs become `forest_plan`
+- [x] Scoped current-HEAD archived replay proves the five canonical primary-plan/source-support IDs
+  classify correctly
+- [x] Sequence 2 stop condition identified the broader active-source-set promotion boundary
 - [x] Docs and handoff updated
 - [x] Plan linter passes
 - [x] Verification gates pass
-- [x] Local atomic commit created for the milestone slice
+- [x] Local atomic commit created for the reduced milestone slice

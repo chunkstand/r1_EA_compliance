@@ -65,11 +65,13 @@ canonical corpus instead of a merely current-promotion-ready corpus.
 - The prerequisite forest-plan component-inventory replay on
   `source-set-9e7d85759951c279` now fails closed. The resulting
   `source_library/derived/source-set-9e7d85759951c279/forest_plan_components/summary.json`
-  records `passed=false`, `component_count=0`, `standard_count=0`, and all
-  `10` tracked forests blocked by
-  `no_selected_forest_plan_chunks`,
-  `plan_component_labels_not_detected`, and
-  `plan_standard_labels_not_detected`.
+  records `passed=false`, `component_count=754`, `standard_count=186`, and only
+  `5` blocked forests:
+  `dakota-prairie-grasslands`,
+  `flathead-nf`,
+  `kootenai-nf`,
+  `lolo-nf`, and
+  `nez-perce-clearwater-nfs`.
 - The blocker is now explicit: the active canonical catalog and chunk store
   contain `0` `R1PLAN-*` rows, while
   `config/r1_forest_plan_component_inventory_build_manifest.json` plus
@@ -87,11 +89,13 @@ canonical corpus instead of a merely current-promotion-ready corpus.
 - The durable routing set is now aligned across `README.md`,
   `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`: the
   extraction blocker lane is closed, the active source set is
-  `source-set-9e7d85759951c279`, and the immediate next work is a dedicated
-  canonical-vs-legacy forest-plan identity reconciliation packet. The next
-  slice inside that packet is the unresolved `25`-row blocker family, not the
-  already-bound `74` rows, before the four downstream reruns above can be
-  completed truthfully.
+  `source-set-9e7d85759951c279`, and the immediate next work is no longer just
+  the unresolved `25`-row identity family. A scoped current-HEAD archived
+  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  replay now proves the classifier fix but mints archived catalog gate
+  `source-set-2b6cb7d17da08906`, so the next truthful slice is a broader
+  full-canonical source-set refresh/rebind decision before the four downstream
+  reruns above can be completed truthfully.
 - This packet is no longer the active implementation surface after the reduced
   Milestone 3 closeout. The active follow-on packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
