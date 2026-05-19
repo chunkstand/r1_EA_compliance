@@ -43,6 +43,11 @@ Reduced on 2026-05-19 with the following repo-grounded outcome:
   active source-set blocker state above remains unchanged because the first long targeted live
   `FPS-125` replay under the new rescue path was interrupted before it produced a merged success
   record.
+- The rescue-path implementation slice itself is now aligned and closed:
+  focused extractor tests, focused lint, docs closeout, and `git diff --check`
+  all pass. The packet remains reduced only because the live corpus still needs
+  one successful `FPS-125` replay plus a governed replacement or repair
+  decision for `FPS-005`, not because repo wiring or verification is missing.
 - Fresh `promotion-suite --manifest config/promotion_suite_v1.json` now fails for the right reason:
   the old full-canonical stale-manifest split is gone, and the remaining full-canonical failure
   surface is narrowed to `4/8` required results passing with

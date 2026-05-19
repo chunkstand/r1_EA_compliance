@@ -75,6 +75,11 @@ Latest reduced closeout on 2026-05-19:
   rescue paths, but the live source-set state above remains unchanged because a
   long targeted `FPS-125` replay under the new code was interrupted before it
   wrote a merged extracted record.
+- That rescue-path implementation slice is now verification-complete and
+  aligned across the repo docs. The remaining work is therefore not a docs,
+  routing, or contract-test mismatch; it is limited to one live OCR-heavy
+  replay (`FPS-125`) plus one governed upstream repair or replacement decision
+  (`FPS-005`).
 - Fresh rebased `promotion-suite --manifest config/promotion_suite_v1.json`
   now reports `current_promotion_ready=true`,
   `promotion_ready=true`,

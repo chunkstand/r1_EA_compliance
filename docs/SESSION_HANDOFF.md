@@ -5,6 +5,43 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Downstream Freshness Rescue Alignment Closeout
+
+This follow-on update does not claim new corpus recovery. It closes the
+verification and doc-alignment gap left by the rescue-path implementation pass
+and supersedes the routing detail below when they disagree.
+
+- routed plan:
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
+- alignment outcome:
+  the active repo docs now agree that the rescue-path implementation slice is
+  fully closed and that the live corpus state is still unchanged at
+  `extracted_count=633`,
+  `failed_count=2`,
+  `chunk_count=97248`,
+  `validation_passed=false`, and
+  `failure_counts={"docling_conversion_failed": 1, "pdf_text_fallback_empty": 1}`.
+- focused verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/extract.py tests/test_extract.py`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`, and
+  `git diff --check`
+  all pass for this reduced follow-on.
+- residual truth:
+  the only unresolved work in this packet remains
+  `FPS-125` live recovery under the new OCR-capable path and a governed
+  repair/replacement decision for upstream-invalid `FPS-005`. No tracked repo
+  contract, doc, or verification gap remains inside the implemented rescue-path
+  slice itself.
+- next routing:
+  finish a green targeted `FPS-125` replay with the existing rescue path, route
+  the `FPS-005` replacement or repair decision through the source-register
+  contract, then rerun
+  `nepa-knowledge-graph-export`,
+  `forest-plan-profile-eval`,
+  `forest-plan-component-retrieval-eval`, and
+  `promotion-suite` on `source-set-cac9c7d02b280825`.
+
 ## Full Canonical Downstream Freshness OCR Rescue Update
 
 This follow-on update adds a bounded scanned-PDF rescue path to the same

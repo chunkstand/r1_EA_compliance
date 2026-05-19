@@ -149,6 +149,11 @@ Local active import baseline on 2026-05-18 after import-completion closeout:
   surfaces, but the live `source-set-cac9c7d02b280825` blocker count remains
   `633/2` because the first long targeted `FPS-125` replay under the new path
   was interrupted without writing a merged success record.
+- That rescue-path implementation slice is now alignment-closed in the repo:
+  the focused extractor suite, focused lint, and docs closeout all pass, so
+  the remaining work is not missing repo wiring. The only unresolved lane is
+  bounded live recovery on `FPS-125` plus a governed replacement or repair
+  decision for upstream-invalid `FPS-005`.
 - Until those `2` residual extraction records are recovered or replaced, the source-set
   knowledge-graph export plus the rebased `forest_plan_profile` and
   `forest_plan_component_retrieval` eval artifacts remain missing or stale.
