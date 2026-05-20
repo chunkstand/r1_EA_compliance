@@ -5,6 +5,33 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Live Source-Set Promotion Milestone 3 Alignment Pass
+
+This docs-only follow-up closes the remaining routing and closeout-hash drift
+after runtime closeout `a299450`.
+
+- outcome label:
+  `resolved` for the alignment pass; runtime truth is unchanged
+- aligned packet surfaces:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`, and
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+- routing truth:
+  `a299450` (`Resolve live source-set promotion Milestone 3`) is the runtime
+  closeout for the live downstream replay on
+  `source-set-f775524ab233ff27`; archived
+  `source-set-732a5a91d31736f8` remains preserved historical downstream
+  evidence only
+- stale-routing cleanup:
+  the top routed docs and packet status lines now pin `a299450`, and the
+  archived identity-reconciliation packet no longer frames itself relative to
+  the earlier live-promotion Milestone 2 closeout
+- verification:
+  milestone-plan lints on the touched packets plus `git diff --check` passed
+
 ## Full Canonical Live Source-Set Promotion Milestone 3 Closeout
 
 This runtime/config slice closes the live successor downstream full-canonical
@@ -12,6 +39,8 @@ rebind/replay boundary.
 
 - outcome label:
   `resolved` for Milestone 3
+- Milestone 3 closeout commit:
+  `a299450` (`Resolve live source-set promotion Milestone 3`)
 - implementation surfaces:
   `config/region1_forest_plan_profile_eval_coverage_v1.json`,
   `config/forest_plan_component_retrieval_eval_v1.json`,

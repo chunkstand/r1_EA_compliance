@@ -128,7 +128,8 @@ Local active import baseline on 2026-05-19 after full canonical live source-set 
   and `promotion-suite --manifest config/promotion_suite_v1.json` now reports
   `full_canonical_source_set_id=source-set-f775524ab233ff27`,
   `full_canonical_corpus_ready=true`, `promotion_ready=true`, and `8/8`
-  required full-canonical results passing.
+  required full-canonical results passing. Milestone 3 closeout commit:
+  `a299450` (`Resolve live source-set promotion Milestone 3`).
 - Archived `source-set-732a5a91d31736f8` remains preserved historical
   downstream evidence, but it no longer governs the active live
   full-canonical contract.

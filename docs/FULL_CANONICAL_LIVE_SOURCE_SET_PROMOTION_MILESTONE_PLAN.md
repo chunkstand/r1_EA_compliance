@@ -1,7 +1,7 @@
 # Full Canonical Live Source-Set Promotion Milestone Plan
 
 Date: 2026-05-19
-Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through `c08e480` with live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 resolved locally 2026-05-19 on live successor `source-set-f775524ab233ff27`; Milestone 4 is the next routed slice
+Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through `c08e480` with live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 resolved locally 2026-05-19 through `a299450` on live successor `source-set-f775524ab233ff27`; Milestone 4 is the next routed slice
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` live full-canonical source-set promotion boundary
 
 ## Purpose
@@ -414,7 +414,8 @@ Outcome label: resolved
   `config/forest_plan_component_retrieval_eval_v1.json`,
   `config/phase_eval_direct_eval_v1.json`, and
   `config/promotion_suite_v1.json` now bind the downstream full-canonical
-  contract to `source-set-f775524ab233ff27`.
+  contract to `source-set-f775524ab233ff27`. Runtime closeout commit:
+  `a299450` (`Resolve live source-set promotion Milestone 3`).
 - Runtime replay truth on the live successor:
   `forest-plan-profile-eval` passes with
   `active_source_set_ids=["source-set-f775524ab233ff27"]`;

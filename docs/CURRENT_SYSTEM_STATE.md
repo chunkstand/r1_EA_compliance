@@ -24,8 +24,8 @@ promotion lane specifically, references below that still treat
 `source-set-9e7d85759951c279` as the active follow-on target, still route
 Milestone 2 as pending, or still describe archived
 `source-set-732a5a91d31736f8` as the governing live downstream contract are
-historical only after the 2026-05-19 live-promotion Milestone 3 closeout on
-`source-set-f775524ab233ff27`.
+historical only after the 2026-05-19 live-promotion Milestone 3 closeout
+`a299450` on `source-set-f775524ab233ff27`.
 
 ## Full Canonical Live Source-Set Promotion Milestone 3 Closeout
 
@@ -36,6 +36,8 @@ Latest closeout on 2026-05-19:
 - Outcome label:
   `resolved` for Milestone 3; the runtime full-canonical downstream split is
   now closed on the live successor.
+- Milestone 3 closeout commit:
+  `a299450` (`Resolve live source-set promotion Milestone 3`).
 - Implementation surfaces:
   `config/region1_forest_plan_profile_eval_coverage_v1.json`,
   `config/forest_plan_component_retrieval_eval_v1.json`,
