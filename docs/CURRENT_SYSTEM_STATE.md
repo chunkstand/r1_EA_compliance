@@ -106,10 +106,14 @@ Latest closeout on 2026-05-19:
   `passed_required_full_canonical_result_count=8`,
   `required_full_canonical_result_count=8`, and
   `full_canonical_failure_category_counts={}`.
+- Milestone 4 runtime closeout landed in
+  `237c45d` (`Resolve archived full-canonical Milestone 4 lane`).
 - Next routing:
-  the archived full-canonical downstream runtime lane is now green. Any
-  remaining work on this packet is docs-only closeout/routing reset, not
-  another blocked rerun on the archived corpus.
+  the archived full-canonical downstream runtime lane is now green. The next
+  routed pass is Milestone 5 in
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`:
+  docs-only durable closeout/routing reset, not another blocked rerun on the
+  archived corpus.
 
 ## Source-Register Forest Plan Role Classification Code Closeout
 

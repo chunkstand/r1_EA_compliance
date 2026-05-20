@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved locally; Milestone 5 remains the durable closeout/routing reset pass
+Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved 2026-05-19 through `237c45d`; Milestone 5 remains the durable closeout/routing reset pass
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -339,6 +339,9 @@ Outcome label: reduced
 
 Outcome label: resolved
 
+- Closing commit hash:
+  `237c45d` (`Resolve archived full-canonical Milestone 4 lane`)
+
 - Replace or governably rebind the `11` wrapper-page direct-document rows
   still rejected by the verified-extraction admission gate on archived
   full-canonical source set `source-set-732a5a91d31736f8`.
@@ -470,11 +473,12 @@ Outcome label: resolved
   `retrieval-build` is reviewer-ready, and the claims, rule-claim, graph, and
   promotion-suite layers all validate truthfully.
 - The remaining accepted residual risk in this packet is no longer runtime
-  readiness. It is only packet-closeout hygiene: durable routing reset and
-  later recording of the final closeout hash once the atomic milestone commit
-  exists.
+  readiness. It is only packet-closeout hygiene: durable routing reset across
+  the active docs plus any final packet-status simplification once the user
+  wants the overall packet marked fully resolved.
 - The next active slice is therefore Milestone 5:
-  align the durable routing set around the now-green archived source set and
-  close the packet without reopening stale `370...` or `6/8` blocker prose.
+  align the durable routing set around runtime closeout commit `237c45d` and
+  the now-green archived source set, without reopening stale `370...` or
+  `6/8` blocker prose.
 - If a future session cannot prove a canonical binding for one of the `24` unresolved rows, it must
   keep that row explicit as unresolved rather than hiding it inside a broad rerun attempt.

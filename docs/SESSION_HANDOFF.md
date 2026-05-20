@@ -5,6 +5,28 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Forest-Plan Identity Reconciliation Milestone 4 Alignment Pass
+
+This docs-only follow-up closes the remaining routing drift after runtime
+closeout commit `237c45d`.
+
+- outcome label:
+  `resolved` for the alignment pass; runtime truth is unchanged
+- aligned packet surfaces:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`, and
+  `docs/R1_FOREST_PLAN_PRIMARY_PLAN_ROLE_CLASSIFICATION_MILESTONE_PLAN.md`
+- routing truth:
+  the archived full-canonical downstream lane remains green on
+  `source-set-732a5a91d31736f8`, Milestone 4 runtime closeout remains
+  `237c45d`, and the next routed pass is Milestone 5 docs-only durable
+  closeout/routing reset rather than another archived replay repair
+- verification:
+  milestone-plan lints on the touched packets plus `git diff --check` passed
+
 ## Full Canonical Forest-Plan Identity Reconciliation Milestone 4 Closeout
 
 This implementation slice closes the narrowed archived full-canonical

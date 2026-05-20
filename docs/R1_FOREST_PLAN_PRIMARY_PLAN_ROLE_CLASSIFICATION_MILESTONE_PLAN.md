@@ -2,7 +2,7 @@
 
 Date: 2026-05-19
 
-Status: Resolved in practice and committed code; archived full-canonical refresh now proves `source-set-370896a1043817f2`, and the former Flathead inventory follow-on is now closed
+Status: Resolved in practice and committed code; archived full-canonical refresh now proves `source-set-732a5a91d31736f8`, and the former Flathead inventory follow-on is now closed
 
 Owner context: This is a catalog/classification milestone for the Region 1 forest-plan lane. It is
 not a parser-expansion milestone, readiness-promotion milestone, or viewer milestone. Its only job
@@ -30,14 +30,14 @@ the forest-plan branch even after the older supplemental-register fix.
   `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
   replay on current HEAD now proves the fix against the real canonical run without mutating the
   active import catalog. The refreshed archived gate emitted
-  `source-set-370896a1043817f2` with
+  `source-set-732a5a91d31736f8` with
   `document_role_counts.forest_plan=33` and
   `document_role_counts.forest_plan_support=316`, and the expected canonical primary-plan/support
   split for `FPS-130`-`FPS-134`, `FPS-267`, `FPS-298`, `FPS-347`, `FPS-165`, `FINAL-KOOT-011`,
   and `FOR-033`.
 - A reuse-first extraction refresh on that archived gate now re-materializes the full-canonical
-  chunk surface with `extracted_count=634`, `reused_count=634`, and `chunk_count=98155`.
-- `forest-plan-components-build` on `source-set-370896a1043817f2` now passes with
+  chunk surface with `extracted_count=634`, `reused_count=291`, and `chunk_count=98699`.
+- `forest-plan-components-build` on `source-set-732a5a91d31736f8` now passes with
   `1416` components and `397` standards. The earlier five-forest role
   starvation boundary and the later Flathead-only residual are both gone.
 - `forest-plan-component-retrieval-eval` now also passes `6/6` on that
@@ -50,7 +50,7 @@ the forest-plan branch even after the older supplemental-register fix.
 - The active import catalog in `source_library/catalog/` remains
   `source-set-9e7d85759951c279`, but the broader source-set refresh/rebind decision is now
   complete for this milestone's scope: the full-canonical forest-plan/downstream contract surfaces
-  point at archived replay `source-set-370896a1043817f2`.
+  point at archived replay `source-set-732a5a91d31736f8`.
 - Historical references below that cite the older `source-set-5e65d845ce77e1a0` working-tree
   replay remain preserved context only.
 
@@ -71,7 +71,7 @@ legacy-plan parsing or readiness promotion:
 ## Current Implementation Status
 
 The classifier fix is now committed in repo code and proven through a refreshed archived
-full-canonical replay on `source-set-370896a1043817f2`.
+full-canonical replay on `source-set-732a5a91d31736f8`.
 
 The detailed Sequence 2/3 text below is preserved as the original intended full closeout path. The
 actual 2026-05-19 milestone outcome now closes `resolved`: the archived refresh/rebind landed and
