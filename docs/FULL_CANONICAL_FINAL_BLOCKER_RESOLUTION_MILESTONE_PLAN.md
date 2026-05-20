@@ -1,7 +1,7 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Reduced 2026-05-19 through `933c667`; superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`, which now owns the green archived full-canonical downstream closeout on `source-set-732a5a91d31736f8` plus the final durable routing reset
+Status: Reduced 2026-05-19 through `933c667`; superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`, which now owns the green archived full-canonical downstream closeout on `source-set-732a5a91d31736f8` plus the final durable routing reset through `df2bd28`
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
@@ -98,8 +98,8 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   Milestone 3 closeout. The active follow-on packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
   active through the archived refresh/rebind, Flathead/retrieval, direct-document,
-  downstream closeouts, and final docs-only Milestone 5 routing reset. That
-  follow-on packet is now locally resolved.
+  downstream closeouts, and final docs-only Milestone 5 routing reset through
+  `df2bd28`. That follow-on packet is now locally resolved.
 
 ## Goal
 

@@ -51,6 +51,9 @@ the forest-plan branch even after the older supplemental-register fix.
   `source-set-9e7d85759951c279`, but the broader source-set refresh/rebind decision is now
   complete for this milestone's scope: the full-canonical forest-plan/downstream contract surfaces
   point at archived replay `source-set-732a5a91d31736f8`.
+- The dedicated identity-reconciliation follow-on packet is now fully closed
+  through docs-only Milestone 5 closeout `df2bd28`, so no further active
+  downstream routing remains on this classifier packet.
 - Historical references below that cite the older `source-set-5e65d845ce77e1a0` working-tree
   replay remain preserved context only.
 

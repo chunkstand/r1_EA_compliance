@@ -108,10 +108,10 @@ Latest closeout on 2026-05-19:
   `full_canonical_failure_category_counts={}`.
 - Milestone 4 runtime closeout landed in
   `237c45d` (`Resolve archived full-canonical Milestone 4 lane`).
-- Milestone 5 now closes the same packet as a docs-only durable
-  closeout/routing reset. The archived full-canonical downstream runtime lane
-  remains green, and no further blocked rerun is routed on the archived
-  corpus through that packet.
+- Milestone 5 docs-only closeout landed in
+  `df2bd28` (`Resolve archived full-canonical Milestone 5 closeout`).
+  The archived full-canonical downstream runtime lane remains green, and no
+  further blocked rerun is routed on the archived corpus through that packet.
 
 ## Source-Register Forest Plan Role Classification Code Closeout
 

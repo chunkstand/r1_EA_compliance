@@ -166,9 +166,11 @@ Local active import baseline on 2026-05-19 after Milestone 4 downstream closeout
   forest-plan/downstream contract itself is no longer red.
 - Milestone 4 runtime closeout landed in
   `237c45d` (`Resolve archived full-canonical Milestone 4 lane`).
-- Milestone 5 now closes the same packet as a docs-only durable
-  closeout/routing reset. The archived full-canonical forest-plan packet is
-  resolved locally; no further archived replay repair remains routed there.
+- Milestone 5 docs-only closeout landed in
+  `df2bd28` (`Resolve archived full-canonical Milestone 5 closeout`).
+  The archived full-canonical forest-plan packet is now locally resolved
+  through that closeout; no further archived replay repair remains routed
+  there.
 
 Historical broader capture baseline:
 

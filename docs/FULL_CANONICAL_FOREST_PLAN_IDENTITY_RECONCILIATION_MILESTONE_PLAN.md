@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Resolved 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved 2026-05-19 through `237c45d`; Milestone 5 closes the packet as the durable closeout/routing reset pass
+Status: Resolved 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved 2026-05-19 through `237c45d`; Milestone 5 is resolved 2026-05-19 through `df2bd28`
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -363,6 +363,9 @@ Outcome label: resolved
 ### Milestone 5: Durable Closeout And Routing Reset
 
 Outcome label: resolved
+
+- Closing commit hash:
+  `df2bd28` (`Resolve archived full-canonical Milestone 5 closeout`)
 
 - Update the durable routing set so this packet is marked resolved instead of
   continuing to route a phantom Milestone 5 follow-on.
