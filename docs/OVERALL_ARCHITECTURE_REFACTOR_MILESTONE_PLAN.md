@@ -1,0 +1,792 @@
+# Overall Architecture Refactor Milestone Plan
+
+Date: 2026-05-20
+
+Status: Milestone 0 and Milestone 1 complete; Milestone 2 complete in the routed agent-entrypoint packet; Milestone 3 next
+
+Owner context: This is the active repo-wide architecture refactor packet after the closed
+`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. The remaining pre-closeout overlap is
+limited to architecture-governance docs owned by this packet; the document-plan runtime slice
+already closed in `1435cdb` and is no longer a live implementation blocker.
+
+## Purpose
+
+Route the repo's structural architecture debt into a governed, hotspot-driven refactor sequence that
+reduces the largest brittle surfaces without weakening tests, current-state gates, or the
+artifact-first reviewer pipeline.
+
+The repo already has strong architectural intent:
+
+- the workbook is the source contract;
+- derived artifacts are explicit and auditable;
+- architecture boundaries are documented in `docs/ARCHITECTURE.md` and
+  `docs/architecture_contract.toml`; and
+- the architecture probe currently reports no Python or JS cycles.
+
+The weak point is not missing direction. The weak point is that too much runtime and test logic is
+still concentrated in a small number of very large files, some governance surfaces only just became
+cheap automated checks, and several operational truths still depend on large append-only docs or
+machine-local state.
+
+## Current Evidence
+
+### Live repo state
+
+- Pre-closeout `git status -sb` is dirty only on architecture-governance docs:
+  `docs/AGENTIC_CODING_ARCHITECTURE_RESEARCH.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md`, and
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- The routed agent-entrypoint packet is now complete:
+  `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` says `Status: complete`, and the public
+  `document-plan` plus `docs/AGENT_START_HERE.md` surfaces closed in `1435cdb`.
+- Broad architecture implementation can start after this docs-and-governance closeout commits the
+  refreshed baseline and cheap prevention gates.
+
+### Architecture probe baseline
+
+From
+`PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --format markdown`:
+
+- `187` code files detected;
+- `57` code files exceed `800` lines;
+- no Python import cycles detected;
+- no JS/TS import cycles detected;
+- top hotspot:
+  `src/usfs_r1_ea_sources/project_sow_package.py` with score `101300`;
+- highest local fan-out:
+  `src.usfs_r1_ea_sources.cli_derived` imports `22` local modules;
+- suggested gates:
+  `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
+
+### Current brittle places
+
+- Giant orchestration modules dominate active edit risk:
+  `project_sow_package.py`, `nepa_knowledge_graph_export.py`, `forest_plan_components.py`,
+  `ea_consistency_decision_support.py`, `extract.py`, `v1_ea_eval.py`, and the applicability family
+  are all far above the repo's reviewable size threshold.
+- Test monoliths are also large and highly active:
+  `tests/test_promotion_suite.py`, `tests/test_cli.py`, `tests/test_compliance_review.py`,
+  `tests/test_forest_plan_resolver.py`, `tests/test_project_sow_package.py`, and
+  `tests/test_extract.py`.
+- Debt governance is red before this closeout:
+  `docs/TECH_DEBT_REGISTER.md` still points `TD-001` at a stale line even though the live
+  `pragma: no cover` branch is at `src/usfs_r1_ea_sources/batches.py:223`.
+- Cheap architecture quality gates are missing before this closeout:
+  large-file count and fan-out are visible in probe output, but not yet pinned by a focused pytest
+  gate.
+- Durable context is high quality but expensive to scan:
+  `docs/SESSION_HANDOFF.md` is `9848` lines and append-only;
+  `docs/CURRENT_SYSTEM_STATE.md` is `4226` lines.
+- Architecture doc routing needs an explicit canonical-path guard:
+  on this macOS checkout the lowercase path aliases the tracked uppercase file, so path drift must
+  be prevented by policy and tests rather than by maintaining two physical docs.
+- Hermeticity is incomplete for at least one governed proving lane:
+  `docs/CURRENT_SYSTEM_STATE.md` still declares the preserved West Reservoir replay-context package
+  path under `/Users/chunkstand/Downloads/West Reservoir (67436)`.
+- Rendering helpers are partially duplicated:
+  `_write_pdf_objects(...)` currently exists in
+  `project_sow_package.py`,
+  `compliance_outputs.py`, and
+  `ea_consistency_decision_support.py`,
+  with adjacent PDF rendering ownership also spread across
+  `final_qa_certification.py` and `review_packet_index.py`.
+
+## Goal
+
+Reduce the repo's highest architecture risk surfaces while preserving current public behavior,
+artifact contracts, review/eval truth, and fail-closed governance.
+
+This umbrella plan is successful when the repo has:
+
+- a clean and explicit agent cold-start entrypoint;
+- green debt and architecture governance surfaces;
+- materially fewer `>800` line hotspots and less concentrated orchestration logic;
+- tighter public CLI and shared-helper ownership;
+- smaller, more reviewable tests and fixtures; and
+- no required proving lane that depends on an undeclared machine-local package path.
+
+## Non-Goals
+
+- Do not rewrite the repo into a new framework or service architecture.
+- Do not regenerate the entire corpus or broad `source_library/` outputs unless a bounded milestone
+  explicitly requires it.
+- Do not weaken tests, add skips, add broad coverage pragmas, or loosen assertions to make the
+  sequence look green.
+- Do not change workbook semantics, downloader rules, citation-bearing reviewer output semantics, or
+  evaluation meaning unless a bounded milestone explicitly owns that contract change.
+- Do not silently absorb already-closed routed narrow packets into the broad refactor without an
+  explicit rebaseline.
+- Do not treat line-count reduction alone as success; every extraction must preserve or strengthen
+  the owning gate.
+
+## Scope
+
+In scope:
+
+- architecture-governance repairs and new size/fan-out gates;
+- agent entrypoint completion and cold-start doc routing;
+- hotspot-driven splits for oversized runtime families;
+- test and fixture hotspot reduction;
+- CLI fan-out and shared helper ownership cleanup;
+- documentation routing cleanup for architecture/current-state/handoff entrypoints; and
+- replay hermeticity work where a live repo claim still depends on a user-home path.
+
+Out of scope:
+
+- arbitrary style-only refactors;
+- broad domain-rule redesign not justified by hotspot ownership;
+- viewer redesign beyond boundary cleanup needed to reduce `viewer/nepa-3d/app.js` concentration;
+- new source capture or review promotion claims unrelated to the architecture-owner work; and
+- large network or package reruns used only to re-prove already known behavior.
+
+## Weak-Point Register
+
+This plan acts as the current repo-wide architecture weak-point register until the sequence closes.
+
+| Weak point | Current evidence | Owner surface | Prevention gate | Status | Next milestone |
+| --- | --- | --- | --- | --- | --- |
+| Dirty baseline overlap | pre-closeout worktree overlap is limited to this packet's architecture-governance docs; the document-plan lane already closed in `1435cdb` | `docs/SESSION_HANDOFF.md`, this plan, active worktree | `git status -sb` plus plan/handoff readback must show no runtime overlap from the closed packet | resolved | closed |
+| Large-file concentration | `57` code files over `800` lines | hotspot families listed in this plan | `tests/test_architecture_quality.py` plus architecture probe readback | guarded | Milestones 3-8 |
+| High-fan-out orchestration | `cli_derived` fan-out `22`; `cli_eval` and `phase_eval` also broad | `cli_*.py`, eval orchestration modules | `tests/test_architecture_quality.py` plus architecture probe readback | guarded | Milestones 3, 7 |
+| Debt-register drift | pre-closeout `TD-001` stale line reference against `batches.py:223` | `docs/TECH_DEBT_REGISTER.md`, debt tests | `tests/test_debt_contract.py` | resolved | closed |
+| Incomplete agent entrypoint | closed in `63e1160` and `1435cdb` | `document_plan.py`, CLI, agent docs | focused document-plan and CLI tests | resolved | closed |
+| Missing dependency declaration | closed by the current planner contract, which validates requests without a new external schema runtime dependency | document-planning surfaces | focused planner/CLI tests | resolved | closed |
+| Cold-start doc sprawl | handoff `9848` lines; current state `4226` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
+| Architecture doc path drift | uppercase path is canonical, but the checkout still needs a guard against lowercase-path drift | architecture docs and references | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
+| Non-hermetic proving dependency | West Reservoir replay context points at `/Users/chunkstand/Downloads/...` | replay-context and proving docs/config | proving-lane contract tests and docs readback | deferred | Milestone 9 |
+| Duplicated PDF/rendering helpers | repeated `_write_pdf_objects(...)` and PDF rendering ownership across multiple modules | reporting/document-output family | focused helper contract tests plus owner-family readback | deferred | Milestone 3 |
+| Oversized test/fixture owners | multiple `tests/*.py` and `tests/support/*.py` files over threshold | test families and support fixtures | architecture probe plus focused pytest slices | deferred | Milestone 8 |
+
+## Large-File Inventory Over 800 Lines
+
+### Priority A - primary runtime hotspots
+
+- `5065` `src/usfs_r1_ea_sources/project_sow_package.py`
+- `5048` `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`
+- `4279` `src/usfs_r1_ea_sources/forest_plan_components.py`
+- `3401` `src/usfs_r1_ea_sources/ea_consistency_decision_support.py`
+- `3204` `src/usfs_r1_ea_sources/extract.py`
+- `2662` `src/usfs_r1_ea_sources/v1_ea_eval.py`
+- `2655` `src/usfs_r1_ea_sources/applicability_eval.py`
+- `2503` `src/usfs_r1_ea_sources/claim_extraction.py`
+- `2490` `src/usfs_r1_ea_sources/applicability_validation.py`
+- `2425` `src/usfs_r1_ea_sources/final_qa_certification.py`
+- `2374` `src/usfs_r1_ea_sources/applicability_decisions.py`
+- `2315` `src/usfs_r1_ea_sources/applicability.py`
+- `2017` `src/usfs_r1_ea_sources/rule_claim_binding.py`
+- `1956` `src/usfs_r1_ea_sources/draft_generation.py`
+- `1901` `src/usfs_r1_ea_sources/forest_plan_resolver.py`
+- `1891` `src/usfs_r1_ea_sources/retrieval.py`
+- `1862` `src/usfs_r1_ea_sources/phase_eval.py`
+- `1781` `src/usfs_r1_ea_sources/compliance_outputs.py`
+- `1770` `src/usfs_r1_ea_sources/forest_plan_source_delta_readiness.py`
+- `1741` `src/usfs_r1_ea_sources/applicability_retrieval.py`
+- `1675` `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`
+- `1499` `src/usfs_r1_ea_sources/catalog.py`
+- `1469` `src/usfs_r1_ea_sources/package_fact_graph.py`
+- `1440` `src/usfs_r1_ea_sources/applicability_rule_pack.py`
+- `1349` `src/usfs_r1_ea_sources/review_packet_index.py`
+- `1347` `src/usfs_r1_ea_sources/compliance_review_eval.py`
+- `1347` `src/usfs_r1_ea_sources/authority_currentness.py`
+- `1271` `src/usfs_r1_ea_sources/upstream_evaluation.py`
+- `1242` `src/usfs_r1_ea_sources/ea_review.py`
+- `1205` `src/usfs_r1_ea_sources/evidence_graph.py`
+- `1181` `src/usfs_r1_ea_sources/source_register_proving.py`
+- `1167` `src/usfs_r1_ea_sources/promotion_suite.py`
+- `1064` `src/usfs_r1_ea_sources/source_register.py`
+- `997` `src/usfs_r1_ea_sources/forest_plan_component_adjudication.py`
+- `959` `src/usfs_r1_ea_sources/download.py`
+- `923` `src/usfs_r1_ea_sources/preflight.py`
+- `886` `src/usfs_r1_ea_sources/forest_plan_component_eval.py`
+- `824` `src/usfs_r1_ea_sources/compliance_validation.py`
+
+### Priority B - test and fixture hotspots
+
+- `2618` `tests/test_forest_plan_resolver.py`
+- `2138` `tests/test_applicability_decisions.py`
+- `2090` `tests/test_promotion_suite.py`
+- `1892` `tests/test_v1_ea_eval.py`
+- `1812` `tests/test_cli.py`
+- `1768` `tests/test_project_sow_package.py`
+- `1754` `tests/test_forest_plan_components.py`
+- `1667` `tests/test_extract.py`
+- `1429` `tests/test_nepa_knowledge_graph_export.py`
+- `1418` `tests/test_compliance_review.py`
+- `1351` `tests/test_final_qa_certification.py`
+- `1236` `tests/test_retrieval.py`
+- `1174` `tests/test_ea_consistency_decision_support.py`
+- `1102` `tests/support/compliance_review_fixtures.py`
+- `954` `tests/test_phase_eval.py`
+- `893` `tests/test_applicability.py`
+- `872` `tests/support/compliance_component_fixtures.py`
+- `828` `tests/test_claim_extraction.py`
+
+### Priority C - viewer hotspot
+
+- `2547` `viewer/nepa-3d/app.js`
+
+## Owner Surfaces
+
+- `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- `docs/SESSION_HANDOFF.md`
+- `docs/ARCHITECTURE.md`
+- `docs/architecture.md`
+- `docs/CURRENT_SYSTEM_STATE.md`
+- `docs/TECH_DEBT_REGISTER.md`
+- `docs/architecture_contract.toml`
+- `pyproject.toml`
+- `src/usfs_r1_ea_sources/cli.py`
+- `src/usfs_r1_ea_sources/cli_*.py`
+- `src/usfs_r1_ea_sources/project_sow_package.py`
+- `src/usfs_r1_ea_sources/ea_consistency_decision_support.py`
+- `src/usfs_r1_ea_sources/draft_generation.py`
+- `src/usfs_r1_ea_sources/final_qa_certification.py`
+- `src/usfs_r1_ea_sources/review_packet_index.py`
+- `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`
+- `src/usfs_r1_ea_sources/forest_plan_*.py`
+- `src/usfs_r1_ea_sources/extract.py`
+- `src/usfs_r1_ea_sources/retrieval.py`
+- `src/usfs_r1_ea_sources/catalog.py`
+- `src/usfs_r1_ea_sources/download.py`
+- `src/usfs_r1_ea_sources/preflight.py`
+- `src/usfs_r1_ea_sources/source_register*.py`
+- `src/usfs_r1_ea_sources/applicability*.py`
+- `src/usfs_r1_ea_sources/rule_claim_binding.py`
+- `src/usfs_r1_ea_sources/evidence_graph.py`
+- `src/usfs_r1_ea_sources/phase_eval*.py`
+- `src/usfs_r1_ea_sources/v1_ea_eval.py`
+- `src/usfs_r1_ea_sources/promotion_suite.py`
+- `tests/`
+- `viewer/nepa-3d/app.js`
+
+## Placement Rules
+
+- Do not add another branch to a monolith when a milestone can instead extract a smaller owned
+  module in the same family.
+- New helper modules must be owner-named and adjacent to the boundary they serve. Do not create
+  vague catch-all files such as `helpers2.py`, `utils_misc.py`, or `architecture_fixups.py`.
+- Public CLI modules stay thin. Argument parsing and dispatch may live in `cli*.py`; domain logic
+  must stay in owned runtime modules.
+- Shared rendering or PDF writing logic should move into one narrow reporting helper owned by the
+  reporting/document-output family rather than remain copied across multiple document producers.
+- Tests should split by contract or behavior family, not by arbitrary line budget alone.
+- Fixture helpers should move to focused support modules only when the split increases reuse and
+  keeps the scenario ownership clear.
+- `docs/ARCHITECTURE.md` should remain the canonical architecture path. `docs/architecture.md`
+  should either become a clearly marked compatibility stub or be removed after references are
+  updated.
+- `docs/AGENT_START_HERE.md` must stay short and route outward. It is not allowed to become another
+  append-only state dump.
+- Any new module, CLI family, or dependency-boundary exception must land with matching updates to
+  `docs/architecture_contract.toml` and focused contract tests.
+
+## Weak-Point Prevention Contract
+
+### Weak point 1 - broad refactor starts from a dirty overlapping worktree
+
+- Weak point forecast: a future session edits the overall refactor on top of the in-flight
+  document-plan slice and produces an unreviewable mixed milestone.
+- Owner surface: `git status -sb`, `docs/SESSION_HANDOFF.md`, this plan.
+- Prevention gate: re-run `git status -sb` before Milestone 0 closeout and require the refactor
+  owner surfaces to be isolated from the existing document-plan changes.
+- Fail threshold: any architecture-refactor milestone stages or edits the document-plan lane
+  without explicitly closing or parking that lane first.
+- Controlled violation: leave `document_plan.py` and the broad refactor edits in the same milestone;
+  the milestone must be treated as blocked.
+- Future-Codex misuse scenario: a future session sees the hotspot backlog and starts splitting code
+  immediately; this plan prevents that by making worktree isolation the first milestone.
+
+### Weak point 2 - gates improve on paper but do not prevent new concentration
+
+- Weak point forecast: the repo adds more architecture prose without adding measurable prevention.
+- Owner surface: `docs/architecture_contract.toml`, architecture probe usage, focused governance
+  tests.
+- Prevention gate: the sequence must add or adopt explicit large-file and fan-out governance checks
+  before large family splits begin.
+- Fail threshold: a hotspot family milestone closes while `57` remains untracked only as prose and
+  there is no live gate watching growth.
+- Controlled violation: intentionally grow a known owner above the threshold in a local check and
+  prove the new gate reports it.
+- Future-Codex misuse scenario: a future session cites "better architecture" without a threshold;
+  the gate turns that into a measurable failure.
+
+### Weak point 3 - extracting code moves behavior but weakens coverage
+
+- Weak point forecast: a monolith gets smaller only because coverage narrows.
+- Owner surface: each runtime family and its focused test family.
+- Prevention gate: every extraction milestone must run the focused tests for the owner family plus
+  architecture and debt gates.
+- Fail threshold: line count goes down but focused behavior or negative-path coverage disappears,
+  loosens, or becomes skipped.
+- Controlled violation: remove a negative-path assertion or route a failure branch around coverage;
+  the focused tests must fail.
+- Future-Codex misuse scenario: a future session deletes hard-to-maintain tests to unlock the split;
+  this plan explicitly forbids that tradeoff.
+
+### Weak point 4 - agent-facing surfaces ship without runtime completeness
+
+- Weak point forecast: the repo exposes new agent commands or docs while missing dependencies or
+  refusal behavior.
+- Owner surface: `pyproject.toml`, `document_plan.py`, CLI registration, `docs/AGENT_START_HERE.md`.
+- Prevention gate: focused document-plan and CLI tests plus help-text readback.
+- Fail threshold: `document-plan` lands or stays routed as live while `tests/test_document_plan.py`
+  still fails to import, the command is not visible, or unsupported requests do not fail closed.
+- Controlled violation: remove the dependency or CLI registration and prove the tests/help readback
+  detect the break.
+- Future-Codex misuse scenario: a future session adds a prompt-facing entrypoint but forgets the
+  package dependency or public CLI registration.
+
+### Weak point 5 - doc routing becomes another large append-only surface
+
+- Weak point forecast: the answer to large docs is another large doc.
+- Owner surface: `docs/AGENT_START_HERE.md`, `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`.
+- Prevention gate: doc routing readback must show a short start-here surface that links outward and
+  does not duplicate the long-form state docs.
+- Fail threshold: the new entrypoint duplicates current-state or handoff content instead of routing
+  to it.
+- Controlled violation: copy large blocks from current-state docs into the start-here doc; the
+  review/readback should fail the milestone.
+- Future-Codex misuse scenario: a future session treats "make it legible" as "paste more summary".
+
+### Weak point 6 - family splits create new ambiguous helper ownership
+
+- Weak point forecast: extracted code lands in vague shared helpers that become the next monolith.
+- Owner surface: new family helper modules.
+- Prevention gate: review extracted paths against the placement rules and architecture contract.
+- Fail threshold: the split creates a generic dump module or new hidden dependency direction.
+- Controlled violation: attempt to place family logic in a generic `helpers.py` catch-all; reject
+  the change during milestone review.
+- Future-Codex misuse scenario: a future session solves a hotspot by inventing a new unlabeled
+  dumping ground.
+
+### Weak point 7 - hermeticity debt stays hidden behind green historical prose
+
+- Weak point forecast: docs or eval results continue to imply replay readiness even though a proving
+  lane depends on a user-home package path.
+- Owner surface: replay contexts, proving docs, review-coverage docs, current-state docs.
+- Prevention gate: readback over West Reservoir references plus the focused proving/eval contract
+  surface.
+- Fail threshold: the lane is still required for repo truth but remains dependent on
+  `/Users/chunkstand/Downloads/...` without an explicit owner milestone.
+- Controlled violation: remove the explicit disclosure from current-state docs and verify the
+  routing review catches the omission.
+- Future-Codex misuse scenario: a future session cites old green prose and assumes the lane is
+  portable.
+
+## Milestone Sequence
+
+### Milestone 0 - Rebaseline And Isolate The Current Worktree
+
+Outcome label: `reduced`
+Status: complete
+
+Purpose: stop the broad architecture sequence from starting on top of unrelated in-progress work.
+
+Implementation:
+
+1. Resolve, commit, or park the current document-plan lane before broad refactor implementation.
+2. Refresh `git status -sb`, the architecture probe, the large-file inventory, and the top handoff
+   routing section.
+3. Record the fresh baseline in this plan and `docs/SESSION_HANDOFF.md`.
+
+Remaining issue after closeout:
+
+- the architecture backlog remains open, but the starting point is clean and current.
+
+Closeout on 2026-05-20:
+
+- The document-plan runtime lane was already closed in `1435cdb`; this milestone rebaselines the
+  umbrella packet against that committed state instead of treating the lane as still in flight.
+- The fresh baseline records `187` code files, `57` code files above `800` lines, no Python or
+  JS/TS import cycles, top hotspot `project_sow_package.py` at score `101300`, and
+  `cli_derived` fan-out `22`.
+- The remaining pre-closeout overlap is limited to architecture-governance docs owned by this
+  packet; no runtime implementation surfaces from the closed agent-entrypoint packet remain mixed
+  into the broad refactor baseline.
+
+### Milestone 1 - Repair Governance And Add Cheap Prevention Gates
+
+Outcome label: `resolved`
+Status: complete
+
+Purpose: make architecture and debt governance trustworthy before large splits begin.
+
+Implementation:
+
+1. Fix `TD-001` in `docs/TECH_DEBT_REGISTER.md` so the live line reference is correct.
+2. Keep `tests/test_debt_contract.py` green.
+3. Add or wire a lightweight architecture quality gate that fails on:
+   - large-file growth above the approved threshold;
+   - high-fan-out growth above the approved threshold; and
+   - new architecture-doc path drift.
+4. Declare `docs/ARCHITECTURE.md` the canonical path and guard against lowercase-path drift in the
+   checkout rather than maintaining a duplicate file on a case-insensitive filesystem.
+
+Resolved scope after closeout:
+
+- the debt register is trustworthy again;
+- architecture drift has a cheap automated check; and
+- architecture-doc routing is canonical.
+
+Closeout on 2026-05-20:
+
+- `TD-001` now points at `src/usfs_r1_ea_sources/batches.py:223`, and
+  `tests/test_debt_contract.py` is green again.
+- `tests/test_architecture_quality.py` now blocks large-file count growth above the current
+  `57`-file `>800` baseline, blocks new `>20` fan-out source modules beyond the existing
+  `cli_derived` outlier, and pins `docs/ARCHITECTURE.md` as the canonical tracked architecture
+  doc path.
+- `docs/ARCHITECTURE.md` now declares the canonical path explicitly, which keeps future doc routing
+  aligned with the new guard.
+
+### Milestone 2 - Finish The Agent Entrypoint Packet
+
+Outcome label: `resolved`
+Status: complete via routed packet
+
+Purpose: close the current cold-start gap for agents and operators.
+
+Implementation:
+
+1. Complete the routed work in `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md`.
+2. Add the missing runtime dependency declarations for the document-plan lane.
+3. Expose `document-plan` on the public CLI.
+4. Add `docs/AGENT_START_HERE.md` as the short entrypoint doc.
+5. Update architecture/current-state/handoff docs so the new entrypoint is the first routed
+   surface for prompt-to-document work.
+
+Resolved scope after closeout:
+
+- the repo has one concise cold-start path for document-routing work;
+- the environment matches the routed surface; and
+- unsupported request classes still fail closed.
+
+Closeout on 2026-05-20:
+
+- The routed agent-entrypoint packet is already complete through `63e1160` and `1435cdb`.
+- `document-plan`, `docs/AGENT_START_HERE.md`, the lane registry, the normalized request schema,
+  and the focused planner/CLI/architecture tests are now historical closeout state, not open work
+  inside this umbrella packet.
+
+### Milestone 3 - Split Project Planning And Document Output Hotspots
+
+Outcome label: `reduced`
+
+Purpose: reduce the highest document-generation concentration risk.
+
+Owner family:
+
+- `project_sow_package.py`
+- `ea_consistency_decision_support.py`
+- `draft_generation.py`
+- `final_qa_certification.py`
+- `review_packet_index.py`
+- `compliance_outputs.py`
+
+Implementation:
+
+1. Extract distinct owner modules for intake normalization, validation, graph assembly, rendering,
+   and PDF writing where those concerns are currently mixed.
+2. Create one shared PDF/object-writing helper for the document-output family.
+3. Keep the public commands and generated artifacts stable while shrinking the largest owner files.
+4. Split the matching large tests by contract family instead of one mega test file per surface.
+
+Remaining issue after closeout:
+
+- the broader document family may still need additional follow-on splits, but the current top
+  hotspot and duplicated PDF ownership are materially smaller and clearer.
+
+### Milestone 4 - Split NEPA Graph And Forest-Plan Review Hotspots
+
+Outcome label: `reduced`
+
+Purpose: reduce concentration in the graph export and forest-plan review family.
+
+Owner family:
+
+- `nepa_knowledge_graph_export.py`
+- `forest_plan_components.py`
+- `forest_plan_resolver.py`
+- `forest_plan_component_eval.py`
+- `forest_plan_component_adjudication.py`
+- `ea_review.py`
+- `viewer/nepa-3d/app.js`
+
+Implementation:
+
+1. Separate graph-contract assembly, export serialization, summary/report formatting, and CLI-facing
+   orchestration in the NEPA graph family.
+2. Split forest-plan parsing, component normalization, adjudication, and evaluation ownership into
+   smaller modules.
+3. Reduce `viewer/nepa-3d/app.js` concentration by extracting bounded viewer modules without
+   changing the operator-facing artifact contract.
+
+Remaining issue after closeout:
+
+- graph and forest-plan surfaces may still remain large, but the core owner boundaries are explicit
+  and no longer dominated by a few multi-thousand-line files.
+
+### Milestone 5 - Split Extraction, Retrieval, And Capture Hotspots
+
+Outcome label: `reduced`
+
+Purpose: reduce concentration across source capture and evidence-prep families.
+
+Owner family:
+
+- `extract.py`
+- `retrieval.py`
+- `catalog.py`
+- `download.py`
+- `preflight.py`
+- `source_register.py`
+- `source_register_proving.py`
+- `authority_currentness.py`
+- `forest_plan_source_delta_readiness.py`
+
+Implementation:
+
+1. Split extraction orchestration from chunk processing, artifact writing, and validation.
+2. Narrow retrieval ownership so index/query assembly is separated from ranking/report output.
+3. Keep capture semantics workbook-first while extracting report/serialization helpers from
+   download, preflight, and catalog owners.
+
+Remaining issue after closeout:
+
+- the family may still contain large surfaces, but the capture-to-retrieval lane becomes more
+  reviewable and easier to test in parts.
+
+### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
+
+Outcome label: `reduced`
+
+Purpose: reduce the largest concentration in the applicability decision family.
+
+Owner family:
+
+- `applicability.py`
+- `applicability_decisions.py`
+- `applicability_validation.py`
+- `applicability_eval.py`
+- `applicability_retrieval.py`
+- `applicability_rule_pack.py`
+- `claim_extraction.py`
+- `rule_claim_binding.py`
+- `package_fact_graph.py`
+- `evidence_graph.py`
+
+Implementation:
+
+1. Separate decision inputs, retrieval traces, decision logic, validation/adjudication, and report
+   formatting into narrower owner modules.
+2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
+3. Split matching test files so the family can evolve without one giant test owner per subsystem.
+
+Remaining issue after closeout:
+
+- the applicability family may still be broad, but the current multi-role owner files no longer
+  hide retrieval, decision, validation, and output logic in the same modules.
+
+### Milestone 7 - Split Eval And Promotion Orchestration Hotspots
+
+Outcome label: `reduced`
+
+Purpose: reduce concentration in the eval layer and high-fan-out orchestration surfaces.
+
+Owner family:
+
+- `phase_eval.py`
+- `phase_eval_direct_eval.py`
+- `v1_ea_eval.py`
+- `promotion_suite.py`
+- `upstream_evaluation.py`
+- `cli_eval.py`
+- `cli_derived.py`
+
+Implementation:
+
+1. Separate manifest loading, gate calculation, result aggregation, and CLI/report wiring.
+2. Reduce broad fan-out in CLI/eval orchestrators while keeping the stable public command surface.
+3. Preserve current eval semantics and historical manifest behavior.
+
+Remaining issue after closeout:
+
+- eval orchestration remains central, but the central owner files become smaller and their
+  dependencies are more deliberate.
+
+### Milestone 8 - Split Oversized Tests And Support Fixtures
+
+Outcome label: `resolved`
+
+Purpose: restore test reviewability without weakening coverage.
+
+Implementation:
+
+1. Split oversized test files by contract family after their corresponding runtime families are
+   narrowed.
+2. Split support fixtures only when the split increases ownership clarity.
+3. Keep or strengthen negative-path coverage for all extracted families.
+
+Resolved scope after closeout:
+
+- the test suite no longer depends on a small number of giant owner files for major architecture
+  families.
+
+### Milestone 9 - Remove Mechanical Drift And Non-Hermetic Replay Debt
+
+Outcome label: `reduced`
+
+Purpose: close the remaining mechanical architecture debt that keeps the repo harder to reproduce
+and navigate than it should be.
+
+Implementation:
+
+1. Replace or explicitly route the West Reservoir user-home package dependency so the proving lane
+   is hermetic or clearly quarantined.
+2. Reduce cold-start doc cost with a short start-here route and smaller live-routing summaries
+   instead of appending more broad prose.
+3. Ensure the architecture/current-state/handoff docs point at the same canonical next-step truth.
+
+Remaining issue after closeout:
+
+- some historical append-only context will remain by policy, but current routing and proving truth
+  are concise, canonical, and reproducible.
+
+### Milestone 10 - Final Architecture Rebaseline And Closeout
+
+Outcome label: `resolved`
+
+Purpose: prove that the full umbrella plan reduced architecture debt without shifting it elsewhere.
+
+Implementation:
+
+1. Re-run the architecture probe and compare against the Milestone 0 baseline.
+2. Re-run debt, architecture, CLI, and family-focused tests.
+3. Re-read the top routed docs and ensure they agree on the current live state.
+4. Record final counts, residual risks, and remaining owner-family backlog in
+   `docs/SESSION_HANDOFF.md`.
+
+Resolved scope after closeout:
+
+- this umbrella plan is complete and the remaining debt, if any, is explicitly rerouted into
+  narrower owner-family packets rather than left implicit.
+
+## Required Implementation Artifacts
+
+- a fresh architecture-quality gate or equivalent probe-driven contract for size/fan-out drift;
+- canonical architecture-doc routing;
+- the completed agent entrypoint packet artifacts;
+- narrower owner modules for each hotspot family that is split;
+- focused regression tests proving no weakened protection;
+- updated plan/handoff/current-state docs for each closed milestone; and
+- any required replay-context or proving-lane artifacts needed to remove the West Reservoir
+  user-home dependency.
+
+## Required Documentation And Handoff Updates
+
+Every implementation milestone under this umbrella must update the relevant subset of:
+
+- `README.md`
+- `docs/ARCHITECTURE.md`
+- `docs/CURRENT_SYSTEM_STATE.md`
+- `docs/OUTPUT_SCHEMAS.md`
+- `docs/TECH_DEBT_REGISTER.md`
+- this plan
+- any narrower follow-on plan spawned from this umbrella
+- `docs/SESSION_HANDOFF.md`
+
+At minimum, each milestone closeout must state:
+
+- outcome label `resolved` or `reduced`;
+- exact verification commands run;
+- current hotspot or fan-out change for the owner family;
+- whether any residual risk remains and where it is routed next.
+
+## Required Verification Gates
+
+Baseline gates for all architecture-refactor milestones:
+
+```bash
+git status -sb
+PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --format markdown
+PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-fan-out 20 --format markdown
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py -q
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_quality.py -q
+PYTHONPATH=src uv run --extra dev pytest tests/test_debt_contract.py -q
+PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
+git diff --check
+```
+
+Milestone-specific additions:
+
+- Milestone 2:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_document_plan.py tests/test_cli.py -q`
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources --help`
+- Milestones 3-7:
+  the focused owner-family tests plus the architecture probe readback for the changed family
+- Milestone 8:
+  the split test families plus the owning runtime family tests
+- Milestone 9:
+  the focused proving/eval commands and docs readback that prove the West Reservoir dependency is
+  removed or explicitly quarantined
+
+If a milestone touches CLI routing, architecture boundaries, or generated artifact ownership, the
+matching contract tests and durable docs must be updated in the same slice.
+
+## Acceptance Criteria
+
+This umbrella plan is complete only when all milestone closeouts pass and the final rebaseline shows
+all of the following:
+
+- no Python or JS/TS import cycles;
+- `tests/test_architecture_contract.py` is green;
+- `tests/test_debt_contract.py` is green;
+- the agent entrypoint packet is either fully closed or explicitly retired in favor of a better
+  routed surface;
+- the repo has one canonical architecture doc path and one short cold-start doc path;
+- the proving lane truth no longer depends on an undeclared user-home package path for required repo
+  verification;
+- the large-file count above `800` lines is reduced from the current baseline of `57` to `45` or
+  fewer;
+- no milestone increased the top hotspot score or fan-out in its owner family without an explicit,
+  documented, and green follow-on gate; and
+- every remaining residual hotspot is explicitly routed in durable docs rather than left as implied
+  debt.
+
+## Stop Conditions
+
+- Stop if the current document-plan lane is still overlapping the owner surfaces for a broad
+  architecture milestone.
+- Stop if a proposed split requires weakening tests or introducing new untracked debt markers.
+- Stop if a milestone needs broad corpus regeneration or network-heavy reproving that is outside the
+  scoped owner family.
+- Stop if current-state docs, handoff routing, and live code disagree and the milestone would have
+  to guess which truth is authoritative.
+- Stop if a family split starts generating a new vague shared helper dumping ground.
+- Stop if a proving-lane claim depends on local machine state that cannot be refreshed or isolated
+  inside the repo's declared contract.
+
+## Local Commit Closeout Policy
+
+- Do not treat a milestone as complete until its code, tests, docs, and handoff updates are all
+  committed together in one local atomic commit.
+- Stage only the verified milestone slice.
+- Do not commit unrelated pre-existing worktree changes.
+- Use `resolved` only when the milestone's scoped issue is actually closed by the governing gate or
+  artifact.
+- Use `reduced` only when the remaining issue is named explicitly and routed to the next owner
+  milestone.
+
+## Residual Risks And Next Routing
+
+- Milestone 2 is already closed through the separate agent-entrypoint packet and should remain
+  treated as historical closeout state, not reopened inside later hotspot milestones.
+- The largest runtime families are big enough that several of the milestones above may need
+  narrower subplans before implementation begins.
+- The repo's append-only handoff policy is useful, but it means doc-routing cleanup must be
+  deliberate and ongoing rather than one-time.
+- The next bounded slice after this closeout is Milestone 3 on the project-planning and
+  document-output hotspot family.

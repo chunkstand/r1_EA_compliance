@@ -8,7 +8,7 @@ Resolved entries should be removed instead of left behind as history.
 
 - status: active
 - kind: coverage_exception
-- path: `src/usfs_r1_ea_sources/batches.py:215`
+- path: `src/usfs_r1_ea_sources/batches.py:223`
 - token: `pragma: no cover`
 - owner: capture lane
 - remove_by: the first milestone that changes batch failure handling or adds direct regression

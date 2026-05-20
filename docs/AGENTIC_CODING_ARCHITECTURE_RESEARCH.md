@@ -2,6 +2,13 @@
 
 Date: 2026-05-04
 
+Status: Historical research brief.
+
+For the current repo guide, live system evaluation, and active architecture routing, start with:
+
+- `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md`
+- `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+
 This brief captures current agentic-coding and software-architecture research that should shape
 future work in this repository. It is intentionally implementation-facing: the goal is to make the
 codebase easier for humans and coding agents to understand, change, verify, and govern.

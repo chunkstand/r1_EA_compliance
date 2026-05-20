@@ -5,6 +5,105 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestones 0 And 1
+
+This docs-and-governance slice rebaselines the umbrella architecture packet after
+the closed document-plan lane and repairs the cheapest architecture-governance
+drift before large owner-family splits begin.
+
+- outcome label:
+  `reduced` for Milestone 0 and `resolved` for Milestone 1; the packet remains
+  active for Milestone 3
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- baseline truth:
+  the document-plan lane already closed in `1435cdb`; pre-closeout worktree
+  overlap is limited to architecture-governance docs owned by this packet; and
+  the fresh architecture probe still reports `57` code files above `800`, top
+  hotspot `src/usfs_r1_ea_sources/project_sow_package.py`, `cli_derived`
+  fan-out `22`, and no Python or JS/TS import cycles
+- governance closeout:
+  `TD-001` now points at `src/usfs_r1_ea_sources/batches.py:223`;
+  `tests/test_architecture_quality.py` now guards large-file growth, new
+  high-fan-out source modules, and architecture-doc path drift; and
+  `docs/ARCHITECTURE.md` is now the explicit canonical architecture doc path
+- docs and tests touched:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md`,
+  `docs/AGENTIC_CODING_ARCHITECTURE_RESEARCH.md`,
+  `docs/TECH_DEBT_REGISTER.md`,
+  `docs/ARCHITECTURE.md`,
+  `tests/test_architecture_quality.py`,
+  `docs/SESSION_HANDOFF.md`
+- next routing:
+  Milestone 2 is already closed through the separate
+  `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` packet; the next bounded
+  architecture slice is Milestone 3 on the project-planning and document-output
+  hotspot family
+- verification:
+  `git status -sb`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`, and
+  `git diff --check`
+
+## Overall Architecture Refactor Milestone Plan
+
+This docs-only routing slice adds the current umbrella plan for repo-wide architecture refactor
+work.
+
+- outcome label:
+  `resolved` for planning/routing only; runtime truth is unchanged
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- routing truth:
+  future repo-wide architecture-refactor, hotspot-paydown, brittle-surface, or weak-point routing
+  requests should start with
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+  and then the narrower active packet
+  `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md`
+  where the umbrella plan says Milestone 2 is already in flight
+- live baseline captured in the plan:
+  dirty document-plan worktree overlap;
+  `57` code files above `800` lines;
+  no import cycles from `architecture_probe.py`;
+  red debt governance because `TD-001` points at the wrong line in `batches.py`;
+  duplicate `docs/ARCHITECTURE.md` and `docs/architecture.md`;
+  and the preserved West Reservoir replay-context dependency on
+  `/Users/chunkstand/Downloads/West Reservoir (67436)`
+- docs touched:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- verification:
+  plan/handoff readback, fresh architecture-probe evidence readback, hotspot inventory readback,
+  and `git diff --check` must agree with the routed packet
+
+## Agentic Repo Best Practices Guide
+
+This docs-only research and evaluation slice adds the current repo-local guide for agentic coding
+and repo best practices.
+
+- outcome label:
+  `resolved` for docs and evaluation only; runtime truth is unchanged
+- routed doc:
+  `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md`
+- routing truth:
+  future best-practice, agent-legibility, and repo-governance questions should start with
+  `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md` before the older
+  `docs/AGENTIC_CODING_ARCHITECTURE_RESEARCH.md` brief
+- live evaluation highlights:
+  `tests/test_architecture_contract.py` passed; `tests/test_debt_contract.py` failed on the stale
+  `TD-001` line reference; `tests/test_document_plan.py` failed because `jsonschema` is not
+  available in the active `.venv`; and CLI help still does not expose `document-plan`
+- docs touched:
+  `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md`,
+  `docs/AGENTIC_CODING_ARCHITECTURE_RESEARCH.md`,
+  `docs/SESSION_HANDOFF.md`
+- verification:
+  `architecture_probe.py`, focused pytest readback, CLI help readback, and `git diff --check`
+  should agree with the guide
+
 ## Agent Legibility Entrypoint Milestone 1
 
 This implementation slice resolves the generic document-lane contract boundary

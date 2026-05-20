@@ -2,6 +2,8 @@
 
 Date: 2026-05-04
 
+Canonical architecture doc path: `docs/ARCHITECTURE.md`
+
 This repository is a local CLI system for building an auditable USDA Forest Service Region 1 EA
 source library and deterministic reviewer engine. The workbook is the source contract. The code
 turns workbook rows into captured artifacts, derived evidence, validated authority applicability,
