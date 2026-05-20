@@ -5,6 +5,50 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 4 Alignment Pass
+
+This follow-up closes the remaining routing and verification drift after the
+reduced Milestone 4 review-and-graph seam split.
+
+- outcome label:
+  `resolved` for alignment only; runtime truth remains `b58f956`
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- alignment closeout:
+  the active umbrella packet now records the real Milestone 4 runtime closeout
+  hash, the residual-risk footer now routes Milestone 5 instead of the older
+  Milestone 4 text, and the current-evidence section no longer claims that the
+  remaining compliance-review issue is a Flathead retrieval-readiness blocker
+- stale-test seam closeout:
+  `tests/test_compliance_review.py` now imports
+  `search_package_chunks` from `review_package_support.py` rather than the
+  removed private helper in `ea_review.py`, so the full compliance-review file
+  is aligned to the shared review-package owner boundary introduced in
+  `b58f956`; `tests/support/compliance_component_fixtures.py` now also uses
+  `FINAL-FLAT-001` for the Flathead primary-plan fixture family, so the full
+  compliance-review file is green again instead of failing on stale identity
+  drift
+- live-state refresh:
+  `git status -sb` is clean on `main` and the branch is `ahead 71`; the fresh
+  architecture probe reports `190` code files, `57` files above `800`, top
+  hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `nepa_knowledge_graph_export.py` at `4837` lines, `tests/test_compliance_review.py`
+  at `1418` lines, one fan-out hotspot at `cli_derived=22`, and no Python or
+  JS/TS import cycles
+- next routing:
+  the next bounded architecture slice remains Milestone 5 on the extraction,
+  retrieval, and source-capture hotspot family
+- stale-routing cleanup:
+  the immediately following Milestone 4 runtime section remains the runtime
+  implementation truth; the older Milestone 3 sections below are historical
+  only for this packet, including their earlier Flathead residual note
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 4
 
 This reduced closeout implements the first bounded split inside the graph and

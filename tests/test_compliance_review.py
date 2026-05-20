@@ -4,8 +4,8 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
-from usfs_r1_ea_sources.ea_review import _search_package_chunks
 from usfs_r1_ea_sources.records import sha256_file
+from usfs_r1_ea_sources.review_package_support import search_package_chunks
 from usfs_r1_ea_sources.rule_packs import validate_rule_pack
 from tests.support.compliance_component_fixtures import (
     _build_beaverhead_compliance_source_library,
@@ -1386,7 +1386,7 @@ class ComplianceReviewTests(unittest.TestCase):
             },
         ]
 
-        result = _search_package_chunks(
+        result = search_package_chunks(
             chunks,
             query="tiers to incorporates by reference programmatic final environmental impact statement",
             required_terms=[

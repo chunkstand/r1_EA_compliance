@@ -76,11 +76,12 @@ From
   at `57` code files over `800` lines and still requires owner-family reduction instead of more
   policy work.
 - The compliance-output family still has oversized verification ownership:
-  the broader `tests/test_compliance_review.py` file mixes renderer assertions with unrelated
-  Flathead forest-plan retrieval-readiness checks, which is a residual test-owner split issue
-  rather than a shared-PDF-helper regression.
+  `tests/test_compliance_review.py` is still a large mixed-owner file at `1418` lines, but the
+  stale review-helper import from `ea_review.py` and the stale Flathead primary-plan fixture drift
+  are now closed and the full file passes again; the remaining issue is test-owner size and
+  coupling, not a blocked Flathead readiness seam or a shared-review-helper regression.
 - Durable context is high quality but expensive to scan:
-  `docs/SESSION_HANDOFF.md` is `10079` lines and append-only;
+  `docs/SESSION_HANDOFF.md` is `10139` lines and append-only;
   `docs/CURRENT_SYSTEM_STATE.md` is `4226` lines.
 - Architecture doc routing needs an explicit canonical-path guard:
   on this macOS checkout the lowercase path aliases the tracked uppercase file, so path drift must
@@ -555,6 +556,8 @@ Implementation:
 
 Milestone 4 closeout:
 
+- Runtime closeout commit:
+  `b58f956` (`Reduce architecture refactor Milestone 4 review and graph seams`)
 - `review_package_support.py` now owns the shared review-package cache lifecycle, extraction reuse,
   retrieval-artifact lookup, and deterministic package-search helpers reused by
   `ea_review.py`, `forest_plan_resolver.py`, and `forest_plan_components.py`.
@@ -830,5 +833,5 @@ all of the following:
   narrower subplans before implementation begins.
 - The repo's append-only handoff policy is useful, but it means doc-routing cleanup must be
   deliberate and ongoing rather than one-time.
-- The next bounded slice after this closeout is Milestone 4 on the graph and forest-plan hotspot
-  family.
+- The next bounded slice after this closeout is Milestone 5 on the extraction, retrieval, and
+  source-capture hotspot family.

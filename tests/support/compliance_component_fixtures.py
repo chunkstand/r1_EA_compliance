@@ -160,7 +160,7 @@ _FLATHEAD_SOURCES = (
         ),
     ),
     (
-        "R1PLAN-flathead-nf-02",
+        "FINAL-FLAT-001",
         "2018 Flathead National Forest Land Management Plan PDF",
         _FLATHEAD_PLAN_COMPONENT_TEXT,
     ),
@@ -490,7 +490,7 @@ def _write_flathead_component_inventory(output_dir: Path, source_set_id: str) ->
     inventory_path = components_dir / "component_inventory.json"
     coverage_path = components_dir / "component_inventory_build_coverage.json"
     components_dir.mkdir(parents=True, exist_ok=True)
-    source_record_id = "R1PLAN-flathead-nf-02"
+    source_record_id = "FINAL-FLAT-001"
     artifact_sha256 = hashlib.sha256(source_record_id.encode("utf-8")).hexdigest()
     content_sha256 = hashlib.sha256(_FLATHEAD_PLAN_COMPONENT_TEXT.encode("utf-8")).hexdigest()
     source_chunk_ids = [f"chunk:{source_record_id}"]
@@ -534,7 +534,7 @@ def _write_flathead_component_inventory(output_dir: Path, source_set_id: str) ->
                 "section_id": "jewel-basin-hiking-area-standard-1",
                 "section_heading": "Jewel Basin Hiking Area Standards",
                 "page": None,
-                "citation_label": "R1PLAN-flathead-nf-02 | test plan | artifact abc123",
+                "citation_label": "FINAL-FLAT-001 | test plan | artifact abc123",
                 "geographic_area_ids": ["geo-hungry-horse"],
                 "management_area_ids": ["mgmt-jewel-basin-hiking-area"],
                 "overlay_ids": [],
@@ -564,7 +564,7 @@ def _write_flathead_component_inventory(output_dir: Path, source_set_id: str) ->
                 "section_id": "jewel-basin-hiking-area-suitability-7",
                 "section_heading": "Jewel Basin Hiking Area Suitability",
                 "page": None,
-                "citation_label": "R1PLAN-flathead-nf-02 | test plan | artifact abc123",
+                "citation_label": "FINAL-FLAT-001 | test plan | artifact abc123",
                 "geographic_area_ids": ["geo-hungry-horse"],
                 "management_area_ids": ["mgmt-jewel-basin-hiking-area"],
                 "overlay_ids": [],
@@ -838,14 +838,14 @@ def _write_flathead_rule_pack(directory: Path) -> Path:
         "version": "0.1.0",
         "title": "Unit Flathead EA Rule Pack",
         "description": "Unit test Flathead forest-plan rule pack.",
-        "baseline_source_record_ids": ["R1PLAN-flathead-nf-02"],
+        "baseline_source_record_ids": ["FINAL-FLAT-001"],
         "rules": [
             {
                 "id": "flathead_fw_std_wtr_2018",
                 "title": "Flathead forest-plan stream-screen standard is addressed",
                 "authority_category": "forest_plan",
                 "authority_family_id": "unit_flathead_forest_plan",
-                "authority_source_record_id": "R1PLAN-flathead-nf-02",
+                "authority_source_record_id": "FINAL-FLAT-001",
                 "authority_document_role": "forest_plan",
                 "applicability_mode": "baseline",
                 "question": "Does the EA package address the applicable Flathead standard?",
@@ -861,7 +861,7 @@ def _write_flathead_rule_pack(directory: Path) -> Path:
                 ),
                 "source_filters": {
                     "document_role": "forest_plan",
-                    "source_record_id": "R1PLAN-flathead-nf-02",
+                    "source_record_id": "FINAL-FLAT-001",
                 },
                 "severity": "high",
             }
