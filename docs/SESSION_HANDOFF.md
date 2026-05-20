@@ -5,6 +5,63 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 10
+
+This tenth Milestone 6 slice closes the applicability adjudication seam, records the new owner
+modules in the architecture surfaces, and keeps the umbrella packet routed inside Milestone 6
+instead of pretending the broader validation and claims/evidence family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 10; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- adjudication-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_adjudication.py` now owns adjudication template rendering
+  plus adjudication evaluation and replayability item checks that previously remained in
+  `applicability_validation.py`
+- adjudication-apply closeout:
+  `src/usfs_r1_ea_sources/applicability_adjudication_apply.py` now owns adjudication replay,
+  decision-ledger rewrite, partition refresh, report regeneration, and provenance updates that
+  previously remained in `applicability_validation.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/applicability_validation.py` keeps the public
+  `validate_applicability_run` entrypoint plus the remaining validation-check, freshness, and
+  provenance core
+- direct contract coverage:
+  `tests/test_applicability_adjudication.py` now pins the extracted adjudication seam directly,
+  while `tests/test_applicability_decisions.py` still verifies the public validation and
+  adjudication behavior end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `applicability_adjudication.py` and
+  `applicability_adjudication_apply.py` explicitly in the applicability container, and
+  `docs/architecture_contract.toml` assigns both modules to the `applicability` layer
+- live probe evidence:
+  the fresh architecture probe reports `216` code files, `55` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `applicability_validation.py` reduced to `1502` lines from the pre-sequence `2494`-line
+  baseline, new module `applicability_adjudication.py=740`,
+  `applicability_adjudication_apply.py=443`, one fan-out hotspot at `cli_derived=22`, and no
+  Python or JS/TS import cycles
+- residual risk:
+  `applicability_validation.py` still remains large with the remaining validation-check,
+  artifact-freshness, and provenance core, and the claims/evidence hotspot family is still
+  untouched by this sequence
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on the remaining validation-check,
+  artifact-freshness, and provenance core in `applicability_validation.py`, then the broader
+  claims/evidence owner families; do not advance to Milestone 7 yet
+- stale-routing cleanup:
+  the immediately following sequence 9 section is now historical for the adjudication-owner
+  residual note; the current section above supersedes any older packet text that still treats
+  `applicability_validation.py` as the owner of adjudication template/eval/apply orchestration
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_adjudication.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 9
 
 This ninth Milestone 6 slice closes the applicability decision forest-plan predicate seam, records
