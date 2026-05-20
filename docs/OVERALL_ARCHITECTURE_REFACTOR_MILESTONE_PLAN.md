@@ -74,7 +74,7 @@ From
 - new applicability owner surfaces:
   `src.usfs_r1_ea_sources.applicability_authority_family_templates` is `417` lines and
   `src.usfs_r1_ea_sources.applicability_contract_support` is `113` lines, while
-  `src/usfs_r1_ea_sources/applicability.py` is down to `1793` lines from the pre-sequence
+  `src/usfs_r1_ea_sources/applicability.py` is down to `1791` lines from the pre-sequence
   `2315`-line baseline without introducing a new `>800` line file;
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
@@ -105,8 +105,8 @@ From
   are now closed and the full file passes again; the remaining issue is test-owner size and
   coupling, not a blocked Flathead readiness seam or a shared-review-helper regression.
 - Durable context is high quality but expensive to scan:
-  `docs/SESSION_HANDOFF.md` is `10139` lines and append-only;
-  `docs/CURRENT_SYSTEM_STATE.md` is `4226` lines.
+  `docs/SESSION_HANDOFF.md` is `10387` lines and append-only;
+  `docs/CURRENT_SYSTEM_STATE.md` is `4274` lines.
 - Architecture doc routing needs an explicit canonical-path guard:
   on this macOS checkout the lowercase path aliases the tracked uppercase file, so path drift must
   be prevented by policy and tests rather than by maintaining two physical docs.
@@ -183,7 +183,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 | Debt-register drift | pre-closeout `TD-001` stale line reference against `batches.py:223` | `docs/TECH_DEBT_REGISTER.md`, debt tests | `tests/test_debt_contract.py` | resolved | closed |
 | Incomplete agent entrypoint | closed in `63e1160` and `1435cdb` | `document_plan.py`, CLI, agent docs | focused document-plan and CLI tests | resolved | closed |
 | Missing dependency declaration | closed by the current planner contract, which validates requests without a new external schema runtime dependency | document-planning surfaces | focused planner/CLI tests | resolved | closed |
-| Cold-start doc sprawl | handoff `10079` lines; current state `4226` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
+| Cold-start doc sprawl | handoff `10387` lines; current state `4274` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
 | Architecture doc path drift | uppercase path is canonical, but the checkout still needs a guard against lowercase-path drift | architecture docs and references | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
 | Non-hermetic proving dependency | West Reservoir replay context points at `/Users/chunkstand/Downloads/...` | replay-context and proving docs/config | proving-lane contract tests and docs readback | deferred | Milestone 9 |
 | Duplicated PDF/rendering helpers | shared PDF object and line renderer ownership now lives in `pdf_object_writer.py`; the owner-family split risk is narrower but not the same as the broader document-owner hotspot | reporting/document-output family | focused helper contract tests plus owner-family readback | resolved | closed |
@@ -204,7 +204,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `2490` `src/usfs_r1_ea_sources/applicability_validation.py`
 - `2425` `src/usfs_r1_ea_sources/final_qa_certification.py`
 - `2374` `src/usfs_r1_ea_sources/applicability_decisions.py`
-- `2315` `src/usfs_r1_ea_sources/applicability.py`
+- `1791` `src/usfs_r1_ea_sources/applicability.py`
 - `2017` `src/usfs_r1_ea_sources/rule_claim_binding.py`
 - `1956` `src/usfs_r1_ea_sources/draft_generation.py`
 - `1901` `src/usfs_r1_ea_sources/forest_plan_resolver.py`
@@ -281,7 +281,10 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `src/usfs_r1_ea_sources/download.py`
 - `src/usfs_r1_ea_sources/preflight.py`
 - `src/usfs_r1_ea_sources/source_register*.py`
-- `src/usfs_r1_ea_sources/applicability*.py`
+- `src/usfs_r1_ea_sources/applicability.py`
+- `src/usfs_r1_ea_sources/applicability_authority_family_templates.py`
+- `src/usfs_r1_ea_sources/applicability_contract_support.py`
+- `src/usfs_r1_ea_sources/applicability_*.py`
 - `src/usfs_r1_ea_sources/rule_claim_binding.py`
 - `src/usfs_r1_ea_sources/evidence_graph.py`
 - `src/usfs_r1_ea_sources/phase_eval*.py`
@@ -673,7 +676,7 @@ Progress after Sequence 1 on 2026-05-20:
   contract surface directly, while `tests/test_applicability.py` still verifies the public
   authority-universe snapshot behavior end to end.
 - The fresh architecture probe reports `197` code files, `57` files above `800`, no Python or
-  JS/TS cycles, `applicability.py` reduced to `1793` lines, and no new `>800` line file created
+  JS/TS cycles, `applicability.py` reduced to `1791` lines, and no new `>800` line file created
   by this seam.
 
 Remaining issue after closeout:

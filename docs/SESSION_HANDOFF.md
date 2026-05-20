@@ -5,6 +5,40 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Alignment Pass
+
+This docs-only follow-up closes the remaining packet-alignment drift after the
+reduced Milestone 6 sequence 1 runtime seam split.
+
+- outcome label:
+  `resolved` for alignment only; runtime truth remains `f96a396`
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- alignment closeout:
+  `docs/CURRENT_SYSTEM_STATE.md` now records the same Milestone 6 sequence 1
+  runtime truth as the handoff, architecture doc, and umbrella plan, and the
+  umbrella packet's large-file inventory plus owner-surface list now reflect
+  the live post-sequence applicability owner state rather than the older
+  pre-split `applicability.py` baseline
+- live-state refresh:
+  `git status -sb` is clean on `main`; the fresh architecture probe still
+  reports `197` code files, `57` files above `800`,
+  top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `applicability.py` at `1791` lines, one fan-out hotspot at
+  `cli_derived=22`, and no Python or JS/TS import cycles
+- next routing:
+  the next bounded slice remains inside Milestone 6 on the remaining
+  applicability candidate assembly plus the decision/validation and
+  claims/evidence hotspot families
+- stale-routing cleanup:
+  the immediately following Milestone 6 sequence 1 section remains the runtime
+  implementation truth from `f96a396`; the current alignment section above
+  supersedes any older packet references that still treated the umbrella plan's
+  applicability inventory and current-state routing as pre-sequence
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 1
 
 This first Milestone 6 slice extracts the authority-family template candidate
@@ -40,7 +74,7 @@ closed.
 - live probe evidence:
   the fresh architecture probe reports `197` code files, `57` files above
   `800`, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
-  `104370`, `applicability.py` reduced to `1793` lines from the prior
+  `104370`, `applicability.py` reduced to `1791` lines from the prior
   `2315`-line baseline, new modules
   `applicability_authority_family_templates.py=417` and
   `applicability_contract_support.py=113`, one fan-out hotspot at

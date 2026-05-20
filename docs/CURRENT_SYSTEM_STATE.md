@@ -33,6 +33,54 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 1
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 6; sequence 1 is implemented, but the broader
+  applicability/claims/evidence hotspot family remains active.
+- Milestone 6 sequence 1 closeout commit:
+  `f96a396` (`Reduce architecture refactor Milestone 6 authority-family seam`).
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/applicability.py`,
+  `src/usfs_r1_ea_sources/applicability_authority_family_templates.py`,
+  `src/usfs_r1_ea_sources/applicability_contract_support.py`,
+  `tests/test_applicability_authority_family_templates.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/architecture_contract.toml`.
+- Runtime seam closeout:
+  `applicability_authority_family_templates.py` now owns authority-family
+  template candidate assembly, source-evidence availability, and
+  retrieval/graph/dependency/search-coverage contract construction that
+  previously lived inside `applicability.py`, while
+  `applicability_contract_support.py` now owns the shared
+  authority-document-role, source-record, string-normalization, and
+  source-record-summary helpers consumed by both modules.
+- Alignment pass:
+  the latest docs-only follow-up pins the same runtime truth across
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/ARCHITECTURE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`, refreshes the
+  umbrella plan's stale `applicability.py` large-file inventory entry from the
+  pre-sequence `2315`-line value to the live `1791`-line value, and keeps the
+  new applicability owner modules explicit in the routed owner-surface lists.
+- Live probe evidence:
+  the fresh architecture probe reports `197` code files, `57` files above
+  `800`, no Python or JS/TS import cycles, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `applicability.py` reduced to `1791` lines, and no new `>800` line file
+  introduced by the seam.
+- Next routing:
+  continue inside Milestone 6 for the remaining rule-template and
+  forest-plan-component candidate assembly still in `applicability.py`, then
+  the broader applicability decision/validation and claims/evidence owner
+  families. Do not advance to Milestone 7 yet.
+
 ## Applicability-First Milestone 10 Closeout
 
 Latest closeout on 2026-05-20:
