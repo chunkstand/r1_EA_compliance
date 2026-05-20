@@ -43,6 +43,8 @@ Latest closeout on 2026-05-20:
   `resolved` for Milestone 10; the umbrella applicability-first architecture
   plan is now locally complete and no further continuation is routed through
   it.
+- Milestone 10 closeout commit:
+  `aa97e59` (`Resolve applicability-first Milestone 10`).
 - Runtime truth refresh:
   a bounded South Plateau `compliance-review` replay regenerated
   `authority_explanation_paths.json`; fresh

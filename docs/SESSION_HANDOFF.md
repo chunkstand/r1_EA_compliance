@@ -14,6 +14,8 @@ real-package coverage lane.
 - outcome label:
   `resolved` for Milestone 10; no further continuation is routed through
   `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`
+- closeout commit:
+  `aa97e59` (`Resolve applicability-first Milestone 10`)
 - runtime truth refresh:
   a bounded South Plateau `compliance-review` replay regenerated
   `authority_explanation_paths.json`; fresh

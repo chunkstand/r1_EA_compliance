@@ -944,7 +944,8 @@ review-scoped `phase-eval` `19/19` with `reviewer_ready=true`. A bounded 2026-05
 `compliance-review` refresh also regenerated `authority_explanation_paths.json`, after which fresh
 South Plateau `v1-ea-eval` and strict `promotion-suite` replays both passed. This closes
 Applicability-First Milestone 10 on the governed ECID preliminary-EA plus South Plateau expansion
-set. A fresh local `real-package-review-coverage-eval` rerun still depends on the preserved West
+set through local closeout commit `aa97e59`. A fresh local `real-package-review-coverage-eval`
+rerun still depends on the preserved West
 Reservoir replay-context package path under `/Users/chunkstand/Downloads/West Reservoir (67436)`,
 so that separate coverage lane is not part of this Milestone 10 closeout claim.
 
