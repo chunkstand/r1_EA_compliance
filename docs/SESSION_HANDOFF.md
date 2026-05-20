@@ -15,6 +15,8 @@ instead of pretending the broader decision/validation and claims/evidence family
   `reduced` for Milestone 6 sequence 8; the broader Milestone 6 family remains active
 - routed packet:
   `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- closeout commit:
+  `b316e20` (`Reduce architecture refactor Milestone 6 decision-coverage seam`)
 - decision-coverage seam closeout:
   `src/usfs_r1_ea_sources/applicability_decision_coverage.py` now owns search-coverage boundary
   evaluation plus search-coverage certificate assembly/rationale that previously remained in

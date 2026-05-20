@@ -51,6 +51,8 @@ Latest closeout on 2026-05-20:
   `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
   `docs/SESSION_HANDOFF.md`, and
   `docs/architecture_contract.toml`.
+- Sequence 8 closeout commit:
+  `b316e20` (`Reduce architecture refactor Milestone 6 decision-coverage seam`).
 - Runtime seam closeout:
   `applicability_decision_coverage.py` now owns search-coverage boundary evaluation plus
   search-coverage certificate assembly/rationale that previously remained inside
