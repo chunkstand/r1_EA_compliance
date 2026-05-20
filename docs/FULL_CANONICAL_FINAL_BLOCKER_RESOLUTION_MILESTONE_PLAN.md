@@ -1,7 +1,7 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Reduced 2026-05-19 through `933c667`; superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`, which owns the green archived full-canonical downstream closeout on `source-set-732a5a91d31736f8` plus the durable routing reset through `df2bd28`; live full-canonical follow-on now routes through `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`, which is locally resolved through Milestones 1-4 on live successor `source-set-f775524ab233ff27`
+Status: Reduced 2026-05-19 through `933c667`; superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`, which owns the green archived full-canonical downstream closeout on `source-set-732a5a91d31736f8` plus the durable routing reset through `df2bd28`; live full-canonical follow-on now routes through `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`, which is locally resolved through Milestones 1-4 and Milestone 4 closeout `f464fa9` on live successor `source-set-f775524ab233ff27`
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose

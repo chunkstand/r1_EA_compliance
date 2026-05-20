@@ -1,7 +1,7 @@
 # Full Canonical Live Source-Set Promotion Milestone Plan
 
 Date: 2026-05-19
-Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through `c08e480` with live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 resolved locally 2026-05-19 through `a299450` on live successor `source-set-f775524ab233ff27`; Milestone 4 resolved locally 2026-05-20 through docs-only sole-truth closeout on live successor `source-set-f775524ab233ff27`
+Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through `c08e480` with live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 resolved locally 2026-05-19 through `a299450` on live successor `source-set-f775524ab233ff27`; Milestone 4 resolved locally 2026-05-20 through `f464fa9` on live successor `source-set-f775524ab233ff27`
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` live full-canonical source-set promotion boundary
 
 ## Purpose
@@ -468,6 +468,8 @@ Outcome label: resolved
   now describe live successor `source-set-f775524ab233ff27` as the sole
   active full-canonical source set and archived
   `source-set-732a5a91d31736f8` as preserved historical evidence only.
+- Milestone 4 closeout commit:
+  `f464fa9` (`Resolve live source-set promotion Milestone 4`).
 - Targeted closeout proof:
   `rg -n "source-set-732a5a91d31736f8"` over
   `config/promotion_suite_v1.json`,

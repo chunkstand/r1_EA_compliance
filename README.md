@@ -142,6 +142,8 @@ Local active import baseline on 2026-05-20 after full canonical live source-set 
   full-canonical truth; a targeted config grep across the active
   full-canonical suite returns no `source-set-732a5a91d31736f8` matches; and
   no further live-promotion follow-on is routed through this boundary.
+  Milestone 4 closeout commit:
+  `f464fa9` (`Resolve live source-set promotion Milestone 4`).
 - The proving-slice active catalog `source-set-9dcf819bc4cca486` and the
   planned-only Phase 2 gate `source-set-ae989382c52344db` remain historical
   pre-import baselines for this checkout, not the live

@@ -5,6 +5,33 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Live Source-Set Promotion Milestone 4 Alignment Pass
+
+This docs-only follow-up pins the real Milestone 4 closeout hash across the
+routed packet set.
+
+- outcome label:
+  `resolved` for the alignment pass; runtime truth is unchanged
+- aligned packet surfaces:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`, and
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+- routing truth:
+  `f464fa9` (`Resolve live source-set promotion Milestone 4`) is the
+  docs-only sole-truth closeout for live successor
+  `source-set-f775524ab233ff27`; no further live-promotion follow-on is
+  routed through this boundary
+- stale-routing cleanup:
+  the top routed docs and packet status lines now pin `f464fa9` as the
+  Milestone 4 closeout hash instead of leaving the docs-only closeout
+  implicit
+- verification:
+  config drift grep, milestone-plan lints on the touched packets, and
+  `git diff --check` passed
+
 ## Full Canonical Live Source-Set Promotion Milestone 4 Closeout
 
 This docs-only closeout resolves the live-promotion packet as the sole active
@@ -12,6 +39,8 @@ full-canonical truth boundary.
 
 - outcome label:
   `resolved` for Milestone 4
+- Milestone 4 closeout commit:
+  `f464fa9` (`Resolve live source-set promotion Milestone 4`)
 - implementation surfaces:
   `README.md`,
   `docs/CURRENT_SYSTEM_STATE.md`,

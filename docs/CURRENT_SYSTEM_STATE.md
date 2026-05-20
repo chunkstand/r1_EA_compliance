@@ -25,7 +25,7 @@ promotion lane specifically, references below that still treat
 Milestone 4 as pending, or still describe archived
 `source-set-732a5a91d31736f8` as the governing live downstream contract are
 historical only after the 2026-05-20 live-promotion Milestone 4 docs-only
-sole-truth closeout on `source-set-f775524ab233ff27`.
+sole-truth closeout `f464fa9` on `source-set-f775524ab233ff27`.
 
 ## Full Canonical Live Source-Set Promotion Milestone 4 Closeout
 
@@ -36,6 +36,8 @@ Latest closeout on 2026-05-20:
 - Outcome label:
   `resolved` for Milestone 4; the live-promotion packet is now locally
   complete as the governing full-canonical closeout boundary.
+- Milestone 4 closeout commit:
+  `f464fa9` (`Resolve live source-set promotion Milestone 4`).
 - Implementation surfaces:
   `README.md`,
   `docs/CURRENT_SYSTEM_STATE.md`,
