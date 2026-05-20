@@ -5,6 +5,59 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 5
+
+This fifth Milestone 6 slice closes the applicability decision-output seam, records the new owner
+module in the architecture surfaces, and keeps the umbrella packet routed inside Milestone 6
+instead of pretending the broader decision/validation and claims/evidence family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 5; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- decision-output seam closeout:
+  `src/usfs_r1_ea_sources/applicability_decision_outputs.py` now owns decision partition records,
+  provenance payload assembly, summary aggregation, and applicability report rendering that
+  previously remained in `applicability_decisions.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/applicability_decisions.py` keeps the public
+  `build_applicability_decisions` entrypoint plus the remaining predicate/arbitration and
+  evidence-matching core, while `src/usfs_r1_ea_sources/applicability_validation.py` now consumes
+  the extracted output owner for its adjudication rewrite path
+- direct contract coverage:
+  `tests/test_applicability_decision_outputs.py` now pins the extracted decision-output seam
+  directly, while `tests/test_applicability_decisions.py` still verifies the public applicability
+  decision behavior end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `applicability_decision_outputs.py` explicitly in the
+  applicability container, and `docs/architecture_contract.toml` assigns it to the `applicability`
+  layer
+- live probe evidence:
+  the fresh architecture probe reports `205` code files, `56` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `applicability_decisions.py` reduced to `2036` lines from the post-sequence-4 `2374`-line
+  baseline, new module `applicability_decision_outputs.py=375`, one fan-out hotspot at
+  `cli_derived=22`, and no Python or JS/TS import cycles
+- residual risk:
+  `applicability_decisions.py` still owns the remaining predicate/arbitration and evidence-matching
+  core, `applicability_validation.py` still remains large, and the claims/evidence hotspot family
+  is still untouched by this sequence
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on the remaining core in
+  `applicability_decisions.py`, then `applicability_validation.py`, and the broader claims/evidence
+  owner families; do not advance to Milestone 7 yet
+- stale-routing cleanup:
+  the immediately following sequence 4 section is now historical for the applicability decision
+  output residual note; the current section above supersedes any older packet text that still
+  treats `applicability_decisions.py` as the owner of partition/provenance/report output assembly
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_decision_outputs.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 4
 
 This fourth Milestone 6 slice closes the remaining authority-universe snapshot builder seam,

@@ -9,8 +9,8 @@ import hashlib
 import json
 import re
 
-from .applicability_decisions import _partition_authority_record
-from .applicability_decisions import _write_report
+from .applicability_decision_outputs import partition_authority_record
+from .applicability_decision_outputs import write_decision_report
 from .records import sha256_file
 
 
@@ -491,7 +491,7 @@ def apply_applicability_adjudication(
             1 for decision in applied_decisions if _decision_status(decision) == "applicable"
         ),
         "authorities": [
-            _partition_authority_record(decision)
+            partition_authority_record(decision)
             for decision in applied_decisions
             if _decision_status(decision) == "applicable"
         ],
@@ -505,7 +505,7 @@ def apply_applicability_adjudication(
             if _decision_status(decision) == "not_applicable"
         ),
         "authorities": [
-            _partition_authority_record(decision)
+            partition_authority_record(decision)
             for decision in applied_decisions
             if _decision_status(decision) == "not_applicable"
         ],
@@ -523,7 +523,11 @@ def apply_applicability_adjudication(
             applicability_dir / "search_coverage_certificates.json"
         ),
     )
-    _write_report(applicability_dir / "applicability_report.md", report_summary, applied_decisions)
+    write_decision_report(
+        applicability_dir / "applicability_report.md",
+        report_summary,
+        applied_decisions,
+    )
     applicable_authorities_sha256 = sha256_file(applicable_authorities_path)
     non_applicable_authorities_sha256 = sha256_file(non_applicable_authorities_path)
     summary = {

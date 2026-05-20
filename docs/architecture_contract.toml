@@ -161,6 +161,7 @@ modules = [
   "applicability_authority_universe_contracts",
   "applicability_candidate_assembly",
   "applicability_contract_support",
+  "applicability_decision_outputs",
   "applicability_decisions",
   "applicability_retrieval",
   "applicability_rule_pack",

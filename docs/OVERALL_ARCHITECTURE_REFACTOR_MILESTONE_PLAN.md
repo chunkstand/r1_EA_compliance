@@ -645,7 +645,7 @@ Remaining issue after closeout:
 ### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
 
 Outcome label: `reduced`
-Status: active after Sequence 4
+Status: active after Sequence 5
 
 Purpose: reduce the largest concentration in the applicability decision family.
 
@@ -657,6 +657,7 @@ Owner family:
 - `applicability_authority_universe_contracts.py`
 - `applicability_candidate_assembly.py`
 - `applicability_contract_support.py`
+- `applicability_decision_outputs.py`
 - `applicability_decisions.py`
 - `applicability_validation.py`
 - `applicability_eval.py`
@@ -674,7 +675,18 @@ Implementation:
 2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
 
-Progress after Sequence 4 on 2026-05-20:
+Progress after Sequence 5 on 2026-05-20:
+
+- `applicability_decision_outputs.py` now owns decision partition records, provenance payload
+  assembly, summary aggregation, and applicability report rendering that previously remained inside
+  `applicability_decisions.py`.
+- `tests/test_applicability_decision_outputs.py` now pins the extracted decision-output seam
+  directly.
+- `applicability_decisions.py` is reduced to `2036` lines from the post-sequence-4 `2374`-line
+  baseline, and the new `applicability_decision_outputs.py` seam remains below the `800`-line gate
+  at `375` lines.
+- The fresh architecture probe reports `205` code files, `56` files above `800`, and no Python or
+  JS/TS cycles.
 
 - `applicability_authority_universe_builder.py` now owns the remaining authority-universe snapshot
   orchestration, catalog/template loading, hashing, and snapshot artifact writing that previously
@@ -713,9 +725,10 @@ Progress after Sequence 4 on 2026-05-20:
 
 Remaining issue after closeout:
 
-- `applicability_decisions.py` and `applicability_validation.py` remain large, and the broader
-  decision/validation plus claims/evidence hotspot families remain open inside Milestone 6 before
-  the umbrella packet can route forward to Milestone 7.
+- `applicability_decisions.py` still owns the remaining predicate/arbitration and evidence-matching
+  core, `applicability_validation.py` remains large, and the broader decision/validation plus
+  claims/evidence hotspot families remain open inside Milestone 6 before the umbrella packet can
+  route forward to Milestone 7.
 
 ### Milestone 7 - Split Eval And Promotion Orchestration Hotspots
 
