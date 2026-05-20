@@ -17,6 +17,7 @@ modules = [
   "overrides",
   "pdf_object_writer",
   "records",
+  "source_set_support",
   "source_register",
   "source_partitions",
   "workbook",
@@ -26,7 +27,7 @@ allowed_import_layers = ["foundation"]
 [[layers]]
 name = "capture"
 summary = "Dry-run, preflight, download, batch, report, pilot, run validation, and source-register contract workflows."
-modules = ["batches", "download", "dry_run", "pilots", "preflight", "report", "validate_run"]
+modules = ["batches", "capture_run_support", "download", "dry_run", "pilots", "preflight", "report", "validate_run"]
 allowed_import_layers = ["foundation", "capture"]
 
 [[layers]]

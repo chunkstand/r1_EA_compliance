@@ -7,17 +7,22 @@ from time import monotonic, sleep
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, HTTPSHandler, Request, build_opener
-import csv
 import hashlib
 import json
 import socket
 import ssl
 
 from .adapters import adapt_download_url
+from .capture_run_support import (
+    build_capture_manifest_record,
+    is_failure_status,
+    write_failures_csv,
+    write_jsonl,
+)
 from .config import DownloaderConfig, NetworkConfig, ValidationConfig
 from .dry_run import _apply_filters, _override_count, new_run_id, utc_now, write_event
 from .preflight import _base_content_type, _body_looks_blocked, _body_looks_not_found
-from .preflight import _int_or_none, _is_failure_status
+from .preflight import _int_or_none
 from .preflight import _request_headers, _uses_browser_compatible_user_agent
 from .preflight import _uses_verified_curl_transport, _run_curl_request
 from .preflight import _respect_host_delay
@@ -324,8 +329,8 @@ def run_download(
         records.append(record)
         write_event(events_path, run_id, "record_finalized", source=source, details={"status": record["status"]})
 
-    _write_jsonl(manifest_path, records)
-    _write_failures_csv(failures_path, records)
+    write_jsonl(manifest_path, records)
+    write_failures_csv(failures_path, records)
 
     status_counts = Counter(record["status"] for record in records)
     top_hosts = Counter(urlsplit(record["normalized_url"]).netloc.lower() for record in records)
@@ -354,7 +359,7 @@ def run_download(
         "duplicate_url_count": status_counts.get("duplicate_url", 0),
         "duplicate_content_count": status_counts.get("duplicate_content", 0),
         "skipped_excluded_count": status_counts.get("skipped_excluded", 0),
-        "failed_count": sum(1 for record in records if _is_failure_status(record["status"])),
+        "failed_count": sum(1 for record in records if is_failure_status(record["status"])),
         "needs_review_count": status_counts.get("needs_review", 0),
         "status_counts": dict(status_counts),
         "top_hosts": top_hosts.most_common(20),
@@ -812,77 +817,27 @@ def _manifest_record(
     failure: dict | None,
     validation: dict,
 ) -> dict:
-    return {
-        "run_id": run_id,
-        "source_record_id": source.source_record_id,
-        "workbook_path": str(workbook_path),
-        "workbook_sha256": workbook_sha256,
-        "sheet": source.sheet,
-        "excel_row": source.excel_row,
-        "source_id": source.source_id,
-        "title": source.title,
-        "original_url": source.original_url,
-        "effective_url": source.effective_url,
-        "normalized_url": source.normalized_url,
-        "final_url": final_url,
-        "redirect_chain": redirect_chain,
-        "status": status,
-        "planned_artifact_path": str(planned_path),
-        "artifact_path": str(artifact_path) if artifact_path else None,
-        "artifact_sha256": artifact_sha256,
-        "artifact_byte_size": artifact_byte_size,
-        "content_type": content_type,
-        "content_length": content_length,
-        "http_status": http_status,
-        "attempt_count": attempt_count,
-        "fetch_timestamp": utc_now() if attempt_count else None,
-        "validation": validation,
-        "duplicate_of": duplicate_of,
-        "failure": failure,
-        "metadata": source.metadata,
-    }
-
-
-def _write_jsonl(path: Path, records: list[dict]) -> None:
-    with path.open("w", encoding="utf-8") as handle:
-        for record in records:
-            handle.write(json.dumps(record, sort_keys=True) + "\n")
-
-
-def _write_failures_csv(path: Path, records: list[dict]) -> None:
-    headers = [
-        "source_record_id",
-        "sheet",
-        "excel_row",
-        "source_id",
-        "title",
-        "original_url",
-        "status",
-        "error_class",
-        "error_message",
-        "attempt_count",
-    ]
-    with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=headers)
-        writer.writeheader()
-        for record in records:
-            if not _is_failure_status(record["status"]):
-                continue
-            failure = record.get("failure") or {}
-            writer.writerow(
-                {
-                    "source_record_id": record["source_record_id"],
-                    "sheet": record["sheet"],
-                    "excel_row": record["excel_row"],
-                    "source_id": record["source_id"],
-                    "title": record["title"],
-                    "original_url": record["original_url"],
-                    "status": record["status"],
-                    "error_class": failure.get("error_class"),
-                    "error_message": failure.get("error_message"),
-                    "attempt_count": failure.get("attempt_count") or record.get("attempt_count"),
-                }
-            )
+    return build_capture_manifest_record(
+        run_id=run_id,
+        workbook_path=workbook_path,
+        workbook_sha256=workbook_sha256,
+        source=source,
+        status=status,
+        final_url=final_url,
+        redirect_chain=redirect_chain,
+        content_type=content_type,
+        content_length=content_length,
+        http_status=http_status,
+        attempt_count=attempt_count,
+        fetch_timestamp=utc_now() if attempt_count else None,
+        validation=validation,
+        duplicate_of=duplicate_of,
+        failure=failure,
+        artifact_path=artifact_path,
+        artifact_sha256=artifact_sha256,
+        artifact_byte_size=artifact_byte_size,
+        extra_fields={"planned_artifact_path": str(planned_path)},
+    )
 
 
 def _validation_report(

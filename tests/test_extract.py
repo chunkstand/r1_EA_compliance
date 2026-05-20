@@ -17,7 +17,10 @@ from usfs_r1_ea_sources.catalog import build_review_catalog
 from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 import usfs_r1_ea_sources.extract as extract_module
 from usfs_r1_ea_sources.extract import build_extraction
-from usfs_r1_ea_sources.extract import _source_derived_dir
+from usfs_r1_ea_sources.source_set_support import (
+    resolve_support_document_role,
+    source_derived_dir,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,7 +50,7 @@ class ExtractionTests(unittest.TestCase):
         self.assertEqual(cleaned, "VerDate 20 2000 alpha beta")
 
     def test_resolve_support_document_role_prefers_r1_register_override(self) -> None:
-        role = extract_module._resolve_support_document_role(
+        role = resolve_support_document_role(
             {
                 "source_record_id": "R1PLAN-custer-gallatin-nf-06",
                 "document_role": "forest_plan",
@@ -1455,7 +1458,7 @@ class ExtractionTests(unittest.TestCase):
     def test_source_derived_dir_rejects_unsafe_source_set_id(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaises(ValueError):
-                _source_derived_dir(Path(tmp), "../outside")
+                source_derived_dir(Path(tmp), "../outside")
 
 
 def _write_download_run(

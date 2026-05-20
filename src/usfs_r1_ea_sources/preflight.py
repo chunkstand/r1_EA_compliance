@@ -7,7 +7,6 @@ from time import monotonic, sleep
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, HTTPSHandler, Request, build_opener
-import csv
 import json
 import socket
 import ssl
@@ -15,6 +14,12 @@ import subprocess
 import tempfile
 
 from .adapters import adapt_download_url
+from .capture_run_support import (
+    build_capture_manifest_record,
+    is_failure_status,
+    write_failures_csv,
+    write_jsonl,
+)
 from .config import DownloaderConfig, NetworkConfig, ValidationConfig
 from .dry_run import _apply_filters, _override_count, new_run_id, utc_now, write_event
 from .records import WorkbookSource, planned_artifact_path, sha256_file
@@ -216,8 +221,8 @@ def run_preflight(
             details={"status": record["status"]},
         )
 
-    _write_jsonl(manifest_path, records)
-    _write_failures_csv(failures_path, records)
+    write_jsonl(manifest_path, records)
+    write_failures_csv(failures_path, records)
 
     status_counts = Counter(record["status"] for record in records)
     top_hosts = Counter(urlsplit(record["normalized_url"]).netloc.lower() for record in records)
@@ -242,7 +247,7 @@ def run_preflight(
         "preflight_ok_count": status_counts.get("preflight_ok", 0),
         "duplicate_url_count": status_counts.get("duplicate_url", 0),
         "skipped_excluded_count": status_counts.get("skipped_excluded", 0),
-        "failed_count": sum(1 for record in records if _is_failure_status(record["status"])),
+        "failed_count": sum(1 for record in records if is_failure_status(record["status"])),
         "needs_review_count": status_counts.get("needs_review", 0),
         "status_counts": dict(status_counts),
         "top_hosts": top_hosts.most_common(20),
@@ -777,77 +782,25 @@ def _manifest_record(
     validation = dict(fetch_result.validation)
     if duplicate_of:
         validation = {"mode": "preflight", "passed": True, "reason": "duplicate URL reference"}
-    return {
-        "run_id": run_id,
-        "source_record_id": source.source_record_id,
-        "workbook_path": str(workbook_path),
-        "workbook_sha256": workbook_sha256,
-        "sheet": source.sheet,
-        "excel_row": source.excel_row,
-        "source_id": source.source_id,
-        "title": source.title,
-        "original_url": source.original_url,
-        "effective_url": source.effective_url,
-        "normalized_url": source.normalized_url,
-        "final_url": fetch_result.final_url,
-        "redirect_chain": fetch_result.redirect_chain,
-        "status": status,
-        "artifact_path": str(artifact_path) if artifact_path else None,
-        "artifact_sha256": None,
-        "artifact_byte_size": None,
-        "content_type": fetch_result.content_type,
-        "content_length": fetch_result.content_length,
-        "http_status": fetch_result.http_status,
-        "fetch_method": fetch_result.method,
-        "attempt_count": fetch_result.attempt_count,
-        "fetch_timestamp": utc_now() if fetch_result.method else None,
-        "validation": validation,
-        "duplicate_of": duplicate_of,
-        "failure": None if duplicate_of else fetch_result.failure,
-        "metadata": source.metadata,
-    }
-
-
-def _write_jsonl(path: Path, records: list[dict]) -> None:
-    with path.open("w", encoding="utf-8") as handle:
-        for record in records:
-            handle.write(json.dumps(record, sort_keys=True) + "\n")
-
-
-def _write_failures_csv(path: Path, records: list[dict]) -> None:
-    headers = [
-        "source_record_id",
-        "sheet",
-        "excel_row",
-        "source_id",
-        "title",
-        "original_url",
-        "status",
-        "error_class",
-        "error_message",
-        "attempt_count",
-    ]
-    with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=headers)
-        writer.writeheader()
-        for record in records:
-            if not _is_failure_status(record["status"]):
-                continue
-            failure = record.get("failure") or {}
-            writer.writerow(
-                {
-                    "source_record_id": record["source_record_id"],
-                    "sheet": record["sheet"],
-                    "excel_row": record["excel_row"],
-                    "source_id": record["source_id"],
-                    "title": record["title"],
-                    "original_url": record["original_url"],
-                    "status": record["status"],
-                    "error_class": failure.get("error_class"),
-                    "error_message": failure.get("error_message"),
-                    "attempt_count": failure.get("attempt_count") or record.get("attempt_count"),
-                }
-            )
+    return build_capture_manifest_record(
+        run_id=run_id,
+        workbook_path=workbook_path,
+        workbook_sha256=workbook_sha256,
+        source=source,
+        status=status,
+        final_url=fetch_result.final_url,
+        redirect_chain=fetch_result.redirect_chain,
+        content_type=fetch_result.content_type,
+        content_length=fetch_result.content_length,
+        http_status=fetch_result.http_status,
+        attempt_count=fetch_result.attempt_count,
+        fetch_timestamp=utc_now() if fetch_result.method else None,
+        validation=validation,
+        duplicate_of=duplicate_of,
+        failure=None if duplicate_of else fetch_result.failure,
+        artifact_path=artifact_path,
+        extra_fields={"fetch_method": fetch_result.method},
+    )
 
 
 def _validation_report(
@@ -902,22 +855,5 @@ def _validation_report(
         "checks": checks,
         "passed": all(check["passed"] for check in checks),
     }
-
-
-def _is_failure_status(status: str) -> bool:
-    return status in {
-        "blocked",
-        "challenge_page",
-        "failed",
-        "invalid_content",
-        "needs_review",
-        "not_found",
-        "rate_limited",
-        "ssl_error",
-        "timeout",
-        "unsupported_content_type",
-    }
-
-
 def _is_transient_status(status: str) -> bool:
     return status in {"failed", "rate_limited", "timeout"}

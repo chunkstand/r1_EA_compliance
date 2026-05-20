@@ -26,7 +26,11 @@ import zipfile
 import xml.etree.ElementTree as ET
 
 from .records import sha256_file
-from .workbook import load_r1_forest_plan_document_register
+from .source_set_support import (
+    load_support_document_role_overrides,
+    resolve_support_document_role,
+    source_derived_dir,
+)
 
 
 DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -40,7 +44,6 @@ PDF_RASTER_OCR_PARALLEL_MIN_PAGES = 24
 PDF_RASTER_OCR_MAX_WORKERS = 4
 APPLE_VISION_OCR_TIMEOUT_SECONDS = 600.0
 DOCLING_PYTHON_ENV_VAR = "USFS_R1_DOCLING_PYTHON"
-DEFAULT_R1_FOREST_PLAN_REGISTER_PATH = Path("config/r1_forest_plan_document_register_draft.csv")
 SUCCESS_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"}
 NON_EXTRACTABLE_SOURCE_STATUSES = {"skipped_excluded"}
 CURRENT_REUSE_INVENTORY_CLASSIFICATIONS = {"already_current", "already_current_cg_slice"}
@@ -191,19 +194,19 @@ def build_extraction(
     )
     preserve_existing_outputs = reuse_existing or reuse_inventory_records is not None
     derived_dir = output_dir / "derived"
-    source_derived_dir = _source_derived_dir(derived_dir, source_set_id)
+    source_derived_root = source_derived_dir(derived_dir, source_set_id)
     selected_ids = set(id_filters or set())
     if id_filter:
         selected_ids.add(id_filter)
     merge_selected_into_existing = bool(
-        merge_selected_into_existing and selected_ids and source_derived_dir.exists()
+        merge_selected_into_existing and selected_ids and source_derived_root.exists()
     )
-    if source_derived_dir.exists() and not preserve_existing_outputs and not merge_selected_into_existing:
-        shutil.rmtree(source_derived_dir)
-    extracted_text_dir = source_derived_dir / "extracted_text"
-    docling_json_dir = source_derived_dir / "docling_json"
-    chunks_dir = source_derived_dir / "chunks"
-    diagnostics_dir = source_derived_dir / "diagnostics"
+    if source_derived_root.exists() and not preserve_existing_outputs and not merge_selected_into_existing:
+        shutil.rmtree(source_derived_root)
+    extracted_text_dir = source_derived_root / "extracted_text"
+    docling_json_dir = source_derived_root / "docling_json"
+    chunks_dir = source_derived_root / "chunks"
+    diagnostics_dir = source_derived_root / "diagnostics"
     payload_cache_dir = diagnostics_dir / "payload_cache"
     for directory in (extracted_text_dir, docling_json_dir, chunks_dir, diagnostics_dir):
         directory.mkdir(parents=True, exist_ok=True)
@@ -380,7 +383,7 @@ def _load_catalog_rows(
     parser_filter: str | None,
     limit: int | None,
 ) -> list[dict]:
-    support_document_role_overrides = _load_support_document_role_overrides()
+    support_document_role_overrides = load_support_document_role_overrides()
     query = """
         SELECT
           s.source_record_id,
@@ -443,35 +446,11 @@ def _load_catalog_rows(
 
     for row in rows:
         row["metadata"] = json.loads(row.pop("metadata_json") or "{}")
-        row["support_document_role"] = _resolve_support_document_role(
+        row["support_document_role"] = resolve_support_document_role(
             row,
             support_document_role_overrides=support_document_role_overrides,
         )
     return rows
-
-
-@lru_cache(maxsize=1)
-def _load_support_document_role_overrides() -> dict[str, str]:
-    if not DEFAULT_R1_FOREST_PLAN_REGISTER_PATH.exists():
-        return {}
-    register = load_r1_forest_plan_document_register(DEFAULT_R1_FOREST_PLAN_REGISTER_PATH)
-    return {
-        row["proposed_source_record_id"]: row["document_role"]
-        for row in register.rows
-    }
-
-
-def _resolve_support_document_role(
-    row: dict,
-    *,
-    support_document_role_overrides: dict[str, str],
-) -> str:
-    return str(
-        support_document_role_overrides.get(str(row.get("source_record_id") or ""))
-        or row.get("metadata", {}).get("document_role")
-        or row.get("document_role")
-        or ""
-    )
 
 
 def _extract_row(
@@ -3058,16 +3037,7 @@ def _summary_represents_full_catalog(summary: dict | None) -> bool:
 
 
 def _source_derived_dir(derived_dir: Path, source_set_id: str) -> Path:
-    if not re.fullmatch(r"[A-Za-z0-9_.-]+", source_set_id):
-        raise ValueError(f"Unsafe source_set_id for derived output path: {source_set_id!r}")
-    derived_root = derived_dir.resolve()
-    path = (derived_root / source_set_id).resolve()
-    try:
-        path.relative_to(derived_root)
-    except ValueError as error:
-        message = f"Unsafe derived output path for source_set_id: {source_set_id}"
-        raise ValueError(message) from error
-    return path
+    return source_derived_dir(derived_dir, source_set_id)
 
 
 def _resolve_artifact_path(output_dir: Path, artifact_path: str) -> Path:

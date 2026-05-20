@@ -12,9 +12,11 @@ import json
 import sqlite3
 import subprocess
 
+from .capture_run_support import read_jsonl
+from .capture_run_support import resolve_manifest_path
+from .capture_run_support import write_jsonl
 from .config import DownloaderConfig, LEGACY_WORKBOOK_LOADER_CONTRACT
 from .records import WorkbookSource, sha256_file, slugify
-from .report import _read_jsonl, _resolve_manifest_path
 from .source_partitions import catalog_source_partition
 from .workbook import (
     ensure_supplemental_sources_allowed,
@@ -159,11 +161,11 @@ def build_review_catalog(
         manifest_load_checks=manifest_load_checks,
     )
 
-    _write_jsonl(source_catalog_path, catalog_records)
+    write_jsonl(source_catalog_path, catalog_records)
     _write_json(source_set_manifest_path, manifest)
     _write_json(validation_path, validation_report)
-    _write_jsonl(graph_nodes_path, graph_nodes)
-    _write_jsonl(graph_edges_path, graph_edges)
+    write_jsonl(graph_nodes_path, graph_nodes)
+    write_jsonl(graph_edges_path, graph_edges)
     _write_sqlite(sqlite_path, manifest, catalog_records)
 
     summary = {
@@ -704,11 +706,11 @@ def _load_single_manifest_records(
     if not summary_path.exists():
         raise FileNotFoundError(f"Missing run summary: {summary_path}")
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    manifest_path = _resolve_manifest_path(output_dir, summary)
+    manifest_path = resolve_manifest_path(output_dir, summary)
     records_by_id: dict[str, dict] = {}
     duplicate_ids = []
     unknown_ids = []
-    for record in _read_jsonl(manifest_path):
+    for record in read_jsonl(manifest_path):
         source_record_id = str(record.get("source_record_id") or "")
         if source_record_id in records_by_id:
             duplicate_ids.append(source_record_id)
@@ -763,7 +765,7 @@ def _load_batch_manifest_records(
             missing_manifest_batches.append(batch_id)
             continue
         manifest_source_ids = set()
-        for record in _read_jsonl(manifest_path):
+        for record in read_jsonl(manifest_path):
             source_record_id = str(record.get("source_record_id") or "")
             manifest_source_ids.add(source_record_id)
             if source_record_id in records_by_id:
@@ -1485,15 +1487,10 @@ def _clean(value: str | None) -> str | None:
     return cleaned or None
 
 
-def _write_json(path: Path, payload: dict) -> None:
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-
-def _write_jsonl(path: Path, records: list[dict]) -> None:
-    with path.open("w", encoding="utf-8") as handle:
-        for record in records:
-            handle.write(json.dumps(record, sort_keys=True) + "\n")
-
-
 def _utc_now() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+
+
+def _write_json(path: Path, value: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")

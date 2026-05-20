@@ -5,6 +5,67 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 5
+
+This reduced closeout splits the shared source-capture manifest/report helpers
+and the first extraction/retrieval helper seam into explicit owned modules, and
+routes the umbrella packet forward to Milestone 6 instead of leaving those
+contracts buried inside larger hotspot files.
+
+- outcome label:
+  `reduced` for Milestone 5; the packet now advances to Milestone 6
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- capture seam closeout:
+  `src/usfs_r1_ea_sources/capture_run_support.py` now owns the shared capture
+  manifest-record builder, JSONL writer, failure CSV writer, failure-status
+  classifier, and manifest-path resolution contract used by `download.py`,
+  `preflight.py`, `report.py`, `validate_run.py`, and `catalog.py`; the
+  private `catalog.py` and `validate_run.py` imports from `report.py`, the
+  private `download.py` import from `preflight.py`, and the duplicated
+  manifest/failure writers in `download.py` and `preflight.py` are gone
+- extraction and retrieval helper closeout:
+  `src/usfs_r1_ea_sources/source_set_support.py` now owns the shared
+  derived-output path and support-document-role helper contract used directly
+  by `extract.py` and `retrieval.py`, so `retrieval.py` no longer imports the
+  private helper trio from `extract.py`; `extract.py` keeps only a thin
+  `_source_derived_dir` compatibility wrapper for downstream owner families
+  outside this milestone
+- architecture closeout:
+  `docs/architecture_contract.toml` now assigns `capture_run_support` to the
+  `capture` layer and `source_set_support` to the `foundation` layer, while
+  `docs/ARCHITECTURE.md` records both shared-owner surfaces in the container
+  table
+- focused helper coverage:
+  `tests/test_capture_run_support.py` now pins the shared capture helper
+  contract directly, and `tests/test_extract.py` now points its support-role
+  and source-derived-path assertions at the shared `source_set_support.py`
+  owner instead of the extraction monolith
+- live probe evidence:
+  the fresh architecture probe reports `193` code files, `57` files above
+  `800`, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `extract.py` at `3174` lines, `retrieval.py` at `1893` lines,
+  shared helper fan-in `capture_run_support=5`, one fan-out hotspot at
+  `cli_derived=22`, and no Python or JS/TS import cycles
+- residual risk:
+  `extract.py` and `retrieval.py` remain large, broader chunking and
+  ranking/report splits still remain for later owner packets, and downstream
+  claim/evidence/eval families still consume the `_source_derived_dir`
+  compatibility wrapper via `extract.py`
+- next routing:
+  the next bounded architecture slice is Milestone 6 on the applicability,
+  claims, and evidence hotspot family
+- stale-routing cleanup:
+  the immediately following Milestone 4 sections are historical only for this
+  packet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_capture_run_support.py tests/test_download.py tests/test_preflight.py tests/test_catalog.py tests/test_validate_run.py tests/test_extract.py tests/test_retrieval.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 4 Alignment Pass
 
 This follow-up closes the remaining routing and verification drift after the

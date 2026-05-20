@@ -2,12 +2,13 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-4 complete; Milestone 5 next
+Status: Milestones 0-5 complete; Milestone 6 next
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
 `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-4 are now closed, the
-document-plan runtime slice remains historical state from `1435cdb`, and the next active owner
-family is Milestone 5 on the extraction, retrieval, and source-capture hotspot surfaces.
+document-plan runtime slice remains historical state from `1435cdb`, Milestone 5 has now closed a
+bounded shared-helper split across the capture and extraction/retrieval owner family, and the next
+active owner family is Milestone 6 on the applicability, claims, and evidence hotspot surfaces.
 
 ## Purpose
 
@@ -41,15 +42,20 @@ machine-local state.
   `ea_review.py`, `forest_plan_resolver.py`, and `forest_plan_components.py`, while
   `nepa_3d_graph_contract.py` now owns NEPA graph lens metadata and validation failure-category
   annotation consumed by `nepa_knowledge_graph_export.py`.
-- The next executable slice in this packet is Milestone 5 on the extraction, retrieval, and
-  source-capture family.
+- Milestone 5 now closes the first bounded source-capture and extraction/retrieval helper split:
+  `capture_run_support.py` owns shared capture manifest/report serialization for
+  `download.py`, `preflight.py`, `report.py`, `validate_run.py`, and `catalog.py`, while
+  `source_set_support.py` owns the shared derived-output path and support-document-role helpers
+  now used directly by `extract.py` and `retrieval.py`.
+- The next executable slice in this packet is Milestone 6 on the applicability, claims, and
+  evidence family.
 
 ### Architecture probe current baseline
 
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `190` code files detected;
+- `193` code files detected;
 - `57` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
@@ -58,7 +64,7 @@ From
 - highest local fan-out:
   `src.usfs_r1_ea_sources.cli_derived` imports `22` local modules;
 - new shared helper fan-in:
-  `src.usfs_r1_ea_sources.pdf_object_writer` is already imported by `5` local modules;
+  `src.usfs_r1_ea_sources.capture_run_support` is already imported by `5` local modules;
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
 
@@ -68,6 +74,12 @@ From
   `project_sow_package.py`, `nepa_knowledge_graph_export.py`, `forest_plan_components.py`,
   `ea_consistency_decision_support.py`, `extract.py`, `v1_ea_eval.py`, and the applicability family
   are all far above the repo's reviewable size threshold.
+- Shared-helper ownership is better, but not finished:
+  `capture_run_support.py` now removes the cross-owner manifest/report helpers previously mixed
+  across `download.py`, `preflight.py`, `report.py`, `validate_run.py`, and `catalog.py`, and
+  `source_set_support.py` now removes the direct `retrieval.py -> extract.py` private-helper seam;
+  however `extract.py` and `retrieval.py` remain large and some downstream families still consume
+  the `_source_derived_dir` compatibility wrapper inside `extract.py`.
 - Test monoliths are also large and highly active:
   `tests/test_promotion_suite.py`, `tests/test_cli.py`, `tests/test_compliance_review.py`,
   `tests/test_forest_plan_resolver.py`, `tests/test_project_sow_package.py`, and
@@ -173,7 +185,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `5048` `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`
 - `4279` `src/usfs_r1_ea_sources/forest_plan_components.py`
 - `3401` `src/usfs_r1_ea_sources/ea_consistency_decision_support.py`
-- `3204` `src/usfs_r1_ea_sources/extract.py`
+- `3174` `src/usfs_r1_ea_sources/extract.py`
 - `2662` `src/usfs_r1_ea_sources/v1_ea_eval.py`
 - `2655` `src/usfs_r1_ea_sources/applicability_eval.py`
 - `2503` `src/usfs_r1_ea_sources/claim_extraction.py`
@@ -184,13 +196,13 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `2017` `src/usfs_r1_ea_sources/rule_claim_binding.py`
 - `1956` `src/usfs_r1_ea_sources/draft_generation.py`
 - `1901` `src/usfs_r1_ea_sources/forest_plan_resolver.py`
-- `1891` `src/usfs_r1_ea_sources/retrieval.py`
+- `1893` `src/usfs_r1_ea_sources/retrieval.py`
 - `1862` `src/usfs_r1_ea_sources/phase_eval.py`
 - `1781` `src/usfs_r1_ea_sources/compliance_outputs.py`
 - `1770` `src/usfs_r1_ea_sources/forest_plan_source_delta_readiness.py`
 - `1741` `src/usfs_r1_ea_sources/applicability_retrieval.py`
 - `1675` `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`
-- `1499` `src/usfs_r1_ea_sources/catalog.py`
+- `1496` `src/usfs_r1_ea_sources/catalog.py`
 - `1469` `src/usfs_r1_ea_sources/package_fact_graph.py`
 - `1440` `src/usfs_r1_ea_sources/applicability_rule_pack.py`
 - `1349` `src/usfs_r1_ea_sources/review_packet_index.py`
@@ -203,8 +215,8 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `1167` `src/usfs_r1_ea_sources/promotion_suite.py`
 - `1064` `src/usfs_r1_ea_sources/source_register.py`
 - `997` `src/usfs_r1_ea_sources/forest_plan_component_adjudication.py`
-- `959` `src/usfs_r1_ea_sources/download.py`
-- `923` `src/usfs_r1_ea_sources/preflight.py`
+- `914` `src/usfs_r1_ea_sources/download.py`
+- `859` `src/usfs_r1_ea_sources/preflight.py`
 - `886` `src/usfs_r1_ea_sources/forest_plan_component_eval.py`
 - `824` `src/usfs_r1_ea_sources/compliance_validation.py`
 
@@ -592,15 +604,21 @@ Owner family:
 
 Implementation:
 
-1. Split extraction orchestration from chunk processing, artifact writing, and validation.
-2. Narrow retrieval ownership so index/query assembly is separated from ranking/report output.
-3. Keep capture semantics workbook-first while extracting report/serialization helpers from
-   download, preflight, and catalog owners.
+1. `capture_run_support.py` now owns the shared capture manifest-record builder, JSONL writer,
+   failure CSV writer, failure-status classifier, and manifest-path resolution contract used by
+   `download.py`, `preflight.py`, `report.py`, `validate_run.py`, and `catalog.py`.
+2. `source_set_support.py` now owns the shared derived-output path and support-document-role helper
+   contract used directly by `extract.py` and `retrieval.py`, removing the private
+   `retrieval.py -> extract.py` helper seam.
+3. Focused tests now pin the shared helper contracts directly, while the existing download,
+   preflight, catalog, validate-run, extraction, and retrieval tests still verify the public
+   workflow behavior end to end.
 
 Remaining issue after closeout:
 
-- the family may still contain large surfaces, but the capture-to-retrieval lane becomes more
-  reviewable and easier to test in parts.
+- `extract.py` and `retrieval.py` remain large, broader chunking/ranking/report owner splits still
+  remain for later packets, and `extract.py` currently keeps a thin `_source_derived_dir`
+  compatibility wrapper for downstream owner families outside this milestone.
 
 ### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
 
@@ -833,5 +851,5 @@ all of the following:
   narrower subplans before implementation begins.
 - The repo's append-only handoff policy is useful, but it means doc-routing cleanup must be
   deliberate and ongoing rather than one-time.
-- The next bounded slice after this closeout is Milestone 5 on the extraction, retrieval, and
-  source-capture hotspot family.
+- The next bounded slice after this closeout is Milestone 6 on the applicability, claims, and
+  evidence hotspot family.

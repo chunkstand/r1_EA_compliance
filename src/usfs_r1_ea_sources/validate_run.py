@@ -5,8 +5,10 @@ from pathlib import Path
 import hashlib
 import json
 
+from .capture_run_support import read_jsonl
+from .capture_run_support import resolve_manifest_path
 from .records import normalize_url
-from .report import _read_jsonl, _resolve_manifest_path, is_repair_status, summarize_records
+from .report import is_repair_status, summarize_records
 
 
 ARTIFACT_SUCCESS_STATUSES = {"downloaded", "downloaded_existing", "duplicate_content"}
@@ -45,8 +47,8 @@ def validate_run(*, output_dir: Path, run_id: str) -> ValidationGateResult:
     if not summary_path.exists():
         raise FileNotFoundError(f"Missing run summary: {summary_path}")
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    manifest_path = _resolve_manifest_path(output_dir, summary)
-    records = _read_jsonl(manifest_path)
+    manifest_path = resolve_manifest_path(output_dir, summary)
+    records = read_jsonl(manifest_path)
     report_summary = summarize_records(summary, records)
 
     checks = [

@@ -23,9 +23,11 @@ from .eval_metrics import (
     reciprocal_rank,
 )
 from .extraction_admission import matched_verified_extraction_contracts
-from .extract import _load_support_document_role_overrides
-from .extract import _resolve_support_document_role
-from .extract import _source_derived_dir
+from .source_set_support import (
+    load_support_document_role_overrides,
+    resolve_support_document_role,
+    source_derived_dir,
+)
 
 
 INDEX_SCHEMA_VERSION = "retrieval-index-v1"
@@ -114,11 +116,11 @@ def build_retrieval_index(
     output_dir = Path(output_dir)
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
-    source_derived_dir = _source_derived_dir(output_dir / "derived", source_set_id)
-    index_dir = source_derived_dir / "retrieval"
+    derived_source_dir = source_derived_dir(output_dir / "derived", source_set_id)
+    index_dir = derived_source_dir / "retrieval"
     index_dir.mkdir(parents=True, exist_ok=True)
 
-    chunks_path = chunks_path or source_derived_dir / "chunks" / "chunks.jsonl"
+    chunks_path = chunks_path or derived_source_dir / "chunks" / "chunks.jsonl"
     resolved_catalog_dir = resolve_catalog_dir_for_source_set(
         output_dir=output_dir,
         source_set_id=source_set_id,
@@ -126,10 +128,10 @@ def build_retrieval_index(
     catalog_sqlite_path = catalog_sqlite_path or resolved_catalog_dir / "review_sources.sqlite"
     catalog_source_set_value = read_catalog_source_set_id(catalog_sqlite_path.parent)
     catalog_source_record_ids = read_catalog_source_record_ids(catalog_sqlite_path.parent)
-    extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
-    extraction_manifest_path = source_derived_dir / "diagnostics" / "extraction_manifest.jsonl"
-    extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
-    extraction_accuracy_path = source_derived_dir / "diagnostics" / "extraction_accuracy_audit.json"
+    extraction_validation_path = derived_source_dir / "diagnostics" / "extraction_validation.json"
+    extraction_manifest_path = derived_source_dir / "diagnostics" / "extraction_manifest.jsonl"
+    extraction_summary_path = derived_source_dir / "diagnostics" / "summary.json"
+    extraction_accuracy_path = derived_source_dir / "diagnostics" / "extraction_accuracy_audit.json"
     sqlite_path = index_dir / DEFAULT_INDEX_FILENAME
     manifest_path = index_dir / "retrieval_manifest.json"
     validation_path = index_dir / "retrieval_validation.json"
@@ -598,8 +600,8 @@ def default_index_path(output_dir: Path, source_set_id: str | None = None) -> Pa
     output_dir = Path(output_dir)
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
-    source_derived_dir = _source_derived_dir(output_dir / "derived", source_set_id)
-    return source_derived_dir / "retrieval" / DEFAULT_INDEX_FILENAME
+    derived_source_dir = source_derived_dir(output_dir / "derived", source_set_id)
+    return derived_source_dir / "retrieval" / DEFAULT_INDEX_FILENAME
 
 
 def _write_sqlite_index(
@@ -1031,7 +1033,7 @@ def _load_catalog_support_document_roles(catalog_sqlite_path: Path) -> dict[str,
         FROM sources
         ORDER BY source_record_id
     """
-    support_document_role_overrides = _load_support_document_role_overrides()
+    support_document_role_overrides = load_support_document_role_overrides()
     roles: dict[str, str] = {}
     try:
         with closing(sqlite3.connect(catalog_sqlite_path)) as connection:
@@ -1049,7 +1051,7 @@ def _load_catalog_support_document_roles(catalog_sqlite_path: Path) -> dict[str,
                         payload = {}
                     if isinstance(payload, dict):
                         metadata = payload
-                role = _resolve_support_document_role(
+                role = resolve_support_document_role(
                     {
                         "source_record_id": source_record_id,
                         "document_role": row["document_role"],

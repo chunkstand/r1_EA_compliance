@@ -6,7 +6,9 @@ from pathlib import Path
 from urllib.parse import urlsplit
 import json
 
-from .preflight import _is_failure_status
+from .capture_run_support import is_failure_status
+from .capture_run_support import read_jsonl
+from .capture_run_support import resolve_manifest_path
 
 
 SUCCESS_OR_NONACTION_STATUSES = {
@@ -34,9 +36,9 @@ def build_run_report(*, output_dir: Path, run_id: str) -> ReportResult:
     if not summary_path.exists():
         raise FileNotFoundError(f"Missing run summary: {summary_path}")
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    manifest_path = _resolve_manifest_path(output_dir, summary)
+    manifest_path = resolve_manifest_path(output_dir, summary)
 
-    records = _read_jsonl(manifest_path)
+    records = read_jsonl(manifest_path)
     report_summary = summarize_records(summary, records)
     text = render_markdown_report(report_summary)
     report_path = run_dir / "operator_report.md"
@@ -50,7 +52,7 @@ def summarize_records(summary: dict, records: list[dict]) -> dict:
     failure_counts = Counter(
         (urlsplit(record["normalized_url"]).netloc.lower(), record["status"])
         for record in records
-        if _is_failure_status(record["status"])
+        if is_failure_status(record["status"])
     )
     adapter_counts = Counter(
         record.get("validation", {}).get("adapter")
@@ -105,7 +107,7 @@ def suggested_action(record: dict) -> str:
 
 
 def is_repair_status(status: str) -> bool:
-    if _is_failure_status(status):
+    if is_failure_status(status):
         return True
     return status not in SUCCESS_OR_NONACTION_STATUSES
 
@@ -142,33 +144,3 @@ def render_markdown_report(report: dict) -> str:
             lines.append(f"  URL: {row['url']}")
     lines.append("")
     return "\n".join(lines)
-
-
-def _read_jsonl(path: Path) -> list[dict]:
-    return [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-
-
-def _resolve_manifest_path(output_dir: Path, summary: dict) -> Path:
-    manifest_value = Path(summary["manifest_path"])
-    candidates = []
-    if manifest_value.is_absolute():
-        candidates.append(manifest_value)
-    else:
-        candidates.extend(
-            [
-                manifest_value,
-                output_dir / manifest_value,
-                output_dir.parent / manifest_value,
-            ]
-        )
-    candidates.append(output_dir / "manifests" / f"{summary['mode']}_{summary['run_id']}.jsonl")
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate
-    raise FileNotFoundError(
-        "Missing manifest. Checked: " + ", ".join(str(candidate) for candidate in candidates)
-    )

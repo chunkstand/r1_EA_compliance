@@ -38,8 +38,8 @@ instructions for agents or privileged tools.
 
 | Container | Role | Current Module Owners |
 | --- | --- | --- |
-| Workbook/config | Load workbook rows, overrides, settings, record identity, source-partition contracts, and neutral artifact helper utilities. | `workbook.py`, `records.py`, `source_partitions.py`, `config.py`, `overrides.py`, `adapters.py`, `artifact_utils.py` |
-| Capture | Dry-run, preflight, download, batch, report, and run validation. | `dry_run.py`, `preflight.py`, `download.py`, `batches.py`, `report.py`, `validate_run.py`, `pilots.py` |
+| Workbook/config | Load workbook rows, overrides, settings, record identity, source-partition contracts, derived-path helpers, support-document role overrides, and neutral artifact helper utilities. | `workbook.py`, `records.py`, `source_partitions.py`, `config.py`, `overrides.py`, `adapters.py`, `artifact_utils.py`, `source_set_support.py` |
+| Capture | Dry-run, preflight, download, batch, report, run validation, and shared capture-manifest/report serialization support. | `dry_run.py`, `preflight.py`, `download.py`, `batches.py`, `report.py`, `validate_run.py`, `pilots.py`, `capture_run_support.py` |
 | Catalog | Promote workbook rows and artifacts into reviewer-facing catalog surfaces. | `catalog.py` |
 | Extraction/retrieval | Build text chunks, accuracy checks, and local evidence indexes. | `extract.py`, `extraction_accuracy.py`, `retrieval.py` |
 | Review support | Build cross-source-set reuse and readiness planning artifacts that may inspect forest-plan review requirements without writing review outputs. | `reuse_inventory.py`, `forest_plan_source_delta_readiness.py` |
