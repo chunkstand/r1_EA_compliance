@@ -7,8 +7,8 @@ Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canon
 ## Purpose
 
 Historical routing note: this preserved packet records the earlier
-`source-set-9e7d85759951c279` live-lane attempt. After the 2026-05-19
-live-promotion Milestone 4 sole-truth closeout on live successor
+`source-set-9e7d85759951c279` live-lane attempt. After the 2026-05-20
+live-promotion Milestone 4 sole-truth closeout `f464fa9` on live successor
 `source-set-f775524ab233ff27`, it is not the active packet and must not be
 read as the current route for full-canonical promotion.
 

@@ -12,6 +12,8 @@ routed packet set.
 
 - outcome label:
   `resolved` for the alignment pass; runtime truth is unchanged
+- alignment checkpoint:
+  this section is the latest routed checkpoint for the live-promotion packet
 - aligned packet surfaces:
   `README.md`,
   `docs/CURRENT_SYSTEM_STATE.md`,
