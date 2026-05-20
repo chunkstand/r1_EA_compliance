@@ -5,6 +5,45 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 3 Alignment Pass
+
+This docs-only follow-up closes the remaining routing and packet-state drift
+after the reduced Milestone 3 shared-PDF closeout.
+
+- outcome label:
+  `resolved` for alignment only; runtime truth is unchanged from `1e87040`
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- alignment closeout:
+  the umbrella packet's `Current Evidence` now reflects the live post-Milestone
+  3 state instead of the older pre-closeout baseline; the architecture doc's
+  container table is readable again; and the active packet now routes directly
+  to Milestone 4 without mixing in older Milestone 0-2 prose as if it were
+  still current
+- live-state refresh:
+  `git status -sb` is clean on `main` and the branch is `ahead 69`; the fresh
+  architecture probe reports `189` code files, `57` files above `800`, top
+  hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `cli_derived` fan-out `22`, shared-helper fan-in `5`, and no Python or JS/TS
+  import cycles
+- residual truth:
+  the broader `tests/test_compliance_review.py` file still couples
+  compliance-output assertions with unrelated Flathead forest-plan
+  retrieval-readiness checks; that residual is now recorded in the umbrella
+  packet as test-owner debt rather than left ambiguous as a renderer regression
+- next routing:
+  the next bounded architecture slice remains Milestone 4 on the graph and
+  forest-plan hotspot family
+- stale-routing cleanup:
+  the immediately following Milestone 3 runtime section remains the current
+  runtime closeout truth; the older Milestones 0 and 1 section and the older
+  original umbrella-plan section below are historical routing only
+- verification:
+  `git status -sb`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 3
 
 This reduced closeout removes the duplicated PDF/rendering seam from the

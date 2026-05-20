@@ -5,9 +5,9 @@ Date: 2026-05-20
 Status: Milestones 0-3 complete; Milestone 4 next
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
-`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. The remaining pre-closeout overlap is
-limited to architecture-governance docs owned by this packet; the document-plan runtime slice
-already closed in `1435cdb` and is no longer a live implementation blocker.
+`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-3 are now closed, the
+document-plan runtime slice remains historical state from `1435cdb`, and the next active owner
+family is Milestone 4 on the graph and forest-plan hotspot surfaces.
 
 ## Purpose
 
@@ -32,30 +32,28 @@ machine-local state.
 
 ### Live repo state
 
-- Pre-closeout `git status -sb` is dirty only on architecture-governance docs:
-  `docs/AGENTIC_CODING_ARCHITECTURE_RESEARCH.md`,
-  `docs/SESSION_HANDOFF.md`,
-  `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md`, and
-  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- `git status -sb` is clean on `main`; the branch is currently `ahead 69`.
 - The routed agent-entrypoint packet is now complete:
   `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` says `Status: complete`, and the public
   `document-plan` plus `docs/AGENT_START_HERE.md` surfaces closed in `1435cdb`.
-- Broad architecture implementation can start after this docs-and-governance closeout commits the
-  refreshed baseline and cheap prevention gates.
+- The shared document-output PDF seam closed in Milestone 3; the next executable slice in this
+  packet is Milestone 4 on the graph and forest-plan review family.
 
-### Architecture probe baseline
+### Architecture probe current baseline
 
 From
-`PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --format markdown`:
+`python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `187` code files detected;
+- `189` code files detected;
 - `57` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
 - top hotspot:
-  `src/usfs_r1_ea_sources/project_sow_package.py` with score `101300`;
+  `src/usfs_r1_ea_sources/project_sow_package.py` with score `104370`;
 - highest local fan-out:
   `src.usfs_r1_ea_sources.cli_derived` imports `22` local modules;
+- new shared helper fan-in:
+  `src.usfs_r1_ea_sources.pdf_object_writer` is already imported by `5` local modules;
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
 
@@ -69,14 +67,15 @@ From
   `tests/test_promotion_suite.py`, `tests/test_cli.py`, `tests/test_compliance_review.py`,
   `tests/test_forest_plan_resolver.py`, `tests/test_project_sow_package.py`, and
   `tests/test_extract.py`.
-- Debt governance is red before this closeout:
-  `docs/TECH_DEBT_REGISTER.md` still points `TD-001` at a stale line even though the live
-  `pragma: no cover` branch is at `src/usfs_r1_ea_sources/batches.py:223`.
-- Cheap architecture quality gates are missing before this closeout:
-  large-file count and fan-out are visible in probe output, but not yet pinned by a focused pytest
-  gate.
+- Debt governance and cheap architecture gates are now green, but the large-file count remains flat
+  at `57` code files over `800` lines and still requires owner-family reduction instead of more
+  policy work.
+- The compliance-output family still has oversized verification ownership:
+  the broader `tests/test_compliance_review.py` file mixes renderer assertions with unrelated
+  Flathead forest-plan retrieval-readiness checks, which is a residual test-owner split issue
+  rather than a shared-PDF-helper regression.
 - Durable context is high quality but expensive to scan:
-  `docs/SESSION_HANDOFF.md` is `9848` lines and append-only;
+  `docs/SESSION_HANDOFF.md` is `10079` lines and append-only;
   `docs/CURRENT_SYSTEM_STATE.md` is `4226` lines.
 - Architecture doc routing needs an explicit canonical-path guard:
   on this macOS checkout the lowercase path aliases the tracked uppercase file, so path drift must
@@ -154,7 +153,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 | Debt-register drift | pre-closeout `TD-001` stale line reference against `batches.py:223` | `docs/TECH_DEBT_REGISTER.md`, debt tests | `tests/test_debt_contract.py` | resolved | closed |
 | Incomplete agent entrypoint | closed in `63e1160` and `1435cdb` | `document_plan.py`, CLI, agent docs | focused document-plan and CLI tests | resolved | closed |
 | Missing dependency declaration | closed by the current planner contract, which validates requests without a new external schema runtime dependency | document-planning surfaces | focused planner/CLI tests | resolved | closed |
-| Cold-start doc sprawl | handoff `9848` lines; current state `4226` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
+| Cold-start doc sprawl | handoff `10079` lines; current state `4226` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
 | Architecture doc path drift | uppercase path is canonical, but the checkout still needs a guard against lowercase-path drift | architecture docs and references | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
 | Non-hermetic proving dependency | West Reservoir replay context points at `/Users/chunkstand/Downloads/...` | replay-context and proving docs/config | proving-lane contract tests and docs readback | deferred | Milestone 9 |
 | Duplicated PDF/rendering helpers | shared PDF object and line renderer ownership now lives in `pdf_object_writer.py`; the owner-family split risk is narrower but not the same as the broader document-owner hotspot | reporting/document-output family | focused helper contract tests plus owner-family readback | resolved | closed |
@@ -509,6 +508,9 @@ Closeout on 2026-05-20:
 - `tests/test_pdf_object_writer.py` now pins the shared writer contract directly, and the existing
   producer-family tests still validate PDF headers and generated artifact wiring through their
   public surfaces.
+- A wider run that included the full `tests/test_compliance_review.py` file still hit the unrelated
+  Flathead `forest_plan_resolver` retrieval-readiness gate, which confirms the remaining
+  verification coupling lives in the oversized test owner rather than in the new shared PDF helper.
 - The architecture probe still reports `57` code files above `800` lines, no Python or JS/TS
   import cycles, and no new fan-out hotspot; the next architecture slice should therefore move to
   the graph and forest-plan family rather than keep reworking the same renderer seam.
@@ -517,7 +519,9 @@ Remaining issue after closeout:
 
 - `draft_generation.py`, the remaining project-planning/document-output owner boundaries, and the
   oversized test-family splits still need follow-on work, but the duplicated PDF/rendering seam is
-  now removed and the current owner files are smaller and clearer.
+  now removed, the current owner files are smaller and clearer, and the unresolved compliance-suite
+  coupling is explicitly routed as test-owner debt rather than being left as an ambiguous renderer
+  regression.
 
 ### Milestone 4 - Split NEPA Graph And Forest-Plan Review Hotspots
 

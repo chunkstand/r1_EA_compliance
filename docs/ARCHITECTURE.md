@@ -53,12 +53,12 @@ instructions for agents or privileged tools.
 | Decision support | Generate supervisor-facing EA consistency synthesis reports from audited review artifacts without replacing validation gates or legal judgment. | `ea_consistency_decision_support.py` |
 | Project planning | Generate proposed-action resource SOW requirements packages before a review package exists. | `project_sow_package.py` |
 | Eval | Score promoted review contracts, applicability quality, and manifest-driven promotion readiness. | `applicability_eval.py`, `promotion_suite.py`, `v1_ea_eval.py` |
+| CLI | Stable public command surface. | `cli.py`, `__main__.py`, `cli_*.py` |
 
 The source-set `phase_eval_results.json` path still lives under the
 `source_library/derived/<source_set_id>/evidence_graph/` directory for path stability, but the
 artifact owner and readiness assembly contract are both part of the `phase_eval` container rather
 than the graph builder.
-| CLI | Stable public command surface. | `cli.py`, `__main__.py`, `cli_*.py` |
 
 The machine-readable contract for these containers is
 `docs/architecture_contract.toml`. That contract is the input to the architecture fitness test and
