@@ -947,7 +947,9 @@ Applicability-First Milestone 10 on the governed ECID preliminary-EA plus South 
 set through local closeout commit `aa97e59`. A fresh local `real-package-review-coverage-eval`
 rerun still depends on the preserved West
 Reservoir replay-context package path under `/Users/chunkstand/Downloads/West Reservoir (67436)`,
-so that separate coverage lane is not part of this Milestone 10 closeout claim.
+so that separate coverage lane is not part of this Milestone 10 closeout claim. The latest
+docs-only alignment follow-up now pins `aa97e59` across the routed README/current-state/handoff/plan
+surfaces and treats older append-only South Plateau blocked notes as historical only.
 
 ## Reviewer Engine Entry Points
 

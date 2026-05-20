@@ -31,7 +31,7 @@ still describe South Plateau strict expansion as blocked on
 `forest_plan_reviewer_not_ready`, or still claim a fresh rerun of the
 aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
-Applicability-First Milestone 10 closeout described below.
+Applicability-First Milestone 10 closeout and alignment described below.
 
 ## Applicability-First Milestone 10 Closeout
 
@@ -45,6 +45,10 @@ Latest closeout on 2026-05-20:
   it.
 - Milestone 10 closeout commit:
   `aa97e59` (`Resolve applicability-first Milestone 10`).
+- Alignment pass:
+  the latest docs-only follow-up pins the same runtime closeout across the
+  routed README/current-state/handoff/plan surfaces and marks older
+  append-only South Plateau blocked references as historical only.
 - Runtime truth refresh:
   a bounded South Plateau `compliance-review` replay regenerated
   `authority_explanation_paths.json`; fresh

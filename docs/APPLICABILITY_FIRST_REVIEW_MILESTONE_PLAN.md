@@ -8,6 +8,10 @@ Closeout summary on 2026-05-20:
 
 - Runtime closeout commit:
   `aa97e59` (`Resolve applicability-first Milestone 10`).
+- Alignment pass:
+  the latest docs-only follow-up pins the runtime closeout across the routed
+  README/current-state/handoff/plan surfaces and marks older append-only
+  South Plateau blocked notes as historical only.
 - Milestone 10 is now closed on local runtime truth: a bounded South Plateau `compliance-review`
   replay regenerated `authority_explanation_paths.json`; fresh
   `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment` now passes with

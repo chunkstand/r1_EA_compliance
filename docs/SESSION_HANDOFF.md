@@ -1,9 +1,36 @@
 # Session Handoff
 
-Date: 2026-05-19
+Date: 2026-05-20
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
+
+## Applicability-First Milestone 10 Alignment Pass
+
+This docs-only follow-up pins the real Milestone 10 runtime closeout across the
+routed packet surfaces and settles the append-only handoff drift.
+
+- outcome label:
+  `resolved` for the alignment pass; runtime truth is unchanged
+- alignment checkpoint:
+  this section is the latest routed applicability-first checkpoint
+- aligned packet surfaces:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`
+- routing truth:
+  `aa97e59` (`Resolve applicability-first Milestone 10`) remains the runtime
+  closeout for the umbrella applicability-first packet; no further
+  continuation is routed through that packet
+- stale-routing cleanup:
+  older lower handoff sections that still describe South Plateau as
+  `typed_blocked`, route Milestone 10 as open, or imply that a fresh aggregate
+  real-package coverage rerun is green without the preserved West Reservoir
+  package authority are historical only
+- verification:
+  targeted stale-routing readback, milestone-plan lint, and `git diff --check`
+  passed
 
 ## Applicability-First Milestone 10 Closeout
 
