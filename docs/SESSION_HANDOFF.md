@@ -5,6 +5,57 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 4
+
+This fourth Milestone 6 slice closes the remaining authority-universe snapshot builder seam,
+records the new owner module in the architecture surfaces, and keeps the umbrella packet routed
+inside Milestone 6 instead of pretending the broader decision/validation and claims/evidence
+family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 4; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- authority-universe builder seam closeout:
+  `src/usfs_r1_ea_sources/applicability_authority_universe_builder.py` now owns the remaining
+  authority-universe snapshot orchestration, catalog/template loading, hashing, and snapshot
+  artifact writing that previously remained in `applicability.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/applicability.py` now acts as a thin public
+  `build_authority_universe_snapshot` facade over the extracted builder module
+- direct contract coverage:
+  `tests/test_applicability_authority_universe_builder.py` now pins the extracted
+  authority-universe builder and loader support surface directly, while `tests/test_applicability.py`
+  still verifies the public authority-universe snapshot behavior end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `applicability_authority_universe_builder.py` explicitly in
+  the applicability container, and `docs/architecture_contract.toml` assigns it to the
+  `applicability` layer
+- live probe evidence:
+  the fresh architecture probe reports `203` code files, `56` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, `applicability.py` reduced to
+  `48` lines from the post-sequence-3 `501`-line baseline, new module
+  `applicability_authority_universe_builder.py=501`, one fan-out hotspot at `cli_derived=22`, and
+  no Python or JS/TS import cycles
+- residual risk:
+  `applicability_decisions.py` and `applicability_validation.py` still remain large, and the
+  claims/evidence hotspot family is still untouched by this sequence
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on `applicability_decisions.py`,
+  `applicability_validation.py`, and the broader claims/evidence owner families; do not advance to
+  Milestone 7 yet
+- stale-routing cleanup:
+  the immediately following sequence 3 section is now historical for the authority-universe
+  orchestration residual note; the current section above supersedes any older packet text that
+  still treats `applicability.py` as the owner of snapshot assembly and loader/report helpers
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability.py tests/test_applicability_authority_family_templates.py tests/test_applicability_candidate_assembly.py tests/test_applicability_authority_universe_contracts.py tests/test_applicability_authority_universe_builder.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 3
 
 This third Milestone 6 slice closes the authority-universe validation and summary seam, records

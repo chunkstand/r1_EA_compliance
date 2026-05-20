@@ -157,6 +157,7 @@ summary = "Authority universe, retrieval traces, decisions, validation, adjudica
 modules = [
   "applicability",
   "applicability_authority_family_templates",
+  "applicability_authority_universe_builder",
   "applicability_authority_universe_contracts",
   "applicability_candidate_assembly",
   "applicability_contract_support",
