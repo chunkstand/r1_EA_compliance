@@ -221,6 +221,15 @@ allowed_import_layers = [
 ]
 
 [[layers]]
+name = "document_planning"
+summary = "Generic agent-facing document lane routing contracts that select existing generators or refuse unsupported requests."
+modules = ["document_plan"]
+allowed_import_layers = [
+  "foundation",
+  "document_planning",
+]
+
+[[layers]]
 name = "eval"
 summary = "Applicability and V1 EA promotion/evaluation commands."
 modules = [
@@ -248,6 +257,7 @@ allowed_import_layers = [
   "compliance",
   "decision_support",
   "project_planning",
+  "document_planning",
   "eval",
 ]
 
@@ -287,6 +297,7 @@ allowed_import_layers = [
   "compliance",
   "decision_support",
   "project_planning",
+  "document_planning",
   "eval",
   "cli",
 ]

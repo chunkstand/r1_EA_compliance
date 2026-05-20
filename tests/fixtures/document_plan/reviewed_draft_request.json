@@ -1,0 +1,11 @@
+{
+  "schema_version": "document-request-v1",
+  "request_id": "reviewed-draft-demo",
+  "request_class": "reviewed_draft_packet",
+  "requested_decision_posture": "review_support",
+  "input_mode": "review_id",
+  "request_summary": "Route an audited review package to the reviewed draft generator.",
+  "inputs": {
+    "review_id": "review-demo"
+  }
+}

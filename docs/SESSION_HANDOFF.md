@@ -5,6 +5,41 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Agent Legibility Entrypoint Milestone 1
+
+This implementation slice resolves the generic document-lane contract boundary
+without adding the public dry-run CLI entrypoint yet.
+
+- outcome label:
+  `resolved` for Milestone 1; Milestone 2 remains the next routed slice
+- implementation surfaces:
+  `config/document_lanes_v1.json`,
+  `docs/schemas/document_request_v1.schema.json`,
+  `src/usfs_r1_ea_sources/document_plan.py`,
+  `tests/fixtures/document_plan/`,
+  `tests/test_document_plan.py`,
+  `docs/architecture_contract.toml`,
+  `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md`, and
+  `docs/SESSION_HANDOFF.md`
+- routing truth:
+  the first generic routing contract is now explicit and intentionally narrow:
+  it routes `project_sow_requirements_package`,
+  `decision_support_report`, and `reviewed_draft_packet`, while
+  `review-packet-index` and `final-qa-certification` are rechecked but
+  explicitly scoped out of the first planner packet
+- refusal truth:
+  unsupported `legal_sufficiency_determination`,
+  `final_agency_decision`, and `responsible_official_approval` request classes
+  now fail closed in the pure routing module before any planner CLI exists
+- next routing:
+  add the public dry-run `document-plan` CLI facade that writes planning-only
+  artifacts and then publish the concise first-stop agent docs
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_document_plan.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `python -m compileall src`, and
+  `git diff --check`
+
 ## Agent Legibility Entrypoint Milestone Plan
 
 This docs-only planning slice routes the first standalone agent-legibility

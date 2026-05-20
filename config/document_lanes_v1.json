@@ -1,0 +1,186 @@
+{
+  "schema_version": "document-lanes-v1",
+  "planner_scope_note": "The first generic agent entrypoint routes only the three primary generator lanes. Review packet index and final QA remain adjacent review-sidecar surfaces outside this first routing packet.",
+  "lanes": [
+    {
+      "lane_id": "project_sow_requirements_package",
+      "supported_request_classes": [
+        "project_sow_requirements_package"
+      ],
+      "supported_decision_postures": [
+        "planning_support"
+      ],
+      "allowed_input_modes": [
+        "project_sow_intake"
+      ],
+      "required_inputs": [
+        "intake_path"
+      ],
+      "optional_inputs": [
+        "project_id",
+        "results_dir",
+        "source_set_id"
+      ],
+      "refusal_categories": [
+        "missing_required_identifier",
+        "unsupported_input_mode",
+        "unsupported_legal_conclusion",
+        "unsupported_responsible_official_approval",
+        "unsupported_final_agency_decision"
+      ],
+      "generator_command": {
+        "command": "project-sow-package",
+        "args": [
+          "--intake",
+          "{intake_path}",
+          "--output-dir",
+          "{output_dir}"
+        ]
+      },
+      "validation_command": {
+        "command": "project-sow-intake-validate",
+        "args": [
+          "--intake",
+          "{intake_path}"
+        ]
+      },
+      "canonical_output_dir_family": "source_library/projects/<project_id>/requirements_package/",
+      "authoritative_config_paths": [
+        "config/project_sow_resource_scopes_v1.json",
+        "config/authority_universe_families_nepa_ea_v1.json"
+      ],
+      "authoritative_doc_paths": [
+        "docs/schemas/project_sow_intake_v0.schema.json",
+        "docs/PROJECT_SOW_PACKAGE_RUNBOOK.md",
+        "docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md",
+        "docs/OUTPUT_SCHEMAS.md"
+      ],
+      "prerequisite_artifact_hints": [
+        "A reviewer-confirmed project-sow intake JSON must exist before package generation.",
+        "The lane reads tracked resource-scope and authority inventory contracts, not raw prompt text."
+      ]
+    },
+    {
+      "lane_id": "decision_support_report",
+      "supported_request_classes": [
+        "decision_support_report"
+      ],
+      "supported_decision_postures": [
+        "review_support"
+      ],
+      "allowed_input_modes": [
+        "review_id"
+      ],
+      "required_inputs": [
+        "review_id"
+      ],
+      "optional_inputs": [
+        "results_dir"
+      ],
+      "refusal_categories": [
+        "missing_required_identifier",
+        "unsupported_input_mode",
+        "unsupported_legal_conclusion",
+        "unsupported_responsible_official_approval",
+        "unsupported_final_agency_decision"
+      ],
+      "generator_command": {
+        "command": "ea-consistency-document",
+        "args": [
+          "--output-dir",
+          "{output_dir}",
+          "--review-id",
+          "{review_id}"
+        ]
+      },
+      "validation_command": {
+        "command": "ea-consistency-document",
+        "args": [
+          "--output-dir",
+          "{output_dir}",
+          "--review-id",
+          "{review_id}",
+          "--validate-only"
+        ]
+      },
+      "canonical_output_dir_family": "source_library/reviews/<review_id>/decision_support/",
+      "authoritative_config_paths": [
+        "config/ea_consistency_decision_support_v1.json",
+        "config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json"
+      ],
+      "authoritative_doc_paths": [
+        "docs/EA_CONSISTENCY_DECISION_SUPPORT_MILESTONE_PLAN.md",
+        "docs/OUTPUT_SCHEMAS.md"
+      ],
+      "prerequisite_artifact_hints": [
+        "Audited review artifacts must already exist under source_library/reviews/<review_id>/ before generation.",
+        "The lane consumes reviewed applicability, compliance, forest-plan, package, and validation artifacts rather than raw prompts."
+      ]
+    },
+    {
+      "lane_id": "reviewed_draft_packet",
+      "supported_request_classes": [
+        "reviewed_draft_packet"
+      ],
+      "supported_decision_postures": [
+        "review_support"
+      ],
+      "allowed_input_modes": [
+        "review_id"
+      ],
+      "required_inputs": [
+        "review_id"
+      ],
+      "optional_inputs": [
+        "results_dir"
+      ],
+      "refusal_categories": [
+        "missing_required_identifier",
+        "unsupported_input_mode",
+        "unsupported_legal_conclusion",
+        "unsupported_responsible_official_approval",
+        "unsupported_final_agency_decision"
+      ],
+      "generator_command": {
+        "command": "draft-generate",
+        "args": [
+          "--output-dir",
+          "{output_dir}",
+          "--review-id",
+          "{review_id}"
+        ]
+      },
+      "validation_command": {
+        "command": "draft-generation-eval",
+        "args": [
+          "--output-dir",
+          "{output_dir}",
+          "--review-id",
+          "{review_id}"
+        ]
+      },
+      "canonical_output_dir_family": "source_library/reviews/<review_id>/draft_generation/",
+      "authoritative_config_paths": [
+        "config/draft_generation_v1.json",
+        "config/draft_generation_eval_v1.json"
+      ],
+      "authoritative_doc_paths": [
+        "docs/OUTPUT_SCHEMAS.md"
+      ],
+      "prerequisite_artifact_hints": [
+        "The reviewed-draft lane requires current audited review artifacts and refuses unsupported legal-conclusion wording.",
+        "The lane writes a reviewed draft packet and validation sidecars, not a final agency decision."
+      ]
+    }
+  ],
+  "scoped_out_lanes": [
+    {
+      "lane_id": "review_packet_index",
+      "reason": "The review packet index is a review-sidecar row inventory and signer-facing packet index, not part of the first planner route."
+    },
+    {
+      "lane_id": "final_qa_certification",
+      "reason": "Final QA certification is a proving-review closeout packet and remains outside the first generic planner route."
+    }
+  ]
+}

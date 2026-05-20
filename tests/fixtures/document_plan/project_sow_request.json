@@ -1,0 +1,11 @@
+{
+  "schema_version": "document-request-v1",
+  "request_id": "project-sow-demo",
+  "request_class": "project_sow_requirements_package",
+  "requested_decision_posture": "planning_support",
+  "input_mode": "project_sow_intake",
+  "request_summary": "Route a reviewer-confirmed project SOW intake to the package generator.",
+  "inputs": {
+    "intake_path": "config/fixtures/project_sow/east_crazies_land_exchange_intake.json"
+  }
+}

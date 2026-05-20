@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "document_request_v1.schema.json",
+  "title": "Normalized agent document request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "request_class",
+    "requested_decision_posture",
+    "input_mode",
+    "request_summary",
+    "inputs"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "document-request-v1"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$"
+    },
+    "request_class": {
+      "type": "string",
+      "enum": [
+        "project_sow_requirements_package",
+        "decision_support_report",
+        "reviewed_draft_packet",
+        "legal_sufficiency_determination",
+        "final_agency_decision",
+        "responsible_official_approval"
+      ]
+    },
+    "requested_decision_posture": {
+      "type": "string",
+      "enum": [
+        "planning_support",
+        "review_support",
+        "legal_conclusion",
+        "final_agency_decision",
+        "responsible_official_approval"
+      ]
+    },
+    "input_mode": {
+      "type": "string",
+      "enum": [
+        "project_sow_intake",
+        "review_id"
+      ]
+    },
+    "request_summary": {
+      "type": "string",
+      "minLength": 10
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "intake_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "results_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_set_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "request_class": {
+            "const": "project_sow_requirements_package"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "requested_decision_posture": {
+            "const": "planning_support"
+          },
+          "input_mode": {
+            "const": "project_sow_intake"
+          },
+          "inputs": {
+            "required": [
+              "intake_path"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "request_class": {
+            "enum": [
+              "decision_support_report",
+              "reviewed_draft_packet"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "requested_decision_posture": {
+            "const": "review_support"
+          },
+          "input_mode": {
+            "const": "review_id"
+          },
+          "inputs": {
+            "required": [
+              "review_id"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "request_class": {
+            "const": "legal_sufficiency_determination"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "requested_decision_posture": {
+            "const": "legal_conclusion"
+          },
+          "inputs": {
+            "required": [
+              "review_id"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "request_class": {
+            "const": "final_agency_decision"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "requested_decision_posture": {
+            "const": "final_agency_decision"
+          },
+          "inputs": {
+            "required": [
+              "review_id"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "request_class": {
+            "const": "responsible_official_approval"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "requested_decision_posture": {
+            "const": "responsible_official_approval"
+          },
+          "inputs": {
+            "required": [
+              "review_id"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

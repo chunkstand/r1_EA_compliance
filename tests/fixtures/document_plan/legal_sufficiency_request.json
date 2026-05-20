@@ -1,0 +1,11 @@
+{
+  "schema_version": "document-request-v1",
+  "request_id": "legal-sufficiency-demo",
+  "request_class": "legal_sufficiency_determination",
+  "requested_decision_posture": "legal_conclusion",
+  "input_mode": "review_id",
+  "request_summary": "Attempt to route a legal sufficiency determination request.",
+  "inputs": {
+    "review_id": "review-demo"
+  }
+}

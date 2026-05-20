@@ -2,7 +2,7 @@
 
 Date: 2026-05-20
 
-Status: Draft
+Status: Milestone 1 complete; Milestone 2 and Milestone 3 pending
 
 Owner context: This is a fresh standalone follow-on milestone plan. It does not append to
 `docs/AGENTIC_CODING_ARCHITECTURE_MILESTONE_PLAN.md`, which closed the earlier repo-wide
@@ -200,6 +200,7 @@ Out of scope:
 ### Milestone 0 - Rebaseline The Active Document Lanes
 
 Outcome label: reduced
+Status: complete
 
 Purpose: refresh the live routing facts before creating a new generic entrypoint.
 
@@ -223,6 +224,18 @@ Acceptance criteria:
 - The first milestone does not attempt to solve full audit-packet unification, lane-generic
   content generation, or corpus-state abstraction in the same closeout.
 
+Rebaseline checkpoint on 2026-05-20:
+
+- `python -m usfs_r1_ea_sources --help` still exposes the active lane roster:
+  `project-sow-package`, `ea-consistency-document`, `draft-generate`,
+  `review-packet-index`, and `final-qa-certification`.
+- The first generic routing packet remains intentionally narrower than that
+  full roster: it routes only `project_sow_requirements_package`,
+  `decision_support_report`, and `reviewed_draft_packet`.
+- `review-packet-index` and `final-qa-certification` were rechecked during
+  rebaseline and are now explicitly marked as scoped-out adjacent review-sidecar
+  lanes in `config/document_lanes_v1.json` rather than being silently omitted.
+
 Verification:
 
 ```bash
@@ -240,6 +253,7 @@ Stop conditions:
 ### Milestone 1 - Add The Generic Document-Lane Contract
 
 Outcome label: resolved
+Status: complete
 
 Purpose: create one small machine-readable source of truth for prompt-to-lane routing.
 
@@ -264,6 +278,20 @@ Implementation tasks:
    packet.
 4. Add focused fixtures under `tests/fixtures/document_plan/` that prove routing to each supported
    lane plus unsupported request refusal.
+
+Implemented work:
+
+- added `config/document_lanes_v1.json` as the first machine-readable routing
+  registry for the three primary generator lanes and the two explicitly
+  scoped-out adjacent review-sidecar lanes;
+- added `docs/schemas/document_request_v1.schema.json` for normalized agent
+  request packets;
+- added `src/usfs_r1_ea_sources/document_plan.py` with schema validation,
+  registry validation, preview-command rendering, lane selection, and fail-closed
+  refusal routing for unsupported legal-conclusion/final-decision requests; and
+- added `tests/fixtures/document_plan/` plus `tests/test_document_plan.py` to
+  lock the routed classes, generic-registry boundary, refusal categories, and
+  missing-identifier behavior.
 
 Acceptance criteria:
 
