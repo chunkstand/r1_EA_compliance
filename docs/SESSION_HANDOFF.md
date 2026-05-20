@@ -5,6 +5,35 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Agent Legibility Entrypoint Milestone Plan
+
+This docs-only planning slice routes the first standalone agent-legibility
+packet for prompt-to-document entrypoint hardening.
+
+- outcome label:
+  `resolved` for planning/routing only; runtime truth is unchanged
+- routed packet:
+  `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md`
+- packet purpose:
+  add the first small agent-facing document entrypoint:
+  `docs/AGENT_START_HERE.md`,
+  `config/document_lanes_v1.json`,
+  `docs/schemas/document_request_v1.schema.json`, and
+  a dry-run `document-plan` CLI surface that routes to the existing
+  `project-sow-package`, `ea-consistency-document`, or `draft-generate` lane
+  or refuses unsupported legal-conclusion requests
+- routing truth:
+  future agent-legibility implementation in this repo should start with
+  `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` rather than reopening
+  the older broad
+  `docs/AGENTIC_CODING_ARCHITECTURE_MILESTONE_PLAN.md` packet
+- docs touched:
+  `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`
+- verification:
+  targeted plan/handoff readback and `git diff --check` must pass before
+  closeout
+
 ## Applicability-First Milestone 10 Alignment Pass
 
 This docs-only follow-up pins the real Milestone 10 runtime closeout across the
