@@ -33,6 +33,44 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 2
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 6; sequence 2 closes the remaining candidate-assembly seam, but the
+  broader applicability decision/validation plus claims/evidence hotspot family remains active.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/applicability.py`,
+  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`,
+  `tests/test_applicability_candidate_assembly.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/architecture_contract.toml`.
+- Runtime seam closeout:
+  `applicability_candidate_assembly.py` now owns rule-template and forest-plan-component candidate
+  assembly plus the required package-fact, retrieval, graph-expansion, dependency, and
+  search-coverage contract builders that previously remained inside `applicability.py`, while the
+  public `build_authority_universe_snapshot` entrypoint stays in `applicability.py`.
+- Direct contract coverage:
+  `tests/test_applicability_candidate_assembly.py` now pins the extracted rule-template and
+  forest-plan-component contract surface directly, while the existing applicability snapshot tests
+  still verify the public authority-universe behavior end to end.
+- Live probe evidence:
+  the fresh architecture probe reports `199` code files, `57` files above `800`, no Python or
+  JS/TS import cycles, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `applicability.py` reduced to `1082` lines from the earlier `1791`-line post-sequence-1
+  baseline, and the new `applicability_candidate_assembly.py` seam remains below the `800`-line
+  gate at `722` lines.
+- Next routing:
+  continue inside Milestone 6 on the remaining authority-universe orchestration plus
+  `applicability_decisions.py`, `applicability_validation.py`, and the broader claims/evidence
+  hotspot families. Do not advance to Milestone 7 yet.
+
 ## Overall Architecture Refactor Milestone 6 Sequence 1
 
 Latest closeout on 2026-05-20:

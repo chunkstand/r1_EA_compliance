@@ -5,6 +5,60 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 2
+
+This second Milestone 6 slice closes the remaining applicability candidate-assembly seam, records
+the new owner module in the architecture surfaces, and keeps the umbrella packet routed inside
+Milestone 6 instead of pretending the broader decision/validation and claims/evidence family is
+closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 2; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- candidate-assembly seam closeout:
+  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py` now owns rule-template and
+  forest-plan-component candidate assembly plus the required package-fact, retrieval,
+  graph-expansion, dependency, and search-coverage contract builders that previously remained in
+  `applicability.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/applicability.py` keeps the public
+  `build_authority_universe_snapshot` entrypoint and authority-universe validation/report
+  orchestration, but its remaining candidate-assembly branch work is gone
+- direct contract coverage:
+  `tests/test_applicability_candidate_assembly.py` now pins the extracted rule-template and
+  forest-plan-component contract surface directly, while `tests/test_applicability.py` still
+  verifies the public authority-universe snapshot behavior end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `applicability_candidate_assembly.py` explicitly in the
+  applicability container, and `docs/architecture_contract.toml` assigns it to the `applicability`
+  layer
+- live probe evidence:
+  the fresh architecture probe reports `199` code files, `57` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, `applicability.py` reduced to
+  `1082` lines from the post-sequence-1 `1791`-line baseline, new module
+  `applicability_candidate_assembly.py=722`, one fan-out hotspot at `cli_derived=22`, and no
+  Python or JS/TS import cycles
+- residual risk:
+  `applicability.py` still owns authority-universe snapshot orchestration, validation, summary, and
+  loader/report helpers, `applicability_decisions.py` and `applicability_validation.py` still
+  remain large, and the claims/evidence hotspot family is still untouched by this sequence
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on the remaining authority-universe
+  orchestration plus the decision/validation and claims/evidence owner families; do not advance to
+  Milestone 7 yet
+- stale-routing cleanup:
+  the immediately following alignment and sequence 1 sections are now historical for the
+  candidate-assembly residual note; the current section above supersedes any older packet text that
+  still routes remaining candidate assembly inside `applicability.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability.py tests/test_applicability_authority_family_templates.py tests/test_applicability_candidate_assembly.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Alignment Pass
 
 This docs-only follow-up closes the remaining packet-alignment drift after the

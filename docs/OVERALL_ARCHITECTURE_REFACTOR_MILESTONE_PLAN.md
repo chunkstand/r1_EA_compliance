@@ -48,20 +48,20 @@ machine-local state.
   `source_set_support.py` owns the shared derived-output path and support-document-role helpers
   now used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
   `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`.
-- Milestone 6 sequence 1 now closes the first bounded applicability-owner seam:
-  `applicability_authority_family_templates.py` owns authority-family template candidate assembly,
-  source-evidence availability, and retrieval/graph/dependency/search-coverage contract
-  construction that previously lived inside `applicability.py`, while
-  `applicability_contract_support.py` owns the shared contract-normalization helpers now consumed
-  by both modules. The next executable slice remains inside Milestone 6 on the remaining
-  applicability, claims, and evidence family.
+- Milestone 6 sequence 2 now closes the remaining applicability candidate-assembly seam:
+  `applicability_candidate_assembly.py` owns rule-template and forest-plan-component candidate
+  assembly plus their pre-review contract builders, while
+  `applicability_authority_family_templates.py` and `applicability_contract_support.py` remain the
+  earlier extracted owner surfaces for authority-family template assembly and shared
+  normalization helpers. The next executable slice remains inside Milestone 6 on the broader
+  applicability decision/validation and claims/evidence hotspot family.
 
 ### Architecture probe current baseline
 
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `197` code files detected;
+- `199` code files detected;
 - `57` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
@@ -73,8 +73,9 @@ From
   `src.usfs_r1_ea_sources.capture_run_support` is already imported by `5` local modules;
 - new applicability owner surfaces:
   `src.usfs_r1_ea_sources.applicability_authority_family_templates` is `417` lines and
-  `src.usfs_r1_ea_sources.applicability_contract_support` is `113` lines, while
-  `src/usfs_r1_ea_sources/applicability.py` is down to `1791` lines from the pre-sequence
+  `src.usfs_r1_ea_sources.applicability_contract_support` is `113` lines,
+  `src.usfs_r1_ea_sources.applicability_candidate_assembly` is `722` lines, and
+  `src/usfs_r1_ea_sources/applicability.py` is down to `1082` lines from the pre-sequence
   `2315`-line baseline without introducing a new `>800` line file;
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
@@ -204,7 +205,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `2490` `src/usfs_r1_ea_sources/applicability_validation.py`
 - `2425` `src/usfs_r1_ea_sources/final_qa_certification.py`
 - `2374` `src/usfs_r1_ea_sources/applicability_decisions.py`
-- `1791` `src/usfs_r1_ea_sources/applicability.py`
+- `1082` `src/usfs_r1_ea_sources/applicability.py`
 - `2017` `src/usfs_r1_ea_sources/rule_claim_binding.py`
 - `1956` `src/usfs_r1_ea_sources/draft_generation.py`
 - `1901` `src/usfs_r1_ea_sources/forest_plan_resolver.py`
@@ -283,6 +284,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `src/usfs_r1_ea_sources/source_register*.py`
 - `src/usfs_r1_ea_sources/applicability.py`
 - `src/usfs_r1_ea_sources/applicability_authority_family_templates.py`
+- `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`
 - `src/usfs_r1_ea_sources/applicability_contract_support.py`
 - `src/usfs_r1_ea_sources/applicability_*.py`
 - `src/usfs_r1_ea_sources/rule_claim_binding.py`
@@ -640,7 +642,7 @@ Remaining issue after closeout:
 ### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
 
 Outcome label: `reduced`
-Status: active after Sequence 1
+Status: active after Sequence 2
 
 Purpose: reduce the largest concentration in the applicability decision family.
 
@@ -664,7 +666,7 @@ Implementation:
 2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
 
-Progress after Sequence 1 on 2026-05-20:
+Progress after Sequence 2 on 2026-05-20:
 
 - `applicability_authority_family_templates.py` now owns authority-family template candidate
   assembly, source-evidence availability, and retrieval/graph/dependency/search-coverage contract
@@ -672,18 +674,25 @@ Progress after Sequence 1 on 2026-05-20:
 - `applicability_contract_support.py` now owns the shared authority-document-role, source-record,
   string-normalization, and source-record-summary helpers used by `applicability.py` and the new
   authority-family template module.
+- `applicability_candidate_assembly.py` now owns rule-template and forest-plan-component candidate
+  assembly plus the required package-fact, retrieval, graph-expansion, dependency, and
+  search-coverage contract builders that previously remained inside `applicability.py`.
+- `tests/test_applicability_candidate_assembly.py` now pins the extracted rule-template and
+  forest-plan-component candidate surface directly, while the existing applicability snapshot tests
+  still verify the public authority-universe behavior end to end.
 - `tests/test_applicability_authority_family_templates.py` now pins the extracted authority-family
   contract surface directly, while `tests/test_applicability.py` still verifies the public
   authority-universe snapshot behavior end to end.
-- The fresh architecture probe reports `197` code files, `57` files above `800`, no Python or
-  JS/TS cycles, `applicability.py` reduced to `1791` lines, and no new `>800` line file created
-  by this seam.
+- The fresh architecture probe reports `199` code files, `57` files above `800`, no Python or
+  JS/TS cycles, `applicability.py` reduced to `1082` lines, and the new
+  `applicability_candidate_assembly.py` seam remains under the `800`-line gate at `722` lines.
 
 Remaining issue after closeout:
 
-- rule-template and forest-plan-component candidate assembly still remain in `applicability.py`,
-  and the broader decision/validation plus claims/evidence hotspot families remain open inside
-  Milestone 6 before the umbrella packet can route forward to Milestone 7.
+- `applicability.py` still owns authority-universe snapshot orchestration, validation, summary, and
+  loader/report helpers, `applicability_decisions.py` and `applicability_validation.py` remain
+  large, and the broader decision/validation plus claims/evidence hotspot families remain open
+  inside Milestone 6 before the umbrella packet can route forward to Milestone 7.
 
 ### Milestone 7 - Split Eval And Promotion Orchestration Hotspots
 
