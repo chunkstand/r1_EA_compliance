@@ -22,10 +22,45 @@ historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes. For the full-canonical live
 promotion lane specifically, references below that still treat
 `source-set-9e7d85759951c279` as the active follow-on target, still route
-Milestone 2 as pending, or still describe archived
+Milestone 4 as pending, or still describe archived
 `source-set-732a5a91d31736f8` as the governing live downstream contract are
-historical only after the 2026-05-19 live-promotion Milestone 3 closeout
-`a299450` on `source-set-f775524ab233ff27`.
+historical only after the 2026-05-20 live-promotion Milestone 4 docs-only
+sole-truth closeout on `source-set-f775524ab233ff27`.
+
+## Full Canonical Live Source-Set Promotion Milestone 4 Closeout
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone 4; the live-promotion packet is now locally
+  complete as the governing full-canonical closeout boundary.
+- Implementation surfaces:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`, and
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
+- Sole-truth closeout:
+  those durable packet surfaces now describe live successor
+  `source-set-f775524ab233ff27` as the sole active full-canonical source set,
+  preserve archived `source-set-732a5a91d31736f8` as historical evidence
+  only, and route no further live-promotion follow-on through this boundary.
+- Active-config proof:
+  targeted `rg -n "source-set-732a5a91d31736f8"` over
+  `config/promotion_suite_v1.json`,
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`,
+  `config/phase_eval_direct_eval_v1.json`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`, and
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`
+  returns no matches, so archived `732a...` is no longer an active
+  full-canonical dependency.
+- Next routing:
+  none through this packet; the live full-canonical promotion boundary is now
+  locally resolved.
 
 ## Full Canonical Live Source-Set Promotion Milestone 3 Closeout
 
@@ -74,7 +109,7 @@ Latest closeout on 2026-05-19:
   component retrieval, direct-eval contract, graph export, and promotion
   surfaces; archived `source-set-732a5a91d31736f8` remains preserved
   historical evidence only.
-- Next routing:
+- Historical next routing before the later Milestone 4 closeout above:
   Milestone 4 docs-only sole-truth closeout on
   `source-set-f775524ab233ff27`: collapse remaining historical routing prose
   and pin the runtime closeout hash across the durable docs set.

@@ -1,17 +1,18 @@
 # Full Canonical Live Source-Set Promotion Milestone Plan
 
 Date: 2026-05-19
-Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through `c08e480` with live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 resolved locally 2026-05-19 through `a299450` on live successor `source-set-f775524ab233ff27`; Milestone 4 is the next routed slice
+Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through `c08e480` with live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 resolved locally 2026-05-19 through `a299450` on live successor `source-set-f775524ab233ff27`; Milestone 4 resolved locally 2026-05-20 through docs-only sole-truth closeout on live successor `source-set-f775524ab233ff27`
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` live full-canonical source-set promotion boundary
 
 ## Purpose
 
 This packet existed to remove the split full-canonical truth between the live
 imported catalog boundary on `source-set-f775524ab233ff27` and the archived
-downstream green replay on `source-set-732a5a91d31736f8`. Milestone 3 has now
-closed that runtime split the right way. The remaining routed pass is
-Milestone 4: finish the durable sole-truth closeout across the docs/handoff
-set without rewriting history or losing the preserved archived evidence.
+downstream green replay on `source-set-732a5a91d31736f8`. Milestones 3-4 have
+now closed both the runtime split and the durable sole-truth closeout the
+right way. This packet is now the governing preserved live-promotion closeout
+artifact for `source-set-f775524ab233ff27`, and no further live-promotion
+follow-on is routed through this boundary.
 
 The intent of that promoted live source set must remain explicit: it is the system's broader
 validated authority corpus, not a narrow forest-plan-only lane. The promoted live successor must be
@@ -54,9 +55,9 @@ plans, and supporting documents that the system must consider before any review-
   with `72` validation checks, `failed_validation_check_count=0`, `3,636`
   nodes, and `7,185` edges.
 - The previous live negative proof `source-set-9e7d85759951c279` remains
-  historical context only after Milestones 2-3. The active live runtime
-  blocker is now closed; the remaining routed pass is the Milestone 4
-  docs-only sole-truth closeout on `source-set-f775524ab233ff27`.
+  historical context only after Milestones 2-4. The active live runtime
+  blocker is closed and the durable sole-truth closeout is now locally
+  resolved on `source-set-f775524ab233ff27`.
 - The refreshed archived gate at
   `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`
   emits `source-set-732a5a91d31736f8` from the same governing download run
@@ -88,6 +89,10 @@ plans, and supporting documents that the system must consider before any review-
   `full_canonical_corpus_ready=true`, `promotion_ready=true`, and `8/8`
   required full-canonical results passing with
   `full_canonical_failure_category_counts={}`.
+- Targeted config drift proof is now green:
+  `rg -n "source-set-732a5a91d31736f8"` over the active full-canonical config
+  suite returns no matches, so archived `732a...` remains preserved in
+  historical docs and evidence only, not in the active live contract.
 - The durable routing set was aligned through Milestone 2 closeout
   `c08e480` before the live downstream replay closed:
   `README.md`, `docs/CURRENT_SYSTEM_STATE.md`,
@@ -98,8 +103,9 @@ plans, and supporting documents that the system must consider before any review-
   downstream replay closed.
 - The former stale-prose risk is now explicitly bounded to preserved historical
   context: the superseded full-canonical forest-plan packets label their
-  `source-set-9e7d85759951c279` references as historical and route active live
-  promotion through this packet instead.
+  `source-set-9e7d85759951c279` references as historical, preserve archived
+  `source-set-732a5a91d31736f8` as evidence only, and no longer route an
+  unfinished live-promotion follow-on through this packet.
 
 ## Goal
 
@@ -455,6 +461,25 @@ Outcome label: resolved
 - Close the milestone only when `promotion-suite` reports
   `full_canonical_source_set_id=<live-successor-source-set-id>`,
   `full_canonical_corpus_ready=true`, and `8/8` required full-canonical results passing.
+- Closed locally on 2026-05-20:
+  `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
+  this plan file, `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`,
+  and `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+  now describe live successor `source-set-f775524ab233ff27` as the sole
+  active full-canonical source set and archived
+  `source-set-732a5a91d31736f8` as preserved historical evidence only.
+- Targeted closeout proof:
+  `rg -n "source-set-732a5a91d31736f8"` over
+  `config/promotion_suite_v1.json`,
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`,
+  `config/phase_eval_direct_eval_v1.json`,
+  `config/r1_forest_plan_component_inventory_build_manifest.json`, and
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`
+  returns no matches.
+- Packet routing truth:
+  the live-promotion boundary is now locally resolved and no further
+  live-promotion follow-on is routed through this packet.
 
 ## Required Implementation Artifacts
 

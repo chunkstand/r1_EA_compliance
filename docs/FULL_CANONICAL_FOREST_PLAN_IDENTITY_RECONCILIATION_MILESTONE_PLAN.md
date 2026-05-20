@@ -1,14 +1,14 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Resolved 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved 2026-05-19 through `237c45d`; Milestone 5 is resolved 2026-05-19 through `df2bd28`; live full-canonical follow-on now routes through `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`, with Milestones 1-3 resolved locally through `a299450` on live successor `source-set-f775524ab233ff27` and Milestone 4 as the next routed slice
+Status: Resolved 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved 2026-05-19 through `237c45d`; Milestone 5 is resolved 2026-05-19 through `df2bd28`; live full-canonical follow-on now routes through `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`, which is locally resolved through Milestones 1-4 on live successor `source-set-f775524ab233ff27`
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
 
 Historical routing note: this packet is locally resolved on the archived
-full-canonical boundary. After the 2026-05-19 live-promotion Milestone 3
-closeout `a299450` on live successor `source-set-f775524ab233ff27`, it
+full-canonical boundary. After the 2026-05-20 live-promotion Milestone 4
+sole-truth closeout on live successor `source-set-f775524ab233ff27`, it
 remains the source of truth for archived downstream green evidence, but it is
 no longer the active live-promotion packet.
 
@@ -86,10 +86,10 @@ replay boundary that downstream reruns must use.
   is now reduced through the active-source-set rebind. Its next routing is this dedicated
   identity-reconciliation packet, not another blind downstream rerun attempt.
 - That archived replay packet is now also locally complete as a handoff
-  boundary. The remaining live full-canonical route is Milestone 4 in
-  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md` on live
-  successor `source-set-f775524ab233ff27` after the locally resolved
-  Milestones 1-3 through `a299450`.
+  boundary. The live full-canonical promotion packet
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`
+  is now locally resolved through Milestones 1-4 on live successor
+  `source-set-f775524ab233ff27`.
 
 ## Goal
 

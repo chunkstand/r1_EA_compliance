@@ -5,6 +5,33 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Live Source-Set Promotion Milestone 4 Closeout
+
+This docs-only closeout resolves the live-promotion packet as the sole active
+full-canonical truth boundary.
+
+- outcome label:
+  `resolved` for Milestone 4
+- implementation surfaces:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`, and
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+- routing truth:
+  live successor `source-set-f775524ab233ff27` is now the sole active
+  full-canonical source set across the routed packet set; archived
+  `source-set-732a5a91d31736f8` remains preserved historical downstream
+  evidence only; and no further live-promotion follow-on is routed through
+  this boundary
+- active-config proof:
+  targeted `rg -n "source-set-732a5a91d31736f8"` over the active
+  full-canonical config suite returns no matches
+- verification:
+  config drift grep, milestone-plan lints on the touched packets, and
+  `git diff --check` passed
+
 ## Full Canonical Live Source-Set Promotion Milestone 3 Alignment Pass
 
 This docs-only follow-up closes the remaining routing and closeout-hash drift
@@ -81,7 +108,7 @@ rebind/replay boundary.
   archived `source-set-732a5a91d31736f8` remains preserved historical
   downstream evidence only; it no longer governs the active live
   full-canonical contract
-- next routing:
+- historical next routing before the later Milestone 4 closeout above:
   Milestone 4 docs-only sole-truth closeout in
   `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`
 - verification:
