@@ -2,12 +2,12 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-3 complete; Milestone 4 next
+Status: Milestones 0-4 complete; Milestone 5 next
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
-`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-3 are now closed, the
+`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-4 are now closed, the
 document-plan runtime slice remains historical state from `1435cdb`, and the next active owner
-family is Milestone 4 on the graph and forest-plan hotspot surfaces.
+family is Milestone 5 on the extraction, retrieval, and source-capture hotspot surfaces.
 
 ## Purpose
 
@@ -32,19 +32,24 @@ machine-local state.
 
 ### Live repo state
 
-- `git status -sb` is clean on `main`; the branch is currently `ahead 69`.
 - The routed agent-entrypoint packet is now complete:
   `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` says `Status: complete`, and the public
   `document-plan` plus `docs/AGENT_START_HERE.md` surfaces closed in `1435cdb`.
-- The shared document-output PDF seam closed in Milestone 3; the next executable slice in this
-  packet is Milestone 4 on the graph and forest-plan review family.
+- The shared document-output PDF seam closed in Milestone 3, and Milestone 4 now closes the first
+  bounded graph-and-review owner split:
+  `review_package_support.py` owns the shared review-package cache/search/readiness seam for
+  `ea_review.py`, `forest_plan_resolver.py`, and `forest_plan_components.py`, while
+  `nepa_3d_graph_contract.py` now owns NEPA graph lens metadata and validation failure-category
+  annotation consumed by `nepa_knowledge_graph_export.py`.
+- The next executable slice in this packet is Milestone 5 on the extraction, retrieval, and
+  source-capture family.
 
 ### Architecture probe current baseline
 
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `189` code files detected;
+- `190` code files detected;
 - `57` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
@@ -547,6 +552,17 @@ Implementation:
    smaller modules.
 3. Reduce `viewer/nepa-3d/app.js` concentration by extracting bounded viewer modules without
    changing the operator-facing artifact contract.
+
+Milestone 4 closeout:
+
+- `review_package_support.py` now owns the shared review-package cache lifecycle, extraction reuse,
+  retrieval-artifact lookup, and deterministic package-search helpers reused by
+  `ea_review.py`, `forest_plan_resolver.py`, and `forest_plan_components.py`.
+- `nepa_3d_graph_contract.py` now owns lens metadata assembly and validation failure-category
+  annotation/counting consumed by `nepa_knowledge_graph_export.py`.
+- Flathead forest-plan resolver fixtures now align to the governed primary-plan identity
+  `FINAL-FLAT-001`, matching the earlier identity-reconciliation packet instead of the retired
+  `R1PLAN-flathead-nf-02` alias.
 
 Remaining issue after closeout:
 

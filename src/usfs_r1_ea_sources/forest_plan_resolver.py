@@ -4,17 +4,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 import hashlib
-import json
 import re
-import shutil
-import sqlite3
 
-from .ea_review import _discover_package_files
-from .ea_review import _extract_package_files
-from .ea_review import _load_package_cache
-from .ea_review import _source_set_id_from_catalog
-from .ea_review import _source_set_id_from_index
-from .ea_review import _utc_now
 from .forest_plan_components import DEFAULT_FOREST_PLAN_COMPONENT_INVENTORY_PATH
 from .forest_plan_components import run_forest_plan_component_evaluation
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
@@ -26,6 +17,18 @@ from .forest_plan_profiles import SupportingRecordTriggerRule
 from .forest_plan_profiles import load_forest_plan_profiles
 from .retrieval import default_index_path
 from .retrieval import query_retrieval_index
+from .review_package_support import discover_package_files
+from .review_package_support import extract_package_files
+from .review_package_support import indexed_source_record_counts
+from .review_package_support import load_package_cache
+from .review_package_support import prepare_review_outputs
+from .review_package_support import read_json_if_exists
+from .review_package_support import retrieval_artifacts
+from .review_package_support import source_set_id_from_catalog
+from .review_package_support import source_set_id_from_index
+from .review_package_support import utc_now
+from .review_package_support import write_json
+from .review_package_support import write_jsonl
 
 
 FOREST_PLAN_CONTEXT_SCHEMA_VERSION = "forest-plan-context-v0"
@@ -280,40 +283,41 @@ def run_forest_plan_resolver(
         review_dir / "forest_plan_applicable_standard_coverage.json"
     )
 
-    _prepare_outputs(
+    prepare_review_outputs(
         package_dir=package_dir,
-        context_path=context_path,
-        validation_path=validation_path,
-        summary_path=summary_path,
-        component_findings_path=component_findings_output_path,
-        component_markdown_path=component_markdown_output_path,
-        component_queue_path=component_queue_output_path,
-        component_inventory_coverage_path=component_inventory_coverage_output_path,
-        applicable_standard_coverage_path=applicable_standard_coverage_output_path,
+        output_paths=(
+            context_path,
+            validation_path,
+            summary_path,
+            component_findings_output_path,
+            component_markdown_output_path,
+            component_queue_output_path,
+            component_inventory_coverage_output_path,
+            applicable_standard_coverage_output_path,
+        ),
         preserve_package_cache=reuse_package_cache,
     )
 
     if reuse_package_cache:
-        package_manifest, package_chunks = _load_package_cache(
+        package_manifest, package_chunks = load_package_cache(
             package_manifest_path=package_manifest_path,
             package_chunks_path=package_chunks_path,
         )
     else:
         for directory in (extracted_text_dir, docling_json_dir):
             directory.mkdir(parents=True, exist_ok=True)
-        package_manifest, package_chunks = _extract_package_files(
-            package_files=_discover_package_files(package_path),
+        package_manifest, package_chunks = extract_package_files(
+            package_files=discover_package_files(package_path),
             review_id=review_id,
             extracted_text_dir=extracted_text_dir,
             docling_json_dir=docling_json_dir,
-            extracted_at=_utc_now(),
             chunk_max_chars=chunk_max_chars,
             chunk_overlap_chars=chunk_overlap_chars,
             docling_ocr=docling_ocr,
             docling_timeout_seconds=docling_timeout_seconds,
         )
-        _write_jsonl(package_manifest_path, package_manifest)
-        _write_jsonl(package_chunks_path, package_chunks)
+        write_jsonl(package_manifest_path, package_manifest)
+        write_jsonl(package_chunks_path, package_chunks)
 
     scope = _resolve_scope(package_chunks, resolver_profile=resolver_profile)
     retrieval_readiness = None
@@ -324,7 +328,7 @@ def run_forest_plan_resolver(
         if not index_path.exists():
             raise FileNotFoundError(f"Missing source-library retrieval index: {index_path}")
         if source_set_id is None:
-            source_set_id = _source_set_id_from_index(index_path) or _source_set_id_from_catalog(
+            source_set_id = source_set_id_from_index(index_path) or source_set_id_from_catalog(
                 output_dir
             )
         retrieval_readiness = _retrieval_readiness_report(
@@ -407,9 +411,9 @@ def run_forest_plan_resolver(
         component_evaluation_summary=component_evaluation_summary,
     )
 
-    _write_json(context_path, context)
-    _write_json(validation_path, validation)
-    _write_json(summary_path, summary)
+    write_json(context_path, context)
+    write_json(validation_path, validation)
+    write_json(summary_path, summary)
     return ForestPlanResolverResult(
         review_id=review_id,
         review_dir=review_dir,
@@ -446,35 +450,6 @@ def _resolve_component_inventory_path(
         if source_set_inventory_path.exists():
             return source_set_inventory_path
     return DEFAULT_FOREST_PLAN_COMPONENT_INVENTORY_PATH
-
-
-def _prepare_outputs(
-    *,
-    package_dir: Path,
-    context_path: Path,
-    validation_path: Path,
-    summary_path: Path,
-    component_findings_path: Path | None,
-    component_markdown_path: Path | None,
-    component_queue_path: Path | None,
-    component_inventory_coverage_path: Path | None,
-    applicable_standard_coverage_path: Path | None,
-    preserve_package_cache: bool,
-) -> None:
-    if package_dir.exists() and not preserve_package_cache:
-        shutil.rmtree(package_dir)
-    for path in (
-        context_path,
-        validation_path,
-        summary_path,
-        component_findings_path,
-        component_markdown_path,
-        component_queue_path,
-        component_inventory_coverage_path,
-        applicable_standard_coverage_path,
-    ):
-        if path is not None:
-            path.unlink(missing_ok=True)
 
 
 def _resolve_scope(
@@ -674,7 +649,7 @@ def _context_report(
     )
     return {
         "schema_version": FOREST_PLAN_CONTEXT_SCHEMA_VERSION,
-        "created_at": _utc_now(),
+        "created_at": utc_now(),
         "review_id": review_id,
         "package_path": str(package_path),
         "output_dir": str(output_dir),
@@ -1472,7 +1447,7 @@ def _validation_report(
     ]
     return {
         "schema_version": "forest-plan-context-validation-v0",
-        "created_at": _utc_now(),
+        "created_at": utc_now(),
         "passed": all(check["passed"] for check in checks),
         "checks": checks,
     }
@@ -1697,7 +1672,7 @@ def _component_adjudication_readiness(
     component_evaluation_summary: dict,
 ) -> dict:
     eval_path = review_dir / "forest_plan_component_adjudication_eval.json"
-    summary = _read_json_if_exists(eval_path)
+    summary = read_json_if_exists(eval_path)
     if not isinstance(summary, dict):
         return {
             "eval_path": str(eval_path),
@@ -1758,11 +1733,8 @@ def _retrieval_readiness_report(
     source_set_id: str,
     required_source_record_ids: tuple[str, ...] = (),
 ) -> dict:
-    summary_path = index_path.parent / "summary.json"
-    validation_path = index_path.parent / "retrieval_validation.json"
-    summary = _read_json_if_exists(summary_path)
-    validation = _read_json_if_exists(validation_path)
-    indexed_source_counts = _indexed_source_record_counts(index_path, required_source_record_ids)
+    summary_path, validation_path, summary, validation = retrieval_artifacts(index_path)
+    indexed_source_counts = indexed_source_record_counts(index_path, required_source_record_ids)
     missing_source_record_ids = [
         source_record_id
         for source_record_id in required_source_record_ids
@@ -1834,50 +1806,6 @@ def _retrieval_readiness_report(
         "passed": all(check["passed"] for check in checks),
         "checks": checks,
     }
-
-
-def _indexed_source_record_counts(
-    index_path: Path,
-    required_source_record_ids: tuple[str, ...],
-) -> dict[str, int]:
-    if not required_source_record_ids or not index_path.exists():
-        return {}
-    placeholders = ",".join("?" for _ in required_source_record_ids)
-    try:
-        with sqlite3.connect(index_path) as connection:
-            rows = connection.execute(
-                f"""
-                SELECT source_record_id, COUNT(*)
-                FROM chunks
-                WHERE source_record_id IN ({placeholders})
-                GROUP BY source_record_id
-                """,
-                list(required_source_record_ids),
-            ).fetchall()
-    except sqlite3.Error:
-        return {}
-    return {str(source_record_id): int(count) for source_record_id, count in rows}
-
-
-def _read_json_if_exists(path: Path) -> dict | None:
-    if not path.exists():
-        return None
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return None
-
-
-def _write_json(path: Path, value: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-
-def _write_jsonl(path: Path, records: list[dict]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for record in records:
-            handle.write(json.dumps(record, sort_keys=True) + "\n")
 
 
 def _default_review_id(package_path: Path) -> str:

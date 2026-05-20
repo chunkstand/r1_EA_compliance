@@ -70,6 +70,7 @@ modules = [
   "forest_plan_components",
   "forest_plan_inventory_build_manifest",
   "forest_plan_profiles",
+  "review_package_support",
   "forest_plan_resolver",
 ]
 allowed_import_layers = ["foundation", "extraction", "retrieval", "review"]

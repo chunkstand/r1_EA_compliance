@@ -9,12 +9,12 @@ from pathlib import Path
 import json
 import re
 
-from .ea_review import _search_package_chunks
 from .forest_plan_inventory_build_manifest import (
     DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH,
     load_region1_forest_plan_inventory_build_manifest,
 )
 from .forest_plan_profiles import load_forest_plan_profile
+from .review_package_support import search_package_chunks
 
 
 FOREST_PLAN_COMPONENT_INVENTORY_SCHEMA_VERSION = "forest-plan-component-inventory-v0"
@@ -2323,7 +2323,7 @@ def _component_package_search(
     terms = _component_package_search_terms(component)
     section_families = _component_section_families(component)
     query = " ".join([component["section_heading"], component["component_text"], *terms])
-    raw = _search_package_chunks(
+    raw = search_package_chunks(
         package_chunks,
         query=query,
         required_terms=list(terms),

@@ -1861,7 +1861,7 @@ _FLATHEAD_TEST_SOURCES = (
         ),
     ),
     (
-        "R1PLAN-flathead-nf-02",
+        "FINAL-FLAT-001",
         "2018 Flathead National Forest Land Management Plan PDF",
         _FLATHEAD_PLAN_TEXT,
     ),
@@ -1952,7 +1952,7 @@ _FLATHEAD_TEST_SOURCES = (
 
 _FLATHEAD_TEST_REVIEW_TOPICS = {
     "R1PLAN-flathead-nf-01": "Check current Flathead plan document set",
-    "R1PLAN-flathead-nf-02": "Extract Flathead plan components by geography and overlay",
+    "FINAL-FLAT-001": "Extract Flathead plan components by geography and overlay",
     "R1PLAN-flathead-nf-03": "Check selected alternative and plan approval",
     "R1PLAN-flathead-nf-04": "Use FEIS context for alternatives and designated areas",
     "R1PLAN-flathead-nf-05": "Use FEIS appendices for supporting analysis context",
@@ -1967,7 +1967,7 @@ _FLATHEAD_TEST_REVIEW_TOPICS = {
 
 _FLATHEAD_TEST_SUPPORT_DOCUMENT_ROLES = {
     "R1PLAN-flathead-nf-01": "planning_page",
-    "R1PLAN-flathead-nf-02": "primary_land_management_plan",
+    "FINAL-FLAT-001": "primary_land_management_plan",
     "R1PLAN-flathead-nf-03": "record_of_decision",
     "R1PLAN-flathead-nf-04": "final_environmental_impact_statement_volume_1_part_1",
     "R1PLAN-flathead-nf-05": "final_environmental_impact_statement_appendices",
@@ -2458,7 +2458,7 @@ def _write_component_inventory(path: Path, *, source_set_id: str) -> Path:
 def _write_flathead_component_inventory(path: Path, *, source_set_id: str) -> Path:
     inventory_path = path / "component_inventory.json"
     inventory_path.parent.mkdir(parents=True, exist_ok=True)
-    source_record_id = "R1PLAN-flathead-nf-02"
+    source_record_id = "FINAL-FLAT-001"
     artifact_sha256 = hashlib.sha256(source_record_id.encode("utf-8")).hexdigest()
     content_sha256 = hashlib.sha256(_FLATHEAD_PLAN_TEXT.encode("utf-8")).hexdigest()
     source_chunk_ids = [f"chunk:{source_record_id}"]
@@ -2470,7 +2470,7 @@ def _write_flathead_component_inventory(path: Path, *, source_set_id: str) -> Pa
         "section_id": "jewel-basin-hiking-area-components",
         "section_heading": "Jewel Basin Hiking Area Components",
         "page": None,
-        "citation_label": "R1PLAN-flathead-nf-02 | test plan | artifact abc123",
+        "citation_label": "FINAL-FLAT-001 | test plan | artifact abc123",
         "geographic_area_ids": ["geo-hungry-horse"],
         "management_area_ids": ["mgmt-jewel-basin-hiking-area"],
         "overlay_ids": [],

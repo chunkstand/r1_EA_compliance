@@ -5,6 +5,66 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 4
+
+This reduced closeout implements the first bounded split inside the graph and
+forest-plan review hotspot family, makes the shared review-package seam
+explicit, and routes the umbrella packet forward to Milestone 5 instead of
+leaving graph-contract and review-runtime ownership mixed into a few large
+modules.
+
+- outcome label:
+  `reduced` for Milestone 4; the packet now advances to Milestone 5
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- implementation closeout:
+  `src/usfs_r1_ea_sources/review_package_support.py` now owns the shared
+  review-package cache lifecycle, extraction reuse, retrieval-artifact lookup,
+  and deterministic package-search helpers used by `ea_review.py`,
+  `forest_plan_resolver.py`, and `forest_plan_components.py`; the private
+  cross-import seam from the forest-plan family into `ea_review.py` is gone
+- graph-contract closeout:
+  `src/usfs_r1_ea_sources/nepa_3d_graph_contract.py` now owns NEPA graph lens
+  metadata plus validation failure-category annotation/counting, and
+  `nepa_knowledge_graph_export.py` consumes that contract helper instead of
+  carrying its own duplicate viewer/export classification logic
+- governed test-fixture alignment:
+  `tests/test_forest_plan_resolver.py` now uses `FINAL-FLAT-001` for the
+  Flathead primary land-management plan fixture and component inventory stub,
+  which matches the earlier forest-plan identity-reconciliation packet rather
+  than the retired `R1PLAN-flathead-nf-02` alias
+- architecture closeout:
+  `docs/architecture_contract.toml` now assigns `review_package_support` to the
+  `review` layer, and `docs/ARCHITECTURE.md` records the shared review-package
+  ownership inside the review container boundary
+- live probe evidence:
+  the fresh architecture probe reports `190` code files, `57` files above
+  `800`, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `forest_plan_components.py` hotspot score `72743`,
+  `nepa_knowledge_graph_export.py` hotspot score `72570`,
+  `forest_plan_resolver.py` at `1829` lines, `review_package_support.py` at
+  `618` lines, one fan-out hotspot at `cli_derived=22`, and no Python or JS/TS
+  import cycles
+- residual risk:
+  `nepa_knowledge_graph_export.py`, `forest_plan_components.py`,
+  `viewer/nepa-3d/app.js`, and `tests/test_forest_plan_resolver.py` remain
+  large and active; Milestone 4 closed the cross-owner seam, not the entire
+  hotspot family
+- next routing:
+  the next bounded architecture slice is Milestone 5 on the extraction,
+  retrieval, and source-capture hotspot family
+- stale-routing cleanup:
+  the immediately following Milestone 3 sections are historical only for this
+  packet; their older Flathead readiness residual note is superseded by the
+  `FINAL-FLAT-001` fixture alignment above
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_ea_review.py tests/test_forest_plan_resolver.py tests/test_forest_plan_components.py tests/test_nepa_knowledge_graph_export.py tests/test_nepa_3d_graph_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 3 Alignment Pass
 
 This docs-only follow-up closes the remaining routing and packet-state drift
