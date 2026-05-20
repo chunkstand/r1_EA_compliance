@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved 2026-05-19 through `237c45d`; Milestone 5 remains the durable closeout/routing reset pass
+Status: Resolved 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved 2026-05-19 through `237c45d`; Milestone 5 closes the packet as the durable closeout/routing reset pass
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -364,11 +364,14 @@ Outcome label: resolved
 
 Outcome label: resolved
 
-- Update the durable routing set so this packet is either marked resolved or
-  reduced with its exact remaining issue named explicitly.
-- Record the closeout commit hash and verification commands in `docs/SESSION_HANDOFF.md`.
-- If the packet remains reduced after Milestone 4, route the next residual
-  explicitly from this plan instead of reverting to stale graph-only language.
+- Update the durable routing set so this packet is marked resolved instead of
+  continuing to route a phantom Milestone 5 follow-on.
+- Record the docs-only closeout and verification commands in
+  `docs/SESSION_HANDOFF.md`.
+- Resolved `2026-05-19` in the current local closeout: the active routing set
+  now describes the archived full-canonical lane as green on
+  `source-set-732a5a91d31736f8`, preserves `237c45d` as the runtime closeout,
+  and stops routing another archived replay through this packet.
 
 ## Required Implementation Artifacts
 
@@ -435,8 +438,9 @@ Outcome label: resolved
   component IDs for the refreshed archived source set.
 - Focused tests prove the committed registry and the live manifest/readiness pair stay aligned on
   that rebound identity mix.
-- The active routing set no longer treats the reduced Milestone 3 rerun packet as the active
-  implementation surface. This identity-reconciliation packet is now the active packet.
+- The active routing set no longer treats the reduced Milestone 3 rerun packet
+  as the active implementation surface, and this packet no longer leaves a
+  pending Milestone 5 residual after the docs-only closeout.
 
 ## Stop Conditions
 
@@ -472,13 +476,10 @@ Outcome label: resolved
   `extraction-accuracy-audit` admits all `343` required active-review rows,
   `retrieval-build` is reviewer-ready, and the claims, rule-claim, graph, and
   promotion-suite layers all validate truthfully.
-- The remaining accepted residual risk in this packet is no longer runtime
-  readiness. It is only packet-closeout hygiene: durable routing reset across
-  the active docs plus any final packet-status simplification once the user
-  wants the overall packet marked fully resolved.
-- The next active slice is therefore Milestone 5:
-  align the durable routing set around runtime closeout commit `237c45d` and
-  the now-green archived source set, without reopening stale `370...` or
-  `6/8` blocker prose.
+- The former Milestone 5 packet-closeout hygiene slice is now resolved. This
+  packet no longer owns an active rerun or docs-only follow-on.
+- Any future work against the explicit `24` unresolved legacy rows must open a
+  fresh packet with its own bounded goal rather than reactivating this
+  archived full-canonical closeout plan by default.
 - If a future session cannot prove a canonical binding for one of the `24` unresolved rows, it must
   keep that row explicit as unresolved rather than hiding it inside a broad rerun attempt.

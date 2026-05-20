@@ -89,16 +89,17 @@ canonical corpus instead of a merely current-promotion-ready corpus.
 - The durable routing set is now aligned across `README.md`,
   `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`: the broader
   refresh/rebind decision is complete, the refreshed archived full-canonical
-  contract is `source-set-732a5a91d31736f8`, and the remaining packet work is
-  closeout/routing hygiene rather than another runtime blocker replay.
+  contract is `source-set-732a5a91d31736f8`, and the remaining packet work was
+  reduced to docs-only closeout/routing hygiene rather than another runtime
+  blocker replay.
 - Milestone 4 runtime closeout now lives in
   `237c45d` (`Resolve archived full-canonical Milestone 4 lane`).
 - This packet is no longer the active implementation surface after the reduced
   Milestone 3 closeout. The active follow-on packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
   active through the archived refresh/rebind, Flathead/retrieval, direct-document,
-  and downstream closeouts, with only the docs-only Milestone 5 routing reset
-  remaining in the latest handoff section.
+  downstream closeouts, and final docs-only Milestone 5 routing reset. That
+  follow-on packet is now locally resolved.
 
 ## Goal
 
