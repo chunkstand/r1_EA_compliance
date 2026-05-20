@@ -33,6 +33,46 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 7
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 6; sequence 7 closes the applicability decision-evidence seam, but the
+  broader applicability decision/validation plus claims/evidence hotspot family remains active.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/applicability_decision_evidence.py`,
+  `src/usfs_r1_ea_sources/applicability_decisions.py`,
+  `tests/test_applicability_decisions.py`,
+  `tests/test_applicability_decision_evidence.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/architecture_contract.toml`.
+- Runtime seam closeout:
+  `applicability_decision_evidence.py` now owns trigger matching, evidence-span assembly,
+  source-library evidence fallback, retrieval lineage support, and decision-evidence text/window
+  helpers that previously remained inside `applicability_decisions.py`, while
+  `applicability_decisions.py` keeps the public decision builder and the remaining
+  coverage-certificate plus forest-plan predicate core.
+- Direct contract coverage:
+  `tests/test_applicability_decision_evidence.py` now pins the extracted decision-evidence seam
+  directly, while the existing applicability decision tests still verify the public
+  `build_applicability_decisions` behavior end to end.
+- Live probe evidence:
+  the fresh architecture probe reports `209` code files, `56` files above `800`, no Python or
+  JS/TS import cycles, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `applicability_decisions.py` reduced to `1123` lines from the earlier `1710`-line
+  post-sequence-6 baseline, and the new `applicability_decision_evidence.py` seam remains below
+  the `800`-line gate at `590` lines.
+- Next routing:
+  continue inside Milestone 6 on the remaining coverage-certificate and forest-plan predicate core
+  in `applicability_decisions.py`, then `applicability_validation.py`, and the broader
+  claims/evidence hotspot families. Do not advance to Milestone 7 yet.
+
 ## Overall Architecture Refactor Milestone 6 Sequence 6
 
 Latest closeout on 2026-05-20:

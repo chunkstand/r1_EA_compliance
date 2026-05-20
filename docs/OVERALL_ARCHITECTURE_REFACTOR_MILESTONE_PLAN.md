@@ -48,22 +48,22 @@ machine-local state.
   `source_set_support.py` owns the shared derived-output path and support-document-role helpers
   now used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
   `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`.
-- Milestone 6 sequence 6 now closes the decision-arbitration seam:
-  `applicability_decision_arbitration.py` owns trigger-group normalization, rule-contract
-  arbitration, missing-trigger reporting, and arbitration summary/effect assembly, while
-  `applicability_decision_outputs.py`, `applicability_candidate_assembly.py`,
-  `applicability_authority_family_templates.py`, `applicability_authority_universe_builder.py`,
-  `applicability_authority_universe_contracts.py`, and `applicability_contract_support.py` remain
-  the earlier extracted owner surfaces. The next executable slice remains inside Milestone 6 on the
-  remaining applicability decision evidence-matching and forest-plan/coverage predicate core plus
-  the broader validation and claims/evidence hotspot family.
+- Milestone 6 sequence 7 now closes the decision-evidence seam:
+  `applicability_decision_evidence.py` owns trigger matching, evidence-span assembly,
+  source-library evidence fallback, retrieval lineage support, and decision-evidence text/window
+  helpers, while `applicability_decision_arbitration.py`, `applicability_decision_outputs.py`,
+  `applicability_candidate_assembly.py`, `applicability_authority_family_templates.py`,
+  `applicability_authority_universe_builder.py`, `applicability_authority_universe_contracts.py`,
+  and `applicability_contract_support.py` remain the earlier extracted owner surfaces. The next
+  executable slice remains inside Milestone 6 on the remaining applicability coverage-certificate
+  and forest-plan predicate core plus the broader validation and claims/evidence hotspot family.
 
 ### Architecture probe current baseline
 
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `207` code files detected;
+- `209` code files detected;
 - `56` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
@@ -79,9 +79,10 @@ From
   `src.usfs_r1_ea_sources.applicability_contract_support` is `113` lines,
   `src.usfs_r1_ea_sources.applicability_candidate_assembly` is `722` lines,
   `src.usfs_r1_ea_sources.applicability_decision_arbitration` is `349` lines,
+  `src.usfs_r1_ea_sources.applicability_decision_evidence` is `590` lines,
   `src.usfs_r1_ea_sources.applicability_decision_outputs` is `375` lines,
-  `src.usfs_r1_ea_sources.applicability_decisions` is down to `1710` lines from the post-sequence-5
-  `2036`-line baseline, and `src/usfs_r1_ea_sources.applicability.py` remains a `48`-line public
+  `src.usfs_r1_ea_sources.applicability_decisions` is down to `1123` lines from the post-sequence-6
+  `1710`-line baseline, and `src/usfs_r1_ea_sources.applicability.py` remains a `48`-line public
   facade after falling from the pre-sequence `2315`-line baseline without introducing a new
   `>800` line file;
 - suggested gates:
@@ -218,7 +219,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `1829` `src/usfs_r1_ea_sources/forest_plan_resolver.py`
 - `1770` `src/usfs_r1_ea_sources/forest_plan_source_delta_readiness.py`
 - `1741` `src/usfs_r1_ea_sources/applicability_retrieval.py`
-- `1710` `src/usfs_r1_ea_sources/applicability_decisions.py`
+- `1123` `src/usfs_r1_ea_sources/applicability_decisions.py`
 - `1686` `src/usfs_r1_ea_sources/compliance_outputs.py`
 - `1675` `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`
 - `1496` `src/usfs_r1_ea_sources/catalog.py`
@@ -648,7 +649,7 @@ Remaining issue after closeout:
 ### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
 
 Outcome label: `reduced`
-Status: active after Sequence 6
+Status: active after Sequence 7
 
 Purpose: reduce the largest concentration in the applicability decision family.
 
@@ -661,6 +662,7 @@ Owner family:
 - `applicability_candidate_assembly.py`
 - `applicability_contract_support.py`
 - `applicability_decision_arbitration.py`
+- `applicability_decision_evidence.py`
 - `applicability_decision_outputs.py`
 - `applicability_decisions.py`
 - `applicability_validation.py`
@@ -679,7 +681,18 @@ Implementation:
 2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
 
-Progress after Sequence 6 on 2026-05-20:
+Progress after Sequence 7 on 2026-05-20:
+
+- `applicability_decision_evidence.py` now owns trigger matching, evidence-span assembly,
+  source-library evidence fallback, retrieval lineage support, and decision-evidence text/window
+  helpers that previously remained inside `applicability_decisions.py`.
+- `tests/test_applicability_decision_evidence.py` now pins the extracted decision-evidence seam
+  directly.
+- `applicability_decisions.py` is reduced to `1123` lines from the post-sequence-6 `1710`-line
+  baseline, and the new `applicability_decision_evidence.py` seam remains below the `800`-line gate
+  at `590` lines.
+- The fresh architecture probe reports `209` code files, `56` files above `800`, and no Python or
+  JS/TS cycles.
 
 - `applicability_decision_arbitration.py` now owns trigger-group normalization, rule-contract
   arbitration, missing-trigger extraction, and arbitration summary/effect assembly that previously
@@ -740,10 +753,10 @@ Progress after Sequence 6 on 2026-05-20:
 
 Remaining issue after closeout:
 
-- `applicability_decisions.py` still owns the remaining evidence-matching, coverage-certificate,
-  and forest-plan predicate core, `applicability_validation.py` remains large, and the broader
-  decision/validation plus claims/evidence hotspot families remain open inside Milestone 6 before
-  the umbrella packet can route forward to Milestone 7.
+- `applicability_decisions.py` still owns the remaining coverage-certificate and forest-plan
+  predicate core, `applicability_validation.py` remains large, and the broader decision/validation
+  plus claims/evidence hotspot families remain open inside Milestone 6 before the umbrella packet
+  can route forward to Milestone 7.
 
 ### Milestone 7 - Split Eval And Promotion Orchestration Hotspots
 
