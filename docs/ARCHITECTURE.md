@@ -170,6 +170,9 @@ The `project-sow-operational-gate` command composes the intake validation, provi
 package/rendering smoke, EA handoff smoke, and tracked docs/schema checks into one local-only
 operational readiness report for milestone closeout. Its gap-close contract makes the durable-doc
 set, local-only CI boundary, generated-output locations, and output hashes machine-readable.
+Project-planning, decision-support, compliance-output, review-packet, and final-QA renderers share
+one foundation-owned low-level PDF writer so page/content ownership can split without copying the
+serializer contract across multiple owner files.
 The tracked acceptance matrix
 `docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md` maps each operationalization sequence to
 acceptance criteria and verification evidence.

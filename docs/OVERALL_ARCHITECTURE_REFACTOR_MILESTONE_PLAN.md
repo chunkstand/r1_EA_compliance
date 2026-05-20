@@ -2,7 +2,7 @@
 
 Date: 2026-05-20
 
-Status: Milestone 0 and Milestone 1 complete; Milestone 2 complete in the routed agent-entrypoint packet; Milestone 3 next
+Status: Milestones 0-3 complete; Milestone 4 next
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
 `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. The remaining pre-closeout overlap is
@@ -84,13 +84,15 @@ From
 - Hermeticity is incomplete for at least one governed proving lane:
   `docs/CURRENT_SYSTEM_STATE.md` still declares the preserved West Reservoir replay-context package
   path under `/Users/chunkstand/Downloads/West Reservoir (67436)`.
-- Rendering helpers are partially duplicated:
-  `_write_pdf_objects(...)` currently exists in
+- The low-level line/PDF writer is now centralized:
+  `pdf_object_writer.py` owns the shared object serializer plus the common
+  line-oriented PDF renderers used by
   `project_sow_package.py`,
-  `compliance_outputs.py`, and
+  `compliance_outputs.py`,
   `ea_consistency_decision_support.py`,
-  with adjacent PDF rendering ownership also spread across
-  `final_qa_certification.py` and `review_packet_index.py`.
+  `final_qa_certification.py`, and
+  `review_packet_index.py`;
+  broader owner-family and test-family splits still remain.
 
 ## Goal
 
@@ -155,7 +157,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 | Cold-start doc sprawl | handoff `9848` lines; current state `4226` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
 | Architecture doc path drift | uppercase path is canonical, but the checkout still needs a guard against lowercase-path drift | architecture docs and references | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
 | Non-hermetic proving dependency | West Reservoir replay context points at `/Users/chunkstand/Downloads/...` | replay-context and proving docs/config | proving-lane contract tests and docs readback | deferred | Milestone 9 |
-| Duplicated PDF/rendering helpers | repeated `_write_pdf_objects(...)` and PDF rendering ownership across multiple modules | reporting/document-output family | focused helper contract tests plus owner-family readback | deferred | Milestone 3 |
+| Duplicated PDF/rendering helpers | shared PDF object and line renderer ownership now lives in `pdf_object_writer.py`; the owner-family split risk is narrower but not the same as the broader document-owner hotspot | reporting/document-output family | focused helper contract tests plus owner-family readback | resolved | closed |
 | Oversized test/fixture owners | multiple `tests/*.py` and `tests/support/*.py` files over threshold | test families and support fixtures | architecture probe plus focused pytest slices | deferred | Milestone 8 |
 
 ## Large-File Inventory Over 800 Lines
@@ -471,6 +473,7 @@ Closeout on 2026-05-20:
 ### Milestone 3 - Split Project Planning And Document Output Hotspots
 
 Outcome label: `reduced`
+Status: complete
 
 Purpose: reduce the highest document-generation concentration risk.
 
@@ -485,16 +488,36 @@ Owner family:
 
 Implementation:
 
-1. Extract distinct owner modules for intake normalization, validation, graph assembly, rendering,
-   and PDF writing where those concerns are currently mixed.
-2. Create one shared PDF/object-writing helper for the document-output family.
-3. Keep the public commands and generated artifacts stable while shrinking the largest owner files.
-4. Split the matching large tests by contract family instead of one mega test file per surface.
+1. Extract one shared document-output PDF helper that owns the low-level object serializer and the
+   repeated line-oriented renderer contract.
+2. Rewire `project_sow_package.py`, `ea_consistency_decision_support.py`,
+   `compliance_outputs.py`, `review_packet_index.py`, and `final_qa_certification.py` to consume
+   that helper without changing their public commands or artifact families.
+3. Add focused helper contract tests and the matching architecture-contract coverage in the same
+   slice.
+4. Route the broader owner-module and large-test decomposition work forward explicitly instead of
+   pretending this seam extraction closes the entire document family.
+
+Closeout on 2026-05-20:
+
+- `src/usfs_r1_ea_sources/pdf_object_writer.py` now owns the shared PDF object writer, the shared
+  single-page line renderer, and the shared paginated line renderer for the document-output family.
+- `project_sow_package.py` shrank from `5065` to `4970` lines, `ea_consistency_decision_support.py`
+  from `3401` to `3306`, `compliance_outputs.py` from `1781` to `1686`,
+  `review_packet_index.py` from `1349` to `1307`, and `final_qa_certification.py` from `2425` to
+  `2384`.
+- `tests/test_pdf_object_writer.py` now pins the shared writer contract directly, and the existing
+  producer-family tests still validate PDF headers and generated artifact wiring through their
+  public surfaces.
+- The architecture probe still reports `57` code files above `800` lines, no Python or JS/TS
+  import cycles, and no new fan-out hotspot; the next architecture slice should therefore move to
+  the graph and forest-plan family rather than keep reworking the same renderer seam.
 
 Remaining issue after closeout:
 
-- the broader document family may still need additional follow-on splits, but the current top
-  hotspot and duplicated PDF ownership are materially smaller and clearer.
+- `draft_generation.py`, the remaining project-planning/document-output owner boundaries, and the
+  oversized test-family splits still need follow-on work, but the duplicated PDF/rendering seam is
+  now removed and the current owner files are smaller and clearer.
 
 ### Milestone 4 - Split NEPA Graph And Forest-Plan Review Hotspots
 
@@ -787,5 +810,5 @@ all of the following:
   narrower subplans before implementation begins.
 - The repo's append-only handoff policy is useful, but it means doc-routing cleanup must be
   deliberate and ongoing rather than one-time.
-- The next bounded slice after this closeout is Milestone 3 on the project-planning and
-  document-output hotspot family.
+- The next bounded slice after this closeout is Milestone 4 on the graph and forest-plan hotspot
+  family.

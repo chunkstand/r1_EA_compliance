@@ -5,6 +5,63 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 3
+
+This reduced closeout removes the duplicated PDF/rendering seam from the
+project-planning and document-output family, moves that shared contract into one
+foundation-owned module, and routes the umbrella packet forward to the next
+hotspot family instead of repeatedly touching the same renderer code.
+
+- outcome label:
+  `reduced` for Milestone 3; the packet now advances to Milestone 4
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- implementation closeout:
+  `src/usfs_r1_ea_sources/pdf_object_writer.py` now owns the shared PDF object
+  serializer plus the shared single-page and paginated line-based renderers;
+  `project_sow_package.py`, `ea_consistency_decision_support.py`,
+  `compliance_outputs.py`, `review_packet_index.py`, and
+  `final_qa_certification.py` now consume that helper without changing their
+  public commands or artifact families
+- architecture closeout:
+  `docs/architecture_contract.toml` now assigns `pdf_object_writer` to the
+  `foundation` layer; `docs/ARCHITECTURE.md` now records the shared low-level
+  PDF-writer ownership; and the routed umbrella packet now marks Milestone 3
+  complete with Milestone 4 next
+- focused contract coverage:
+  `tests/test_pdf_object_writer.py` now pins the shared writer contract
+  directly, while the existing document-output family tests still verify their
+  generated PDF headers and artifact wiring through the public surfaces
+- live probe evidence:
+  `project_sow_package.py` dropped from `5065` to `4970` lines,
+  `ea_consistency_decision_support.py` from `3401` to `3306`,
+  `compliance_outputs.py` from `1781` to `1686`,
+  `review_packet_index.py` from `1349` to `1307`, and
+  `final_qa_certification.py` from `2425` to `2384`; the fresh architecture
+  probe still reports `57` code files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` with score `99400`, helper
+  fan-in `5`, no new fan-out hotspot, and no Python or JS/TS import cycles
+- residual risk:
+  `draft_generation.py`, the remaining document-owner splits, and the oversized
+  test-family reductions still remain follow-on work even though the duplicated
+  renderer seam is now gone
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_pdf_object_writer.py tests/test_project_sow_package.py tests/test_ea_consistency_decision_support.py tests/test_review_packet_index.py tests/test_final_qa_certification.py tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py tests/test_compliance_review.py::ComplianceReviewTests::test_compliance_review_emits_rule_pack_findings_and_graph -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/pdf_object_writer.py src/usfs_r1_ea_sources/project_sow_package.py src/usfs_r1_ea_sources/ea_consistency_decision_support.py src/usfs_r1_ea_sources/compliance_outputs.py src/usfs_r1_ea_sources/review_packet_index.py src/usfs_r1_ea_sources/final_qa_certification.py tests/test_pdf_object_writer.py`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+- note on broader suite:
+  a wider run that included the full `tests/test_compliance_review.py` file hit
+  the unrelated Flathead forest-plan resolver readiness gate
+  `required_custer_source_records_indexed` /
+  `retrieval_ready_for_forest_plan_resolver`; that path was not changed in this
+  milestone and is not part of the shared PDF seam
+- stale-routing cleanup:
+  the immediately following Milestones 0 and 1 section is now historical
+  baseline only; current umbrella-plan truth is this section plus the refreshed
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+
 ## Overall Architecture Refactor Milestones 0 And 1
 
 This docs-and-governance slice rebaselines the umbrella architecture packet after

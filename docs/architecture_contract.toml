@@ -15,6 +15,7 @@ modules = [
   "eval_metrics",
   "evidence_strength",
   "overrides",
+  "pdf_object_writer",
   "records",
   "source_register",
   "source_partitions",

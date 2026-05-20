@@ -10,6 +10,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .pdf_object_writer import write_line_pdf
+
 
 DEFAULT_CONFIG_PATH = Path("config/east_crazies_final_qa_certification_v1.json")
 DEFAULT_EXPECTED_SUMMARY_PATH = Path(
@@ -1627,50 +1629,7 @@ def _pdf_lines(report: Mapping[str, Any]) -> list[str]:
 
 
 def _write_simple_pdf(path: Path, lines: list[str]) -> None:
-    content_lines = ["BT", "/F1 12 Tf", "72 740 Td"]
-    for line in lines:
-        content_lines.append(f"({_escape_pdf_text(line)}) Tj")
-        content_lines.append("0 -18 Td")
-    content_lines.append("ET")
-    stream = "\n".join(content_lines).encode("latin-1", errors="replace")
-    objects = [
-        b"<< /Type /Catalog /Pages 2 0 R >>",
-        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] "
-        b"/Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>",
-        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
-        b"<< /Length "
-        + str(len(stream)).encode("ascii")
-        + b" >>\nstream\n"
-        + stream
-        + b"\nendstream",
-    ]
-    output = bytearray(b"%PDF-1.4\n")
-    offsets: list[int] = []
-    for index, body in enumerate(objects, start=1):
-        offsets.append(len(output))
-        output.extend(f"{index} 0 obj\n".encode("ascii"))
-        output.extend(body)
-        output.extend(b"\nendobj\n")
-    xref_offset = len(output)
-    output.extend(f"xref\n0 {len(objects) + 1}\n".encode("ascii"))
-    output.extend(b"0000000000 65535 f \n")
-    for offset in offsets:
-        output.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
-    output.extend(
-        (
-            "trailer\n"
-            f"<< /Size {len(objects) + 1} /Root 1 0 R >>\n"
-            "startxref\n"
-            f"{xref_offset}\n"
-            "%%EOF\n"
-        ).encode("ascii")
-    )
-    path.write_bytes(bytes(output))
-
-
-def _escape_pdf_text(value: str) -> str:
-    return value.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+    write_line_pdf(path, lines)
 
 
 def _input_hash_specs(review_id: str) -> list[dict[str, str]]:

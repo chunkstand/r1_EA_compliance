@@ -9,6 +9,8 @@ import hashlib
 import json
 import re
 
+from .pdf_object_writer import write_paginated_line_pdf
+
 
 PACKAGE_SCHEMA_VERSION = "project-sow-package-v0"
 MANIFEST_SCHEMA_VERSION = "project-sow-package-manifest-v0"
@@ -2164,85 +2166,11 @@ def _paginate_pdf_lines(lines: list[str], *, max_lines: int) -> list[list[str]]:
 
 
 def _write_simple_pdf(path: Path, pages: list[list[str]], *, title: str) -> None:
-    width = 1008
-    height = 612
-    margin_x = 34
-    start_y = 568
-    leading = 12
-    font_size = 8
-    objects: list[bytes | None] = [None, None, None]
-
-    def add_object(payload: bytes) -> int:
-        objects.append(payload)
-        return len(objects)
-
-    for page_number, page_lines in enumerate(pages, start=1):
-        content = _pdf_page_content(
-            page_lines,
-            page_number=page_number,
-            page_count=len(pages),
-            title=title,
-            margin_x=margin_x,
-            start_y=start_y,
-            leading=leading,
-            font_size=font_size,
-        )
-        content_id = add_object(
-            b"<< /Length "
-            + str(len(content)).encode("ascii")
-            + b" >>\nstream\n"
-            + content
-            + b"\nendstream"
-        )
-        page_id = add_object(
-            (
-                f"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {width} {height}] "
-                f"/Resources << /Font << /F1 3 0 R >> >> /Contents {content_id} 0 R >>"
-            ).encode("ascii")
-        )
-        objects[1] = (objects[1] or b"") + f"{page_id} 0 R ".encode("ascii")
-
-    kids = objects[1] or b""
-    objects[0] = b"<< /Type /Catalog /Pages 2 0 R >>"
-    objects[1] = (
-        b"<< /Type /Pages /Kids ["
-        + kids
-        + b"] /Count "
-        + str(len(pages)).encode("ascii")
-        + b" >>"
-    )
-    objects[2] = b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"
-    _write_pdf_objects(path, [obj for obj in objects if obj is not None])
-
-
-def _pdf_page_content(
-    lines: list[str],
-    *,
-    page_number: int,
-    page_count: int,
-    title: str,
-    margin_x: int,
-    start_y: int,
-    leading: int,
-    font_size: int,
-) -> bytes:
-    commands = [f"BT /F1 {font_size} Tf {leading} TL {margin_x} {start_y} Td"]
-    for line in lines:
-        commands.append(f"({_pdf_escape(line)}) Tj T*")
-    footer_y = 24 - (start_y - len(lines) * leading)
-    commands.append(
-        f"0 {footer_y} Td ({_pdf_escape(f'{title} | Page {page_number} of {page_count}')}) Tj"
-    )
-    commands.append("ET")
-    return "\n".join(commands).encode("latin-1", errors="replace")
-
-
-def _pdf_escape(value: str) -> str:
-    return (
-        _pdf_text(value)
-        .replace("\\", "\\\\")
-        .replace("(", "\\(")
-        .replace(")", "\\)")
+    write_paginated_line_pdf(
+        path,
+        pages,
+        title=title,
+        text_transform=_pdf_text,
     )
 
 
@@ -2260,29 +2188,6 @@ def _pdf_text(value: str) -> str:
     for old, new in replacements.items():
         text = text.replace(old, new)
     return text.encode("latin-1", errors="replace").decode("latin-1")
-
-
-def _write_pdf_objects(path: Path, objects: list[bytes]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    offsets = []
-    payload = bytearray(b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n")
-    for index, obj in enumerate(objects, start=1):
-        offsets.append(len(payload))
-        payload.extend(f"{index} 0 obj\n".encode("ascii"))
-        payload.extend(obj)
-        payload.extend(b"\nendobj\n")
-    xref_offset = len(payload)
-    payload.extend(f"xref\n0 {len(objects) + 1}\n".encode("ascii"))
-    payload.extend(b"0000000000 65535 f \n")
-    for offset in offsets:
-        payload.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
-    payload.extend(
-        (
-            f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\n"
-            f"startxref\n{xref_offset}\n%%EOF\n"
-        ).encode("ascii")
-    )
-    path.write_bytes(bytes(payload))
 
 
 def _truncate(value: str, max_chars: int) -> str:
