@@ -1,14 +1,15 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Reduced 2026-05-19 through `933c667`; superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`, which owns the green archived full-canonical downstream closeout on `source-set-732a5a91d31736f8` plus the durable routing reset through `df2bd28`; live full-canonical follow-on now routes through `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`, with Milestone 1 resolved through `09a85f7`
+Status: Reduced 2026-05-19 through `933c667`; superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`, which owns the green archived full-canonical downstream closeout on `source-set-732a5a91d31736f8` plus the durable routing reset through `df2bd28`; live full-canonical follow-on now routes through `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`, with Milestones 1-2 resolved locally on live successor `source-set-f775524ab233ff27`
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
 
 Historical routing note: this preserved packet records the earlier
-`source-set-9e7d85759951c279` live-lane attempt. After live-promotion
-Milestone 1 closeout `09a85f7`, it is not the active packet and must not be
+`source-set-9e7d85759951c279` live-lane attempt. After the 2026-05-19
+live-promotion Milestone 2 closeout on live successor
+`source-set-f775524ab233ff27`, it is not the active packet and must not be
 read as the current route for full-canonical promotion.
 
 The canonical source-register import and downstream-freshness reduction packets have already been
@@ -105,9 +106,10 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   active through the archived refresh/rebind, Flathead/retrieval, direct-document,
   downstream closeouts, and final docs-only Milestone 5 routing reset through
   `df2bd28`. That follow-on packet is now locally resolved, and the remaining
-  live full-canonical promotion route is Milestone 2 in
+  live full-canonical promotion route is Milestone 3 in
   `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md` after
-  Milestone 1 closeout `09a85f7`.
+  the locally resolved Milestones 1-2 on live successor
+  `source-set-f775524ab233ff27`.
 
 ## Goal
 

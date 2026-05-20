@@ -1,7 +1,7 @@
 # Full Canonical Live Source-Set Promotion Milestone Plan
 
 Date: 2026-05-19
-Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 is the next routed slice
+Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 is the next routed slice
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` live full-canonical source-set promotion boundary
 
 ## Purpose
@@ -37,15 +37,20 @@ plans, and supporting documents that the system must consider before any review-
   is green with `extracted_count=634`, `failed_count=0`, `chunk_count=98699`,
   `reused_count=634`, and `validation_passed=true`.
 - `source_library/derived/source-set-f775524ab233ff27/authority_currentness/authority_currentness_report.json`
-  is present and green, but
+  is present and green.
+- `source_library/derived/source-set-f775524ab233ff27/forest_plan_components/summary.json`
+  is now present and green with `component_count=1416`,
+  `standard_count=397`, `coverage_passed=true`,
+  `component_source_accuracy_passed=true`, and
+  `blocked_forest_unit_ids=[]`, but
   `retrieval/summary.json`, `claims/summary.json`,
   `knowledge_graph/nepa_3d_graph_validation.json`, and
   `knowledge_graph/nepa_3d_graph_summary.json` are not yet present for that
   live source set.
 - The previous live negative proof `source-set-9e7d85759951c279` remains
-  historical context only after Milestone 1. The active live blocker is no
-  longer stale catalog shape; it is the still-unreplayed forest-plan component
-  inventory and downstream full-canonical chain on
+  historical context only after Milestone 2. The active live blocker is no
+  longer stale catalog shape or the forest-plan component inventory; it is the
+  still-unreplayed downstream full-canonical chain on
   `source-set-f775524ab233ff27`.
 - The refreshed archived gate at
   `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`
@@ -62,10 +67,13 @@ plans, and supporting documents that the system must consider before any review-
   policies, directives, handbooks, forest plans, and supporting documents visible before
   review-specific narrowing. This promotion packet must preserve that intent rather than describing
   the live successor as only a forest-plan repair lane.
-- The live full-canonical contract configs now point at the archived source set, not the live
-  imported catalog:
+- The live component-inventory contract configs now point at the live
+  successor:
   `config/r1_forest_plan_component_inventory_build_manifest.json`,
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  and `config/r1_forest_plan_identity_reconciliation_v1.json`.
+- The downstream full-canonical contract configs still point at the archived
+  source set, not yet the live successor:
   `config/region1_forest_plan_profile_eval_coverage_v1.json`,
   `config/forest_plan_component_retrieval_eval_v1.json`,
   `config/phase_eval_direct_eval_v1.json`, and
@@ -74,12 +82,12 @@ plans, and supporting documents that the system must consider before any review-
   still reports `full_canonical_corpus_ready=true`, but it does so for
   `full_canonical_source_set_id=source-set-732a5a91d31736f8`, not for live
   successor `source-set-f775524ab233ff27`.
-- The durable routing set is now aligned through Milestone 1 closeout
-  `09a85f7`: `README.md`, `docs/CURRENT_SYSTEM_STATE.md`,
+- The durable routing set is now aligned through Milestone 2 closeout:
+  `README.md`, `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/SESSION_HANDOFF.md`, and the two superseded full-canonical
   forest-plan packets all describe `source-set-f775524ab233ff27` as the
-  resolved live catalog plus extraction/currentness boundary and Milestone 2 as
-  the next routed slice.
+  resolved live catalog plus extraction/currentness/component-inventory
+  boundary and Milestone 3 as the next routed slice.
 - The former stale-prose risk is now explicitly bounded to preserved historical
   context: the superseded full-canonical forest-plan packets label their
   `source-set-9e7d85759951c279` references as historical and route active live
@@ -303,7 +311,7 @@ Promote a single live full-canonical source set by:
 
 ### Milestone 0: Rebaseline The Live Promotion Packet Against Current Repo Truth
 
-Outcome label: resolved
+Outcome label: resolved locally
 
 - Reconfirm the current split truth from:
   `source_library/catalog/source_set_manifest.json`,
@@ -361,6 +369,15 @@ Outcome label: resolved
 - Close the milestone only when the live successor component inventory reports
   `coverage_passed=true`, `component_source_accuracy_passed=true`,
   `blocked_forest_unit_ids=[]`, `component_count=1416`, and `standard_count=397`.
+- Closed locally on 2026-05-19:
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`, and
+  `config/r1_forest_plan_identity_reconciliation_v1.json` now bind the live
+  component-inventory boundary to `source-set-f775524ab233ff27`.
+- `forest-plan-components-build --output-dir source_library --source-set-id source-set-f775524ab233ff27 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  passed with `component_count=1416`, `standard_count=397`,
+  `blocked_forest_unit_ids=[]`, `coverage_passed=true`, and
+  `component_source_accuracy_passed=true`.
 
 ### Milestone 3: Rebind And Replay The Full-Canonical Downstream Chain On The Live Successor
 

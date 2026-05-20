@@ -75,7 +75,7 @@ source-delta-required, `1` documented official-source gap), but
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
 promotion evidence.
 
-Local active import baseline on 2026-05-19 after full canonical live source-set promotion Milestone 1:
+Local active import baseline on 2026-05-19 after full canonical live source-set promotion Milestone 2:
 
 - Active local catalog in `source_library/catalog/` is now full-register
   source set `source-set-f775524ab233ff27`, created on
@@ -96,14 +96,27 @@ Local active import baseline on 2026-05-19 after full canonical live source-set 
   with `authority_family_count=454`, `source_currentness_record_count=634`,
   and `validation_passed=true`. Milestone 1 closeout commit:
   `09a85f7` (`Resolve live source-set promotion Milestone 1`).
+- Full canonical live promotion Milestone 2 is now resolved locally:
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`, and
+  `config/r1_forest_plan_identity_reconciliation_v1.json` now bind the
+  forest-plan component-inventory boundary to
+  `source-set-f775524ab233ff27`, and
+  `forest-plan-components-build --output-dir source_library --source-set-id source-set-f775524ab233ff27 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  passed with `component_count=1416`, `standard_count=397`,
+  `blocked_forest_unit_ids=[]`, `coverage_passed=true`, and
+  `component_source_accuracy_passed=true`.
 - Archived `source-set-732a5a91d31736f8` still remains the governing green
-  downstream full-canonical contract while the live successor is promoted
-  through forest-plan components, retrieval, claims, graph export, and
-  `promotion-suite`.
-- The next routed slice is Milestone 2 on live successor
-  `source-set-f775524ab233ff27`: repoint the component-inventory boundary and
-  prove `component_count=1416`, `standard_count=397`, and
-  `blocked_forest_unit_ids=[]` before any downstream config flip.
+  downstream full-canonical contract while the live successor promotion is
+  carried through the remaining profile-eval, component-retrieval, retrieval,
+  claims, graph-export, direct-eval, and `promotion-suite` surfaces.
+- The next routed slice is Milestone 3 on live successor
+  `source-set-f775524ab233ff27`: rebind
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`,
+  `config/phase_eval_direct_eval_v1.json`, and
+  `config/promotion_suite_v1.json`, then replay the downstream
+  full-canonical chain on the live successor.
 - The proving-slice active catalog `source-set-9dcf819bc4cca486` and the
   planned-only Phase 2 gate `source-set-ae989382c52344db` remain historical
   pre-import baselines for this checkout, not the live
@@ -124,8 +137,10 @@ Local active import baseline on 2026-05-19 after full canonical live source-set 
   `38/38`.
 - The reduced downstream rerun packet
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
-  is historical blocker context only. The active implementation packet remains
-  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
+  and the archived forest-plan packet
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+  are historical blocker context only. The active implementation packet is now
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`.
 - The governed identity registry in
   `config/r1_forest_plan_identity_reconciliation_v1.json`
   now records the live `99` referenced legacy source-record IDs as

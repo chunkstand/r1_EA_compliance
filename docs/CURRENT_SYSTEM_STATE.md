@@ -21,8 +21,48 @@ older references below that still treat `source-set-5e65d845ce77e1a0`,
 historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes. For the full-canonical live
 promotion lane specifically, references below that still treat
-`source-set-9e7d85759951c279` as the active follow-on target are historical
-only after live-promotion Milestone 1 closeout `09a85f7`.
+`source-set-9e7d85759951c279` as the active follow-on target, or still route
+Milestone 2 as pending, are historical only after the 2026-05-19
+live-promotion Milestone 2 closeout that rebound the committed
+component-inventory manifest/readiness/identity surfaces to
+`source-set-f775524ab233ff27`.
+
+## Full Canonical Live Source-Set Promotion Milestone 2 Closeout
+
+Latest closeout on 2026-05-19:
+
+- Routed implementation packet:
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone 2; the next routed slice is the live
+  downstream rebind/replay boundary.
+- The committed forest-plan component-inventory boundary now binds to live
+  successor `source-set-f775524ab233ff27`:
+  `config/r1_forest_plan_component_inventory_build_manifest.json` now points
+  `source_set_references.active_full_canonical.source_set_id` and
+  `identity_reconciliation.registry_active_source_set_id` at the live
+  successor; `config/region1_forest_plan_readiness_nepa_3d_v1.json` now points
+  its top-level `source_set_id`, every
+  `component_inventory_validation.artifact_path`, and
+  `identity_reconciliation.registry_active_source_set_id` at the live
+  successor; and
+  `config/r1_forest_plan_identity_reconciliation_v1.json` now records
+  `active_source_set_id=source-set-f775524ab233ff27`.
+- `forest-plan-components-build --output-dir source_library --source-set-id source-set-f775524ab233ff27 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  now passes on the live successor with `component_count=1416`,
+  `standard_count=397`, `blocked_forest_unit_ids=[]`,
+  `coverage_passed=true`, and `component_source_accuracy_passed=true`.
+- Split truth is reduced again but not yet closed: live successor
+  `source-set-f775524ab233ff27` now governs the catalog, extraction,
+  authority-currentness, and forest-plan component-inventory boundary, while
+  downstream profile-eval, component-retrieval, direct-eval, and
+  `promotion-suite` surfaces still point at archived
+  `source-set-732a5a91d31736f8`.
+- Next routing:
+  rebind the downstream full-canonical contract surfaces to
+  `source-set-f775524ab233ff27`, replay the profile/retrieval/claims/graph/
+  promotion chain on the live successor, and stop if any lane still depends on
+  archived `732a...` or guessed legacy-ID mappings.
 
 ## Full Canonical Live Source-Set Promotion Milestone 1 Closeout
 

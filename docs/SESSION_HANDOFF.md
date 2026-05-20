@@ -5,6 +5,37 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Live Source-Set Promotion Milestone 2 Closeout
+
+This runtime/config slice closes the live successor forest-plan
+component-inventory boundary and routes the next pass into downstream
+full-canonical rebind/replay.
+
+- outcome label:
+  `resolved` for Milestone 2
+- implementation surfaces:
+  `config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
+  `config/r1_forest_plan_identity_reconciliation_v1.json`,
+  focused contract tests, and the durable closeout docs/handoff set
+- runtime truth:
+  the committed inventory manifest, readiness contract, and identity registry
+  now bind the live forest-plan component-inventory boundary to
+  `source-set-f775524ab233ff27`; and
+  `forest-plan-components-build --output-dir source_library --source-set-id source-set-f775524ab233ff27 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  passed with `component_count=1416`, `standard_count=397`,
+  `blocked_forest_unit_ids=[]`, `coverage_passed=true`, and
+  `component_source_accuracy_passed=true`
+- routing truth:
+  live successor `source-set-f775524ab233ff27` now governs the catalog,
+  extraction, currentness, and forest-plan component-inventory boundary;
+  archived `source-set-732a5a91d31736f8` still remains the governing green
+  downstream full-canonical contract; and the next routed slice is Milestone 3
+  in `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`
+- verification:
+  `forest-plan-components-build` plus the focused config/contract and doc-drift
+  checks for this milestone passed
+
 ## Full Canonical Live Source-Set Promotion Milestone 1 Alignment Pass
 
 This docs-only follow-up closes the remaining routing drift after Milestone 1
