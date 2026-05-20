@@ -6,8 +6,8 @@ import json
 import tempfile
 import unittest
 
+from usfs_r1_ea_sources.applicability_decision_evidence import term_in_text
 from usfs_r1_ea_sources.applicability_decisions import build_applicability_decisions
-from usfs_r1_ea_sources.applicability_decisions import _term_in_text
 from usfs_r1_ea_sources.applicability_retrieval import build_applicability_retrieval_traces
 from usfs_r1_ea_sources.applicability_rule_pack import generate_applicability_rule_pack
 from usfs_r1_ea_sources.applicability_rule_pack import validate_generated_rule_pack
@@ -26,12 +26,12 @@ from usfs_r1_ea_sources.retrieval import _write_sqlite_index
 class ApplicabilityDecisionTests(unittest.TestCase):
     def test_short_acronym_trigger_requires_token_boundary(self) -> None:
         self.assertFalse(
-            _term_in_text(
+            term_in_text(
                 "CE",
                 "The Forest Service combined the NEPA scoping and public comment periods.",
             )
         )
-        self.assertTrue(_term_in_text("CE", "The agency adopted a CE for this action."))
+        self.assertTrue(term_in_text("CE", "The agency adopted a CE for this action."))
 
     def test_evidence_strength_classifies_uncertainty_contexts(self) -> None:
         conditional_text = "Trail construction may occur if needed for final design."

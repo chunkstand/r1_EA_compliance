@@ -164,6 +164,7 @@ modules = [
   "applicability_decision_arbitration",
   "applicability_decision_coverage",
   "applicability_decision_evidence",
+  "applicability_decision_forest_plan",
   "applicability_decision_outputs",
   "applicability_decisions",
   "applicability_retrieval",

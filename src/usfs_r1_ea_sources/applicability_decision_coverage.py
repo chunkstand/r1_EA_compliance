@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import defaultdict
 import hashlib
 from typing import Any
 
@@ -19,6 +20,13 @@ SOURCE_QUERY_TYPES = {
     "citation",
 }
 PACKAGE_QUERY_TYPES = {"package_section", "graph_seed"}
+
+
+def records_by_candidate(records: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    by_candidate: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for record in records:
+        by_candidate[str(record.get("candidate_authority_id") or "")].append(record)
+    return by_candidate
 
 
 def coverage_boundary(

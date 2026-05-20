@@ -4,9 +4,27 @@ import unittest
 
 from usfs_r1_ea_sources.applicability_decision_coverage import coverage_boundary
 from usfs_r1_ea_sources.applicability_decision_coverage import coverage_certificate
+from usfs_r1_ea_sources.applicability_decision_coverage import records_by_candidate
 
 
 class ApplicabilityDecisionCoverageTests(unittest.TestCase):
+    def test_records_by_candidate_groups_rows(self) -> None:
+        grouped = records_by_candidate(
+            [
+                {"candidate_authority_id": "candidate-1", "row_id": "row-1"},
+                {"candidate_authority_id": "candidate-2", "row_id": "row-2"},
+                {"candidate_authority_id": "candidate-1", "row_id": "row-3"},
+            ]
+        )
+
+        self.assertEqual(
+            {key: [row["row_id"] for row in rows] for key, rows in grouped.items()},
+            {
+                "candidate-1": ["row-1", "row-3"],
+                "candidate-2": ["row-2"],
+            },
+        )
+
     def test_coverage_boundary_reports_missing_query_variants(self) -> None:
         boundary = coverage_boundary(
             candidate={

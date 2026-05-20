@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections import defaultdict
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -16,14 +15,14 @@ from .applicability_decision_arbitration import trigger_groups as _trigger_group
 from .applicability_decision_coverage import SEARCH_COVERAGE_CERTIFICATES_SCHEMA_VERSION
 from .applicability_decision_coverage import coverage_boundary as _coverage_boundary
 from .applicability_decision_coverage import coverage_certificate as _coverage_certificate
+from .applicability_decision_coverage import records_by_candidate as _records_by_candidate
 from .applicability_decision_evidence import declared_source_library_evidence as _declared_source_library_evidence
+from .applicability_decision_forest_plan import forest_plan_component_result as _forest_plan_component_result
 from .applicability_decision_evidence import package_fact_nodes as _package_fact_nodes
-from .applicability_decision_evidence import present_package_values as _present_package_values
 from .applicability_decision_evidence import retrieval_lineage as _retrieval_lineage
 from .applicability_decision_evidence import selected_package_results as _selected_package_results
 from .applicability_decision_evidence import source_evidence_available as _source_evidence_available
 from .applicability_decision_evidence import source_library_evidence as _source_library_evidence
-from .applicability_decision_evidence import term_in_text
 from .applicability_decision_evidence import trigger_match as _trigger_match
 from .applicability_decision_outputs import decision_provenance
 from .applicability_decision_outputs import decision_summary
@@ -675,117 +674,6 @@ def _decision_for_candidate(
     }
 
 
-def _forest_plan_component_result(
-    *,
-    candidate: dict[str, Any],
-    package_nodes: list[dict[str, Any]],
-    positive_match: dict[str, Any],
-    negative_match: dict[str, Any],
-    coverage_boundary: dict[str, Any],
-) -> dict[str, Any]:
-    forest_plan = candidate.get("forest_plan") if isinstance(candidate.get("forest_plan"), dict) else {}
-    required_values = {
-        "geography": _strings(forest_plan.get("geographic_area_ids")),
-        "management_area": _strings(forest_plan.get("management_area_ids")),
-        "overlay": _strings(forest_plan.get("overlay_ids")),
-    }
-    present_values = _present_package_values(package_nodes)
-    missing = []
-    for fact_type, values in required_values.items():
-        for value in values:
-            if value not in present_values.get(fact_type, set()):
-                missing.append(f"{fact_type}:{value}")
-    trigger_required = bool(_trigger_groups(candidate.get("positive_trigger_groups")))
-    trigger_matched = positive_match["matched"] if trigger_required else True
-    if negative_match["requires_adjudication"]:
-        return {
-            "status": "needs_adjudication",
-            "basis_type": "unresolved_evidence_conflict",
-            "basis": {
-                "rationale": "Forest Plan component negative scope evidence is weak or conflicting.",
-                "matched_negative_trigger_groups": negative_match["matched_groups"],
-            },
-            "missing_evidence": missing,
-            "contradiction_notes": negative_match["adjudication_notes"],
-            "confidence": "needs_adjudication",
-        }
-    if negative_match["matched"]:
-        basis = {
-            "rationale": (
-                "Package evidence matched an explicit negative Forest Plan component "
-                "scope trigger."
-            ),
-            "matched_negative_trigger_groups": negative_match["matched_groups"],
-            "matched_package_values": required_values if not missing else {},
-            "matched_positive_trigger_groups": positive_match["matched_groups"],
-            "missing_package_values": missing,
-        }
-        if coverage_boundary["coverage_sufficient"]:
-            return {
-                "status": "not_applicable",
-                "basis_type": "negative_package_evidence",
-                "basis": basis,
-                "missing_evidence": [],
-                "contradiction_notes": [],
-                "confidence": "deterministic_high",
-            }
-        return {
-            "status": "unresolved",
-            "basis_type": "forest_plan_profile_resolution",
-            "basis": basis,
-            "missing_evidence": [*missing, "sufficient forest-plan search coverage"],
-            "contradiction_notes": [],
-            "confidence": "low",
-        }
-    if positive_match["requires_adjudication"]:
-        return {
-            "status": "needs_adjudication",
-            "basis_type": "unresolved_evidence_conflict",
-            "basis": {
-                "rationale": "Forest Plan component trigger evidence is weak or conflicting.",
-                "matched_trigger_groups": positive_match["matched_groups"],
-            },
-            "missing_evidence": missing,
-            "contradiction_notes": positive_match["adjudication_notes"],
-            "confidence": "needs_adjudication",
-        }
-    if not missing and trigger_matched:
-        return {
-            "status": "applicable",
-            "basis_type": "forest_plan_component",
-            "basis": {
-                "rationale": "Package facts match the Forest Plan component scope.",
-                "matched_package_values": required_values,
-                "matched_trigger_groups": positive_match["matched_groups"],
-            },
-            "missing_evidence": [],
-            "contradiction_notes": [],
-            "confidence": "deterministic_high",
-        }
-    basis = {
-        "rationale": "Required Forest Plan component package scope was not found.",
-        "missing_package_values": missing,
-        "missing_trigger_groups": [] if trigger_matched else candidate.get("positive_trigger_groups") or [],
-    }
-    if coverage_boundary["coverage_sufficient"]:
-        return {
-            "status": "not_applicable",
-            "basis_type": "forest_plan_component",
-            "basis": basis,
-            "missing_evidence": missing,
-            "contradiction_notes": [],
-            "confidence": "deterministic_medium",
-        }
-    return {
-        "status": "unresolved",
-        "basis_type": "forest_plan_profile_resolution",
-        "basis": basis,
-        "missing_evidence": [*missing, "sufficient forest-plan search coverage"],
-        "contradiction_notes": [],
-        "confidence": "low",
-    }
-
-
 def _authority_family_ids_for_candidate(candidate: dict[str, Any]) -> list[str]:
     family_ids = set(_strings(candidate.get("authority_family_ids")))
     family_ids.update(_strings([candidate.get("authority_family_id")]))
@@ -794,17 +682,6 @@ def _authority_family_ids_for_candidate(candidate: dict[str, Any]) -> list[str]:
         family_ids.update(_strings(rule_template.get("authority_family_ids")))
         family_ids.update(_strings([rule_template.get("authority_family_id")]))
     return sorted(family_ids)
-
-
-def _records_by_candidate(records: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
-    by_candidate: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for record in records:
-        by_candidate[str(record.get("candidate_authority_id") or "")].append(record)
-    return by_candidate
-
-
-def _term_in_text(term: str, text: str) -> bool:
-    return term_in_text(term, text)
 
 
 def _assert_source_set_matches(

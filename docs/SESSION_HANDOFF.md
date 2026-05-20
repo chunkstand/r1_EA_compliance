@@ -5,6 +5,60 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 9
+
+This ninth Milestone 6 slice closes the applicability decision forest-plan predicate seam, records
+the new owner module in the architecture surfaces, and keeps the umbrella packet routed inside
+Milestone 6 instead of pretending the broader decision/validation and claims/evidence family is
+closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 9; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- decision-forest-plan seam closeout:
+  `src/usfs_r1_ea_sources/applicability_decision_forest_plan.py` now owns Forest Plan component
+  predicate evaluation that previously remained in `applicability_decisions.py`
+- coverage-owner support closeout:
+  `src/usfs_r1_ea_sources/applicability_decision_coverage.py` now also owns candidate-row grouping
+  support used by the public decision builder before per-candidate coverage evaluation
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/applicability_decisions.py` keeps the public
+  `build_applicability_decisions` entrypoint and is now reduced below the `800`-line gate
+- direct contract coverage:
+  `tests/test_applicability_decision_forest_plan.py` now pins the extracted forest-plan predicate
+  seam directly, while `tests/test_applicability_decision_coverage.py` now also covers the moved
+  candidate-row grouping helper and `tests/test_applicability_decisions.py` still verifies the
+  public applicability decision behavior end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `applicability_decision_forest_plan.py` explicitly in the
+  applicability container, and `docs/architecture_contract.toml` assigns it to the `applicability`
+  layer
+- live probe evidence:
+  the fresh architecture probe reports `213` code files, `55` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `applicability_decisions.py` reduced to `793` lines from the post-sequence-8 `916`-line
+  baseline, new module `applicability_decision_forest_plan.py=128`,
+  `applicability_decision_coverage.py=227`, one fan-out hotspot at `cli_derived=22`, and no
+  Python or JS/TS import cycles
+- residual risk:
+  `applicability_validation.py` still remains large, and the claims/evidence hotspot family is
+  still untouched by this sequence
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on `applicability_validation.py`, then the
+  broader claims/evidence owner families; do not advance to Milestone 7 yet
+- stale-routing cleanup:
+  the immediately following sequence 8 section is now historical for the forest-plan-owner
+  residual note; the current section above supersedes any older packet text that still treats
+  `applicability_decisions.py` as the owner of Forest Plan component predicate evaluation
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decision_arbitration.py tests/test_applicability_decision_coverage.py tests/test_applicability_decision_evidence.py tests/test_applicability_decision_forest_plan.py tests/test_applicability_decision_outputs.py tests/test_applicability_decisions.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 8
 
 This eighth Milestone 6 slice closes the applicability decision-coverage seam, records the new
