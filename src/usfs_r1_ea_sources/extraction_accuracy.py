@@ -15,11 +15,11 @@ from .extract import _find_xml_scope_element
 from .extract import _normalize_xml_scope_identifier
 from .extract import _raise_pypdf_decompression_limit
 from .extract import _read_json
-from .extract import _source_derived_dir
 from .extract import _write_json
 from .extract import _xml_local_name
 from .extract import _xml_scope_for_row
 from .records import sha256_file
+from .source_set_support import source_derived_dir
 
 
 @dataclass(frozen=True)
@@ -40,7 +40,7 @@ def run_extraction_accuracy_audit(
     source_set_id = source_set_id or _read_json(
         output_dir / "catalog" / "source_set_manifest.json"
     )["source_set_id"]
-    derived_dir = _source_derived_dir(output_dir / "derived", source_set_id)
+    derived_dir = source_derived_dir(output_dir / "derived", source_set_id)
     manifest_path = derived_dir / "diagnostics" / "extraction_manifest.jsonl"
     chunks_path = derived_dir / "chunks" / "chunks.jsonl"
     validation_path = derived_dir / "diagnostics" / "extraction_validation.json"

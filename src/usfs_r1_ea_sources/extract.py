@@ -3036,10 +3036,6 @@ def _summary_represents_full_catalog(summary: dict | None) -> bool:
     )
 
 
-def _source_derived_dir(derived_dir: Path, source_set_id: str) -> Path:
-    return source_derived_dir(derived_dir, source_set_id)
-
-
 def _resolve_artifact_path(output_dir: Path, artifact_path: str) -> Path:
     path = Path(artifact_path)
     if path.is_absolute():

@@ -24,10 +24,10 @@ from .claim_extraction import SUPPORTED_CLAIM_TYPES
 from .claim_extraction import _load_validated_claims_for_eval
 from .claim_extraction import _source_set_id_from_catalog
 from .claim_extraction import default_claims_path
-from .extract import _source_derived_dir
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .rule_packs import load_rule_pack
 from .rule_packs import validate_rule_pack
+from .source_set_support import source_derived_dir
 
 
 RULE_CLAIM_LINK_SCHEMA_VERSION = "rule-claim-links-v0"
@@ -646,7 +646,7 @@ def default_rule_claim_links_dir(
     if rule_pack is None:
         rule_pack = load_rule_pack(rule_pack_path)
     return (
-        _source_derived_dir(output_dir / "derived", source_set_id)
+        source_derived_dir(output_dir / "derived", source_set_id)
         / "rule_claim_links"
         / _safe_segment(str(rule_pack["rule_pack_id"]))
         / _safe_segment(str(rule_pack["version"]))

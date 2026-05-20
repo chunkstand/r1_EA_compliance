@@ -18,7 +18,7 @@ from .artifact_utils import _source_set_id_from_catalog
 from .artifact_utils import _utc_now
 from .artifact_utils import _write_json
 from .catalog_surface import resolve_catalog_dir_for_source_set
-from .extract import _source_derived_dir
+from .source_set_support import source_derived_dir
 
 
 GRAPH_SCHEMA_VERSION = "document-evidence-graph-v1"
@@ -78,8 +78,8 @@ def build_evidence_graph(
     output_dir = Path(output_dir)
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
-    source_derived_dir = _source_derived_dir(output_dir / "derived", source_set_id)
-    graph_dir = source_derived_dir / "evidence_graph"
+    derived_source_dir = source_derived_dir(output_dir / "derived", source_set_id)
+    graph_dir = derived_source_dir / "evidence_graph"
     graph_dir.mkdir(parents=True, exist_ok=True)
     catalog_dir = resolve_catalog_dir_for_source_set(
         output_dir=output_dir,
@@ -87,13 +87,13 @@ def build_evidence_graph(
         catalog_dir=catalog_dir,
     )
 
-    chunks_path = source_derived_dir / "chunks" / "chunks.jsonl"
+    chunks_path = derived_source_dir / "chunks" / "chunks.jsonl"
     catalog_sqlite_path = catalog_dir / "review_sources.sqlite"
     catalog_validation_path = catalog_dir / "catalog_validation.json"
-    extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
-    extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
-    retrieval_validation_path = source_derived_dir / "retrieval" / "retrieval_validation.json"
-    retrieval_summary_path = source_derived_dir / "retrieval" / "summary.json"
+    extraction_validation_path = derived_source_dir / "diagnostics" / "extraction_validation.json"
+    extraction_summary_path = derived_source_dir / "diagnostics" / "summary.json"
+    retrieval_validation_path = derived_source_dir / "retrieval" / "retrieval_validation.json"
+    retrieval_summary_path = derived_source_dir / "retrieval" / "summary.json"
 
     nodes_path = graph_dir / "document_graph_nodes.jsonl"
     edges_path = graph_dir / "document_graph_edges.jsonl"

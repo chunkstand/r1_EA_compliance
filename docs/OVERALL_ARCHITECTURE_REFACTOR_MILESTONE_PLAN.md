@@ -5,7 +5,7 @@ Date: 2026-05-20
 Status: Milestones 0-5 complete; Milestone 6 next
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
-`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-4 are now closed, the
+`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-5 are now closed, the
 document-plan runtime slice remains historical state from `1435cdb`, Milestone 5 has now closed a
 bounded shared-helper split across the capture and extraction/retrieval owner family, and the next
 active owner family is Milestone 6 on the applicability, claims, and evidence hotspot surfaces.
@@ -46,7 +46,8 @@ machine-local state.
   `capture_run_support.py` owns shared capture manifest/report serialization for
   `download.py`, `preflight.py`, `report.py`, `validate_run.py`, and `catalog.py`, while
   `source_set_support.py` owns the shared derived-output path and support-document-role helpers
-  now used directly by `extract.py` and `retrieval.py`.
+  now used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
+  `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`.
 - The next executable slice in this packet is Milestone 6 on the applicability, claims, and
   evidence family.
 
@@ -55,7 +56,7 @@ machine-local state.
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `193` code files detected;
+- `194` code files detected;
 - `57` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
@@ -77,9 +78,10 @@ From
 - Shared-helper ownership is better, but not finished:
   `capture_run_support.py` now removes the cross-owner manifest/report helpers previously mixed
   across `download.py`, `preflight.py`, `report.py`, `validate_run.py`, and `catalog.py`, and
-  `source_set_support.py` now removes the direct `retrieval.py -> extract.py` private-helper seam;
-  however `extract.py` and `retrieval.py` remain large and some downstream families still consume
-  the `_source_derived_dir` compatibility wrapper inside `extract.py`.
+  `source_set_support.py` now removes the direct `retrieval.py -> extract.py` private-helper seam
+  and the remaining in-repo `extract._source_derived_dir` wrapper consumers; direct helper coverage
+  now lives in `tests/test_source_set_support.py`. The remaining issue is not helper routing but
+  file size: `extract.py` and `retrieval.py` still remain large.
 - Test monoliths are also large and highly active:
   `tests/test_promotion_suite.py`, `tests/test_cli.py`, `tests/test_compliance_review.py`,
   `tests/test_forest_plan_resolver.py`, `tests/test_project_sow_package.py`, and
@@ -185,7 +187,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `5048` `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`
 - `4279` `src/usfs_r1_ea_sources/forest_plan_components.py`
 - `3401` `src/usfs_r1_ea_sources/ea_consistency_decision_support.py`
-- `3174` `src/usfs_r1_ea_sources/extract.py`
+- `3170` `src/usfs_r1_ea_sources/extract.py`
 - `2662` `src/usfs_r1_ea_sources/v1_ea_eval.py`
 - `2655` `src/usfs_r1_ea_sources/applicability_eval.py`
 - `2503` `src/usfs_r1_ea_sources/claim_extraction.py`
@@ -229,7 +231,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `1812` `tests/test_cli.py`
 - `1768` `tests/test_project_sow_package.py`
 - `1754` `tests/test_forest_plan_components.py`
-- `1667` `tests/test_extract.py`
+- `1646` `tests/test_extract.py`
 - `1429` `tests/test_nepa_knowledge_graph_export.py`
 - `1418` `tests/test_compliance_review.py`
 - `1351` `tests/test_final_qa_certification.py`
@@ -608,17 +610,19 @@ Implementation:
    failure CSV writer, failure-status classifier, and manifest-path resolution contract used by
    `download.py`, `preflight.py`, `report.py`, `validate_run.py`, and `catalog.py`.
 2. `source_set_support.py` now owns the shared derived-output path and support-document-role helper
-   contract used directly by `extract.py` and `retrieval.py`, removing the private
-   `retrieval.py -> extract.py` helper seam.
-3. Focused tests now pin the shared helper contracts directly, while the existing download,
-   preflight, catalog, validate-run, extraction, and retrieval tests still verify the public
-   workflow behavior end to end.
+   contract used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
+   `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`,
+   removing both the private `retrieval.py -> extract.py` helper seam and the temporary
+   in-repo compatibility dependence on `extract._source_derived_dir`.
+3. Focused tests now pin the shared helper contracts directly in
+   `tests/test_capture_run_support.py` and `tests/test_source_set_support.py`, while the existing
+   download, preflight, catalog, validate-run, extraction, retrieval, claim, evidence-graph,
+   phase-eval, and rule-claim tests still verify the public workflow behavior end to end.
 
 Remaining issue after closeout:
 
-- `extract.py` and `retrieval.py` remain large, broader chunking/ranking/report owner splits still
-  remain for later packets, and `extract.py` currently keeps a thin `_source_derived_dir`
-  compatibility wrapper for downstream owner families outside this milestone.
+- `extract.py` and `retrieval.py` remain large, and broader chunking/ranking/report owner splits
+  still remain for later packets.
 
 ### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
 

@@ -5,6 +5,58 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 5 Alignment Pass
+
+This follow-up closes the remaining helper-consumer gap after the reduced
+Milestone 5 closeout in `60cbd11`, removes the temporary compatibility-wrapper
+dependency from the active repo, and keeps the umbrella packet routed to
+Milestone 6.
+
+- outcome label:
+  `resolved` for the post-closeout gap pass; the reduced Milestone 5 runtime
+  seam remains `60cbd11`
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- wrapper-consumer closeout:
+  `claim_extraction.py`, `extraction_accuracy.py`, `evidence_graph.py`,
+  `phase_eval.py`, and `rule_claim_binding.py` now import
+  `source_derived_dir` from `source_set_support.py` directly instead of
+  depending on `extract._source_derived_dir`; there are now no remaining
+  in-repo consumers of that temporary extraction wrapper, and the wrapper is
+  removed from `extract.py`
+- direct helper coverage:
+  `tests/test_source_set_support.py` now owns the direct
+  support-document-role and derived-path helper assertions, so those checks no
+  longer live inside the extraction monolith
+- packet-alignment closeout:
+  the umbrella packet no longer records the removed compatibility-wrapper
+  dependence as a Milestone 5 residual, and the active plan/handoff now both
+  describe `source_set_support.py` as the direct owner for all current in-repo
+  derived-path helper consumers
+- live probe evidence:
+  the fresh architecture probe reports `194` code files, `57` files above
+  `800`, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `extract.py` at `3170` lines with hotspot score `53890`,
+  `tests/test_extract.py` at `1646` lines, shared helper fan-in
+  `source_set_support=7` and `capture_run_support=5`, one fan-out hotspot at
+  `cli_derived=22`, and no Python or JS/TS import cycles
+- residual risk:
+  `extract.py` and `retrieval.py` still remain large, broader chunking and
+  ranking/report splits still remain for later owner packets, and the next
+  hotspot family is still applicability/claims/evidence rather than another
+  helper-routing pass
+- next routing:
+  the next bounded architecture slice remains Milestone 6 on the
+  applicability, claims, and evidence hotspot family
+- stale-routing cleanup:
+  the immediately following Milestone 5 section remains historical closeout
+  state from `60cbd11`; the current alignment section above supersedes its
+  older compatibility-wrapper residual note
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_set_support.py tests/test_extract.py tests/test_claim_extraction.py tests/test_extraction_accuracy.py tests/test_evidence_graph.py tests/test_phase_eval.py tests/test_rule_claim_binding.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and the full gate stack listed below after docs closeout
+
 ## Overall Architecture Refactor Milestone 5
 
 This reduced closeout splits the shared source-capture manifest/report helpers

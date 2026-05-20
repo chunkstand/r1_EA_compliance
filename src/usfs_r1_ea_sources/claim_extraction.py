@@ -20,7 +20,7 @@ from .eval_metrics import (
     reciprocal_rank,
 )
 from .catalog_surface import resolve_catalog_dir_for_source_set
-from .extract import _source_derived_dir
+from .source_set_support import source_derived_dir
 
 
 CLAIM_SCHEMA_VERSION = "source-claims-v0"
@@ -196,20 +196,20 @@ def build_claim_extraction(
     output_dir = Path(output_dir)
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
-    source_derived_dir = _source_derived_dir(output_dir / "derived", source_set_id)
-    claims_dir = source_derived_dir / "claims"
+    derived_source_dir = source_derived_dir(output_dir / "derived", source_set_id)
+    claims_dir = derived_source_dir / "claims"
     claims_dir.mkdir(parents=True, exist_ok=True)
 
-    chunks_path = chunks_path or source_derived_dir / "chunks" / "chunks.jsonl"
+    chunks_path = chunks_path or derived_source_dir / "chunks" / "chunks.jsonl"
     resolved_catalog_dir = resolve_catalog_dir_for_source_set(
         output_dir=output_dir,
         source_set_id=source_set_id,
     )
     catalog_sqlite_path = catalog_sqlite_path or resolved_catalog_dir / "review_sources.sqlite"
-    extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
-    extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
-    retrieval_validation_path = source_derived_dir / "retrieval" / "retrieval_validation.json"
-    retrieval_summary_path = source_derived_dir / "retrieval" / "summary.json"
+    extraction_validation_path = derived_source_dir / "diagnostics" / "extraction_validation.json"
+    extraction_summary_path = derived_source_dir / "diagnostics" / "summary.json"
+    retrieval_validation_path = derived_source_dir / "retrieval" / "retrieval_validation.json"
+    retrieval_summary_path = derived_source_dir / "retrieval" / "summary.json"
     claims_path = claims_dir / "claims.jsonl"
     entities_path = claims_dir / "entities.jsonl"
     nodes_path = claims_dir / "claim_graph_nodes.jsonl"
@@ -655,7 +655,7 @@ def default_claims_path(output_dir: Path, source_set_id: str | None = None) -> P
     output_dir = Path(output_dir)
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
-    return _source_derived_dir(output_dir / "derived", source_set_id) / "claims" / "claims.jsonl"
+    return source_derived_dir(output_dir / "derived", source_set_id) / "claims" / "claims.jsonl"
 
 
 def validate_claim_outputs(
@@ -687,18 +687,18 @@ def validate_claim_outputs(
     allow_partial_retrieval: bool = False,
 ) -> dict:
     output_dir = Path(output_dir)
-    source_derived_dir = _source_derived_dir(output_dir / "derived", source_set_id)
+    derived_source_dir = source_derived_dir(output_dir / "derived", source_set_id)
     extraction_validation_path = (
         extraction_validation_path
-        or source_derived_dir / "diagnostics" / "extraction_validation.json"
+        or derived_source_dir / "diagnostics" / "extraction_validation.json"
     )
     extraction_summary_path = (
-        extraction_summary_path or source_derived_dir / "diagnostics" / "summary.json"
+        extraction_summary_path or derived_source_dir / "diagnostics" / "summary.json"
     )
     retrieval_validation_path = (
-        retrieval_validation_path or source_derived_dir / "retrieval" / "retrieval_validation.json"
+        retrieval_validation_path or derived_source_dir / "retrieval" / "retrieval_validation.json"
     )
-    retrieval_summary_path = retrieval_summary_path or source_derived_dir / "retrieval" / "summary.json"
+    retrieval_summary_path = retrieval_summary_path or derived_source_dir / "retrieval" / "summary.json"
     if extraction_validation is None and extraction_validation_path.exists():
         extraction_validation = _read_json(extraction_validation_path)
     if extraction_summary is None and extraction_summary_path.exists():

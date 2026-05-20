@@ -23,7 +23,6 @@ from .ea_consistency_decision_support import DEFAULT_CONFIG_PATH as DECISION_SUP
 from .ea_consistency_decision_support import (
     DEFAULT_EXPECTED_SUMMARY_PATH as DECISION_SUPPORT_EXPECTED_SUMMARY_PATH,
 )
-from .extract import _source_derived_dir
 from .forest_plan_component_eval import FOREST_PLAN_COMPONENT_EVAL_RESULTS_SCHEMA_VERSION
 from .final_qa_certification import VALIDATION_FILENAME as FINAL_QA_VALIDATION_FILENAME
 from .phase_eval_direct_eval import apply_source_set_phase_direct_eval_gate
@@ -47,6 +46,7 @@ from .replay_context import load_replay_context
 from .replay_context import tracked_replay_context_path
 from .review_packet_index import VALIDATION_FILENAME as REVIEW_PACKET_VALIDATION_FILENAME
 from .rule_claim_binding import default_rule_claim_links_dir
+from .source_set_support import source_derived_dir
 from .source_register import validate_source_register
 
 
@@ -162,8 +162,8 @@ def run_phase_aligned_eval(
                 catalog_dir = resolved_catalog_dir
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
-    source_derived_dir = _source_derived_dir(output_dir / "derived", source_set_id)
-    graph_dir = source_derived_dir / "evidence_graph"
+    derived_source_dir = source_derived_dir(output_dir / "derived", source_set_id)
+    graph_dir = derived_source_dir / "evidence_graph"
     graph_dir.mkdir(parents=True, exist_ok=True)
     output_path = graph_dir / "phase_eval_results.json"
     catalog_dir = resolve_catalog_dir_for_source_set(
@@ -175,24 +175,24 @@ def run_phase_aligned_eval(
     catalog_validation_path = catalog_dir / "catalog_validation.json"
     catalog_source_path = catalog_dir / "source_catalog.jsonl"
     source_set_manifest_path = catalog_dir / "source_set_manifest.json"
-    extraction_validation_path = source_derived_dir / "diagnostics" / "extraction_validation.json"
-    extraction_summary_path = source_derived_dir / "diagnostics" / "summary.json"
+    extraction_validation_path = derived_source_dir / "diagnostics" / "extraction_validation.json"
+    extraction_summary_path = derived_source_dir / "diagnostics" / "summary.json"
     extraction_accuracy_path = (
-        source_derived_dir / "diagnostics" / "extraction_accuracy_audit.json"
+        derived_source_dir / "diagnostics" / "extraction_accuracy_audit.json"
     )
     authority_currentness_path = (
-        source_derived_dir / "authority_currentness" / "authority_currentness_report.json"
+        derived_source_dir / "authority_currentness" / "authority_currentness_report.json"
     )
     upstream_evaluation_path = (
         output_dir / "evaluations" / "upstream" / "upstream_evaluation_results.json"
     )
     downstream_direct_eval_manifest_path = DOWNSTREAM_DIRECT_EVAL_MANIFEST_PATH
-    retrieval_eval_path = source_derived_dir / "retrieval" / "retrieval_eval_results.json"
-    retrieval_validation_path = source_derived_dir / "retrieval" / "retrieval_validation.json"
-    retrieval_summary_path = source_derived_dir / "retrieval" / "summary.json"
+    retrieval_eval_path = derived_source_dir / "retrieval" / "retrieval_eval_results.json"
+    retrieval_validation_path = derived_source_dir / "retrieval" / "retrieval_validation.json"
+    retrieval_summary_path = derived_source_dir / "retrieval" / "summary.json"
     graph_validation_path = graph_dir / "evidence_graph_validation.json"
     graph_summary_path = graph_dir / "summary.json"
-    knowledge_graph_dir = source_derived_dir / "knowledge_graph"
+    knowledge_graph_dir = derived_source_dir / "knowledge_graph"
     knowledge_graph_validation_path = (
         knowledge_graph_dir / f"{KNOWLEDGE_GRAPH_FILE_PREFIX}_validation.json"
     )
@@ -208,8 +208,8 @@ def run_phase_aligned_eval(
     citation_alias_eval_path = knowledge_graph_dir / "citation_alias_eval_report.json"
     graph_health_eval_path = knowledge_graph_dir / "graph_health_eval_report.json"
     graph_accuracy_eval_path = knowledge_graph_dir / "graph_accuracy_eval_report.json"
-    proving_semantic_dir = source_derived_dir / "source_register_proving"
-    claim_dir = source_derived_dir / "claims"
+    proving_semantic_dir = derived_source_dir / "source_register_proving"
+    claim_dir = derived_source_dir / "claims"
     claim_eval_path = claim_dir / "claim_eval_results.json"
     claim_validation_path = claim_dir / "claim_validation.json"
     claim_summary_path = claim_dir / "summary.json"
@@ -219,12 +219,12 @@ def run_phase_aligned_eval(
             source_set_id=source_set_id,
         )
     except (FileNotFoundError, ValueError):
-        rule_claim_dir = source_derived_dir / "rule_claim_links"
+        rule_claim_dir = derived_source_dir / "rule_claim_links"
     rule_claim_validation_path = rule_claim_dir / "rule_claim_link_validation.json"
     rule_claim_summary_path = rule_claim_dir / "summary.json"
     rule_claim_eval_path = rule_claim_dir / "rule_claim_link_eval_results.json"
     if not rule_claim_summary_path.exists():
-        candidates = sorted((source_derived_dir / "rule_claim_links").glob("*/*/summary.json"))
+        candidates = sorted((derived_source_dir / "rule_claim_links").glob("*/*/summary.json"))
         if candidates:
             rule_claim_summary_path = candidates[0]
             rule_claim_validation_path = rule_claim_summary_path.parent / "rule_claim_link_validation.json"
@@ -1391,7 +1391,7 @@ def default_graph_dir(output_dir: Path, source_set_id: str | None = None) -> Pat
     output_dir = Path(output_dir)
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
-    return _source_derived_dir(output_dir / "derived", source_set_id) / "evidence_graph"
+    return source_derived_dir(output_dir / "derived", source_set_id) / "evidence_graph"
 
 
 def _catalog_uses_source_register_v1(catalog_rows: list[dict], source_set_id: str) -> bool:
