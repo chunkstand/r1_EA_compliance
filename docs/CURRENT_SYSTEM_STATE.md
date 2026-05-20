@@ -21,6 +21,47 @@ older references below that still treat `source-set-5e65d845ce77e1a0`,
 historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes.
 
+## Full Canonical Live Source-Set Promotion Milestone 1 Closeout
+
+Latest closeout on 2026-05-19:
+
+- Routed implementation packet:
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone 1; the next routed slice is the live
+  forest-plan component-inventory boundary.
+- `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  now emits live successor source set `source-set-f775524ab233ff27` in
+  `source_library/catalog/` with `source_count=634`, `artifact_count=622`,
+  `unique_url_count=634`,
+  `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  `status_counts={"downloaded": 1, "downloaded_existing": 621, "duplicate_content": 12}`,
+  `document_role_counts.forest_plan=34`,
+  `document_role_counts.forest_plan_support=315`, and
+  `document_role_counts.regulation=44`.
+- The governed reuse-first extraction path for a brand-new live source set is
+  now explicit in this lane:
+  `reuse-inventory --source-set-id source-set-f775524ab233ff27 --previous-source-set-id source-set-732a5a91d31736f8`
+  classified `reuse_extraction=634` and `needs_extract=0`, and
+  `extract-build --reuse-existing --reuse-inventory-path source_library/derived/source-set-f775524ab233ff27/reuse_inventory/reuse_inventory.json`
+  then passed with `extracted_count=634`, `failed_count=0`,
+  `chunk_count=98699`, `reused_count=634`, and `validation_passed=true`.
+- `authority-currentness --source-set-id source-set-f775524ab233ff27` now
+  passes on the live successor with `authority_family_count=454`,
+  `source_currentness_record_count=634`,
+  `catalog_source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  and `validation_passed=true`.
+- Split truth is reduced but not closed: archived
+  `source-set-732a5a91d31736f8` still remains the governing green downstream
+  full-canonical contract, active full-canonical configs still point at that
+  archived source set, and `promotion-suite` still reports
+  `full_canonical_source_set_id=source-set-732a5a91d31736f8`.
+- Next routing:
+  repoint the component-inventory manifest/readiness boundary at live successor
+  `source-set-f775524ab233ff27`, rerun `forest-plan-components-build`, and
+  stop if the live lane cannot truthfully close the `1416`-component / `397`-
+  standard parity gate.
+
 ## Full Canonical Archived Forest-Plan Source-Set Refresh/Rebind
 
 Latest closeout on 2026-05-19:

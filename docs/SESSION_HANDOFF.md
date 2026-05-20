@@ -5,6 +5,75 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Live Source-Set Promotion Milestone 1 Closeout
+
+This runtime slice closes the live successor catalog/extraction/currentness
+boundary and routes the next pass into forest-plan inventory promotion.
+
+- outcome label:
+  `resolved` for Milestone 1
+- implementation surfaces:
+  `source_library/catalog/source_set_manifest.json`,
+  `source_library/catalog/source_catalog.jsonl`,
+  `source_library/catalog/catalog_validation.json`,
+  `source_library/derived/source-set-f775524ab233ff27/diagnostics/summary.json`,
+  `source_library/derived/source-set-f775524ab233ff27/reuse_inventory/`,
+  `source_library/derived/source-set-f775524ab233ff27/authority_currentness/authority_currentness_report.json`,
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`, and
+  `docs/SESSION_HANDOFF.md`
+- runtime truth:
+  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
+  now emits live successor source set `source-set-f775524ab233ff27` with
+  `source_count=634`, `artifact_count=622`,
+  `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  `document_role_counts.forest_plan=34`,
+  `document_role_counts.forest_plan_support=315`, and
+  `document_role_counts.regulation=44`
+- extraction/currentness closeout:
+  `reuse-inventory --source-set-id source-set-f775524ab233ff27 --previous-source-set-id source-set-732a5a91d31736f8`
+  classified `reuse_extraction=634` and `needs_extract=0`;
+  `extract-build --reuse-existing --reuse-inventory-path source_library/derived/source-set-f775524ab233ff27/reuse_inventory/reuse_inventory.json`
+  passed with `extracted_count=634`, `failed_count=0`, `chunk_count=98699`,
+  `reused_count=634`, and `validation_passed=true`; and
+  `authority-currentness --source-set-id source-set-f775524ab233ff27` passed
+  with `authority_family_count=454`, `source_currentness_record_count=634`,
+  and `validation_passed=true`
+- routing truth:
+  archived `source-set-732a5a91d31736f8` still remains the governing green
+  downstream full-canonical contract, active full-canonical configs still point
+  at that archived source set, and the next routed slice is Milestone 2 on
+  live successor `source-set-f775524ab233ff27` at the
+  forest-plan component-inventory boundary
+- verification:
+  `validate-run`, `catalog-build`, `reuse-inventory`, `extract-build`, and
+  `authority-currentness` all passed on the routed live-successor boundary;
+  `git diff --check` and milestone-plan lint also passed for the closeout docs
+
+## Full Canonical Live Source-Set Promotion Plan Routing
+
+This docs-only follow-up routes the next truthful full-canonical packet after
+archived closeout `df2bd28`.
+
+- outcome label:
+  `resolved` for the planning/routing slice
+- routed packet surfaces:
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md` and
+  `docs/SESSION_HANDOFF.md`
+- routing truth:
+  archived `source-set-732a5a91d31736f8` remains the current green
+  full-canonical downstream contract, live `source-set-9e7d85759951c279`
+  remains the active imported catalog only, and the next packet is to emit a
+  new live successor source set under current `HEAD`, replay the full-canonical
+  downstream lane on that successor, preserve the broader `Document_Register_Master`
+  authority-corpus intent of that promoted live source set, and retire the archived
+  dependency from active configs and docs
+- verification:
+  milestone-plan lint on
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md` plus
+  `git diff --check`
+
 ## Full Canonical Forest-Plan Identity Reconciliation Milestone 5 Alignment Pass
 
 This docs-only follow-up closes the remaining traceability drift after

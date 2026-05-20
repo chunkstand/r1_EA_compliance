@@ -75,13 +75,30 @@ source-delta-required, `1` documented official-source gap), but
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
 promotion evidence.
 
-Local active import baseline on 2026-05-19 after Milestone 4 downstream closeout:
+Local active import baseline on 2026-05-19 after full canonical live source-set promotion Milestone 1:
 
-- Active local catalog in `source_library/catalog/` remains full-register
-  source set `source-set-9e7d85759951c279`, with `source_count=634`,
+- Active local catalog in `source_library/catalog/` is now full-register
+  source set `source-set-f775524ab233ff27`, created on
+  `2026-05-20T03:45:44.663816Z`, with `source_count=634`,
   `artifact_count=622`,
   `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
-  and `status_counts={"downloaded_existing": 622, "duplicate_content": 12}`.
+  `status_counts={"downloaded": 1, "downloaded_existing": 621, "duplicate_content": 12}`,
+  `document_role_counts.forest_plan=34`,
+  `document_role_counts.forest_plan_support=315`, and
+  `document_role_counts.regulation=44`.
+- Full canonical live promotion Milestone 1 is now resolved locally:
+  `reuse-inventory --source-set-id source-set-f775524ab233ff27 --previous-source-set-id source-set-732a5a91d31736f8`
+  classified `reuse_extraction=634` and `needs_extract=0`;
+  `extract-build --reuse-existing --reuse-inventory-path source_library/derived/source-set-f775524ab233ff27/reuse_inventory/reuse_inventory.json`
+  passed with `extracted_count=634`, `failed_count=0`, `chunk_count=98699`,
+  `reused_count=634`, and `validation_passed=true`; and
+  `authority-currentness --source-set-id source-set-f775524ab233ff27` passed
+  with `authority_family_count=454`, `source_currentness_record_count=634`,
+  and `validation_passed=true`.
+- Archived `source-set-732a5a91d31736f8` still remains the governing green
+  downstream full-canonical contract while the live successor is promoted
+  through forest-plan components, retrieval, claims, graph export, and
+  `promotion-suite`.
 - The proving-slice active catalog `source-set-9dcf819bc4cca486` and the
   planned-only Phase 2 gate `source-set-ae989382c52344db` remain historical
   pre-import baselines for this checkout, not the live
