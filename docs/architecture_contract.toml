@@ -156,6 +156,8 @@ name = "applicability"
 summary = "Authority universe, retrieval traces, decisions, validation, adjudication, and generated rule packs."
 modules = [
   "applicability",
+  "applicability_authority_family_templates",
+  "applicability_contract_support",
   "applicability_decisions",
   "applicability_retrieval",
   "applicability_rule_pack",

@@ -5,6 +5,63 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 1
+
+This first Milestone 6 slice extracts the authority-family template candidate
+contract seam from `applicability.py`, records the new owner modules in the
+architecture surfaces, and keeps the umbrella packet routed inside Milestone 6
+instead of pretending the broader applicability/claims/evidence family is
+closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 1; the broader Milestone 6 family remains
+  active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- authority-family seam closeout:
+  `src/usfs_r1_ea_sources/applicability_authority_family_templates.py` now
+  owns authority-family template candidate assembly, source-evidence
+  availability, and retrieval/graph/dependency/search-coverage contract
+  construction that previously lived inside `applicability.py`
+- shared support closeout:
+  `src/usfs_r1_ea_sources/applicability_contract_support.py` now owns the
+  shared authority-document-role, source-record, string-normalization, and
+  source-record-summary helpers consumed by `applicability.py` and the new
+  authority-family template module
+- direct contract coverage:
+  `tests/test_applicability_authority_family_templates.py` now pins the
+  extracted authority-family contract surface directly, while
+  `tests/test_applicability.py` still verifies the public authority-universe
+  snapshot behavior end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists the new applicability owner modules
+  explicitly, and `docs/architecture_contract.toml` assigns both new modules
+  to the `applicability` layer
+- live probe evidence:
+  the fresh architecture probe reports `197` code files, `57` files above
+  `800`, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `applicability.py` reduced to `1793` lines from the prior
+  `2315`-line baseline, new modules
+  `applicability_authority_family_templates.py=417` and
+  `applicability_contract_support.py=113`, one fan-out hotspot at
+  `cli_derived=22`, and no Python or JS/TS import cycles
+- residual risk:
+  rule-template and forest-plan-component candidate assembly still remain in
+  `applicability.py`, `applicability_decisions.py` and
+  `applicability_validation.py` still remain large, and the claims/evidence
+  hotspot family is still untouched by this sequence
+- next routing:
+  continue Milestone 6 inside the same umbrella packet with the remaining
+  applicability candidate assembly plus the decision/validation and
+  claims/evidence owner families; do not advance to Milestone 7 yet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability.py tests/test_applicability_authority_family_templates.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 5 Alignment Pass
 
 This follow-up closes the remaining helper-consumer gap after the reduced

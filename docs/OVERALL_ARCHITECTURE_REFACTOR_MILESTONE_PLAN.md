@@ -2,13 +2,13 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-5 complete; Milestone 6 next
+Status: Milestones 0-5 complete; Milestone 6 active
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
 `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-5 are now closed, the
 document-plan runtime slice remains historical state from `1435cdb`, Milestone 5 has now closed a
-bounded shared-helper split across the capture and extraction/retrieval owner family, and the next
-active owner family is Milestone 6 on the applicability, claims, and evidence hotspot surfaces.
+bounded shared-helper split across the capture and extraction/retrieval owner family, and
+Milestone 6 is now active on the applicability, claims, and evidence hotspot surfaces.
 
 ## Purpose
 
@@ -48,15 +48,20 @@ machine-local state.
   `source_set_support.py` owns the shared derived-output path and support-document-role helpers
   now used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
   `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`.
-- The next executable slice in this packet is Milestone 6 on the applicability, claims, and
-  evidence family.
+- Milestone 6 sequence 1 now closes the first bounded applicability-owner seam:
+  `applicability_authority_family_templates.py` owns authority-family template candidate assembly,
+  source-evidence availability, and retrieval/graph/dependency/search-coverage contract
+  construction that previously lived inside `applicability.py`, while
+  `applicability_contract_support.py` owns the shared contract-normalization helpers now consumed
+  by both modules. The next executable slice remains inside Milestone 6 on the remaining
+  applicability, claims, and evidence family.
 
 ### Architecture probe current baseline
 
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `194` code files detected;
+- `197` code files detected;
 - `57` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
@@ -66,6 +71,11 @@ From
   `src.usfs_r1_ea_sources.cli_derived` imports `22` local modules;
 - new shared helper fan-in:
   `src.usfs_r1_ea_sources.capture_run_support` is already imported by `5` local modules;
+- new applicability owner surfaces:
+  `src.usfs_r1_ea_sources.applicability_authority_family_templates` is `417` lines and
+  `src.usfs_r1_ea_sources.applicability_contract_support` is `113` lines, while
+  `src/usfs_r1_ea_sources/applicability.py` is down to `1793` lines from the pre-sequence
+  `2315`-line baseline without introducing a new `>800` line file;
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
 
@@ -627,6 +637,7 @@ Remaining issue after closeout:
 ### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
 
 Outcome label: `reduced`
+Status: active after Sequence 1
 
 Purpose: reduce the largest concentration in the applicability decision family.
 
@@ -650,10 +661,26 @@ Implementation:
 2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
 
+Progress after Sequence 1 on 2026-05-20:
+
+- `applicability_authority_family_templates.py` now owns authority-family template candidate
+  assembly, source-evidence availability, and retrieval/graph/dependency/search-coverage contract
+  construction previously embedded inside `applicability.py`.
+- `applicability_contract_support.py` now owns the shared authority-document-role, source-record,
+  string-normalization, and source-record-summary helpers used by `applicability.py` and the new
+  authority-family template module.
+- `tests/test_applicability_authority_family_templates.py` now pins the extracted authority-family
+  contract surface directly, while `tests/test_applicability.py` still verifies the public
+  authority-universe snapshot behavior end to end.
+- The fresh architecture probe reports `197` code files, `57` files above `800`, no Python or
+  JS/TS cycles, `applicability.py` reduced to `1793` lines, and no new `>800` line file created
+  by this seam.
+
 Remaining issue after closeout:
 
-- the applicability family may still be broad, but the current multi-role owner files no longer
-  hide retrieval, decision, validation, and output logic in the same modules.
+- rule-template and forest-plan-component candidate assembly still remain in `applicability.py`,
+  and the broader decision/validation plus claims/evidence hotspot families remain open inside
+  Milestone 6 before the umbrella packet can route forward to Milestone 7.
 
 ### Milestone 7 - Split Eval And Promotion Orchestration Hotspots
 
