@@ -1,7 +1,7 @@
 # Full Canonical Live Source-Set Promotion Milestone Plan
 
 Date: 2026-05-19
-Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 is the next routed slice
+Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through `c08e480` with live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 is the next routed slice
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` live full-canonical source-set promotion boundary
 
 ## Purpose
@@ -82,7 +82,8 @@ plans, and supporting documents that the system must consider before any review-
   still reports `full_canonical_corpus_ready=true`, but it does so for
   `full_canonical_source_set_id=source-set-732a5a91d31736f8`, not for live
   successor `source-set-f775524ab233ff27`.
-- The durable routing set is now aligned through Milestone 2 closeout:
+- The durable routing set is now aligned through Milestone 2 closeout
+  `c08e480`:
   `README.md`, `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/SESSION_HANDOFF.md`, and the two superseded full-canonical
   forest-plan packets all describe `source-set-f775524ab233ff27` as the
@@ -373,7 +374,8 @@ Outcome label: resolved
   `config/r1_forest_plan_component_inventory_build_manifest.json`,
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`, and
   `config/r1_forest_plan_identity_reconciliation_v1.json` now bind the live
-  component-inventory boundary to `source-set-f775524ab233ff27`.
+  component-inventory boundary to `source-set-f775524ab233ff27`. Runtime
+  closeout commit: `c08e480` (`Resolve live source-set promotion Milestone 2`).
 - `forest-plan-components-build --output-dir source_library --source-set-id source-set-f775524ab233ff27 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
   passed with `component_count=1416`, `standard_count=397`,
   `blocked_forest_unit_ids=[]`, `coverage_passed=true`, and

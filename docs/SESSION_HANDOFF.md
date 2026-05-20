@@ -5,6 +5,35 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Live Source-Set Promotion Milestone 2 Alignment Pass
+
+This docs-only follow-up closes the remaining routing drift after Milestone 2
+runtime closeout `c08e480`.
+
+- outcome label:
+  `resolved` for the alignment pass; runtime truth is unchanged
+- aligned packet surfaces:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`, and
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+- routing truth:
+  live successor `source-set-f775524ab233ff27` is the resolved Milestone 2
+  catalog plus extraction/currentness/component-inventory boundary through
+  `c08e480`, archived `source-set-732a5a91d31736f8` remains the governing
+  green downstream full-canonical contract, and the next routed slice is
+  Milestone 3 on `source-set-f775524ab233ff27`
+- stale-routing cleanup:
+  the immediately following Milestone 2 runtime section, the older Milestone 1
+  alignment/closeout sections, and the two superseded full-canonical
+  forest-plan packets now pin `c08e480` and treat Milestone 2 as historical
+  complete state rather than pending routing
+- verification:
+  milestone-plan lints on the touched live-promotion packets plus
+  `git diff --check` passed in this alignment pass
+
 ## Full Canonical Live Source-Set Promotion Milestone 2 Closeout
 
 This runtime/config slice closes the live successor forest-plan
@@ -13,6 +42,8 @@ full-canonical rebind/replay.
 
 - outcome label:
   `resolved` for Milestone 2
+- Milestone 2 closeout commit:
+  `c08e480` (`Resolve live source-set promotion Milestone 2`)
 - implementation surfaces:
   `config/r1_forest_plan_component_inventory_build_manifest.json`,
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
@@ -54,13 +85,13 @@ runtime closeout `09a85f7`.
   live successor `source-set-f775524ab233ff27` is the resolved Milestone 1
   catalog plus extraction/currentness boundary through `09a85f7`, archived
   `source-set-732a5a91d31736f8` remains the governing green downstream
-  full-canonical contract, and the next routed slice is Milestone 2 on
-  `source-set-f775524ab233ff27` at the forest-plan component-inventory
-  boundary
+  full-canonical contract, and that component-inventory boundary was the next
+  routed slice before Milestone 2 closeout `c08e480`
 - stale-routing cleanup:
   the immediately following plan-routing section and the two superseded
   full-canonical forest-plan packets are now historical context only; they must
-  not be read as the active packet after `09a85f7`
+  not be read as the active packet after `09a85f7` or as the active routing
+  state after Milestone 2 closeout `c08e480`
 - verification:
   milestone-plan lint on the touched live-promotion packet plus
   `git diff --check` passed in this alignment pass
@@ -103,9 +134,8 @@ boundary and routes the next pass into forest-plan inventory promotion.
 - routing truth:
   archived `source-set-732a5a91d31736f8` still remains the governing green
   downstream full-canonical contract, active full-canonical configs still point
-  at that archived source set, and the next routed slice is Milestone 2 on
-  live successor `source-set-f775524ab233ff27` at the
-  forest-plan component-inventory boundary
+  at that archived source set, and that component-inventory boundary was the
+  next routed slice before Milestone 2 closeout `c08e480`
 - verification:
   `validate-run`, `catalog-build`, `reuse-inventory`, `extract-build`, and
   `authority-currentness` all passed on the routed live-successor boundary;

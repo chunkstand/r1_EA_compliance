@@ -36,6 +36,8 @@ Latest closeout on 2026-05-19:
 - Outcome label:
   `resolved` for Milestone 2; the next routed slice is the live
   downstream rebind/replay boundary.
+- Milestone 2 closeout commit:
+  `c08e480` (`Resolve live source-set promotion Milestone 2`).
 - The committed forest-plan component-inventory boundary now binds to live
   successor `source-set-f775524ab233ff27`:
   `config/r1_forest_plan_component_inventory_build_manifest.json` now points
@@ -101,11 +103,11 @@ Latest closeout on 2026-05-19:
   full-canonical contract, active full-canonical configs still point at that
   archived source set, and `promotion-suite` still reports
   `full_canonical_source_set_id=source-set-732a5a91d31736f8`.
-- Next routing:
-  repoint the component-inventory manifest/readiness boundary at live successor
-  `source-set-f775524ab233ff27`, rerun `forest-plan-components-build`, and
-  stop if the live lane cannot truthfully close the `1416`-component / `397`-
-  standard parity gate.
+- Historical next routing before Milestone 2 closeout `c08e480`:
+  repoint the component-inventory manifest/readiness boundary at live
+  successor `source-set-f775524ab233ff27`, rerun
+  `forest-plan-components-build`, and stop if the live lane cannot truthfully
+  close the `1416`-component / `397`-standard parity gate.
 
 ## Full Canonical Archived Forest-Plan Source-Set Refresh/Rebind
 

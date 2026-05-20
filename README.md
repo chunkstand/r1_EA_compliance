@@ -105,7 +105,8 @@ Local active import baseline on 2026-05-19 after full canonical live source-set 
   `forest-plan-components-build --output-dir source_library --source-set-id source-set-f775524ab233ff27 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
   passed with `component_count=1416`, `standard_count=397`,
   `blocked_forest_unit_ids=[]`, `coverage_passed=true`, and
-  `component_source_accuracy_passed=true`.
+  `component_source_accuracy_passed=true`. Milestone 2 closeout commit:
+  `c08e480` (`Resolve live source-set promotion Milestone 2`).
 - Archived `source-set-732a5a91d31736f8` still remains the governing green
   downstream full-canonical contract while the live successor promotion is
   carried through the remaining profile-eval, component-retrieval, retrieval,
