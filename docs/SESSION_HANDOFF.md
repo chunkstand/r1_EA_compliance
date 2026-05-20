@@ -40,6 +40,58 @@ without adding the public dry-run CLI entrypoint yet.
   `python -m compileall src`, and
   `git diff --check`
 
+## Agent Legibility Entrypoint Milestone 2 And 3
+
+This implementation slice closes the public dry-run planner facade and the
+first-stop agent docs for the standalone agent-legibility packet.
+
+- outcome label:
+  `resolved` for Milestones 2 and 3; the packet is now complete
+- implementation surfaces:
+  `docs/AGENT_START_HERE.md`,
+  `README.md`,
+  `docs/ARCHITECTURE.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `config/document_lanes_v1.json`,
+  `docs/architecture_contract.toml`,
+  `src/usfs_r1_ea_sources/document_plan.py`,
+  `src/usfs_r1_ea_sources/cli_document_planning.py`,
+  `src/usfs_r1_ea_sources/cli.py`,
+  `tests/test_document_plan.py`, and
+  `tests/test_cli.py`
+- routing truth:
+  future agent-driven document work should start with
+  `docs/AGENT_START_HERE.md` and the dry-run `document-plan` command before
+  invoking `project-sow-package`, `ea-consistency-document`, or
+  `draft-generate` directly
+- planner boundary:
+  the planner validates the normalized request contract, routes only
+  `project_sow_requirements_package`,
+  `decision_support_report`, and
+  `reviewed_draft_packet`, writes planning-only artifacts under
+  `source_library/document_plans/<request_id>/`, and never writes canonical
+  lane outputs
+- refusal truth:
+  invalid requests, unsupported legal-conclusion/final-decision requests, and
+  missing lane-required identifiers now fail closed with explicit refusal
+  categories in the planning artifacts
+- debt register:
+  `docs/TECH_DEBT_REGISTER.md` remains unchanged because this packet introduced
+  no temporary debt exception
+- next routing:
+  no further work is routed through
+  `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md`; future follow-on work
+  should start as a new standalone packet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_document_plan.py tests/test_cli.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_draft_generation.py tests/test_ea_consistency_decision_support.py tests/test_project_sow_package.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`, and
+  `git diff --check`
+
 ## Agent Legibility Entrypoint Milestone Plan
 
 This docs-only planning slice routes the first standalone agent-legibility

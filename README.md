@@ -8,6 +8,11 @@ workbook-defined source rows into a local, auditable source library, then builds
 retrieval, evidence graph, source-claim graph, rule-claim binding, and deterministic EA package
 review artifacts on top of that corpus.
 
+For agent-driven document work, start with `docs/AGENT_START_HERE.md`. The public
+`document-plan` command validates a normalized request packet, routes it to the supported document
+lane, and writes planning-only artifacts under `source_library/document_plans/<request_id>/`
+without generating canonical lane outputs.
+
 Canonical source-register refoundation status on 2026-05-18:
 
 - Active runtime workbook for `dry-run`, `preflight`, `download`, `batch-download`, and
@@ -753,6 +758,10 @@ Generated outputs are written under `source_library/` and ignored by git:
 - Graph seed files:
   - `source_library/catalog/source_graph_nodes.jsonl`
   - `source_library/catalog/source_graph_edges.jsonl`
+- Document-planning outputs:
+  - `source_library/document_plans/<request_id>/document_request.json`
+  - `source_library/document_plans/<request_id>/document_plan.json`
+  - `source_library/document_plans/<request_id>/document_plan.md`
 - Derived extraction outputs: `source_library/derived/<source_set_id>/`
 - Authority currentness outputs:
   - `source_library/derived/<source_set_id>/authority_currentness/authority_currentness_report.json`

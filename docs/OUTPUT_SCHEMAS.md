@@ -2,7 +2,8 @@
 
 The system writes durable, auditable outputs under `source_library/`. This file covers downloader,
 batch, catalog, EA review, extraction, retrieval, evidence graph, source claim graph,
-applicability-first review, and phase-eval artifacts.
+applicability-first review, phase-eval artifacts, and the document-planning/document-generation
+families.
 
 ## Row Manifest JSONL
 
@@ -2474,6 +2475,72 @@ deterministic risk categories such as `package_evidence_gap`,
 and `human_adjudicated_authority_family`. Each flag has rule IDs, authority-family IDs, candidate
 authority IDs, evidence/artifact refs, rationale, `deterministic_basis=true`, and
 `legal_conclusion=false`; this artifact is not a legal conclusion generator.
+
+## Document Plan Outputs
+
+Path: `source_library/document_plans/<request_id>/`
+
+The document-plan artifact family is a planning-only routing surface for agent-authored document
+requests. It validates a normalized request against
+`docs/schemas/document_request_v1.schema.json`, reads `config/document_lanes_v1.json`, selects
+exactly one supported document lane or fails closed, and never writes lane-owned canonical outputs
+such as `project_sow_package.json`, `ea_consistency_decision_support.json`, or
+`draft_generation_package.json`.
+
+Tracked contract surfaces:
+
+- `docs/AGENT_START_HERE.md`
+- `docs/schemas/document_request_v1.schema.json`
+- `config/document_lanes_v1.json`
+- `src/usfs_r1_ea_sources/document_plan.py`
+- `src/usfs_r1_ea_sources/cli_document_planning.py`
+
+Generate the planning artifact family with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources document-plan \
+  --request /tmp/document_request.json \
+  --output-dir source_library
+```
+
+The command also accepts `--results-dir`, `--lane-registry`, and `--request-schema` when a local
+packet needs to override the default planning path or tracked contract inputs.
+
+The generated artifact family includes:
+
+- `document_request.json`
+- `document_plan.json`
+- `document_plan.md`
+
+`document_request.json` is a copied snapshot of the normalized request packet that was evaluated.
+
+`document_plan.json` has schema version `document-plan-v1`. It records:
+
+- request identity: `request_id`, `request_class`, `request_summary`, and `status`
+- the planning-only boundary note and tracked request-contract paths
+- the full `request_snapshot`
+- either a `selected_lane` block with `lane_id`, required inputs, missing inputs, canonical output
+  family, expected output filenames, prerequisite artifact hints, and authoritative config/doc
+  paths, or a fail-closed `refusal` block
+- the exact downstream `generator_command` and `validation_command` previews when a lane is
+  selected
+
+Status values are:
+
+- `planned`
+- `refused`
+- `invalid_request`
+
+`document_plan.md` is a compact human-readable rendering of the same routing decision. It restates
+the selected lane or refusal boundary, the next commands, expected output filenames, prerequisite
+artifacts, and authoritative references.
+
+Document-plan validation must fail closed on:
+
+- request packets that do not satisfy the normalized request schema
+- unsupported legal-conclusion or final-decision request classes
+- missing lane-required identifiers such as `review_id`, `project_id`, or `intake_path`
+- registry drift that removes required routing metadata from a supported lane
 
 ## EA Consistency Decision-Support Outputs
 

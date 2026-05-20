@@ -2,7 +2,7 @@
 
 Date: 2026-05-20
 
-Status: Milestone 1 complete; Milestone 2 and Milestone 3 pending
+Status: complete
 
 Owner context: This is a fresh standalone follow-on milestone plan. It does not append to
 `docs/AGENTIC_CODING_ARCHITECTURE_MILESTONE_PLAN.md`, which closed the earlier repo-wide
@@ -328,6 +328,7 @@ Stop conditions:
 ### Milestone 2 - Add The Dry-Run `document-plan` Command
 
 Outcome label: resolved
+Status: complete
 
 Purpose: make one narrow public CLI entrypoint that chooses the right lane or refuses the request.
 
@@ -386,9 +387,19 @@ Stop conditions:
 - The planner requires a broad new architecture exception or materially broadens an existing
   hotspot to land.
 
+Closeout on 2026-05-20:
+
+- `document-plan` is now registered through `src/usfs_r1_ea_sources/cli.py` via the dedicated
+  owner module `src/usfs_r1_ea_sources/cli_document_planning.py`.
+- The planner writes `document_request.json`, `document_plan.json`, and `document_plan.md` under
+  `source_library/document_plans/<request_id>/` and does not write canonical lane outputs.
+- The routing registry now declares each supported lane's expected canonical output filenames so
+  the dry-run plan artifacts can remain registry-driven rather than lane-hardcoded.
+
 ### Milestone 3 - Publish The First-Stop Agent Docs
 
 Outcome label: resolved
+Status: complete
 
 Purpose: make the routing contract discoverable in one short read.
 
@@ -436,6 +447,14 @@ Stop conditions:
 
 - The start-here doc duplicates large sections of existing docs instead of staying concise.
 - The closeout docs imply broader legal or operational readiness than the existing lanes prove.
+
+Closeout on 2026-05-20:
+
+- `docs/AGENT_START_HERE.md` is now the first-stop agent guide for document work.
+- `README.md`, `docs/ARCHITECTURE.md`, and `docs/OUTPUT_SCHEMAS.md` now route agent-driven
+  document work to the planner and keep the refusal boundary explicit.
+- `docs/TECH_DEBT_REGISTER.md` remains unchanged because this packet did not introduce a temporary
+  debt exception.
 
 ## Required Documentation And Handoff Updates
 

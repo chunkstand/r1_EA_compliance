@@ -9,6 +9,8 @@ from .cli_capture import handle_capture_command
 from .cli_capture import register_capture_commands
 from .cli_compliance import handle_compliance_command
 from .cli_compliance import register_compliance_commands
+from .cli_document_planning import handle_document_planning_command
+from .cli_document_planning import register_document_planning_commands
 from .cli_derived import handle_derived_command
 from .cli_derived import register_derived_commands
 from .cli_decision_support import handle_decision_support_command
@@ -33,6 +35,7 @@ COMMAND_HANDLERS: tuple[CommandHandler, ...] = (
     handle_eval_command,
     handle_review_command,
     handle_compliance_command,
+    handle_document_planning_command,
     handle_decision_support_command,
     handle_final_qa_command,
     handle_project_planning_command,
@@ -53,6 +56,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_eval_commands(subparsers)
     register_review_commands(subparsers)
     register_compliance_commands(subparsers)
+    register_document_planning_commands(subparsers)
     register_decision_support_commands(subparsers)
     register_final_qa_commands(subparsers)
     register_project_planning_commands(subparsers)

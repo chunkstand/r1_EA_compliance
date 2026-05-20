@@ -47,6 +47,7 @@ instructions for agents or privileged tools.
 | Applicability | Build package facts, retrieve/trace authority evidence, decide applicability, validate and adjudicate decisions, and generate applicability rule packs. | `package_fact_graph.py`, `applicability*.py` |
 | Review | Run EA checklist review and forest-plan context/component review. | `ea_review.py`, `forest_plan_*.py` |
 | Compliance | Produce citation-bearing compliance findings, authority-integration artifacts, matrices, finding graphs, coverage, review evals, and gold evals. | `compliance_review.py`, `compliance_review_eval.py`, `compliance_inputs.py`, `compliance_findings.py`, `compliance_authority_integration.py`, `compliance_finding_graph.py`, `compliance_validation.py`, `compliance_outputs.py`, `compliance_coverage.py`, `compliance_gold_eval.py` |
+| Document planning | Route normalized agent-authored document requests into existing supported document lanes without generating canonical lane outputs. | `document_plan.py` |
 | Decision support | Generate supervisor-facing EA consistency synthesis reports from audited review artifacts without replacing validation gates or legal judgment. | `ea_consistency_decision_support.py` |
 | Project planning | Generate proposed-action resource SOW requirements packages before a review package exists. | `project_sow_package.py` |
 | Eval | Score promoted review contracts, applicability quality, and manifest-driven promotion readiness. | `applicability_eval.py`, `promotion_suite.py`, `v1_ea_eval.py` |
@@ -174,6 +175,12 @@ These commands do not create applicability decisions, generated rule packs, comp
 legal sufficiency conclusions, and an unreviewed draft cannot pass validation until
 reviewer-confirmation metadata is cleared.
 
+Document planning is a thin routing facade over those existing document lanes. The `document-plan`
+command validates a normalized request packet, reads the tracked lane registry, selects exactly one
+supported lane or fails closed, and writes planning-only artifacts under
+`source_library/document_plans/<request_id>/`. It must not generate canonical lane outputs or
+replace lane-owned validation and readiness checks.
+
 ## Public CLI Surface
 
 `src/usfs_r1_ea_sources/cli.py` remains the public entrypoint. Command registration can be split by
@@ -187,9 +194,13 @@ Current command groups are recorded in `docs/architecture_contract.toml`:
 - applicability;
 - review and forest-plan;
 - compliance;
+- document planning;
 - decision support;
 - project planning;
 - eval and promotion.
+
+For agent-driven document requests, `docs/AGENT_START_HERE.md` is the first-stop doc before the
+larger lane-specific docs.
 
 ## Architecture Fitness Gates
 

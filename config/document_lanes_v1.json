@@ -45,6 +45,12 @@
         ]
       },
       "canonical_output_dir_family": "source_library/projects/<project_id>/requirements_package/",
+      "expected_output_files": [
+        "project_sow_package.json",
+        "project_sow_package.md",
+        "project_sow_package.pdf",
+        "project_sow_package_manifest.json"
+      ],
       "authoritative_config_paths": [
         "config/project_sow_resource_scopes_v1.json",
         "config/authority_universe_families_nepa_ea_v1.json"
@@ -104,6 +110,12 @@
         ]
       },
       "canonical_output_dir_family": "source_library/reviews/<review_id>/decision_support/",
+      "expected_output_files": [
+        "ea_consistency_decision_support.json",
+        "ea_consistency_decision_support.md",
+        "ea_consistency_decision_support.pdf",
+        "ea_consistency_decision_support_manifest.json"
+      ],
       "authoritative_config_paths": [
         "config/ea_consistency_decision_support_v1.json",
         "config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json"
@@ -160,6 +172,15 @@
         ]
       },
       "canonical_output_dir_family": "source_library/reviews/<review_id>/draft_generation/",
+      "expected_output_files": [
+        "draft_generation_package.json",
+        "draft_generation.md",
+        "draft_generation_manifest.json",
+        "draft_generation_traceability.json",
+        "draft_generation_refusals.json",
+        "draft_defensibility_packet.json",
+        "draft_generation_validation.json"
+      ],
       "authoritative_config_paths": [
         "config/draft_generation_v1.json",
         "config/draft_generation_eval_v1.json"

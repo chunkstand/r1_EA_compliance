@@ -10,6 +10,7 @@ import pytest
 from usfs_r1_ea_sources import cli_compliance
 from usfs_r1_ea_sources import cli_capture
 from usfs_r1_ea_sources import cli_decision_support
+from usfs_r1_ea_sources import cli_document_planning
 from usfs_r1_ea_sources import cli_derived
 from usfs_r1_ea_sources import cli_eval
 from usfs_r1_ea_sources import cli_final_qa
@@ -1803,6 +1804,71 @@ def test_project_sow_adjudication_apply_handler_propagates_options(monkeypatch) 
     assert captured["source_set_id"] == "source-set-1"
     assert captured["resource_scope_config_path"] == Path("config/scopes.json")
     assert captured["authority_inventory_path"] == Path("config/authorities.json")
+
+
+def test_document_plan_parser_accepts_paths() -> None:
+    args = build_parser().parse_args(
+        [
+            "document-plan",
+            "--request",
+            "request.json",
+            "--output-dir",
+            "source_library",
+            "--results-dir",
+            "source_library/document_plans/request-1",
+            "--lane-registry",
+            "config/document_lanes_v1.json",
+            "--request-schema",
+            "docs/schemas/document_request_v1.schema.json",
+        ]
+    )
+
+    assert args.command == "document-plan"
+    assert args.request == Path("request.json")
+    assert args.output_dir == Path("source_library")
+    assert args.results_dir == Path("source_library/document_plans/request-1")
+    assert args.lane_registry == Path("config/document_lanes_v1.json")
+    assert args.request_schema == Path("docs/schemas/document_request_v1.schema.json")
+
+
+def test_document_plan_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_document_plan(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_document_planning,
+        "run_document_plan",
+        fake_run_document_plan,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "document-plan",
+            "--request",
+            "request.json",
+            "--output-dir",
+            "source_library",
+            "--results-dir",
+            "source_library/document_plans/request-1",
+            "--lane-registry",
+            "config/document_lanes_v1.json",
+            "--request-schema",
+            "docs/schemas/document_request_v1.schema.json",
+        ]
+    )
+
+    result = cli_document_planning.handle_document_planning_command(args, parser)
+
+    assert result == 0
+    assert captured["request_path"] == Path("request.json")
+    assert captured["output_dir"] == Path("source_library")
+    assert captured["results_dir"] == Path("source_library/document_plans/request-1")
+    assert captured["lane_registry_path"] == Path("config/document_lanes_v1.json")
+    assert captured["request_schema_path"] == Path("docs/schemas/document_request_v1.schema.json")
 
 
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:

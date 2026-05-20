@@ -272,6 +272,7 @@ modules = [
   "cli_common",
   "cli_compliance",
   "cli_decision_support",
+  "cli_document_planning",
   "cli_derived",
   "cli_eval",
   "cli_final_qa",
@@ -483,6 +484,14 @@ paths = [
 ]
 
 [[artifacts]]
+owner_layer = "document_planning"
+paths = [
+  "source_library/document_plans/<request_id>/document_request.json",
+  "source_library/document_plans/<request_id>/document_plan.json",
+  "source_library/document_plans/<request_id>/document_plan.md",
+]
+
+[[artifacts]]
 owner_layer = "eval"
 paths = [
   "source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json",
@@ -596,6 +605,10 @@ commands = [
   "project-sow-operational-gate",
   "project-sow-package",
 ]
+
+[[command_groups]]
+name = "document_planning"
+commands = ["document-plan"]
 
 [[command_groups]]
 name = "eval"

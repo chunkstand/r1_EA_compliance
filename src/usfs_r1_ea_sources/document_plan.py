@@ -1,15 +1,22 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 import json
+import re
 
 
 DOCUMENT_LANE_REGISTRY_SCHEMA_VERSION = "document-lanes-v1"
 DOCUMENT_REQUEST_SCHEMA_VERSION = "document-request-v1"
+DOCUMENT_PLAN_SCHEMA_VERSION = "document-plan-v1"
+GENERATOR_VERSION = "document-plan-generator-v1"
 DEFAULT_LANE_REGISTRY_PATH = Path("config/document_lanes_v1.json")
 DEFAULT_REQUEST_SCHEMA_PATH = Path("docs/schemas/document_request_v1.schema.json")
+REQUEST_FILENAME = "document_request.json"
+PLAN_FILENAME = "document_plan.json"
+MARKDOWN_FILENAME = "document_plan.md"
 PLANNED_REQUEST_CLASSES = {
     "decision_support_report",
     "project_sow_requirements_package",
@@ -48,8 +55,19 @@ class DocumentRouteDecision:
     canonical_output_dir_family: str | None
     generator_command_preview: str | None
     validation_command_preview: str | None
+    expected_output_files: tuple[str, ...]
     refusal_category: str | None
     refusal_reason: str | None
+
+
+@dataclass(frozen=True)
+class DocumentPlanResult:
+    request_id: str
+    results_dir: Path
+    request_copy_path: Path
+    plan_path: Path
+    markdown_path: Path
+    summary: dict[str, Any]
 
 
 def load_document_lane_registry(
@@ -100,6 +118,7 @@ def validate_document_lane_registry(registry: dict[str, Any]) -> list[str]:
             "supported_decision_postures",
             "required_inputs",
             "refusal_categories",
+            "expected_output_files",
             "authoritative_config_paths",
             "authoritative_doc_paths",
             "prerequisite_artifact_hints",
@@ -396,6 +415,7 @@ def plan_document_request(
             canonical_output_dir_family=lane["canonical_output_dir_family"],
             generator_command_preview=None,
             validation_command_preview=None,
+            expected_output_files=tuple(lane["expected_output_files"]),
             refusal_category="missing_required_identifier",
             refusal_reason="Missing required inputs: " + ", ".join(missing_inputs),
         )
@@ -418,6 +438,7 @@ def plan_document_request(
             lane["validation_command"],
             inputs=request.get("inputs") or {},
         ),
+        expected_output_files=tuple(lane["expected_output_files"]),
         refusal_category=None,
         refusal_reason=None,
     )
@@ -465,13 +486,277 @@ def _refused_decision(
         canonical_output_dir_family=None,
         generator_command_preview=None,
         validation_command_preview=None,
+        expected_output_files=(),
         refusal_category=refusal_category,
         refusal_reason=refusal_reason,
     )
 
 
+def run_document_plan(
+    *,
+    request_path: Path,
+    output_dir: Path = Path("source_library"),
+    lane_registry_path: Path = DEFAULT_LANE_REGISTRY_PATH,
+    request_schema_path: Path = DEFAULT_REQUEST_SCHEMA_PATH,
+    results_dir: Path | None = None,
+) -> DocumentPlanResult:
+    request_path = Path(request_path)
+    output_dir = Path(output_dir)
+    lane_registry_path = Path(lane_registry_path)
+    request_schema_path = Path(request_schema_path)
+    raw_request = _read_json(request_path)
+    request_id = _safe_request_id(str(raw_request.get("request_id") or request_path.stem or "document-request"))
+    resolved_results_dir = (
+        Path(results_dir)
+        if results_dir is not None
+        else output_dir / "document_plans" / request_id
+    )
+    resolved_results_dir.mkdir(parents=True, exist_ok=True)
+
+    schema = _read_json(request_schema_path)
+    request_errors = validate_document_request(raw_request, schema)
+    registry = load_document_lane_registry(lane_registry_path)
+
+    if request_errors:
+        plan_payload = _build_invalid_request_plan(
+            request=raw_request,
+            request_id=request_id,
+            request_path=request_path,
+            request_schema_path=request_schema_path,
+            registry_path=lane_registry_path,
+            validation_errors=request_errors,
+        )
+    else:
+        route_decision = plan_document_request(raw_request, registry)
+        plan_payload = _build_document_plan_payload(
+            request=raw_request,
+            request_path=request_path,
+            request_schema_path=request_schema_path,
+            registry_path=lane_registry_path,
+            route_decision=route_decision,
+        )
+
+    request_copy_path = resolved_results_dir / REQUEST_FILENAME
+    plan_path = resolved_results_dir / PLAN_FILENAME
+    markdown_path = resolved_results_dir / MARKDOWN_FILENAME
+    _write_json(request_copy_path, raw_request)
+    _write_json(plan_path, plan_payload)
+    markdown_path.write_text(_render_document_plan_markdown(plan_payload), encoding="utf-8")
+
+    summary = _build_document_plan_summary(
+        request_id=request_id,
+        plan_payload=plan_payload,
+        request_copy_path=request_copy_path,
+        plan_path=plan_path,
+        markdown_path=markdown_path,
+    )
+    return DocumentPlanResult(
+        request_id=request_id,
+        results_dir=resolved_results_dir,
+        request_copy_path=request_copy_path,
+        plan_path=plan_path,
+        markdown_path=markdown_path,
+        summary=summary,
+    )
+
+
 def _read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _build_document_plan_payload(
+    *,
+    request: dict[str, Any],
+    request_path: Path,
+    request_schema_path: Path,
+    registry_path: Path,
+    route_decision: DocumentRouteDecision,
+) -> dict[str, Any]:
+    refusal = None
+    if route_decision.refusal_category is not None:
+        refusal = {
+            "category": route_decision.refusal_category,
+            "reason": route_decision.refusal_reason,
+        }
+    return {
+        "schema_version": DOCUMENT_PLAN_SCHEMA_VERSION,
+        "generator_version": GENERATOR_VERSION,
+        "generated_at": datetime.now(UTC).isoformat(),
+        "request_id": route_decision.request_id,
+        "request_class": request.get("request_class"),
+        "request_summary": request.get("request_summary"),
+        "status": route_decision.status,
+        "planning_only": True,
+        "planning_boundary_note": (
+            "This artifact routes to existing document lanes or refuses unsupported requests. "
+            "It does not write canonical lane outputs."
+        ),
+        "request_contract": {
+            "request_path": str(request_path),
+            "request_schema_path": str(request_schema_path),
+            "lane_registry_path": str(registry_path),
+        },
+        "request_snapshot": request,
+        "selected_lane": (
+            {
+                "lane_id": route_decision.lane_id,
+                "required_inputs": list(route_decision.required_inputs),
+                "missing_inputs": list(route_decision.missing_inputs),
+                "canonical_output_dir_family": route_decision.canonical_output_dir_family,
+                "expected_output_files": list(route_decision.expected_output_files),
+                "prerequisite_artifact_hints": list(route_decision.prerequisite_artifact_hints),
+                "authoritative_config_paths": list(route_decision.authoritative_config_paths),
+                "authoritative_doc_paths": list(route_decision.authoritative_doc_paths),
+            }
+            if route_decision.lane_id is not None
+            else None
+        ),
+        "next_commands": {
+            "generator_command": route_decision.generator_command_preview,
+            "validation_command": route_decision.validation_command_preview,
+        },
+        "refusal": refusal,
+    }
+
+
+def _build_invalid_request_plan(
+    *,
+    request: dict[str, Any],
+    request_id: str,
+    request_path: Path,
+    request_schema_path: Path,
+    registry_path: Path,
+    validation_errors: list[str],
+) -> dict[str, Any]:
+    return {
+        "schema_version": DOCUMENT_PLAN_SCHEMA_VERSION,
+        "generator_version": GENERATOR_VERSION,
+        "generated_at": datetime.now(UTC).isoformat(),
+        "request_id": request_id,
+        "request_class": request.get("request_class"),
+        "request_summary": request.get("request_summary"),
+        "status": "invalid_request",
+        "planning_only": True,
+        "planning_boundary_note": (
+            "This artifact records a fail-closed invalid request. No canonical lane outputs were written."
+        ),
+        "request_contract": {
+            "request_path": str(request_path),
+            "request_schema_path": str(request_schema_path),
+            "lane_registry_path": str(registry_path),
+        },
+        "request_snapshot": request,
+        "selected_lane": None,
+        "next_commands": {
+            "generator_command": None,
+            "validation_command": None,
+        },
+        "refusal": {
+            "category": "invalid_request",
+            "reason": "The request file does not satisfy the normalized document request contract.",
+            "validation_errors": validation_errors,
+        },
+    }
+
+
+def _build_document_plan_summary(
+    *,
+    request_id: str,
+    plan_payload: dict[str, Any],
+    request_copy_path: Path,
+    plan_path: Path,
+    markdown_path: Path,
+) -> dict[str, Any]:
+    refusal = plan_payload.get("refusal") or {}
+    selected_lane = plan_payload.get("selected_lane") or {}
+    return {
+        "schema_version": "document-plan-summary-v1",
+        "request_id": request_id,
+        "passed": plan_payload.get("status") == "planned",
+        "status": plan_payload.get("status"),
+        "lane_id": selected_lane.get("lane_id"),
+        "refusal_category": refusal.get("category"),
+        "output_paths": {
+            "request_copy": str(request_copy_path),
+            "plan": str(plan_path),
+            "markdown": str(markdown_path),
+        },
+    }
+
+
+def _render_document_plan_markdown(plan_payload: dict[str, Any]) -> str:
+    selected_lane = plan_payload.get("selected_lane") or {}
+    next_commands = plan_payload.get("next_commands") or {}
+    refusal = plan_payload.get("refusal") or {}
+    lines = [
+        "# Document Plan",
+        "",
+        f"- Request ID: `{plan_payload['request_id']}`",
+        f"- Status: `{plan_payload['status']}`",
+        f"- Request class: `{plan_payload.get('request_class')}`",
+        "",
+        "## Boundary",
+        "",
+        plan_payload["planning_boundary_note"],
+        "",
+    ]
+    if selected_lane:
+        lines.extend(
+            [
+                "## Selected Lane",
+                "",
+                f"- Lane ID: `{selected_lane.get('lane_id')}`",
+                f"- Canonical output family: `{selected_lane.get('canonical_output_dir_family')}`",
+                f"- Required inputs: `{', '.join(selected_lane.get('required_inputs') or [])}`",
+                "",
+                "## Next Commands",
+                "",
+                f"- Generator: `{next_commands.get('generator_command')}`",
+                f"- Validation: `{next_commands.get('validation_command')}`",
+                "",
+                "## Expected Outputs",
+                "",
+            ]
+        )
+        lines.extend(
+            f"- `{filename}`" for filename in selected_lane.get("expected_output_files") or []
+        )
+        lines.extend(["", "## Prerequisites", ""])
+        lines.extend(
+            f"- {hint}" for hint in selected_lane.get("prerequisite_artifact_hints") or []
+        )
+        lines.extend(["", "## References", ""])
+        lines.extend(
+            f"- Config: `{path}`" for path in selected_lane.get("authoritative_config_paths") or []
+        )
+        lines.extend(
+            f"- Doc: `{path}`" for path in selected_lane.get("authoritative_doc_paths") or []
+        )
+    if refusal:
+        lines.extend(
+            [
+                "",
+                "## Refusal",
+                "",
+                f"- Category: `{refusal.get('category')}`",
+                f"- Reason: {refusal.get('reason')}",
+            ]
+        )
+        validation_errors = refusal.get("validation_errors") or []
+        if validation_errors:
+            lines.extend(["- Validation errors:"])
+            lines.extend(f"  - {error}" for error in validation_errors)
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def _safe_request_id(raw_request_id: str) -> str:
+    sanitized = re.sub(r"[^a-z0-9._-]+", "-", raw_request_id.strip().lower())
+    sanitized = sanitized.strip("-.")
+    return sanitized or "document-request"
+
+
+def _write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 class _SafeFormatDict(dict[str, str]):
