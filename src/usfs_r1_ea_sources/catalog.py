@@ -1403,6 +1403,8 @@ def _authority_level(source: WorkbookSource, issuer: str | None, host: str) -> s
 
 def _expected_parser(source: WorkbookSource, content_type: str | None) -> str:
     if content_type:
+        if content_type == "application/zip":
+            return "zip"
         if content_type == "application/pdf":
             return "pdf"
         if content_type == "application/msword":
@@ -1418,6 +1420,8 @@ def _expected_parser(source: WorkbookSource, content_type: str | None) -> str:
             return "image"
     path = urlsplit(source.effective_url).path.lower()
     host = urlsplit(source.normalized_url).netloc.lower()
+    if path.endswith(".zip"):
+        return "zip"
     if path.endswith(".pdf"):
         return "pdf"
     if path.endswith(".doc"):

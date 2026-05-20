@@ -29,28 +29,34 @@ Latest closeout on 2026-05-19:
   an archived classifier-refresh gate at
   `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`
   with refreshed full-canonical source set
-  `source-set-370896a1043817f2`.
+  `source-set-732a5a91d31736f8`.
 - That archived gate preserves the real canonical run lineage
   `phase2-canonical-download-full-post-fps005-removal-20260519` while
   carrying the committed classifier fix on current `HEAD`. It records
   `source_count=634`, `artifact_count=622`,
   `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
   and the corrected canonical primary-plan/support split.
-- A reuse-first extraction refresh on that archived gate now passes with
-  `extracted_count=634`, `reused_count=634`, `chunk_count=98155`, and
-  `validation_passed=true` under
-  `source_library/derived/source-set-370896a1043817f2/`.
+- The refreshed gate now records `status_counts={"downloaded": 1, "downloaded_existing": 621, "duplicate_content": 12}` and remains the
+  governing archived full-canonical replay boundary for downstream
+  forest-plan work.
+- The archived extraction lane now passes on
+  `source_library/derived/source-set-732a5a91d31736f8/` with
+  `extracted_count=634`, `failed_count=0`, `chunk_count=98699`,
+  `reused_count=291`, and `validation_passed=true`.
 - `authority-currentness` now passes on
-  `source-set-370896a1043817f2` with
+  `source-set-732a5a91d31736f8` with
   `authority_family_count=454`,
-  `source_currentness_record_count=634`, and
+  `source_currentness_record_count=634`,
+  `catalog_source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`, and
   `validation_passed=true`.
 - `forest-plan-profile-eval` now passes on the refreshed full-canonical
   contract with
-  `active_source_set_ids=["source-set-370896a1043817f2"]`.
+  `active_source_set_ids=["source-set-732a5a91d31736f8"]`,
+  `covered_profile_count=10`, and `profile_failure_count=0`.
 - `forest-plan-components-build` on the refreshed archived source set now
-  passes with `component_count=1416`, `standard_count=397`, and
-  `blocked_forest_unit_ids=[]`.
+  passes with `component_count=1416`, `standard_count=397`,
+  `blocked_forest_unit_ids=[]`, `coverage_passed=true`, and
+  `component_source_accuracy_passed=true`.
 - The governed identity registry in
   `config/r1_forest_plan_identity_reconciliation_v1.json` now records
   `74` exact official-URL matches, `1` governed catalog rebound
@@ -64,41 +70,46 @@ Latest closeout on 2026-05-19:
 - The managed `extraction` extra now includes `rapidocr` and `cryptography`,
   which closes the Python 3.14 fallback-runtime gap behind raster OCR and AES
   PDF crosschecks for archived extraction/audit replays.
-- After a targeted archived direct-replay refresh, the derived lane on
-  `source-set-370896a1043817f2` remains green at `634/634` extracted rows, and
-  the stale markup-leak rows `FPS-040` and `WILD-ESA-030` were re-materialized
-  under the stricter text cleaner.
+- The workbook direct-document repair slice is now closed: `WILD-ESA-075` and
+  the `LEX-USFS-002/003/007/008/011/012/013/016/017` rows now point at direct
+  USDA/FWS PDF targets in the workbook contract, `FPS-420` now admits through
+  ZIP metadata extraction, and stale HTML artifact reuse is blocked when a row
+  now governs a direct PDF artifact.
 - `extraction-accuracy-audit` on
-  `source-set-370896a1043817f2` now admits `332/343` required
-  active-review rows and blocks only `11` wrapper-page direct-document rows:
-  `FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
-  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
-  `LEX-USFS-016`, `LEX-USFS-017`, and `WILD-ESA-075`.
-- `retrieval-build` on the refreshed archived source set now fails only on
-  that `11`-row family, with
-  `verified_extraction_admitted_source_count=332` and
-  `verified_extraction_required_source_count=343`.
-- `claim-extract` now writes
-  `source_library/derived/source-set-370896a1043817f2/claims/claims.jsonl`
-  with `claim_count=120689`, but validation remains red because retrieval is
-  not reviewer-ready and the admitted retrieval index still has `0` bound
-  chunks. `rule-claim-link` therefore fails closed on claim validation, and
-  direct `nepa-knowledge-graph-export` now stops on the missing validated
-  `rule_claim_links.jsonl` artifact instead of the older missing-claims path.
-- `promotion-suite --manifest config/promotion_suite_v1.json` still points
-  `full_canonical_source_set_id=source-set-370896a1043817f2` and reports
-  `full_canonical_corpus_ready=false` with `6/8` required full-canonical
-  results passing and
-  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`.
-  That remaining red category is downstream of the `11` blocked
-  direct-document rows, not a standalone graph-only replay gap.
+  `source-set-732a5a91d31736f8` now passes with
+  `audited_record_count=343`,
+  `knowledge_base_admitted_source_record_ids=343`,
+  `knowledge_base_blocked_source_record_ids=0`, and every audit check green,
+  including `direct_document_required_records_use_document_artifacts`.
+- `retrieval-build` on the refreshed archived source set is now
+  reviewer-ready with `chunk_count=98699`,
+  `verified_extraction_admitted_source_count=343`,
+  `verified_extraction_required_source_count=343`, and
+  `validation_passed=true`.
+- `claim-extract` now passes on
+  `source-set-732a5a91d31736f8` with `claim_count=122285` and
+  `validation_passed=true`.
+- `rule-claim-link` now validates truthfully on
+  `source-set-732a5a91d31736f8` with `rule_count=48`, `link_count=0`,
+  `gap_count=48`, and zero validation failures.
+- `nepa-knowledge-graph-export` now passes on
+  `source-set-732a5a91d31736f8` with `72` validation checks,
+  `failed_validation_check_count=0`,
+  `region1_forest_plan_graph_ready_profile_count=10`, and
+  `region1_forest_plan_blocked_profile_count=0`.
+- `promotion-suite --manifest config/promotion_suite_v1.json` now points
+  `full_canonical_source_set_id=source-set-732a5a91d31736f8` and reports
+  `current_promotion_ready=true`,
+  `full_canonical_corpus_ready=true`,
+  `expansion_ready=true`,
+  `promotion_ready=true`,
+  `passed_required_full_canonical_result_count=8`,
+  `required_full_canonical_result_count=8`, and
+  `full_canonical_failure_category_counts={}`.
 - Next routing:
-  the broader refresh/rebind decision, the Flathead/retrieval rebind, and the
-  archived parser/runtime repair are complete. The remaining active slice is
-  now direct-document recovery for the `11` rows above, followed by a rerun of
-  retrieval, `claim-extract`, `rule-claim-link`,
-  `nepa-knowledge-graph-export`, and `promotion-suite` on
-  `source-set-370896a1043817f2`.
+  the archived full-canonical downstream runtime lane is now green. Any
+  remaining work on this packet is docs-only closeout/routing reset, not
+  another blocked rerun on the archived corpus.
 
 ## Source-Register Forest Plan Role Classification Code Closeout
 

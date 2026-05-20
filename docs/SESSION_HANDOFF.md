@@ -5,6 +5,56 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Forest-Plan Identity Reconciliation Milestone 4 Closeout
+
+This implementation slice closes the narrowed archived full-canonical
+direct-document residual and reopens the full downstream chain.
+
+- outcome label:
+  `resolved` for Milestone 4 runtime scope; no archived downstream rerun
+  residual remains on the full-canonical forest-plan lane
+- implementation surfaces:
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `src/usfs_r1_ea_sources/download.py`,
+  `src/usfs_r1_ea_sources/catalog.py`,
+  `src/usfs_r1_ea_sources/extract.py`,
+  `src/usfs_r1_ea_sources/extraction_accuracy.py`,
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`,
+  the bound full-canonical config surfaces, and focused regression tests
+- workbook/direct-document repair:
+  `WILD-ESA-075` and `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
+  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
+  `LEX-USFS-016`, and `LEX-USFS-017` now point at direct official PDF targets
+  in the workbook contract; `FPS-420` now admits through ZIP metadata
+  extraction; and download reuse now refuses stale HTML artifacts when a row
+  now governs a direct PDF
+- archived replay truth:
+  the archived full-canonical gate remains
+  `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`,
+  but the refreshed replay now emits `source-set-732a5a91d31736f8` with
+  `status_counts={"downloaded": 1, "downloaded_existing": 621, "duplicate_content": 12}`
+- green downstream chain:
+  `extraction-accuracy-audit` now passes `343/343` admitted with zero blocked
+  rows; `retrieval-build` is reviewer-ready with `chunk_count=98699`;
+  `claim-extract` passes with `claim_count=122285`;
+  `rule-claim-link` validates truthfully with `rule_count=48`,
+  `link_count=0`, and `gap_count=48`;
+  `nepa-knowledge-graph-export` passes all `72` validation checks with
+  `region1_forest_plan_graph_ready_profile_count=10`; and
+  `promotion-suite` now reports
+  `full_canonical_source_set_id=source-set-732a5a91d31736f8`,
+  `full_canonical_corpus_ready=true`, and `8/8` required full-canonical
+  results passing
+- semantic graph closeout:
+  source-register graph export now consumes the real Region 1
+  profile/readiness/component inputs and synthesizes governed
+  readiness-backed semantic path nodes instead of failing closed on a
+  placeholder semantic-path lane
+- next routing:
+  the archived full-canonical runtime lane is no longer blocked. If the user
+  wants more work on this packet, the only remaining pass is Milestone 5
+  durable closeout/routing reset rather than another archive replay repair
+
 ## Full Canonical Forest-Plan Identity Reconciliation Milestone 3 Alignment Pass
 
 This docs-only follow-up closes the remaining routing drift after the reduced

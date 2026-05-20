@@ -294,6 +294,46 @@ def test_source_delta_readiness_fails_inventory_gate_when_promoted_artifact_is_m
         assert not checks["nepa_3d_graph_region1_promoted_profiles_have_inventory"]["passed"]
 
 
+def test_nepa_knowledge_graph_export_builds_source_register_v1_graph_from_region1_readiness() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-test"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        _rewrite_catalog_as_source_register_v1(output_dir, source_set_id=source_set_id)
+        forest_profiles = _read_json(paths["forest_profiles"])
+        forest_profiles["profiles"][0]["supporting_source_record_ids_by_role"][
+            "stale_legacy_support"
+        ] = {
+            "source_record_id": "R1PLAN-LEGACY-MISSING-001",
+            "required_for": "legacy regression guard",
+        }
+        _write_json(paths["forest_profiles"], forest_profiles)
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            authority_inventory_path=paths["authority_inventory"],
+            forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
+        )
+
+        graph = _read_json(result.graph_path)
+        checks = {check["name"]: check for check in graph["validation"]["checks"]}
+
+        assert result.summary["validation_passed"]
+        assert result.summary["region1_forest_plan_readiness_profile_count"] == 2
+        assert result.summary["region1_forest_plan_graph_ready_profile_count"] == 1
+        assert result.summary["forest_plan_profile_count"] == 1
+        assert result.summary["node_type_counts"]["authority_path"] >= 1
+        assert result.summary["node_type_counts"]["forest_unit"] >= 2
+        assert checks["nepa_3d_graph_edges_resolve_to_nodes"]["passed"]
+        assert checks["nepa_3d_graph_exports_semantic_authority_paths"]["passed"]
+        assert checks["nepa_3d_graph_exports_forest_units_from_semantic_relationships"]["passed"]
+        assert checks["nepa_3d_graph_region1_readiness_covers_configured_profiles"]["passed"]
+        assert checks["nepa_3d_graph_region1_promoted_profiles_have_inventory"]["passed"]
+
+
 def test_nepa_knowledge_graph_export_fails_when_inventory_is_borrowed_from_other_source_set() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"
@@ -866,6 +906,57 @@ def _write_minimal_source_delta_readiness_report(
         },
     )
     return report_path
+
+
+def _rewrite_catalog_as_source_register_v1(output_dir: Path, *, source_set_id: str) -> None:
+    catalog_path = output_dir / "catalog" / "source_catalog.jsonl"
+    rows = _read_jsonl(catalog_path)
+    semantic_metadata = {
+        "R1EA-001": {
+            "authority_document_id": "authority_document:nepa-act",
+            "authority_section_id": "authority_section:nepa-act#4332",
+            "citation_or_code": "42 U.S.C. 4332",
+            "document_type": "law",
+        },
+        "R1EA-002": {
+            "authority_document_id": (
+                "authority_document:federal-united-states-regulation-36-cfr-part-219-"
+                "national-forest-system-land-management-planning"
+            ),
+            "authority_section_id": "authority_section:planning-rule#219.15",
+            "citation_or_code": "36 C.F.R. 219.15",
+            "document_type": "regulation",
+        },
+        "R1EA-003": {
+            "authority_document_id": "authority_document:candidate-guidance",
+            "authority_section_id": "authority_section:candidate-guidance#1",
+            "citation_or_code": "Candidate Guidance",
+            "document_type": "guidance",
+        },
+        "R1EA-004": {
+            "authority_document_id": "authority_document:superseded-guidance",
+            "authority_section_id": "authority_section:superseded-guidance#1",
+            "citation_or_code": "Superseded Guidance",
+            "document_type": "guidance",
+        },
+        "R1PLAN-001": {
+            "authority_document_id": "authority_document:test-forest-plan",
+            "authority_section_id": "authority_section:test-forest-plan#standard-1",
+            "citation_or_code": "Test Forest Plan",
+            "document_type": "forest_plan",
+            "authority_tier": "forest",
+            "jurisdiction_or_unit": "Test Forest",
+        },
+    }
+    for row in rows:
+        row["source_set_id"] = source_set_id
+        row["metadata"] = {
+            "loader_contract": "source_register_v1",
+            "jurisdiction_scope_id": "scope:federal-us",
+            "authority_tier": "federal",
+            **semantic_metadata[str(row["source_record_id"])],
+        }
+    _write_jsonl(catalog_path, rows)
 
 
 def _catalog_row(

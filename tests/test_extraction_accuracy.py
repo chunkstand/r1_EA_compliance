@@ -3,9 +3,11 @@ from __future__ import annotations
 from dataclasses import replace
 from pathlib import Path
 import hashlib
+import io
 import json
 import tempfile
 import unittest
+import zipfile
 
 from usfs_r1_ea_sources.catalog import build_review_catalog
 from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
@@ -261,6 +263,56 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
             check = _check(result.summary, "direct_document_required_records_use_document_artifacts")
             self.assertFalse(check["passed"])
 
+    def test_audit_accepts_zip_metadata_parser_for_direct_file_zip_artifact(self) -> None:
+        config = canonical_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(
+                output_dir,
+                source_record_id="FPS-420",
+                artifact_body=_zip_with_metadata_body(),
+                suffix=".zip",
+                content_type="application/zip",
+            )
+            build_review_catalog(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+                source_record_ids={"FPS-420"},
+            )
+            build_extraction(output_dir=output_dir, id_filter="FPS-420")
+            contract_path = output_dir / "contract.json"
+            contract_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "verified-extraction-admission-contract-v0",
+                        "contracts": [
+                            {
+                                "contract_id": "zip-direct-file",
+                                "required_source_record_ids": ["FPS-420"],
+                                "require_direct_extraction": True,
+                            }
+                        ],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_extraction_accuracy_audit(
+                output_dir=output_dir,
+                contract_path=contract_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(
+                result.summary["knowledge_base_admitted_source_record_ids"],
+                ["FPS-420"],
+            )
+            self.assertEqual(result.summary["knowledge_base_blocked_source_record_ids"], [])
+
     def test_audit_selector_contracts_resolve_canonical_active_review_rows(self) -> None:
         config = canonical_config()
         with tempfile.TemporaryDirectory() as tmp:
@@ -419,6 +471,22 @@ def _html_body() -> bytes:
         b"<p>Agencies shall consider environmental impacts and alternatives.</p>"
         b"<p>Evidence must remain traceable to the administrative record.</p></body></html>"
     )
+
+
+def _zip_with_metadata_body() -> bytes:
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w") as archive:
+        archive.writestr("GrizAnalysisUnits_LNF_10302023.shp", b"placeholder shapefile bytes")
+        archive.writestr(
+            "GrizAnalysisUnits_LNF_10302023.shp.xml",
+            (
+                "<metadata><idinfo><citation><citeinfo><title>Grizzly Bear Analysis Units"
+                "</title></citeinfo></citation></idinfo><dataqual><lineage><procstep>"
+                "<procdesc>Metadata describes the Flathead analysis unit coverage.</procdesc>"
+                "</procstep></lineage></dataqual></metadata>"
+            ),
+        )
+    return buffer.getvalue()
 
 
 def _check(summary: dict, name: str) -> dict:

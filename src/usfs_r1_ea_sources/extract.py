@@ -1064,6 +1064,8 @@ def _extract_payload(
         return _extract_doc(artifact_path)
     if parser == "docx":
         return _extract_docx(artifact_path)
+    if parser == "zip":
+        return _extract_zip(artifact_path)
     if parser == "image":
         return _extract_image(
             artifact_path,
@@ -1079,6 +1081,8 @@ def _effective_parser(row: dict, artifact_path: Path) -> str:
     expected = (row.get("expected_parser") or "").lower()
     content_type = (row.get("content_type") or "").lower()
     suffix = artifact_path.suffix.lower()
+    if content_type == "application/zip" or suffix == ".zip":
+        return "zip"
     if expected in {"html", "xml", "pdf", "docx", "doc", "image"}:
         return expected
     if expected == "structured_web_adapter":
@@ -2315,6 +2319,62 @@ def _extract_docx(artifact_path: Path) -> ExtractionPayload:
         parser_name="python_docx_zip_xml",
         parser_version=sys.version.split()[0],
     )
+
+
+def _extract_zip(artifact_path: Path) -> ExtractionPayload:
+    try:
+        with zipfile.ZipFile(artifact_path) as archive:
+            entry_names = sorted(archive.namelist())
+            metadata_name = next(
+                (name for name in entry_names if name.lower().endswith(".xml")),
+                None,
+            )
+            metadata_bytes = archive.read(metadata_name) if metadata_name else None
+    except (KeyError, zipfile.BadZipFile, OSError) as error:
+        raise ExtractionFailure("zip_parse_failed", str(error)) from error
+
+    fragments = ["Archive entries:\n" + "\n".join(entry_names)]
+    if metadata_bytes:
+        metadata_text = _extract_zip_metadata_text(metadata_bytes)
+        if metadata_text:
+            fragments.append(metadata_text)
+    text, blocks = _blocks_from_plain_text("\n\n".join(fragment for fragment in fragments if fragment))
+    return ExtractionPayload(
+        text=text,
+        blocks=blocks,
+        parser_name="python_zip_metadata_xml",
+        parser_version=sys.version.split()[0],
+        metadata={
+            "archive_entry_count": len(entry_names),
+            "metadata_entry": metadata_name,
+        },
+    )
+
+
+def _extract_zip_metadata_text(payload: bytes) -> str:
+    decoded = payload.decode("utf-8", errors="ignore")
+    try:
+        root = ET.fromstring(decoded)
+    except ET.ParseError:
+        return _clean_text(re.sub(r"<[^>]+>", " ", decoded))
+
+    fragments: list[str] = []
+    seen: set[str] = set()
+    for element in root.iter():
+        text = _clean_text(element.text or "")
+        if not text:
+            continue
+        tag = _xml_local_name(element.tag)
+        if tag.lower() in {"wkt", "pexml"}:
+            continue
+        if len(text) > 500:
+            text = text[:500].rstrip() + "..."
+        fragment = f"{tag}: {text}" if tag else text
+        if fragment in seen:
+            continue
+        seen.add(fragment)
+        fragments.append(fragment)
+    return "\n".join(fragments)
 
 
 def _extract_doc(artifact_path: Path) -> ExtractionPayload:

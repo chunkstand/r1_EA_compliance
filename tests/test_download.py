@@ -17,10 +17,13 @@ from usfs_r1_ea_sources.download import (
     _suffix_for_content_type,
     run_download,
 )
+from usfs_r1_ea_sources.records import planned_artifact_path
+from usfs_r1_ea_sources.workbook import load_canonical_sources
 
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
+CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 
 
@@ -42,6 +45,22 @@ def downloaded_result(url: str) -> DownloadFetchResult:
         final_url=url,
         redirect_chain=[],
         content_type="text/html",
+        content_length=len(body),
+        body=body,
+        attempt_count=1,
+        failure=None,
+        validation={"mode": "download", "passed": True, "reason": None},
+    )
+
+
+def downloaded_pdf_result(url: str) -> DownloadFetchResult:
+    body = b"%PDF-1.4 direct document bytes" + b" " * 128
+    return DownloadFetchResult(
+        status="downloaded",
+        http_status=200,
+        final_url=url,
+        redirect_chain=[],
+        content_type="application/pdf",
         content_length=len(body),
         body=body,
         attempt_count=1,
@@ -169,6 +188,45 @@ class DownloadTests(unittest.TestCase):
             self.assertEqual(record["status"], "downloaded_existing")
             self.assertTrue(Path(record["artifact_path"]).exists())
             self.assertTrue(record["artifact_sha256"])
+
+    def test_download_ignores_stale_html_artifact_when_row_now_targets_direct_pdf(self) -> None:
+        config = load_config(CONFIG)
+        fetcher = FakeDownloader(
+            {
+                "https://www.fws.gov/sites/default/files/federal_register_document/2022-27087.pdf": (
+                    downloaded_pdf_result(
+                        "https://www.fws.gov/sites/default/files/federal_register_document/2022-27087.pdf"
+                    )
+                )
+            }
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            sources = load_canonical_sources(CANONICAL_WORKBOOK, config.workbook)
+            source = next(row for row in sources if row.source_record_id == "WILD-ESA-075")
+            planned_path = planned_artifact_path(output_dir, source)
+            planned_path.parent.mkdir(parents=True, exist_ok=True)
+            stale_html = planned_path.parent / f"{planned_path.with_suffix('').name}_stale.html"
+            stale_html.write_bytes(b"<html><body>stale wrapper</body></html>" + b" " * 128)
+
+            result = run_download(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                run_id="wild-esa-075-refresh",
+                id_filter="WILD-ESA-075",
+                fetcher=fetcher,
+                sleep_fn=lambda _: None,
+            )
+
+            self.assertEqual(result.summary["downloaded_count"], 1)
+            self.assertEqual(result.summary["downloaded_existing_count"], 0)
+            self.assertEqual(len(fetcher.calls), 1)
+            record = json.loads(result.manifest_path.read_text(encoding="utf-8").splitlines()[0])
+            self.assertEqual(record["status"], "downloaded")
+            self.assertEqual(record["content_type"], "application/pdf")
+            self.assertTrue(record["artifact_path"].endswith(".pdf"))
 
     def test_download_refetches_when_existing_artifact_is_invalid(self) -> None:
         config = legacy_config()

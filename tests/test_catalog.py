@@ -241,6 +241,34 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(artifact_count, 2)
             self.assertEqual(batch_id, "unit-batches")
 
+    def test_build_review_catalog_sets_zip_expected_parser_from_download_content_type(self) -> None:
+        config = load_config(CONFIG)
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(
+                output_dir,
+                "unit-download",
+                source_record_id="FPS-420",
+                artifact_body=b"PK\x03\x04 fake zip bytes" + b" " * 128,
+                content_type="application/zip",
+                suffix=".zip",
+            )
+
+            result = build_review_catalog(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+                source_record_ids={"FPS-420"},
+            )
+
+            records = _read_jsonl(result.source_catalog_path)
+            self.assertEqual(len(records), 1)
+            self.assertEqual(records[0]["source_record_id"], "FPS-420")
+            self.assertEqual(records[0]["expected_parser"], "zip")
+            self.assertTrue(result.summary["validation_passed"])
+
     def test_build_review_catalog_accepts_r1_forest_plan_source_delta_batch(self) -> None:
         config = legacy_config()
         register = load_r1_forest_plan_document_register(R1_FOREST_PLAN_REGISTER)
@@ -580,6 +608,7 @@ def _write_download_run(
     source_record_id: str = "R1EA-001",
     artifact_body: bytes | None = None,
     content_type: str = "text/html",
+    suffix: str = ".html",
 ) -> Path:
     run_dir = output_dir / "runs" / run_id
     manifest_dir = output_dir / "manifests"
@@ -587,7 +616,7 @@ def _write_download_run(
     manifest_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = manifest_dir / f"download_{run_id}.jsonl"
     body = artifact_body or _artifact_body()
-    artifact = output_dir / "artifacts" / "raw" / f"{run_id}-{source_record_id}.html"
+    artifact = output_dir / "artifacts" / "raw" / f"{run_id}-{source_record_id}{suffix}"
     artifact.parent.mkdir(parents=True, exist_ok=True)
     artifact.write_bytes(body)
     record = {
@@ -727,18 +756,20 @@ def _source_delta_primary_plan_source_record_ids(register) -> list[str]:
 def _source_delta_catalog_role_counts(register) -> dict[str, int]:
     primary_count = len(_source_delta_primary_plan_source_record_ids(register))
     source_delta_count = len(register.source_delta_sources)
-    return {
+    counts = {
         "forest_plan": primary_count,
         "forest_plan_support": source_delta_count - primary_count,
     }
+    return {role: count for role, count in counts.items() if count}
 
 
 def _merged_catalog_role_counts(register) -> dict[str, int]:
     source_delta_counts = _source_delta_catalog_role_counts(register)
-    return {
-        "forest_plan": 28 + source_delta_counts["forest_plan"],
-        "forest_plan_support": source_delta_counts["forest_plan_support"],
+    counts = {
+        "forest_plan": 28 + source_delta_counts.get("forest_plan", 0),
+        "forest_plan_support": source_delta_counts.get("forest_plan_support", 0),
     }
+    return {role: count for role, count in counts.items() if count}
 
 
 def _check(validation: dict, name: str) -> dict:

@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind landed on `source-set-370896a1043817f2`; Milestone 2 is resolved locally; Milestone 3 is now reduced and the remaining residual is the `11`-row direct-document wrapper-page family on `source-set-370896a1043817f2`
+Status: Active 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved locally; Milestone 5 remains the durable closeout/routing reset pass
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -18,18 +18,21 @@ replay boundary that downstream reruns must use.
 - Archived full-canonical classifier-refresh gate
   `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`
   now emits refreshed full-canonical source set
-  `source-set-370896a1043817f2`.
-- `source_library/derived/source-set-370896a1043817f2/forest_plan_components/summary.json`
+  `source-set-732a5a91d31736f8`.
+- `source_library/derived/source-set-732a5a91d31736f8/forest_plan_components/summary.json`
   now records `passed=true`, `component_count=1416`, `standard_count=397`, and
-  `blocked_forest_unit_ids=[]`.
-- `source_library/derived/source-set-370896a1043817f2/authority_currentness/authority_currentness_report.json`
+  `blocked_forest_unit_ids=[]`, `coverage_passed=true`, and
+  `component_source_accuracy_passed=true`.
+- `source_library/derived/source-set-732a5a91d31736f8/authority_currentness/authority_currentness_report.json`
   now passes with
   `authority_family_count=454`,
+  `catalog_source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
   `source_currentness_record_count=634`, and
   `validation_passed=true`.
 - `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_results.json`
   now passes with
-  `active_source_set_ids=["source-set-370896a1043817f2"]`.
+  `active_source_set_ids=["source-set-732a5a91d31736f8"]`,
+  `covered_profile_count=10`, and `profile_failure_count=0`.
 - `config/r1_forest_plan_component_inventory_build_manifest.json` and
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`
   now reduce the source-record identity mix to `74` exact canonical
@@ -47,13 +50,31 @@ replay boundary that downstream reruns must use.
   the unresolved blocker family stays explicit instead of hiding inside a mixed-ID manifest.
 - `docs/R1_FOREST_PLAN_PRIMARY_PLAN_ROLE_CLASSIFICATION_MILESTONE_PLAN.md` is now resolved in
   practice as well as code. The refreshed archived replay on
-  `source-set-370896a1043817f2` now proves the classifier fix all the way through the
+  `source-set-732a5a91d31736f8` now proves the classifier fix all the way through the
   full-canonical component inventory boundary for `10/10` forests.
 - `config/forest_plan_profiles.json` now aligns the Flathead active plan and
   supporting primary-plan role to `FINAL-FLAT-001`.
 - `config/forest_plan_component_retrieval_eval_v1.json`
   now carries canonical component IDs for the retrieval-eval cases, and
   `forest-plan-component-retrieval-eval` now passes `6/6`.
+- The workbook direct-document repair slice is now closed: `WILD-ESA-075` and
+  `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`, `LEX-USFS-008`,
+  `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`, `LEX-USFS-016`, and
+  `LEX-USFS-017` now point at direct official PDFs in the workbook contract,
+  `FPS-420` now admits through ZIP metadata extraction, and download reuse no
+  longer accepts stale HTML artifacts when a row now governs a direct PDF.
+- `extraction-accuracy-audit` now passes on
+  `source-set-732a5a91d31736f8` with `audited_record_count=343`,
+  `knowledge_base_admitted_source_record_ids=343`, and
+  `knowledge_base_blocked_source_record_ids=0`.
+- The downstream archived replay chain is now green on
+  `source-set-732a5a91d31736f8`: `retrieval-build` is reviewer-ready with
+  `chunk_count=98699`; `claim-extract` passes with `claim_count=122285`;
+  `rule-claim-link` validates with `rule_count=48`, `link_count=0`, and
+  `gap_count=48`; `nepa-knowledge-graph-export` passes `72` validation checks
+  with `region1_forest_plan_graph_ready_profile_count=10`; and
+  `promotion-suite` now reports `full_canonical_corpus_ready=true` with `8/8`
+  required full-canonical results passing.
 - The prior packet
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
   is now reduced through the active-source-set rebind. Its next routing is this dedicated
@@ -74,7 +95,7 @@ Return the forest-plan downstream lane to a truthful replayable state by:
   `nepa-knowledge-graph-export`, and
   `promotion-suite`
   on refreshed archived full-canonical source set
-  `source-set-370896a1043817f2`.
+  `source-set-732a5a91d31736f8`.
 
 ## Non-Goals
 
@@ -102,16 +123,28 @@ Return the forest-plan downstream lane to a truthful replayable state by:
 
 ## Out Of Scope
 
-- workbook changes
-- downloader, catalog, extraction, or currentness changes inside this packet itself
+- broad workbook refoundation beyond the exact direct-document recovery rows
+- downloader, catalog, extraction, currentness, or graph changes unrelated to
+  the exact archived full-canonical blocker surfaces in this packet
 - broad multi-forest source-delta capture
 - direct downstream reruns while the forest-plan identity contracts are still mixed
 - review-ready East Crazies or expansion-slot work
 
 ## Owner Surfaces
 
+- `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+- `src/usfs_r1_ea_sources/download.py`
+- `src/usfs_r1_ea_sources/catalog.py`
+- `src/usfs_r1_ea_sources/extract.py`
+- `src/usfs_r1_ea_sources/extraction_accuracy.py`
+- `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`
 - `src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py`
 - `src/usfs_r1_ea_sources/forest_plan_components.py`
+- `tests/test_download.py`
+- `tests/test_catalog.py`
+- `tests/test_extract.py`
+- `tests/test_extraction_accuracy.py`
+- `tests/test_nepa_knowledge_graph_export.py`
 - `tests/test_forest_plan_identity_reconciliation.py`
 - `tests/test_forest_plan_component_retrieval_eval.py`
 - `tests/test_forest_plan_components.py`
@@ -124,7 +157,7 @@ Return the forest-plan downstream lane to a truthful replayable state by:
 - `docs/architecture_contract.toml`
 - `source_library/catalog/source_catalog.jsonl`
 - `source_library/catalog/source_set_manifest.json`
-- `source_library/derived/source-set-370896a1043817f2/forest_plan_components/summary.json`
+- `source_library/derived/source-set-732a5a91d31736f8/forest_plan_components/summary.json`
 - `README.md`
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`
@@ -308,21 +341,28 @@ Outcome label: resolved
 
 - Replace or governably rebind the `11` wrapper-page direct-document rows
   still rejected by the verified-extraction admission gate on archived
-  full-canonical source set `source-set-370896a1043817f2`.
+  full-canonical source set `source-set-732a5a91d31736f8`.
 - Rerun `retrieval-build`, then rerun `claim-extract`,
   `rule-claim-link`, `nepa-knowledge-graph-export`, and
-  `promotion-suite` on `source-set-370896a1043817f2`.
+  `promotion-suite` on `source-set-732a5a91d31736f8`.
 - Close only when the archived admission gate is green, retrieval is
   reviewer-ready, validated `claims.jsonl` and `rule_claim_links.jsonl`
   regenerate truthfully, and `promotion-suite` no longer reports
   `graph_viewer_export_invalid`.
+- Resolved `2026-05-19` in the current local closeout: the workbook now points
+  the `LEX-USFS-*` and `WILD-ESA-075` rows at direct official PDFs, `FPS-420`
+  now admits through ZIP metadata extraction, the archived replay now emits
+  `source-set-732a5a91d31736f8`, `extraction-accuracy-audit` passes with zero
+  blocked rows, and the downstream archived chain is green through
+  `promotion-suite` with `full_canonical_corpus_ready=true` and `8/8`
+  required full-canonical results passing.
 
 ### Milestone 5: Durable Closeout And Routing Reset
 
 Outcome label: resolved
 
-- Update the durable routing set so this packet is either marked resolved or reduced with its exact
-- remaining issue named explicitly.
+- Update the durable routing set so this packet is either marked resolved or
+  reduced with its exact remaining issue named explicitly.
 - Record the closeout commit hash and verification commands in `docs/SESSION_HANDOFF.md`.
 - If the packet remains reduced after Milestone 4, route the next residual
   explicitly from this plan instead of reverting to stale graph-only language.
@@ -359,16 +399,16 @@ Outcome label: resolved
 - Milestone 3 archived parser/runtime gate:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_extraction_accuracy.py tests/test_retrieval.py tests/test_claim_extraction.py -q`
 - Milestone 4 archived direct-document and downstream rerun gate:
-  `PYTHONPATH=src python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-370896a1043817f2`
-  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-370896a1043817f2`
-  `PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_library --source-set-id source-set-370896a1043817f2`
-  `PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link --output-dir source_library --source-set-id source-set-370896a1043817f2`
-  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-370896a1043817f2`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-732a5a91d31736f8`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-732a5a91d31736f8`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_library --source-set-id source-set-732a5a91d31736f8`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources rule-claim-link --output-dir source_library --source-set-id source-set-732a5a91d31736f8`
+  `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-732a5a91d31736f8`
   `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
 - Architecture contract gate:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py -q`
 - Source/test lint:
-  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py src/usfs_r1_ea_sources/forest_plan_components.py tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py tests/test_forest_plan_component_retrieval_eval.py tests/test_forest_plan_components.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py tests/test_promotion_suite.py`
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/download.py src/usfs_r1_ea_sources/catalog.py src/usfs_r1_ea_sources/extract.py src/usfs_r1_ea_sources/extraction_accuracy.py src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py src/usfs_r1_ea_sources/forest_plan_components.py tests/test_download.py tests/test_catalog.py tests/test_extract.py tests/test_extraction_accuracy.py tests/test_nepa_knowledge_graph_export.py tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_profile_eval_contracts.py tests/test_forest_plan_component_retrieval_eval.py tests/test_forest_plan_components.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py tests/test_promotion_suite.py`
 - Plan lint:
   `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
 - Docs and closeout:
@@ -422,32 +462,19 @@ Outcome label: resolved
 
 - The broader full-canonical source-set refresh/rebind decision and the
   narrowed Flathead/retrieval repair are now complete through archived replay
-  source set `source-set-370896a1043817f2`.
-- The remaining accepted residual risk is now narrower than the original
-  source-record and component-identity family. On the refreshed archived source
-  set, `forest-plan-components-build` now validates `10/10` forests and
-  `forest-plan-component-retrieval-eval` now passes `6/6`.
-- The archived parser/runtime gap that initially hid the downstream blocker is
-  now closed: the derived replay stays green at `634/634` extracted rows, the
-  managed `extraction` extra now carries `rapidocr` plus `cryptography`, and
-  the archived audit now admits `332/343` required active-review rows.
-- The only remaining full-canonical red lane is no longer a standalone
-  graph-only replay gap. The active blocker is the `11` direct-document
-  wrapper-page rows still rejected by
-  `direct_document_required_records_use_document_artifacts`:
-  `FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
-  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
-  `LEX-USFS-016`, `LEX-USFS-017`, and `WILD-ESA-075`.
-- `promotion-suite` remains `6/8` with only
-  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`,
-  but that category is now understood to be downstream of the `11` blocked
-  direct-document rows because retrieval is not reviewer-ready, claims fail
-  validation, rule-claim binding fails closed, and graph export stops on the
-  missing validated `rule_claim_links.jsonl`.
-- The next active slice is therefore Milestone 4:
-  replace or governably rebind those `11` direct-document rows, rerun
-  retrieval, then rerun `claim-extract`, `rule-claim-link`,
-  `nepa-knowledge-graph-export`, and `promotion-suite` on
-  `source-set-370896a1043817f2`.
+  source set `source-set-732a5a91d31736f8`.
+- The archived runtime lane is now green end to end. On the refreshed archived
+  source set, `forest-plan-components-build` validates `10/10` forests,
+  `forest-plan-component-retrieval-eval` passes `6/6`,
+  `extraction-accuracy-audit` admits all `343` required active-review rows,
+  `retrieval-build` is reviewer-ready, and the claims, rule-claim, graph, and
+  promotion-suite layers all validate truthfully.
+- The remaining accepted residual risk in this packet is no longer runtime
+  readiness. It is only packet-closeout hygiene: durable routing reset and
+  later recording of the final closeout hash once the atomic milestone commit
+  exists.
+- The next active slice is therefore Milestone 5:
+  align the durable routing set around the now-green archived source set and
+  close the packet without reopening stale `370...` or `6/8` blocker prose.
 - If a future session cannot prove a canonical binding for one of the `24` unresolved rows, it must
   keep that row explicit as unresolved rather than hiding it inside a broad rerun attempt.

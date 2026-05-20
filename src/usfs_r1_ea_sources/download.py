@@ -199,7 +199,10 @@ def run_download(
             continue
 
         first_record_by_url[source.normalized_url] = source.source_record_id
-        existing = None if force else _find_existing_artifact(planned_path)
+        existing = None if force else _find_existing_artifact(
+            planned_path,
+            preferred_suffixes=_preferred_existing_artifact_suffixes(source.effective_url),
+        )
         if existing:
             artifact_sha256 = sha256_file(existing)
             artifact_byte_size = existing.stat().st_size
@@ -747,7 +750,11 @@ def _next_version_path(path: Path) -> Path:
     raise RuntimeError(f"Could not allocate versioned artifact path for {path}")
 
 
-def _find_existing_artifact(planned_path: Path) -> Path | None:
+def _find_existing_artifact(
+    planned_path: Path,
+    *,
+    preferred_suffixes: set[str] | None = None,
+) -> Path | None:
     directory = planned_path.parent
     if not directory.exists():
         return None
@@ -755,9 +762,33 @@ def _find_existing_artifact(planned_path: Path) -> Path | None:
     matches = sorted(
         path
         for path in directory.iterdir()
-        if path.is_file() and path.name.startswith(prefix) and not path.name.endswith(".tmp")
+        if path.is_file()
+        and path.name.startswith(prefix)
+        and not path.name.endswith(".tmp")
+        and (not preferred_suffixes or path.suffix.lower() in preferred_suffixes)
     )
     return matches[0] if matches else None
+
+
+def _preferred_existing_artifact_suffixes(url: str | None) -> set[str] | None:
+    path = urlsplit(url or "").path.lower()
+    if path.endswith(".pdf"):
+        return {".pdf"}
+    if path.endswith(".docx"):
+        return {".docx"}
+    if path.endswith(".doc"):
+        return {".doc"}
+    if path.endswith(".xml"):
+        return {".xml"}
+    if path.endswith(".zip"):
+        return {".zip"}
+    if path.endswith(".jpg"):
+        return {".jpg"}
+    if path.endswith(".jpeg"):
+        return {".jpeg"}
+    if path.endswith(".png"):
+        return {".png"}
+    return None
 
 
 def _manifest_record(

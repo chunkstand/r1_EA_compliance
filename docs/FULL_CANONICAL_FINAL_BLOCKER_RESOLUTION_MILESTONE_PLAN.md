@@ -1,7 +1,7 @@
 # Full Canonical Final Blocker Resolution Milestone Plan
 
 Date: 2026-05-19
-Status: Reduced 2026-05-19 through `933c667`; superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`, which now owns the narrowed `11`-row direct-document residual after the archived parser/runtime and Flathead/retrieval closeouts
+Status: Reduced 2026-05-19 through `933c667`; superseded as the active implementation packet by `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`, which now owns the green archived full-canonical downstream closeout on `source-set-732a5a91d31736f8` plus the final durable routing reset
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical final-blocker boundary
 
 ## Purpose
@@ -58,15 +58,15 @@ canonical corpus instead of a merely current-promotion-ready corpus.
   `current_promotion_ready=true`,
   `promotion_ready=true`,
   `expansion_ready=true`,
-  `full_canonical_corpus_ready=false`,
-  `passed_required_full_canonical_result_count=4`,
+  `full_canonical_corpus_ready=true`,
+  `passed_required_full_canonical_result_count=8`,
   `required_full_canonical_result_count=8`, and
-  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2, "stale_artifact": 2}`.
+  `full_canonical_failure_category_counts={}`.
 - The historical blocker proof on
   `source-set-9e7d85759951c279` is now superseded by the archived
   full-canonical classifier-refresh replay on
-  `source-set-370896a1043817f2`.
-  `source_library/derived/source-set-370896a1043817f2/forest_plan_components/summary.json`
+  `source-set-732a5a91d31736f8`.
+  `source_library/derived/source-set-732a5a91d31736f8/forest_plan_components/summary.json`
   now records `passed=true`, `component_count=1416`, and `standard_count=397`.
 - The blocker is now explicit: the active canonical catalog and chunk store
   contain `0` `R1PLAN-*` rows, while
@@ -80,27 +80,23 @@ canonical corpus instead of a merely current-promotion-ready corpus.
 - `config/forest_plan_component_retrieval_eval_v1.json` is now rebound to the
   emitted canonical component IDs, and
   `forest-plan-component-retrieval-eval` now passes `6/6` on
-  `source-set-370896a1043817f2`.
-- The exact remaining failed required full-canonical slots are now narrower on refreshed archived
-  source set `source-set-370896a1043817f2`, but they are no longer truthfully
-  described as a pure graph-only replay gap. The archived replay now admits
-  `332/343` required active-review rows and blocks only `11` direct-document
-  wrapper-page rows:
-  `FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
-  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
-  `LEX-USFS-016`, `LEX-USFS-017`, and `WILD-ESA-075`.
+  `source-set-732a5a91d31736f8`.
+- The former direct-document residual is now closed on refreshed archived
+  source set `source-set-732a5a91d31736f8`: the archived replay now admits all
+  `343/343` required active-review rows, retrieval is reviewer-ready,
+  claims and rule-claim validation both pass, and graph export plus
+  promotion-suite are green.
 - The durable routing set is now aligned across `README.md`,
   `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`: the broader
   refresh/rebind decision is complete, the refreshed archived full-canonical
-  contract is `source-set-370896a1043817f2`, and the next work is the
-  direct-document replacement/rebind residual rather than a broad identity-only,
-  Flathead, source-set-refresh, or graph-only replay packet.
+  contract is `source-set-732a5a91d31736f8`, and the remaining packet work is
+  closeout/routing hygiene rather than another runtime blocker replay.
 - This packet is no longer the active implementation surface after the reduced
   Milestone 3 closeout. The active follow-on packet is now
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
-  active through the archived refresh/rebind, Flathead/retrieval, and reduced
-  direct-document closeouts, with its current routed residual captured in the
-  latest handoff section and Milestone 3 reduced status.
+  active through the archived refresh/rebind, Flathead/retrieval, direct-document,
+  and downstream closeouts, with the remaining routed work captured in the
+  latest handoff section.
 
 ## Goal
 

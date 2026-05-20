@@ -664,7 +664,12 @@ def _record_uses_direct_document_artifact(record: dict) -> bool:
         return True
     if artifact_path.endswith((".pdf", ".doc", ".docx")):
         return True
-    return parser_name in {"docling", "python_docx_zip_xml", "pypdf_text_fallback"}
+    return parser_name in {
+        "docling",
+        "python_docx_zip_xml",
+        "python_zip_metadata_xml",
+        "pypdf_text_fallback",
+    }
 
 
 def _per_source_failure_map(

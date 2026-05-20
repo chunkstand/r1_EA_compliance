@@ -408,7 +408,7 @@ class PhaseEvalTests(unittest.TestCase):
     def test_phase_eval_requires_cross_forest_profile_eval_for_source_set_graph(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
-            source_set_id = "source-set-370896a1043817f2"
+            source_set_id = "source-set-732a5a91d31736f8"
             write_catalog_validation(output_dir, passed=True)
             write_extraction_diagnostics(
                 output_dir,
@@ -495,7 +495,7 @@ class PhaseEvalTests(unittest.TestCase):
     ) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
-            source_set_id = "source-set-370896a1043817f2"
+            source_set_id = "source-set-732a5a91d31736f8"
             write_catalog_validation(output_dir, passed=True)
             write_extraction_diagnostics(
                 output_dir,

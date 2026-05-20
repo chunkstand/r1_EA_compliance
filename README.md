@@ -75,178 +75,95 @@ source-delta-required, `1` documented official-source gap), but
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
 promotion evidence.
 
-Local active import baseline on 2026-05-19 after Milestone 3 reduced closeout:
+Local active import baseline on 2026-05-19 after Milestone 4 downstream closeout:
 
-- Active local catalog in `source_library/catalog/` is now full-register source
-  set `source-set-9e7d85759951c279`, created on `2026-05-19T17:50:42Z`, with
-  `634` source rows, `622` unique raw artifacts, `634` unique URLs,
+- Active local catalog in `source_library/catalog/` remains full-register
+  source set `source-set-9e7d85759951c279`, with `source_count=634`,
+  `artifact_count=622`,
   `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
-  `status_counts={"downloaded_existing": 622, "duplicate_content": 12}`,
-  and governing download run
-  `phase2-canonical-download-full-post-fps005-removal-20260519`.
+  and `status_counts={"downloaded_existing": 622, "duplicate_content": 12}`.
 - The proving-slice active catalog `source-set-9dcf819bc4cca486` and the
-  planned-only Phase 2 gate `source-set-ae989382c52344db` are now historical
-  pre-import baselines for this checkout, not the live `source_library/catalog/`
-  truth.
+  planned-only Phase 2 gate `source-set-ae989382c52344db` remain historical
+  pre-import baselines for this checkout, not the live
+  `source_library/catalog/` truth.
 - The governing workbook contract is now:
   `Document_Register_Master=634`,
   `Direct_File_Capture_Queue=51`,
   `Removed_Not_Applicable_Final=3`.
   `source-register-validate` passes with `issue_count=0` on workbook SHA
-  `999c773bb5d6183a391f03b7346084f046389f7ede52d07139cee1dfc9f073f6`.
-- Milestone 2 is now closed through:
-  `phase2-canonical-dry-run-post-fps005-removal-20260519`
-  (`planned_count=634`);
-  `phase2-canonical-download-full-post-fps005-removal-20260519`
-  (`downloaded_existing=622`, `duplicate_content=12`,
-  `failed_count=0`, `needs_review_count=0`);
-  `validate-run` on that exact run ID (`8/8` checks passed); and
-  `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
-  (`validation_passed=true`).
-- Milestone 2 closeout commit is
-  `4660d11` (`Close Milestone 2 FPS-005 workbook contract removal`).
-- `FPS-005` is now explicitly removed from the active load-bearing set. The
-  workbook row moved into `Removed_Not_Applicable_Final` with a governed
-  removal reason after a 2026-05-19 recheck confirmed that the official
-  Beaverhead planning page still points at `https://www.fs.usda.gov/media/228272`,
-  the served PDF remains structurally invalid across the available parsers/PDF
-  tools, and no exact official replacement chapter artifact was available.
+  `1e7d7623f9633c37e953d74780c986426514d8a472082f3b95142266556505c8`.
+- `FPS-005` remains explicitly removed from the active load-bearing set. The
+  workbook row stays in `Removed_Not_Applicable_Final` with the governed
+  removal reason from Milestone 2.
 - The unsupported-format direct-document slice remains green and preserved:
   scoped preflight passed `8/8`, scoped download passed `8/8`, scoped catalog
   gate `source-set-a0402de124943920` records `artifact_count=8`, scoped
   extraction admitted all `8/8`, and upstream direct eval remains green at
   `38/38`.
-- The new active extraction lane is now green on
-  `source-set-9e7d85759951c279`. A reuse-first refresh copied `620`
-  extraction records after the reuse inventory classified
-  `reuse_extraction=624` and `needs_extract=10`, and a targeted merged
-  reextract of `USDA-002`, `USDA-003`, `USDA-004`, and `USDA-006` cleared the
-  prior scoped XML audit red. The live extraction summary now records
-  `extracted_count=634`, `failed_count=0`, `chunk_count=98155`,
-  `reused_count=620`, and `validation_passed=true`.
 - The reduced downstream rerun packet
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
-  is now historical blocker context, not the active implementation packet.
-  Milestones 0-2 are resolved there, and its reduced Milestone 3 pass
-  rebound the active full-canonical contract surfaces in
-  `config/promotion_suite_v1.json`,
-  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
-  `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
-  `config/r1_forest_plan_component_inventory_build_manifest.json`,
-  `config/forest_plan_component_retrieval_eval_v1.json`, and
-  `config/phase_eval_direct_eval_v1.json`
-  to `source-set-9e7d85759951c279`. `authority-currentness --source-set-id
-  source-set-9e7d85759951c279` still passes
-  with `authority_family_count=454` and
-  `source_currentness_record_count=634`.
-- The reduced Milestone 3 closeout commit is
-  `933c667` (`Reduce Milestone 3 to forest-plan identity blocker`).
-- Focused contract coverage for that rebind is now green:
-  `tests/test_promotion_suite.py`,
-  `tests/test_forest_plan_inventory_build_manifest.py`,
-  `tests/test_forest_plan_profile_eval_contracts.py`,
-  `tests/test_phase_eval_direct_eval_contracts.py`, and
-  `tests/test_phase_eval.py`
-  pass `59/59`.
-- Historical note:
-  the first post-import blocker replay on
-  `source-set-9e7d85759951c279` stopped at `754` components, `186` standards,
-  and `5` blocked forests, which is what exposed the canonical
-  `source_register_v1` role-classifier regression in the first place.
-- `src/usfs_r1_ea_sources/catalog.py` now fixes that regression by applying a
-  manifest-driven primary-plan override before the generic `regulation`
-  fallback. Canonical workbook proof now classifies `FPS-130`-`FPS-134`,
-  `FPS-267`, `FPS-298`, and `FPS-347` as `forest_plan`, while `FPS-165`,
-  `FINAL-KOOT-011`, and `FOR-033` remain `forest_plan_support`.
-- A dedicated archived full-canonical classifier-refresh replay now lives at
-  `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`
-  and emits refreshed full-canonical source set
-  `source-set-370896a1043817f2`.
-- A reuse-first extraction refresh on that archived gate now re-materializes
-  the refreshed derived lane with `extracted_count=634`,
-  `reused_count=634`, `chunk_count=98155`, and
-  `validation_passed=true`.
-- `authority-currentness` now passes on
-  `source-set-370896a1043817f2`, and
-  `forest-plan-profile-eval` now passes with
-  `active_source_set_ids=["source-set-370896a1043817f2"]`.
-- `forest-plan-components-build` on the refreshed archived source set now
-  passes with `1416` components, `397` standards, and
-  `blocked_forest_unit_ids=[]`.
-- A fresh local non-strict
-  `promotion-suite --manifest config/promotion_suite_v1.json`
-  now points
-  `full_canonical_source_set_id=source-set-370896a1043817f2` and reports
-  `full_canonical_corpus_ready=false` with `6/8` required full-canonical
-  results passing and
-  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`.
-- The active implementation packet is now
+  is historical blocker context only. The active implementation packet remains
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`.
-  Milestone 0 in that packet is now resolved through
-  `d3606ad` (`Close identity reconciliation Milestone 0 baseline`) and a
-  governed registry artifact:
-  `config/r1_forest_plan_identity_reconciliation_v1.json`.
-  That registry captures the live `99` referenced legacy source-record IDs as
-  `74` exact official-URL matches plus `1` governed catalog rebound
-  (`R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`) to active canonical
-  source-record IDs, with only `24` unresolved rows remaining
-  (`11` `catalog_confirmed`, `13` `source_delta_required`).
-- Milestone 1 in that packet is now reduced through
-  `7dd4fb5` (`Reduce identity reconciliation Milestone 1 source-record mix`):
-  the committed
-  manifest/readiness pair carries the `74` exact URL-backed rows as canonical
-  source-record IDs. The current local Milestone 2 closeout adds the governed
-  Flathead primary-plan rebind to `FINAL-FLAT-001`, so the committed
-  manifest/readiness/profile surfaces now leave only the explicit unresolved
-  `24`-row legacy blocker set, with governed `identity_reconciliation`
-  metadata on the bound configs.
-- `forest-plan-component-retrieval-eval` now passes `6/6` on the refreshed
-  source set after rebinding the shipped eval contract from legacy
-  `R1PLAN-*` component IDs onto the emitted canonical component IDs such as
-  `FOR-009-*`, `FOR-002-*`, and `FINAL-FLAT-001-*`.
-- The managed `extraction` extra now includes `rapidocr` and `cryptography`,
-  so Python 3.14 archived fallback replays can run raster OCR and AES-backed
-  PDF crosschecks without ad hoc environment patching.
-- A targeted archived direct-replay pass closed the remaining parser lane on
-  `source-set-370896a1043817f2`: the derived replay still validates
-  `634/634` extracted rows, and the stale markup-leak rows `FPS-040` and
-  `WILD-ESA-030` were re-materialized under the stricter text cleaner.
-- `extraction-accuracy-audit` on
-  `source-set-370896a1043817f2` now admits `332/343` required
-  active-review rows and blocks only `11` direct-document wrapper-page rows:
-  `FPS-420`, `LEX-USFS-002`, `LEX-USFS-003`, `LEX-USFS-007`,
-  `LEX-USFS-008`, `LEX-USFS-011`, `LEX-USFS-012`, `LEX-USFS-013`,
-  `LEX-USFS-016`, `LEX-USFS-017`, and `WILD-ESA-075`.
-- `retrieval-build` now fails only on that `11`-row direct-document family,
-  with `verified_extraction_admitted_source_count=332` and
-  `verified_extraction_required_source_count=343`.
-- `claim-extract` now materializes
-  `120689` claims on `source-set-370896a1043817f2`, but the claim lane
-  remains invalid because retrieval is not reviewer-ready and the admitted
-  retrieval index still has `0` bound chunks. `rule-claim-link` therefore
-  fails closed on claim validation, and direct
-  `nepa-knowledge-graph-export` still stops on the missing validated
-  `rule_claim_links.jsonl` artifact.
+- The governed identity registry in
+  `config/r1_forest_plan_identity_reconciliation_v1.json`
+  now records the live `99` referenced legacy source-record IDs as
+  `74` exact official-URL matches, `1` governed catalog rebound
+  (`R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`), and `24` unresolved rows
+  split as `catalog_confirmed=11` and `source_delta_required=13`.
+- `src/usfs_r1_ea_sources/catalog.py` now fixes the canonical
+  `source_register_v1` primary-plan classifier regression, and
+  `forest-plan-component-retrieval-eval` stays rebound to canonical
+  component IDs instead of legacy `R1PLAN-*` IDs.
+- The archived full-canonical replay contract still lives at
+  `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`,
+  but the refreshed gate now emits source set `source-set-732a5a91d31736f8`
+  after the direct-document repair pass.
+- That refreshed archived gate records `source_count=634`,
+  `artifact_count=622`,
+  `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  and `status_counts={"downloaded": 1, "downloaded_existing": 621, "duplicate_content": 12}`.
+- The archived extraction lane is now fully green on
+  `source-set-732a5a91d31736f8`: `extracted_count=634`, `failed_count=0`,
+  `chunk_count=98699`, `reused_count=291`, and `validation_passed=true`.
+- `extraction-accuracy-audit` now passes on
+  `source-set-732a5a91d31736f8` with `audited_record_count=343`,
+  `knowledge_base_admitted_source_record_ids=343`, and
+  `knowledge_base_blocked_source_record_ids=0`. The former `11`-row
+  direct-document blocker family is closed.
+- `authority-currentness` now passes on
+  `source-set-732a5a91d31736f8` with `authority_family_count=454`,
+  `source_currentness_record_count=634`,
+  `catalog_source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  and `validation_passed=true`.
+- `forest-plan-components-build` now passes on
+  `source-set-732a5a91d31736f8` with `component_count=1416`,
+  `standard_count=397`, `blocked_forest_unit_ids=[]`,
+  `coverage_passed=true`, and `component_source_accuracy_passed=true`.
+- `forest-plan-profile-eval` now passes with
+  `active_source_set_ids=["source-set-732a5a91d31736f8"]`,
+  `covered_profile_count=10`, and `profile_failure_count=0`.
+- `forest-plan-component-retrieval-eval` now passes `6/6` on
+  `source-set-732a5a91d31736f8` with
+  `component_retrieval_precision=1.0`.
+- The downstream lane is now green on the refreshed archived contract:
+  `retrieval-build` is reviewer-ready with `chunk_count=98699`;
+  `claim-extract` passes with `claim_count=122285`;
+  `rule-claim-link` validates truthfully with `rule_count=48`,
+  `link_count=0`, and `gap_count=48`;
+  `nepa-knowledge-graph-export` passes with `72` validation checks,
+  `failed_validation_check_count=0`,
+  `region1_forest_plan_graph_ready_profile_count=10`, and
+  `region1_forest_plan_blocked_profile_count=0`.
+- `promotion-suite --manifest config/promotion_suite_v1.json` now points
+  `full_canonical_source_set_id=source-set-732a5a91d31736f8` and reports
+  `current_promotion_ready=true`,
+  `full_canonical_corpus_ready=true`,
+  `expansion_ready=true`,
+  `promotion_ready=true`, and `8/8` required full-canonical results passing
+  with `full_canonical_failure_category_counts={}`.
 - Current reviewer-ready downstream evidence still lives on review-oriented
-  source set `source-set-ba8d0feae79501b8`. The imported canonical catalog in
-  `source_library/catalog/` remains active source set
-  `source-set-9e7d85759951c279`, but the refreshed archived full-canonical
-  forest-plan/downstream contract now points at
-  `source-set-370896a1043817f2`.
-- A fresh local non-strict
-  `promotion-suite --manifest config/promotion_suite_v1.json`
-  still reports
-  `full_canonical_corpus_ready=false` with `6/8` required full-canonical
-  results passing and
-  `full_canonical_failure_category_counts={"graph_viewer_export_invalid": 2}`.
-  That red category is now understood to be downstream of the `11` blocked
-  direct-document rows, not a standalone graph-only replay gap.
-- The next routed slice is no longer a pure claims/rule-claim replay.
-  The remaining full-canonical work is now explicit:
-  replace or rebind the `11` wrapper-page direct-document rows above, rerun
-  retrieval, then rerun `claim-extract`, `rule-claim-link`,
-  `nepa-knowledge-graph-export`, and `promotion-suite` on
-  `source-set-370896a1043817f2`.
+  source set `source-set-ba8d0feae79501b8`, but the archived full-canonical
+  forest-plan/downstream contract itself is no longer red.
 
 Historical broader capture baseline:
 

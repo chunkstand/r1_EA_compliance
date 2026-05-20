@@ -377,6 +377,38 @@ class ExtractionTests(unittest.TestCase):
         finally:
             extract_module._try_extract_docling = original_try_docling
 
+    def test_build_extraction_uses_zip_metadata_parser_for_direct_file_zip_artifact(self) -> None:
+        config = canonical_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(
+                output_dir,
+                "unit-download",
+                source_record_id="FPS-420",
+                artifact_body=_zip_with_metadata_body(),
+                content_type="application/zip",
+                suffix=".zip",
+            )
+            build_review_catalog(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+                source_record_ids={"FPS-420"},
+            )
+
+            result = build_extraction(output_dir=output_dir, id_filter="FPS-420")
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["parser_counts"], {"python_zip_metadata_xml": 1})
+            manifest = _read_jsonl(result.extraction_manifest_path)
+            self.assertEqual(manifest[0]["parser_name"], "python_zip_metadata_xml")
+            self.assertTrue(manifest[0]["direct_document_artifact_required"])
+            text = Path(manifest[0]["text_path"]).read_text(encoding="utf-8")
+            self.assertIn("Grizzly Bear Analysis Unit Shapefile", text)
+            self.assertIn("Exported GIS layer package", text)
+
     def test_build_extraction_fails_validation_on_artifact_hash_mismatch(self) -> None:
         config = legacy_config()
         with tempfile.TemporaryDirectory() as tmp:
@@ -1590,6 +1622,26 @@ def _xml_escape(value: str) -> str:
         .replace(">", "&gt;")
         .replace('"', "&quot;")
     )
+
+
+def _zip_with_metadata_body() -> bytes:
+    metadata_xml = (
+        "<metadata>"
+        "<idinfo><citation><citeinfo>"
+        "<title>Lolo National Forest Grizzly Bear Analysis Unit Shapefile</title>"
+        "</citeinfo></citation></idinfo>"
+        "<dataqual><lineage><procstep>"
+        "<procdesc>Exported GIS layer package for grizzly bear analysis units.</procdesc>"
+        "</procstep></lineage></dataqual>"
+        "</metadata>"
+    )
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("GrizAnalysisUnits_LNF_10302023.shp.xml", metadata_xml)
+        archive.writestr("GrizAnalysisUnits_LNF_10302023.shp", b"shape-bytes")
+        archive.writestr("GrizAnalysisUnits_LNF_10302023.dbf", b"dbf-bytes")
+    buffer.seek(0)
+    return buffer.read()
 
 
 def _artifact_sha256(body: bytes) -> str:
