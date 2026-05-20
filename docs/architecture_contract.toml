@@ -162,6 +162,7 @@ modules = [
   "applicability_candidate_assembly",
   "applicability_contract_support",
   "applicability_decision_arbitration",
+  "applicability_decision_coverage",
   "applicability_decision_evidence",
   "applicability_decision_outputs",
   "applicability_decisions",
