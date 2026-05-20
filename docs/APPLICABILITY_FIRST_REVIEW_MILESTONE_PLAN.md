@@ -1,7 +1,25 @@
 # Applicability-First Review Milestone Plan
 
 Date: 2026-05-04
-Last updated: 2026-05-06
+Last updated: 2026-05-20
+Status: Resolved 2026-05-20 (Milestones 1-9 were already implemented; Milestone 10 is now closed on refreshed South Plateau reviewer-ready expansion truth)
+
+Closeout summary on 2026-05-20:
+
+- Milestone 10 is now closed on local runtime truth: a bounded South Plateau `compliance-review`
+  replay regenerated `authority_explanation_paths.json`; fresh
+  `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment` now passes with
+  `contract_status="reviewer_ready"`; and fresh
+  `promotion-suite --manifest config/promotion_suite_v1.json --strict-expansion` now passes with
+  `current_promotion_ready=true`, `promotion_ready=true`, `expansion_ready=true`, and
+  `open_expansion_slot_count=0`.
+- The runtime work that originally sat behind Milestone 10 is now fully distributed across
+  `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md` and
+  `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`; this packet now records the umbrella
+  applicability-first closeout rather than routing more implementation through a stale South
+  Plateau blocker note.
+- No further continuation is routed through this packet. Future applicability-first work should
+  start as a new standalone milestone or targeted follow-on packet.
 
 This plan defines the post-V1 architecture change needed to make legal-authority applicability a
 first-class, pre-review stage. The critical system function is not merely to evaluate a static rule
@@ -63,18 +81,14 @@ Implemented today:
 
 Current remaining work:
 
-- Milestone 10 real-package expansion remains open until strict expansion can truthfully report the
-  declared real-package set. The ECID preliminary-EA slot is ready. The South Plateau Area
-  Landscape Treatment Project now resolves to Custer Gallatin forest-plan context with
-  `validation_passed=true`, but strict expansion is intentionally blocked by
-  `forest_plan_reviewer_not_ready` because `31` forest-plan component adjudication items remain
-  pending.
+- Milestone 10 is resolved through the post-V1 real-package expansion closeout, the South Plateau
+  forest-plan context closeout, and the 2026-05-20 South Plateau runtime-truth refresh described
+  above.
 - The roads/access/special-use blocker exposed a general evidence-arbitration gap. That gap is now
-  closed through Evidence Arbitration Milestones 1-5: roads/access no longer blocks on weak
-  auxiliary evidence, arbitration behavior has permanent seed/gold/phase/promotion coverage, and
-  the later ECID applicability conflicts were resolved through replayable adjudication.
-- The active follow-up plan is
-  `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`.
+  closed through Evidence Arbitration Milestones 1-5 and remains historical support for the
+  implemented applicability-first lane.
+- No active follow-up plan remains under this packet; future work should route through a fresh
+  standalone milestone instead of extending this plan.
 
 ## Target Invariant
 
@@ -110,6 +124,125 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 
 Keep this gate alongside the focused applicability/compliance tests, ruff, compileall, eval
 commands, and `git diff --check` required by the specific milestone.
+
+## Owner Surfaces
+
+- `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`
+- `README.md`
+- `docs/CURRENT_SYSTEM_STATE.md`
+- `docs/SESSION_HANDOFF.md`
+- `config/promotion_suite_v1.json`
+- `config/v1_south_plateau_real_ea_eval.json`
+- `source_library/reviews/region1-expansion-south-plateau-landscape-treatment/`
+
+## Placement Rules
+
+- Keep Milestone 10 closeout truth in the existing South Plateau review directory and the existing
+  durable docs set. Do not add a parallel review ID or a second applicability-first closeout file.
+- Regenerate missing South Plateau review artifacts in place instead of weakening `v1-ea-eval`,
+  `phase-eval`, or `promotion-suite`.
+- Treat any West Reservoir package-authority repair as a separate lane. Do not hide that work
+  inside the Milestone 10 closeout.
+
+## Weak-Point Prevention Contract
+
+- Weak point forecast: docs close Milestone 10 as resolved while South Plateau `v1-ea-eval` or
+  strict expansion is still red.
+  Owner surface: South Plateau review artifacts, `config/v1_south_plateau_real_ea_eval.json`, and
+  `config/promotion_suite_v1.json`.
+  Prevention gate:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json --strict-expansion`.
+  Fail threshold: `v1-ea-eval` is not `passed=true` with `contract_status="reviewer_ready"`, or
+  strict `promotion-suite` is not `current_promotion_ready=true`, `promotion_ready=true`, and
+  `expansion_ready=true`.
+  Controlled violation: remove `authority_explanation_paths.json`; South Plateau `v1-ea-eval` must
+  fail `authority_explanation_paths_ready`.
+  Future-Codex misuse scenario: a future session updates docs from cached promotion output without
+  rerunning the South Plateau reviewer-ready gates.
+
+- Weak point forecast: Milestone 10 quietly absorbs unrelated West Reservoir package-authority
+  drift and overclaims broader real-package coverage.
+  Owner surface: `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and
+  `config/v1_real_package_review_coverage_v1.json`.
+  Prevention gate: the closeout docs must explicitly call West Reservoir package-authority drift a
+  separate lane, and this milestone must not change West Reservoir config or replay context.
+  Fail threshold: the closeout claims a fresh local `real-package-review-coverage-eval` rerun is
+  green, or it edits West Reservoir package-authority surfaces inside this milestone.
+  Controlled violation:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`
+  still fails closed on `missing_package_authority` until a separate lane repairs that surface.
+  Future-Codex misuse scenario: a future session copies the older `3/3 reviewer-ready slots`
+  language into new docs without checking the live West Reservoir replay-context package path.
+
+## Milestone Sequence
+
+1. Outcome label: `resolved`. Replay bounded South Plateau compliance review until
+   `authority_explanation_paths.json` exists and compliance validation remains green.
+2. Outcome label: `resolved`. Rerun South Plateau `v1-ea-eval` until it reports
+   `passed=true` and `contract_status="reviewer_ready"`.
+3. Outcome label: `resolved`. Rerun strict `promotion-suite` until the declared ECID preliminary-EA
+   plus South Plateau expansion set reports `expansion_ready=true` with `open_expansion_slot_count=0`.
+4. Outcome label: `resolved`. Update this plan, `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+   `docs/SESSION_HANDOFF.md` so Milestone 10 no longer routes as open and the separate West
+   Reservoir caveat stays explicit.
+
+## Required Documentation And Handoff Updates
+
+- `README.md`
+- `docs/CURRENT_SYSTEM_STATE.md`
+- `docs/SESSION_HANDOFF.md`
+- this milestone plan
+
+## Required Verification Gates
+
+- `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment --output-dir source_library --rule-pack source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/generated_rule_pack.json --source-set-id source-set-ba8d0feae79501b8 --review-id region1-expansion-south-plateau-landscape-treatment --reuse-package-cache`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`
+- `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json --strict-expansion`
+- `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`
+- `git diff --check`
+
+## Acceptance Criteria
+
+- South Plateau closeout artifacts exist in the governed review directory, including
+  `authority_explanation_paths.json`.
+- South Plateau `v1-ea-eval` reports `passed=true`, `contract_status="reviewer_ready"`, and
+  `authority_explanation_path_rate=1.0`.
+- Strict `promotion-suite` reports `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=true`, and `open_expansion_slot_count=0`.
+- `README.md`, `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and this plan all route
+  Milestone 10 as `resolved` and no active follow-up plan remains under this packet.
+- The milestone is not complete until verification passes, the docs and handoff updates land, and
+  the local atomic commit is created. A verified but uncommitted milestone is only ready-to-close.
+- Do not weaken existing tests or gates. Replacement coverage must remain equivalent, and
+  documentation-only closeout must not make the verification surface easier just to report green.
+
+## Stop Conditions
+
+- Stop if South Plateau reviewer-ready closure requires weakening `v1-ea-eval`, `phase-eval`, or
+  `promotion-suite`.
+- Stop if Milestone 10 can close only by relabeling historical outputs or by treating cached stale
+  West Reservoir package-authority truth as current.
+- Stop if the milestone needs West Reservoir package-authority repair to look green; route that
+  issue into a separate follow-on packet instead.
+
+## Local Commit Closeout Policy
+
+- Stage only the verified milestone slice: `README.md`, `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`.
+- Close Milestone 10 with one local atomic commit. The milestone is complete only after that local
+  atomic commit exists.
+- Preserve anti-test-weakening rules: do not loosen gates, skip checks, or delete negative
+  coverage to make the closeout pass.
+
+## Residual Risks And Next Routing
+
+- Residual risk: a fresh local `real-package-review-coverage-eval` rerun still depends on the
+  preserved West Reservoir replay-context package path under
+  `/Users/chunkstand/Downloads/West Reservoir (67436)`.
+- Next routing: no further continuation remains under this packet. Future applicability-first
+  expansion or replay-context repair should start as a new standalone milestone.
 
 ## Research Basis
 
@@ -1060,7 +1193,7 @@ Stop conditions:
 
 ## Milestone 10: Real-Package Expansion And Operating Runbook
 
-Status: open / active next pass
+Status: resolved on 2026-05-20
 
 Goal:
 Prove the applicability-first architecture on a broader set of real EA packages and document the
@@ -1081,7 +1214,7 @@ Relevant files or surfaces:
 - real package intake directories under `source_library/reviews/_intake/`
 - applicability and compliance eval artifacts
 
-Current state as of 2026-05-06:
+Current state as of 2026-05-20:
 
 - Applicability-first Milestones 1 through 9 are implemented and verified.
 - The separate evidence-arbitration gap plan is complete through Milestone 5. Roads/access and
@@ -1108,25 +1241,20 @@ Current state as of 2026-05-06:
   applicability adjudications, Sequence 6 generated the South Plateau rule pack and compliance
   artifacts, and Sequence 7 hardened strict expansion so South Plateau cannot pass while its
   declared forest-plan context is ambiguous. The South Plateau forest-plan context milestone then
-  resolved the context to Custer Gallatin and narrowed the remaining blocker to the `31` pending
-  component-adjudication items.
+  resolved the context to Custer Gallatin, the `31`-item component-adjudication queue was closed as
+  `applicability_false_positive` system misses, a bounded 2026-05-20 South Plateau
+  `compliance-review` refresh regenerated `authority_explanation_paths.json`, and fresh
+  South Plateau `v1-ea-eval` plus strict `promotion-suite` both now pass reviewer-ready expansion
+  truthfully.
 
-Implementation direction:
+Closeout direction:
 
-- Complete the South Plateau `31`-item forest-plan component adjudication worklist, then rerun
-  component adjudication eval, compliance review, phase eval, and strict expansion promotion.
-- Select a small real-package set covering:
-  - Custer Gallatin;
-  - at least one additional Region 1 forest profile once implemented;
-  - ESA/NHPA/MBTA/Roadless/wetlands negative and positive cases;
-  - missing or ambiguous package evidence;
-  - Forest Plan component positives and hard negatives; and
-  - authorities with exceptions, dependencies, or supersession relationships.
-- Run the full sequence for each package.
-- Adjudicate applicability before reviewing compliance.
-- Record false positives, false negatives, retrieval misses, graph expansion misses, source gaps,
-  ambiguous evidence, and coverage certificate failures.
-- Update docs with exact command sequence and current readiness boundary.
+- Milestone 10 is now runtime-proven on the governed ECID preliminary-EA plus South Plateau
+  expansion set.
+- Future expansion should add new verified package slots under a new standalone milestone instead of
+  reopening this umbrella applicability-first packet.
+- Separate review-slot package-authority or historical replay-context repairs belong in their own
+  follow-on lane and must not be hidden inside this closeout.
 
 Required eval signal:
 

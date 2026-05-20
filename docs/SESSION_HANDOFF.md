@@ -5,6 +5,40 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Applicability-First Milestone 10 Closeout
+
+This closeout resolves the last open milestone in the umbrella
+applicability-first architecture packet without reopening the separate
+real-package coverage lane.
+
+- outcome label:
+  `resolved` for Milestone 10; no further continuation is routed through
+  `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`
+- runtime truth refresh:
+  a bounded South Plateau `compliance-review` replay regenerated
+  `authority_explanation_paths.json`; fresh
+  `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`
+  now passes with `contract_status="reviewer_ready"`; and fresh
+  `promotion-suite --manifest config/promotion_suite_v1.json --strict-expansion`
+  now passes with `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=true`, and `open_expansion_slot_count=0`
+- routed packet surfaces:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`
+- routing truth:
+  Milestones 1 through 9 stay implemented, Milestone 10 is now closed through
+  the post-V1 real-package expansion plus South Plateau reviewer-ready
+  conversion, and future applicability-first work should start as a new
+  standalone milestone
+- separate local caveat:
+  a fresh rerun of `real-package-review-coverage-eval` still depends on the
+  preserved West Reservoir replay-context package path under
+  `/Users/chunkstand/Downloads/West Reservoir (67436)`. That package-authority
+  drift belongs to the separate real-package coverage lane and was not
+  reopened here.
+
 ## Full Canonical Live Source-Set Promotion Milestone 4 Alignment Pass
 
 This docs-only follow-up pins the real Milestone 4 closeout hash across the
@@ -8537,10 +8571,11 @@ left untouched.
 
 ## Current Applicability-First State
 
-The current active implementation lane is the post-V1 applicability-first review architecture in
-`docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`. The V1 EA gate remains promoted for the Custer
-Gallatin East Crazy proving package, but new work has moved into a pre-review applicability
-pipeline that separates authority applicability from compliance findings.
+The post-V1 applicability-first review architecture in
+`docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` is now locally complete through Milestone 10.
+The V1 EA gate remains promoted for the Custer Gallatin East Crazy proving package, and the notes
+below preserve the implemented pre-review applicability pipeline plus the historical path to
+closeout.
 
 Current completed applicability milestones:
 
@@ -8968,13 +9003,14 @@ legal conclusion.
   applicability adjudication worklist, generated-rule-pack/artifact-check pass, source-claim gap
   closure, Forest Plan component adjudication replay, and third package fixture selection are
   complete. The selected South Plateau run is now complete through applicability validation,
-  generated rule-pack validation, compliance review, review-scoped phase eval, and Sequence 7
-  strict-expansion fail-closed hardening.
+  generated rule-pack validation, compliance review, review-scoped phase eval, Sequence 7
+  strict-expansion hardening, the South Plateau reviewer-ready conversion, and the 2026-05-20
+  `authority_explanation_paths.json` truth refresh.
 - `docs/POST_V1_REAL_PACKAGE_EXPANSION_MILESTONE_PLAN.md`: focused closure plan for resolving
-  `expansion_ready=false`; complete through Sequence 7 for the declared expansion set, with South
-  Plateau intentionally blocked on `forest_plan_reviewer_not_ready`.
-- `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`: active follow-up plan for resolving
-  the remaining South Plateau strict-expansion blocker without weakening the declared-profile,
+  `expansion_ready=false`; complete through Sequence 7 for the declared expansion set, and later
+  closeout work removed the temporary South Plateau strict-expansion blocker.
+- `docs/SOUTH_PLATEAU_FOREST_PLAN_CONTEXT_MILESTONE_PLAN.md`: follow-up plan that resolved the
+  remaining South Plateau strict-expansion blocker without weakening the declared-profile,
   compliance-review, phase-eval, or promotion-suite gates.
 - `docs/NEPA_3D_KNOWLEDGE_GRAPH_MILESTONE_PLAN.md`: build a source-set and review-specific
   knowledge graph export plus local 3D viewer for all USDA/Forest Service Region 1 EA authority
@@ -9219,10 +9255,10 @@ Historical next implementation target, now superseded:
 The V1 EA gate repair plan is complete through Milestone 6. This historical handoff originally
 pointed to the revised `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` as the next target.
 Milestones 1 through 9 of that applicability-first plan are now implemented, and the separate
-evidence-arbitration gap plan is complete through Milestone 5. The remaining target is Milestone 10
-real-package expansion: resolve the ECID preliminary-EA adjudication worklist or add the third real
-package fixture. Do not broaden the V1 claim beyond the current Custer Gallatin proving package
-without a new evidence-backed plan and gate.
+evidence-arbitration gap plan is complete through Milestone 5. Milestone 10 is now also resolved
+through the post-V1 real-package expansion closeout, the South Plateau reviewer-ready conversion,
+and the 2026-05-20 South Plateau artifact-truth refresh. Do not broaden the V1 claim beyond the
+current governed package set without a new evidence-backed plan and gate.
 
 The forest-plan review evaluator now runs component-evaluation V0 by default for packages resolved
 to the selected forest-plan profile. Mandatory component evaluation is committed at `8f607e4`, and

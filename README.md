@@ -940,10 +940,13 @@ South Plateau expansion package has replayed and validated its six applicability
 generated and validated `61` rules, resolved to Custer Gallatin forest-plan context with
 `validation_passed=true`, closed the tracked `31`-item component-adjudication queue as
 `applicability_false_positive` system misses, and now passes compliance review, `v1-ea-eval`, and
-review-scoped `phase-eval` `19/19` with `reviewer_ready=true`. Real-package review coverage is now
-`3/3` reviewer-ready slots, aggregate gold coverage records `reviewer_ready_review_count=3` and
-`typed_blocked_review_count=0`, and both non-strict and strict `promotion-suite` replays now pass
-with `expansion_ready=true`.
+review-scoped `phase-eval` `19/19` with `reviewer_ready=true`. A bounded 2026-05-20 South Plateau
+`compliance-review` refresh also regenerated `authority_explanation_paths.json`, after which fresh
+South Plateau `v1-ea-eval` and strict `promotion-suite` replays both passed. This closes
+Applicability-First Milestone 10 on the governed ECID preliminary-EA plus South Plateau expansion
+set. A fresh local `real-package-review-coverage-eval` rerun still depends on the preserved West
+Reservoir replay-context package path under `/Users/chunkstand/Downloads/West Reservoir (67436)`,
+so that separate coverage lane is not part of this Milestone 10 closeout claim.
 
 ## Reviewer Engine Entry Points
 
@@ -1548,10 +1551,11 @@ whether the real EA review applied the correct source documents to the correct E
 tracked review-slot manifest lives at `config/v1_real_package_review_coverage_v1.json`. When
 `--review-id` is supplied, `v1-ea-eval` resolves the matching per-review contract from that
 manifest; otherwise it fails closed unless `--eval-file` is provided explicitly. The tracked
-contracts cover East Crazies, West Reservoir, and South Plateau. Typed blocked reviews remain valid
-coverage only when a declared blocked lane and blocker categories still match the live review
-artifacts, but the current shipped three-review contract set is now fully reviewer-ready with
-South Plateau carrying `package_style_tags=["reviewer_ready_expansion"]`.
+contracts cover East Crazies, West Reservoir, and South Plateau. South Plateau now carries
+`package_style_tags=["reviewer_ready_expansion"]`. Fresh reruns of the aggregate coverage gate
+still require each slot's package-authority surface to exist locally, so the preserved West
+Reservoir replay-context package path remains a checkout-specific prerequisite when that separate
+coverage lane is replayed.
 
 The result summary separates the overall readiness gate from two diagnostic lanes:
 `broader_ea` for package sections, baseline authorities, rule bindings, conditional sources, and

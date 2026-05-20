@@ -25,7 +25,43 @@ promotion lane specifically, references below that still treat
 Milestone 4 as pending, or still describe archived
 `source-set-732a5a91d31736f8` as the governing live downstream contract are
 historical only after the 2026-05-20 live-promotion Milestone 4 docs-only
-sole-truth closeout `f464fa9` on `source-set-f775524ab233ff27`.
+sole-truth closeout `f464fa9` on `source-set-f775524ab233ff27`. Older
+references below that still treat Applicability-First Milestone 10 as open,
+still describe South Plateau strict expansion as blocked on
+`forest_plan_reviewer_not_ready`, or still claim a fresh rerun of the
+aggregate real-package coverage gate is green without the preserved West
+Reservoir package authority are historical only after the 2026-05-20
+Applicability-First Milestone 10 closeout described below.
+
+## Applicability-First Milestone 10 Closeout
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone 10; the umbrella applicability-first architecture
+  plan is now locally complete and no further continuation is routed through
+  it.
+- Runtime truth refresh:
+  a bounded South Plateau `compliance-review` replay regenerated
+  `authority_explanation_paths.json`; fresh
+  `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`
+  now passes with `contract_status="reviewer_ready"`; and fresh
+  `promotion-suite --manifest config/promotion_suite_v1.json --strict-expansion`
+  now passes with `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=true`, and `open_expansion_slot_count=0`.
+- Routing truth:
+  Milestones 1 through 9 remain implemented, Milestone 10 is closed through
+  post-V1 real-package expansion plus South Plateau reviewer-ready conversion,
+  and future applicability-first work should start as a new standalone
+  milestone.
+- Residual caveat outside this packet:
+  a fresh local rerun of `real-package-review-coverage-eval` still depends on
+  the preserved West Reservoir replay-context package path under
+  `/Users/chunkstand/Downloads/West Reservoir (67436)`. That package-authority
+  drift belongs to the separate real-package review coverage lane and was not
+  reopened in this milestone.
 
 ## Full Canonical Live Source-Set Promotion Milestone 4 Closeout
 
