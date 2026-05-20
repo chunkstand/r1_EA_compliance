@@ -231,7 +231,6 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
 - `docs/SESSION_HANDOFF.md`
 - `docs/ARCHITECTURE.md`
-- `docs/architecture.md`
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/TECH_DEBT_REGISTER.md`
 - `docs/architecture_contract.toml`
@@ -273,9 +272,9 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - Tests should split by contract or behavior family, not by arbitrary line budget alone.
 - Fixture helpers should move to focused support modules only when the split increases reuse and
   keeps the scenario ownership clear.
-- `docs/ARCHITECTURE.md` should remain the canonical architecture path. `docs/architecture.md`
-  should either become a clearly marked compatibility stub or be removed after references are
-  updated.
+- `docs/ARCHITECTURE.md` should remain the canonical architecture path. On this case-insensitive
+  checkout, do not try to maintain a second physical lowercase file; guard the canonical tracked
+  path with tests and references instead.
 - `docs/AGENT_START_HERE.md` must stay short and route outward. It is not allowed to become another
   append-only state dump.
 - Any new module, CLI family, or dependency-boundary exception must land with matching updates to

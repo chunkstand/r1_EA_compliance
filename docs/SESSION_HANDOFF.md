@@ -14,6 +14,8 @@ drift before large owner-family splits begin.
 - outcome label:
   `reduced` for Milestone 0 and `resolved` for Milestone 1; the packet remains
   active for Milestone 3
+- closeout commit:
+  `78786d2` (`Resolve architecture refactor Milestones 0 and 1`)
 - routed packet:
   `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
 - baseline truth:
@@ -40,6 +42,13 @@ drift before large owner-family splits begin.
   `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` packet; the next bounded
   architecture slice is Milestone 3 on the project-planning and document-output
   hotspot family
+- stale-routing cleanup:
+  the immediately following older handoff sections
+  `Overall Architecture Refactor Milestone Plan` and
+  `Agentic Repo Best Practices Guide` are historical pre-closeout routing only;
+  current truth is this section plus the refreshed
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` and
+  `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md`
 - verification:
   `git status -sb`,
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
