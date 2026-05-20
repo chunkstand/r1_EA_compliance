@@ -1,23 +1,17 @@
 # Full Canonical Live Source-Set Promotion Milestone Plan
 
 Date: 2026-05-19
-Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through `c08e480` with live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 is the next routed slice
+Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 resolved locally 2026-05-19 through `c08e480` with live component-inventory parity on `source-set-f775524ab233ff27`; Milestone 3 resolved locally 2026-05-19 on live successor `source-set-f775524ab233ff27`; Milestone 4 is the next routed slice
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` live full-canonical source-set promotion boundary
 
 ## Purpose
 
-The repo now has a split full-canonical truth:
-
-- the live imported catalog plus extraction/currentness boundary in
-  `source_library/catalog/` is now `source-set-f775524ab233ff27`, and
-- the governing green full-canonical downstream contract is the refreshed archived replay
-  `source-set-732a5a91d31736f8`.
-
-This milestone exists to remove that split truth the right way. It does not paper over the gap by
-renaming `source-set-9e7d85759951c279` in docs or configs. Instead, it emits a new live successor
-source set from the existing canonical download run under current `HEAD`, replays the full-canonical
-forest-plan and downstream lanes on that live successor, then promotes that successor as the sole
-governing full-canonical source set.
+This packet existed to remove the split full-canonical truth between the live
+imported catalog boundary on `source-set-f775524ab233ff27` and the archived
+downstream green replay on `source-set-732a5a91d31736f8`. Milestone 3 has now
+closed that runtime split the right way. The remaining routed pass is
+Milestone 4: finish the durable sole-truth closeout across the docs/handoff
+set without rewriting history or losing the preserved archived evidence.
 
 The intent of that promoted live source set must remain explicit: it is the system's broader
 validated authority corpus, not a narrow forest-plan-only lane. The promoted live successor must be
@@ -34,24 +28,35 @@ plans, and supporting documents that the system must consider before any review-
 - `reuse-inventory --source-set-id source-set-f775524ab233ff27 --previous-source-set-id source-set-732a5a91d31736f8`
   now classifies `reuse_extraction=634` and `needs_extract=0`, and
   `source_library/derived/source-set-f775524ab233ff27/diagnostics/summary.json`
-  is green with `extracted_count=634`, `failed_count=0`, `chunk_count=98699`,
-  `reused_count=634`, and `validation_passed=true`.
+  is now green after the Milestone 3 no-reuse replay with
+  `extracted_count=634`, `failed_count=0`, `chunk_count=98827`,
+  `reused_count=0`, and `validation_passed=true`. The reuse-first replay
+  remains historical context only because the verified-extraction admission
+  contract rejected reused rows for the `343` required direct-document records
+  until the live extraction family was rebuilt truthfully.
 - `source_library/derived/source-set-f775524ab233ff27/authority_currentness/authority_currentness_report.json`
   is present and green.
 - `source_library/derived/source-set-f775524ab233ff27/forest_plan_components/summary.json`
   is now present and green with `component_count=1416`,
   `standard_count=397`, `coverage_passed=true`,
   `component_source_accuracy_passed=true`, and
-  `blocked_forest_unit_ids=[]`, but
-  `retrieval/summary.json`, `claims/summary.json`,
-  `knowledge_graph/nepa_3d_graph_validation.json`, and
-  `knowledge_graph/nepa_3d_graph_summary.json` are not yet present for that
-  live source set.
+  `blocked_forest_unit_ids=[]`.
+- `source_library/derived/source-set-f775524ab233ff27/retrieval/summary.json`
+  is now present and green with `reviewer_ready=true`,
+  `verified_extraction_admitted_source_count=343`,
+  `verified_extraction_required_source_count=343`, `chunk_count=98827`, and
+  `validation_passed=true`.
+- `source_library/derived/source-set-f775524ab233ff27/claims/summary.json`
+  is now present and green with `claim_count=122510` and
+  `validation_passed=true`.
+- `source_library/derived/source-set-f775524ab233ff27/knowledge_graph/nepa_3d_graph_validation.json`
+  and `knowledge_graph/nepa_3d_graph_summary.json` are now present and green
+  with `72` validation checks, `failed_validation_check_count=0`, `3,636`
+  nodes, and `7,185` edges.
 - The previous live negative proof `source-set-9e7d85759951c279` remains
-  historical context only after Milestone 2. The active live blocker is no
-  longer stale catalog shape or the forest-plan component inventory; it is the
-  still-unreplayed downstream full-canonical chain on
-  `source-set-f775524ab233ff27`.
+  historical context only after Milestones 2-3. The active live runtime
+  blocker is now closed; the remaining routed pass is the Milestone 4
+  docs-only sole-truth closeout on `source-set-f775524ab233ff27`.
 - The refreshed archived gate at
   `source_library/runs/phase2-canonical-full-canonical-classifier-refresh-20260519/catalog_gate/`
   emits `source-set-732a5a91d31736f8` from the same governing download run
@@ -72,23 +77,25 @@ plans, and supporting documents that the system must consider before any review-
   `config/r1_forest_plan_component_inventory_build_manifest.json`,
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`,
   and `config/r1_forest_plan_identity_reconciliation_v1.json`.
-- The downstream full-canonical contract configs still point at the archived
-  source set, not yet the live successor:
+- The downstream full-canonical contract configs now point at the live
+  successor:
   `config/region1_forest_plan_profile_eval_coverage_v1.json`,
   `config/forest_plan_component_retrieval_eval_v1.json`,
   `config/phase_eval_direct_eval_v1.json`, and
   `config/promotion_suite_v1.json`.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  still reports `full_canonical_corpus_ready=true`, but it does so for
-  `full_canonical_source_set_id=source-set-732a5a91d31736f8`, not for live
-  successor `source-set-f775524ab233ff27`.
-- The durable routing set is now aligned through Milestone 2 closeout
-  `c08e480`:
+  now reports `full_canonical_source_set_id=source-set-f775524ab233ff27`,
+  `full_canonical_corpus_ready=true`, `promotion_ready=true`, and `8/8`
+  required full-canonical results passing with
+  `full_canonical_failure_category_counts={}`.
+- The durable routing set was aligned through Milestone 2 closeout
+  `c08e480` before the live downstream replay closed:
   `README.md`, `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/SESSION_HANDOFF.md`, and the two superseded full-canonical
   forest-plan packets all describe `source-set-f775524ab233ff27` as the
   resolved live catalog plus extraction/currentness/component-inventory
-  boundary and Milestone 3 as the next routed slice.
+  boundary and Milestone 3 as the former next routed slice before the live
+  downstream replay closed.
 - The former stale-prose risk is now explicitly bounded to preserved historical
   context: the superseded full-canonical forest-plan packets label their
   `source-set-9e7d85759951c279` references as historical and route active live
@@ -402,6 +409,34 @@ Outcome label: resolved
   `promotion-suite`.
 - Close the milestone only when the eval and promotion artifacts themselves report the live
   successor source-set ID and the full-canonical chain is green without archived fallbacks.
+- Closed locally on 2026-05-19:
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`,
+  `config/phase_eval_direct_eval_v1.json`, and
+  `config/promotion_suite_v1.json` now bind the downstream full-canonical
+  contract to `source-set-f775524ab233ff27`.
+- Runtime replay truth on the live successor:
+  `forest-plan-profile-eval` passes with
+  `active_source_set_ids=["source-set-f775524ab233ff27"]`;
+  `forest-plan-component-retrieval-eval` passes `6/6`;
+  the live extraction family was rebuilt without reuse to
+  `extracted_count=634`, `failed_count=0`, `chunk_count=98827`, and
+  `reused_count=0` after the targeted Docling refresh of `WILD-ESA-094`;
+  `extraction-accuracy-audit` passes with `audited_record_count=343`;
+  `retrieval-build` is reviewer-ready with `verified_extraction_admitted_source_count=343`;
+  `claim-extract` passes with `claim_count=122510`;
+  `rule-claim-link` validates with `rule_count=48`, `link_count=0`, and
+  `gap_count=48`; bare `nepa-knowledge-graph-export` passes with
+  `72` validation checks, `3,636` nodes, and `7,185` edges; and
+  `promotion-suite` now reports
+  `full_canonical_source_set_id=source-set-f775524ab233ff27`,
+  `full_canonical_corpus_ready=true`, `promotion_ready=true`, and `8/8`
+  required full-canonical results passing.
+- Narrow runtime/code repair:
+  `nepa_knowledge_graph_export.py` now accepts the governed proving-context
+  pointer when its cached context ID is stale but its manifest path already
+  resolves to the active source set, so the live canonical graph replay no
+  longer depends on a manual `--authority-inventory` override.
 
 ### Milestone 4: Promote The Live Successor As Sole Full-Canonical Truth And Retire Archived Dependency
 
@@ -469,8 +504,8 @@ Outcome label: resolved
   `PYTHONPATH=src python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id <live-successor-source-set-id>`
   `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
 - Focused contract/test coverage:
-  `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profile_eval_contracts.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py -q`
-  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/catalog.py tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py tests/test_promotion_suite.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profile_eval_contracts.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py`
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_knowledge_graph_export.py tests/test_graph_accuracy_eval.py tests/test_source_register_proving.py tests/test_promotion_suite.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profile_eval_contracts.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py -q`
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py tests/test_nepa_knowledge_graph_export.py tests/test_graph_accuracy_eval.py tests/test_source_register_proving.py tests/test_catalog.py tests/test_forest_plan_source_delta_readiness.py tests/test_promotion_suite.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profile_eval_contracts.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py`
   `PYTHONPATH=src python -m compileall src`
 - Config/doc drift checks:
   `rg -n "source-set-732a5a91d31736f8" config/promotion_suite_v1.json config/region1_forest_plan_profile_eval_coverage_v1.json config/forest_plan_component_retrieval_eval_v1.json config/phase_eval_direct_eval_v1.json config/r1_forest_plan_component_inventory_build_manifest.json config/region1_forest_plan_readiness_nepa_3d_v1.json`

@@ -12,7 +12,7 @@ from usfs_r1_ea_sources.promotion_suite import run_promotion_suite
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 COMMITTED_PROMOTION_SUITE = REPO_ROOT / "config" / "promotion_suite_v1.json"
-FULL_CANONICAL_SOURCE_SET_ID = "source-set-732a5a91d31736f8"
+FULL_CANONICAL_SOURCE_SET_ID = "source-set-f775524ab233ff27"
 FULL_CANONICAL_DOWNLOAD_RUN_ID = "phase2-canonical-download-full-post-fps005-removal-20260519"
 
 
@@ -27,8 +27,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
     assert active_catalog["required_for_current_promotion"] is False
     assert active_catalog["required_for_full_canonical_corpus"] is True
     assert active_catalog["path"] == (
-        "runs/phase2-canonical-full-canonical-classifier-refresh-20260519/"
-        "catalog_gate/source_set_manifest.json"
+        "catalog/source_set_manifest.json"
     )
     active_catalog_checks = {check["name"]: check for check in active_catalog["checks"]}
     assert active_catalog_checks["full_canonical_source_set_matches"]["equals"] == (
@@ -51,10 +50,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
     active_validation = suite_results["full_canonical_catalog_validation"]
     assert active_validation["required_for_current_promotion"] is False
     assert active_validation["required_for_full_canonical_corpus"] is True
-    assert active_validation["path"] == (
-        "runs/phase2-canonical-full-canonical-classifier-refresh-20260519/"
-        "catalog_gate/catalog_validation.json"
-    )
+    assert active_validation["path"] == "catalog/catalog_validation.json"
     active_validation_checks = {
         check["name"]: check for check in active_validation["checks"]
     }

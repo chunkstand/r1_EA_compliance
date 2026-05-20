@@ -2,10 +2,10 @@
   "schema_version": "forest-plan-component-retrieval-eval-v1",
   "contract_id": "region1-forest-plan-component-retrieval-eval",
   "version": "1",
-  "description": "Standalone component-retrieval eval coverage for the refreshed archived full-canonical Region 1 multi-forest component inventory. Measures exact component recall, precision, applicable-standard recall, wrong-forest selection rate, and hard-negative behavior before review-scoped component compliance scoring.",
-  "source_set_id": "source-set-732a5a91d31736f8",
+  "description": "Standalone component-retrieval eval coverage for the live full-canonical Region 1 multi-forest component inventory. Measures exact component recall, precision, applicable-standard recall, wrong-forest selection rate, and hard-negative behavior before review-scoped component compliance scoring.",
+  "source_set_id": "source-set-f775524ab233ff27",
   "expected_active_source_set_ids": [
-    "source-set-732a5a91d31736f8"
+    "source-set-f775524ab233ff27"
   ],
   "search_config": {
     "top_k": 1

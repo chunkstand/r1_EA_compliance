@@ -334,6 +334,47 @@ def test_nepa_knowledge_graph_export_builds_source_register_v1_graph_from_region
         assert checks["nepa_3d_graph_region1_promoted_profiles_have_inventory"]["passed"]
 
 
+def test_nepa_knowledge_graph_export_accepts_stale_proving_context_id_when_manifest_matches() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-live"
+        stale_source_set_id = "source-set-stale"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        _rewrite_catalog_as_source_register_v1(output_dir, source_set_id=source_set_id)
+        proving_dir = output_dir / "derived" / stale_source_set_id / "source_register_proving"
+        proving_dir.mkdir(parents=True, exist_ok=True)
+        _write_json(proving_dir / "proving_slice_report.json", {"schema_version": "unit-proving-report"})
+        _write_json(
+            output_dir / "derived" / "source_register_proving" / "latest_context.json",
+            {
+                "schema_version": "source-register-proving-context-v1",
+                "source_set_id": stale_source_set_id,
+                "report_path": str((proving_dir / "proving_slice_report.json").resolve()),
+                "catalog_dir": str((output_dir / "catalog").resolve()),
+                "source_catalog_path": str((output_dir / "catalog" / "source_catalog.jsonl").resolve()),
+                "source_set_manifest_path": str(
+                    (output_dir / "catalog" / "source_set_manifest.json").resolve()
+                ),
+                "authority_inventory_path": str(paths["authority_inventory"].resolve()),
+                "source_addition_decisions_path": str(
+                    (proving_dir / "source_addition_decisions.json").resolve()
+                ),
+            },
+        )
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
+        )
+
+        assert result.summary["validation_passed"]
+        assert result.summary["authority_family_count"] == 3
+        assert result.summary["forest_plan_profile_count"] == 1
+
+
 def test_nepa_knowledge_graph_export_fails_when_inventory_is_borrowed_from_other_source_set() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"

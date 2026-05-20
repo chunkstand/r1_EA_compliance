@@ -22,7 +22,7 @@ from tests.test_source_register_proving import build_test_proving_slice
 from tests.support.phase_eval_fixtures import phase
 
 
-def _build_canonical_knowledge_graph(output_dir: Path) -> tuple[str, dict]:
+def _build_canonical_knowledge_graph(output_dir: Path) -> tuple[str, dict, dict]:
     proving = build_test_proving_slice(output_dir)
     source_set_id = proving.summary["source_set_id"]
 
@@ -44,13 +44,18 @@ def _build_canonical_knowledge_graph(output_dir: Path) -> tuple[str, dict]:
         catalog_path=currentness_inputs["catalog_path"],
         source_set_manifest_path=currentness_inputs["source_set_manifest_path"],
     )
+    graph_inputs = _write_minimal_region1_graph_inputs(output_dir, source_set_id=source_set_id)
     build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
     build_evidence_graph(output_dir=output_dir, source_set_id=source_set_id)
-    build_nepa_knowledge_graph_export(
+    export = build_nepa_knowledge_graph_export(
         output_dir=output_dir,
         source_set_id=source_set_id,
+        authority_inventory_path=currentness_inputs["authority_inventory_path"],
+        forest_plan_profiles_path=graph_inputs["forest_profiles_path"],
+        region1_forest_plan_readiness_path=graph_inputs["readiness_path"],
+        forest_plan_components_path=graph_inputs["component_inventory_path"],
     )
-    return source_set_id, currentness.summary
+    return source_set_id, currentness.summary, export.summary
 
 
 def _knowledge_graph_path(output_dir: Path, source_set_id: str) -> Path:
@@ -69,6 +74,110 @@ def _checks_by_name(output_path: Path) -> dict[str, dict]:
         str(check["name"]): check
         for check in payload.get("checks", [])
         if isinstance(check, dict) and check.get("name")
+    }
+
+
+def _write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _write_minimal_region1_graph_inputs(output_dir: Path, *, source_set_id: str) -> dict[str, Path]:
+    catalog_path = output_dir / "catalog" / "source_catalog.jsonl"
+    catalog_rows = [
+        json.loads(line)
+        for line in catalog_path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    assert catalog_rows
+    plan_source_record_id = str(catalog_rows[0]["source_record_id"])
+    derived_dir = output_dir / "derived" / source_set_id / "forest_plan_components"
+    component_inventory_path = derived_dir / "component_inventory.json"
+    forest_profiles_path = output_dir / "forest_profiles.json"
+    readiness_path = output_dir / "region1_readiness.json"
+    _write_json(
+        component_inventory_path,
+        {
+            "schema_version": "forest-plan-component-inventory-v0",
+            "source_set_id": source_set_id,
+            "components": [
+                {
+                    "component_id": "test-forest:standard-1",
+                    "forest_unit_id": "test-forest",
+                    "source_record_id": plan_source_record_id,
+                    "artifact_sha256": "sha-test-forest-plan",
+                    "content_sha256": "component-sha",
+                    "component_text": "Standard 01",
+                    "component_type": "standard",
+                    "source_chunk_ids": ["chunk:test-forest-plan"],
+                }
+            ],
+        },
+    )
+    _write_json(
+        forest_profiles_path,
+        {
+            "schema_version": "forest-plan-profiles-v0",
+            "known_other_forest_units": [],
+            "profiles": [
+                {
+                    "forest_unit_id": "test-forest",
+                    "forest_unit_names": ["Test Forest"],
+                    "active_plan_source_record_id": plan_source_record_id,
+                    "required_readiness_source_roles": ["primary_land_management_plan"],
+                    "supporting_source_record_ids_by_role": {
+                        "primary_land_management_plan": {
+                            "source_record_id": plan_source_record_id
+                        }
+                    },
+                }
+            ],
+        },
+    )
+    _write_json(
+        readiness_path,
+        {
+            "schema_version": "region1-forest-plan-readiness-v1",
+            "readiness_matrix_id": "unit-region1-readiness",
+            "source_set_id": source_set_id,
+            "region1_completeness_claim": False,
+            "field_directive_requirements": [],
+            "overlay_requirements": [],
+            "profile_rows": [
+                {
+                    "forest_unit_id": "test-forest",
+                    "forest_unit_names": ["Test Forest"],
+                    "profile_kind": "active_profile",
+                    "active_plan_source_record_id": plan_source_record_id,
+                    "graph_promotion_status": "promoted",
+                    "milestone_5_added_profile": False,
+                    "readiness_blockers": [],
+                    "source_requirements": [
+                        {
+                            "role": "primary_land_management_plan",
+                            "readiness_status": "catalog_confirmed",
+                            "source_record_id": plan_source_record_id,
+                        }
+                    ],
+                    "component_inventory_validation": {
+                        "status": "validated",
+                        "component_count": 1,
+                        "standard_count": 1,
+                    },
+                    "applicability_eval_coverage": {
+                        "status": "covered",
+                        "positive_case_count": 1,
+                        "hard_negative_case_count": 1,
+                        "fixture_family_ids": ["selected_profile_component_eval_seed"],
+                    },
+                }
+            ],
+        },
+    )
+    return {
+        "component_inventory_path": component_inventory_path,
+        "forest_profiles_path": forest_profiles_path,
+        "readiness_path": readiness_path,
     }
 
 
@@ -91,8 +200,9 @@ def test_phase_1_5_eval_commands_pass_on_proving_slice() -> None:
 def test_canonical_graph_eval_commands_pass_on_exported_knowledge_graph() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         output_dir = Path(tmp_dir) / "source_library"
-        source_set_id, currentness_summary = _build_canonical_knowledge_graph(output_dir)
-        export = build_nepa_knowledge_graph_export(output_dir=output_dir, source_set_id=source_set_id)
+        source_set_id, currentness_summary, export_summary = _build_canonical_knowledge_graph(
+            output_dir
+        )
 
         ontology_eval = run_authority_ontology_validate(
             output_dir=output_dir,
@@ -105,7 +215,7 @@ def test_canonical_graph_eval_commands_pass_on_exported_knowledge_graph() -> Non
         phase_eval = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
 
         assert currentness_summary["validation_passed"] is True
-        assert export.summary["validation_passed"] is True
+        assert export_summary["validation_passed"] is True
         assert ontology_eval.summary["passed"] is True
         assert relationship_eval.summary["passed"] is True
         assert alias_eval.summary["passed"] is True
@@ -121,7 +231,7 @@ def test_canonical_graph_eval_commands_pass_on_exported_knowledge_graph() -> Non
 def test_authority_ontology_validate_fails_when_required_source_set_node_type_missing() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         output_dir = Path(tmp_dir) / "source_library"
-        source_set_id, _ = _build_canonical_knowledge_graph(output_dir)
+        source_set_id, _, _ = _build_canonical_knowledge_graph(output_dir)
         graph_path = _knowledge_graph_path(output_dir, source_set_id)
         graph = json.loads(graph_path.read_text(encoding="utf-8"))
         graph["nodes"] = [
@@ -145,7 +255,7 @@ def test_authority_ontology_validate_fails_when_required_source_set_node_type_mi
 def test_graph_health_eval_fails_when_required_semantic_lens_is_missing() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         output_dir = Path(tmp_dir) / "source_library"
-        source_set_id, _ = _build_canonical_knowledge_graph(output_dir)
+        source_set_id, _, _ = _build_canonical_knowledge_graph(output_dir)
         graph_path = _knowledge_graph_path(output_dir, source_set_id)
         graph = json.loads(graph_path.read_text(encoding="utf-8"))
         graph["lens_metadata"] = [
@@ -166,7 +276,7 @@ def test_graph_health_eval_fails_when_required_semantic_lens_is_missing() -> Non
 def test_graph_accuracy_eval_fails_when_authority_path_loses_justification_edge() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         output_dir = Path(tmp_dir) / "source_library"
-        source_set_id, _ = _build_canonical_knowledge_graph(output_dir)
+        source_set_id, _, _ = _build_canonical_knowledge_graph(output_dir)
         graph_path = _knowledge_graph_path(output_dir, source_set_id)
         graph = json.loads(graph_path.read_text(encoding="utf-8"))
         graph["edges"] = [

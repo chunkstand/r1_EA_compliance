@@ -21,11 +21,61 @@ older references below that still treat `source-set-5e65d845ce77e1a0`,
 historical only after the 2026-05-19 import-completion closeout, unless a
 later milestone explicitly reruns those lanes. For the full-canonical live
 promotion lane specifically, references below that still treat
-`source-set-9e7d85759951c279` as the active follow-on target, or still route
-Milestone 2 as pending, are historical only after the 2026-05-19
-live-promotion Milestone 2 closeout that rebound the committed
-component-inventory manifest/readiness/identity surfaces to
+`source-set-9e7d85759951c279` as the active follow-on target, still route
+Milestone 2 as pending, or still describe archived
+`source-set-732a5a91d31736f8` as the governing live downstream contract are
+historical only after the 2026-05-19 live-promotion Milestone 3 closeout on
 `source-set-f775524ab233ff27`.
+
+## Full Canonical Live Source-Set Promotion Milestone 3 Closeout
+
+Latest closeout on 2026-05-19:
+
+- Routed implementation packet:
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone 3; the runtime full-canonical downstream split is
+  now closed on the live successor.
+- Implementation surfaces:
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`,
+  `config/phase_eval_direct_eval_v1.json`,
+  `config/promotion_suite_v1.json`,
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`,
+  focused graph/promotion contract tests, and the durable docs/handoff set.
+- Downstream replay truth on `source-set-f775524ab233ff27`:
+  a no-reuse `extract-build` replay rebuilt the live extraction family to
+  `extracted_count=634`, `failed_count=0`, `chunk_count=98827`, and
+  `reused_count=0` after the targeted Docling refresh of `WILD-ESA-094`;
+  `extraction-accuracy-audit` now passes with `audited_record_count=343`;
+  `authority-currentness` passes with `authority_family_count=454`;
+  `forest-plan-components-build` passes with `component_count=1416` and
+  `standard_count=397`; `forest-plan-profile-eval` passes with
+  `active_source_set_ids=["source-set-f775524ab233ff27"]`; `forest-plan-component-retrieval-eval`
+  passes `6/6`; `retrieval-build` is reviewer-ready with `chunk_count=98827`
+  and `verified_extraction_admitted_source_count=343`; `claim-extract` passes
+  with `claim_count=122510`; `rule-claim-link` validates with `rule_count=48`,
+  `link_count=0`, and `gap_count=48`; bare `nepa-knowledge-graph-export`
+  passes with `72` validation checks, `3,636` nodes, and `7,185` edges; and
+  `promotion-suite` now reports
+  `full_canonical_source_set_id=source-set-f775524ab233ff27`,
+  `full_canonical_corpus_ready=true`, `promotion_ready=true`, and `8/8`
+  required full-canonical results passing.
+- Graph-export durability truth:
+  `nepa_knowledge_graph_export.py` now accepts the governed proving-context
+  pointer when its cached context ID is stale but its manifest path already
+  resolves to the active source set, so the live canonical graph replay no
+  longer depends on a manual `--authority-inventory` override.
+- Routing truth:
+  live successor `source-set-f775524ab233ff27` now governs the active
+  catalog, extraction, currentness, component inventory, profile eval,
+  component retrieval, direct-eval contract, graph export, and promotion
+  surfaces; archived `source-set-732a5a91d31736f8` remains preserved
+  historical evidence only.
+- Next routing:
+  Milestone 4 docs-only sole-truth closeout on
+  `source-set-f775524ab233ff27`: collapse remaining historical routing prose
+  and pin the runtime closeout hash across the durable docs set.
 
 ## Full Canonical Live Source-Set Promotion Milestone 2 Closeout
 
@@ -54,17 +104,10 @@ Latest closeout on 2026-05-19:
   now passes on the live successor with `component_count=1416`,
   `standard_count=397`, `blocked_forest_unit_ids=[]`,
   `coverage_passed=true`, and `component_source_accuracy_passed=true`.
-- Split truth is reduced again but not yet closed: live successor
-  `source-set-f775524ab233ff27` now governs the catalog, extraction,
-  authority-currentness, and forest-plan component-inventory boundary, while
-  downstream profile-eval, component-retrieval, direct-eval, and
-  `promotion-suite` surfaces still point at archived
-  `source-set-732a5a91d31736f8`.
-- Next routing:
-  rebind the downstream full-canonical contract surfaces to
-  `source-set-f775524ab233ff27`, replay the profile/retrieval/claims/graph/
-  promotion chain on the live successor, and stop if any lane still depends on
-  archived `732a...` or guessed legacy-ID mappings.
+- Historical routing note:
+  this Milestone 2 section is preserved runtime context only after the later
+  Milestone 3 closeout above closed the downstream live replay on
+  `source-set-f775524ab233ff27`.
 
 ## Full Canonical Live Source-Set Promotion Milestone 1 Closeout
 

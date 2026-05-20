@@ -4572,7 +4572,16 @@ def _source_register_proving_context_for_source_set(
         context = resolve_latest_proving_context(output_dir)
     except (FileNotFoundError, ValueError, json.JSONDecodeError):
         return None
-    return context if str(context.get("source_set_id") or "") == source_set_id else None
+    if str(context.get("source_set_id") or "") == source_set_id:
+        return context
+    manifest_path_value = str(context.get("source_set_manifest_path") or "").strip()
+    if not manifest_path_value:
+        return None
+    try:
+        manifest = _read_json(manifest_path_value)
+    except (FileNotFoundError, ValueError, json.JSONDecodeError):
+        return None
+    return context if str(manifest.get("source_set_id") or "") == source_set_id else None
 
 
 def _empty_rule_pack() -> dict[str, Any]:

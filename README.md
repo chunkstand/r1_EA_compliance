@@ -75,7 +75,7 @@ source-delta-required, `1` documented official-source gap), but
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
 promotion evidence.
 
-Local active import baseline on 2026-05-19 after full canonical live source-set promotion Milestone 2:
+Local active import baseline on 2026-05-19 after full canonical live source-set promotion Milestone 3:
 
 - Active local catalog in `source_library/catalog/` is now full-register
   source set `source-set-f775524ab233ff27`, created on
@@ -107,17 +107,35 @@ Local active import baseline on 2026-05-19 after full canonical live source-set 
   `blocked_forest_unit_ids=[]`, `coverage_passed=true`, and
   `component_source_accuracy_passed=true`. Milestone 2 closeout commit:
   `c08e480` (`Resolve live source-set promotion Milestone 2`).
-- Archived `source-set-732a5a91d31736f8` still remains the governing green
-  downstream full-canonical contract while the live successor promotion is
-  carried through the remaining profile-eval, component-retrieval, retrieval,
-  claims, graph-export, direct-eval, and `promotion-suite` surfaces.
-- The next routed slice is Milestone 3 on live successor
-  `source-set-f775524ab233ff27`: rebind
+- Full canonical live promotion Milestone 3 is now resolved locally:
   `config/region1_forest_plan_profile_eval_coverage_v1.json`,
   `config/forest_plan_component_retrieval_eval_v1.json`,
   `config/phase_eval_direct_eval_v1.json`, and
-  `config/promotion_suite_v1.json`, then replay the downstream
-  full-canonical chain on the live successor.
+  `config/promotion_suite_v1.json` now bind the active downstream
+  full-canonical contract to `source-set-f775524ab233ff27`; a no-reuse
+  `extract-build` replay rebuilt the live extraction family to
+  `extracted_count=634`, `failed_count=0`, `chunk_count=98827`, and
+  `reused_count=0` after the targeted Docling refresh of `WILD-ESA-094`;
+  `extraction-accuracy-audit` now passes with `audited_record_count=343`;
+  `forest-plan-profile-eval` passes with
+  `active_source_set_ids=["source-set-f775524ab233ff27"]`; `forest-plan-component-retrieval-eval`
+  passes `6/6`; `retrieval-build` is reviewer-ready with
+  `verified_extraction_admitted_source_count=343`; `claim-extract` passes with
+  `claim_count=122510`; `rule-claim-link` validates with `rule_count=48`,
+  `link_count=0`, and `gap_count=48`; bare
+  `nepa-knowledge-graph-export --source-set-id source-set-f775524ab233ff27`
+  now passes with `72` validation checks, `3,636` nodes, and `7,185` edges;
+  and `promotion-suite --manifest config/promotion_suite_v1.json` now reports
+  `full_canonical_source_set_id=source-set-f775524ab233ff27`,
+  `full_canonical_corpus_ready=true`, `promotion_ready=true`, and `8/8`
+  required full-canonical results passing.
+- Archived `source-set-732a5a91d31736f8` remains preserved historical
+  downstream evidence, but it no longer governs the active live
+  full-canonical contract.
+- The next routed slice is Milestone 4 on live successor
+  `source-set-f775524ab233ff27`: finish the durable sole-truth closeout across
+  the remaining historical routing prose and pin this runtime closeout through
+  the durable docs set.
 - The proving-slice active catalog `source-set-9dcf819bc4cca486` and the
   planned-only Phase 2 gate `source-set-ae989382c52344db` remain historical
   pre-import baselines for this checkout, not the live

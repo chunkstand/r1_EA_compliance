@@ -36,6 +36,7 @@ from tests.support.phase_eval_fixtures import write_replay_context
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_WORKBOOK = REPO_ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
+FULL_CANONICAL_SOURCE_SET_ID = "source-set-f775524ab233ff27"
 
 
 class PhaseEvalTests(unittest.TestCase):
@@ -408,7 +409,7 @@ class PhaseEvalTests(unittest.TestCase):
     def test_phase_eval_requires_cross_forest_profile_eval_for_source_set_graph(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
-            source_set_id = "source-set-732a5a91d31736f8"
+            source_set_id = FULL_CANONICAL_SOURCE_SET_ID
             write_catalog_validation(output_dir, passed=True)
             write_extraction_diagnostics(
                 output_dir,
@@ -495,7 +496,7 @@ class PhaseEvalTests(unittest.TestCase):
     ) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
-            source_set_id = "source-set-732a5a91d31736f8"
+            source_set_id = FULL_CANONICAL_SOURCE_SET_ID
             write_catalog_validation(output_dir, passed=True)
             write_extraction_diagnostics(
                 output_dir,

@@ -5,6 +5,64 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Live Source-Set Promotion Milestone 3 Closeout
+
+This runtime/config slice closes the live successor downstream full-canonical
+rebind/replay boundary.
+
+- outcome label:
+  `resolved` for Milestone 3
+- implementation surfaces:
+  `config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `config/forest_plan_component_retrieval_eval_v1.json`,
+  `config/phase_eval_direct_eval_v1.json`,
+  `config/promotion_suite_v1.json`,
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`,
+  `tests/test_nepa_knowledge_graph_export.py`,
+  `tests/test_graph_accuracy_eval.py`,
+  the focused contract suite, and the durable closeout docs/handoff set
+- runtime truth:
+  live successor `source-set-f775524ab233ff27` now governs the active
+  downstream full-canonical lane; no-reuse `extract-build` rebuilt the live
+  extraction family to `extracted_count=634`, `failed_count=0`,
+  `chunk_count=98827`, and `reused_count=0` after the targeted Docling
+  refresh of `WILD-ESA-094`; `extraction-accuracy-audit` passes with
+  `audited_record_count=343`; `authority-currentness` passes with
+  `authority_family_count=454`; `forest-plan-components-build` passes with
+  `component_count=1416` and `standard_count=397`;
+  `forest-plan-profile-eval` passes with
+  `active_source_set_ids=["source-set-f775524ab233ff27"]`;
+  `forest-plan-component-retrieval-eval` passes `6/6`;
+  `retrieval-build` is reviewer-ready with `chunk_count=98827` and
+  `verified_extraction_admitted_source_count=343`; `claim-extract` passes with
+  `claim_count=122510`; `rule-claim-link` validates with `rule_count=48`,
+  `link_count=0`, and `gap_count=48`; bare
+  `nepa-knowledge-graph-export --source-set-id source-set-f775524ab233ff27`
+  now passes with `72` validation checks, `3,636` nodes, and `7,185` edges;
+  and `promotion-suite --manifest config/promotion_suite_v1.json` now reports
+  `full_canonical_source_set_id=source-set-f775524ab233ff27`,
+  `full_canonical_corpus_ready=true`, `promotion_ready=true`, and `8/8`
+  required full-canonical results passing
+- graph-export durability truth:
+  the canonical source-set graph exporter now accepts the governed
+  proving-context pointer when its cached source-set ID is stale but its
+  manifest path already resolves to the active source set, so the live replay
+  no longer depends on a manual `--authority-inventory` override
+- routing truth:
+  archived `source-set-732a5a91d31736f8` remains preserved historical
+  downstream evidence only; it no longer governs the active live
+  full-canonical contract
+- next routing:
+  Milestone 4 docs-only sole-truth closeout in
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`
+- verification:
+  `forest-plan-profile-eval`, `forest-plan-component-retrieval-eval`,
+  `extract-build`, `extraction-accuracy-audit`, `authority-currentness`,
+  `forest-plan-components-build`, `retrieval-build`, `claim-extract`,
+  `rule-claim-link`, `nepa-knowledge-graph-export`, `promotion-suite`,
+  the focused `93`-test pytest bundle, focused `ruff check`,
+  `python -m compileall src`, and `git diff --check` passed
+
 ## Full Canonical Live Source-Set Promotion Milestone 2 Alignment Pass
 
 This docs-only follow-up closes the remaining routing drift after Milestone 2
@@ -22,9 +80,8 @@ runtime closeout `c08e480`.
 - routing truth:
   live successor `source-set-f775524ab233ff27` is the resolved Milestone 2
   catalog plus extraction/currentness/component-inventory boundary through
-  `c08e480`, archived `source-set-732a5a91d31736f8` remains the governing
-  green downstream full-canonical contract, and the next routed slice is
-  Milestone 3 on `source-set-f775524ab233ff27`
+  `c08e480`; this section is historical only after the later Milestone 3
+  closeout above
 - stale-routing cleanup:
   the immediately following Milestone 2 runtime section, the older Milestone 1
   alignment/closeout sections, and the two superseded full-canonical

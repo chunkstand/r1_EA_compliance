@@ -9,7 +9,7 @@ from usfs_r1_ea_sources.phase_eval_direct_eval import load_phase_eval_direct_eva
 from usfs_r1_ea_sources.phase_eval_direct_eval import resolve_phase_eval_direct_eval_coverage
 
 
-FULL_CANONICAL_SOURCE_SET_ID = "source-set-732a5a91d31736f8"
+FULL_CANONICAL_SOURCE_SET_ID = "source-set-f775524ab233ff27"
 CURRENT_PROMOTION_SOURCE_SET_ID = "source-set-ba8d0feae79501b8"
 
 

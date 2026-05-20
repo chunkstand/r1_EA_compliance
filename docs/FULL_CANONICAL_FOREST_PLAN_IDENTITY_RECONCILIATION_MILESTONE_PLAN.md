@@ -1,7 +1,7 @@
 # Full Canonical Forest Plan Identity Reconciliation Milestone Plan
 
 Date: 2026-05-19
-Status: Resolved 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved 2026-05-19 through `237c45d`; Milestone 5 is resolved 2026-05-19 through `df2bd28`; live full-canonical follow-on now routes through `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`, with Milestones 1-2 resolved locally through `c08e480` on live successor `source-set-f775524ab233ff27`
+Status: Resolved 2026-05-19; Milestone 0 resolved 2026-05-19 through `d3606ad`; Milestone 1 reduced 2026-05-19 through `7dd4fb5`; archived full-canonical source-set refresh/rebind now emits `source-set-732a5a91d31736f8`; Milestone 2 is resolved locally; Milestone 3 is reduced historical runtime context; Milestone 4 is resolved 2026-05-19 through `237c45d`; Milestone 5 is resolved 2026-05-19 through `df2bd28`; live full-canonical follow-on now routes through `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`, with Milestones 1-3 resolved locally on live successor `source-set-f775524ab233ff27` and Milestone 4 as the next routed slice
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical forest-plan identity reconciliation boundary
 
 ## Purpose
@@ -86,10 +86,10 @@ replay boundary that downstream reruns must use.
   is now reduced through the active-source-set rebind. Its next routing is this dedicated
   identity-reconciliation packet, not another blind downstream rerun attempt.
 - That archived replay packet is now also locally complete as a handoff
-  boundary. The remaining live full-canonical route is Milestone 3 in
+  boundary. The remaining live full-canonical route is Milestone 4 in
   `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md` on live
   successor `source-set-f775524ab233ff27` after the locally resolved
-  Milestones 1-2.
+  Milestones 1-3.
 
 ## Goal
 
