@@ -5,6 +5,35 @@ Date: 2026-05-19
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Full Canonical Live Source-Set Promotion Milestone 1 Alignment Pass
+
+This docs-only follow-up closes the remaining routing drift after Milestone 1
+runtime closeout `09a85f7`.
+
+- outcome label:
+  `resolved` for the alignment pass; runtime truth is unchanged
+- aligned packet surfaces:
+  `README.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`, and
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
+- routing truth:
+  live successor `source-set-f775524ab233ff27` is the resolved Milestone 1
+  catalog plus extraction/currentness boundary through `09a85f7`, archived
+  `source-set-732a5a91d31736f8` remains the governing green downstream
+  full-canonical contract, and the next routed slice is Milestone 2 on
+  `source-set-f775524ab233ff27` at the forest-plan component-inventory
+  boundary
+- stale-routing cleanup:
+  the immediately following plan-routing section and the two superseded
+  full-canonical forest-plan packets are now historical context only; they must
+  not be read as the active packet after `09a85f7`
+- verification:
+  milestone-plan lint on the touched live-promotion packet plus
+  `git diff --check` passed in this alignment pass
+
 ## Full Canonical Live Source-Set Promotion Milestone 1 Closeout
 
 This runtime slice closes the live successor catalog/extraction/currentness

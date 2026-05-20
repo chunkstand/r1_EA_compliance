@@ -19,7 +19,10 @@ older references below that still treat `source-set-5e65d845ce77e1a0`,
 `source-set-9dcf819bc4cca486`, or the planned Phase 2 gate
 `source-set-ae989382c52344db` as the active local import catalog are
 historical only after the 2026-05-19 import-completion closeout, unless a
-later milestone explicitly reruns those lanes.
+later milestone explicitly reruns those lanes. For the full-canonical live
+promotion lane specifically, references below that still treat
+`source-set-9e7d85759951c279` as the active follow-on target are historical
+only after live-promotion Milestone 1 closeout `09a85f7`.
 
 ## Full Canonical Live Source-Set Promotion Milestone 1 Closeout
 
@@ -30,6 +33,8 @@ Latest closeout on 2026-05-19:
 - Outcome label:
   `resolved` for Milestone 1; the next routed slice is the live
   forest-plan component-inventory boundary.
+- Milestone 1 closeout commit:
+  `09a85f7` (`Resolve live source-set promotion Milestone 1`).
 - `catalog-build --run-id phase2-canonical-download-full-post-fps005-removal-20260519`
   now emits live successor source set `source-set-f775524ab233ff27` in
   `source_library/catalog/` with `source_count=634`, `artifact_count=622`,

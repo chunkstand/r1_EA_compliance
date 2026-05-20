@@ -94,11 +94,16 @@ Local active import baseline on 2026-05-19 after full canonical live source-set 
   `reused_count=634`, and `validation_passed=true`; and
   `authority-currentness --source-set-id source-set-f775524ab233ff27` passed
   with `authority_family_count=454`, `source_currentness_record_count=634`,
-  and `validation_passed=true`.
+  and `validation_passed=true`. Milestone 1 closeout commit:
+  `09a85f7` (`Resolve live source-set promotion Milestone 1`).
 - Archived `source-set-732a5a91d31736f8` still remains the governing green
   downstream full-canonical contract while the live successor is promoted
   through forest-plan components, retrieval, claims, graph export, and
   `promotion-suite`.
+- The next routed slice is Milestone 2 on live successor
+  `source-set-f775524ab233ff27`: repoint the component-inventory boundary and
+  prove `component_count=1416`, `standard_count=397`, and
+  `blocked_forest_unit_ids=[]` before any downstream config flip.
 - The proving-slice active catalog `source-set-9dcf819bc4cca486` and the
   planned-only Phase 2 gate `source-set-ae989382c52344db` remain historical
   pre-import baselines for this checkout, not the live

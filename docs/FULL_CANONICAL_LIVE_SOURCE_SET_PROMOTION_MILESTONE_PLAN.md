@@ -1,7 +1,7 @@
 # Full Canonical Live Source-Set Promotion Milestone Plan
 
 Date: 2026-05-19
-Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved locally 2026-05-19 with live successor `source-set-f775524ab233ff27`; Milestone 2 is the next routed slice
+Status: Milestone 0 resolved 2026-05-19 through routing rebaseline; Milestone 1 resolved 2026-05-19 through `09a85f7` with live successor `source-set-f775524ab233ff27`; Milestone 2 is the next routed slice
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` live full-canonical source-set promotion boundary
 
 ## Purpose
@@ -74,9 +74,16 @@ plans, and supporting documents that the system must consider before any review-
   still reports `full_canonical_corpus_ready=true`, but it does so for
   `full_canonical_source_set_id=source-set-732a5a91d31736f8`, not for live
   successor `source-set-f775524ab233ff27`.
-- `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md` still preserves superseded
-  prose that can be misread as if `source-set-9e7d85759951c279` itself is the already-promoted
-  green full-canonical source set. That drift must not survive this packet's closeout.
+- The durable routing set is now aligned through Milestone 1 closeout
+  `09a85f7`: `README.md`, `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, and the two superseded full-canonical
+  forest-plan packets all describe `source-set-f775524ab233ff27` as the
+  resolved live catalog plus extraction/currentness boundary and Milestone 2 as
+  the next routed slice.
+- The former stale-prose risk is now explicitly bounded to preserved historical
+  context: the superseded full-canonical forest-plan packets label their
+  `source-set-9e7d85759951c279` references as historical and route active live
+  promotion through this packet instead.
 
 ## Goal
 
