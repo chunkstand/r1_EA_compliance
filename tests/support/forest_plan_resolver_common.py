@@ -1,0 +1,208 @@
+from __future__ import annotations
+
+from contextlib import closing
+from pathlib import Path
+import hashlib
+import json
+import sqlite3
+
+
+def _write_extraction_diagnostics(
+    output_dir: Path,
+    source_set_id: str,
+    source_record_ids: list[str],
+    *,
+    catalog_source_count: int | None = None,
+) -> None:
+    diagnostics_dir = output_dir / "derived" / source_set_id / "diagnostics"
+    diagnostics_dir.mkdir(parents=True, exist_ok=True)
+    (diagnostics_dir / "extraction_validation.json").write_text(
+        json.dumps({"passed": True}, sort_keys=True),
+        encoding="utf-8",
+    )
+    manifest_records = [
+        {
+            "source_set_id": source_set_id,
+            "source_record_id": source_record_id,
+            "status": "extracted",
+        }
+        for source_record_id in source_record_ids
+    ]
+    (diagnostics_dir / "extraction_manifest.jsonl").write_text(
+        "".join(json.dumps(record, sort_keys=True) + "\n" for record in manifest_records),
+        encoding="utf-8",
+    )
+    summary = {
+        "source_set_id": source_set_id,
+        "catalog_source_count": catalog_source_count or len(source_record_ids),
+        "selected_source_count": len(source_record_ids),
+        "extracted_count": len(source_record_ids),
+        "filters": {
+            "id": source_record_ids if catalog_source_count else None,
+            "parser": None,
+            "limit": None,
+        },
+    }
+    (diagnostics_dir / "summary.json").write_text(
+        json.dumps(summary, sort_keys=True),
+        encoding="utf-8",
+    )
+    catalog_dir = output_dir / "catalog"
+    catalog_dir.mkdir(parents=True, exist_ok=True)
+    (catalog_dir / "source_set_manifest.json").write_text(
+        json.dumps({"source_set_id": source_set_id}, sort_keys=True),
+        encoding="utf-8",
+    )
+
+
+def _write_extraction_accuracy_audit(
+    output_dir: Path,
+    source_set_id: str,
+    *,
+    admitted_source_record_ids: list[str],
+) -> Path:
+    path = output_dir / "derived" / source_set_id / "diagnostics" / "extraction_accuracy_audit.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "source_set_id": source_set_id,
+        "passed": True,
+        "knowledge_base_admitted_source_record_ids": admitted_source_record_ids,
+        "knowledge_base_blocked_source_record_ids": [],
+    }
+    path.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
+    return path
+
+
+def _write_chunks(output_dir: Path, source_set_id: str, chunks: list[dict]) -> Path:
+    path = output_dir / "derived" / source_set_id / "chunks" / "chunks.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    for chunk in chunks:
+        artifact_path = output_dir / chunk["artifact_path"]
+        artifact_path.parent.mkdir(parents=True, exist_ok=True)
+        artifact_path.write_text(f"artifact for {chunk['source_record_id']}", encoding="utf-8")
+        text_path = output_dir / chunk["source_text_path"]
+        text_path.parent.mkdir(parents=True, exist_ok=True)
+        text_path.write_text(chunk["text"], encoding="utf-8")
+    path.write_text(
+        "".join(json.dumps(chunk, sort_keys=True) + "\n" for chunk in chunks),
+        encoding="utf-8",
+    )
+    return path
+
+
+def _write_catalog_sqlite(output_dir: Path, topics_by_source: dict[str, list[str]]) -> Path:
+    path = output_dir / "catalog" / "review_sources.sqlite"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with closing(sqlite3.connect(path)) as connection:
+        connection.executescript(
+            """
+            CREATE TABLE review_topics (
+              topic_id TEXT PRIMARY KEY,
+              label TEXT NOT NULL
+            );
+            CREATE TABLE source_review_topics (
+              source_record_id TEXT NOT NULL,
+              topic_id TEXT NOT NULL,
+              PRIMARY KEY (source_record_id, topic_id)
+            );
+            """
+        )
+        for source_record_id, topics in topics_by_source.items():
+            for index, topic in enumerate(topics):
+                topic_id = f"topic:{source_record_id}:{index}"
+                connection.execute("INSERT INTO review_topics VALUES (?, ?)", (topic_id, topic))
+                connection.execute(
+                    "INSERT INTO source_review_topics VALUES (?, ?)",
+                    (source_record_id, topic_id),
+                )
+        connection.commit()
+    return path
+
+
+def _chunk(
+    *,
+    source_set_id: str,
+    source_record_id: str,
+    title: str,
+    document_role: str,
+    support_document_role: str | None = None,
+    authority_level: str,
+    citation_label: str,
+    text: str,
+) -> dict:
+    content_sha256 = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    artifact_sha256 = hashlib.sha256(source_record_id.encode("utf-8")).hexdigest()
+    return {
+        "chunk_id": f"chunk:{source_record_id}",
+        "source_set_id": source_set_id,
+        "source_record_id": source_record_id,
+        "chunk_index": 0,
+        "title": title,
+        "document_role": document_role,
+        "support_document_role": support_document_role or document_role,
+        "authority_level": authority_level,
+        "host": "example.test",
+        "expected_parser": "html",
+        "artifact_sha256": artifact_sha256,
+        "artifact_path": f"artifacts/raw/{source_record_id}.html",
+        "citation_label": citation_label,
+        "original_url": f"https://example.test/{source_record_id}/original",
+        "effective_url": f"https://example.test/{source_record_id}",
+        "final_url": f"https://example.test/{source_record_id}",
+        "parser_name": "unit_parser",
+        "parser_version": "1.0",
+        "extracted_at": "2026-04-30T00:00:00Z",
+        "source_text_path": f"derived/{source_set_id}/extracted_text/{source_record_id}.txt",
+        "char_start": 0,
+        "char_end": len(text),
+        "page": None,
+        "section": None,
+        "heading": title,
+        "content_sha256": content_sha256,
+        "text": text,
+    }
+
+
+def _write_package(directory: Path, text: str) -> Path:
+    package_path = directory / "ea-package.txt"
+    package_path.write_text(text, encoding="utf-8")
+    return package_path
+
+
+def _east_crazies_fixture_text() -> str:
+    path = Path(__file__).resolve().parents[1] / "fixtures" / "forest_plan_evaluator" / (
+        "east_crazies_profile_driven.txt"
+    )
+    return path.read_text(encoding="utf-8")
+
+
+def _write_resolver_profile_config(
+    path: Path,
+    *,
+    forest_unit_names: list[str] | None = None,
+    required_roles: list[str] | None = None,
+    extra_profile_updates: dict | None = None,
+) -> None:
+    payload = json.loads(Path("config/forest_plan_profiles.json").read_text(encoding="utf-8"))
+    profile = payload["profiles"][0]
+    if forest_unit_names is not None:
+        profile["forest_unit_names"] = forest_unit_names
+    if required_roles is not None:
+        profile["required_readiness_source_roles"] = required_roles
+    if extra_profile_updates is not None:
+        extra_profile = dict(profile)
+        extra_profile.update(extra_profile_updates)
+        payload["profiles"].append(extra_profile)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def _names(entries: list[dict]) -> list[str]:
+    return [entry["name"] for entry in entries]
+
+
+def _check(validation: dict, name: str) -> dict:
+    return next(check for check in validation["checks"] if check["name"] == name)
+
+
+def _readiness_check(readiness: dict, name: str) -> dict:
+    return next(check for check in readiness["checks"] if check["name"] == name)

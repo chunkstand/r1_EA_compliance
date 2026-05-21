@@ -1500,10 +1500,56 @@ Progress after Sequence 36 on 2026-05-21:
   review routing, component adjudication, rule-pack validation, and package search contracts
   across the split compliance-review owner surface.
 
+Progress after Sequence 37 on 2026-05-21:
+
+- `tests/support/forest_plan_resolver_common.py` now owns the shared extraction diagnostics,
+  audit/catalog writers, package writer, East Crazies fixture loader, and profile-config helper
+  that previously remained inline inside `tests/test_forest_plan_resolver.py`.
+- `tests/support/forest_plan_resolver_custer_fixtures.py` now owns the Custer Gallatin resolver
+  source corpus builder plus the Custer component inventory fixture that previously remained inline
+  inside `tests/test_forest_plan_resolver.py`.
+- `tests/support/forest_plan_resolver_profile_fixtures.py` now owns the Beaverhead and Flathead
+  resolver source-library builders plus the Flathead component inventory fixture that previously
+  remained inline inside `tests/test_forest_plan_resolver.py`.
+- `tests/test_forest_plan_resolver_scope.py` now owns the profile-config, scope resolution,
+  readiness, Custer supporting-route, and ambiguity coverage that previously remained inline
+  inside `tests/test_forest_plan_resolver.py`.
+- `tests/test_forest_plan_resolver_profiles.py` now owns the Beaverhead and Flathead profile
+  routing, currentness, and hard-negative coverage that previously remained inline inside
+  `tests/test_forest_plan_resolver.py`.
+- `tests/test_forest_plan_resolver.py` keeps the East Crazies and component-evaluation sentinel
+  coverage while the extracted files preserve scope, profile, and shared-fixture surfaces end to
+  end.
+- `tests/test_forest_plan_resolver_test_boundary.py` now records the split owner budgets and
+  sentinel ownership for `tests/test_forest_plan_resolver.py`,
+  `tests/test_forest_plan_resolver_scope.py`, and
+  `tests/test_forest_plan_resolver_profiles.py`.
+- `tests/test_forest_plan_resolver.py` is reduced to `430` lines from the pre-sequence `2618`-line
+  baseline, while
+  `tests/test_forest_plan_resolver_scope.py=733`,
+  `tests/test_forest_plan_resolver_profiles.py=621`,
+  `tests/support/forest_plan_resolver_common.py=208`,
+  `tests/support/forest_plan_resolver_custer_fixtures.py=327`, and
+  `tests/support/forest_plan_resolver_profile_fixtures.py=370`.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `36` to `35`.
+- The fresh architecture probe reports `306` code files, `35` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_forest_plan_resolver.py=430`,
+  `tests/test_forest_plan_resolver_scope.py=733`,
+  `tests/test_forest_plan_resolver_profiles.py=621`,
+  `tests/support/forest_plan_resolver_common.py=208`,
+  `tests/support/forest_plan_resolver_custer_fixtures.py=327`,
+  `tests/support/forest_plan_resolver_profile_fixtures.py=370`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_resolver.py tests/test_forest_plan_resolver_scope.py tests/test_forest_plan_resolver_profiles.py tests/test_forest_plan_resolver_test_boundary.py -q`
+  passes `43/43`, preserving East Crazies, component-evaluation, profile-config, scope,
+  supporting-route, currentness, and owner-boundary coverage across the split forest-plan
+  resolver owner surface.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_forest_plan_resolver.py`, which is now the next
-  oversized test hotspot on the live architecture probe after the compliance-review family is
+- Milestone 8 remains active on `tests/test_project_sow_package.py`, which is now the next
+  oversized test hotspot on the live architecture probe after the forest-plan resolver family is
   reduced.
 
 Resolved scope after closeout:

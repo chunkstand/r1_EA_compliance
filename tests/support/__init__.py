@@ -1,1 +1,1 @@
-"""Shared test support for compliance hotspot boundary splits."""
+"""Shared test support for hotspot boundary splits and fixture helpers."""

@@ -5,59 +5,73 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
-## Overall Architecture Refactor Milestone 8 Sequence 36
+## Overall Architecture Refactor Milestone 8 Sequence 37
 
-This thirty-sixth overall architecture-refactor slice closes the
-`tests/test_compliance_review.py` hotspot split, records the new compliance-review test owners and
-their boundary contract in the routed packet, and keeps the broader Milestone 8 test-hotspot
-packet moving on the next oversized test owner from the live architecture probe.
+This thirty-seventh overall architecture-refactor slice closes the
+`tests/test_forest_plan_resolver.py` hotspot split, records the new forest-plan resolver test
+owners plus extracted fixture helpers in the routed packet, and keeps the broader Milestone 8
+test-hotspot packet moving on the next oversized test owner from the live architecture probe.
 
 - outcome label:
-  `reduced` for Milestone 8 sequence 36; the broader Milestone 8 family remains active
+  `reduced` for Milestone 8 sequence 37; the broader Milestone 8 family remains active
 - routed packet:
   `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
-- compliance-review-forest-plan-owner closeout:
-  `tests/test_compliance_review_forest_plan.py` now owns the forest-plan profile routing,
-  component gate, component adjudication, and stale-inventory coverage that previously remained
-  inline in `tests/test_compliance_review.py`
-- compliance-review-contract-owner closeout:
-  `tests/test_compliance_review_contracts.py` now owns the compliance rule-pack validation,
-  unsafe review-id guard, cache reuse, grouped conditional applicability, NEPA config contract,
-  and package-section search preference coverage that previously remained inline in
-  `tests/test_compliance_review.py`
-- compliance-review-boundary-owner closeout:
-  `tests/test_compliance_review_test_boundary.py` now records the split owner budgets and sentinel
-  ownership for `tests/test_compliance_review.py`,
-  `tests/test_compliance_review_forest_plan.py`, and
-  `tests/test_compliance_review_contracts.py`
+- forest-plan-resolver-common-support closeout:
+  `tests/support/forest_plan_resolver_common.py` now owns the shared extraction diagnostics,
+  audit/catalog writers, package writer, East Crazies fixture loader, and profile-config helper
+  that previously remained inline in `tests/test_forest_plan_resolver.py`
+- forest-plan-resolver-custer-support closeout:
+  `tests/support/forest_plan_resolver_custer_fixtures.py` now owns the Custer Gallatin resolver
+  source corpus builder plus the Custer component inventory fixture that previously remained inline
+  in `tests/test_forest_plan_resolver.py`
+- forest-plan-resolver-profile-support closeout:
+  `tests/support/forest_plan_resolver_profile_fixtures.py` now owns the Beaverhead and Flathead
+  resolver source-library builders plus the Flathead component inventory fixture that previously
+  remained inline in `tests/test_forest_plan_resolver.py`
+- forest-plan-resolver-scope-owner closeout:
+  `tests/test_forest_plan_resolver_scope.py` now owns the profile-config, scope resolution,
+  readiness, Custer supporting-route, and ambiguity coverage that previously remained inline in
+  `tests/test_forest_plan_resolver.py`
+- forest-plan-resolver-profile-owner closeout:
+  `tests/test_forest_plan_resolver_profiles.py` now owns the Beaverhead and Flathead profile
+  routing, currentness, and hard-negative coverage that previously remained inline in
+  `tests/test_forest_plan_resolver.py`
+- forest-plan-resolver-boundary-owner closeout:
+  `tests/test_forest_plan_resolver_test_boundary.py` now records the split owner budgets and
+  sentinel ownership for `tests/test_forest_plan_resolver.py`,
+  `tests/test_forest_plan_resolver_scope.py`, and
+  `tests/test_forest_plan_resolver_profiles.py`
 - facade-preserving routing:
-  `tests/test_compliance_review.py` keeps the generated-rule-pack gate sentinel plus the
-  reviewer-ready authority integration and compliance matrix/report artifact coverage while the
-  extracted files preserve the forest-plan and contract surfaces end to end
+  `tests/test_forest_plan_resolver.py` keeps the East Crazies and component-evaluation sentinel
+  coverage while the extracted files preserve scope, profile, and shared-fixture surfaces end to
+  end
 - direct contract coverage:
-  `tests/test_compliance_review.py`, `tests/test_compliance_review_forest_plan.py`,
-  `tests/test_compliance_review_contracts.py`, and
-  `tests/test_compliance_review_test_boundary.py` still verify generated-rule-pack gate behavior,
-  reviewer-ready authority artifacts, forest-plan routing, component adjudication, rule-pack
-  validation, package search preferences, and owner-boundary enforcement after the split
+  `tests/test_forest_plan_resolver.py`, `tests/test_forest_plan_resolver_scope.py`,
+  `tests/test_forest_plan_resolver_profiles.py`, and
+  `tests/test_forest_plan_resolver_test_boundary.py` still verify East Crazies, component
+  evaluation, profile-config routing, selected-profile isolation, supporting-route resolution,
+  Flathead currentness, and owner-boundary enforcement after the split
 - architecture closeout:
-  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `37` to `36`
-  after the `tests/test_compliance_review.py` hotspot is reduced below the `800`-line gate
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `36` to `35`
+  after the `tests/test_forest_plan_resolver.py` hotspot is reduced below the `800`-line gate
 - live probe evidence:
-  the fresh architecture probe reports `300` code files, `36` files above `800`, top hotspot
+  the fresh architecture probe reports `306` code files, `35` files above `800`, top hotspot
   `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
-  `tests/test_compliance_review.py=598`,
-  `tests/test_compliance_review_forest_plan.py=461`,
-  `tests/test_compliance_review_contracts.py=389`, no remaining modules above the
+  `tests/test_forest_plan_resolver.py=430`,
+  `tests/test_forest_plan_resolver_scope.py=733`,
+  `tests/test_forest_plan_resolver_profiles.py=621`,
+  `tests/support/forest_plan_resolver_common.py=208`,
+  `tests/support/forest_plan_resolver_custer_fixtures.py=327`,
+  `tests/support/forest_plan_resolver_profile_fixtures.py=370`, no remaining modules above the
   `20`-import fan-out gate, and no Python or JS/TS import cycles
 - residual system state:
-  runtime behavior is unchanged in this slice; the verification focus stayed on compliance-review
-  contract coverage, forest-plan routing, and architecture gates because only test-owner surfaces
-  and routing docs changed
+  runtime behavior is unchanged in this slice; the verification focus stayed on forest-plan
+  resolver contract coverage, support-fixture routing, and architecture gates because only
+  test-owner surfaces and routing docs changed
 - next routing:
-  continue the same umbrella packet inside Milestone 8 on `tests/test_forest_plan_resolver.py`
+  continue the same umbrella packet inside Milestone 8 on `tests/test_project_sow_package.py`
 - verification:
-  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_compliance_review_forest_plan.py tests/test_compliance_review_contracts.py tests/test_compliance_review_test_boundary.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_resolver.py tests/test_forest_plan_resolver_scope.py tests/test_forest_plan_resolver_profiles.py tests/test_forest_plan_resolver_test_boundary.py -q`,
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
   `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
   `PYTHONPATH=src uv run --extra dev ruff check src tests`,
