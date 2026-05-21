@@ -5,6 +5,67 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 7 Sequence 31
+
+This thirty-first overall architecture-refactor slice closes the `cli_derived` owner split,
+records the new derived-CLI helper modules in the architecture surfaces, and resolves the broader
+Milestone 7 eval/promotion/CLI packet so the umbrella plan can advance into Milestone 8 on the
+oversized CLI test owner.
+
+- outcome label:
+  `resolved` for Milestone 7 sequence 31; the broader umbrella packet remains active and now
+  advances to Milestone 8
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- cli-derived-registration-owner closeout:
+  `src/usfs_r1_ea_sources/cli_derived_registration.py` now owns parser registration and
+  derived-command spec construction that previously remained inline in `cli_derived.py`
+- cli-derived-dispatch-owner closeout:
+  `src/usfs_r1_ea_sources/cli_derived_dispatch.py` now owns summary-printing dispatch and
+  exit-code handling for derived commands that previously remained inline in `cli_derived.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/cli_derived.py` keeps the public `register_derived_commands(...)`,
+  `handle_derived_command(...)`, and monkeypatch-visible `run_*` and `build_*` runtime bindings
+  while switching those runtime bindings to thin wrappers and local command handlers instead of
+  importing the derived runtime family directly
+- direct contract coverage:
+  `tests/test_cli.py` still verifies parser registration, argument propagation, and exit-code
+  behavior across the derived CLI surface end to end after the split
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now records scoped command-family registration and dispatch entrypoints
+  in the CLI container, `docs/architecture_contract.toml` assigns
+  `cli_derived_registration.py` plus `cli_derived_dispatch.py` to the CLI layer, and
+  `tests/test_architecture_quality.py` removes the no-longer-needed `cli_derived` fan-out
+  exception
+- live probe evidence:
+  the fresh architecture probe reports `283` code files, `41` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, `cli_derived.py=643`,
+  `cli_derived_registration.py=418`, `cli_derived_dispatch.py=27`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles. The derived CLI fan-out seam is
+  reduced from the pre-sequence `22` local imports to `3`
+  (`cli_common`, `cli_derived_registration`, and `cli_derived_dispatch`)
+- residual system state:
+  the live commands
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  both still pass after the CLI split; upstream eval reports `matched_case_count=38`,
+  `required_category_count=19`, `required_lane_count=3`, and all lane summaries
+  `direct_eval_present`, while promotion suite remains green with
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, `promotion_ready=true`,
+  `expansion_ready=true`, and `open_expansion_slot_count=0`
+- next routing:
+  advance the same umbrella packet into Milestone 8 on `tests/test_cli.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 7 Sequence 30
 
 This thirtieth overall architecture-refactor slice closes the `cli_eval` owner split, records the

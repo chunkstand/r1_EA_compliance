@@ -1313,11 +1313,38 @@ Progress after Sequence 30 on 2026-05-21:
   `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
   both still pass after the CLI split.
 
-Remaining issue after closeout:
+Progress after Sequence 31 on 2026-05-21:
 
-- eval orchestration remains central, but the central owner files become smaller and their
-  dependencies are more deliberate.
-- Milestone 7 remains active on `cli_derived.py`.
+- `cli_derived_registration.py` now owns parser registration and derived-command spec construction
+  that previously remained inline inside `cli_derived.py`.
+- `cli_derived_dispatch.py` now owns summary-printing dispatch and exit-code handling for derived
+  commands that previously remained inline inside `cli_derived.py`.
+- `cli_derived.py` keeps the public `register_derived_commands(...)`,
+  `handle_derived_command(...)`, and monkeypatch-visible `run_*` and `build_*` runtime bindings
+  while switching those runtime bindings to thin wrappers and local command handlers instead of
+  directly importing the derived runtime family.
+- The CLI derived fan-out seam is now reduced from the pre-sequence `22` local imports to `3`
+  (`cli_common`, `cli_derived_registration`, and `cli_derived_dispatch`), while `cli_derived.py`
+  stays under the `800`-line gate at `643` lines with helper modules
+  `cli_derived_registration.py=418` and `cli_derived_dispatch.py=27`.
+- `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` now record the CLI registration and
+  dispatch helper owners inside the CLI container, and `tests/test_architecture_quality.py`
+  removes the now-obsolete high-fan-out whitelist for `cli_derived`.
+- The fresh architecture probe reports `283` code files, `41` files above `800`, no Python or
+  JS/TS import cycles, and no remaining modules above the `20`-import fan-out gate.
+- Live CLI replays
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  both still pass after the CLI split.
+
+Resolved scope after closeout:
+
+- the eval, promotion, and CLI owner family now uses facade-preserving module splits across
+  `phase_eval.py`, `phase_eval_direct_eval.py`, `v1_ea_eval.py`, `promotion_suite.py`,
+  `upstream_evaluation.py`, `cli_eval.py`, and `cli_derived.py`.
+- no Python module remains above the `20`-import fan-out gate, and Milestone 7 is resolved.
+- advance the umbrella packet to Milestone 8 on `tests/test_cli.py`.
 
 ### Milestone 8 - Split Oversized Tests And Support Fixtures
 
@@ -1328,7 +1355,7 @@ Purpose: restore test reviewability without weakening coverage.
 Implementation:
 
 1. Split oversized test files by contract family after their corresponding runtime families are
-   narrowed.
+   narrowed. Start with `tests/test_cli.py` now that the eval and derived CLI owners are reduced.
 2. Split support fixtures only when the split increases ownership clarity.
 3. Keep or strengthen negative-path coverage for all extracted families.
 

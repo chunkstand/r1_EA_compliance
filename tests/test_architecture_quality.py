@@ -16,7 +16,7 @@ CODE_GLOBS = ("*.py", "*.js")
 MAX_REVIEWABLE_LINES = 800
 MAX_ALLOWED_OVERSIZED_FILES = 41
 MAX_ALLOWED_FAN_OUT = 20
-ALLOWED_HIGH_FAN_OUT_MODULES = {"cli_derived"}
+ALLOWED_HIGH_FAN_OUT_MODULES: set[str] = set()
 
 
 def test_large_file_count_does_not_grow() -> None:

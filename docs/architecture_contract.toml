@@ -325,6 +325,8 @@ modules = [
   "cli_decision_support",
   "cli_document_planning",
   "cli_derived",
+  "cli_derived_dispatch",
+  "cli_derived_registration",
   "cli_eval_dispatch",
   "cli_eval",
   "cli_eval_registration",
