@@ -7,6 +7,14 @@ from pathlib import Path
 import sqlite3
 
 from .claim_extraction import SUPPORTED_CLAIM_TYPES
+from .rule_claim_binding_runtime import RULE_CLAIM_GAP_SCHEMA_VERSION
+from .rule_claim_binding_runtime import RULE_CLAIM_LINK_SCHEMA_VERSION
+from .rule_claim_binding_runtime import _claim_matches_rule_filters
+from .rule_claim_binding_runtime import _gap_id
+from .rule_claim_binding_runtime import _link_id
+from .rule_claim_binding_runtime import _rule_query
+from .rule_claim_binding_runtime import _score_rule_claim
+from .rule_claim_binding_runtime import _tokenize
 from .rule_packs import load_rule_pack
 from .rule_packs import validate_rule_pack
 
@@ -14,21 +22,13 @@ from .rule_packs import validate_rule_pack
 _RULE_CLAIM_BINDING = import_module("usfs_r1_ea_sources.rule_claim_binding")
 REQUIRED_GAP_FIELDS = _RULE_CLAIM_BINDING.REQUIRED_GAP_FIELDS
 REQUIRED_LINK_FIELDS = _RULE_CLAIM_BINDING.REQUIRED_LINK_FIELDS
-RULE_CLAIM_GAP_SCHEMA_VERSION = _RULE_CLAIM_BINDING.RULE_CLAIM_GAP_SCHEMA_VERSION
-RULE_CLAIM_LINK_SCHEMA_VERSION = _RULE_CLAIM_BINDING.RULE_CLAIM_LINK_SCHEMA_VERSION
 RULE_CLAIM_LINK_VALIDATION_SCHEMA_VERSION = (
     _RULE_CLAIM_BINDING.RULE_CLAIM_LINK_VALIDATION_SCHEMA_VERSION
 )
 _claim_artifact_readiness = _RULE_CLAIM_BINDING._claim_artifact_readiness
-_claim_matches_rule_filters = _RULE_CLAIM_BINDING._claim_matches_rule_filters
 _failed_check_names = _RULE_CLAIM_BINDING._failed_check_names
-_gap_id = _RULE_CLAIM_BINDING._gap_id
-_link_id = _RULE_CLAIM_BINDING._link_id
 _load_validated_claims_for_eval = _RULE_CLAIM_BINDING._load_validated_claims_for_eval
 _read_jsonl = _RULE_CLAIM_BINDING._read_jsonl
-_rule_query = _RULE_CLAIM_BINDING._rule_query
-_score_rule_claim = _RULE_CLAIM_BINDING._score_rule_claim
-_tokenize = _RULE_CLAIM_BINDING._tokenize
 _utc_now = _RULE_CLAIM_BINDING._utc_now
 
 

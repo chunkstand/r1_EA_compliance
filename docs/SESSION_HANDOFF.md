@@ -5,6 +5,62 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 19
+
+This nineteenth Milestone 6 slice closes the `rule-claim-runtime` owner seam, records the new
+owner module in the architecture surfaces, and keeps the umbrella packet routed inside Milestone 6
+instead of pretending the broader claims/evidence family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 19; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- rule-claim-runtime-owner closeout:
+  `src/usfs_r1_ea_sources/rule_claim_binding_runtime.py` now owns deterministic rule-query
+  assembly, source-filter matching, scoring, link/gap record construction, safe path-segment
+  validation, and deterministic link/gap identity helpers that previously remained in
+  `rule_claim_binding.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/rule_claim_binding.py` keeps the public `rule-claim-link`,
+  `rule-claim-validate`, and `rule-claim-eval` workflow surface, now holds the public facade plus
+  sqlite-write and artifact-readiness support, and delegates the deterministic build/runtime core
+  to the new owner module without changing callers
+- validation-boundary alignment:
+  `src/usfs_r1_ea_sources/rule_claim_binding_validation.py` now reads deterministic scoring,
+  filtering, and identity helpers from `rule_claim_binding_runtime.py` instead of the facade, so
+  the private runtime seam is owned in one place
+- direct contract coverage:
+  `tests/test_rule_claim_binding_runtime.py` now pins the extracted runtime seam directly, while
+  `tests/test_rule_claim_binding.py` still verifies the public rule-claim build and eval workflow
+  end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `rule_claim_binding_runtime.py` explicitly in the
+  evidence-and-claims container, and `docs/architecture_contract.toml` assigns it to the `claims`
+  layer
+- live probe evidence:
+  the fresh architecture probe reports `236` code files, `51` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `rule_claim_binding.py` reduced to `508` lines from the post-sequence-18 `849`-line baseline and
+  the pre-sequence `2017`-line baseline, new module `rule_claim_binding_runtime.py=349`,
+  `rule_claim_binding_validation.py=592`, `tests/test_rule_claim_binding.py=600`, new test seam
+  `tests/test_rule_claim_binding_runtime.py=172`, one fan-out hotspot at `cli_derived=22`, and no
+  Python or JS/TS import cycles
+- residual risk:
+  the broader claims/evidence hotspot family is still open beyond the completed rule-claim owner
+  family, with `evidence_graph.py`, `package_fact_graph.py`, `applicability_retrieval.py`,
+  `applicability_rule_pack.py`, and `applicability_eval.py` still routed inside Milestone 6
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on `evidence_graph.py`, then
+  `package_fact_graph.py`, `applicability_retrieval.py`, `applicability_rule_pack.py`, and
+  `applicability_eval.py`; do not advance to Milestone 7 yet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_rule_claim_binding.py tests/test_rule_claim_binding_eval.py tests/test_rule_claim_binding_runtime.py tests/test_rule_claim_binding_validation.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 18
 
 This eighteenth Milestone 6 slice closes the `rule-claim-validation` owner seam, records the new

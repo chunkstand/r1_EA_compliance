@@ -2,7 +2,7 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-5 complete; Milestone 6 active after Sequence 18
+Status: Milestones 0-5 complete; Milestone 6 active after Sequence 19
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
 `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-5 are now closed, the
@@ -48,20 +48,20 @@ machine-local state.
   `source_set_support.py` owns the shared derived-output path and support-document-role helpers
   now used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
   `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`.
-- Milestone 6 sequence 18 now closes the `rule-claim-validation` owner seam:
-  `rule_claim_binding_validation.py` now owns rule-claim artifact validation, rule-pack and claim
-  readiness checks, deterministic link/gap identity validation, provenance/filter/score/rank
-  checks, and sqlite validation support, while `rule_claim_binding.py` is reduced to the public
-  rule-claim facade plus the remaining rule-matching and build core. The next executable slice now
-  remains on the remaining `rule_claim_binding.py` build core inside Milestone 6.
+- Milestone 6 sequence 19 now closes the `rule-claim-runtime` owner seam:
+  `rule_claim_binding_runtime.py` now owns deterministic rule-query assembly, filter matching,
+  scoring, link/gap record construction, safe path-segment validation, and deterministic
+  link/gap identity helpers, while `rule_claim_binding.py` is reduced to the public rule-claim
+  facade plus sqlite-write and artifact-readiness support. The next executable slice now advances
+  to `evidence_graph.py` inside Milestone 6.
 
 ### Architecture probe current baseline
 
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `234` code files detected;
-- `52` code files exceed `800` lines;
+- `236` code files detected;
+- `51` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
 - top hotspot:
@@ -98,11 +98,13 @@ From
   extraction runtime surface at `342` lines, `src.usfs_r1_ea_sources.claim_extraction_validation.py`
   now owns the bounded validation surface at `614` lines, `src.usfs_r1_ea_sources.claim_extraction_eval.py`
   remains at the `800`-line gate, `src.usfs_r1_ea_sources.claim_extraction_graph.py` remains
-  below the gate at `457` lines, `src.usfs_r1_ea_sources.rule_claim_binding.py` is down to
-  `849` lines from the post-sequence-17 `1360`-line baseline and the pre-sequence `2017`-line
-  baseline, `src.usfs_r1_ea_sources.rule_claim_binding_eval.py` now owns the bounded rule-claim
-  eval seam at `708` lines, and `src.usfs_r1_ea_sources.rule_claim_binding_validation.py` now
-  owns the bounded rule-claim validation seam at `592` lines;
+  below the gate at `457` lines, `src.usfs_r1_ea_sources.rule_claim_binding.py` is down to `508`
+  lines from the post-sequence-18 `849`-line baseline, the post-sequence-17 `1360`-line baseline,
+  and the pre-sequence `2017`-line baseline, `src.usfs_r1_ea_sources.rule_claim_binding_runtime.py`
+  now owns the bounded rule-claim runtime seam at `349` lines,
+  `src.usfs_r1_ea_sources.rule_claim_binding_eval.py` now owns the bounded rule-claim eval seam at
+  `708` lines, and `src.usfs_r1_ea_sources.rule_claim_binding_validation.py` now owns the bounded
+  rule-claim validation seam at `592` lines;
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
 
@@ -124,7 +126,7 @@ From
   `tests/test_forest_plan_resolver.py`, `tests/test_project_sow_package.py`, and
   `tests/test_extract.py`.
 - Debt governance and cheap architecture gates are now green, but the large-file count remains at
-  `52` code files over `800` lines and still requires owner-family reduction instead of more
+  `51` code files over `800` lines and still requires owner-family reduction instead of more
   policy work.
 - The compliance-output family still has oversized verification ownership:
   `tests/test_compliance_review.py` is still a large mixed-owner file at `1418` lines, but the
@@ -698,6 +700,7 @@ Owner family:
 - `claim_extraction_validation.py`
 - `rule_claim_binding.py`
 - `rule_claim_binding_eval.py`
+- `rule_claim_binding_runtime.py`
 - `rule_claim_binding_validation.py`
 - `package_fact_graph.py`
 - `evidence_graph.py`
@@ -708,6 +711,23 @@ Implementation:
    formatting into narrower owner modules.
 2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
+
+Progress after Sequence 19 on 2026-05-20:
+
+- `rule_claim_binding_runtime.py` now owns deterministic rule-query assembly, filter matching,
+  scoring, link/gap record construction, safe path-segment validation, and deterministic
+  link/gap identity helpers that previously remained inside `rule_claim_binding.py`.
+- `rule_claim_binding_validation.py` now reads deterministic scoring, filtering, and identity
+  helpers from `rule_claim_binding_runtime.py`, so the runtime seam is owned in one place.
+- `tests/test_rule_claim_binding_runtime.py` now pins the extracted runtime seam directly, while
+  `tests/test_rule_claim_binding.py` still verifies the public rule-claim build and eval workflow
+  end to end.
+- `rule_claim_binding.py` is reduced to `508` lines from the post-sequence-18 `849`-line baseline
+  and the pre-sequence `2017`-line baseline, `rule_claim_binding_runtime.py` lands at `349`
+  lines, `tests/test_rule_claim_binding_runtime.py` lands at `172` lines, the
+  `tests/test_architecture_quality.py` oversized-file baseline tightens to `51`, and the fresh
+  architecture probe reports `236` code files, `51` files above `800`, and no Python or JS/TS
+  cycles.
 
 Progress after Sequence 18 on 2026-05-20:
 
@@ -943,12 +963,11 @@ Progress after Sequence 12 on 2026-05-20:
 Remaining issue after closeout:
 
 - The applicability validation family is now reduced to explicit owners, and the claim-graph,
-  claim-eval, claim-validation, claim-runtime, rule-claim-eval, and rule-claim-validation seams
-  are now closed, but the broader claims/evidence hotspot family remains open inside Milestone 6.
-  The next routed slice stays on the remaining `rule_claim_binding.py` build core, then advances to
-  `evidence_graph.py`, `package_fact_graph.py`, `applicability_retrieval.py`,
-  `applicability_rule_pack.py`, and `applicability_eval.py` before the umbrella packet can route
-  forward to Milestone 7.
+  claim-eval, claim-validation, claim-runtime, rule-claim-eval, rule-claim-validation, and
+  rule-claim-runtime seams are now closed, but the broader claims/evidence hotspot family remains
+  open inside Milestone 6. The next routed slice advances to `evidence_graph.py`, then
+  `package_fact_graph.py`, `applicability_retrieval.py`, `applicability_rule_pack.py`, and
+  `applicability_eval.py` before the umbrella packet can route forward to Milestone 7.
 
 ### Milestone 7 - Split Eval And Promotion Orchestration Hotspots
 
