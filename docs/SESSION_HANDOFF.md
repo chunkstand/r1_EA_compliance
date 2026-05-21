@@ -5,6 +5,79 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 7 Sequence 28
+
+This twenty-eighth overall architecture-refactor slice closes the `promotion_suite` owner split,
+records the new promotion-suite modules in the architecture surfaces, and lets the broader
+Milestone 7 eval/promotion packet advance to `upstream_evaluation.py` instead of staying pinned on
+the promotion-suite owner.
+
+- outcome label:
+  `reduced` for Milestone 7 sequence 28; the broader Milestone 7 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- promotion-suite-support-owner closeout:
+  `src/usfs_r1_ea_sources/promotion_suite_support.py` now owns shared suite constants,
+  manifest-context shaping, failure-category selection, JSON/path helpers, hashing, check
+  builders, and JSON write support that previously remained in `promotion_suite.py`
+- promotion-suite-artifact-owner closeout:
+  `src/usfs_r1_ea_sources/promotion_suite_artifacts.py` now owns rule-pack contract checks,
+  review-case result assembly, artifact result assembly, and check execution over JSON, binary, and
+  sidecar-hash artifact contracts that previously remained in `promotion_suite.py`
+- promotion-suite-expansion-owner closeout:
+  `src/usfs_r1_ea_sources/promotion_suite_expansion.py` now owns expansion-slot readiness shaping
+  and declared forest-plan-profile false-pass checks that previously remained in
+  `promotion_suite.py`
+- promotion-suite-summary-owner closeout:
+  `src/usfs_r1_ea_sources/promotion_suite_summary.py` now owns current-promotion,
+  strict-expansion, and full-canonical failure-category aggregation that previously remained in
+  `promotion_suite.py`
+- promotion-suite-validation-owner closeout:
+  `src/usfs_r1_ea_sources/promotion_suite_validation.py` now owns manifest, result-spec,
+  expansion-slot, and safe-id validation that previously remained in `promotion_suite.py`
+- promotion-suite-report-owner closeout:
+  `src/usfs_r1_ea_sources/promotion_suite_report.py` now owns markdown report rendering that
+  previously remained in `promotion_suite.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/promotion_suite.py` keeps the public `run_promotion_suite(...)` surface
+  and now owns only suite orchestration, readiness aggregation, and writeback without changing
+  callers
+- direct contract coverage:
+  `tests/test_promotion_suite.py` and the promotion-suite CLI surface in `tests/test_cli.py` still
+  verify the public promotion-suite facade and its caller contract end to end after the split
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `promotion_suite_support.py`,
+  `promotion_suite_artifacts.py`, `promotion_suite_expansion.py`,
+  `promotion_suite_summary.py`, `promotion_suite_validation.py`, and
+  `promotion_suite_report.py` explicitly in the eval container, and
+  `docs/architecture_contract.toml` assigns all six new modules to the `eval` layer
+- live probe evidence:
+  the fresh architecture probe reports `275` code files, `42` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `promotion_suite.py` reduced to `205` lines from the pre-sequence `1167`-line baseline, new
+  modules `promotion_suite_support.py=177`, `promotion_suite_artifacts.py=297`,
+  `promotion_suite_expansion.py=179`, `promotion_suite_summary.py=63`,
+  `promotion_suite_validation.py=223`, `promotion_suite_report.py=96`, one allowed fan-out hotspot
+  at `cli_derived=22`, and no Python or JS/TS import cycles
+- residual system state:
+  the live command
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  passes with `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `promotion_ready=true`, `expansion_ready=true`, `failure_category_counts={}`,
+  `expansion_failure_category_counts={}`, and `open_expansion_slot_count=0`, so this split did
+  not change the now-green live promotion semantics
+- next routing:
+  continue Milestone 7 inside the same umbrella packet on `upstream_evaluation.py`; do not advance
+  to the CLI orchestration owners until the upstream-evaluation seam is narrowed
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py tests/test_cli.py -k promotion_suite -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 7 Sequence 27
 
 This twenty-seventh overall architecture-refactor slice closes the `v1_ea_eval` owner split,

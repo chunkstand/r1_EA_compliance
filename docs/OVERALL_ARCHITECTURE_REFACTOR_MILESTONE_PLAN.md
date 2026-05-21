@@ -2,7 +2,7 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-6 complete; Milestone 7 active after Sequence 27
+Status: Milestones 0-6 complete; Milestone 7 active after Sequence 28
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
 `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-6 are now closed, the
@@ -1230,12 +1230,40 @@ Progress after Sequence 27 on 2026-05-21:
   `v1_ea_eval_forest_plan.py=502`, `v1_ea_eval_summary.py=712`, and no Python or JS/TS import
   cycles.
 
+Progress after Sequence 28 on 2026-05-21:
+
+- `promotion_suite_support.py` now owns shared suite constants, manifest-context shaping,
+  failure-category selection, JSON/path helpers, hashing, check builders, and JSON write support
+  that previously remained inside `promotion_suite.py`.
+- `promotion_suite_artifacts.py` now owns rule-pack contract checks, review-case result assembly,
+  artifact result assembly, and check execution over JSON, binary, and sidecar-hash artifact
+  contracts that previously remained inside `promotion_suite.py`.
+- `promotion_suite_expansion.py` now owns expansion-slot readiness shaping and declared
+  forest-plan-profile false-pass checks that previously remained inside `promotion_suite.py`.
+- `promotion_suite_summary.py` now owns current-promotion, strict-expansion, and full-canonical
+  failure-category aggregation that previously remained inside `promotion_suite.py`.
+- `promotion_suite_validation.py` now owns manifest, result-spec, expansion-slot, and safe-id
+  validation that previously remained inside `promotion_suite.py`.
+- `promotion_suite_report.py` now owns markdown report rendering that previously remained inside
+  `promotion_suite.py`.
+- `promotion_suite.py` is reduced to `205` lines from the pre-sequence `1167`-line baseline while
+  keeping `run_promotion_suite(...)` as the stable public facade for orchestrating the owned
+  helpers and writing `promotion_suite_results.json` plus `promotion_suite_report.md`.
+- `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` now list the extracted
+  promotion-suite owner modules explicitly in the `eval` container, and
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline to `42`.
+- The fresh architecture probe reports `275` code files, `42` files above `800`, one allowed
+  fan-out hotspot at `cli_derived=22`, `promotion_suite.py=205`,
+  `promotion_suite_support.py=177`, `promotion_suite_artifacts.py=297`,
+  `promotion_suite_expansion.py=179`, `promotion_suite_summary.py=63`,
+  `promotion_suite_validation.py=223`, `promotion_suite_report.py=96`, and no Python or JS/TS
+  import cycles.
+
 Remaining issue after closeout:
 
 - eval orchestration remains central, but the central owner files become smaller and their
   dependencies are more deliberate.
-- Milestone 7 remains active on `promotion_suite.py`, then `upstream_evaluation.py`, and the CLI
-  orchestration owners.
+- Milestone 7 remains active on `upstream_evaluation.py`, then the CLI orchestration owners.
 
 ### Milestone 8 - Split Oversized Tests And Support Fixtures
 
