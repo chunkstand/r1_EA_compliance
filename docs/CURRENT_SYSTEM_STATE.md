@@ -47,53 +47,56 @@ still route the overall architecture umbrella as open or still claim a fresh
 full-canonical bounded gold aggregate is green are historical only after the
 2026-05-21 Milestone 10 Sequence 52 rebaseline closeout described below.
 Older references below that still treat the live full-canonical gold replay as
-the earlier `14/14` rule/retrieval failure bundle are historical only after
-the 2026-05-21 generated-case routing repair and owner-family split described
-below.
+the earlier `14/14` rule/retrieval failure bundle or as a pre-scored
+applicability abort are historical only after the 2026-05-21 generated-case
+routing repair, owner-family split, and diagnostic generated-pack slice
+described below.
 
-## Full Canonical Compliance Gold Rebaseline Milestones 0 And 1
+## Full Canonical Compliance Gold Rebaseline Milestones 0 Through 2 Slice
 
 Latest implementation on 2026-05-21:
 
 - Routed implementation packet:
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 - Outcome label:
-  Milestone `0` freshness lock is resolved and Milestone `1` owner-family split
-  is resolved; the packet remains active on Milestone `2`.
+  Milestone `0` freshness lock is resolved, Milestone `1` owner-family split
+  is resolved, and the first Milestone `2` runtime-repair slice is reduced; the
+  packet remains active on Milestone `2`.
 - Implementation surfaces:
+  `src/usfs_r1_ea_sources/compliance_inputs.py`,
+  `src/usfs_r1_ea_sources/compliance_review.py`,
   `src/usfs_r1_ea_sources/compliance_review_eval.py`,
   `src/usfs_r1_ea_sources/compliance_gold_eval.py`,
+  `tests/test_compliance_review.py`,
   `tests/test_compliance_review_eval.py`, and
   `tests/test_compliance_gold_eval.py`.
 - Runtime repair:
   gold cases that carry `expected_generated_*` expectations now route back
   through the generated-rule-pack compliance-review eval path instead of
   silently falling through the base-rule-pack diagnostic lane. Focused
-  regression coverage now proves that generated expectations trigger the
-  generated-pack path and that generated rule IDs remain valid in the eval
-  contract.
+  regression coverage now also proves that eval-owned generated rule packs can
+  run in an explicit non-reviewer-ready diagnostic mode when synthetic cases
+  explicitly expect failed applicability validation.
 - Fresh isolated replay truth:
-  `compliance-gold-eval --results-dir source_library/reviews/compliance_gold_eval_seq52_fix1`
-  no longer fails on the prior `rule_claim_binding_miss` /
-  `rule_wording_issue` / `source_applicability_miss` /
-  `source_retrieval_miss` bundle. It now fails earlier because synthetic case
-  `compliance-eval-gold-all-authorities-supported` cannot pass applicability
-  validation: `candidate_universe_partitioned_without_unresolved_authorities`
-  reports `candidate_authority_count=67`, `applicable_partition_count=0`,
-  `non_applicable_partition_count=0`, and `67` unresolved candidate
-  authorities, so `compliance_review_eval` does not run and
-  `passed_case_count` remains `0/14`.
+  `compliance-gold-eval --results-dir source_library/reviews/compliance_gold_eval_seq52_fix3`
+  no longer aborts on synthetic-case applicability validation. All `14`
+  synthetic reviews now run through `generated_rule_pack_diagnostic`,
+  `compliance_review_eval_error=null`, `validation_match_rate=1.0`, and
+  `reviewer_ready_match_rate=1.0`, but every case still fails closed on live
+  all-`uncertain` findings. The isolated replay stays red at `0/14` passed
+  cases with failure-category counts
+  `{"authority_trace_coverage_miss": 14, "rule_claim_binding_miss": 14, "rule_wording_issue": 14, "source_applicability_miss": 14, "source_retrieval_miss": 14}`.
 - Bounded aggregate truth:
-  `gold_coverage_eval_seq52_fix1` stays red only because
-  `compliance_gold.passed=false`; it still records `required_theme_count=7`,
+  `gold_coverage_eval_seq52_fix3` stays red only because
+  `compliance_gold_failed=1`; it still records `required_theme_count=7`,
   `passed_theme_count=7`, `distinct_forest_count=2`,
   `distinct_package_style_count=3`, `reviewer_ready_review_count=2`, and
   `typed_blocked_review_count=1` with no threshold failures.
 - Next routing:
   keep the same packet active on Milestone `2`, with the remaining owner
-  surface now narrowed to applicability/adjudication readiness for the
-  synthetic gold fixtures rather than the earlier diagnostic
-  retrieval/binding noise.
+  surface now narrowed to live source-record/source-claim support and
+  all-`uncertain` finding drift for the synthetic gold fixtures rather than the
+  earlier applicability abort.
 
 ## Overall Architecture Refactor Milestone 10 Sequence 52
 

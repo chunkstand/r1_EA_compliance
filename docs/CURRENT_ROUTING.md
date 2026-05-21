@@ -31,10 +31,12 @@ Use this file as the short current route before opening the large append-only do
   path again; the older `14/14` rule/retrieval failure bundle was diagnostic noise from the
   base-rule-pack rerun path.
 - Fresh full-canonical `compliance-gold-eval` replay on `source-set-f775524ab233ff27` now fails
-  earlier on synthetic-case applicability readiness: case
-  `compliance-eval-gold-all-authorities-supported` leaves `67/67` candidate authorities unresolved,
-  so `compliance_review_eval` never runs and the bounded `gold_coverage_eval_seq52_fix1` replay
-  remains red only because `compliance_gold.passed=false`.
+  through a scored `generated_rule_pack_diagnostic` lane instead of aborting at applicability
+  validation. Validation and reviewer-ready expectations now both match at `1.0`, but all `14`
+  synthetic cases still resolve to live `uncertain` findings with failure families
+  `authority_trace_coverage_miss`, `rule_claim_binding_miss`, `rule_wording_issue`,
+  `source_applicability_miss`, and `source_retrieval_miss`; the bounded
+  `gold_coverage_eval_seq52_fix3` replay remains red only because `compliance_gold_failed=1`.
 - Next routed packet: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 
 ## Deep Reads

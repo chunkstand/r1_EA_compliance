@@ -7,6 +7,58 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Compliance Gold Rebaseline Milestone 2 Diagnostic Slice
+
+This slice keeps the same routed gold packet active, but it removes the
+synthetic generated-case early abort. The live full-canonical lane now fails
+closed on real scored deltas instead of `compliance_review_eval_not_run`.
+
+- outcome label:
+  Milestone `2` reduced; the packet remains active on the next Milestone `2`
+  owner family
+- routed packet:
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- runtime repair:
+  `src/usfs_r1_ea_sources/compliance_inputs.py`,
+  `src/usfs_r1_ea_sources/compliance_review.py`, and
+  `src/usfs_r1_ea_sources/compliance_review_eval.py` now allow eval-owned
+  generated rule packs to run in explicit
+  `generated_rule_pack_diagnostic` mode when a synthetic gold case explicitly
+  expects failed applicability validation or reviewer-readiness
+- fresh isolated replay truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52_fix3`
+  now lands all `14` synthetic reviews with `compliance_review_eval_error=null`
+  and `source_set_id=source-set-f775524ab233ff27`; the eval no longer aborts
+  at applicability validation. The red lane is now explicit:
+  `validation_match_rate=1.0`, `reviewer_ready_match_rate=1.0`, but
+  `status_match_rate=0.0`, `claim_type_match_rate=0.0`,
+  `source_evidence_match_rate=0.0`, `source_claim_link_match_rate=0.0`,
+  `source_record_match_rate=0.0`, `source_document_role_match_rate=0.0`, and
+  `authority_trace_coverage_rate=0.0`
+- live failure family:
+  the isolated replay stays red at `0/14` passed cases because every synthetic
+  review resolves to live all-`uncertain` findings. Aggregate failure-category
+  counts are now
+  `{"authority_trace_coverage_miss": 14, "rule_claim_binding_miss": 14, "rule_wording_issue": 14, "source_applicability_miss": 14, "source_retrieval_miss": 14}`
+  instead of the earlier null-output abort
+- bounded aggregate truth:
+  `source_library/reviews/gold_coverage_eval_seq52_fix3/gold_coverage_eval_results.json`
+  remains red only because `compliance_gold_failed=1`; the replay still records
+  `required_theme_count=7`, `passed_theme_count=7`,
+  `distinct_forest_count=2`, `distinct_package_style_count=3`,
+  `reviewer_ready_review_count=2`, and `typed_blocked_review_count=1` with no
+  threshold failures
+- next routing:
+  continue the same packet on Milestone `2`, now focused on live
+  source-record/source-claim support and the all-`uncertain` finding surface
+  rather than the earlier synthetic applicability abort
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/compliance_inputs.py src/usfs_r1_ea_sources/compliance_review.py src/usfs_r1_ea_sources/compliance_review_eval.py src/usfs_r1_ea_sources/compliance_gold_eval.py tests/test_compliance_review.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py`,
+  `PYTHONPATH=src python -m compileall src/usfs_r1_ea_sources/compliance_inputs.py src/usfs_r1_ea_sources/compliance_review.py src/usfs_r1_ea_sources/compliance_review_eval.py src/usfs_r1_ea_sources/compliance_gold_eval.py tests/test_compliance_review.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py`,
+  the fresh `compliance-gold-eval` replay above, the explicit-results bounded
+  `gold_coverage_eval_seq52_fix3` replay, and `git diff --check`
+
 ## Full Canonical Compliance Gold Rebaseline Milestones 0 And 1
 
 This slice begins the routed full-canonical gold packet: it fixes the

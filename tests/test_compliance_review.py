@@ -68,6 +68,52 @@ class ComplianceReviewTests(unittest.TestCase):
             self.assertFalse(gate["passed"])
             self.assertEqual(gate["details"]["mode"], "base_rule_pack_diagnostic")
 
+    def test_generated_rule_pack_diagnostic_mode_allows_non_reviewer_ready_eval(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            review_id = "generated-diagnostic"
+            _build_source_library(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            base_rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            generated_rule_pack_path = _write_generated_review_gate(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                package_path=package_path,
+                base_rule_pack_path=base_rule_pack_path,
+            )
+            (
+                output_dir
+                / "reviews"
+                / review_id
+                / "applicability"
+                / "generated_rule_pack_validation.json"
+            ).unlink()
+
+            result = run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=generated_rule_pack_path,
+                review_id=review_id,
+                reuse_package_cache=True,
+                allow_generated_rule_pack_diagnostic=True,
+            )
+
+            self.assertFalse(result.summary["reviewer_ready"])
+            self.assertFalse(result.summary["validation_passed"])
+            self.assertEqual(
+                result.summary["applicability_gate"]["mode"],
+                "generated_rule_pack_diagnostic",
+            )
+            validation = json.loads(
+                result.compliance_validation_path.read_text(encoding="utf-8")
+            )
+            gate = _check(validation, "applicability_generated_rule_pack_gate")
+            self.assertFalse(gate["passed"])
+            self.assertEqual(gate["details"]["mode"], "generated_rule_pack_diagnostic")
+
     def test_generated_rule_pack_gate_makes_review_reviewer_ready(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

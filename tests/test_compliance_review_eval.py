@@ -5,6 +5,8 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.compliance_review_eval import _case_requires_generated_rule_pack
+from usfs_r1_ea_sources.compliance_review_eval import _case_allows_generated_rule_pack_diagnostic
+from usfs_r1_ea_sources.compliance_review_eval import _generated_diagnostic_rule_ids
 from usfs_r1_ea_sources.compliance_review_eval import _normalized_eval_findings_by_rule
 from usfs_r1_ea_sources.compliance_review_eval import (
     _validate_compliance_review_eval_cases_against_rule_pack,
@@ -257,6 +259,48 @@ class ComplianceReviewEvalTests(unittest.TestCase):
         }
 
         _validate_compliance_review_eval_cases_against_rule_pack([case], _rule_pack())
+
+    def test_generated_expectations_allow_diagnostic_generated_rule_pack(self) -> None:
+        case = {
+            "id": "generated-case",
+            "package_text": "Purpose and Need",
+            "expected_statuses": {
+                "purpose_need": "pass",
+                "mitigation": "not_applicable",
+            },
+            "expected_generated_statuses": {
+                "trail_access_authority_template": "uncertain",
+            },
+            "expected_generated_validation_passed": False,
+        }
+
+        self.assertTrue(_case_allows_generated_rule_pack_diagnostic(case))
+        self.assertEqual(
+            _generated_diagnostic_rule_ids(case),
+            {"trail_access_authority_template"},
+        )
+
+    def test_generated_diagnostic_rule_ids_collect_generated_maps(self) -> None:
+        case = {
+            "id": "generated-case",
+            "package_text": "Purpose and Need",
+            "expected_generated_package_evidence": {
+                "trail_access_authority_template": True,
+            },
+            "expected_generated_source_claim_links": {
+                "mitigation_authority_template": True,
+            },
+            "expected_generated_reviewer_ready": False,
+        }
+
+        self.assertEqual(
+            _generated_diagnostic_rule_ids(case),
+            {
+                "mitigation_authority_template",
+                "trail_access_authority_template",
+            },
+        )
+        self.assertTrue(_case_allows_generated_rule_pack_diagnostic(case))
 
     def test_compliance_review_eval_rejects_status_count_mismatch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

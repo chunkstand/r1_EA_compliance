@@ -16,6 +16,7 @@ def applicability_gate_context(
     rule_pack_path: Path,
     rule_pack: dict,
     allow_base_rule_pack_review: bool,
+    allow_generated_rule_pack_diagnostic: bool = False,
 ) -> dict:
     is_generated = rule_pack.get("schema_version") == GENERATED_RULE_PACK_SCHEMA_VERSION
     if not is_generated:
@@ -224,6 +225,25 @@ def applicability_gate_context(
     ]
     failed = [check["name"] for check in checks if not check["passed"]]
     if failed:
+        if allow_generated_rule_pack_diagnostic:
+            return {
+                "mode": "generated_rule_pack_diagnostic",
+                "is_generated_rule_pack": True,
+                "reviewer_ready_eligible": False,
+                "rule_pack_path": str(rule_pack_path),
+                "applicability_dir": str(applicability_dir),
+                "applicability_validation_path": str(validation_path),
+                "generated_rule_pack_validation_path": str(generated_validation_path),
+                "applicability_decisions_path": str(decisions_path),
+                "applicable_authorities_path": str(applicable_path),
+                "non_applicable_authorities_path": str(non_applicable_path),
+                "non_applicable_authority_count": len(non_applicable.get("authorities") or []),
+                "search_coverage_certificates_path": str(coverage_path),
+                "applicability_provenance_path": str(provenance_path),
+                "expected_package_manifest_sha256": rule_pack.get("package_manifest_sha256"),
+                "expected_package_chunks_sha256": rule_pack.get("package_chunks_sha256"),
+                "checks": checks,
+            }
         raise ValueError(
             "Generated applicability rule pack gate failed. Failed checks: "
             + ", ".join(failed)

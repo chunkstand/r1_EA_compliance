@@ -87,6 +87,7 @@ def run_compliance_review(
     docling_timeout_seconds: float | None = 120.0,
     reuse_package_cache: bool = False,
     allow_base_rule_pack_review: bool = False,
+    allow_generated_rule_pack_diagnostic: bool = False,
 ) -> ComplianceReviewResult:
     """Run a versioned compliance rule pack against a local EA package."""
 
@@ -156,6 +157,7 @@ def run_compliance_review(
         rule_pack_path=rule_pack_path,
         rule_pack=rule_pack,
         allow_base_rule_pack_review=allow_base_rule_pack_review,
+        allow_generated_rule_pack_diagnostic=allow_generated_rule_pack_diagnostic,
     )
     evaluation_rule_pack_path = _write_evaluation_rule_pack(
         review_dir=review_dir,
