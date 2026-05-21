@@ -5,6 +5,83 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 39
+
+This thirty-ninth overall architecture-refactor slice closes the
+`tests/test_forest_plan_components.py` hotspot split, records the new forest-plan component test
+owners plus shared fixture helpers in the routed packet, and keeps the broader Milestone 8
+test-hotspot packet moving on the next oversized test owner from the live architecture probe.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 39; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- forest-plan-component-fixture-owner closeout:
+  `tests/support/forest_plan_component_fixtures.py` now owns the shared forest-plan component
+  fixture text, package-chunk builders, chunk writers, manifest-contract writers, and report-check
+  helpers that previously remained inline in `tests/test_forest_plan_components.py`
+- forest-plan-component-package-owner closeout:
+  `tests/test_forest_plan_components.py` now owns the package-search, section-binding, and
+  plan-consistency determination coverage that previously remained inline in
+  `tests/test_forest_plan_components.py`
+- forest-plan-component-inventory-owner closeout:
+  `tests/test_forest_plan_components_inventory.py` now owns the component-inventory parsing,
+  section-context, cross-reference suppression, and tabular-label rejection coverage that
+  previously remained inline in `tests/test_forest_plan_components.py`
+- forest-plan-component-coverage-owner closeout:
+  `tests/test_forest_plan_components_coverage.py` now owns the duplicate-label, overlapping-chunk,
+  source-accuracy, and generated-inventory coverage gating that previously remained inline in
+  `tests/test_forest_plan_components.py`
+- forest-plan-component-manifest-owner closeout:
+  `tests/test_forest_plan_components_manifest.py` now owns the manifest-batch, multi-forest,
+  component-bearing-role, forest-plan-support, and CLI parser coverage that previously remained
+  inline in `tests/test_forest_plan_components.py`
+- forest-plan-component-boundary-owner closeout:
+  `tests/test_forest_plan_components_test_boundary.py` now records the split owner budgets and
+  sentinel ownership for `tests/test_forest_plan_components.py`,
+  `tests/test_forest_plan_components_inventory.py`,
+  `tests/test_forest_plan_components_coverage.py`, and
+  `tests/test_forest_plan_components_manifest.py`
+- facade-preserving routing:
+  `tests/test_forest_plan_components.py` keeps the package-search, section-binding, and
+  plan-consistency determination sentinel coverage while the extracted files preserve the build
+  parsing, build coverage, and manifest/CLI surfaces end to end
+- direct contract coverage:
+  `tests/test_forest_plan_components.py`,
+  `tests/test_forest_plan_components_inventory.py`,
+  `tests/test_forest_plan_components_coverage.py`,
+  `tests/test_forest_plan_components_manifest.py`, and
+  `tests/test_forest_plan_components_test_boundary.py` still verify package-search, component-key
+  determination, inventory parsing, section-context routing, duplicate suppression, build-coverage
+  gating, manifest-batch parsing, CLI argument routing, and owner-boundary enforcement after the
+  split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `34` to `33`
+  after the `tests/test_forest_plan_components.py` hotspot is reduced below the `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `316` code files, `33` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_forest_plan_components.py=528`,
+  `tests/test_forest_plan_components_inventory.py=588`,
+  `tests/test_forest_plan_components_coverage.py=247`,
+  `tests/test_forest_plan_components_manifest.py=299`,
+  `tests/test_forest_plan_components_test_boundary.py=106`,
+  `tests/support/forest_plan_component_fixtures.py=137`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on forest-plan
+  component test-owner routing and architecture gates because only test-owner surfaces and routed
+  docs changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on `tests/test_extract.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_forest_plan_components_inventory.py tests/test_forest_plan_components_coverage.py tests/test_forest_plan_components_manifest.py tests/test_forest_plan_components_test_boundary.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 38
 
 This thirty-eighth overall architecture-refactor slice closes the

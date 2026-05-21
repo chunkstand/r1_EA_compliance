@@ -1546,56 +1546,47 @@ Progress after Sequence 37 on 2026-05-21:
   supporting-route, currentness, and owner-boundary coverage across the split forest-plan
   resolver owner surface.
 
-Progress after Sequence 38 on 2026-05-21:
+Progress after Sequence 39 on 2026-05-21:
 
-- `tests/support/project_sow_package_fixtures.py` now owns the shared Project SOW fixture paths,
-  graph-path helpers, completed-adjudication fixture builder, and intake/package validation
-  helpers that previously remained inline inside `tests/test_project_sow_package.py`.
-- `tests/test_project_sow_adjudication.py` now owns the adjudication template, adjudication eval,
-  adjudication apply, and EA package handoff coverage that previously remained inline inside
-  `tests/test_project_sow_package.py`.
-- `tests/test_project_sow_intake.py` now owns the intake schema, intake draft, reviewer-confirmed
-  draft replay, validation-only acceptance, and invalid-intake coverage that previously remained
-  inline inside `tests/test_project_sow_package.py`.
-- `tests/test_project_sow_package_validation.py` now owns the Project SOW graph and package
-  failure-path coverage that previously remained inline inside `tests/test_project_sow_package.py`.
-- `tests/test_project_sow_package.py` keeps the requirements-package sentinel, proving eval, and
-  operational-gate coverage while the extracted files preserve the adjudication, intake, and graph
-  validation surfaces end to end.
-- `tests/test_project_sow_package_test_boundary.py` now records the split owner budgets and
-  sentinel ownership for `tests/test_project_sow_package.py`,
-  `tests/test_project_sow_adjudication.py`,
-  `tests/test_project_sow_intake.py`, and
-  `tests/test_project_sow_package_validation.py`.
-- `docs/PROJECT_SOW_OPERATIONALIZATION_MILESTONE_PLAN.md`,
-  `docs/PROJECT_SOW_OPERATIONALIZATION_ACCEPTANCE_MATRIX.md`, and
-  `docs/PROJECT_SOW_REQUIREMENTS_PACKAGE_MILESTONE_PLAN.md` now point their live Project SOW
-  verification references at the split owner family instead of the retired monolith.
-- `tests/test_project_sow_package.py` is reduced to `405` lines from the pre-sequence
-  `1768`-line baseline, while
-  `tests/test_project_sow_adjudication.py=458`,
-  `tests/test_project_sow_intake.py=383`,
-  `tests/test_project_sow_package_validation.py=444`,
-  `tests/test_project_sow_package_test_boundary.py=106`, and
-  `tests/support/project_sow_package_fixtures.py=136`.
-- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `35` to `34`.
-- The fresh architecture probe reports `311` code files, `34` files above `800`, top hotspot
-  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
-  `tests/test_project_sow_package.py=405`,
-  `tests/test_project_sow_adjudication.py=458`,
-  `tests/test_project_sow_intake.py=383`,
-  `tests/test_project_sow_package_validation.py=444`,
-  `tests/support/project_sow_package_fixtures.py=136`, no remaining modules above the
-  `20`-import fan-out gate, and no Python or JS/TS import cycles.
-- `PYTHONPATH=src uv run --extra dev pytest tests/test_project_sow_package.py tests/test_project_sow_adjudication.py tests/test_project_sow_intake.py tests/test_project_sow_package_validation.py tests/test_project_sow_package_test_boundary.py -q`
-  passes `47/47`, preserving requirements-package, proving-eval, operational-gate, adjudication,
-  EA handoff, intake draft/validation, graph failure-path, and owner-boundary coverage across the
-  split Project SOW owner surface.
+- `tests/support/forest_plan_component_fixtures.py` now owns the shared forest-plan component
+  fixture text, package-chunk builders, chunk writers, manifest-contract writers, and report-check
+  helpers that previously remained inline inside `tests/test_forest_plan_components.py`.
+- `tests/test_forest_plan_components.py` now owns the package-search, section-binding, and
+  plan-consistency determination coverage that previously remained inline inside
+  `tests/test_forest_plan_components.py`.
+- `tests/test_forest_plan_components_inventory.py` now owns the component-inventory parsing,
+  section-context, cross-reference suppression, and tabular-label rejection coverage that
+  previously remained inline inside `tests/test_forest_plan_components.py`.
+- `tests/test_forest_plan_components_coverage.py` now owns the duplicate-label, overlapping-chunk,
+  source-accuracy, and generated-inventory coverage gating that previously remained inline inside
+  `tests/test_forest_plan_components.py`.
+- `tests/test_forest_plan_components_manifest.py` now owns the manifest-batch, multi-forest,
+  component-bearing-role, forest-plan-support, and CLI parser coverage that previously remained
+  inline inside `tests/test_forest_plan_components.py`.
+- `tests/test_forest_plan_components_test_boundary.py` now records the split owner budgets and
+  sentinel ownership for `tests/test_forest_plan_components.py`,
+  `tests/test_forest_plan_components_inventory.py`,
+  `tests/test_forest_plan_components_coverage.py`, and
+  `tests/test_forest_plan_components_manifest.py`.
+- `tests/test_forest_plan_components.py` is reduced to `528` lines from the pre-sequence
+  `1754`-line baseline, while
+  `tests/test_forest_plan_components_inventory.py=588`,
+  `tests/test_forest_plan_components_coverage.py=247`,
+  `tests/test_forest_plan_components_manifest.py=299`,
+  `tests/test_forest_plan_components_test_boundary.py=106`, and
+  `tests/support/forest_plan_component_fixtures.py=137`.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `34` to `33`.
+- The fresh architecture probe reports `316` code files, `33` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, no remaining modules above
+  the `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_forest_plan_components_inventory.py tests/test_forest_plan_components_coverage.py tests/test_forest_plan_components_manifest.py tests/test_forest_plan_components_test_boundary.py -q`
+  passes `37/37`, preserving package-search, determination, build parsing, dedupe, manifest/CLI,
+  and owner-boundary coverage across the split forest-plan component owner surface.
 
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_forest_plan_components.py`, which is now the next
-  oversized test hotspot on the live architecture probe after the Project SOW family is reduced.
+- Milestone 8 remains active on `tests/test_extract.py`, which is now the next oversized test
+  hotspot on the live architecture probe after the forest-plan component family is reduced.
 
 Resolved scope after closeout:
 
