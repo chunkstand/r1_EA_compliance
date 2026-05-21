@@ -5,6 +5,74 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 42
+
+This forty-second overall architecture-refactor slice closes the
+`tests/test_final_qa_certification.py` hotspot split, records the new final-QA certification test
+owners plus shared fixture helpers in the routed packet, and keeps the broader Milestone 8
+test-hotspot packet moving on the next oversized test owner from the live architecture probe.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 42; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- final-qa-fixture-owner closeout:
+  `tests/support/final_qa_certification_fixtures.py` now owns the shared synthetic review packet,
+  final-QA config writer, expected-summary builder, count selector, matrix-row builder, and hash
+  helpers that previously remained inline in `tests/test_final_qa_certification.py`
+- final-qa-contract-owner closeout:
+  `tests/test_final_qa_certification.py` now owns the routed config, expected-summary, minimal
+  packet fixture, and output-schema contract coverage that previously remained inline in
+  `tests/test_final_qa_certification.py`
+- final-qa-report-owner closeout:
+  `tests/test_final_qa_certification_report.py` now owns the generated report family and outer
+  gate self-reference coverage that previously remained inline in
+  `tests/test_final_qa_certification.py`
+- final-qa-validation-owner closeout:
+  `tests/test_final_qa_certification_validation.py` now owns the validate-only missing-packet,
+  phase-eval pending final-QA-only, and stale validation sidecar coverage that previously
+  remained inline in `tests/test_final_qa_certification.py`
+- final-qa-boundary-owner closeout:
+  `tests/test_final_qa_certification_test_boundary.py` now records the split owner budgets and
+  sentinel ownership for `tests/test_final_qa_certification.py`,
+  `tests/test_final_qa_certification_report.py`, and
+  `tests/test_final_qa_certification_validation.py`
+- facade-preserving routing:
+  `tests/test_final_qa_certification.py` keeps the config and fixture sentinel coverage while the
+  extracted files preserve the generated report and validation surfaces end to end
+- direct contract coverage:
+  `tests/test_final_qa_certification.py`,
+  `tests/test_final_qa_certification_report.py`,
+  `tests/test_final_qa_certification_validation.py`, and
+  `tests/test_final_qa_certification_test_boundary.py` still verify final-QA config routing,
+  expected-summary locking, rendered packet outputs, self-reference filtering, validate-only
+  fail-closed behavior, stale sidecar detection, and owner-boundary enforcement after the split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `31` to `30`
+  after the `tests/test_final_qa_certification.py` hotspot is reduced below the `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `329` code files, `30` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_final_qa_certification.py=416`,
+  `tests/test_final_qa_certification_report.py=174`,
+  `tests/test_final_qa_certification_validation.py=101`,
+  `tests/test_final_qa_certification_test_boundary.py=101`, and
+  `tests/support/final_qa_certification_fixtures.py=765`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on final-QA
+  certification test-owner routing and architecture gates because only test-owner surfaces and
+  routed docs changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on `tests/test_retrieval.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_final_qa_certification.py tests/test_final_qa_certification_report.py tests/test_final_qa_certification_validation.py tests/test_final_qa_certification_test_boundary.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 41
 
 This forty-first overall architecture-refactor slice closes the

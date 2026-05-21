@@ -1582,11 +1582,44 @@ Progress after Sequence 41 on 2026-05-21:
   passes `11/11`, preserving source-set, readiness, review-overlay, phase-eval, and
   owner-boundary coverage across the split NEPA knowledge-graph export owner surface.
 
+Progress after Sequence 42 on 2026-05-21:
+
+- `tests/support/final_qa_certification_fixtures.py` now owns the shared synthetic review packet,
+  final-QA config writer, expected-summary builder, count selector, matrix-row builder, and hash
+  helpers that previously remained inline inside `tests/test_final_qa_certification.py`.
+- `tests/test_final_qa_certification.py` now owns the routed config, expected-summary, minimal
+  packet fixture, and output-schema contract coverage that previously remained inline inside
+  `tests/test_final_qa_certification.py`.
+- `tests/test_final_qa_certification_report.py` now owns the generated report family and outer
+  gate self-reference coverage that previously remained inline inside
+  `tests/test_final_qa_certification.py`.
+- `tests/test_final_qa_certification_validation.py` now owns the validate-only missing-packet,
+  phase-eval pending final-QA-only, and stale validation sidecar coverage that previously
+  remained inline inside `tests/test_final_qa_certification.py`.
+- `tests/test_final_qa_certification.py` keeps the config and fixture sentinel coverage while the
+  extracted files preserve the generated report and validation surfaces end to end.
+- `tests/test_final_qa_certification_test_boundary.py` now records the split owner budgets and
+  sentinel ownership for `tests/test_final_qa_certification.py`,
+  `tests/test_final_qa_certification_report.py`, and
+  `tests/test_final_qa_certification_validation.py`.
+- `tests/test_final_qa_certification.py` is reduced to `416` lines from the pre-sequence
+  `1351`-line baseline, while
+  `tests/test_final_qa_certification_report.py=174`,
+  `tests/test_final_qa_certification_validation.py=101`,
+  `tests/test_final_qa_certification_test_boundary.py=101`, and
+  `tests/support/final_qa_certification_fixtures.py=765`.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `31` to `30`.
+- The fresh architecture probe reports `329` code files, `30` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, no remaining modules above
+  the `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_final_qa_certification.py tests/test_final_qa_certification_report.py tests/test_final_qa_certification_validation.py tests/test_final_qa_certification_test_boundary.py -q`
+  passes `16/16`, preserving routed config, expected-summary, generated report family, validate-only,
+  stale-sidecar, and owner-boundary coverage across the split final-QA certification owner surface.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_final_qa_certification.py`, which is now the next
-  oversized test hotspot on the live architecture probe after the NEPA knowledge-graph export
-  family is reduced.
+- Milestone 8 remains active on `tests/test_retrieval.py`, which is now the next oversized test
+  hotspot on the live architecture probe after the final-QA certification family is reduced.
 
 Resolved scope after closeout:
 
