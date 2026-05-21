@@ -33,6 +33,49 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 21
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 6; sequence 21 closes the `package-fact-runtime` owner seam, but the
+  broader claims/evidence hotspot family remains active.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/package_fact_graph.py`,
+  `src/usfs_r1_ea_sources/package_fact_graph_runtime.py`,
+  `src/usfs_r1_ea_sources/package_fact_graph_terms.py`,
+  `tests/test_package_fact_graph_runtime.py`,
+  `tests/test_package_fact_graph_terms.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/architecture_contract.toml`, and
+  `tests/test_architecture_quality.py`.
+- Runtime seam closeout:
+  `package_fact_graph_runtime.py` now owns deterministic package-fact extraction, node and edge
+  assembly, uncertainty-record construction, section/runtime helpers, and extraction-summary
+  assembly; `package_fact_graph_terms.py` now owns deterministic term specifications,
+  profile-derived term expansion, extraction-method constants, and term deduplication support;
+  `package_fact_graph.py` now keeps the public package-fact facade plus validation, context
+  assembly, source-package metadata, and artifact IO.
+- Direct contract coverage:
+  `tests/test_package_fact_graph_runtime.py` and `tests/test_package_fact_graph_terms.py` now pin
+  the extracted seams directly, while `tests/test_package_fact_graph.py` still verifies the public
+  package-fact build workflow end to end.
+- Live probe evidence:
+  the fresh architecture probe reports `242` code files, `49` files above `800`, no Python or
+  JS/TS import cycles, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `package_fact_graph.py` reduced to `597` lines from the pre-sequence `1469`-line
+  baseline, `package_fact_graph_runtime.py` at `610` lines, `package_fact_graph_terms.py` at
+  `534` lines, `tests/test_package_fact_graph_runtime.py` at `124` lines, and
+  `tests/test_package_fact_graph_terms.py` at `21` lines.
+- Next routing:
+  continue inside Milestone 6 on `applicability_retrieval.py`, then `applicability_rule_pack.py`,
+  and `applicability_eval.py`. Do not advance to Milestone 7 yet.
+
 ## Overall Architecture Refactor Milestone 6 Sequence 20
 
 Latest closeout on 2026-05-20:

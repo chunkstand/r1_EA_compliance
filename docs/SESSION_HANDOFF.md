@@ -5,6 +5,59 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 21
+
+This twenty-first Milestone 6 slice closes the `package-fact-runtime` owner seam, records the new
+owner modules in the architecture surfaces, and keeps the umbrella packet routed inside Milestone 6
+instead of pretending the broader applicability/evidence family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 21; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- package-fact-runtime-owner closeout:
+  `src/usfs_r1_ea_sources/package_fact_graph_runtime.py` now owns deterministic package-fact
+  extraction, node and edge assembly, uncertainty-record construction, section/runtime helpers, and
+  extraction-summary assembly that previously remained in `package_fact_graph.py`
+- package-fact-term-owner closeout:
+  `src/usfs_r1_ea_sources/package_fact_graph_terms.py` now owns deterministic term specifications,
+  profile-derived term expansion, extraction-method constants, and term deduplication support used
+  by the package-fact runtime
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/package_fact_graph.py` keeps the public
+  `build_package_fact_graph(...)` workflow surface, now holds validation/context assembly,
+  source-package metadata, artifact IO, and the stable `_base_term_specs(...)` facade, and
+  delegates deterministic runtime assembly to the new owner modules without changing callers
+- direct contract coverage:
+  `tests/test_package_fact_graph_runtime.py` and `tests/test_package_fact_graph_terms.py` now pin
+  the extracted seams directly, while `tests/test_package_fact_graph.py` still verifies the public
+  package-fact build workflow end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `package_fact_graph_runtime.py` and
+  `package_fact_graph_terms.py` explicitly in the applicability container, and
+  `docs/architecture_contract.toml` assigns both to the `package_context` layer
+- live probe evidence:
+  the fresh architecture probe reports `242` code files, `49` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `package_fact_graph.py` reduced to `597` lines from the pre-sequence `1469`-line baseline, new
+  modules `package_fact_graph_runtime.py=610` and `package_fact_graph_terms.py=534`,
+  `tests/test_package_fact_graph_runtime.py=124`, `tests/test_package_fact_graph_terms.py=21`, one
+  fan-out hotspot at `cli_derived=22`, and no Python or JS/TS import cycles
+- residual risk:
+  the broader claims/evidence hotspot family is still open beyond the completed package-fact owner
+  family, with `applicability_retrieval.py`, `applicability_rule_pack.py`, and
+  `applicability_eval.py` still routed inside Milestone 6
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on `applicability_retrieval.py`, then
+  `applicability_rule_pack.py` and `applicability_eval.py`; do not advance to Milestone 7 yet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_package_fact_graph.py tests/test_package_fact_graph_runtime.py tests/test_package_fact_graph_terms.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 20
 
 This twentieth Milestone 6 slice closes the `evidence-graph-validation` owner seam, records the
