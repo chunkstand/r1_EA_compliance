@@ -5,6 +5,72 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 7 Sequence 29
+
+This twenty-ninth overall architecture-refactor slice closes the `upstream_evaluation` owner
+split, records the new upstream-evaluation modules in the architecture surfaces, and lets the
+broader Milestone 7 eval/promotion packet advance to `cli_eval.py` instead of staying pinned on
+the upstream-evaluation owner.
+
+- outcome label:
+  `reduced` for Milestone 7 sequence 29; the broader Milestone 7 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- upstream-eval-support-owner closeout:
+  `src/usfs_r1_ea_sources/upstream_evaluation_support.py` now owns shared path resolution,
+  JSON/JSONL IO, case-path normalization, timestamp generation, check lookup, and config shaping
+  that previously remained in `upstream_evaluation.py`
+- upstream-eval-contract-owner closeout:
+  `src/usfs_r1_ea_sources/upstream_evaluation_contracts.py` now owns manifest contract validation,
+  category/lane summary aggregation, and Markdown report rendering that previously remained in
+  `upstream_evaluation.py`
+- upstream-eval-fixture-owner closeout:
+  `src/usfs_r1_ea_sources/upstream_evaluation_fixture_support.py` now owns scenario workbook
+  generation, batch/download run materialization, artifact byte builders, extraction mutation
+  helpers, and preflight fixture result shaping that previously remained in
+  `upstream_evaluation.py`
+- upstream-eval-runner-owner closeout:
+  `src/usfs_r1_ea_sources/upstream_evaluation_runners.py` now owns fixture-backed capture,
+  catalog, and extraction runner execution plus per-case expectation matching that previously
+  remained in `upstream_evaluation.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/upstream_evaluation.py` keeps the public
+  `run_upstream_evaluation(...)` surface and now owns only manifest loading, case orchestration,
+  summary assembly, and writeback without changing callers
+- direct contract coverage:
+  `tests/test_upstream_evaluation.py` and the upstream-eval CLI surface in `tests/test_cli.py`
+  still verify the public upstream-evaluation facade and its caller contract end to end after the
+  split
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `upstream_evaluation_support.py`,
+  `upstream_evaluation_contracts.py`, `upstream_evaluation_fixture_support.py`, and
+  `upstream_evaluation_runners.py` explicitly in the eval container, and
+  `docs/architecture_contract.toml` assigns all four new modules to the `eval` layer
+- live probe evidence:
+  the fresh architecture probe reports `279` code files, `41` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `upstream_evaluation.py` reduced to `138` lines from the pre-sequence `1271`-line baseline, new
+  modules `upstream_evaluation_support.py=110`, `upstream_evaluation_contracts.py=280`,
+  `upstream_evaluation_fixture_support.py=484`, `upstream_evaluation_runners.py=371`, one allowed
+  fan-out hotspot at `cli_derived=22`, and no Python or JS/TS import cycles
+- residual system state:
+  the live command
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`
+  passes with `matched_case_count=38`, `case_count=38`, `required_category_count=19`,
+  `required_lane_count=3`, and all lane summaries `direct_eval_present`, so this split did not
+  change live upstream-evaluation semantics
+- next routing:
+  continue Milestone 7 inside the same umbrella packet on `cli_eval.py`; do not advance to
+  `cli_derived.py` until the eval CLI seam is narrowed
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_upstream_evaluation.py tests/test_cli.py -k upstream_eval -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 7 Sequence 28
 
 This twenty-eighth overall architecture-refactor slice closes the `promotion_suite` owner split,

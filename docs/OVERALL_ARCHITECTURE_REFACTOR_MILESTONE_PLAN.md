@@ -1259,11 +1259,41 @@ Progress after Sequence 28 on 2026-05-21:
   `promotion_suite_validation.py=223`, `promotion_suite_report.py=96`, and no Python or JS/TS
   import cycles.
 
+Progress after Sequence 29 on 2026-05-21:
+
+- `upstream_evaluation_support.py` now owns shared path resolution, JSON/JSONL IO, case-path
+  normalization, timestamp generation, check lookup, and config shaping that previously remained
+  inside `upstream_evaluation.py`.
+- `upstream_evaluation_contracts.py` now owns manifest contract validation, category/lane summary
+  aggregation, and Markdown report rendering that previously remained inside `upstream_evaluation.py`.
+- `upstream_evaluation_fixture_support.py` now owns scenario workbook generation, batch/download
+  run materialization, artifact byte builders, extraction mutation helpers, and preflight fixture
+  result shaping that previously remained inside `upstream_evaluation.py`.
+- `upstream_evaluation_runners.py` now owns fixture-backed capture, catalog, and extraction runner
+  execution plus per-case expectation matching that previously remained inside
+  `upstream_evaluation.py`.
+- `upstream_evaluation.py` is reduced to `138` lines from the pre-sequence `1271`-line baseline
+  while keeping `run_upstream_evaluation(...)` as the stable public facade for orchestrating the
+  owned helpers and writing `upstream_evaluation_results.json` plus
+  `upstream_evaluation_report.md`.
+- `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` now list the extracted
+  upstream-evaluation owner modules explicitly in the `eval` container, and
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline to `41`.
+- The fresh architecture probe reports `279` code files, `41` files above `800`, one allowed
+  fan-out hotspot at `cli_derived=22`, `upstream_evaluation.py=138`,
+  `upstream_evaluation_support.py=110`, `upstream_evaluation_contracts.py=280`,
+  `upstream_evaluation_fixture_support.py=484`, `upstream_evaluation_runners.py=371`, and no
+  Python or JS/TS import cycles.
+- The live upstream replay
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`
+  passes with `matched_case_count=38`, `case_count=38`, `required_category_count=19`,
+  `required_lane_count=3`, and all lane summaries `direct_eval_present`.
+
 Remaining issue after closeout:
 
 - eval orchestration remains central, but the central owner files become smaller and their
   dependencies are more deliberate.
-- Milestone 7 remains active on `upstream_evaluation.py`, then the CLI orchestration owners.
+- Milestone 7 remains active on `cli_eval.py`, then `cli_derived.py`.
 
 ### Milestone 8 - Split Oversized Tests And Support Fixtures
 
