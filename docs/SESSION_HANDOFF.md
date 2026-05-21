@@ -5,6 +5,65 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 11
+
+This eleventh Milestone 6 slice closes the applicability validation-check seam, records the new
+owner modules in the architecture surfaces, and keeps the umbrella packet routed inside Milestone 6
+instead of pretending the broader freshness/provenance and claims/evidence family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 11; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- validation-check-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_validation_checks.py` now owns the required-artifact,
+  identity, package-fact validation, candidate/partition, evidence-basis, traceability,
+  forest-plan scope, contradiction, and adjudication-replay checks that previously remained in
+  `applicability_validation.py`
+- validation-support-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_validation_support.py` now owns the shared validation
+  candidate/status helpers, JSON read/write utilities, safe-segment validation, and deterministic
+  timestamp/hash helpers used by both the public validation facade and the new validation-check
+  owner
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/applicability_validation.py` keeps the public
+  `validate_applicability_run` entrypoint plus the remaining artifact-loading, artifact-freshness,
+  and provenance core
+- direct contract coverage:
+  `tests/test_applicability_validation_checks.py` now pins the extracted validation-check seam
+  directly, while `tests/test_applicability_decisions.py` and
+  `tests/test_applicability_adjudication.py` still verify the public validation workflow end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `applicability_validation_checks.py` and
+  `applicability_validation_support.py` explicitly in the applicability container, and
+  `docs/architecture_contract.toml` assigns both modules to the `applicability` layer
+- live probe evidence:
+  the fresh architecture probe reports `219` code files, `54` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `applicability_validation.py` reduced to `607` lines from the post-sequence-10 `1502`-line
+  baseline, new modules `applicability_validation_checks.py=791` and
+  `applicability_validation_support.py=171`, one fan-out hotspot at `cli_derived=22`, and no
+  Python or JS/TS import cycles
+- residual risk:
+  `applicability_validation.py` still owns the remaining artifact-loading, artifact-freshness, and
+  provenance core, and the broader claims/evidence hotspot family is still untouched by this
+  sequence
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on the remaining artifact-loading,
+  artifact-freshness, and provenance core in `applicability_validation.py`, then the broader
+  claims/evidence owner families; do not advance to Milestone 7 yet
+- stale-routing cleanup:
+  the immediately following sequence 10 section is now historical for the validation-check-owner
+  residual note; the current section above supersedes any older packet text that still treats
+  `applicability_validation.py` as the owner of the non-freshness validation check family
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_adjudication.py tests/test_applicability_validation_checks.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 10
 
 This tenth Milestone 6 slice closes the applicability adjudication seam, records the new owner

@@ -33,6 +33,48 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 11
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 6; sequence 11 closes the applicability validation-check seam, but the
+  broader applicability freshness/provenance plus claims/evidence hotspot family remains active.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/applicability_validation.py`,
+  `src/usfs_r1_ea_sources/applicability_validation_checks.py`,
+  `src/usfs_r1_ea_sources/applicability_validation_support.py`,
+  `tests/test_applicability_validation_checks.py`,
+  `tests/test_applicability_decisions.py`,
+  `tests/test_applicability_adjudication.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/architecture_contract.toml`.
+- Runtime seam closeout:
+  `applicability_validation_checks.py` now owns the non-freshness validation check family,
+  `applicability_validation_support.py` now owns shared validation helpers, and
+  `applicability_validation.py` now keeps the remaining artifact-loading, artifact-freshness, and
+  provenance facade.
+- Direct contract coverage:
+  `tests/test_applicability_validation_checks.py` now pins the extracted validation-check seam
+  directly, while the existing applicability decision and adjudication tests still verify the
+  public validation behavior end to end.
+- Live probe evidence:
+  the fresh architecture probe reports `219` code files, `54` files above `800`, no Python or
+  JS/TS import cycles, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `applicability_validation.py` reduced to `607` lines from the post-sequence-10
+  `1502`-line baseline, and the new `applicability_validation_checks.py` and
+  `applicability_validation_support.py` seams remain below the `800`-line gate at `791` and `171`
+  lines.
+- Next routing:
+  continue inside Milestone 6 on the remaining artifact-loading, artifact-freshness, and
+  provenance core in `applicability_validation.py`, then the broader claims/evidence hotspot
+  families. Do not advance to Milestone 7 yet.
+
 ## Overall Architecture Refactor Milestone 6 Sequence 10
 
 Latest closeout on 2026-05-20:
