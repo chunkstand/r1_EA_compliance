@@ -1546,47 +1546,41 @@ Progress after Sequence 37 on 2026-05-21:
   supporting-route, currentness, and owner-boundary coverage across the split forest-plan
   resolver owner surface.
 
-Progress after Sequence 39 on 2026-05-21:
+Progress after Sequence 40 on 2026-05-21:
 
-- `tests/support/forest_plan_component_fixtures.py` now owns the shared forest-plan component
-  fixture text, package-chunk builders, chunk writers, manifest-contract writers, and report-check
-  helpers that previously remained inline inside `tests/test_forest_plan_components.py`.
-- `tests/test_forest_plan_components.py` now owns the package-search, section-binding, and
-  plan-consistency determination coverage that previously remained inline inside
-  `tests/test_forest_plan_components.py`.
-- `tests/test_forest_plan_components_inventory.py` now owns the component-inventory parsing,
-  section-context, cross-reference suppression, and tabular-label rejection coverage that
-  previously remained inline inside `tests/test_forest_plan_components.py`.
-- `tests/test_forest_plan_components_coverage.py` now owns the duplicate-label, overlapping-chunk,
-  source-accuracy, and generated-inventory coverage gating that previously remained inline inside
-  `tests/test_forest_plan_components.py`.
-- `tests/test_forest_plan_components_manifest.py` now owns the manifest-batch, multi-forest,
-  component-bearing-role, forest-plan-support, and CLI parser coverage that previously remained
-  inline inside `tests/test_forest_plan_components.py`.
-- `tests/test_forest_plan_components_test_boundary.py` now records the split owner budgets and
-  sentinel ownership for `tests/test_forest_plan_components.py`,
-  `tests/test_forest_plan_components_inventory.py`,
-  `tests/test_forest_plan_components_coverage.py`, and
-  `tests/test_forest_plan_components_manifest.py`.
-- `tests/test_forest_plan_components.py` is reduced to `528` lines from the pre-sequence
-  `1754`-line baseline, while
-  `tests/test_forest_plan_components_inventory.py=588`,
-  `tests/test_forest_plan_components_coverage.py=247`,
-  `tests/test_forest_plan_components_manifest.py=299`,
-  `tests/test_forest_plan_components_test_boundary.py=106`, and
-  `tests/support/forest_plan_component_fixtures.py=137`.
-- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `34` to `33`.
-- The fresh architecture probe reports `316` code files, `33` files above `800`, top hotspot
+- `tests/support/extract_fixtures.py` now owns the shared extraction config builders,
+  download-run manifest writers, fixture payload builders, and validation helpers that previously
+  remained inline inside `tests/test_extract.py`.
+- `tests/test_extract.py` now owns the core parser/build coverage for HTML, XML, XHTML, DOCX, DOC,
+  image, canonical direct-document, ZIP metadata, hash mismatch, and catalog-refresh routing that
+  previously remained inline inside `tests/test_extract.py`.
+- `tests/test_extract_reuse.py` now owns the reuse-existing, reuse-inventory, scope-excluded, and
+  reuse-bundle-path coverage that previously remained inline inside `tests/test_extract.py`.
+- `tests/test_extract_pdf_fallbacks.py` now owns the docling-unavailable, external-docling,
+  PDF-text fallback, chunked-docling, raster-OCR, Apple Vision, and OCR helper coverage that
+  previously remained inline inside `tests/test_extract.py`.
+- `tests/test_extract_test_boundary.py` now records the split owner budgets and sentinel ownership
+  for `tests/test_extract.py`,
+  `tests/test_extract_reuse.py`, and
+  `tests/test_extract_pdf_fallbacks.py`.
+- `tests/test_extract.py` is reduced to `552` lines from the pre-sequence `1646`-line baseline,
+  while
+  `tests/test_extract_reuse.py=349`,
+  `tests/test_extract_pdf_fallbacks.py=559`,
+  `tests/test_extract_test_boundary.py=101`, and
+  `tests/support/extract_fixtures.py=236`.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `33` to `32`.
+- The fresh architecture probe reports `320` code files, `32` files above `800`, top hotspot
   `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, no remaining modules above
   the `20`-import fan-out gate, and no Python or JS/TS import cycles.
-- `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_forest_plan_components_inventory.py tests/test_forest_plan_components_coverage.py tests/test_forest_plan_components_manifest.py tests/test_forest_plan_components_test_boundary.py -q`
-  passes `37/37`, preserving package-search, determination, build parsing, dedupe, manifest/CLI,
-  and owner-boundary coverage across the split forest-plan component owner surface.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_extract_reuse.py tests/test_extract_pdf_fallbacks.py tests/test_extract_test_boundary.py -q`
+  passes `36/36`, preserving parser/build, reuse, fallback, OCR-helper, and owner-boundary
+  coverage across the split extraction owner surface.
 
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_extract.py`, which is now the next oversized test
-  hotspot on the live architecture probe after the forest-plan component family is reduced.
+- Milestone 8 remains active on `tests/test_nepa_knowledge_graph_export.py`, which is now the next
+  oversized test hotspot on the live architecture probe after the extraction family is reduced.
 
 Resolved scope after closeout:
 

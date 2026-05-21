@@ -5,6 +5,73 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 40
+
+This fortieth overall architecture-refactor slice closes the
+`tests/test_extract.py` hotspot split, records the new extraction test owners plus shared fixture
+helpers in the routed packet, and keeps the broader Milestone 8 test-hotspot packet moving on the
+next oversized test owner from the live architecture probe.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 40; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- extract-fixture-owner closeout:
+  `tests/support/extract_fixtures.py` now owns the shared extraction config builders,
+  download-run manifest writers, fixture payload builders, and validation helpers that previously
+  remained inline in `tests/test_extract.py`
+- extract-build-owner closeout:
+  `tests/test_extract.py` now owns the core parser/build coverage for HTML, XML, XHTML, DOCX, DOC,
+  image, canonical direct-document, ZIP metadata, hash mismatch, and catalog-refresh routing that
+  previously remained inline in `tests/test_extract.py`
+- extract-reuse-owner closeout:
+  `tests/test_extract_reuse.py` now owns the reuse-existing, reuse-inventory, scope-excluded, and
+  reuse-bundle-path coverage that previously remained inline in `tests/test_extract.py`
+- extract-pdf-fallback-owner closeout:
+  `tests/test_extract_pdf_fallbacks.py` now owns the docling-unavailable, external-docling,
+  PDF-text fallback, chunked-docling, raster-OCR, Apple Vision, and OCR helper coverage that
+  previously remained inline in `tests/test_extract.py`
+- extract-boundary-owner closeout:
+  `tests/test_extract_test_boundary.py` now records the split owner budgets and sentinel ownership
+  for `tests/test_extract.py`,
+  `tests/test_extract_reuse.py`, and
+  `tests/test_extract_pdf_fallbacks.py`
+- facade-preserving routing:
+  `tests/test_extract.py` keeps the parser/build sentinel coverage while the extracted files
+  preserve the reuse and PDF fallback/OCR surfaces end to end
+- direct contract coverage:
+  `tests/test_extract.py`,
+  `tests/test_extract_reuse.py`,
+  `tests/test_extract_pdf_fallbacks.py`, and
+  `tests/test_extract_test_boundary.py` still verify parser selection, manifest provenance,
+  extraction reuse, scope-excluded routing, docling fallback behavior, raster/Apple Vision OCR
+  helpers, and owner-boundary enforcement after the split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `33` to `32`
+  after the `tests/test_extract.py` hotspot is reduced below the `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `320` code files, `32` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_extract.py=552`,
+  `tests/test_extract_reuse.py=349`,
+  `tests/test_extract_pdf_fallbacks.py=559`,
+  `tests/test_extract_test_boundary.py=101`,
+  `tests/support/extract_fixtures.py=236`, no remaining modules above the `20`-import fan-out
+  gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on extraction
+  test-owner routing and architecture gates because only test-owner surfaces and routed docs
+  changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on `tests/test_nepa_knowledge_graph_export.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_extract_reuse.py tests/test_extract_pdf_fallbacks.py tests/test_extract_test_boundary.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 39
 
 This thirty-ninth overall architecture-refactor slice closes the
