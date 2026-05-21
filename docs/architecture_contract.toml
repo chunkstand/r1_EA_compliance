@@ -114,7 +114,7 @@ allowed_import_layers = [
 [[layers]]
 name = "evidence_graph"
 summary = "Document evidence graph build and validation."
-modules = ["evidence_graph"]
+modules = ["evidence_graph", "evidence_graph_validation"]
 allowed_import_layers = [
   "foundation",
   "extraction",

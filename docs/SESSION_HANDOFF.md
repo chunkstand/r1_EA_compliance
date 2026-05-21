@@ -5,6 +5,57 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 20
+
+This twentieth Milestone 6 slice closes the `evidence-graph-validation` owner seam, records the
+new owner module in the architecture surfaces, and keeps the umbrella packet routed inside
+Milestone 6 instead of pretending the broader claims/evidence family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 20; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- evidence-graph-validation-owner closeout:
+  `src/usfs_r1_ea_sources/evidence_graph_validation.py` now owns retrieval-index readability,
+  validation-report assembly, chunk/retrieval binding checks, graph-integrity and graph-health
+  checks, review-topic/evidence-span checks, retrieval replay-path resolution, and sqlite graph
+  validation support that previously remained in `evidence_graph.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/evidence_graph.py` keeps the public `build_evidence_graph(...)` workflow
+  surface, now holds the graph build/runtime, source metadata enrichment, metrics, sqlite write,
+  and graph identity helpers, and delegates the validation seam to the new owner module without
+  changing callers
+- direct contract coverage:
+  `tests/test_evidence_graph_validation.py` now pins the extracted validation seam directly, while
+  `tests/test_evidence_graph.py` still verifies the public evidence-graph build workflow end to
+  end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `evidence_graph_validation.py` explicitly in the
+  evidence-and-claims container, and `docs/architecture_contract.toml` assigns it to the
+  `evidence_graph` layer
+- live probe evidence:
+  the fresh architecture probe reports `238` code files, `50` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `evidence_graph.py` reduced to `758` lines from the pre-sequence `1205`-line baseline, new
+  module `evidence_graph_validation.py=640`, `tests/test_evidence_graph.py=364`, new test seam
+  `tests/test_evidence_graph_validation.py=110`, one fan-out hotspot at `cli_derived=22`, and no
+  Python or JS/TS import cycles
+- residual risk:
+  the broader claims/evidence hotspot family is still open beyond the completed evidence-graph
+  validation owner, with `package_fact_graph.py`, `applicability_retrieval.py`,
+  `applicability_rule_pack.py`, and `applicability_eval.py` still routed inside Milestone 6
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on `package_fact_graph.py`, then
+  `applicability_retrieval.py`, `applicability_rule_pack.py`, and `applicability_eval.py`; do not
+  advance to Milestone 7 yet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_evidence_graph.py tests/test_evidence_graph_validation.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 19
 
 This nineteenth Milestone 6 slice closes the `rule-claim-runtime` owner seam, records the new

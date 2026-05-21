@@ -33,6 +33,45 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 20
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 6; sequence 20 closes the `evidence-graph-validation` owner seam, but
+  the broader claims/evidence hotspot family remains active.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/evidence_graph.py`,
+  `src/usfs_r1_ea_sources/evidence_graph_validation.py`,
+  `tests/test_evidence_graph_validation.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/architecture_contract.toml`, and
+  `tests/test_architecture_quality.py`.
+- Validation seam closeout:
+  `evidence_graph_validation.py` now owns retrieval-index readability, validation-report assembly,
+  chunk/retrieval binding checks, graph-integrity and graph-health checks, review-topic and
+  evidence-span checks, replay-path resolution, and sqlite graph validation support;
+  `evidence_graph.py` now keeps the public evidence-graph facade plus the graph build/runtime,
+  source metadata enrichment, metrics, sqlite write, and graph identity helpers.
+- Direct contract coverage:
+  `tests/test_evidence_graph_validation.py` now pins the extracted validation seam directly, while
+  `tests/test_evidence_graph.py` still verifies the public evidence-graph build workflow end to
+  end.
+- Live probe evidence:
+  the fresh architecture probe reports `238` code files, `50` files above `800`, no Python or
+  JS/TS import cycles, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `evidence_graph.py` reduced to `758` lines from the pre-sequence `1205`-line
+  baseline, `evidence_graph_validation.py` at `640` lines, `tests/test_evidence_graph.py` at
+  `364` lines, and `tests/test_evidence_graph_validation.py` at `110` lines.
+- Next routing:
+  continue inside Milestone 6 on `package_fact_graph.py`, then `applicability_retrieval.py`,
+  `applicability_rule_pack.py`, and `applicability_eval.py`. Do not advance to Milestone 7 yet.
+
 ## Overall Architecture Refactor Milestone 6 Sequence 19
 
 Latest closeout on 2026-05-20:
