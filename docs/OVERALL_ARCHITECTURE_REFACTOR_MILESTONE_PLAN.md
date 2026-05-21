@@ -2,7 +2,7 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-5 complete; Milestone 6 active
+Status: Milestones 0-5 complete; Milestone 6 active after Sequence 14
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
 `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-5 are now closed, the
@@ -48,11 +48,11 @@ machine-local state.
   `source_set_support.py` owns the shared derived-output path and support-document-role helpers
   now used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
   `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`.
-- Milestone 6 sequence 13 now closes the first `claim_extraction.py` graph-owner seam:
-  `claim_extraction_graph.py` now owns entity extraction and aggregation, claim graph
-  node/edge assembly, and the claim-graph SQLite writer/checks, while `claim_extraction.py`
-  is reduced to the public claim-extraction facade plus the remaining claim extraction,
-  validation, and eval core. The next executable slice remains inside Milestone 6 on that
+- Milestone 6 sequence 14 now closes the `claim-eval` owner seam:
+  `claim_extraction_eval.py` now owns deterministic claim eval scoring, contract loading,
+  coverage/metric checks, and claim-readiness revalidation, while `claim_extraction.py`
+  is reduced to the public claim-extraction facade plus the remaining claim extraction
+  and validation core. The next executable slice remains inside Milestone 6 on that
   remaining `claim_extraction.py` core before the packet advances to `rule_claim_binding.py`.
 
 ### Architecture probe current baseline
@@ -60,7 +60,7 @@ machine-local state.
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `224` code files detected;
+- `226` code files detected;
 - `54` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
@@ -92,8 +92,10 @@ From
   pre-sequence `2494`-line baseline, and `src/usfs_r1_ea_sources.applicability.py`
   remains a `48`-line public facade after falling from the pre-sequence `2315`-line baseline
   without introducing a new `>800` line file; `src.usfs_r1_ea_sources.claim_extraction.py`
-  is down to `2084` lines from the pre-sequence `2503`-line baseline, and the new
-  `src.usfs_r1_ea_sources.claim_extraction_graph.py` seam remains below the gate at `457` lines;
+  is down to `1328` lines from the post-sequence-13 `2084`-line baseline and the pre-sequence
+  `2503`-line baseline, `src.usfs_r1_ea_sources.claim_extraction_eval.py` now owns the bounded
+  eval surface at exactly `800` lines, and `src.usfs_r1_ea_sources.claim_extraction_graph.py`
+  remains below the gate at `457` lines;
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
 
@@ -218,7 +220,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `3170` `src/usfs_r1_ea_sources/extract.py`
 - `2662` `src/usfs_r1_ea_sources/v1_ea_eval.py`
 - `2655` `src/usfs_r1_ea_sources/applicability_eval.py`
-- `2084` `src/usfs_r1_ea_sources/claim_extraction.py`
+- `1328` `src/usfs_r1_ea_sources/claim_extraction.py`
 - `2384` `src/usfs_r1_ea_sources/final_qa_certification.py`
 - `2017` `src/usfs_r1_ea_sources/rule_claim_binding.py`
 - `1956` `src/usfs_r1_ea_sources/draft_generation.py`
@@ -656,7 +658,7 @@ Remaining issue after closeout:
 ### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
 
 Outcome label: `reduced`
-Status: active after Sequence 13
+Status: active after Sequence 14
 
 Purpose: reduce the largest concentration in the applicability decision family and the adjacent
 claims/evidence hotspots without weakening downstream gates.
@@ -686,6 +688,7 @@ Owner family:
 - `applicability_retrieval.py`
 - `applicability_rule_pack.py`
 - `claim_extraction.py`
+- `claim_extraction_eval.py`
 - `claim_extraction_graph.py`
 - `rule_claim_binding.py`
 - `package_fact_graph.py`
@@ -697,6 +700,18 @@ Implementation:
    formatting into narrower owner modules.
 2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
+
+Progress after Sequence 14 on 2026-05-20:
+
+- `claim_extraction_eval.py` now owns deterministic claim eval scoring, legacy/current eval
+  contract loading, coverage and metric-threshold checks, and claim-readiness revalidation that
+  previously remained inside `claim_extraction.py`.
+- `tests/test_claim_extraction_eval.py` now pins the extracted eval-contract and query/ranking seam
+  directly, while `tests/test_claim_extraction.py` still verifies the public claim-extraction and
+  claim-eval workflow end to end.
+- `claim_extraction.py` is reduced to `1328` lines from the post-sequence-13 `2084`-line baseline,
+  `claim_extraction_eval.py` lands at the `800`-line gate, and the fresh architecture probe reports
+  `226` code files, `54` files above `800`, and no Python or JS/TS cycles.
 
 Progress after Sequence 13 on 2026-05-20:
 
@@ -863,10 +878,10 @@ Progress after Sequence 12 on 2026-05-20:
 
 Remaining issue after closeout:
 
-- The applicability validation family is now reduced to explicit owners, and the first claim-graph
-  seam is now closed, but the broader claims/evidence hotspot family remains open inside
-  Milestone 6. The next routed slice stays inside `claim_extraction.py` for the remaining claim
-  extraction, validation, and eval core, then advances to `rule_claim_binding.py`,
+- The applicability validation family is now reduced to explicit owners, and both the claim-graph
+  and claim-eval seams are now closed, but the broader claims/evidence hotspot family remains open
+  inside Milestone 6. The next routed slice stays inside `claim_extraction.py` for the remaining
+  claim extraction and validation core, then advances to `rule_claim_binding.py`,
   `evidence_graph.py`, `package_fact_graph.py`, `applicability_retrieval.py`,
   `applicability_rule_pack.py`, and `applicability_eval.py` before the umbrella packet can route
   forward to Milestone 7.
