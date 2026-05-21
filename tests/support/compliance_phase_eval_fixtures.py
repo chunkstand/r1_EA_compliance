@@ -11,9 +11,9 @@ from tests.support.compliance_phase_eval_contracts import build_final_qa_config
 from tests.support.compliance_phase_eval_contracts import build_final_qa_expected
 from tests.support.compliance_phase_eval_contracts import write_decision_support_artifacts
 from tests.support.compliance_review_fixtures import (
-    _write_downstream_direct_eval_phase_outputs,
     _write_json,
 )
+from tests.support.compliance_review_eval_fixtures import _write_downstream_direct_eval_phase_outputs
 
 
 def _write_graph_phase_outputs(output_dir: Path, source_set_id: str) -> None:

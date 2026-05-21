@@ -5,6 +5,80 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 45
+
+This forty-fifth overall architecture-refactor slice closes the
+`tests/support/compliance_review_fixtures.py` hotspot split, records the new compliance-review
+support owners in the routed packet, and keeps the broader Milestone 8 test-hotspot packet moving
+on the next oversized test owner from the live architecture probe.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 45; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- compliance-review-core-support-owner closeout:
+  `tests/support/compliance_review_fixtures.py` now owns the source-library bootstrap, package and
+  generated-review gate builders, grouped conditional rule-pack fixture, shared JSON writers, and
+  report/validation lookup helpers that remain on the core compliance-review lane
+- compliance-review-eval-support-owner closeout:
+  `tests/support/compliance_review_eval_fixtures.py` now owns the downstream direct-eval fixture
+  writers, coverage/gold-eval contract builders, phase lookup helper, and land-exchange contract
+  assertion coverage that previously remained inline in
+  `tests/support/compliance_review_fixtures.py`
+- compliance-review-import-routing closeout:
+  `tests/test_compliance_review_eval.py`, `tests/test_compliance_coverage.py`,
+  `tests/test_compliance_gold_eval.py`, `tests/test_compliance_phase_eval.py`, and
+  `tests/support/compliance_phase_eval_fixtures.py` now import the extracted eval-family helpers
+  from `tests/support/compliance_review_eval_fixtures.py`, while
+  `tests/test_compliance_review.py` keeps the core compliance-review sentinel coverage
+- compliance-review-boundary-owner closeout:
+  `tests/test_compliance_review_test_boundary.py` now records the split support-owner budgets for
+  `tests/support/compliance_review_fixtures.py`,
+  `tests/support/compliance_review_eval_fixtures.py`, and the now-sub-`800` eval/phase-eval owner
+  files
+- review-phase-contract closeout:
+  `tests/test_compliance_gold_eval.py` and `tests/test_compliance_phase_eval.py` now enter
+  `run_phase_aligned_eval()` through explicit review directories when asserting review-scoped
+  compliance coverage and gold-eval phases, matching the current review-phase contract without
+  weakening assertions
+- direct contract coverage:
+  `tests/test_compliance_review.py`,
+  `tests/test_compliance_review_forest_plan.py`,
+  `tests/test_compliance_review_contracts.py`,
+  `tests/test_compliance_review_eval.py`,
+  `tests/test_compliance_coverage.py`,
+  `tests/test_compliance_gold_eval.py`,
+  `tests/test_compliance_phase_eval.py`, and
+  `tests/test_compliance_review_test_boundary.py` still verify compliance-review core routing,
+  grouped conditional rule-pack validation, eval/coverage/gold-eval contracts, phase-eval
+  review-phase behavior, and owner-boundary enforcement after the support split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `28` to `27`
+  after the `tests/support/compliance_review_fixtures.py` hotspot is reduced below the
+  `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `338` code files, `27` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/support/compliance_review_fixtures.py=694`,
+  `tests/support/compliance_review_eval_fixtures.py=430`,
+  `tests/test_compliance_review_test_boundary.py=130`, and
+  `tests/support/compliance_component_fixtures.py=872`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on compliance-review
+  support-owner routing, review-phase contract alignment, and architecture gates because only
+  test/support surfaces and routed docs changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on
+  `tests/support/compliance_component_fixtures.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_compliance_review_forest_plan.py tests/test_compliance_review_contracts.py tests/test_compliance_review_eval.py tests/test_compliance_coverage.py tests/test_compliance_gold_eval.py tests/test_compliance_phase_eval.py tests/test_compliance_review_test_boundary.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 44
 
 This forty-fourth overall architecture-refactor slice closes the

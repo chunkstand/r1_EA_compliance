@@ -1686,11 +1686,43 @@ Progress after Sequence 44 on 2026-05-21:
   fail-closed artifact behavior, and owner-boundary coverage across the split decision-support
   owner surface.
 
+Progress after Sequence 45:
+
+- `tests/support/compliance_review_fixtures.py` is reduced from the pre-sequence `1102`-line
+  hotspot to `694` lines by moving the direct-eval, coverage-matrix, gold-eval, phase lookup, and
+  land-exchange contract assertion helpers into the new
+  `tests/support/compliance_review_eval_fixtures.py` owner.
+- `tests/support/compliance_review_eval_fixtures.py` now owns the downstream direct-eval fixture
+  writers, coverage/gold-eval contract builders, phase lookup helper, and land-exchange contract
+  assertion coverage that previously remained inside
+  `tests/support/compliance_review_fixtures.py`.
+- `tests/test_compliance_review_eval.py`, `tests/test_compliance_coverage.py`,
+  `tests/test_compliance_gold_eval.py`, `tests/test_compliance_phase_eval.py`, and
+  `tests/support/compliance_phase_eval_fixtures.py` now import the extracted eval-family helpers
+  from `tests/support/compliance_review_eval_fixtures.py`, while
+  `tests/test_compliance_review.py` keeps the core compliance-review sentinel coverage.
+- `tests/test_compliance_review_test_boundary.py` now records the split support-owner budgets for
+  `tests/support/compliance_review_fixtures.py`,
+  `tests/support/compliance_review_eval_fixtures.py`, and the now-sub-`800` eval/phase-eval
+  owner files.
+- `tests/test_compliance_gold_eval.py` and `tests/test_compliance_phase_eval.py` now enter
+  `run_phase_aligned_eval()` through explicit review directories when asserting review-scoped
+  compliance coverage and gold-eval phases, matching the current review-phase contract without
+  weakening assertions.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `28` to `27`.
+- The fresh architecture probe reports `338` code files, `27` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, no remaining modules above
+  the `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_compliance_review_forest_plan.py tests/test_compliance_review_contracts.py tests/test_compliance_review_eval.py tests/test_compliance_coverage.py tests/test_compliance_gold_eval.py tests/test_compliance_phase_eval.py tests/test_compliance_review_test_boundary.py -q`
+  passes `72 passed, 3 subtests passed`, preserving compliance-review core routing, grouped
+  conditional rule-pack validation, eval/coverage/gold-eval contracts, phase-eval review-phase
+  behavior, and owner-boundary enforcement after the support split.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/support/compliance_review_fixtures.py`, which is now the
-  next oversized test-owner hotspot on the live architecture probe after the decision-support
-  family is reduced.
+- Milestone 8 remains active on `tests/support/compliance_component_fixtures.py`, which is now the
+  next oversized test-owner hotspot on the live architecture probe after the compliance-review
+  support family is reduced.
 
 Resolved scope after closeout:
 

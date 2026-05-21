@@ -6,7 +6,6 @@ import unittest
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
 from usfs_r1_ea_sources.records import sha256_file
 from tests.support.compliance_review_fixtures import (
-    _assert_v1_land_exchange_contract,
     _build_source_library,
     _check,
     _finding,
@@ -16,6 +15,7 @@ from tests.support.compliance_review_fixtures import (
     _write_package,
     _write_rule_pack,
 )
+from tests.support.compliance_review_eval_fixtures import _assert_v1_land_exchange_contract
 
 
 class ComplianceReviewTests(unittest.TestCase):

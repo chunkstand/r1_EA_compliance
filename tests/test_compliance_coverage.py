@@ -12,9 +12,11 @@ from usfs_r1_ea_sources.rule_claim_binding import build_rule_claim_links
 from tests.support.compliance_review_fixtures import (
     _build_source_library,
     _check,
+    _write_rule_pack,
+)
+from tests.support.compliance_review_eval_fixtures import (
     _write_compliance_eval_file,
     _write_coverage_matrix,
-    _write_rule_pack,
 )
 
 

@@ -13,9 +13,9 @@ from usfs_r1_ea_sources.compliance_review_eval import run_compliance_review_eval
 from tests.support.compliance_review_fixtures import (
     _build_source_library,
     _rule_pack,
-    _write_compliance_eval_file,
     _write_rule_pack,
 )
+from tests.support.compliance_review_eval_fixtures import _write_compliance_eval_file
 
 
 class ComplianceReviewEvalTests(unittest.TestCase):

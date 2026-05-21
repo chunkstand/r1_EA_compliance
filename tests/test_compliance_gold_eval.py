@@ -14,10 +14,10 @@ from tests.support.compliance_phase_eval_fixtures import _write_graph_phase_outp
 from tests.support.compliance_review_fixtures import (
     _build_source_library,
     _check,
-    _phase,
-    _write_gold_eval_file,
     _write_rule_pack,
 )
+from tests.support.compliance_review_eval_fixtures import _phase
+from tests.support.compliance_review_eval_fixtures import _write_gold_eval_file
 
 
 class ComplianceGoldEvalTests(unittest.TestCase):
@@ -54,6 +54,7 @@ class ComplianceGoldEvalTests(unittest.TestCase):
             phase_result = run_phase_aligned_eval(
                 output_dir=output_dir,
                 source_set_id=source_set_id,
+                review_dir=result.output_path.parent,
             )
             gold_phase = _phase(phase_result.summary, "compliance_gold_eval")
             self.assertTrue(gold_phase["passed"])

@@ -20,15 +20,17 @@ from tests.support.compliance_phase_eval_fixtures import (
 )
 from tests.support.compliance_review_fixtures import (
     _build_source_library,
+    _run_generated_compliance_review,
+    _write_package,
+    _write_rule_pack,
+)
+from tests.support.compliance_review_eval_fixtures import (
     _direct_eval_result_payload,
     _phase,
-    _run_generated_compliance_review,
     _write_compliance_eval_file,
     _write_coverage_matrix,
     _write_downstream_direct_eval_phase_outputs,
     _write_gold_eval_file,
-    _write_package,
-    _write_rule_pack,
 )
 
 
@@ -72,10 +74,13 @@ class CompliancePhaseEvalTests(unittest.TestCase):
                 json.dumps(coverage_summary, sort_keys=True),
                 encoding="utf-8",
             )
+            review_dir = output_dir / "reviews" / "coverage-review"
+            review_dir.mkdir(parents=True, exist_ok=True)
 
             phase_result = run_phase_aligned_eval(
                 output_dir=output_dir,
                 source_set_id=source_set_id,
+                review_dir=review_dir,
             )
 
             self.assertFalse(phase_result.summary["reviewer_ready"])
