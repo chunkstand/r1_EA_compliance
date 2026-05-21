@@ -33,6 +33,44 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 16
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 6; sequence 16 closes the `claim-runtime` owner seam, but the broader
+  claims/evidence hotspot family remains active.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/claim_extraction.py`,
+  `src/usfs_r1_ea_sources/claim_extraction_runtime.py`,
+  `src/usfs_r1_ea_sources/claim_extraction_validation.py`,
+  `tests/test_claim_extraction.py`,
+  `tests/test_claim_extraction_runtime.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/architecture_contract.toml`.
+- Runtime seam closeout:
+  `claim_extraction_runtime.py` now owns deterministic claim-pattern definitions, sentence/window
+  handling, claim record assembly, IDs/hashes, and extraction metrics; `claim_extraction.py` now
+  keeps the public claim-extraction facade plus orchestration support.
+- Direct contract coverage:
+  `tests/test_claim_extraction_runtime.py` now pins the extracted runtime seam directly, while
+  `tests/test_claim_extraction.py` still verifies the public claim-extraction workflow end to end.
+- Live probe evidence:
+  the fresh architecture probe reports `230` code files, `52` files above `800`, no Python or
+  JS/TS import cycles, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `claim_extraction.py` reduced to `458` lines from the post-sequence-15 `783`-line
+  baseline, `claim_extraction_runtime.py` at `342` lines, `claim_extraction_validation.py` at
+  `614` lines, and `tests/test_claim_extraction.py` reduced to `712` lines.
+- Next routing:
+  continue inside Milestone 6 on `rule_claim_binding.py`, then `evidence_graph.py`,
+  `package_fact_graph.py`, `applicability_retrieval.py`, `applicability_rule_pack.py`, and
+  `applicability_eval.py`. Do not advance to Milestone 7 yet.
+
 ## Overall Architecture Refactor Milestone 6 Sequence 15
 
 Latest closeout on 2026-05-20:

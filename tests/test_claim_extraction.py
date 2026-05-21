@@ -151,38 +151,6 @@ class ClaimExtractionTests(unittest.TestCase):
             claims = _read_jsonl(result.claims_path)
             self.assertEqual(claims[0]["review_topics"], ["Archived exact topic"])
 
-    def test_claim_extraction_captures_structural_definition_claims(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            output_dir = Path(tmp)
-            source_set_id = "source-set-test"
-            _prepare_source_library(
-                output_dir,
-                source_set_id,
-                [
-                    _chunk(
-                        source_set_id=source_set_id,
-                        source_record_id="R1EA-028",
-                        title="Forest Service Directives",
-                        document_role="agency_policy",
-                        authority_level="federal",
-                        citation_label="R1EA-028 | Forest Service Directives | artifact abc123",
-                        text=(
-                            "The Forest Service Directive System consists of the Forest Service "
-                            "Manual and Handbooks, which codify the agency's policy, practice, "
-                            "and procedure."
-                        ),
-                    )
-                ],
-            )
-
-            result = build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
-
-            self.assertTrue(result.summary["validation_passed"])
-            claims = _read_jsonl(result.claims_path)
-            self.assertEqual(claims[0]["source_record_id"], "R1EA-028")
-            self.assertEqual(claims[0]["claim_type"], "definition")
-            self.assertEqual(claims[0]["pattern_id"], "structural_definition")
-
     def test_claim_eval_scores_expected_claims_terms_and_provenance(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -295,43 +263,6 @@ class ClaimExtractionTests(unittest.TestCase):
 
             with self.assertRaisesRegex(ValueError, "unsupported filters"):
                 run_claim_eval(claims_path=result.claims_path, eval_file=eval_file)
-
-    def test_claim_extraction_deduplicates_overlapping_claims_by_source_offsets(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            output_dir = Path(tmp)
-            source_set_id = "source-set-test"
-            text = "The responsible official must document the decision."
-            _prepare_source_library(
-                output_dir,
-                source_set_id,
-                [
-                    _chunk(
-                        source_set_id=source_set_id,
-                        source_record_id="R1EA-020",
-                        title="Decision documentation",
-                        document_role="handbook",
-                        authority_level="agency_guidance",
-                        citation_label="R1EA-020 | Decision documentation | artifact abc123",
-                        text=text,
-                        chunk_id="chunk:R1EA-020:a",
-                    ),
-                    _chunk(
-                        source_set_id=source_set_id,
-                        source_record_id="R1EA-020",
-                        title="Decision documentation",
-                        document_role="handbook",
-                        authority_level="agency_guidance",
-                        citation_label="R1EA-020 | Decision documentation | artifact abc123",
-                        text=text,
-                        chunk_id="chunk:R1EA-020:b",
-                    ),
-                ],
-            )
-
-            result = build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
-
-            self.assertTrue(result.summary["validation_passed"])
-            self.assertEqual(result.summary["claim_count"], 1)
 
     def test_phase_eval_reports_claim_extraction_phase(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

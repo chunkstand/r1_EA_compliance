@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections import Counter
 from contextlib import closing
-from importlib import import_module
 from pathlib import Path
 import sqlite3
 
@@ -11,14 +10,12 @@ from .artifact_utils import _int_from_summary
 from .artifact_utils import _read_json
 from .artifact_utils import _read_jsonl
 from .artifact_utils import _safe_int
+from .claim_extraction_runtime import CLAIM_PATTERNS
+from .claim_extraction_runtime import SUPPORTED_CLAIM_TYPES
+from .claim_extraction_runtime import _claim_metrics
+from .claim_extraction_runtime import _text_sha256
 from .source_set_support import source_derived_dir
 
-
-_CLAIM_EXTRACTION = import_module("usfs_r1_ea_sources.claim_extraction")
-CLAIM_PATTERNS = _CLAIM_EXTRACTION.CLAIM_PATTERNS
-SUPPORTED_CLAIM_TYPES = _CLAIM_EXTRACTION.SUPPORTED_CLAIM_TYPES
-_claim_metrics = _CLAIM_EXTRACTION._claim_metrics
-_text_sha256 = _CLAIM_EXTRACTION._text_sha256
 
 DEFAULT_RETRIEVAL_INDEX_FILENAME = "evidence_index.sqlite"
 REQUIRED_CLAIM_FIELDS = {
