@@ -5,6 +5,61 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 48
+
+This forty-eighth overall architecture-refactor slice closes the
+`tests/test_phase_eval.py` hotspot split, records the new review-scoped phase-eval owner in the
+routed packet, and resolves the broader Milestone 8 oversized-test packet before routing the
+umbrella plan into Milestone 9.
+
+- outcome label:
+  `resolved` for Milestone 8 sequence 48; the broader Milestone 8 family is complete
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- phase-eval-source-set-owner closeout:
+  `tests/test_phase_eval.py` now owns the source-set phase replay, direct-eval coverage,
+  archived-catalog resolution, and canonical currentness/extraction-accuracy contracts that remain
+  on the source-set phase-eval lane
+- phase-eval-review-owner closeout:
+  `tests/test_phase_eval_review.py` now owns the tracked replay-context and draft-generation
+  defensibility coverage that previously remained inline in `tests/test_phase_eval.py`
+- phase-eval-boundary-owner closeout:
+  `tests/test_phase_eval_test_boundary.py` now records the split line budgets, forbids the core
+  source-set owner from retaining review-only imports, and pins sentinel ownership for the
+  source-set and review suites after the split
+- direct contract coverage:
+  `tests/test_phase_eval.py`,
+  `tests/test_phase_eval_review.py`,
+  `tests/test_phase_eval_test_boundary.py`, and
+  `tests/test_compliance_phase_eval.py` still verify source-set phase replay, review replay-context,
+  draft-generation defensibility, compliance review-phase behavior, and owner-boundary enforcement
+  after the split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `25` to `24`
+  after the `tests/test_phase_eval.py` hotspot is reduced below the `800`-line gate, leaving no
+  `tests/` or `tests/support/` owner above the reviewability threshold
+- live probe evidence:
+  the fresh architecture probe reports `344` code files, `24` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_phase_eval.py=735`,
+  `tests/test_phase_eval_review.py=243`, and
+  `tests/test_phase_eval_test_boundary.py=123`, no remaining modules above the `20`-import
+  fan-out gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on source-set versus
+  review-scoped phase-eval test-owner routing and architecture gates because only test surfaces and
+  routed docs changed
+- next routing:
+  Milestone 8 is complete. Advance the same umbrella packet to Milestone 9 on the West Reservoir
+  user-home proving dependency and cold-start doc routing drift
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval.py tests/test_phase_eval_review.py tests/test_phase_eval_test_boundary.py tests/test_compliance_phase_eval.py -q`,
+  `PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --max-fan-out 20 --format markdown`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 47
 
 This forty-seventh overall architecture-refactor slice closes the

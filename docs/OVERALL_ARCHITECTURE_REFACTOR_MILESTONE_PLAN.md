@@ -1784,16 +1784,43 @@ Progress after Sequence 47:
   passes `20/20`, preserving authority-universe snapshot assembly, validation, default-template
   loading, CLI routing, and owner-boundary enforcement after the split.
 
+Progress after Sequence 48:
+
+- `tests/test_phase_eval_review.py` now owns the review-scoped tracked replay-context and
+  draft-generation defensibility coverage that previously remained inline inside
+  `tests/test_phase_eval.py`.
+- `tests/test_phase_eval.py` now keeps the source-set phase replay, direct-eval coverage,
+  archived-catalog resolution, and canonical currentness/extraction-accuracy contracts that
+  previously shared a giant mixed owner with review-only replay-context and draft-generation cases.
+- `tests/test_phase_eval_test_boundary.py` now records the split line budgets, forbids the core
+  source-set owner from retaining review-only imports, and pins sentinel ownership for the source-set
+  and review suites after the split.
+- `tests/test_phase_eval.py` is reduced to `735` lines from the pre-sequence `954`-line baseline,
+  while
+  `tests/test_phase_eval_review.py=243` and
+  `tests/test_phase_eval_test_boundary.py=123`.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `25` to `24`.
+- The fresh architecture probe reports `344` code files, `24` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_phase_eval.py=735`,
+  `tests/test_phase_eval_review.py=243`,
+  `tests/test_phase_eval_test_boundary.py=123`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval.py tests/test_phase_eval_review.py tests/test_phase_eval_test_boundary.py tests/test_compliance_phase_eval.py -q`
+  passes `34 passed, 3 subtests passed`, preserving source-set phase replay, review replay-context,
+  draft-generation defensibility, compliance review-phase coverage, and owner-boundary enforcement
+  after the split.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_phase_eval.py`, which is now the final oversized
-  test-owner hotspot on the live architecture probe after the applicability authority-universe
-  family is reduced.
+- Milestone 8 is resolved. Advance the umbrella packet to Milestone 9 on the West Reservoir
+  user-home proving dependency plus cold-start doc routing drift.
 
 Resolved scope after closeout:
 
-- the test suite no longer depends on a small number of giant owner files for major architecture
+- the test suite no longer depends on oversized test or support owners for major architecture
   families.
+- no `tests/` or `tests/support/` file remains above the `800`-line reviewability gate.
 
 ### Milestone 9 - Remove Mechanical Drift And Non-Hermetic Replay Debt
 
