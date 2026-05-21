@@ -10,7 +10,7 @@ from usfs_r1_ea_sources.compliance_gold_eval import run_compliance_gold_eval
 from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 from usfs_r1_ea_sources.rule_claim_binding import build_rule_claim_links
 
-from tests.support.compliance_component_fixtures import (
+from tests.support.compliance_component_review_fixtures import (
     _write_component_adjudication_eval,
     _write_component_eval,
 )

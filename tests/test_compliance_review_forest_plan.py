@@ -7,6 +7,8 @@ from tests.support.compliance_component_fixtures import (
     _build_beaverhead_compliance_source_library,
     _build_custer_compliance_source_library,
     _build_flathead_compliance_source_library,
+)
+from tests.support.compliance_component_review_fixtures import (
     _write_beaverhead_rule_pack,
     _write_component_adjudication_eval,
     _write_custer_rule_pack,

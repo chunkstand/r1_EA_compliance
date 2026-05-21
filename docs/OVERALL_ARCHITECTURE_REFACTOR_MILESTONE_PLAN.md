@@ -1718,11 +1718,46 @@ Progress after Sequence 45:
   conditional rule-pack validation, eval/coverage/gold-eval contracts, phase-eval review-phase
   behavior, and owner-boundary enforcement after the support split.
 
+Progress after Sequence 46:
+
+- `tests/support/compliance_component_fixtures.py` is reduced from the pre-sequence `872`-line
+  hotspot to `648` lines by moving the component adjudication/eval writers plus the
+  Custer/Beaverhead/Flathead rule-pack helpers into the new
+  `tests/support/compliance_component_review_fixtures.py` owner.
+- `tests/support/compliance_component_review_fixtures.py` now owns the review-scoped component
+  adjudication payload writer, component-eval result writer, and the forest-plan-specific rule-pack
+  builders that previously remained inside `tests/support/compliance_component_fixtures.py`.
+- `tests/test_compliance_review_forest_plan.py` now imports the extracted rule-pack and
+  adjudication helpers from `tests/support/compliance_component_review_fixtures.py`, while
+  `tests/support/compliance_component_fixtures.py` keeps the source-library and component-inventory
+  builders used by the forest-plan compliance and resolver profile lanes.
+- `tests/test_compliance_phase_eval.py` now imports the extracted adjudication/eval helpers from
+  `tests/support/compliance_component_review_fixtures.py`, preserving the review-scoped
+  component-phase assertions without reaching into the source-library fixture owner.
+- `tests/test_compliance_review_test_boundary.py` now records the split support-owner budgets for
+  `tests/support/compliance_component_fixtures.py`,
+  `tests/support/compliance_component_review_fixtures.py`, and the now-sub-`800`
+  forest-plan compliance and phase-eval owner files.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `27` to `26`.
+- The fresh architecture probe reports `339` code files, `26` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/support/compliance_component_fixtures.py=648`,
+  `tests/support/compliance_component_review_fixtures.py=229`,
+  `tests/test_compliance_review_forest_plan.py=463`,
+  `tests/test_compliance_phase_eval.py=739`,
+  `tests/test_compliance_review_test_boundary.py=131`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_compliance_review_forest_plan.py tests/test_compliance_review_contracts.py tests/test_compliance_review_eval.py tests/test_compliance_coverage.py tests/test_compliance_gold_eval.py tests/test_compliance_phase_eval.py tests/test_compliance_review_test_boundary.py -q`
+  passes `72 passed, 3 subtests passed`, preserving forest-plan compliance routing, rule-pack
+  builders, component adjudication/eval review-phase coverage, and owner-boundary enforcement after
+  the support split.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/support/compliance_component_fixtures.py`, which is now the
-  next oversized test-owner hotspot on the live architecture probe after the compliance-review
-  support family is reduced.
+- Milestone 8 remains active on `tests/test_applicability.py`, which is now the next oversized
+  test-owner hotspot on the live architecture probe after the compliance-component support family
+  is reduced; `tests/test_phase_eval.py` remains the subsequent oversized test owner in the same
+  Milestone 8 packet.
 
 Resolved scope after closeout:
 

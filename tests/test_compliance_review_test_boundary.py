@@ -16,7 +16,8 @@ SUITE_BUDGETS = {
     "tests/test_compliance_phase_eval.py": 800,
     "tests/support/compliance_review_fixtures.py": 800,
     "tests/support/compliance_review_eval_fixtures.py": 800,
-    "tests/support/compliance_component_fixtures.py": 1200,
+    "tests/support/compliance_component_fixtures.py": 800,
+    "tests/support/compliance_component_review_fixtures.py": 800,
     "tests/support/compliance_phase_eval_fixtures.py": 800,
 }
 FORBIDDEN_CORE_IMPORTS = {
