@@ -5,6 +5,81 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 41
+
+This forty-first overall architecture-refactor slice closes the
+`tests/test_nepa_knowledge_graph_export.py` hotspot split, records the new NEPA knowledge-graph
+export test owners plus shared fixture helpers in the routed packet, and keeps the broader
+Milestone 8 test-hotspot packet moving on the next oversized test owner from the live
+architecture probe.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 41; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- nepa-graph-fixture-owner closeout:
+  `tests/support/nepa_knowledge_graph_export_fixtures.py` now owns the shared source-set graph,
+  Region 1 readiness, semantic catalog rewrite, currentness, and JSON fixture helpers that
+  previously remained inline in `tests/test_nepa_knowledge_graph_export.py`
+- nepa-graph-review-fixture-owner closeout:
+  `tests/support/nepa_knowledge_graph_review_fixtures.py` now owns the shared review overlay,
+  package-fact, applicability, compliance-matrix, and review-phase helper builders that
+  previously remained inline in `tests/test_nepa_knowledge_graph_export.py`
+- nepa-graph-core-owner closeout:
+  `tests/test_nepa_knowledge_graph_export.py` now owns the base source-set graph, source-register
+  graph, and stale-proving-context coverage that previously remained inline in
+  `tests/test_nepa_knowledge_graph_export.py`
+- nepa-graph-readiness-owner closeout:
+  `tests/test_nepa_knowledge_graph_export_readiness.py` now owns the promoted-profile eval-floor,
+  source-delta readiness, missing promoted inventory, and borrowed-inventory ownership coverage
+  that previously remained inline in `tests/test_nepa_knowledge_graph_export.py`
+- nepa-graph-review-owner closeout:
+  `tests/test_nepa_knowledge_graph_export_review.py` now owns the review-specific NEPA 3D overlay
+  and phase-eval coverage that previously remained inline in
+  `tests/test_nepa_knowledge_graph_export.py`
+- nepa-graph-boundary-owner closeout:
+  `tests/test_nepa_knowledge_graph_export_test_boundary.py` now records the split owner budgets
+  and sentinel ownership for `tests/test_nepa_knowledge_graph_export.py`,
+  `tests/test_nepa_knowledge_graph_export_readiness.py`, and
+  `tests/test_nepa_knowledge_graph_export_review.py`
+- facade-preserving routing:
+  `tests/test_nepa_knowledge_graph_export.py` keeps the source-set and source-register sentinel
+  coverage while the extracted files preserve the readiness and review-overlay surfaces end to end
+- direct contract coverage:
+  `tests/test_nepa_knowledge_graph_export.py`,
+  `tests/test_nepa_knowledge_graph_export_readiness.py`,
+  `tests/test_nepa_knowledge_graph_export_review.py`, and
+  `tests/test_nepa_knowledge_graph_export_test_boundary.py` still verify source-set graph export,
+  Region 1 readiness gating, source-delta inventory guards, review overlay export, phase-eval
+  integration, and owner-boundary enforcement after the split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `32` to `31`
+  after the `tests/test_nepa_knowledge_graph_export.py` hotspot is reduced below the `800`-line
+  gate
+- live probe evidence:
+  the fresh architecture probe reports `325` code files, `31` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_nepa_knowledge_graph_export.py=246`,
+  `tests/test_nepa_knowledge_graph_export_readiness.py=202`,
+  `tests/test_nepa_knowledge_graph_export_review.py=136`,
+  `tests/test_nepa_knowledge_graph_export_test_boundary.py=102`,
+  `tests/support/nepa_knowledge_graph_export_fixtures.py=611`, and
+  `tests/support/nepa_knowledge_graph_review_fixtures.py=281`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on NEPA
+  knowledge-graph export test-owner routing and architecture gates because only test-owner
+  surfaces and routed docs changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on `tests/test_final_qa_certification.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_knowledge_graph_export.py tests/test_nepa_knowledge_graph_export_readiness.py tests/test_nepa_knowledge_graph_export_review.py tests/test_nepa_knowledge_graph_export_test_boundary.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 40
 
 This fortieth overall architecture-refactor slice closes the
