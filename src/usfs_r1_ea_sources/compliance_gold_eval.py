@@ -665,7 +665,7 @@ def _gold_case_result(case: dict, case_results: list[dict]) -> dict:
         "adjudication": adjudication if isinstance(adjudication, dict) else {},
         "passed": bool(result.get("passed")),
         "failure_reasons": failure_reasons or [],
-        "expected_statuses": case.get("expected_statuses", {}),
+        "expected_statuses": result.get("expected_statuses", case.get("expected_statuses", {})),
         "actual_statuses": result.get("actual_statuses", {}),
         "finding_status_counts": result.get("finding_status_counts", {}),
         "failure_taxonomy": result.get("failure_taxonomy", []),

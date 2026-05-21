@@ -7,6 +7,51 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Compliance Gold Rebaseline Milestones 0 And 1
+
+This slice begins the routed full-canonical gold packet: it fixes the
+generated-case routing regression that had turned the gold suite into a
+base-pack diagnostic rerun, refreshes the isolated and bounded replays on the
+live catalog, and leaves the packet narrowed to the next real owner family.
+
+- outcome label:
+  Milestone `0` freshness lock resolved; Milestone `1` owner-family split
+  resolved; the packet remains active on Milestone `2`
+- routed packet:
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- runtime repair:
+  `src/usfs_r1_ea_sources/compliance_review_eval.py` now treats gold cases with
+  `expected_generated_*` expectations as generated-rule-pack cases again,
+  while `src/usfs_r1_ea_sources/compliance_gold_eval.py` now reports the
+  effective expected-status map coming back from the eval layer instead of the
+  stale base-only map
+- fresh isolated replay truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52_fix1`
+  no longer fails on the earlier `14/14` rule/retrieval diagnostic bundle; it
+  now fails earlier because synthetic review
+  `compliance-eval-gold-all-authorities-supported` leaves `67` candidate
+  authorities unresolved in applicability validation, so
+  `compliance_review_eval` does not run and the top-level gold result stays
+  `passed=false`
+- bounded aggregate truth:
+  `source_library/reviews/gold_coverage_eval_seq52_fix1/gold_coverage_eval_results.json`
+  remains red only because `compliance_gold.passed=false`; the replay still
+  records `required_theme_count=7`, `passed_theme_count=7`,
+  `distinct_forest_count=2`, `distinct_package_style_count=3`,
+  `reviewer_ready_review_count=2`, and `typed_blocked_review_count=1` with no
+  threshold failures
+- next routing:
+  continue the same packet on Milestone `2`, now focused on
+  applicability/adjudication readiness for the synthetic gold fixtures rather
+  than the earlier generated-case routing regression
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/compliance_review_eval.py src/usfs_r1_ea_sources/compliance_gold_eval.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py`,
+  `PYTHONPATH=src python -m compileall src/usfs_r1_ea_sources/compliance_review_eval.py src/usfs_r1_ea_sources/compliance_gold_eval.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py`,
+  the fresh `compliance-gold-eval` replay above, and the bounded
+  `gold_coverage_eval_seq52_fix1` replay wired to the fresh compliance-gold
+  result plus the current applicability and real-package-review aggregates
+
 ## Overall Architecture Refactor Closeout Audit
 
 This follow-up audit keeps the already-resolved architecture umbrella honest: it removes stale

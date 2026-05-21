@@ -4,6 +4,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
+from usfs_r1_ea_sources.compliance_review_eval import _case_requires_generated_rule_pack
 from usfs_r1_ea_sources.compliance_review_eval import _normalized_eval_findings_by_rule
 from usfs_r1_ea_sources.compliance_review_eval import (
     _validate_compliance_review_eval_cases_against_rule_pack,
@@ -216,6 +217,43 @@ class ComplianceReviewEvalTests(unittest.TestCase):
             "expected_finding_status_counts": {
                 "gap": 1,
             },
+        }
+
+        _validate_compliance_review_eval_cases_against_rule_pack([case], _rule_pack())
+
+    def test_generated_expectations_require_generated_rule_pack(self) -> None:
+        case = {
+            "id": "generated-case",
+            "package_text": "Purpose and Need",
+            "expected_statuses": {
+                "purpose_need": "pass",
+                "mitigation": "pass",
+            },
+            "expected_generated_statuses": {
+                "trail_access_authority_template": "uncertain",
+            },
+            "expected_generated_validation_passed": False,
+        }
+
+        self.assertTrue(_case_requires_generated_rule_pack(case))
+
+    def test_generated_expectations_allow_generated_rule_ids(self) -> None:
+        case = {
+            "id": "generated-case",
+            "package_text": "Purpose and Need",
+            "min_findings": 1,
+            "expected_statuses": {
+                "purpose_need": "pass",
+                "mitigation": "pass",
+                "trail_access_authority_template": "uncertain",
+            },
+            "expected_generated_statuses": {
+                "trail_access_authority_template": "uncertain",
+            },
+            "expected_generated_source_claim_links": {
+                "trail_access_authority_template": True,
+            },
+            "expected_generated_validation_passed": False,
         }
 
         _validate_compliance_review_eval_cases_against_rule_pack([case], _rule_pack())

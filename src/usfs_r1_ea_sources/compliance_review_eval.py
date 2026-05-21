@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -39,6 +40,18 @@ COMPLIANCE_REVIEW_EVAL_SCHEMA_VERSION = "compliance-review-eval-v1"
 COMPLIANCE_REVIEW_EVAL_RESULTS_SCHEMA_VERSION = "compliance-review-eval-results-v1"
 DEFAULT_COMPLIANCE_REVIEW_EVAL_PATH = Path("config/compliance_review_eval_seed.json")
 SUPPORTED_COMPLIANCE_REVIEW_EVAL_FILTERS = {"claim_type", "rule_id", "status"}
+GENERATED_RULE_PACK_EXPECTATION_FIELDS = (
+    "expected_generated_statuses",
+    "expected_generated_claim_types",
+    "expected_generated_package_evidence",
+    "expected_generated_source_evidence",
+    "expected_generated_source_claim_links",
+    "expected_generated_source_record_ids",
+    "expected_generated_source_document_roles",
+    "expected_generated_validation_passed",
+    "expected_generated_reviewer_ready",
+    "expected_generated_min_findings",
+)
 
 
 @dataclass(frozen=True)
@@ -334,8 +347,27 @@ def _case_requires_generated_rule_pack(case: dict) -> bool:
             "all_authorities_control",
             "conditional_subset",
             "hard_negative_package",
+            "generated_rule_pack_case",
         )
-    )
+    ) or _case_has_generated_rule_pack_expectations(case)
+
+
+def _case_has_generated_rule_pack_expectations(case: dict) -> bool:
+    for field in GENERATED_RULE_PACK_EXPECTATION_FIELDS:
+        if field not in case:
+            continue
+        value = case.get(field)
+        if isinstance(value, dict):
+            if value:
+                return True
+            continue
+        if isinstance(value, list):
+            if value:
+                return True
+            continue
+        if value is not None:
+            return True
+    return False
 
 
 def _generated_rule_pack_for_eval_case(
@@ -498,13 +530,20 @@ def _validate_compliance_review_eval_cases_against_rule_pack(
     for index, case in enumerate(cases):
         case_id = str(case["id"])
         status_rule_ids = set(_string_map(case["expected_statuses"]))
+        generated_rule_pack_case = _case_requires_generated_rule_pack(case)
         if status_rule_ids != expected_rule_ids:
             missing = sorted(expected_rule_ids - status_rule_ids)
-            unexpected = sorted(status_rule_ids - expected_rule_ids)
-            raise ValueError(
-                f"Compliance review eval case {index} ({case_id}) expected_statuses must "
-                f"cover every rule in the rule pack. Missing: {missing}; unexpected: {unexpected}."
+            unexpected = (
+                []
+                if generated_rule_pack_case
+                else sorted(status_rule_ids - expected_rule_ids)
             )
+            if missing or unexpected:
+                raise ValueError(
+                    f"Compliance review eval case {index} ({case_id}) expected_statuses must "
+                    f"cover every rule in the rule pack. Missing: {missing}; unexpected: {unexpected}."
+                )
+        allowed_rule_ids = status_rule_ids if generated_rule_pack_case else expected_rule_ids
         for key in (
             "expected_claim_types",
             "expected_package_evidence",
@@ -513,9 +552,9 @@ def _validate_compliance_review_eval_cases_against_rule_pack(
             "expected_source_record_ids",
             "expected_source_document_roles",
         ):
-            _validate_eval_rule_map_keys(index, case_id, case.get(key) or {}, expected_rule_ids, key)
+            _validate_eval_rule_map_keys(index, case_id, case.get(key) or {}, allowed_rule_ids, key)
         unsupported_ids = set(str(value) for value in case.get("expected_unsupported_finding_ids", []))
-        unexpected_unsupported = sorted(unsupported_ids - expected_rule_ids)
+        unexpected_unsupported = sorted(unsupported_ids - allowed_rule_ids)
         if unexpected_unsupported:
             raise ValueError(
                 f"Compliance review eval case {index} ({case_id}) expected_unsupported_finding_ids "
@@ -524,7 +563,7 @@ def _validate_compliance_review_eval_cases_against_rule_pack(
         filters = case.get("filters") or {}
         if "rule_id" in filters:
             rule_filter_ids = set(_filter_values(filters["rule_id"]))
-            unknown_filters = sorted(rule_filter_ids - expected_rule_ids)
+            unknown_filters = sorted(rule_filter_ids - allowed_rule_ids)
             if unknown_filters:
                 raise ValueError(
                     f"Compliance review eval case {index} ({case_id}) rule_id filter "
@@ -743,24 +782,29 @@ def _compliance_review_eval_case_result(
 ) -> dict:
     findings = list(report.get("findings", []))
     findings_by_rule = {str(finding.get("rule_id")): finding for finding in findings}
+    effective_case = _effective_eval_case_expectations(
+        case=case,
+        review_dir=result.review_dir,
+        findings_by_rule=findings_by_rule,
+    )
     filters = dict(case.get("filters") or {})
     selected_findings = _filter_eval_findings(findings, filters)
-    expected_statuses = _string_map(case["expected_statuses"])
-    expected_claim_types = _expected_claim_type_map(case, expected_statuses)
+    expected_statuses = _string_map(effective_case["expected_statuses"])
+    expected_claim_types = _expected_claim_type_map(effective_case, expected_statuses)
     expected_package_evidence = _expected_bool_presence_map(
-        case,
+        effective_case,
         "expected_package_evidence",
         expected_statuses,
         lambda status: status == "pass",
     )
     expected_source_evidence = _expected_bool_presence_map(
-        case,
+        effective_case,
         "expected_source_evidence",
         expected_statuses,
         lambda status: status in CLAIM_STATUSES,
     )
     expected_source_claim_links = _expected_bool_presence_map(
-        case,
+        effective_case,
         "expected_source_claim_links",
         expected_statuses,
         lambda status: status in CLAIM_STATUSES,
@@ -768,7 +812,7 @@ def _compliance_review_eval_case_result(
     normalized_findings_by_rule = _normalized_eval_findings_by_rule(
         findings_by_rule=findings_by_rule,
         expected_statuses=expected_statuses,
-        generated_rule_pack_case=_case_requires_generated_rule_pack(case),
+        generated_rule_pack_case=_case_requires_generated_rule_pack(effective_case),
     )
     status_mismatches = _value_mismatches(
         normalized_findings_by_rule,
@@ -795,9 +839,12 @@ def _compliance_review_eval_case_result(
         expected_source_claim_links,
         _finding_has_source_claim_links,
     )
-    expected_source_record_ids = _expected_string_list_map(case, "expected_source_record_ids")
+    expected_source_record_ids = _expected_string_list_map(
+        effective_case,
+        "expected_source_record_ids",
+    )
     expected_source_document_roles = _expected_string_list_map(
-        case,
+        effective_case,
         "expected_source_document_roles",
     )
     source_record_mismatches = _expected_subset_mismatches(
@@ -812,14 +859,14 @@ def _compliance_review_eval_case_result(
     )
     expected_status_counts = {
         str(status): int(count)
-        for status, count in (case.get("expected_finding_status_counts") or {}).items()
+        for status, count in (effective_case.get("expected_finding_status_counts") or {}).items()
     }
     actual_status_counts = dict(Counter(str(finding.get("status")) for finding in findings))
     status_counts_match = (
         not expected_status_counts or actual_status_counts == expected_status_counts
     )
     expected_unsupported = sorted(
-        str(value) for value in case.get("expected_unsupported_finding_ids", [])
+        str(value) for value in effective_case.get("expected_unsupported_finding_ids", [])
     )
     actual_unsupported = sorted(
         str(value)
@@ -832,23 +879,23 @@ def _compliance_review_eval_case_result(
         isinstance(applicability_gate, dict)
         and applicability_gate.get("mode") == "base_rule_pack_diagnostic"
     )
-    if "expected_validation_passed" in case:
-        expected_validation_passed = bool(case.get("expected_validation_passed"))
+    if "expected_validation_passed" in effective_case:
+        expected_validation_passed = bool(effective_case.get("expected_validation_passed"))
     else:
         expected_validation_passed = not diagnostic_base_rule_pack
     validation_passed_matches = bool(validation.get("passed")) == expected_validation_passed
-    if "expected_reviewer_ready" in case:
-        expected_reviewer_ready = bool(case.get("expected_reviewer_ready"))
+    if "expected_reviewer_ready" in effective_case:
+        expected_reviewer_ready = bool(effective_case.get("expected_reviewer_ready"))
     else:
         expected_reviewer_ready = not diagnostic_base_rule_pack
     reviewer_ready_matches = (
         bool(summary.get("reviewer_ready")) == expected_reviewer_ready
     )
-    require_graph_coverage = bool(case.get("require_graph_coverage", True))
+    require_graph_coverage = bool(effective_case.get("require_graph_coverage", True))
     graph_coverage_supported = (
         not require_graph_coverage or validation_checks_passed(validation, GRAPH_COVERAGE_CHECKS)
     )
-    min_findings = int(case.get("min_findings", 1))
+    min_findings = int(effective_case.get("min_findings", 1))
     min_findings_met = len(selected_findings) >= min_findings
     citation_coverage_supported = bool(selected_findings) and all(
         _finding_has_required_eval_citations(finding) for finding in selected_findings
@@ -966,15 +1013,99 @@ def _compliance_review_eval_case_result(
         "require_graph_coverage": require_graph_coverage,
         "validation_failed_checks": failed_check_names(validation),
         "finding_results": [_eval_finding_summary(finding) for finding in selected_findings],
-        "hard_negative_package": bool(case.get("hard_negative_package")),
-        "conditional_subset": bool(case.get("conditional_subset")),
-        "all_authorities_control": bool(case.get("all_authorities_control")),
+        "hard_negative_package": bool(effective_case.get("hard_negative_package")),
+        "conditional_subset": bool(effective_case.get("conditional_subset")),
+        "all_authorities_control": bool(effective_case.get("all_authorities_control")),
         **result_flags,
         "failure_reasons": failure_reasons,
         "failure_taxonomy": failure_taxonomy,
         "failure_category_counts": dict(Counter(item["category"] for item in failure_taxonomy)),
         "reproduction": _case_reproduction(result, package_path),
         "passed": not failure_reasons,
+    }
+
+
+def _effective_eval_case_expectations(
+    *,
+    case: dict,
+    review_dir: Path,
+    findings_by_rule: dict[str, dict],
+) -> dict:
+    if not (
+        _case_requires_generated_rule_pack(case)
+        and _case_has_generated_rule_pack_expectations(case)
+    ):
+        return deepcopy(case)
+
+    rule_ids = _evaluation_rule_ids(review_dir=review_dir) or set(findings_by_rule)
+    if not rule_ids:
+        return deepcopy(case)
+
+    effective_case = deepcopy(case)
+    base_statuses = _string_map(case.get("expected_statuses") or {})
+    generated_statuses = _string_map(case.get("expected_generated_statuses") or {})
+    merged_statuses = {rule_id: status for rule_id, status in base_statuses.items() if rule_id in rule_ids}
+    merged_statuses.update(
+        {rule_id: status for rule_id, status in generated_statuses.items() if rule_id in rule_ids}
+    )
+    if merged_statuses:
+        effective_case["expected_statuses"] = merged_statuses
+        effective_case["expected_finding_status_counts"] = dict(Counter(merged_statuses.values()))
+
+    generated_source_claim_links = (
+        deepcopy(case.get("expected_generated_source_claim_links"))
+        if isinstance(case.get("expected_generated_source_claim_links"), dict)
+        else {}
+    )
+    for rule_id, status in generated_statuses.items():
+        if (
+            rule_id in rule_ids
+            and status == "uncertain"
+            and rule_id not in generated_source_claim_links
+        ):
+            generated_source_claim_links[rule_id] = True
+    if generated_source_claim_links:
+        effective_case["expected_generated_source_claim_links"] = generated_source_claim_links
+
+    for base_field, generated_field in (
+        ("expected_claim_types", "expected_generated_claim_types"),
+        ("expected_package_evidence", "expected_generated_package_evidence"),
+        ("expected_source_evidence", "expected_generated_source_evidence"),
+        ("expected_source_claim_links", "expected_generated_source_claim_links"),
+        ("expected_source_record_ids", "expected_generated_source_record_ids"),
+        ("expected_source_document_roles", "expected_generated_source_document_roles"),
+    ):
+        base_value = case.get(base_field)
+        generated_value = case.get(generated_field)
+        if not isinstance(base_value, dict) and not isinstance(generated_value, dict):
+            continue
+        merged_value = deepcopy(base_value) if isinstance(base_value, dict) else {}
+        if isinstance(generated_value, dict):
+            merged_value.update(deepcopy(generated_value))
+        effective_case[base_field] = {
+            str(rule_id): value for rule_id, value in merged_value.items() if str(rule_id) in rule_ids
+        }
+
+    for base_field, generated_field in (
+        ("expected_validation_passed", "expected_generated_validation_passed"),
+        ("expected_reviewer_ready", "expected_generated_reviewer_ready"),
+        ("min_findings", "expected_generated_min_findings"),
+    ):
+        if generated_field in case:
+            effective_case[base_field] = deepcopy(case.get(generated_field))
+
+    return effective_case
+
+
+def _evaluation_rule_ids(*, review_dir: Path) -> set[str]:
+    path = review_dir / "applicability" / "compliance_evaluation_rule_pack.json"
+    if not path.exists():
+        return set()
+    payload = _read_json(path)
+    return {
+        str(rule.get("id"))
+        for rule in payload.get("rules", [])
+        if isinstance(rule, dict) and str(rule.get("id") or "").strip()
     }
 
 

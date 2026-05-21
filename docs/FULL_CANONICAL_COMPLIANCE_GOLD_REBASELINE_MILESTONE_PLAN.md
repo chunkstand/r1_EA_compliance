@@ -2,7 +2,7 @@
 
 Date: 2026-05-21
 
-Status: Active; spawned from overall architecture Milestone 10 Sequence 52
+Status: Active; Milestone 0 resolved 2026-05-21 through `compliance_gold_eval_seq52_fix1` and `gold_coverage_eval_seq52_fix1`; Milestone 1 resolved 2026-05-21 through generated-case routing repair and owner-family split; Milestone 2 active on synthetic-case applicability readiness
 
 Owner context: the overall architecture umbrella is now closed on truthful routing, but the live
 full-canonical gold lane remains red on the active local catalog
@@ -16,11 +16,15 @@ authority gates.
 
 ## Current Evidence
 
-- Fresh isolated replay on 2026-05-21:
-  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52`
-  finished on `source-set-f775524ab233ff27` with `passed=false`, `passed_case_count=0`,
-  `failed_case_count=14`, and `failure_category_counts={"rule_claim_binding_miss": 14,
-  "rule_wording_issue": 14, "source_applicability_miss": 14, "source_retrieval_miss": 14}`.
+- Fresh isolated replay after the generated-case routing repair on 2026-05-21:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52_fix1`
+  no longer produces the earlier `rule_claim_binding_miss` / `rule_wording_issue` /
+  `source_applicability_miss` / `source_retrieval_miss` bundle. It now fails earlier because
+  synthetic review `compliance-eval-gold-all-authorities-supported` cannot pass applicability
+  validation: `candidate_universe_partitioned_without_unresolved_authorities` reports
+  `candidate_authority_count=67`, `applicable_partition_count=0`,
+  `non_applicable_partition_count=0`, and `67` unresolved candidate authorities, so
+  `compliance_review_eval` does not run and `passed_case_count` remains `0/14`.
 - The same isolated replay still proves the coverage contract is present:
   `coverage_tags=["cultural_tribal", "forest_plan_consistency", "land_exchange",
   "migratory_birds", "multi_forest_plan_trigger", "roadless", "water_wetlands"]` and
@@ -31,12 +35,16 @@ authority gates.
   `distinct_package_style_count=3`, and `missing_package_authority_count=0`.
 - Fresh bounded aggregate replay on 2026-05-21 using:
   global applicability gold results,
-  isolated `compliance_gold_eval_seq52`,
+  isolated `compliance_gold_eval_seq52_fix1`,
   and fresh `real_package_review_coverage_eval_results.json`
   stays red only because `compliance_gold.passed=false`; it still records
   `required_theme_count=7`, `passed_theme_count=7`, `distinct_forest_count=2`,
   `distinct_package_style_count=3`, `reviewer_ready_review_count=2`,
   and `typed_blocked_review_count=1` with no threshold failures.
+- Fresh owner-family split on 2026-05-21:
+  the generated-case routing regression is now fixed in code and verified by focused tests, so the
+  remaining Milestone 2 owner is no longer generic retrieval/binding drift. The active blocker is
+  applicability/adjudication readiness for the synthetic gold fixtures.
 
 ## Goal
 
@@ -125,13 +133,13 @@ Outcome label: `resolved`
 ## Required Verification
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52_fix1
 PYTHONPATH=src python - <<'PY'
 # bounded gold-coverage replay using explicit results_path inputs
 PY
-PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py -q
-PYTHONPATH=src uv run --extra dev ruff check src tests
-PYTHONPATH=src python -m compileall src
+PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py -q
+PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/compliance_review_eval.py src/usfs_r1_ea_sources/compliance_gold_eval.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py
+PYTHONPATH=src python -m compileall src/usfs_r1_ea_sources/compliance_review_eval.py src/usfs_r1_ea_sources/compliance_gold_eval.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py
 git diff --check
 ```
 

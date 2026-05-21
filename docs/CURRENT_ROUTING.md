@@ -27,8 +27,14 @@ Use this file as the short current route before opening the large append-only do
 - West Reservoir is now an explicit `typed_blocked` replay quarantine rather than a claimed
   reviewer-ready replay contract because the broader-EA and forest-plan review artifact families are
   not reproducible from current repo-local state.
-- Fresh full-canonical `compliance-gold-eval` replay on `source-set-f775524ab233ff27` is red on
-  `14/14` cases even though the required coverage and package-style tags are present.
+- The gold packet now routes `expected_generated_*` gold cases into the generated-rule-pack eval
+  path again; the older `14/14` rule/retrieval failure bundle was diagnostic noise from the
+  base-rule-pack rerun path.
+- Fresh full-canonical `compliance-gold-eval` replay on `source-set-f775524ab233ff27` now fails
+  earlier on synthetic-case applicability readiness: case
+  `compliance-eval-gold-all-authorities-supported` leaves `67/67` candidate authorities unresolved,
+  so `compliance_review_eval` never runs and the bounded `gold_coverage_eval_seq52_fix1` replay
+  remains red only because `compliance_gold.passed=false`.
 - Next routed packet: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 
 ## Deep Reads
