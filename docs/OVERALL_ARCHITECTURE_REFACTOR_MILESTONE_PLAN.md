@@ -271,9 +271,12 @@ This plan acts as the current repo-wide architecture weak-point register until t
 | Architecture doc path drift | uppercase path is canonical, but the checkout still needs a guard against lowercase-path drift | architecture docs and references | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
 | Non-hermetic proving dependency | West Reservoir replay context points at `/Users/chunkstand/Downloads/...` | replay-context and proving docs/config | proving-lane contract tests and docs readback | deferred | Milestone 9 |
 | Duplicated PDF/rendering helpers | shared PDF object and line renderer ownership now lives in `pdf_object_writer.py`; the owner-family split risk is narrower but not the same as the broader document-owner hotspot | reporting/document-output family | focused helper contract tests plus owner-family readback | resolved | closed |
-| Oversized test/fixture owners | multiple `tests/*.py` and `tests/support/*.py` files over threshold | test families and support fixtures | architecture probe plus focused pytest slices | deferred | Milestone 8 |
+| Oversized test/fixture owners | live architecture probe now reports no `tests/` or `tests/support/` file above the `800`-line reviewability gate; remaining oversized owners are runtime/viewer families outside the Milestone 8 test packet | test families and support fixtures | architecture probe plus focused pytest slices | resolved | closed |
 
 ## Large-File Inventory Over 800 Lines
+
+This inventory is the umbrella packet's Milestone 0 baseline used to route the larger owner
+families. Live oversized-file counts are ratcheted in the milestone progress entries below.
 
 ### Priority A - primary runtime hotspots
 
@@ -1811,6 +1814,20 @@ Progress after Sequence 48:
   draft-generation defensibility, compliance review-phase coverage, and owner-boundary enforcement
   after the split.
 
+Progress after Sequence 49 on 2026-05-21:
+
+- `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/SESSION_HANDOFF.md` now align on the Milestone 8 closeout truth: the oversized
+  test/support owner packet is resolved and the umbrella route advances to Milestone 9.
+- A fresh architecture-probe audit still reports `344` code files, `24` files above `800`, top
+  hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, no remaining modules
+  above the `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- The post-closeout debt-shift audit confirms no `tests/` or `tests/support/` owner has re-crossed
+  the `800`-line reviewability gate after Sequences 46-48; the remaining oversized files are all
+  outside the Milestone 8 owner family.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`
+  passes `10/10`, and `git diff --check` passes after the docs-only alignment slice.
+
 Remaining issue after closeout:
 
 - Milestone 8 is resolved. Advance the umbrella packet to Milestone 9 on the West Reservoir
@@ -1821,6 +1838,8 @@ Resolved scope after closeout:
 - the test suite no longer depends on oversized test or support owners for major architecture
   families.
 - no `tests/` or `tests/support/` file remains above the `800`-line reviewability gate.
+- no adjacent split owner inherited fresh oversized-file, fan-out, or cycle debt in the
+  post-closeout architecture audit.
 
 ### Milestone 9 - Remove Mechanical Drift And Non-Hermetic Replay Debt
 

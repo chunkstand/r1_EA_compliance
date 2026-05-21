@@ -5,6 +5,37 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 49
+
+This forty-ninth overall architecture-refactor slice closes the remaining
+Milestone 8 documentation and routing drift, reruns the live architecture gate,
+and proves the oversized-test paydown did not shift debt into adjacent
+test/support owners before the umbrella packet advances to Milestone 9.
+
+- outcome label:
+  `resolved` for Milestone 8 sequence 49; the broader Milestone 8 family remains closed
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- documentation-alignment closeout:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/SESSION_HANDOFF.md` now align on the same closeout truth and route the umbrella packet to
+  Milestone 9 consistently
+- debt-shift audit:
+  the fresh architecture probe still reports `344` code files, `24` files above `800`, top
+  hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, no remaining modules
+  above the `20`-import fan-out gate, no Python or JS/TS import cycles, and no `tests/` or
+  `tests/support/` owner above the `800`-line reviewability gate
+- residual system state:
+  runtime behavior is unchanged in this slice; the work closes stale documentation/routing drift
+  only
+- next routing:
+  Milestone 8 is complete. Advance the same umbrella packet to Milestone 9 on the West Reservoir
+  user-home proving dependency plus cold-start doc routing drift
+- verification:
+  `PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --max-fan-out 20 --format markdown`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 48
 
 This forty-eighth overall architecture-refactor slice closes the

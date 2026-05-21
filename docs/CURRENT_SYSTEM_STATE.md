@@ -32,6 +32,39 @@ still describe South Plateau strict expansion as blocked on
 aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
+Older architecture references below that still route the oversized-test packet
+as open or still list pre-closeout Milestone 8 hotspot sizes such as
+`tests/test_phase_eval.py=954` are historical only after the 2026-05-21
+Milestone 8 alignment closeout described below.
+
+## Overall Architecture Refactor Milestone 8 Sequence 49
+
+Latest closeout on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone 8; sequence 49 closes the remaining documentation and routing drift
+  after the Sequence 48 test-owner split.
+- Implementation surfaces:
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`, and
+  `docs/SESSION_HANDOFF.md`.
+- Documentation alignment closeout:
+  the umbrella plan weak-point register, current-system-state route, and canonical handoff now
+  agree that the oversized test/support owner packet is complete and that the next routed
+  architecture slice is Milestone 9 on the West Reservoir user-home proving dependency plus
+  cold-start doc routing drift.
+- Debt-shift audit:
+  the fresh architecture probe reports `344` code files, `24` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, no remaining modules above
+  the `20`-import fan-out gate, and no Python or JS/TS import cycles; no `tests/` or
+  `tests/support/` owner remains above the `800`-line reviewability gate.
+- Residual system state:
+  runtime behavior is unchanged in this slice; the work closes stale architecture/doc routing only.
+- Next routing:
+  Milestone 8 is complete. Advance the same umbrella packet to Milestone 9 on the West Reservoir
+  user-home proving dependency plus cold-start doc routing drift.
 
 ## Overall Architecture Refactor Milestone 6 Sequence 24
 
