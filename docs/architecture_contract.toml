@@ -172,7 +172,9 @@ modules = [
   "applicability_retrieval",
   "applicability_rule_pack",
   "applicability_validation",
+  "applicability_validation_artifacts",
   "applicability_validation_checks",
+  "applicability_validation_freshness",
   "applicability_validation_support",
 ]
 allowed_import_layers = [

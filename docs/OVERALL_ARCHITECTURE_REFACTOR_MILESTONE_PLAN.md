@@ -48,20 +48,20 @@ machine-local state.
   `source_set_support.py` owns the shared derived-output path and support-document-role helpers
   now used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
   `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`.
-- Milestone 6 sequence 11 now closes the applicability validation-check seam:
-  `applicability_validation_checks.py` now owns the non-freshness validation check family,
-  `applicability_validation_support.py` owns the shared validation serialization/id/status helper
-  surface, and `applicability_validation.py` is reduced to the remaining artifact-loading,
-  freshness, provenance, and summary facade. The next executable slice remains inside Milestone 6
-  on the remaining artifact-freshness/provenance core in `applicability_validation.py` plus the
-  broader claims/evidence hotspot family.
+- Milestone 6 sequence 12 now closes the remaining applicability validation seam:
+  `applicability_validation_artifacts.py` now owns validation artifact-path resolution, artifact
+  loading, artifact-hash summary assembly, and source-set/run-id inference;
+  `applicability_validation_freshness.py` now owns artifact-freshness and provenance validation;
+  and `applicability_validation.py` is reduced to a thin public validation facade. The next
+  executable slice remains inside Milestone 6 on the broader claims/evidence hotspot family,
+  starting with `claim_extraction.py`.
 
 ### Architecture probe current baseline
 
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `219` code files detected;
+- `222` code files detected;
 - `54` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
@@ -74,7 +74,9 @@ From
 - new applicability owner surfaces:
   `src.usfs_r1_ea_sources.applicability_adjudication` is `740` lines,
   `src.usfs_r1_ea_sources.applicability_adjudication_apply` is `443` lines,
+  `src.usfs_r1_ea_sources.applicability_validation_artifacts` is `173` lines,
   `src.usfs_r1_ea_sources.applicability_validation_checks` is `791` lines,
+  `src.usfs_r1_ea_sources.applicability_validation_freshness` is `304` lines,
   `src.usfs_r1_ea_sources.applicability_validation_support` is `171` lines,
   `src.usfs_r1_ea_sources.applicability_authority_family_templates` is `417` lines and
   `src.usfs_r1_ea_sources.applicability_authority_universe_contracts` is `594` lines,
@@ -86,8 +88,9 @@ From
   `src.usfs_r1_ea_sources.applicability_decision_forest_plan` is `128` lines,
   `src.usfs_r1_ea_sources.applicability_decision_outputs` is `375` lines,
   `src.usfs_r1_ea_sources.applicability_decisions` is down to `793` lines from the post-sequence-8
-  `916`-line baseline, `src.usfs_r1_ea_sources.applicability_validation` is down to `607` lines
-  from the post-sequence-10 `1502`-line baseline and pre-sequence `2494`-line baseline, and `src/usfs_r1_ea_sources.applicability.py`
+  `916`-line baseline, `src.usfs_r1_ea_sources.applicability_validation` is down to `178` lines
+  from the post-sequence-11 `607`-line baseline, post-sequence-10 `1502`-line baseline, and
+  pre-sequence `2494`-line baseline, and `src/usfs_r1_ea_sources.applicability.py`
   remains a `48`-line public facade after falling from the pre-sequence `2315`-line baseline
   without introducing a new `>800` line file;
 - suggested gates:
@@ -119,8 +122,8 @@ From
   are now closed and the full file passes again; the remaining issue is test-owner size and
   coupling, not a blocked Flathead readiness seam or a shared-review-helper regression.
 - Durable context is high quality but expensive to scan:
-  `docs/SESSION_HANDOFF.md` is `10927` lines and append-only;
-  `docs/CURRENT_SYSTEM_STATE.md` is `4672` lines.
+  `docs/SESSION_HANDOFF.md` is `10985` lines and append-only;
+  `docs/CURRENT_SYSTEM_STATE.md` is `4717` lines.
 - Architecture doc routing needs an explicit canonical-path guard:
   on this macOS checkout the lowercase path aliases the tracked uppercase file, so path drift must
   be prevented by policy and tests rather than by maintaining two physical docs.
@@ -197,7 +200,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 | Debt-register drift | pre-closeout `TD-001` stale line reference against `batches.py:223` | `docs/TECH_DEBT_REGISTER.md`, debt tests | `tests/test_debt_contract.py` | resolved | closed |
 | Incomplete agent entrypoint | closed in `63e1160` and `1435cdb` | `document_plan.py`, CLI, agent docs | focused document-plan and CLI tests | resolved | closed |
 | Missing dependency declaration | closed by the current planner contract, which validates requests without a new external schema runtime dependency | document-planning surfaces | focused planner/CLI tests | resolved | closed |
-| Cold-start doc sprawl | handoff `10927` lines; current state `4672` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
+| Cold-start doc sprawl | handoff `10985` lines; current state `4717` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
 | Architecture doc path drift | uppercase path is canonical, but the checkout still needs a guard against lowercase-path drift | architecture docs and references | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
 | Non-hermetic proving dependency | West Reservoir replay context points at `/Users/chunkstand/Downloads/...` | replay-context and proving docs/config | proving-lane contract tests and docs readback | deferred | Milestone 9 |
 | Duplicated PDF/rendering helpers | shared PDF object and line renderer ownership now lives in `pdf_object_writer.py`; the owner-family split risk is narrower but not the same as the broader document-owner hotspot | reporting/document-output family | focused helper contract tests plus owner-family readback | resolved | closed |
@@ -652,7 +655,7 @@ Remaining issue after closeout:
 ### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
 
 Outcome label: `reduced`
-Status: active after Sequence 11
+Status: active after Sequence 12
 
 Purpose: reduce the largest concentration in the applicability decision family.
 
@@ -661,7 +664,9 @@ Owner family:
 - `applicability.py`
 - `applicability_adjudication.py`
 - `applicability_adjudication_apply.py`
+- `applicability_validation_artifacts.py`
 - `applicability_validation_checks.py`
+- `applicability_validation_freshness.py`
 - `applicability_validation_support.py`
 - `applicability_authority_family_templates.py`
 - `applicability_authority_universe_builder.py`
@@ -690,7 +695,24 @@ Implementation:
 2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
 
-Progress after Sequence 11 on 2026-05-20:
+Progress after Sequence 12 on 2026-05-20:
+
+- `applicability_validation_artifacts.py` now owns validation artifact-path resolution, artifact
+  loading, artifact-hash summary assembly, and source-set/run-id inference that previously remained
+  inside `applicability_validation.py`.
+- `applicability_validation_freshness.py` now owns artifact-freshness and provenance validation
+  that previously remained inside `applicability_validation.py`.
+- `tests/test_applicability_validation_artifacts.py` now pins the extracted artifact and
+  freshness/provenance seams directly, while the existing validation-check, applicability decision,
+  and adjudication tests still verify the public validation workflow end to end.
+- `applicability_validation.py` is reduced to `178` lines from the post-sequence-11 `607`-line
+  baseline, `applicability_validation_artifacts.py` stays at `173` lines, and
+  `applicability_validation_freshness.py` stays at `304` lines.
+- The fresh architecture probe reports `222` code files, `54` files above `800`, and no Python or
+  JS/TS cycles.
+
+- Sequence 11 closeout commit:
+  `8493946` (`Reduce architecture refactor Milestone 6 validation-check seam`).
 
 - `applicability_validation_checks.py` now owns the required-artifact, identity, package-fact
   validation, candidate/partition, evidence-basis, traceability, forest-plan scope,
@@ -820,9 +842,11 @@ Progress after Sequence 11 on 2026-05-20:
 
 Remaining issue after closeout:
 
-- `applicability_validation.py` now keeps the remaining artifact-loading, artifact-freshness, and
-  provenance core, and the broader claims/evidence hotspot families remain open inside Milestone 6
-  before the umbrella packet can route forward to Milestone 7.
+- The applicability validation family is now reduced to explicit owners, but the broader
+  claims/evidence hotspot families remain open inside Milestone 6. The next routed slice starts
+  with `claim_extraction.py`, then `rule_claim_binding.py`, `evidence_graph.py`,
+  `package_fact_graph.py`, `applicability_retrieval.py`, `applicability_rule_pack.py`, and
+  `applicability_eval.py` before the umbrella packet can route forward to Milestone 7.
 
 ### Milestone 7 - Split Eval And Promotion Orchestration Hotspots
 
