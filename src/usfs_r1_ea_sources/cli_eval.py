@@ -1,40 +1,123 @@
 from __future__ import annotations
 
-from pathlib import Path
 import argparse
+import importlib
+from pathlib import Path
 
-from .applicability import DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH
-from .applicability_eval import DEFAULT_APPLICABILITY_EVAL_PATH
-from .applicability_eval import DEFAULT_APPLICABILITY_GOLD_EVAL_PATH
-from .applicability_eval import run_applicability_eval
-from .applicability_eval import run_applicability_gold_eval
 from .cli_common import print_summary
-from .draft_generation import DEFAULT_CONFIG_PATH as DEFAULT_DRAFT_GENERATION_CONFIG_PATH
-from .draft_generation_eval import DEFAULT_EVAL_PATH as DEFAULT_DRAFT_GENERATION_EVAL_PATH
-from .draft_generation_eval import run_draft_generation_eval
-from .forest_plan_component_retrieval_eval import (
-    DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_MANIFEST_PATH,
+from .cli_eval_dispatch import EvalCommandHandler, dispatch_eval_command
+from .cli_eval_registration import (
+    EvalArgumentSpec,
+    EvalCommandSpec,
+    register_eval_command_specs,
 )
-from .forest_plan_component_retrieval_eval import run_forest_plan_component_retrieval_eval
-from .forest_plan_component_eval_coverage import (
-    DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
+
+
+DEFAULT_OUTPUT_DIR = Path("source_library")
+
+
+def _module_attr(module_name: str, attr_name: str):
+    module = importlib.import_module(f".{module_name}", __package__)
+    return getattr(module, attr_name)
+
+
+DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH = _module_attr(
+    "applicability", "DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH"
 )
-from .forest_plan_component_eval_coverage import run_forest_plan_component_eval_coverage
-from .forest_plan_profile_eval import DEFAULT_FOREST_PLAN_PROFILE_EVAL_MANIFEST_PATH
-from .forest_plan_profile_eval import run_forest_plan_profile_eval
-from .gold_coverage_eval import DEFAULT_GOLD_COVERAGE_MANIFEST_PATH
-from .gold_coverage_eval import run_gold_coverage_eval
-from .phase_eval import run_phase_aligned_eval
-from .real_package_review_coverage_eval import (
-    DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
+DEFAULT_APPLICABILITY_EVAL_PATH = _module_attr(
+    "applicability_eval", "DEFAULT_APPLICABILITY_EVAL_PATH"
 )
-from .real_package_review_coverage_eval import run_real_package_review_coverage_eval
-from .promotion_suite import DEFAULT_PROMOTION_SUITE_PATH
-from .promotion_suite import run_promotion_suite
-from .rule_packs import DEFAULT_RULE_PACK_PATH
-from .upstream_evaluation import DEFAULT_UPSTREAM_EVALUATION_MANIFEST_PATH
-from .upstream_evaluation import run_upstream_evaluation
-from .v1_ea_eval import run_v1_ea_review_eval
+DEFAULT_APPLICABILITY_GOLD_EVAL_PATH = _module_attr(
+    "applicability_eval", "DEFAULT_APPLICABILITY_GOLD_EVAL_PATH"
+)
+DEFAULT_RULE_PACK_PATH = _module_attr("rule_packs", "DEFAULT_RULE_PACK_PATH")
+DEFAULT_DRAFT_GENERATION_CONFIG_PATH = _module_attr(
+    "draft_generation", "DEFAULT_CONFIG_PATH"
+)
+DEFAULT_DRAFT_GENERATION_EVAL_PATH = _module_attr(
+    "draft_generation_eval", "DEFAULT_EVAL_PATH"
+)
+DEFAULT_UPSTREAM_EVALUATION_MANIFEST_PATH = _module_attr(
+    "upstream_evaluation", "DEFAULT_UPSTREAM_EVALUATION_MANIFEST_PATH"
+)
+DEFAULT_FOREST_PLAN_PROFILE_EVAL_MANIFEST_PATH = _module_attr(
+    "forest_plan_profile_eval", "DEFAULT_FOREST_PLAN_PROFILE_EVAL_MANIFEST_PATH"
+)
+DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_MANIFEST_PATH = _module_attr(
+    "forest_plan_component_retrieval_eval",
+    "DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_MANIFEST_PATH",
+)
+DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH = _module_attr(
+    "forest_plan_component_eval_coverage",
+    "DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH",
+)
+DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH = _module_attr(
+    "real_package_review_coverage_eval",
+    "DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH",
+)
+DEFAULT_GOLD_COVERAGE_MANIFEST_PATH = _module_attr(
+    "gold_coverage_eval", "DEFAULT_GOLD_COVERAGE_MANIFEST_PATH"
+)
+DEFAULT_PROMOTION_SUITE_PATH = _module_attr(
+    "promotion_suite", "DEFAULT_PROMOTION_SUITE_PATH"
+)
+
+
+def run_applicability_eval(**kwargs):
+    return _module_attr("applicability_eval", "run_applicability_eval")(**kwargs)
+
+
+def run_applicability_gold_eval(**kwargs):
+    return _module_attr("applicability_eval", "run_applicability_gold_eval")(**kwargs)
+
+
+def run_draft_generation_eval(**kwargs):
+    return _module_attr("draft_generation_eval", "run_draft_generation_eval")(**kwargs)
+
+
+def run_upstream_evaluation(**kwargs):
+    return _module_attr("upstream_evaluation", "run_upstream_evaluation")(**kwargs)
+
+
+def run_forest_plan_profile_eval(**kwargs):
+    return _module_attr("forest_plan_profile_eval", "run_forest_plan_profile_eval")(**kwargs)
+
+
+def run_forest_plan_component_retrieval_eval(**kwargs):
+    return _module_attr(
+        "forest_plan_component_retrieval_eval",
+        "run_forest_plan_component_retrieval_eval",
+    )(**kwargs)
+
+
+def run_forest_plan_component_eval_coverage(**kwargs):
+    return _module_attr(
+        "forest_plan_component_eval_coverage",
+        "run_forest_plan_component_eval_coverage",
+    )(**kwargs)
+
+
+def run_phase_aligned_eval(**kwargs):
+    return _module_attr("phase_eval", "run_phase_aligned_eval")(**kwargs)
+
+
+def run_v1_ea_review_eval(**kwargs):
+    return _module_attr("v1_ea_eval", "run_v1_ea_review_eval")(**kwargs)
+
+
+def run_real_package_review_coverage_eval(**kwargs):
+    return _module_attr(
+        "real_package_review_coverage_eval",
+        "run_real_package_review_coverage_eval",
+    )(**kwargs)
+
+
+def run_gold_coverage_eval(**kwargs):
+    return _module_attr("gold_coverage_eval", "run_gold_coverage_eval")(**kwargs)
+
+
+def run_promotion_suite(**kwargs):
+    return _module_attr("promotion_suite", "run_promotion_suite")(**kwargs)
 
 
 EVAL_COMMANDS = {
@@ -53,315 +136,303 @@ EVAL_COMMANDS = {
 }
 
 
-def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
-    applicability_eval = subparsers.add_parser(
-        "applicability-eval",
+def _arg(*flags: str, **kwargs) -> EvalArgumentSpec:
+    return EvalArgumentSpec(flags=flags, kwargs=kwargs)
+
+
+COMMAND_SPECS = (
+    EvalCommandSpec(
+        name="applicability-eval",
         help="Run deterministic applicability decision-quality eval cases.",
-    )
-    applicability_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
-    applicability_eval.add_argument("--source-set-id")
-    applicability_eval.add_argument("--base-rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
-    applicability_eval.add_argument("--eval-file", default=DEFAULT_APPLICABILITY_EVAL_PATH, type=Path)
-    applicability_eval.add_argument(
-        "--authority-family-templates-path",
-        default=DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
-        type=Path,
-    )
-    applicability_eval.add_argument(
-        "--no-authority-family-templates",
-        action="store_const",
-        const=None,
-        dest="authority_family_templates_path",
-    )
-    applicability_eval.add_argument("--results-dir", type=Path)
-    applicability_eval.add_argument("--top-k", type=int, default=5)
-
-    applicability_gold_eval = subparsers.add_parser(
-        "applicability-gold-eval",
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--source-set-id"),
+            _arg("--base-rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path),
+            _arg("--eval-file", default=DEFAULT_APPLICABILITY_EVAL_PATH, type=Path),
+            _arg(
+                "--authority-family-templates-path",
+                default=DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
+                type=Path,
+            ),
+            _arg(
+                "--no-authority-family-templates",
+                action="store_const",
+                const=None,
+                dest="authority_family_templates_path",
+            ),
+            _arg("--results-dir", type=Path),
+            _arg("--top-k", type=int, default=5),
+        ),
+    ),
+    EvalCommandSpec(
+        name="applicability-gold-eval",
         help="Run adjudicated applicability gold eval cases.",
-    )
-    applicability_gold_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
-    applicability_gold_eval.add_argument("--source-set-id")
-    applicability_gold_eval.add_argument("--base-rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path)
-    applicability_gold_eval.add_argument(
-        "--gold-file",
-        default=DEFAULT_APPLICABILITY_GOLD_EVAL_PATH,
-        type=Path,
-    )
-    applicability_gold_eval.add_argument(
-        "--authority-family-templates-path",
-        default=DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
-        type=Path,
-    )
-    applicability_gold_eval.add_argument(
-        "--no-authority-family-templates",
-        action="store_const",
-        const=None,
-        dest="authority_family_templates_path",
-    )
-    applicability_gold_eval.add_argument("--results-dir", type=Path)
-    applicability_gold_eval.add_argument("--top-k", type=int, default=5)
-
-    draft_generation_eval = subparsers.add_parser(
-        "draft-generation-eval",
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--source-set-id"),
+            _arg("--base-rule-pack", default=DEFAULT_RULE_PACK_PATH, type=Path),
+            _arg("--gold-file", default=DEFAULT_APPLICABILITY_GOLD_EVAL_PATH, type=Path),
+            _arg(
+                "--authority-family-templates-path",
+                default=DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
+                type=Path,
+            ),
+            _arg(
+                "--no-authority-family-templates",
+                action="store_const",
+                const=None,
+                dest="authority_family_templates_path",
+            ),
+            _arg("--results-dir", type=Path),
+            _arg("--top-k", type=int, default=5),
+        ),
+    ),
+    EvalCommandSpec(
+        name="draft-generation-eval",
         help="Run fail-closed draft-generation eval fixtures and validate the live draft packet.",
-    )
-    draft_generation_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
-    draft_generation_eval.add_argument("--review-id")
-    draft_generation_eval.add_argument(
-        "--eval-file",
-        default=DEFAULT_DRAFT_GENERATION_EVAL_PATH,
-        type=Path,
-    )
-    draft_generation_eval.add_argument(
-        "--config",
-        default=DEFAULT_DRAFT_GENERATION_CONFIG_PATH,
-        type=Path,
-    )
-    draft_generation_eval.add_argument("--results-dir", type=Path)
-
-    upstream_eval = subparsers.add_parser(
-        "upstream-eval",
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--review-id"),
+            _arg("--eval-file", default=DEFAULT_DRAFT_GENERATION_EVAL_PATH, type=Path),
+            _arg("--config", default=DEFAULT_DRAFT_GENERATION_CONFIG_PATH, type=Path),
+            _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="upstream-eval",
         help="Run deterministic upstream direct-eval coverage fixtures.",
-    )
-    upstream_eval.add_argument("--manifest", default=DEFAULT_UPSTREAM_EVALUATION_MANIFEST_PATH, type=Path)
-    upstream_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
-    upstream_eval.add_argument("--results-dir", type=Path)
-
-    forest_plan_profile_eval = subparsers.add_parser(
-        "forest-plan-profile-eval",
+        arguments=(
+            _arg("--manifest", default=DEFAULT_UPSTREAM_EVALUATION_MANIFEST_PATH, type=Path),
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="forest-plan-profile-eval",
         help="Run the aggregate Region 1 cross-forest profile coverage gate.",
-    )
-    forest_plan_profile_eval.add_argument(
-        "--manifest",
-        default=DEFAULT_FOREST_PLAN_PROFILE_EVAL_MANIFEST_PATH,
-        type=Path,
-    )
-    forest_plan_profile_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
-    forest_plan_profile_eval.add_argument("--results-dir", type=Path)
-
-    forest_plan_component_retrieval_eval = subparsers.add_parser(
-        "forest-plan-component-retrieval-eval",
+        arguments=(
+            _arg(
+                "--manifest",
+                default=DEFAULT_FOREST_PLAN_PROFILE_EVAL_MANIFEST_PATH,
+                type=Path,
+            ),
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="forest-plan-component-retrieval-eval",
         help="Run the standalone source-set component retrieval coverage gate.",
-    )
-    forest_plan_component_retrieval_eval.add_argument(
-        "--manifest",
-        default=DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_MANIFEST_PATH,
-        type=Path,
-    )
-    forest_plan_component_retrieval_eval.add_argument(
-        "--output-dir",
-        default=Path("source_library"),
-        type=Path,
-    )
-    forest_plan_component_retrieval_eval.add_argument("--results-dir", type=Path)
-
-    forest_plan_component_eval_coverage = subparsers.add_parser(
-        "forest-plan-component-eval-coverage",
+        arguments=(
+            _arg(
+                "--manifest",
+                default=DEFAULT_FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_MANIFEST_PATH,
+                type=Path,
+            ),
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="forest-plan-component-eval-coverage",
         help="Run the aggregate component coverage gate across retrieval and tracked review slots.",
-    )
-    forest_plan_component_eval_coverage.add_argument(
-        "--manifest",
-        default=DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
-        type=Path,
-    )
-    forest_plan_component_eval_coverage.add_argument(
-        "--output-dir",
-        default=Path("source_library"),
-        type=Path,
-    )
-    forest_plan_component_eval_coverage.add_argument("--results-dir", type=Path)
-
-    phase_eval = subparsers.add_parser(
-        "phase-eval",
+        arguments=(
+            _arg(
+                "--manifest",
+                default=DEFAULT_FOREST_PLAN_COMPONENT_EVAL_COVERAGE_MANIFEST_PATH,
+                type=Path,
+            ),
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="phase-eval",
         help="Run phase-aligned readiness evals across generated artifacts.",
-    )
-    phase_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
-    phase_eval.add_argument("--source-set-id")
-    phase_eval.add_argument("--catalog-dir", type=Path)
-    phase_eval.add_argument("--review-id")
-    phase_eval.add_argument("--review-dir", type=Path)
-
-    v1_ea_eval = subparsers.add_parser(
-        "v1-ea-eval",
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--source-set-id"),
+            _arg("--catalog-dir", type=Path),
+            _arg("--review-id"),
+            _arg("--review-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="v1-ea-eval",
         help="Evaluate a real EA compliance review against the V1 source/section contract.",
-    )
-    v1_ea_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
-    v1_ea_eval.add_argument("--review-id")
-    v1_ea_eval.add_argument("--review-dir", type=Path)
-    v1_ea_eval.add_argument("--eval-file", type=Path)
-    v1_ea_eval.add_argument(
-        "--manifest",
-        default=DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
-        type=Path,
-    )
-    v1_ea_eval.add_argument("--output-path", type=Path)
-
-    real_package_review_coverage_eval = subparsers.add_parser(
-        "real-package-review-coverage-eval",
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--review-id"),
+            _arg("--review-dir", type=Path),
+            _arg("--eval-file", type=Path),
+            _arg(
+                "--manifest",
+                default=DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
+                type=Path,
+            ),
+            _arg("--output-path", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="real-package-review-coverage-eval",
         help="Run the aggregate real-package review coverage gate across tracked review slots.",
-    )
-    real_package_review_coverage_eval.add_argument(
-        "--output-dir",
-        default=Path("source_library"),
-        type=Path,
-    )
-    real_package_review_coverage_eval.add_argument(
-        "--manifest",
-        default=DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
-        type=Path,
-    )
-    real_package_review_coverage_eval.add_argument("--results-dir", type=Path)
-
-    gold_coverage_eval = subparsers.add_parser(
-        "gold-coverage-eval",
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg(
+                "--manifest",
+                default=DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH,
+                type=Path,
+            ),
+            _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="gold-coverage-eval",
         help="Run the aggregate gold coverage gate across adjudicated gold and real-review contracts.",
-    )
-    gold_coverage_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
-    gold_coverage_eval.add_argument(
-        "--manifest",
-        default=DEFAULT_GOLD_COVERAGE_MANIFEST_PATH,
-        type=Path,
-    )
-    gold_coverage_eval.add_argument("--results-dir", type=Path)
-
-    promotion_suite = subparsers.add_parser(
-        "promotion-suite",
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--manifest", default=DEFAULT_GOLD_COVERAGE_MANIFEST_PATH, type=Path),
+            _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="promotion-suite",
         help="Check manifest-declared promotion evidence and write an aggregate readiness report.",
-    )
-    promotion_suite.add_argument("--output-dir", default=Path("source_library"), type=Path)
-    promotion_suite.add_argument("--manifest", default=DEFAULT_PROMOTION_SUITE_PATH, type=Path)
-    promotion_suite.add_argument("--results-dir", type=Path)
-    promotion_suite.add_argument(
-        "--strict-expansion",
-        action="store_true",
-        help="Require expansion slots to be ready before returning promotion-ready.",
-    )
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--manifest", default=DEFAULT_PROMOTION_SUITE_PATH, type=Path),
+            _arg("--results-dir", type=Path),
+            _arg(
+                "--strict-expansion",
+                action="store_true",
+                help="Require expansion slots to be ready before returning promotion-ready.",
+            ),
+        ),
+    ),
+)
+
+
+def register_eval_commands(subparsers: argparse._SubParsersAction) -> None:
+    register_eval_command_specs(subparsers, COMMAND_SPECS)
+
+
+def _command_handlers() -> dict[str, EvalCommandHandler]:
+    return {
+        "applicability-eval": EvalCommandHandler(
+            run=lambda args: run_applicability_eval(
+                output_dir=args.output_dir,
+                eval_file=args.eval_file,
+                base_rule_pack_path=args.base_rule_pack,
+                authority_family_templates_path=args.authority_family_templates_path,
+                source_set_id=args.source_set_id,
+                results_dir=args.results_dir,
+                top_k=args.top_k,
+            ),
+            success_key="passed",
+        ),
+        "applicability-gold-eval": EvalCommandHandler(
+            run=lambda args: run_applicability_gold_eval(
+                output_dir=args.output_dir,
+                gold_file=args.gold_file,
+                base_rule_pack_path=args.base_rule_pack,
+                authority_family_templates_path=args.authority_family_templates_path,
+                source_set_id=args.source_set_id,
+                results_dir=args.results_dir,
+                top_k=args.top_k,
+            ),
+            success_key="passed",
+        ),
+        "draft-generation-eval": EvalCommandHandler(
+            run=lambda args: run_draft_generation_eval(
+                output_dir=args.output_dir,
+                review_id=args.review_id,
+                eval_path=args.eval_file,
+                config_path=args.config,
+                results_dir=args.results_dir,
+            ),
+            success_key="passed",
+        ),
+        "upstream-eval": EvalCommandHandler(
+            run=lambda args: run_upstream_evaluation(
+                manifest_path=args.manifest,
+                output_dir=args.output_dir,
+                results_dir=args.results_dir,
+            ),
+            success_key="passed",
+        ),
+        "forest-plan-profile-eval": EvalCommandHandler(
+            run=lambda args: run_forest_plan_profile_eval(
+                manifest_path=args.manifest,
+                output_dir=args.output_dir,
+                results_dir=args.results_dir,
+            ),
+            success_key="passed",
+        ),
+        "forest-plan-component-retrieval-eval": EvalCommandHandler(
+            run=lambda args: run_forest_plan_component_retrieval_eval(
+                manifest_path=args.manifest,
+                output_dir=args.output_dir,
+                results_dir=args.results_dir,
+            ),
+            success_key="passed",
+        ),
+        "forest-plan-component-eval-coverage": EvalCommandHandler(
+            run=lambda args: run_forest_plan_component_eval_coverage(
+                manifest_path=args.manifest,
+                output_dir=args.output_dir,
+                results_dir=args.results_dir,
+            ),
+            success_key="passed",
+        ),
+        "phase-eval": EvalCommandHandler(
+            run=lambda args: run_phase_aligned_eval(
+                output_dir=args.output_dir,
+                source_set_id=args.source_set_id,
+                catalog_dir=args.catalog_dir,
+                review_id=args.review_id,
+                review_dir=args.review_dir,
+            ),
+            success_key="reviewer_ready",
+        ),
+        "v1-ea-eval": EvalCommandHandler(
+            run=lambda args: run_v1_ea_review_eval(
+                output_dir=args.output_dir,
+                review_id=args.review_id,
+                review_dir=args.review_dir,
+                eval_file=args.eval_file,
+                manifest_path=args.manifest,
+                output_path=args.output_path,
+            ),
+            success_key="passed",
+        ),
+        "real-package-review-coverage-eval": EvalCommandHandler(
+            run=lambda args: run_real_package_review_coverage_eval(
+                output_dir=args.output_dir,
+                manifest_path=args.manifest,
+                results_dir=args.results_dir,
+            ),
+            success_key="passed",
+        ),
+        "gold-coverage-eval": EvalCommandHandler(
+            run=lambda args: run_gold_coverage_eval(
+                output_dir=args.output_dir,
+                manifest_path=args.manifest,
+                results_dir=args.results_dir,
+            ),
+            success_key="passed",
+        ),
+        "promotion-suite": EvalCommandHandler(
+            run=lambda args: run_promotion_suite(
+                output_dir=args.output_dir,
+                manifest_path=args.manifest,
+                results_dir=args.results_dir,
+                strict_expansion=args.strict_expansion,
+            ),
+            success_key="promotion_ready",
+        ),
+    }
 
 
 def handle_eval_command(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int | None:
-    if args.command == "applicability-eval":
-        result = run_applicability_eval(
-            output_dir=args.output_dir,
-            eval_file=args.eval_file,
-            base_rule_pack_path=args.base_rule_pack,
-            authority_family_templates_path=args.authority_family_templates_path,
-            source_set_id=args.source_set_id,
-            results_dir=args.results_dir,
-            top_k=args.top_k,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["passed"] else 1
-
-    if args.command == "applicability-gold-eval":
-        result = run_applicability_gold_eval(
-            output_dir=args.output_dir,
-            gold_file=args.gold_file,
-            base_rule_pack_path=args.base_rule_pack,
-            authority_family_templates_path=args.authority_family_templates_path,
-            source_set_id=args.source_set_id,
-            results_dir=args.results_dir,
-            top_k=args.top_k,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["passed"] else 1
-
-    if args.command == "draft-generation-eval":
-        result = run_draft_generation_eval(
-            output_dir=args.output_dir,
-            review_id=args.review_id,
-            eval_path=args.eval_file,
-            config_path=args.config,
-            results_dir=args.results_dir,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["passed"] else 1
-
-    if args.command == "upstream-eval":
-        result = run_upstream_evaluation(
-            manifest_path=args.manifest,
-            output_dir=args.output_dir,
-            results_dir=args.results_dir,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["passed"] else 1
-
-    if args.command == "forest-plan-profile-eval":
-        result = run_forest_plan_profile_eval(
-            manifest_path=args.manifest,
-            output_dir=args.output_dir,
-            results_dir=args.results_dir,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["passed"] else 1
-
-    if args.command == "forest-plan-component-retrieval-eval":
-        result = run_forest_plan_component_retrieval_eval(
-            manifest_path=args.manifest,
-            output_dir=args.output_dir,
-            results_dir=args.results_dir,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["passed"] else 1
-
-    if args.command == "forest-plan-component-eval-coverage":
-        result = run_forest_plan_component_eval_coverage(
-            manifest_path=args.manifest,
-            output_dir=args.output_dir,
-            results_dir=args.results_dir,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["passed"] else 1
-
-    if args.command == "phase-eval":
-        result = run_phase_aligned_eval(
-            output_dir=args.output_dir,
-            source_set_id=args.source_set_id,
-            catalog_dir=args.catalog_dir,
-            review_id=args.review_id,
-            review_dir=args.review_dir,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["reviewer_ready"] else 1
-
-    if args.command == "v1-ea-eval":
-        result = run_v1_ea_review_eval(
-            output_dir=args.output_dir,
-            review_id=args.review_id,
-            review_dir=args.review_dir,
-            eval_file=args.eval_file,
-            manifest_path=args.manifest,
-            output_path=args.output_path,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["passed"] else 1
-
-    if args.command == "real-package-review-coverage-eval":
-        result = run_real_package_review_coverage_eval(
-            output_dir=args.output_dir,
-            manifest_path=args.manifest,
-            results_dir=args.results_dir,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["passed"] else 1
-
-    if args.command == "gold-coverage-eval":
-        result = run_gold_coverage_eval(
-            output_dir=args.output_dir,
-            manifest_path=args.manifest,
-            results_dir=args.results_dir,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["passed"] else 1
-
-    if args.command == "promotion-suite":
-        result = run_promotion_suite(
-            output_dir=args.output_dir,
-            manifest_path=args.manifest,
-            results_dir=args.results_dir,
-            strict_expansion=args.strict_expansion,
-        )
-        print_summary(result.summary)
-        return 0 if result.summary["promotion_ready"] else 1
-
-    return None
+    del parser
+    return dispatch_eval_command(args, _command_handlers(), print_summary)

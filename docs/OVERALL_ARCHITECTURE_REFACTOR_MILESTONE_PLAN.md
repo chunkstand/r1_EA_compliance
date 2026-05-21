@@ -1289,11 +1289,35 @@ Progress after Sequence 29 on 2026-05-21:
   passes with `matched_case_count=38`, `case_count=38`, `required_category_count=19`,
   `required_lane_count=3`, and all lane summaries `direct_eval_present`.
 
+Progress after Sequence 30 on 2026-05-21:
+
+- `cli_eval_registration.py` now owns parser registration for manifest-driven eval command specs
+  that previously remained inline inside `cli_eval.py`.
+- `cli_eval_dispatch.py` now owns summary-printing dispatch and success-key exit-code handling for
+  eval commands that previously remained inline inside `cli_eval.py`.
+- `cli_eval.py` keeps the public `register_eval_commands(...)`, `handle_eval_command(...)`, and
+  monkeypatch-visible `run_*` eval bindings while switching those runtime bindings to thin wrappers
+  and local command specs instead of importing the eval runtime family directly.
+- The CLI eval fan-out seam is now reduced from the pre-sequence `15` local imports to `3`
+  (`cli_common`, `cli_eval_registration`, and `cli_eval_dispatch`), while `cli_eval.py` stays
+  under the `800`-line gate at `438` lines with helper modules
+  `cli_eval_registration.py=27` and `cli_eval_dispatch.py=25`.
+- `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` now record the CLI registration and
+  dispatch helper owners inside the CLI container.
+- The fresh architecture probe reports `281` code files, `41` files above `800`, one allowed
+  fan-out hotspot at `cli_derived=22`, and no Python or JS/TS import cycles. `cli_eval.py` no
+  longer appears in the high-fan-out module list.
+- Live CLI replays
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  both still pass after the CLI split.
+
 Remaining issue after closeout:
 
 - eval orchestration remains central, but the central owner files become smaller and their
   dependencies are more deliberate.
-- Milestone 7 remains active on `cli_eval.py`, then `cli_derived.py`.
+- Milestone 7 remains active on `cli_derived.py`.
 
 ### Milestone 8 - Split Oversized Tests And Support Fixtures
 

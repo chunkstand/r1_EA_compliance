@@ -5,6 +5,64 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 7 Sequence 30
+
+This thirtieth overall architecture-refactor slice closes the `cli_eval` owner split, records the
+new eval-CLI helper modules in the architecture surfaces, and lets the broader Milestone 7
+eval/promotion packet advance to `cli_derived.py` instead of staying pinned on the eval CLI owner.
+
+- outcome label:
+  `reduced` for Milestone 7 sequence 30; the broader Milestone 7 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- cli-eval-registration-owner closeout:
+  `src/usfs_r1_ea_sources/cli_eval_registration.py` now owns parser registration for
+  manifest-driven eval command specs that previously remained inline in `cli_eval.py`
+- cli-eval-dispatch-owner closeout:
+  `src/usfs_r1_ea_sources/cli_eval_dispatch.py` now owns summary-printing dispatch and success-key
+  exit-code handling for eval commands that previously remained inline in `cli_eval.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/cli_eval.py` keeps the public `register_eval_commands(...)`,
+  `handle_eval_command(...)`, and monkeypatch-visible `run_*` eval bindings while switching those
+  runtime bindings to thin wrappers and local command specs instead of importing the eval runtime
+  family directly
+- direct contract coverage:
+  `tests/test_cli.py` still verifies parser registration, argument propagation, and exit-code
+  behavior across the eval CLI surface end to end after the split
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now records scoped command-family registration and dispatch entrypoints in
+  the CLI container, and `docs/architecture_contract.toml` assigns
+  `cli_eval_registration.py` plus `cli_eval_dispatch.py` to the CLI layer
+- live probe evidence:
+  the fresh architecture probe reports `281` code files, `41` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, `cli_eval.py=438`,
+  `cli_eval_registration.py=27`, `cli_eval_dispatch.py=25`, one allowed fan-out hotspot at
+  `cli_derived=22`, and no Python or JS/TS import cycles. The eval CLI fan-out seam is reduced
+  from the pre-sequence `15` local imports to `3`
+  (`cli_common`, `cli_eval_registration`, and `cli_eval_dispatch`), and `cli_eval.py` no longer
+  appears in the high-fan-out module list
+- residual system state:
+  the live commands
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  both still pass after the CLI split; upstream eval reports `matched_case_count=38`,
+  `required_category_count=19`, `required_lane_count=3`, and all lane summaries
+  `direct_eval_present`, while promotion suite remains green with
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`, `promotion_ready=true`,
+  `expansion_ready=true`, and `open_expansion_slot_count=0`
+- next routing:
+  continue Milestone 7 inside the same umbrella packet on `cli_derived.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --results-dir source_library/evaluations/upstream`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 7 Sequence 29
 
 This twenty-ninth overall architecture-refactor slice closes the `upstream_evaluation` owner
