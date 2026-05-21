@@ -5,6 +5,62 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 7 Sequence 25
+
+This twenty-fifth overall architecture-refactor slice closes the first `phase_eval` owner split,
+records the new phase-eval modules in the architecture surfaces, and keeps the broader Milestone 7
+eval/promotion packet active on the remaining direct-eval and eval-orchestration hotspots instead
+of reopening the closed applicability family.
+
+- outcome label:
+  `reduced` for Milestone 7 sequence 25; the broader Milestone 7 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- phase-eval-source-set-owner closeout:
+  `src/usfs_r1_ea_sources/phase_eval_source_set_phases.py` now owns source-set phase construction
+  for catalog, extraction, retrieval, graph, claim, rule-claim, downstream direct-eval, canonical
+  source-register, and semantic graph readiness gates that previously remained in `phase_eval.py`
+- phase-eval-review-owner closeout:
+  `src/usfs_r1_ea_sources/phase_eval_review_phases.py` now owns review-scoped applicability,
+  compliance, component eval, adjudication, draft-generation, review-packet-index, and final-QA
+  phase construction that previously remained in `phase_eval.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/phase_eval.py` keeps the public `run_phase_aligned_eval(...)` surface and
+  now owns replay-context resolution, artifact loading, direct-eval coverage application, summary
+  writeback, and the stable `PhaseEvalResult` facade without changing callers
+- direct contract coverage:
+  `tests/test_phase_eval.py` still verifies the source-set and review-scoped public phase-eval
+  surfaces end to end after the split
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `phase_eval_source_set_phases.py` and
+  `phase_eval_review_phases.py` explicitly in the phase-eval container, and
+  `docs/architecture_contract.toml` assigns both new modules to the `phase_eval` layer
+- live probe evidence:
+  the fresh architecture probe reports `261` code files, `45` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `phase_eval.py` reduced to `648` lines from the pre-sequence `1862`-line baseline,
+  new modules `phase_eval_source_set_phases.py=644` and `phase_eval_review_phases.py=782`, one
+  allowed fan-out hotspot at `cli_derived=22`, and no Python or JS/TS import cycles
+- residual system state:
+  the live source-set command
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-f775524ab233ff27`
+  still exits red because the current local corpus is missing downstream direct-eval artifacts for
+  retrieval, claim extraction, and rule-claim binding and does not yet expose current semantic
+  graph eval reports for the active source set; this is pre-existing corpus readiness debt, not a
+  new regression from the owner split
+- next routing:
+  continue Milestone 7 inside the same umbrella packet on `phase_eval_direct_eval.py`; do not
+  advance to the broader `v1_ea_eval.py` or CLI orchestration owners until the direct-eval seam is
+  narrowed
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-f775524ab233ff27`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 24
 
 This twenty-fourth Milestone 6 slice closes the remaining `applicability_eval` owner family,
