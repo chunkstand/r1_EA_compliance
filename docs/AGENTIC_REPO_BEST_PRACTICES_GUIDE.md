@@ -1,6 +1,6 @@
 # Agentic Repo Best Practices Guide
 
-Date: 2026-05-20
+Date: 2026-05-21
 
 This guide turns current primary-source guidance on software architecture, code health, and
 agentic engineering into repo practices for `usfs-r1-EA-sources`.
@@ -118,7 +118,7 @@ by humans and coding agents.
 
 ## Current Repo Evaluation
 
-Evaluation date: 2026-05-20
+Evaluation date: 2026-05-21
 
 ### Strong
 
@@ -185,9 +185,9 @@ Evaluation date: 2026-05-20
 
 - The repo has good boundaries on paper, but large owned modules still dominate the risk surface.
 - Evidence from `architecture_probe.py`:
-  - `57` code files exceed `800` lines;
+  - `24` code files exceed `800` lines;
   - top hotspots include `project_sow_package.py`, `nepa_knowledge_graph_export.py`,
-    `forest_plan_components.py`, `extract.py`, and `tests/test_cli.py`.
+    `forest_plan_components.py`, `extract.py`, and `final_qa_certification.py`.
 - Assessment:
   - good architecture direction;
   - too many large active edit surfaces for easy agentic maintenance.
@@ -198,14 +198,17 @@ Evaluation date: 2026-05-20
 
 - The repo has dependency and debt gates, but large-file and fan-out protection is still young.
 - Evidence:
-  - the new `tests/test_architecture_quality.py` now guards the current `57`-file `>800` line
-    baseline, blocks new `>20` fan-out source modules beyond the existing `cli_derived` outlier,
-    and pins `docs/ARCHITECTURE.md` as the canonical tracked architecture path;
+  - `tests/test_architecture_quality.py` now guards the current `24`-file `>800` line baseline,
+    blocks new `>20` fan-out source modules with no current exceptions, and pins
+    `docs/ARCHITECTURE.md` as the canonical tracked architecture path;
+  - Milestone 8 in the umbrella architecture packet is now resolved, so no `tests/` or
+    `tests/support/` owner remains above the `800`-line reviewability gate;
   - the gate is intentionally conservative and prevents growth, but it does not yet reduce the
     existing hotspot inventory by itself.
 - Assessment:
   - governance is now meaningfully better;
-  - the hard work is still the owner-family splits in the next milestones.
+  - the active follow-on is now mechanical routing and hermeticity cleanup before the remaining
+    runtime/viewer hotspot families.
 
 #### Hermeticity and long-form routing are still open debt
 
@@ -232,51 +235,41 @@ PYTHONPATH=src python -m usfs_r1_ea_sources --help
 
 Observed results:
 
-- pre-closeout `git status -sb`: dirty only on architecture-packet docs; no runtime overlap from
-  the already-closed document-plan lane.
-- `architecture_probe.py`: no Python or JS cycles; `57` code files over `800` lines; top hotspot
-  `project_sow_package.py`; and one source module above fan-out `20`
-  (`src.usfs_r1_ea_sources.cli_derived`).
+- `git status -sb`: clean worktree on `main`.
+- `architecture_probe.py`: no Python or JS cycles; `24` code files over `800` lines; top hotspot
+  `project_sow_package.py`; no source module above fan-out `20`; and no `tests/` or
+  `tests/support/` owner above the `800`-line reviewability gate.
 - `tests/test_architecture_contract.py`, `tests/test_architecture_quality.py`, and
-  `tests/test_debt_contract.py`: all pass together after the Milestone 1 governance closeout.
+  `tests/test_debt_contract.py`: all pass together after the Milestone 8 docs-alignment closeout.
 - CLI help: `document-plan` is exposed on the public command surface.
 
 ## Priority Queue
 
-### 1. Split Project Planning And Document Output Hotspots
-
-- Use current hotspot evidence to choose the next split.
-- `project_sow_package.py`, `ea_consistency_decision_support.py`, `draft_generation.py`,
-  `final_qa_certification.py`, `review_packet_index.py`, and `compliance_outputs.py` are the next
-  bounded owner family from the active umbrella plan.
-- Do not refactor by aesthetic preference alone.
-
-### 2. Split NEPA Graph And Forest-Plan Review Hotspots
-
-- Keep the next queue routed to `nepa_knowledge_graph_export.py`,
-  `forest_plan_components.py`, `forest_plan_resolver.py`, and the viewer family after the document
-  output hotspot slice closes.
-
-### 3. Split Extraction, Retrieval, And Capture Hotspots
-
-- Keep the post-graph queue pointed at `extract.py`, `retrieval.py`, `catalog.py`, `download.py`,
-  `preflight.py`, and related source-register owners.
-
-### 4. Remove Mechanical Routing And Hermeticity Drift
+### 1. Remove Mechanical Routing And Hermeticity Drift
 
 - Replace or quarantine the West Reservoir user-home dependency.
-- Keep `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, and the architecture packet
-  aligned on one explicit next-step truth.
+- Keep `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/AGENT_START_HERE.md`, and the umbrella architecture packet aligned on one explicit
+  next-step truth.
+- Finish the Milestone 9 routing cleanup before reopening broader hotspot-owner refactors.
 
-### 5. Keep The Cheap Architecture Gates Green
+### 2. Keep The Cheap Architecture Gates Green
 
-- Do not let the new size, fan-out, debt, or path-drift checks go stale while hotspot splits are
-  underway.
+- Do not let the size, fan-out, debt, or path-drift checks go stale while Milestones 9 and 10
+  close.
+
+### 3. Resume Remaining Runtime And Viewer Hotspots After The Routing Closeout
+
+- After the routing packet closes, the largest remaining active owner families are
+  `project_sow_package.py`, `nepa_knowledge_graph_export.py`, `forest_plan_components.py`,
+  `ea_consistency_decision_support.py`, `extract.py`, and the NEPA 3D viewer surface.
+- Do not refactor by aesthetic preference alone; keep using hotspot and ownership evidence.
 
 ## Bottom Line
 
 This repo is already stronger than average on architecture legibility, artifact auditability,
 security boundaries, and milestone discipline. The current main gap is no longer agent-entrypoint
-completeness. The current main gap is concentrated runtime/test hotspots plus a smaller set of
-mechanical routing and hermeticity debts. The next quality step is to keep the new governance gates
-green while reducing those owner families one bounded milestone at a time.
+completeness or oversized test-owner sprawl. The current main gap is the remaining mechanical
+routing and hermeticity debt, with larger runtime/viewer hotspot families queued behind that
+cleanup. The next quality step is to close Milestone 9 cleanly while keeping the architecture gates
+green.

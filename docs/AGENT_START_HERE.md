@@ -1,9 +1,11 @@
 # Agent Start Here
 
-Date: 2026-05-20
+Date: 2026-05-21
 
 Use this file as the first stop for agent-driven document work in this repo.
 It tells you which existing lane to use and when to refuse the request.
+For non-document repo state, route to `docs/CURRENT_SYSTEM_STATE.md` and
+`docs/SESSION_HANDOFF.md` after this quick read.
 
 ## First Step
 
@@ -27,6 +29,16 @@ The planner:
 
 - Active workbook: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
 - Active workbook table: `Document_Register_Master`
+
+## Current Routing
+
+- Live corpus/runtime truth is tracked in `docs/CURRENT_SYSTEM_STATE.md`.
+- Current routed work and recent closeout facts are tracked in
+  `docs/SESSION_HANDOFF.md`.
+- The active umbrella architecture packet in
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` has Milestone 8
+  resolved and is now routed to Milestone 9 on the West Reservoir user-home
+  proving dependency plus cold-start doc routing drift.
 
 ## Supported Lanes
 
@@ -59,7 +71,9 @@ legal sufficiency determinations, final agency decisions, or human approvals.
 ## Go Deeper
 
 - `README.md`
+- `docs/CURRENT_SYSTEM_STATE.md`
+- `docs/SESSION_HANDOFF.md`
 - `docs/ARCHITECTURE.md`
+- `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
 - `docs/OUTPUT_SCHEMAS.md`
 - `docs/PROJECT_SOW_PACKAGE_RUNBOOK.md`
-- `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md`

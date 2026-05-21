@@ -13,6 +13,25 @@ For agent-driven document work, start with `docs/AGENT_START_HERE.md`. The publi
 lane, and writes planning-only artifacts under `source_library/document_plans/<request_id>/`
 without generating canonical lane outputs.
 
+Current routed state on 2026-05-21:
+
+- Live local catalog remains `source-set-f775524ab233ff27` in
+  `source_library/catalog/source_set_manifest.json` with `source_count=634`,
+  `artifact_count=622`,
+  `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  and workbook SHA
+  `1e7d7623f9633c37e953d74780c986426514d8a472082f3b95142266556505c8`.
+- The current architecture packet in
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` has Milestone 8
+  resolved and now routes to Milestone 9 on the West Reservoir user-home
+  proving dependency plus cold-start doc routing drift.
+- The latest architecture gate reports `344` code files, `24` above `800`
+  lines, no Python or JS/TS import cycles, no source module above the
+  `20`-import fan-out gate, and no `tests/` or `tests/support/` owner above
+  the `800`-line reviewability gate.
+- For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
+  work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
+
 Canonical source-register refoundation status on 2026-05-18:
 
 - Active runtime workbook for `dry-run`, `preflight`, `download`, `batch-download`, and
@@ -614,9 +633,12 @@ now complete: reviewer-facing compliance outputs carry authority-family provenan
 non-applicable authority appendices, reviewer-resolution status, and deterministic litigation-risk
 categories tied to evidence artifacts.
 
-See `docs/CURRENT_SYSTEM_STATE.md` for the current architecture, storage model, and reviewer-engine
-read path. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the architecture
-map, layer ownership, generated-artifact ownership, command groups, and automated architecture gate.
+See `docs/CURRENT_SYSTEM_STATE.md` for the current corpus/runtime state, storage model, and
+reviewer-engine read path. See `docs/SESSION_HANDOFF.md` for current routed work and recent
+closeout facts. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the
+architecture map, layer ownership, generated-artifact ownership, command groups, and automated
+architecture gate. See `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` for the active
+architecture packet and next routed slice.
 See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system plan: a Custer
 Gallatin National Forest EA compliance review as the proving ground. See
 `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` for the post-V1 plan that makes authority
