@@ -5,6 +5,52 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 13
+
+This thirteenth Milestone 6 slice closes the first `claim_extraction.py` graph-owner seam,
+records the new owner module in the architecture surfaces, and keeps the umbrella packet routed
+inside Milestone 6 instead of pretending the broader claims/evidence family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 13; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- claim-graph-owner closeout:
+  `src/usfs_r1_ea_sources/claim_extraction_graph.py` now owns entity extraction and aggregation,
+  claim graph node/edge assembly, and the claim-graph SQLite writer/checks that previously remained
+  in `claim_extraction.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/claim_extraction.py` keeps the public `claim-extract`,
+  `claim-validate`, and `claim-eval` workflow surface and now holds the remaining claim
+  extraction, validation, and eval core
+- direct contract coverage:
+  `tests/test_claim_extraction_graph.py` now pins the extracted claim-graph seam directly, while
+  `tests/test_claim_extraction.py` still verifies the public claim-extraction workflow end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `claim_extraction_graph.py` explicitly in the evidence-and-claims
+  container, and `docs/architecture_contract.toml` assigns it to the `claims` layer
+- live probe evidence:
+  the fresh architecture probe reports `224` code files, `54` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `claim_extraction.py` reduced to `2084` lines from the pre-sequence `2503`-line baseline, new
+  module `claim_extraction_graph.py=457`, one fan-out hotspot at `cli_derived=22`, and no Python
+  or JS/TS import cycles
+- residual risk:
+  `claim_extraction.py` still remains a large mixed-owner file because the extraction/query,
+  validation, and eval core is still coupled in the public facade
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on the remaining claim extraction,
+  validation, and eval core in `claim_extraction.py`, then `rule_claim_binding.py`,
+  `evidence_graph.py`, `package_fact_graph.py`, `applicability_retrieval.py`,
+  `applicability_rule_pack.py`, and `applicability_eval.py`; do not advance to Milestone 7 yet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_claim_extraction.py tests/test_claim_extraction_graph.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 12
 
 This twelfth Milestone 6 slice closes the remaining applicability validation
