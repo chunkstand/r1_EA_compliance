@@ -5,6 +5,67 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 23
+
+This twenty-third Milestone 6 slice closes the `applicability-rule-pack` support, runtime, and
+validation owner seams, records the new owner modules in the architecture surfaces, and keeps the
+umbrella packet routed inside Milestone 6 instead of pretending the broader applicability/evidence
+family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 23; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- applicability-rule-pack-support-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_rule_pack_support.py` now owns rule-pack artifact paths,
+  IO, identity helpers, and validation-hash support that previously remained in
+  `applicability_rule_pack.py`
+- applicability-rule-pack-runtime-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_rule_pack_runtime.py` now owns deterministic
+  generated-rule-pack assembly and rule applicability metadata shaping that previously remained in
+  `applicability_rule_pack.py`
+- applicability-rule-pack-validation-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_rule_pack_validation.py` now owns required-artifact
+  checks, validation/hash freshness checks, generated-rule metadata validation, and trace/readiness
+  checks that previously remained in `applicability_rule_pack.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/applicability_rule_pack.py` keeps the public
+  `generate_applicability_rule_pack(...)` and `validate_generated_rule_pack(...)` workflow
+  surfaces and now delegates support, runtime, and validation work to the new owner modules
+  without changing callers
+- direct contract coverage:
+  `tests/test_applicability_rule_pack_runtime.py` and
+  `tests/test_applicability_rule_pack_validation.py` now pin the extracted seams directly, while
+  `tests/test_applicability_decisions.py` still verifies generated-rule-pack behavior end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `applicability_rule_pack_support.py`,
+  `applicability_rule_pack_runtime.py`, and `applicability_rule_pack_validation.py` explicitly in
+  the applicability container, and `docs/architecture_contract.toml` assigns all three to the
+  `applicability` layer
+- live probe evidence:
+  the fresh architecture probe reports `251` code files, `47` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `applicability_rule_pack.py` reduced to `331` lines from the pre-sequence `1440`-line baseline,
+  new modules `applicability_rule_pack_support.py=219`,
+  `applicability_rule_pack_runtime.py=363`, and
+  `applicability_rule_pack_validation.py=581`,
+  `tests/test_applicability_rule_pack_runtime.py=122`,
+  `tests/test_applicability_rule_pack_validation.py=80`, one fan-out hotspot at `cli_derived=22`,
+  and no Python or JS/TS import cycles
+- residual risk:
+  the broader applicability/evidence hotspot family is still open beyond the completed rule-pack
+  owner family, with `applicability_eval.py` still routed inside Milestone 6
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on `applicability_eval.py`; do not advance
+  to Milestone 7 yet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_rule_pack_runtime.py tests/test_applicability_rule_pack_validation.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 22
 
 This twenty-second Milestone 6 slice closes the `applicability-retrieval` runtime and graph owner

@@ -33,6 +33,52 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 23
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 6; sequence 23 closes the `applicability-rule-pack-support`,
+  `applicability-rule-pack-runtime`, and `applicability-rule-pack-validation` owner seams, but
+  the broader applicability/evidence hotspot family remains active.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/applicability_rule_pack.py`,
+  `src/usfs_r1_ea_sources/applicability_rule_pack_support.py`,
+  `src/usfs_r1_ea_sources/applicability_rule_pack_runtime.py`,
+  `src/usfs_r1_ea_sources/applicability_rule_pack_validation.py`,
+  `tests/test_applicability_rule_pack_runtime.py`,
+  `tests/test_applicability_rule_pack_validation.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/architecture_contract.toml`, and
+  `tests/test_architecture_quality.py`.
+- Support, runtime, and validation seam closeout:
+  `applicability_rule_pack_support.py` now owns rule-pack artifact paths, IO, identity helpers,
+  and validation-hash support; `applicability_rule_pack_runtime.py` now owns deterministic
+  generated-rule-pack assembly and rule applicability metadata shaping;
+  `applicability_rule_pack_validation.py` now owns required-artifact checks, validation/hash
+  freshness checks, generated-rule metadata validation, and trace/readiness checks; and
+  `applicability_rule_pack.py` now keeps the public generate/validate facade.
+- Direct contract coverage:
+  `tests/test_applicability_rule_pack_runtime.py` and
+  `tests/test_applicability_rule_pack_validation.py` now pin the extracted seams directly, while
+  `tests/test_applicability_decisions.py` still verifies generated-rule-pack behavior end to end.
+- Live probe evidence:
+  the fresh architecture probe reports `251` code files, `47` files above `800`, no Python or
+  JS/TS import cycles, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `applicability_rule_pack.py` reduced to `331` lines from the pre-sequence
+  `1440`-line baseline, `applicability_rule_pack_support.py` at `219` lines,
+  `applicability_rule_pack_runtime.py` at `363` lines,
+  `applicability_rule_pack_validation.py` at `581` lines,
+  `tests/test_applicability_rule_pack_runtime.py` at `122` lines, and
+  `tests/test_applicability_rule_pack_validation.py` at `80` lines.
+- Next routing:
+  continue inside Milestone 6 on `applicability_eval.py`. Do not advance to Milestone 7 yet.
+
 ## Overall Architecture Refactor Milestone 6 Sequence 22
 
 Latest closeout on 2026-05-20:

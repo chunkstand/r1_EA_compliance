@@ -2,7 +2,7 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-5 complete; Milestone 6 active after Sequence 22
+Status: Milestones 0-5 complete; Milestone 6 active after Sequence 23
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
 `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-5 are now closed, the
@@ -48,21 +48,21 @@ machine-local state.
   `source_set_support.py` owns the shared derived-output path and support-document-role helpers
   now used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
   `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`.
-- Milestone 6 sequence 22 now closes the `applicability-retrieval` runtime and graph owner seams:
-  `applicability_retrieval_runtime.py` now owns deterministic query planning and execution,
-  source/package result rows, fusion, and query helpers, while
-  `applicability_retrieval_graph.py` now owns bounded graph expansion and graph trace assembly.
-  `applicability_retrieval.py` is reduced to the public retrieval-trace facade plus validation,
-  diagnostics, summary assembly, artifact IO, and identity helpers. The next executable slice now
-  advances to `applicability_rule_pack.py` inside Milestone 6.
+- Milestone 6 sequence 23 now closes the `applicability-rule-pack` support, runtime, and
+  validation owner seams: `applicability_rule_pack_support.py` now owns rule-pack artifact paths,
+  IO, identity helpers, and validation-hash support; `applicability_rule_pack_runtime.py` now
+  owns deterministic generated-rule-pack assembly and metadata shaping; and
+  `applicability_rule_pack_validation.py` now owns rule-pack validation checks.
+  `applicability_rule_pack.py` is reduced to the public generate/validate facade. The next
+  executable slice now advances to `applicability_eval.py` inside Milestone 6.
 
 ### Architecture probe current baseline
 
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `246` code files detected;
-- `48` code files exceed `800` lines;
+- `251` code files detected;
+- `47` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
 - top hotspot:
@@ -117,7 +117,13 @@ From
   `1741`-line baseline, `src.usfs_r1_ea_sources.applicability_retrieval_runtime.py` now owns the
   bounded retrieval runtime seam at `704` lines, and
   `src.usfs_r1_ea_sources.applicability_retrieval_graph.py` now owns the bounded graph-trace seam
-  at `479` lines;
+  at `479` lines, `src.usfs_r1_ea_sources.applicability_rule_pack.py` is down to `331` lines from
+  the pre-sequence `1440`-line baseline, `src.usfs_r1_ea_sources.applicability_rule_pack_support.py`
+  now owns the bounded support seam at `219` lines,
+  `src.usfs_r1_ea_sources.applicability_rule_pack_runtime.py` now owns the bounded rule-pack
+  runtime seam at `363` lines, and
+  `src.usfs_r1_ea_sources.applicability_rule_pack_validation.py` now owns the bounded rule-pack
+  validation seam at `581` lines;
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
 
@@ -251,7 +257,6 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `1686` `src/usfs_r1_ea_sources/compliance_outputs.py`
 - `1675` `src/usfs_r1_ea_sources/phase_eval_direct_eval.py`
 - `1496` `src/usfs_r1_ea_sources/catalog.py`
-- `1440` `src/usfs_r1_ea_sources/applicability_rule_pack.py`
 - `1347` `src/usfs_r1_ea_sources/compliance_review_eval.py`
 - `1347` `src/usfs_r1_ea_sources/authority_currentness.py`
 - `1307` `src/usfs_r1_ea_sources/review_packet_index.py`
@@ -702,6 +707,9 @@ Owner family:
 - `applicability_eval.py`
 - `applicability_retrieval.py`
 - `applicability_rule_pack.py`
+- `applicability_rule_pack_runtime.py`
+- `applicability_rule_pack_support.py`
+- `applicability_rule_pack_validation.py`
 - `claim_extraction.py`
 - `claim_extraction_eval.py`
 - `claim_extraction_graph.py`
@@ -723,6 +731,28 @@ Implementation:
    formatting into narrower owner modules.
 2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
+
+Progress after Sequence 23 on 2026-05-20:
+
+- `applicability_rule_pack_support.py` now owns rule-pack artifact paths, IO, identity helpers,
+  and validation-hash support that previously remained inside `applicability_rule_pack.py`.
+- `applicability_rule_pack_runtime.py` now owns deterministic generated-rule-pack assembly and rule
+  applicability metadata shaping that previously remained inside `applicability_rule_pack.py`.
+- `applicability_rule_pack_validation.py` now owns required-artifact checks, validation/hash
+  freshness checks, generated-rule metadata validation, and trace/readiness checks that previously
+  remained inside `applicability_rule_pack.py`.
+- `tests/test_applicability_rule_pack_runtime.py` and
+  `tests/test_applicability_rule_pack_validation.py` now pin the extracted seams directly, while
+  `tests/test_applicability_decisions.py` still verifies generated-rule-pack behavior end to end.
+- `applicability_rule_pack.py` is reduced to `331` lines from the pre-sequence `1440`-line
+  baseline, `applicability_rule_pack_support.py` lands at `219` lines,
+  `applicability_rule_pack_runtime.py` lands at `363` lines,
+  `applicability_rule_pack_validation.py` lands at `581` lines,
+  `tests/test_applicability_rule_pack_runtime.py` lands at `122` lines,
+  `tests/test_applicability_rule_pack_validation.py` lands at `80` lines, the
+  `tests/test_architecture_quality.py` oversized-file baseline tightens to `47`, and the fresh
+  architecture probe reports `251` code files, `47` files above `800`, and no Python or JS/TS
+  cycles.
 
 Progress after Sequence 22 on 2026-05-20:
 
@@ -1031,10 +1061,10 @@ Remaining issue after closeout:
 
 - The applicability validation family is now reduced to explicit owners, and the claim-graph,
   claim-eval, claim-validation, claim-runtime, rule-claim-eval, rule-claim-validation,
-  rule-claim-runtime, evidence-graph-validation, package-fact, and applicability-retrieval seams
-  are now closed, but the broader applicability/evidence hotspot family remains open inside
-  Milestone 6. The next routed slice advances to `applicability_rule_pack.py`, then
-  `applicability_eval.py` before the umbrella packet can route forward to Milestone 7.
+  rule-claim-runtime, evidence-graph-validation, package-fact, applicability-retrieval, and
+  applicability-rule-pack seams are now closed, but the broader applicability/evidence hotspot
+  family remains open inside Milestone 6. The next routed slice advances to `applicability_eval.py`
+  before the umbrella packet can route forward to Milestone 7.
 
 ### Milestone 7 - Split Eval And Promotion Orchestration Hotspots
 
