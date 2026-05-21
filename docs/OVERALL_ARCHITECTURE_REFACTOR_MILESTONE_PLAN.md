@@ -53,7 +53,14 @@ machine-local state.
   IO, identity helpers, and validation-hash support; `applicability_rule_pack_runtime.py` now
   owns deterministic generated-rule-pack assembly and metadata shaping; and
   `applicability_rule_pack_validation.py` now owns rule-pack validation checks.
-  `applicability_rule_pack.py` is reduced to the public generate/validate facade. The next
+  `applicability_rule_pack.py` is reduced to the public generate/validate facade. Sequence 23
+  closeout also removes the downstream replay-contract gap exposed by the split:
+  `phase_eval_optional_phases.py` now validates final-QA packets against the contract paths
+  recorded in the packet, `final_qa_certification.py` now exposes that contract-path inference,
+  and the synthetic compliance phase-eval support is split across
+  `tests/support/compliance_phase_eval_fixtures.py` and
+  `tests/support/compliance_phase_eval_contracts.py` so the review-scoped decision-support and
+  final-QA packets remain replayable without creating a new oversized test owner. The next
   executable slice now advances to `applicability_eval.py` inside Milestone 6.
 
 ### Architecture probe current baseline
@@ -61,7 +68,7 @@ machine-local state.
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `251` code files detected;
+- `252` code files detected;
 - `47` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;

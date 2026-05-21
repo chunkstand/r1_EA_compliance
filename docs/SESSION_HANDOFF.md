@@ -8,9 +8,10 @@ that lane supersedes older sections below when they disagree.
 ## Overall Architecture Refactor Milestone 6 Sequence 23
 
 This twenty-third Milestone 6 slice closes the `applicability-rule-pack` support, runtime, and
-validation owner seams, records the new owner modules in the architecture surfaces, and keeps the
-umbrella packet routed inside Milestone 6 instead of pretending the broader applicability/evidence
-family is closed.
+validation owner seams, closes the downstream final-QA/phase-eval replay-contract gap exposed by
+that split, records the new owner modules in the architecture surfaces, and keeps the umbrella
+packet routed inside Milestone 6 instead of pretending the broader applicability/evidence family
+is closed.
 
 - outcome label:
   `reduced` for Milestone 6 sequence 23; the broader Milestone 6 family remains active
@@ -37,18 +38,28 @@ family is closed.
   `tests/test_applicability_rule_pack_runtime.py` and
   `tests/test_applicability_rule_pack_validation.py` now pin the extracted seams directly, while
   `tests/test_applicability_decisions.py` still verifies generated-rule-pack behavior end to end
+- downstream replay-contract closeout:
+  `src/usfs_r1_ea_sources/final_qa_certification.py` now exposes review-local final-QA contract
+  path inference, `src/usfs_r1_ea_sources/phase_eval_optional_phases.py` now validates final-QA
+  packets against the recorded packet contract instead of the canonical East Crazies default, and
+  the synthetic compliance phase-eval lane is split across
+  `tests/support/compliance_phase_eval_fixtures.py` and
+  `tests/support/compliance_phase_eval_contracts.py` so the review-scoped decision-support and
+  final-QA packets are replayable without creating a new oversized test-owner file
 - architecture closeout:
   `docs/ARCHITECTURE.md` now lists `applicability_rule_pack_support.py`,
   `applicability_rule_pack_runtime.py`, and `applicability_rule_pack_validation.py` explicitly in
   the applicability container, and `docs/architecture_contract.toml` assigns all three to the
   `applicability` layer
 - live probe evidence:
-  the fresh architecture probe reports `251` code files, `47` files above `800`, top hotspot
+  the fresh architecture probe reports `252` code files, `47` files above `800`, top hotspot
   `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
   `applicability_rule_pack.py` reduced to `331` lines from the pre-sequence `1440`-line baseline,
   new modules `applicability_rule_pack_support.py=219`,
   `applicability_rule_pack_runtime.py=363`, and
   `applicability_rule_pack_validation.py=581`,
+  `tests/support/compliance_phase_eval_fixtures.py=672` after splitting out
+  `tests/support/compliance_phase_eval_contracts.py=761`,
   `tests/test_applicability_rule_pack_runtime.py=122`,
   `tests/test_applicability_rule_pack_validation.py=80`, one fan-out hotspot at `cli_derived=22`,
   and no Python or JS/TS import cycles
@@ -59,8 +70,7 @@ family is closed.
   continue Milestone 6 inside the same umbrella packet on `applicability_eval.py`; do not advance
   to Milestone 7 yet
 - verification:
-  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_rule_pack_runtime.py tests/test_applicability_rule_pack_validation.py -q`,
-  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_rule_pack_runtime.py tests/test_applicability_rule_pack_validation.py tests/test_compliance_review.py tests/test_final_qa_certification.py tests/test_phase_eval.py tests/test_compliance_review_eval.py tests/test_compliance_phase_eval.py tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
   `PYTHONPATH=src uv run --extra dev ruff check src tests`,
   `PYTHONPATH=src python -m compileall src`,
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,

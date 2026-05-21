@@ -18,6 +18,7 @@ from .final_qa_certification import DEFAULT_CONFIG_PATH as FINAL_QA_CONFIG_PATH
 from .final_qa_certification import (
     DEFAULT_EXPECTED_SUMMARY_PATH as FINAL_QA_EXPECTED_SUMMARY_PATH,
 )
+from .final_qa_certification import infer_final_qa_contract_paths
 from .final_qa_certification import MANIFEST_FILENAME as FINAL_QA_MANIFEST_FILENAME
 from .final_qa_certification import PDF_FILENAME as FINAL_QA_PDF_FILENAME
 from .final_qa_certification import REPORT_FILENAME as FINAL_QA_REPORT_FILENAME
@@ -183,13 +184,19 @@ def _final_qa_certification_phase(
     manifest_path = final_qa_dir / FINAL_QA_MANIFEST_FILENAME
     pdf_path = final_qa_dir / FINAL_QA_PDF_FILENAME
     validation_path = final_qa_dir / FINAL_QA_VALIDATION_FILENAME
+    config_path: Path | None = FINAL_QA_CONFIG_PATH
+    expected_summary_path: Path | None = FINAL_QA_EXPECTED_SUMMARY_PATH
+    if final_qa_dir.exists():
+        inferred_config, inferred_expected = infer_final_qa_contract_paths(final_qa_dir)
+        config_path = inferred_config or config_path
+        expected_summary_path = inferred_expected or expected_summary_path
 
     try:
         result = validate_final_qa_certification_report(
             output_dir=output_dir,
             review_id=review_id,
-            config_path=FINAL_QA_CONFIG_PATH,
-            expected_summary_path=FINAL_QA_EXPECTED_SUMMARY_PATH,
+            config_path=config_path,
+            expected_summary_path=expected_summary_path,
             results_dir=final_qa_dir,
             require_validation_result=True,
         )

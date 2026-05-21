@@ -219,6 +219,64 @@ def validate_final_qa_certification_report(
     )
 
 
+def infer_final_qa_contract_paths(
+    report_dir: Path,
+) -> tuple[Path | None, Path | None]:
+    """Infer the config and expected-summary paths recorded in a final-QA packet."""
+
+    report_dir = Path(report_dir)
+    report_path = report_dir / REPORT_FILENAME
+    manifest_path = report_dir / MANIFEST_FILENAME
+    manifest = None
+    report = None
+
+    if manifest_path.exists():
+        try:
+            manifest = _read_json(manifest_path)
+        except (OSError, ValueError, json.JSONDecodeError):
+            manifest = None
+    if report_path.exists():
+        try:
+            report = _read_json(report_path)
+        except (OSError, ValueError, json.JSONDecodeError):
+            report = None
+
+    candidates: list[tuple[Any, Any]] = []
+    if isinstance(manifest, Mapping):
+        candidates.append(
+            (
+                manifest.get("config_hashes"),
+                _selector_value(manifest, "artifact_freshness_ledger"),
+            )
+        )
+    if isinstance(report, Mapping):
+        candidates.append(
+            (
+                _selector_value(report, "manifest.config_hashes"),
+                _selector_value(report, "artifact_freshness_ledger"),
+            )
+        )
+
+    for config_hashes, freshness in candidates:
+        if isinstance(config_hashes, Mapping):
+            config_path = config_hashes.get("config_path")
+            expected_summary_path = config_hashes.get("expected_summary_path")
+            if config_path or expected_summary_path:
+                return (
+                    Path(str(config_path)) if config_path else None,
+                    Path(str(expected_summary_path)) if expected_summary_path else None,
+                )
+        if isinstance(freshness, Mapping):
+            config_path = freshness.get("config_path")
+            expected_summary_path = freshness.get("expected_summary_path")
+            if config_path or expected_summary_path:
+                return (
+                    Path(str(config_path)) if config_path else None,
+                    Path(str(expected_summary_path)) if expected_summary_path else None,
+                )
+    return None, None
+
+
 def _collect_input_state(
     *,
     output_dir: Path,

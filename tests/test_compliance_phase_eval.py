@@ -364,11 +364,17 @@ class CompliancePhaseEvalTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["reviewer_ready"])
-            self.assertEqual(result.summary["phase_count"], 18)
+            self.assertEqual(result.summary["phase_count"], 21)
+            decision_support_phase = _phase(result.summary, "decision_support_report")
+            self.assertTrue(decision_support_phase["passed"])
+            self.assertTrue(decision_support_phase["reviewer_ready"])
+            review_packet_phase = _phase(result.summary, "review_packet_index")
+            self.assertTrue(review_packet_phase["passed"])
+            self.assertTrue(review_packet_phase["reviewer_ready"])
             final_qa_phase = _phase(result.summary, "final_qa_certification_report")
             self.assertTrue(final_qa_phase["passed"])
             self.assertTrue(final_qa_phase["reviewer_ready"])
-            self.assertTrue(final_qa_phase["details"]["validation_result_passed"])
+            self.assertTrue(final_qa_phase["details"]["validation_passed"])
             self.assertEqual(final_qa_phase["details"]["failed_check_count"], 0)
 
     def test_phase_eval_accepts_base_gold_eval_for_generated_rule_pack(self) -> None:
