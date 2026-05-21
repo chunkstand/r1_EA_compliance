@@ -5,6 +5,67 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 33
+
+This thirty-third overall architecture-refactor slice closes the `tests/test_promotion_suite.py`
+hotspot split, records the new promotion-suite test owners and shared fixture helper in the routed
+packet, and keeps the broader Milestone 8 test-hotspot packet moving on the next oversized
+eval-family owner instead of leaving promotion coverage pinned in one giant test file.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 33; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- promotion-suite-fixture-owner closeout:
+  `tests/support/promotion_suite_fixtures.py` now owns the shared promotion-suite manifest
+  writers, artifact fixture setup, and hash helpers that previously lived at the bottom of
+  `tests/test_promotion_suite.py`
+- promotion-suite-full-canonical-owner closeout:
+  `tests/test_promotion_suite_full_canonical.py` now owns the committed full-canonical corpus
+  contract plus the runtime full-canonical readiness and artifact-path assertions that previously
+  remained inline in `tests/test_promotion_suite.py`
+- promotion-suite-expansion-slot-owner closeout:
+  `tests/test_promotion_suite_expansion_slots.py` now owns expansion-slot readiness, selected-slot
+  contract validation, stale validation sidecar hashing, required expansion artifact, and missing
+  required artifact assertions that previously remained inline in `tests/test_promotion_suite.py`
+- promotion-suite-forest-profile-owner closeout:
+  `tests/test_promotion_suite_forest_profile.py` now owns the declared forest-profile expansion
+  gate assertions that previously remained inline in `tests/test_promotion_suite.py`
+- facade-preserving routing:
+  `tests/test_promotion_suite.py` keeps the current-promotion committed gate contracts and the
+  committed expansion-slot artifact-routing assertions while the extracted files preserve the
+  public promotion-suite manifest and readiness behavior end to end
+- direct contract coverage:
+  `tests/test_promotion_suite.py`, `tests/test_promotion_suite_full_canonical.py`,
+  `tests/test_promotion_suite_expansion_slots.py`, and
+  `tests/test_promotion_suite_forest_profile.py` still verify committed manifest shape, full
+  canonical readiness, expansion-slot behavior, missing-artifact failure closure, and declared
+  forest-profile gates after the split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `40` to `39`
+  after the promotion-suite hotspot is reduced below the `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `290` code files, `39` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_promotion_suite.py=533`, `tests/test_promotion_suite_full_canonical.py=709`,
+  `tests/test_promotion_suite_expansion_slots.py=357`,
+  `tests/test_promotion_suite_forest_profile.py=393`,
+  `tests/support/promotion_suite_fixtures.py=129`, no remaining modules above the `20`-import
+  fan-out gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on promotion-suite
+  contract coverage and architecture gates because only test-owner surfaces and routing docs
+  changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on `tests/test_v1_ea_eval.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py tests/test_promotion_suite_full_canonical.py tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite_forest_profile.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 32
 
 This thirty-second overall architecture-refactor slice closes the `tests/test_cli.py` hotspot

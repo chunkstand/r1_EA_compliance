@@ -1377,10 +1377,38 @@ Progress after Sequence 32 on 2026-05-21:
   passes `62/62`, preserving full CLI parser and handler option-propagation coverage after the
   split.
 
+Progress after Sequence 33 on 2026-05-21:
+
+- `tests/support/promotion_suite_fixtures.py` now owns the shared promotion-suite manifest writers,
+  fixture artifact setup, and hash helpers that previously lived at the bottom of
+  `tests/test_promotion_suite.py`.
+- `tests/test_promotion_suite_full_canonical.py` now owns the committed full-canonical manifest
+  contract plus the runtime full-canonical readiness and artifact-path coverage that previously
+  remained inline inside `tests/test_promotion_suite.py`.
+- `tests/test_promotion_suite_expansion_slots.py` now owns expansion-slot readiness, selected-slot
+  contract validation, stale validation sidecar hashing, required expansion artifact, and missing
+  required artifact coverage that previously remained inline inside `tests/test_promotion_suite.py`.
+- `tests/test_promotion_suite_forest_profile.py` now owns the declared forest-profile expansion
+  gate coverage that previously remained inline inside `tests/test_promotion_suite.py`.
+- `tests/test_promotion_suite.py` is reduced to `533` lines from the pre-sequence `2090`-line
+  baseline while keeping the current-promotion committed gate contracts and the committed expansion
+  slot artifact-routing assertions.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `40` to `39`.
+- The fresh architecture probe reports `290` code files, `39` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_promotion_suite.py=533`, `tests/test_promotion_suite_full_canonical.py=709`,
+  `tests/test_promotion_suite_expansion_slots.py=357`,
+  `tests/test_promotion_suite_forest_profile.py=393`,
+  `tests/support/promotion_suite_fixtures.py=129`, no remaining modules above the `20`-import
+  fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite.py tests/test_promotion_suite_full_canonical.py tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite_forest_profile.py -q`
+  passes `19/19`, preserving promotion-suite manifest, readiness, and forest-profile gate coverage
+  across the split test-owner surface.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_promotion_suite.py`; do not advance to fixture-owner
-  splits until the next oversized eval-family test owner is reduced.
+- Milestone 8 remains active on `tests/test_v1_ea_eval.py`; keep the eval-family hotspot lane
+  moving before broader non-eval test owners like `tests/test_applicability_decisions.py`.
 
 Resolved scope after closeout:
 
