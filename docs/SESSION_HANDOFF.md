@@ -5,6 +5,73 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 43
+
+This forty-third overall architecture-refactor slice closes the
+`tests/test_retrieval.py` hotspot split, records the new retrieval test owners plus shared fixture
+helpers in the routed packet, and keeps the broader Milestone 8 test-hotspot packet moving on the
+next oversized test owner from the live architecture probe.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 43; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- retrieval-fixture-owner closeout:
+  `tests/support/retrieval_fixtures.py` now owns the shared extraction diagnostics writer,
+  chunk/catalog builders, source-set manifest helpers, extraction-accuracy-audit writer, and
+  validation-check helper that previously remained inline in `tests/test_retrieval.py`
+- retrieval-query-owner closeout:
+  `tests/test_retrieval.py` now owns the build/query filters, citation and support-role filters,
+  duplicate-hit diversification, title/topic/role boosting, legacy-index fallback, and
+  query-or-filter contract coverage that previously remained inline in `tests/test_retrieval.py`
+- retrieval-eval-owner closeout:
+  `tests/test_retrieval_eval.py` now owns the retrieval-eval scoring and expected-zero-hit coverage
+  that previously remained inline in `tests/test_retrieval.py`
+- retrieval-validation-owner closeout:
+  `tests/test_retrieval_validation.py` now owns the bad-hash, partial-extraction, support-role
+  backfill, catalog-gate resolution, verified-extraction audit, scope-excluded, and
+  missing-chunk coverage that previously remained inline in `tests/test_retrieval.py`
+- retrieval-boundary-owner closeout:
+  `tests/test_retrieval_test_boundary.py` now records the split owner budgets and sentinel
+  ownership for `tests/test_retrieval.py`, `tests/test_retrieval_eval.py`, and
+  `tests/test_retrieval_validation.py`
+- facade-preserving routing:
+  `tests/test_retrieval.py` keeps the query/ranking sentinel coverage while the extracted files
+  preserve the eval and validation/catalog surfaces end to end
+- direct contract coverage:
+  `tests/test_retrieval.py`,
+  `tests/test_retrieval_eval.py`,
+  `tests/test_retrieval_validation.py`, and
+  `tests/test_retrieval_test_boundary.py` still verify retrieval index build/query routing,
+  ranking behavior, retrieval-eval scoring, catalog-gate fallback, verified-extraction audit
+  enforcement, extraction-scope validation, and owner-boundary enforcement after the split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `30` to `29`
+  after the `tests/test_retrieval.py` hotspot is reduced below the `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `333` code files, `29` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_retrieval.py=434`,
+  `tests/test_retrieval_eval.py=118`,
+  `tests/test_retrieval_validation.py=481`,
+  `tests/test_retrieval_test_boundary.py=101`, and
+  `tests/support/retrieval_fixtures.py=231`, no remaining modules above the `20`-import fan-out
+  gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on retrieval
+  test-owner routing and architecture gates because only test-owner surfaces and routed docs
+  changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on
+  `tests/test_ea_consistency_decision_support.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_retrieval.py tests/test_retrieval_eval.py tests/test_retrieval_validation.py tests/test_retrieval_test_boundary.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 42
 
 This forty-second overall architecture-refactor slice closes the

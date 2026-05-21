@@ -1616,10 +1616,44 @@ Progress after Sequence 42 on 2026-05-21:
   passes `16/16`, preserving routed config, expected-summary, generated report family, validate-only,
   stale-sidecar, and owner-boundary coverage across the split final-QA certification owner surface.
 
+Progress after Sequence 43 on 2026-05-21:
+
+- `tests/support/retrieval_fixtures.py` now owns the shared extraction diagnostics writer,
+  chunk/catalog builders, source-set manifest helpers, extraction-accuracy-audit writer, and
+  validation-check helper that previously remained inline inside `tests/test_retrieval.py`.
+- `tests/test_retrieval.py` now owns the build/query filters, citation and support-role filters,
+  duplicate-hit diversification, title/topic/role boosting, legacy-index fallback, and
+  query-or-filter contract coverage that previously remained inline inside `tests/test_retrieval.py`.
+- `tests/test_retrieval_eval.py` now owns the retrieval-eval scoring and expected-zero-hit coverage
+  that previously remained inline inside `tests/test_retrieval.py`.
+- `tests/test_retrieval_validation.py` now owns the bad-hash, partial-extraction, support-role
+  backfill, catalog-gate resolution, verified-extraction audit, scope-excluded, and
+  missing-chunk coverage that previously remained inline inside `tests/test_retrieval.py`.
+- `tests/test_retrieval.py` keeps the query/ranking sentinel coverage while the extracted files
+  preserve the eval and validation/catalog surfaces end to end.
+- `tests/test_retrieval_test_boundary.py` now records the split owner budgets and sentinel
+  ownership for `tests/test_retrieval.py`, `tests/test_retrieval_eval.py`, and
+  `tests/test_retrieval_validation.py`.
+- `tests/test_retrieval.py` is reduced to `434` lines from the pre-sequence `1236`-line baseline,
+  while
+  `tests/test_retrieval_eval.py=118`,
+  `tests/test_retrieval_validation.py=481`,
+  `tests/test_retrieval_test_boundary.py=101`, and
+  `tests/support/retrieval_fixtures.py=231`.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `30` to `29`.
+- The fresh architecture probe reports `333` code files, `29` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, no remaining modules above
+  the `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_retrieval.py tests/test_retrieval_eval.py tests/test_retrieval_validation.py tests/test_retrieval_test_boundary.py -q`
+  passes `21/21`, preserving retrieval index build/query routing, ranking behavior, retrieval-eval
+  scoring, catalog-gate fallback, verified-extraction audit enforcement, extraction-scope
+  validation, and owner-boundary coverage across the split retrieval owner surface.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_retrieval.py`, which is now the next oversized test
-  hotspot on the live architecture probe after the final-QA certification family is reduced.
+- Milestone 8 remains active on `tests/test_ea_consistency_decision_support.py`, which is now the
+  next oversized test hotspot on the live architecture probe after the retrieval family is
+  reduced.
 
 Resolved scope after closeout:
 
