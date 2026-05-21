@@ -3,6 +3,7 @@ from __future__ import annotations
 from importlib import import_module
 from pathlib import Path
 
+from .claim_extraction import SUPPORTED_CLAIM_TYPES
 from .eval_metrics import (
     average,
     contract_snapshot,
@@ -21,7 +22,6 @@ RULE_CLAIM_LINK_EVAL_RESULTS_SCHEMA_VERSION = (
 )
 RULE_CLAIM_LINK_EVAL_SCHEMA_VERSION = _RULE_CLAIM_BINDING.RULE_CLAIM_LINK_EVAL_SCHEMA_VERSION
 RuleClaimLinkEvalResult = _RULE_CLAIM_BINDING.RuleClaimLinkEvalResult
-SUPPORTED_CLAIM_TYPES = _RULE_CLAIM_BINDING.SUPPORTED_CLAIM_TYPES
 SUPPORTED_RULE_CLAIM_EVAL_FILTERS = _RULE_CLAIM_BINDING.SUPPORTED_RULE_CLAIM_EVAL_FILTERS
 validate_rule_claim_links = _RULE_CLAIM_BINDING.validate_rule_claim_links
 _failed_check_names = _RULE_CLAIM_BINDING._failed_check_names

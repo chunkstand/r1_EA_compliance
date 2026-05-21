@@ -33,6 +33,45 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 18
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 6; sequence 18 closes the `rule-claim-validation` owner seam, but the
+  broader claims/evidence hotspot family remains active.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/rule_claim_binding.py`,
+  `src/usfs_r1_ea_sources/rule_claim_binding_validation.py`,
+  `tests/test_rule_claim_binding.py`,
+  `tests/test_rule_claim_binding_validation.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `docs/architecture_contract.toml`.
+- Validation seam closeout:
+  `rule_claim_binding_validation.py` now owns rule-claim artifact validation, rule-pack and claim
+  readiness checks, deterministic link/gap identity validation, provenance/filter/score/rank
+  checks, and sqlite validation support; `rule_claim_binding.py` now keeps the public rule-claim
+  facade plus the remaining rule-matching and build core.
+- Direct contract coverage:
+  `tests/test_rule_claim_binding_validation.py` now pins the extracted validation seam directly,
+  while `tests/test_rule_claim_binding.py` still verifies the public rule-claim build and eval
+  workflow end to end.
+- Live probe evidence:
+  the fresh architecture probe reports `234` code files, `52` files above `800`, no Python or
+  JS/TS import cycles, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `rule_claim_binding.py` reduced to `849` lines from the post-sequence-17 `1360`-line
+  baseline, `rule_claim_binding_validation.py` at `592` lines, `tests/test_rule_claim_binding.py`
+  reduced to `600` lines, and `tests/test_rule_claim_binding_validation.py` at `163` lines.
+- Next routing:
+  continue inside Milestone 6 on the remaining `rule_claim_binding.py` build core, then
+  `evidence_graph.py`, `package_fact_graph.py`, `applicability_retrieval.py`,
+  `applicability_rule_pack.py`, and `applicability_eval.py`. Do not advance to Milestone 7 yet.
+
 ## Overall Architecture Refactor Milestone 6 Sequence 17
 
 Latest closeout on 2026-05-20:
