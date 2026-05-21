@@ -170,6 +170,8 @@ modules = [
   "applicability_decision_outputs",
   "applicability_decisions",
   "applicability_retrieval",
+  "applicability_retrieval_graph",
+  "applicability_retrieval_runtime",
   "applicability_rule_pack",
   "applicability_validation",
   "applicability_validation_artifacts",

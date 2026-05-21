@@ -5,6 +5,60 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 22
+
+This twenty-second Milestone 6 slice closes the `applicability-retrieval` runtime and graph owner
+seams, records the new owner modules in the architecture surfaces, and keeps the umbrella packet
+routed inside Milestone 6 instead of pretending the broader applicability/evidence family is
+closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 22; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- applicability-retrieval-runtime-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_retrieval_runtime.py` now owns deterministic query
+  planning and execution, source/package result rows, fusion, and query helpers that previously
+  remained in `applicability_retrieval.py`
+- applicability-retrieval-graph-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_retrieval_graph.py` now owns bounded graph expansion and
+  graph trace assembly that previously remained in `applicability_retrieval.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/applicability_retrieval.py` keeps the public
+  `build_applicability_retrieval_traces(...)` workflow surface, now holds validation, diagnostics,
+  summary assembly, artifact IO, and identity helpers, and delegates deterministic retrieval and
+  graph runtime work to the new owner modules without changing callers
+- direct contract coverage:
+  `tests/test_applicability_retrieval_runtime.py` and `tests/test_applicability_retrieval_graph.py`
+  now pin the extracted seams directly, while `tests/test_applicability_retrieval.py` still
+  verifies the public retrieval-trace build workflow end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `applicability_retrieval_runtime.py` and
+  `applicability_retrieval_graph.py` explicitly in the applicability container, and
+  `docs/architecture_contract.toml` assigns both to the `applicability` layer
+- live probe evidence:
+  the fresh architecture probe reports `246` code files, `48` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `applicability_retrieval.py` reduced to `589` lines from the pre-sequence `1741`-line
+  baseline, new modules `applicability_retrieval_runtime.py=704` and
+  `applicability_retrieval_graph.py=479`, `tests/test_applicability_retrieval_runtime.py=134`,
+  `tests/test_applicability_retrieval_graph.py=113`, one fan-out hotspot at `cli_derived=22`, and
+  no Python or JS/TS import cycles
+- residual risk:
+  the broader applicability/evidence hotspot family is still open beyond the completed retrieval
+  owner family, with `applicability_rule_pack.py` and `applicability_eval.py` still routed inside
+  Milestone 6
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on `applicability_rule_pack.py`, then
+  `applicability_eval.py`; do not advance to Milestone 7 yet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_retrieval.py tests/test_applicability_retrieval_runtime.py tests/test_applicability_retrieval_graph.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 21
 
 This twenty-first Milestone 6 slice closes the `package-fact-runtime` owner seam, records the new

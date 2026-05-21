@@ -33,6 +33,50 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 22
+
+Latest closeout on 2026-05-20:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 6; sequence 22 closes the `applicability-retrieval-runtime` and
+  `applicability-retrieval-graph` owner seams, but the broader applicability/evidence hotspot
+  family remains active.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/applicability_retrieval.py`,
+  `src/usfs_r1_ea_sources/applicability_retrieval_runtime.py`,
+  `src/usfs_r1_ea_sources/applicability_retrieval_graph.py`,
+  `tests/test_applicability_retrieval_runtime.py`,
+  `tests/test_applicability_retrieval_graph.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/architecture_contract.toml`, and
+  `tests/test_architecture_quality.py`.
+- Runtime and graph seam closeout:
+  `applicability_retrieval_runtime.py` now owns deterministic query planning and execution,
+  source/package result rows, fusion, and query helpers; `applicability_retrieval_graph.py` now
+  owns bounded graph expansion and graph trace assembly; `applicability_retrieval.py` now keeps
+  the public retrieval-trace facade plus validation, diagnostics, summary assembly, artifact IO,
+  and identity helpers.
+- Direct contract coverage:
+  `tests/test_applicability_retrieval_runtime.py` and `tests/test_applicability_retrieval_graph.py`
+  now pin the extracted seams directly, while `tests/test_applicability_retrieval.py` still
+  verifies the public retrieval-trace build workflow end to end.
+- Live probe evidence:
+  the fresh architecture probe reports `246` code files, `48` files above `800`, no Python or
+  JS/TS import cycles, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `applicability_retrieval.py` reduced to `589` lines from the pre-sequence
+  `1741`-line baseline, `applicability_retrieval_runtime.py` at `704` lines,
+  `applicability_retrieval_graph.py` at `479` lines,
+  `tests/test_applicability_retrieval_runtime.py` at `134` lines, and
+  `tests/test_applicability_retrieval_graph.py` at `113` lines.
+- Next routing:
+  continue inside Milestone 6 on `applicability_rule_pack.py`, then `applicability_eval.py`. Do
+  not advance to Milestone 7 yet.
+
 ## Overall Architecture Refactor Milestone 6 Sequence 21
 
 Latest closeout on 2026-05-20:
