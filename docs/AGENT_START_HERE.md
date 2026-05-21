@@ -36,10 +36,11 @@ The planner:
 - Live corpus/runtime truth is tracked in `docs/CURRENT_SYSTEM_STATE.md`.
 - Current routed work and recent closeout facts are tracked in
   `docs/SESSION_HANDOFF.md`.
-- The active umbrella architecture packet in
-  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` has Milestone 9
-  active after Sequence 50 on the remaining archived West Reservoir
-  broader-EA artifact drift after removing the tracked user-home package path.
+- The umbrella architecture packet in
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` is now resolved
+  through Milestone 10 Sequence 52; the next routed follow-on is
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` after the
+  West Reservoir replay contract was explicitly typed-blocked and quarantined.
 
 ## Supported Lanes
 

@@ -21,16 +21,15 @@ Use this file as the short current route before opening the large append-only do
 
 ## Current Architecture Route
 
-- Milestone 9 is active after Sequence 50.
+- The overall architecture umbrella is resolved after Milestone 10 Sequence 52.
 - `config/replay_contexts/west-reservoir-67436.json` now uses the repo-relative cached package path
   `source_library/reviews/west-reservoir-67436/package` instead of a user-home path.
-- The remaining West Reservoir blocker is broader-EA artifact drift:
-  `v1-ea-eval --review-id west-reservoir-67436` still reports missing
-  `authority_explanation_paths.json`, and a cache-backed `compliance-review` reentry is blocked
-  because the archived `source-set-5e65d845ce77e1a0` retrieval index is not reviewer-ready in this
-  checkout.
-- Next slice: restore that archived broader-EA artifact from a repo-local replay path or
-  explicitly retire/quarantine the stale reviewer-ready contract before Milestone 10 rebaseline.
+- West Reservoir is now an explicit `typed_blocked` replay quarantine rather than a claimed
+  reviewer-ready replay contract because the broader-EA and forest-plan review artifact families are
+  not reproducible from current repo-local state.
+- Fresh full-canonical `compliance-gold-eval` replay on `source-set-f775524ab233ff27` is red on
+  `14/14` cases even though the required coverage and package-style tags are present.
+- Next routed packet: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 
 ## Deep Reads
 

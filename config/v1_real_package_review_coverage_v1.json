@@ -6,12 +6,12 @@
     "missing_required_slot_count_max": 0,
     "required_coverage_class_count": 3,
     "required_slot_count": 3,
-    "reviewer_ready_slot_count_min": 3,
-    "typed_blocked_slot_count_min": 0
+    "reviewer_ready_slot_count_min": 2,
+    "typed_blocked_slot_count_min": 1
   },
   "id": "region1-real-package-review-coverage-v1",
   "required_coverage_class_ids": [
-    "alternate_package_reviewer_ready",
+    "alternate_package_typed_blocked",
     "current_promotion_reviewer_ready",
     "expansion_reviewer_ready"
   ],
@@ -32,18 +32,18 @@
       "slot_id": "east-crazies-current-promotion"
     },
     {
-      "coverage_class_id": "alternate_package_reviewer_ready",
+      "coverage_class_id": "alternate_package_typed_blocked",
       "eval_file": "v1_west_reservoir_real_ea_eval.json",
-      "expected_contract_status": "reviewer_ready",
+      "expected_contract_status": "typed_blocked",
       "forest_unit_id": "flathead-nf",
-      "label": "West Reservoir reviewer-ready proving lane",
+      "label": "West Reservoir typed-blocked replay quarantine",
       "package_authority": {
         "replay_context_path": "replay_contexts/west-reservoir-67436.json"
       },
       "package_label": "West Reservoir Land Exchange",
       "required": true,
       "review_id": "west-reservoir-67436",
-      "slot_id": "west-reservoir-reviewer-ready"
+      "slot_id": "west-reservoir-typed-blocked"
     },
     {
       "coverage_class_id": "expansion_reviewer_ready",

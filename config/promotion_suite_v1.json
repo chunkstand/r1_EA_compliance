@@ -2351,12 +2351,12 @@
         {
           "name": "gold_coverage_eval_reviewer_ready_review_count",
           "json_path": "reviewer_ready_review_count",
-          "min": 3
+          "min": 2
         },
         {
           "name": "gold_coverage_eval_typed_blocked_review_count",
           "json_path": "typed_blocked_review_count",
-          "min": 0
+          "min": 1
         },
         {
           "name": "gold_coverage_eval_missing_review_contract_count",

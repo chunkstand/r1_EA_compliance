@@ -2,14 +2,15 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-8 complete; Milestone 9 active after Sequence 50
+Status: Resolved 2026-05-21 through Sequence 52; next routed packet `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
 
-Owner context: This is the active repo-wide architecture refactor packet after the closed
-`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-8 are now closed, the
+Owner context: This is the resolved repo-wide architecture refactor packet after the closed
+`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-9 are now closed, the
 document-plan runtime slice remains historical state from `1435cdb`, the oversized runtime/test
-owner families through Milestone 8 are reduced below the active architecture gates, and Milestone 9
-is now active on the remaining West Reservoir replay-contract drift plus concise current-routing
-alignment before the final umbrella rebaseline.
+owner families through Milestone 8 are reduced below the active architecture gates, Milestone 9
+closed the West Reservoir replay-contract drift plus concise current-routing alignment, and
+Milestone 10 closed the final umbrella rebaseline while routing the remaining full-canonical
+compliance-gold regression into a narrower follow-on packet.
 
 ## Purpose
 
@@ -204,7 +205,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 | Missing dependency declaration | closed by the current planner contract, which validates requests without a new external schema runtime dependency | document-planning surfaces | focused planner/CLI tests | resolved | closed |
 | Cold-start doc sprawl | `docs/CURRENT_ROUTING.md` now provides a short first-stop route ahead of the append-only handoff/current-state docs | `docs/CURRENT_ROUTING.md`, `README.md`, `docs/AGENT_START_HERE.md` | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
 | Architecture doc path drift | uppercase path is canonical, but the checkout still needs a guard against lowercase-path drift | architecture docs and references | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
-| Non-hermetic proving dependency | West Reservoir replay context now points at repo-relative cached package authority, but `v1-ea-eval` still fails on missing `authority_explanation_paths.json` and cache-backed compliance reentry is blocked on archived retrieval readiness | replay-context and proving docs/config | proving-lane contract tests and docs readback | reduced | Milestone 9 |
+| Non-hermetic proving dependency | West Reservoir replay context now points at repo-relative cached package authority and the stale reviewer-ready replay claim is explicitly retired behind a typed-blocked contract | replay-context and proving docs/config | proving-lane contract tests and docs readback | resolved | closed |
 | Duplicated PDF/rendering helpers | shared PDF object and line renderer ownership now lives in `pdf_object_writer.py`; the owner-family split risk is narrower but not the same as the broader document-owner hotspot | reporting/document-output family | focused helper contract tests plus owner-family readback | resolved | closed |
 | Oversized test/fixture owners | live architecture probe now reports no `tests/` or `tests/support/` file above the `800`-line reviewability gate; remaining oversized owners are runtime/viewer families outside the Milestone 8 test packet | test families and support fixtures | architecture probe plus focused pytest slices | resolved | closed |
 
@@ -1781,11 +1782,47 @@ Progress after Sequence 50 on 2026-05-21:
   user-home dependency: it now fails later on archived retrieval readiness for
   `source-set-5e65d845ce77e1a0`.
 
+Progress after Sequence 51 on 2026-05-21:
+
+- `config/v1_west_reservoir_real_ea_eval.json` now declares West Reservoir as an explicit
+  typed-blocked replay quarantine with blocker categories
+  `review_artifact_missing`, `forest_plan_matrix_miss`, `forest_plan_reviewer_not_ready`, and
+  `forest_plan_scope_miss`.
+- `config/v1_real_package_review_coverage_v1.json` now requires the coverage classes
+  `current_promotion_reviewer_ready`, `alternate_package_typed_blocked`, and
+  `expansion_reviewer_ready`, with thresholds `reviewer_ready_slot_count_min=2` and
+  `typed_blocked_slot_count_min=1`.
+- `config/gold_coverage_v1.json` plus `config/promotion_suite_v1.json` now align the aggregate
+  direct-eval thresholds to the same live roster: `2` reviewer-ready tracked reviews and `1`
+  typed-blocked tracked review.
+- The top routed docs now agree that West Reservoir remains repo-local for package authority but is
+  no longer claimed as reviewer-ready on this checkout, so Milestone 9 closes without shifting the
+  stale replay debt into hidden assumptions elsewhere.
+
+Progress after Sequence 52 on 2026-05-21:
+
+- The final architecture rebaseline is now live and green on its own terms:
+  focused architecture/debt/review-contract tests pass, the fresh architecture probe still reports
+  `344` code files with `24` above `800`, no Python or JS/TS cycles, and no local module above the
+  `20`-import fan-out gate.
+- The last routed-doc drift is now closed: `README.md`, `docs/CURRENT_ROUTING.md`,
+  `docs/AGENT_START_HERE.md`, `docs/ARCHITECTURE.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/SESSION_HANDOFF.md` all agree that the architecture umbrella is complete and that the
+  remaining live red lane is not architecture debt.
+- Fresh isolated full-canonical `compliance-gold-eval` replay on
+  `source-set-f775524ab233ff27` is explicitly recorded as red with `0/14` passed cases even
+  though the required coverage tags and package-style tags are present.
+- Fresh bounded `gold-coverage-eval` replay is explicitly recorded as red only because
+  `compliance_gold_eval` is red; the review-diversity and package-authority contract remains green
+  at `2 reviewer_ready + 1 typed_blocked` with no aggregate threshold failures.
+- The residual lane is now routed into
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` instead of being left inside
+  the closed architecture umbrella.
+
 Remaining issue after closeout:
 
-- Milestone 9 remains active on the stale West Reservoir broader-EA contract
-  (`authority_explanation_paths.json`) and archived retrieval-index replay drift; the tracked
-  user-home package path and cold-start routing drift are now closed.
+- The overall architecture umbrella is resolved. Continue the remaining live red lane in
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 
 Resolved scope after closeout:
 
@@ -1797,7 +1834,7 @@ Resolved scope after closeout:
 
 ### Milestone 9 - Remove Mechanical Drift And Non-Hermetic Replay Debt
 
-Outcome label: `reduced`
+Outcome label: `resolved`
 
 Purpose: close the remaining mechanical architecture debt that keeps the repo harder to reproduce
 and navigate than it should be.
@@ -1812,9 +1849,8 @@ Implementation:
 
 Remaining issue after closeout:
 
-- some historical append-only context will remain by policy, and the West Reservoir broader-EA
-  contract still needs either a repo-local replay repair or an explicit retirement/quarantine
-  decision before the umbrella packet can advance to Milestone 10.
+- none inside Milestone 9; the remaining umbrella work is the Milestone 10 rebaseline and final
+  debt-shift audit.
 
 ### Milestone 10 - Final Architecture Rebaseline And Closeout
 

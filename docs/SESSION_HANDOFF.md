@@ -7,6 +7,86 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Overall Architecture Refactor Milestone 10 Sequence 52
+
+This fifty-second overall architecture-refactor slice closes the umbrella packet on truthful
+rebaseline evidence, corrects the remaining routed-doc overclaim around the live gold aggregate,
+and moves the non-architecture residual into a narrower full-canonical compliance-gold packet.
+
+- outcome label:
+  `resolved` for Milestone 10 and for the overall architecture umbrella
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- architecture closeout:
+  the fresh architecture probe still reports `344` code files, `24` above `800`, no Python or
+  JS/TS cycles, no source module above the `20`-import fan-out gate, and no `tests/` or
+  `tests/support/` owner above the `800`-line reviewability gate
+- review-contract truth:
+  `v1-ea-eval --review-id west-reservoir-67436` still passes as `contract_status="typed_blocked"`
+  and `real-package-review-coverage-eval` still passes with `reviewer_ready_slot_count=2`,
+  `typed_blocked_slot_count=1`, and `missing_package_authority_count=0`
+- full-canonical gold truth:
+  isolated `compliance-gold-eval` replay on `source-set-f775524ab233ff27` is now explicitly
+  recorded as red with `passed_case_count=0`, `failed_case_count=14`, and failure families
+  `rule_claim_binding_miss`, `rule_wording_issue`, `source_applicability_miss`, and
+  `source_retrieval_miss` even though the required coverage tags and package-style tags are present
+- bounded aggregate truth:
+  bounded `gold-coverage-eval` replay remains red only because `compliance_gold_eval` is red; the
+  same replay still records `required_theme_count=7`, `passed_theme_count=7`,
+  `distinct_forest_count=2`, `distinct_package_style_count=3`, `reviewer_ready_review_count=2`,
+  and `typed_blocked_review_count=1` with no threshold failures
+- routed residual:
+  the remaining live red lane now belongs to
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_real_package_review_coverage_eval.py tests/test_gold_coverage_eval.py tests/test_v1_ea_eval.py tests/test_v1_ea_eval_contracts.py tests/test_v1_ea_eval_forest_plan.py tests/test_promotion_suite.py tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --max-fan-out 20 --format markdown`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id west-reservoir-67436`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq51`,
+  bounded `run_gold_coverage_eval(...)` replay using explicit results paths for applicability gold,
+  `compliance_gold_eval_seq51`, and `real_package_review_coverage_eval_results.json`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
+## Overall Architecture Refactor Milestone 9 Sequence 51
+
+This fifty-first overall architecture-refactor slice converts the stale West Reservoir
+reviewer-ready replay claim into an explicit typed-blocked quarantine, updates the aggregate
+coverage contracts to match the live replayable state, and resolves Milestone 9 before the final
+umbrella rebaseline.
+
+- outcome label:
+  `resolved` for Milestone 9 sequence 51; the umbrella packet now advances to Milestone 10
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- replay-contract closeout:
+  `config/v1_west_reservoir_real_ea_eval.json` now declares West Reservoir as a typed-blocked
+  replay quarantine with explicit blocker categories instead of a stale reviewer-ready contract
+- aggregate-coverage closeout:
+  `config/v1_real_package_review_coverage_v1.json`, `config/gold_coverage_v1.json`, and
+  `config/promotion_suite_v1.json` now require `2` reviewer-ready tracked reviews plus `1`
+  typed-blocked tracked review, matching the live East Crazies / West Reservoir / South Plateau
+  roster
+- live-state routing closeout:
+  `README.md`, `docs/CURRENT_ROUTING.md`, `docs/AGENT_START_HERE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/OUTPUT_SCHEMAS.md`, and `docs/ARCHITECTURE.md` now agree that West Reservoir remains
+  repo-local for package authority but is no longer claimed as reviewer-ready on this checkout
+- next routing:
+  Milestone 9 is complete. Advance the same umbrella packet to Milestone 10 on the final
+  architecture rebaseline and debt-shift closeout
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id west-reservoir-67436`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src python - <<'PY' ... run_gold_coverage_eval(...).summary ... PY`,
+  `PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --max-fan-out 20 --format markdown`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_real_package_review_coverage_eval.py tests/test_gold_coverage_eval.py tests/test_v1_ea_eval.py tests/test_v1_ea_eval_contracts.py tests/test_v1_ea_eval_forest_plan.py tests/test_promotion_suite.py tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 9 Sequence 50
 
 This fiftieth overall architecture-refactor slice removes the tracked

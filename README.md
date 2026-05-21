@@ -25,14 +25,20 @@ Current routed state on 2026-05-21:
 - `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
   catalog, and architecture routing.
 - The current architecture packet in
-  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` has Milestone 9
-  active after Sequence 50: the tracked West Reservoir replay context now uses
-  repo-relative cached package authority, and the remaining routed gap is the
-  stale broader-EA artifact contract for `west-reservoir-67436`.
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` is now resolved
+  through Milestone 10 Sequence 52: the tracked West Reservoir replay context
+  uses repo-relative cached package authority, the stale reviewer-ready replay
+  claim stays retired behind an explicit typed-blocked contract for
+  `west-reservoir-67436`, and the remaining live red lane is rerouted into
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 - The latest architecture gate reports `344` code files, `24` above `800`
   lines, no Python or JS/TS import cycles, no source module above the
   `20`-import fan-out gate, and no `tests/` or `tests/support/` owner above
   the `800`-line reviewability gate.
+- Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
+  because `compliance-gold-eval` is red on the active full-canonical source set
+  `source-set-f775524ab233ff27`; the tracked review-contract lane itself remains
+  green at `2 reviewer_ready + 1 typed_blocked`.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 
@@ -328,14 +334,11 @@ Historical documented full-corpus promotion baseline:
   `verified_extraction_contract_ids=["flathead-forest-plan-direct-extraction"]` with
   `verified_extraction_admitted_source_count=17`. This closes the source-document extraction and
   knowledge-base admission gap for Flathead without claiming a live Flathead EA package replay.
-- The Flathead live-package proving lane is now closed on the active full-canonical corpus.
-  Review `west-reservoir-67436` against the local West Reservoir package now passes review-bound
-  `phase-eval` `17/17` with `reviewer_ready=true`. The generated-pack applicability lane closes
-  with `44` applicable authorities, `23` non-applicable authorities, `0` unresolved decisions,
-  and a reviewer-ready `44`-rule generated pack; Flathead supporting-plan context validation is
-  green; the tracked component-adjudication lane resolves `48/48` queue items with
-  `reviewer_ready=true`; `compliance-review` is green in generated-pack mode; and the review-local
-  gold eval passes `10/10` cases with `promotion_ready=true`.
+- The Flathead live-package proving lane is no longer treated as an active reviewer-ready replay
+  contract on this checkout. West Reservoir still has a local repo-relative package cache plus
+  preserved applicability, component-adjudication, and gold-eval evidence, but the current
+  reviewer-ready broader-EA and forest-plan review artifact families are not reproducible from
+  repo-local state, so the tracked V1 contract is now an explicit typed-blocked replay quarantine.
 - The primary-plan role-classification milestone is now implemented in code and focused tests.
   When `catalog-build` runs with the Region 1 register, the five supplemental manifest-declared
   primary plan PDFs for `dakota-prairie-grasslands`, `flathead-nf`, `kootenai-nf`, `lolo-nf`, and
@@ -1589,11 +1592,13 @@ whether the real EA review applied the correct source documents to the correct E
 tracked review-slot manifest lives at `config/v1_real_package_review_coverage_v1.json`. When
 `--review-id` is supplied, `v1-ea-eval` resolves the matching per-review contract from that
 manifest; otherwise it fails closed unless `--eval-file` is provided explicitly. The tracked
-contracts cover East Crazies, West Reservoir, and South Plateau. South Plateau now carries
-`package_style_tags=["reviewer_ready_expansion"]`. Fresh reruns of the aggregate coverage gate
-still require each slot's package-authority surface to exist locally, so the preserved West
-Reservoir replay-context package path remains a checkout-specific prerequisite when that separate
-coverage lane is replayed.
+contracts cover East Crazies (`reviewer_ready`), West Reservoir (`typed_blocked` replay
+quarantine), and South Plateau (`reviewer_ready`). South Plateau now carries
+`package_style_tags=["reviewer_ready_expansion"]`, while West Reservoir keeps
+`package_style_tags=["live_external_noisy"]` but is intentionally typed-blocked until the archived
+review artifact family is rebuilt. Fresh reruns of the aggregate coverage gate still require each
+slot's package-authority surface to exist locally, and West Reservoir now resolves that surface
+repo-relatively through `source_library/reviews/west-reservoir-67436/package`.
 
 The result summary separates the overall readiness gate from two diagnostic lanes:
 `broader_ea` for package sections, baseline authorities, rule bindings, conditional sources, and
@@ -1613,7 +1618,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval \
 `real-package-review-coverage-eval` is the fail-closed owner for the three governed real-package
 slots. It replays or loads the tracked East Crazies, West Reservoir, and South Plateau V1 results,
 checks package-authority ownership for each slot, requires the three coverage classes
-`current_promotion_reviewer_ready`, `alternate_package_reviewer_ready`, and
+`current_promotion_reviewer_ready`, `alternate_package_typed_blocked`, and
 `expansion_reviewer_ready`, and reports covered review IDs, ready-versus-blocked slot counts,
 distinct forest/package-style counts, and any missing authority or slot failures.
 
@@ -1629,8 +1634,12 @@ PYTHONPATH=src python -m usfs_r1_ea_sources gold-coverage-eval \
 default applicability and compliance gold suites plus the manifest-owned
 `real-package-review-coverage-eval` lane, then requires all seven named theme groups, all `19`
 high-priority family IDs, at least `3` tracked review contracts across at least `2` forests and
-`3` package-style tags, all `3` tracked reviews in reviewer-ready status, and no missing
-package-authority declarations.
+`3` package-style tags, at least `2` reviewer-ready tracked reviews plus `1` typed-blocked review,
+and no missing package-authority declarations.
+On 2026-05-21, a bounded replay against fresh applicability, compliance, and real-package results
+still fails closed only because `compliance-gold-eval` is red on the active full-canonical source
+set; the seven theme groups, `2` forests, `3` package styles, and `2 reviewer_ready + 1
+typed_blocked` review-diversity contract all remain satisfied.
 
 Run the manifest-driven promotion suite:
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -14,6 +15,10 @@ from tests.support.v1_ea_eval_repair_fixtures import _write_repair_baseline_eval
 from tests.support.v1_ea_eval_repair_fixtures import _write_repair_baseline_failure_review
 from usfs_r1_ea_sources.cli import build_parser
 from usfs_r1_ea_sources.v1_ea_eval import run_v1_ea_review_eval
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+COMMITTED_WEST_RESERVOIR_CONTRACT = REPO_ROOT / "config" / "v1_west_reservoir_real_ea_eval.json"
 
 
 class V1EAReviewEvalContractTests(unittest.TestCase):
@@ -134,3 +139,32 @@ class V1EAReviewEvalContractTests(unittest.TestCase):
                     output_dir=root / "source_library",
                     review_dir=review_dir,
                 )
+
+    def test_committed_west_reservoir_contract_declares_typed_blocked_quarantine(self) -> None:
+        contract = json.loads(COMMITTED_WEST_RESERVOIR_CONTRACT.read_text(encoding="utf-8"))
+
+        self.assertEqual(contract["review_id"], "west-reservoir-67436")
+        self.assertEqual(contract["expected_lane_states"], {
+            "broader_ea_passed": False,
+            "forest_plan_passed": False,
+        })
+        self.assertEqual(
+            sorted(contract["allowed_blocker_categories"]),
+            [
+                "forest_plan_matrix_miss",
+                "forest_plan_reviewer_not_ready",
+                "forest_plan_scope_miss",
+                "review_artifact_missing",
+            ],
+        )
+        self.assertEqual(contract["package_style_tags"], ["live_external_noisy"])
+        self.assertTrue(
+            contract["conditional_source_expectations"],
+            "expected conditional source expectations to remain present",
+        )
+        for entry in contract["conditional_source_expectations"]:
+            self.assertIn(
+                "typed-blocked replay quarantine",
+                entry["classification_rationale"],
+            )
+            self.assertNotIn("reviewer-ready contract", entry["classification_rationale"])

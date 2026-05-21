@@ -10,12 +10,15 @@ turns workbook rows into captured artifacts, derived evidence, validated authori
 compliance findings, reports, and eval gates.
 
 Live architecture gate on 2026-05-21: the current umbrella packet in
-`docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` has Milestone 8
-resolved and is routed to Milestone 9 on the West Reservoir user-home proving
-dependency plus cold-start doc routing drift. The latest architecture probe
-reports `344` code files, `24` files above `800` lines, no Python or JS/TS
-import cycles, no source module above the `20`-import fan-out gate, and no
-`tests/` or `tests/support/` owner above the `800`-line reviewability gate.
+`docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` is now resolved through
+Milestone 10 Sequence 52. West Reservoir uses a repo-relative package cache and
+is explicitly typed-blocked instead of implicitly pretending to remain
+reviewer-ready, while the remaining live full-canonical gold regression is
+rerouted into `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
+The latest architecture probe reports `344` code files, `24` files above
+`800` lines, no Python or JS/TS import cycles, no source module above the
+`20`-import fan-out gate, and no `tests/` or `tests/support/` owner above the
+`800`-line reviewability gate.
 
 The architecture is intentionally artifact-first. Each layer reads explicit inputs, writes durable
 outputs under `source_library/`, and exposes validation artifacts that later layers must respect.

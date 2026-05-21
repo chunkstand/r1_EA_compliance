@@ -38,7 +38,97 @@ Applicability-First Milestone 10 closeout and alignment described below.
 Older architecture references below that still route the oversized-test packet
 as open or still list pre-closeout Milestone 8 hotspot sizes such as
 `tests/test_phase_eval.py=954` are historical only after the 2026-05-21
-Milestone 8 alignment closeout described below.
+Milestone 8 alignment closeout described below. Older references below that
+still treat West Reservoir as reviewer-ready or still report aggregate
+real-package and gold coverage with `3` reviewer-ready tracked reviews and `0`
+typed-blocked reviews are historical only after the 2026-05-21 Milestone 9
+Sequence 51 quarantine closeout described below. Older references below that
+still route the overall architecture umbrella as open or still claim a fresh
+full-canonical bounded gold aggregate is green are historical only after the
+2026-05-21 Milestone 10 Sequence 52 rebaseline closeout described below.
+
+## Overall Architecture Refactor Milestone 10 Sequence 52
+
+Latest closeout on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone 10; sequence 52 closes the architecture umbrella on truthful routed
+  docs, live architecture proof, and explicit residual rerouting instead of leaving the remaining
+  full-canonical gold regression implicit inside the architecture packet.
+- Implementation surfaces:
+  `config/v1_west_reservoir_real_ea_eval.json`,
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`,
+  `README.md`,
+  `docs/CURRENT_ROUTING.md`,
+  `docs/AGENT_START_HERE.md`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `tests/test_v1_ea_eval_contracts.py`.
+- Architecture closeout:
+  the fresh architecture probe still reports `344` code files, `24` files above `800`, no Python
+  or JS/TS import cycles, no local module above the `20`-import fan-out gate, and no
+  `tests/` or `tests/support/` owner above the `800`-line reviewability gate.
+- Full-canonical gold rebaseline evidence:
+  an isolated `compliance-gold-eval` replay against the active local catalog
+  `source-set-f775524ab233ff27` finished red with `passed_case_count=0`,
+  `failed_case_count=14`, and `failure_category_counts={"rule_claim_binding_miss": 14,
+  "rule_wording_issue": 14, "source_applicability_miss": 14, "source_retrieval_miss": 14}`
+  even though the required coverage tags and package-style tags were present.
+- Bounded aggregate truth:
+  a bounded `gold-coverage-eval` replay against fresh applicability results, the isolated red
+  compliance-gold result, and the fresh tracked review-contract aggregate remains red only because
+  `compliance_gold.passed=false`; the aggregate still records `required_theme_count=7`,
+  `passed_theme_count=7`, `distinct_forest_count=2`, `distinct_package_style_count=3`,
+  `reviewer_ready_review_count=2`, and `typed_blocked_review_count=1` with no threshold failures.
+- Next routing:
+  the overall architecture umbrella is complete. Advance the remaining live red lane to
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
+
+## Overall Architecture Refactor Milestone 9 Sequence 51
+
+Latest closeout on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone 9; sequence 51 explicitly retires the stale West Reservoir
+  reviewer-ready replay claim behind a machine-checked typed-blocked contract and advances the
+  umbrella route to Milestone 10.
+- Implementation surfaces:
+  `config/v1_west_reservoir_real_ea_eval.json`,
+  `config/v1_real_package_review_coverage_v1.json`,
+  `config/gold_coverage_v1.json`,
+  `config/promotion_suite_v1.json`,
+  `README.md`,
+  `docs/CURRENT_ROUTING.md`,
+  `docs/AGENT_START_HERE.md`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `tests/test_real_package_review_coverage_eval.py`,
+  `tests/test_gold_coverage_eval.py`,
+  `tests/test_promotion_suite.py`, and
+  `tests/test_v1_ea_eval_contracts.py`.
+- Quarantine closeout:
+  `v1-ea-eval --review-id west-reservoir-67436` now passes as `contract_status="typed_blocked"`
+  with the live blocker categories
+  `review_artifact_missing`, `forest_plan_matrix_miss`, `forest_plan_reviewer_not_ready`, and
+  `forest_plan_scope_miss` explicitly declared in the committed contract.
+- Aggregate coverage closeout:
+  the shipped real-package and gold coverage manifests now require `2` reviewer-ready tracked
+  reviews plus `1` typed-blocked tracked review, so the aggregate gates reflect the live replayable
+  state instead of the stale `3` reviewer-ready claim.
+- Next routing:
+  Milestone 9 is complete. Advance the same umbrella packet to Milestone 10 on the final
+  architecture rebaseline and debt-shift closeout.
 
 ## Overall Architecture Refactor Milestone 9 Sequence 50
 
@@ -2840,20 +2930,18 @@ Latest closeout on 2026-05-13:
 - `v1-ea-eval` now resolves tracked per-review contracts from
   `config/v1_real_package_review_coverage_v1.json` when `--review-id` is supplied, and still
   supports explicit typed blocked lane semantics. The current shipped contracts cover East Crazies
-  (`reviewer_ready`), West Reservoir (`reviewer_ready`), and South Plateau
+  (`reviewer_ready`), West Reservoir (`typed_blocked`), and South Plateau
   (`reviewer_ready_expansion`).
 - `real-package-review-coverage-eval` is now the aggregate fail-closed owner for the three tracked
-  real-package slots. The live replay on 2026-05-15 passed with
+  real-package slots. The current routed manifest now requires
   `required_slot_count=3`, `covered_slot_count=3`, `distinct_forest_count=2`,
-  `distinct_package_style_count=3`, `reviewer_ready_slot_count=3`,
-  `typed_blocked_slot_count=0`, and `missing_package_authority_count=0`.
+  `distinct_package_style_count=3`, `reviewer_ready_slot_count=2`,
+  `typed_blocked_slot_count=1`, and `missing_package_authority_count=0`.
 - `gold-coverage-eval` now reuses that manifest-owned real-package aggregate instead of owning a
-  second review roster. The current aggregate result artifact plus the fresh real-package coverage
-  output stay green with `required_theme_count=7`,
-  `passed_theme_count=7`,
-  `required_high_priority_family_id_count=19`, `distinct_forest_count=2`,
-  `distinct_package_style_count=3`, `reviewer_ready_review_count=3`, and
-  `typed_blocked_review_count=0`.
+  second review roster. The current aggregate contract now requires `required_theme_count=7`,
+  `passed_theme_count=7`, `required_high_priority_family_id_count=19`,
+  `distinct_forest_count=2`, `distinct_package_style_count=3`,
+  `reviewer_ready_review_count=2`, and `typed_blocked_review_count=1`.
 - `docs/EVALUATION_COVERAGE_REGISTER.md` now carries gold and real-review rows for
   `applicability_gold_eval`, `compliance_gold_eval`, `v1_ea_eval`,
   `real_package_review_coverage_eval`, and `gold_coverage_eval`, all marked

@@ -18,7 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 COMMITTED_MANIFEST = REPO_ROOT / "config" / "v1_real_package_review_coverage_v1.json"
 
 
-def test_real_package_review_coverage_eval_accepts_declared_reviewer_ready_slots() -> None:
+def test_real_package_review_coverage_eval_accepts_declared_reviewer_ready_and_typed_blocked_slots() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         output_dir = root / "source_library"
@@ -31,8 +31,8 @@ def test_real_package_review_coverage_eval_accepts_declared_reviewer_ready_slots
 
         assert result.summary["passed"] is True
         assert result.summary["covered_slot_count"] == 3
-        assert result.summary["reviewer_ready_slot_count"] == 3
-        assert result.summary["typed_blocked_slot_count"] == 0
+        assert result.summary["reviewer_ready_slot_count"] == 2
+        assert result.summary["typed_blocked_slot_count"] == 1
         assert result.summary["distinct_forest_count"] == 2
         assert result.summary["distinct_package_style_count"] == 3
         assert result.summary["missing_package_authority_count"] == 0
@@ -82,7 +82,7 @@ def test_committed_real_package_review_coverage_manifest_tracks_three_slots() ->
 
     assert manifest["schema_version"] == REAL_PACKAGE_REVIEW_COVERAGE_SCHEMA_VERSION
     assert manifest["required_coverage_class_ids"] == [
-        "alternate_package_reviewer_ready",
+        "alternate_package_typed_blocked",
         "current_promotion_reviewer_ready",
         "expansion_reviewer_ready",
     ]
@@ -96,8 +96,8 @@ def test_committed_real_package_review_coverage_manifest_tracks_three_slots() ->
     assert thresholds["required_coverage_class_count"] == 3
     assert thresholds["distinct_forest_count_min"] == 2
     assert thresholds["distinct_package_style_count_min"] == 3
-    assert thresholds["reviewer_ready_slot_count_min"] == 3
-    assert thresholds["typed_blocked_slot_count_min"] == 0
+    assert thresholds["reviewer_ready_slot_count_min"] == 2
+    assert thresholds["typed_blocked_slot_count_min"] == 1
 
 
 def _write_manifest(
@@ -161,14 +161,14 @@ def _write_manifest(
         {
             "review_id": "west-reservoir-67436",
             "passed": True,
-            "contract_status": "reviewer_ready",
+            "contract_status": "typed_blocked",
             "forest_unit_id": "flathead-nf",
             "package_style_tags": ["live_external_noisy"],
-            "actual_overall_passed": True,
-            "broader_ea_passed": True,
-            "forest_plan_passed": True,
-            "failure_category_counts": {},
-            "forest_plan_failure_category_counts": {},
+            "actual_overall_passed": False,
+            "broader_ea_passed": False,
+            "forest_plan_passed": False,
+            "failure_category_counts": {"review_artifact_missing": 4},
+            "forest_plan_failure_category_counts": {"review_artifact_missing": 4},
         },
     ]
     if include_expansion_slot:
@@ -208,16 +208,16 @@ def _write_manifest(
             },
         },
         {
-            "slot_id": "west-reservoir-reviewer-ready",
-            "label": "West Reservoir reviewer-ready proving lane",
+            "slot_id": "west-reservoir-typed-blocked",
+            "label": "West Reservoir typed-blocked replay quarantine",
             "review_id": "west-reservoir-67436",
             "package_label": "West Reservoir",
-            "coverage_class_id": "alternate_package_reviewer_ready",
+            "coverage_class_id": "alternate_package_typed_blocked",
             "forest_unit_id": "flathead-nf",
             "eval_file": "config/v1_west_reservoir_real_ea_eval.json",
             "results_path": str(review_paths[1]),
             "required": True,
-            "expected_contract_status": "reviewer_ready",
+            "expected_contract_status": "typed_blocked",
             "package_authority": {
                 "intake_package_path": str(
                     authorities_dir / ("missing-west" if missing_ready_authority else "package-west")
@@ -251,7 +251,7 @@ def _write_manifest(
             "id": "unit-real-package-review-coverage",
             "version": "0.1.0",
             "required_coverage_class_ids": [
-                "alternate_package_reviewer_ready",
+                "alternate_package_typed_blocked",
                 "current_promotion_reviewer_ready",
                 "expansion_reviewer_ready",
             ],
@@ -260,8 +260,8 @@ def _write_manifest(
                 "required_coverage_class_count": 3,
                 "distinct_forest_count_min": 2,
                 "distinct_package_style_count_min": 3,
-                "reviewer_ready_slot_count_min": 3,
-                "typed_blocked_slot_count_min": 0,
+                "reviewer_ready_slot_count_min": 2,
+                "typed_blocked_slot_count_min": 1,
                 "missing_required_slot_count_max": 0,
                 "missing_package_authority_count_max": 0,
             },

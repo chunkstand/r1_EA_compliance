@@ -3541,8 +3541,8 @@ fixtures or rerun `compliance-review`. The gate expects these review artifacts:
 
 When `--review-id` is supplied without `--eval-file`, the command resolves the per-review contract
 from `config/v1_real_package_review_coverage_v1.json`. That tracked manifest currently governs East
-Crazies current promotion, West Reservoir, and South Plateau. If no tracked review slot matches,
-the command fails closed unless an explicit `--eval-file` is provided.
+Crazies current promotion, West Reservoir typed-blocked replay quarantine, and South Plateau. If no
+tracked review slot matches, the command fails closed unless an explicit `--eval-file` is provided.
 
 The contract has schema version `v1-ea-real-review-eval-contract-v0` and records:
 
