@@ -20,6 +20,7 @@ from .review_package_support import source_set_id_from_index
 from .review_package_support import utc_now
 from .review_package_support import write_json
 from .review_package_support import write_jsonl
+from .records import reconciled_source_record_ids
 
 
 DEFAULT_CHECKLIST_PATH = Path("config/ea_review_checklist_seed.json")
@@ -141,6 +142,9 @@ def run_ea_review(
             preferred_term_groups=_package_term_groups(item, "package_section_term_groups"),
         )
         source_filters = dict(item.get("source_filters") or {})
+        source_record_filter_ids = reconciled_source_record_ids(
+            source_record_id=source_filters.get("source_record_id")
+        )
         source_query = query_retrieval_index(
             index_path=index_path,
             query=str(item.get("source_query") or item.get("query") or item["title"]),
@@ -148,6 +152,7 @@ def run_ea_review(
             document_role=source_filters.get("document_role"),
             authority_level=source_filters.get("authority_level"),
             source_record_id=source_filters.get("source_record_id"),
+            source_record_ids=source_record_filter_ids,
             review_topic=source_filters.get("review_topic") or source_filters.get("topic"),
             citation=source_filters.get("citation"),
             host=source_filters.get("host"),

@@ -66,6 +66,47 @@ class RuleClaimBindingTests(unittest.TestCase):
                 _check(validation, "all_rules_have_claim_link_or_explicit_gap")["passed"]
             )
 
+    def test_rule_claim_link_reconciles_legacy_source_record_ids_to_canonical_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _prepare_source_library(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="FED-001",
+                        title="National Environmental Policy Act",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="FED-001 | National Environmental Policy Act | artifact abc123",
+                        text="An environmental assessment should describe the purpose and need.",
+                    )
+                ],
+            )
+            build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+            rule_pack = _rule_pack()
+            rule_pack["rules"] = [rule for rule in rule_pack["rules"] if rule["id"] == "purpose_need"]
+            rule_pack["rules"][0]["source_filters"]["source_record_id"] = "R1EA-001"
+            rule_pack_path = Path(tmp) / "reconciled_rule_pack.json"
+            rule_pack_path.write_text(
+                json.dumps(rule_pack, sort_keys=True),
+                encoding="utf-8",
+            )
+
+            result = build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["link_count"], 1)
+            links = _read_jsonl(result.links_path)
+            self.assertEqual(links[0]["source_record_id"], "FED-001")
+            self.assertEqual(links[0]["rule_source_filters"]["source_record_id"], "R1EA-001")
+
     def test_rule_claim_link_allows_topic_slug_when_source_record_matches(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

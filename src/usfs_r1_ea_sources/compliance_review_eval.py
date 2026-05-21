@@ -34,6 +34,7 @@ from .forest_plan_resolver import DEFAULT_FOREST_PLAN_PROFILE_ID
 from .package_fact_graph import build_package_fact_graph
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .rule_packs import SAFE_ID_RE
+from .rule_packs import aliased_source_record_ids
 from .rule_packs import load_rule_pack
 from .rule_packs import validate_rule_pack
 
@@ -1078,12 +1079,12 @@ def _compliance_review_eval_case_result(
     source_record_mismatches = _expected_subset_mismatches(
         normalized_findings_by_rule,
         expected_source_record_ids,
-        finding_source_record_ids,
+        _finding_source_record_ids_with_aliases,
     )
     source_document_role_mismatches = _expected_subset_mismatches(
         normalized_findings_by_rule,
         expected_source_document_roles,
-        finding_source_document_roles,
+        _finding_source_document_roles_for_eval,
     )
     expected_status_counts = {
         str(status): int(count)
@@ -1103,19 +1104,16 @@ def _compliance_review_eval_case_result(
     unsupported_finding_ids_match = actual_unsupported == expected_unsupported
     summary = report.get("summary", {})
     applicability_gate = summary.get("applicability_gate")
-    diagnostic_base_rule_pack = (
-        isinstance(applicability_gate, dict)
-        and applicability_gate.get("mode") == "base_rule_pack_diagnostic"
-    )
+    diagnostic_rule_pack = _applicability_gate_is_diagnostic(applicability_gate)
     if "expected_validation_passed" in effective_case:
         expected_validation_passed = bool(effective_case.get("expected_validation_passed"))
     else:
-        expected_validation_passed = not diagnostic_base_rule_pack
+        expected_validation_passed = not diagnostic_rule_pack
     validation_passed_matches = bool(validation.get("passed")) == expected_validation_passed
     if "expected_reviewer_ready" in effective_case:
         expected_reviewer_ready = bool(effective_case.get("expected_reviewer_ready"))
     else:
-        expected_reviewer_ready = not diagnostic_base_rule_pack
+        expected_reviewer_ready = not diagnostic_rule_pack
     reviewer_ready_matches = (
         bool(summary.get("reviewer_ready")) == expected_reviewer_ready
     )
@@ -1135,7 +1133,7 @@ def _compliance_review_eval_case_result(
     authority_path_classification_supported = (not selected_findings) or all(
         _finding_has_authority_path_classification(finding) for finding in selected_findings
     )
-    authority_trace_coverage_supported = diagnostic_base_rule_pack or (not selected_findings) or all(
+    authority_trace_coverage_supported = diagnostic_rule_pack or (not selected_findings) or all(
         _finding_has_graph_or_retrieval_trace(finding) for finding in selected_findings
     )
     unexpected_positive_rule_ids = sorted(
@@ -1392,7 +1390,7 @@ def _expected_subset_mismatches(
     failures = []
     for rule_id, expected_values in expected.items():
         finding = findings_by_rule.get(rule_id)
-        actual = actual_values(finding) if finding else []
+        actual = actual_values(rule_id, finding) if finding else []
         missing = sorted(set(expected_values) - set(actual))
         if missing:
             failures.append(
@@ -1493,6 +1491,23 @@ def _finding_has_graph_or_retrieval_trace(finding: dict) -> bool:
         or finding.get("graph_path_ids")
         or finding.get("search_coverage_certificate_ids")
     )
+
+
+def _applicability_gate_is_diagnostic(applicability_gate: object) -> bool:
+    if not isinstance(applicability_gate, dict):
+        return False
+    mode = str(applicability_gate.get("mode") or "").strip()
+    return mode.endswith("_diagnostic")
+
+
+def _finding_source_record_ids_with_aliases(rule_id: str, finding: dict) -> list[str]:
+    del rule_id
+    return aliased_source_record_ids(finding_source_record_ids(finding))
+
+
+def _finding_source_document_roles_for_eval(rule_id: str, finding: dict) -> list[str]:
+    del rule_id
+    return finding_source_document_roles(finding)
 
 
 def _eval_finding_summary(finding: dict) -> dict:

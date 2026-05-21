@@ -115,6 +115,71 @@ class EAReviewTests(unittest.TestCase):
             self.assertTrue(_check(validation, "source_retrieval_is_reviewer_ready")["passed"])
             self.assertTrue(_check(validation, "gap_findings_have_source_evidence")["passed"])
 
+    def test_ea_review_reconciles_legacy_source_filters_to_canonical_source_records(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["FED-001"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="FED-001",
+                        title="National Environmental Policy Act",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="FED-001 | National Environmental Policy Act | artifact abc123",
+                        text="An environmental assessment should describe the purpose and need.",
+                    ),
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"FED-001": ["Purpose and need"]})
+            build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+            package_path = _write_package(
+                Path(tmp),
+                "Purpose and Need\n\nThe proposed action improves trail access.",
+            )
+            checklist = Path(tmp) / "checklist.json"
+            checklist.write_text(
+                json.dumps(
+                    [
+                        {
+                            "id": "purpose_need",
+                            "title": "Purpose and need are stated",
+                            "package_query": "purpose need proposed action",
+                            "package_terms": ["purpose and need", "proposed action"],
+                            "source_query": "national environmental policy act purpose need",
+                            "source_filters": {
+                                "document_role": "regulation",
+                                "source_record_id": "R1EA-001",
+                            },
+                            "severity": "high",
+                        }
+                    ],
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_ea_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                checklist_path=checklist,
+                review_id="legacy-filter-reconciliation",
+            )
+
+            report = json.loads(result.json_report_path.read_text(encoding="utf-8"))
+            finding = _finding(report, "purpose_need")
+            self.assertEqual(finding["source_library_evidence_status"], "found")
+            self.assertEqual(finding["source_library_evidence"]["source_record_id"], "FED-001")
+
     def test_ea_review_rejects_non_reviewer_ready_retrieval_index(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

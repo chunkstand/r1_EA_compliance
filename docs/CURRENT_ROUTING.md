@@ -32,11 +32,18 @@ Use this file as the short current route before opening the large append-only do
   base-rule-pack rerun path.
 - Fresh full-canonical `compliance-gold-eval` replay on `source-set-f775524ab233ff27` now fails
   through a scored `generated_rule_pack_diagnostic` lane instead of aborting at applicability
-  validation. Validation and reviewer-ready expectations now both match at `1.0`, but all `14`
-  synthetic cases still resolve to live `uncertain` findings with failure families
-  `authority_trace_coverage_miss`, `rule_claim_binding_miss`, `rule_wording_issue`,
-  `source_applicability_miss`, and `source_retrieval_miss`; the bounded
-  `gold_coverage_eval_seq52_fix3` replay remains red only because `compliance_gold_failed=1`.
+  validation. The legacy-to-canonical source-record reconciliation slice now drives
+  `authority_trace_coverage_rate=1.0`, and `gold-all-authorities-supported` no longer collapses to
+  all `uncertain`: it now scores `39` live `pass` findings and `20` `uncertain` findings.
+  The remaining source-record/document-role mismatches are limited to five still-unmapped
+  authorities:
+  `apa_final_agency_action`,
+  `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`,
+  `organic_act_16usc_475`, and
+  `seven_county_nepa_scope`.
+  Review-time source-claim-link mismatches remain routed next, and the bounded
+  `gold_coverage_eval_seq52_fix4` replay still remains red only because `compliance_gold_failed=1`.
 - Next routed packet: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 
 ## Deep Reads

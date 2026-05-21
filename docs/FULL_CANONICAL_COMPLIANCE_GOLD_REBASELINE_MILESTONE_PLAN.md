@@ -2,7 +2,7 @@
 
 Date: 2026-05-21
 
-Status: Active; Milestone 0 resolved 2026-05-21 through `compliance_gold_eval_seq52_fix1` and `gold_coverage_eval_seq52_fix1`; Milestone 1 resolved 2026-05-21 through generated-case routing repair and owner-family split; Milestone 2 reduced 2026-05-21 through `compliance_gold_eval_seq52_fix3` and `gold_coverage_eval_seq52_fix3`, and remains active on live source-claim/source-record drift
+Status: Active; Milestone 0 resolved 2026-05-21 through `compliance_gold_eval_seq52_fix1` and `gold_coverage_eval_seq52_fix1`; Milestone 1 resolved 2026-05-21 through generated-case routing repair and owner-family split; Milestone 2 reduced 2026-05-21 through `compliance_gold_eval_seq52_fix4` and `gold_coverage_eval_seq52_fix4`, and remains active on five still-unmapped live authorities plus narrowed review-time source-claim drift
 
 Owner context: the overall architecture umbrella is now closed on truthful routing, but the live
 full-canonical gold lane remains red on the active local catalog
@@ -32,6 +32,24 @@ authority gates.
   `validation_match_rate=1.0`, and `reviewer_ready_match_rate=1.0`, but all `14` cases still
   fail closed on live all-`uncertain` findings with failure-category counts
   `{"authority_trace_coverage_miss": 14, "rule_claim_binding_miss": 14, "rule_wording_issue": 14, "source_applicability_miss": 14, "source_retrieval_miss": 14}`.
+- Fresh Milestone 2 legacy/current source-record reconciliation replay on 2026-05-21:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52_fix4`
+  keeps the lane red at `0/14`, but it removes the old broad canonical source-ID drift. The
+  replay now records `authority_trace_coverage_rate=1.0`; aggregate finding statuses are
+  `226 pass`, `166 gap`, and `268 uncertain`; and
+  `gold-all-authorities-supported` now scores `39` live `pass` findings instead of collapsing to
+  all `uncertain`. The remaining source-record and source-document-role mismatches are narrowed to
+  the five authorities with no current canonical row:
+  `apa_final_agency_action`,
+  `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`,
+  `organic_act_16usc_475`, and
+  `seven_county_nepa_scope`.
+  Review-time source-claim-link mismatches now remain on a smaller set:
+  the same unresolved authorities plus
+  `montana_shpo_review` as a missing positive link and
+  `land_exchange_statutory_authorities_authority_template` /
+  `region1_forest_plan_source_records_authority_template` as unexpected positive links.
 - The same isolated replay still proves the coverage contract is present:
   `coverage_tags=["cultural_tribal", "forest_plan_consistency", "land_exchange",
   "migratory_birds", "multi_forest_plan_trigger", "roadless", "water_wetlands"]` and
@@ -42,7 +60,7 @@ authority gates.
   `distinct_package_style_count=3`, and `missing_package_authority_count=0`.
 - Fresh bounded aggregate replay on 2026-05-21 using:
   global applicability gold results,
-  isolated `compliance_gold_eval_seq52_fix3`,
+  isolated `compliance_gold_eval_seq52_fix4`,
   and fresh `real_package_review_coverage_eval_results.json`
   stays red only because `compliance_gold_failed=1`; it still records
   `required_theme_count=7`, `passed_theme_count=7`, `distinct_forest_count=2`,
@@ -51,8 +69,9 @@ authority gates.
 - Fresh owner-family split on 2026-05-21:
   the generated-case routing regression and the synthetic-case early-abort path are now fixed in
   code and verified by focused tests, so the remaining Milestone 2 owner is no longer
-  applicability abort. The active blocker is live source-record/source-claim support and
-  all-`uncertain` finding drift for the synthetic gold fixtures.
+  applicability abort or broad canonical source-ID drift. The active blocker is now the five still-
+  unmapped live authorities plus the narrower review-time source-claim expectation drift for the
+  synthetic gold fixtures.
 
 ## Goal
 
@@ -123,12 +142,18 @@ Outcome label: `resolved`
 - `src/usfs_r1_ea_sources/compliance_inputs.py`
 - `src/usfs_r1_ea_sources/compliance_review.py`
 - `src/usfs_r1_ea_sources/compliance_review_eval.py`
+- `src/usfs_r1_ea_sources/records.py`
 - `src/usfs_r1_ea_sources/rule_claim_binding*.py`
 - `src/usfs_r1_ea_sources/applicability*.py`
 - `src/usfs_r1_ea_sources/retrieval.py`
 - `src/usfs_r1_ea_sources/gold_coverage_eval.py`
+- `config/compliance_source_record_reconciliation_v1.json`
 - `config/compliance_gold_eval_v1.json`
 - `config/gold_coverage_v1.json`
+- `tests/test_retrieval.py`
+- `tests/test_rule_claim_binding_runtime.py`
+- `tests/test_rule_claim_binding.py`
+- `tests/test_ea_review.py`
 - `tests/test_compliance_gold_eval.py`
 - `tests/test_compliance_review.py`
 - `tests/test_gold_coverage_eval.py`
@@ -144,13 +169,13 @@ Outcome label: `resolved`
 ## Required Verification
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52_fix3
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52_fix4
 PYTHONPATH=src python - <<'PY'
 # bounded gold-coverage replay using explicit results_path inputs
 PY
-PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py -q
-PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/compliance_inputs.py src/usfs_r1_ea_sources/compliance_review.py src/usfs_r1_ea_sources/compliance_review_eval.py src/usfs_r1_ea_sources/compliance_gold_eval.py tests/test_compliance_review.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py
-PYTHONPATH=src python -m compileall src/usfs_r1_ea_sources/compliance_inputs.py src/usfs_r1_ea_sources/compliance_review.py src/usfs_r1_ea_sources/compliance_review_eval.py src/usfs_r1_ea_sources/compliance_gold_eval.py tests/test_compliance_review.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_retrieval.py tests/test_rule_claim_binding_runtime.py tests/test_rule_claim_binding.py tests/test_ea_review.py tests/test_compliance_review_eval.py tests/test_compliance_review_contracts.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py -q
+PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/records.py src/usfs_r1_ea_sources/retrieval.py src/usfs_r1_ea_sources/ea_review.py src/usfs_r1_ea_sources/rule_claim_binding_runtime.py src/usfs_r1_ea_sources/rule_claim_binding_validation.py src/usfs_r1_ea_sources/compliance_review_eval.py tests/test_retrieval.py tests/test_rule_claim_binding_runtime.py tests/test_rule_claim_binding.py tests/test_ea_review.py tests/test_compliance_review_eval.py tests/test_compliance_review_contracts.py
+PYTHONPATH=src python -m compileall src
 git diff --check
 ```
 

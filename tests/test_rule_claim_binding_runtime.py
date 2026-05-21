@@ -24,6 +24,25 @@ def test_claim_matches_rule_filters_allows_topic_slug_when_source_record_is_fixe
     )
 
 
+def test_claim_matches_rule_filters_allows_reconciled_source_record_ids() -> None:
+    claim = _claim(
+        claim_id="claim:FED-001:1",
+        source_record_id="FED-001",
+        review_topics=["Topic unrelated to the slug filter"],
+    )
+
+    assert _claim_matches_rule_filters(
+        claim,
+        {
+            "source_record_id": "R1EA-001",
+            "document_role": "regulation",
+            "authority_level": "federal",
+            "topic": "nepa_core_statute",
+        },
+        source_record_ids=["R1EA-001", "FED-001"],
+    )
+
+
 def test_score_rule_claim_returns_expected_terms_and_topic_bonus() -> None:
     rule = {
         "id": "purpose_need",

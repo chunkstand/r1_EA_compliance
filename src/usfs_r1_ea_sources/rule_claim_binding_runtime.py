@@ -4,6 +4,8 @@ from urllib.parse import urlparse
 import hashlib
 import re
 
+from .rule_packs import reconciled_source_record_ids
+
 
 RULE_CLAIM_LINK_SCHEMA_VERSION = "rule-claim-links-v0"
 RULE_CLAIM_GAP_SCHEMA_VERSION = "rule-claim-link-gaps-v0"
@@ -47,8 +49,15 @@ def _build_links(
         scored = []
         query = _rule_query(rule)
         terms = _tokenize(query)
+        resolved_source_record_ids = reconciled_source_record_ids(
+            source_record_id=(rule.get("source_filters") or {}).get("source_record_id")
+        )
         for claim in claims:
-            if not _claim_matches_rule_filters(claim, rule.get("source_filters") or {}):
+            if not _claim_matches_rule_filters(
+                claim,
+                rule.get("source_filters") or {},
+                source_record_ids=resolved_source_record_ids,
+            ):
                 continue
             score, matched_terms = _score_rule_claim(rule, claim, terms=terms, query=query)
             if terms and score <= 0:
@@ -238,16 +247,28 @@ def _claim_search_text(claim: dict) -> str:
     )
 
 
-def _claim_matches_rule_filters(claim: dict, filters: dict) -> bool:
-    source_record_filter = filters.get("source_record_id")
-    for key in ("document_role", "authority_level", "source_record_id"):
+def _claim_matches_rule_filters(
+    claim: dict,
+    filters: dict,
+    *,
+    source_record_ids: list[str] | tuple[str, ...] | None = None,
+) -> bool:
+    source_record_filter_ids = _normalized_source_record_ids(
+        source_record_id=filters.get("source_record_id"),
+        source_record_ids=source_record_ids,
+    )
+    for key in ("document_role", "authority_level"):
         value = filters.get(key)
         if value and str(claim.get(key) or "").lower() != str(value).lower():
             return False
+    if source_record_filter_ids and str(claim.get("source_record_id") or "") not in set(
+        source_record_filter_ids
+    ):
+        return False
     review_topic = filters.get("review_topic") or filters.get("topic")
     if (
         review_topic
-        and not source_record_filter
+        and not source_record_filter_ids
         and not _topic_matches(str(review_topic), claim.get("review_topics", []))
     ):
         return False
@@ -303,6 +324,26 @@ def _contains_term(term: str, token_set: set[str], text: str) -> bool:
     if " " in term:
         return term.lower() in text.lower()
     return term.lower() in token_set
+
+
+def _normalized_source_record_ids(
+    *,
+    source_record_id: str | None = None,
+    source_record_ids: list[str] | tuple[str, ...] | None = None,
+) -> list[str]:
+    values: list[str] = []
+    if source_record_id is not None:
+        values.append(str(source_record_id))
+    values.extend(str(value) for value in (source_record_ids or []))
+    normalized: list[str] = []
+    seen = set()
+    for value in values:
+        candidate = str(value or "").strip()
+        if not candidate or candidate in seen:
+            continue
+        seen.add(candidate)
+        normalized.append(candidate)
+    return normalized
 
 
 def _tokenize(text: str) -> list[str]:

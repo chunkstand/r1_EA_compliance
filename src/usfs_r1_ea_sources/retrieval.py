@@ -286,6 +286,7 @@ def query_retrieval_index(
     support_document_role: str | None = None,
     authority_level: str | None = None,
     source_record_id: str | None = None,
+    source_record_ids: list[str] | tuple[str, ...] | None = None,
     review_topic: str | None = None,
     citation: str | None = None,
     host: str | None = None,
@@ -298,15 +299,22 @@ def query_retrieval_index(
     if not index_path.exists():
         raise FileNotFoundError(f"Missing retrieval index: {index_path}")
 
+    source_record_filter_ids = _normalized_filter_ids(
+        source_record_id=source_record_id,
+        source_record_ids=source_record_ids,
+    )
     filters = {
         "document_role": document_role,
         "support_document_role": support_document_role,
         "authority_level": authority_level,
-        "source_record_id": source_record_id,
         "review_topic": review_topic,
         "citation": citation,
         "host": host,
     }
+    if source_record_ids is not None:
+        filters["source_record_ids"] = source_record_filter_ids
+    elif source_record_filter_ids:
+        filters["source_record_id"] = source_record_filter_ids[0]
     if not query.strip() and not any(value for value in filters.values()):
         raise ValueError("retrieval query requires query text or at least one filter")
     terms = _tokenize(query)
@@ -317,7 +325,7 @@ def query_retrieval_index(
             document_role=document_role,
             support_document_role=support_document_role,
             authority_level=authority_level,
-            source_record_id=source_record_id,
+            source_record_ids=source_record_filter_ids,
             host=host,
         )
 
@@ -777,7 +785,7 @@ def _load_candidate_rows(
     document_role: str | None,
     support_document_role: str | None,
     authority_level: str | None,
-    source_record_id: str | None,
+    source_record_ids: list[str] | None,
     host: str | None,
 ) -> list[sqlite3.Row]:
     query = "SELECT * FROM chunks WHERE 1 = 1"
@@ -791,14 +799,35 @@ def _load_candidate_rows(
     if authority_level:
         query += " AND authority_level = ?"
         params.append(authority_level)
-    if source_record_id:
-        query += " AND source_record_id = ?"
-        params.append(source_record_id)
+    if source_record_ids:
+        placeholders = ", ".join("?" for _ in source_record_ids)
+        query += f" AND source_record_id IN ({placeholders})"
+        params.extend(source_record_ids)
     if host:
         query += " AND host = ?"
         params.append(host)
     query += " ORDER BY source_record_id, chunk_index"
     return list(connection.execute(query, params))
+
+
+def _normalized_filter_ids(
+    *,
+    source_record_id: str | None = None,
+    source_record_ids: list[str] | tuple[str, ...] | None = None,
+) -> list[str] | None:
+    values: list[str] = []
+    if source_record_id is not None:
+        values.append(str(source_record_id))
+    values.extend(str(value) for value in (source_record_ids or []))
+    normalized: list[str] = []
+    seen = set()
+    for value in values:
+        candidate = str(value or "").strip()
+        if not candidate or candidate in seen:
+            continue
+        seen.add(candidate)
+        normalized.append(candidate)
+    return normalized or None
 
 
 def _result_from_row(

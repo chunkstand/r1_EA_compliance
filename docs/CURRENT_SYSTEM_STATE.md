@@ -49,10 +49,11 @@ full-canonical bounded gold aggregate is green are historical only after the
 Older references below that still treat the live full-canonical gold replay as
 the earlier `14/14` rule/retrieval failure bundle or as a pre-scored
 applicability abort are historical only after the 2026-05-21 generated-case
-routing repair, owner-family split, and diagnostic generated-pack slice
+routing repair, owner-family split, diagnostic generated-pack slice, and
+legacy/current source-record reconciliation slice
 described below.
 
-## Full Canonical Compliance Gold Rebaseline Milestones 0 Through 2 Slice
+## Full Canonical Compliance Gold Rebaseline Milestones 0 Through 3 Slice
 
 Latest implementation on 2026-05-21:
 
@@ -60,43 +61,63 @@ Latest implementation on 2026-05-21:
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 - Outcome label:
   Milestone `0` freshness lock is resolved, Milestone `1` owner-family split
-  is resolved, and the first Milestone `2` runtime-repair slice is reduced; the
-  packet remains active on Milestone `2`.
+  is resolved, Milestone `2` is reduced again, and the closeout for this
+  reduced slice is complete; the packet remains active on Milestone `2`.
 - Implementation surfaces:
-  `src/usfs_r1_ea_sources/compliance_inputs.py`,
-  `src/usfs_r1_ea_sources/compliance_review.py`,
+  `config/compliance_source_record_reconciliation_v1.json`,
+  `src/usfs_r1_ea_sources/records.py`,
+  `src/usfs_r1_ea_sources/retrieval.py`,
+  `src/usfs_r1_ea_sources/ea_review.py`,
+  `src/usfs_r1_ea_sources/rule_claim_binding_runtime.py`,
+  `src/usfs_r1_ea_sources/rule_claim_binding_validation.py`,
   `src/usfs_r1_ea_sources/compliance_review_eval.py`,
-  `src/usfs_r1_ea_sources/compliance_gold_eval.py`,
-  `tests/test_compliance_review.py`,
+  `tests/test_retrieval.py`,
+  `tests/test_rule_claim_binding_runtime.py`,
+  `tests/test_rule_claim_binding.py`,
+  `tests/test_ea_review.py`,
   `tests/test_compliance_review_eval.py`, and
-  `tests/test_compliance_gold_eval.py`.
+  `tests/test_compliance_review_contracts.py`.
 - Runtime repair:
-  gold cases that carry `expected_generated_*` expectations now route back
-  through the generated-rule-pack compliance-review eval path instead of
-  silently falling through the base-rule-pack diagnostic lane. Focused
-  regression coverage now also proves that eval-owned generated rule packs can
-  run in an explicit non-reviewer-ready diagnostic mode when synthetic cases
-  explicitly expect failed applicability validation.
+  the governed reconciliation surface
+  `config/compliance_source_record_reconciliation_v1.json` now maps legacy
+  compliance authority source-record IDs onto the active canonical IDs. The
+  shared helper in `records.py` now widens retrieval filters, rule-claim
+  filter validation, and compliance-review eval source-record comparisons
+  without weakening unresolved-authority failures. This same slice also treats
+  every `*_diagnostic` applicability gate mode as a diagnostic path for eval
+  expectation defaults and authority-trace coverage scoring.
 - Fresh isolated replay truth:
-  `compliance-gold-eval --results-dir source_library/reviews/compliance_gold_eval_seq52_fix3`
-  no longer aborts on synthetic-case applicability validation. All `14`
-  synthetic reviews now run through `generated_rule_pack_diagnostic`,
-  `compliance_review_eval_error=null`, `validation_match_rate=1.0`, and
-  `reviewer_ready_match_rate=1.0`, but every case still fails closed on live
-  all-`uncertain` findings. The isolated replay stays red at `0/14` passed
-  cases with failure-category counts
-  `{"authority_trace_coverage_miss": 14, "rule_claim_binding_miss": 14, "rule_wording_issue": 14, "source_applicability_miss": 14, "source_retrieval_miss": 14}`.
+  `compliance-gold-eval --results-dir source_library/reviews/compliance_gold_eval_seq52_fix4`
+  still fails closed at `0/14` passed cases, but the earlier all-`uncertain`
+  collapse is gone. The replay now records `authority_trace_coverage_rate=1.0`
+  with aggregate finding statuses `226 pass`, `166 gap`, and `268 uncertain`;
+  `gold-all-authorities-supported` now scores `39` live `pass` findings and
+  `20` `uncertain` findings instead of all `uncertain`.
+- Residual owner truth:
+  source-record and source-document-role mismatches are now limited to the five
+  authorities with no current canonical row:
+  `apa_final_agency_action`,
+  `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`,
+  `organic_act_16usc_475`, and
+  `seven_county_nepa_scope`.
+  Review-time source-claim-link mismatches are narrower too:
+  the same unresolved authorities plus
+  `montana_shpo_review` as a missing expected link and
+  `land_exchange_statutory_authorities_authority_template` /
+  `region1_forest_plan_source_records_authority_template` as unexpected
+  positive links.
 - Bounded aggregate truth:
-  `gold_coverage_eval_seq52_fix3` stays red only because
+  `gold_coverage_eval_seq52_fix4` stays red only because
   `compliance_gold_failed=1`; it still records `required_theme_count=7`,
   `passed_theme_count=7`, `distinct_forest_count=2`,
   `distinct_package_style_count=3`, `reviewer_ready_review_count=2`, and
   `typed_blocked_review_count=1` with no threshold failures.
 - Next routing:
   keep the same packet active on Milestone `2`, with the remaining owner
-  surface now narrowed to live source-record/source-claim support and
-  all-`uncertain` finding drift for the synthetic gold fixtures rather than the
-  earlier applicability abort.
+  surface now narrowed to five unmapped live authorities plus review-time
+  source-claim expectation drift for the synthetic gold fixtures rather than
+  the earlier applicability abort or broad source-ID mismatch.
 
 ## Overall Architecture Refactor Milestone 10 Sequence 52
 

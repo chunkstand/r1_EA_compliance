@@ -949,8 +949,9 @@ statutory, regulatory, policy, state, executive-order, and forest-plan authoriti
 rule pack, evaluates the EA against each applicable authority, and emits a compliance matrix plus
 finding graph with source-claim support. The `v1-ea-eval` command scores the current East Crazy
 Inspiration Divide real EA review against the V1 contract, including the explicit pending
-conditional-adjudication policy. The `compliance-gold-eval` command runs the 10-case adjudication
-promotion gate. The `promotion-suite` command checks manifest-declared readiness evidence for the
+conditional-adjudication policy. The `compliance-gold-eval` command runs the 14-case adjudication
+promotion gate and is currently the active full-canonical red lane on
+`source-set-f775524ab233ff27`. The `promotion-suite` command checks manifest-declared readiness evidence for the
 current V1 review and post-V1 expansion slots. The active compliance rule pack is `0.4.0`: it
 declares the 26 workbook `Scope=Baseline` source records explicitly and contains 48 total authority
 rules.
@@ -1576,6 +1577,14 @@ package-style tags `clean_baseline`, `live_external_noisy`, and `typed_blocked_e
 fails closed when those required tags are missing. It emits `promotion_ready` only when the rule
 pack is a reviewer-ready generated applicability rule pack and adjudication checks plus the
 underlying compliance-review eval both pass.
+On 2026-05-21, the live replay against `source-set-f775524ab233ff27` is still red at `0/14`
+passed cases, but the governed source-record reconciliation surface
+`config/compliance_source_record_reconciliation_v1.json` removed the broad legacy/current source-ID
+drift: `authority_trace_coverage_rate` is now `1.0`, and the remaining source-record mismatches are
+limited to the five authorities that still have no current canonical row
+(`apa_final_agency_action`, `directives_notice_comment_36cfr_216`,
+`musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`, and
+`seven_county_nepa_scope`) plus a narrower review-time source-claim-link expectation delta.
 Gold case IDs must be unique and safe for generated paths, and package fixture paths must stay under
 the gold file directory.
 

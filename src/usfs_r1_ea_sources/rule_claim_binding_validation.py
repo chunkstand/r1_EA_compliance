@@ -16,6 +16,7 @@ from .rule_claim_binding_runtime import _rule_query
 from .rule_claim_binding_runtime import _score_rule_claim
 from .rule_claim_binding_runtime import _tokenize
 from .rule_packs import load_rule_pack
+from .rule_packs import reconciled_source_record_ids
 from .rule_packs import validate_rule_pack
 
 
@@ -409,7 +410,13 @@ def _check_links_match_rule_filters(rule_pack: dict, links: list[dict]) -> dict:
         if not rule:
             failures.append({"link_id": link.get("link_id"), "reason": "unknown_rule"})
             continue
-        if not _claim_matches_rule_filters(link, rule.get("source_filters") or {}):
+        if not _claim_matches_rule_filters(
+            link,
+            rule.get("source_filters") or {},
+            source_record_ids=reconciled_source_record_ids(
+                source_record_id=(rule.get("source_filters") or {}).get("source_record_id")
+            ),
+        ):
             failures.append({"link_id": link.get("link_id"), "reason": "filter_mismatch"})
     return {
         "name": "rule_claim_links_match_rule_filters",

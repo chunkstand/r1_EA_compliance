@@ -7,6 +7,9 @@ import unittest
 from usfs_r1_ea_sources.compliance_review_eval import _case_requires_generated_rule_pack
 from usfs_r1_ea_sources.compliance_review_eval import _case_allows_generated_rule_pack_diagnostic
 from usfs_r1_ea_sources.compliance_review_eval import _generated_diagnostic_rule_ids
+from usfs_r1_ea_sources.compliance_review_eval import _applicability_gate_is_diagnostic
+from usfs_r1_ea_sources.compliance_review_eval import _expected_subset_mismatches
+from usfs_r1_ea_sources.compliance_review_eval import _finding_source_record_ids_with_aliases
 from usfs_r1_ea_sources.compliance_review_eval import _normalized_eval_findings_by_rule
 from usfs_r1_ea_sources.compliance_review_eval import (
     _validate_compliance_review_eval_cases_against_rule_pack,
@@ -205,6 +208,34 @@ class ComplianceReviewEvalTests(unittest.TestCase):
             generated_rule_pack_case=False,
         )
         self.assertNotIn("mitigation", unchanged)
+
+    def test_compliance_review_eval_reconciles_source_record_id_aliases(self) -> None:
+        findings_by_rule = {
+            "nepa_statute_chapter_55": {
+                "rule_id": "nepa_statute_chapter_55",
+                "status": "pass",
+                "source_library_evidence": {
+                    "source_record_id": "FED-001",
+                    "document_role": "law",
+                },
+                "source_claim_links": [],
+            }
+        }
+
+        mismatches = _expected_subset_mismatches(
+            findings_by_rule,
+            {"nepa_statute_chapter_55": ["R1EA-001"]},
+            _finding_source_record_ids_with_aliases,
+        )
+
+        self.assertEqual(mismatches, [])
+
+    def test_generated_rule_pack_diagnostic_mode_counts_as_diagnostic(self) -> None:
+        self.assertTrue(
+            _applicability_gate_is_diagnostic({"mode": "generated_rule_pack_diagnostic"})
+        )
+        self.assertTrue(_applicability_gate_is_diagnostic({"mode": "base_rule_pack_diagnostic"}))
+        self.assertFalse(_applicability_gate_is_diagnostic({"mode": "generated_rule_pack"}))
 
     def test_compliance_review_eval_allows_generated_rule_pack_status_counts(self) -> None:
         case = {

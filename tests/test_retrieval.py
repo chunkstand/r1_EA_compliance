@@ -84,6 +84,58 @@ class RetrievalTests(unittest.TestCase):
             self.assertEqual(hit["evidence_span"]["source_char_start"], 0)
             self.assertGreater(hit["evidence_span"]["source_char_end"], 0)
 
+    def test_retrieval_query_supports_multiple_source_record_filters(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["FED-001", "USDA-001"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="FED-001",
+                        title="National Environmental Policy Act",
+                        document_role="law",
+                        authority_level="federal",
+                        citation_label="FED-001 | National Environmental Policy Act | artifact abc123",
+                        text="The National Environmental Policy Act requires environmental review.",
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="USDA-001",
+                        title="USDA NEPA procedures",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="USDA-001 | USDA NEPA procedures | artifact def456",
+                        text="USDA NEPA procedures govern environmental review implementation.",
+                    ),
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    "FED-001": ["NEPA"],
+                    "USDA-001": ["USDA NEPA"],
+                },
+            )
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="environmental review",
+                source_record_ids=["R1EA-001", "FED-001"],
+            )
+
+            self.assertEqual(query["hit_count"], 1)
+            self.assertEqual(query["results"][0]["source_record_id"], "FED-001")
+            self.assertEqual(query["filters"]["source_record_ids"], ["R1EA-001", "FED-001"])
+
     def test_retrieval_query_supports_citation_filter(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

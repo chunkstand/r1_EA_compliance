@@ -1,0 +1,245 @@
+{
+  "schema_version": "compliance-source-record-reconciliation-v1",
+  "entries": [
+    {
+      "legacy_source_record_id": "R1EA-001",
+      "current_source_record_ids": ["FED-001"],
+      "notes": "Canonical NEPA statute row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-002",
+      "current_source_record_ids": ["FED-001"],
+      "notes": "Canonical NEPA statute row carries section 4332 text."
+    },
+    {
+      "legacy_source_record_id": "R1EA-003",
+      "current_source_record_ids": ["FED-001"],
+      "notes": "Canonical NEPA statute row carries section 4336 level-of-review text."
+    },
+    {
+      "legacy_source_record_id": "R1EA-004",
+      "current_source_record_ids": ["FED-001"],
+      "notes": "Canonical NEPA statute row carries section 4336a timing text."
+    },
+    {
+      "legacy_source_record_id": "R1EA-005",
+      "current_source_record_ids": ["FED-001"],
+      "notes": "Canonical NEPA statute row carries section 4336b programmatic-tiering text."
+    },
+    {
+      "legacy_source_record_id": "R1EA-006",
+      "current_source_record_ids": ["FED-001"],
+      "notes": "Canonical NEPA statute row carries section 4336c CE-adoption text."
+    },
+    {
+      "legacy_source_record_id": "R1EA-007",
+      "current_source_record_ids": ["FED-001"],
+      "notes": "Canonical NEPA statute row carries section 4336f sponsor-prepared text."
+    },
+    {
+      "legacy_source_record_id": "R1EA-008",
+      "current_source_record_ids": ["USDA-001"],
+      "notes": "Canonical USDA NEPA procedures row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-009",
+      "current_source_record_ids": ["USDA-001"],
+      "notes": "Canonical USDA NEPA procedures row carries section 1b.1."
+    },
+    {
+      "legacy_source_record_id": "R1EA-010",
+      "current_source_record_ids": ["USDA-001"],
+      "notes": "Canonical USDA NEPA procedures row carries section 1b.2."
+    },
+    {
+      "legacy_source_record_id": "R1EA-011",
+      "current_source_record_ids": ["USDA-001", "USDA-006"],
+      "notes": "Canonical USDA CE/FANEC text now spans procedures plus definitions/design criteria."
+    },
+    {
+      "legacy_source_record_id": "R1EA-012",
+      "current_source_record_ids": ["USDA-001", "USDA-006"],
+      "notes": "Canonical USDA subcomponent CE text now spans procedures plus definitions/design criteria."
+    },
+    {
+      "legacy_source_record_id": "R1EA-013",
+      "current_source_record_ids": ["USDA-002"],
+      "notes": "Canonical USDA EA row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-014",
+      "current_source_record_ids": ["USDA-003"],
+      "notes": "Canonical USDA FONSI row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-015",
+      "current_source_record_ids": ["USDA-004"],
+      "notes": "Canonical USDA efficient-review and prior-analyses row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-016",
+      "current_source_record_ids": ["USDA-005"],
+      "notes": "Canonical applicant/third-party documentation row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-017",
+      "current_source_record_ids": ["USDA-006"],
+      "notes": "Canonical USDA definitions row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-018",
+      "current_source_record_ids": ["USDA-007", "USDA-001"],
+      "notes": "Canonical final-rule notice plus governing procedures row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-019",
+      "current_source_record_ids": ["USFS-001"],
+      "notes": "Canonical Forest Service NEPA policy page."
+    },
+    {
+      "legacy_source_record_id": "R1EA-020",
+      "current_source_record_ids": [],
+      "notes": "No current canonical row is routed yet for Seven County v. Eagle County."
+    },
+    {
+      "legacy_source_record_id": "R1EA-021",
+      "current_source_record_ids": [],
+      "notes": "No current canonical row is routed yet for APA final-agency-action authority."
+    },
+    {
+      "legacy_source_record_id": "R1EA-022",
+      "current_source_record_ids": ["FED-021"],
+      "notes": "Canonical NFMA row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-023",
+      "current_source_record_ids": ["FED-003"],
+      "notes": "Canonical planning-rule row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-024",
+      "current_source_record_ids": ["FED-003"],
+      "notes": "Canonical planning-rule row carries section 219.15 consistency text."
+    },
+    {
+      "legacy_source_record_id": "R1EA-025",
+      "current_source_record_ids": ["FED-002"],
+      "notes": "Canonical predecisional-review row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-026",
+      "current_source_record_ids": ["FED-004"],
+      "notes": "Canonical postdecisional-review row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-027",
+      "current_source_record_ids": [],
+      "notes": "No current canonical row is routed yet for 36 CFR part 216 notice-and-comment authority."
+    },
+    {
+      "legacy_source_record_id": "R1EA-028",
+      "current_source_record_ids": ["USDA-008", "USFS-004"],
+      "notes": "Canonical directives coverage now spans USDA and Forest Service directive portals."
+    },
+    {
+      "legacy_source_record_id": "R1EA-029",
+      "current_source_record_ids": ["R1-006"],
+      "notes": "Canonical Region 1 directives index."
+    },
+    {
+      "legacy_source_record_id": "R1EA-031",
+      "current_source_record_ids": ["USFS-027"],
+      "notes": "Canonical FSM 2670 species-policy row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-033",
+      "current_source_record_ids": [],
+      "notes": "No current canonical row is routed yet for MUSYA."
+    },
+    {
+      "legacy_source_record_id": "R1EA-034",
+      "current_source_record_ids": [],
+      "notes": "No current canonical row is routed yet for Organic Administration Act section 475."
+    },
+    {
+      "legacy_source_record_id": "R1EA-035",
+      "current_source_record_ids": ["LEX-FED-008"],
+      "notes": "Canonical Organic Administration Act management-authority row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-049",
+      "current_source_record_ids": ["FED-014"],
+      "notes": "Canonical roadless/special-areas row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-065",
+      "current_source_record_ids": ["FED-031"],
+      "notes": "Canonical ESA section 7 row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-066",
+      "current_source_record_ids": ["FED-016"],
+      "notes": "Canonical ESA consultation-regulations row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-067",
+      "current_source_record_ids": ["R1-003"],
+      "notes": "Canonical Region 1 species-of-conservation-concern row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-070",
+      "current_source_record_ids": ["FED-024"],
+      "notes": "Canonical NHPA section 106 row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-071",
+      "current_source_record_ids": ["FED-015"],
+      "notes": "Canonical 36 CFR part 800 row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-094",
+      "current_source_record_ids": ["FED-030"],
+      "notes": "Canonical MBTA row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-096",
+      "current_source_record_ids": ["FED-040"],
+      "notes": "Canonical EO 13186 row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-104",
+      "current_source_record_ids": ["FED-043"],
+      "notes": "Canonical EO 11990 wetlands row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-119",
+      "current_source_record_ids": ["STP-026"],
+      "notes": "Canonical Montana SHPO row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-124",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory coverage now spans CFR plus Region 1 and FSH implementation rows."
+    },
+    {
+      "legacy_source_record_id": "R1EA-137",
+      "current_source_record_ids": ["FED-032", "LEX-FED-003", "LEX-FED-004", "LEX-FED-006", "LEX-FED-011"],
+      "notes": "Canonical land-exchange statutory-authority coverage is now split across FLPMA and supporting statutory rows."
+    },
+    {
+      "legacy_source_record_id": "R1EA-146",
+      "current_source_record_ids": ["FED-032"],
+      "notes": "Canonical FLPMA exchange row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-150",
+      "current_source_record_ids": ["USFS-035", "LEX-USFS-002", "LEX-USFS-003", "LEX-USFS-004", "LEX-USFS-006", "LEX-USFS-007"],
+      "notes": "Canonical land-exchange policy/reference coverage now spans the main program row plus FSM/FSH support rows."
+    },
+    {
+      "legacy_source_record_id": "R1PLAN-custer-gallatin-nf-02",
+      "current_source_record_ids": ["FOR-009"],
+      "notes": "Canonical Custer Gallatin land-management-plan row."
+    }
+  ]
+}
