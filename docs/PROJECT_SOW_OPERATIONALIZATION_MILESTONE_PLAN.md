@@ -403,7 +403,7 @@ Milestone closeout alignment:
 For implementation sequences touching Python, CLI, config, schema, or generated artifact contracts:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_project_sow_package.py tests/test_cli.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_project_sow_package.py tests/test_project_sow_adjudication.py tests/test_project_sow_intake.py tests/test_project_sow_package_validation.py tests/test_cli.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src uv run --extra dev python -m compileall src
