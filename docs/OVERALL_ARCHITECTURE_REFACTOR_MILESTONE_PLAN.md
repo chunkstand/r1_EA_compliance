@@ -1649,11 +1649,48 @@ Progress after Sequence 43 on 2026-05-21:
   scoring, catalog-gate fallback, verified-extraction audit enforcement, extraction-scope
   validation, and owner-boundary coverage across the split retrieval owner surface.
 
+Progress after Sequence 44 on 2026-05-21:
+
+- `tests/support/ea_consistency_decision_support_fixtures.py` now owns the shared synthetic
+  decision-support review packet, evidence assertions, report-validation helpers, and hash/JSON
+  fixture writers that previously remained inline inside
+  `tests/test_ea_consistency_decision_support.py`.
+- `tests/test_ea_consistency_decision_support.py` now owns the routed config, expected-summary,
+  minimal fixture, and output-schema contract coverage that previously remained inline inside
+  `tests/test_ea_consistency_decision_support.py`.
+- `tests/test_ea_consistency_decision_support_report.py` now owns the generated report-family,
+  supervisor-rendering, and fail-closed missing-artifact coverage that previously remained inline
+  inside `tests/test_ea_consistency_decision_support.py`.
+- `tests/test_ea_consistency_decision_support_validation.py` now owns the current-family
+  validation, stale-hash, invalid-PDF, supervisor-context, and phase-eval coverage that
+  previously remained inline inside `tests/test_ea_consistency_decision_support.py`.
+- `tests/test_ea_consistency_decision_support.py` keeps the config and fixture sentinel coverage
+  while the extracted files preserve the generated report and validation surfaces end to end.
+- `tests/test_ea_consistency_decision_support_test_boundary.py` now records the split owner
+  budgets and sentinel ownership for `tests/test_ea_consistency_decision_support.py`,
+  `tests/test_ea_consistency_decision_support_report.py`, and
+  `tests/test_ea_consistency_decision_support_validation.py`.
+- `tests/test_ea_consistency_decision_support.py` is reduced to `313` lines from the pre-sequence
+  `1174`-line baseline, while
+  `tests/test_ea_consistency_decision_support_report.py=121`,
+  `tests/test_ea_consistency_decision_support_validation.py=174`,
+  `tests/test_ea_consistency_decision_support_test_boundary.py=101`, and
+  `tests/support/ea_consistency_decision_support_fixtures.py=616`.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `29` to `28`.
+- The fresh architecture probe reports `337` code files, `28` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, no remaining modules above
+  the `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_ea_consistency_decision_support.py tests/test_ea_consistency_decision_support_report.py tests/test_ea_consistency_decision_support_validation.py tests/test_ea_consistency_decision_support_test_boundary.py -q`
+  passes `17/17`, preserving decision-support config routing, expected-summary locking, rendered
+  report family, supervisor-context rendering, validation gates, phase-eval integration,
+  fail-closed artifact behavior, and owner-boundary coverage across the split decision-support
+  owner surface.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_ea_consistency_decision_support.py`, which is now the
-  next oversized test hotspot on the live architecture probe after the retrieval family is
-  reduced.
+- Milestone 8 remains active on `tests/support/compliance_review_fixtures.py`, which is now the
+  next oversized test-owner hotspot on the live architecture probe after the decision-support
+  family is reduced.
 
 Resolved scope after closeout:
 

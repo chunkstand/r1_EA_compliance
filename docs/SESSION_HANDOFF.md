@@ -5,6 +5,78 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 44
+
+This forty-fourth overall architecture-refactor slice closes the
+`tests/test_ea_consistency_decision_support.py` hotspot split, records the new decision-support
+test owners plus shared fixture helpers in the routed packet, and keeps the broader Milestone 8
+test-hotspot packet moving on the next oversized test owner from the live architecture probe.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 44; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- decision-support-fixture-owner closeout:
+  `tests/support/ea_consistency_decision_support_fixtures.py` now owns the shared synthetic
+  decision-support review packet, evidence assertions, report-validation helpers, and hash/JSON
+  fixture writers that previously remained inline in
+  `tests/test_ea_consistency_decision_support.py`
+- decision-support-contract-owner closeout:
+  `tests/test_ea_consistency_decision_support.py` now owns the routed config, expected-summary,
+  minimal fixture, and output-schema contract coverage that previously remained inline in
+  `tests/test_ea_consistency_decision_support.py`
+- decision-support-report-owner closeout:
+  `tests/test_ea_consistency_decision_support_report.py` now owns the generated report-family,
+  supervisor-rendering, and fail-closed missing-artifact coverage that previously remained inline
+  in `tests/test_ea_consistency_decision_support.py`
+- decision-support-validation-owner closeout:
+  `tests/test_ea_consistency_decision_support_validation.py` now owns the current-family
+  validation, stale-hash, invalid-PDF, supervisor-context, and phase-eval coverage that
+  previously remained inline in `tests/test_ea_consistency_decision_support.py`
+- decision-support-boundary-owner closeout:
+  `tests/test_ea_consistency_decision_support_test_boundary.py` now records the split owner
+  budgets and sentinel ownership for `tests/test_ea_consistency_decision_support.py`,
+  `tests/test_ea_consistency_decision_support_report.py`, and
+  `tests/test_ea_consistency_decision_support_validation.py`
+- facade-preserving routing:
+  `tests/test_ea_consistency_decision_support.py` keeps the config and fixture sentinel coverage
+  while the extracted files preserve the generated report and validation surfaces end to end
+- direct contract coverage:
+  `tests/test_ea_consistency_decision_support.py`,
+  `tests/test_ea_consistency_decision_support_report.py`,
+  `tests/test_ea_consistency_decision_support_validation.py`, and
+  `tests/test_ea_consistency_decision_support_test_boundary.py` still verify decision-support
+  config routing, expected-summary locking, rendered report family, supervisor-context rendering,
+  validation gates, phase-eval integration, fail-closed artifact behavior, and owner-boundary
+  enforcement after the split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `29` to `28`
+  after the `tests/test_ea_consistency_decision_support.py` hotspot is reduced below the
+  `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `337` code files, `28` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_ea_consistency_decision_support.py=313`,
+  `tests/test_ea_consistency_decision_support_report.py=121`,
+  `tests/test_ea_consistency_decision_support_validation.py=174`,
+  `tests/test_ea_consistency_decision_support_test_boundary.py=101`, and
+  `tests/support/ea_consistency_decision_support_fixtures.py=616`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on decision-support
+  test-owner routing and architecture gates because only test-owner surfaces and routed docs
+  changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on
+  `tests/support/compliance_review_fixtures.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_ea_consistency_decision_support.py tests/test_ea_consistency_decision_support_report.py tests/test_ea_consistency_decision_support_validation.py tests/test_ea_consistency_decision_support_test_boundary.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 43
 
 This forty-third overall architecture-refactor slice closes the
