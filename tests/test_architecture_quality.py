@@ -22,6 +22,12 @@ REPLAY_CONTEXT_DIR = REPO_ROOT / "config" / "replay_contexts"
 CURRENT_ROUTING_PATH = REPO_ROOT / "docs" / "CURRENT_ROUTING.md"
 MAX_CURRENT_ROUTING_LINES = 40
 OVERALL_ARCHITECTURE_PLAN_PATH = REPO_ROOT / "docs" / "OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md"
+README_PATH = REPO_ROOT / "README.md"
+CURRENT_SYSTEM_STATE_PATH = REPO_ROOT / "docs" / "CURRENT_SYSTEM_STATE.md"
+SESSION_HANDOFF_PATH = REPO_ROOT / "docs" / "SESSION_HANDOFF.md"
+FULL_CANONICAL_GOLD_PLAN_PATH = (
+    REPO_ROOT / "docs" / "FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md"
+)
 
 
 def test_large_file_count_does_not_grow() -> None:
@@ -114,6 +120,21 @@ def test_overall_architecture_plan_closeout_stays_current() -> None:
     assert "PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval" in sequence_52
     assert "PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval" in sequence_52
     assert "git diff --check" in sequence_52
+
+
+def test_full_canonical_gold_docs_stay_aligned() -> None:
+    docs = {
+        "README": README_PATH.read_text(encoding="utf-8"),
+        "Current Routing": CURRENT_ROUTING_PATH.read_text(encoding="utf-8"),
+        "Current System State": CURRENT_SYSTEM_STATE_PATH.read_text(encoding="utf-8"),
+        "Gold Plan": FULL_CANONICAL_GOLD_PLAN_PATH.read_text(encoding="utf-8"),
+        "Session Handoff": SESSION_HANDOFF_PATH.read_text(encoding="utf-8"),
+    }
+
+    for name, text in docs.items():
+        assert "five still-unmapped live authorities" in text, name
+        assert "zero-link structural surface" in text, name
+        assert "generated diagnostic" in text, name
 
 
 def _code_paths() -> list[Path]:

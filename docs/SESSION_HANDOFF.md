@@ -7,6 +7,43 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Compliance Gold Rebaseline Milestone 2 Alignment Slice
+
+This slice does not change the live replay outcome. It closes the remaining
+doc/routing truth gap around the active gold packet so the routed plan, handoff,
+README, and short current route all describe the same owner family.
+
+- outcome label:
+  Milestone `2` reduced again; the closeout for this alignment slice is
+  complete; the packet remains active on the same next Milestone `2` owner
+  family
+- routed packet:
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- alignment repair:
+  the routed docs now state the important split explicitly: the base
+  `nepa-ea-v0` rule-claim-link summary still records `link_count=0` and
+  remains a separate zero-link structural surface, while the active generated
+  diagnostic gold cases now build non-zero rule-claim-link artifacts under
+  `source_library/derived/source-set-f775524ab233ff27/rule_claim_links/generated-diagnostic-*/`
+- current artifact truth:
+  the generated diagnostic all-authorities-supported summary now records
+  `link_count=195`, `source_record_count=31`, and `linked_rule_count=40`,
+  which matches the narrowed fix4 scoring shape; the packet is therefore still
+  routed on five still-unmapped live authorities plus narrower review-time
+  source-claim-link expectation drift, not on a hidden generated-link collapse
+- routing hygiene:
+  `docs/CURRENT_ROUTING.md` is back under the enforced short-doc line cap and
+  now points directly at the active gold packet instead of the already-resolved
+  architecture umbrella
+- next routing:
+  unchanged; continue the same packet on Milestone `2` for the five unmapped
+  authorities and narrowed review-time source-claim-link drift
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_quality.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check tests/test_architecture_quality.py`,
+  `PYTHONPATH=src python -m compileall tests/test_architecture_quality.py`, and
+  `git diff --check`
+
 ## Full Canonical Compliance Gold Rebaseline Milestone 2 Source-Record Reconciliation Slice
 
 This slice keeps the same routed gold packet active, but it removes the broad

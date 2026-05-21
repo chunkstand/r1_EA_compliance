@@ -2,7 +2,7 @@
 
 Date: 2026-05-21
 
-Status: Active; Milestone 0 resolved 2026-05-21 through `compliance_gold_eval_seq52_fix1` and `gold_coverage_eval_seq52_fix1`; Milestone 1 resolved 2026-05-21 through generated-case routing repair and owner-family split; Milestone 2 reduced 2026-05-21 through `compliance_gold_eval_seq52_fix4` and `gold_coverage_eval_seq52_fix4`, and remains active on five still-unmapped live authorities plus narrowed review-time source-claim drift
+Status: Active; Milestone 0 resolved 2026-05-21 through `compliance_gold_eval_seq52_fix1` and `gold_coverage_eval_seq52_fix1`; Milestone 1 resolved 2026-05-21 through generated-case routing repair and owner-family split; Milestone 2 reduced 2026-05-21 through `compliance_gold_eval_seq52_fix4` and `gold_coverage_eval_seq52_fix4`; routed docs are now aligned on the generated-vs-base rule-claim-link split, and the packet remains active on five still-unmapped live authorities plus narrowed review-time source-claim drift
 
 Owner context: the overall architecture umbrella is now closed on truthful routing, but the live
 full-canonical gold lane remains red on the active local catalog
@@ -50,6 +50,15 @@ authority gates.
   `montana_shpo_review` as a missing positive link and
   `land_exchange_statutory_authorities_authority_template` /
   `region1_forest_plan_source_records_authority_template` as unexpected positive links.
+- Artifact alignment truth on 2026-05-21:
+  the base canonical `rule-claim-link` summary for `nepa-ea-v0/0.4.0` still records
+  `link_count=0` and remains a separate zero-link structural surface, but the generated diagnostic
+  gold rule packs now emit non-zero rule-claim-link artifacts under
+  `source_library/derived/source-set-f775524ab233ff27/rule_claim_links/generated-diagnostic-*/`.
+  The generated diagnostic all-authorities-supported summary, for example, now records
+  `link_count=195`, `source_record_count=31`, and `linked_rule_count=40`. This packet therefore
+  remains routed on five still-unmapped live authorities plus narrowed review-time source-claim
+  drift, not on a hidden generated-link collapse.
 - The same isolated replay still proves the coverage contract is present:
   `coverage_tags=["cultural_tribal", "forest_plan_consistency", "land_exchange",
   "migratory_birds", "multi_forest_plan_trigger", "roadless", "water_wetlands"]` and

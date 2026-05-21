@@ -93,6 +93,15 @@ Latest implementation on 2026-05-21:
   with aggregate finding statuses `226 pass`, `166 gap`, and `268 uncertain`;
   `gold-all-authorities-supported` now scores `39` live `pass` findings and
   `20` `uncertain` findings instead of all `uncertain`.
+- Artifact alignment truth:
+  the base `nepa-ea-v0` rule-claim-link summary still records `link_count=0`
+  and remains a separate zero-link structural surface, but the generated
+  diagnostic gold rule packs now emit non-zero rule-claim-link artifacts under
+  `source_library/derived/source-set-f775524ab233ff27/rule_claim_links/generated-diagnostic-*/`.
+  For example, the generated diagnostic all-authorities-supported summary now
+  records `link_count=195` and `source_record_count=31`, so the packet remains
+  routed on five still-unmapped live authorities plus narrowed review-time
+  source-claim drift rather than a hidden generated-link collapse.
 - Residual owner truth:
   source-record and source-document-role mismatches are now limited to the five
   authorities with no current canonical row:

@@ -38,7 +38,9 @@ Current routed state on 2026-05-21:
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
   because `compliance-gold-eval` is red on the active full-canonical source set
   `source-set-f775524ab233ff27`; the tracked review-contract lane itself remains
-  green at `2 reviewer_ready + 1 typed_blocked`.
+  green at `2 reviewer_ready + 1 typed_blocked`. The active generated
+  diagnostic gold cases now build non-zero rule-claim-link artifacts, while the
+  base `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural surface.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 
@@ -1581,10 +1583,13 @@ On 2026-05-21, the live replay against `source-set-f775524ab233ff27` is still re
 passed cases, but the governed source-record reconciliation surface
 `config/compliance_source_record_reconciliation_v1.json` removed the broad legacy/current source-ID
 drift: `authority_trace_coverage_rate` is now `1.0`, and the remaining source-record mismatches are
-limited to the five authorities that still have no current canonical row
+limited to the five still-unmapped live authorities
 (`apa_final_agency_action`, `directives_notice_comment_36cfr_216`,
 `musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`, and
-`seven_county_nepa_scope`) plus a narrower review-time source-claim-link expectation delta.
+`seven_county_nepa_scope`) plus a narrower review-time source-claim-link expectation delta. The
+generated diagnostic gold rule packs now emit non-zero rule-claim-link artifacts under
+`source_library/derived/source-set-f775524ab233ff27/rule_claim_links/generated-diagnostic-*/`,
+while the base `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural surface.
 Gold case IDs must be unique and safe for generated paths, and package fixture paths must stay under
 the gold file directory.
 
