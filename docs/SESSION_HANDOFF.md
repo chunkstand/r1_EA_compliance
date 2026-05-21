@@ -5,6 +5,65 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 34
+
+This thirty-fourth overall architecture-refactor slice closes the `tests/test_v1_ea_eval.py`
+hotspot split, records the new `v1_ea_eval` test owners and bounded support helpers in the routed
+packet, and lets the broader Milestone 8 test-hotspot packet leave the eval-family lane and move
+to the next oversized test owner on the live architecture probe.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 34; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- v1-ea-eval-fixture-owner closeout:
+  `tests/support/v1_ea_eval_fixtures.py` now owns the shared positive-review fixture builders,
+  manifest writers, evidence-row helpers, JSON writers, and summary/policy helpers that
+  previously lived at the bottom of `tests/test_v1_ea_eval.py`
+- v1-ea-eval-repair-fixture-owner closeout:
+  `tests/support/v1_ea_eval_repair_fixtures.py` now owns the repair-baseline fixture builders and
+  failure-summary assertion helper that previously lived at the bottom of
+  `tests/test_v1_ea_eval.py`
+- v1-ea-eval-forest-plan-owner closeout:
+  `tests/test_v1_ea_eval_forest_plan.py` now owns the forest-plan lane coverage that previously
+  remained inline in `tests/test_v1_ea_eval.py`
+- v1-ea-eval-contract-owner closeout:
+  `tests/test_v1_ea_eval_contracts.py` now owns the repair-baseline, CLI, and tracked-manifest
+  contract coverage that previously remained inline in `tests/test_v1_ea_eval.py`
+- facade-preserving routing:
+  `tests/test_v1_ea_eval.py` keeps the broader-EA and conditional expectation coverage plus the
+  generated-rule-pack identity and baseline-source alignment assertions while the extracted files
+  preserve the forest-plan and contract surfaces end to end
+- direct contract coverage:
+  `tests/test_v1_ea_eval.py`, `tests/test_v1_ea_eval_forest_plan.py`, and
+  `tests/test_v1_ea_eval_contracts.py` still verify broader-EA scoring, conditional adjudication
+  policy, forest-plan lane gating, repair-baseline failures, CLI parsing, and tracked manifest
+  contract resolution after the split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `39` to `38`
+  after the `tests/test_v1_ea_eval.py` hotspot is reduced below the `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `294` code files, `38` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_v1_ea_eval.py=596`, `tests/test_v1_ea_eval_forest_plan.py=346`,
+  `tests/test_v1_ea_eval_contracts.py=136`,
+  `tests/support/v1_ea_eval_fixtures.py=525`,
+  `tests/support/v1_ea_eval_repair_fixtures.py=343`, no remaining modules above the `20`-import
+  fan-out gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on `v1_ea_eval`
+  contract coverage and architecture gates because only test-owner surfaces and routing docs
+  changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on `tests/test_applicability_decisions.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_v1_ea_eval.py tests/test_v1_ea_eval_forest_plan.py tests/test_v1_ea_eval_contracts.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 33
 
 This thirty-third overall architecture-refactor slice closes the `tests/test_promotion_suite.py`

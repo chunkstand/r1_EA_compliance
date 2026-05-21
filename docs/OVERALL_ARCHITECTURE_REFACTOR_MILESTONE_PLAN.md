@@ -1405,10 +1405,38 @@ Progress after Sequence 33 on 2026-05-21:
   passes `19/19`, preserving promotion-suite manifest, readiness, and forest-profile gate coverage
   across the split test-owner surface.
 
+Progress after Sequence 34 on 2026-05-21:
+
+- `tests/support/v1_ea_eval_fixtures.py` now owns the shared positive-review fixture builders,
+  manifest writers, evidence-row helpers, JSON writers, and summary/policy helpers that
+  previously lived at the bottom of `tests/test_v1_ea_eval.py`.
+- `tests/support/v1_ea_eval_repair_fixtures.py` now owns the repair-baseline fixture builders and
+  failure-summary assertion helper that previously lived at the bottom of
+  `tests/test_v1_ea_eval.py`.
+- `tests/test_v1_ea_eval_forest_plan.py` now owns the forest-plan lane coverage that previously
+  remained inline inside `tests/test_v1_ea_eval.py`.
+- `tests/test_v1_ea_eval_contracts.py` now owns the repair-baseline, CLI, and tracked-manifest
+  contract coverage that previously remained inline inside `tests/test_v1_ea_eval.py`.
+- `tests/test_v1_ea_eval.py` is reduced to `596` lines from the pre-sequence `1892`-line baseline
+  while keeping the broader-EA and conditional expectation coverage plus the generated-rule-pack
+  identity and baseline-source alignment assertions.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `39` to `38`.
+- The fresh architecture probe reports `294` code files, `38` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_v1_ea_eval.py=596`, `tests/test_v1_ea_eval_forest_plan.py=346`,
+  `tests/test_v1_ea_eval_contracts.py=136`,
+  `tests/support/v1_ea_eval_fixtures.py=525`,
+  `tests/support/v1_ea_eval_repair_fixtures.py=343`, no remaining modules above the `20`-import
+  fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_v1_ea_eval.py tests/test_v1_ea_eval_forest_plan.py tests/test_v1_ea_eval_contracts.py -q`
+  passes `27/27`, preserving the broader-EA, forest-plan, repair-baseline, CLI, and tracked
+  manifest contract coverage across the split `v1_ea_eval` owner surface.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_v1_ea_eval.py`; keep the eval-family hotspot lane
-  moving before broader non-eval test owners like `tests/test_applicability_decisions.py`.
+- Milestone 8 remains active on `tests/test_applicability_decisions.py`, which is now the next
+  oversized test owner on the live architecture probe after the eval-family `tests/test_v1_ea_eval.py`
+  hotspot is reduced.
 
 Resolved scope after closeout:
 
