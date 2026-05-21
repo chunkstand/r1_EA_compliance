@@ -1468,10 +1468,43 @@ Progress after Sequence 35 on 2026-05-21:
   validation-artifact, validation-check, and rule-pack runtime coverage across the split
   applicability owner surface.
 
+Progress after Sequence 36 on 2026-05-21:
+
+- `tests/test_compliance_review_forest_plan.py` now owns the forest-plan profile routing,
+  component gate, component adjudication, and stale-inventory coverage that previously remained
+  inline inside `tests/test_compliance_review.py`.
+- `tests/test_compliance_review_contracts.py` now owns the compliance rule-pack validation,
+  unsafe review-id guard, cache reuse, grouped conditional applicability, NEPA config contract,
+  and package-section search preference coverage that previously remained inline inside
+  `tests/test_compliance_review.py`.
+- `tests/test_compliance_review.py` keeps the generated-rule-pack gate sentinel plus the
+  reviewer-ready authority integration and compliance matrix/report artifact coverage while the
+  extracted files preserve the forest-plan and contract surfaces end to end.
+- `tests/test_compliance_review_test_boundary.py` now records the split owner budgets and sentinel
+  ownership for `tests/test_compliance_review.py`,
+  `tests/test_compliance_review_forest_plan.py`, and
+  `tests/test_compliance_review_contracts.py`.
+- `tests/test_compliance_review.py` is reduced to `598` lines from the pre-sequence
+  `1418`-line baseline, while
+  `tests/test_compliance_review_forest_plan.py=461` and
+  `tests/test_compliance_review_contracts.py=389`.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `37` to `36`.
+- The fresh architecture probe reports `300` code files, `36` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_compliance_review.py=598`,
+  `tests/test_compliance_review_forest_plan.py=461`,
+  `tests/test_compliance_review_contracts.py=389`, no remaining modules above the `20`-import
+  fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review.py tests/test_compliance_review_forest_plan.py tests/test_compliance_review_contracts.py tests/test_compliance_review_test_boundary.py -q`
+  passes `34` tests plus `3` subtests, preserving generated-rule-pack gate behavior, forest-plan
+  review routing, component adjudication, rule-pack validation, and package search contracts
+  across the split compliance-review owner surface.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_compliance_review.py`, which is now the next oversized
-  test hotspot on the live architecture probe after the applicability decision family is reduced.
+- Milestone 8 remains active on `tests/test_forest_plan_resolver.py`, which is now the next
+  oversized test hotspot on the live architecture probe after the compliance-review family is
+  reduced.
 
 Resolved scope after closeout:
 

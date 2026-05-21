@@ -7,7 +7,9 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CORE_SUITE = REPO_ROOT / "tests" / "test_compliance_review.py"
 SUITE_BUDGETS = {
-    "tests/test_compliance_review.py": 1400,
+    "tests/test_compliance_review.py": 800,
+    "tests/test_compliance_review_forest_plan.py": 800,
+    "tests/test_compliance_review_contracts.py": 800,
     "tests/test_compliance_review_eval.py": 1200,
     "tests/test_compliance_coverage.py": 1200,
     "tests/test_compliance_gold_eval.py": 1200,
@@ -30,6 +32,12 @@ CORE_FORBIDDEN_HELPER_PREFIXES = ("_build_", "_write_")
 CORE_FORBIDDEN_HELPERS = {"_run_generated_compliance_review"}
 SENTINEL_OWNERS = {
     "tests/test_compliance_review.py": {"test_generated_rule_pack_gate_makes_review_reviewer_ready"},
+    "tests/test_compliance_review_forest_plan.py": {
+        "test_custer_compliance_review_requires_generated_component_gate"
+    },
+    "tests/test_compliance_review_contracts.py": {
+        "test_compliance_review_rejects_invalid_rule_pack"
+    },
     "tests/test_compliance_review_eval.py": {"test_compliance_review_eval_scores_package_fixtures"},
     "tests/test_compliance_coverage.py": {"test_compliance_coverage_scores_matrix_links_and_eval_cases"},
     "tests/test_compliance_gold_eval.py": {"test_compliance_gold_eval_runs_adjudicated_profiles"},
