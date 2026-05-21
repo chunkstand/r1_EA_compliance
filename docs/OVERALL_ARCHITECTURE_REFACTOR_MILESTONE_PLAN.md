@@ -2,7 +2,7 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-5 complete; Milestone 6 active after Sequence 14
+Status: Milestones 0-5 complete; Milestone 6 active after Sequence 15
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
 `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-5 are now closed, the
@@ -48,12 +48,13 @@ machine-local state.
   `source_set_support.py` owns the shared derived-output path and support-document-role helpers
   now used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
   `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`.
-- Milestone 6 sequence 14 now closes the `claim-eval` owner seam:
-  `claim_extraction_eval.py` now owns deterministic claim eval scoring, contract loading,
-  coverage/metric checks, and claim-readiness revalidation, while `claim_extraction.py`
-  is reduced to the public claim-extraction facade plus the remaining claim extraction
-  and validation core. The next executable slice remains inside Milestone 6 on that
-  remaining `claim_extraction.py` core before the packet advances to `rule_claim_binding.py`.
+- Milestone 6 sequence 15 now closes the `claim-validation` owner seam:
+  `claim_extraction_validation.py` now owns claim-artifact validation, retrieval-index
+  readability/loading, provenance and offset checks, graph integrity/health checks, and
+  partial-retrieval gating, while `claim_extraction.py` is reduced to the public
+  claim-extraction facade plus the remaining extraction core. The next executable slice
+  remains inside Milestone 6 on that remaining `claim_extraction.py` core before the packet
+  advances to `rule_claim_binding.py`.
 
 ### Architecture probe current baseline
 
@@ -92,10 +93,12 @@ From
   pre-sequence `2494`-line baseline, and `src/usfs_r1_ea_sources.applicability.py`
   remains a `48`-line public facade after falling from the pre-sequence `2315`-line baseline
   without introducing a new `>800` line file; `src.usfs_r1_ea_sources.claim_extraction.py`
-  is down to `1328` lines from the post-sequence-13 `2084`-line baseline and the pre-sequence
-  `2503`-line baseline, `src.usfs_r1_ea_sources.claim_extraction_eval.py` now owns the bounded
-  eval surface at exactly `800` lines, and `src.usfs_r1_ea_sources.claim_extraction_graph.py`
-  remains below the gate at `457` lines;
+  is down to `783` lines from the post-sequence-14 `1328`-line baseline, the post-sequence-13
+  `2084`-line baseline, and the pre-sequence `2503`-line baseline,
+  `src.usfs_r1_ea_sources.claim_extraction_validation.py` now owns the bounded validation surface
+  at `617` lines, `src.usfs_r1_ea_sources.claim_extraction_eval.py` remains at the `800`-line
+  gate, and `src.usfs_r1_ea_sources.claim_extraction_graph.py` remains below the gate at `457`
+  lines;
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
 
@@ -117,7 +120,7 @@ From
   `tests/test_forest_plan_resolver.py`, `tests/test_project_sow_package.py`, and
   `tests/test_extract.py`.
 - Debt governance and cheap architecture gates are now green, but the large-file count remains at
-  `54` code files over `800` lines and still requires owner-family reduction instead of more
+  `52` code files over `800` lines and still requires owner-family reduction instead of more
   policy work.
 - The compliance-output family still has oversized verification ownership:
   `tests/test_compliance_review.py` is still a large mixed-owner file at `1418` lines, but the
@@ -220,7 +223,6 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `3170` `src/usfs_r1_ea_sources/extract.py`
 - `2662` `src/usfs_r1_ea_sources/v1_ea_eval.py`
 - `2655` `src/usfs_r1_ea_sources/applicability_eval.py`
-- `1328` `src/usfs_r1_ea_sources/claim_extraction.py`
 - `2384` `src/usfs_r1_ea_sources/final_qa_certification.py`
 - `2017` `src/usfs_r1_ea_sources/rule_claim_binding.py`
 - `1956` `src/usfs_r1_ea_sources/draft_generation.py`
@@ -267,8 +269,6 @@ This plan acts as the current repo-wide architecture weak-point register until t
 - `954` `tests/test_phase_eval.py`
 - `893` `tests/test_applicability.py`
 - `872` `tests/support/compliance_component_fixtures.py`
-- `828` `tests/test_claim_extraction.py`
-
 ### Priority C - viewer hotspot
 
 - `2547` `viewer/nepa-3d/app.js`
@@ -658,7 +658,7 @@ Remaining issue after closeout:
 ### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
 
 Outcome label: `reduced`
-Status: active after Sequence 14
+Status: active after Sequence 15
 
 Purpose: reduce the largest concentration in the applicability decision family and the adjacent
 claims/evidence hotspots without weakening downstream gates.
@@ -690,6 +690,7 @@ Owner family:
 - `claim_extraction.py`
 - `claim_extraction_eval.py`
 - `claim_extraction_graph.py`
+- `claim_extraction_validation.py`
 - `rule_claim_binding.py`
 - `package_fact_graph.py`
 - `evidence_graph.py`
@@ -700,6 +701,22 @@ Implementation:
    formatting into narrower owner modules.
 2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
+
+Progress after Sequence 15 on 2026-05-20:
+
+- `claim_extraction_validation.py` now owns claim-artifact validation, retrieval-index
+  readability/loading, claim provenance/type/offset consistency checks, claim-graph integrity and
+  health checks, and partial-retrieval gating that previously remained inside
+  `claim_extraction.py`.
+- `tests/test_claim_extraction_validation.py` now pins the extracted validation seam directly,
+  while `tests/test_claim_extraction.py` still verifies the public claim-extraction workflow end
+  to end.
+- `tests/test_architecture_quality.py` now tightens the oversized-file guard to the fresh
+  `52`-file architecture-probe baseline so the milestone does not leave a stale regression budget.
+- `claim_extraction.py` is reduced to `783` lines from the post-sequence-14 `1328`-line baseline,
+  `claim_extraction_validation.py` lands at `617` lines, `tests/test_claim_extraction.py` is
+  reduced to `781` lines, and the fresh architecture probe reports `228` code files, `52` files
+  above `800`, and no Python or JS/TS cycles.
 
 Progress after Sequence 14 on 2026-05-20:
 
@@ -878,10 +895,10 @@ Progress after Sequence 12 on 2026-05-20:
 
 Remaining issue after closeout:
 
-- The applicability validation family is now reduced to explicit owners, and both the claim-graph
-  and claim-eval seams are now closed, but the broader claims/evidence hotspot family remains open
-  inside Milestone 6. The next routed slice stays inside `claim_extraction.py` for the remaining
-  claim extraction and validation core, then advances to `rule_claim_binding.py`,
+- The applicability validation family is now reduced to explicit owners, and the claim-graph,
+  claim-eval, and claim-validation seams are now closed, but the broader claims/evidence hotspot
+  family remains open inside Milestone 6. The next routed slice stays inside `claim_extraction.py`
+  for the remaining claim extraction core, then advances to `rule_claim_binding.py`,
   `evidence_graph.py`, `package_fact_graph.py`, `applicability_retrieval.py`,
   `applicability_rule_pack.py`, and `applicability_eval.py` before the umbrella packet can route
   forward to Milestone 7.

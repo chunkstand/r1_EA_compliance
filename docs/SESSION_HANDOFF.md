@@ -5,6 +5,59 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 15
+
+This fifteenth Milestone 6 slice closes the `claim-validation` owner seam, records the new owner
+module in the architecture surfaces, and keeps the umbrella packet routed inside Milestone 6
+instead of pretending the broader claims/evidence family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 15; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- claim-validation-owner closeout:
+  `src/usfs_r1_ea_sources/claim_extraction_validation.py` now owns claim-artifact validation,
+  retrieval-index readability/loading, claim provenance/type/offset consistency checks,
+  claim-graph integrity and health checks, and partial-retrieval gating that previously remained
+  in `claim_extraction.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/claim_extraction.py` keeps the public `claim-extract`,
+  `claim-validate`, and `claim-eval` workflow surface, now holds the remaining claim extraction
+  core, and delegates validation support to the new owner module without changing downstream
+  callers
+- direct contract coverage:
+  `tests/test_claim_extraction_validation.py` now pins the extracted validation seam directly,
+  while `tests/test_claim_extraction.py` still verifies the public claim-extraction workflow end to
+  end
+- gate closeout:
+  `tests/test_architecture_quality.py` now tightens the oversized-file guard to the fresh
+  `52`-file architecture-probe baseline so the milestone does not leave a stale regression budget
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `claim_extraction_validation.py` explicitly in the
+  evidence-and-claims container, and `docs/architecture_contract.toml` assigns it to the `claims`
+  layer
+- live probe evidence:
+  the fresh architecture probe reports `228` code files, `52` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `claim_extraction.py` reduced to `783` lines from the post-sequence-14 `1328`-line baseline,
+  new module `claim_extraction_validation.py=617`, `tests/test_claim_extraction.py` reduced to
+  `781`, one fan-out hotspot at `cli_derived=22`, and no Python or JS/TS import cycles
+- residual risk:
+  `claim_extraction.py` still remains the owner of the remaining extraction core, and the broader
+  claims/evidence hotspot family is still untouched beyond the claim-validation boundary
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on the remaining claim extraction core in
+  `claim_extraction.py`, then `rule_claim_binding.py`, `evidence_graph.py`,
+  `package_fact_graph.py`, `applicability_retrieval.py`, `applicability_rule_pack.py`, and
+  `applicability_eval.py`; do not advance to Milestone 7 yet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_claim_extraction.py tests/test_claim_extraction_eval.py tests/test_claim_extraction_validation.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 14
 
 This fourteenth Milestone 6 slice closes the `claim-eval` owner seam, records the new owner module

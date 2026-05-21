@@ -10,7 +10,6 @@ import unittest
 
 from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
 from usfs_r1_ea_sources.claim_extraction import run_claim_eval
-from usfs_r1_ea_sources.claim_extraction import validate_claim_outputs
 from usfs_r1_ea_sources.evidence_graph import build_evidence_graph
 from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
@@ -296,45 +295,6 @@ class ClaimExtractionTests(unittest.TestCase):
 
             with self.assertRaisesRegex(ValueError, "unsupported filters"):
                 run_claim_eval(claims_path=result.claims_path, eval_file=eval_file)
-
-    def test_claim_validation_rejects_tampered_unsupported_claim(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            output_dir = Path(tmp)
-            source_set_id = "source-set-test"
-            _prepare_source_library(
-                output_dir,
-                source_set_id,
-                [
-                    _chunk(
-                        source_set_id=source_set_id,
-                        source_record_id="R1EA-001",
-                        title="Purpose and need",
-                        document_role="regulation",
-                        authority_level="federal_regulation",
-                        citation_label="R1EA-001 | Purpose and need | artifact abc123",
-                        text="The agency must identify the purpose and need.",
-                    )
-                ],
-            )
-            result = build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
-            claims = _read_jsonl(result.claims_path)
-            claims[0]["claim_type"] = "model_generated_conclusion"
-            claims[0]["pattern_id"] = "unsupported"
-            _write_jsonl(result.claims_path, claims)
-
-            validation = validate_claim_outputs(
-                output_dir=output_dir,
-                source_set_id=source_set_id,
-                claims_path=result.claims_path,
-                entities_path=result.entities_path,
-                nodes_path=result.nodes_path,
-                edges_path=result.edges_path,
-                chunks_path=output_dir / "derived" / source_set_id / "chunks" / "chunks.jsonl",
-            )
-
-            self.assertFalse(validation["passed"])
-            self.assertFalse(_check(validation, "claim_types_are_supported")["passed"])
-            self.assertFalse(_check(validation, "no_unsupported_claims_emitted")["passed"])
 
     def test_claim_extraction_deduplicates_overlapping_claims_by_source_offsets(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -808,13 +768,6 @@ def _write_jsonl(path: Path, records: list[dict]) -> None:
         "".join(json.dumps(record, sort_keys=True) + "\n" for record in records),
         encoding="utf-8",
     )
-
-
-def _check(validation: dict, name: str) -> dict:
-    for check in validation["checks"]:
-        if check["name"] == name:
-            return check
-    raise AssertionError(f"Missing validation check {name}")
 
 
 def _phase(summary: dict, name: str) -> dict:
