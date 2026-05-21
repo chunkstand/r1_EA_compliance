@@ -2,14 +2,15 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-6 complete; Milestone 7 active after Sequence 25
+Status: Milestones 0-6 complete; Milestone 7 active after Sequence 26
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
 `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-6 are now closed, the
 document-plan runtime slice remains historical state from `1435cdb`, Milestone 5 closed a bounded
 shared-helper split across the capture and extraction/retrieval owner family, Milestone 6 closed
 the remaining applicability, claims, and evidence hotspot family, and Milestone 7 is now active on
-the eval/promotion orchestration packet after its first `phase_eval` owner split.
+the eval/promotion orchestration packet after its first `phase_eval` owner split and the bounded
+`phase_eval_direct_eval` owner closeout.
 
 ## Purpose
 
@@ -64,20 +65,31 @@ machine-local state.
   `phase_eval.py` remains the public facade for replay-context resolution, artifact loading,
   direct-eval coverage application, and summary writes, and the next Milestone 7 routing stays
   inside the eval/promotion family instead of reopening the closed applicability packet.
+- Milestone 7 sequence 26 now closes the `phase_eval_direct_eval` owner split:
+  `phase_eval_direct_eval_source_set.py` owns source-set direct-eval status resolution,
+  `phase_eval_direct_eval_review.py` owns declared-review direct-eval status resolution,
+  `phase_eval_direct_eval_support.py` owns shared direct-eval contract constants and parsing
+  helpers, and `phase_eval_direct_eval.py` is reduced to the public contract loader plus coverage
+  application facade.
 
 ### Architecture probe current baseline
 
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `261` code files detected;
-- `45` code files exceed `800` lines;
+- `264` code files detected;
+- `44` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
 - top hotspot:
   `src/usfs_r1_ea_sources/project_sow_package.py` with score `104370`;
 - highest local fan-out:
   `src.usfs_r1_ea_sources.cli_derived` imports `22` local modules;
+- new direct-eval owner surfaces:
+  `src.usfs_r1_ea_sources.phase_eval_direct_eval.py` is `372` lines,
+  `src.usfs_r1_ea_sources.phase_eval_direct_eval_source_set.py` is `763` lines,
+  `src.usfs_r1_ea_sources.phase_eval_direct_eval_review.py` is `481` lines, and
+  `src.usfs_r1_ea_sources.phase_eval_direct_eval_support.py` is `141` lines;
 - new phase-eval owner surfaces:
   `src.usfs_r1_ea_sources.phase_eval.py` is `648` lines,
   `src.usfs_r1_ea_sources.phase_eval_source_set_phases.py` is `644` lines,
@@ -1167,12 +1179,36 @@ Progress after Sequence 25 on 2026-05-21:
   reports; that residual state is pre-existing corpus readiness debt, not a new phase-eval
   regression from this sequence.
 
+Progress after Sequence 26 on 2026-05-21:
+
+- `phase_eval_direct_eval_source_set.py` now owns source-set direct-eval status resolution for
+  upstream, downstream, forest-plan profile, and forest-plan component retrieval coverage families
+  that previously remained inside `phase_eval_direct_eval.py`.
+- `phase_eval_direct_eval_review.py` now owns declared-review direct-eval status resolution for
+  `v1_ea_eval`, real-package review coverage, and forest-plan component review coverage that
+  previously remained inside `phase_eval_direct_eval.py`.
+- `phase_eval_direct_eval_support.py` now owns the shared direct-eval contract constants, JSON/path
+  helpers, numeric coercion helpers, and string-dedup support used by the direct-eval owner
+  family.
+- `phase_eval_direct_eval.py` is reduced to `372` lines from the pre-sequence `1675`-line
+  baseline while keeping `load_phase_eval_direct_eval_contract(...)`,
+  `resolve_phase_eval_direct_eval_coverage(...)`,
+  `apply_source_set_phase_direct_eval_gate(...)`, and
+  `build_evaluation_coverage_phase(...)` as the stable public facade.
+- `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` now list the extracted direct-eval
+  owner modules explicitly in the `phase_eval` container, and
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline to `44`.
+- The fresh architecture probe reports `264` code files, `44` files above `800`, one allowed
+  fan-out hotspot at `cli_derived=22`, `phase_eval_direct_eval.py=372`,
+  `phase_eval_direct_eval_source_set.py=763`, `phase_eval_direct_eval_review.py=481`,
+  `phase_eval_direct_eval_support.py=141`, and no Python or JS/TS import cycles.
+
 Remaining issue after closeout:
 
 - eval orchestration remains central, but the central owner files become smaller and their
   dependencies are more deliberate.
-- Milestone 7 remains active on `phase_eval_direct_eval.py`, then the broader `v1_ea_eval.py`,
-  `promotion_suite.py`, `upstream_evaluation.py`, and CLI orchestration owners.
+- Milestone 7 remains active on `v1_ea_eval.py`, then the broader `promotion_suite.py`,
+  `upstream_evaluation.py`, and CLI orchestration owners.
 
 ### Milestone 8 - Split Oversized Tests And Support Fixtures
 
