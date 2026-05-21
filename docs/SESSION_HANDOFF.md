@@ -16,6 +16,8 @@ claims/evidence family is closed.
   `reduced` for Milestone 6 sequence 12; the broader Milestone 6 family remains active
 - routed packet:
   `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- closeout commit:
+  `46d0d6b` (`Reduce architecture refactor Milestone 6 validation-facade seam`)
 - validation-artifact-owner closeout:
   `src/usfs_r1_ea_sources/applicability_validation_artifacts.py` now owns validation artifact-path
   resolution, artifact loading, artifact-hash summary assembly, and source-set/run-id inference

@@ -43,6 +43,8 @@ Latest closeout on 2026-05-20:
   `reduced` for Milestone 6; sequence 12 closes the remaining applicability validation
   artifact/freshness/provenance seam, but the broader claims/evidence hotspot family remains
   active.
+- Sequence 12 closeout commit:
+  `46d0d6b` (`Reduce architecture refactor Milestone 6 validation-facade seam`).
 - Implementation surfaces:
   `src/usfs_r1_ea_sources/applicability_validation.py`,
   `src/usfs_r1_ea_sources/applicability_validation_artifacts.py`,
