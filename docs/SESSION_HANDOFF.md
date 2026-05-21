@@ -1,9 +1,78 @@
 # Session Handoff
 
-Date: 2026-05-20
+Date: 2026-05-21
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
+
+## Overall Architecture Refactor Milestone 6 Sequence 24
+
+This twenty-fourth Milestone 6 slice closes the remaining `applicability_eval` owner family,
+records the new eval-owner modules in the architecture surfaces, and completes the broader
+applicability/evidence hotspot packet so routing can advance to Milestone 7 instead of remaining
+stuck inside the Milestone 6 umbrella.
+
+- outcome label:
+  `resolved` for Milestone 6 sequence 24; the broader Milestone 6 family is now complete
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- applicability-eval-runtime-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_eval_runtime.py` now owns deterministic applicability-eval
+  orchestration, case execution, and adjudication-template apply flow that previously remained in
+  `applicability_eval.py`
+- applicability-eval-authority-universe-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_eval_authority_universe.py` now owns eval-scoped
+  authority-universe fixture assembly, template/rule selection, and authority-family contract
+  shaping that previously remained in `applicability_eval.py`
+- applicability-eval-fixture-runtime-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_eval_fixture_runtime.py` now owns package-cache,
+  retrieval-index, and source-chunk materialization for eval fixtures that previously remained in
+  `applicability_eval.py`
+- applicability-eval-scoring-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_eval_scoring.py` now owns case rescoring, artifact rereads,
+  retrieval/graph alignment checks, generated-rule-pack identity checks, and failure taxonomy
+  scoring that previously remained in `applicability_eval.py`
+- applicability-eval-summary-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_eval_summary.py` now owns aggregate arbitration,
+  failure-category, and authority-family coverage summaries shared by applicability eval and
+  applicability gold eval
+- applicability-gold-eval-owner closeout:
+  `src/usfs_r1_ea_sources/applicability_eval_gold.py` now owns adjudicated gold-eval contract
+  checks and family-group coverage evaluation that previously remained in `applicability_eval.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/applicability_eval.py` keeps the public defaults, result types, eval
+  runners, and compatibility re-exports used by CLI, gold coverage, and existing tests without
+  changing callers
+- direct contract coverage:
+  `tests/test_applicability_eval.py` and `tests/test_gold_coverage_eval.py` still verify the
+  public applicability/gold eval surfaces end to end after the split
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists the extracted applicability-eval owner modules explicitly in the
+  eval container, and `docs/architecture_contract.toml` assigns all new modules to the `eval`
+  layer
+- live probe evidence:
+  the fresh architecture probe reports `259` code files, `46` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `applicability_eval.py` reduced to `32` lines from the pre-sequence `2655`-line baseline,
+  new modules `applicability_eval_runtime.py=373`,
+  `applicability_eval_authority_universe.py=653`,
+  `applicability_eval_fixture_runtime.py=261`,
+  `applicability_eval_scoring.py=767`,
+  `applicability_eval_summary.py=149`,
+  `applicability_eval_gold.py=498`,
+  `applicability_eval_support.py=197`, one fan-out hotspot at `cli_derived=22`, and no Python or
+  JS/TS import cycles
+- next routing:
+  Milestone 6 is complete. Advance to Milestone 7 on `phase_eval.py`; do not reopen the
+  applicability/evidence hotspot packet unless a fresh downstream gap appears
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py tests/test_gold_coverage_eval.py tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-eval --output-dir /tmp/usfs-r1-applicability-eval-closeout --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --eval-file config/applicability_eval_seed.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gold-eval --output-dir /tmp/usfs-r1-applicability-gold-closeout --base-rule-pack config/compliance_rule_pack_nepa_ea_v0.json --gold-file config/applicability_gold_eval_v0.json`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
 
 ## Overall Architecture Refactor Milestone 6 Sequence 23
 

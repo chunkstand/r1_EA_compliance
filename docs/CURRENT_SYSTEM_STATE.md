@@ -33,6 +33,64 @@ aggregate real-package coverage gate is green without the preserved West
 Reservoir package authority are historical only after the 2026-05-20
 Applicability-First Milestone 10 closeout and alignment described below.
 
+## Overall Architecture Refactor Milestone 6 Sequence 24
+
+Latest closeout on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone 6; sequence 24 closes the remaining `applicability_eval`
+  owner family and completes the broader applicability/evidence hotspot packet.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/applicability_eval.py`,
+  `src/usfs_r1_ea_sources/applicability_eval_runtime.py`,
+  `src/usfs_r1_ea_sources/applicability_eval_authority_universe.py`,
+  `src/usfs_r1_ea_sources/applicability_eval_fixture_runtime.py`,
+  `src/usfs_r1_ea_sources/applicability_eval_scoring.py`,
+  `src/usfs_r1_ea_sources/applicability_eval_summary.py`,
+  `src/usfs_r1_ea_sources/applicability_eval_gold.py`,
+  `src/usfs_r1_ea_sources/applicability_eval_support.py`,
+  `src/usfs_r1_ea_sources/gold_coverage_eval.py`,
+  `tests/test_applicability_eval.py`,
+  `tests/test_gold_coverage_eval.py`,
+  `docs/ARCHITECTURE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/architecture_contract.toml`, and
+  `tests/test_architecture_quality.py`.
+- Eval owner split closeout:
+  `applicability_eval_runtime.py` now owns deterministic applicability-eval orchestration and
+  adjudication-apply flow; `applicability_eval_authority_universe.py` now owns eval-scoped
+  authority-universe fixture assembly and template/rule selection;
+  `applicability_eval_fixture_runtime.py` now owns package/source fixture materialization;
+  `applicability_eval_scoring.py` now owns case rescoring, artifact rereads, retrieval/graph
+  alignment, and generated-rule-pack identity checks; `applicability_eval_summary.py` now owns
+  aggregate arbitration and authority-family coverage summaries; and
+  `applicability_eval_gold.py` now owns adjudicated gold-eval contract checks.
+- Facade-preserving routing:
+  `applicability_eval.py` now keeps the public defaults, result types, eval runners, and
+  compatibility re-exports used by CLI, gold coverage, and the existing test surface.
+- Direct contract coverage:
+  `tests/test_applicability_eval.py` and `tests/test_gold_coverage_eval.py` still verify the
+  public applicability/gold eval surfaces end to end after the split.
+- Live probe evidence:
+  the fresh architecture probe reports `259` code files, `46` files above `800`, no Python or
+  JS/TS import cycles, top hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score
+  `104370`, `applicability_eval.py` reduced to `32` lines from the pre-sequence `2655`-line
+  baseline, `applicability_eval_runtime.py` at `373` lines,
+  `applicability_eval_authority_universe.py` at `653` lines,
+  `applicability_eval_fixture_runtime.py` at `261` lines,
+  `applicability_eval_scoring.py` at `767` lines,
+  `applicability_eval_summary.py` at `149` lines,
+  `applicability_eval_gold.py` at `498` lines,
+  `applicability_eval_support.py` at `197` lines, and one allowed fan-out hotspot at
+  `cli_derived=22`.
+- Next routing:
+  Milestone 6 is complete. Advance to Milestone 7 on `phase_eval.py`; do not reopen the
+  applicability/evidence hotspot packet unless a fresh downstream gap appears.
+
 ## Overall Architecture Refactor Milestone 6 Sequence 23
 
 Latest closeout on 2026-05-20:

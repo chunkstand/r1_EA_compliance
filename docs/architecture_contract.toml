@@ -258,6 +258,13 @@ name = "eval"
 summary = "Applicability and V1 EA promotion/evaluation commands."
 modules = [
   "applicability_eval",
+  "applicability_eval_authority_universe",
+  "applicability_eval_fixture_runtime",
+  "applicability_eval_gold",
+  "applicability_eval_runtime",
+  "applicability_eval_scoring",
+  "applicability_eval_summary",
+  "applicability_eval_support",
   "draft_generation_eval",
   "forest_plan_component_retrieval_eval",
   "forest_plan_profile_eval",

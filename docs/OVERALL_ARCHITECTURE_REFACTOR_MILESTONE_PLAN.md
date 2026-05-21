@@ -2,13 +2,14 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-5 complete; Milestone 6 active after Sequence 23
+Status: Milestones 0-6 complete; Milestone 7 next
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
-`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-5 are now closed, the
-document-plan runtime slice remains historical state from `1435cdb`, Milestone 5 has now closed a
-bounded shared-helper split across the capture and extraction/retrieval owner family, and
-Milestone 6 is now active on the applicability, claims, and evidence hotspot surfaces.
+`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-6 are now closed, the
+document-plan runtime slice remains historical state from `1435cdb`, Milestone 5 closed a bounded
+shared-helper split across the capture and extraction/retrieval owner family, Milestone 6 closed
+the remaining applicability, claims, and evidence hotspot family, and Milestone 7 is now the next
+routed eval/promotion orchestration packet.
 
 ## Purpose
 
@@ -48,34 +49,38 @@ machine-local state.
   `source_set_support.py` owns the shared derived-output path and support-document-role helpers
   now used directly by `extract.py`, `retrieval.py`, `extraction_accuracy.py`,
   `claim_extraction.py`, `evidence_graph.py`, `phase_eval.py`, and `rule_claim_binding.py`.
-- Milestone 6 sequence 23 now closes the `applicability-rule-pack` support, runtime, and
-  validation owner seams: `applicability_rule_pack_support.py` now owns rule-pack artifact paths,
-  IO, identity helpers, and validation-hash support; `applicability_rule_pack_runtime.py` now
-  owns deterministic generated-rule-pack assembly and metadata shaping; and
-  `applicability_rule_pack_validation.py` now owns rule-pack validation checks.
-  `applicability_rule_pack.py` is reduced to the public generate/validate facade. Sequence 23
-  closeout also removes the downstream replay-contract gap exposed by the split:
-  `phase_eval_optional_phases.py` now validates final-QA packets against the contract paths
-  recorded in the packet, `final_qa_certification.py` now exposes that contract-path inference,
-  and the synthetic compliance phase-eval support is split across
-  `tests/support/compliance_phase_eval_fixtures.py` and
-  `tests/support/compliance_phase_eval_contracts.py` so the review-scoped decision-support and
-  final-QA packets remain replayable without creating a new oversized test owner. The next
-  executable slice now advances to `applicability_eval.py` inside Milestone 6.
+- Milestone 6 sequence 24 now closes the remaining `applicability_eval` owner family:
+  `applicability_eval_runtime.py` now owns deterministic eval orchestration,
+  `applicability_eval_authority_universe.py` now owns authority-universe fixture assembly and
+  template/rule selection, `applicability_eval_fixture_runtime.py` now owns package/source fixture
+  materialization, `applicability_eval_scoring.py` now owns case rescoring and artifact-gap
+  evaluation, `applicability_eval_summary.py` now owns aggregate arbitration and family-coverage
+  summaries, and `applicability_eval_gold.py` now owns adjudicated gold-eval contract checks.
+  `applicability_eval.py` is reduced to a public facade, the final Milestone 6 oversized-file
+  owner is now closed, and the umbrella packet can route forward to Milestone 7.
 
 ### Architecture probe current baseline
 
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `252` code files detected;
-- `47` code files exceed `800` lines;
+- `259` code files detected;
+- `46` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
 - top hotspot:
   `src/usfs_r1_ea_sources/project_sow_package.py` with score `104370`;
 - highest local fan-out:
   `src.usfs_r1_ea_sources.cli_derived` imports `22` local modules;
+- new eval-owner surfaces:
+  `src.usfs_r1_ea_sources.applicability_eval.py` is `32` lines,
+  `src.usfs_r1_ea_sources.applicability_eval_runtime.py` is `373` lines,
+  `src.usfs_r1_ea_sources.applicability_eval_authority_universe.py` is `653` lines,
+  `src.usfs_r1_ea_sources.applicability_eval_fixture_runtime.py` is `261` lines,
+  `src.usfs_r1_ea_sources.applicability_eval_scoring.py` is `767` lines,
+  `src.usfs_r1_ea_sources.applicability_eval_summary.py` is `149` lines,
+  `src.usfs_r1_ea_sources.applicability_eval_gold.py` is `498` lines, and
+  `src.usfs_r1_ea_sources.applicability_eval_support.py` is `197` lines;
 - new shared helper fan-in:
   `src.usfs_r1_ea_sources.capture_run_support` is already imported by `5` local modules;
 - new applicability and claims owner surfaces:
@@ -684,8 +689,8 @@ Remaining issue after closeout:
 
 ### Milestone 6 - Split Applicability, Claims, And Evidence Hotspots
 
-Outcome label: `reduced`
-Status: active after Sequence 16
+Outcome label: `resolved`
+Status: complete after Sequence 24
 
 Purpose: reduce the largest concentration in the applicability decision family and the adjacent
 claims/evidence hotspots without weakening downstream gates.
@@ -712,6 +717,13 @@ Owner family:
 - `applicability_decisions.py`
 - `applicability_validation.py`
 - `applicability_eval.py`
+- `applicability_eval_authority_universe.py`
+- `applicability_eval_fixture_runtime.py`
+- `applicability_eval_gold.py`
+- `applicability_eval_runtime.py`
+- `applicability_eval_scoring.py`
+- `applicability_eval_summary.py`
+- `applicability_eval_support.py`
 - `applicability_retrieval.py`
 - `applicability_rule_pack.py`
 - `applicability_rule_pack_runtime.py`
@@ -738,6 +750,30 @@ Implementation:
    formatting into narrower owner modules.
 2. Keep rule-pack generation and rule-claim binding explicit and test-covered.
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
+
+Progress after Sequence 24 on 2026-05-21:
+
+- `applicability_eval_runtime.py` now owns deterministic applicability-eval orchestration, case
+  execution, and adjudication-template apply flow that previously remained inside
+  `applicability_eval.py`.
+- `applicability_eval_authority_universe.py` now owns eval-scoped authority-universe fixture
+  assembly, template/rule candidate selection, and authority-family contract shaping that
+  previously remained inside `applicability_eval.py`.
+- `applicability_eval_fixture_runtime.py` now owns package-cache, retrieval-index, and source
+  chunk materialization for eval fixtures that previously remained inside `applicability_eval.py`.
+- `applicability_eval_scoring.py` now owns case rescoring, artifact rereads, retrieval/graph
+  alignment checks, generated-rule-pack identity checks, and failure taxonomy scoring that
+  previously remained inside `applicability_eval.py`.
+- `applicability_eval_summary.py` now owns aggregate arbitration, failure-category, and
+  authority-family coverage summaries used by both applicability eval and applicability gold eval.
+- `applicability_eval_gold.py` now owns adjudicated gold-eval contract checks and family-group
+  coverage evaluation that previously remained inside `applicability_eval.py`.
+- `tests/test_applicability_eval.py` and `tests/test_gold_coverage_eval.py` keep the public
+  applicability/gold eval surfaces covered end to end, `applicability_eval.py` is reduced to
+  `32` lines from the pre-sequence `2655`-line baseline, the largest extracted owner lands at
+  `767` lines, `tests/test_architecture_quality.py` tightens the oversized-file baseline to `46`,
+  and the fresh architecture probe reports `259` code files, `46` files above `800`, one allowed
+  fan-out hotspot at `cli_derived=22`, and no Python or JS/TS cycles.
 
 Progress after Sequence 23 on 2026-05-20:
 
@@ -1064,14 +1100,13 @@ Progress after Sequence 12 on 2026-05-20:
   `applicability_candidate_assembly.py` seams remain under the `800`-line gate at `594` and `722`
   lines.
 
-Remaining issue after closeout:
+Resolved scope after closeout:
 
-- The applicability validation family is now reduced to explicit owners, and the claim-graph,
-  claim-eval, claim-validation, claim-runtime, rule-claim-eval, rule-claim-validation,
-  rule-claim-runtime, evidence-graph-validation, package-fact, applicability-retrieval, and
-  applicability-rule-pack seams are now closed, but the broader applicability/evidence hotspot
-  family remains open inside Milestone 6. The next routed slice advances to `applicability_eval.py`
-  before the umbrella packet can route forward to Milestone 7.
+- The applicability validation family, claim-graph, claim-eval, claim-validation, claim-runtime,
+  rule-claim-eval, rule-claim-validation, rule-claim-runtime, evidence-graph-validation,
+  package-fact, applicability-retrieval, applicability-rule-pack, and applicability-eval seams are
+  now all closed inside Milestone 6. The umbrella packet now routes forward to Milestone 7, with
+  `phase_eval.py` as the next bounded owner slice.
 
 ### Milestone 7 - Split Eval And Promotion Orchestration Hotspots
 
