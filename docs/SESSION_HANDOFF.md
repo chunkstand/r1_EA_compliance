@@ -5,6 +5,57 @@ Date: 2026-05-20
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 6 Sequence 17
+
+This seventeenth Milestone 6 slice closes the `rule-claim-eval` owner seam, records the new owner
+module in the architecture surfaces, and keeps the umbrella packet routed inside Milestone 6
+instead of pretending the broader claims/evidence family is closed.
+
+- outcome label:
+  `reduced` for Milestone 6 sequence 17; the broader Milestone 6 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- rule-claim-eval-owner closeout:
+  `src/usfs_r1_ea_sources/rule_claim_binding_eval.py` now owns deterministic rule-claim eval
+  scoring, legacy/current eval contract loading, coverage and metric-threshold checks, and
+  rule-claim readiness revalidation that previously remained in `rule_claim_binding.py`
+- facade-preserving routing:
+  `src/usfs_r1_ea_sources/rule_claim_binding.py` keeps the public `rule-claim-link`,
+  `rule-claim-validate`, and `rule-claim-eval` workflow surface, now holds the remaining
+  rule-matching and validation core, and re-exports `_load_validated_links_for_eval(...)` for
+  downstream consumers without changing callers
+- direct contract coverage:
+  `tests/test_rule_claim_binding_eval.py` now pins the extracted eval-contract, query/ranking, and
+  readiness seam directly, while `tests/test_rule_claim_binding.py` still verifies the public
+  rule-claim build, validation, and eval workflow end to end
+- architecture closeout:
+  `docs/ARCHITECTURE.md` now lists `rule_claim_binding_eval.py` explicitly in the
+  evidence-and-claims container, and `docs/architecture_contract.toml` assigns it to the `claims`
+  layer
+- live probe evidence:
+  the fresh architecture probe reports `232` code files, `52` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `rule_claim_binding.py` reduced to `1360` lines from the pre-sequence `2017`-line baseline,
+  new module `rule_claim_binding_eval.py=708`, `tests/test_rule_claim_binding.py` remains at `753`,
+  new test seam `tests/test_rule_claim_binding_eval.py=178`, one fan-out hotspot at
+  `cli_derived=22`, and no Python or JS/TS import cycles
+- residual risk:
+  `rule_claim_binding.py` still remains the owner of the remaining build, scoring, and validation
+  core, and the broader claims/evidence hotspot family is still open beyond the rule-claim eval
+  boundary
+- next routing:
+  continue Milestone 6 inside the same umbrella packet on the remaining `rule_claim_binding.py`
+  build and validation core, then `evidence_graph.py`, `package_fact_graph.py`,
+  `applicability_retrieval.py`, `applicability_rule_pack.py`, and `applicability_eval.py`; do not
+  advance to Milestone 7 yet
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_rule_claim_binding.py tests/test_rule_claim_binding_eval.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 6 Sequence 16
 
 This sixteenth Milestone 6 slice closes the `claim-runtime` owner seam, records the new owner

@@ -51,7 +51,7 @@ allowed_import_layers = ["foundation", "extraction", "retrieval"]
 [[layers]]
 name = "claims"
 summary = "Source-claim extraction and rule-claim binding."
-modules = ["claim_extraction", "claim_extraction_eval", "claim_extraction_graph", "claim_extraction_runtime", "claim_extraction_validation", "rule_claim_binding"]
+modules = ["claim_extraction", "claim_extraction_eval", "claim_extraction_graph", "claim_extraction_runtime", "claim_extraction_validation", "rule_claim_binding", "rule_claim_binding_eval"]
 allowed_import_layers = ["foundation", "extraction", "claims", "rule_packs"]
 
 [[layers]]
