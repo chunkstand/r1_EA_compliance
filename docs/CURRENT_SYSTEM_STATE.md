@@ -42,6 +42,8 @@ Latest closeout on 2026-05-20:
 - Outcome label:
   `reduced` for Milestone 6; sequence 13 closes the first `claim_extraction.py` graph-owner
   seam, but the broader claims/evidence hotspot family remains active.
+- Sequence 13 closeout commit:
+  `a3363ca` (`Reduce architecture refactor Milestone 6 claim-graph seam`).
 - Implementation surfaces:
   `src/usfs_r1_ea_sources/claim_extraction.py`,
   `src/usfs_r1_ea_sources/claim_extraction_graph.py`,

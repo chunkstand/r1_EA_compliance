@@ -15,6 +15,8 @@ inside Milestone 6 instead of pretending the broader claims/evidence family is c
   `reduced` for Milestone 6 sequence 13; the broader Milestone 6 family remains active
 - routed packet:
   `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- closeout commit:
+  `a3363ca` (`Reduce architecture refactor Milestone 6 claim-graph seam`)
 - claim-graph-owner closeout:
   `src/usfs_r1_ea_sources/claim_extraction_graph.py` now owns entity extraction and aggregation,
   claim graph node/edge assembly, and the claim-graph SQLite writer/checks that previously remained

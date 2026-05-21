@@ -123,8 +123,8 @@ From
   are now closed and the full file passes again; the remaining issue is test-owner size and
   coupling, not a blocked Flathead readiness seam or a shared-review-helper regression.
 - Durable context is high quality but expensive to scan:
-  `docs/SESSION_HANDOFF.md` is `11033` lines and append-only;
-  `docs/CURRENT_SYSTEM_STATE.md` is `4757` lines.
+  `docs/SESSION_HANDOFF.md` is `11035` lines and append-only;
+  `docs/CURRENT_SYSTEM_STATE.md` is `4759` lines.
 - Architecture doc routing needs an explicit canonical-path guard:
   on this macOS checkout the lowercase path aliases the tracked uppercase file, so path drift must
   be prevented by policy and tests rather than by maintaining two physical docs.
@@ -201,7 +201,7 @@ This plan acts as the current repo-wide architecture weak-point register until t
 | Debt-register drift | pre-closeout `TD-001` stale line reference against `batches.py:223` | `docs/TECH_DEBT_REGISTER.md`, debt tests | `tests/test_debt_contract.py` | resolved | closed |
 | Incomplete agent entrypoint | closed in `63e1160` and `1435cdb` | `document_plan.py`, CLI, agent docs | focused document-plan and CLI tests | resolved | closed |
 | Missing dependency declaration | closed by the current planner contract, which validates requests without a new external schema runtime dependency | document-planning surfaces | focused planner/CLI tests | resolved | closed |
-| Cold-start doc sprawl | handoff `11033` lines; current state `4757` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
+| Cold-start doc sprawl | handoff `11035` lines; current state `4759` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
 | Architecture doc path drift | uppercase path is canonical, but the checkout still needs a guard against lowercase-path drift | architecture docs and references | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
 | Non-hermetic proving dependency | West Reservoir replay context points at `/Users/chunkstand/Downloads/...` | replay-context and proving docs/config | proving-lane contract tests and docs readback | deferred | Milestone 9 |
 | Duplicated PDF/rendering helpers | shared PDF object and line renderer ownership now lives in `pdf_object_writer.py`; the owner-family split risk is narrower but not the same as the broader document-owner hotspot | reporting/document-output family | focused helper contract tests plus owner-family readback | resolved | closed |
@@ -699,6 +699,9 @@ Implementation:
 3. Split matching test files so the family can evolve without one giant test owner per subsystem.
 
 Progress after Sequence 13 on 2026-05-20:
+
+- Sequence 13 closeout commit:
+  `a3363ca` (`Reduce architecture refactor Milestone 6 claim-graph seam`).
 
 - `claim_extraction_graph.py` now owns entity extraction and aggregation, claim graph
   node/edge assembly, and the claim-graph SQLite writer/checks that previously remained inside
