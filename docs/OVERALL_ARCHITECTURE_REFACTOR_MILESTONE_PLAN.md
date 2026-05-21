@@ -2,15 +2,14 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-6 complete; Milestone 7 active after Sequence 28
+Status: Milestones 0-8 complete; Milestone 9 active after Sequence 50
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
-`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-6 are now closed, the
-document-plan runtime slice remains historical state from `1435cdb`, Milestone 5 closed a bounded
-shared-helper split across the capture and extraction/retrieval owner family, Milestone 6 closed
-the remaining applicability, claims, and evidence hotspot family, and Milestone 7 is now active on
-the eval/promotion orchestration packet after its first `phase_eval` owner split and the bounded
-`phase_eval_direct_eval` owner closeout.
+`docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-8 are now closed, the
+document-plan runtime slice remains historical state from `1435cdb`, the oversized runtime/test
+owner families through Milestone 8 are reduced below the active architecture gates, and Milestone 9
+is now active on the remaining West Reservoir replay-contract drift plus concise current-routing
+alignment before the final umbrella rebaseline.
 
 ## Purpose
 
@@ -77,89 +76,24 @@ machine-local state.
 From
 `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`:
 
-- `264` code files detected;
-- `44` code files exceed `800` lines;
+- `344` code files detected;
+- `24` code files exceed `800` lines;
 - no Python import cycles detected;
 - no JS/TS import cycles detected;
 - top hotspot:
   `src/usfs_r1_ea_sources/project_sow_package.py` with score `104370`;
-- highest local fan-out:
-  `src.usfs_r1_ea_sources.cli_derived` imports `22` local modules;
-- new direct-eval owner surfaces:
-  `src.usfs_r1_ea_sources.phase_eval_direct_eval.py` is `372` lines,
-  `src.usfs_r1_ea_sources.phase_eval_direct_eval_source_set.py` is `763` lines,
-  `src.usfs_r1_ea_sources.phase_eval_direct_eval_review.py` is `481` lines, and
-  `src.usfs_r1_ea_sources.phase_eval_direct_eval_support.py` is `141` lines;
-- new phase-eval owner surfaces:
-  `src.usfs_r1_ea_sources.phase_eval.py` is `648` lines,
-  `src.usfs_r1_ea_sources.phase_eval_source_set_phases.py` is `644` lines,
-  `src.usfs_r1_ea_sources.phase_eval_review_phases.py` is `782` lines, and
-  `src.usfs_r1_ea_sources.phase_eval_direct_eval.py` remains the next oversized owner at
-  `1675` lines;
-- new eval-owner surfaces:
-  `src.usfs_r1_ea_sources.applicability_eval.py` is `32` lines,
-  `src.usfs_r1_ea_sources.applicability_eval_runtime.py` is `373` lines,
-  `src.usfs_r1_ea_sources.applicability_eval_authority_universe.py` is `653` lines,
-  `src.usfs_r1_ea_sources.applicability_eval_fixture_runtime.py` is `261` lines,
-  `src.usfs_r1_ea_sources.applicability_eval_scoring.py` is `767` lines,
-  `src.usfs_r1_ea_sources.applicability_eval_summary.py` is `149` lines,
-  `src.usfs_r1_ea_sources.applicability_eval_gold.py` is `498` lines, and
-  `src.usfs_r1_ea_sources.applicability_eval_support.py` is `197` lines;
-- new shared helper fan-in:
-  `src.usfs_r1_ea_sources.capture_run_support` is already imported by `5` local modules;
-- new applicability and claims owner surfaces:
-  `src.usfs_r1_ea_sources.applicability_adjudication` is `740` lines,
-  `src.usfs_r1_ea_sources.applicability_adjudication_apply` is `443` lines,
-  `src.usfs_r1_ea_sources.applicability_validation_artifacts` is `173` lines,
-  `src.usfs_r1_ea_sources.applicability_validation_checks` is `791` lines,
-  `src.usfs_r1_ea_sources.applicability_validation_freshness` is `304` lines,
-  `src.usfs_r1_ea_sources.applicability_validation_support` is `171` lines,
-  `src.usfs_r1_ea_sources.applicability_authority_family_templates` is `417` lines and
-  `src.usfs_r1_ea_sources.applicability_authority_universe_contracts` is `594` lines,
-  `src.usfs_r1_ea_sources.applicability_contract_support` is `113` lines,
-  `src.usfs_r1_ea_sources.applicability_candidate_assembly` is `722` lines,
-  `src.usfs_r1_ea_sources.applicability_decision_arbitration` is `349` lines,
-  `src.usfs_r1_ea_sources.applicability_decision_coverage` is `227` lines,
-  `src.usfs_r1_ea_sources.applicability_decision_evidence` is `590` lines,
-  `src.usfs_r1_ea_sources.applicability_decision_forest_plan` is `128` lines,
-  `src.usfs_r1_ea_sources.applicability_decision_outputs` is `375` lines,
-  `src.usfs_r1_ea_sources.applicability_decisions` is down to `793` lines from the post-sequence-8
-  `916`-line baseline, `src.usfs_r1_ea_sources.applicability_validation` is down to `178` lines
-  from the post-sequence-11 `607`-line baseline, post-sequence-10 `1502`-line baseline, and
-  pre-sequence `2494`-line baseline, and `src/usfs_r1_ea_sources.applicability.py`
-  remains a `48`-line public facade after falling from the pre-sequence `2315`-line baseline
-  without introducing a new `>800` line file; `src.usfs_r1_ea_sources.claim_extraction.py`
-  is down to `458` lines from the post-sequence-15 `783`-line baseline, the post-sequence-14
-  `1328`-line baseline, the post-sequence-13 `2084`-line baseline, and the pre-sequence
-  `2503`-line baseline, `src.usfs_r1_ea_sources.claim_extraction_runtime.py` now owns the bounded
-  extraction runtime surface at `342` lines, `src.usfs_r1_ea_sources.claim_extraction_validation.py`
-  now owns the bounded validation surface at `614` lines, `src.usfs_r1_ea_sources.claim_extraction_eval.py`
-  remains at the `800`-line gate, `src.usfs_r1_ea_sources.claim_extraction_graph.py` remains
-  below the gate at `457` lines, `src.usfs_r1_ea_sources.rule_claim_binding.py` is down to `508`
-  lines from the post-sequence-18 `849`-line baseline, the post-sequence-17 `1360`-line baseline,
-  and the pre-sequence `2017`-line baseline, `src.usfs_r1_ea_sources.rule_claim_binding_runtime.py`
-  now owns the bounded rule-claim runtime seam at `349` lines,
-  `src.usfs_r1_ea_sources.rule_claim_binding_eval.py` now owns the bounded rule-claim eval seam at
-  `708` lines, `src.usfs_r1_ea_sources.rule_claim_binding_validation.py` now owns the bounded
-  rule-claim validation seam at `592` lines, `src.usfs_r1_ea_sources.evidence_graph.py` is down to
-  `758` lines from the pre-sequence `1205`-line baseline, `src.usfs_r1_ea_sources.package_fact_graph.py`
-  is down to `597` lines from the pre-sequence `1469`-line baseline,
-  `src.usfs_r1_ea_sources.package_fact_graph_runtime.py` now owns the bounded package-fact
-  runtime seam at `610` lines,
-  `src.usfs_r1_ea_sources.package_fact_graph_terms.py` now owns the bounded package-fact term
-  surface at `534` lines, `src.usfs_r1_ea_sources.evidence_graph_validation.py` now owns the
-  bounded evidence-graph validation seam at `640` lines,
-  `src.usfs_r1_ea_sources.applicability_retrieval.py` is down to `589` lines from the pre-sequence
-  `1741`-line baseline, `src.usfs_r1_ea_sources.applicability_retrieval_runtime.py` now owns the
-  bounded retrieval runtime seam at `704` lines, and
-  `src.usfs_r1_ea_sources.applicability_retrieval_graph.py` now owns the bounded graph-trace seam
-  at `479` lines, `src.usfs_r1_ea_sources.applicability_rule_pack.py` is down to `331` lines from
-  the pre-sequence `1440`-line baseline, `src.usfs_r1_ea_sources.applicability_rule_pack_support.py`
-  now owns the bounded support seam at `219` lines,
-  `src.usfs_r1_ea_sources.applicability_rule_pack_runtime.py` now owns the bounded rule-pack
-  runtime seam at `363` lines, and
-  `src.usfs_r1_ea_sources.applicability_rule_pack_validation.py` now owns the bounded rule-pack
-  validation seam at `581` lines;
+- no local module exceeds the `20`-import fan-out gate;
+- no `tests/` or `tests/support/` owner exceeds the `800`-line reviewability gate;
+- the remaining largest runtime hotspots are
+  `project_sow_package.py`,
+  `nepa_knowledge_graph_export.py`,
+  `forest_plan_components.py`,
+  `ea_consistency_decision_support.py`, and
+  `extract.py`;
+- `docs/CURRENT_ROUTING.md` is now the concise first-stop routing surface; `README.md` and
+  `docs/AGENT_START_HERE.md` point to it ahead of the large append-only docs; and
+- `config/replay_contexts/west-reservoir-67436.json` no longer points at a user-home package path,
+  though the West Reservoir broader-EA replay contract remains stale.
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
 
@@ -188,15 +122,16 @@ From
   stale review-helper import from `ea_review.py` and the stale Flathead primary-plan fixture drift
   are now closed and the full file passes again; the remaining issue is test-owner size and
   coupling, not a blocked Flathead readiness seam or a shared-review-helper regression.
-- Durable context is high quality but expensive to scan:
-  `docs/SESSION_HANDOFF.md` is `11035` lines and append-only;
-  `docs/CURRENT_SYSTEM_STATE.md` is `4759` lines.
+- Durable context is still large and append-only, but cold-start cost is lower now that
+  `docs/CURRENT_ROUTING.md` provides a short first stop before the large handoff/current-state docs.
 - Architecture doc routing needs an explicit canonical-path guard:
   on this macOS checkout the lowercase path aliases the tracked uppercase file, so path drift must
   be prevented by policy and tests rather than by maintaining two physical docs.
-- Hermeticity is incomplete for at least one governed proving lane:
-  `docs/CURRENT_SYSTEM_STATE.md` still declares the preserved West Reservoir replay-context package
-  path under `/Users/chunkstand/Downloads/West Reservoir (67436)`.
+- Hermeticity is still incomplete for one governed proving lane:
+  West Reservoir no longer depends on a tracked user-home package path, but the broader-EA contract
+  still cannot be replayed from current repo-local state because `authority_explanation_paths.json`
+  is missing and the archived `source-set-5e65d845ce77e1a0` retrieval index is no longer
+  reviewer-ready in this checkout.
 - The low-level line/PDF writer is now centralized:
   `pdf_object_writer.py` owns the shared object serializer plus the common
   line-oriented PDF renderers used by
@@ -267,9 +202,9 @@ This plan acts as the current repo-wide architecture weak-point register until t
 | Debt-register drift | pre-closeout `TD-001` stale line reference against `batches.py:223` | `docs/TECH_DEBT_REGISTER.md`, debt tests | `tests/test_debt_contract.py` | resolved | closed |
 | Incomplete agent entrypoint | closed in `63e1160` and `1435cdb` | `document_plan.py`, CLI, agent docs | focused document-plan and CLI tests | resolved | closed |
 | Missing dependency declaration | closed by the current planner contract, which validates requests without a new external schema runtime dependency | document-planning surfaces | focused planner/CLI tests | resolved | closed |
-| Cold-start doc sprawl | handoff `11035` lines; current state `4759` lines | `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, start-here docs | doc routing readback plus handoff routing review | reduced | Milestone 9 |
+| Cold-start doc sprawl | `docs/CURRENT_ROUTING.md` now provides a short first-stop route ahead of the append-only handoff/current-state docs | `docs/CURRENT_ROUTING.md`, `README.md`, `docs/AGENT_START_HERE.md` | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
 | Architecture doc path drift | uppercase path is canonical, but the checkout still needs a guard against lowercase-path drift | architecture docs and references | `tests/test_architecture_quality.py` plus doc readback | resolved | closed |
-| Non-hermetic proving dependency | West Reservoir replay context points at `/Users/chunkstand/Downloads/...` | replay-context and proving docs/config | proving-lane contract tests and docs readback | deferred | Milestone 9 |
+| Non-hermetic proving dependency | West Reservoir replay context now points at repo-relative cached package authority, but `v1-ea-eval` still fails on missing `authority_explanation_paths.json` and cache-backed compliance reentry is blocked on archived retrieval readiness | replay-context and proving docs/config | proving-lane contract tests and docs readback | reduced | Milestone 9 |
 | Duplicated PDF/rendering helpers | shared PDF object and line renderer ownership now lives in `pdf_object_writer.py`; the owner-family split risk is narrower but not the same as the broader document-owner hotspot | reporting/document-output family | focused helper contract tests plus owner-family readback | resolved | closed |
 | Oversized test/fixture owners | live architecture probe now reports no `tests/` or `tests/support/` file above the `800`-line reviewability gate; remaining oversized owners are runtime/viewer families outside the Milestone 8 test packet | test families and support fixtures | architecture probe plus focused pytest slices | resolved | closed |
 
@@ -1828,10 +1763,29 @@ Progress after Sequence 49 on 2026-05-21:
 - `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`
   passes `10/10`, and `git diff --check` passes after the docs-only alignment slice.
 
+Progress after Sequence 50 on 2026-05-21:
+
+- `config/replay_contexts/west-reservoir-67436.json` now points `package_path` at the
+  repo-relative cache `source_library/reviews/west-reservoir-67436/package` instead of the former
+  user-home path.
+- `docs/CURRENT_ROUTING.md` is now the concise first-stop route for live workbook, catalog, and
+  architecture truth; `README.md` and `docs/AGENT_START_HERE.md` now point to it before the large
+  append-only docs.
+- `tests/test_architecture_quality.py` now forbids absolute replay-context package paths and keeps
+  the short routing doc linked from the primary cold-start surfaces.
+- `real-package-review-coverage-eval` remains red, but West Reservoir no longer fails on missing
+  package authority; the remaining red is the stale broader-EA contract mismatch from missing
+  `authority_explanation_paths.json`.
+- A cache-backed `compliance-review` replay using
+  `source_library/reviews/west-reservoir-67436/package` proves the remaining gap is not the old
+  user-home dependency: it now fails later on archived retrieval readiness for
+  `source-set-5e65d845ce77e1a0`.
+
 Remaining issue after closeout:
 
-- Milestone 8 is resolved. Advance the umbrella packet to Milestone 9 on the West Reservoir
-  user-home proving dependency plus cold-start doc routing drift.
+- Milestone 9 remains active on the stale West Reservoir broader-EA contract
+  (`authority_explanation_paths.json`) and archived retrieval-index replay drift; the tracked
+  user-home package path and cold-start routing drift are now closed.
 
 Resolved scope after closeout:
 
@@ -1858,8 +1812,9 @@ Implementation:
 
 Remaining issue after closeout:
 
-- some historical append-only context will remain by policy, but current routing and proving truth
-  are concise, canonical, and reproducible.
+- some historical append-only context will remain by policy, and the West Reservoir broader-EA
+  contract still needs either a repo-local replay repair or an explicit retirement/quarantine
+  decision before the umbrella packet can advance to Milestone 10.
 
 ### Milestone 10 - Final Architecture Rebaseline And Closeout
 

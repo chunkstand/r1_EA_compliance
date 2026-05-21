@@ -11,6 +11,9 @@ deterministic EA package review commands, and it now contains preserved legacy
 baseline artifacts, the active full-register canonical import, and
 reviewer-ready downstream lanes.
 
+For a short current route before this append-only state log, start with
+`docs/CURRENT_ROUTING.md`.
+
 Routing note: the newest forest-plan identity-reconciliation closeout, full-canonical final-blocker closeout,
 downstream-freshness reduced closeout, import-completion closeout,
 operational-recovery, and gold-coverage sections below supersede older
@@ -36,6 +39,46 @@ Older architecture references below that still route the oversized-test packet
 as open or still list pre-closeout Milestone 8 hotspot sizes such as
 `tests/test_phase_eval.py=954` are historical only after the 2026-05-21
 Milestone 8 alignment closeout described below.
+
+## Overall Architecture Refactor Milestone 9 Sequence 50
+
+Latest closeout on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced` for Milestone 9; sequence 50 removes the tracked user-home replay-context path and
+  adds a short current-routing surface, but the broader West Reservoir review-contract replay is
+  still not reproducible from current repo-local evidence.
+- Implementation surfaces:
+  `config/replay_contexts/west-reservoir-67436.json`,
+  `docs/CURRENT_ROUTING.md`,
+  `README.md`,
+  `docs/AGENT_START_HERE.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`,
+  `docs/SESSION_HANDOFF.md`, and
+  `tests/test_architecture_quality.py`.
+- Hermeticity closeout:
+  West Reservoir replay-context package authority now points at
+  `source_library/reviews/west-reservoir-67436/package` instead of a user-home path;
+  `real-package-review-coverage-eval` no longer fails on missing package authority for West
+  Reservoir, and the remaining failure is the stale broader-EA contract mismatch.
+- Cold-start routing closeout:
+  `docs/CURRENT_ROUTING.md` is now the concise first stop for active workbook, catalog, and
+  architecture routing; `README.md` and `docs/AGENT_START_HERE.md` now route through it before the
+  larger current-state and handoff docs.
+- Live probe evidence:
+  the fresh architecture probe still reports `344` code files, `24` files above `800`, no local
+  module above the `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- Residual system state:
+  `v1-ea-eval --review-id west-reservoir-67436` still fails on missing
+  `authority_explanation_paths.json`; a cache-backed `compliance-review` reentry using the repo
+  package cache is blocked because archived `source-set-5e65d845ce77e1a0` no longer has a
+  reviewer-ready retrieval index in this checkout.
+- Next routing:
+  keep Milestone 9 active on restoring or explicitly retiring that stale West Reservoir
+  broader-EA contract before Milestone 10 rebaseline.
 
 ## Overall Architecture Refactor Milestone 8 Sequence 49
 

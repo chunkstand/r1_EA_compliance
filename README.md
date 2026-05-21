@@ -8,10 +8,11 @@ workbook-defined source rows into a local, auditable source library, then builds
 retrieval, evidence graph, source-claim graph, rule-claim binding, and deterministic EA package
 review artifacts on top of that corpus.
 
-For agent-driven document work, start with `docs/AGENT_START_HERE.md`. The public
-`document-plan` command validates a normalized request packet, routes it to the supported document
-lane, and writes planning-only artifacts under `source_library/document_plans/<request_id>/`
-without generating canonical lane outputs.
+For agent-driven document work, start with `docs/AGENT_START_HERE.md`. For the concise live
+repo route, start with `docs/CURRENT_ROUTING.md`. The public `document-plan` command validates a
+normalized request packet, routes it to the supported document lane, and writes planning-only
+artifacts under `source_library/document_plans/<request_id>/` without generating canonical lane
+outputs.
 
 Current routed state on 2026-05-21:
 
@@ -21,10 +22,13 @@ Current routed state on 2026-05-21:
   `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
   and workbook SHA
   `1e7d7623f9633c37e953d74780c986426514d8a472082f3b95142266556505c8`.
+- `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
+  catalog, and architecture routing.
 - The current architecture packet in
-  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` has Milestone 8
-  resolved and now routes to Milestone 9 on the West Reservoir user-home
-  proving dependency plus cold-start doc routing drift.
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` has Milestone 9
+  active after Sequence 50: the tracked West Reservoir replay context now uses
+  repo-relative cached package authority, and the remaining routed gap is the
+  stale broader-EA artifact contract for `west-reservoir-67436`.
 - The latest architecture gate reports `344` code files, `24` above `800`
   lines, no Python or JS/TS import cycles, no source module above the
   `20`-import fan-out gate, and no `tests/` or `tests/support/` owner above

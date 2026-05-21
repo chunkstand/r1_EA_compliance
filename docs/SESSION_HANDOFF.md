@@ -5,6 +5,47 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
+
+## Overall Architecture Refactor Milestone 9 Sequence 50
+
+This fiftieth overall architecture-refactor slice removes the tracked
+West Reservoir user-home replay-context path, adds a concise current-routing
+surface, and proves the remaining West Reservoir gap is the stale broader-EA
+artifact contract rather than the old package-path dependency.
+
+- outcome label:
+  `reduced` for Milestone 9 sequence 50; the broader Milestone 9 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- hermeticity closeout:
+  `config/replay_contexts/west-reservoir-67436.json` now points `package_path` at the repo-relative
+  cache `source_library/reviews/west-reservoir-67436/package` instead of
+  `/Users/chunkstand/Downloads/West Reservoir (67436)`
+- routing closeout:
+  `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook, catalog, and
+  architecture routing, and `README.md` plus `docs/AGENT_START_HERE.md` now point to it before the
+  larger append-only docs
+- proving-lane readback:
+  `real-package-review-coverage-eval` no longer reports West Reservoir missing package authority;
+  the remaining red is the stale broader-EA contract mismatch from missing
+  `authority_explanation_paths.json`
+- residual system state:
+  a cache-backed `compliance-review` reentry using
+  `source_library/reviews/west-reservoir-67436/package` still fails because archived
+  `source-set-5e65d845ce77e1a0` no longer has a reviewer-ready retrieval index in this checkout,
+  so the repo cannot yet regenerate the missing broader-EA artifact from local state alone
+- next routing:
+  keep Milestone 9 active on restoring or explicitly retiring the stale West Reservoir
+  broader-EA reviewer-ready contract before the umbrella packet advances to Milestone 10
+- verification:
+  `PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --max-fan-out 20 --format markdown`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py tests/test_real_package_review_coverage_eval.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 49
 
 This forty-ninth overall architecture-refactor slice closes the remaining

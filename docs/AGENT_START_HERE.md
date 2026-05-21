@@ -4,8 +4,8 @@ Date: 2026-05-21
 
 Use this file as the first stop for agent-driven document work in this repo.
 It tells you which existing lane to use and when to refuse the request.
-For non-document repo state, route to `docs/CURRENT_SYSTEM_STATE.md` and
-`docs/SESSION_HANDOFF.md` after this quick read.
+For non-document repo state, route through `docs/CURRENT_ROUTING.md` after this
+quick read.
 
 ## First Step
 
@@ -32,13 +32,14 @@ The planner:
 
 ## Current Routing
 
+- `docs/CURRENT_ROUTING.md` is the concise first stop for live repo routing.
 - Live corpus/runtime truth is tracked in `docs/CURRENT_SYSTEM_STATE.md`.
 - Current routed work and recent closeout facts are tracked in
   `docs/SESSION_HANDOFF.md`.
 - The active umbrella architecture packet in
-  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` has Milestone 8
-  resolved and is now routed to Milestone 9 on the West Reservoir user-home
-  proving dependency plus cold-start doc routing drift.
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` has Milestone 9
+  active after Sequence 50 on the remaining archived West Reservoir
+  broader-EA artifact drift after removing the tracked user-home package path.
 
 ## Supported Lanes
 
@@ -71,6 +72,7 @@ legal sufficiency determinations, final agency decisions, or human approvals.
 ## Go Deeper
 
 - `README.md`
+- `docs/CURRENT_ROUTING.md`
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`
 - `docs/ARCHITECTURE.md`

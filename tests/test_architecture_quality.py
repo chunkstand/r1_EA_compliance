@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import json
 import subprocess
 from pathlib import Path
 
@@ -17,6 +18,9 @@ MAX_REVIEWABLE_LINES = 800
 MAX_ALLOWED_OVERSIZED_FILES = 24
 MAX_ALLOWED_FAN_OUT = 20
 ALLOWED_HIGH_FAN_OUT_MODULES: set[str] = set()
+REPLAY_CONTEXT_DIR = REPO_ROOT / "config" / "replay_contexts"
+CURRENT_ROUTING_PATH = REPO_ROOT / "docs" / "CURRENT_ROUTING.md"
+MAX_CURRENT_ROUTING_LINES = 40
 
 
 def test_large_file_count_does_not_grow() -> None:
@@ -55,6 +59,31 @@ def test_architecture_doc_path_stays_canonical() -> None:
     assert "Canonical architecture doc path: `docs/ARCHITECTURE.md`" in architecture_doc.read_text(
         encoding="utf-8"
     )
+
+
+def test_replay_context_package_paths_stay_repo_relative() -> None:
+    for config_path in sorted(REPLAY_CONTEXT_DIR.glob("*.json")):
+        payload = json.loads(config_path.read_text(encoding="utf-8"))
+        package_path = payload.get("package_path")
+        if not package_path:
+            continue
+        declared_path = Path(str(package_path))
+        assert not declared_path.is_absolute(), config_path
+        assert ".." not in declared_path.parts, config_path
+
+
+def test_current_routing_doc_stays_short_and_linked() -> None:
+    assert CURRENT_ROUTING_PATH.exists()
+
+    current_routing = CURRENT_ROUTING_PATH.read_text(encoding="utf-8")
+    assert len(current_routing.splitlines()) <= MAX_CURRENT_ROUTING_LINES
+    assert "docs/CURRENT_SYSTEM_STATE.md" in current_routing
+    assert "docs/SESSION_HANDOFF.md" in current_routing
+
+    readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+    start_here = (REPO_ROOT / "docs" / "AGENT_START_HERE.md").read_text(encoding="utf-8")
+    assert "docs/CURRENT_ROUTING.md" in readme
+    assert "docs/CURRENT_ROUTING.md" in start_here
 
 
 def _code_paths() -> list[Path]:
