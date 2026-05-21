@@ -5,6 +5,67 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 47
+
+This forty-seventh overall architecture-refactor slice closes the
+`tests/test_applicability.py` hotspot split, records the new applicability authority-universe
+support and CLI owners in the routed packet, and keeps the broader Milestone 8 test-hotspot packet
+moving on the final oversized test owner from the live architecture probe.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 47; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- applicability-authority-universe-support-owner closeout:
+  `tests/support/applicability_authority_universe_fixtures.py` now owns the catalog builders,
+  extraction-manifest fallback writer, base rule-pack fixture, authority-family template fixture,
+  component inventory fixtures, validation lookup helper, and JSON/JSONL writers that previously
+  remained inline in `tests/test_applicability.py`
+- applicability-authority-universe-snapshot-owner closeout:
+  `tests/test_applicability.py` now owns the authority-universe snapshot behavior and validation
+  contracts while importing its shared builders from the new support owner
+- applicability-authority-universe-cli-owner closeout:
+  `tests/test_applicability_cli.py` now owns the `applicability-authority-universe` CLI routing
+  and default-template loading coverage that previously remained inline in
+  `tests/test_applicability.py`
+- applicability-boundary-owner closeout:
+  `tests/test_applicability_test_boundary.py` now records the split line budgets, forbids the core
+  snapshot owner from retaining the CLI import, and pins sentinel ownership for the snapshot and
+  CLI suites after the split
+- direct contract coverage:
+  `tests/test_applicability.py`,
+  `tests/test_applicability_cli.py`,
+  `tests/test_applicability_test_boundary.py`,
+  `tests/test_applicability_authority_universe_builder.py`,
+  `tests/test_applicability_authority_universe_contracts.py`, and
+  `tests/test_applicability_candidate_assembly.py` still verify authority-universe snapshot
+  assembly, validation, default-template loading, CLI routing, and owner-boundary enforcement after
+  the split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `26` to `25`
+  after the `tests/test_applicability.py` hotspot is reduced below the `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `342` code files, `25` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_applicability.py=444`,
+  `tests/test_applicability_cli.py=124`,
+  `tests/test_applicability_test_boundary.py=113`, and
+  `tests/support/applicability_authority_universe_fixtures.py=359`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on authority-universe
+  snapshot/CLI test-owner routing and architecture gates because only test/support surfaces and
+  routed docs changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on `tests/test_phase_eval.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability.py tests/test_applicability_cli.py tests/test_applicability_test_boundary.py tests/test_applicability_authority_universe_builder.py tests/test_applicability_authority_universe_contracts.py tests/test_applicability_candidate_assembly.py -q`,
+  `PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --max-fan-out 20 --format markdown`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 46
 
 This forty-sixth overall architecture-refactor slice closes the

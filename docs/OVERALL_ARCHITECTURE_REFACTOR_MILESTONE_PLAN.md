@@ -1752,12 +1752,43 @@ Progress after Sequence 46:
   builders, component adjudication/eval review-phase coverage, and owner-boundary enforcement after
   the support split.
 
+Progress after Sequence 47:
+
+- `tests/support/applicability_authority_universe_fixtures.py` now owns the authority-universe
+  catalog builders, extraction-manifest fallback writer, base rule-pack fixture, authority-family
+  template fixture, component inventory fixtures, validation lookup, and JSON/JSONL writers that
+  previously remained inline inside `tests/test_applicability.py`.
+- `tests/test_applicability.py` now keeps the authority-universe snapshot behavior and validation
+  contracts that previously shared a giant mixed owner with CLI coverage and inline fixture
+  builders.
+- `tests/test_applicability_cli.py` now owns the `applicability-authority-universe` CLI routing and
+  default-template loading coverage that previously remained inline inside
+  `tests/test_applicability.py`.
+- `tests/test_applicability_test_boundary.py` now records the split line budgets, forbids the core
+  snapshot owner from retaining the CLI import, and pins sentinel ownership for the snapshot and
+  CLI suites after the split.
+- `tests/test_applicability.py` is reduced to `444` lines from the pre-sequence `893`-line
+  baseline, while
+  `tests/test_applicability_cli.py=124`,
+  `tests/test_applicability_test_boundary.py=113`, and
+  `tests/support/applicability_authority_universe_fixtures.py=359`.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `26` to `25`.
+- The fresh architecture probe reports `342` code files, `25` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_applicability.py=444`,
+  `tests/test_applicability_cli.py=124`,
+  `tests/test_applicability_test_boundary.py=113`, and
+  `tests/support/applicability_authority_universe_fixtures.py=359`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability.py tests/test_applicability_cli.py tests/test_applicability_test_boundary.py tests/test_applicability_authority_universe_builder.py tests/test_applicability_authority_universe_contracts.py tests/test_applicability_candidate_assembly.py -q`
+  passes `20/20`, preserving authority-universe snapshot assembly, validation, default-template
+  loading, CLI routing, and owner-boundary enforcement after the split.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_applicability.py`, which is now the next oversized
-  test-owner hotspot on the live architecture probe after the compliance-component support family
-  is reduced; `tests/test_phase_eval.py` remains the subsequent oversized test owner in the same
-  Milestone 8 packet.
+- Milestone 8 remains active on `tests/test_phase_eval.py`, which is now the final oversized
+  test-owner hotspot on the live architecture probe after the applicability authority-universe
+  family is reduced.
 
 Resolved scope after closeout:
 
