@@ -52,7 +52,7 @@ instructions for agents or privileged tools.
 | Document planning | Route normalized agent-authored document requests into existing supported document lanes without generating canonical lane outputs. | `document_plan.py` |
 | Decision support | Generate supervisor-facing EA consistency synthesis reports from audited review artifacts without replacing validation gates or legal judgment. | `ea_consistency_decision_support.py` |
 | Project planning | Generate proposed-action resource SOW requirements packages before a review package exists. | `project_sow_package.py` |
-| Eval | Score promoted review contracts, applicability quality, and manifest-driven promotion readiness. | `applicability_eval.py`, `applicability_eval_runtime.py`, `applicability_eval_gold.py`, `applicability_eval_scoring.py`, `applicability_eval_summary.py`, `applicability_eval_support.py`, `applicability_eval_authority_universe.py`, `applicability_eval_fixture_runtime.py`, `promotion_suite.py`, `v1_ea_eval.py` |
+| Eval | Score promoted review contracts, applicability quality, and manifest-driven promotion readiness. | `applicability_eval.py`, `applicability_eval_runtime.py`, `applicability_eval_gold.py`, `applicability_eval_scoring.py`, `applicability_eval_summary.py`, `applicability_eval_support.py`, `applicability_eval_authority_universe.py`, `applicability_eval_fixture_runtime.py`, `promotion_suite.py`, `v1_ea_eval.py`, `v1_ea_eval_support.py`, `v1_ea_eval_rule_expectations.py`, `v1_ea_eval_conditional.py`, `v1_ea_eval_forest_plan.py`, `v1_ea_eval_summary.py` |
 | CLI | Stable public command surface. | `cli.py`, `__main__.py`, `cli_*.py` |
 
 The source-set `phase_eval_results.json` path still lives under the

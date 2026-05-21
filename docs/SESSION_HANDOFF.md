@@ -5,65 +5,69 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
-## Overall Architecture Refactor Milestone 7 Sequence 26
+## Overall Architecture Refactor Milestone 7 Sequence 27
 
-This twenty-sixth overall architecture-refactor slice closes the `phase_eval_direct_eval` owner
-split, records the new direct-eval modules in the architecture surfaces, and lets the broader
-Milestone 7 eval/promotion packet advance to `v1_ea_eval.py` instead of staying pinned on the
-direct-eval contract owner.
+This twenty-seventh overall architecture-refactor slice closes the `v1_ea_eval` owner split,
+records the new V1 eval modules in the architecture surfaces, and lets the broader Milestone 7
+eval/promotion packet advance to `promotion_suite.py` instead of staying pinned on the V1 review
+eval owner.
 
 - outcome label:
-  `reduced` for Milestone 7 sequence 26; the broader Milestone 7 family remains active
+  `reduced` for Milestone 7 sequence 27; the broader Milestone 7 family remains active
 - routed packet:
   `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
-- direct-eval-source-set-owner closeout:
-  `src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py` now owns source-set direct-eval
-  status resolution for upstream, downstream, forest-plan profile, and forest-plan component
-  retrieval coverage families that previously remained in `phase_eval_direct_eval.py`
-- direct-eval-review-owner closeout:
-  `src/usfs_r1_ea_sources/phase_eval_direct_eval_review.py` now owns declared-review direct-eval
-  status resolution for `v1_ea_eval`, real-package review coverage, and forest-plan component
-  review coverage that previously remained in `phase_eval_direct_eval.py`
-- direct-eval-support-owner closeout:
-  `src/usfs_r1_ea_sources/phase_eval_direct_eval_support.py` now owns shared direct-eval contract
-  constants, JSON/path helpers, numeric coercion helpers, and string-dedup support used across the
-  direct-eval owner family
+- v1-eval-support-owner closeout:
+  `src/usfs_r1_ea_sources/v1_ea_eval_support.py` now owns eval-contract loading, review artifact
+  IO, review-identity matching, contract validation, and shared normalization/JSON helpers that
+  previously remained in `v1_ea_eval.py`
+- v1-eval-rule-owner closeout:
+  `src/usfs_r1_ea_sources/v1_ea_eval_rule_expectations.py` now owns section detection, baseline
+  authority alignment, rule-review expectation scoring, and applicability-decision
+  surrogate/evidence helpers that previously remained in `v1_ea_eval.py`
+- v1-eval-conditional-owner closeout:
+  `src/usfs_r1_ea_sources/v1_ea_eval_conditional.py` now owns conditional expectation scoring and
+  conditional adjudication-policy reporting that previously remained in `v1_ea_eval.py`
+- v1-eval-forest-plan-owner closeout:
+  `src/usfs_r1_ea_sources/v1_ea_eval_forest_plan.py` now owns forest-plan expectation scoring,
+  forest-plan authority bridge rows, and reviewer-resolution/component-adjudication helpers that
+  previously remained in `v1_ea_eval.py`
+- v1-eval-summary-owner closeout:
+  `src/usfs_r1_ea_sources/v1_ea_eval_summary.py` now owns check synthesis, metrics, failure
+  aggregation, lane-state evaluation, and contract-status calculation that previously remained in
+  `v1_ea_eval.py`
 - facade-preserving routing:
-  `src/usfs_r1_ea_sources/phase_eval_direct_eval.py` keeps the public
-  `load_phase_eval_direct_eval_contract(...)`,
-  `resolve_phase_eval_direct_eval_coverage(...)`,
-  `apply_source_set_phase_direct_eval_gate(...)`, and
-  `build_evaluation_coverage_phase(...)` surfaces and now owns only contract loading, source-set +
-  review orchestration calls, public gate application, and contract validation without changing
-  callers
+  `src/usfs_r1_ea_sources/v1_ea_eval.py` keeps the public `run_v1_ea_review_eval(...)` surface
+  and now owns only orchestration, payload assembly, and writeback without changing callers
 - direct contract coverage:
-  `tests/test_phase_eval_direct_eval_contracts.py` and `tests/test_phase_eval.py` still verify the
-  public direct-eval coverage surfaces end to end after the split
+  `tests/test_v1_ea_eval.py`, `tests/test_real_package_review_coverage_eval.py`, and
+  `tests/test_gold_coverage_eval.py` still verify the public V1 review eval surface and its
+  manifest-driven callers end to end after the split
 - architecture closeout:
-  `docs/ARCHITECTURE.md` now lists `phase_eval_direct_eval_source_set.py`,
-  `phase_eval_direct_eval_review.py`, and `phase_eval_direct_eval_support.py` explicitly in the
-  phase-eval container, and `docs/architecture_contract.toml` assigns all three new modules to the
-  `phase_eval` layer
+  `docs/ARCHITECTURE.md` now lists `v1_ea_eval_support.py`,
+  `v1_ea_eval_rule_expectations.py`, `v1_ea_eval_conditional.py`,
+  `v1_ea_eval_forest_plan.py`, and `v1_ea_eval_summary.py` explicitly in the eval container, and
+  `docs/architecture_contract.toml` assigns all five new modules to the `eval` layer
 - live probe evidence:
-  the fresh architecture probe reports `264` code files, `44` files above `800`, top hotspot
+  the fresh architecture probe reports `269` code files, `43` files above `800`, top hotspot
   `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
-  `phase_eval_direct_eval.py` reduced to `372` lines from the pre-sequence `1675`-line baseline,
-  new modules `phase_eval_direct_eval_source_set.py=763`,
-  `phase_eval_direct_eval_review.py=481`,
-  `phase_eval_direct_eval_support.py=141`, one allowed fan-out hotspot at `cli_derived=22`, and
-  no Python or JS/TS import cycles
+  `v1_ea_eval.py` reduced to `298` lines from the pre-sequence `2662`-line baseline, new modules
+  `v1_ea_eval_support.py=521`, `v1_ea_eval_rule_expectations.py=498`,
+  `v1_ea_eval_conditional.py=246`, `v1_ea_eval_forest_plan.py=502`,
+  `v1_ea_eval_summary.py=712`, one allowed fan-out hotspot at `cli_derived=22`, and no Python or
+  JS/TS import cycles
 - residual system state:
   the live source-set command
   `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --source-set-id source-set-f775524ab233ff27`
   still exits red because the current local corpus is missing downstream direct-eval artifacts for
   retrieval, claim extraction, and rule-claim binding and does not yet expose current semantic
   graph eval reports for the active source set; this is pre-existing corpus readiness debt, not a
-  new regression from the direct-eval owner split
+  new regression from the V1 eval owner split
 - next routing:
-  continue Milestone 7 inside the same umbrella packet on `v1_ea_eval.py`; do not advance to the
-  broader `promotion_suite.py` or CLI orchestration owners until the v1-eval seam is narrowed
+  continue Milestone 7 inside the same umbrella packet on `promotion_suite.py`; do not advance to
+  `upstream_evaluation.py` or the CLI orchestration owners until the promotion-suite seam is
+  narrowed
 - verification:
-  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_v1_ea_eval.py tests/test_real_package_review_coverage_eval.py tests/test_gold_coverage_eval.py tests/test_phase_eval_direct_eval_contracts.py -q`,
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
   `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
   `PYTHONPATH=src uv run --extra dev ruff check src tests`,

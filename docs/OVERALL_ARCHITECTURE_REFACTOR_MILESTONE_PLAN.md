@@ -2,7 +2,7 @@
 
 Date: 2026-05-20
 
-Status: Milestones 0-6 complete; Milestone 7 active after Sequence 26
+Status: Milestones 0-6 complete; Milestone 7 active after Sequence 27
 
 Owner context: This is the active repo-wide architecture refactor packet after the closed
 `docs/AGENT_LEGIBILITY_ENTRYPOINT_MILESTONE_PLAN.md` lane. Milestones 0-6 are now closed, the
@@ -1203,12 +1203,39 @@ Progress after Sequence 26 on 2026-05-21:
   `phase_eval_direct_eval_source_set.py=763`, `phase_eval_direct_eval_review.py=481`,
   `phase_eval_direct_eval_support.py=141`, and no Python or JS/TS import cycles.
 
+Progress after Sequence 27 on 2026-05-21:
+
+- `v1_ea_eval_support.py` now owns eval-contract loading, review artifact IO, review-identity
+  matching, contract validation, and shared normalization/JSON helpers that previously remained
+  inside `v1_ea_eval.py`.
+- `v1_ea_eval_rule_expectations.py` now owns section detection, baseline authority alignment,
+  rule-review expectation scoring, and applicability-decision surrogate/evidence helpers that
+  previously remained inside `v1_ea_eval.py`.
+- `v1_ea_eval_conditional.py` now owns conditional expectation scoring and conditional
+  adjudication-policy reporting that previously remained inside `v1_ea_eval.py`.
+- `v1_ea_eval_forest_plan.py` now owns forest-plan expectation scoring, forest-plan authority
+  bridge rows, and reviewer-resolution/component-adjudication helpers that previously remained
+  inside `v1_ea_eval.py`.
+- `v1_ea_eval_summary.py` now owns check synthesis, metrics, failure aggregation, lane-state
+  evaluation, and contract-status calculation that previously remained inside `v1_ea_eval.py`.
+- `v1_ea_eval.py` is reduced to `298` lines from the pre-sequence `2662`-line baseline while
+  keeping `run_v1_ea_review_eval(...)` as the stable public facade for orchestrating the owned
+  helpers and writing `v1_ea_eval_results.json`.
+- `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` now list the extracted V1 eval
+  owner modules explicitly in the `eval` container, and `tests/test_architecture_quality.py`
+  tightens the oversized-file baseline to `43`.
+- The fresh architecture probe reports `269` code files, `43` files above `800`, one allowed
+  fan-out hotspot at `cli_derived=22`, `v1_ea_eval.py=298`, `v1_ea_eval_support.py=521`,
+  `v1_ea_eval_rule_expectations.py=498`, `v1_ea_eval_conditional.py=246`,
+  `v1_ea_eval_forest_plan.py=502`, `v1_ea_eval_summary.py=712`, and no Python or JS/TS import
+  cycles.
+
 Remaining issue after closeout:
 
 - eval orchestration remains central, but the central owner files become smaller and their
   dependencies are more deliberate.
-- Milestone 7 remains active on `v1_ea_eval.py`, then the broader `promotion_suite.py`,
-  `upstream_evaluation.py`, and CLI orchestration owners.
+- Milestone 7 remains active on `promotion_suite.py`, then `upstream_evaluation.py`, and the CLI
+  orchestration owners.
 
 ### Milestone 8 - Split Oversized Tests And Support Fixtures
 

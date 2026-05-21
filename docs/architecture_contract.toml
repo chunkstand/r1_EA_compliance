@@ -279,6 +279,11 @@ modules = [
   "real_package_review_coverage_eval",
   "upstream_evaluation",
   "v1_ea_eval",
+  "v1_ea_eval_conditional",
+  "v1_ea_eval_forest_plan",
+  "v1_ea_eval_rule_expectations",
+  "v1_ea_eval_summary",
+  "v1_ea_eval_support",
 ]
 allowed_import_layers = [
   "foundation",
