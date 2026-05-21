@@ -5,6 +5,56 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 32
+
+This thirty-second overall architecture-refactor slice closes the `tests/test_cli.py` hotspot
+split, records the new command-family test owners in the routed packet, and lets the broader
+Milestone 8 test-hotspot packet advance to `tests/test_promotion_suite.py` instead of staying
+pinned on the oversized CLI test owner.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 32; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- cli-derived-test-owner closeout:
+  `tests/test_cli_derived.py` now owns derived CLI parser and handler coverage that previously
+  remained inline in `tests/test_cli.py`
+- cli-eval-test-owner closeout:
+  `tests/test_cli_eval.py` now owns eval-family CLI parser and handler coverage that previously
+  remained inline in `tests/test_cli.py`
+- cli-project-planning-test-owner closeout:
+  `tests/test_cli_project_planning.py` now owns project-planning CLI handler coverage that
+  previously remained inline in `tests/test_cli.py`
+- facade-preserving routing:
+  `tests/test_cli.py` keeps the command-group registration contract plus the core capture,
+  compliance, decision-support, final-QA, review-packet, and document-plan CLI assertions while
+  the extracted files preserve the public CLI parser and handler contract end to end
+- direct contract coverage:
+  `tests/test_cli.py`, `tests/test_cli_derived.py`, `tests/test_cli_eval.py`, and
+  `tests/test_cli_project_planning.py` still verify parser registration, argument propagation, and
+  exit-code behavior across the split CLI test surface after the extraction
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `41` to `40`
+  after the `tests/test_cli.py` hotspot is reduced below the `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `286` code files, `40` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`, `tests/test_cli.py=561`,
+  `tests/test_cli_derived.py=378`, `tests/test_cli_eval.py=496`,
+  `tests/test_cli_project_planning.py=462`, no remaining modules above the `20`-import fan-out
+  gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on CLI contract
+  coverage and architecture gates because only test-owner surfaces and routing docs changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on `tests/test_promotion_suite.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_cli_derived.py tests/test_cli_eval.py tests/test_cli_project_planning.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 7 Sequence 31
 
 This thirty-first overall architecture-refactor slice closes the `cli_derived` owner split,

@@ -1359,6 +1359,29 @@ Implementation:
 2. Split support fixtures only when the split increases ownership clarity.
 3. Keep or strengthen negative-path coverage for all extracted families.
 
+Progress after Sequence 32 on 2026-05-21:
+
+- `tests/test_cli_derived.py` now owns derived CLI parser and handler coverage that previously
+  remained inline inside `tests/test_cli.py`.
+- `tests/test_cli_eval.py` now owns eval-family CLI parser and handler coverage that previously
+  remained inline inside `tests/test_cli.py`.
+- `tests/test_cli_project_planning.py` now owns project-planning CLI handler coverage that
+  previously remained inline inside `tests/test_cli.py`.
+- `tests/test_cli.py` is reduced to `561` lines from the pre-sequence `1878`-line baseline while
+  keeping command-group contract coverage plus the core capture, compliance, decision-support,
+  final-QA, review-packet, and document-plan CLI assertions.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `41` to `40`.
+- The fresh architecture probe reports `286` code files, `40` files above `800`, no Python or
+  JS/TS import cycles, and no remaining modules above the `20`-import fan-out gate.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py tests/test_cli_derived.py tests/test_cli_eval.py tests/test_cli_project_planning.py -q`
+  passes `62/62`, preserving full CLI parser and handler option-propagation coverage after the
+  split.
+
+Remaining issue after closeout:
+
+- Milestone 8 remains active on `tests/test_promotion_suite.py`; do not advance to fixture-owner
+  splits until the next oversized eval-family test owner is reduced.
+
 Resolved scope after closeout:
 
 - the test suite no longer depends on a small number of giant owner files for major architecture
