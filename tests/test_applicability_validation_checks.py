@@ -11,8 +11,8 @@ from usfs_r1_ea_sources.applicability_validation_checks import check_human_adjud
 from usfs_r1_ea_sources.applicability_validation_support import read_json_if_exists
 from usfs_r1_ea_sources.applicability_validation_support import read_jsonl_if_exists
 
-from tests.test_applicability_decisions import _build_adjudicated_applicability_dir
-from tests.test_applicability_decisions import _write_decision_fixture
+from tests.support.applicability_decision_fixtures import _build_adjudicated_applicability_dir
+from tests.support.applicability_decision_fixtures import _write_decision_fixture
 
 
 def test_check_candidate_decisions_reports_missing_duplicate_and_unexpected() -> None:

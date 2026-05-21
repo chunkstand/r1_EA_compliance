@@ -13,7 +13,7 @@ from usfs_r1_ea_sources.applicability_adjudication_apply import (
 )
 from usfs_r1_ea_sources.applicability_decisions import build_applicability_decisions
 
-from tests.test_applicability_decisions import _write_decision_fixture
+from tests.support.applicability_decision_fixtures import _write_decision_fixture
 
 
 def test_template_pins_unresolved_decisions_directly() -> None:

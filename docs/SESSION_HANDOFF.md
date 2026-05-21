@@ -5,6 +5,71 @@ Date: 2026-05-21
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
+## Overall Architecture Refactor Milestone 8 Sequence 35
+
+This thirty-fifth overall architecture-refactor slice closes the
+`tests/test_applicability_decisions.py` hotspot split, records the new applicability decision test
+owners plus shared support fixtures in the routed packet, and keeps the broader Milestone 8
+test-hotspot packet moving on the next oversized test owner from the live architecture probe.
+
+- outcome label:
+  `reduced` for Milestone 8 sequence 35; the broader Milestone 8 family remains active
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- applicability-decision-fixture-owner closeout:
+  `tests/support/applicability_decision_fixtures.py` now owns the shared applicability fixture
+  builder, adjudicated applicability directory helper, generated base rule-pack fixture, and
+  candidate-authority builders that previously lived at the bottom of
+  `tests/test_applicability_decisions.py`
+- applicability-decision-support-owner closeout:
+  `tests/support/applicability_decision_support.py` now owns the forest-plan candidate builders,
+  package/source chunk fixture writers, and JSON/JSONL helpers that previously lived at the bottom
+  of `tests/test_applicability_decisions.py`
+- applicability-validation-owner closeout:
+  `tests/test_applicability_validation.py` now owns the validation, adjudication, forest-plan
+  scope-miss, and CLI validation artifact coverage that previously remained inline in
+  `tests/test_applicability_decisions.py`
+- applicability-rule-pack-owner closeout:
+  `tests/test_applicability_rule_pack.py` now owns the generated-rule-pack and CLI
+  generated-pack artifact coverage that previously remained inline in
+  `tests/test_applicability_decisions.py`
+- facade-preserving routing:
+  `tests/test_applicability_decisions.py` keeps the decision-artifact, arbitration,
+  source-evidence fallback, and CLI decision-output coverage while the extracted files preserve the
+  validation and generated-rule-pack surfaces end to end
+- direct contract coverage:
+  `tests/test_applicability_decisions.py`, `tests/test_applicability_validation.py`,
+  `tests/test_applicability_rule_pack.py`, `tests/test_applicability_validation_artifacts.py`,
+  `tests/test_applicability_rule_pack_runtime.py`,
+  `tests/test_applicability_rule_pack_validation.py`, `tests/test_applicability_adjudication.py`,
+  and `tests/test_applicability_validation_checks.py` still verify decision artifacts,
+  adjudication resolution, rule-pack generation, artifact freshness, validation checks, and
+  runtime materialization after the split
+- architecture closeout:
+  `tests/test_architecture_quality.py` tightens the oversized-file baseline from `38` to `37`
+  after the `tests/test_applicability_decisions.py` hotspot is reduced below the `800`-line gate
+- live probe evidence:
+  the fresh architecture probe reports `298` code files, `37` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_applicability_decisions.py=526`, `tests/test_applicability_validation.py=488`,
+  `tests/test_applicability_rule_pack.py=330`,
+  `tests/support/applicability_decision_fixtures.py=493`,
+  `tests/support/applicability_decision_support.py=365`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles
+- residual system state:
+  runtime behavior is unchanged in this slice; the verification focus stayed on applicability
+  decision contracts, support-fixture routing, and architecture gates because only test-owner
+  surfaces and routing docs changed
+- next routing:
+  continue the same umbrella packet inside Milestone 8 on `tests/test_compliance_review.py`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_validation.py tests/test_applicability_rule_pack.py tests/test_applicability_validation_artifacts.py tests/test_applicability_rule_pack_runtime.py tests/test_applicability_rule_pack_validation.py tests/test_applicability_adjudication.py tests/test_applicability_validation_checks.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 8 Sequence 34
 
 This thirty-fourth overall architecture-refactor slice closes the `tests/test_v1_ea_eval.py`

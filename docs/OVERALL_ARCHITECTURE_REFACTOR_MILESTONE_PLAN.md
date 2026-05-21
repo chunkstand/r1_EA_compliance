@@ -1432,11 +1432,46 @@ Progress after Sequence 34 on 2026-05-21:
   passes `27/27`, preserving the broader-EA, forest-plan, repair-baseline, CLI, and tracked
   manifest contract coverage across the split `v1_ea_eval` owner surface.
 
+Progress after Sequence 35 on 2026-05-21:
+
+- `tests/support/applicability_decision_fixtures.py` now owns the shared applicability fixture
+  builder, adjudicated applicability directory helper, generated base rule-pack fixture, and
+  candidate-authority builders that previously lived at the bottom of
+  `tests/test_applicability_decisions.py`.
+- `tests/support/applicability_decision_support.py` now owns the forest-plan candidate builders,
+  package/source chunk fixture writers, and JSON/JSONL helpers that previously lived at the bottom
+  of `tests/test_applicability_decisions.py`.
+- `tests/test_applicability_validation.py` now owns the validation, adjudication, forest-plan
+  scope-miss, and CLI validation artifact coverage that previously remained inline inside
+  `tests/test_applicability_decisions.py`.
+- `tests/test_applicability_rule_pack.py` now owns the generated-rule-pack and CLI generated-pack
+  artifact coverage that previously remained inline inside `tests/test_applicability_decisions.py`.
+- `tests/test_applicability_validation_artifacts.py`,
+  `tests/test_applicability_rule_pack_runtime.py`,
+  `tests/test_applicability_rule_pack_validation.py`,
+  `tests/test_applicability_adjudication.py`, and
+  `tests/test_applicability_validation_checks.py` now import their shared applicability fixtures
+  from the new `tests/support/` owner instead of reaching into a giant test module.
+- `tests/test_applicability_decisions.py` is reduced to `526` lines from the pre-sequence
+  `2138`-line baseline while keeping the decision-artifact, arbitration, source-evidence fallback,
+  and CLI decision-output coverage.
+- `tests/test_architecture_quality.py` tightens the oversized-file baseline from `38` to `37`.
+- The fresh architecture probe reports `298` code files, `37` files above `800`, top hotspot
+  `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`,
+  `tests/test_applicability_decisions.py=526`, `tests/test_applicability_validation.py=488`,
+  `tests/test_applicability_rule_pack.py=330`,
+  `tests/support/applicability_decision_fixtures.py=493`,
+  `tests/support/applicability_decision_support.py=365`, no remaining modules above the
+  `20`-import fan-out gate, and no Python or JS/TS import cycles.
+- `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_decisions.py tests/test_applicability_validation.py tests/test_applicability_rule_pack.py tests/test_applicability_validation_artifacts.py tests/test_applicability_rule_pack_runtime.py tests/test_applicability_rule_pack_validation.py tests/test_applicability_adjudication.py tests/test_applicability_validation_checks.py -q`
+  passes `40/40`, preserving decision, validation, adjudication, generated-rule-pack,
+  validation-artifact, validation-check, and rule-pack runtime coverage across the split
+  applicability owner surface.
+
 Remaining issue after closeout:
 
-- Milestone 8 remains active on `tests/test_applicability_decisions.py`, which is now the next
-  oversized test owner on the live architecture probe after the eval-family `tests/test_v1_ea_eval.py`
-  hotspot is reduced.
+- Milestone 8 remains active on `tests/test_compliance_review.py`, which is now the next oversized
+  test hotspot on the live architecture probe after the applicability decision family is reduced.
 
 Resolved scope after closeout:
 

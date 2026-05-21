@@ -16,8 +16,8 @@ from usfs_r1_ea_sources.applicability_validation_freshness import (
 )
 from usfs_r1_ea_sources.applicability_validation_freshness import check_provenance
 
-from tests.test_applicability_decisions import _build_adjudicated_applicability_dir
-from tests.test_applicability_decisions import _write_decision_fixture
+from tests.support.applicability_decision_fixtures import _build_adjudicated_applicability_dir
+from tests.support.applicability_decision_fixtures import _write_decision_fixture
 
 
 def _load_fixture_artifacts(tmp_dir: Path) -> tuple[dict, Path, dict[str, Path], dict]:
