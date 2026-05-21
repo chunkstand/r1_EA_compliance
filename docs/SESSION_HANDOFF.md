@@ -7,6 +7,39 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Overall Architecture Refactor Closeout Audit
+
+This follow-up audit keeps the already-resolved architecture umbrella honest: it removes stale
+live-state claims from the umbrella plan, records the missing final verification lines directly in
+that plan, and adds a regression guard so the closeout cannot silently drift back out of alignment.
+
+- outcome label:
+  `resolved`; the overall architecture umbrella remains closed after Milestone 10 Sequence 52
+- routed packet:
+  `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md`
+- closeout alignment:
+  the plan's top-level current-evidence, brittle-place, weak-point, and acceptance sections now
+  match the live closeout truth: `24` oversized files, no `>20` local fan-out modules, explicit
+  West Reservoir typed-blocked quarantine, and the narrower full-canonical compliance-gold
+  residual route
+- regression guard:
+  `tests/test_architecture_quality.py` now fails if the resolved umbrella plan drifts back to the
+  stale `50`/`54`/`57-to-45` live claims or loses the explicit Sequence 52 verification record
+- next routing:
+  unchanged; continue the remaining live red lane in
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --max-fan-out 20 --format markdown`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_real_package_review_coverage_eval.py tests/test_gold_coverage_eval.py tests/test_v1_ea_eval.py tests/test_v1_ea_eval_contracts.py tests/test_v1_ea_eval_forest_plan.py tests/test_promotion_suite.py tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id west-reservoir-67436`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52`,
+  bounded `gold-coverage-eval` replay using explicit results paths for applicability gold,
+  `compliance_gold_eval_seq52`, and `real_package_review_coverage_eval_results.json`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Overall Architecture Refactor Milestone 10 Sequence 52
 
 This fifty-second overall architecture-refactor slice closes the umbrella packet on truthful

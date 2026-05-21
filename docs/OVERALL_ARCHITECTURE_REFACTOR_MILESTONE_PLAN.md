@@ -94,7 +94,8 @@ From
 - `docs/CURRENT_ROUTING.md` is now the concise first-stop routing surface; `README.md` and
   `docs/AGENT_START_HERE.md` point to it ahead of the large append-only docs; and
 - `config/replay_contexts/west-reservoir-67436.json` no longer points at a user-home package path,
-  though the West Reservoir broader-EA replay contract remains stale.
+  and the stale West Reservoir reviewer-ready replay claim is now retired behind an explicit
+  typed-blocked contract.
 - suggested gates:
   `large-active-files`, `high-fan-out-modules`, and `hotspot-review`.
 
@@ -111,28 +112,21 @@ From
   and the remaining in-repo `extract._source_derived_dir` wrapper consumers; direct helper coverage
   now lives in `tests/test_source_set_support.py`. The remaining issue is not helper routing but
   file size: `extract.py` and `retrieval.py` still remain large.
-- Test monoliths are also large and highly active:
-  `tests/test_promotion_suite.py`, `tests/test_cli.py`, `tests/test_compliance_review.py`,
-  `tests/test_forest_plan_resolver.py`, `tests/test_project_sow_package.py`, and
-  `tests/test_extract.py`.
-- Debt governance and cheap architecture gates are now green, but the large-file count remains at
-  `50` code files over `800` lines and still requires owner-family reduction instead of more
-  policy work.
-- The compliance-output family still has oversized verification ownership:
-  `tests/test_compliance_review.py` is still a large mixed-owner file at `1418` lines, but the
-  stale review-helper import from `ea_review.py` and the stale Flathead primary-plan fixture drift
-  are now closed and the full file passes again; the remaining issue is test-owner size and
-  coupling, not a blocked Flathead readiness seam or a shared-review-helper regression.
+- The former oversized test/support owner packet is now closed:
+  no `tests/` or `tests/support/` file remains above the `800`-line reviewability gate, though
+  active test hotspots such as `tests/test_compliance_review.py`, `tests/test_cli.py`, and
+  `tests/test_promotion_suite.py` still matter because of churn.
+- Debt governance and cheap architecture gates are green, and the large-file count is now `24`
+  code files over `800` lines, down from the Milestone 0 baseline of `57`.
 - Durable context is still large and append-only, but cold-start cost is lower now that
   `docs/CURRENT_ROUTING.md` provides a short first stop before the large handoff/current-state docs.
-- Architecture doc routing needs an explicit canonical-path guard:
-  on this macOS checkout the lowercase path aliases the tracked uppercase file, so path drift must
-  be prevented by policy and tests rather than by maintaining two physical docs.
-- Hermeticity is still incomplete for one governed proving lane:
-  West Reservoir no longer depends on a tracked user-home package path, but the broader-EA contract
-  still cannot be replayed from current repo-local state because `authority_explanation_paths.json`
-  is missing and the archived `source-set-5e65d845ce77e1a0` retrieval index is no longer
-  reviewer-ready in this checkout.
+- Canonical path and replay-context guards are now executable:
+  the uppercase architecture-doc path and repo-relative replay-context package paths are both
+  enforced by `tests/test_architecture_quality.py`.
+- West Reservoir is now explicitly quarantined rather than implicitly stale:
+  the review remains repo-local for package authority, passes `v1-ea-eval` as
+  `contract_status="typed_blocked"`, and the remaining live red lane is routed into the narrower
+  full-canonical compliance-gold packet rather than left inside this closed umbrella.
 - The low-level line/PDF writer is now centralized:
   `pdf_object_writer.py` owns the shared object serializer plus the common
   line-oriented PDF renderers used by
@@ -198,8 +192,8 @@ This plan acts as the current repo-wide architecture weak-point register until t
 | Weak point | Current evidence | Owner surface | Prevention gate | Status | Next milestone |
 | --- | --- | --- | --- | --- | --- |
 | Dirty baseline overlap | pre-closeout worktree overlap is limited to this packet's architecture-governance docs; the document-plan lane already closed in `1435cdb` | `docs/SESSION_HANDOFF.md`, this plan, active worktree | `git status -sb` plus plan/handoff readback must show no runtime overlap from the closed packet | resolved | closed |
-| Large-file concentration | `54` code files over `800` lines | hotspot families listed in this plan | `tests/test_architecture_quality.py` plus architecture probe readback | guarded | Milestones 3-8 |
-| High-fan-out orchestration | `cli_derived` fan-out `22`; `cli_eval` and `phase_eval` also broad | `cli_*.py`, eval orchestration modules | `tests/test_architecture_quality.py` plus architecture probe readback | guarded | Milestones 3, 7 |
+| Large-file concentration | reduced from the Milestone 0 baseline of `57` to `24` code files over `800` lines | hotspot families listed in this plan | `tests/test_architecture_quality.py` plus architecture probe readback | resolved | closed |
+| High-fan-out orchestration | no local module exceeds the `20`-import fan-out gate after the `cli_derived` and eval-owner reductions | `cli_*.py`, eval orchestration modules | `tests/test_architecture_quality.py` plus architecture probe readback | resolved | closed |
 | Debt-register drift | pre-closeout `TD-001` stale line reference against `batches.py:223` | `docs/TECH_DEBT_REGISTER.md`, debt tests | `tests/test_debt_contract.py` | resolved | closed |
 | Incomplete agent entrypoint | closed in `63e1160` and `1435cdb` | `document_plan.py`, CLI, agent docs | focused document-plan and CLI tests | resolved | closed |
 | Missing dependency declaration | closed by the current planner contract, which validates requests without a new external schema runtime dependency | document-planning surfaces | focused planner/CLI tests | resolved | closed |
@@ -1781,6 +1775,13 @@ Progress after Sequence 50 on 2026-05-21:
   `source_library/reviews/west-reservoir-67436/package` proves the remaining gap is not the old
   user-home dependency: it now fails later on archived retrieval readiness for
   `source-set-5e65d845ce77e1a0`.
+- Verification:
+  `PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --max-fan-out 20 --format markdown`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py tests/test_real_package_review_coverage_eval.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`.
 
 Progress after Sequence 51 on 2026-05-21:
 
@@ -1798,6 +1799,16 @@ Progress after Sequence 51 on 2026-05-21:
 - The top routed docs now agree that West Reservoir remains repo-local for package authority but is
   no longer claimed as reviewer-ready on this checkout, so Milestone 9 closes without shifting the
   stale replay debt into hidden assumptions elsewhere.
+- Verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id west-reservoir-67436`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  bounded `gold-coverage-eval` replay using explicit applicability/compliance/review-contract
+  results paths,
+  `PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --max-fan-out 20 --format markdown`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_real_package_review_coverage_eval.py tests/test_gold_coverage_eval.py tests/test_v1_ea_eval.py tests/test_v1_ea_eval_contracts.py tests/test_v1_ea_eval_forest_plan.py tests/test_promotion_suite.py tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`.
 
 Progress after Sequence 52 on 2026-05-21:
 
@@ -1818,6 +1829,17 @@ Progress after Sequence 52 on 2026-05-21:
 - The residual lane is now routed into
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` instead of being left inside
   the closed architecture umbrella.
+- Verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_real_package_review_coverage_eval.py tests/test_gold_coverage_eval.py tests/test_v1_ea_eval.py tests/test_v1_ea_eval_contracts.py tests/test_v1_ea_eval_forest_plan.py tests/test_promotion_suite.py tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py . --max-file-lines 800 --max-fan-out 20 --format markdown`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id west-reservoir-67436`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52`,
+  bounded `gold-coverage-eval` replay using explicit applicability/compliance/review-contract
+  results paths,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`.
 
 Remaining issue after closeout:
 
@@ -1948,8 +1970,8 @@ all of the following:
 - the repo has one canonical architecture doc path and one short cold-start doc path;
 - the proving lane truth no longer depends on an undeclared user-home package path for required repo
   verification;
-- the large-file count above `800` lines is reduced from the current baseline of `57` to `45` or
-  fewer;
+- the large-file count above `800` lines is reduced from the Milestone 0 baseline of `57` to the
+  live closeout count of `24`, well below the original `<=45` floor;
 - no milestone increased the top hotspot score or fan-out in its owner family without an explicit,
   documented, and green follow-on gate; and
 - every remaining residual hotspot is explicitly routed in durable docs rather than left as implied

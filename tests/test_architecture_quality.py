@@ -21,6 +21,7 @@ ALLOWED_HIGH_FAN_OUT_MODULES: set[str] = set()
 REPLAY_CONTEXT_DIR = REPO_ROOT / "config" / "replay_contexts"
 CURRENT_ROUTING_PATH = REPO_ROOT / "docs" / "CURRENT_ROUTING.md"
 MAX_CURRENT_ROUTING_LINES = 40
+OVERALL_ARCHITECTURE_PLAN_PATH = REPO_ROOT / "docs" / "OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md"
 
 
 def test_large_file_count_does_not_grow() -> None:
@@ -86,6 +87,35 @@ def test_current_routing_doc_stays_short_and_linked() -> None:
     assert "docs/CURRENT_ROUTING.md" in start_here
 
 
+def test_overall_architecture_plan_closeout_stays_current() -> None:
+    plan = OVERALL_ARCHITECTURE_PLAN_PATH.read_text(encoding="utf-8")
+
+    current_brittle = _section_text(plan, "### Current brittle places", "## Goal")
+    assert "large-file count is now `24`" in current_brittle
+    assert "code files over `800` lines" in current_brittle
+    assert "`50` code files over `800` lines" not in current_brittle
+    assert "`1418` lines" not in current_brittle
+    assert "typed_blocked" in current_brittle
+
+    weak_points = _section_text(plan, "## Weak-Point Register", "## Large-File Inventory Over 800 Lines")
+    assert "reduced from the Milestone 0 baseline of `57` to `24` code files over `800` lines" in weak_points
+    assert "no local module exceeds the `20`-import fan-out gate" in weak_points
+    assert "| Large-file concentration | `54` code files over `800` lines |" not in weak_points
+
+    acceptance = _section_text(plan, "## Acceptance Criteria", "## Stop Conditions")
+    assert "live closeout count of `24`" in acceptance
+    assert "current baseline of `57` to `45` or" not in acceptance
+
+    sequence_52 = _section_text(
+        plan,
+        "Progress after Sequence 52 on 2026-05-21:",
+        "Remaining issue after closeout:",
+    )
+    assert "PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval" in sequence_52
+    assert "PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval" in sequence_52
+    assert "git diff --check" in sequence_52
+
+
 def _code_paths() -> list[Path]:
     paths: list[Path] = []
     for root in CODE_ROOTS:
@@ -132,3 +162,9 @@ def _absolute_import_targets(node: ast.Import, modules: set[str]) -> set[str]:
             if target in modules:
                 targets.add(target)
     return targets
+
+
+def _section_text(text: str, start_marker: str, end_marker: str) -> str:
+    start = text.index(start_marker)
+    end = text.index(end_marker, start)
+    return text[start:end]
