@@ -6,37 +6,6 @@
   "queued_plan": "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md",
   "families": [
     {
-      "name": "compliance_and_eval",
-      "target_milestone": 7,
-      "required_tests": [
-        "tests/test_compliance_review_eval.py",
-        "tests/test_compliance_review.py",
-        "tests/test_compliance_review_contracts.py",
-        "tests/test_compliance_review_test_boundary.py",
-        "tests/test_compliance_gold_eval.py",
-        "tests/test_gold_coverage_eval.py",
-        "tests/test_promotion_suite.py",
-        "tests/test_real_package_review_coverage_eval.py",
-        "tests/test_v1_ea_eval.py",
-        "tests/test_v1_ea_eval_contracts.py",
-        "tests/test_v1_ea_eval_forest_plan.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/compliance_review_eval.py",
-          "line_count": 1714
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/compliance_outputs.py",
-          "line_count": 1686
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/compliance_validation.py",
-          "line_count": 824
-        }
-      ]
-    },
-    {
       "name": "viewer",
       "target_milestone": 8,
       "required_tests": [

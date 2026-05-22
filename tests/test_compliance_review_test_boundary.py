@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+SOURCE_ROOT = REPO_ROOT / "src" / "usfs_r1_ea_sources"
 CORE_SUITE = REPO_ROOT / "tests" / "test_compliance_review.py"
 SUITE_BUDGETS = {
     "tests/test_compliance_review.py": 800,
@@ -14,12 +15,32 @@ SUITE_BUDGETS = {
     "tests/test_compliance_coverage.py": 800,
     "tests/test_compliance_gold_eval.py": 800,
     "tests/test_compliance_phase_eval.py": 800,
+    "tests/test_compliance_review_test_boundary.py": 300,
     "tests/support/compliance_review_fixtures.py": 800,
     "tests/support/compliance_review_eval_fixtures.py": 800,
     "tests/support/compliance_component_fixtures.py": 800,
     "tests/support/compliance_component_review_fixtures.py": 800,
     "tests/support/compliance_phase_eval_fixtures.py": 800,
 }
+SOURCE_FAMILY_BUDGETS = {
+    "src/usfs_r1_ea_sources/compliance_review_eval.py": 400,
+    "src/usfs_r1_ea_sources/compliance_review_eval_contract.py": 450,
+    "src/usfs_r1_ea_sources/compliance_review_eval_generated.py": 450,
+    "src/usfs_r1_ea_sources/compliance_review_eval_scoring.py": 780,
+    "src/usfs_r1_ea_sources/compliance_outputs.py": 80,
+    "src/usfs_r1_ea_sources/compliance_outputs_audit.py": 220,
+    "src/usfs_r1_ea_sources/compliance_outputs_common.py": 450,
+    "src/usfs_r1_ea_sources/compliance_outputs_forest_plan.py": 350,
+    "src/usfs_r1_ea_sources/compliance_outputs_matrix.py": 550,
+    "src/usfs_r1_ea_sources/compliance_outputs_render.py": 400,
+    "src/usfs_r1_ea_sources/compliance_validation.py": 400,
+    "src/usfs_r1_ea_sources/compliance_validation_checks.py": 650,
+}
+SOURCE_FAMILY_PREFIXES = (
+    "compliance_review_eval",
+    "compliance_outputs",
+    "compliance_validation",
+)
 FORBIDDEN_CORE_IMPORTS = {
     "run_compliance_review_eval",
     "run_compliance_coverage",
@@ -61,6 +82,22 @@ def test_compliance_suite_line_budgets_are_respected() -> None:
             oversize.append({"path": relative_path, "line_count": line_count, "max_lines": max_lines})
 
     assert missing == []
+    assert oversize == []
+
+
+def test_compliance_source_family_roster_and_line_budgets_are_respected() -> None:
+    expected_paths = set(SOURCE_FAMILY_BUDGETS)
+    actual_paths = _relative_paths_for_prefixes(SOURCE_FAMILY_PREFIXES)
+
+    assert actual_paths == expected_paths
+
+    oversize = []
+    for relative_path, max_lines in SOURCE_FAMILY_BUDGETS.items():
+        path = REPO_ROOT / relative_path
+        line_count = len(path.read_text(encoding="utf-8").splitlines())
+        if line_count > max_lines:
+            oversize.append({"path": relative_path, "line_count": line_count, "max_lines": max_lines})
+
     assert oversize == []
 
 
@@ -129,3 +166,11 @@ def _test_function_names(path: Path) -> set[str]:
         if isinstance(node, ast.FunctionDef) and node.name.startswith("test_"):
             names.add(node.name)
     return names
+
+
+def _relative_paths_for_prefixes(prefixes: tuple[str, ...]) -> set[str]:
+    return {
+        path.relative_to(REPO_ROOT).as_posix()
+        for prefix in prefixes
+        for path in SOURCE_ROOT.glob(f"{prefix}*.py")
+    }

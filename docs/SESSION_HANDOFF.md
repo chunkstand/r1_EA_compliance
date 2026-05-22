@@ -7,6 +7,73 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestone 7
+
+This slice resolves the compliance and eval owner family under the repo's `800`-line
+reviewability gate while preserving the existing compliance review, matrix rendering, validation,
+and gold-eval semantics.
+
+- outcome label:
+  Milestone `7` resolved; the next routed slice in this packet is Milestone `8` for the
+  viewer family
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/compliance_review_eval.py`,
+  `src/usfs_r1_ea_sources/compliance_review_eval_contract.py`,
+  `src/usfs_r1_ea_sources/compliance_review_eval_generated.py`,
+  `src/usfs_r1_ea_sources/compliance_review_eval_scoring.py`,
+  `src/usfs_r1_ea_sources/compliance_outputs.py`,
+  `src/usfs_r1_ea_sources/compliance_outputs_audit.py`,
+  `src/usfs_r1_ea_sources/compliance_outputs_common.py`,
+  `src/usfs_r1_ea_sources/compliance_outputs_forest_plan.py`,
+  `src/usfs_r1_ea_sources/compliance_outputs_matrix.py`,
+  `src/usfs_r1_ea_sources/compliance_outputs_render.py`,
+  `src/usfs_r1_ea_sources/compliance_validation.py`,
+  `src/usfs_r1_ea_sources/compliance_validation_checks.py`,
+  `tests/test_compliance_review_test_boundary.py`,
+  `tests/test_architecture_quality.py`,
+  `config/architecture_large_file_inventory_v1.json`, and
+  `docs/architecture_contract.toml`
+- closeout truth:
+  the three oversized compliance/eval owners are now thin facades over explicit sibling owner
+  modules; every file in the `compliance_review_eval*`, `compliance_outputs*`, and
+  `compliance_validation*` families is `<=800` lines; the compliance boundary test now fails
+  closed on the exact source-family roster plus per-file budgets; the oversized-file inventory now
+  contains only the viewer family; and `tests/test_architecture_quality.py` now ratchets the
+  live oversized queue to `1`
+- debt-shift audit:
+  the largest new sibling files are
+  `compliance_review_eval_scoring.py=728`,
+  `compliance_validation_checks.py=533`,
+  `compliance_outputs_matrix.py=469`,
+  `compliance_outputs_common.py=413`, and
+  `compliance_review_eval_generated.py=373`; none reopened the oversized queue, created an import
+  cycle, or exceeded the fan-out gate
+- live architecture truth:
+  the fresh architecture probe now reports `454` code files, `1` code file above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and only remaining
+  oversized file `viewer/nepa-3d/app.js`
+- bounded gold replay:
+  `source_library/reviews/compliance_gold_eval_under800/compliance_gold_eval_results.json`
+  stayed red at `0/14` with `authority_trace_coverage_rate=1.0`; the same five still-unmapped
+  live authorities remain the only failing rule IDs
+  (`apa_final_agency_action`, `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`, and
+  `seven_county_nepa_scope`), so this slice did not change active gold semantics
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `8` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_review_eval.py tests/test_compliance_review.py tests/test_compliance_review_contracts.py tests/test_compliance_review_test_boundary.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_real_package_review_coverage_eval.py tests/test_v1_ea_eval.py tests/test_v1_ea_eval_contracts.py tests/test_v1_ea_eval_forest_plan.py tests/test_architecture_contract.py tests/test_architecture_quality.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_under800`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`, and
+  `git diff --check`
+
 ## Under-800 Hotspot Reduction Milestone 6
 
 This slice resolves the capture, catalog, and source-register owner family under the repo's

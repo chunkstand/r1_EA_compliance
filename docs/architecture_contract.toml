@@ -289,9 +289,18 @@ modules = [
   "compliance_gold_eval",
   "compliance_inputs",
   "compliance_outputs",
+  "compliance_outputs_audit",
+  "compliance_outputs_common",
+  "compliance_outputs_forest_plan",
+  "compliance_outputs_matrix",
+  "compliance_outputs_render",
   "compliance_review",
   "compliance_review_eval",
+  "compliance_review_eval_contract",
+  "compliance_review_eval_generated",
+  "compliance_review_eval_scoring",
   "compliance_validation",
+  "compliance_validation_checks",
 ]
 allowed_import_layers = [
   "foundation",

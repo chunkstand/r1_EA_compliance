@@ -33,17 +33,18 @@ Current routed state on 2026-05-21:
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 - The queued under-`800` follow-on packet in
   `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` is now resolved
-  through Milestone `6`: the capture, catalog, and source-register family
-  is now closed under the `800`-line gate, and the next routed slice is
-  Milestone `7` on compliance and eval owners.
-- The latest architecture gate reports `445` code files, `4` above `800`
+  through Milestone `7`: the compliance and eval family is now closed under
+  the `800`-line gate, and the next routed slice is Milestone `8` on the
+  viewer family.
+- The latest architecture gate reports `454` code files, `1` above `800`
   lines, no Python or JS/TS import cycles, and no source module above the
   `20`-import fan-out gate.
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
   because `compliance-gold-eval` is red on the active full-canonical source set
   `source-set-f775524ab233ff27`; the tracked review-contract lane itself remains
-  green at `2 reviewer_ready + 1 typed_blocked`. The active generated diagnostic
-  gold cases now build non-zero rule-claim-link artifacts, while the base
+  green at `2 reviewer_ready + 1 typed_blocked`. The bounded Milestone `7`
+  replay stayed red at `0/14` on the same five still-unmapped live authorities.
+  The active generated diagnostic gold cases now build non-zero rule-claim-link artifacts, while the base
   `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural surface.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.

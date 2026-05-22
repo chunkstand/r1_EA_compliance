@@ -8,8 +8,8 @@ through the Project SOW family split; Milestone `3` resolved 2026-05-21 through 
 knowledge-graph and decision-support family split; Milestone `4` resolved 2026-05-21 through
 the forest-plan runtime family split; Milestone `5` resolved 2026-05-21 through the extraction,
 retrieval, and review-artifact family split; Milestone `6` resolved 2026-05-21 through the
-capture, catalog, and source-register family split; next routed slice Milestone `7` for
-compliance and eval owners
+capture, catalog, and source-register family split; Milestone `7` resolved 2026-05-21 through the
+compliance and eval family split; next routed slice Milestone `8` for the viewer family
 
 Owner context: The resolved umbrella architecture packet closed at a count-only large-file guard of
 `24` code files above `800` lines. This follow-on packet resolves the remaining repo-wide
@@ -24,35 +24,34 @@ queued explicit follow-on, not the default active route.
 Resolve the remaining large-file and hotspot concentration debt after the umbrella architecture
 closeout. The immediate weakness is no longer missing architecture direction. The weakness is that:
 
-- `4` live code files still exceed the repo's `800`-line reviewability threshold;
-- the remaining oversized concentration is now localized in the compliance/eval and viewer
-  families; and
-- the next risk is debt shifting into medium-large siblings or stale routing after each family
+- `1` live code file still exceeds the repo's `800`-line reviewability threshold;
+- the remaining oversized concentration is now localized only in the viewer family; and
+- the next risk is debt shifting into medium-large siblings or stale routing after the final owner
   split, not the earlier count-only gate drift or dirty-baseline overlap that Milestones `0` and
   `1` already closed.
 
 ## Current Evidence
 
-### Live baseline after Milestone `6`
+### Live baseline after Milestone `7`
 
 - `git status -sb` was clean at the start of this alignment pass. The earlier planning-time
   compliance/eval overlap closed at Milestone `0` and is no longer part of the active baseline.
-- Fresh architecture probe at the Milestone `6` closeout
+- Fresh architecture probe at the Milestone `7` closeout
   (`python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`)
-- reports `445` code files, `4` code files above `800` lines, no Python cycles, no JS/TS cycles,
+- reports `454` code files, `1` code file above `800` lines, no Python cycles, no JS/TS cycles,
   no local module above the `20`-import fan-out gate, top overall hotspot
-  `tests/test_compliance_review.py` at score `35420`, and largest remaining oversized source owner
-  `src/usfs_r1_ea_sources/compliance_review_eval.py` at `1714` lines.
-- `tests/test_architecture_quality.py` now enforces `MAX_ALLOWED_OVERSIZED_FILES = 4` and exact
+  `tests/test_compliance_review.py` at score `35420`, and only remaining oversized file
+  `viewer/nepa-3d/app.js` at `2547` lines.
+- `tests/test_architecture_quality.py` now enforces `MAX_ALLOWED_OVERSIZED_FILES = 1` and exact
   oversized-file path membership against `config/architecture_large_file_inventory_v1.json`; the
   earlier count-only `24`-file blind spot is closed.
-- The governed live oversized inventory is now exactly two remaining families in
-  `config/architecture_large_file_inventory_v1.json`: compliance/eval (`3` files) and viewer
-  (`1` file).
-- Debt-shift audit after the capture/catalog/source-register split is currently clean: the largest
-  new sibling modules are `catalog.py=782`, `source_register_proving.py=741`,
-  `source_register.py=729`, `catalog_outputs.py=723`, `authority_currentness.py=670`, and
-  `download.py=616`, all below the `800`-line gate and outside the oversized queue.
+- The governed live oversized inventory is now exactly one remaining family in
+  `config/architecture_large_file_inventory_v1.json`: viewer (`1` file).
+- Debt-shift audit after the compliance/eval split is currently clean: the largest new sibling
+  modules are `compliance_review_eval_scoring.py=728`,
+  `compliance_validation_checks.py=533`, `compliance_outputs_matrix.py=469`,
+  `compliance_outputs_common.py=413`, and `compliance_review_eval_generated.py=373`, all below the
+  `800`-line gate and outside the oversized queue.
 
 ### Historical packet-start baseline
 
@@ -79,7 +78,7 @@ closeout. The immediate weakness is no longer missing architecture direction. Th
 | Compliance and eval | `1714` `src/usfs_r1_ea_sources/compliance_review_eval.py`; `1686` `src/usfs_r1_ea_sources/compliance_outputs.py`; `824` `src/usfs_r1_ea_sources/compliance_validation.py` |
 | Viewer | `2547` `viewer/nepa-3d/app.js` |
 
-### Governance state after Milestone `6`
+### Governance state after Milestone `7`
 
 The first packet weakness was governance drift. That part is now closed, and the active governance
 risk has shifted:
@@ -87,9 +86,9 @@ risk has shifted:
 - the live oversized-file set is now machine-backed through
   `config/architecture_large_file_inventory_v1.json` and exact-membership checks in
   `tests/test_architecture_quality.py`;
-- future Codex sessions can still shift debt into medium-large siblings or stale docs if they stop
-  at a green split without the post-probe alignment sweep; and
-- Milestone `7` therefore needs to close with the live inventory artifact, architecture probe, and
+- future Codex sessions can still shift debt into medium-large viewer siblings or stale docs if
+  they stop at a green split without the post-probe alignment sweep; and
+- Milestone `8` therefore needs to close with the live inventory artifact, architecture probe, and
   routing readback rather than only a reduced file count.
 
 Milestone `1` closed the original blind spot; the remaining packet work is owner-family reduction
@@ -512,6 +511,25 @@ PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir so
 python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20
 git diff --check
 ```
+
+Progress after Milestone `7` on 2026-05-21:
+
+- `compliance_review_eval.py`, `compliance_outputs.py`, and `compliance_validation.py` are now
+  thin public facades over explicit sibling owner modules, and every file in the
+  `compliance_review_eval*`, `compliance_outputs*`, and `compliance_validation*` families is
+  `<=800` lines.
+- `tests/test_compliance_review_test_boundary.py` now fails closed on the exact compliance source
+  family roster plus per-file budgets, `docs/architecture_contract.toml` includes the new owner
+  modules, and `config/architecture_large_file_inventory_v1.json` now tracks only the viewer
+  family.
+- The bounded replay at
+  `source_library/reviews/compliance_gold_eval_under800/compliance_gold_eval_results.json`
+  stayed red at `0/14` with `authority_trace_coverage_rate=1.0`; the same five still-unmapped live
+  authorities remain the only failing rule IDs, so this split did not change active gold
+  semantics.
+- The fresh architecture probe now reports `454` code files, `1` code file above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and only remaining
+  oversized file `viewer/nepa-3d/app.js`.
 
 ### Milestone `8`: Viewer family under `800`
 

@@ -47,6 +47,11 @@ still route the overall architecture umbrella as open or still claim a fresh
 full-canonical bounded gold aggregate is green are historical only after the
 2026-05-21 Milestone 10 Sequence 52 rebaseline closeout described below.
 Older architecture references below that still route the under-`800` hotspot
+packet as pending on Milestone `7` or still report the pre-closeout
+compliance/eval baseline of `445` code files and `4` files above `800` are
+historical only after the 2026-05-21 Under-800 Hotspot Reduction Milestone
+`7` closeout described below.
+Older architecture references below that still route the under-`800` hotspot
 packet as pending on Milestone `6` or still report the pre-closeout
 capture/catalog/source-register baseline of `437` code files and `10` files
 above `800` are historical only after the 2026-05-21 Under-800 Hotspot
@@ -58,6 +63,59 @@ applicability abort are historical only after the 2026-05-21 generated-case
 routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
+
+## Under-800 Hotspot Reduction Milestone 7
+
+Latest implementation on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone `7`; the compliance and eval owner family is now
+  closed under the `800`-line gate, and the packet advances to Milestone `8`.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/compliance_review_eval.py`,
+  the new `src/usfs_r1_ea_sources/compliance_review_eval_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/compliance_outputs.py`,
+  the new `src/usfs_r1_ea_sources/compliance_outputs_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/compliance_validation.py`,
+  `src/usfs_r1_ea_sources/compliance_validation_checks.py`,
+  `tests/test_compliance_review_test_boundary.py`,
+  `tests/test_architecture_quality.py`,
+  `config/architecture_large_file_inventory_v1.json`, and
+  `docs/architecture_contract.toml`.
+- Closeout truth:
+  the oversized compliance/eval owners are now thin facades over explicit sibling owners; every
+  file in the `compliance_review_eval*`, `compliance_outputs*`, and
+  `compliance_validation*` families is `<=800` lines; the compliance boundary test now
+  fails closed on the exact source-family roster plus per-file budgets; the oversized-file
+  inventory now contains only the viewer family; and `tests/test_architecture_quality.py`
+  now ratchets the live oversized queue to `1`.
+- Debt-shift audit:
+  the largest new sibling files are
+  `compliance_review_eval_scoring.py=728`,
+  `compliance_validation_checks.py=533`,
+  `compliance_outputs_matrix.py=469`,
+  `compliance_outputs_common.py=413`,
+  and `compliance_review_eval_generated.py=373`; none reopened the oversized queue, created an
+  import cycle, or exceeded the fan-out gate.
+- Live architecture truth:
+  the fresh architecture probe now reports `454` code files, `1` code file above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, top
+  overall hotspot `tests/test_compliance_review.py` at score `35420`, and only remaining
+  oversized file `viewer/nepa-3d/app.js` at `2547` lines.
+- Bounded gold replay:
+  `source_library/reviews/compliance_gold_eval_under800/compliance_gold_eval_results.json`
+  stayed red at `0/14` with `authority_trace_coverage_rate=1.0`; the same five still-unmapped
+  live authorities remain the only failing rule IDs
+  (`apa_final_agency_action`, `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`, and
+  `seven_county_nepa_scope`), so this slice did not change active gold semantics.
+- Next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `8` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
 
 ## Under-800 Hotspot Reduction Milestone 6
 

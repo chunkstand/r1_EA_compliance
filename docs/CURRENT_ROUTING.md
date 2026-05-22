@@ -11,17 +11,17 @@ Use this file as the short current route before opening the large append-only do
 
 - Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
   `Document_Register_Master` / `source-set-f775524ab233ff27`
-- Architecture gate: `445` code files, `4` above `800` lines, no Python or JS/TS cycles, no
-  local module above the `20`-import fan-out gate, and largest remaining source owner
-  `src/usfs_r1_ea_sources/compliance_review_eval.py`
-- Under-`800` follow-on: Milestone `6` is resolved through the capture, catalog, and
-  source-register family; the next queued slice is Milestone `7` on compliance and eval owners
+- Architecture gate: `454` code files, `1` above `800` lines, no Python or JS/TS cycles, no
+  local module above the `20`-import fan-out gate, and only remaining oversized file
+  `viewer/nepa-3d/app.js`
+- Under-`800` follow-on: Milestone `7` is resolved through the compliance and eval family; the
+  next queued slice is Milestone `8` on the viewer family
 - The overall architecture umbrella is resolved after Milestone 10 Sequence 52.
 - West Reservoir stays an explicit `typed_blocked` replay quarantine.
 - Active gold packet truth: generated diagnostic gold cases now build non-zero rule-claim-link
   artifacts, while the base `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural surface.
-- Fresh `compliance-gold-eval` fix6 on `source-set-f775524ab233ff27` remains red at `0/14`;
-  `authority_trace_coverage_rate=1.0`; `gold-all-authorities-supported` still scores
+- Fresh bounded `compliance-gold-eval` replay on `source-set-f775524ab233ff27` remains red at
+  `0/14`; `authority_trace_coverage_rate=1.0`; `gold-all-authorities-supported` still scores
   `39 pass / 20 uncertain` and now records `rule_claim_link_count=200`.
 - Remaining owner is the five still-unmapped live authorities only
   (`apa_final_agency_action`, `directives_notice_comment_36cfr_216`,
