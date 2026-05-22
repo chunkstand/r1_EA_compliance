@@ -43,6 +43,12 @@ gate while preserving the existing public facades and CLI-facing review contract
   drops the forest-plan runtime family entirely; and `rule_packs.py` now re-exports
   `aliased_source_record_ids` so the CLI-bound component/adjudication tests keep their historical
   import contract
+- debt-shift audit:
+  the largest new forest-plan sibling files are
+  `forest_plan_component_eval_coverage.py=764`,
+  `forest_plan_source_delta_readiness_readiness.py=676`, and
+  `forest_plan_components_inventory_quality.py=672`; none reopened the oversized queue, created an
+  import cycle, or exceeded the fan-out gate
 - live architecture truth:
   the fresh architecture probe now reports `409` code files, `15` code files above `800`, no
   Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top hotspot

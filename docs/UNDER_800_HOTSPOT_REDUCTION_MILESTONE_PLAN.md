@@ -22,38 +22,51 @@ queued explicit follow-on, not the default active route.
 Resolve the remaining large-file and hotspot concentration debt after the umbrella architecture
 closeout. The immediate weakness is no longer missing architecture direction. The weakness is that:
 
-- `24` live code files still exceed the repo's `800`-line reviewability threshold;
-- the current architecture quality gate ratchets only the total oversized-file count, so hotspot
-  substitution can occur without reopening the resolved umbrella; and
-- the current dirty worktree overlaps one of the remaining oversized families
-  (`compliance_review_eval.py`), so future implementation must start with isolation rather than
-  pretend the baseline is clean.
+- `15` live code files still exceed the repo's `800`-line reviewability threshold;
+- the remaining oversized concentration is now localized in the extraction/retrieval/review-artifact,
+  capture/catalog/source-register, compliance/eval, and viewer families; and
+- the next risk is debt shifting into medium-large siblings or stale routing after each family
+  split, not the earlier count-only gate drift or dirty-baseline overlap that Milestones `0` and
+  `1` already closed.
 
 ## Current Evidence
 
-### Live baseline
+### Live baseline after Milestone `4`
 
-- `git status -sb` at the Milestone `0` recheck now shows only this packet's planning slice:
+- `git status -sb` was clean at the start of this alignment pass. The earlier planning-time
+  compliance/eval overlap closed at Milestone `0` and is no longer part of the active baseline.
+- Fresh architecture probe at the Milestone `4` closeout
+  (`python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`)
+  reports `409` code files, `15` code files above `800` lines, no Python cycles, no JS/TS cycles,
+  no local module above the `20`-import fan-out gate, and top hotspot
+  `src/usfs_r1_ea_sources/extract.py` at score `57060`.
+- `tests/test_architecture_quality.py` now enforces `MAX_ALLOWED_OVERSIZED_FILES = 15` and exact
+  oversized-file path membership against `config/architecture_large_file_inventory_v1.json`; the
+  earlier count-only `24`-file blind spot is closed.
+- The governed live oversized inventory is now exactly four remaining families in
+  `config/architecture_large_file_inventory_v1.json`: extraction/retrieval/review artifacts
+  (`5` files), capture/catalog/source-register (`6` files), compliance/eval (`3` files), and
+  viewer (`1` file).
+- Debt-shift audit after the forest-plan split is currently clean: the largest new forest-plan
+  sibling modules are `forest_plan_component_eval_coverage.py=764`,
+  `forest_plan_source_delta_readiness_readiness.py=676`, and
+  `forest_plan_components_inventory_quality.py=672`, all below the `800`-line gate and outside the
+  oversized queue.
+
+### Historical packet-start baseline
+
+- `git status -sb` at the Milestone `0` recheck showed only this packet's planning slice:
   `docs/CURRENT_ROUTING.md`,
   `docs/SESSION_HANDOFF.md`, and
   `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
-  The earlier planning-time compliance/eval overlap is now historical context, not a current
-  blocker for Milestone `1`.
-- Fresh architecture probe
-  (`python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`)
-  reports `344` code files, `24` code files above `800` lines, no Python cycles, no JS/TS cycles,
-  no local module above the `20`-import fan-out gate, and top hotspot
+- The packet-start architecture probe at Milestone `0` reported `344` code files, `24` code files
+  above `800` lines, no Python cycles, no JS/TS cycles, no local module above the
+  `20`-import fan-out gate, and top hotspot
   `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`.
-- `tests/test_architecture_quality.py` currently enforces only
-  `MAX_ALLOWED_OVERSIZED_FILES = 24`. That guard fails if the count grows, but it does not fail
-  when one closed owner family grows back above `800` and another file drops below `800`.
-- `config/architecture_large_file_inventory_v1.json` is the governed Milestone `1` inventory
-  surface that must replace count-only large-file routing with exact path membership.
-- The resolved umbrella plan remains historically correct for its closeout point, but it is no
-  longer a sufficient live routing surface for oversized-file ownership because the exact live
-  inventory has shifted while the count stayed flat at `24`.
+- The packet started from a `24`-file oversized inventory before Milestones `2` through `4`
+  closed the Project SOW, knowledge-graph/decision-support, and forest-plan runtime families.
 
-### Exact live oversized-file inventory at packet start
+### Exact oversized-file inventory at packet start
 
 | Family | Live files over `800` lines |
 | --- | --- |
@@ -65,22 +78,25 @@ closeout. The immediate weakness is no longer missing architecture direction. Th
 | Compliance and eval | `1714` `src/usfs_r1_ea_sources/compliance_review_eval.py`; `1686` `src/usfs_r1_ea_sources/compliance_outputs.py`; `824` `src/usfs_r1_ea_sources/compliance_validation.py` |
 | Viewer | `2547` `viewer/nepa-3d/app.js` |
 
-### Architecture gate blind spot
+### Governance state after Milestone `4`
 
-The next architecture milestone cannot start by splitting a large file directly. The first live
-weak point is governance drift:
+The first packet weakness was governance drift. That part is now closed, and the active governance
+risk has shifted:
 
-- the current count-only gate does not encode the exact oversized-file set;
-- the current test couples live closeout truth to the resolved umbrella plan rather than to an
-  explicit queued follow-on register; and
-- future Codex sessions could close a family milestone while silently shifting the hotspot into a
-  new `>800` helper module or a different previously-green file.
+- the live oversized-file set is now machine-backed through
+  `config/architecture_large_file_inventory_v1.json` and exact-membership checks in
+  `tests/test_architecture_quality.py`;
+- future Codex sessions can still shift debt into medium-large siblings or stale docs if they stop
+  at a green split without the post-probe alignment sweep; and
+- Milestone `5` therefore needs to close with the live inventory artifact, architecture probe, and
+  routing readback rather than only a reduced file count.
 
-Milestone `1` in this packet exists to close that blind spot before any large-file work starts.
+Milestone `1` closed the original blind spot; the remaining packet work is owner-family reduction
+plus debt-shift prevention.
 
 ## Goal
 
-Drive the live oversized-file inventory from `24` to `0` while preserving:
+Drive the remaining live oversized-file inventory from `15` to `0` while preserving:
 
 - current public CLI command names;
 - workbook, catalog, and generated-artifact contracts;
@@ -103,7 +119,8 @@ Drive the live oversized-file inventory from `24` to `0` while preserving:
 
 In scope:
 
-- the exact live `24`-file oversized inventory above;
+- the exact live `15`-file oversized inventory in
+  `config/architecture_large_file_inventory_v1.json`;
 - architecture gate hardening for exact oversized-file membership and no-substitution ratchets;
 - owner-family splits that reduce every current `>800` code file to `<=800`;
 - matching `docs/architecture_contract.toml`, focused boundary tests, and durable routing updates;
@@ -367,6 +384,11 @@ Progress after Milestone `4` on 2026-05-21:
 - `src/usfs_r1_ea_sources/rule_packs.py` now re-exports `aliased_source_record_ids` so the
   CLI-bound component and adjudication tests retain their historical compatibility contract during
   milestone verification.
+- Debt-shift audit: the largest new forest-plan sibling files are
+  `forest_plan_component_eval_coverage.py=764`,
+  `forest_plan_source_delta_readiness_readiness.py=676`, and
+  `forest_plan_components_inventory_quality.py=672`; none reopened the oversized queue, created an
+  import cycle, or exceeded the fan-out gate.
 - The fresh architecture probe now reports `409` code files, `15` code files above `800`, no
   Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top hotspot
   `src/usfs_r1_ea_sources/extract.py` at score `57060`.
@@ -565,8 +587,15 @@ family overlaps the active gold lane.
 - The active default repo route remains
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` until that packet is closed or
   explicitly parked. This architecture packet stays queued behind it except for planning work.
-- The compliance/eval family remains the highest overlap risk because the current dirty baseline
-  already touches that owner family.
+- The highest active oversized concentration risk is now the extraction, retrieval, and
+  review-artifact family, which owns the top hotspot `src/usfs_r1_ea_sources/extract.py` and the
+  next five queued files in the live inventory.
+- The compliance/eval family remains semantically sensitive, but the earlier dirty-overlap concern
+  is now historical only. Rebaseline it again when Milestone `7` starts instead of treating it as
+  already dirty.
+- The just-closed forest-plan family did not shift debt back into the oversized queue, but its
+  largest new siblings remain near the threshold at `764`, `676`, and `672` lines and should stay
+  under the existing boundary tests rather than absorb unrelated follow-on work.
 - The viewer family is intentionally last because it is isolated from the Python lane and should not
   disrupt higher-value repo runtime work while the under-`800` gate is still being hardened.
 - If any family cannot be reduced to `<=800` without broadening scope, split that family into
