@@ -39,13 +39,31 @@ allowed_import_layers = ["foundation", "capture", "catalog"]
 [[layers]]
 name = "extraction"
 summary = "Artifact extraction, extraction accuracy, and extraction-derived text surfaces."
-modules = ["extract", "extraction_accuracy", "extraction_admission"]
+modules = [
+  "extract",
+  "extract_chunking",
+  "extract_common",
+  "extract_docling_support",
+  "extract_markup_support",
+  "extract_pdf_support",
+  "extract_runtime",
+  "extract_validation",
+  "extraction_accuracy",
+  "extraction_admission",
+]
 allowed_import_layers = ["foundation", "capture", "catalog", "extraction"]
 
 [[layers]]
 name = "retrieval"
 summary = "Local evidence index construction, validation, query, and retrieval eval support."
-modules = ["retrieval"]
+modules = [
+  "retrieval",
+  "retrieval_common",
+  "retrieval_eval_runtime",
+  "retrieval_query",
+  "retrieval_runtime",
+  "retrieval_validation",
+]
 allowed_import_layers = ["foundation", "extraction", "retrieval"]
 
 [[layers]]
@@ -277,6 +295,11 @@ name = "decision_support"
 summary = "Supervisor-facing EA consistency report synthesis over audited review artifacts."
 modules = [
   "draft_generation",
+  "draft_generation_common",
+  "draft_generation_inputs",
+  "draft_generation_outputs",
+  "draft_generation_sections",
+  "draft_generation_traceability",
   "ea_consistency_decision_support",
   "ea_consistency_decision_support_inputs",
   "ea_consistency_decision_support_models",
@@ -285,7 +308,16 @@ modules = [
   "ea_consistency_decision_support_report_validation",
   "ea_consistency_decision_support_runtime",
   "final_qa_certification",
+  "final_qa_certification_common",
+  "final_qa_certification_counts",
+  "final_qa_certification_report",
+  "final_qa_certification_runtime",
+  "final_qa_certification_validation",
   "review_packet_index",
+  "review_packet_index_artifacts",
+  "review_packet_index_common",
+  "review_packet_index_inventory",
+  "review_packet_index_outputs",
 ]
 allowed_import_layers = [
   "foundation",

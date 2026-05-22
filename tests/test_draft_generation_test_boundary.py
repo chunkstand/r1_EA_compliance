@@ -7,39 +7,39 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPO_ROOT / "src" / "usfs_r1_ea_sources"
 SUITE_BUDGETS = {
-    "tests/test_retrieval.py": 500,
-    "tests/test_retrieval_eval.py": 200,
-    "tests/test_retrieval_validation.py": 700,
-    "tests/test_retrieval_test_boundary.py": 250,
-    "tests/support/retrieval_fixtures.py": 300,
+    "tests/test_draft_generation.py": 200,
+    "tests/test_draft_generation_eval.py": 150,
+    "tests/test_draft_generation_test_boundary.py": 250,
+    "tests/support/draft_generation_fixtures.py": 500,
 }
 SOURCE_FAMILY_BUDGETS = {
-    "src/usfs_r1_ea_sources/retrieval.py": 80,
-    "src/usfs_r1_ea_sources/retrieval_common.py": 200,
-    "src/usfs_r1_ea_sources/retrieval_eval_runtime.py": 550,
-    "src/usfs_r1_ea_sources/retrieval_query.py": 400,
-    "src/usfs_r1_ea_sources/retrieval_runtime.py": 500,
-    "src/usfs_r1_ea_sources/retrieval_validation.py": 550,
+    "src/usfs_r1_ea_sources/draft_generation.py": 80,
+    "src/usfs_r1_ea_sources/draft_generation_common.py": 300,
+    "src/usfs_r1_ea_sources/draft_generation_eval.py": 300,
+    "src/usfs_r1_ea_sources/draft_generation_inputs.py": 450,
+    "src/usfs_r1_ea_sources/draft_generation_outputs.py": 650,
+    "src/usfs_r1_ea_sources/draft_generation_sections.py": 600,
+    "src/usfs_r1_ea_sources/draft_generation_traceability.py": 300,
 }
 SPLIT_SUITES = (
-    "tests/test_retrieval.py",
-    "tests/test_retrieval_eval.py",
-    "tests/test_retrieval_validation.py",
+    "tests/test_draft_generation.py",
+    "tests/test_draft_generation_eval.py",
 )
+ALLOWED_TOP_LEVEL_HELPERS = {
+    "tests/test_draft_generation.py": {"_read_json"},
+    "tests/test_draft_generation_eval.py": {"_read_json"},
+}
 SENTINEL_OWNERS = {
-    "tests/test_retrieval.py": {
-        "test_build_retrieval_index_and_query_with_filters",
+    "tests/test_draft_generation.py": {
+        "test_run_draft_generate_writes_governed_output_family",
     },
-    "tests/test_retrieval_eval.py": {
-        "test_retrieval_eval_scores_expected_sources_terms_and_provenance",
-    },
-    "tests/test_retrieval_validation.py": {
-        "test_retrieval_build_rejects_catalog_with_incompatible_source_record_set",
+    "tests/test_draft_generation_eval.py": {
+        "test_draft_generation_eval_runs_fail_closed_fixture_cases",
     },
 }
 
 
-def test_retrieval_split_line_budgets_are_respected() -> None:
+def test_draft_generation_split_line_budgets_are_respected() -> None:
     oversize = []
     missing = []
 
@@ -56,10 +56,10 @@ def test_retrieval_split_line_budgets_are_respected() -> None:
     assert oversize == []
 
 
-def test_retrieval_source_family_roster_and_line_budgets_are_respected() -> None:
+def test_draft_generation_source_family_roster_and_line_budgets_are_respected() -> None:
     actual_paths = {
         path.relative_to(REPO_ROOT).as_posix()
-        for path in SOURCE_ROOT.glob("retrieval*.py")
+        for path in SOURCE_ROOT.glob("draft_generation*.py")
     }
 
     assert actual_paths == set(SOURCE_FAMILY_BUDGETS)
@@ -82,7 +82,8 @@ def test_split_suites_do_not_redefine_top_level_helpers() -> None:
         helpers = []
         for node in tree.body:
             if isinstance(node, ast.FunctionDef) and node.name.startswith("_"):
-                helpers.append(node.name)
+                if node.name not in ALLOWED_TOP_LEVEL_HELPERS.get(relative_path, set()):
+                    helpers.append(node.name)
         if helpers:
             forbidden_helpers[relative_path] = helpers
 

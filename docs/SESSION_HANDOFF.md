@@ -7,6 +7,69 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestone 5
+
+This slice resolves the extraction, retrieval, and review-artifact owner family under the repo's
+`800`-line reviewability gate while preserving the existing public facades and test-patch
+contracts.
+
+- outcome label:
+  Milestone `5` resolved; the next routed slice in this packet is Milestone `6` for the capture,
+  catalog, and source-register family
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/extract.py`,
+  the new `src/usfs_r1_ea_sources/extract_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/retrieval.py`,
+  the new `src/usfs_r1_ea_sources/retrieval*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/final_qa_certification.py`,
+  the new `src/usfs_r1_ea_sources/final_qa_certification*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/draft_generation.py`,
+  the new `src/usfs_r1_ea_sources/draft_generation*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/review_packet_index.py`,
+  the new `src/usfs_r1_ea_sources/review_packet_index*.py` sibling owner modules,
+  `tests/test_extract_test_boundary.py`,
+  `tests/test_retrieval_test_boundary.py`,
+  `tests/test_final_qa_certification_test_boundary.py`,
+  `tests/test_draft_generation_test_boundary.py`,
+  `tests/test_review_packet_index_test_boundary.py`,
+  `tests/test_architecture_quality.py`,
+  `config/architecture_large_file_inventory_v1.json`, and
+  `docs/architecture_contract.toml`
+- closeout truth:
+  `extract.py`, `retrieval.py`, `final_qa_certification.py`, `draft_generation.py`, and
+  `review_packet_index.py` are now thin facades over explicit sibling owner modules; every file in
+  the `extract*`, `retrieval*`, `final_qa_certification*`, `draft_generation*`, and
+  `review_packet_index*` families is `<=800` lines; the boundary tests now fail-close on exact
+  source rosters plus per-file budgets; and the oversized-file inventory drops this family
+  entirely while `tests/test_architecture_quality.py` ratchets the repo-wide queue to `10`
+- debt-shift audit:
+  the largest new sibling files are
+  `extract_runtime.py=796`,
+  `final_qa_certification_validation.py=741`,
+  `final_qa_certification_report.py=627`,
+  `draft_generation_outputs.py=604`,
+  `review_packet_index_inventory.py=545`, and
+  `review_packet_index_outputs.py=542`; none reopened the oversized queue, created an import cycle,
+  or exceeded the fan-out gate
+- live architecture truth:
+  the fresh architecture probe now reports `437` code files, `10` code files above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top overall
+  hotspot `tests/test_compliance_review.py` at score `35420`; the largest remaining oversized
+  source owner is `src/usfs_r1_ea_sources/catalog.py`
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `6` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract.py tests/test_extract_reuse.py tests/test_extract_pdf_fallbacks.py tests/test_extract_test_boundary.py tests/test_extraction_accuracy.py tests/test_final_qa_certification.py tests/test_final_qa_certification_report.py tests/test_final_qa_certification_validation.py tests/test_final_qa_certification_test_boundary.py tests/test_draft_generation.py tests/test_draft_generation_eval.py tests/test_draft_generation_test_boundary.py tests/test_retrieval.py tests/test_retrieval_validation.py tests/test_retrieval_eval.py tests/test_retrieval_test_boundary.py tests/test_review_packet_index.py tests/test_review_packet_index_test_boundary.py tests/test_architecture_contract.py tests/test_architecture_quality.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`, and
+  `git diff --check`
+
 ## Under-800 Hotspot Reduction Milestone 4
 
 This slice resolves the forest-plan runtime owner family under the repo's `800`-line reviewability

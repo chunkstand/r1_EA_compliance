@@ -5,12 +5,21 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+SOURCE_ROOT = REPO_ROOT / "src" / "usfs_r1_ea_sources"
 SUITE_BUDGETS = {
     "tests/test_final_qa_certification.py": 500,
     "tests/test_final_qa_certification_report.py": 300,
     "tests/test_final_qa_certification_validation.py": 250,
     "tests/test_final_qa_certification_test_boundary.py": 250,
     "tests/support/final_qa_certification_fixtures.py": 775,
+}
+SOURCE_FAMILY_BUDGETS = {
+    "src/usfs_r1_ea_sources/final_qa_certification.py": 80,
+    "src/usfs_r1_ea_sources/final_qa_certification_common.py": 250,
+    "src/usfs_r1_ea_sources/final_qa_certification_counts.py": 450,
+    "src/usfs_r1_ea_sources/final_qa_certification_report.py": 700,
+    "src/usfs_r1_ea_sources/final_qa_certification_runtime.py": 600,
+    "src/usfs_r1_ea_sources/final_qa_certification_validation.py": 750,
 }
 SPLIT_SUITES = (
     "tests/test_final_qa_certification.py",
@@ -44,6 +53,24 @@ def test_final_qa_certification_split_line_budgets_are_respected() -> None:
             oversize.append({"path": relative_path, "line_count": line_count, "max_lines": max_lines})
 
     assert missing == []
+    assert oversize == []
+
+
+def test_final_qa_certification_source_family_roster_and_line_budgets_are_respected() -> None:
+    actual_paths = {
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in SOURCE_ROOT.glob("final_qa_certification*.py")
+    }
+
+    assert actual_paths == set(SOURCE_FAMILY_BUDGETS)
+
+    oversize = []
+    for relative_path, max_lines in SOURCE_FAMILY_BUDGETS.items():
+        path = REPO_ROOT / relative_path
+        line_count = len(path.read_text(encoding="utf-8").splitlines())
+        if line_count > max_lines:
+            oversize.append({"path": relative_path, "line_count": line_count, "max_lines": max_lines})
+
     assert oversize == []
 
 

@@ -5,12 +5,23 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+SOURCE_ROOT = REPO_ROOT / "src" / "usfs_r1_ea_sources"
 SUITE_BUDGETS = {
     "tests/test_extract.py": 650,
     "tests/test_extract_reuse.py": 450,
     "tests/test_extract_pdf_fallbacks.py": 700,
     "tests/test_extract_test_boundary.py": 250,
     "tests/support/extract_fixtures.py": 250,
+}
+SOURCE_FAMILY_BUDGETS = {
+    "src/usfs_r1_ea_sources/extract.py": 400,
+    "src/usfs_r1_ea_sources/extract_chunking.py": 250,
+    "src/usfs_r1_ea_sources/extract_common.py": 550,
+    "src/usfs_r1_ea_sources/extract_docling_support.py": 500,
+    "src/usfs_r1_ea_sources/extract_markup_support.py": 500,
+    "src/usfs_r1_ea_sources/extract_pdf_support.py": 600,
+    "src/usfs_r1_ea_sources/extract_runtime.py": 800,
+    "src/usfs_r1_ea_sources/extract_validation.py": 500,
 }
 SPLIT_SUITES = (
     "tests/test_extract.py",
@@ -44,6 +55,25 @@ def test_extract_split_line_budgets_are_respected() -> None:
             oversize.append({"path": relative_path, "line_count": line_count, "max_lines": max_lines})
 
     assert missing == []
+    assert oversize == []
+
+
+def test_extract_source_family_roster_and_line_budgets_are_respected() -> None:
+    actual_paths = {
+        path.relative_to(REPO_ROOT).as_posix()
+        for pattern in ("extract.py", "extract_*.py")
+        for path in SOURCE_ROOT.glob(pattern)
+    }
+
+    assert actual_paths == set(SOURCE_FAMILY_BUDGETS)
+
+    oversize = []
+    for relative_path, max_lines in SOURCE_FAMILY_BUDGETS.items():
+        path = REPO_ROOT / relative_path
+        line_count = len(path.read_text(encoding="utf-8").splitlines())
+        if line_count > max_lines:
+            oversize.append({"path": relative_path, "line_count": line_count, "max_lines": max_lines})
+
     assert oversize == []
 
 

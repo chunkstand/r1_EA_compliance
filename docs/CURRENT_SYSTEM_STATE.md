@@ -47,16 +47,70 @@ still route the overall architecture umbrella as open or still claim a fresh
 full-canonical bounded gold aggregate is green are historical only after the
 2026-05-21 Milestone 10 Sequence 52 rebaseline closeout described below.
 Older architecture references below that still route the under-`800` hotspot
-packet as pending on Milestone `4` or still report the pre-closeout
-forest-plan baseline of `377` code files and `20` files above `800` are
-historical only after the 2026-05-21 Under-800 Hotspot Reduction Milestone `4`
-closeout described below. Older references below that still treat the live
+packet as pending on Milestone `5` or still report the pre-closeout
+extraction/retrieval baseline of `409` code files and `15` files above `800`
+are historical only after the 2026-05-21 Under-800 Hotspot Reduction
+Milestone `5` closeout described below. Older references below that still
+treat the live
 full-canonical gold replay as
 the earlier `14/14` rule/retrieval failure bundle or as a pre-scored
 applicability abort are historical only after the 2026-05-21 generated-case
 routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
+
+## Under-800 Hotspot Reduction Milestone 5
+
+Latest implementation on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone `5`; the extraction, retrieval, and review-artifact owner family is now
+  closed under the `800`-line gate, and the packet advances to Milestone `6`.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/extract.py`,
+  the new `src/usfs_r1_ea_sources/extract_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/retrieval.py`,
+  the new `src/usfs_r1_ea_sources/retrieval*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/final_qa_certification.py`,
+  the new `src/usfs_r1_ea_sources/final_qa_certification*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/draft_generation.py`,
+  the new `src/usfs_r1_ea_sources/draft_generation*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/review_packet_index.py`,
+  the new `src/usfs_r1_ea_sources/review_packet_index*.py` sibling owner modules,
+  `tests/test_extract_test_boundary.py`,
+  `tests/test_retrieval_test_boundary.py`,
+  `tests/test_final_qa_certification_test_boundary.py`,
+  `tests/test_draft_generation_test_boundary.py`,
+  `tests/test_review_packet_index_test_boundary.py`,
+  `tests/test_architecture_quality.py`,
+  `config/architecture_large_file_inventory_v1.json`, and
+  `docs/architecture_contract.toml`.
+- Closeout truth:
+  the five oversized extraction/retrieval/review owners are now thin public facades over explicit
+  sibling owner modules; the new boundary tests fail-close on exact source-family rosters plus
+  per-file budgets; the oversized-file inventory no longer tracks this family; and
+  `tests/test_architecture_quality.py` now ratchets the live oversized queue at `10` files.
+- Debt-shift audit:
+  the largest new sibling files are
+  `extract_runtime.py=796`,
+  `final_qa_certification_validation.py=741`,
+  `final_qa_certification_report.py=627`,
+  `draft_generation_outputs.py=604`,
+  `review_packet_index_inventory.py=545`, and
+  `review_packet_index_outputs.py=542`; none reopened the oversized queue, created an import cycle,
+  or exceeded the fan-out gate.
+- Live architecture truth:
+  the fresh architecture probe now reports `437` code files, `10` code files above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and top
+  overall hotspot `tests/test_compliance_review.py` at score `35420`. The largest remaining
+  oversized source owner is `src/usfs_r1_ea_sources/catalog.py` at `1496` lines.
+- Next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `6` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
 
 ## Under-800 Hotspot Reduction Milestone 4
 

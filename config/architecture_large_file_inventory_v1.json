@@ -6,49 +6,6 @@
   "queued_plan": "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md",
   "families": [
     {
-      "name": "extraction_retrieval_and_review_artifacts",
-      "target_milestone": 5,
-      "required_tests": [
-        "tests/test_extract.py",
-        "tests/test_extract_reuse.py",
-        "tests/test_extract_pdf_fallbacks.py",
-        "tests/test_extract_test_boundary.py",
-        "tests/test_final_qa_certification.py",
-        "tests/test_final_qa_certification_report.py",
-        "tests/test_final_qa_certification_validation.py",
-        "tests/test_final_qa_certification_test_boundary.py",
-        "tests/test_draft_generation.py",
-        "tests/test_draft_generation_eval.py",
-        "tests/test_retrieval.py",
-        "tests/test_retrieval_validation.py",
-        "tests/test_retrieval_eval.py",
-        "tests/test_retrieval_test_boundary.py",
-        "tests/test_review_packet_index.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/extract.py",
-          "line_count": 3170
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/final_qa_certification.py",
-          "line_count": 2442
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/draft_generation.py",
-          "line_count": 1956
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/retrieval.py",
-          "line_count": 1922
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/review_packet_index.py",
-          "line_count": 1307
-        }
-      ]
-    },
-    {
       "name": "capture_catalog_and_source_register",
       "target_milestone": 6,
       "required_tests": [

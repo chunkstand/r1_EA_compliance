@@ -7,39 +7,34 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPO_ROOT / "src" / "usfs_r1_ea_sources"
 SUITE_BUDGETS = {
-    "tests/test_retrieval.py": 500,
-    "tests/test_retrieval_eval.py": 200,
-    "tests/test_retrieval_validation.py": 700,
-    "tests/test_retrieval_test_boundary.py": 250,
-    "tests/support/retrieval_fixtures.py": 300,
+    "tests/test_review_packet_index.py": 400,
+    "tests/test_review_packet_index_test_boundary.py": 250,
 }
 SOURCE_FAMILY_BUDGETS = {
-    "src/usfs_r1_ea_sources/retrieval.py": 80,
-    "src/usfs_r1_ea_sources/retrieval_common.py": 200,
-    "src/usfs_r1_ea_sources/retrieval_eval_runtime.py": 550,
-    "src/usfs_r1_ea_sources/retrieval_query.py": 400,
-    "src/usfs_r1_ea_sources/retrieval_runtime.py": 500,
-    "src/usfs_r1_ea_sources/retrieval_validation.py": 550,
+    "src/usfs_r1_ea_sources/review_packet_index.py": 80,
+    "src/usfs_r1_ea_sources/review_packet_index_artifacts.py": 200,
+    "src/usfs_r1_ea_sources/review_packet_index_common.py": 200,
+    "src/usfs_r1_ea_sources/review_packet_index_inventory.py": 600,
+    "src/usfs_r1_ea_sources/review_packet_index_outputs.py": 600,
 }
-SPLIT_SUITES = (
-    "tests/test_retrieval.py",
-    "tests/test_retrieval_eval.py",
-    "tests/test_retrieval_validation.py",
-)
+SPLIT_SUITES = ("tests/test_review_packet_index.py",)
+ALLOWED_TOP_LEVEL_HELPERS = {
+    "tests/test_review_packet_index.py": {
+        "_append_land_exchange_rows",
+        "_read_json",
+        "_validation_check",
+        "_write_json",
+        "_write_minimal_review",
+    }
+}
 SENTINEL_OWNERS = {
-    "tests/test_retrieval.py": {
-        "test_build_retrieval_index_and_query_with_filters",
-    },
-    "tests/test_retrieval_eval.py": {
-        "test_retrieval_eval_scores_expected_sources_terms_and_provenance",
-    },
-    "tests/test_retrieval_validation.py": {
-        "test_retrieval_build_rejects_catalog_with_incompatible_source_record_set",
+    "tests/test_review_packet_index.py": {
+        "test_review_packet_index_generates_row_inventory_manifest_and_packet",
     },
 }
 
 
-def test_retrieval_split_line_budgets_are_respected() -> None:
+def test_review_packet_index_split_line_budgets_are_respected() -> None:
     oversize = []
     missing = []
 
@@ -56,10 +51,10 @@ def test_retrieval_split_line_budgets_are_respected() -> None:
     assert oversize == []
 
 
-def test_retrieval_source_family_roster_and_line_budgets_are_respected() -> None:
+def test_review_packet_index_source_family_roster_and_line_budgets_are_respected() -> None:
     actual_paths = {
         path.relative_to(REPO_ROOT).as_posix()
-        for path in SOURCE_ROOT.glob("retrieval*.py")
+        for path in SOURCE_ROOT.glob("review_packet_index*.py")
     }
 
     assert actual_paths == set(SOURCE_FAMILY_BUDGETS)
@@ -82,7 +77,8 @@ def test_split_suites_do_not_redefine_top_level_helpers() -> None:
         helpers = []
         for node in tree.body:
             if isinstance(node, ast.FunctionDef) and node.name.startswith("_"):
-                helpers.append(node.name)
+                if node.name not in ALLOWED_TOP_LEVEL_HELPERS.get(relative_path, set()):
+                    helpers.append(node.name)
         if helpers:
             forbidden_helpers[relative_path] = helpers
 

@@ -33,10 +33,10 @@ Current routed state on 2026-05-21:
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 - The queued under-`800` follow-on packet in
   `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` is now resolved
-  through Milestone `4`: the forest-plan runtime family is closed under the
-  `800`-line gate, and the next routed slice is Milestone `5` on the
-  extraction, retrieval, and review-artifact owners.
-- The latest architecture gate reports `409` code files, `15` above `800`
+  through Milestone `5`: the extraction, retrieval, and review-artifact
+  family is now closed under the `800`-line gate, and the next routed slice
+  is Milestone `6` on capture, catalog, and source-register owners.
+- The latest architecture gate reports `437` code files, `10` above `800`
   lines, no Python or JS/TS import cycles, and no source module above the
   `20`-import fan-out gate.
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
