@@ -183,32 +183,39 @@ Evaluation date: 2026-05-21
 
 #### Reviewability of large modules
 
-- The repo has good boundaries on paper, but large owned modules still dominate the risk surface.
+- The repo has good boundaries on paper, and the oversized-owner lane is now closed; the remaining
+  risk is concentration near the `800`-line ridge plus churn-heavy hotspots.
 - Evidence from `architecture_probe.py`:
-  - `24` code files exceed `800` lines;
-  - top hotspots include `project_sow_package.py`, `nepa_knowledge_graph_export.py`,
-    `forest_plan_components.py`, `extract.py`, and `final_qa_certification.py`.
+  - `0` code files now exceed `800` lines;
+  - the largest current source owners sit at or below the gate, led by
+    `claim_extraction_eval.py=800`, `extract_runtime.py=796`,
+    `ea_consistency_decision_support_inputs.py=794`, and
+    `applicability_decisions.py=793`;
+  - top churn hotspots now include `tests/test_compliance_review.py`, `evidence_graph.py`, and
+    `tests/test_cli.py`.
 - Assessment:
   - good architecture direction;
-  - too many large active edit surfaces for easy agentic maintenance.
+  - remaining architecture-paydown work should start from current hotspot and near-threshold
+    evidence, not the old oversized queue.
 
 ### Weak
 
 #### Cheap governance only just reached the hotspot layer
 
-- The repo has dependency and debt gates, but large-file and fan-out protection is still young.
+- The repo has dependency and debt gates, and the large-file/fan-out protection now holds a live
+  zero-oversized baseline.
 - Evidence:
-  - `tests/test_architecture_quality.py` now guards the current `24`-file `>800` line baseline,
+  - `tests/test_architecture_quality.py` now guards the current `0`-file `>800` line baseline,
     blocks new `>20` fan-out source modules with no current exceptions, and pins
     `docs/ARCHITECTURE.md` as the canonical tracked architecture path;
-  - Milestone 8 in the umbrella architecture packet is now resolved, so no `tests/` or
-    `tests/support/` owner remains above the `800`-line reviewability gate;
-  - the gate is intentionally conservative and prevents growth, but it does not yet reduce the
-    existing hotspot inventory by itself.
+  - the under-`800` follow-on packet is now resolved through Milestone `9`, so the former oversized
+    owner queue is closed and the inventory file is empty;
+  - the gate is intentionally conservative and now blocks both queue growth and reopen.
 - Assessment:
   - governance is now meaningfully better;
-  - the active follow-on is now mechanical routing and hermeticity cleanup before the remaining
-    runtime/viewer hotspot families.
+  - the active follow-on is no longer Milestone `9` cleanup; it is maintaining the closed baseline
+    while the broader repo route stays on the full-canonical gold packet and other non-architecture
+    lanes.
 
 #### Hermeticity and long-form routing are still open debt
 
@@ -236,40 +243,44 @@ PYTHONPATH=src python -m usfs_r1_ea_sources --help
 Observed results:
 
 - `git status -sb`: clean worktree on `main`.
-- `architecture_probe.py`: no Python or JS cycles; `24` code files over `800` lines; top hotspot
-  `project_sow_package.py`; no source module above fan-out `20`; and no `tests/` or
+- `architecture_probe.py`: no Python or JS cycles; `0` code files over `800` lines; top hotspot
+  `tests/test_compliance_review.py`; no source module above fan-out `20`; and no `tests/` or
   `tests/support/` owner above the `800`-line reviewability gate.
 - `tests/test_architecture_contract.py`, `tests/test_architecture_quality.py`, and
-  `tests/test_debt_contract.py`: all pass together after the Milestone 8 docs-alignment closeout.
+  `tests/test_debt_contract.py`: all pass together after the Milestone `9` closeout.
 - CLI help: `document-plan` is exposed on the public command surface.
 
 ## Priority Queue
 
 ### 1. Remove Mechanical Routing And Hermeticity Drift
 
-- Replace or quarantine the West Reservoir user-home dependency.
+- Keep the resolved under-`800` packet historical and avoid reintroducing it as active debt.
+- Preserve the explicit West Reservoir typed-blocked quarantine instead of reviving stale
+  reviewer-ready claims.
 - Keep `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/AGENT_START_HERE.md`, and the umbrella architecture packet aligned on one explicit
   next-step truth.
-- Finish the Milestone 9 routing cleanup before reopening broader hotspot-owner refactors.
+- Route any new hotspot-owner paydown from a fresh rebaseline rather than the old Milestone `9`
+  queue.
 
 ### 2. Keep The Cheap Architecture Gates Green
 
-- Do not let the size, fan-out, debt, or path-drift checks go stale while Milestones 9 and 10
-  close.
+- Do not let the size, fan-out, debt, or path-drift checks go stale while the broader repo route
+  stays on the full-canonical gold and quarantine lanes.
 
 ### 3. Resume Remaining Runtime And Viewer Hotspots After The Routing Closeout
 
-- After the routing packet closes, the largest remaining active owner families are
-  `project_sow_package.py`, `nepa_knowledge_graph_export.py`, `forest_plan_components.py`,
-  `ea_consistency_decision_support.py`, `extract.py`, and the NEPA 3D viewer surface.
+- If another hotspot paydown packet is opened, start from the current ridge and hotspot evidence:
+  `claim_extraction_eval.py=800`, `extract_runtime.py=796`,
+  `ea_consistency_decision_support_inputs.py=794`, `applicability_decisions.py=793`,
+  and churn-heavy surfaces such as `tests/test_compliance_review.py` and `evidence_graph.py`.
 - Do not refactor by aesthetic preference alone; keep using hotspot and ownership evidence.
 
 ## Bottom Line
 
 This repo is already stronger than average on architecture legibility, artifact auditability,
 security boundaries, and milestone discipline. The current main gap is no longer agent-entrypoint
-completeness or oversized test-owner sprawl. The current main gap is the remaining mechanical
-routing and hermeticity debt, with larger runtime/viewer hotspot families queued behind that
-cleanup. The next quality step is to close Milestone 9 cleanly while keeping the architecture gates
-green.
+completeness or oversized test-owner sprawl. The under-`800` hotspot packet is now closed; the
+current discipline task is to keep that baseline closed while the active repo route stays on the
+full-canonical gold and quarantine work. The next architecture paydown should start from current
+hotspot and near-threshold evidence, not from the retired Milestone `9` queue.

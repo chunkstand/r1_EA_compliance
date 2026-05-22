@@ -31,7 +31,7 @@ Current routed state on 2026-05-21:
   claim stays retired behind an explicit typed-blocked contract for
   `west-reservoir-67436`, and the remaining live red lane is rerouted into
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
-- The queued under-`800` follow-on packet in
+- The under-`800` follow-on packet in
   `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` is now fully resolved
   through Milestone `9`: the viewer family was the last oversized owner, the
   repo remains at `0` code files above `800` lines, and the packet is now a
@@ -653,8 +653,8 @@ reviewer-engine read path. See `docs/SESSION_HANDOFF.md` for current routed work
 closeout facts. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the
 architecture map, layer ownership, generated-artifact ownership, command groups, and automated
 architecture gate. See `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` for the resolved
-umbrella history and `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` for the current
-oversized-file follow-on queue.
+umbrella history and `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` for the resolved
+zero-oversized follow-on closeout record.
 See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system plan: a Custer
 Gallatin National Forest EA compliance review as the proving ground. See
 `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` for the post-V1 plan that makes authority

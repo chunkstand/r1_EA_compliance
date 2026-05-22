@@ -7,6 +7,37 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestone 9 Alignment Closeout
+
+This docs-only pass closes the remaining post-closeout drift after the Milestone `9` packet
+commit.
+
+- outcome label:
+  `resolved`; the packet was already closed, and this pass updates the remaining secondary docs and
+  metadata so they no longer imply queued work or the earlier `24`-file baseline
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- alignment truth:
+  `config/architecture_large_file_inventory_v1.json` now records the packet as
+  `resolved_historical_closeout` instead of a queued plan, `README.md` no longer refers to a
+  current oversized-file follow-on queue, and `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md` now
+  reflects the live `0`-oversized baseline instead of the historical `24`-file snapshot
+- stale-reference audit:
+  no remaining live doc or metadata surface in this repo-wide sweep still tells users to finish
+  Milestone `9` or still describes the under-`800` packet as an active queued lane; only
+  explicitly historical append-only sections below keep the older wording
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; the under-`800` packet
+  remains resolved with no queued follow-on slice
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_quality.py tests/test_architecture_contract.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `wc -l docs/CURRENT_ROUTING.md`, and
+  `git diff --check`
+
 ## Under-800 Hotspot Reduction Milestone 9 Closeout
 
 This docs-and-readback slice closes the under-`800` follow-on packet at the live zero-oversized
@@ -16,6 +47,8 @@ baseline.
   `resolved`; Milestone `9` closes the packet and retires the remaining queued-route wording
 - routed packet:
   `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- closeout commit:
+  `a6c5459` (`Resolve under-800 Milestone 9 closeout`)
 - closeout truth:
   the fresh architecture probe still reports `462` code files, `0` code files above `800`, no
   Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and an

@@ -73,6 +73,25 @@ routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
 
+## Under-800 Hotspot Reduction Milestone 9 Alignment Closeout
+
+Latest docs-only alignment on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved`; the packet was already closed, and this pass updates the remaining secondary docs and
+  metadata so they no longer imply queued work or the historical `24`-file baseline.
+- Alignment truth:
+  `config/architecture_large_file_inventory_v1.json` now records this packet as
+  `resolved_historical_closeout`, `README.md` no longer points readers to a current oversized-file
+  follow-on queue, and `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md` now reflects the live
+  `462`-file / `0`-oversized baseline.
+- Stale-reference audit:
+  no remaining live doc or metadata surface in this repo-wide sweep still instructs users to
+  finish Milestone `9` or still describes the under-`800` packet as active queued work; older
+  append-only sections below remain historical only.
+
 ## Under-800 Hotspot Reduction Milestone 9 Closeout
 
 Latest docs-and-readback closeout on 2026-05-21:
@@ -82,6 +101,8 @@ Latest docs-and-readback closeout on 2026-05-21:
 - Outcome label:
   `resolved`; Milestone `9` closes the under-`800` packet and retires the last queued-route
   wording.
+- Closeout commit:
+  `a6c5459` (`Resolve under-800 Milestone 9 closeout`).
 - Closeout truth:
   the fresh architecture probe still reports `462` code files, `0` code files above `800`, no
   Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and an empty

@@ -595,11 +595,17 @@ Progress after Milestone `9` on 2026-05-21:
 - `config/architecture_large_file_inventory_v1.json` remains empty, and
   `tests/test_architecture_quality.py` plus `tests/test_debt_contract.py` keep the zero-oversized
   architecture contract fail-closed.
+- The closeout commit `a6c5459` touched only `README.md`, `docs/CURRENT_ROUTING.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and this plan.
 - `README.md`, `docs/CURRENT_ROUTING.md`, `docs/SESSION_HANDOFF.md`, and
   `docs/CURRENT_SYSTEM_STATE.md` now treat this packet as resolved historical closeout rather than
   queued active debt.
 - The exact last oversized owner family closed in this packet was the viewer family at Milestone
   `8`; Milestone `9` closes only the final zero-oversized rebaseline and routing readback.
+- Closeout commit: `a6c5459` (`Resolve under-800 Milestone 9 closeout`).
+- A later docs-only alignment pass also normalized `config/architecture_large_file_inventory_v1.json`
+  metadata and removed stale `24`-file or pending-Milestone-`9` wording from
+  `docs/AGENTIC_REPO_BEST_PRACTICES_GUIDE.md` and the remaining live `README.md` references.
 - Milestone `9` is resolved. The under-`800` hotspot reduction packet is fully closed with no
   further queued slice; keep the broader repo default route on
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.

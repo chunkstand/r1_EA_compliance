@@ -3,6 +3,9 @@
   "as_of": "2026-05-21",
   "reviewable_line_threshold": 800,
   "probe_command": "python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20",
-  "queued_plan": "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md",
+  "plan_path": "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md",
+  "plan_status": "resolved_historical_closeout",
+  "closeout_commit": "a6c5459",
+  "last_oversized_owner_family": "viewer",
   "families": []
 }
