@@ -19,6 +19,7 @@ modules = [
   "records",
   "source_set_support",
   "source_register",
+  "source_register_validation",
   "source_partitions",
   "workbook",
 ]
@@ -27,13 +28,24 @@ allowed_import_layers = ["foundation"]
 [[layers]]
 name = "capture"
 summary = "Dry-run, preflight, download, batch, report, pilot, run validation, and source-register contract workflows."
-modules = ["batches", "capture_run_support", "download", "dry_run", "pilots", "preflight", "report", "validate_run"]
+modules = [
+  "batches",
+  "capture_run_support",
+  "download",
+  "download_transport",
+  "dry_run",
+  "pilots",
+  "preflight",
+  "preflight_transport",
+  "report",
+  "validate_run",
+]
 allowed_import_layers = ["foundation", "capture"]
 
 [[layers]]
 name = "catalog"
 summary = "Reviewer catalog and source-set promotion surfaces."
-modules = ["catalog"]
+modules = ["catalog", "catalog_outputs"]
 allowed_import_layers = ["foundation", "capture", "catalog"]
 
 [[layers]]
@@ -125,6 +137,8 @@ name = "review_support"
 summary = "Cross-source-set reuse planning helpers that may inspect review-derived source-set requirements without writing review outputs."
 modules = [
   "authority_currentness",
+  "authority_currentness_projection",
+  "authority_currentness_validation",
   "authority_relationship_eval",
   "citation_alias_eval",
   "forest_plan_identity_reconciliation",
@@ -139,6 +153,7 @@ modules = [
   "graph_health_eval",
   "reuse_inventory",
   "source_register_proving",
+  "source_register_proving_graph",
 ]
 allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "review", "review_support"]
 

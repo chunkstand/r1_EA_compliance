@@ -7,6 +7,67 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestone 6
+
+This slice resolves the capture, catalog, and source-register owner family under the repo's
+`800`-line reviewability gate while preserving workbook, catalog, and schema contracts.
+
+- outcome label:
+  Milestone `6` resolved; the next routed slice in this packet is Milestone `7` for the
+  compliance and eval family
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/catalog.py`,
+  `src/usfs_r1_ea_sources/catalog_outputs.py`,
+  `src/usfs_r1_ea_sources/authority_currentness.py`,
+  `src/usfs_r1_ea_sources/authority_currentness_projection.py`,
+  `src/usfs_r1_ea_sources/authority_currentness_validation.py`,
+  `src/usfs_r1_ea_sources/source_register.py`,
+  `src/usfs_r1_ea_sources/source_register_validation.py`,
+  `src/usfs_r1_ea_sources/source_register_proving.py`,
+  `src/usfs_r1_ea_sources/source_register_proving_graph.py`,
+  `src/usfs_r1_ea_sources/download.py`,
+  `src/usfs_r1_ea_sources/download_transport.py`,
+  `src/usfs_r1_ea_sources/preflight.py`,
+  `src/usfs_r1_ea_sources/preflight_transport.py`,
+  `tests/test_capture_catalog_source_register_test_boundary.py`,
+  `tests/test_architecture_quality.py`,
+  `config/architecture_large_file_inventory_v1.json`, and
+  `docs/architecture_contract.toml`
+- closeout truth:
+  the six oversized capture/catalog/source-register owners are now thin public facades over
+  explicit sibling owner modules; every file in the `catalog*`, `authority_currentness*`,
+  `source_register*`, `download*`, and `preflight*` families is `<=800` lines; the new boundary
+  test now fails-close on the exact source-family roster plus per-file budgets; the oversized-file
+  inventory drops this family entirely; and `tests/test_architecture_quality.py` now ratchets the
+  live oversized queue to `4`
+- debt-shift audit:
+  the largest new sibling files are
+  `catalog.py=782`,
+  `source_register_proving.py=741`,
+  `source_register.py=729`,
+  `catalog_outputs.py=723`,
+  `authority_currentness.py=670`, and
+  `download.py=616`; none reopened the oversized queue, created an import cycle, or exceeded the
+  fan-out gate
+- live architecture truth:
+  the fresh architecture probe now reports `445` code files, `4` code files above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top overall
+  hotspot `tests/test_compliance_review.py` at score `35420`; the largest remaining oversized
+  source owner is `src/usfs_r1_ea_sources/compliance_review_eval.py`
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `7` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_authority_currentness.py tests/test_source_register_proving.py tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_download.py tests/test_preflight.py tests/test_capture_catalog_source_register_test_boundary.py tests/test_architecture_contract.py tests/test_architecture_quality.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`, and
+  `git diff --check`
+
 ## Under-800 Hotspot Reduction Milestone 5
 
 This slice resolves the extraction, retrieval, and review-artifact owner family under the repo's

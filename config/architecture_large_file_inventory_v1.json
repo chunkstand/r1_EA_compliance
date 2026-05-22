@@ -6,45 +6,6 @@
   "queued_plan": "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md",
   "families": [
     {
-      "name": "capture_catalog_and_source_register",
-      "target_milestone": 6,
-      "required_tests": [
-        "tests/test_catalog.py",
-        "tests/test_authority_currentness.py",
-        "tests/test_source_register_proving.py",
-        "tests/test_source_register_loader.py",
-        "tests/test_source_register_schema.py",
-        "tests/test_download.py",
-        "tests/test_preflight.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/catalog.py",
-          "line_count": 1496
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/authority_currentness.py",
-          "line_count": 1347
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/source_register_proving.py",
-          "line_count": 1181
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/source_register.py",
-          "line_count": 1064
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/download.py",
-          "line_count": 914
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/preflight.py",
-          "line_count": 859
-        }
-      ]
-    },
-    {
       "name": "compliance_and_eval",
       "target_milestone": 7,
       "required_tests": [

@@ -7,8 +7,9 @@ Status: Milestone `0` resolved 2026-05-21 through live baseline recheck; Milesto
 through the Project SOW family split; Milestone `3` resolved 2026-05-21 through the
 knowledge-graph and decision-support family split; Milestone `4` resolved 2026-05-21 through
 the forest-plan runtime family split; Milestone `5` resolved 2026-05-21 through the extraction,
-retrieval, and review-artifact family split; next routed slice Milestone `6` for capture,
-catalog, and source-register owners
+retrieval, and review-artifact family split; Milestone `6` resolved 2026-05-21 through the
+capture, catalog, and source-register family split; next routed slice Milestone `7` for
+compliance and eval owners
 
 Owner context: The resolved umbrella architecture packet closed at a count-only large-file guard of
 `24` code files above `800` lines. This follow-on packet resolves the remaining repo-wide
@@ -23,36 +24,35 @@ queued explicit follow-on, not the default active route.
 Resolve the remaining large-file and hotspot concentration debt after the umbrella architecture
 closeout. The immediate weakness is no longer missing architecture direction. The weakness is that:
 
-- `10` live code files still exceed the repo's `800`-line reviewability threshold;
-- the remaining oversized concentration is now localized in the capture/catalog/source-register,
-  compliance/eval, and viewer families; and
+- `4` live code files still exceed the repo's `800`-line reviewability threshold;
+- the remaining oversized concentration is now localized in the compliance/eval and viewer
+  families; and
 - the next risk is debt shifting into medium-large siblings or stale routing after each family
   split, not the earlier count-only gate drift or dirty-baseline overlap that Milestones `0` and
   `1` already closed.
 
 ## Current Evidence
 
-### Live baseline after Milestone `5`
+### Live baseline after Milestone `6`
 
 - `git status -sb` was clean at the start of this alignment pass. The earlier planning-time
   compliance/eval overlap closed at Milestone `0` and is no longer part of the active baseline.
-- Fresh architecture probe at the Milestone `5` closeout
+- Fresh architecture probe at the Milestone `6` closeout
   (`python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`)
-- reports `437` code files, `10` code files above `800` lines, no Python cycles, no JS/TS cycles,
+- reports `445` code files, `4` code files above `800` lines, no Python cycles, no JS/TS cycles,
   no local module above the `20`-import fan-out gate, top overall hotspot
   `tests/test_compliance_review.py` at score `35420`, and largest remaining oversized source owner
-  `src/usfs_r1_ea_sources/catalog.py` at `1496` lines.
-- `tests/test_architecture_quality.py` now enforces `MAX_ALLOWED_OVERSIZED_FILES = 10` and exact
+  `src/usfs_r1_ea_sources/compliance_review_eval.py` at `1714` lines.
+- `tests/test_architecture_quality.py` now enforces `MAX_ALLOWED_OVERSIZED_FILES = 4` and exact
   oversized-file path membership against `config/architecture_large_file_inventory_v1.json`; the
   earlier count-only `24`-file blind spot is closed.
-- The governed live oversized inventory is now exactly three remaining families in
-  `config/architecture_large_file_inventory_v1.json`: capture/catalog/source-register (`6`
-  files), compliance/eval (`3` files), and viewer (`1` file).
-- Debt-shift audit after the extraction/retrieval/review split is currently clean: the largest new
-  sibling modules are `extract_runtime.py=796`, `final_qa_certification_validation.py=741`,
-  `final_qa_certification_report.py=627`, `draft_generation_outputs.py=604`,
-  `review_packet_index_inventory.py=545`, and `review_packet_index_outputs.py=542`, all below the
-  `800`-line gate and outside the oversized queue.
+- The governed live oversized inventory is now exactly two remaining families in
+  `config/architecture_large_file_inventory_v1.json`: compliance/eval (`3` files) and viewer
+  (`1` file).
+- Debt-shift audit after the capture/catalog/source-register split is currently clean: the largest
+  new sibling modules are `catalog.py=782`, `source_register_proving.py=741`,
+  `source_register.py=729`, `catalog_outputs.py=723`, `authority_currentness.py=670`, and
+  `download.py=616`, all below the `800`-line gate and outside the oversized queue.
 
 ### Historical packet-start baseline
 
@@ -79,7 +79,7 @@ closeout. The immediate weakness is no longer missing architecture direction. Th
 | Compliance and eval | `1714` `src/usfs_r1_ea_sources/compliance_review_eval.py`; `1686` `src/usfs_r1_ea_sources/compliance_outputs.py`; `824` `src/usfs_r1_ea_sources/compliance_validation.py` |
 | Viewer | `2547` `viewer/nepa-3d/app.js` |
 
-### Governance state after Milestone `5`
+### Governance state after Milestone `6`
 
 The first packet weakness was governance drift. That part is now closed, and the active governance
 risk has shifted:
@@ -89,7 +89,7 @@ risk has shifted:
   `tests/test_architecture_quality.py`;
 - future Codex sessions can still shift debt into medium-large siblings or stale docs if they stop
   at a green split without the post-probe alignment sweep; and
-- Milestone `6` therefore needs to close with the live inventory artifact, architecture probe, and
+- Milestone `7` therefore needs to close with the live inventory artifact, architecture probe, and
   routing readback rather than only a reduced file count.
 
 Milestone `1` closed the original blind spot; the remaining packet work is owner-family reduction
@@ -97,7 +97,7 @@ plus debt-shift prevention.
 
 ## Goal
 
-Drive the remaining live oversized-file inventory from `10` to `0` while preserving:
+Drive the remaining live oversized-file inventory from `4` to `0` while preserving:
 
 - current public CLI command names;
 - workbook, catalog, and generated-artifact contracts;
@@ -144,7 +144,7 @@ Out of scope:
 | Knowledge graph and decision support | `nepa_knowledge_graph_export.py`, `ea_consistency_decision_support.py`, `nepa_3d_graph_contract.py` | `tests/test_nepa_knowledge_graph_export.py`, `tests/test_nepa_knowledge_graph_export_review.py`, `tests/test_nepa_knowledge_graph_export_readiness.py`, `tests/test_nepa_knowledge_graph_export_test_boundary.py`, `tests/test_nepa_3d_graph_contract.py`, `tests/test_ea_consistency_decision_support.py`, `tests/test_ea_consistency_decision_support_report.py`, `tests/test_ea_consistency_decision_support_validation.py`, `tests/test_ea_consistency_decision_support_test_boundary.py` |
 | Forest-plan runtime | `forest_plan_components.py`, `forest_plan_resolver.py`, `forest_plan_source_delta_readiness.py`, `forest_plan_component_adjudication.py`, `forest_plan_component_eval.py` | `tests/test_forest_plan_components.py`, `tests/test_forest_plan_components_manifest.py`, `tests/test_forest_plan_components_inventory.py`, `tests/test_forest_plan_components_coverage.py`, `tests/test_forest_plan_components_test_boundary.py`, `tests/test_forest_plan_resolver.py`, `tests/test_forest_plan_resolver_profiles.py`, `tests/test_forest_plan_resolver_scope.py`, `tests/test_forest_plan_resolver_test_boundary.py`, `tests/test_forest_plan_source_delta_readiness.py`, `tests/test_forest_plan_component_adjudication.py`, `tests/test_forest_plan_component_eval.py`, `tests/test_forest_plan_component_eval_coverage.py`, `tests/test_forest_plan_component_retrieval_eval.py` |
 | Extraction, retrieval, and review artifacts | `extract.py`, `final_qa_certification.py`, `draft_generation.py`, `retrieval.py`, `review_packet_index.py` | `tests/test_extract.py`, `tests/test_extract_reuse.py`, `tests/test_extract_pdf_fallbacks.py`, `tests/test_extract_test_boundary.py`, `tests/test_final_qa_certification.py`, `tests/test_final_qa_certification_report.py`, `tests/test_final_qa_certification_validation.py`, `tests/test_final_qa_certification_test_boundary.py`, `tests/test_draft_generation.py`, `tests/test_draft_generation_eval.py`, `tests/test_retrieval.py`, `tests/test_retrieval_validation.py`, `tests/test_retrieval_eval.py`, `tests/test_retrieval_test_boundary.py`, `tests/test_review_packet_index.py` |
-| Capture, catalog, and source-register | `catalog.py`, `authority_currentness.py`, `source_register_proving.py`, `source_register.py`, `download.py`, `preflight.py` | `tests/test_catalog.py`, `tests/test_authority_currentness.py`, `tests/test_source_register_proving.py`, `tests/test_source_register_loader.py`, `tests/test_source_register_schema.py`, `tests/test_download.py`, `tests/test_preflight.py` |
+| Capture, catalog, and source-register | `catalog.py`, `authority_currentness.py`, `source_register_proving.py`, `source_register.py`, `download.py`, `preflight.py` | `tests/test_catalog.py`, `tests/test_authority_currentness.py`, `tests/test_source_register_proving.py`, `tests/test_source_register_loader.py`, `tests/test_source_register_schema.py`, `tests/test_download.py`, `tests/test_preflight.py`, `tests/test_capture_catalog_source_register_test_boundary.py` |
 | Compliance and eval | `compliance_review_eval.py`, `compliance_outputs.py`, `compliance_validation.py` | `tests/test_compliance_review_eval.py`, `tests/test_compliance_review.py`, `tests/test_compliance_review_contracts.py`, `tests/test_compliance_review_test_boundary.py`, `tests/test_compliance_gold_eval.py`, `tests/test_gold_coverage_eval.py`, `tests/test_promotion_suite.py`, `tests/test_real_package_review_coverage_eval.py`, `tests/test_v1_ea_eval.py`, `tests/test_v1_ea_eval_contracts.py`, `tests/test_v1_ea_eval_forest_plan.py` |
 | Viewer | `viewer/nepa-3d/app.js` | `tests/test_nepa_3d_viewer.py` |
 
@@ -461,12 +461,33 @@ Work:
 Required verification:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_authority_currentness.py tests/test_source_register_proving.py tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_download.py tests/test_preflight.py tests/test_architecture_contract.py tests/test_architecture_quality.py -q
+PYTHONPATH=src uv run --extra dev pytest tests/test_catalog.py tests/test_authority_currentness.py tests/test_source_register_proving.py tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_download.py tests/test_preflight.py tests/test_capture_catalog_source_register_test_boundary.py tests/test_architecture_contract.py tests/test_architecture_quality.py -q
 PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources tests
 PYTHONPATH=src python -m compileall src
 python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20
 git diff --check
 ```
+
+Progress after Milestone `6` on 2026-05-21:
+
+- `catalog.py`, `authority_currentness.py`, `source_register_proving.py`, `source_register.py`,
+  `download.py`, and `preflight.py` are now thin public facades over explicit sibling owner
+  modules; every new family file in those five prefixes is `<=800` lines.
+- `tests/test_capture_catalog_source_register_test_boundary.py` now fails-close on the exact
+  source-family roster plus per-file budgets, while `docs/architecture_contract.toml` owns the new
+  foundation, capture, catalog, and review-support modules directly.
+- `config/architecture_large_file_inventory_v1.json` no longer tracks the capture/catalog/source-
+  register family, and `tests/test_architecture_quality.py` now ratchets the live oversized queue
+  at `4` files.
+- Debt-shift audit: the largest new sibling files are `catalog.py=782`,
+  `source_register_proving.py=741`, `source_register.py=729`, `catalog_outputs.py=723`,
+  `authority_currentness.py=670`, and `download.py=616`; none reopened the oversized queue,
+  created an import cycle, or exceeded the fan-out gate.
+- The fresh architecture probe now reports `445` code files, `4` code files above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top overall
+  hotspot `tests/test_compliance_review.py` at score `35420`.
+- Milestone `6` is resolved. The next routed implementation slice in this packet is Milestone `7`
+  on compliance and eval owners.
 
 ### Milestone `7`: Compliance and eval family under `800`
 

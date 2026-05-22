@@ -47,10 +47,10 @@ still route the overall architecture umbrella as open or still claim a fresh
 full-canonical bounded gold aggregate is green are historical only after the
 2026-05-21 Milestone 10 Sequence 52 rebaseline closeout described below.
 Older architecture references below that still route the under-`800` hotspot
-packet as pending on Milestone `5` or still report the pre-closeout
-extraction/retrieval baseline of `409` code files and `15` files above `800`
-are historical only after the 2026-05-21 Under-800 Hotspot Reduction
-Milestone `5` closeout described below. Older references below that still
+packet as pending on Milestone `6` or still report the pre-closeout
+capture/catalog/source-register baseline of `437` code files and `10` files
+above `800` are historical only after the 2026-05-21 Under-800 Hotspot
+Reduction Milestone `6` closeout described below. Older references below that still
 treat the live
 full-canonical gold replay as
 the earlier `14/14` rule/retrieval failure bundle or as a pre-scored
@@ -58,6 +58,57 @@ applicability abort are historical only after the 2026-05-21 generated-case
 routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
+
+## Under-800 Hotspot Reduction Milestone 6
+
+Latest implementation on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone `6`; the capture, catalog, and source-register owner family is now
+  closed under the `800`-line gate, and the packet advances to Milestone `7`.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/catalog.py`,
+  the new `src/usfs_r1_ea_sources/catalog_outputs.py`,
+  `src/usfs_r1_ea_sources/authority_currentness.py`,
+  the new `src/usfs_r1_ea_sources/authority_currentness_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/source_register.py`,
+  the new `src/usfs_r1_ea_sources/source_register_validation.py`,
+  `src/usfs_r1_ea_sources/source_register_proving.py`,
+  the new `src/usfs_r1_ea_sources/source_register_proving_graph.py`,
+  `src/usfs_r1_ea_sources/download.py`,
+  the new `src/usfs_r1_ea_sources/download_transport.py`,
+  `src/usfs_r1_ea_sources/preflight.py`,
+  the new `src/usfs_r1_ea_sources/preflight_transport.py`,
+  `tests/test_capture_catalog_source_register_test_boundary.py`,
+  `tests/test_architecture_quality.py`,
+  `config/architecture_large_file_inventory_v1.json`, and
+  `docs/architecture_contract.toml`.
+- Closeout truth:
+  the six oversized capture/catalog/source-register owners are now thin public facades over
+  explicit sibling owner modules; the new boundary test fails closed on the exact source-family
+  roster plus per-file budgets; the oversized-file inventory no longer tracks this family; and
+  `tests/test_architecture_quality.py` now ratchets the live oversized queue at `4` files.
+- Debt-shift audit:
+  the largest new sibling files are
+  `catalog.py=782`,
+  `source_register_proving.py=741`,
+  `source_register.py=729`,
+  `catalog_outputs.py=723`,
+  `authority_currentness.py=670`, and
+  `download.py=616`; none reopened the oversized queue, created an import cycle, or exceeded the
+  fan-out gate.
+- Live architecture truth:
+  the fresh architecture probe now reports `445` code files, `4` code files above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and top
+  overall hotspot `tests/test_compliance_review.py` at score `35420`. The largest remaining
+  oversized source owner is `src/usfs_r1_ea_sources/compliance_review_eval.py` at `1714` lines.
+- Next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `7` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
 
 ## Under-800 Hotspot Reduction Milestone 5
 
