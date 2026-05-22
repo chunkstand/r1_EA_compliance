@@ -96,7 +96,7 @@ plus debt-shift prevention.
 
 ## Goal
 
-Drive the remaining live oversized-file inventory from `4` to `0` while preserving:
+Drive the remaining live oversized-file inventory from `1` to `0` while preserving:
 
 - current public CLI command names;
 - workbook, catalog, and generated-artifact contracts;
@@ -119,7 +119,7 @@ Drive the remaining live oversized-file inventory from `4` to `0` while preservi
 
 In scope:
 
-- the exact live `15`-file oversized inventory in
+- the exact live `1`-file oversized inventory in
   `config/architecture_large_file_inventory_v1.json`;
 - architecture gate hardening for exact oversized-file membership and no-substitution ratchets;
 - owner-family splits that reduce every current `>800` code file to `<=800`;
