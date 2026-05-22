@@ -7,6 +7,73 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Compliance Gold Rebaseline Milestone 2 Source-Claim Narrowing Slice
+
+This slice keeps the same routed gold packet active, but it closes the
+remaining review-time generated source-claim-link drift. The live red owner is
+now only the five unmapped authorities with no current canonical row.
+
+- outcome label:
+  Milestone `2` reduced again; the closeout for this reduced slice is
+  complete; the packet remains active on the next Milestone `2` owner family
+- routed packet:
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- runtime repair:
+  `src/usfs_r1_ea_sources/claim_extraction_runtime.py` now applies a
+  role-scoped duty-list extraction pattern for `agency_policy` and
+  `state_requirement` chunks; `src/usfs_r1_ea_sources/claim_extraction_validation.py`
+  now treats that pattern as a governed emitted pattern; and
+  `src/usfs_r1_ea_sources/compliance_review_eval.py` now merges generated
+  source-claim-link expectations from the effective case map and no longer
+  synthesizes blanket generated positives for every `uncertain` rule.
+  `config/compliance_gold_eval_v1.json` now declares explicit generated
+  source-claim-link positives only for
+  `land_exchange_statutory_authorities_authority_template` and
+  `region1_forest_plan_source_records_authority_template`
+- fresh extraction truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_library --source-set-id source-set-f775524ab233ff27`
+  now records `claim_count=122655`, `source_record_count=548`,
+  `document_role_counts.state_requirement=298`, `validation_passed=true`, and
+  `reviewer_ready=true`.
+  `STP-026` now emits `6` claims, including the Montana SHPO duty statements
+  that had been missing from the live source-claim surface
+- fresh isolated replay truth:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52_fix6`
+  still finishes red with `passed_case_count=0/14`, but the review-time
+  generated-link drift is gone. The replay records
+  `authority_trace_coverage_rate=1.0`; `gold-all-authorities-supported` still
+  scores `39` live `pass` findings and `20` `uncertain` findings, and its
+  generated diagnostic rule-claim surface now records `rule_claim_link_count=200`
+- residual owner truth:
+  the only remaining status / claim-type / source-evidence / source-claim-link /
+  source-record / source-document-role mismatches are
+  `apa_final_agency_action`,
+  `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`,
+  `organic_act_16usc_475`, and
+  `seven_county_nepa_scope`
+  because those five authorities still have no current canonical row on
+  `source-set-f775524ab233ff27`
+- bounded aggregate truth:
+  `source_library/reviews/gold_coverage_eval_seq52_fix6/gold_coverage_eval_results.json`
+  remains red only because `compliance_gold_failed=1`; it still records
+  `required_theme_count=7`, `passed_theme_count=7`,
+  `distinct_forest_count=2`, `distinct_package_style_count=3`,
+  `reviewer_ready_review_count=2`, and `typed_blocked_review_count=1` with no
+  threshold failures
+- next routing:
+  continue the same packet on Milestone `2`, now focused only on the five
+  unmapped live authorities rather than the earlier review-time
+  source-claim-link expectation drift
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_claim_extraction.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/claim_extraction_runtime.py src/usfs_r1_ea_sources/claim_extraction_validation.py src/usfs_r1_ea_sources/compliance_review_eval.py tests/test_claim_extraction.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src python -m compileall src/usfs_r1_ea_sources/claim_extraction_runtime.py src/usfs_r1_ea_sources/claim_extraction_validation.py src/usfs_r1_ea_sources/compliance_review_eval.py tests/test_claim_extraction.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py`,
+  the fresh `claim-extract` replay above,
+  the fresh `compliance-gold-eval` replay above,
+  the explicit-results bounded `gold_coverage_eval_seq52_fix6` replay, and
+  `git diff --check`
+
 ## Full Canonical Compliance Gold Rebaseline Milestone 2 Alignment Slice
 
 This slice does not change the live replay outcome. It closes the remaining

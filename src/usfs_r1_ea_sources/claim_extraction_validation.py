@@ -12,6 +12,7 @@ from .artifact_utils import _read_jsonl
 from .artifact_utils import _safe_int
 from .claim_extraction_runtime import CLAIM_PATTERNS
 from .claim_extraction_runtime import SUPPORTED_CLAIM_TYPES
+from .claim_extraction_runtime import _DUTY_STATEMENT_PATTERN
 from .claim_extraction_runtime import _claim_metrics
 from .claim_extraction_runtime import _text_sha256
 from .source_set_support import source_derived_dir
@@ -464,6 +465,8 @@ def _check_claims_match_retrieval_index(
 
 
 def _check_no_unsupported_claims(claims: list[dict]) -> dict:
+    supported_pattern_ids = {pattern.pattern_id for pattern in CLAIM_PATTERNS}
+    supported_pattern_ids.add(_DUTY_STATEMENT_PATTERN.pattern_id)
     failures = []
     for claim in claims:
         if claim.get("validation_status") != "valid":
@@ -472,7 +475,7 @@ def _check_no_unsupported_claims(claims: list[dict]) -> dict:
             failures.append({"claim_id": claim.get("claim_id"), "reason": "missing_citation"})
         if claim.get("claim_type") not in SUPPORTED_CLAIM_TYPES:
             failures.append({"claim_id": claim.get("claim_id"), "reason": "unsupported_type"})
-        if not any(pattern.pattern_id == claim.get("pattern_id") for pattern in CLAIM_PATTERNS):
+        if claim.get("pattern_id") not in supported_pattern_ids:
             failures.append({"claim_id": claim.get("claim_id"), "reason": "unknown_pattern"})
     return {
         "name": "no_unsupported_claims_emitted",

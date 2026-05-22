@@ -83,6 +83,51 @@ class ClaimExtractionTests(unittest.TestCase):
             self.assertIn("CLAIM_HAS_EVIDENCE_SPAN", {edge["relationship"] for edge in edges})
             self.assertIn("CLAIM_MENTIONS_ENTITY", {edge["relationship"] for edge in edges})
 
+    def test_claim_extraction_captures_state_requirement_duty_list_claims(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _prepare_source_library(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="STP-026",
+                        title="Montana SHPO",
+                        document_role="state_requirement",
+                        authority_level="state",
+                        citation_label="STP-026 | Montana SHPO | artifact abc123",
+                        text=(
+                            "About State Historic Preservation Offices. "
+                            "These duties include: Maintaining a statewide survey and cultural "
+                            "records for historic and archaeological resources. "
+                            "Assisting federal and state agencies in their responsibilities to "
+                            "identify and protect cultural resources. "
+                            "Providing technical guidance and best practices to preserve "
+                            "historic architecture, archaeology, and other cultural resources."
+                        ),
+                    )
+                ],
+            )
+
+            result = build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+
+            self.assertTrue(result.summary["validation_passed"])
+            claims = [
+                claim
+                for claim in _read_jsonl(result.claims_path)
+                if claim["source_record_id"] == "STP-026"
+            ]
+            self.assertGreaterEqual(len(claims), 2)
+            self.assertTrue(
+                any(
+                    "Assisting federal and state agencies" in claim["claim_text"]
+                    for claim in claims
+                )
+            )
+            self.assertTrue(all(claim["claim_type"] == "guidance" for claim in claims))
+
     def test_claim_extraction_allows_scope_excluded_rows_in_complete_extraction(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

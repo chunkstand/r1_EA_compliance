@@ -2,7 +2,7 @@
 
 Date: 2026-05-21
 
-Status: Active; Milestone 0 resolved 2026-05-21 through `compliance_gold_eval_seq52_fix1` and `gold_coverage_eval_seq52_fix1`; Milestone 1 resolved 2026-05-21 through generated-case routing repair and owner-family split; Milestone 2 reduced 2026-05-21 through `compliance_gold_eval_seq52_fix4` and `gold_coverage_eval_seq52_fix4`; routed docs are now aligned on the generated-vs-base rule-claim-link split, and the packet remains active on five still-unmapped live authorities plus narrowed review-time source-claim drift
+Status: Active; Milestone 0 resolved 2026-05-21 through `compliance_gold_eval_seq52_fix1` and `gold_coverage_eval_seq52_fix1`; Milestone 1 resolved 2026-05-21 through generated-case routing repair and owner-family split; Milestone 2 reduced 2026-05-21 through `compliance_gold_eval_seq52_fix6` and `gold_coverage_eval_seq52_fix6`; routed docs are aligned on the generated-vs-base rule-claim-link split, the narrower review-time source-claim drift is closed, and the packet remains active on five still-unmapped live authorities
 
 Owner context: the overall architecture umbrella is now closed on truthful routing, but the live
 full-canonical gold lane remains red on the active local catalog
@@ -50,15 +50,31 @@ authority gates.
   `montana_shpo_review` as a missing positive link and
   `land_exchange_statutory_authorities_authority_template` /
   `region1_forest_plan_source_records_authority_template` as unexpected positive links.
+- Fresh Milestone 2 source-claim narrowing slice on 2026-05-21:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources claim-extract --output-dir source_library --source-set-id source-set-f775524ab233ff27`
+  raises the active claim summary to `claim_count=122655`, `source_record_count=548`, and
+  `document_role_counts.state_requirement=298`; `STP-026` now emits `6` claims, including the
+  Montana SHPO duty statements that had been missing from the live source-claim surface.
+- Fresh Milestone 2 source-claim-link narrowing replay on 2026-05-21:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json --results-dir source_library/reviews/compliance_gold_eval_seq52_fix6`
+  keeps the lane red at `0/14`, but it closes the remaining review-time generated-link drift.
+  `gold-all-authorities-supported` still scores `39` live `pass` findings and `20`
+  `uncertain` findings, now records `rule_claim_link_count=200`, and the only remaining
+  status / claim-type / source-evidence / source-claim-link / source-record /
+  source-document-role mismatches are:
+  `apa_final_agency_action`,
+  `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`,
+  `organic_act_16usc_475`, and
+  `seven_county_nepa_scope`.
 - Artifact alignment truth on 2026-05-21:
   the base canonical `rule-claim-link` summary for `nepa-ea-v0/0.4.0` still records
   `link_count=0` and remains a separate zero-link structural surface, but the generated diagnostic
   gold rule packs now emit non-zero rule-claim-link artifacts under
   `source_library/derived/source-set-f775524ab233ff27/rule_claim_links/generated-diagnostic-*/`.
   The generated diagnostic all-authorities-supported summary, for example, now records
-  `link_count=195`, `source_record_count=31`, and `linked_rule_count=40`. This packet therefore
-  remains routed on five still-unmapped live authorities plus narrowed review-time source-claim
-  drift, not on a hidden generated-link collapse.
+  `link_count=200`, `source_record_count=32`, and `linked_rule_count=41`. This packet therefore
+  remains routed on five still-unmapped live authorities, not on a hidden generated-link collapse.
 - The same isolated replay still proves the coverage contract is present:
   `coverage_tags=["cultural_tribal", "forest_plan_consistency", "land_exchange",
   "migratory_birds", "multi_forest_plan_trigger", "roadless", "water_wetlands"]` and
@@ -69,7 +85,7 @@ authority gates.
   `distinct_package_style_count=3`, and `missing_package_authority_count=0`.
 - Fresh bounded aggregate replay on 2026-05-21 using:
   global applicability gold results,
-  isolated `compliance_gold_eval_seq52_fix4`,
+  isolated `compliance_gold_eval_seq52_fix6`,
   and fresh `real_package_review_coverage_eval_results.json`
   stays red only because `compliance_gold_failed=1`; it still records
   `required_theme_count=7`, `passed_theme_count=7`, `distinct_forest_count=2`,
@@ -77,10 +93,9 @@ authority gates.
   and `typed_blocked_review_count=1` with no threshold failures.
 - Fresh owner-family split on 2026-05-21:
   the generated-case routing regression and the synthetic-case early-abort path are now fixed in
-  code and verified by focused tests, so the remaining Milestone 2 owner is no longer
-  applicability abort or broad canonical source-ID drift. The active blocker is now the five still-
-  unmapped live authorities plus the narrower review-time source-claim expectation drift for the
-  synthetic gold fixtures.
+  code and verified by focused tests, and the source-claim narrowing slice closes the remaining
+  review-time generated-link expectation drift. The active blocker is now only the five still-
+  unmapped live authorities with no current canonical row.
 
 ## Goal
 

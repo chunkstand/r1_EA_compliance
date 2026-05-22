@@ -94,6 +94,18 @@ CLAIM_PATTERNS = (
         0.65,
     ),
 )
+_DUTY_STATEMENT_DOCUMENT_ROLES = {"agency_policy", "state_requirement"}
+_DUTY_STATEMENT_PATTERN = ClaimPattern(
+    "guidance",
+    "duty_list_item",
+    re.compile(
+        r"^(?:Maintaining|Evaluating|Supporting|Assisting|Providing|Developing|Implementing|"
+        r"Administering|Preparing|Conducting|Coordinating|Documenting|Reviewing|Preserving|"
+        r"Protecting)\b",
+        re.I,
+    ),
+    0.67,
+)
 
 
 def _extract_claims(*, chunks: list[dict], source_set_id: str) -> list[dict]:
@@ -102,7 +114,10 @@ def _extract_claims(*, chunks: list[dict], source_set_id: str) -> list[dict]:
     for chunk in chunks:
         text = str(chunk.get("text") or "")
         for sentence_start, sentence_end, sentence_text in _sentence_spans(text):
-            match = _match_claim_pattern(sentence_text)
+            match = _match_claim_pattern(
+                sentence_text,
+                document_role=str(chunk.get("document_role") or ""),
+            )
             if match is None:
                 continue
             pattern, pattern_match = match
@@ -229,11 +244,19 @@ def _period_is_abbreviation(text: str, index: int) -> bool:
     return False
 
 
-def _match_claim_pattern(sentence: str) -> tuple[ClaimPattern, re.Match[str]] | None:
+def _match_claim_pattern(
+    sentence: str,
+    *,
+    document_role: str = "",
+) -> tuple[ClaimPattern, re.Match[str]] | None:
     for pattern in CLAIM_PATTERNS:
         match = pattern.regex.search(sentence)
         if match:
             return pattern, match
+    if document_role in _DUTY_STATEMENT_DOCUMENT_ROLES:
+        match = _DUTY_STATEMENT_PATTERN.regex.search(sentence)
+        if match and len(sentence.split()) >= 5:
+            return _DUTY_STATEMENT_PATTERN, match
     return None
 
 

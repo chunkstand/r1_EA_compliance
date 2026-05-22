@@ -6,6 +6,7 @@ import unittest
 
 from usfs_r1_ea_sources.compliance_review_eval import _case_requires_generated_rule_pack
 from usfs_r1_ea_sources.compliance_review_eval import _case_allows_generated_rule_pack_diagnostic
+from usfs_r1_ea_sources.compliance_review_eval import _effective_eval_case_expectations
 from usfs_r1_ea_sources.compliance_review_eval import _generated_diagnostic_rule_ids
 from usfs_r1_ea_sources.compliance_review_eval import _applicability_gate_is_diagnostic
 from usfs_r1_ea_sources.compliance_review_eval import _expected_subset_mismatches
@@ -332,6 +333,80 @@ class ComplianceReviewEvalTests(unittest.TestCase):
             },
         )
         self.assertTrue(_case_allows_generated_rule_pack_diagnostic(case))
+
+    def test_generated_source_claim_link_expectations_merge_into_effective_expectations(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            review_dir = Path(tmp)
+            applicability_dir = review_dir / "applicability"
+            applicability_dir.mkdir(parents=True, exist_ok=True)
+            (applicability_dir / "compliance_evaluation_rule_pack.json").write_text(
+                '{"rules":[{"id":"trail_access_authority_template"}]}',
+                encoding="utf-8",
+            )
+            case = {
+                "id": "generated-case",
+                "package_text": "Purpose and Need",
+                "expected_statuses": {
+                    "purpose_need": "pass",
+                },
+                "expected_generated_statuses": {
+                    "trail_access_authority_template": "uncertain",
+                },
+                "expected_generated_source_claim_links": {
+                    "trail_access_authority_template": True,
+                },
+            }
+
+            effective = _effective_eval_case_expectations(
+                case=case,
+                review_dir=review_dir,
+                findings_by_rule={
+                    "trail_access_authority_template": {
+                        "rule_id": "trail_access_authority_template",
+                        "status": "uncertain",
+                    }
+                },
+            )
+
+            self.assertEqual(
+                effective["expected_source_claim_links"],
+                {"trail_access_authority_template": True},
+            )
+
+    def test_generated_uncertain_rules_do_not_gain_implicit_source_claim_link_expectations(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            review_dir = Path(tmp)
+            applicability_dir = review_dir / "applicability"
+            applicability_dir.mkdir(parents=True, exist_ok=True)
+            (applicability_dir / "compliance_evaluation_rule_pack.json").write_text(
+                '{"rules":[{"id":"trail_access_authority_template"}]}',
+                encoding="utf-8",
+            )
+            case = {
+                "id": "generated-case",
+                "package_text": "Purpose and Need",
+                "expected_statuses": {
+                    "purpose_need": "pass",
+                },
+                "expected_generated_statuses": {
+                    "trail_access_authority_template": "uncertain",
+                },
+            }
+
+            effective = _effective_eval_case_expectations(
+                case=case,
+                review_dir=review_dir,
+                findings_by_rule={
+                    "trail_access_authority_template": {
+                        "rule_id": "trail_access_authority_template",
+                        "status": "uncertain",
+                    }
+                },
+            )
+
+            self.assertNotIn("expected_source_claim_links", effective)
 
     def test_compliance_review_eval_rejects_status_count_mismatch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

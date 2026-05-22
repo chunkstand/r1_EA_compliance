@@ -1283,13 +1283,6 @@ def _effective_eval_case_expectations(
         if isinstance(case.get("expected_generated_source_claim_links"), dict)
         else {}
     )
-    for rule_id, status in generated_statuses.items():
-        if (
-            rule_id in rule_ids
-            and status == "uncertain"
-            and rule_id not in generated_source_claim_links
-        ):
-            generated_source_claim_links[rule_id] = True
     if generated_source_claim_links:
         effective_case["expected_generated_source_claim_links"] = generated_source_claim_links
 
@@ -1301,8 +1294,8 @@ def _effective_eval_case_expectations(
         ("expected_source_record_ids", "expected_generated_source_record_ids"),
         ("expected_source_document_roles", "expected_generated_source_document_roles"),
     ):
-        base_value = case.get(base_field)
-        generated_value = case.get(generated_field)
+        base_value = effective_case.get(base_field)
+        generated_value = effective_case.get(generated_field)
         if not isinstance(base_value, dict) and not isinstance(generated_value, dict):
             continue
         merged_value = deepcopy(base_value) if isinstance(base_value, dict) else {}

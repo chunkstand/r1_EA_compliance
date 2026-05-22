@@ -1586,10 +1586,14 @@ drift: `authority_trace_coverage_rate` is now `1.0`, and the remaining source-re
 limited to the five still-unmapped live authorities
 (`apa_final_agency_action`, `directives_notice_comment_36cfr_216`,
 `musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`, and
-`seven_county_nepa_scope`) plus a narrower review-time source-claim-link expectation delta. The
-generated diagnostic gold rule packs now emit non-zero rule-claim-link artifacts under
+`seven_county_nepa_scope`). The earlier review-time source-claim-link expectation drift is now
+closed: the active claim extraction summary records `document_role_counts.state_requirement=298`,
+`STP-026` now emits `6` claims, and the generated gold contract only expects positive generated
+source-claim links for the two template rules that actually resolve them live. The generated
+diagnostic gold rule packs now emit non-zero rule-claim-link artifacts under
 `source_library/derived/source-set-f775524ab233ff27/rule_claim_links/generated-diagnostic-*/`,
-while the base `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural surface.
+while the base `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural
+surface; the generated all-authorities-supported replay now records `rule_claim_link_count=200`.
 Gold case IDs must be unique and safe for generated paths, and package fixture paths must stay under
 the gold file directory.
 
@@ -1652,8 +1656,9 @@ high-priority family IDs, at least `3` tracked review contracts across at least 
 and no missing package-authority declarations.
 On 2026-05-21, a bounded replay against fresh applicability, compliance, and real-package results
 still fails closed only because `compliance-gold-eval` is red on the active full-canonical source
-set; the seven theme groups, `2` forests, `3` package styles, and `2 reviewer_ready + 1
-typed_blocked` review-diversity contract all remain satisfied.
+set. The fresh bounded `gold_coverage_eval_seq52_fix6` replay still records all seven theme groups,
+`2` forests, `3` package styles, and the `2 reviewer_ready + 1 typed_blocked` review-diversity
+contract with no threshold failures; only `compliance_gold_failed=1` keeps the aggregate red.
 
 Run the manifest-driven promotion suite:
 

@@ -22,12 +22,15 @@ Use this file as the short current route before opening the large append-only do
 - West Reservoir stays an explicit `typed_blocked` replay quarantine.
 - Active gold packet truth: generated diagnostic gold cases now build non-zero rule-claim-link
   artifacts, while the base `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural surface.
-- Fresh `compliance-gold-eval` fix4 on `source-set-f775524ab233ff27` remains red at `0/14`;
-  `authority_trace_coverage_rate=1.0`; `gold-all-authorities-supported` now scores
-  `39 pass / 20 uncertain`.
-- Remaining owner is five still-unmapped live authorities plus narrower review-time
-  source-claim-link expectation drift; bounded `gold_coverage_eval_seq52_fix4` stays red only
-  because `compliance_gold_failed=1`.
+- Fresh `compliance-gold-eval` fix6 on `source-set-f775524ab233ff27` remains red at `0/14`;
+  `authority_trace_coverage_rate=1.0`; `gold-all-authorities-supported` still scores
+  `39 pass / 20 uncertain` and now records `rule_claim_link_count=200`.
+- Remaining owner is the five still-unmapped live authorities only
+  (`apa_final_agency_action`, `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`,
+  and `seven_county_nepa_scope`); the earlier review-time source-claim-link expectation drift is
+  closed, and bounded `gold_coverage_eval_seq52_fix6` stays red only because
+  `compliance_gold_failed=1`.
 
 ## Deep Reads
 

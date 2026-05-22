@@ -57,6 +57,10 @@
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
       },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
+      },
       "expected_generated_validation_passed": false,
       "expected_reviewer_ready": false,
       "expected_source_document_roles": {
@@ -424,6 +428,10 @@
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
       },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
+      },
       "expected_generated_validation_passed": false,
       "expected_source_document_roles": {
         "apa_final_agency_action": [
@@ -686,6 +694,10 @@
         "tribal_consultation_trust_sacred_sites_authority_template": "uncertain",
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
+      },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
       },
       "expected_generated_validation_passed": false,
       "expected_reviewer_ready": false,
@@ -955,6 +967,10 @@
         "tribal_consultation_trust_sacred_sites_authority_template": "uncertain",
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
+      },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
       },
       "expected_generated_validation_passed": false,
       "expected_source_document_roles": {
@@ -1229,6 +1245,10 @@
         "tribal_consultation_trust_sacred_sites_authority_template": "uncertain",
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
+      },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
       },
       "expected_generated_validation_passed": false,
       "expected_source_document_roles": {
@@ -1510,6 +1530,10 @@
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
       },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
+      },
       "expected_generated_validation_passed": false,
       "expected_source_document_roles": {
         "apa_final_agency_action": [
@@ -1781,6 +1805,10 @@
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
       },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
+      },
       "expected_generated_validation_passed": false,
       "expected_source_document_roles": {
         "apa_final_agency_action": [
@@ -2050,6 +2078,10 @@
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
       },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
+      },
       "expected_generated_validation_passed": false,
       "expected_source_document_roles": {
         "apa_final_agency_action": [
@@ -2308,6 +2340,10 @@
         "tribal_consultation_trust_sacred_sites_authority_template": "uncertain",
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
+      },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
       },
       "expected_generated_validation_passed": false,
       "expected_source_document_roles": {
@@ -2571,6 +2607,10 @@
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
       },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
+      },
       "expected_generated_validation_passed": false,
       "expected_source_document_roles": {
         "apa_final_agency_action": [
@@ -2832,6 +2872,10 @@
         "tribal_consultation_trust_sacred_sites_authority_template": "uncertain",
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
+      },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
       },
       "expected_generated_validation_passed": false,
       "expected_reviewer_ready": false,
@@ -3205,6 +3249,10 @@
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
       },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
+      },
       "expected_generated_validation_passed": false,
       "expected_source_document_roles": {
         "apa_final_agency_action": [
@@ -3485,6 +3533,10 @@
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
       },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
+      },
       "expected_generated_validation_passed": false,
       "expected_source_document_roles": {
         "apa_final_agency_action": [
@@ -3759,6 +3811,10 @@
         "tribal_consultation_trust_sacred_sites_authority_template": "uncertain",
         "vegetation_wildfire_forest_health_authorities_authority_template": "uncertain",
         "wilderness_wsr_trails_designated_areas_authority_template": "uncertain"
+      },
+      "expected_generated_source_claim_links": {
+        "land_exchange_statutory_authorities_authority_template": true,
+        "region1_forest_plan_source_records_authority_template": true
       },
       "expected_generated_validation_passed": false,
       "expected_reviewer_ready": false,
