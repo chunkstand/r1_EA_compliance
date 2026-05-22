@@ -87,8 +87,8 @@ risk has shifted:
 - Milestone `9` therefore needs to close with the live zero-inventory artifact, architecture
   probe, and routing readback rather than only a reduced file count.
 
-Milestone `1` closed the original blind spot; the remaining packet work is owner-family reduction
-plus debt-shift prevention.
+Milestone `1` closed the original blind spot. The remaining packet work is final zero-oversized
+closeout, routing readback, and debt-shift prevention.
 
 ## Goal
 
@@ -115,7 +115,7 @@ Hold the live oversized-file inventory at `0` through final closeout while prese
 
 In scope:
 
-- the exact live `1`-file oversized inventory in
+- the exact live `0`-file oversized inventory in
   `config/architecture_large_file_inventory_v1.json`;
 - architecture gate hardening for exact oversized-file membership and no-substitution ratchets;
 - owner-family splits that reduced every current `>800` code file to `<=800`;

@@ -7,6 +7,34 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestone 8 Alignment Closeout
+
+This docs-only slice closes the remaining post-Milestone `8` plan drift after the viewer split.
+
+- outcome label:
+  `resolved`; the live route and closeout state did not change, but the packet now matches the
+  actual zero-oversized baseline everywhere it still needed to
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- alignment truth:
+  the remaining live gap was stale plan wording that still described the scope as an exact live
+  `1`-file oversized inventory and still framed the remaining packet work as owner-family
+  reduction; the packet now correctly states a live `0`-file inventory and a Milestone `9`
+  closeout/readback-only finish
+- stale-reference audit:
+  the only remaining viewer-family `1`-file wording is confined to older Milestone `7` historical
+  sections in append-only docs, where it remains explicitly superseded by the newer Milestone `8`
+  closeout
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `9` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_quality.py tests/test_architecture_contract.py -q`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`, and
+  `git diff --check`
+
 ## Under-800 Hotspot Reduction Milestone 8
 
 This slice resolves the viewer owner family under the repo's `800`-line reviewability gate while

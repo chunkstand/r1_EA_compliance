@@ -69,6 +69,29 @@ routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
 
+## Under-800 Hotspot Reduction Milestone 8 Alignment Closeout
+
+Latest docs-only alignment on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved`; this pass did not change the live routed implementation slice, but it closed the
+  remaining post-Milestone `8` plan drift.
+- Alignment truth:
+  the remaining live gap was stale packet wording that still described the scope as an exact live
+  `1`-file oversized inventory and still described the remaining packet work as owner-family
+  reduction. The packet now correctly reflects the Milestone `8` zero-oversized baseline and a
+  Milestone `9` closeout/readback-only finish.
+- Stale-reference audit:
+  the only remaining viewer-family `1`-file wording is confined to older Milestone `7` historical
+  sections in append-only docs, where it is explicitly superseded by the Milestone `8` closeout
+  and this alignment pass.
+- Live architecture truth:
+  the fresh architecture probe remains at `462` code files, `0` code files above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and an empty
+  oversized-file inventory in `config/architecture_large_file_inventory_v1.json`.
+
 ## Under-800 Hotspot Reduction Milestone 8
 
 Latest implementation on 2026-05-21:
