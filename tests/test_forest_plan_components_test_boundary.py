@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+SOURCE_ROOT = REPO_ROOT / "src" / "usfs_r1_ea_sources"
 SUITE_BUDGETS = {
     "tests/test_forest_plan_components.py": 550,
     "tests/test_forest_plan_components_inventory.py": 700,
@@ -13,6 +14,37 @@ SUITE_BUDGETS = {
     "tests/test_forest_plan_components_test_boundary.py": 275,
     "tests/support/forest_plan_component_fixtures.py": 200,
 }
+SOURCE_FAMILY_BUDGETS = {
+    "src/usfs_r1_ea_sources/forest_plan_components.py": 120,
+    "src/usfs_r1_ea_sources/forest_plan_components_common.py": 220,
+    "src/usfs_r1_ea_sources/forest_plan_components_coverage.py": 500,
+    "src/usfs_r1_ea_sources/forest_plan_components_determination.py": 650,
+    "src/usfs_r1_ea_sources/forest_plan_components_inventory_build.py": 450,
+    "src/usfs_r1_ea_sources/forest_plan_components_inventory_common.py": 180,
+    "src/usfs_r1_ea_sources/forest_plan_components_inventory_detection.py": 450,
+    "src/usfs_r1_ea_sources/forest_plan_components_inventory_quality.py": 750,
+    "src/usfs_r1_ea_sources/forest_plan_components_models.py": 450,
+    "src/usfs_r1_ea_sources/forest_plan_components_package_search.py": 650,
+    "src/usfs_r1_ea_sources/forest_plan_components_runtime.py": 450,
+    "src/usfs_r1_ea_sources/forest_plan_components_validation.py": 450,
+    "src/usfs_r1_ea_sources/forest_plan_component_adjudication.py": 80,
+    "src/usfs_r1_ea_sources/forest_plan_component_adjudication_common.py": 260,
+    "src/usfs_r1_ea_sources/forest_plan_component_adjudication_eval.py": 500,
+    "src/usfs_r1_ea_sources/forest_plan_component_adjudication_models.py": 80,
+    "src/usfs_r1_ea_sources/forest_plan_component_adjudication_runtime.py": 240,
+    "src/usfs_r1_ea_sources/forest_plan_component_adjudication_template.py": 240,
+    "src/usfs_r1_ea_sources/forest_plan_component_eval.py": 80,
+    "src/usfs_r1_ea_sources/forest_plan_component_eval_cases.py": 450,
+    "src/usfs_r1_ea_sources/forest_plan_component_eval_coverage.py": 800,
+    "src/usfs_r1_ea_sources/forest_plan_component_eval_models.py": 80,
+    "src/usfs_r1_ea_sources/forest_plan_component_eval_runtime.py": 260,
+    "src/usfs_r1_ea_sources/forest_plan_component_eval_validation.py": 360,
+}
+SOURCE_FAMILY_PREFIXES = (
+    "forest_plan_components",
+    "forest_plan_component_adjudication",
+    "forest_plan_component_eval",
+)
 SPLIT_SUITES = (
     "tests/test_forest_plan_components.py",
     "tests/test_forest_plan_components_inventory.py",
@@ -49,6 +81,22 @@ def test_forest_plan_component_split_line_budgets_are_respected() -> None:
             oversize.append({"path": relative_path, "line_count": line_count, "max_lines": max_lines})
 
     assert missing == []
+    assert oversize == []
+
+
+def test_forest_plan_component_source_family_roster_and_line_budgets_are_respected() -> None:
+    expected_paths = set(SOURCE_FAMILY_BUDGETS)
+    actual_paths = _relative_paths_for_prefixes(SOURCE_FAMILY_PREFIXES)
+
+    assert actual_paths == expected_paths
+
+    oversize = []
+    for relative_path, max_lines in SOURCE_FAMILY_BUDGETS.items():
+        path = REPO_ROOT / relative_path
+        line_count = len(path.read_text(encoding="utf-8").splitlines())
+        if line_count > max_lines:
+            oversize.append({"path": relative_path, "line_count": line_count, "max_lines": max_lines})
+
     assert oversize == []
 
 
@@ -104,3 +152,11 @@ def _test_function_names(path: Path) -> set[str]:
         if isinstance(node, ast.FunctionDef) and node.name.startswith("test_"):
             names.add(node.name)
     return names
+
+
+def _relative_paths_for_prefixes(prefixes: tuple[str, ...]) -> set[str]:
+    return {
+        path.relative_to(REPO_ROOT).as_posix()
+        for prefix in prefixes
+        for path in SOURCE_ROOT.glob(f"{prefix}*.py")
+    }

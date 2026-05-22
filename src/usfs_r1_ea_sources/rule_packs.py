@@ -6,6 +6,7 @@ from pathlib import Path
 import json
 import re
 
+from .records import aliased_source_record_ids as _aliased_source_record_ids
 from .records import reconciled_source_record_ids as _reconciled_source_record_ids
 
 
@@ -40,6 +41,10 @@ ALLOWED_SOURCE_FILTER_KEYS = {
 
 def reconciled_source_record_ids(*args, **kwargs):
     return _reconciled_source_record_ids(*args, **kwargs)
+
+
+def aliased_source_record_ids(*args, **kwargs):
+    return _aliased_source_record_ids(*args, **kwargs)
 
 
 def load_rule_pack(path: Path) -> dict:

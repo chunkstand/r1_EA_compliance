@@ -5,8 +5,9 @@ Date: 2026-05-21
 Status: Milestone `0` resolved 2026-05-21 through live baseline recheck; Milestone `1` resolved
 2026-05-21 through exact oversized-file inventory gate hardening; Milestone `2` resolved 2026-05-21
 through the Project SOW family split; Milestone `3` resolved 2026-05-21 through the
-knowledge-graph and decision-support family split; next routed slice Milestone `4` for the
-forest-plan runtime family
+knowledge-graph and decision-support family split; Milestone `4` resolved 2026-05-21 through
+the forest-plan runtime family split; next routed slice Milestone `5` for extraction,
+retrieval, and review-artifact owners
 
 Owner context: The resolved umbrella architecture packet closed at a count-only large-file guard of
 `24` code files above `800` lines. This follow-on packet resolves the remaining repo-wide
@@ -316,9 +317,9 @@ Progress after Milestone `3` on 2026-05-21:
   and still pass.
 - `docs/architecture_contract.toml` now owns the first-class knowledge-graph and
   decision-support sibling modules directly rather than only the old monolith facades.
-- The fresh architecture probe now reports `377` code files, `20` code files above `800`, no
-  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top hotspot
-  `src/usfs_r1_ea_sources/forest_plan_components.py` at score `77022`.
+- The fresh architecture probe at Milestone `3` closeout reported `377` code files, `20` code
+  files above `800`, no Python or JS/TS cycles, no local module above the `20`-import fan-out
+  gate, and top hotspot `src/usfs_r1_ea_sources/forest_plan_components.py` at score `77022`.
 - Milestone `3` is resolved. The next routed implementation slice in this packet is Milestone `4`
   on the forest-plan runtime family.
 
@@ -349,6 +350,28 @@ PYTHONPATH=src python -m compileall src
 python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20
 git diff --check
 ```
+
+Progress after Milestone `4` on 2026-05-21:
+
+- `forest_plan_components.py`, `forest_plan_resolver.py`, `forest_plan_source_delta_readiness.py`,
+  `forest_plan_component_adjudication.py`, and `forest_plan_component_eval.py` are now thin
+  public facades over explicit sibling owner modules; every new family file in those five lanes is
+  `<=800` lines.
+- `tests/test_forest_plan_components_test_boundary.py` and
+  `tests/test_forest_plan_resolver_test_boundary.py` now fail-close on exact source-family rosters
+  plus per-file budgets, while `docs/architecture_contract.toml` owns the new review and
+  review-support modules directly.
+- `config/architecture_large_file_inventory_v1.json` no longer tracks the forest-plan runtime
+  family, and `tests/test_architecture_quality.py` now ratchets the live oversized-file inventory
+  at `15` files.
+- `src/usfs_r1_ea_sources/rule_packs.py` now re-exports `aliased_source_record_ids` so the
+  CLI-bound component and adjudication tests retain their historical compatibility contract during
+  milestone verification.
+- The fresh architecture probe now reports `409` code files, `15` code files above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top hotspot
+  `src/usfs_r1_ea_sources/extract.py` at score `57060`.
+- Milestone `4` is resolved. The next routed implementation slice in this packet is Milestone `5`
+  on extraction, retrieval, and review-artifact owners.
 
 ### Milestone `5`: Extraction, retrieval, and review-artifact family under `800`
 

@@ -11,12 +11,11 @@ Use this file as the short current route before opening the large append-only do
 
 - Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
   `Document_Register_Master` / `source-set-f775524ab233ff27`
-- Architecture gate: `377` code files, `20` above `800` lines, no Python or JS/TS cycles, no
+- Architecture gate: `409` code files, `15` above `800` lines, no Python or JS/TS cycles, no
   local module above the `20`-import fan-out gate, and top hotspot
-  `src/usfs_r1_ea_sources/forest_plan_components.py` at score `77022`
-- Under-`800` follow-on: Milestone `3` is resolved through the knowledge-graph and
-  decision-support family; the next queued slice is Milestone `4` on the forest-plan runtime
-  family
+  `src/usfs_r1_ea_sources/extract.py` at score `57060`
+- Under-`800` follow-on: Milestone `4` is resolved through the forest-plan runtime family; the
+  next queued slice is Milestone `5` on extraction, retrieval, and review-artifact owners
 - The overall architecture umbrella is resolved after Milestone 10 Sequence 52.
 - West Reservoir stays an explicit `typed_blocked` replay quarantine.
 - Active gold packet truth: generated diagnostic gold cases now build non-zero rule-claim-link

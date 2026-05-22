@@ -6,48 +6,6 @@
   "queued_plan": "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md",
   "families": [
     {
-      "name": "forest_plan_runtime",
-      "target_milestone": 4,
-      "required_tests": [
-        "tests/test_forest_plan_components.py",
-        "tests/test_forest_plan_components_manifest.py",
-        "tests/test_forest_plan_components_inventory.py",
-        "tests/test_forest_plan_components_coverage.py",
-        "tests/test_forest_plan_components_test_boundary.py",
-        "tests/test_forest_plan_resolver.py",
-        "tests/test_forest_plan_resolver_profiles.py",
-        "tests/test_forest_plan_resolver_scope.py",
-        "tests/test_forest_plan_resolver_test_boundary.py",
-        "tests/test_forest_plan_source_delta_readiness.py",
-        "tests/test_forest_plan_component_adjudication.py",
-        "tests/test_forest_plan_component_eval.py",
-        "tests/test_forest_plan_component_eval_coverage.py",
-        "tests/test_forest_plan_component_retrieval_eval.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/forest_plan_components.py",
-          "line_count": 4279
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/forest_plan_resolver.py",
-          "line_count": 1829
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/forest_plan_source_delta_readiness.py",
-          "line_count": 1770
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/forest_plan_component_adjudication.py",
-          "line_count": 997
-        },
-        {
-          "path": "src/usfs_r1_ea_sources/forest_plan_component_eval.py",
-          "line_count": 886
-        }
-      ]
-    },
-    {
       "name": "extraction_retrieval_and_review_artifacts",
       "target_milestone": 5,
       "required_tests": [

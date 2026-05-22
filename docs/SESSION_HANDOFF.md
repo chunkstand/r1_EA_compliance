@@ -7,6 +7,58 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestone 4
+
+This slice resolves the forest-plan runtime owner family under the repo's `800`-line reviewability
+gate while preserving the existing public facades and CLI-facing review contracts.
+
+- outcome label:
+  Milestone `4` resolved; the next routed slice in this packet is Milestone `5` for the
+  extraction, retrieval, and review-artifact family
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/forest_plan_components.py`,
+  the new `src/usfs_r1_ea_sources/forest_plan_components_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/forest_plan_resolver.py`,
+  the new `src/usfs_r1_ea_sources/forest_plan_resolver_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/forest_plan_source_delta_readiness.py`,
+  the new `src/usfs_r1_ea_sources/forest_plan_source_delta_readiness_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/forest_plan_component_adjudication.py`,
+  the new `src/usfs_r1_ea_sources/forest_plan_component_adjudication_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/forest_plan_component_eval.py`,
+  the new `src/usfs_r1_ea_sources/forest_plan_component_eval_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/rule_packs.py`,
+  `tests/test_forest_plan_components_test_boundary.py`,
+  `tests/test_forest_plan_resolver_test_boundary.py`,
+  `tests/test_architecture_quality.py`,
+  `config/architecture_large_file_inventory_v1.json`, and
+  `docs/architecture_contract.toml`
+- closeout truth:
+  the five oversized forest-plan runtime owners are now thin facades over explicit sibling owner
+  modules; every file in the `forest_plan_components*`, `forest_plan_resolver*`,
+  `forest_plan_source_delta_readiness*`, `forest_plan_component_adjudication*`, and
+  `forest_plan_component_eval*` families is `<=800` lines; the component and resolver boundary
+  tests now fail-close on exact source rosters plus per-file budgets; the oversized-file inventory
+  drops the forest-plan runtime family entirely; and `rule_packs.py` now re-exports
+  `aliased_source_record_ids` so the CLI-bound component/adjudication tests keep their historical
+  import contract
+- live architecture truth:
+  the fresh architecture probe now reports `409` code files, `15` code files above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top hotspot
+  `src/usfs_r1_ea_sources/extract.py` at score `57060`
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `5` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_components.py tests/test_forest_plan_components_manifest.py tests/test_forest_plan_components_inventory.py tests/test_forest_plan_components_coverage.py tests/test_forest_plan_components_test_boundary.py tests/test_forest_plan_resolver.py tests/test_forest_plan_resolver_profiles.py tests/test_forest_plan_resolver_scope.py tests/test_forest_plan_resolver_test_boundary.py tests/test_forest_plan_source_delta_readiness.py tests/test_forest_plan_component_adjudication.py tests/test_forest_plan_component_eval.py tests/test_forest_plan_component_eval_coverage.py tests/test_forest_plan_component_retrieval_eval.py tests/test_architecture_contract.py tests/test_architecture_quality.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`, and
+  `git diff --check`
+
 ## Under-800 Hotspot Reduction Milestone 3
 
 This slice resolves the knowledge-graph and decision-support owner family under the repo's

@@ -47,9 +47,9 @@ still route the overall architecture umbrella as open or still claim a fresh
 full-canonical bounded gold aggregate is green are historical only after the
 2026-05-21 Milestone 10 Sequence 52 rebaseline closeout described below.
 Older architecture references below that still route the under-`800` hotspot
-packet as pending on Milestone `3` or still report the pre-closeout
-knowledge-graph baseline of `357` code files and `23` files above `800` are
-historical only after the 2026-05-21 Under-800 Hotspot Reduction Milestone `3`
+packet as pending on Milestone `4` or still report the pre-closeout
+forest-plan baseline of `377` code files and `20` files above `800` are
+historical only after the 2026-05-21 Under-800 Hotspot Reduction Milestone `4`
 closeout described below. Older references below that still treat the live
 full-canonical gold replay as
 the earlier `14/14` rule/retrieval failure bundle or as a pre-scored
@@ -57,6 +57,48 @@ applicability abort are historical only after the 2026-05-21 generated-case
 routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
+
+## Under-800 Hotspot Reduction Milestone 4
+
+Latest implementation on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone `4`; the forest-plan runtime owner family is now closed under the
+  `800`-line gate, and the packet advances to Milestone `5`.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/forest_plan_components.py`,
+  the new `src/usfs_r1_ea_sources/forest_plan_components_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/forest_plan_resolver.py`,
+  the new `src/usfs_r1_ea_sources/forest_plan_resolver_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/forest_plan_source_delta_readiness.py`,
+  the new `src/usfs_r1_ea_sources/forest_plan_source_delta_readiness_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/forest_plan_component_adjudication.py`,
+  the new `src/usfs_r1_ea_sources/forest_plan_component_adjudication_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/forest_plan_component_eval.py`,
+  the new `src/usfs_r1_ea_sources/forest_plan_component_eval_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/rule_packs.py`,
+  `tests/test_forest_plan_components_test_boundary.py`,
+  `tests/test_forest_plan_resolver_test_boundary.py`,
+  `tests/test_architecture_quality.py`,
+  `config/architecture_large_file_inventory_v1.json`, and
+  `docs/architecture_contract.toml`.
+- Closeout truth:
+  the five oversized forest-plan runtime owners are now thin public facades over explicit sibling
+  modules; every new family file is `<=800` lines; the component and resolver boundary tests now
+  fail-close on exact source rosters plus per-file budgets; the oversized-file inventory no longer
+  tracks the forest-plan runtime family; and `rule_packs.py` now preserves the
+  `aliased_source_record_ids` compatibility import used by CLI-bound component/adjudication tests.
+- Live architecture truth:
+  the fresh architecture probe now reports `409` code files, `15` code files above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and top
+  hotspot `src/usfs_r1_ea_sources/extract.py` at score `57060`.
+- Next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `5` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
 
 ## Under-800 Hotspot Reduction Milestone 3
 
