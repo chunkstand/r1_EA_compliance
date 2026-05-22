@@ -52,6 +52,11 @@ compliance/eval baseline of `445` code files and `4` files above `800` are
 historical only after the 2026-05-21 Under-800 Hotspot Reduction Milestone
 `7` closeout described below.
 Older architecture references below that still route the under-`800` hotspot
+packet as pending on Milestone `8` or still report the pre-closeout
+viewer baseline of `454` code files and `1` file above `800` are historical
+only after the 2026-05-21 Under-800 Hotspot Reduction Milestone `8` closeout
+described below.
+Older architecture references below that still route the under-`800` hotspot
 packet as pending on Milestone `6` or still report the pre-closeout
 capture/catalog/source-register baseline of `437` code files and `10` files
 above `800` are historical only after the 2026-05-21 Under-800 Hotspot
@@ -63,6 +68,55 @@ applicability abort are historical only after the 2026-05-21 generated-case
 routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
+
+## Under-800 Hotspot Reduction Milestone 8
+
+Latest implementation on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone `8`; the viewer owner family is now closed under the
+  `800`-line gate, and the packet advances to Milestone `9`.
+- Implementation surfaces:
+  `viewer/nepa-3d/app.js`,
+  `viewer/nepa-3d/index.html`,
+  `viewer/nepa-3d/viewer-utils.js`,
+  `viewer/nepa-3d/viewer-config.js`,
+  `viewer/nepa-3d/viewer-controls.js`,
+  `viewer/nepa-3d/viewer-data.js`,
+  `viewer/nepa-3d/viewer-scenes.js`,
+  `viewer/nepa-3d/viewer-graph.js`,
+  `viewer/nepa-3d/viewer-details.js`,
+  `viewer/nepa-3d/viewer-labels.js`,
+  `tests/test_nepa_3d_viewer.py`,
+  `tests/test_architecture_quality.py`, and
+  `config/architecture_large_file_inventory_v1.json`.
+- Closeout truth:
+  the old viewer monolith is now a thin bootstrap over named viewer siblings for shared utilities,
+  configuration, controls, dataset discovery, scene routing, graph logic, details, and labels;
+  every viewer-local script is `<=800` lines; the viewer test suite now fails closed on the exact
+  local script roster plus per-file budgets; and the oversized-file inventory is now empty.
+- Debt-shift audit:
+  the largest new viewer siblings are
+  `viewer-graph.js=636`,
+  `viewer-labels.js=461`,
+  `viewer-config.js=357`,
+  `viewer-utils.js=256`,
+  `viewer-controls.js=209`,
+  `viewer-data.js=209`,
+  `viewer-details.js=267`, and
+  `viewer-scenes.js=127`; none reopened the oversized queue or created a JS/TS cycle.
+- Live architecture truth:
+  the fresh architecture probe now reports `462` code files, `0` code files above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, top overall
+  hotspot `tests/test_compliance_review.py` at score `35420`, and an empty oversized-file
+  inventory in `config/architecture_large_file_inventory_v1.json`.
+- Next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `9` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
 
 ## Under-800 Hotspot Reduction Milestone 7
 

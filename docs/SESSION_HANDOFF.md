@@ -7,6 +7,66 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestone 8
+
+This slice resolves the viewer owner family under the repo's `800`-line reviewability gate while
+preserving the NEPA 3D viewer's existing runtime surface, demo scenes, filter model, and readiness
+semantics.
+
+- outcome label:
+  Milestone `8` resolved; the next routed slice in this packet is Milestone `9` for the final
+  zero-oversized rebaseline and closeout
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- implementation surfaces:
+  `viewer/nepa-3d/app.js`,
+  `viewer/nepa-3d/index.html`,
+  `viewer/nepa-3d/viewer-utils.js`,
+  `viewer/nepa-3d/viewer-config.js`,
+  `viewer/nepa-3d/viewer-controls.js`,
+  `viewer/nepa-3d/viewer-data.js`,
+  `viewer/nepa-3d/viewer-scenes.js`,
+  `viewer/nepa-3d/viewer-graph.js`,
+  `viewer/nepa-3d/viewer-details.js`,
+  `viewer/nepa-3d/viewer-labels.js`,
+  `tests/test_nepa_3d_viewer.py`,
+  `tests/test_architecture_quality.py`, and
+  `config/architecture_large_file_inventory_v1.json`
+- closeout truth:
+  `viewer/nepa-3d/app.js` is now a `5`-line bootstrap shell over named viewer siblings for shared
+  utilities, configuration, controls, dataset discovery, scene routing, graph logic, details, and
+  labels; every viewer-local script is `<=800` lines; the viewer test suite now fails closed on
+  the exact local script roster plus per-file budgets; and the oversized-file inventory is now
+  empty
+- debt-shift audit:
+  the largest new viewer siblings are
+  `viewer-graph.js=636`,
+  `viewer-labels.js=461`,
+  `viewer-config.js=357`,
+  `viewer-utils.js=256`,
+  `viewer-controls.js=209`,
+  `viewer-data.js=209`,
+  `viewer-details.js=267`, and
+  `viewer-scenes.js=127`; none reopened the oversized queue or created a JS/TS cycle
+- live architecture truth:
+  the fresh architecture probe now reports `462` code files, `0` code files above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and top
+  overall hotspot `tests/test_compliance_review.py` at score `35420`
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `9` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_3d_viewer.py -q`,
+  `node --check viewer/nepa-3d/*.js`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_3d_viewer.py tests/test_architecture_quality.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `wc -l docs/CURRENT_ROUTING.md`, and
+  `git diff --check`
+
 ## Under-800 Hotspot Reduction Milestone 7
 
 This slice resolves the compliance and eval owner family under the repo's `800`-line

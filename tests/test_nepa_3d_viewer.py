@@ -7,6 +7,18 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 VIEWER_ROOT = REPO_ROOT / "viewer" / "nepa-3d"
+VIEWER_LOCAL_SCRIPTS = [
+    "viewer-utils.js",
+    "viewer-config.js",
+    "viewer-controls.js",
+    "viewer-data.js",
+    "viewer-scenes.js",
+    "viewer-graph.js",
+    "viewer-details.js",
+    "viewer-labels.js",
+    "app.js",
+]
+MAX_VIEWER_SCRIPT_LINES = 800
 
 
 def test_nepa_3d_viewer_manifest_lists_graph_capable_fallback_exports() -> None:
@@ -102,11 +114,18 @@ def test_nepa_3d_viewer_has_required_controls_and_runtime_hook() -> None:
     assert required_ids <= parser.ids
     assert any("three@" in src for src in parser.script_srcs)
     assert any("3d-force-graph" in src for src in parser.script_srcs)
-    assert any(src.startswith("app.js") for src in parser.script_srcs)
+    local_scripts = _viewer_local_script_srcs(parser)
+    assert local_scripts == VIEWER_LOCAL_SCRIPTS
+    assert local_scripts[-1] == "app.js"
 
 
-def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary() -> None:
-    script = (VIEWER_ROOT / "app.js").read_text()
+def test_nepa_3d_viewer_local_scripts_stay_reviewable() -> None:
+    for script_path in _viewer_script_paths():
+        assert len(script_path.read_text().splitlines()) <= MAX_VIEWER_SCRIPT_LINES, script_path.name
+
+
+def test_nepa_3d_viewer_script_bundle_preserves_milestone_controls_and_readiness_boundary() -> None:
+    script = _viewer_script_bundle()
 
     assert 'const DEMO_START_SCENE_ID = "full_graph";' in script
 
@@ -186,7 +205,7 @@ def test_nepa_3d_viewer_app_preserves_milestone_controls_and_readiness_boundary(
 
 
 def test_nepa_3d_viewer_filter_categories_are_not_overloaded() -> None:
-    script = (VIEWER_ROOT / "app.js").read_text()
+    script = _viewer_script_bundle()
     html = (VIEWER_ROOT / "index.html").read_text()
 
     authority_category = _function_body(script, "authorityCategoryValues")
@@ -237,6 +256,23 @@ def _function_body(script: str, function_name: str) -> str:
     if next_function == -1:
         return script[start:]
     return script[start:next_function]
+
+
+def _viewer_local_script_srcs(parser: "_IdParser") -> list[str]:
+    script_names: list[str] = []
+    for src in parser.script_srcs:
+        if src.startswith("http"):
+            continue
+        script_names.append(src.split("?", 1)[0])
+    return script_names
+
+
+def _viewer_script_paths() -> list[Path]:
+    return [VIEWER_ROOT / script_name for script_name in VIEWER_LOCAL_SCRIPTS]
+
+
+def _viewer_script_bundle() -> str:
+    return "\n".join(path.read_text() for path in _viewer_script_paths())
 
 
 class _IdParser(HTMLParser):

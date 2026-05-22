@@ -4,19 +4,5 @@
   "reviewable_line_threshold": 800,
   "probe_command": "python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20",
   "queued_plan": "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md",
-  "families": [
-    {
-      "name": "viewer",
-      "target_milestone": 8,
-      "required_tests": [
-        "tests/test_nepa_3d_viewer.py"
-      ],
-      "files": [
-        {
-          "path": "viewer/nepa-3d/app.js",
-          "line_count": 2547
-        }
-      ]
-    }
-  ]
+  "families": []
 }

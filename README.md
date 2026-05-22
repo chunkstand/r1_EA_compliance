@@ -33,12 +33,13 @@ Current routed state on 2026-05-21:
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 - The queued under-`800` follow-on packet in
   `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` is now resolved
-  through Milestone `7`: the compliance and eval family is now closed under
-  the `800`-line gate, and the next routed slice is Milestone `8` on the
-  viewer family.
-- The latest architecture gate reports `454` code files, `1` above `800`
-  lines, no Python or JS/TS import cycles, and no source module above the
-  `20`-import fan-out gate.
+  through Milestone `8`: the viewer family is now closed under the `800`-line
+  gate, and the next routed slice is Milestone `9` for the final zero-oversized
+  rebaseline and closeout.
+- The latest architecture gate reports `462` code files, `0` above `800`
+  lines, no Python or JS/TS import cycles, no source module above the
+  `20`-import fan-out gate, and an empty oversized-file inventory in
+  `config/architecture_large_file_inventory_v1.json`.
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
   because `compliance-gold-eval` is red on the active full-canonical source set
   `source-set-f775524ab233ff27`; the tracked review-contract lane itself remains

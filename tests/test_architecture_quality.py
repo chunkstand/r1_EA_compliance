@@ -15,7 +15,7 @@ CODE_ROOTS = (
 )
 CODE_GLOBS = ("*.py", "*.js")
 MAX_REVIEWABLE_LINES = 800
-MAX_ALLOWED_OVERSIZED_FILES = 1
+MAX_ALLOWED_OVERSIZED_FILES = 0
 MAX_ALLOWED_FAN_OUT = 20
 ALLOWED_HIGH_FAN_OUT_MODULES: set[str] = set()
 REPLAY_CONTEXT_DIR = REPO_ROOT / "config" / "replay_contexts"
@@ -41,7 +41,6 @@ def test_large_file_count_does_not_grow() -> None:
 def test_large_file_inventory_matches_follow_on_queue() -> None:
     inventory = _large_file_inventory()
     families = inventory["families"]
-    assert families
 
     expected_paths: set[Path] = set()
     expected_count = 0
@@ -59,6 +58,11 @@ def test_large_file_inventory_matches_follow_on_queue() -> None:
             actual_line_count = _line_count(REPO_ROOT / path)
             assert actual_line_count == entry["line_count"], path
             assert actual_line_count > MAX_REVIEWABLE_LINES, path
+
+    if MAX_ALLOWED_OVERSIZED_FILES == 0:
+        assert families == []
+    else:
+        assert families
 
     assert expected_count == MAX_ALLOWED_OVERSIZED_FILES
     assert _oversized_code_paths() == expected_paths
