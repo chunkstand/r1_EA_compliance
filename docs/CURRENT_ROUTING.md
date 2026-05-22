@@ -13,8 +13,7 @@ Use this file as the short current route before opening the large append-only do
 
 ## Live Facts
 
-- Active workbook/table/catalog:
-  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
+- Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
   `Document_Register_Master` / `source-set-f775524ab233ff27`
 - Architecture gate: `344` code files, `24` above `800` lines, no Python or JS/TS cycles, and no
   local module above the `20`-import fan-out gate
@@ -35,7 +34,7 @@ Use this file as the short current route before opening the large append-only do
 ## Deep Reads
 
 - `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` for the queued architecture follow-on
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`
 - `docs/ARCHITECTURE.md`
-- `docs/OUTPUT_SCHEMAS.md`

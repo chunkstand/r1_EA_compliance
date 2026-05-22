@@ -7,6 +7,85 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestones 0 And 1
+
+This slice starts implementation of the queued under-`800` architecture packet without reopening
+the resolved umbrella or mixing in the active full-canonical gold lane.
+
+- outcome label:
+  Milestone `0` resolved; Milestone `1` resolved; the next routed slice in this packet is
+  Milestone `2` for the Project SOW package family
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- baseline truth:
+  the Milestone `0` recheck no longer found the planning-time dirty overlap in
+  `config/compliance_gold_eval_v1.json`,
+  `src/usfs_r1_ea_sources/compliance_review_eval.py`, or
+  `tests/test_compliance_review_eval.py`; only this packet's docs-routing slice was dirty at
+  implementation start, so the under-`800` lane could proceed to governance hardening without
+  reopening the active gold packet
+- gate hardening:
+  `config/architecture_large_file_inventory_v1.json` now governs the exact live oversized-file
+  queue (`24` code files), and `tests/test_architecture_quality.py` now fails on exact oversized
+  path membership rather than count-only drift while also checking that this follow-on packet stays
+  routed from the plan, handoff, and short current route
+- doc alignment:
+  `README.md` and `docs/CURRENT_SYSTEM_STATE.md` now use the same generated-diagnostic wording as
+  the active gold packet, so the existing cross-doc gold-alignment gate is green again without
+  weakening the assertion
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `2` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- verification:
+  `git status -sb`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_quality.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check tests/test_architecture_quality.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src python -m compileall tests/test_architecture_quality.py tests/test_architecture_contract.py`, and
+  `git diff --check`
+
+## Under-800 Hotspot Reduction Follow-On Plan
+
+This is a planning-only routing note for the next standalone architecture packet after the resolved
+umbrella plan. The repo's default active packet remains
+`docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; this follow-on is queued, not
+active by default.
+
+- outcome label:
+  `resolved`; the planning/routing slice is complete; the queued follow-on packet is now durable
+  repo state
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- live architecture truth:
+  fresh architecture probe on 2026-05-21 reports `344` code files, `24` code files above `800`
+  lines, no Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top
+  hotspot `src/usfs_r1_ea_sources/project_sow_package.py` at score `104370`
+- exact queue scope:
+  the queued packet owns the current `24` live oversized files, grouped into Project SOW,
+  knowledge-graph/decision-support, forest-plan, extraction/retrieval/review-artifact,
+  capture/catalog/source-register, compliance/eval, and viewer families
+- overlap warning:
+  the current dirty worktree already touches the queued compliance/eval family through
+  `config/compliance_gold_eval_v1.json`,
+  `src/usfs_r1_ea_sources/compliance_review_eval.py`, and
+  `tests/test_compliance_review_eval.py`; Milestone `0` in the queued packet must isolate that
+  overlap before any size-reduction implementation begins
+- gate gap routed explicitly:
+  the queued packet starts with a governance fix because `tests/test_architecture_quality.py`
+  currently ratchets only the total oversized-file count (`24`) and does not fail on hotspot
+  substitution when the exact oversized-file membership shifts
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, start at Milestone `0` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` rather than reopening the resolved umbrella
+- verification:
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_quality.py -q`, and
+  `git diff --check`
+
 ## Full Canonical Compliance Gold Rebaseline Milestone 2 Source-Claim Narrowing Slice
 
 This slice keeps the same routed gold packet active, but it closes the

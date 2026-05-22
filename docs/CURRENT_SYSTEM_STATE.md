@@ -103,9 +103,9 @@ Latest implementation on 2026-05-21:
   diagnostic gold rule packs now emit non-zero rule-claim-link artifacts under
   `source_library/derived/source-set-f775524ab233ff27/rule_claim_links/generated-diagnostic-*/`.
   For example, the generated diagnostic all-authorities-supported summary now
-  records `link_count=200`, `source_record_count=32`, and
-  `linked_rule_count=41`, so the packet remains routed on five still-unmapped
-  live authorities rather than a hidden generated-link collapse.
+  records `link_count=200`, `source_record_count=32`, and `linked_rule_count=41`, so the packet
+  remains routed on five still-unmapped live authorities rather than a hidden generated-link
+  collapse.
 - Residual owner truth:
   the only remaining status / claim-type / source-evidence / source-claim-link /
   source-record / source-document-role mismatches are the five authorities with

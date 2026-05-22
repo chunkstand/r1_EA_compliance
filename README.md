@@ -38,9 +38,9 @@ Current routed state on 2026-05-21:
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
   because `compliance-gold-eval` is red on the active full-canonical source set
   `source-set-f775524ab233ff27`; the tracked review-contract lane itself remains
-  green at `2 reviewer_ready + 1 typed_blocked`. The active generated
-  diagnostic gold cases now build non-zero rule-claim-link artifacts, while the
-  base `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural surface.
+  green at `2 reviewer_ready + 1 typed_blocked`. The active generated diagnostic
+  gold cases now build non-zero rule-claim-link artifacts, while the base
+  `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural surface.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 
@@ -1589,8 +1589,8 @@ limited to the five still-unmapped live authorities
 `seven_county_nepa_scope`). The earlier review-time source-claim-link expectation drift is now
 closed: the active claim extraction summary records `document_role_counts.state_requirement=298`,
 `STP-026` now emits `6` claims, and the generated gold contract only expects positive generated
-source-claim links for the two template rules that actually resolve them live. The generated
-diagnostic gold rule packs now emit non-zero rule-claim-link artifacts under
+source-claim links for the two template rules that actually resolve them live. The generated diagnostic
+gold rule packs now emit non-zero rule-claim-link artifacts under
 `source_library/derived/source-set-f775524ab233ff27/rule_claim_links/generated-diagnostic-*/`,
 while the base `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural
 surface; the generated all-authorities-supported replay now records `rule_claim_link_count=200`.

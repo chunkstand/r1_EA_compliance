@@ -19,9 +19,11 @@ MAX_ALLOWED_OVERSIZED_FILES = 24
 MAX_ALLOWED_FAN_OUT = 20
 ALLOWED_HIGH_FAN_OUT_MODULES: set[str] = set()
 REPLAY_CONTEXT_DIR = REPO_ROOT / "config" / "replay_contexts"
+LARGE_FILE_INVENTORY_PATH = REPO_ROOT / "config" / "architecture_large_file_inventory_v1.json"
 CURRENT_ROUTING_PATH = REPO_ROOT / "docs" / "CURRENT_ROUTING.md"
 MAX_CURRENT_ROUTING_LINES = 40
 OVERALL_ARCHITECTURE_PLAN_PATH = REPO_ROOT / "docs" / "OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md"
+UNDER_800_PLAN_PATH = REPO_ROOT / "docs" / "UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md"
 README_PATH = REPO_ROOT / "README.md"
 CURRENT_SYSTEM_STATE_PATH = REPO_ROOT / "docs" / "CURRENT_SYSTEM_STATE.md"
 SESSION_HANDOFF_PATH = REPO_ROOT / "docs" / "SESSION_HANDOFF.md"
@@ -31,13 +33,35 @@ FULL_CANONICAL_GOLD_PLAN_PATH = (
 
 
 def test_large_file_count_does_not_grow() -> None:
-    oversized = [
-        path.relative_to(REPO_ROOT)
-        for path in _code_paths()
-        if len(path.read_text(encoding="utf-8").splitlines()) > MAX_REVIEWABLE_LINES
-    ]
+    oversized = _oversized_code_paths()
 
     assert len(oversized) <= MAX_ALLOWED_OVERSIZED_FILES
+
+
+def test_large_file_inventory_matches_follow_on_queue() -> None:
+    inventory = _large_file_inventory()
+    families = inventory["families"]
+    assert families
+
+    expected_paths: set[Path] = set()
+    expected_count = 0
+
+    for family in families:
+        assert family["required_tests"], family["name"]
+        files = family["files"]
+        assert files, family["name"]
+
+        for entry in files:
+            path = Path(entry["path"])
+            expected_paths.add(path)
+            expected_count += 1
+
+            actual_line_count = _line_count(REPO_ROOT / path)
+            assert actual_line_count == entry["line_count"], path
+            assert actual_line_count > MAX_REVIEWABLE_LINES, path
+
+    assert expected_count == MAX_ALLOWED_OVERSIZED_FILES
+    assert _oversized_code_paths() == expected_paths
 
 
 def test_no_new_high_fan_out_modules() -> None:
@@ -93,6 +117,16 @@ def test_current_routing_doc_stays_short_and_linked() -> None:
     assert "docs/CURRENT_ROUTING.md" in start_here
 
 
+def test_under_800_follow_on_is_routed_and_inventory_backed() -> None:
+    plan = UNDER_800_PLAN_PATH.read_text(encoding="utf-8")
+    handoff = SESSION_HANDOFF_PATH.read_text(encoding="utf-8")
+    current_routing = CURRENT_ROUTING_PATH.read_text(encoding="utf-8")
+
+    assert "config/architecture_large_file_inventory_v1.json" in plan
+    assert "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md" in handoff
+    assert "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md" in current_routing
+
+
 def test_overall_architecture_plan_closeout_stays_current() -> None:
     plan = OVERALL_ARCHITECTURE_PLAN_PATH.read_text(encoding="utf-8")
 
@@ -145,6 +179,22 @@ def _code_paths() -> list[Path]:
         for pattern in CODE_GLOBS:
             paths.extend(sorted(root.rglob(pattern)))
     return paths
+
+
+def _oversized_code_paths() -> set[Path]:
+    return {
+        path.relative_to(REPO_ROOT)
+        for path in _code_paths()
+        if _line_count(path) > MAX_REVIEWABLE_LINES
+    }
+
+
+def _line_count(path: Path) -> int:
+    return len(path.read_text(encoding="utf-8").splitlines())
+
+
+def _large_file_inventory() -> dict[str, object]:
+    return json.loads(LARGE_FILE_INVENTORY_PATH.read_text(encoding="utf-8"))
 
 
 def _source_modules() -> set[str]:
