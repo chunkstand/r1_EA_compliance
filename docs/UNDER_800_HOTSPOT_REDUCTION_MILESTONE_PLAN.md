@@ -10,31 +10,30 @@ the forest-plan runtime family split; Milestone `5` resolved 2026-05-21 through 
 retrieval, and review-artifact family split; Milestone `6` resolved 2026-05-21 through the
 capture, catalog, and source-register family split; Milestone `7` resolved 2026-05-21 through the
 compliance and eval family split; Milestone `8` resolved 2026-05-21 through the viewer family
-split; next routed slice Milestone `9` for the final zero-oversized rebaseline and closeout
+split; Milestone `9` resolved 2026-05-21 through the final zero-oversized rebaseline and closeout
 
 Owner context: The resolved umbrella architecture packet closed at a count-only large-file guard of
-`24` code files above `800` lines. This follow-on packet has now closed the last live oversized
-owner and is down to the final zero-oversized rebaseline. The remaining work is to finish the
-closeout without reopening the resolved umbrella, weakening tests, or letting stale routing imply
-that the viewer hotspot still exists. The repo's default active implementation packet remains
-`docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; this architecture packet is a
-queued explicit follow-on, not the default active route.
+`24` code files above `800` lines. This follow-on packet is now fully resolved: the viewer family
+was the last live oversized owner, the repo now holds a zero-oversized baseline, and this plan is
+the durable closeout record rather than a queued active lane. The repo's default active
+implementation packet remains `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`;
+this architecture packet is now historical follow-on evidence, not the default active route.
 
 ## Purpose
 
-Resolve the remaining large-file and hotspot concentration debt after the umbrella architecture
-closeout. The immediate weakness is no longer an oversized code file. Milestone `8` closed the
-last live hotspot. The remaining weakness is stale routing or debt shift after the last owner
-split, not the earlier count-only gate drift or dirty-baseline overlap that Milestones `0` and `1`
-already closed.
+Record and preserve the zero-oversized closeout after the umbrella architecture packet's count-only
+guard. The immediate weakness is no longer an oversized code file. Milestone `8` closed the last
+live hotspot, and Milestone `9` closed the remaining routing/readback drift so future sessions do
+not treat this lane as active debt. The earlier count-only gate drift and dirty-baseline overlap
+from Milestones `0` and `1` remain closed.
 
 ## Current Evidence
 
-### Live baseline after Milestone `8`
+### Live baseline after Milestone `9`
 
-- `git status -sb` was clean at the start of this alignment pass. The earlier planning-time
+- `git status -sb` was clean at the start of the Milestone `9` closeout pass. The earlier planning-time
   compliance/eval overlap closed at Milestone `0` and is no longer part of the active baseline.
-- Fresh architecture probe at the Milestone `8` closeout
+- Fresh architecture probe at the Milestone `9` closeout
   (`python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`)
 - reports `462` code files, `0` code files above `800` lines, no Python cycles, no JS/TS cycles,
   no local module above the `20`-import fan-out gate, and top overall hotspot
@@ -74,21 +73,21 @@ already closed.
 | Compliance and eval | `1714` `src/usfs_r1_ea_sources/compliance_review_eval.py`; `1686` `src/usfs_r1_ea_sources/compliance_outputs.py`; `824` `src/usfs_r1_ea_sources/compliance_validation.py` |
 | Viewer | `2547` `viewer/nepa-3d/app.js` |
 
-### Governance state after Milestone `8`
+### Governance state after Milestone `9`
 
 The first packet weakness was governance drift. That part is now closed, and the active governance
-risk has shifted:
+risk has shifted from this packet's implementation to future regression prevention:
 
 - the live oversized-file set remains machine-backed through
   `config/architecture_large_file_inventory_v1.json` and exact-membership checks in
   `tests/test_architecture_quality.py`, now at zero;
 - future Codex sessions can still shift debt into medium-large viewer siblings or stale docs if
-  they stop at a green split without the final readback sweep; and
-- Milestone `9` therefore needs to close with the live zero-inventory artifact, architecture
-  probe, and routing readback rather than only a reduced file count.
+  they stop at a green split without repeating the zero-inventory readback sweep; and
+- Milestone `9` closed with the live zero-inventory artifact, architecture probe, and routing
+  readback rather than only a reduced file count.
 
-Milestone `1` closed the original blind spot. The remaining packet work is final zero-oversized
-closeout, routing readback, and debt-shift prevention.
+Milestone `1` closed the original blind spot, and Milestone `9` closed the final queued-route
+drift. No further implementation slice remains in this packet.
 
 ## Goal
 
@@ -588,6 +587,23 @@ python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/arch
 git diff --check
 ```
 
+Progress after Milestone `9` on 2026-05-21:
+
+- The fresh architecture probe still reports `462` code files, `0` code files above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top overall
+  hotspot `tests/test_compliance_review.py` at score `35420`.
+- `config/architecture_large_file_inventory_v1.json` remains empty, and
+  `tests/test_architecture_quality.py` plus `tests/test_debt_contract.py` keep the zero-oversized
+  architecture contract fail-closed.
+- `README.md`, `docs/CURRENT_ROUTING.md`, `docs/SESSION_HANDOFF.md`, and
+  `docs/CURRENT_SYSTEM_STATE.md` now treat this packet as resolved historical closeout rather than
+  queued active debt.
+- The exact last oversized owner family closed in this packet was the viewer family at Milestone
+  `8`; Milestone `9` closes only the final zero-oversized rebaseline and routing readback.
+- Milestone `9` is resolved. The under-`800` hotspot reduction packet is fully closed with no
+  further queued slice; keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
+
 ## Required Implementation Artifacts
 
 - One machine-readable oversized-file inventory artifact created in Milestone `1`.
@@ -665,18 +681,17 @@ family overlaps the active gold lane.
 
 - The active default repo route remains
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` until that packet is closed or
-  explicitly parked. This architecture packet stays queued behind it except for planning work.
+  explicitly parked. This architecture packet is now resolved and historical.
 - The live oversized-file queue is now closed, but the highest near-threshold concentration risk
   is the `800`-line ridge in files such as `claim_extraction_eval.py=800`,
   `extract_runtime.py=796`, and `ea_consistency_decision_support_inputs.py=794`.
 - The compliance/eval family remains semantically sensitive, but the earlier dirty-overlap concern
-  is now historical only. Rebaseline it again when Milestone `7` starts instead of treating it as
-  already dirty.
+  is historical only and is no longer active routing in this packet.
 - The just-closed forest-plan family did not shift debt back into the oversized queue, but its
   largest new siblings remain near the threshold at `764`, `676`, and `672` lines and should stay
   under the existing boundary tests rather than absorb unrelated follow-on work.
-- The viewer family is now resolved; the remaining packet work is docs, routing, inventory, and
-  debt-shift readback only.
+- The viewer family was the last oversized owner; Milestone `9` closed the final docs, routing,
+  inventory, and debt-shift readback for this packet.
 - If any family cannot be reduced to `<=800` without broadening scope, split that family into
   explicitly named sequences inside this packet. Do not create a new anonymous follow-on packet
   unless the user asks for a narrower separate lane.

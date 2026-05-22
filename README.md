@@ -32,10 +32,10 @@ Current routed state on 2026-05-21:
   `west-reservoir-67436`, and the remaining live red lane is rerouted into
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
 - The queued under-`800` follow-on packet in
-  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` is now resolved
-  through Milestone `8`: the viewer family is now closed under the `800`-line
-  gate, and the next routed slice is Milestone `9` for the final zero-oversized
-  rebaseline and closeout.
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` is now fully resolved
+  through Milestone `9`: the viewer family was the last oversized owner, the
+  repo remains at `0` code files above `800` lines, and the packet is now a
+  historical closeout reference rather than queued active debt.
 - The latest architecture gate reports `462` code files, `0` above `800`
   lines, no Python or JS/TS import cycles, no source module above the
   `20`-import fan-out gate, and an empty oversized-file inventory in

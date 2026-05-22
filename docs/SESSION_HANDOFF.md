@@ -7,6 +7,36 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestone 9 Closeout
+
+This docs-and-readback slice closes the under-`800` follow-on packet at the live zero-oversized
+baseline.
+
+- outcome label:
+  `resolved`; Milestone `9` closes the packet and retires the remaining queued-route wording
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- closeout truth:
+  the fresh architecture probe still reports `462` code files, `0` code files above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and an
+  empty oversized-file inventory; the exact last oversized owner family closed in this packet was
+  the viewer family at Milestone `8`, and Milestone `9` closes only the final zero-oversized
+  rebaseline and routing readback
+- stale-reference audit:
+  older Milestone `7` and Milestone `8` sections below still mention queued next slices, but they
+  are historical only and explicitly superseded by this closeout
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; the under-`800` packet is
+  now resolved and has no further queued slice
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_quality.py tests/test_architecture_contract.py tests/test_debt_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `wc -l docs/CURRENT_ROUTING.md`, and
+  `git diff --check`
+
 ## Under-800 Hotspot Reduction Milestone 8 Alignment Closeout
 
 This docs-only slice closes the remaining post-Milestone `8` plan drift after the viewer split.

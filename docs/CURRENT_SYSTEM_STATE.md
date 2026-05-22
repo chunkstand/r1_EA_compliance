@@ -57,6 +57,10 @@ viewer baseline of `454` code files and `1` file above `800` are historical
 only after the 2026-05-21 Under-800 Hotspot Reduction Milestone `8` closeout
 described below.
 Older architecture references below that still route the under-`800` hotspot
+packet as pending on Milestone `9` or still describe the packet as queued
+active debt are historical only after the 2026-05-21 Under-800 Hotspot
+Reduction Milestone `9` closeout described below.
+Older architecture references below that still route the under-`800` hotspot
 packet as pending on Milestone `6` or still report the pre-closeout
 capture/catalog/source-register baseline of `437` code files and `10` files
 above `800` are historical only after the 2026-05-21 Under-800 Hotspot
@@ -68,6 +72,28 @@ applicability abort are historical only after the 2026-05-21 generated-case
 routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
+
+## Under-800 Hotspot Reduction Milestone 9 Closeout
+
+Latest docs-and-readback closeout on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved`; Milestone `9` closes the under-`800` packet and retires the last queued-route
+  wording.
+- Closeout truth:
+  the fresh architecture probe still reports `462` code files, `0` code files above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and an empty
+  oversized-file inventory in `config/architecture_large_file_inventory_v1.json`.
+- Last owner truth:
+  the viewer family was the final oversized owner closed in this packet at Milestone `8`; this
+  Milestone `9` slice closes only the final zero-oversized rebaseline and live-doc routing
+  readback.
+- Routing truth:
+  `README.md`, `docs/CURRENT_ROUTING.md`, `docs/SESSION_HANDOFF.md`, and
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` now treat this packet as resolved
+  historical closeout rather than queued active debt.
 
 ## Under-800 Hotspot Reduction Milestone 8 Alignment Closeout
 

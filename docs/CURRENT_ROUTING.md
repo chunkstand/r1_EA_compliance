@@ -13,8 +13,8 @@ Use this file as the short current route before opening the large append-only do
   `Document_Register_Master` / `source-set-f775524ab233ff27`
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or JS/TS cycles, no
   local module above the `20`-import fan-out gate, and the oversized-file inventory is empty
-- Under-`800` follow-on: Milestone `8` is resolved through the viewer family; the next queued
-  slice is Milestone `9` for the final zero-oversized rebaseline and closeout
+- Under-`800` follow-on: Milestones `0-9` are resolved; the repo remains at `0` oversized code
+  files, and this packet is now historical closeout only
 - The overall architecture umbrella is resolved after Milestone 10 Sequence 52.
 - West Reservoir stays an explicit `typed_blocked` replay quarantine.
 - Active gold packet truth: generated diagnostic gold cases now build non-zero rule-claim-link
