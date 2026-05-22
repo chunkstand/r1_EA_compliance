@@ -46,12 +46,55 @@ Sequence 51 quarantine closeout described below. Older references below that
 still route the overall architecture umbrella as open or still claim a fresh
 full-canonical bounded gold aggregate is green are historical only after the
 2026-05-21 Milestone 10 Sequence 52 rebaseline closeout described below.
-Older references below that still treat the live full-canonical gold replay as
+Older architecture references below that still route the under-`800` hotspot
+packet as pending on Milestone `3` or still report the pre-closeout
+knowledge-graph baseline of `357` code files and `23` files above `800` are
+historical only after the 2026-05-21 Under-800 Hotspot Reduction Milestone `3`
+closeout described below. Older references below that still treat the live
+full-canonical gold replay as
 the earlier `14/14` rule/retrieval failure bundle or as a pre-scored
 applicability abort are historical only after the 2026-05-21 generated-case
 routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
+
+## Under-800 Hotspot Reduction Milestone 3
+
+Latest implementation on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone `3`; the knowledge-graph and decision-support owner family is now closed
+  under the `800`-line gate, and the packet advances to Milestone `4`.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/nepa_3d_graph_contract.py`,
+  the new `src/usfs_r1_ea_sources/nepa_3d_graph_contract_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`,
+  the new `src/usfs_r1_ea_sources/nepa_knowledge_graph_export_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/ea_consistency_decision_support.py`,
+  the new `src/usfs_r1_ea_sources/ea_consistency_decision_support_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/rule_packs.py`,
+  `tests/test_nepa_knowledge_graph_export_test_boundary.py`,
+  `tests/test_ea_consistency_decision_support_test_boundary.py`,
+  `tests/test_architecture_quality.py`, and
+  `docs/architecture_contract.toml`.
+- Closeout truth:
+  `nepa_3d_graph_contract.py`, `nepa_knowledge_graph_export.py`, and
+  `ea_consistency_decision_support.py` are now thin public facades over explicit owner modules for
+  contract models and validation, export/runtime/overlay/readiness concerns, and decision-support
+  inputs/report/rendering/runtime seams. The family boundary tests now check exact rosters plus
+  per-file budgets so the hotspot cannot regrow in a hidden sibling while the architecture
+  contract owns the new first-class modules directly.
+- Live architecture truth:
+  the fresh architecture probe now reports `377` code files, `20` code files above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and top
+  hotspot `src/usfs_r1_ea_sources/forest_plan_components.py` at score `77022`.
+- Next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `4` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
 
 ## Full Canonical Compliance Gold Rebaseline Milestones 0 Through 3 Slice
 

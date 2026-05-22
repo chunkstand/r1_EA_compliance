@@ -4,8 +4,9 @@ Date: 2026-05-21
 
 Status: Milestone `0` resolved 2026-05-21 through live baseline recheck; Milestone `1` resolved
 2026-05-21 through exact oversized-file inventory gate hardening; Milestone `2` resolved 2026-05-21
-through the Project SOW family split; next routed slice Milestone `3` for the knowledge-graph and
-decision-support family
+through the Project SOW family split; Milestone `3` resolved 2026-05-21 through the
+knowledge-graph and decision-support family split; next routed slice Milestone `4` for the
+forest-plan runtime family
 
 Owner context: The resolved umbrella architecture packet closed at a count-only large-file guard of
 `24` code files above `800` lines. This follow-on packet resolves the remaining repo-wide
@@ -302,6 +303,24 @@ PYTHONPATH=src python -m compileall src
 python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20
 git diff --check
 ```
+
+Progress after Milestone `3` on 2026-05-21:
+
+- `src/usfs_r1_ea_sources/nepa_3d_graph_contract.py`,
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`, and
+  `src/usfs_r1_ea_sources/ea_consistency_decision_support.py` are now thin public facades over
+  explicit sibling owner modules, and every file in the three families is `<=800` lines.
+- `tests/test_nepa_knowledge_graph_export_test_boundary.py` and
+  `tests/test_ea_consistency_decision_support_test_boundary.py` now fail-close on the exact family
+  rosters plus per-file budgets, so a future session cannot shift the hotspot into a hidden sibling
+  and still pass.
+- `docs/architecture_contract.toml` now owns the first-class knowledge-graph and
+  decision-support sibling modules directly rather than only the old monolith facades.
+- The fresh architecture probe now reports `377` code files, `20` code files above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top hotspot
+  `src/usfs_r1_ea_sources/forest_plan_components.py` at score `77022`.
+- Milestone `3` is resolved. The next routed implementation slice in this packet is Milestone `4`
+  on the forest-plan runtime family.
 
 ### Milestone `4`: Forest-plan runtime family under `800`
 

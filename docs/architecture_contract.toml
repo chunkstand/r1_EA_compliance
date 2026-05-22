@@ -132,7 +132,21 @@ summary = "NEPA 3D graph contract and source-set/review export assembly."
 modules = [
   "authority_ontology_validate",
   "nepa_3d_graph_contract",
+  "nepa_3d_graph_contract_common",
+  "nepa_3d_graph_contract_lens",
+  "nepa_3d_graph_contract_models",
+  "nepa_3d_graph_contract_validation",
   "nepa_knowledge_graph_export",
+  "nepa_knowledge_graph_export_common",
+  "nepa_knowledge_graph_export_forest_plan",
+  "nepa_knowledge_graph_export_models",
+  "nepa_knowledge_graph_export_region1",
+  "nepa_knowledge_graph_export_review_overlay",
+  "nepa_knowledge_graph_export_review_validation",
+  "nepa_knowledge_graph_export_rule_templates",
+  "nepa_knowledge_graph_export_runtime",
+  "nepa_knowledge_graph_export_source_register",
+  "nepa_knowledge_graph_export_source_set_validation",
 ]
 allowed_import_layers = [
   "foundation",
@@ -232,6 +246,12 @@ summary = "Supervisor-facing EA consistency report synthesis over audited review
 modules = [
   "draft_generation",
   "ea_consistency_decision_support",
+  "ea_consistency_decision_support_inputs",
+  "ea_consistency_decision_support_models",
+  "ea_consistency_decision_support_rendering",
+  "ea_consistency_decision_support_report",
+  "ea_consistency_decision_support_report_validation",
+  "ea_consistency_decision_support_runtime",
   "final_qa_certification",
   "review_packet_index",
 ]

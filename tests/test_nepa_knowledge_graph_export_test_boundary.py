@@ -29,6 +29,24 @@ SENTINEL_OWNERS = {
         "test_nepa_knowledge_graph_export_builds_review_specific_overlay",
     },
 }
+SOURCE_FAMILY_BUDGETS = {
+    "src/usfs_r1_ea_sources/nepa_3d_graph_contract.py": 200,
+    "src/usfs_r1_ea_sources/nepa_3d_graph_contract_common.py": 300,
+    "src/usfs_r1_ea_sources/nepa_3d_graph_contract_lens.py": 250,
+    "src/usfs_r1_ea_sources/nepa_3d_graph_contract_models.py": 250,
+    "src/usfs_r1_ea_sources/nepa_3d_graph_contract_validation.py": 500,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py": 200,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export_common.py": 400,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export_forest_plan.py": 800,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export_models.py": 600,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export_region1.py": 500,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export_review_overlay.py": 600,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export_review_validation.py": 600,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export_rule_templates.py": 400,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export_runtime.py": 500,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export_source_register.py": 700,
+    "src/usfs_r1_ea_sources/nepa_knowledge_graph_export_source_set_validation.py": 800,
+}
 
 
 def test_nepa_knowledge_graph_export_split_line_budgets_are_respected() -> None:
@@ -87,6 +105,25 @@ def test_sentinel_tests_live_in_expected_owner_suites() -> None:
 
     assert missing == []
     assert duplicate_owners == {}
+
+
+def test_nepa_knowledge_graph_source_family_modules_stay_bounded_and_explicit() -> None:
+    actual_paths = {
+        path.relative_to(REPO_ROOT).as_posix()
+        for prefix in ("nepa_3d_graph_contract", "nepa_knowledge_graph_export")
+        for path in (REPO_ROOT / "src" / "usfs_r1_ea_sources").glob(f"{prefix}*.py")
+    }
+
+    assert actual_paths == set(SOURCE_FAMILY_BUDGETS)
+
+    oversize = []
+    for relative_path, max_lines in SOURCE_FAMILY_BUDGETS.items():
+        path = REPO_ROOT / relative_path
+        line_count = len(path.read_text(encoding="utf-8").splitlines())
+        if line_count > max_lines:
+            oversize.append({"path": relative_path, "line_count": line_count, "max_lines": max_lines})
+
+    assert oversize == []
 
 
 def _parse_module(path: Path) -> ast.Module:

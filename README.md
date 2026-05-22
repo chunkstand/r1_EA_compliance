@@ -31,10 +31,14 @@ Current routed state on 2026-05-21:
   claim stays retired behind an explicit typed-blocked contract for
   `west-reservoir-67436`, and the remaining live red lane is rerouted into
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
-- The latest architecture gate reports `344` code files, `24` above `800`
-  lines, no Python or JS/TS import cycles, no source module above the
-  `20`-import fan-out gate, and no `tests/` or `tests/support/` owner above
-  the `800`-line reviewability gate.
+- The queued under-`800` follow-on packet in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` is now resolved
+  through Milestone `3`: the knowledge-graph and decision-support families are
+  closed under the `800`-line gate, and the next routed slice is Milestone
+  `4` on the forest-plan runtime family.
+- The latest architecture gate reports `377` code files, `20` above `800`
+  lines, no Python or JS/TS import cycles, and no source module above the
+  `20`-import fan-out gate.
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
   because `compliance-gold-eval` is red on the active full-canonical source set
   `source-set-f775524ab233ff27`; the tracked review-contract lane itself remains

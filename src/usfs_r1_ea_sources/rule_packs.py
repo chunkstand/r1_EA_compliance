@@ -6,6 +6,8 @@ from pathlib import Path
 import json
 import re
 
+from .records import reconciled_source_record_ids as _reconciled_source_record_ids
+
 
 RULE_PACK_SCHEMA_VERSION = "compliance-rule-pack-v0"
 GENERATED_RULE_PACK_SCHEMA_VERSION = "generated-compliance-rule-pack-v0"
@@ -34,6 +36,10 @@ ALLOWED_SOURCE_FILTER_KEYS = {
     "source_record_id",
     "topic",
 }
+
+
+def reconciled_source_record_ids(*args, **kwargs):
+    return _reconciled_source_record_ids(*args, **kwargs)
 
 
 def load_rule_pack(path: Path) -> dict:

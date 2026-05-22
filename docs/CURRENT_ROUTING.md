@@ -1,22 +1,22 @@
 # Current Routing
-
 Date: 2026-05-21
-
 Use this file as the short current route before opening the large append-only docs.
-
 ## First Stops
 
 - Document-routing work: `docs/AGENT_START_HERE.md`
 - Live system truth: `README.md`, then `docs/CURRENT_SYSTEM_STATE.md`
 - Recent closeout and next slice: `docs/SESSION_HANDOFF.md`
 - Active gold packet: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
-
 ## Live Facts
 
 - Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
   `Document_Register_Master` / `source-set-f775524ab233ff27`
-- Architecture gate: `357` code files, `23` above `800` lines, no Python or JS/TS cycles, and no
-  local module above the `20`-import fan-out gate
+- Architecture gate: `377` code files, `20` above `800` lines, no Python or JS/TS cycles, no
+  local module above the `20`-import fan-out gate, and top hotspot
+  `src/usfs_r1_ea_sources/forest_plan_components.py` at score `77022`
+- Under-`800` follow-on: Milestone `3` is resolved through the knowledge-graph and
+  decision-support family; the next queued slice is Milestone `4` on the forest-plan runtime
+  family
 - The overall architecture umbrella is resolved after Milestone 10 Sequence 52.
 - West Reservoir stays an explicit `typed_blocked` replay quarantine.
 - Active gold packet truth: generated diagnostic gold cases now build non-zero rule-claim-link
@@ -30,7 +30,6 @@ Use this file as the short current route before opening the large append-only do
   and `seven_county_nepa_scope`); the earlier review-time source-claim-link expectation drift is
   closed, and bounded `gold_coverage_eval_seq52_fix6` stays red only because
   `compliance_gold_failed=1`.
-
 ## Deep Reads
 
 - `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`

@@ -28,6 +28,15 @@ SENTINEL_OWNERS = {
         "test_sequence_4_validation_gate_accepts_current_generated_report_family",
     },
 }
+SOURCE_FAMILY_BUDGETS = {
+    "src/usfs_r1_ea_sources/ea_consistency_decision_support.py": 200,
+    "src/usfs_r1_ea_sources/ea_consistency_decision_support_inputs.py": 800,
+    "src/usfs_r1_ea_sources/ea_consistency_decision_support_models.py": 300,
+    "src/usfs_r1_ea_sources/ea_consistency_decision_support_rendering.py": 700,
+    "src/usfs_r1_ea_sources/ea_consistency_decision_support_report.py": 750,
+    "src/usfs_r1_ea_sources/ea_consistency_decision_support_report_validation.py": 800,
+    "src/usfs_r1_ea_sources/ea_consistency_decision_support_runtime.py": 300,
+}
 
 
 def test_ea_consistency_decision_support_split_line_budgets_are_respected() -> None:
@@ -86,6 +95,26 @@ def test_sentinel_tests_live_in_expected_owner_suites() -> None:
 
     assert missing == []
     assert duplicate_owners == {}
+
+
+def test_ea_consistency_decision_support_source_family_modules_stay_bounded_and_explicit() -> None:
+    actual_paths = {
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in (REPO_ROOT / "src" / "usfs_r1_ea_sources").glob(
+            "ea_consistency_decision_support*.py"
+        )
+    }
+
+    assert actual_paths == set(SOURCE_FAMILY_BUDGETS)
+
+    oversize = []
+    for relative_path, max_lines in SOURCE_FAMILY_BUDGETS.items():
+        path = REPO_ROOT / relative_path
+        line_count = len(path.read_text(encoding="utf-8").splitlines())
+        if line_count > max_lines:
+            oversize.append({"path": relative_path, "line_count": line_count, "max_lines": max_lines})
+
+    assert oversize == []
 
 
 def _parse_module(path: Path) -> ast.Module:

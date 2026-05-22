@@ -7,6 +7,51 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestone 3
+
+This slice resolves the knowledge-graph and decision-support owner family under the repo's
+`800`-line reviewability gate while preserving the existing public facades.
+
+- outcome label:
+  Milestone `3` resolved; the next routed slice in this packet is Milestone `4` for the
+  forest-plan runtime family
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/nepa_3d_graph_contract.py`,
+  the new `src/usfs_r1_ea_sources/nepa_3d_graph_contract_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py`,
+  the new `src/usfs_r1_ea_sources/nepa_knowledge_graph_export_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/ea_consistency_decision_support.py`,
+  the new `src/usfs_r1_ea_sources/ea_consistency_decision_support_*.py` sibling owner modules,
+  `src/usfs_r1_ea_sources/rule_packs.py`,
+  `tests/test_nepa_knowledge_graph_export_test_boundary.py`,
+  `tests/test_ea_consistency_decision_support_test_boundary.py`,
+  `tests/test_architecture_quality.py`, and
+  `docs/architecture_contract.toml`
+- closeout truth:
+  `nepa_3d_graph_contract.py`, `nepa_knowledge_graph_export.py`, and
+  `ea_consistency_decision_support.py` are now thin public facades over explicit sibling owner
+  modules; every file in those three families is `<=800` lines; the family boundary tests now
+  fail-close on exact rosters plus per-file budgets; and the architecture contract now owns the new
+  knowledge-graph and decision-support owner modules directly rather than only the old monolith
+  facades
+- live architecture truth:
+  the fresh architecture probe now reports `377` code files, `20` code files above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top hotspot
+  `src/usfs_r1_ea_sources/forest_plan_components.py` at score `77022`
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `4` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_nepa_knowledge_graph_export.py tests/test_nepa_knowledge_graph_export_review.py tests/test_nepa_knowledge_graph_export_readiness.py tests/test_nepa_knowledge_graph_export_test_boundary.py tests/test_nepa_3d_graph_contract.py tests/test_ea_consistency_decision_support.py tests/test_ea_consistency_decision_support_report.py tests/test_ea_consistency_decision_support_validation.py tests/test_ea_consistency_decision_support_test_boundary.py tests/test_architecture_contract.py tests/test_architecture_quality.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`, and
+  `git diff --check`
+
 ## Under-800 Hotspot Reduction Milestone 2
 
 This slice resolves the Project SOW owner family under the repo's `800`-line reviewability gate
