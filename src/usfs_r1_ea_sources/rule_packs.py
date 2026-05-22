@@ -6,9 +6,6 @@ from pathlib import Path
 import json
 import re
 
-from .records import aliased_source_record_ids
-from .records import reconciled_source_record_ids
-
 
 RULE_PACK_SCHEMA_VERSION = "compliance-rule-pack-v0"
 GENERATED_RULE_PACK_SCHEMA_VERSION = "generated-compliance-rule-pack-v0"

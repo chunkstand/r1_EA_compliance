@@ -646,8 +646,9 @@ See `docs/CURRENT_SYSTEM_STATE.md` for the current corpus/runtime state, storage
 reviewer-engine read path. See `docs/SESSION_HANDOFF.md` for current routed work and recent
 closeout facts. See `docs/ARCHITECTURE.md` and `docs/architecture_contract.toml` for the
 architecture map, layer ownership, generated-artifact ownership, command groups, and automated
-architecture gate. See `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` for the active
-architecture packet and next routed slice.
+architecture gate. See `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` for the resolved
+umbrella history and `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` for the current
+oversized-file follow-on queue.
 See `docs/V1_DEMO_DOCUMENT_REVIEW_MILESTONE_PLAN.md` for the canonical V1 system plan: a Custer
 Gallatin National Forest EA compliance review as the proving ground. See
 `docs/APPLICABILITY_FIRST_REVIEW_MILESTONE_PLAN.md` for the post-V1 plan that makes authority

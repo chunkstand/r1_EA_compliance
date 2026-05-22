@@ -7,6 +7,55 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Under-800 Hotspot Reduction Milestone 2
+
+This slice resolves the Project SOW owner family under the repo's `800`-line reviewability gate
+while preserving `project_sow_package.py` as the stable public facade.
+
+- outcome label:
+  Milestone `2` resolved; the next routed slice in this packet is Milestone `3` for the
+  knowledge-graph and decision-support family
+- routed packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/project_sow_package.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_models.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_common.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_intake_support.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_graph.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_validation.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_draft.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_rendering.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_assembly.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_eval.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_operational_gate.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_adjudication.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_adjudication_eval.py`,
+  `src/usfs_r1_ea_sources/project_sow_package_ea_handoff.py`,
+  `tests/test_project_sow_package_test_boundary.py`,
+  `tests/test_architecture_quality.py`, and
+  `docs/architecture_contract.toml`
+- closeout truth:
+  `project_sow_package.py` is now a `71`-line facade over explicit sibling owner modules; every
+  `project_sow_package*.py` family file is `<=800` lines, the family boundary test now checks the
+  exact module roster plus per-file budgets, and the architecture contract now owns the whole
+  Project SOW planning lane instead of only the old monolith
+- live architecture truth:
+  the fresh architecture probe now reports `357` code files, `23` code files above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top hotspot
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py` at score `77392`
+- next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `3` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- verification:
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_project_sow_package.py tests/test_project_sow_package_validation.py tests/test_project_sow_adjudication.py tests/test_project_sow_intake.py tests/test_project_sow_package_test_boundary.py tests/test_architecture_contract.py tests/test_architecture_quality.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources tests`,
+  `PYTHONPATH=src python -m compileall src`,
+  and `git diff --check`
+
 ## Under-800 Hotspot Reduction Milestones 0 And 1
 
 This slice starts implementation of the queued under-`800` architecture packet without reopening

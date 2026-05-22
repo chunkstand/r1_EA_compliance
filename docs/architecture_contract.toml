@@ -243,7 +243,22 @@ allowed_import_layers = [
 [[layers]]
 name = "project_planning"
 summary = "Proposed-action NEPA project requirements and resource SOW package generation before review artifacts exist."
-modules = ["project_sow_package"]
+modules = [
+  "project_sow_package",
+  "project_sow_package_adjudication",
+  "project_sow_package_adjudication_eval",
+  "project_sow_package_assembly",
+  "project_sow_package_common",
+  "project_sow_package_draft",
+  "project_sow_package_ea_handoff",
+  "project_sow_package_eval",
+  "project_sow_package_graph",
+  "project_sow_package_intake_support",
+  "project_sow_package_models",
+  "project_sow_package_operational_gate",
+  "project_sow_package_rendering",
+  "project_sow_package_validation",
+]
 allowed_import_layers = [
   "foundation",
   "project_planning",

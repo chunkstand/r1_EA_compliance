@@ -6,23 +6,6 @@
   "queued_plan": "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md",
   "families": [
     {
-      "name": "project_sow_package",
-      "target_milestone": 2,
-      "required_tests": [
-        "tests/test_project_sow_package.py",
-        "tests/test_project_sow_package_validation.py",
-        "tests/test_project_sow_adjudication.py",
-        "tests/test_project_sow_intake.py",
-        "tests/test_project_sow_package_test_boundary.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/project_sow_package.py",
-          "line_count": 4970
-        }
-      ]
-    },
-    {
       "name": "knowledge_graph_and_decision_support",
       "target_milestone": 3,
       "required_tests": [

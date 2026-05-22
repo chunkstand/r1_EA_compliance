@@ -15,7 +15,7 @@ Use this file as the short current route before opening the large append-only do
 
 - Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
   `Document_Register_Master` / `source-set-f775524ab233ff27`
-- Architecture gate: `344` code files, `24` above `800` lines, no Python or JS/TS cycles, and no
+- Architecture gate: `357` code files, `23` above `800` lines, no Python or JS/TS cycles, and no
   local module above the `20`-import fan-out gate
 - The overall architecture umbrella is resolved after Milestone 10 Sequence 52.
 - West Reservoir stays an explicit `typed_blocked` replay quarantine.

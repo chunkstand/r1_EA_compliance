@@ -3,8 +3,9 @@
 Date: 2026-05-21
 
 Status: Milestone `0` resolved 2026-05-21 through live baseline recheck; Milestone `1` resolved
-2026-05-21 through exact oversized-file inventory gate hardening; next routed slice Milestone `2`
-for the Project SOW package family
+2026-05-21 through exact oversized-file inventory gate hardening; Milestone `2` resolved 2026-05-21
+through the Project SOW family split; next routed slice Milestone `3` for the knowledge-graph and
+decision-support family
 
 Owner context: The resolved umbrella architecture packet closed at a count-only large-file guard of
 `24` code files above `800` lines. This follow-on packet resolves the remaining repo-wide
@@ -50,7 +51,7 @@ closeout. The immediate weakness is no longer missing architecture direction. Th
   longer a sufficient live routing surface for oversized-file ownership because the exact live
   inventory has shifted while the count stayed flat at `24`.
 
-### Exact live oversized-file inventory
+### Exact live oversized-file inventory at packet start
 
 | Family | Live files over `800` lines |
 | --- | --- |
@@ -262,6 +263,22 @@ PYTHONPATH=src python -m compileall src
 python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20
 git diff --check
 ```
+
+Progress after Milestone `2` on 2026-05-21:
+
+- `src/usfs_r1_ea_sources/project_sow_package.py` is now a `71`-line public facade over explicit
+  sibling owner modules for models, common helpers, intake support, graph assembly, validation,
+  drafting, rendering, package assembly, eval, operational gate, adjudication, and EA handoff.
+- `tests/test_project_sow_package_test_boundary.py` now fail-closes on the exact
+  `project_sow_package*.py` family roster and per-file budgets, so a future session cannot claim
+  progress by moving the hotspot into a hidden oversized sibling.
+- `docs/architecture_contract.toml` now owns the full Project SOW planning family rather than only
+  the old monolith facade.
+- The fresh architecture probe now reports `357` code files, `23` code files above `800`, no
+  Python or JS/TS cycles, no local module above the `20`-import fan-out gate, and top hotspot
+  `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py` at score `77392`.
+- Milestone `2` is resolved. The next routed implementation slice in this packet is Milestone `3`
+  on the knowledge-graph and decision-support family.
 
 ### Milestone `3`: Knowledge graph and decision-support family under `800`
 

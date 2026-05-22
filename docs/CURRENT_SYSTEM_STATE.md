@@ -127,6 +127,36 @@ Latest implementation on 2026-05-21:
   earlier applicability abort, broad source-ID mismatch, or review-time
   generated-link expectation drift.
 
+## Under-800 Hotspot Reduction Milestone 2
+
+Latest closeout on 2026-05-21:
+
+- Routed implementation packet:
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone `2`; the Project SOW owner family is now closed under the `800`-line
+  gate, and the packet advances to Milestone `3`.
+- Implementation surfaces:
+  `src/usfs_r1_ea_sources/project_sow_package.py`,
+  the new `src/usfs_r1_ea_sources/project_sow_package_*.py` sibling owner modules,
+  `tests/test_project_sow_package_test_boundary.py`,
+  `tests/test_architecture_quality.py`, and
+  `docs/architecture_contract.toml`.
+- Closeout truth:
+  `project_sow_package.py` is now a `71`-line public facade over explicit owner modules for
+  intake, validation, graph assembly, rendering, package assembly, eval, operational gate,
+  adjudication, and EA handoff. The Project SOW boundary test now checks the exact family module
+  roster plus per-file budgets so the hotspot cannot regrow as a hidden sibling.
+- Live architecture truth:
+  the fresh architecture probe now reports `357` code files, `23` code files above `800`, no
+  Python or JS/TS import cycles, no local module above the `20`-import fan-out gate, and top
+  hotspot `src/usfs_r1_ea_sources/nepa_knowledge_graph_export.py` at score `77392`.
+- Next routing:
+  keep the broader repo default route on
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`; when the under-`800`
+  architecture queue resumes, continue at Milestone `3` in
+  `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`.
+
 ## Overall Architecture Refactor Milestone 10 Sequence 52
 
 Latest closeout on 2026-05-21:
