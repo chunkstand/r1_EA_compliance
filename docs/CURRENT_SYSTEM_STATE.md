@@ -82,6 +82,53 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Extraction Fidelity Eval Milestone 4 Resolved Locally
+
+Latest implementation update on 2026-05-23:
+
+- Routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+- Outcome label:
+  `implemented locally` for Milestone `4`; the extraction-fidelity packet now
+  has its live closeout replay and owner split verified end to end, while the
+  exact closeout hash is synced in the immediately following alignment pass.
+- Final owner split:
+  `extraction_validation.json` remains structural validation,
+  `extraction_accuracy_audit.json` remains the live generated-corpus audit,
+  `extraction_fidelity_eval_results.json` remains the dedicated offline
+  direct-fidelity artifact, `upstream-eval` remains the capture/catalog
+  umbrella proof, and full-canonical `promotion-suite` now consumes the
+  dedicated extraction-fidelity artifact directly for readiness.
+- Fixture replay truth:
+  `extraction-fidelity-eval --manifest config/extraction_fidelity_eval_v1.json --output-dir source_library`
+  remains green at `required_category_count=12`, `case_count=24`,
+  `matched_case_count=24`, `parser_route_mismatch_count=1`,
+  `anchor_mismatch_count=13`, `span_mismatch_count=10`,
+  `boundary_mismatch_count=4`, `negative_case_pass_count=12`,
+  `negative_case_fail_count=0`, and `required_check_mismatch_count=0`.
+- Live audit truth:
+  the Docling-backed
+  `extraction-accuracy-audit --output-dir source_library` rerun on
+  `source-set-f775524ab233ff27` remains green with
+  `audited_record_count=581`, `audited_chunk_count=96997`,
+  `knowledge_base_admitted_source_record_ids=581`,
+  `knowledge_base_blocked_source_record_ids=0`, and
+  `explicitly_non_admitted_source_record_ids=53`.
+- Upstream replay truth:
+  `upstream-eval --manifest config/upstream_evaluation_v1.json --output-dir source_library`
+  remains green with `required_lane_count=2`, `required_category_count=8`,
+  `case_count=16`, and `matched_case_count=16`.
+- Promotion replay truth:
+  `promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  remains green with `passed_required_full_canonical_result_count=10`,
+  `required_full_canonical_result_count=10`,
+  `full_canonical_source_set_id=source-set-f775524ab233ff27`,
+  `full_canonical_corpus_ready=true`, `current_promotion_ready=true`,
+  `expansion_ready=true`, and `promotion_ready=true`.
+- Next routing:
+  the next executable packet is now
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+
 ## Extraction Fidelity Eval Milestone 3 Alignment Pass
 
 Latest docs alignment on 2026-05-23:

@@ -2,33 +2,47 @@
 
 Date: 2026-05-23
 
-Status: In progress on 2026-05-23. Milestones `0` through `3` are now
-resolved locally: the live owner split was re-locked from repo artifacts
-only, the repo now ships `config/extraction_fidelity_eval_v1.json`, `12`
-governed fidelity families, `24` tracked cases, fixture-backed controlled
-violations, and `tests/test_extraction_fidelity_eval.py` as the contract
-substrate, the dedicated `extraction-fidelity-eval` producer writes durable
-JSON and Markdown results under
-`source_library/evaluations/extraction_fidelity/`, `upstream-eval` is now
-narrowed to the capture/catalog umbrella with `required_lane_count=2`,
-`required_category_count=8`, `case_count=16`, and `matched_case_count=16`,
-and full-canonical `promotion-suite` now requires the dedicated
-extraction-fidelity artifact directly, raising the live full-canonical
-promotion baseline to `10/10` required results passing. The current green
-fidelity replay records `matched_case_count=24`,
+Status: Implementation complete on 2026-05-23. Milestones `0` through `4`
+now replay green locally: the live owner split was re-locked from repo
+artifacts only, the repo ships `config/extraction_fidelity_eval_v1.json`,
+`12` governed fidelity families, `24` tracked cases, fixture-backed
+controlled violations, and `tests/test_extraction_fidelity_eval.py` as the
+contract substrate, the dedicated `extraction-fidelity-eval` producer writes
+durable JSON and Markdown results under
+`source_library/evaluations/extraction_fidelity/`, the Docling-backed live
+`extraction-accuracy-audit` reran green on
+`source-set-f775524ab233ff27` with `581` admitted active-current rows, `0`
+blocked rows, and `53` explicit archive/currentness rows, `upstream-eval`
+remains narrowed to the capture/catalog umbrella with
+`required_lane_count=2`, `required_category_count=8`, `case_count=16`, and
+`matched_case_count=16`, and full-canonical `promotion-suite` stays green at
+`passed_required_full_canonical_result_count=10`,
+`required_full_canonical_result_count=10`,
+`full_canonical_source_set_id=source-set-f775524ab233ff27`,
+`full_canonical_corpus_ready=true`, and `promotion_ready=true`. The current
+green fidelity replay records `matched_case_count=24`,
 `parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
-`span_mismatch_count=10`, `boundary_mismatch_count=4`, and
-`negative_case_pass_count=12`. The full canonical source-truth lane is
-already resolved locally through `93a23b0`, the downstream full-canonical
+`span_mismatch_count=10`, `boundary_mismatch_count=4`,
+`negative_case_pass_count=12`, `negative_case_fail_count=0`, and
+`required_check_mismatch_count=0`. The final owner split is now locked:
+`diagnostics/extraction_validation.json` remains structural validation,
+`diagnostics/extraction_accuracy_audit.json` remains live generated-corpus
+truth,
+`source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`
+remains the dedicated offline direct-fidelity artifact, and `upstream-eval`
+remains the capture/catalog umbrella proof that `promotion-suite` consumes
+alongside the live audit. The full canonical source-truth lane is already
+resolved locally through `93a23b0`, the downstream full-canonical
 compliance-gold lane is already resolved locally through `8e0e02b`, and no
-active owner remains in that closed source-truth/gold route. This packet now
-has one remaining slice: rerun the strengthened route against the live audit
-and finish closeout/alignment. The Milestone `0`/`1` closeout commit is
-`f2afa8f` (`Resolve extraction fidelity Milestones 0-1`), and the Milestone
-`2` closeout commit is `16fb8b2`
-(`Implement extraction fidelity Milestone 2`). The Milestone `3` closeout
-commit is `4269f5e`
-(`Implement extraction fidelity Milestone 3`).
+active owner remains in that closed source-truth/gold route. The next routed
+owner is now
+`docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+The Milestone `0`/`1` closeout commit is `f2afa8f`
+(`Resolve extraction fidelity Milestones 0-1`), the Milestone `2` closeout
+commit is `16fb8b2` (`Implement extraction fidelity Milestone 2`), the
+Milestone `3` closeout commit is `4269f5e`
+(`Implement extraction fidelity Milestone 3`), and the exact Milestone `4`
+closeout hash is synced in the immediately following docs-alignment pass.
 
 Owner context: this plan follows
 `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`, which already created
@@ -570,6 +584,34 @@ Milestone 3 closeout note on 2026-05-23:
 
 Outcome label: `resolved`
 
+Closeout update on 2026-05-23:
+
+- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources extraction-fidelity-eval --manifest config/extraction_fidelity_eval_v1.json --output-dir source_library`
+  reran green at `required_category_count=12`, `case_count=24`,
+  `matched_case_count=24`, `parser_route_mismatch_count=1`,
+  `anchor_mismatch_count=13`, `span_mismatch_count=10`,
+  `boundary_mismatch_count=4`, `negative_case_pass_count=12`,
+  `negative_case_fail_count=0`, and `required_check_mismatch_count=0`.
+- `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`
+  reran green on `source-set-f775524ab233ff27` with
+  `audited_record_count=581`, `audited_chunk_count=96997`,
+  `knowledge_base_admitted_source_record_ids=581`,
+  `knowledge_base_blocked_source_record_ids=0`, and
+  `explicitly_non_admitted_source_record_ids=53`.
+- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --output-dir source_library`
+  reran green at `required_lane_count=2`, `required_category_count=8`,
+  `case_count=16`, and `matched_case_count=16`.
+- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  reran green at `passed_required_full_canonical_result_count=10`,
+  `required_full_canonical_result_count=10`,
+  `full_canonical_source_set_id=source-set-f775524ab233ff27`,
+  `full_canonical_corpus_ready=true`, `current_promotion_ready=true`,
+  `expansion_ready=true`, and `promotion_ready=true`.
+- The next routed owner is now
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`;
+  the exact Milestone `4` closeout hash is synced in the immediately
+  following docs-alignment pass.
+
 Purpose: prove the new direct-eval owner coexists cleanly with the live
 source-truth and promotion route.
 
@@ -723,4 +765,4 @@ The final closeout must record:
 - [x] `upstream-eval` and promotion wiring consume the new owner truthfully
 - [x] `README.md`, routing docs, current-state docs, this plan, and handoff are aligned
 - [x] focused tests, lint, eval commands, and `git diff --check` passed
-- [x] closeout commit hash is recorded in `docs/SESSION_HANDOFF.md`
+- [ ] closeout commit hash is recorded in `docs/SESSION_HANDOFF.md`

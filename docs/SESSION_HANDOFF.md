@@ -7,6 +7,61 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Extraction Fidelity Eval Milestone 4 Resolved Locally
+
+This implementation slice closes the final live replay work in
+`docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+
+- outcome label:
+  `implemented locally` for Milestone `4`; the packet now has the live audit,
+  strengthened upstream route, and full-canonical promotion route rerun
+  green, while the exact closeout hash is synced in the immediately
+  following docs-alignment pass
+- routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- final owner split:
+  `extraction_validation.json` remains structural validation,
+  `extraction_accuracy_audit.json` remains the live generated-corpus audit,
+  `extraction_fidelity_eval_results.json` remains the dedicated offline
+  direct-fidelity artifact, and `upstream-eval` remains the narrowed
+  capture/catalog umbrella that promotion consumes alongside the live audit
+- fixture replay truth:
+  `extraction-fidelity-eval --manifest config/extraction_fidelity_eval_v1.json --output-dir source_library`
+  remains green at `required_category_count=12`, `case_count=24`,
+  `matched_case_count=24`, `parser_route_mismatch_count=1`,
+  `anchor_mismatch_count=13`, `span_mismatch_count=10`,
+  `boundary_mismatch_count=4`, `negative_case_pass_count=12`,
+  `negative_case_fail_count=0`, and `required_check_mismatch_count=0`
+- live audit truth:
+  `extraction-accuracy-audit --output-dir source_library` reran green on
+  `source-set-f775524ab233ff27` with `audited_record_count=581`,
+  `audited_chunk_count=96997`,
+  `knowledge_base_admitted_source_record_ids=581`,
+  `knowledge_base_blocked_source_record_ids=0`, and
+  `explicitly_non_admitted_source_record_ids=53`
+- upstream replay truth:
+  `upstream-eval --manifest config/upstream_evaluation_v1.json --output-dir source_library`
+  reran green with `required_lane_count=2`, `required_category_count=8`,
+  `case_count=16`, and `matched_case_count=16`
+- promotion replay truth:
+  `promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+  reran green with `passed_required_full_canonical_result_count=10`,
+  `required_full_canonical_result_count=10`,
+  `full_canonical_source_set_id=source-set-f775524ab233ff27`,
+  `full_canonical_corpus_ready=true`, `current_promotion_ready=true`,
+  `expansion_ready=true`, and `promotion_ready=true`
+- next routing:
+  the next executable packet is now
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources extraction-fidelity-eval --manifest config/extraction_fidelity_eval_v1.json --output-dir source_library`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_fidelity_eval.py tests/test_extraction_accuracy.py tests/test_upstream_evaluation.py tests/test_promotion_suite_full_canonical.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/extraction_fidelity_eval.py src/usfs_r1_ea_sources/upstream_evaluation.py src/usfs_r1_ea_sources/cli_eval.py tests/test_extraction_fidelity_eval.py tests/test_extraction_accuracy.py tests/test_upstream_evaluation.py tests/test_promotion_suite_full_canonical.py tests/test_architecture_contract.py`,
+  and `git diff --check`
+
 ## Extraction Fidelity Eval Milestone 3 Alignment Pass
 
 This docs-only follow-up closes the remaining routing drift after the

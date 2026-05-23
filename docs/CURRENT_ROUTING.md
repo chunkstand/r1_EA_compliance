@@ -6,10 +6,11 @@ Use this file as the short current route before opening the large append-only do
 - Document-routing work: `docs/AGENT_START_HERE.md`
 - Live system truth: `README.md`, then `docs/CURRENT_SYSTEM_STATE.md`
 - Recent closeout and next slice: `docs/SESSION_HANDOFF.md`
-- Active upstream packet: `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- Recent upstream closeout:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
 - Recent source-truth closeout: `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
 - Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
-- Active queue follow-on:
+- Next executable packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 ## Live Facts
 
@@ -55,28 +56,23 @@ Use this file as the short current route before opening the large append-only do
   `19/19` mapped high-priority families, `3` required review contracts,
   `2` forests, `3` package styles, `2 reviewer_ready + 1 typed_blocked`
   tracked reviews, and zero threshold failures
-- Next routed follow-on: `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
-  owns the next standard raise for import/extraction truth. Milestones `0`
-  through `3` are now resolved locally: the contract substrate still defines
-  `12` governed fidelity families and `24` tracked cases under
-  `config/extraction_fidelity_eval_v1.json`, the dedicated
-  `extraction-fidelity-eval` producer still writes durable results under
-  `source_library/evaluations/extraction_fidelity/`, `upstream-eval` is now
-  narrowed to the capture/catalog umbrella with `required_lane_count=2`,
-  `required_category_count=8`, `case_count=16`, and
-  `matched_case_count=16`, and full-canonical `promotion-suite` now requires
-  the dedicated extraction-fidelity artifact directly, raising the live
-  full-canonical baseline to `10/10` required results passing. The Milestone
-  `3` closeout landed in commit `4269f5e`
-  (`Implement extraction fidelity Milestone 3`). The current green replay
-  still records `matched_case_count=24`,
-  `parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
-  `span_mismatch_count=10`, `boundary_mismatch_count=4`, and
-  `negative_case_pass_count=12`, while the live `extraction-accuracy-audit`
-  remains green at `581/581` admitted active-current rows. Milestone `4` is
-  the next routed slice: rerun the live audit plus the strengthened
-  upstream/promotion route and finish packet closeout/alignment.
-- Active queue follow-on: the source-truth/gold lane remains resolved, but
+- Recent upstream closeout: the extraction-fidelity packet is now implemented
+  locally through Milestone `4`. The dedicated
+  `extraction-fidelity-eval --manifest config/extraction_fidelity_eval_v1.json --output-dir source_library`
+  replay remains green with `12` governed families, `24` tracked cases,
+  `matched_case_count=24`, `parser_route_mismatch_count=1`,
+  `anchor_mismatch_count=13`, `span_mismatch_count=10`,
+  `boundary_mismatch_count=4`, and `negative_case_pass_count=12`; the live
+  `extraction-accuracy-audit --output-dir source_library` rerun on
+  `source-set-f775524ab233ff27` remains green at `581/581` admitted
+  active-current rows with `0` blocked rows and `53` explicit
+  archive/currentness rows; the narrowed `upstream-eval` replay stays green
+  at `16/16`; and full-canonical `promotion-suite` stays green at `10/10`
+  required full-canonical results with
+  `full_canonical_source_set_id=source-set-f775524ab233ff27`. The exact
+  Milestone `4` closeout hash is synced in the immediately following
+  docs-alignment pass.
+- Next routed follow-on: the source-truth/gold lane remains resolved, but
   `51` `Direct_File_Capture_Queue` rows still remain outside the active
   load-bearing surface by workbook contract. That work is now explicitly
   routed through
