@@ -107,7 +107,8 @@ Use this file as the short current route before opening the large append-only do
   (`Open Flathead reading-room blocker packet`).
   The latest slice now routes `WILD-ESA-Q001` to
   `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md` as an
-  explicit blocker family.
+  explicit blocker family, and that closeout landed in commit `3a8dd2d`
+  (`Open WILD-ESA NCDE blocker packet`).
   The tracked `config/source_register_queue_resolution_ledger_v1.json`
   enumerates all `51` queue rows, preserves the `4` governed `resolved`
   promotions from Milestone `2` plus the `4` SCC structured-export families

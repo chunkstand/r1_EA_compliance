@@ -93,9 +93,9 @@ Current routed state on 2026-05-23:
   through docs-alignment commit `82e2195`
   (`Align direct-file queue SCC slice docs`), and the Flathead reading-room
   blocker opener landed in commit `eb09556`
-  (`Open Flathead reading-room blocker packet`). The latest slice now opens
-  the NCDE amendment export blocker family for `WILD-ESA-Q001`; the earlier
-  Milestone `2`
+  (`Open Flathead reading-room blocker packet`). The latest slice opened the
+  NCDE amendment export blocker family for `WILD-ESA-Q001` in commit
+  `3a8dd2d` (`Open WILD-ESA NCDE blocker packet`); the earlier Milestone `2`
   direct-file promotion closeout remains commit `85f087b`
   (`Resolve direct-file queue Milestone 2`).
 - The downstream full-canonical compliance-gold packet is now resolved

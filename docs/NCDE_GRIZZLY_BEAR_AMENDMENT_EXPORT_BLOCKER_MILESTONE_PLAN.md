@@ -1,7 +1,7 @@
 # NCDE Grizzly Bear Amendment Export Blocker Milestone Plan
 
 Date: 2026-05-23
-Status: Active blocker packet (`Milestone 0 resolved locally; Milestone 1 next when the mixed Flathead and multi-forest NCDE amendment roster is reconciled document-by-document into governed canonical successors or explicit exclusions`)
+Status: Active blocker packet (`Milestone 0 resolved locally through 3a8dd2d; Milestone 1 next when the mixed Flathead and multi-forest NCDE amendment roster is reconciled document-by-document into governed canonical successors or explicit exclusions`)
 Owner context: the `WILD-ESA-Q001` queue family spans overlapping Flathead plan/FEIS documents, still-missing Flathead map appendices, and distinct multi-forest NCDE grizzly-bear amendment documents, so it is not an honest one-shot structured-export promotion
 
 ## Purpose
@@ -22,7 +22,8 @@ the live public Pinyon/Box folder mixes:
 
 ## Latest Local Implementation
 
-Milestone `0` is now resolved locally in the current slice.
+Milestone `0` is now resolved locally through commit `3a8dd2d`
+(`Open WILD-ESA NCDE blocker packet`).
 
 - `config/source_register_queue_resolution_ledger_v1.json` now routes
   `WILD-ESA-Q001` to this exact packet path and marks it

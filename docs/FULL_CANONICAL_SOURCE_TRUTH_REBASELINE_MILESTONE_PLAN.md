@@ -80,7 +80,8 @@ The latest queue follow-on now also narrows `WILD-ESA-Q001` into
 explicit mixed export blocker family because the live public roster spans
 overlapping Flathead plan/FEIS documents plus distinct multi-forest NCDE
 amendment records; that routing change also leaves the live source set and
-admitted-count boundary unchanged.
+admitted-count boundary unchanged. That blocker opener landed in commit
+`3a8dd2d` (`Open WILD-ESA NCDE blocker packet`).
 Older `634/581` references below remain the historical closeout baseline for
 commit `93a23b0` unless a later bullet explicitly updates them.
 
