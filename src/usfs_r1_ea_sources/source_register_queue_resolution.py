@@ -112,6 +112,16 @@ def build_source_register_queue_disposition_audit(
         if _string_or_none(entry.get("planned_disposition")) == "named_blocker"
         and not _string_or_none(entry.get("blocker_packet_reference"))
     )
+    named_blocker_with_invalid_reference = sorted(
+        source_id
+        for source_id, entry in entry_by_source_id.items()
+        if _string_or_none(entry.get("planned_disposition")) == "named_blocker"
+        and _string_or_none(entry.get("blocker_packet_reference"))
+        and not _blocker_packet_reference_exists(
+            _string_or_none(entry.get("blocker_packet_reference")) or "",
+            ledger_path=ledger_path,
+        )
+    )
     historical_source_ids = sorted(
         source_id
         for source_id, entry in entry_by_source_id.items()
@@ -128,6 +138,12 @@ def build_source_register_queue_disposition_audit(
         for source_id, entry in entry_by_source_id.items()
         if _string_or_none(entry.get("currentness_class")) == CURRENT_OR_PROJECT_APPLICABLE
         and _string_or_none(entry.get("resolution_status")) == "planned"
+    )
+    blocked_current_applicable_source_ids = sorted(
+        source_id
+        for source_id, entry in entry_by_source_id.items()
+        if _string_or_none(entry.get("currentness_class")) == CURRENT_OR_PROJECT_APPLICABLE
+        and _string_or_none(entry.get("resolution_status")) == "blocked"
     )
 
     planned_disposition_counts = Counter(
@@ -220,6 +236,16 @@ def build_source_register_queue_disposition_audit(
     )
     _append_check(
         checks,
+        name="named_blocker_rows_reference_existing_packet",
+        expected=[],
+        actual=named_blocker_with_invalid_reference,
+        passed=not named_blocker_with_invalid_reference,
+        details=(
+            "Named blocker rows must reference an existing tracked blocker packet under docs/."
+        ),
+    )
+    _append_check(
+        checks,
         name="historical_noncurrent_baseline_matches_expected_ids",
         expected=sorted(EXPECTED_HISTORICAL_SOURCE_IDS),
         actual=historical_source_ids,
@@ -251,6 +277,8 @@ def build_source_register_queue_disposition_audit(
         ),
         "historical_noncurrent_count": len(historical_source_ids),
         "historical_noncurrent_source_ids": historical_source_ids,
+        "blocked_current_or_project_applicable_count": len(blocked_current_applicable_source_ids),
+        "blocked_current_or_project_applicable_source_ids": blocked_current_applicable_source_ids,
         "unresolved_current_or_project_applicable_count": len(
             unresolved_current_applicable_source_ids
         ),
@@ -331,3 +359,21 @@ def _append_check(
             "details": details,
         }
     )
+
+
+def _blocker_packet_reference_exists(reference: str, *, ledger_path: Path) -> bool:
+    text = reference.strip()
+    if not text:
+        return False
+    reference_path = Path(text)
+    if reference_path.suffix.lower() != ".md":
+        return False
+    if not str(reference_path).startswith("docs/"):
+        return False
+    if reference_path.is_absolute():
+        return reference_path.exists()
+    candidates = (
+        Path.cwd() / reference_path,
+        ledger_path.resolve().parent.parent / reference_path,
+    )
+    return any(candidate.exists() for candidate in candidates)

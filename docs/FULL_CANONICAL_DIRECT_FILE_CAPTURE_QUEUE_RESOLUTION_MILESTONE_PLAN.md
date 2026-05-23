@@ -1,22 +1,23 @@
 # Full Canonical Direct-File Capture Queue Resolution Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 next`)
+Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction opened locally`)
 Owner context: follow-on from the resolved full-canonical source-truth and compliance-gold
 rebaseline packets
 
 ## Latest Local Implementation
 
 Milestones `0`, `1`, and `2` are now resolved locally through commit `85f087b`
-(`Resolve direct-file queue Milestone 2`).
+(`Resolve direct-file queue Milestone 2`). Milestone `3` is now reduced
+locally through the project-specific blocker-family opening slice.
 
 - `config/source_register_queue_resolution_ledger_v1.json` now enumerates all
   `51` queue rows exactly once with `49` current/project-applicable rows, `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`), planned disposition
   counts of `37` `promote_direct_file`, `9`
   `promote_structured_export`, `3` `named_blocker`, and `2`
-  `historical_scope_only`, plus resolution status counts of `47` `planned`
-  and `4` `resolved`.
+  `historical_scope_only`, plus resolution status counts of `44` `planned`,
+  `3` `blocked`, and `4` `resolved`.
 - The low-complexity direct-file family now promotes
   `FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, and `PROG-010`
   into `Document_Register_Master`, raising the active full-canonical catalog
@@ -24,10 +25,15 @@ Milestones `0`, `1`, and `2` are now resolved locally through commit `85f087b`
   `artifact_count=626`,
   `source_partition_counts={"active_review_corpus":585,"currentness_supersession_archive":53}`,
   and `status_counts={"downloaded":4,"downloaded_existing":622,"duplicate_content":12}`.
+- Milestone `3` now opens the named blocker family for project-specific
+  placeholders: `PROG-011`, `PROG-012`, and `PROG-013` route to
+  `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
+  and now carry explicit `blocked` status instead of a free-text ledger hint.
 - `source-register-queue-audit` now provides the machine-checked gate for the
   queue packet and passes with zero missing, unexpected, duplicated, or
-  drifted rows, `unresolved_current_or_project_applicable_count=45`, and the
-  same governed historical roster.
+  drifted rows, `blocked_current_or_project_applicable_count=3`,
+  `unresolved_current_or_project_applicable_count=42`, and the same governed
+  historical roster.
 - The refreshed downstream stack is green on the strengthened source set:
   `extraction-accuracy-audit` now admits `585/585` active-current rows with
   `53` explicit archive/currentness rows, `authority-currentness` now reports
@@ -36,8 +42,8 @@ Milestones `0`, `1`, and `2` are now resolved locally through commit `85f087b`
   `validation_passed=true` and `reviewer_ready=true`, and
   `promotion-suite` again reports `10/10` required full-canonical results
   passing.
-- The next routed slice is now Milestone `3` for export-backed families and
-  named blockers.
+- The next routed slice remains Milestone `3` for the export-backed families
+  after the project-specific blocker-family opener.
 
 ## Purpose
 
@@ -62,8 +68,9 @@ is `585/585` on `source-set-3f7d4578cafb0704`:
   promotion-suite results passing.
 - The same routing file also records that the workbook still carries `51`
   `Direct_File_Capture_Queue` rows by contract, but `4` of them now have
-  governed `resolved` promotions and only `45` current/project-applicable
-  rows remain unresolved.
+  governed `resolved` promotions, `3` now have explicit blocker ownership,
+  and only `42` current/project-applicable rows remain in the generic
+  unresolved planned roster.
 - `config/source_register_sheet_contract_v1.json` defines `Document_Register_Master` as the only
   load-bearing sheet and `Direct_File_Capture_Queue` as a deferred queue with `emits_load_rows=false`.
 - `config/source_register_row_states_v1.json` defines queue rows as
@@ -81,7 +88,10 @@ is `585/585` on `source-set-3f7d4578cafb0704`:
   - `51` queue rows total;
   - `49` rows that still classify as current or project-applicable;
   - `4` rows already resolved by Milestone `2` promotion;
-  - `45` current/project-applicable rows still unresolved;
+  - `3` project-specific rows now explicitly blocked by
+    `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`;
+  - `42` current/project-applicable rows still unresolved in the generic
+    planned roster;
   - `2` explicitly historical/noncurrent rows: `FPS-380` and `SUP-007`;
   - dominant queue reasons:
     - `21` `Folder/listing/manual-export placeholder`;

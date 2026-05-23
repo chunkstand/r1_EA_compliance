@@ -13,6 +13,8 @@ Use this file as the short current route before opening the large append-only do
 - Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
 - Next executable packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- Active blocker packet:
+  `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
 
 ## Live Facts
 
@@ -83,18 +85,22 @@ Use this file as the short current route before opening the large append-only do
   (`Resolve extraction fidelity Milestone 4`).
 - Direct-file capture packet status: Milestones `0`, `1`, and `2` in
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
-  are now resolved locally through commit `85f087b`
-  (`Resolve direct-file queue Milestone 2`). The tracked
-  `config/source_register_queue_resolution_ledger_v1.json` enumerates all
-  `51` queue rows, `4` are now governed `resolved` promotions
-  (`FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, `PROG-010`),
-  `source-register-queue-audit` now passes with
-  `resolution_status_counts={"planned":47,"resolved":4}`,
-  `unresolved_current_or_project_applicable_count=45`, and the same `2`
+  remain resolved locally through commit `85f087b`
+  (`Resolve direct-file queue Milestone 2`), and Milestone `3` is now
+  reduced locally by opening the project-specific blocker family in
+  `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`.
+  The tracked `config/source_register_queue_resolution_ledger_v1.json`
+  enumerates all `51` queue rows, preserves the `4` governed `resolved`
+  promotions (`FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`,
+  `PROG-010`), and now routes `PROG-011`, `PROG-012`, and `PROG-013` as
+  explicit `blocked` placeholders. `source-register-queue-audit` now passes
+  with `resolution_status_counts={"blocked":3,"planned":44,"resolved":4}`,
+  `blocked_current_or_project_applicable_count=3`,
+  `unresolved_current_or_project_applicable_count=42`, and the same `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`); the next routed slice
-  is now Milestone `3` for export-backed families and named blockers. West
-  Reservoir remains an intentional `typed_blocked` replay quarantine rather
-  than a promotion blocker
+  remains Milestone `3` for the export-backed families. West Reservoir
+  remains an intentional `typed_blocked` replay quarantine rather than a
+  promotion blocker
 - Ad hoc full-canonical `phase-eval` status: do not treat the
   `source-set-3f7d4578cafb0704` ad hoc `phase-eval` replay as the live
   promotion gate; it still lacks extraction, retrieval, claim-extraction,

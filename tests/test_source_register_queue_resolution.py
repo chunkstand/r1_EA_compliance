@@ -16,7 +16,7 @@ CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_
 LEDGER_PATH = ROOT / DEFAULT_SOURCE_REGISTER_QUEUE_RESOLUTION_LEDGER_PATH
 
 
-def test_queue_disposition_audit_matches_milestone0_baseline() -> None:
+def test_queue_disposition_audit_matches_current_queue_baseline() -> None:
     result = build_source_register_queue_disposition_audit(CANONICAL_WORKBOOK)
 
     assert result["validation_passed"] is True
@@ -25,14 +25,24 @@ def test_queue_disposition_audit_matches_milestone0_baseline() -> None:
     assert result["current_or_project_applicable_count"] == 49
     assert result["historical_noncurrent_count"] == 2
     assert result["historical_noncurrent_source_ids"] == ["FPS-380", "SUP-007"]
-    assert result["unresolved_current_or_project_applicable_count"] == 45
+    assert result["blocked_current_or_project_applicable_count"] == 3
+    assert result["blocked_current_or_project_applicable_source_ids"] == [
+        "PROG-011",
+        "PROG-012",
+        "PROG-013",
+    ]
+    assert result["unresolved_current_or_project_applicable_count"] == 42
     assert result["planned_disposition_counts"] == {
         "historical_scope_only": 2,
         "named_blocker": 3,
         "promote_direct_file": 37,
         "promote_structured_export": 9,
     }
-    assert result["resolution_status_counts"] == {"planned": 47, "resolved": 4}
+    assert result["resolution_status_counts"] == {
+        "blocked": 3,
+        "planned": 44,
+        "resolved": 4,
+    }
 
 
 def test_queue_disposition_audit_fails_when_queue_row_missing_from_ledger() -> None:
@@ -71,6 +81,20 @@ def test_queue_disposition_audit_fails_when_current_row_lacks_planned_dispositio
     assert checks["current_applicable_rows_have_planned_disposition"]["actual"] == [
         "R1-SCC-Q-CGNF-RATIONALES"
     ]
+
+
+def test_queue_disposition_audit_fails_when_named_blocker_reference_is_not_a_packet() -> None:
+    ledger = load_source_register_queue_resolution_ledger(LEDGER_PATH)
+    for entry in ledger["entries"]:
+        if entry["source_id"] == "PROG-011":
+            entry["blocker_packet_reference"] = "docs/DOES_NOT_EXIST.md"
+            break
+
+    result = _run_with_temp_ledger(ledger)
+
+    checks = {check["name"]: check for check in result["checks"]}
+    assert result["validation_passed"] is False
+    assert checks["named_blocker_rows_reference_existing_packet"]["actual"] == ["PROG-011"]
 
 
 def test_queue_disposition_audit_detects_identity_drift() -> None:

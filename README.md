@@ -63,16 +63,20 @@ Current routed state on 2026-05-23:
   Register XML source, and `promotion-suite` again reports
   `full_canonical_corpus_ready=true` with `10/10` required full-canonical
   results passing.
-- The direct-file capture queue packet now closes Milestone `2` locally:
-  `config/source_register_queue_resolution_ledger_v1.json` records all `51`
-  queue rows exactly once, `4` are now governed `resolved` promotions
-  (`FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, `PROG-010`),
-  `source-register-queue-audit` now passes with
-  `resolution_status_counts={"planned":47,"resolved":4}`,
-  `unresolved_current_or_project_applicable_count=45`, the same `2`
+- The direct-file capture queue packet now reduces Milestone `3` locally:
+  `config/source_register_queue_resolution_ledger_v1.json` still records all
+  `51` queue rows exactly once, preserves the `4` governed `resolved`
+  promotions (`FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`,
+  `PROG-010`), and now routes the project-specific placeholder family
+  `PROG-011`, `PROG-012`, and `PROG-013` to
+  `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
+  as explicit `blocked` rows. `source-register-queue-audit` now passes with
+  `resolution_status_counts={"blocked":3,"planned":44,"resolved":4}`,
+  `blocked_current_or_project_applicable_count=3`,
+  `unresolved_current_or_project_applicable_count=42`, the same `2`
   governed historical rows (`FPS-380`, `SUP-007`), and the next routed slice
-  is now Milestone `3` for export-backed families and named blockers. This
-  closeout landed in commit `85f087b`
+  remains Milestone `3` for the export-backed families. The earlier
+  Milestone `2` direct-file promotion closeout remains commit `85f087b`
   (`Resolve direct-file queue Milestone 2`).
 - The downstream full-canonical compliance-gold packet is now resolved
   historically on pre-queue source set `source-set-f775524ab233ff27`:
@@ -203,12 +207,16 @@ Local active import baseline on 2026-05-23 after direct-file queue Milestone 2:
   `status_counts={"downloaded": 4, "downloaded_existing": 622, "duplicate_content": 12}`,
   and workbook SHA
   `b0e78bb90336a01f73cd7489c109e45260d1a98fc0165f6b713d99311f029e5a`.
-- Queue Milestone `2` is now reduced locally: workbook promotions
+- Queue Milestone `3` is now reduced locally: workbook promotions
   `FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, and `PROG-010`
-  land in `Document_Register_Master`; the workbook still preserves all `51`
+  still land in `Document_Register_Master`; `PROG-011`, `PROG-012`, and
+  `PROG-013` now route to
+  `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
+  as governed project-specific blockers; the workbook still preserves all `51`
   queue rows for audit lineage; and `source-register-queue-audit` now passes
-  with `resolution_status_counts={"planned":47,"resolved":4}` and
-  `unresolved_current_or_project_applicable_count=45`.
+  with `resolution_status_counts={"blocked":3,"planned":44,"resolved":4}`,
+  `blocked_current_or_project_applicable_count=3`, and
+  `unresolved_current_or_project_applicable_count=42`.
 - The strengthened downstream stack on `source-set-3f7d4578cafb0704` is now
   green where this packet requires it:
   `extraction-accuracy-audit` admits `585/585` active-current rows with `53`

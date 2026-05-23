@@ -120,21 +120,28 @@ Latest implementation update on 2026-05-23:
 - Routed packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
 - Outcome label:
-  `reduced locally` for Milestone `2`; the low-complexity direct-file
-  promotion slice is now closed locally, and the next routed slice is
-  Milestone `3`.
+  `reduced locally` for Milestone `3`; the low-complexity direct-file
+  promotion slice remains closed from Milestone `2`, and the
+  project-specific blocker-family opening slice is now closed locally while
+  the next routed slice remains Milestone `3`.
 - Promoted workbook rows:
   `FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, and `PROG-010`
   are now promoted into `Document_Register_Master` with governed direct-file
   capture rather than remaining queue-only placeholders.
+- Blocked project-specific queue rows:
+  `PROG-011`, `PROG-012`, and `PROG-013` now route to
+  `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
+  as explicit project-specific blockers instead of generic unresolved queue
+  placeholders.
 - Workbook and queue truth:
   `source-register-diff` now records `canonical_master_row_count=638`,
   `canonical_only_source_count=638`, `canonical_queue_row_count=51`, and
   workbook SHA
   `b0e78bb90336a01f73cd7489c109e45260d1a98fc0165f6b713d99311f029e5a`;
   `source-register-queue-audit` now passes with
-  `resolution_status_counts={"planned":47,"resolved":4}`,
-  `unresolved_current_or_project_applicable_count=45`, and the same `2`
+  `resolution_status_counts={"blocked":3,"planned":44,"resolved":4}`,
+  `blocked_current_or_project_applicable_count=3`,
+  `unresolved_current_or_project_applicable_count=42`, and the same `2`
   governed historical/noncurrent rows (`FPS-380`, `SUP-007`).
 - Active full-canonical catalog truth:
   `catalog-build` now promotes the live catalog to
