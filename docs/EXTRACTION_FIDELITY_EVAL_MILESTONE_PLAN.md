@@ -2,35 +2,39 @@
 
 Date: 2026-05-23
 
-Status: In progress on 2026-05-23. Milestones `0` through `2` are now
-resolved locally: the live owner split and `9/9` promotion baseline were
-re-locked from repo artifacts only, the repo now ships
-`config/extraction_fidelity_eval_v1.json`, `12` governed fidelity families,
-`24` tracked cases, fixture-backed controlled violations, and
-`tests/test_extraction_fidelity_eval.py` as the contract substrate, and the
-dedicated `extraction-fidelity-eval` producer now writes durable JSON and
-Markdown results under `source_library/evaluations/extraction_fidelity/`.
-The current green replay records `matched_case_count=24`,
+Status: In progress on 2026-05-23. Milestones `0` through `3` are now
+resolved locally: the live owner split was re-locked from repo artifacts
+only, the repo now ships `config/extraction_fidelity_eval_v1.json`, `12`
+governed fidelity families, `24` tracked cases, fixture-backed controlled
+violations, and `tests/test_extraction_fidelity_eval.py` as the contract
+substrate, the dedicated `extraction-fidelity-eval` producer writes durable
+JSON and Markdown results under
+`source_library/evaluations/extraction_fidelity/`, `upstream-eval` is now
+narrowed to the capture/catalog umbrella with `required_lane_count=2`,
+`required_category_count=8`, `case_count=16`, and `matched_case_count=16`,
+and full-canonical `promotion-suite` now requires the dedicated
+extraction-fidelity artifact directly, raising the live full-canonical
+promotion baseline to `10/10` required results passing. The current green
+fidelity replay records `matched_case_count=24`,
 `parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
 `span_mismatch_count=10`, `boundary_mismatch_count=4`, and
 `negative_case_pass_count=12`. The full canonical source-truth lane is
 already resolved locally through `93a23b0`, the downstream full-canonical
 compliance-gold lane is already resolved locally through `8e0e02b`, and no
 active owner remains in that closed source-truth/gold route. This packet now
-owns the next upstream-standard raise: route the new artifact into
-upstream/promotion truth instead of leaving the older extraction umbrella as
-the effective owner. The Milestone `0`/`1` closeout commit is `f2afa8f`
-(`Resolve extraction fidelity Milestones 0-1`), and the Milestone `2`
-closeout commit is `16fb8b2`
+has one remaining slice: rerun the strengthened route against the live audit
+and finish closeout/alignment. The Milestone `0`/`1` closeout commit is
+`f2afa8f` (`Resolve extraction fidelity Milestones 0-1`), and the Milestone
+`2` closeout commit is `16fb8b2`
 (`Implement extraction fidelity Milestone 2`).
 
 Owner context: this plan follows
 `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`, which already created
-`upstream-eval` and the upstream coverage register. That upstream packet closed
-the missing-eval gap for capture, catalog, and extraction category coverage,
-but the current load-bearing extraction direct-eval route is still bundled
-inside the aggregate `upstream-eval` lane. The repo now has four distinct
-upstream truth surfaces:
+`upstream-eval` and the upstream coverage register. Milestone `3` in this
+packet narrows that older aggregate route so `upstream-eval` now owns only
+capture/catalog direct eval while promotion consumes the dedicated extraction
+fidelity artifact directly. The repo now has four distinct upstream truth
+surfaces:
 
 - `extract-build` structural validation in
   `diagnostics/extraction_validation.json`
@@ -40,12 +44,11 @@ upstream truth surfaces:
 - dedicated offline fidelity proof in
   `source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`
 
-What is still missing is load-bearing routing that consumes the dedicated,
-reviewer-visible, thresholded fidelity producer now that it exists. The repo
-can already prove difficult extraction cases by span, boundary, layout,
-scope, parser-route, and negative-case expectations; the remaining gap is to
-make that artifact authoritative in upstream/promotion truth without weakening
-the current audit or moving the problem into downstream gold coverage.
+What is still missing is the final live closeout pass that proves the
+strengthened upstream/promotion route coexists cleanly with the live
+generated-corpus audit. The repo can already prove difficult extraction cases
+by span, boundary, layout, scope, parser-route, and negative-case
+expectations, and the promotion route now consumes that owner directly.
 
 ## Purpose
 
@@ -72,14 +75,14 @@ fail closed when:
 
 ## Current Evidence
 
-- `config/upstream_evaluation_v1.json` already declares an `extraction` lane
-  with `11` required extraction categories and `22` extraction cases inside
-  the aggregate `upstream-eval` contract.
+- `config/upstream_evaluation_v1.json` now declares only the capture/catalog
+  upstream umbrella with `2` required lanes, `8` required categories, and
+  `16` fixture-backed cases.
 - `tests/test_upstream_evaluation.py` currently proves the real manifest runs
-  green with `required_category_count=19`, `case_count=38`, and
-  `matched_case_count=38`. That confirms category presence and controlled
-  violations, but it still treats extraction fidelity as one aggregate
-  upstream lane rather than the final dedicated owner.
+  green with `required_lane_count=2`, `required_category_count=8`,
+  `case_count=16`, and `matched_case_count=16`. That confirms the narrowed
+  capture/catalog umbrella stays green while extraction direct-eval ownership
+  is no longer bundled into the aggregate upstream lane.
 - `src/usfs_r1_ea_sources/extraction_accuracy.py` currently owns live
   generated-output checks for:
   `extraction_validation_passed`,
@@ -104,13 +107,13 @@ fail closed when:
 - Live full-canonical promotion is also currently green:
   `promotion_suite_results.json` records
   `full_canonical_corpus_ready=true`,
-  `passed_required_full_canonical_result_count=9`,
-  `required_full_canonical_result_count=9`, and
+  `passed_required_full_canonical_result_count=10`,
+  `required_full_canonical_result_count=10`, and
   `current_promotion_ready=true`.
-- The gap, therefore, is no longer missing source-truth or missing promotion.
-  The gap is that extraction direct-eval ownership is still too aggregate and
-  too category-level to be the long-term fidelity standard for future parser
-  drift.
+- The gap, therefore, is no longer missing source-truth, missing promotion,
+  or aggregate-owner routing. The remaining gap is the final live closeout
+  replay and docs alignment that proves the strengthened route stays green
+  with the live extraction audit.
 
 ## Goal
 
@@ -175,7 +178,7 @@ Success means all of the following are true:
   drift before implementation starts, Milestone 0 must refresh this plan's
   owner names, counts, and routing before code changes begin.
 - If the live full-canonical promotion suite grows beyond the current
-  `9/9` full-canonical result count before this packet starts, Milestone 0 must
+  `10/10` full-canonical result count before this packet starts, Milestone 0 must
   update the targeted promotion wiring in this plan rather than preserving
   stale thresholds.
 - If implementation cannot keep the owner split explicit between structural
@@ -356,7 +359,7 @@ Implementation tasks:
 3. Lock the live baseline counts and route facts that later docs must preserve:
    upstream eval still green,
    extraction audit still green,
-   full-canonical promotion still green at `9/9`.
+   full-canonical promotion still green at `10/10`.
 
 Required verification:
 
@@ -539,6 +542,26 @@ PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-d
 git diff --check
 ```
 
+Milestone 3 closeout note on 2026-05-23:
+
+- `upstream-eval` no longer owns raw extraction fidelity fixtures; the real
+  manifest now stays green with `required_lane_count=2`,
+  `required_category_count=8`, `case_count=16`, and
+  `matched_case_count=16` across the capture/catalog umbrella only.
+- `promotion-suite` now requires
+  `source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`
+  directly as a full-canonical result and stays green at
+  `passed_required_full_canonical_result_count=10`,
+  `required_full_canonical_result_count=10`.
+- The owner split is now explicit:
+  `extraction_validation.json` = structural validation,
+  `extraction_accuracy_audit.json` = live generated-corpus truth,
+  `extraction_fidelity_eval_results.json` = direct extraction fidelity truth,
+  `upstream-eval` = capture/catalog umbrella only.
+- Next routing: execute Milestone `4` in this packet to rerun the live audit
+  plus the strengthened upstream/promotion route and finish packet
+  closeout/alignment.
+
 ### Milestone 4 - Live Closeout And Alignment
 
 Outcome label: `resolved`
@@ -693,7 +716,7 @@ The final closeout must record:
 - [x] tracked fidelity fixtures and controlled violations exist
 - [x] `extraction-fidelity-eval` is implemented and CLI-registered
 - [x] dedicated results and report artifacts are documented
-- [ ] `upstream-eval` and promotion wiring consume the new owner truthfully
+- [x] `upstream-eval` and promotion wiring consume the new owner truthfully
 - [x] `README.md`, routing docs, current-state docs, this plan, and handoff are aligned
 - [x] focused tests, lint, eval commands, and `git diff --check` passed
 - [ ] closeout commit hash is recorded in `docs/SESSION_HANDOFF.md`

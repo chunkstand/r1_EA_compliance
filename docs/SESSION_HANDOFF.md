@@ -7,6 +7,51 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Extraction Fidelity Eval Milestone 3 Resolved Locally
+
+This implementation slice closes Milestone `3` in
+`docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+
+- outcome label:
+  `resolved locally`; `upstream-eval` is now narrowed to the capture/catalog
+  umbrella, and full-canonical `promotion-suite` now consumes the dedicated
+  extraction-fidelity artifact directly
+- routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- owner split:
+  `extraction_validation.json` remains structural validation,
+  `extraction_accuracy_audit.json` remains the live generated-corpus audit,
+  `extraction_fidelity_eval_results.json` is now the load-bearing direct
+  extraction-fidelity artifact, and `upstream-eval` no longer owns the raw
+  extraction fixture families
+- upstream replay truth:
+  the committed `upstream_evaluation_v1.json` manifest now covers only the
+  capture/catalog umbrella and the real replay stays green with
+  `required_lane_count=2`, `required_category_count=8`, `case_count=16`, and
+  `matched_case_count=16`
+- promotion replay truth:
+  `promotion-suite` now requires
+  `source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`
+  directly for full-canonical readiness and the strengthened replay stays
+  green at `passed_required_full_canonical_result_count=10`,
+  `required_full_canonical_result_count=10`,
+  `full_canonical_corpus_ready=true`, and `current_promotion_ready=true`
+- stale-reference audit:
+  the immediately following Milestone `2` alignment and Milestone `2`
+  resolved sections are historical only wherever they still route the packet
+  to Milestone `3` or still cite the older `9/9` full-canonical baseline
+- next routing:
+  execute Milestone `4` in
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md` to rerun the live
+  extraction audit plus the strengthened upstream/promotion route and finish
+  packet closeout/alignment
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_upstream_evaluation.py tests/test_promotion_suite_full_canonical.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/upstream_evaluation.py tests/test_upstream_evaluation.py tests/test_promotion_suite_full_canonical.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources upstream-eval --manifest config/upstream_evaluation_v1.json --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  and `git diff --check`
+
 ## Extraction Fidelity Eval Milestone 2 Alignment Pass
 
 This docs-only follow-up closes the remaining routing drift after the

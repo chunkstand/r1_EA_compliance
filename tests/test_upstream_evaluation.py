@@ -48,9 +48,14 @@ def test_upstream_evaluation_runs_real_manifest_and_writes_outputs() -> None:
         assert result.summary["passed"] is True
         assert result.output_path.exists()
         assert result.report_path.exists()
-        assert result.summary["required_category_count"] == 19
-        assert result.summary["case_count"] == 38
-        assert result.summary["matched_case_count"] == 38
+        assert result.summary["required_lane_count"] == 2
+        assert result.summary["required_category_count"] == 8
+        assert result.summary["case_count"] == 16
+        assert result.summary["matched_case_count"] == 16
+        assert {lane_summary["lane_id"] for lane_summary in result.summary["lane_summaries"]} == {
+            "capture",
+            "catalog",
+        }
         assert all(
             lane_summary["status"] == "direct_eval_present"
             for lane_summary in result.summary["lane_summaries"]

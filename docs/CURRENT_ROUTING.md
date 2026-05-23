@@ -57,22 +57,23 @@ Use this file as the short current route before opening the large append-only do
   tracked reviews, and zero threshold failures
 - Next routed follow-on: `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
   owns the next standard raise for import/extraction truth. Milestones `0`
-  through `2` are now resolved locally: the repo-grounded owner split stays
-  re-locked against the live `9/9` promotion baseline, the contract substrate
-  still defines `12` governed fidelity families and `24` tracked cases under
-  `config/extraction_fidelity_eval_v1.json`, and the dedicated
-  `extraction-fidelity-eval` producer now writes durable results under
-  `source_library/evaluations/extraction_fidelity/`. The Milestone `2`
-  closeout landed in commit `16fb8b2`
-  (`Implement extraction fidelity Milestone 2`). The current green replay
-  records `matched_case_count=24`, `parser_route_mismatch_count=1`,
-  `anchor_mismatch_count=13`, `span_mismatch_count=10`,
-  `boundary_mismatch_count=4`, and `negative_case_pass_count=12`, while the
-  live `extraction-accuracy-audit` remains green at `581/581` admitted
-  active-current rows. Milestone `3` is the next routed slice: narrow the
-  older `upstream-eval` extraction umbrella and make the new artifact
-  load-bearing in upstream/promotion truth instead of reopening downstream
-  gold coverage.
+  through `3` are now resolved locally: the contract substrate still defines
+  `12` governed fidelity families and `24` tracked cases under
+  `config/extraction_fidelity_eval_v1.json`, the dedicated
+  `extraction-fidelity-eval` producer still writes durable results under
+  `source_library/evaluations/extraction_fidelity/`, `upstream-eval` is now
+  narrowed to the capture/catalog umbrella with `required_lane_count=2`,
+  `required_category_count=8`, `case_count=16`, and
+  `matched_case_count=16`, and full-canonical `promotion-suite` now requires
+  the dedicated extraction-fidelity artifact directly, raising the live
+  full-canonical baseline to `10/10` required results passing. The current
+  green replay still records `matched_case_count=24`,
+  `parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
+  `span_mismatch_count=10`, `boundary_mismatch_count=4`, and
+  `negative_case_pass_count=12`, while the live `extraction-accuracy-audit`
+  remains green at `581/581` admitted active-current rows. Milestone `4` is
+  the next routed slice: rerun the live audit plus the strengthened
+  upstream/promotion route and finish packet closeout/alignment.
 - Active queue follow-on: the source-truth/gold lane remains resolved, but
   `51` `Direct_File_Capture_Queue` rows still remain outside the active
   load-bearing surface by workbook contract. That work is now explicitly

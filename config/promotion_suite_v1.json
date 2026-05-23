@@ -1986,6 +1986,79 @@
       ]
     },
     {
+      "id": "full_canonical_extraction_fidelity_eval",
+      "label": "Full canonical extraction fidelity direct eval",
+      "path": "evaluations/extraction_fidelity/extraction_fidelity_eval_results.json",
+      "required_for_current_promotion": false,
+      "required_for_full_canonical_corpus": true,
+      "failure_category": "extraction_fidelity_gap",
+      "checks": [
+        {
+          "name": "full_canonical_extraction_fidelity_eval_schema",
+          "json_path": "schema_version",
+          "equals": "extraction-fidelity-eval-results-v0",
+          "failure_category": "stale_artifact"
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_required_category_count",
+          "json_path": "required_category_count",
+          "equals": 12,
+          "failure_category": "stale_artifact"
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_case_count",
+          "json_path": "case_count",
+          "equals": 24,
+          "failure_category": "stale_artifact"
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_matched_case_count",
+          "json_path": "matched_case_count",
+          "equals": 24
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_parser_route_mismatch_count",
+          "json_path": "parser_route_mismatch_count",
+          "equals": 1
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_anchor_mismatch_count",
+          "json_path": "anchor_mismatch_count",
+          "equals": 13
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_span_mismatch_count",
+          "json_path": "span_mismatch_count",
+          "equals": 10
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_boundary_mismatch_count",
+          "json_path": "boundary_mismatch_count",
+          "equals": 4
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_negative_case_pass_count",
+          "json_path": "negative_case_pass_count",
+          "equals": 12
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_negative_case_fail_count",
+          "json_path": "negative_case_fail_count",
+          "equals": 0
+        },
+        {
+          "name": "full_canonical_extraction_fidelity_eval_required_check_mismatch_count",
+          "json_path": "required_check_mismatch_count",
+          "equals": 0
+        }
+      ]
+    },
+    {
       "id": "phase_eval_core",
       "label": "Current-promotion review phase eval readiness",
       "path": "reviews/v1-cg-ecid-compliance-review/phase_eval_results.json",

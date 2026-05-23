@@ -447,6 +447,89 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         == 0
     )
 
+    full_extraction_fidelity = suite_results["full_canonical_extraction_fidelity_eval"]
+    assert full_extraction_fidelity["required_for_current_promotion"] is False
+    assert full_extraction_fidelity["required_for_full_canonical_corpus"] is True
+    assert (
+        full_extraction_fidelity["path"]
+        == "evaluations/extraction_fidelity/extraction_fidelity_eval_results.json"
+    )
+    full_extraction_fidelity_checks = {
+        check["name"]: check for check in full_extraction_fidelity["checks"]
+    }
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_schema"
+        ]["equals"]
+        == "extraction-fidelity-eval-results-v0"
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_passed"
+        ]["equals"]
+        is True
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_required_category_count"
+        ]["equals"]
+        == 12
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_case_count"
+        ]["equals"]
+        == 24
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_matched_case_count"
+        ]["equals"]
+        == 24
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_parser_route_mismatch_count"
+        ]["equals"]
+        == 1
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_anchor_mismatch_count"
+        ]["equals"]
+        == 13
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_span_mismatch_count"
+        ]["equals"]
+        == 10
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_boundary_mismatch_count"
+        ]["equals"]
+        == 4
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_negative_case_pass_count"
+        ]["equals"]
+        == 12
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_negative_case_fail_count"
+        ]["equals"]
+        == 0
+    )
+    assert (
+        full_extraction_fidelity_checks[
+            "full_canonical_extraction_fidelity_eval_required_check_mismatch_count"
+        ]["equals"]
+        == 0
+    )
+
 def test_run_promotion_suite_reports_full_canonical_corpus_readiness_separately(
     tmp_path: Path,
 ) -> None:
@@ -530,6 +613,20 @@ def test_run_promotion_suite_reports_full_canonical_corpus_readiness_separately(
                             }
                         ],
                     },
+                    {
+                        "id": "full_canonical_extraction_fidelity_eval",
+                        "path": "evaluations/extraction_fidelity/extraction_fidelity_eval_results.json",
+                        "required_for_current_promotion": False,
+                        "required_for_full_canonical_corpus": True,
+                        "failure_category": "extraction_fidelity_gap",
+                        "checks": [
+                            {
+                                "name": "full_canonical_extraction_fidelity_eval_passed",
+                                "json_path": "passed",
+                                "equals": True,
+                            }
+                        ],
+                    },
                 ],
                 "expansion_slots": [],
             }
@@ -544,10 +641,11 @@ def test_run_promotion_suite_reports_full_canonical_corpus_readiness_separately(
     assert result.summary["full_canonical_source_set_id"] == "source-set-full"
     assert result.summary["current_promotion_ready"] is True
     assert result.summary["full_canonical_corpus_ready"] is False
-    assert result.summary["required_full_canonical_result_count"] == 2
+    assert result.summary["required_full_canonical_result_count"] == 3
     assert result.summary["passed_required_full_canonical_result_count"] == 1
     assert result.summary["full_canonical_failure_category_counts"] == {
-        "stale_artifact": 1
+        "extraction_fidelity_gap": 1,
+        "stale_artifact": 1,
     }
     report_text = result.markdown_path.read_text(encoding="utf-8")
     assert "Full canonical source set" in report_text
@@ -641,6 +739,18 @@ def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Pa
                 "passed": True,
                 "profile_failure_count": 0,
                 "profiles_below_floor_ids": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    extraction_fidelity_dir = output_dir / "evaluations" / "extraction_fidelity"
+    extraction_fidelity_dir.mkdir(parents=True)
+    (extraction_fidelity_dir / "extraction_fidelity_eval_results.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "extraction-fidelity-eval-results-v0",
+                "passed": True,
+                "required_category_count": 12,
             }
         ),
         encoding="utf-8",
@@ -754,6 +864,24 @@ def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Pa
                             },
                         ],
                     },
+                    {
+                        "id": "full_canonical_extraction_fidelity_eval",
+                        "path": "evaluations/extraction_fidelity/extraction_fidelity_eval_results.json",
+                        "required_for_current_promotion": False,
+                        "required_for_full_canonical_corpus": True,
+                        "checks": [
+                            {
+                                "name": "full_canonical_extraction_fidelity_eval_passed",
+                                "json_path": "passed",
+                                "equals": True,
+                            },
+                            {
+                                "name": "full_canonical_extraction_fidelity_eval_required_category_count",
+                                "json_path": "required_category_count",
+                                "equals": 12,
+                            },
+                        ],
+                    },
                 ],
                 "expansion_slots": [],
             }
@@ -764,8 +892,8 @@ def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Pa
     result = run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
 
     assert result.summary["full_canonical_corpus_ready"] is True
-    assert result.summary["required_full_canonical_result_count"] == 6
-    assert result.summary["passed_required_full_canonical_result_count"] == 6
+    assert result.summary["required_full_canonical_result_count"] == 7
+    assert result.summary["passed_required_full_canonical_result_count"] == 7
     suite_results = {item["id"]: item for item in result.summary["suite_results"]}
     assert suite_results["full_canonical_authority_currentness"]["path"].endswith(
         f"derived/{full_source_set_id}/authority_currentness/authority_currentness_report.json"
@@ -777,4 +905,7 @@ def test_run_promotion_suite_supports_full_canonical_artifact_paths(tmp_path: Pa
     )
     assert suite_results["full_canonical_forest_plan_profile_eval"]["path"].endswith(
         "evaluations/forest_plan_profile/forest_plan_profile_eval_results.json"
+    )
+    assert suite_results["full_canonical_extraction_fidelity_eval"]["path"].endswith(
+        "evaluations/extraction_fidelity/extraction_fidelity_eval_results.json"
     )

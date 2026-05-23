@@ -4137,7 +4137,9 @@ The command replays tracked offline fixtures across OCR-heavy PDFs, table-dense 
 section boundaries, scoped XML, directive documents, forest-plan chapter/map/monitoring families,
 split-page continuations, parser-route identity, and direct-document wrapper negatives. It does not
 depend on live `source_library/` state beyond the target output directory where it writes its own
-results.
+results. Full-canonical `promotion-suite` now treats this artifact as the
+load-bearing direct extraction-fidelity proof instead of relying on the older
+aggregate `upstream-eval` extraction umbrella.
 
 `extraction_fidelity_eval_results.json` has schema version
 `extraction-fidelity-eval-results-v0` and includes:
@@ -4221,8 +4223,10 @@ The `upstream-eval` command writes:
 
 `upstream-eval` reads a tracked manifest, default
 `config/upstream_evaluation_v1.json`, and fixture cases rooted under the manifest's declared
-`fixture_roots`. The contract is deterministic and local-only: it replays capture, catalog, and
-extraction adversarial cases without network access or broad `source_library/` regeneration.
+`fixture_roots`. The contract is deterministic and local-only: it replays the
+capture and catalog adversarial cases without network access or broad
+`source_library/` regeneration. Dedicated extraction direct-eval coverage now
+belongs to `extraction-fidelity-eval`.
 
 `upstream_evaluation_results.json` has schema version
 `upstream-evaluation-results-v0` and includes:

@@ -82,6 +82,43 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Extraction Fidelity Eval Milestone 3 Resolved Locally
+
+Latest implementation update on 2026-05-23:
+
+- Routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved locally` for Milestone `3`; Milestones `0` through `2` remain
+  closed, and Milestone `4` remains open.
+- Owner split:
+  `extraction_validation.json` remains structural validation,
+  `extraction_accuracy_audit.json` remains the live generated-corpus audit,
+  `extraction_fidelity_eval_results.json` is now the load-bearing direct
+  extraction-fidelity artifact, and `upstream-eval` is now narrowed to the
+  capture/catalog umbrella only.
+- Upstream replay truth:
+  `config/upstream_evaluation_v1.json` now declares `required_lane_count=2`,
+  `required_category_count=8`, and `case_count=16`, and the real
+  `upstream-eval` replay stays green at `matched_case_count=16`.
+- Promotion routing truth:
+  `config/promotion_suite_v1.json` now requires
+  `source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`
+  directly for full-canonical readiness, and the strengthened replay now
+  stays green at `passed_required_full_canonical_result_count=10`,
+  `required_full_canonical_result_count=10`,
+  `full_canonical_corpus_ready=true`, and `current_promotion_ready=true`.
+- Stale-reference audit:
+  the immediately following Milestone `2` alignment and Milestone `2`
+  closeout sections remain historical context only wherever they still route
+  the packet to Milestone `3` or still cite the older `9/9` full-canonical
+  baseline.
+- Next routing:
+  execute Milestone `4` in
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md` to rerun the live
+  extraction audit plus the strengthened upstream/promotion route and finish
+  packet closeout/alignment.
+
 ## Extraction Fidelity Eval Milestone 2 Alignment Pass
 
 Latest docs alignment on 2026-05-23:

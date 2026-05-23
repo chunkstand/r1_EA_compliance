@@ -55,7 +55,7 @@ Current routed state on 2026-05-23:
   (`FSH 2509.18`) remains governed currentness lineage evidence with
   replacement `USFS-023`, `FPS-344` remains admitted as a structured Federal
   Register XML source, and `promotion-suite` now reports
-  `full_canonical_corpus_ready=true` with `9/9` required full-canonical
+  `full_canonical_corpus_ready=true` with `10/10` required full-canonical
   results passing. This closeout landed in commit `93a23b0`
   (`Resolve source-truth archive boundary rebaseline`). `51`
   `Direct_File_Capture_Queue` rows remain outside the active load-bearing
@@ -80,22 +80,24 @@ Current routed state on 2026-05-23:
   (`Resolve full canonical compliance gold rebaseline`).
 - The active upstream-standard packet is now
   `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`. Milestones `0` through
-  `2` are now resolved locally: the route facts and owner split remain
-  re-locked against the live `9/9` promotion baseline, the repo ships the
-  checked-in extraction-fidelity contract substrate under
-  `config/extraction_fidelity_eval_v1.json`, and the dedicated
-  `extraction-fidelity-eval` producer now writes durable results under
-  `source_library/evaluations/extraction_fidelity/`. The Milestone `2`
-  closeout landed in commit `16fb8b2`
-  (`Implement extraction fidelity Milestone 2`). The current green replay
-  records `12` governed families, `24` cases, `matched_case_count=24`,
+  `3` are now resolved locally: the repo ships the checked-in
+  extraction-fidelity contract substrate under
+  `config/extraction_fidelity_eval_v1.json`, the dedicated
+  `extraction-fidelity-eval` producer writes durable results under
+  `source_library/evaluations/extraction_fidelity/`, `upstream-eval` is now
+  narrowed to the capture/catalog umbrella with `required_lane_count=2`,
+  `required_category_count=8`, `case_count=16`, and
+  `matched_case_count=16`, and full-canonical `promotion-suite` now requires
+  `source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`
+  directly, raising the live full-canonical baseline to `10/10` required
+  results passing. The current green extraction-fidelity replay still records
+  `12` governed families, `24` cases, `matched_case_count=24`,
   `parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
   `span_mismatch_count=10`, `boundary_mismatch_count=4`, and
   `negative_case_pass_count=12`, while the live full-canonical
   `extraction-accuracy-audit` remains green at `581/581` admitted active
-  rows. Milestone `3` is the next routed slice: make the new artifact
-  load-bearing in upstream/promotion routing instead of leaving the older
-  extraction umbrella as the effective owner.
+  rows. Milestone `4` is the next routed slice: rerun the live audit plus the
+  strengthened upstream/promotion route and finish packet closeout/alignment.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 
@@ -1757,7 +1759,7 @@ gold artifacts, the manifest-owned non-strict replay at
 reports `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
 `expansion_ready=true`, `promotion_ready=true`,
 `passed_required_current_result_count=32/32`, and
-`passed_required_full_canonical_result_count=9/9` with
+`passed_required_full_canonical_result_count=10/10` with
 `failure_category_counts={}`.
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,
 `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
