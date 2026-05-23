@@ -19,6 +19,8 @@ rebaseline packet locally in
   source-backed statuses, and rebaselines the five still-unmapped authorities
   as explicit `uncertain` package-only adjudication rather than false
   source-backed misses
+- closeout commit:
+  `8e0e02b` (`Resolve full canonical compliance gold rebaseline`)
 - implementation surfaces:
   `config/compliance_gold_eval_v1.json`,
   `src/usfs_r1_ea_sources/compliance_review_eval.py`,

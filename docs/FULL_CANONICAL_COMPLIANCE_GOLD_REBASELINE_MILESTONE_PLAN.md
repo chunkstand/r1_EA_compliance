@@ -12,9 +12,10 @@ canonical `gold_coverage_eval`, and manifest-owned `promotion-suite`
 alignment. Routed docs now reflect that the five still-unmapped live
 authorities remain governed as explicit `uncertain` package-only adjudication
 on `source-set-f775524ab233ff27`, default `compliance-gold-eval` passes
-`14/14`, default `gold_coverage_eval` passes, and `promotion-suite` now
-reports `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
-`expansion_ready=true`, and `promotion_ready=true`.
+`14/14`, default `gold_coverage_eval` passes `7/7`, and `promotion-suite`
+now reports `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+`expansion_ready=true`, and `promotion_ready=true`. The Milestone 3 closeout
+commit is `8e0e02b` (`Resolve full canonical compliance gold rebaseline`).
 
 Owner context: the overall architecture umbrella is now closed on truthful
 routing, and the downstream full-canonical gold lane is now also resolved

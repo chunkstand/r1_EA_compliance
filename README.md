@@ -75,6 +75,8 @@ Current routed state on 2026-05-23:
   `expansion_ready=true`, and `promotion_ready=true`. The five still-unmapped
   authorities are now governed as explicit `uncertain` package-only
   adjudication in the gold contract rather than false source-backed misses.
+  This closeout landed in commit `8e0e02b`
+  (`Resolve full canonical compliance gold rebaseline`).
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 

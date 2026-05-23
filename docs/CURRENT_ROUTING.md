@@ -38,7 +38,8 @@ Use this file as the short current route before opening the large append-only do
 - Downstream gold packet status: the full canonical compliance-gold
   rebaseline is now resolved locally on `source-set-f775524ab233ff27`;
   refreshed claims record `claim_count=124458`, `source_record_count=539`,
-  `validation_passed=true`, and `reviewer_ready=true`
+  `validation_passed=true`, `reviewer_ready=true`, and the closeout lands in
+  commit `8e0e02b` (`Resolve full canonical compliance gold rebaseline`)
 - Default `compliance-gold-eval` now passes `14/14` adjudicated cases with
   `status_match_rate=1.0`, `source_record_match_rate=1.0`,
   `source_document_role_match_rate=1.0`,

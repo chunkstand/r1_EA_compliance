@@ -28,7 +28,10 @@ refreshed `promotion-suite` again reports
 results passing. The downstream compliance-gold rebaseline is now also
 resolved locally, and the refreshed default `promotion-suite` now reports
 `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
-`expansion_ready=true`, and `promotion_ready=true`.
+`expansion_ready=true`, and `promotion_ready=true`. The downstream claim
+refresh now records `claim_count=124458` and `source_record_count=539`, and
+that closeout landed in commit `8e0e02b`
+(`Resolve full canonical compliance gold rebaseline`).
 `FPS-344` stays admitted as a structured Federal Register XML source, `9`
 handbook wrapper rows admit through live National Directives contents PDFs,
 and `12` manual wrapper rows admit through live USDA guidance or current

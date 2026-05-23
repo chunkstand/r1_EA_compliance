@@ -95,6 +95,8 @@ Latest worktree implementation on 2026-05-23:
   source-backed statuses, and rebaselining the five still-unmapped
   authorities as explicit `uncertain` package-only adjudication rather than
   false source-backed misses.
+- Closeout commit:
+  `8e0e02b` (`Resolve full canonical compliance gold rebaseline`).
 - Implementation surfaces:
   `config/compliance_gold_eval_v1.json`,
   `src/usfs_r1_ea_sources/compliance_review_eval.py`,
