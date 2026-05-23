@@ -1,7 +1,7 @@
 # Full Canonical Direct-File Capture Queue Resolution Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; SCC structured-export Milestone 3 slice resolved locally through e78f491 and docs-aligned through 82e2195; Flathead reading-room blocker slice reduced locally through eb09556; remaining export-backed Milestone 3 slice next`)
+Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; SCC structured-export Milestone 3 slice resolved locally through e78f491 and docs-aligned through 82e2195; Flathead reading-room blocker slice reduced locally through eb09556; WILD-ESA NCDE amendment blocker slice reduced locally; remaining export-backed Milestone 3 slice next`)
 Owner context: follow-on from the resolved full-canonical source-truth and compliance-gold
 rebaseline packets
 
@@ -17,15 +17,17 @@ resolved locally through commit `e78f491`
 through commit `82e2195`
 (`Align direct-file queue SCC slice docs`), and the Flathead reading-room
 blocker slice is now reduced locally through commit `eb09556`
-(`Open Flathead reading-room blocker packet`).
+(`Open Flathead reading-room blocker packet`). The mixed
+`WILD-ESA-Q001` NCDE amendment export family is now also reduced locally as an
+explicit blocker packet.
 
 - `config/source_register_queue_resolution_ledger_v1.json` now enumerates all
   `51` queue rows exactly once with `49` current/project-applicable rows, `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`), planned disposition
-  counts of `37` `promote_direct_file`, `8`
-  `promote_structured_export`, `4` `named_blocker`, and `2`
-  `historical_scope_only`, plus resolution status counts of `39` `planned`,
-  `4` `blocked`, and `8` `resolved`.
+  counts of `37` `promote_direct_file`, `7`
+  `promote_structured_export`, `5` `named_blocker`, and `2`
+  `historical_scope_only`, plus resolution status counts of `38` `planned`,
+  `5` `blocked`, and `8` `resolved`.
 - The low-complexity direct-file family now promotes
   `FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, and `PROG-010`
   into `Document_Register_Master`.
@@ -50,10 +52,16 @@ blocker slice is now reduced locally through commit `eb09556`
   `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md` and now
   carries explicit `blocked` status instead of remaining in the generic
   planned structured-export roster.
+- Milestone `3` now also opens the named blocker family for the mixed NCDE
+  amendment export placeholder: `WILD-ESA-Q001` routes to
+  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`
+  because the live public export roster crosses overlapping Flathead plan/FEIS
+  records, still-missing Flathead appendix-map surfaces, and distinct
+  multi-forest NCDE amendment documents.
 - `source-register-queue-audit` now provides the machine-checked gate for the
   queue packet and passes with zero missing, unexpected, duplicated, or
-  drifted rows, `blocked_current_or_project_applicable_count=4`,
-  `unresolved_current_or_project_applicable_count=37`, and the same governed
+  drifted rows, `blocked_current_or_project_applicable_count=5`,
+  `unresolved_current_or_project_applicable_count=36`, and the same governed
   historical roster.
 - The strengthened extraction/runtime gate now supports governed `.xlsx`
   direct files and distinguishes verified payload-cache reuse from opaque
@@ -71,7 +79,7 @@ blocker slice is now reduced locally through commit `eb09556`
   successor source-truth packet reruns the downstream artifacts on
   `source-set-4fb59e9eb43045cb`.
 - The next routed slice remains Milestone `3` for the export-backed families
-  after the project-specific and Flathead blocker-family openers.
+  after the project-specific, Flathead, and NCDE blocker-family openers.
 
 ## Purpose
 
@@ -97,8 +105,8 @@ is `594/594` on `source-set-4fb59e9eb43045cb`:
   `source-set-3f7d4578cafb0704`.
 - The same routing file also records that the workbook still carries `51`
   `Direct_File_Capture_Queue` rows by contract, but `8` of them now have
-  governed `resolved` promotions, `4` now have explicit blocker ownership,
-  and only `37` current/project-applicable rows remain in the generic
+  governed `resolved` promotions, `5` now have explicit blocker ownership,
+  and only `36` current/project-applicable rows remain in the generic
   unresolved planned roster.
 - `config/source_register_sheet_contract_v1.json` defines `Document_Register_Master` as the only
   load-bearing sheet and `Direct_File_Capture_Queue` as a deferred queue with `emits_load_rows=false`.
@@ -117,12 +125,14 @@ is `594/594` on `source-set-4fb59e9eb43045cb`:
   - `51` queue rows total;
   - `49` rows that still classify as current or project-applicable;
   - `8` rows now resolved by governed promotion;
-  - `4` rows now explicitly blocked by governed blocker packets:
+  - `5` rows now explicitly blocked by governed blocker packets:
     `FINAL-Q-FLAT-001` by
     `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, and
+    `WILD-ESA-Q001` by
+    `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, and
     `3` project-specific rows by
     `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`;
-  - `37` current/project-applicable rows still unresolved in the generic
+  - `36` current/project-applicable rows still unresolved in the generic
     planned roster;
   - `2` explicitly historical/noncurrent rows: `FPS-380` and `SUP-007`;
   - dominant queue reasons:

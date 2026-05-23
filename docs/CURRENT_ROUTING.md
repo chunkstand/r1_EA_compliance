@@ -14,8 +14,8 @@ Use this file as the short current route before opening the large append-only do
 - Next executable packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - Active blocker packets:
-  `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`
-  and
+  `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
+  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, and
   `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
 
 ## Live Facts
@@ -95,7 +95,8 @@ Use this file as the short current route before opening the large append-only do
   remain resolved locally through commit `85f087b`
   (`Resolve direct-file queue Milestone 2`), and Milestone `3` is now
   reduced locally through the project-specific blocker-family opener, the SCC
-  structured-export slice, and the Flathead reading-room blocker opener.
+  structured-export slice, the Flathead reading-room blocker opener, and the
+  NCDE amendment export blocker opener.
   The blocker-family opener landed in commit `8b889a9`
   (`Open project-specific queue blocker packet`).
   The SCC structured-export implementation landed in commit `e78f491`
@@ -104,21 +105,26 @@ Use this file as the short current route before opening the large append-only do
   (`Align direct-file queue SCC slice docs`).
   The Flathead reading-room blocker opener landed in commit `eb09556`
   (`Open Flathead reading-room blocker packet`).
+  The latest slice now routes `WILD-ESA-Q001` to
+  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md` as an
+  explicit blocker family.
   The tracked `config/source_register_queue_resolution_ledger_v1.json`
   enumerates all `51` queue rows, preserves the `4` governed `resolved`
   promotions from Milestone `2` plus the `4` SCC structured-export families
   (`R1-SCC-Q-CGNF-RATIONALES`, `R1-SCC-Q-FLAT-RATIONALES`,
   `R1-SCC-Q-HLC-RATIONALES`, `R1-SCC-Q-NPC-RATIONALES`), now routes
   `FINAL-Q-FLAT-001` to
-  `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, and routes
-  `PROG-011`, `PROG-012`, and `PROG-013` as explicit `blocked`
+  `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, routes
+  `WILD-ESA-Q001` to
+  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, and
+  routes `PROG-011`, `PROG-012`, and `PROG-013` as explicit `blocked`
   placeholders. `source-register-queue-audit` now passes with
-  `resolution_status_counts={"blocked":4,"planned":39,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=4`,
-  `unresolved_current_or_project_applicable_count=37`, and the same `2`
+  `resolution_status_counts={"blocked":5,"planned":38,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=5`,
+  `unresolved_current_or_project_applicable_count=36`, and the same `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`); the next routed slice
   remains Milestone `3` for the remaining export-backed families
-  `WILD-ESA-Q001`, `FINAL-Q-LOLO-001`, `FINAL-Q-NPC-001`, and `LEX-Q-001`.
+  `FINAL-Q-LOLO-001`, `FINAL-Q-NPC-001`, and `LEX-Q-001`.
   West Reservoir remains an intentional `typed_blocked` replay quarantine
   rather than a promotion blocker
 - Ad hoc full-canonical `phase-eval` status: do not treat the

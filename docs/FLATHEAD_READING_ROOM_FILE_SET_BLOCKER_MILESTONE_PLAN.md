@@ -46,8 +46,12 @@ Milestone `0` is now resolved locally through commit `eb09556`
 - The preserved legacy Flathead source-delta register still records additional
   public reading-room documents that do not yet exist as canonical master rows,
   including the Flathead BA/BO family, monitoring/BMER records,
-  administrative change, ROD cover letter, response-to-comments volume,
-  forest-plan-amendments volume, and appendix-map files.
+  administrative change, ROD cover letter, and response-to-comments volume.
+  The forest-plan-amendments and appendix-map surfaces now also overlap the
+  separately routed
+  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`
+  packet because the live `WILD-ESA-Q001` export family carries the same
+  mixed Flathead plus NCDE amendment roster.
 - Because the current canonical family mixes NFSL mirror links, Federal
   Register notice coverage, and preserved Box-hosted direct links from the
   legacy source-delta register, the remaining work is no longer a simple
@@ -252,5 +256,6 @@ git diff --check
   explicitly excluded.
 - The active direct-file queue packet remains the live next route; after this
   blocker-opening slice, continue Milestone `3` on the remaining export-backed
-  families `WILD-ESA-Q001`, `FINAL-Q-LOLO-001`, `FINAL-Q-NPC-001`, and
-  `LEX-Q-001`.
+  families `FINAL-Q-LOLO-001`, `FINAL-Q-NPC-001`, and `LEX-Q-001`, while the
+  overlapping amendment/map surfaces are now explicitly owned by
+  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`.

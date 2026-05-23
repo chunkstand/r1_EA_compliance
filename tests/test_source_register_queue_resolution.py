@@ -25,24 +25,25 @@ def test_queue_disposition_audit_matches_current_queue_baseline() -> None:
     assert result["current_or_project_applicable_count"] == 49
     assert result["historical_noncurrent_count"] == 2
     assert result["historical_noncurrent_source_ids"] == ["FPS-380", "SUP-007"]
-    assert result["blocked_current_or_project_applicable_count"] == 4
+    assert result["blocked_current_or_project_applicable_count"] == 5
     assert result["blocked_current_or_project_applicable_source_ids"] == [
         "FINAL-Q-FLAT-001",
         "PROG-011",
         "PROG-012",
         "PROG-013",
+        "WILD-ESA-Q001",
     ]
     assert result["resolved_current_or_project_applicable_count"] == 8
-    assert result["unresolved_current_or_project_applicable_count"] == 37
+    assert result["unresolved_current_or_project_applicable_count"] == 36
     assert result["planned_disposition_counts"] == {
         "historical_scope_only": 2,
-        "named_blocker": 4,
+        "named_blocker": 5,
         "promote_direct_file": 37,
-        "promote_structured_export": 8,
+        "promote_structured_export": 7,
     }
     assert result["resolution_status_counts"] == {
-        "blocked": 4,
-        "planned": 39,
+        "blocked": 5,
+        "planned": 38,
         "resolved": 8,
     }
 

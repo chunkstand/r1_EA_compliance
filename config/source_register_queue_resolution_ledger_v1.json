@@ -2,12 +2,12 @@
   "schema_version": "source-register-queue-resolution-ledger-v1",
   "contract_id": "source-register-queue-resolution-ledger-v1",
   "as_of_date": "2026-05-23",
-  "status": "milestone3_scc_structured_export_family_resolved",
+  "status": "milestone3_wild_esa_ncde_blocker_family_opened",
   "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
   "workbook_sha256": "2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49",
   "sheet_name": "Direct_File_Capture_Queue",
   "summary": {
-    "blocked_current_or_project_applicable_count": 4,
+    "blocked_current_or_project_applicable_count": 5,
     "current_or_project_applicable_count": 49,
     "historical_noncurrent_count": 2,
     "historical_noncurrent_source_ids": [
@@ -16,9 +16,9 @@
     ],
     "planned_disposition_counts": {
       "historical_scope_only": 2,
-      "named_blocker": 4,
+      "named_blocker": 5,
       "promote_direct_file": 37,
-      "promote_structured_export": 8
+      "promote_structured_export": 7
     },
     "queue_reason_counts": {
       "Box planning record cannot be represented as row-level document sources without export.": 1,
@@ -37,12 +37,12 @@
     },
     "queue_row_count": 51,
     "resolution_status_counts": {
-      "blocked": 4,
-      "planned": 39,
+      "blocked": 5,
+      "planned": 38,
       "resolved": 8
     },
     "resolved_current_or_project_applicable_count": 8,
-    "unresolved_current_or_project_applicable_count": 37
+    "unresolved_current_or_project_applicable_count": 36
   },
   "entries": [
     {
@@ -258,14 +258,14 @@
       "target_successor_source_id": null
     },
     {
-      "blocker_packet_reference": null,
+      "blocker_packet_reference": "docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md",
       "currentness_class": "current_or_project_applicable",
       "document_title": "FNF Plan Revision and NCDE Grizzly Bear Conservation Strategy Forest Plan Amendments - direct document export",
       "excel_row": 20,
-      "planned_disposition": "promote_structured_export",
+      "planned_disposition": "named_blocker",
       "queue_reason": "Non-load source placeholder",
       "resolution_required": "Download/export FEIS, ROD, BA/BO, appendices, maps/GIS, objection/decision documents, and any final support files from Pinyon/Box/widget. Promote direct files to Document_Register_Master.",
-      "resolution_status": "planned",
+      "resolution_status": "blocked",
       "source_id": "WILD-ESA-Q001",
       "source_url": "https://www.fs.usda.gov/r01/flathead/projects/archive/46286",
       "target_successor_source_id": null

@@ -75,6 +75,12 @@ explicit blocker family because the Flathead reading-room public file set is
 only partially represented by current canonical rows; that routing change does
 not alter the live source set or admitted-count boundary. That blocker opener
 landed in commit `eb09556` (`Open Flathead reading-room blocker packet`).
+The latest queue follow-on now also narrows `WILD-ESA-Q001` into
+`docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md` as an
+explicit mixed export blocker family because the live public roster spans
+overlapping Flathead plan/FEIS documents plus distinct multi-forest NCDE
+amendment records; that routing change also leaves the live source set and
+admitted-count boundary unchanged.
 Older `634/581` references below remain the historical closeout baseline for
 commit `93a23b0` unless a later bullet explicitly updates them.
 
@@ -161,17 +167,17 @@ truth instead of the older `343`-row active-review subset.
 - Workbook queue census on 2026-05-23 now shows all `51`
   `Direct_File_Capture_Queue` rows preserved for audit lineage; `49` classify
   as current or project-applicable, `8` are now governed `resolved`
-  promotions, `3` are explicit `blocked` rows, `38`
+  promotions, `5` are explicit `blocked` rows, `36`
   current/project-applicable rows remain unresolved in the planned roster,
   and `2` are explicitly historical/noncurrent (`FPS-380` and `SUP-007`).
 - `config/direct_file_readiness_contract_v1.json` still records queue status `phase0_freeze` and
   defines queue rows as non-load until direct-file promotion or explicit exclusion.
 - `config/source_register_queue_resolution_ledger_v1.json` and
   `source-register-queue-audit` now lock the queue roster to the governed
-  post-SCC-structured-export state with
-  `resolution_status_counts={"blocked":3,"planned":40,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=3`,
-  `unresolved_current_or_project_applicable_count=38`, and the same `2`
+  post-WILD-ESA-blocker state with
+  `resolution_status_counts={"blocked":5,"planned":38,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=5`,
+  `unresolved_current_or_project_applicable_count=36`, and the same `2`
   governed historical rows.
 - `tests/test_extraction_accuracy.py` already proves the fail-closed negative case:
   wrapper pages are not admissible when a row requires a direct document artifact.
