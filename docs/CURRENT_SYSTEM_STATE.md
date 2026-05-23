@@ -82,6 +82,27 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Extraction Fidelity Eval Milestones 0-1 Alignment Pass
+
+Latest docs alignment on 2026-05-23:
+
+- Routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+- Outcome label:
+  `aligned locally`; the top docs stack now records the actual first-slice
+  closeout commit and removes the remaining active-looking drift between the
+  local Milestone `0`/`1` implementation state and the older proposed-only
+  packet entry below.
+- Closeout commit:
+  `f2afa8f` (`Resolve extraction fidelity Milestones 0-1`).
+- Stale-reference audit:
+  the immediately following `Extraction Fidelity Eval Packet Proposed`
+  section is historical only after `f2afa8f`; use the newer Milestone `0`/`1`
+  state plus `docs/CURRENT_ROUTING.md` as live routing truth.
+- Next routing:
+  the packet remains active and the next routed slice is still Milestone `2`
+  in `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+
 ## Extraction Fidelity Eval Milestone 1 Started Locally
 
 Latest implementation update on 2026-05-23:
@@ -108,6 +129,8 @@ Latest implementation update on 2026-05-23:
   fixture-backed category files under
   `config/fixtures/extraction_fidelity_eval/`, and contract-negative
   manifests under `tests/fixtures/extraction_fidelity_eval/`.
+- Closeout commit:
+  `f2afa8f` (`Resolve extraction fidelity Milestones 0-1`).
 - Acceptance proof:
   `tests/test_extraction_fidelity_eval.py` now passes the real manifest plus
   the missing-category and out-of-tree fixture fail-closed checks.

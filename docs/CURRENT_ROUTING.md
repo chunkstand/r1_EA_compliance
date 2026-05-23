@@ -60,13 +60,14 @@ Use this file as the short current route before opening the large append-only do
   Milestone `1` are now resolved locally: the repo-grounded owner split is
   re-locked against the live `9/9` promotion baseline, and the new checked-in
   contract substrate defines `12` required fidelity families and `24`
-  tracked cases under `config/extraction_fidelity_eval_v1.json`. The current
-  upstream extraction lane is still green through `upstream-eval` with `11`
-  extraction categories and `22` extraction cases, and the live
-  `extraction-accuracy-audit` is still green at `581/581` admitted
-  active-current rows. Milestone `2` is the next routed slice: implement the
-  dedicated `extraction-fidelity-eval` producer and route it into
-  upstream/promotion truth instead of reopening downstream gold coverage.
+  tracked cases under `config/extraction_fidelity_eval_v1.json`. The first
+  slice landed in commit `f2afa8f` (`Resolve extraction fidelity Milestones
+  0-1`). The current upstream extraction lane is still green through
+  `upstream-eval` with `11` extraction categories and `22` extraction cases,
+  and the live `extraction-accuracy-audit` is still green at `581/581`
+  admitted active-current rows. Milestone `2` is the next routed slice:
+  implement the dedicated `extraction-fidelity-eval` producer and route it
+  into upstream/promotion truth instead of reopening downstream gold coverage.
 - Active queue follow-on: the source-truth/gold lane remains resolved, but
   `51` `Direct_File_Capture_Queue` rows still remain outside the active
   load-bearing surface by workbook contract. That work is now explicitly

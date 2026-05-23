@@ -85,13 +85,15 @@ Current routed state on 2026-05-23:
   a checked-in extraction-fidelity contract substrate with
   `config/extraction_fidelity_eval_v1.json`, `12` required fidelity families,
   `24` tracked cases, fixture-backed controlled violations, and
-  `tests/test_extraction_fidelity_eval.py`. The current upstream extraction
-  lane is still green through `upstream-eval` with `11` extraction categories
-  and `22` extraction cases, and the live full-canonical
-  `extraction-accuracy-audit` is still green at `581/581` admitted active
-  rows. Milestone `2` is the next routed slice: implement the dedicated
-  `extraction-fidelity-eval` command and durable artifact owner rather than
-  pushing more import/extraction burden into downstream gold coverage.
+  `tests/test_extraction_fidelity_eval.py`. This first packet slice landed in
+  closeout commit `f2afa8f` (`Resolve extraction fidelity Milestones 0-1`).
+  The current upstream extraction lane is still green through `upstream-eval`
+  with `11` extraction categories and `22` extraction cases, and the live
+  full-canonical `extraction-accuracy-audit` is still green at `581/581`
+  admitted active rows. Milestone `2` is the next routed slice: implement the
+  dedicated `extraction-fidelity-eval` command and durable artifact owner
+  rather than pushing more import/extraction burden into downstream gold
+  coverage.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 

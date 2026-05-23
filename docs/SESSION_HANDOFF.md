@@ -7,6 +7,33 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Extraction Fidelity Eval Milestones 0-1 Alignment Pass
+
+This docs-only follow-up closes the remaining routing drift after the first
+extraction-fidelity implementation slice landed.
+
+- outcome label:
+  `aligned locally`; the top routing/docs stack now records the actual
+  Milestone `0`/`1` closeout commit and retires the older proposed-only
+  packet entry below as historical
+- closeout commit:
+  `f2afa8f` (`Resolve extraction fidelity Milestones 0-1`)
+- routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- stale-reference audit:
+  the immediately following `Extraction Fidelity Eval Packet Proposed`
+  section is historical only after `f2afa8f`; use the newer Milestone `0`/`1`
+  section plus `docs/CURRENT_ROUTING.md` as the live owner state
+- next routing:
+  the packet remains active and the next routed slice is still Milestone `2`
+  in `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- verification:
+  targeted route grep across `README.md`, `docs/CURRENT_ROUTING.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`, `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_fidelity_eval.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check tests/test_extraction_fidelity_eval.py`, and
+  `git diff --check`
+
 ## Extraction Fidelity Eval Milestones 0-1 Resolved Locally
 
 This implementation slice begins the routed upstream-standard packet in
@@ -36,6 +63,8 @@ fixture substrate.
   fixture-backed expected-pass and controlled-violation scenarios under
   `config/fixtures/extraction_fidelity_eval/`, and the contract-negative
   manifests live under `tests/fixtures/extraction_fidelity_eval/`
+- closeout commit:
+  `f2afa8f` (`Resolve extraction fidelity Milestones 0-1`)
 - acceptance proof:
   `tests/test_extraction_fidelity_eval.py` now proves the real manifest plus
   fail-closed missing-category and out-of-tree fixture checks
@@ -123,6 +152,9 @@ resolved source-truth and downstream gold lanes.
   targeted doc-route alignment against `README.md`, `docs/CURRENT_ROUTING.md`,
   `docs/CURRENT_SYSTEM_STATE.md`, `docs/EVALUATION_COVERAGE_REGISTER.md`,
   `config/upstream_evaluation_v1.json`, and `git diff --check`
+
+Historical only after local Milestone `0`/`1` closeout commit `f2afa8f`
+(`Resolve extraction fidelity Milestones 0-1`).
 
 ## Full Canonical Downstream Freshness Packet Retired For Live Routing
 

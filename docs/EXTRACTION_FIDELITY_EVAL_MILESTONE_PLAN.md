@@ -14,7 +14,8 @@ locally through `8e0e02b`, and no active owner remains in that closed
 source-truth/gold route. This packet still owns the next upstream-standard
 raise: build a dedicated extraction-fidelity eval that proves fixture-backed
 extraction correctness directly, rather than trying to infer import and
-extraction truth from downstream gold breadth.
+extraction truth from downstream gold breadth. The Milestone `0`/`1`
+closeout commit is `f2afa8f` (`Resolve extraction fidelity Milestones 0-1`).
 
 Owner context: this plan follows
 `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`, which already created
@@ -422,6 +423,8 @@ Milestone 1 closeout note on 2026-05-23:
 - `tests/test_extraction_fidelity_eval.py` now proves the real manifest,
   missing-category fail-closed behavior, and out-of-tree fixture fail-closed
   behavior.
+- The Milestone `0`/`1` closeout commit is
+  `f2afa8f` (`Resolve extraction fidelity Milestones 0-1`).
 
 ### Milestone 2 - Dedicated Extraction-Fidelity Eval Producer
 
