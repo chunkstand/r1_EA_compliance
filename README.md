@@ -41,39 +41,33 @@ Current routed state on 2026-05-23:
   lines, no Python or JS/TS import cycles, no source module above the
   `20`-import fan-out gate, and an empty oversized-file inventory in
   `config/architecture_large_file_inventory_v1.json`.
-- The active source-truth mismatch is now explicit: the live local source set
-  `source-set-f775524ab233ff27` proves `634/634` extracted
-  `Document_Register_Master` rows, and the current worktree now rebaselines
-  verified admission to all `582` `active_review_corpus` rows through
-  `canonical-source-register-active-current-admission`. The refreshed
-  `extraction-accuracy-audit` and `retrieval-build` replays now agree on
+- The active source-truth Milestone `2` closeout is now live locally: the
+  local source set `source-set-f775524ab233ff27` proves `634/634` extracted
+  `Document_Register_Master` rows, and the refreshed
+  `extraction-accuracy-audit` plus `retrieval-build` replays now agree on
   `verified_extraction_admitted_source_count=581`,
-  `verified_extraction_required_source_count=582`, and an explicit blocked
-  roster of `1` active-current row. The current worktree now also promotes
-  `12` legacy `fsm` wrapper rows through live USDA guidance or current Forest
-  Service static-file PDF targets: `USFS-018` (`FSM 2410`) and `USFS-024`
-  (`FSM 2580`) now admit, and the lone remaining blocker is `USFS-026`
-  (`FSH 2509.18`), whose live official surface still exposes only a
-  transmittal link rather than a current contents page. `FPS-344` remains
-  admitted as a structured Federal Register XML source. The latest
-  manual-redirect reduced slice landed in
-  `53d59da` (`Reduce source-truth Milestone 2 manual redirect blockers`). The
-  earlier manual-wrapper reduced slice landed in
-  `96450be` (`Reduce source-truth Milestone 2 manual wrapper blockers`). The
-  earlier handbook-wrapper reduced slice landed in
-  `4650837` (`Reduce source-truth Milestone 2 handbook wrapper blockers`).
-  `51`
-  `Direct_File_Capture_Queue` rows remain outside the active load-bearing
-  surface and the `52` archive rows still await Milestone `3` lineage closure.
+  `verified_extraction_required_source_count=581`, `validation_passed=true`,
+  and `reviewer_ready=true` under
+  `canonical-source-register-active-current-admission`. `USFS-026`
+  (`FSH 2509.18`) is no longer an active-current blocker: the live official
+  transmittal now lands as a direct PDF, and governed currentness lineage
+  retains the row as `currentness_supersession_archive` evidence because the
+  transmittal removes `FSH 2509.18` from the directive system and
+  incorporates the direction into `FSM 2550` (`USFS-023`). `FPS-344` remains
+  admitted as a structured Federal Register XML source. The immediately
+  preceding reduced slices remain `53d59da`, `96450be`, `4650837`, and
+  `806cdf1`. `51` `Direct_File_Capture_Queue` rows remain outside the active
+  load-bearing surface and the `53` archive rows now route into Milestone
+  `3` lineage closure.
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
-  because `compliance-gold-eval` is red on the active full-canonical source set
-  `source-set-f775524ab233ff27`; the tracked review-contract lane itself remains
-  green at `2 reviewer_ready + 1 typed_blocked`. That downstream gold packet
-  remains active, but it is no longer the root routed lane while the
-  full-canonical source-truth packet advances to Milestone `2` on the
-  remaining `1` direct-document blocker. The bounded Milestone `7` replay
-  stayed red at `0/14` on the same five still-unmapped live authorities. The
-  active generated diagnostic gold cases now build non-zero rule-claim-link
+  because `compliance-gold-eval` is red on the active full-canonical source
+  set `source-set-f775524ab233ff27`; the tracked review-contract lane itself
+  remains green at `2 reviewer_ready + 1 typed_blocked`. That downstream gold
+  packet remains active, but it is now downstream of the source-truth
+  packet's Milestone `3` archive-lineage decision rather than a remaining
+  active-current admission blocker. The bounded Milestone `7` replay stayed
+  red at `0/14` on the same five still-unmapped live authorities. The active
+  generated diagnostic gold cases now build non-zero rule-claim-link
   artifacts, while the base `nepa-ea-v0` rule-claim-link summary remains a
   separate zero-link structural surface.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed

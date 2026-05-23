@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass
+from functools import cache
 from importlib import import_module
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -23,6 +24,9 @@ DEFAULT_DIRECT_FILE_READINESS_CONTRACT_PATH = Path("config/direct_file_readiness
 DEFAULT_PARSER_ADMISSION_CONTRACT_PATH = Path("config/parser_admission_contract_v1.json")
 DEFAULT_CITATION_ALIAS_REGISTER_PATH = Path("config/citation_alias_register_v1.json")
 DEFAULT_JURISDICTION_SCOPE_REGISTER_PATH = Path("config/jurisdiction_scope_register_v1.json")
+DEFAULT_SOURCE_REGISTER_CURRENTNESS_LINEAGE_PATH = Path(
+    "config/source_register_currentness_lineage_v1.json"
+)
 
 
 @dataclass(frozen=True)
@@ -62,6 +66,7 @@ class CanonicalSourceRow:
     metadata: dict[str, str | None]
 
     def to_workbook_source(self) -> WorkbookSource:
+        lineage_metadata = _lineage_metadata_for_source_record(self.source_record_id)
         metadata = {
             "loader_contract": "source_register_v1",
             "source_contract_version": "source-register-sheet-contract-v1",
@@ -93,6 +98,7 @@ class CanonicalSourceRow:
             "parser_route_id": self.parser_route_id,
             "parser_admission_class": self.parser_admission_class,
             "expected_parser": self.expected_parser,
+            **lineage_metadata,
             **self.metadata,
         }
         return WorkbookSource(
@@ -115,6 +121,26 @@ def load_source_register_contract(path: Path | str = DEFAULT_SOURCE_REGISTER_SHE
             "Unsupported source register sheet contract schema_version: "
             f"{payload.get('schema_version')!r}"
         )
+    return payload
+
+
+def load_source_register_currentness_lineage(
+    path: Path | str = DEFAULT_SOURCE_REGISTER_CURRENTNESS_LINEAGE_PATH,
+) -> dict:
+    lineage_path = Path(path)
+    if not lineage_path.exists():
+        return {
+            "schema_version": "source-register-currentness-lineage-v1",
+            "lineage_rules": [],
+        }
+    payload = json.loads(lineage_path.read_text(encoding="utf-8"))
+    if payload.get("schema_version") != "source-register-currentness-lineage-v1":
+        raise ValueError(
+            "Unsupported source register currentness lineage schema_version: "
+            f"{payload.get('schema_version')!r}"
+        )
+    if not isinstance(payload.get("lineage_rules"), list):
+        raise ValueError("Source register currentness lineage must define a lineage_rules list.")
     return payload
 
 
@@ -517,6 +543,40 @@ def _normalize_identity_text(value: object) -> str:
     if not text:
         return ""
     return re.sub(r"[^a-z0-9]+", " ", text.lower()).strip()
+
+
+@cache
+def _lineage_metadata_index(
+    path: Path = DEFAULT_SOURCE_REGISTER_CURRENTNESS_LINEAGE_PATH,
+) -> dict[str, dict[str, str | None]]:
+    payload = load_source_register_currentness_lineage(path)
+    index: dict[str, dict[str, str | None]] = {}
+    for entry in payload.get("lineage_rules", []):
+        if not isinstance(entry, dict):
+            continue
+        source_record_id = str(entry.get("source_record_id") or "").strip()
+        if not source_record_id:
+            continue
+        lineage_disposition = str(entry.get("lineage_disposition") or "").strip()
+        replacement_source_record_ids = [
+            str(value).strip()
+            for value in entry.get("replacement_source_record_ids", []) or []
+            if str(value).strip()
+        ]
+        index[source_record_id] = {
+            "supersession_status": lineage_disposition.replace("_", " ") or None,
+            "supersession_status_id": lineage_disposition or None,
+            "source_currentness_status": str(entry.get("lineage_basis") or "").strip() or None,
+            "replacement_source_record_ids": ", ".join(replacement_source_record_ids) or None,
+        }
+    return index
+
+
+def _lineage_metadata_for_source_record(
+    source_record_id: str,
+    path: Path = DEFAULT_SOURCE_REGISTER_CURRENTNESS_LINEAGE_PATH,
+) -> dict[str, str | None]:
+    return dict(_lineage_metadata_index(path).get(source_record_id, {}))
 
 
 def _string_or_none(value: object) -> str | None:

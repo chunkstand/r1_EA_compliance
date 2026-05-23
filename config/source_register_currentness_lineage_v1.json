@@ -31,6 +31,14 @@
       "lineage_disposition": "revoked_without_replacement",
       "replacement_source_record_ids": [],
       "source_record_id": "SUP-005"
+    },
+    {
+      "lineage_basis": "The current servicewide FSH 2509.18 transmittal states the handbook is removed from the directive system and its direction is incorporated into FSM 2550. Retain this row only as currentness lineage evidence; current controlling soil-management direction is carried by the active FSM 2550 row.",
+      "lineage_disposition": "superseded_by_current_authority",
+      "replacement_source_record_ids": [
+        "USFS-023"
+      ],
+      "source_record_id": "USFS-026"
     }
   ],
   "schema_version": "source-register-currentness-lineage-v1"

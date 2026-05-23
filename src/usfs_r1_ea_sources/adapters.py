@@ -25,6 +25,7 @@ _BOX_PUBLIC_FILE_RE = re.compile(r"/(?:s|v)/[^/]+/file/(?P<file_id>\d+)(?:/|$)")
 _USFS_LEGACY_DIRECTIVES_HOSTS = {"www.fs.usda.gov", "fs.usda.gov"}
 _USFS_NATIONAL_DIRECTIVES_URL = "https://www.fs.usda.gov/about-agency/regulations-policies/national-directives"
 _DIRECT_DOCUMENT_EXTENSIONS = ("pdf", "doc", "docx")
+_USFS_HANDBOOK_TRANSMITTAL_FALLBACK_CODES = {"2509.18"}
 _USFS_MANUAL_DIRECT_DOCUMENT_URLS = {
     # Live-verified official direct-document targets for the current FSM family. Some chapters
     # now resolve through USDA guidance pages, while others still expose the current PDF on the
@@ -199,6 +200,10 @@ def _adapt_usfs_legacy_directive_url(url: str, network: NetworkConfig) -> Adapte
     if not national_directives_page:
         return None
     directive_page_url = _usfs_handbook_contents_page_url(code, national_directives_page)
+    adapter = "usfs_national_directives_handbook_direct_document"
+    if not directive_page_url and code in _USFS_HANDBOOK_TRANSMITTAL_FALLBACK_CODES:
+        directive_page_url = _usfs_handbook_transmittal_page_url(code, national_directives_page)
+        adapter = "usfs_national_directives_handbook_transmittal_document"
     if not directive_page_url:
         return None
     directive_page = _read_text_url_with_curl(directive_page_url, network)
@@ -209,7 +214,7 @@ def _adapt_usfs_legacy_directive_url(url: str, network: NetworkConfig) -> Adapte
         return None
     return AdaptedURL(
         url=direct_document_url,
-        adapter="usfs_national_directives_handbook_direct_document",
+        adapter=adapter,
         expected_content_type=_direct_document_content_type(direct_document_url),
     )
 
@@ -317,6 +322,17 @@ def _legacy_directive_code(query: str) -> str | None:
 
 def _usfs_handbook_contents_page_url(code: str, page_text: str) -> str | None:
     expected_label = f"{code} - Contents".lower()
+    for href, text in _anchor_pairs(page_text):
+        if text.lower() != expected_label:
+            continue
+        if "/about-agency/regulations-policies/handbook/" not in href:
+            continue
+        return urljoin(_USFS_NATIONAL_DIRECTIVES_URL, href)
+    return None
+
+
+def _usfs_handbook_transmittal_page_url(code: str, page_text: str) -> str | None:
+    expected_label = f"{code} - Transmittal".lower()
     for href, text in _anchor_pairs(page_text):
         if text.lower() != expected_label:
             continue

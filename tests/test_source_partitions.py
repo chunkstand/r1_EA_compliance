@@ -190,3 +190,26 @@ def test_catalog_source_partition_overrides_stale_canonical_active_partition() -
 
     assert source_partition == CURRENTNESS_SUPERSESSION_ARCHIVE
     assert basis == "canonical_row_currentness_override"
+
+
+def test_catalog_source_partition_archives_source_register_lineage_supersession_rows() -> None:
+    source_partition, basis = catalog_source_partition(
+        {
+            "source_status": "downloaded_existing",
+            "source_partition": "active_review_corpus",
+            "title": "Soil and Water Conservation / Watershed Conservation Practices",
+            "metadata": {
+                "loader_contract": "source_register_v1",
+                "authority_tier": "USFS",
+                "supersession_status": "superseded by current authority",
+                "source_currentness_status": (
+                    "The current servicewide FSH 2509.18 transmittal states the handbook is "
+                    "removed from the directive system and its direction is incorporated into "
+                    "FSM 2550."
+                ),
+            },
+        }
+    )
+
+    assert source_partition == CURRENTNESS_SUPERSESSION_ARCHIVE
+    assert basis == "canonical_row_currentness_override"

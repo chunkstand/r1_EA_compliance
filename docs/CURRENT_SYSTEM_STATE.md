@@ -73,63 +73,74 @@ routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
 
-## Full Canonical Source Truth Rebaseline Milestone 2 Reduced
+## Full Canonical Source Truth Rebaseline Milestone 2 Resolved Locally
 
 Latest worktree implementation on 2026-05-23:
 
 - Routed implementation packet:
   `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
 - Outcome label:
-  `reduced`; a follow-on Milestone `2` manual-redirect slice is now live
-  locally, the packet now admits `12` legacy `fsm` wrapper rows through live
-  USDA guidance or current Forest Service static-file PDF targets, and it
-  remains reduced on the `1` direct-document blocker that still lacks a
-  governed current document path.
-- Closeout commit:
-  `53d59da` (`Reduce source-truth Milestone 2 manual redirect blockers`).
+  `resolved locally`; the current worktree now closes the remaining
+  `USFS-026` blocker by capturing the live `FSH 2509.18` transmittal as a
+  direct PDF and projecting the row into governed currentness lineage because
+  the transmittal removes the handbook from the directive system and
+  incorporates the direction into `FSM 2550` (`USFS-023`).
 - Previous reduced-slice closeout:
+  the manual-redirect slice remains recorded in `53d59da`
+  (`Reduce source-truth Milestone 2 manual redirect blockers`).
+- Earlier reduced-slice closeout:
   `96450be` (`Reduce source-truth Milestone 2 manual wrapper blockers`).
 - Earlier reduced-slice closeout:
   the handbook-wrapper slice remains recorded in `4650837`
   (`Reduce source-truth Milestone 2 handbook wrapper blockers`).
 - Implementation surfaces:
   `src/usfs_r1_ea_sources/adapters.py`,
-  `tests/test_adapters_report.py`, and the local ignored refreshed download,
-  catalog, extraction, and retrieval replays under
+  `src/usfs_r1_ea_sources/source_register.py`,
+  `config/source_register_currentness_lineage_v1.json`,
+  `tests/test_adapters_report.py`,
+  `tests/test_source_register_loader.py`,
+  `tests/test_source_partitions.py`, and the local ignored refreshed download,
+  catalog, extraction, authority-currentness, and retrieval replays under
   `source_library/derived/source-set-f775524ab233ff27/diagnostics/` and
   `source_library/derived/source-set-f775524ab233ff27/retrieval/`, plus the
   local download replays
   `phase2-canonical-download-full-usfs-handbook-wrapper-adapter-20260522`,
-  `phase2-canonical-download-full-usfs-manual-wrapper-adapter-20260522`, and
-  `phase2-canonical-download-full-usfs-manual-redirect-reduction-20260522`.
+  `phase2-canonical-download-full-usfs-manual-wrapper-adapter-20260522`,
+  `phase2-canonical-download-full-usfs-manual-redirect-reduction-20260522`,
+  and `phase2-canonical-download-usfs026-transmittal-20260522`.
 - Live replay truth:
   the refreshed retrieval replay on `source-set-f775524ab233ff27` now records
-  `verified_extraction_required_source_count=582`,
+  `verified_extraction_required_source_count=581`,
   `verified_extraction_admitted_source_count=581`,
   `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`,
-  `validation_passed=false`, and `reviewer_ready=false`.
+  `validation_passed=true`, and `reviewer_ready=true`. The refreshed
+  `authority-currentness` report now records
+  `families_requiring_milestone_2_source_currentness=0` with
+  `validation_passed=true`.
 - Blocked roster:
-  `extraction-accuracy-audit` and retrieval validation now agree on `1`
-  blocked active-current row under the rebaselined contract:
-  `USFS-026` (`FSH 2509.18`). `USFS-018` (`FSM 2410`) and `USFS-024`
-  (`FSM 2580`) now admit through live current official Forest Service
-  static-file PDFs, while `USFS-026` still exposes only a transmittal link.
+  none. `USFS-026` is no longer an active-current blocker; the row now lands
+  as `currentness_supersession_archive` evidence with replacement
+  `USFS-023`, while `USFS-018` (`FSM 2410`) and `USFS-024` (`FSM 2580`)
+  remain admitted through live current official Forest Service static-file
+  PDFs.
 - Remaining boundary:
   `51` `Direct_File_Capture_Queue` rows remain outside the active load-bearing
-  surface, and the `52` `currentness_supersession_archive` rows still await the
-  Milestone `3` lineage decision in the same packet.
+  surface, and the `53` `currentness_supersession_archive` rows now route to
+  Milestone `3` lineage decision work in the same packet.
 - Stale-reference audit:
   the immediately following Milestone `1` section and older append-only
-  references to `579/582`, `569/582`, `560/582`, or `559/582`, broader
-  manual-family owner language, and `FPS-344` as a direct-document blocker are
-  now historical only; this latest Milestone `2` reduced slice supersedes them
-  for live routing.
+  references to `581/582`, `579/582`, `569/582`, `560/582`, or `559/582`,
+  broader manual-family owner language, and `USFS-026` as an active-current
+  direct-document blocker are now historical only; this latest Milestone `2`
+  local resolution supersedes them for live routing.
 - Verification:
-  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_adapters_report.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py -q`,
-  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/adapters.py tests/test_adapters_report.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py`,
-  `PYTHONPATH=src .venv/bin/python - <<'PY' ... run_download(... source_record_ids={"USFS-018","USFS-024"}, run_id="phase2-canonical-download-full-usfs-manual-redirect-reduction-20260522") ... PY`,
-  `PYTHONPATH=src .venv/bin/python - <<'PY' ... build_extraction(output_dir=Path("source_library"), id_filters={"USFS-018","USFS-024"}, merge_selected_into_existing=True) ... PY`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_adapters_report.py tests/test_source_register_loader.py tests/test_source_partitions.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/adapters.py src/usfs_r1_ea_sources/source_register.py tests/test_adapters_report.py tests/test_source_register_loader.py tests/test_source_partitions.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id phase2-canonical-download-usfs026-transmittal-20260522 --id USFS-026`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id phase2-canonical-download-full-post-fps005-removal-20260519 --catalog-dir source_library/runs/phase2-canonical-catalog-usfs026-20260522/catalog_gate`,
+  `PYTHONPATH=src .venv/bin/python - <<'PY' ... build_extraction(output_dir=Path("source_library"), id_filters={"USFS-026"}, merge_selected_into_existing=True) ... PY`,
   `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-f775524ab233ff27`,
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f775524ab233ff27`, and
   `git diff --check`.
 

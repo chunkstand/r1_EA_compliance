@@ -7,6 +7,65 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Source Truth Rebaseline Milestone 2 Resolved Locally
+
+This worktree slice resolves Milestone `2` locally in
+`docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
+
+- outcome label:
+  `resolved locally`; the current worktree captures the live `FSH 2509.18`
+  transmittal PDF for `USFS-026`, then projects governed lineage metadata so
+  the row is retained only as `currentness_supersession_archive` evidence with
+  replacement `USFS-023` because the transmittal removes the handbook from the
+  directive system and incorporates the direction into `FSM 2550`
+- previous reduced-slice closeout:
+  `53d59da` (`Reduce source-truth Milestone 2 manual redirect blockers`)
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/adapters.py`,
+  `src/usfs_r1_ea_sources/source_register.py`,
+  `config/source_register_currentness_lineage_v1.json`,
+  `tests/test_adapters_report.py`,
+  `tests/test_source_register_loader.py`,
+  `tests/test_source_partitions.py`, and the local ignored refreshed download,
+  catalog, extraction, authority-currentness, and retrieval artifacts under
+  `source_library/`
+- live replay truth:
+  the refreshed `retrieval/summary.json` on
+  `source-set-f775524ab233ff27` now records
+  `verified_extraction_required_source_count=581`,
+  `verified_extraction_admitted_source_count=581`,
+  `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`,
+  `validation_passed=true`, and `reviewer_ready=true`
+- currentness truth:
+  `authority_currentness_report.json` now records
+  `families_requiring_milestone_2_source_currentness=0`,
+  `current_authority_source_record_count=581`, and `validation_passed=true`
+- blocked roster:
+  none; `USFS-026` is no longer an active-current blocker and now routes only
+  as archive lineage evidence, while `FPS-344` remains admitted as structured
+  Federal Register XML
+- next routing:
+  continue with Milestone `3` in
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md` to decide
+  the explicit admission/search boundary for the `53`
+  `currentness_supersession_archive` rows while the downstream gold packet
+  remains secondary on the five still-unmapped live authorities
+- stale-reference audit:
+  the immediately following Milestone `2` reduced manual-redirect section is
+  preserved append-only history only; this local Milestone `2` resolution
+  supersedes the earlier `581/582` plus `1`-blocker checkpoint for live
+  routing
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_adapters_report.py tests/test_source_register_loader.py tests/test_source_partitions.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/adapters.py src/usfs_r1_ea_sources/source_register.py tests/test_adapters_report.py tests/test_source_register_loader.py tests/test_source_partitions.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id phase2-canonical-download-usfs026-transmittal-20260522 --id USFS-026`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id phase2-canonical-download-full-post-fps005-removal-20260519 --catalog-dir source_library/runs/phase2-canonical-catalog-usfs026-20260522/catalog_gate`,
+  `PYTHONPATH=src .venv/bin/python - <<'PY' ... build_extraction(output_dir=Path("source_library"), id_filters={"USFS-026"}, merge_selected_into_existing=True) ... PY`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-f775524ab233ff27`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f775524ab233ff27`, and
+  `git diff --check`
+
 ## Full Canonical Source Truth Rebaseline Milestone 2 Reduced Manual Redirect Slice
 
 This worktree slice further reduces Milestone `2` in

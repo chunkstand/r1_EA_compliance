@@ -126,6 +126,21 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     assert forest_plan_row.authority_section_id is not None
 
 
+def test_source_register_loader_projects_governed_lineage_metadata_into_workbook_sources() -> None:
+    config = load_config(CONFIG)
+    sources = {
+        source.source_record_id: source
+        for source in load_canonical_sources(CANONICAL_WORKBOOK, config.workbook)
+    }
+
+    usfs_026 = sources["USFS-026"]
+
+    assert usfs_026.metadata["supersession_status"] == "superseded by current authority"
+    assert usfs_026.metadata["supersession_status_id"] == "superseded_by_current_authority"
+    assert usfs_026.metadata["replacement_source_record_ids"] == "USFS-023"
+    assert "removed from the directive system" in usfs_026.metadata["source_currentness_status"]
+
+
 def test_source_register_loader_rejects_blocked_alias_without_context() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         workbook_path = Path(tmp_dir) / "ambiguous-source-register.xlsx"

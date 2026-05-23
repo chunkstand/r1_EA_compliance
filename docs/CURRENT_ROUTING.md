@@ -11,20 +11,18 @@ Use this file as the short current route before opening the large append-only do
 
 - Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
   `Document_Register_Master` / `source-set-f775524ab233ff27`
-- Active source-truth packet status: Milestone `2` remains reduced; the latest
-  manual-redirect slice in `53d59da` now admits `12` legacy USFS directive
-  rows, including `USFS-018` and `USFS-024` through live current official
-  Forest Service static-file PDFs, and the next routed slice remains
-  Milestone `2` on the remaining `1` direct-document blocker: `USFS-026`
-  (`FSH 2509.18`)
-- Active canonical-source mismatch: the live source set proves `634/634` extracted
-  `Document_Register_Master` rows, and the current worktree now rebaselines verified admission to
-  all `582` `active_review_corpus` rows through
-  `canonical-source-register-active-current-admission`; the latest refreshed audit and retrieval
-  replays record `581` admitted, `582` required, and `1` explicitly blocked active-current row:
-  `USFS-026` (`FSH 2509.18`),
-  while `51` `Direct_File_Capture_Queue` rows remain outside the active load-bearing surface and
-  the `52` archive rows still await Milestone `3` lineage closure
+- Active source-truth packet status: Milestone `2` is now resolved locally;
+  the latest worktree final-blocker slice captures the official `FSH 2509.18`
+  transmittal PDF, archives `USFS-026` as governed currentness lineage
+  evidence with replacement `USFS-023`, and routes the next slice to
+  Milestone `3` on the `53` archive rows
+- Active canonical-source truth: the live source set proves `634/634`
+  extracted `Document_Register_Master` rows, and the refreshed
+  `canonical-source-register-active-current-admission` boundary now admits all
+  `581/581` `active_review_corpus` rows; `retrieval-build` now reports
+  `validation_passed=true` and `reviewer_ready=true`, while `51`
+  `Direct_File_Capture_Queue` rows remain outside the active load-bearing
+  surface and the `53` archive rows now await Milestone `3` lineage closure
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or JS/TS cycles, no
   local module above the `20`-import fan-out gate, and the oversized-file inventory is empty
 - Under-`800` follow-on: Milestones `0-9` are resolved; the repo remains at `0` oversized code
@@ -41,9 +39,8 @@ Use this file as the short current route before opening the large append-only do
   (`apa_final_agency_action`, `directives_notice_comment_36cfr_216`,
   `musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`,
   and `seven_county_nepa_scope`); the earlier review-time source-claim-link expectation drift is
-  closed, but that packet is now downstream of the source-truth rebaseline because the live
-  verified-admission target is still blocked at `581/582` admitted current rows rather than a
-  fully admitted canonical Region 1 corpus.
+  closed, and that packet now remains downstream of the source-truth Milestone `3`
+  archive-boundary decision rather than an active-current admission blocker.
 ## Deep Reads
 
 - `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`

@@ -215,6 +215,42 @@ class AdapterAndReportTests(unittest.TestCase):
         )
         self.assertEqual(adapted.expected_content_type, "application/pdf")
 
+    def test_usfs_handbook_adapter_uses_transmittal_pdf_when_contents_are_absent(self) -> None:
+        config = legacy_config()
+        portal = """
+        <html><body>
+        <a href="/about-agency/regulations-policies/handbook/250918-transmittal">2509.18 - Transmittal</a>
+        </body></html>
+        """
+        directive_page = """
+        <html><body>
+        <iframe
+          data-src="https://www.fs.usda.gov/sites/default/files/2023-12/wo_2509.18-2010-1_transmittal.pdf"
+        ></iframe>
+        </body></html>
+        """
+
+        def fake_read(url, _network):  # noqa: ANN001
+            if url.endswith("/national-directives"):
+                return portal
+            if url.endswith("/handbook/250918-transmittal"):
+                return directive_page
+            return None
+
+        with patch("usfs_r1_ea_sources.adapters._read_text_url_with_curl", side_effect=fake_read):
+            adapted = adapt_download_url(
+                "https://www.fs.usda.gov/cgi-bin/Directives/get_dirs/fsh?2509.18=",
+                config.network,
+            )
+
+        self.assertIsNotNone(adapted)
+        self.assertEqual(adapted.adapter, "usfs_national_directives_handbook_transmittal_document")
+        self.assertEqual(
+            adapted.url,
+            "https://www.fs.usda.gov/sites/default/files/2023-12/wo_2509.18-2010-1_transmittal.pdf",
+        )
+        self.assertEqual(adapted.expected_content_type, "application/pdf")
+
     def test_usfs_manual_adapter_maps_current_direct_document_targets(self) -> None:
         config = legacy_config()
         cases = {

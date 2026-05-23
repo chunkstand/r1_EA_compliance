@@ -1,21 +1,25 @@
 # Full Canonical Source Truth Rebaseline Milestone Plan
 
-Date: 2026-05-22
+Date: 2026-05-23
 
 Status: Active; Milestone 0 resolved on 2026-05-22 through the routed-doc
-packet open, and Milestone 1 is now resolved locally: the checked-in
-verified-admission contract has been rebaselined from the hidden `343`-row
-shadow-filtered subset to all `582` active-current canonical rows via
-`canonical-source-register-active-current-admission`, focused regression
-coverage is green, and the refreshed `extraction-accuracy-audit` plus
-`retrieval-build` replays now agree on `581` admitted plus `1` blocked
-active-current row. `FPS-344` stays in the admitted set as a structured
-Federal Register XML source, `9` handbook wrapper rows now admit through live
-National Directives contents PDFs, and `12` manual wrapper rows now admit
-through live USDA guidance or current Forest Service static-file PDF targets.
-The packet remains in Milestone 2 reduced only on `USFS-026` (`FSH 2509.18`),
-whose live official surface still exposes only a transmittal link rather than
-a current contents page. The latest recorded Milestone 2 reduced local commit is `53d59da`
+packet open, Milestone 1 is resolved locally, and Milestone 2 is now resolved
+locally: the checked-in verified-admission contract has been rebaselined from
+the hidden `343`-row shadow-filtered subset to all `581` active-current
+canonical rows via `canonical-source-register-active-current-admission`,
+focused regression coverage is green, the live `FSH 2509.18` transmittal now
+lands as a direct PDF, governed currentness lineage retains `USFS-026` as
+`currentness_supersession_archive` evidence with replacement `USFS-023`, and
+the refreshed `extraction-accuracy-audit`, `authority-currentness`, and
+`retrieval-build` replays now agree on `581` admitted out of `581` required
+active-current rows with `validation_passed=true`, `reviewer_ready=true`, and
+`families_requiring_milestone_2_source_currentness=0`. `FPS-344` stays in the
+admitted set as a structured Federal Register XML source, `9` handbook
+wrapper rows now admit through live National Directives contents PDFs, and
+`12` manual wrapper rows now admit through live USDA guidance or current
+Forest Service static-file PDF targets. The `53`
+`currentness_supersession_archive` rows now route into Milestone 3 lineage
+closure. The latest recorded Milestone 2 reduced local commit is `53d59da`
 (`Reduce source-truth Milestone 2 manual redirect blockers`); the earlier
 Milestone 2 reduced manual-wrapper slice remains `96450be`
 (`Reduce source-truth Milestone 2 manual wrapper blockers`); the earlier
@@ -56,19 +60,21 @@ truth instead of the older `343`-row active-review subset.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/retrieval/summary.json`
   now records `verified_extraction_admitted_source_count=581`,
-  `verified_extraction_required_source_count=582`, and
+  `verified_extraction_required_source_count=581`, and
   `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/diagnostics/extraction_accuracy_audit.json`
-  now records `audited_record_count=582`,
+  now records `audited_record_count=581`,
   `knowledge_base_admitted_source_record_ids=581`,
-  `knowledge_base_blocked_source_record_ids=1`, and a single remaining failed
-  gate:
-  `direct_document_required_records_use_document_artifacts`.
+  `knowledge_base_blocked_source_record_ids=0`, and no failed gates.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/retrieval/retrieval_validation.json`
-  now derives the same truthful blocked roster of `1` active-current row
-  under the rebaselined contract.
+  now derives the same truthful zero-blocker roster under the rebaselined
+  contract.
+- The latest
+  `source_library/derived/source-set-f775524ab233ff27/authority_currentness/authority_currentness_report.json`
+  now records `families_requiring_milestone_2_source_currentness=0`,
+  `current_authority_source_record_count=581`, and `validation_passed=true`.
 - `FPS-344` now remains admissible as a structured Federal Register XML source
   because the generic listing-page direct-file instruction no longer upgrades
   authoritative structured-web rows into the direct-document bucket without a
@@ -81,9 +87,10 @@ truth instead of the older `343`-row active-review subset.
   Service static-file PDF targets:
   `USFS-007`, `USFS-015`, `USFS-016`, `USFS-019`, `USFS-022`, `USFS-023`,
   `USFS-029`, `USFS-033`, `USFS-034`, `USFS-039`, `USFS-018`, and `USFS-024`.
-- The remaining blocked roster is now only `USFS-026` (`FSH 2509.18`), whose
-  live official surface still exposes only a transmittal link rather than a
-  current contents page.
+- `USFS-026` (`FSH 2509.18`) is no longer an active-current blocker; the
+  servicewide transmittal removes the handbook from the directive system and
+  incorporates the direction into `FSM 2550`, so the row is now retained only
+  as governed currentness lineage evidence with replacement `USFS-023`.
 - `README.md`, `AGENTS.md`, and the current workbook contract still define
   `Document_Register_Master=634` as the active load-bearing table while
   `Direct_File_Capture_Queue=51` remains a deferred non-load surface.
@@ -96,8 +103,9 @@ truth instead of the older `343`-row active-review subset.
   wrapper pages are not admissible when a row requires a direct document artifact.
 - The downstream packet
   `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` remains live, but it is still
-  measuring against the narrower verified-admission boundary above. This packet must finish first
-  so downstream gold work is aligned to the true canonical target.
+  measuring against the active-current verified-admission boundary above while the archive-lineage
+  decision is still open. Milestone 3 must finish so downstream gold work is aligned to the true
+  canonical target.
 
 ## Goal
 
@@ -342,11 +350,14 @@ Current worktree checkpoint on 2026-05-23:
 
 ### Milestone 2 - Applicable Current-Row Promotion Or Exclusion
 
-Outcome label: `reduced`
+Outcome label: `resolved locally`
 
-Current worktree checkpoint on 2026-05-22:
+Current worktree checkpoint on 2026-05-23:
 
-- The latest local reduced-slice closeout commit is
+- The latest recorded reduced-slice closeout commit before this local
+  resolution is `53d59da`
+  (`Reduce source-truth Milestone 2 manual redirect blockers`).
+- The earlier local reduced-slice closeout commit is
   `96450be` (`Reduce source-truth Milestone 2 manual wrapper blockers`).
 - The earlier Milestone 2 reduced handbook slice remains
   `4650837` (`Reduce source-truth Milestone 2 handbook wrapper blockers`).
@@ -366,15 +377,20 @@ Current worktree checkpoint on 2026-05-22:
 - The current worktree now further admits `USFS-018` (`FSM 2410`) and
   `USFS-024` (`FSM 2580`) through live current official Forest Service
   static-file PDFs exposed by the current directive surfaces.
+- The current worktree now captures the live `FSH 2509.18` transmittal PDF,
+  projects governed lineage metadata for `USFS-026`, and retains the row only
+  as `currentness_supersession_archive` evidence with replacement `USFS-023`
+  because the transmittal removes the handbook from the directive system and
+  incorporates the direction into `FSM 2550`.
 - The refreshed `extraction-accuracy-audit` and `retrieval-build` replays now
-  agree on `582` required active-current rows, `581` admitted rows, and `1`
-  blocked row.
-- The remaining owner family is now a single directives-wrapper row:
-  `USFS-026` (`FSH 2509.18`); no Federal Register row remains blocked in this
-  milestone.
+  agree on `581` required active-current rows, `581` admitted rows, `0`
+  blocked rows, `validation_passed=true`, and `reviewer_ready=true`.
+- The refreshed `authority-currentness` report now records
+  `families_requiring_milestone_2_source_currentness=0`, so this milestone no
+  longer carries an open active-current owner family.
 
 1. Resolve the currently excluded active-review families
-   (`1` remaining directives-wrapper blocker) by
+   (`0` remaining directives-wrapper blockers) by
    promoting direct files, converting queue placeholders into real canonical rows, or moving rows
    into explicit historical/not-applicable lineage where the evidence proves they do not belong in
    the canonical target.
@@ -386,7 +402,7 @@ Current worktree checkpoint on 2026-05-22:
 
 Outcome label: `reduced`
 
-1. Decide whether the `52` `currentness_supersession_archive` rows are part of the full-canonical
+1. Decide whether the `53` `currentness_supersession_archive` rows are part of the full-canonical
    verified target, a historical-only searchable lane, or a mixed contract with explicit
    partition-aware admission.
 2. Update currentness/source-partition contracts so archive inclusion or exclusion is explicit and
