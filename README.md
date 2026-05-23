@@ -234,7 +234,9 @@ Local active import baseline on 2026-05-20 after full canonical live source-set 
   gate `source-set-a0402de124943920` records `artifact_count=8`, scoped
   extraction admitted all `8/8`, and upstream direct eval remains green at
   `38/38`.
-- The reduced downstream rerun packet
+- The reduced downstream freshness packet
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`, the
+  reduced downstream rerun packet
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`
   and the archived forest-plan packet
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`

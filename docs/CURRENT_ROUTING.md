@@ -57,6 +57,12 @@ Use this file as the short current route before opening the large append-only do
   load-bearing surface by workbook contract, and West Reservoir remains an
   intentional `typed_blocked` replay quarantine rather than a promotion
   blocker
+- Historical `source-set-cac9c7d02b280825` / `source-set-9e7d85759951c279`
+  downstream packets in
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md` and
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md` are
+  preserved blocker context only; do not treat their reduced status lines as
+  live routing
 ## Deep Reads
 
 - `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`

@@ -82,6 +82,41 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Full Canonical Downstream Freshness Packet Retired For Live Routing
+
+Latest docs-only routing retirement on 2026-05-23:
+
+- Routed packet:
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved historical reference`; the preserved `source-set-cac9c7d02b280825`
+  freshness reduction is append-only blocker evidence only, not a live reduced
+  owner.
+- Successor chain:
+  the live full-canonical route has since closed through
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`, and
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
+- Live routing truth:
+  `source-set-f775524ab233ff27` is the sole active full-canonical catalog;
+  source-truth now admits `581/581` active-current rows while explicitly
+  keeping `53` archive/currentness rows outside verified admission; default
+  `compliance-gold-eval` now passes `14/14`; default `gold-coverage-eval`
+  passes `7/7`; and the default `promotion-suite` now reports
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `expansion_ready=true`, and `promotion_ready=true`.
+- Stale-reference audit:
+  the downstream freshness packet's reduced `source-set-cac9c7d02b280825`
+  checkpoint is historical only after the later live-promotion closeout
+  `f464fa9`, source-truth closeout `93a23b0`, and downstream gold closeout
+  `8e0e02b`.
+- Verification:
+  targeted route grep over the top docs, milestone-plan lint on
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`, and
+  `git diff --check`.
+
 ## Full Canonical Compliance Gold Rebaseline Resolved Locally
 
 Latest worktree implementation on 2026-05-23:

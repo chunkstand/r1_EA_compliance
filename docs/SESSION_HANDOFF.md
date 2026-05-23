@@ -7,6 +7,39 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Downstream Freshness Packet Retired For Live Routing
+
+This docs-only slice retires the preserved downstream-freshness packet as an
+active-looking route.
+
+- outcome label:
+  `resolved historical reference`; the reduced
+  `source-set-cac9c7d02b280825` checkpoint remains append-only blocker
+  history only
+- routed packet:
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
+- successor chain:
+  later packets have already closed the live route through
+  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`,
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`, and
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- live routing truth:
+  `source-set-f775524ab233ff27` is the sole active full-canonical route;
+  source-truth is `581/581` admitted with `53` explicit archive rows;
+  `compliance-gold-eval` passes `14/14`; `gold-coverage-eval` passes `7/7`;
+  and default `promotion-suite` is green on
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `expansion_ready=true`, and `promotion_ready=true`
+- next routing:
+  do not reopen the preserved downstream-freshness packet; choose a fresh
+  packet from `docs/CURRENT_ROUTING.md` if further work is needed
+- verification:
+  milestone-plan lint on
+  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`,
+  targeted route grep, and `git diff --check`
+
 ## Full Canonical Compliance Gold Rebaseline Resolved Locally
 
 This worktree slice resolves the downstream full-canonical compliance-gold

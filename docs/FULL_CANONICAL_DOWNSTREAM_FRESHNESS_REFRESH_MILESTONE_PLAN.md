@@ -1,10 +1,28 @@
 # Full Canonical Downstream Freshness Refresh Milestone Plan
 
 Date: 2026-05-19
-Status: Reduced 2026-05-19
-Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` active full-canonical downstream refresh boundary
+Status: Historical closeout reference; reduced on 2026-05-19 for
+`source-set-cac9c7d02b280825`, then superseded as the live route by
+`docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`,
+`docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`,
+`docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`,
+`docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`, and
+`docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`. The
+governing live local route is now `source-set-f775524ab233ff27` with
+source-truth `581/581` admitted, `53` explicit archive rows,
+`compliance-gold-eval` `14/14`, `gold-coverage-eval` `7/7`, and
+`promotion-suite` green.
+Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` preserved
+historical full-canonical downstream refresh boundary; not an active live
+owner
 
 ## Purpose
+
+Historical routing note: this plan records the earlier
+`source-set-cac9c7d02b280825` downstream-freshness reduction only. After the
+live-promotion sole-truth closeout `f464fa9`, source-truth closeout
+`93a23b0`, and downstream gold closeout `8e0e02b`, it is no longer an active
+packet and must not be reopened for live routing.
 
 The canonical source-register import packet made the 635-row workbook import the active local
 catalog, but the full-canonical downstream artifact family, coverage manifests, and promotion
