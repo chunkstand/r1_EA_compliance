@@ -11,8 +11,9 @@ coverage is green, and the refreshed `extraction-accuracy-audit` plus
 `retrieval-build` replays now agree on `560` admitted plus `22` blocked
 active-current rows. `FPS-344` is back in the admitted set as a structured
 Federal Register XML source, and the packet remains in Milestone 2 reduced on
-the remaining USFS directive-wrapper blockers. Milestone 1 closeout commit:
-`46bff61` (`Resolve source-truth rebaseline Milestone 1`).
+the remaining USFS directive-wrapper blockers. Milestone 2 reduced local
+commit: `806cdf1` (`Reduce source-truth Milestone 2 blockers`). Milestone 1
+closeout commit: `46bff61` (`Resolve source-truth rebaseline Milestone 1`).
 
 Owner context: on 2026-05-22 the governing intent was clarified: the newest imported source set
 must fully replace the older source set as the canonical source of truth for this repository's
@@ -324,6 +325,8 @@ Outcome label: `reduced`
 
 Current worktree checkpoint on 2026-05-22:
 
+- The local reduced-slice closeout commit is
+  `806cdf1` (`Reduce source-truth Milestone 2 blockers`).
 - `FPS-344` is now back in the admitted set as a structured Federal Register
   XML source after the direct-document requirement stopped overfiring on its
   generic listing-page instruction clause.

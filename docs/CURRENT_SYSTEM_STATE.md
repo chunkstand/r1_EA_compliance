@@ -84,6 +84,8 @@ Latest worktree implementation on 2026-05-22:
   admitted again as a structured Federal Register XML source, and the packet
   remains reduced on the `22` Official USFS source-page wrappers still blocked
   by the direct-document gate.
+- Closeout commit:
+  `806cdf1` (`Reduce source-truth Milestone 2 blockers`).
 - Implementation surfaces:
   `src/usfs_r1_ea_sources/extract_common.py`,
   `tests/test_extract.py`, and the local ignored refreshed extraction and

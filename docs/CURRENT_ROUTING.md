@@ -11,9 +11,10 @@ Use this file as the short current route before opening the large append-only do
 
 - Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
   `Document_Register_Master` / `source-set-f775524ab233ff27`
-- Active source-truth packet status: Milestone `1` is closed through local
-  commit `46bff61` (`Resolve source-truth rebaseline Milestone 1`); the next
-  routed slice is Milestone `2` on the remaining `22` direct-document blockers
+- Active source-truth packet status: Milestone `2` is reduced through local
+  commit `806cdf1` (`Reduce source-truth Milestone 2 blockers`); the next
+  routed slice remains Milestone `2` on the remaining `22`
+  direct-document blockers
 - Active canonical-source mismatch: the live source set proves `634/634` extracted
   `Document_Register_Master` rows, and the current worktree now rebaselines verified admission to
   all `582` `active_review_corpus` rows through
