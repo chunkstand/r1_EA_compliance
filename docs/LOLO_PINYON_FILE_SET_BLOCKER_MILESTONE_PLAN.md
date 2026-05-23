@@ -269,4 +269,6 @@ git diff --check
   library is governed document by document.
 - The active direct-file queue packet remains the live next route; after this
   blocker-opening slice, continue Milestone `3` on the remaining export-backed
-  families `FINAL-Q-NPC-001` and `LEX-Q-001`.
+  family `LEX-Q-001`, while the NPC planning-record surfaces are now
+  explicitly owned by
+  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`.

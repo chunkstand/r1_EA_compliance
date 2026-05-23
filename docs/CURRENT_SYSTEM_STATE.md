@@ -99,6 +99,65 @@ Older references below that still report
 `resolution_status_counts={"blocked":5,"planned":38,"resolved":8}` or still
 route `FINAL-Q-LOLO-001` as a generic planned export family are historical
 only after the 2026-05-23 Lolo Pinyon blocker opener described below.
+Older references below that still report
+`resolution_status_counts={"blocked":6,"planned":37,"resolved":8}` or still
+route `FINAL-Q-NPC-001` as a generic planned export family are historical only
+after the 2026-05-23 NPC planning-record blocker opener described below.
+
+## Full Canonical Direct-File Queue Milestone 3 NPC Planning Record Blocker Reduced Locally
+
+Latest implementation update on 2026-05-23:
+
+- Routed packet:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced locally` for Milestone `3`; `FINAL-Q-NPC-001` is now an explicit
+  mixed planning-record blocker family, the earlier SCC, Flathead, NCDE, and
+  Lolo slices remain resolved/reduced, and the next routed slice stays on the
+  remaining generic export-backed family.
+- Workbook and queue truth:
+  `source-register-diff` remains unchanged at
+  `canonical_master_row_count=647`, `canonical_only_source_count=647`,
+  `canonical_queue_row_count=51`, and workbook SHA
+  `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`;
+  `source-register-queue-audit` now passes with
+  `resolution_status_counts={"blocked":7,"planned":36,"resolved":8}`,
+  `resolved_current_or_project_applicable_count=8`,
+  `blocked_current_or_project_applicable_count=7`,
+  `unresolved_current_or_project_applicable_count=34`, and the same governed
+  historical/noncurrent rows (`FPS-380`, `SUP-007`).
+- New blocker family:
+  `FINAL-Q-NPC-001` now routes to
+  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`
+  because the live public Box share is a multi-page NPC planning-record
+  library whose visible top-level folders already mix core plan documents with
+  high-volume FEIS-reference, objection-reference, consultation, amendment,
+  infrastructure, and misc-support surfaces.
+- Active full-canonical catalog truth:
+  the live source set remains `source-set-4fb59e9eb43045cb` with
+  `source_count=647`, `artifact_count=635`,
+  `source_partition_counts={"active_review_corpus":594,"currentness_supersession_archive":53}`,
+  `status_counts={"downloaded_existing":635,"duplicate_content":12}`, and the
+  same strengthened extraction, currentness, and retrieval truth already
+  described below; this blocker opener changes queue governance only and does
+  not change the catalog or downstream derived artifacts.
+- Next routing:
+  stay on Milestone `3` in
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  for the remaining export-backed family `LEX-Q-001`. The active blocker
+  packets are now
+  `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
+  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`,
+  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
+  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`, and
+  `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`.
+- Verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_source_register_queue_resolution.py tests/test_source_register_schema.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check tests/test_source_register_queue_resolution.py`,
+  and `git diff --check`.
 
 ## Full Canonical Direct-File Queue Milestone 3 Lolo Pinyon Blocker Reduced Locally
 

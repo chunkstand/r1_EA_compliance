@@ -89,6 +89,14 @@ already-captured Lolo plan and SCC records plus broader assessment, notice,
 geospatial, and topic-support folders; that routing change also leaves the
 live source set and admitted-count boundary unchanged. That blocker opener
 landed in commit `2d7d7c2` (`Open Lolo Pinyon blocker packet`).
+The latest queue follow-on now also narrows `FINAL-Q-NPC-001` into
+`docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md` as an
+explicit mixed planning-record blocker family because the live Box share spans
+a multi-page NPC planning-record library whose visible top-level folders mix
+core plan documents with high-volume FEIS-reference, objection-reference,
+consultation, amendment, infrastructure, and misc-support surfaces; that
+routing change also leaves the live source set and admitted-count boundary
+unchanged.
 Older `634/581` references below remain the historical closeout baseline for
 commit `93a23b0` unless a later bullet explicitly updates them.
 

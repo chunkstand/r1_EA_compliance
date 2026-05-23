@@ -114,6 +114,9 @@ Use this file as the short current route before opening the large append-only do
   `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md` as an explicit
   blocker family, and that closeout landed in commit `2d7d7c2`
   (`Open Lolo Pinyon blocker packet`).
+  The latest slice now also routes `FINAL-Q-NPC-001` to
+  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md` as an
+  explicit blocker family.
   The tracked `config/source_register_queue_resolution_ledger_v1.json`
   enumerates all `51` queue rows, preserves the `4` governed `resolved`
   promotions from Milestone `2` plus the `4` SCC structured-export families
@@ -124,15 +127,16 @@ Use this file as the short current route before opening the large append-only do
   `WILD-ESA-Q001` to
   `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, routes
   `FINAL-Q-LOLO-001` to
-  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, and routes
-  `PROG-011`, `PROG-012`, and `PROG-013` as explicit `blocked`
+  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, routes
+  `FINAL-Q-NPC-001` to
+  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`, and
+  routes `PROG-011`, `PROG-012`, and `PROG-013` as explicit `blocked`
   placeholders. `source-register-queue-audit` now passes with
-  `resolution_status_counts={"blocked":6,"planned":37,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=6`,
-  `unresolved_current_or_project_applicable_count=35`, and the same `2`
+  `resolution_status_counts={"blocked":7,"planned":36,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=7`,
+  `unresolved_current_or_project_applicable_count=34`, and the same `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`); the next routed slice
-  remains Milestone `3` for the remaining export-backed families
-  `FINAL-Q-NPC-001` and `LEX-Q-001`.
+  remains Milestone `3` for the remaining export-backed family `LEX-Q-001`.
   West Reservoir remains an intentional `typed_blocked` replay quarantine
   rather than a promotion blocker
 - Ad hoc full-canonical `phase-eval` status: do not treat the

@@ -1,7 +1,7 @@
 # Full Canonical Direct-File Capture Queue Resolution Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; SCC structured-export Milestone 3 slice resolved locally through e78f491 and docs-aligned through 82e2195; Flathead reading-room blocker slice reduced locally through eb09556; WILD-ESA NCDE amendment blocker slice reduced locally through 3a8dd2d; Lolo Pinyon blocker slice reduced locally through 2d7d7c2; remaining export-backed Milestone 3 slice next`)
+Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; SCC structured-export Milestone 3 slice resolved locally through e78f491 and docs-aligned through 82e2195; Flathead reading-room blocker slice reduced locally through eb09556; WILD-ESA NCDE amendment blocker slice reduced locally through 3a8dd2d; Lolo Pinyon blocker slice reduced locally through 2d7d7c2; NPC planning-record blocker slice reduced locally; remaining export-backed Milestone 3 slice next`)
 Owner context: follow-on from the resolved full-canonical source-truth and compliance-gold
 rebaseline packets
 
@@ -22,15 +22,17 @@ blocker slice is now reduced locally through commit `eb09556`
 explicit blocker packet through commit `3a8dd2d`
 (`Open WILD-ESA NCDE blocker packet`). The mixed `FINAL-Q-LOLO-001` Lolo
 Pinyon family is now also reduced locally as an explicit blocker packet
-through commit `2d7d7c2` (`Open Lolo Pinyon blocker packet`).
+through commit `2d7d7c2` (`Open Lolo Pinyon blocker packet`). The mixed
+`FINAL-Q-NPC-001` Nez Perce-Clearwater planning-record family is now also
+reduced locally as an explicit blocker packet.
 
 - `config/source_register_queue_resolution_ledger_v1.json` now enumerates all
   `51` queue rows exactly once with `49` current/project-applicable rows, `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`), planned disposition
-  counts of `37` `promote_direct_file`, `7`
-  `promote_structured_export`, `6` `named_blocker`, and `2`
-  `historical_scope_only`, plus resolution status counts of `37` `planned`,
-  `6` `blocked`, and `8` `resolved`.
+  counts of `37` `promote_direct_file`, `5`
+  `promote_structured_export`, `7` `named_blocker`, and `2`
+  `historical_scope_only`, plus resolution status counts of `36` `planned`,
+  `7` `blocked`, and `8` `resolved`.
 - The low-complexity direct-file family now promotes
   `FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, and `PROG-010`
   into `Document_Register_Master`.
@@ -67,10 +69,17 @@ through commit `2d7d7c2` (`Open Lolo Pinyon blocker packet`).
   folder is a multi-folder planning library that overlaps existing Lolo plan
   and SCC rows while also carrying assessment, notice, geospatial, and topical
   support surfaces.
+- Milestone `3` now also opens the named blocker family for the mixed
+  Nez Perce-Clearwater planning-record placeholder: `FINAL-Q-NPC-001` routes
+  to `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`
+  because the live Box share is a multi-page planning-record library that
+  already overlaps governed NPC plan-family rows while also carrying
+  high-volume FEIS-reference, objection-reference, consultation, amendment,
+  infrastructure, and misc-support folders.
 - `source-register-queue-audit` now provides the machine-checked gate for the
   queue packet and passes with zero missing, unexpected, duplicated, or
-  drifted rows, `blocked_current_or_project_applicable_count=6`,
-  `unresolved_current_or_project_applicable_count=35`, and the same governed
+  drifted rows, `blocked_current_or_project_applicable_count=7`,
+  `unresolved_current_or_project_applicable_count=34`, and the same governed
   historical roster.
 - The strengthened extraction/runtime gate now supports governed `.xlsx`
   direct files and distinguishes verified payload-cache reuse from opaque
@@ -87,8 +96,9 @@ through commit `2d7d7c2` (`Open Lolo Pinyon blocker packet`).
   `full_canonical_failure_category_counts={"stale_artifact":2}` until the
   successor source-truth packet reruns the downstream artifacts on
   `source-set-4fb59e9eb43045cb`.
-- The next routed slice remains Milestone `3` for the export-backed families
-  after the project-specific, Flathead, NCDE, and Lolo blocker-family openers.
+- The next routed slice remains Milestone `3` for the export-backed family
+  after the project-specific, Flathead, NCDE, Lolo, and NPC blocker-family
+  openers.
 
 ## Purpose
 
@@ -134,14 +144,18 @@ is `594/594` on `source-set-4fb59e9eb43045cb`:
   - `51` queue rows total;
   - `49` rows that still classify as current or project-applicable;
   - `8` rows now resolved by governed promotion;
-  - `5` rows now explicitly blocked by governed blocker packets:
+  - `7` rows now explicitly blocked by governed blocker packets:
     `FINAL-Q-FLAT-001` by
     `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, and
     `WILD-ESA-Q001` by
     `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, and
+    `FINAL-Q-LOLO-001` by
+    `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, and
+    `FINAL-Q-NPC-001` by
+    `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`, and
     `3` project-specific rows by
     `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`;
-  - `36` current/project-applicable rows still unresolved in the generic
+  - `34` current/project-applicable rows still unresolved in the generic
     planned roster;
   - `2` explicitly historical/noncurrent rows: `FPS-380` and `SUP-007`;
   - dominant queue reasons:

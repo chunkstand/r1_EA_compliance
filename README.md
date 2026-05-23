@@ -77,17 +77,18 @@ Current routed state on 2026-05-23:
   `WILD-ESA-Q001` to
   `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, routes
   `FINAL-Q-LOLO-001` to
-  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, and routes the
-  project-specific placeholder family `PROG-011`, `PROG-012`, and `PROG-013`
-  to
+  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, routes
+  `FINAL-Q-NPC-001` to
+  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`, and
+  routes the project-specific placeholder family `PROG-011`, `PROG-012`, and
+  `PROG-013` to
   `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
   as explicit `blocked` rows. `source-register-queue-audit` now passes with
-  `resolution_status_counts={"blocked":6,"planned":37,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=6`,
-  `unresolved_current_or_project_applicable_count=35`, the same `2`
+  `resolution_status_counts={"blocked":7,"planned":36,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=7`,
+  `unresolved_current_or_project_applicable_count=34`, the same `2`
   governed historical rows (`FPS-380`, `SUP-007`), and the next routed slice
-  remains Milestone `3` for the remaining export-backed families
-  (`FINAL-Q-NPC-001`, `LEX-Q-001`).
+  remains Milestone `3` for the remaining export-backed family `LEX-Q-001`.
   The project-specific blocker-family opener landed in commit `8b889a9`
   (`Open project-specific queue blocker packet`), the SCC structured-export
   closeout landed in commit `e78f491`
@@ -99,7 +100,9 @@ Current routed state on 2026-05-23:
   NCDE amendment export blocker family for `WILD-ESA-Q001` in commit
   `3a8dd2d` (`Open WILD-ESA NCDE blocker packet`) and the Lolo Pinyon blocker
   family for `FINAL-Q-LOLO-001` in commit `2d7d7c2`
-  (`Open Lolo Pinyon blocker packet`); the earlier Milestone `2`
+  (`Open Lolo Pinyon blocker packet`); the latest slice also opened the NPC
+  planning-record blocker family for `FINAL-Q-NPC-001`; the earlier
+  Milestone `2`
   direct-file promotion closeout remains commit `85f087b`
   (`Resolve direct-file queue Milestone 2`).
 - The downstream full-canonical compliance-gold packet is now resolved
