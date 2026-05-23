@@ -73,6 +73,39 @@ routing repair, owner-family split, diagnostic generated-pack slice, and
 legacy/current source-record reconciliation slice
 described below.
 
+## Full Canonical Source Truth Rebaseline Milestone 1 Resolved
+
+Latest worktree implementation on 2026-05-22:
+
+- Routed implementation packet:
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved` for Milestone `1`; the packet now advances to Milestone `2`
+  reduced with the widened verified-admission replay landed locally.
+- Live replay truth:
+  the refreshed retrieval replay on `source-set-f775524ab233ff27` records
+  `verified_extraction_required_source_count=582`,
+  `verified_extraction_admitted_source_count=559`,
+  `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`,
+  `validation_passed=false`, and `reviewer_ready=false`.
+- Blocked roster:
+  `extraction-accuracy-audit` and retrieval validation now agree on `23`
+  blocked active-current rows under the rebaselined contract:
+  `22` Official USFS source-page wrappers and `1` Federal Register XML source
+  (`FPS-344`).
+- Remaining boundary:
+  `51` `Direct_File_Capture_Queue` rows remain outside the active load-bearing
+  surface, and the `52` `currentness_supersession_archive` rows still await the
+  Milestone `3` lineage decision in the same packet.
+- Verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_accuracy.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_retrieval_validation.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/extraction_accuracy.py tests/test_extraction_accuracy.py`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f775524ab233ff27`, and
+  `git diff --check`.
+
 ## Under-800 Hotspot Reduction Milestone 9 Alignment Closeout
 
 Latest docs-only alignment on 2026-05-21:

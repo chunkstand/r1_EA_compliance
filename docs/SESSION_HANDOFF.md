@@ -1,11 +1,79 @@
 # Session Handoff
 
-Date: 2026-05-21
+Date: 2026-05-22
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
+
+## Full Canonical Source Truth Rebaseline Milestone 1 Resolved
+
+This worktree slice resolves Milestone `1` in
+`docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
+
+- outcome label:
+  `resolved` for Milestone `1`; the checked-in verified-admission contract now
+  targets all `582` `active_review_corpus` rows under
+  `canonical-source-register-active-current-admission`, and the packet advances
+  to Milestone `2` reduced on the remaining direct-document blockers
+- implementation surfaces:
+  `config/verified_extraction_admission_contract.json`,
+  `src/usfs_r1_ea_sources/extraction_accuracy.py`,
+  `tests/test_extraction_accuracy.py`, and the local ignored refreshed audit and
+  retrieval replays under
+  `source_library/derived/source-set-f775524ab233ff27/diagnostics/` and
+  `source_library/derived/source-set-f775524ab233ff27/retrieval/`
+- live replay truth:
+  the refreshed `retrieval/summary.json` on
+  `source-set-f775524ab233ff27` records
+  `verified_extraction_required_source_count=582`,
+  `verified_extraction_admitted_source_count=559`,
+  `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`,
+  `validation_passed=false`, and `reviewer_ready=false`
+- blocked roster:
+  `extraction-accuracy-audit` and retrieval validation now agree on `23`
+  blocked active-current rows under the rebaselined contract:
+  `22` Official USFS source-page wrappers and `1` Federal Register XML source
+  (`FPS-344`)
+- next routing:
+  continue with Milestone `2` in
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md` to resolve
+  those `23` direct-document blockers through governed promotion or exclusion
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_accuracy.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_retrieval_validation.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/extraction_accuracy.py tests/test_extraction_accuracy.py`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f775524ab233ff27`, and
+  `git diff --check`
+
+## Full Canonical Source Truth Rebaseline Packet Opened
+
+This docs-only routing slice opens a new standalone packet after the governing canonical-source
+intent was clarified on 2026-05-22.
+
+- outcome label:
+  `reduced`; the root routing and target ambiguity are now explicit, but the live verified
+  admission contract still admits only `343` rows and still leaves `51`
+  `Direct_File_Capture_Queue` rows outside the active load-bearing surface
+- routed packet:
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
+- live mismatch:
+  `source-set-f775524ab233ff27` currently proves `634/634` extracted rows, while
+  `source_library/derived/source-set-f775524ab233ff27/retrieval/summary.json` still records
+  `verified_extraction_required_source_count=343` under
+  `canonical-source-register-active-review-admission`; the workbook still records `51`
+  direct-file-capture queue rows outside `Document_Register_Master`
+- downstream dependency:
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` remains live, but it is no
+  longer the root routed lane; it depends on this packet to make the verified-admission target
+  match the intended full canonical Region 1 source truth
+- next routing:
+  continue with Milestone `0` in `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
+- verification:
+  `git diff --check`
 
 ## Under-800 Hotspot Reduction Milestone 9 Alignment Closeout
 

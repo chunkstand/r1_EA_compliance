@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
 CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
+VERIFIED_ADMISSION_CONTRACT = ROOT / "config" / "verified_extraction_admission_contract.json"
 
 
 def legacy_config():
@@ -57,6 +58,34 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
         self.assertEqual(
             failures,
             {"R1EA-001": ["pdf_text_crosscheck_against_pypdf"]},
+        )
+
+    def test_pdf_crosscheck_skips_self_reference_for_pypdf_fallback_records(self) -> None:
+        result = extraction_accuracy_module._check_pdf_text_crosscheck(
+            [
+                {
+                    "source_record_id": "R1EA-PDF-001",
+                    "status": "extracted",
+                    "content_type": "application/pdf",
+                    "artifact_path": "missing.pdf",
+                    "parser_name": "pypdf_text_fallback",
+                }
+            ],
+            {},
+            ROOT,
+        )
+
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["details"]["checked_record_count"], 0)
+        self.assertEqual(result["details"]["skipped_record_count"], 1)
+        self.assertEqual(
+            result["details"]["skipped"],
+            [
+                {
+                    "source_record_id": "R1EA-PDF-001",
+                    "reason": "self_reference_pypdf_fallback",
+                }
+            ],
         )
 
     def test_audit_passes_generated_html_extraction(self) -> None:
@@ -262,6 +291,63 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
             )
             check = _check(result.summary, "direct_document_required_records_use_document_artifacts")
             self.assertFalse(check["passed"])
+
+    def test_committed_verified_admission_contract_audits_active_review_blockers(self) -> None:
+        config = canonical_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run_records(
+                output_dir,
+                records=[
+                    {
+                        "source_record_id": "FED-001",
+                        "artifact_body": _html_body(),
+                        "suffix": ".html",
+                        "content_type": "text/html",
+                    },
+                    {
+                        "source_record_id": "FOR-002",
+                        "artifact_body": (
+                            b"<html><body><h1>Forest Plan Landing Page</h1>"
+                            b"<p>Download the direct file from this wrapper page.</p></body></html>"
+                        ),
+                        "suffix": ".html",
+                        "content_type": "text/html",
+                    },
+                ],
+            )
+            build_review_catalog(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+                source_record_ids={"FED-001", "FOR-002"},
+            )
+            build_extraction(output_dir=output_dir, id_filters={"FED-001", "FOR-002"})
+
+            result = run_extraction_accuracy_audit(
+                output_dir=output_dir,
+                contract_path=VERIFIED_ADMISSION_CONTRACT,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertEqual(
+                result.summary["verified_extraction_admission_contracts"][0]["contract_id"],
+                "canonical-source-register-active-current-admission",
+            )
+            self.assertEqual(
+                result.summary["audited_source_record_ids"],
+                ["FED-001", "FOR-002"],
+            )
+            self.assertEqual(
+                result.summary["knowledge_base_admitted_source_record_ids"],
+                ["FED-001"],
+            )
+            self.assertEqual(
+                result.summary["knowledge_base_blocked_source_record_ids"],
+                ["FOR-002"],
+            )
 
     def test_audit_accepts_zip_metadata_parser_for_direct_file_zip_artifact(self) -> None:
         config = canonical_config()

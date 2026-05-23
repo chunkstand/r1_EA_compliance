@@ -14,7 +14,7 @@ normalized request packet, routes it to the supported document lane, and writes 
 artifacts under `source_library/document_plans/<request_id>/` without generating canonical lane
 outputs.
 
-Current routed state on 2026-05-21:
+Current routed state on 2026-05-22:
 
 - Live local catalog remains `source-set-f775524ab233ff27` in
   `source_library/catalog/source_set_manifest.json` with `source_count=634`,
@@ -29,8 +29,9 @@ Current routed state on 2026-05-21:
   through Milestone 10 Sequence 52: the tracked West Reservoir replay context
   uses repo-relative cached package authority, the stale reviewer-ready replay
   claim stays retired behind an explicit typed-blocked contract for
-  `west-reservoir-67436`, and the remaining live red lane is rerouted into
-  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
+  `west-reservoir-67436`, and the remaining live source-truth rebaseline lane
+  is now rerouted into
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
 - The under-`800` follow-on packet in
   `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` is now fully resolved
   through Milestone `9`: the viewer family was the last oversized owner, the
@@ -40,13 +41,29 @@ Current routed state on 2026-05-21:
   lines, no Python or JS/TS import cycles, no source module above the
   `20`-import fan-out gate, and an empty oversized-file inventory in
   `config/architecture_large_file_inventory_v1.json`.
+- The active source-truth mismatch is now explicit: the live local source set
+  `source-set-f775524ab233ff27` proves `634/634` extracted
+  `Document_Register_Master` rows, and the current worktree now rebaselines
+  verified admission to all `582` `active_review_corpus` rows through
+  `canonical-source-register-active-current-admission`. The refreshed
+  `extraction-accuracy-audit` and `retrieval-build` replays now agree on
+  `verified_extraction_admitted_source_count=559`,
+  `verified_extraction_required_source_count=582`, and an explicit blocked
+  roster of `23` active-current rows (`22` Official USFS source-page wrappers
+  plus `FPS-344` on a Federal Register XML artifact), while `51`
+  `Direct_File_Capture_Queue` rows remain outside the active load-bearing
+  surface and the `52` archive rows still await Milestone `3` lineage closure.
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
   because `compliance-gold-eval` is red on the active full-canonical source set
   `source-set-f775524ab233ff27`; the tracked review-contract lane itself remains
-  green at `2 reviewer_ready + 1 typed_blocked`. The bounded Milestone `7`
-  replay stayed red at `0/14` on the same five still-unmapped live authorities.
-  The active generated diagnostic gold cases now build non-zero rule-claim-link artifacts, while the base
-  `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural surface.
+  green at `2 reviewer_ready + 1 typed_blocked`. That downstream gold packet
+  remains active, but it is no longer the root routed lane while the
+  full-canonical source-truth packet advances to Milestone `2` on the
+  remaining `23` direct-document blockers. The bounded Milestone `7` replay
+  stayed red at `0/14` on the same five still-unmapped live authorities. The
+  active generated diagnostic gold cases now build non-zero rule-claim-link
+  artifacts, while the base `nepa-ea-v0` rule-claim-link summary remains a
+  separate zero-link structural surface.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 

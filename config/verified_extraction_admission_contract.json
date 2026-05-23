@@ -26,8 +26,8 @@
       "require_direct_extraction": true
     },
     {
-      "contract_id": "canonical-source-register-active-review-admission",
-      "description": "Canonical source-register knowledge-base admission currently applies only to active-review rows that are already source_register_v1 governed and not still waiting on manual direct-file export or wrapper-page replacement.",
+      "contract_id": "canonical-source-register-active-current-admission",
+      "description": "Canonical source-register knowledge-base admission currently applies to every source_register_v1 row already classified into the active current-review corpus; direct-document gaps stay in the required roster and must fail closed until governed promotion or exclusion resolves them.",
       "required_record_selectors": [
         {
           "loader_contracts": [
@@ -36,13 +36,7 @@
           "source_partitions": [
             "active_review_corpus"
           ],
-          "artifact_is_proving_placeholder": false,
-          "docling_instructions_not_contains": [
-            "first export/download the direct file",
-            "manual Pinyon/Box export",
-            "manual export",
-            "chapter/handbook PDF/DOC"
-          ]
+          "artifact_is_proving_placeholder": false
         }
       ],
       "require_direct_extraction": true

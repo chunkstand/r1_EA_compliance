@@ -566,6 +566,14 @@ def _check_pdf_text_crosscheck(
                 record.get("artifact_path") or ""
             ).lower().endswith(".pdf"):
                 continue
+            if record.get("parser_name") == "pypdf_text_fallback":
+                skipped.append(
+                    {
+                        "source_record_id": record["source_record_id"],
+                        "reason": "self_reference_pypdf_fallback",
+                    }
+                )
+                continue
             artifact_path = _resolve_artifact_path(output_dir, record.get("artifact_path"))
             if not artifact_path or not artifact_path.exists():
                 skipped.append({"source_record_id": record["source_record_id"], "reason": "missing_pdf"})
@@ -591,7 +599,7 @@ def _check_pdf_text_crosscheck(
             overlap = reference_tokens & extracted_tokens
             recall = len(overlap) / len(reference_tokens)
             precision = len(overlap) / len(extracted_tokens) if extracted_tokens else 0.0
-            threshold = 0.95 if record.get("parser_name") == "pypdf_text_fallback" else 0.55
+            threshold = 0.55
             metric = {
                 "source_record_id": record["source_record_id"],
                 "parser_name": record.get("parser_name"),
