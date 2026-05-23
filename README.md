@@ -105,11 +105,11 @@ Current routed state on 2026-05-23:
   `diagnostics/extraction_accuracy_audit.json`, offline direct-fidelity proof
   in
   `source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`,
-  and capture/catalog umbrella proof in `upstream-eval`. The next routed
-  follow-on is now
-  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`;
-  the exact Milestone `4` closeout hash is synced in the immediately
-  following docs-alignment pass.
+  and capture/catalog umbrella proof in `upstream-eval`. The Milestone `4`
+  closeout landed in commit `abd0e4d`
+  (`Resolve extraction fidelity Milestone 4`). The next routed follow-on is
+  now
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 

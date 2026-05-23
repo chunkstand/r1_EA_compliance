@@ -7,16 +7,48 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Extraction Fidelity Eval Milestone 4 Alignment Pass
+
+This docs-only follow-up pins the real Milestone `4` closeout hash across the
+top routing/docs stack and retires the remaining implementation-only wording.
+
+- outcome label:
+  `aligned locally`; the top routing/docs stack now records the actual
+  Milestone `4` closeout commit and retires the remaining active-looking
+  Milestone `4` follow-up wording plus lower Milestone `3` next-step
+  references as historical for routing
+- closeout commit:
+  `abd0e4d` (`Resolve extraction fidelity Milestone 4`)
+- routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- stale-reference audit:
+  the immediately following `Extraction Fidelity Eval Milestone 4 Resolved
+  Locally` section remains the live closeout summary, but the lower
+  `Milestone 3 Alignment Pass`, `Milestone 3 Resolved Locally`,
+  `Milestone 2 Alignment Pass`, `Milestone 2 Resolved Locally`,
+  `Milestones 0-1 Alignment Pass`, and `Milestones 0-1 Resolved Locally`
+  sections are historical only after `abd0e4d` wherever they still treat the
+  packet as active or still route the next slice to Milestone `4`
+- next routing:
+  the next executable packet is now
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- verification:
+  targeted route grep across `README.md`, `docs/CURRENT_ROUTING.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`, and `git diff --check`
+
 ## Extraction Fidelity Eval Milestone 4 Resolved Locally
 
 This implementation slice closes the final live replay work in
 `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
 
 - outcome label:
-  `implemented locally` for Milestone `4`; the packet now has the live audit,
+  `resolved locally` for Milestone `4`; the packet now has the live audit,
   strengthened upstream route, and full-canonical promotion route rerun
-  green, while the exact closeout hash is synced in the immediately
-  following docs-alignment pass
+  green
+- closeout commit:
+  `abd0e4d` (`Resolve extraction fidelity Milestone 4`)
 - routed packet:
   `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
 - final owner split:

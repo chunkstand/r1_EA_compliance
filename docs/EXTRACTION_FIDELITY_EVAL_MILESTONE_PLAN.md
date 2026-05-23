@@ -2,7 +2,7 @@
 
 Date: 2026-05-23
 
-Status: Implementation complete on 2026-05-23. Milestones `0` through `4`
+Status: Resolved locally on 2026-05-23. Milestones `0` through `4`
 now replay green locally: the live owner split was re-locked from repo
 artifacts only, the repo ships `config/extraction_fidelity_eval_v1.json`,
 `12` governed fidelity families, `24` tracked cases, fixture-backed
@@ -41,8 +41,9 @@ The Milestone `0`/`1` closeout commit is `f2afa8f`
 (`Resolve extraction fidelity Milestones 0-1`), the Milestone `2` closeout
 commit is `16fb8b2` (`Implement extraction fidelity Milestone 2`), the
 Milestone `3` closeout commit is `4269f5e`
-(`Implement extraction fidelity Milestone 3`), and the exact Milestone `4`
-closeout hash is synced in the immediately following docs-alignment pass.
+(`Implement extraction fidelity Milestone 3`), and the Milestone `4`
+closeout commit is `abd0e4d`
+(`Resolve extraction fidelity Milestone 4`).
 
 Owner context: this plan follows
 `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`, which already created
@@ -60,11 +61,12 @@ surfaces:
 - dedicated offline fidelity proof in
   `source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`
 
-What is still missing is the final live closeout pass that proves the
-strengthened upstream/promotion route coexists cleanly with the live
-generated-corpus audit. The repo can already prove difficult extraction cases
-by span, boundary, layout, scope, parser-route, and negative-case
-expectations, and the promotion route now consumes that owner directly.
+The final live closeout pass is now complete: the strengthened
+upstream/promotion route coexists cleanly with the live generated-corpus
+audit, the repo can prove difficult extraction cases by span, boundary,
+layout, scope, parser-route, and negative-case expectations, and promotion
+now consumes that owner directly without reopening the closed source-truth or
+gold packets.
 
 ## Purpose
 
@@ -607,10 +609,10 @@ Closeout update on 2026-05-23:
   `full_canonical_source_set_id=source-set-f775524ab233ff27`,
   `full_canonical_corpus_ready=true`, `current_promotion_ready=true`,
   `expansion_ready=true`, and `promotion_ready=true`.
+- The Milestone `4` closeout commit is `abd0e4d`
+  (`Resolve extraction fidelity Milestone 4`).
 - The next routed owner is now
-  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`;
-  the exact Milestone `4` closeout hash is synced in the immediately
-  following docs-alignment pass.
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
 
 Purpose: prove the new direct-eval owner coexists cleanly with the live
 source-truth and promotion route.
@@ -765,4 +767,4 @@ The final closeout must record:
 - [x] `upstream-eval` and promotion wiring consume the new owner truthfully
 - [x] `README.md`, routing docs, current-state docs, this plan, and handoff are aligned
 - [x] focused tests, lint, eval commands, and `git diff --check` passed
-- [ ] closeout commit hash is recorded in `docs/SESSION_HANDOFF.md`
+- [x] closeout commit hash is recorded in `docs/SESSION_HANDOFF.md`

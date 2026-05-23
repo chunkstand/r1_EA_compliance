@@ -82,6 +82,28 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Extraction Fidelity Eval Milestone 4 Alignment Pass
+
+Latest docs alignment on 2026-05-23:
+
+- Routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+- Outcome label:
+  `aligned locally`; the top docs stack now records the actual Milestone `4`
+  closeout commit and retires the remaining implementation-only wording plus
+  older Milestone `3` next-step references below as historical for routing.
+- Closeout commit:
+  `abd0e4d` (`Resolve extraction fidelity Milestone 4`).
+- Stale-reference audit:
+  the immediately following Milestone `4` closeout section remains the live
+  closeout summary, but the lower Milestone `3`, Milestone `2`, and
+  Milestones `0`/`1` sections are historical only wherever they still treat
+  the extraction-fidelity packet as active or still route the next slice to
+  Milestone `4` after `abd0e4d`.
+- Next routing:
+  the next executable packet is now
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+
 ## Extraction Fidelity Eval Milestone 4 Resolved Locally
 
 Latest implementation update on 2026-05-23:
@@ -89,9 +111,10 @@ Latest implementation update on 2026-05-23:
 - Routed packet:
   `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
 - Outcome label:
-  `implemented locally` for Milestone `4`; the extraction-fidelity packet now
-  has its live closeout replay and owner split verified end to end, while the
-  exact closeout hash is synced in the immediately following alignment pass.
+  `resolved locally` for Milestone `4`; the extraction-fidelity packet is now
+  fully closed locally.
+- Closeout commit:
+  `abd0e4d` (`Resolve extraction fidelity Milestone 4`).
 - Final owner split:
   `extraction_validation.json` remains structural validation,
   `extraction_accuracy_audit.json` remains the live generated-corpus audit,

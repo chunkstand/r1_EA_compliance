@@ -56,7 +56,7 @@ Use this file as the short current route before opening the large append-only do
   `19/19` mapped high-priority families, `3` required review contracts,
   `2` forests, `3` package styles, `2 reviewer_ready + 1 typed_blocked`
   tracked reviews, and zero threshold failures
-- Recent upstream closeout: the extraction-fidelity packet is now implemented
+- Recent upstream closeout: the extraction-fidelity packet is now resolved
   locally through Milestone `4`. The dedicated
   `extraction-fidelity-eval --manifest config/extraction_fidelity_eval_v1.json --output-dir source_library`
   replay remains green with `12` governed families, `24` tracked cases,
@@ -69,9 +69,9 @@ Use this file as the short current route before opening the large append-only do
   archive/currentness rows; the narrowed `upstream-eval` replay stays green
   at `16/16`; and full-canonical `promotion-suite` stays green at `10/10`
   required full-canonical results with
-  `full_canonical_source_set_id=source-set-f775524ab233ff27`. The exact
-  Milestone `4` closeout hash is synced in the immediately following
-  docs-alignment pass.
+  `full_canonical_source_set_id=source-set-f775524ab233ff27`. The Milestone
+  `4` closeout landed in commit `abd0e4d`
+  (`Resolve extraction fidelity Milestone 4`).
 - Next routed follow-on: the source-truth/gold lane remains resolved, but
   `51` `Direct_File_Capture_Queue` rows still remain outside the active
   load-bearing surface by workbook contract. That work is now explicitly
