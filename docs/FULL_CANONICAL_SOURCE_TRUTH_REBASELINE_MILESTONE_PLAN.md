@@ -14,7 +14,9 @@ Federal Register XML source, `9` handbook wrapper rows now admit through live
 National Directives contents PDFs, and the packet remains in Milestone 2
 reduced on the remaining directives-wrapper blockers: `12` FSM/manual wrappers
 plus `USFS-026`, whose live directives listing exposes only a transmittal
-link. The first Milestone 2 reduced local commit remains `806cdf1`
+link. The latest Milestone 2 reduced local commit is `4650837`
+(`Reduce source-truth Milestone 2 handbook wrapper blockers`); the earlier
+Milestone 2 reduced slice remains `806cdf1`
 (`Reduce source-truth Milestone 2 blockers`). Milestone 1 closeout commit:
 `46bff61` (`Resolve source-truth rebaseline Milestone 1`).
 
@@ -338,7 +340,9 @@ Outcome label: `reduced`
 
 Current worktree checkpoint on 2026-05-22:
 
-- The local reduced-slice closeout commit is
+- The latest local reduced-slice closeout commit is
+  `4650837` (`Reduce source-truth Milestone 2 handbook wrapper blockers`).
+- The earlier Milestone 2 reduced slice remains
   `806cdf1` (`Reduce source-truth Milestone 2 blockers`).
 - `FPS-344` is now back in the admitted set as a structured Federal Register
   XML source after the direct-document requirement stopped overfiring on its

@@ -85,6 +85,8 @@ Latest worktree implementation on 2026-05-22:
   National Directives contents PDFs, and the packet remains reduced on the
   `13` direct-document blockers that still lack a governed current document
   path.
+- Closeout commit:
+  `4650837` (`Reduce source-truth Milestone 2 handbook wrapper blockers`).
 - Implementation surfaces:
   `src/usfs_r1_ea_sources/adapters.py`,
   `src/usfs_r1_ea_sources/download.py`,

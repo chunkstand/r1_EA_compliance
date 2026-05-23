@@ -54,7 +54,9 @@ Current routed state on 2026-05-22:
   the remaining blockers are `12` FSM/manual wrapper pages plus `USFS-026`,
   whose current directives entry exposes only a transmittal link rather than a
   live contents page. `FPS-344` remains admitted as a structured Federal
-  Register XML source, while `51`
+  Register XML source. Latest reduced-slice commit:
+  `4650837` (`Reduce source-truth Milestone 2 handbook wrapper blockers`).
+  `51`
   `Direct_File_Capture_Queue` rows remain outside the active load-bearing
   surface and the `52` archive rows still await Milestone `3` lineage closure.
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only

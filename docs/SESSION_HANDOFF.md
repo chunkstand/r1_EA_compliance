@@ -17,6 +17,8 @@ This worktree slice further reduces Milestone `2` in
   rows through live National Directives contents PDFs, and the packet remains
   reduced on the `13` direct-document blockers still lacking a governed current
   document path
+- closeout commit:
+  `4650837` (`Reduce source-truth Milestone 2 handbook wrapper blockers`)
 - implementation surfaces:
   `src/usfs_r1_ea_sources/adapters.py`,
   `src/usfs_r1_ea_sources/download.py`,
