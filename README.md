@@ -16,12 +16,14 @@ outputs.
 
 Current routed state on 2026-05-23:
 
-- Live local catalog remains `source-set-f775524ab233ff27` in
-  `source_library/catalog/source_set_manifest.json` with `source_count=634`,
-  `artifact_count=622`,
-  `source_partition_counts={"active_review_corpus": 581, "currentness_supersession_archive": 53}`,
+- Live local catalog is now `source-set-3f7d4578cafb0704` in
+  `source_library/catalog/source_set_manifest.json` with
+  `download_run_id=queue-m2-full-canonical-merged-download-20260523`,
+  `source_count=638`, `artifact_count=626`,
+  `source_partition_counts={"active_review_corpus": 585, "currentness_supersession_archive": 53}`,
+  `status_counts={"downloaded": 4, "downloaded_existing": 622, "duplicate_content": 12}`,
   and workbook SHA
-  `1e7d7623f9633c37e953d74780c986426514d8a472082f3b95142266556505c8`.
+  `b0e78bb90336a01f73cd7489c109e45260d1a98fc0165f6b713d99311f029e5a`.
 - `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
   catalog, and architecture routing.
 - The current architecture packet in
@@ -41,39 +43,39 @@ Current routed state on 2026-05-23:
   lines, no Python or JS/TS import cycles, no source module above the
   `20`-import fan-out gate, and an empty oversized-file inventory in
   `config/architecture_large_file_inventory_v1.json`.
-- The active source-truth rebaseline packet is now resolved locally: the
-  local source set `source-set-f775524ab233ff27` proves `634/634` extracted
+- The active source-truth rebaseline packet remains historically resolved in
+  commit `93a23b0` (`Resolve source-truth archive boundary rebaseline`), and
+  the direct-file queue follow-on now strengthens that live boundary: the
+  local source set `source-set-3f7d4578cafb0704` proves `638/638` extracted
   `Document_Register_Master` rows, the refreshed `extraction-accuracy-audit`
-  records `581` admitted active-current rows, `0` blocked rows, and `53`
-  explicit non-admitted archive/currentness rows, and the refreshed
-  `retrieval-build` replay agrees with
-  `verified_extraction_admitted_source_count=581`,
-  `verified_extraction_required_source_count=581`,
+  records `585` admitted active-current rows, `0` blocked rows, and `53`
+  explicit non-admitted archive/currentness rows, `authority-currentness`
+  reports `current_authority_source_record_count=585` and
+  `authority_family_count=456`, and the refreshed `retrieval-build` replay
+  agrees with `verified_extraction_admitted_source_count=585`,
+  `verified_extraction_required_source_count=585`,
   `verified_extraction_explicitly_non_admitted_source_count=53`,
   `validation_passed=true`, and `reviewer_ready=true` under
   `canonical-source-register-active-current-admission`. `USFS-026`
   (`FSH 2509.18`) remains governed currentness lineage evidence with
   replacement `USFS-023`, `FPS-344` remains admitted as a structured Federal
-  Register XML source, and `promotion-suite` now reports
+  Register XML source, and `promotion-suite` again reports
   `full_canonical_corpus_ready=true` with `10/10` required full-canonical
-  results passing. This closeout landed in commit `93a23b0`
-  (`Resolve source-truth archive boundary rebaseline`). `51`
-  `Direct_File_Capture_Queue` rows remain outside the active load-bearing
-  surface by workbook contract, and the follow-on owner for those rows is now
-  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
-- The direct-file capture queue packet now closes its baseline and audit gate
-  locally: `config/source_register_queue_resolution_ledger_v1.json` records
-  every `Direct_File_Capture_Queue` row exactly once, the new
-  `source-register-queue-audit` command passes with `49`
-  current/project-applicable rows, `2` governed historical rows
-  (`FPS-380`, `SUP-007`), and planned disposition counts of `37`
-  `promote_direct_file`, `9` `promote_structured_export`, `3`
-  `named_blocker`, and `2` `historical_scope_only`; the next routed slice in
-  that packet is now Milestone `2`.
+  results passing.
+- The direct-file capture queue packet now closes Milestone `2` locally:
+  `config/source_register_queue_resolution_ledger_v1.json` records all `51`
+  queue rows exactly once, `4` are now governed `resolved` promotions
+  (`FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, `PROG-010`),
+  `source-register-queue-audit` now passes with
+  `resolution_status_counts={"planned":47,"resolved":4}`,
+  `unresolved_current_or_project_applicable_count=45`, the same `2`
+  governed historical rows (`FPS-380`, `SUP-007`), and the next routed slice
+  is now Milestone `3` for export-backed families and named blockers.
 - The downstream full-canonical compliance-gold packet is now resolved
-  locally on `source-set-f775524ab233ff27`: refreshed claims now record
-  `claim_count=124458`, `source_record_count=539`, `validation_passed=true`,
-  and `reviewer_ready=true`; default `compliance-gold-eval` now passes
+  historically on pre-queue source set `source-set-f775524ab233ff27`:
+  refreshed claims there record `claim_count=124458`,
+  `source_record_count=539`, `validation_passed=true`, and
+  `reviewer_ready=true`; default `compliance-gold-eval` now passes
   `14/14` adjudicated cases with `status_match_rate=1.0`,
   `source_record_match_rate=1.0`, `source_document_role_match_rate=1.0`,
   `source_claim_link_match_rate=1.0`, and `package_evidence_match_rate=1.0`;
@@ -96,10 +98,9 @@ Current routed state on 2026-05-23:
   `anchor_mismatch_count=13`, `span_mismatch_count=10`,
   `boundary_mismatch_count=4`, and `negative_case_pass_count=12`; the live
   Docling-backed
-  `extraction-accuracy-audit --output-dir source_library` rerun on
-  `source-set-f775524ab233ff27` remains green with
-  `audited_record_count=581`,
-  `knowledge_base_admitted_source_record_ids=581`,
+  `extraction-accuracy-audit --output-dir source_library --source-set-id source-set-3f7d4578cafb0704`
+  rerun is now green with `audited_record_count=585`,
+  `knowledge_base_admitted_source_record_ids=585`,
   `knowledge_base_blocked_source_record_ids=0`, and
   `explicitly_non_admitted_source_record_ids=53`; the narrowed
   `upstream-eval` replay stays green at `required_lane_count=2`,
@@ -107,7 +108,7 @@ Current routed state on 2026-05-23:
   `matched_case_count=16`; and full-canonical `promotion-suite` stays green
   at `passed_required_full_canonical_result_count=10`,
   `required_full_canonical_result_count=10`,
-  `full_canonical_source_set_id=source-set-f775524ab233ff27`,
+  `full_canonical_source_set_id=source-set-3f7d4578cafb0704`,
   `full_canonical_corpus_ready=true`, and `promotion_ready=true`. The final
   owner split remains structural validation in
   `diagnostics/extraction_validation.json`, live generated-corpus truth in
@@ -174,7 +175,7 @@ Active canonical source-register contract:
 
 - Workbook: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
 - Load-bearing table: `Document_Register_Master`
-- Retained load rows: `634`
+- Retained load rows: `638`
 - Deferred queue rows: `51`
 - Removed-not-applicable rows: `3`
 - Direct-media rows reclassified to direct extraction: `29`
@@ -188,6 +189,41 @@ source-delta-required, `1` documented official-source gap), but
 `legacy_v0` config override for baseline comparison work. See
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
 promotion evidence.
+
+Local active import baseline on 2026-05-23 after direct-file queue Milestone 2:
+
+- Active local catalog in `source_library/catalog/` is now full-register
+  source set `source-set-3f7d4578cafb0704`, created from download run
+  `queue-m2-full-canonical-merged-download-20260523`, with
+  `source_count=638`, `artifact_count=626`,
+  `source_partition_counts={"active_review_corpus": 585, "currentness_supersession_archive": 53}`,
+  `status_counts={"downloaded": 4, "downloaded_existing": 622, "duplicate_content": 12}`,
+  and workbook SHA
+  `b0e78bb90336a01f73cd7489c109e45260d1a98fc0165f6b713d99311f029e5a`.
+- Queue Milestone `2` is now reduced locally: workbook promotions
+  `FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, and `PROG-010`
+  land in `Document_Register_Master`; the workbook still preserves all `51`
+  queue rows for audit lineage; and `source-register-queue-audit` now passes
+  with `resolution_status_counts={"planned":47,"resolved":4}` and
+  `unresolved_current_or_project_applicable_count=45`.
+- The strengthened downstream stack on `source-set-3f7d4578cafb0704` is now
+  green where this packet requires it:
+  `extraction-accuracy-audit` admits `585/585` active-current rows with `53`
+  explicit archive/currentness rows; `authority-currentness` reports
+  `authority_family_count=456` and
+  `current_authority_source_record_count=585`; `retrieval-build` is
+  reviewer-ready with `verified_extraction_admitted_source_count=585`;
+  `forest-plan-components-build` remains green at `component_count=1416` and
+  `standard_count=397`; `nepa-knowledge-graph-export` now passes with
+  `catalog_source_record_count=638` and `72` validation checks;
+  `forest-plan-profile-eval` still covers `10` profiles; and
+  `forest-plan-component-retrieval-eval` still passes `6/6`.
+- `promotion-suite --manifest config/promotion_suite_v1.json` now reports
+  `full_canonical_source_set_id=source-set-3f7d4578cafb0704`,
+  `passed_required_full_canonical_result_count=10`,
+  `required_full_canonical_result_count=10`,
+  `full_canonical_corpus_ready=true`, `current_promotion_ready=true`,
+  `expansion_ready=true`, and `promotion_ready=true`.
 
 Local active import baseline on 2026-05-20 after full canonical live source-set promotion Milestone 4:
 

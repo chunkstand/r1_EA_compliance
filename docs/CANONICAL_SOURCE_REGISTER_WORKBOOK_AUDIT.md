@@ -14,7 +14,7 @@ must exist before and after runtime cutover.
 - repo workbook path:
   `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
 - workbook SHA256:
-  `1e7d7623f9633c37e953d74780c986426514d8a472082f3b95142266556505c8`
+  `b0e78bb90336a01f73cd7489c109e45260d1a98fc0165f6b713d99311f029e5a`
 - sheet count: `13`
 - canonical load sheet: `Document_Register_Master`
 - deferred queue sheet: `Direct_File_Capture_Queue`
@@ -34,7 +34,7 @@ Frozen sheet contract and row-state contract live at:
 
 `source-register-validate` on the staged workbook currently proves:
 
-- `634` retained load-ready rows in `Document_Register_Master`
+- `638` retained load-ready rows in `Document_Register_Master`
 - `51` deferred queue rows in `Direct_File_Capture_Queue`
 - `3` removed-not-applicable rows in `Removed_Not_Applicable_Final`
 - `5` `Applicable - stale-source detector only` rows
@@ -43,11 +43,11 @@ Frozen sheet contract and row-state contract live at:
 - zero duplicate `Source_ID` values in the master load table
 - zero duplicate `Source_URL` values in the master load table
 - zero blank or non-HTTP(S) master URLs
-- `634` explicit `EA_System_Applicability_Status` values on retained load rows
+- `638` explicit `EA_System_Applicability_Status` values on retained load rows
 
 The retained master applicability distribution is:
 
-- `238` `Applicable - forest/grassland plan-specific`
+- `241` `Applicable - forest/grassland plan-specific`
 - `207` `Applicable - species/ESA/wildlife trigger`
 - `50` `Applicable - land exchange trigger`
 - `31` `Applicable - federal resource/trigger authority`
@@ -58,7 +58,7 @@ The retained master applicability distribution is:
 - `6` `Applicable - core federal EA authority`
 - `5` `Applicable - stale-source detector only`
 - `2` `Applicable - USFS resource directive`
-- `1` `Applicable - programmatic/tiering or consultation source`
+- `2` `Applicable - programmatic/tiering or consultation source`
 
 The deferred queue is governed, not incidental. The dominant queue classes are:
 
@@ -73,8 +73,9 @@ The queue baseline is now also tracked in
 `source-register-queue-audit` command currently proves:
 
 - all `51` queue `Source_ID` values appear exactly once in the ledger
-- `49` queue rows remain current/project-applicable and unresolved
+- `45` queue rows remain current/project-applicable and unresolved
 - `2` queue rows (`FPS-380`, `SUP-007`) are governed historical/noncurrent
+- queue resolution statuses are now `47` `planned` and `4` `resolved`
 - planned disposition counts are `37` `promote_direct_file`, `9`
   `promote_structured_export`, `3` `named_blocker`, and `2`
   `historical_scope_only`
@@ -89,13 +90,13 @@ The queue baseline is now also tracked in
 - documented official-source gaps: `1`
 - legacy runtime unique source rows after workbook plus source-delta merge:
   `350`
-- canonical retained master rows: `634`
+- canonical retained master rows: `638`
 - canonical deferred queue rows: `51`
 - canonical removed rows: `3`
 - canonical shared `Source_ID` values with the legacy workbook: `0`
 - canonical shared `Source_ID` values with the promoted source-delta register:
   `0`
-- canonical-only retained master rows: `634`
+- canonical-only retained master rows: `638`
 - legacy-only runtime rows: `350`
 
 This is therefore a source-contract replacement, not an incremental merge of

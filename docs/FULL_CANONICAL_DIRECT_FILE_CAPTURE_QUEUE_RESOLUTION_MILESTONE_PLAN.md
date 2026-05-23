@@ -1,25 +1,42 @@
 # Full Canonical Direct-File Capture Queue Resolution Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet (`Milestones 0-1 resolved locally; Milestone 2 next`)
+Status: Active packet (`Milestones 0-2 resolved locally; Milestone 3 next`)
 Owner context: follow-on from the resolved full-canonical source-truth and compliance-gold
 rebaseline packets
 
 ## Latest Local Implementation
 
-Milestones `0` and `1` are now resolved locally.
+Milestones `0`, `1`, and `2` are now resolved locally.
 
 - `config/source_register_queue_resolution_ledger_v1.json` now enumerates all
   `51` queue rows exactly once with `49` current/project-applicable rows, `2`
-  historical/noncurrent rows (`FPS-380`, `SUP-007`), and planned disposition
+  historical/noncurrent rows (`FPS-380`, `SUP-007`), planned disposition
   counts of `37` `promote_direct_file`, `9`
   `promote_structured_export`, `3` `named_blocker`, and `2`
-  `historical_scope_only`.
+  `historical_scope_only`, plus resolution status counts of `47` `planned`
+  and `4` `resolved`.
+- The low-complexity direct-file family now promotes
+  `FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, and `PROG-010`
+  into `Document_Register_Master`, raising the active full-canonical catalog
+  to `source-set-3f7d4578cafb0704` with `source_count=638`,
+  `artifact_count=626`,
+  `source_partition_counts={"active_review_corpus":585,"currentness_supersession_archive":53}`,
+  and `status_counts={"downloaded":4,"downloaded_existing":622,"duplicate_content":12}`.
 - `source-register-queue-audit` now provides the machine-checked gate for the
   queue packet and passes with zero missing, unexpected, duplicated, or
-  drifted rows.
-- The next routed slice is now Milestone `2` for low-complexity direct-file
-  promotion families.
+  drifted rows, `unresolved_current_or_project_applicable_count=45`, and the
+  same governed historical roster.
+- The refreshed downstream stack is green on the strengthened source set:
+  `extraction-accuracy-audit` now admits `585/585` active-current rows with
+  `53` explicit archive/currentness rows, `authority-currentness` now reports
+  `current_authority_source_record_count=585` and
+  `authority_family_count=456`, `retrieval-build` is
+  `validation_passed=true` and `reviewer_ready=true`, and
+  `promotion-suite` again reports `10/10` required full-canonical results
+  passing.
+- The next routed slice is now Milestone `3` for export-backed families and
+  named blockers.
 
 ## Purpose
 
@@ -36,11 +53,15 @@ the already-resolved `581/581` active-current admission lane:
 
 ## Current Evidence
 
-- `docs/CURRENT_ROUTING.md` now records the active source-truth lane as resolved locally on
-  `source-set-f775524ab233ff27`, with `581/581` `active_review_corpus` rows admitted and `53`
-  explicit archive/currentness rows outside verified admission.
-- The same routing file also records that `51` `Direct_File_Capture_Queue` rows still remain
-  outside the active load-bearing surface by workbook contract.
+- `docs/CURRENT_ROUTING.md` now records the strengthened active source-truth
+  lane on `source-set-3f7d4578cafb0704`, with `585/585`
+  `active_review_corpus` rows admitted, `53` explicit archive/currentness
+  rows outside verified admission, and `10/10` required full-canonical
+  promotion-suite results passing.
+- The same routing file also records that the workbook still carries `51`
+  `Direct_File_Capture_Queue` rows by contract, but `4` of them now have
+  governed `resolved` promotions and only `45` current/project-applicable
+  rows remain unresolved.
 - `config/source_register_sheet_contract_v1.json` defines `Document_Register_Master` as the only
   load-bearing sheet and `Direct_File_Capture_Queue` as a deferred queue with `emits_load_rows=false`.
 - `config/source_register_row_states_v1.json` defines queue rows as
@@ -54,9 +75,11 @@ the already-resolved `581/581` active-current admission lane:
   `src/usfs_r1_ea_sources/source_register_proving.py` already exercise five representative queue
   rows in the Phase 1.5 proving slice, so queue resolution can start from an existing governed test
   boundary instead of a blind bulk edit.
-- Live workbook census on 2026-05-23 shows:
+- Live workbook census on 2026-05-23 now shows:
   - `51` queue rows total;
-  - `49` rows that still look current or project-applicable;
+  - `49` rows that still classify as current or project-applicable;
+  - `4` rows already resolved by Milestone `2` promotion;
+  - `45` current/project-applicable rows still unresolved;
   - `2` explicitly historical/noncurrent rows: `FPS-380` and `SUP-007`;
   - dominant queue reasons:
     - `21` `Folder/listing/manual-export placeholder`;
@@ -419,9 +442,9 @@ PYTHONPATH=src .venv/bin/python -m ruff check src tests
 If a milestone promotes queue rows into the active corpus:
 
 ```bash
-PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library
-PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-f775524ab233ff27
-PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f775524ab233ff27
+PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-3f7d4578cafb0704
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-3f7d4578cafb0704
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-3f7d4578cafb0704
 PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json
 ```
 

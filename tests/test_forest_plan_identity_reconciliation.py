@@ -247,7 +247,7 @@ def test_committed_registry_tracks_current_identity_gap() -> None:
     registry = _read_json(COMMITTED_REGISTRY)
 
     assert registry["schema_version"] == FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION
-    assert registry["active_source_set_id"] == "source-set-f775524ab233ff27"
+    assert registry["active_source_set_id"] == "source-set-3f7d4578cafb0704"
     assert registry["referenced_legacy_source_record_count"] == 99
     assert registry["exact_url_matched_source_record_count"] == 74
     assert registry["governed_catalog_rebound_source_record_count"] == 1
@@ -434,7 +434,7 @@ def test_committed_manifest_and_readiness_reduce_identity_mix_to_canonical_plus_
     assert manifest["identity_reconciliation"] == {
         "registry_path": "config/r1_forest_plan_identity_reconciliation_v1.json",
         "registry_schema_version": FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION,
-        "registry_active_source_set_id": "source-set-f775524ab233ff27",
+        "registry_active_source_set_id": "source-set-3f7d4578cafb0704",
         "exact_url_rebound_source_record_count": 74,
         "governed_catalog_rebound_source_record_count": 1,
         "remaining_unresolved_source_record_count": 24,

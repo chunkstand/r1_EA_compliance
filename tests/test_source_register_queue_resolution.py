@@ -25,13 +25,14 @@ def test_queue_disposition_audit_matches_milestone0_baseline() -> None:
     assert result["current_or_project_applicable_count"] == 49
     assert result["historical_noncurrent_count"] == 2
     assert result["historical_noncurrent_source_ids"] == ["FPS-380", "SUP-007"]
-    assert result["unresolved_current_or_project_applicable_count"] == 49
+    assert result["unresolved_current_or_project_applicable_count"] == 45
     assert result["planned_disposition_counts"] == {
         "historical_scope_only": 2,
         "named_blocker": 3,
         "promote_direct_file": 37,
         "promote_structured_export": 9,
     }
+    assert result["resolution_status_counts"] == {"planned": 47, "resolved": 4}
 
 
 def test_queue_disposition_audit_fails_when_queue_row_missing_from_ledger() -> None:

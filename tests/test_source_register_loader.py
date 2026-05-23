@@ -34,7 +34,7 @@ def test_source_register_loader_dispatch_returns_workbook_source_compatibility_r
 
     sources = load_canonical_sources(CANONICAL_WORKBOOK, workbook_config)
 
-    assert len(sources) == 634
+    assert len(sources) == 638
     assert all(source.sheet == "Document_Register_Master" for source in sources)
     assert all(source.metadata["loader_contract"] == SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT for source in sources)
     assert all(source.metadata["row_state"] == "load_ready_master_row" for source in sources)
@@ -111,6 +111,10 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     tribal_row = rows["USDA-011"]
     assert tribal_row.parser_admission_class == "direct_document"
     assert tribal_row.expected_parser == "pdf"
+
+    nwcg_row = rows["PROG-010"]
+    assert nwcg_row.parser_admission_class == "direct_document"
+    assert nwcg_row.expected_parser == "pdf"
 
     nondiscrimination_row = rows["USDA-012"]
     assert nondiscrimination_row.parser_admission_class == "structured_web_source"

@@ -24,7 +24,7 @@ outside the active verified-admission roster, the refreshed
 `replacement_source_confirmed` rows, `retrieval-build` records
 `verified_extraction_explicitly_non_admitted_source_count=53`, and the
 refreshed `promotion-suite` again reports
-`full_canonical_corpus_ready=true` with `9/9` required full-canonical
+`full_canonical_corpus_ready=true` with `10/10` required full-canonical
 results passing. The downstream compliance-gold rebaseline is now also
 resolved locally, and the refreshed default `promotion-suite` now reports
 `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
@@ -46,6 +46,13 @@ blockers`); the earlier Milestone 2 reduced handbook slice remains `4650837`
 earlier Milestone 2 reduced slice remains `806cdf1` (`Reduce source-truth
 Milestone 2 blockers`). Milestone 1 closeout commit: `46bff61` (`Resolve
 source-truth rebaseline Milestone 1`).
+
+Successor note: the queue Milestone `2` follow-on now promotes four direct-file
+queue rows into live full-canonical source set `source-set-3f7d4578cafb0704`,
+raising the active catalog to `638` extracted rows and `585` admitted
+active-current rows while keeping the same `53` explicit archive/currentness
+rows. Older `634/581` references below remain the historical closeout baseline
+for commit `93a23b0` unless a later bullet explicitly updates them.
 
 Owner context: on 2026-05-22 the governing intent was clarified: the newest imported source set
 must fully replace the older source set as the canonical source of truth for this repository's
@@ -124,18 +131,21 @@ truth instead of the older `343`-row active-review subset.
   servicewide transmittal removes the handbook from the directive system and
   incorporates the direction into `FSM 2550`, so the row is now retained only
   as governed currentness lineage evidence with replacement `USFS-023`.
-- `README.md`, `AGENTS.md`, and the current workbook contract still define
-  `Document_Register_Master=634` as the active load-bearing table while
+- `README.md`, `AGENTS.md`, and the current workbook contract now define
+  `Document_Register_Master=638` as the active load-bearing table while
   `Direct_File_Capture_Queue=51` remains a deferred non-load surface.
-- Workbook queue census on 2026-05-22 shows all `51` `Direct_File_Capture_Queue` rows still carry
-  `Database_Load="No - direct file capture queue only"`; `49` look current or project-applicable,
-  while `2` are explicitly historical/noncurrent (`FPS-380` and `SUP-007`).
+- Workbook queue census on 2026-05-23 still shows all `51`
+  `Direct_File_Capture_Queue` rows preserved for audit lineage; `49` classify
+  as current or project-applicable, `4` are now governed `resolved`
+  promotions, `45` current/project-applicable rows remain unresolved, and `2`
+  are explicitly historical/noncurrent (`FPS-380` and `SUP-007`).
 - `config/direct_file_readiness_contract_v1.json` still records queue status `phase0_freeze` and
   defines queue rows as non-load until direct-file promotion or explicit exclusion.
 - `config/source_register_queue_resolution_ledger_v1.json` and
   `source-register-queue-audit` now lock the queue roster to a governed
-  Milestone `0`/`1` baseline with `49` unresolved current/project-applicable
-  rows and `2` governed historical rows; no queue row has been promoted yet.
+  Milestone `2` state with `resolution_status_counts={"planned":47,"resolved":4}`,
+  `unresolved_current_or_project_applicable_count=45`, and the same `2`
+  governed historical rows.
 - `tests/test_extraction_accuracy.py` already proves the fail-closed negative case:
   wrapper pages are not admissible when a row requires a direct document artifact.
 - The downstream packet

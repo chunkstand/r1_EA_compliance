@@ -3,7 +3,7 @@
   "id": "post-v1-region1-ea-promotion-suite",
   "label": "Post-V1 Region 1 EA promotion suite",
   "source_set_id": "source-set-ba8d0feae79501b8",
-  "full_canonical_source_set_id": "source-set-f775524ab233ff27",
+  "full_canonical_source_set_id": "source-set-3f7d4578cafb0704",
   "rule_pack_path": "config/compliance_rule_pack_nepa_ea_v0.json",
   "rule_pack_id": "nepa-ea-v0",
   "rule_pack_version": "0.4.0",
@@ -1537,12 +1537,12 @@
         {
           "name": "full_canonical_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-f775524ab233ff27"
+          "equals": "source-set-3f7d4578cafb0704"
         },
         {
           "name": "full_canonical_download_run_id_matches",
           "json_path": "download_run_id",
-          "equals": "phase2-canonical-download-full-post-fps005-removal-20260519"
+          "equals": "queue-m2-full-canonical-merged-download-20260523"
         },
         {
           "name": "full_canonical_download_batch_run_ids",
@@ -1552,17 +1552,17 @@
         {
           "name": "full_canonical_source_count",
           "json_path": "source_count",
-          "equals": 634
+          "equals": 638
         },
         {
           "name": "full_canonical_artifact_count",
           "json_path": "artifact_count",
-          "equals": 622
+          "equals": 626
         },
         {
           "name": "full_canonical_active_review_corpus_count",
           "json_path": "source_partition_counts.active_review_corpus",
-          "equals": 581
+          "equals": 585
         },
         {
           "name": "full_canonical_currentness_supersession_archive_count",
@@ -1572,7 +1572,7 @@
         {
           "name": "full_canonical_downloaded_existing_count",
           "json_path": "status_counts.downloaded_existing",
-          "equals": 620
+          "equals": 622
         },
         {
           "name": "full_canonical_duplicate_content_count",
@@ -1597,7 +1597,7 @@
         {
           "name": "full_canonical_catalog_validation_source_set",
           "json_path": "source_set_id",
-          "equals": "source-set-f775524ab233ff27"
+          "equals": "source-set-3f7d4578cafb0704"
         }
       ]
     },
@@ -1617,7 +1617,7 @@
         {
           "name": "full_canonical_authority_currentness_source_set",
           "json_path": "source_set_id",
-          "equals": "source-set-f775524ab233ff27",
+          "equals": "source-set-3f7d4578cafb0704",
           "failure_category": "graph_stale_artifact"
         },
         {
@@ -1628,7 +1628,7 @@
         {
           "name": "full_canonical_authority_currentness_active_review_corpus_count",
           "json_path": "summary.catalog_source_partition_counts.active_review_corpus",
-          "equals": 581
+          "equals": 585
         },
         {
           "name": "full_canonical_authority_currentness_currentness_supersession_archive_count",
@@ -1648,7 +1648,7 @@
         {
           "name": "full_canonical_authority_currentness_current_authority_source_count",
           "json_path": "summary.current_authority_source_record_count",
-          "equals": 581
+          "equals": 585
         }
       ]
     },
@@ -1663,7 +1663,7 @@
         {
           "name": "full_canonical_verified_admission_boundary_source_set",
           "json_path": "source_set_id",
-          "equals": "source-set-f775524ab233ff27"
+          "equals": "source-set-3f7d4578cafb0704"
         },
         {
           "name": "full_canonical_verified_admission_boundary_contract_ids",
@@ -1675,12 +1675,12 @@
         {
           "name": "full_canonical_verified_admission_required_source_count",
           "json_path": "verified_extraction_required_source_count",
-          "equals": 581
+          "equals": 585
         },
         {
           "name": "full_canonical_verified_admission_admitted_source_count",
           "json_path": "verified_extraction_admitted_source_count",
-          "equals": 581
+          "equals": 585
         },
         {
           "name": "full_canonical_verified_admission_explicitly_non_admitted_source_count",
@@ -1735,13 +1735,13 @@
         {
           "name": "full_canonical_source_set_graph_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-f775524ab233ff27",
+          "equals": "source-set-3f7d4578cafb0704",
           "failure_category": "graph_stale_artifact"
         },
         {
           "name": "full_canonical_source_set_graph_catalog_source_record_count",
           "json_path": "catalog_source_record_count",
-          "equals": 634,
+          "equals": 638,
           "failure_category": "graph_missing_source_record"
         },
         {
@@ -1801,7 +1801,7 @@
           "name": "full_canonical_forest_plan_profile_eval_source_set_matches",
           "json_path": "active_source_set_ids",
           "equals": [
-            "source-set-f775524ab233ff27"
+            "source-set-3f7d4578cafb0704"
           ],
           "failure_category": "stale_artifact"
         },
@@ -1854,14 +1854,14 @@
         {
           "name": "full_canonical_forest_plan_component_retrieval_eval_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-f775524ab233ff27",
+          "equals": "source-set-3f7d4578cafb0704",
           "failure_category": "stale_artifact"
         },
         {
           "name": "full_canonical_forest_plan_component_retrieval_eval_active_source_set_matches",
           "json_path": "expected_active_source_set_ids",
           "equals": [
-            "source-set-f775524ab233ff27"
+            "source-set-3f7d4578cafb0704"
           ],
           "failure_category": "stale_artifact"
         },

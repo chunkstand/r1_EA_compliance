@@ -82,6 +82,86 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Full Canonical Direct-File Queue Milestone 2 Reduced Locally
+
+Latest implementation update on 2026-05-23:
+
+- Routed packet:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced locally` for Milestone `2`; the low-complexity direct-file
+  promotion slice is now closed locally, and the next routed slice is
+  Milestone `3`.
+- Promoted workbook rows:
+  `FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, and `PROG-010`
+  are now promoted into `Document_Register_Master` with governed direct-file
+  capture rather than remaining queue-only placeholders.
+- Workbook and queue truth:
+  `source-register-diff` now records `canonical_master_row_count=638`,
+  `canonical_only_source_count=638`, `canonical_queue_row_count=51`, and
+  workbook SHA
+  `b0e78bb90336a01f73cd7489c109e45260d1a98fc0165f6b713d99311f029e5a`;
+  `source-register-queue-audit` now passes with
+  `resolution_status_counts={"planned":47,"resolved":4}`,
+  `unresolved_current_or_project_applicable_count=45`, and the same `2`
+  governed historical/noncurrent rows (`FPS-380`, `SUP-007`).
+- Active full-canonical catalog truth:
+  `catalog-build` now promotes the live catalog to
+  `source-set-3f7d4578cafb0704` with download run
+  `queue-m2-full-canonical-merged-download-20260523`,
+  `source_count=638`, `artifact_count=626`,
+  `source_partition_counts={"active_review_corpus":585,"currentness_supersession_archive":53}`,
+  `status_counts={"downloaded":4,"downloaded_existing":622,"duplicate_content":12}`,
+  and the same workbook SHA as above.
+- Downstream revalidation truth:
+  `extraction-accuracy-audit --source-set-id source-set-3f7d4578cafb0704`
+  is green with `knowledge_base_admitted_source_record_ids=585`,
+  `knowledge_base_blocked_source_record_ids=0`, and
+  `explicitly_non_admitted_source_record_ids=53`;
+  `authority-currentness --source-set-id source-set-3f7d4578cafb0704` is
+  green with `authority_family_count=456`,
+  `current_authority_source_record_count=585`,
+  `source_currentness_counts={"confirmed_from_catalog":585,"currentness_archive_only":47,"replacement_source_confirmed":6}`;
+  `retrieval-build --source-set-id source-set-3f7d4578cafb0704` is
+  `validation_passed=true` and `reviewer_ready=true` with
+  `verified_extraction_required_source_count=585`,
+  `verified_extraction_admitted_source_count=585`, and
+  `verified_extraction_explicitly_non_admitted_source_count=53`;
+  `forest-plan-components-build` is green with `component_count=1416` and
+  `standard_count=397`;
+  `nepa-knowledge-graph-export` is green with
+  `catalog_source_record_count=638`, `validation_check_count=72`, and
+  `failed_validation_check_count=0`;
+  `forest-plan-profile-eval` is green with `covered_profile_count=10`;
+  `forest-plan-component-retrieval-eval` is green with `6/6` cases passed;
+  and `promotion-suite --manifest config/promotion_suite_v1.json` again
+  reports `full_canonical_source_set_id=source-set-3f7d4578cafb0704`,
+  `passed_required_full_canonical_result_count=10`,
+  `required_full_canonical_result_count=10`,
+  `full_canonical_corpus_ready=true`, `current_promotion_ready=true`,
+  `expansion_ready=true`, and `promotion_ready=true`.
+- Residual truth:
+  the ad hoc full-canonical
+  `phase-eval --source-set-id source-set-3f7d4578cafb0704` replay still
+  lacks extraction, retrieval, claim-extraction, and rule-claim direct-eval
+  coverage on the strengthened full-canonical source set and therefore
+  remains outside this Milestone `2` acceptance boundary.
+- Next routing:
+  execute Milestone `3` in
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  for export-backed families and named blockers.
+- Verification:
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-3f7d4578cafb0704`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-3f7d4578cafb0704`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-3f7d4578cafb0704`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-3f7d4578cafb0704 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-3f7d4578cafb0704`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-profile-eval --output-dir source_library --manifest config/region1_forest_plan_profile_eval_coverage_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-component-retrieval-eval --output-dir source_library --manifest config/forest_plan_component_retrieval_eval_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  and
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_source_register_queue_resolution.py tests/test_dry_run.py tests/test_preflight.py tests/test_catalog.py tests/test_phase_eval_direct_eval_contracts.py tests/test_forest_plan_profile_eval_contracts.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_identity_reconciliation.py tests/test_phase_eval.py tests/test_promotion_suite_full_canonical.py tests/test_architecture_contract.py -q`.
+
 ## Full Canonical Direct-File Queue Milestones 0-1 Resolved Locally
 
 Latest implementation update on 2026-05-23:

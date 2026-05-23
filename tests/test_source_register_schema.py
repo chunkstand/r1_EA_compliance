@@ -23,7 +23,7 @@ class SourceRegisterSchemaTests(unittest.TestCase):
 
         self.assertTrue(result["validation_passed"])
         self.assertEqual(result["sheet_count"], 13)
-        self.assertEqual(result["load_row_count"], 634)
+        self.assertEqual(result["load_row_count"], 638)
         self.assertEqual(result["queue_row_count"], 51)
         self.assertEqual(result["removed_row_count"], 3)
         self.assertEqual(result["stale_source_detector_count"], 5)
@@ -75,13 +75,13 @@ class SourceRegisterSchemaTests(unittest.TestCase):
         self.assertEqual(result["legacy_register_source_delta_count"], 160)
         self.assertEqual(result["legacy_register_gap_count"], 1)
         self.assertEqual(result["legacy_runtime_unique_source_count"], 350)
-        self.assertEqual(result["canonical_master_row_count"], 634)
+        self.assertEqual(result["canonical_master_row_count"], 638)
         self.assertEqual(result["canonical_queue_row_count"], 51)
         self.assertEqual(result["canonical_removed_row_count"], 3)
         self.assertEqual(result["canonical_stale_source_detector_count"], 5)
         self.assertEqual(result["canonical_shared_with_legacy_workbook_count"], 0)
         self.assertEqual(result["canonical_shared_with_source_delta_count"], 0)
-        self.assertEqual(result["canonical_only_source_count"], 634)
+        self.assertEqual(result["canonical_only_source_count"], 638)
         self.assertEqual(result["legacy_only_source_count"], 350)
         self.assertEqual(result["canonical_only_source_ids_sample"][0], "FED-001")
         self.assertEqual(result["legacy_only_source_ids_sample"][0], "R1EA-001")
@@ -132,8 +132,12 @@ class SourceRegisterSchemaTests(unittest.TestCase):
             "FED-043": "https://www.archives.gov/federal-register/codification/executive-order/11990.html",
             "FED-029": "https://uscode.house.gov/view.xhtml?path=/prelim@title16/chapter5A&edition=prelim",
             "FPS-117": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/custergallatin/CNF%20FPAdjustment%20001.pdf",
+            "FINAL-Q-HLC-001": "https://www.fs.usda.gov/sites/nfs/files/r01/helena-lewisclark/publication/V3%20Maps%20EIS%202021%20Forest%20Plan.pdf",
+            "FINAL-Q-HLC-002": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/helena-lewisclark/Volume%204%20-%20HLCNF%20Plan.pdf",
+            "FINAL-Q-HLC-003": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/helena-lewisclark/Volume%205%20-%20HLCNF%20Plan.pdf",
             "FPS-344": "https://www.federalregister.gov/d/2024-30342",
             "PROG-008": "https://www.fs.usda.gov/naturalresources/watershed/pubs/FS_National_Core_BMPs_April2012.pdf",
+            "PROG-010": "https://fs-prod-nwcg.s3.us-gov-west-1.amazonaws.com/s3fs-public/publication/pms484.pdf",
             "STP-015": "https://www.deq.idaho.gov/water-quality/surface-water/total-maximum-daily-loads/",
             "STP-011": "https://idfg.idaho.gov/species/",
             "USDA-008": "https://www.fs.usda.gov/im/directives/",

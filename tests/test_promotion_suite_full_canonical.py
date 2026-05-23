@@ -31,14 +31,14 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         FULL_CANONICAL_DOWNLOAD_RUN_ID
     )
     assert active_catalog_checks["full_canonical_download_batch_run_ids"]["equals"] == []
-    assert active_catalog_checks["full_canonical_source_count"]["equals"] == 634
-    assert active_catalog_checks["full_canonical_artifact_count"]["equals"] == 622
-    assert active_catalog_checks["full_canonical_active_review_corpus_count"]["equals"] == 581
+    assert active_catalog_checks["full_canonical_source_count"]["equals"] == 638
+    assert active_catalog_checks["full_canonical_artifact_count"]["equals"] == 626
+    assert active_catalog_checks["full_canonical_active_review_corpus_count"]["equals"] == 585
     assert (
         active_catalog_checks["full_canonical_currentness_supersession_archive_count"]["equals"]
         == 53
     )
-    assert active_catalog_checks["full_canonical_downloaded_existing_count"]["equals"] == 620
+    assert active_catalog_checks["full_canonical_downloaded_existing_count"]["equals"] == 622
     assert active_catalog_checks["full_canonical_duplicate_content_count"]["equals"] == 12
 
     active_validation = suite_results["full_canonical_catalog_validation"]
@@ -79,7 +79,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         currentness_checks[
             "full_canonical_authority_currentness_active_review_corpus_count"
         ]["equals"]
-        == 581
+        == 585
     )
     assert (
         currentness_checks[
@@ -101,7 +101,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         currentness_checks[
             "full_canonical_authority_currentness_current_authority_source_count"
         ]["equals"]
-        == 581
+        == 585
     )
 
     full_canonical_verified_admission = suite_results[
@@ -132,13 +132,13 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         verified_admission_checks["full_canonical_verified_admission_required_source_count"][
             "equals"
         ]
-        == 581
+        == 585
     )
     assert (
         verified_admission_checks["full_canonical_verified_admission_admitted_source_count"][
             "equals"
         ]
-        == 581
+        == 585
     )
     assert (
         verified_admission_checks[
@@ -195,7 +195,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         full_graph_summary_checks[
             "full_canonical_source_set_graph_catalog_source_record_count"
         ]["equals"]
-        == 634
+        == 638
     )
     assert (
         full_graph_summary_checks["full_canonical_source_set_graph_validation_checks"][
