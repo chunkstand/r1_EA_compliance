@@ -108,11 +108,13 @@ Latest implementation update on 2026-05-23:
   stays green at `passed_required_full_canonical_result_count=10`,
   `required_full_canonical_result_count=10`,
   `full_canonical_corpus_ready=true`, and `current_promotion_ready=true`.
+- Closeout commit:
+  `4269f5e` (`Implement extraction fidelity Milestone 3`).
 - Stale-reference audit:
   the immediately following Milestone `2` alignment and Milestone `2`
   closeout sections remain historical context only wherever they still route
   the packet to Milestone `3` or still cite the older `9/9` full-canonical
-  baseline.
+  baseline after `4269f5e`.
 - Next routing:
   execute Milestone `4` in
   `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md` to rerun the live

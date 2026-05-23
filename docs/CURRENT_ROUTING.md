@@ -66,8 +66,10 @@ Use this file as the short current route before opening the large append-only do
   `required_category_count=8`, `case_count=16`, and
   `matched_case_count=16`, and full-canonical `promotion-suite` now requires
   the dedicated extraction-fidelity artifact directly, raising the live
-  full-canonical baseline to `10/10` required results passing. The current
-  green replay still records `matched_case_count=24`,
+  full-canonical baseline to `10/10` required results passing. The Milestone
+  `3` closeout landed in commit `4269f5e`
+  (`Implement extraction fidelity Milestone 3`). The current green replay
+  still records `matched_case_count=24`,
   `parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
   `span_mismatch_count=10`, `boundary_mismatch_count=4`, and
   `negative_case_pass_count=12`, while the live `extraction-accuracy-audit`

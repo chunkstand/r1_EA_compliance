@@ -26,7 +26,9 @@ has one remaining slice: rerun the strengthened route against the live audit
 and finish closeout/alignment. The Milestone `0`/`1` closeout commit is
 `f2afa8f` (`Resolve extraction fidelity Milestones 0-1`), and the Milestone
 `2` closeout commit is `16fb8b2`
-(`Implement extraction fidelity Milestone 2`).
+(`Implement extraction fidelity Milestone 2`). The Milestone `3` closeout
+commit is `4269f5e`
+(`Implement extraction fidelity Milestone 3`).
 
 Owner context: this plan follows
 `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`, which already created
@@ -553,6 +555,8 @@ Milestone 3 closeout note on 2026-05-23:
   directly as a full-canonical result and stays green at
   `passed_required_full_canonical_result_count=10`,
   `required_full_canonical_result_count=10`.
+- The Milestone `3` closeout commit is `4269f5e`
+  (`Implement extraction fidelity Milestone 3`).
 - The owner split is now explicit:
   `extraction_validation.json` = structural validation,
   `extraction_accuracy_audit.json` = live generated-corpus truth,
@@ -719,4 +723,4 @@ The final closeout must record:
 - [x] `upstream-eval` and promotion wiring consume the new owner truthfully
 - [x] `README.md`, routing docs, current-state docs, this plan, and handoff are aligned
 - [x] focused tests, lint, eval commands, and `git diff --check` passed
-- [ ] closeout commit hash is recorded in `docs/SESSION_HANDOFF.md`
+- [x] closeout commit hash is recorded in `docs/SESSION_HANDOFF.md`

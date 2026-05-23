@@ -36,10 +36,13 @@ This implementation slice closes Milestone `3` in
   green at `passed_required_full_canonical_result_count=10`,
   `required_full_canonical_result_count=10`,
   `full_canonical_corpus_ready=true`, and `current_promotion_ready=true`
+- closeout commit:
+  `4269f5e` (`Implement extraction fidelity Milestone 3`)
 - stale-reference audit:
   the immediately following Milestone `2` alignment and Milestone `2`
   resolved sections are historical only wherever they still route the packet
   to Milestone `3` or still cite the older `9/9` full-canonical baseline
+  after `4269f5e`
 - next routing:
   execute Milestone `4` in
   `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md` to rerun the live

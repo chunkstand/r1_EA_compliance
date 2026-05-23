@@ -90,8 +90,10 @@ Current routed state on 2026-05-23:
   `matched_case_count=16`, and full-canonical `promotion-suite` now requires
   `source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`
   directly, raising the live full-canonical baseline to `10/10` required
-  results passing. The current green extraction-fidelity replay still records
-  `12` governed families, `24` cases, `matched_case_count=24`,
+  results passing. The Milestone `3` closeout landed in commit `4269f5e`
+  (`Implement extraction fidelity Milestone 3`). The current green
+  extraction-fidelity replay still records `12` governed families, `24`
+  cases, `matched_case_count=24`,
   `parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
   `span_mismatch_count=10`, `boundary_mismatch_count=4`, and
   `negative_case_pass_count=12`, while the live full-canonical
