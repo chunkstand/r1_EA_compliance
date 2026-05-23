@@ -31,6 +31,7 @@ from .extract_docling_support import _resolve_external_docling_python
 from .extract_markup_support import _extract_docx
 from .extract_markup_support import _extract_html
 from .extract_markup_support import _extract_plain_text
+from .extract_markup_support import _extract_xlsx
 from .extract_markup_support import _extract_xml
 from .extract_markup_support import _extract_zip
 from .extract_markup_support import _find_xml_scope_element
@@ -57,6 +58,7 @@ __all__ = [
     "_extract_html",
     "_extract_pdf",
     "_extract_plain_text",
+    "_extract_xlsx",
     "_extract_row",
     "_extract_xml",
     "_extract_zip",

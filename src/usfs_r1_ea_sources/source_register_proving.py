@@ -712,6 +712,7 @@ def _content_type_for_parser(expected_parser: str) -> str:
         "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "html": "text/html",
         "pdf": "application/pdf",
+        "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "xml": "application/xml",
     }
     return parser_to_content_type.get(expected_parser, "application/octet-stream")

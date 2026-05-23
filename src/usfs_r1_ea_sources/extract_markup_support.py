@@ -11,6 +11,9 @@ import xml.etree.ElementTree as ET
 import zipfile
 from typing import Any
 
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
+
 from .extract_chunking import _assemble_blocks
 from .extract_chunking import _blocks_from_plain_text
 from .extract_chunking import _blocks_from_text_fragments
@@ -315,6 +318,55 @@ def _extract_docx(artifact_path: Path) -> ExtractionPayload:
     )
 
 
+def _extract_xlsx(artifact_path: Path) -> ExtractionPayload:
+    try:
+        workbook = load_workbook(artifact_path, read_only=True, data_only=True)
+    except (OSError, ValueError, zipfile.BadZipFile) as error:
+        raise ExtractionFailure("xlsx_parse_failed", str(error)) from error
+
+    blocks: list[TextBlock] = []
+    rendered_rows: list[str] = []
+    sheet_summaries: list[dict[str, object]] = []
+
+    for sheet in workbook.worksheets:
+        nonempty_row_count = 0
+        for row_index, values in enumerate(sheet.iter_rows(values_only=True), start=1):
+            rendered_cells = [_xlsx_cell_text(value) for value in values]
+            if not any(rendered_cells):
+                continue
+            nonempty_row_count += 1
+            last_column_index = max(
+                index for index, value in enumerate(rendered_cells, start=1) if value
+            )
+            text = " | ".join(value for value in rendered_cells if value)
+            section = f"{sheet.title}!A{row_index}:{get_column_letter(last_column_index)}{row_index}"
+            blocks.append(TextBlock(text=text, heading=sheet.title, section=section))
+            rendered_rows.append(f"[{section}] {text}")
+        sheet_summaries.append(
+            {
+                "sheet_name": sheet.title,
+                "nonempty_row_count": nonempty_row_count,
+            }
+        )
+
+    if not blocks:
+        raise ExtractionFailure(
+            "xlsx_parse_failed",
+            "Workbook did not contain any non-empty readable cell rows.",
+        )
+
+    return ExtractionPayload(
+        text="\n".join(rendered_rows),
+        blocks=blocks,
+        parser_name="openpyxl_xlsx_cells",
+        parser_version=sys.version.split()[0],
+        metadata={
+            "sheet_count": len(workbook.worksheets),
+            "sheets": sheet_summaries,
+        },
+    )
+
+
 def _extract_zip(artifact_path: Path) -> ExtractionPayload:
     try:
         with zipfile.ZipFile(artifact_path) as archive:
@@ -427,3 +479,9 @@ def _extract_plain_text(artifact_path: Path) -> ExtractionPayload:
         parser_name="python_text_decode",
         parser_version=sys.version.split()[0],
     )
+
+
+def _xlsx_cell_text(value: object) -> str:
+    if value in (None, ""):
+        return ""
+    return " ".join(str(value).strip().split())

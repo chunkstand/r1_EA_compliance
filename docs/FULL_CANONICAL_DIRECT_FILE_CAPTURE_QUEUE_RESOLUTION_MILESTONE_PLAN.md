@@ -1,7 +1,7 @@
 # Full Canonical Direct-File Capture Queue Resolution Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; export-backed Milestone 3 slice next`)
+Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; SCC structured-export Milestone 3 slice now reduced locally; remaining export-backed Milestone 3 slice next`)
 Owner context: follow-on from the resolved full-canonical source-truth and compliance-gold
 rebaseline packets
 
@@ -11,22 +11,31 @@ Milestones `0`, `1`, and `2` are now resolved locally through commit `85f087b`
 (`Resolve direct-file queue Milestone 2`). Milestone `3` is now reduced
 locally through commit `8b889a9`
 (`Open project-specific queue blocker packet`) for the project-specific
-blocker-family opening slice.
+blocker-family opening slice, and the SCC structured-export slice is now
+resolved locally in the current worktree.
 
 - `config/source_register_queue_resolution_ledger_v1.json` now enumerates all
   `51` queue rows exactly once with `49` current/project-applicable rows, `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`), planned disposition
   counts of `37` `promote_direct_file`, `9`
   `promote_structured_export`, `3` `named_blocker`, and `2`
-  `historical_scope_only`, plus resolution status counts of `44` `planned`,
-  `3` `blocked`, and `4` `resolved`.
+  `historical_scope_only`, plus resolution status counts of `40` `planned`,
+  `3` `blocked`, and `8` `resolved`.
 - The low-complexity direct-file family now promotes
   `FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, and `PROG-010`
-  into `Document_Register_Master`, raising the active full-canonical catalog
-  to `source-set-3f7d4578cafb0704` with `source_count=638`,
-  `artifact_count=626`,
-  `source_partition_counts={"active_review_corpus":585,"currentness_supersession_archive":53}`,
-  and `status_counts={"downloaded":4,"downloaded_existing":622,"duplicate_content":12}`.
+  into `Document_Register_Master`.
+- The first export-backed Milestone `3` slice now resolves the SCC rationale
+  families `R1-SCC-Q-CGNF-RATIONALES`, `R1-SCC-Q-FLAT-RATIONALES`,
+  `R1-SCC-Q-HLC-RATIONALES`, and `R1-SCC-Q-NPC-RATIONALES` into nine
+  workbook successors:
+  `R1-SCC-CGNF-005`, `R1-SCC-CGNF-006`, `R1-SCC-FLAT-005`,
+  `R1-SCC-FLAT-006`, `R1-SCC-FLAT-007`, `R1-SCC-HLC-005`,
+  `R1-SCC-HLC-006`, `R1-SCC-NPC-004`, and `R1-SCC-NPC-005`.
+- Those promotions raise the live full-canonical catalog to
+  `source-set-4fb59e9eb43045cb` with `source_count=647`,
+  `artifact_count=635`,
+  `source_partition_counts={"active_review_corpus":594,"currentness_supersession_archive":53}`,
+  and `status_counts={"downloaded_existing":635,"duplicate_content":12}`.
 - Milestone `3` now opens the named blocker family for project-specific
   placeholders: `PROG-011`, `PROG-012`, and `PROG-013` route to
   `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
@@ -34,16 +43,23 @@ blocker-family opening slice.
 - `source-register-queue-audit` now provides the machine-checked gate for the
   queue packet and passes with zero missing, unexpected, duplicated, or
   drifted rows, `blocked_current_or_project_applicable_count=3`,
-  `unresolved_current_or_project_applicable_count=42`, and the same governed
+  `unresolved_current_or_project_applicable_count=38`, and the same governed
   historical roster.
-- The refreshed downstream stack is green on the strengthened source set:
-  `extraction-accuracy-audit` now admits `585/585` active-current rows with
-  `53` explicit archive/currentness rows, `authority-currentness` now reports
-  `current_authority_source_record_count=585` and
-  `authority_family_count=456`, `retrieval-build` is
-  `validation_passed=true` and `reviewer_ready=true`, and
-  `promotion-suite` again reports `10/10` required full-canonical results
-  passing.
+- The strengthened extraction/runtime gate now supports governed `.xlsx`
+  direct files and distinguishes verified payload-cache reuse from opaque
+  text-only reuse. `extraction-accuracy-audit` now admits `594/594`
+  active-current rows with `53` explicit archive/currentness rows,
+  `authority-currentness` now reports
+  `current_authority_source_record_count=594` and
+  `authority_family_count=460`, and `retrieval-build` is
+  `validation_passed=true` and `reviewer_ready=true`.
+- The full-canonical downstream contract intentionally remains split at the
+  end of this slice: `promotion-suite` is still pinned to
+  `full_canonical_source_set_id=source-set-3f7d4578cafb0704` and now
+  truthfully reports `full_canonical_corpus_ready=false` with
+  `full_canonical_failure_category_counts={"stale_artifact":2}` until the
+  successor source-truth packet reruns the downstream artifacts on
+  `source-set-4fb59e9eb43045cb`.
 - The next routed slice remains Milestone `3` for the export-backed families
   after the project-specific blocker-family opener.
 
@@ -54,7 +70,7 @@ carrying them as a known but ownerless boundary outside the active canonical loa
 
 This packet exists to convert every queue row into one of four governed outcomes without weakening
 the already-resolved active-current admission lane, whose current live successor
-is `585/585` on `source-set-3f7d4578cafb0704`:
+is `594/594` on `source-set-4fb59e9eb43045cb`:
 
 1. promoted to `Document_Register_Master` with direct document evidence;
 2. resolved through structured export and then promoted with file-level provenance;
@@ -64,14 +80,15 @@ is `585/585` on `source-set-3f7d4578cafb0704`:
 ## Current Evidence
 
 - `docs/CURRENT_ROUTING.md` now records the strengthened active source-truth
-  lane on `source-set-3f7d4578cafb0704`, with `585/585`
+  lane on `source-set-4fb59e9eb43045cb`, with `594/594`
   `active_review_corpus` rows admitted, `53` explicit archive/currentness
-  rows outside verified admission, and `10/10` required full-canonical
-  promotion-suite results passing.
+  rows outside verified admission, while also recording that
+  `promotion-suite` is still pinned to the older downstream contract on
+  `source-set-3f7d4578cafb0704`.
 - The same routing file also records that the workbook still carries `51`
-  `Direct_File_Capture_Queue` rows by contract, but `4` of them now have
+  `Direct_File_Capture_Queue` rows by contract, but `8` of them now have
   governed `resolved` promotions, `3` now have explicit blocker ownership,
-  and only `42` current/project-applicable rows remain in the generic
+  and only `38` current/project-applicable rows remain in the generic
   unresolved planned roster.
 - `config/source_register_sheet_contract_v1.json` defines `Document_Register_Master` as the only
   load-bearing sheet and `Direct_File_Capture_Queue` as a deferred queue with `emits_load_rows=false`.
@@ -89,10 +106,10 @@ is `585/585` on `source-set-3f7d4578cafb0704`:
 - Live workbook census on 2026-05-23 now shows:
   - `51` queue rows total;
   - `49` rows that still classify as current or project-applicable;
-  - `4` rows already resolved by Milestone `2` promotion;
+  - `8` rows now resolved by governed promotion;
   - `3` project-specific rows now explicitly blocked by
     `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`;
-  - `42` current/project-applicable rows still unresolved in the generic
+  - `38` current/project-applicable rows still unresolved in the generic
     planned roster;
   - `2` explicitly historical/noncurrent rows: `FPS-380` and `SUP-007`;
   - dominant queue reasons:
@@ -113,7 +130,7 @@ while preserving current active-corpus truth:
 - no current/applicable queue row remains ownerless;
 - no queue row is promoted by treating a wrapper page, folder listing, or manual placeholder as a
   canonical direct document;
-- the active `585/585` current-admission lane remains green throughout the packet or strengthens
+- the active `594/594` current-admission lane remains green throughout the packet or strengthens
   through governed promotions; and
 - any remaining unresolved queue rows are explicit historical lineage or a named blocker packet, not
   an unowned side surface.
@@ -121,7 +138,7 @@ while preserving current active-corpus truth:
 ## Non-Goals
 
 - Do not reopen the resolved active-current source-truth packet just to restate the current
-  `585/585` successor baseline.
+  `594/594` successor baseline.
 - Do not weaken `extraction-accuracy-audit`, `retrieval-build`, `authority-currentness`, or
   `promotion-suite` to make queue work look green.
 - Do not admit wrapper pages, JS folders, reading-room placeholders, SCC listing pages, Box/Pinyon
@@ -247,7 +264,7 @@ while preserving current active-corpus truth:
 - Prevention gate:
   `authority-currentness`, `extraction-accuracy-audit`, `retrieval-build`, and `promotion-suite`
 - Fail threshold:
-  the promoted workbook regresses below `585/585` admitted active-current rows, produces a new
+  the promoted workbook regresses below `594/594` admitted active-current rows, produces a new
   blocked active-current row, or introduces a new full-canonical promotion-suite failure
 - Controlled violation:
   a focused fixture that promotes a queue row without valid direct-document evidence must fail
@@ -408,7 +425,7 @@ Acceptance criteria:
 
 - No current/applicable queue row remains outside the canonical target without promotion, explicit
   exclusion, historical scoping, or a named blocker packet.
-- The source-truth lane remains green on the active-current `585/585` baseline or an auditable
+- The source-truth lane remains green on the active-current `594/594` baseline or an auditable
   stronger successor count after legitimate promotions.
 - Routing docs no longer say that the queue is unresolved and ownerless.
 
@@ -457,9 +474,9 @@ PYTHONPATH=src .venv/bin/python -m ruff check src tests
 If a milestone promotes queue rows into the active corpus:
 
 ```bash
-PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-3f7d4578cafb0704
-PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-3f7d4578cafb0704
-PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-3f7d4578cafb0704
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb
 PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json
 ```
 

@@ -19,30 +19,35 @@ Use this file as the short current route before opening the large append-only do
 ## Live Facts
 
 - Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
-  `Document_Register_Master` / `source-set-3f7d4578cafb0704`
+  `Document_Register_Master` / `source-set-4fb59e9eb43045cb`
 - Active source-truth packet status: the full canonical source-truth
   rebaseline remains historically resolved in commit `93a23b0`
   (`Resolve source-truth archive boundary rebaseline`); the queue Milestone 2
-  follow-on now strengthens that live boundary from the older `634/581`
-  baseline to a governed `638/585` successor while keeping the `53`
+  and Milestone 3 SCC follow-ons now strengthen that live boundary from the
+  older `634/581` baseline to a governed `647/594` successor while keeping
+  the same `53`
   `currentness_supersession_archive` rows explicit lineage outside verified
   admission
-- Active canonical-source truth: the live source set now proves `638/638`
+- Active canonical-source truth: the live source set now proves `647/647`
   extracted `Document_Register_Master` rows on
-  `source-set-3f7d4578cafb0704`; the refreshed
+  `source-set-4fb59e9eb43045cb`; the refreshed
   `canonical-source-register-active-current-admission` boundary admits all
-  `585/585` `active_review_corpus` rows while explicitly keeping `53`
+  `594/594` `active_review_corpus` rows while explicitly keeping `53`
   archive/currentness rows outside the verified-admission roster;
   `authority-currentness` reports
-  `current_authority_source_record_count=585` and `authority_family_count=456`;
+  `current_authority_source_record_count=594` and `authority_family_count=460`;
   `retrieval-build` reports `validation_passed=true`,
   `reviewer_ready=true`,
-  `verified_extraction_admitted_source_count=585`,
-  `verified_extraction_required_source_count=585`, and
-  `verified_extraction_explicitly_non_admitted_source_count=53`; and
-  `promotion-suite` again reports `current_promotion_ready=true`,
-  `full_canonical_corpus_ready=true`, `expansion_ready=true`, and
-  `promotion_ready=true` with `10/10` required full-canonical results passing
+  `verified_extraction_admitted_source_count=594`,
+  `verified_extraction_required_source_count=594`, and
+  `verified_extraction_explicitly_non_admitted_source_count=53`
+- Full-canonical downstream split: the live extraction/retrieval truth now
+  sits on `source-set-4fb59e9eb43045cb`, but `promotion-suite` is still
+  pinned to `full_canonical_source_set_id=source-set-3f7d4578cafb0704` and
+  now reports `full_canonical_corpus_ready=false` with
+  `full_canonical_failure_category_counts={"stale_artifact":2}` until the
+  source-truth follow-on reruns the downstream contract on the strengthened
+  source set
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty
@@ -87,18 +92,20 @@ Use this file as the short current route before opening the large append-only do
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
   remain resolved locally through commit `85f087b`
   (`Resolve direct-file queue Milestone 2`), and Milestone `3` is now
-  reduced locally by opening the project-specific blocker family in
-  `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`.
+  reduced locally through the project-specific blocker-family opener plus the
+  SCC structured-export slice.
   The blocker-family opener landed in commit `8b889a9`
   (`Open project-specific queue blocker packet`).
   The tracked `config/source_register_queue_resolution_ledger_v1.json`
   enumerates all `51` queue rows, preserves the `4` governed `resolved`
-  promotions (`FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`,
-  `PROG-010`), and now routes `PROG-011`, `PROG-012`, and `PROG-013` as
-  explicit `blocked` placeholders. `source-register-queue-audit` now passes
-  with `resolution_status_counts={"blocked":3,"planned":44,"resolved":4}`,
+  promotions from Milestone `2` plus the `4` SCC structured-export families
+  (`R1-SCC-Q-CGNF-RATIONALES`, `R1-SCC-Q-FLAT-RATIONALES`,
+  `R1-SCC-Q-HLC-RATIONALES`, `R1-SCC-Q-NPC-RATIONALES`), and now routes
+  `PROG-011`, `PROG-012`, and `PROG-013` as explicit `blocked`
+  placeholders. `source-register-queue-audit` now passes with
+  `resolution_status_counts={"blocked":3,"planned":40,"resolved":8}`,
   `blocked_current_or_project_applicable_count=3`,
-  `unresolved_current_or_project_applicable_count=42`, and the same `2`
+  `unresolved_current_or_project_applicable_count=38`, and the same `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`); the next routed slice
   remains Milestone `3` for the export-backed families. West Reservoir
   remains an intentional `typed_blocked` replay quarantine rather than a

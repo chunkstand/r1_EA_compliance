@@ -65,6 +65,11 @@ class ExtractionReuseTests(unittest.TestCase):
             second_manifest = _read_jsonl(second.extraction_manifest_path)
             self.assertEqual(second_manifest[0]["parser_name"], "python_htmlparser")
             self.assertTrue(second_manifest[0]["parser_metadata"]["reused_existing"])
+            self.assertEqual(
+                second_manifest[0]["parser_metadata"]["reuse_from"],
+                "current_payload_cache",
+            )
+            self.assertTrue(second_manifest[0]["parser_metadata"]["verified_reuse_admissible"])
             self.assertEqual(Path(second_manifest[0]["text_path"]), text_path)
 
     def test_build_extraction_reuses_prior_inventory_candidate(self) -> None:
@@ -87,6 +92,7 @@ class ExtractionReuseTests(unittest.TestCase):
                 config_path=CONFIG,
                 run_id="unit-download",
             )
+            initial = build_extraction(output_dir=output_dir, id_filter="R1EA-001")
 
             catalog_row = next(
                 row
@@ -98,17 +104,41 @@ class ExtractionReuseTests(unittest.TestCase):
                     encoding="utf-8"
                 )
             )["source_set_id"]
-            prior_text = "Prior extraction text keeps environmental impacts traceable."
+            initial_manifest = _read_jsonl(initial.extraction_manifest_path)
+            self.assertEqual(initial_manifest[0]["parser_name"], "python_htmlparser")
+            initial_text_path = Path(initial_manifest[0]["text_path"])
+            current_payload_cache_path = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "diagnostics"
+                / "payload_cache"
+                / f"R1EA-001_{catalog_row['artifact_sha256'][:16]}.json"
+            )
             prior_text_path = (
                 output_dir
                 / "derived"
                 / "source-set-prior"
                 / "extracted_text"
-                / "R1EA-001_prior.txt"
+                / f"R1EA-001_{catalog_row['artifact_sha256'][:16]}.txt"
             )
             prior_text_path.parent.mkdir(parents=True)
+            prior_text = initial_text_path.read_text(encoding="utf-8").strip()
             prior_text_path.write_text(prior_text + "\n", encoding="utf-8")
             text_sha256 = hashlib.sha256(prior_text.encode("utf-8")).hexdigest()
+            prior_payload_cache_path = (
+                output_dir
+                / "derived"
+                / "source-set-prior"
+                / "diagnostics"
+                / "payload_cache"
+                / f"R1EA-001_{catalog_row['artifact_sha256'][:16]}.json"
+            )
+            prior_payload_cache_path.parent.mkdir(parents=True, exist_ok=True)
+            prior_payload_cache_path.write_text(
+                current_payload_cache_path.read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
             inventory_path = output_dir / "reuse_inventory_records.jsonl"
             inventory_record = {
                 "source_set_id": source_set_id,
@@ -164,6 +194,11 @@ class ExtractionReuseTests(unittest.TestCase):
             self.assertEqual(
                 manifest[0]["parser_metadata"]["reuse_source_set_id"],
                 "source-set-prior",
+            )
+            self.assertTrue(manifest[0]["parser_metadata"]["verified_reuse_admissible"])
+            self.assertEqual(
+                Path(manifest[0]["parser_metadata"]["reuse_payload_cache_path"]).resolve(),
+                prior_payload_cache_path.resolve(),
             )
             self.assertIn(
                 "environmental impacts",
@@ -347,3 +382,5 @@ class ExtractionReuseTests(unittest.TestCase):
                 manifest[0]["parser_metadata"]["reuse_from"],
                 "inventory_prior_extraction",
             )
+            self.assertFalse(manifest[0]["parser_metadata"]["verified_reuse_admissible"])
+            self.assertTrue(manifest[0]["parser_metadata"]["reuse_without_parser_payload"])

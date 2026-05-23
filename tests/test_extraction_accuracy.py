@@ -9,6 +9,8 @@ import tempfile
 import unittest
 import zipfile
 
+from openpyxl import Workbook
+
 from usfs_r1_ea_sources.catalog import build_review_catalog
 from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.extract import build_extraction
@@ -192,6 +194,134 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
             )
             check = _check(result.summary, "required_source_records_are_present_and_direct")
             self.assertFalse(check["passed"])
+
+    def test_audit_accepts_verified_inventory_reuse_when_payload_cache_matches(self) -> None:
+        config = legacy_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(output_dir, artifact_body=_html_body())
+            build_review_catalog(
+                workbook_path=WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+            )
+            initial = build_extraction(output_dir=output_dir, id_filter="R1EA-001")
+            catalog_row = next(
+                row
+                for row in _read_jsonl(output_dir / "catalog" / "source_catalog.jsonl")
+                if row["source_record_id"] == "R1EA-001"
+            )
+            source_set_id = json.loads(
+                (output_dir / "catalog" / "source_set_manifest.json").read_text(
+                    encoding="utf-8"
+                )
+            )["source_set_id"]
+            initial_manifest = _read_jsonl(initial.extraction_manifest_path)
+            prior_text_path = (
+                output_dir
+                / "derived"
+                / "source-set-prior"
+                / "extracted_text"
+                / f"R1EA-001_{catalog_row['artifact_sha256'][:16]}.txt"
+            )
+            prior_text_path.parent.mkdir(parents=True, exist_ok=True)
+            prior_text = Path(initial_manifest[0]["text_path"]).read_text(encoding="utf-8").strip()
+            prior_text_path.write_text(prior_text + "\n", encoding="utf-8")
+            prior_payload_cache_path = (
+                output_dir
+                / "derived"
+                / "source-set-prior"
+                / "diagnostics"
+                / "payload_cache"
+                / f"R1EA-001_{catalog_row['artifact_sha256'][:16]}.json"
+            )
+            prior_payload_cache_path.parent.mkdir(parents=True, exist_ok=True)
+            current_payload_cache_path = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "diagnostics"
+                / "payload_cache"
+                / f"R1EA-001_{catalog_row['artifact_sha256'][:16]}.json"
+            )
+            prior_payload_cache_path.write_text(
+                current_payload_cache_path.read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+            inventory_path = output_dir / "reuse_inventory_records.jsonl"
+            inventory_path.write_text(
+                json.dumps(
+                    {
+                        "source_set_id": source_set_id,
+                        "source_record_id": "R1EA-001",
+                        "classification": "reuse_extraction",
+                        "artifact_check": {"passed": True},
+                        "artifact_sha256": catalog_row["artifact_sha256"],
+                        "expected_parser": catalog_row["expected_parser"],
+                        "content_type": catalog_row["content_type"],
+                        "reuse_candidate": {
+                            "source_set_id": "source-set-prior",
+                            "source_record_id": "R1EA-001",
+                            "status": "extracted",
+                            "artifact_sha256": catalog_row["artifact_sha256"],
+                            "expected_parser": catalog_row["expected_parser"],
+                            "content_type": catalog_row["content_type"],
+                            "parser_name": initial_manifest[0]["parser_name"],
+                            "parser_version": initial_manifest[0]["parser_version"],
+                            "parser_metadata": initial_manifest[0]["parser_metadata"],
+                            "chunk_count": initial_manifest[0]["chunk_count"],
+                            "text_path": str(prior_text_path),
+                            "text_sha256": initial_manifest[0]["text_sha256"],
+                        },
+                    },
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            extraction = build_extraction(
+                output_dir=output_dir,
+                id_filter="R1EA-001",
+                reuse_inventory_path=inventory_path,
+            )
+            manifest = _read_jsonl(extraction.extraction_manifest_path)
+            self.assertEqual(
+                manifest[0]["parser_metadata"]["reuse_from"],
+                "inventory_prior_extraction",
+            )
+            self.assertTrue(manifest[0]["parser_metadata"]["verified_reuse_admissible"])
+            contract_path = output_dir / "contract.json"
+            contract_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "verified-extraction-admission-contract-v0",
+                        "contracts": [
+                            {
+                                "contract_id": "direct-html",
+                                "required_source_record_ids": ["R1EA-001"],
+                                "require_direct_extraction": True,
+                            }
+                        ],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_extraction_accuracy_audit(
+                output_dir=output_dir,
+                contract_path=contract_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(
+                result.summary["knowledge_base_admitted_source_record_ids"],
+                ["R1EA-001"],
+            )
+            self.assertEqual(result.summary["knowledge_base_blocked_source_record_ids"], [])
 
     def test_audit_ignores_partial_overlap_with_direct_extraction_contract(self) -> None:
         config = legacy_config()
@@ -452,6 +582,56 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
             )
             self.assertEqual(result.summary["knowledge_base_blocked_source_record_ids"], [])
 
+    def test_audit_accepts_xlsx_parser_for_direct_file_workbook_artifact(self) -> None:
+        config = canonical_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run(
+                output_dir,
+                source_record_id="R1-SCC-CGNF-005",
+                artifact_body=_xlsx_body(),
+                suffix=".xlsx",
+                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
+            build_review_catalog(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+                source_record_ids={"R1-SCC-CGNF-005"},
+            )
+            build_extraction(output_dir=output_dir, id_filter="R1-SCC-CGNF-005")
+            contract_path = output_dir / "contract.json"
+            contract_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "verified-extraction-admission-contract-v0",
+                        "contracts": [
+                            {
+                                "contract_id": "xlsx-direct-file",
+                                "required_source_record_ids": ["R1-SCC-CGNF-005"],
+                                "require_direct_extraction": True,
+                            }
+                        ],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_extraction_accuracy_audit(
+                output_dir=output_dir,
+                contract_path=contract_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(
+                result.summary["knowledge_base_admitted_source_record_ids"],
+                ["R1-SCC-CGNF-005"],
+            )
+            self.assertEqual(result.summary["knowledge_base_blocked_source_record_ids"], [])
+
     def test_audit_selector_contracts_resolve_canonical_active_review_rows(self) -> None:
         config = canonical_config()
         with tempfile.TemporaryDirectory() as tmp:
@@ -630,6 +810,10 @@ def _html_body() -> bytes:
     )
 
 
+def _read_jsonl(path: Path) -> list[dict]:
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+
+
 def _zip_with_metadata_body() -> bytes:
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w") as archive:
@@ -643,6 +827,19 @@ def _zip_with_metadata_body() -> bytes:
                 "</procstep></lineage></dataqual></metadata>"
             ),
         )
+    return buffer.getvalue()
+
+
+def _xlsx_body() -> bytes:
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Species"
+    sheet["A1"] = "Common Name"
+    sheet["B1"] = "Status"
+    sheet["A2"] = "Canada lynx"
+    sheet["B2"] = "Present"
+    buffer = io.BytesIO()
+    workbook.save(buffer)
     return buffer.getvalue()
 
 

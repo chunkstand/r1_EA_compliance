@@ -233,15 +233,17 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
     if args.command == "dry-run":
         config = load_config(args.config)
         source_delta_options = _source_delta_options(args, parser, config.workbook.loader_contract)
+        id_filter, source_record_ids = _id_filters(args.id)
         result = run_dry_run(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
             config=config,
             run_id=args.run_id,
             sheet_filter=args.sheet,
-            id_filter=args.id,
+            id_filter=id_filter,
             host_filter=args.host,
             limit=args.limit,
+            source_record_ids=source_record_ids,
             **source_delta_options,
         )
         print_summary(result.summary)
@@ -250,15 +252,17 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
     if args.command == "preflight":
         config = load_config(args.config)
         source_delta_options = _source_delta_options(args, parser, config.workbook.loader_contract)
+        id_filter, source_record_ids = _id_filters(args.id)
         result = run_preflight(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
             config=config,
             run_id=args.run_id,
             sheet_filter=args.sheet,
-            id_filter=args.id,
+            id_filter=id_filter,
             host_filter=args.host,
             limit=args.limit,
+            source_record_ids=source_record_ids,
             **source_delta_options,
         )
         print_summary(result.summary)
@@ -267,15 +271,17 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
     if args.command == "download":
         config = load_config(args.config)
         source_delta_options = _source_delta_options(args, parser, config.workbook.loader_contract)
+        id_filter, source_record_ids = _id_filters(args.id)
         result = run_download(
             workbook_path=args.workbook,
             output_dir=args.output_dir,
             config=config,
             run_id=args.run_id,
             sheet_filter=args.sheet,
-            id_filter=args.id,
+            id_filter=id_filter,
             host_filter=args.host,
             limit=args.limit,
+            source_record_ids=source_record_ids,
             **source_delta_options,
             force=args.force,
         )
@@ -362,10 +368,18 @@ def _add_workbook_run_filters(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
     parser.add_argument("--run-id")
     parser.add_argument("--sheet")
-    parser.add_argument("--id")
+    parser.add_argument("--id", action="append")
     parser.add_argument("--host")
     parser.add_argument("--limit", type=int)
     _add_source_delta_options(parser)
+
+
+def _id_filters(values: list[str] | None) -> tuple[str | None, set[str] | None]:
+    if not values:
+        return None, None
+    if len(values) == 1:
+        return values[0], None
+    return None, set(values)
 
 
 def _add_source_delta_options(parser: argparse.ArgumentParser) -> None:

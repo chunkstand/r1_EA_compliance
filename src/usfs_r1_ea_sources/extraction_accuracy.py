@@ -203,7 +203,7 @@ def _check_required_source_records_present_and_direct(
                 }
             )
             continue
-        if require_direct_extraction and (record.get("parser_metadata") or {}).get("reused_existing"):
+        if require_direct_extraction and not _record_satisfies_direct_extraction_requirement(record):
             failures.append(
                 {
                     "source_record_id": source_record_id,
@@ -220,6 +220,31 @@ def _check_required_source_records_present_and_direct(
             "failures": failures[:50],
         },
     }
+
+
+def _record_satisfies_direct_extraction_requirement(record: dict) -> bool:
+    metadata = record.get("parser_metadata") or {}
+    if not metadata.get("reused_existing"):
+        return True
+    if not metadata.get("verified_reuse_admissible"):
+        return False
+    if metadata.get("reuse_without_parser_payload"):
+        return False
+    reuse_from = str(metadata.get("reuse_from") or "")
+    if reuse_from not in {
+        "current_payload_cache",
+        "inventory_current_extraction",
+        "inventory_prior_extraction",
+    }:
+        return False
+    reuse_source_set_id = str(metadata.get("reuse_source_set_id") or "").strip()
+    if not reuse_source_set_id:
+        return False
+    record_text_sha256 = str(record.get("text_sha256") or "").strip()
+    reuse_text_sha256 = str(metadata.get("reuse_text_sha256") or "").strip()
+    if reuse_text_sha256 and record_text_sha256 and reuse_text_sha256 != record_text_sha256:
+        return False
+    return True
 
 
 def _check_direct_document_required_records_use_document_artifacts(records: list[dict]) -> dict:
@@ -671,12 +696,14 @@ def _record_uses_direct_document_artifact(record: dict) -> bool:
         "application/pdf",
         "application/msword",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     }:
         return True
-    if artifact_path.endswith((".pdf", ".doc", ".docx")):
+    if artifact_path.endswith((".pdf", ".doc", ".docx", ".xlsx")):
         return True
     return parser_name in {
         "docling",
+        "openpyxl_xlsx_cells",
         "python_docx_zip_xml",
         "python_zip_metadata_xml",
         "pypdf_text_fallback",

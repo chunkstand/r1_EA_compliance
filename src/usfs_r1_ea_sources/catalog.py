@@ -704,6 +704,9 @@ def _expected_parser(source: WorkbookSource, content_type: str | None) -> str:
         docx_content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         if content_type == docx_content_type:
             return "docx"
+        xlsx_content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        if content_type == xlsx_content_type:
+            return "xlsx"
         if content_type.startswith("image/"):
             return "image"
     path = urlsplit(source.effective_url).path.lower()
@@ -718,6 +721,8 @@ def _expected_parser(source: WorkbookSource, content_type: str | None) -> str:
         return "xml"
     if path.endswith(".docx"):
         return "docx"
+    if path.endswith(".xlsx"):
+        return "xlsx"
     if path.endswith((".jpg", ".jpeg", ".png")):
         return "image"
     if host in {"www.ecfr.gov", "www.federalregister.gov"}:

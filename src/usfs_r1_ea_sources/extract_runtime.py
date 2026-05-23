@@ -536,6 +536,7 @@ def _record_and_chunks_from_payload(
     chunk_overlap_chars: int,
     write_text: bool,
     reused: bool,
+    reuse_metadata: dict[str, object] | None = None,
 ) -> tuple[dict, list[dict]]:
     artifact_sha256 = row["artifact_sha256"]
     text = payload.text.strip()
@@ -579,13 +580,22 @@ def _record_and_chunks_from_payload(
         overlap_chars=chunk_overlap_chars,
     )
     record = dict(base_record)
+    parser_metadata = dict(payload.metadata or {})
+    if reuse_metadata:
+        parser_metadata.update(
+            {
+                key: value
+                for key, value in reuse_metadata.items()
+                if value is not None
+            }
+        )
     record.update(
         {
             "status": "extracted",
             "artifact_sha256_verified": True,
             "parser_name": payload.parser_name,
             "parser_version": payload.parser_version,
-            "parser_metadata": _parser_metadata_with_reuse(payload.metadata, reused=reused),
+            "parser_metadata": _parser_metadata_with_reuse(parser_metadata, reused=reused),
             "text_path": str(text_path),
             "docling_json_path": str(docling_json_path) if docling_json_path else None,
             "text_char_count": len(text),
@@ -618,6 +628,12 @@ def _reuse_existing_extraction(
 
     payload_path = _payload_cache_path(payload_cache_dir, row)
     payload = None
+    reuse_metadata = {
+        "reuse_from": "current_payload_cache",
+        "reuse_source_set_id": row.get("source_set_id"),
+        "reuse_payload_cache_path": str(payload_path),
+        "verified_reuse_admissible": True,
+    }
     if payload_path.exists():
         try:
             payload = _payload_from_wire(_read_json(payload_path))
@@ -634,10 +650,15 @@ def _reuse_existing_extraction(
             parser_name="reused_extracted_text",
             parser_version="1",
             metadata={
-                "reuse_from": "extracted_text",
+                "reuse_from": "current_extracted_text",
                 "reuse_without_parser_payload": True,
             },
         )
+        reuse_metadata = {
+            "reuse_from": "current_extracted_text",
+            "reuse_source_set_id": row.get("source_set_id"),
+            "verified_reuse_admissible": False,
+        }
 
     return _record_and_chunks_from_payload(
         row=row,
@@ -651,6 +672,7 @@ def _reuse_existing_extraction(
         chunk_overlap_chars=chunk_overlap_chars,
         write_text=False,
         reused=True,
+        reuse_metadata=reuse_metadata,
     )
 
 
@@ -694,23 +716,30 @@ def _reuse_inventory_extraction(
     if expected_text_sha256 and actual_text_sha256 != expected_text_sha256:
         return None
 
-    text, blocks = _blocks_from_plain_text(text)
-    metadata = {
-        **(candidate.get("parser_metadata") or {}),
+    candidate_payload_path = _candidate_payload_cache_path(output_dir, candidate)
+    payload = _load_candidate_payload_cache(candidate_payload_path)
+    reuse_metadata = {
         "reuse_from": reuse_from,
         "reuse_inventory_classification": classification,
         "reuse_source_set_id": candidate.get("source_set_id"),
         "reuse_text_path": str(source_text_path),
         "reuse_text_sha256": actual_text_sha256,
-        "reuse_without_parser_payload": True,
+        "verified_reuse_admissible": bool(payload is not None),
+        "reuse_payload_cache_path": str(candidate_payload_path) if candidate_payload_path else None,
     }
-    payload = ExtractionPayload(
-        text=text,
-        blocks=blocks,
-        parser_name=candidate.get("parser_name") or "reused_extracted_text",
-        parser_version=str(candidate.get("parser_version") or "1"),
-        metadata=metadata,
-    )
+    if payload is None:
+        text, blocks = _blocks_from_plain_text(text)
+        metadata = {
+            **(candidate.get("parser_metadata") or {}),
+            "reuse_without_parser_payload": True,
+        }
+        payload = ExtractionPayload(
+            text=text,
+            blocks=blocks,
+            parser_name=candidate.get("parser_name") or "reused_extracted_text",
+            parser_version=str(candidate.get("parser_version") or "1"),
+            metadata=metadata,
+        )
     return _record_and_chunks_from_payload(
         row=row,
         base_record=base_record,
@@ -723,6 +752,7 @@ def _reuse_inventory_extraction(
         chunk_overlap_chars=chunk_overlap_chars,
         write_text=True,
         reused=True,
+        reuse_metadata=reuse_metadata,
     )
 
 
@@ -748,6 +778,30 @@ def _reuse_inventory_record_matches_row(
         return False
     artifact_check = inventory_record.get("artifact_check") or {}
     return artifact_check.get("passed") is not False
+
+
+def _candidate_payload_cache_path(output_dir: Path, candidate: dict) -> Path | None:
+    source_set_id = str(candidate.get("source_set_id") or "").strip()
+    source_record_id = str(candidate.get("source_record_id") or "").strip()
+    artifact_sha256 = str(candidate.get("artifact_sha256") or "").strip()
+    if not source_set_id or not source_record_id or not artifact_sha256:
+        return None
+    return _payload_cache_path(
+        source_derived_dir(output_dir / "derived", source_set_id) / "diagnostics" / "payload_cache",
+        {
+            "source_record_id": source_record_id,
+            "artifact_sha256": artifact_sha256,
+        },
+    )
+
+
+def _load_candidate_payload_cache(path: Path | None) -> ExtractionPayload | None:
+    if path is None or not path.exists():
+        return None
+    try:
+        return _payload_from_wire(_read_json(path))
+    except (KeyError, TypeError, json.JSONDecodeError):
+        return None
 
 
 
@@ -783,6 +837,8 @@ def _extract_payload(
         return facade_module._extract_doc(artifact_path)
     if parser == "docx":
         return facade_module._extract_docx(artifact_path)
+    if parser == "xlsx":
+        return facade_module._extract_xlsx(artifact_path)
     if parser == "zip":
         return facade_module._extract_zip(artifact_path)
     if parser == "image":

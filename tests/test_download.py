@@ -108,6 +108,14 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(_content_type_for_suffix(".zip"), "application/zip")
         self.assertEqual(_suffix_for_content_type("application/msword"), ".doc")
         self.assertEqual(_content_type_for_suffix(".doc"), "application/msword")
+        self.assertEqual(
+            _suffix_for_content_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+            ".xlsx",
+        )
+        self.assertEqual(
+            _content_type_for_suffix(".xlsx"),
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
         self.assertEqual(_suffix_for_content_type("image/jpeg"), ".jpg")
         self.assertEqual(_content_type_for_suffix(".jpg"), "image/jpeg")
 

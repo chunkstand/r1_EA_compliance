@@ -3933,7 +3933,11 @@ at an archived catalog gate so merged or scoped source-set extraction can run wi
 - terminal extraction `status`
 - parser name and version when parsing succeeded
 - parser metadata when fallback extraction or source-scoped XML extraction is used, including
-  raster OCR backend/page-count provenance when the parser route is `pdf_raster_ocr`
+  raster OCR backend/page-count provenance when the parser route is `pdf_raster_ocr`, plus
+  governed reuse provenance fields such as `reused_existing`, `reuse_from`,
+  `reuse_source_set_id`, `reuse_payload_cache_path`, `reuse_text_sha256`, and
+  `verified_reuse_admissible` when a manifest row is materialized from
+  hash-matched payload-cache reuse
 - extracted text path, Docling JSON path, text SHA256, text character count, and chunk count
 - failure object when parsing did not succeed
 

@@ -312,7 +312,7 @@ def _effective_parser(row: dict, artifact_path: Path) -> str:
     suffix = artifact_path.suffix.lower()
     if content_type == "application/zip" or suffix == ".zip":
         return "zip"
-    if expected in {"html", "xml", "pdf", "docx", "doc", "image"}:
+    if expected in {"html", "xml", "pdf", "docx", "doc", "image", "xlsx"}:
         return expected
     if expected == "structured_web_adapter":
         if content_type in {"application/xml", "text/xml"} or suffix == ".xml":
@@ -328,6 +328,12 @@ def _effective_parser(row: dict, artifact_path: Path) -> str:
         return "html"
     if content_type == DOCX_CONTENT_TYPE or suffix == ".docx":
         return "docx"
+    if (
+        content_type
+        == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        or suffix == ".xlsx"
+    ):
+        return "xlsx"
     if content_type.startswith("image/") or suffix in {".jpg", ".jpeg", ".png"}:
         return "image"
     if content_type.startswith("text/"):

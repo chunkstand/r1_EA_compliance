@@ -62,7 +62,16 @@ def build_source_register_queue_disposition_audit(
     ledger_path = Path(ledger_path)
     ledger = load_source_register_queue_resolution_ledger(ledger_path)
     tables = read_source_register_tables(workbook_path, contract_path=sheet_contract_path)
+    master_rows = list((tables.get("Document_Register_Master") or {}).get("rows", []))
     queue_rows = list((tables.get("Direct_File_Capture_Queue") or {}).get("rows", []))
+    master_source_ids = {
+        source_id
+        for source_id in (
+            _string_or_none(row.get("Source_ID"))
+            for row in master_rows
+        )
+        if source_id
+    }
 
     queue_source_ids = [_string_or_none(row.get("Source_ID")) for row in queue_rows]
     duplicate_queue_source_ids = _duplicates(queue_source_ids)
@@ -122,6 +131,30 @@ def build_source_register_queue_disposition_audit(
             ledger_path=ledger_path,
         )
     )
+    invalid_successor_reference_source_ids = sorted(
+        source_id
+        for source_id, entry in entry_by_source_id.items()
+        if _has_invalid_successor_reference_format(entry)
+    )
+    resolved_promotion_source_ids_without_target = sorted(
+        source_id
+        for source_id, entry in entry_by_source_id.items()
+        if _string_or_none(entry.get("resolution_status")) == "resolved"
+        and _string_or_none(entry.get("planned_disposition"))
+        in {"promote_direct_file", "promote_structured_export"}
+        and not _successor_source_ids(entry)
+    )
+    resolved_promotion_source_ids_with_missing_master_target = sorted(
+        source_id
+        for source_id, entry in entry_by_source_id.items()
+        if _string_or_none(entry.get("resolution_status")) == "resolved"
+        and _string_or_none(entry.get("planned_disposition"))
+        in {"promote_direct_file", "promote_structured_export"}
+        and any(
+            target_source_id not in master_source_ids
+            for target_source_id in _successor_source_ids(entry)
+        )
+    )
     historical_source_ids = sorted(
         source_id
         for source_id, entry in entry_by_source_id.items()
@@ -144,6 +177,12 @@ def build_source_register_queue_disposition_audit(
         for source_id, entry in entry_by_source_id.items()
         if _string_or_none(entry.get("currentness_class")) == CURRENT_OR_PROJECT_APPLICABLE
         and _string_or_none(entry.get("resolution_status")) == "blocked"
+    )
+    resolved_current_applicable_source_ids = sorted(
+        source_id
+        for source_id, entry in entry_by_source_id.items()
+        if _string_or_none(entry.get("currentness_class")) == CURRENT_OR_PROJECT_APPLICABLE
+        and _string_or_none(entry.get("resolution_status")) == "resolved"
     )
 
     planned_disposition_counts = Counter(
@@ -246,6 +285,38 @@ def build_source_register_queue_disposition_audit(
     )
     _append_check(
         checks,
+        name="successor_reference_fields_are_valid",
+        expected=[],
+        actual=invalid_successor_reference_source_ids,
+        passed=not invalid_successor_reference_source_ids,
+        details=(
+            "Queue-resolution ledger successor fields must use either a single target_successor_source_id "
+            "or a non-empty target_successor_source_ids list."
+        ),
+    )
+    _append_check(
+        checks,
+        name="resolved_promotions_reference_successor_rows",
+        expected=[],
+        actual=resolved_promotion_source_ids_without_target,
+        passed=not resolved_promotion_source_ids_without_target,
+        details=(
+            "Resolved direct-file or structured-export promotions must reference their promoted "
+            "Document_Register_Master successor rows."
+        ),
+    )
+    _append_check(
+        checks,
+        name="resolved_promotion_successor_rows_exist_in_master",
+        expected=[],
+        actual=resolved_promotion_source_ids_with_missing_master_target,
+        passed=not resolved_promotion_source_ids_with_missing_master_target,
+        details=(
+            "Resolved promotion successor rows must exist in Document_Register_Master."
+        ),
+    )
+    _append_check(
+        checks,
         name="historical_noncurrent_baseline_matches_expected_ids",
         expected=sorted(EXPECTED_HISTORICAL_SOURCE_IDS),
         actual=historical_source_ids,
@@ -279,6 +350,8 @@ def build_source_register_queue_disposition_audit(
         "historical_noncurrent_source_ids": historical_source_ids,
         "blocked_current_or_project_applicable_count": len(blocked_current_applicable_source_ids),
         "blocked_current_or_project_applicable_source_ids": blocked_current_applicable_source_ids,
+        "resolved_current_or_project_applicable_count": len(resolved_current_applicable_source_ids),
+        "resolved_current_or_project_applicable_source_ids": resolved_current_applicable_source_ids,
         "unresolved_current_or_project_applicable_count": len(
             unresolved_current_applicable_source_ids
         ),
@@ -377,3 +450,26 @@ def _blocker_packet_reference_exists(reference: str, *, ledger_path: Path) -> bo
         ledger_path.resolve().parent.parent / reference_path,
     )
     return any(candidate.exists() for candidate in candidates)
+
+
+def _successor_source_ids(entry: dict[str, object]) -> list[str]:
+    raw_multiple = entry.get("target_successor_source_ids")
+    if raw_multiple is not None:
+        if not isinstance(raw_multiple, list):
+            return []
+        return [
+            source_id
+            for source_id in (_string_or_none(value) for value in raw_multiple)
+            if source_id
+        ]
+    single = _string_or_none(entry.get("target_successor_source_id"))
+    return [single] if single else []
+
+
+def _has_invalid_successor_reference_format(entry: dict[str, object]) -> bool:
+    raw_multiple = entry.get("target_successor_source_ids")
+    if raw_multiple is None:
+        return False
+    if not isinstance(raw_multiple, list) or not raw_multiple:
+        return True
+    return any(_string_or_none(value) is None for value in raw_multiple)

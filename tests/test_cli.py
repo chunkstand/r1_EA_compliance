@@ -107,6 +107,23 @@ def test_capture_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     assert args.source_delta_only is True
 
 
+def test_capture_parser_accepts_repeated_ids_for_targeted_runs() -> None:
+    args = build_parser().parse_args(
+        [
+            "download",
+            "--workbook",
+            "workbook.xlsx",
+            "--id",
+            "R1-SCC-NPC-004",
+            "--id",
+            "R1-SCC-NPC-005",
+        ]
+    )
+
+    assert args.command == "download"
+    assert args.id == ["R1-SCC-NPC-004", "R1-SCC-NPC-005"]
+
+
 def test_source_delta_options_reject_register_under_canonical_loader(capsys) -> None:
     parser = argparse.ArgumentParser(prog="preflight")
     args = SimpleNamespace(

@@ -402,6 +402,8 @@ def _suffix_for_content_type(content_type: str | None) -> str:
         return ".zip"
     if content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         return ".docx"
+    if content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        return ".xlsx"
     if content_type == "image/jpeg":
         return ".jpg"
     return ".bin"
@@ -415,6 +417,7 @@ def _content_type_for_suffix(suffix: str) -> str | None:
         ".xml": "application/xml",
         ".zip": "application/zip",
         ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         ".jpg": "image/jpeg",
         ".jpeg": "image/jpeg",
     }.get(suffix.lower())

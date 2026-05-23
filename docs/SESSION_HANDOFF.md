@@ -7,6 +7,85 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Direct-File Queue Milestone 3 SCC Structured-Export Slice Reduced Locally
+
+This implementation slice closes the first export-backed Milestone `3` family
+in `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+
+- outcome label:
+  `reduced locally`; the SCC structured-export family is now resolved, the
+  project-specific blocker family remains explicit, and the next routed slice
+  stays on the remaining export-backed queue families
+- routed packet:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- workbook and queue truth:
+  `source-register-diff` now records `canonical_master_row_count=647`,
+  `canonical_only_source_count=647`, `canonical_queue_row_count=51`, and
+  workbook SHA
+  `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`;
+  `source-register-queue-audit` now passes with
+  `resolution_status_counts={"blocked":3,"planned":40,"resolved":8}`,
+  `resolved_current_or_project_applicable_count=8`,
+  `blocked_current_or_project_applicable_count=3`,
+  `unresolved_current_or_project_applicable_count=38`, and governed
+  historical rows `FPS-380` and `SUP-007`
+- resolved queue families:
+  `R1-SCC-Q-CGNF-RATIONALES`, `R1-SCC-Q-FLAT-RATIONALES`,
+  `R1-SCC-Q-HLC-RATIONALES`, and `R1-SCC-Q-NPC-RATIONALES` now promote nine
+  workbook successors:
+  `R1-SCC-CGNF-005`, `R1-SCC-CGNF-006`, `R1-SCC-FLAT-005`,
+  `R1-SCC-FLAT-006`, `R1-SCC-FLAT-007`, `R1-SCC-HLC-005`,
+  `R1-SCC-HLC-006`, `R1-SCC-NPC-004`, and `R1-SCC-NPC-005`
+- active catalog truth:
+  `catalog-build` now promotes the live full-canonical catalog to
+  `source-set-4fb59e9eb43045cb` with download run
+  `queue-m3-full-canonical-merged-download-20260523`,
+  `source_count=647`, `artifact_count=635`,
+  `source_partition_counts={"active_review_corpus":594,"currentness_supersession_archive":53}`,
+  and `status_counts={"downloaded_existing":635,"duplicate_content":12}`
+- downstream truth on the strengthened source set:
+  `extract-build --reuse-existing --reuse-inventory-path .../source-set-4fb59e9eb43045cb/reuse_inventory/reuse_inventory.json`
+  now passes with `extracted_count=647`, `reused_count=646`,
+  `chunk_count=103063`, and `validation_passed=true`;
+  `extraction-accuracy-audit --source-set-id source-set-4fb59e9eb43045cb`
+  is green with `594` admitted active-current rows, `0` blocked rows, and
+  `53` explicit archive/currentness rows;
+  `authority-currentness --source-set-id source-set-4fb59e9eb43045cb` is
+  green with `authority_family_count=460` and
+  `current_authority_source_record_count=594`; and
+  `retrieval-build --source-set-id source-set-4fb59e9eb43045cb` is
+  `validation_passed=true`, `reviewer_ready=true`, and
+  `verified_extraction_admitted_source_count=594`
+- extraction/runtime gate truth:
+  the live extraction manifest now records governed payload-cache reuse
+  provenance (`reused_existing`, `reuse_from`, `reuse_source_set_id`,
+  `reuse_payload_cache_path`, `verified_reuse_admissible`), and the
+  direct-document audit now treats `.xlsx` workbook artifacts as admissible
+  direct files instead of wrapper pages
+- residual split:
+  `promotion-suite --manifest config/promotion_suite_v1.json` remains pinned
+  to `full_canonical_source_set_id=source-set-3f7d4578cafb0704` and now
+  truthfully reports `full_canonical_corpus_ready=false` with
+  `full_canonical_failure_category_counts={"stale_artifact":2}`. Rebinding
+  that downstream contract stays in the source-truth successor lane rather
+  than this queue slice
+- next routing:
+  execute the remaining Milestone `3` export-backed families and named
+  blockers in
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources extract-build --output-dir source_library --reuse-existing --reuse-inventory-path source_library/derived/source-set-4fb59e9eb43045cb/reuse_inventory/reuse_inventory.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --manifest config/promotion_suite_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_source_register_loader.py tests/test_source_register_queue_resolution.py tests/test_source_register_schema.py tests/test_catalog.py tests/test_extract.py tests/test_extract_reuse.py tests/test_extraction_accuracy.py tests/test_download.py tests/test_preflight.py tests/test_dry_run.py tests/test_cli.py tests/test_retrieval_validation.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src tests`,
+  and `git diff --check`
+
 ## Full Canonical Direct-File Queue Milestone 3 Alignment Pass
 
 This docs-only follow-up closes the remaining route/checkpoint drift after the

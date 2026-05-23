@@ -16,14 +16,14 @@ outputs.
 
 Current routed state on 2026-05-23:
 
-- Live local catalog is now `source-set-3f7d4578cafb0704` in
+- Live local catalog is now `source-set-4fb59e9eb43045cb` in
   `source_library/catalog/source_set_manifest.json` with
-  `download_run_id=queue-m2-full-canonical-merged-download-20260523`,
-  `source_count=638`, `artifact_count=626`,
-  `source_partition_counts={"active_review_corpus": 585, "currentness_supersession_archive": 53}`,
-  `status_counts={"downloaded": 4, "downloaded_existing": 622, "duplicate_content": 12}`,
+  `download_run_id=queue-m3-full-canonical-merged-download-20260523`,
+  `source_count=647`, `artifact_count=635`,
+  `source_partition_counts={"active_review_corpus": 594, "currentness_supersession_archive": 53}`,
+  `status_counts={"downloaded_existing": 635, "duplicate_content": 12}`,
   and workbook SHA
-  `b0e78bb90336a01f73cd7489c109e45260d1a98fc0165f6b713d99311f029e5a`.
+  `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
 - `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
   catalog, and architecture routing.
 - The current architecture packet in
@@ -47,33 +47,38 @@ Current routed state on 2026-05-23:
 - The active source-truth rebaseline packet remains historically resolved in
   commit `93a23b0` (`Resolve source-truth archive boundary rebaseline`), and
   the direct-file queue follow-on now strengthens that live boundary: the
-  local source set `source-set-3f7d4578cafb0704` proves `638/638` extracted
+  local source set `source-set-4fb59e9eb43045cb` proves `647/647` extracted
   `Document_Register_Master` rows, the refreshed `extraction-accuracy-audit`
-  records `585` admitted active-current rows, `0` blocked rows, and `53`
+  records `594` admitted active-current rows, `0` blocked rows, and `53`
   explicit non-admitted archive/currentness rows, `authority-currentness`
-  reports `current_authority_source_record_count=585` and
-  `authority_family_count=456`, and the refreshed `retrieval-build` replay
-  agrees with `verified_extraction_admitted_source_count=585`,
-  `verified_extraction_required_source_count=585`,
+  reports `current_authority_source_record_count=594` and
+  `authority_family_count=460`, and the refreshed `retrieval-build` replay
+  agrees with `verified_extraction_admitted_source_count=594`,
+  `verified_extraction_required_source_count=594`,
   `verified_extraction_explicitly_non_admitted_source_count=53`,
   `validation_passed=true`, and `reviewer_ready=true` under
   `canonical-source-register-active-current-admission`. `USFS-026`
   (`FSH 2509.18`) remains governed currentness lineage evidence with
   replacement `USFS-023`, `FPS-344` remains admitted as a structured Federal
-  Register XML source, and `promotion-suite` again reports
-  `full_canonical_corpus_ready=true` with `10/10` required full-canonical
-  results passing.
+  Register XML source. The live queue slice does not yet rebind the
+  promotion-suite full-canonical slot: `promotion-suite` still pins
+  `full_canonical_source_set_id=source-set-3f7d4578cafb0704` and now
+  truthfully reports `full_canonical_corpus_ready=false` with
+  `full_canonical_failure_category_counts={"stale_artifact":2}` until the
+  downstream rebind packet reruns on the strengthened source set.
 - The direct-file capture queue packet now reduces Milestone `3` locally:
   `config/source_register_queue_resolution_ledger_v1.json` still records all
-  `51` queue rows exactly once, preserves the `4` governed `resolved`
+  `51` queue rows exactly once, preserves the `8` governed `resolved`
   promotions (`FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`,
-  `PROG-010`), and now routes the project-specific placeholder family
-  `PROG-011`, `PROG-012`, and `PROG-013` to
+  `PROG-010`, `R1-SCC-Q-CGNF-RATIONALES`, `R1-SCC-Q-FLAT-RATIONALES`,
+  `R1-SCC-Q-HLC-RATIONALES`, `R1-SCC-Q-NPC-RATIONALES`), routes the
+  project-specific placeholder family `PROG-011`, `PROG-012`, and
+  `PROG-013` to
   `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
   as explicit `blocked` rows. `source-register-queue-audit` now passes with
-  `resolution_status_counts={"blocked":3,"planned":44,"resolved":4}`,
+  `resolution_status_counts={"blocked":3,"planned":40,"resolved":8}`,
   `blocked_current_or_project_applicable_count=3`,
-  `unresolved_current_or_project_applicable_count=42`, the same `2`
+  `unresolved_current_or_project_applicable_count=38`, the same `2`
   governed historical rows (`FPS-380`, `SUP-007`), and the next routed slice
   remains Milestone `3` for the export-backed families. This blocker-family
   opener landed in commit `8b889a9`

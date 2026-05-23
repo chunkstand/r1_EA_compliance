@@ -7,6 +7,8 @@ import io
 import json
 import zipfile
 
+from openpyxl import Workbook
+
 from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT
 from usfs_r1_ea_sources.config import load_config
 
@@ -16,6 +18,7 @@ WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.
 CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
 
 def legacy_config():
@@ -175,6 +178,18 @@ def _docx_body(paragraphs: list[str]) -> bytes:
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
         archive.writestr("[Content_Types].xml", "<Types/>")
         archive.writestr("word/document.xml", document_xml)
+    buffer.seek(0)
+    return buffer.read()
+
+
+def _xlsx_body(rows: list[list[object]]) -> bytes:
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "SCC Evaluation"
+    for row in rows:
+        sheet.append(row)
+    buffer = io.BytesIO()
+    workbook.save(buffer)
     buffer.seek(0)
     return buffer.read()
 

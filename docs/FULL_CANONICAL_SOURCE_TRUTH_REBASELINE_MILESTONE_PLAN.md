@@ -59,6 +59,16 @@ follow-on now further reduces the live queue surface by routing `PROG-011`,
 as explicit blockers while leaving `source-set-3f7d4578cafb0704` unchanged.
 That blocker-family opener landed in commit `8b889a9`
 (`Open project-specific queue blocker packet`).
+The later SCC structured-export slice now promotes nine workbook successors
+into live full-canonical source set `source-set-4fb59e9eb43045cb`, raising
+the active catalog to `647` extracted rows and `594` admitted active-current
+rows while keeping the same `53` explicit archive/currentness rows.
+`extraction-accuracy-audit`, `authority-currentness`, and `retrieval-build`
+are now green on that strengthened source set, but `promotion-suite` remains
+intentionally pinned to `full_canonical_source_set_id=source-set-3f7d4578cafb0704`
+and now reports `full_canonical_failure_category_counts={"stale_artifact":2}`
+until the downstream rebind packet reruns the full-canonical contract on
+`source-set-4fb59e9eb43045cb`.
 Older `634/581` references below remain the historical closeout baseline for
 commit `93a23b0` unless a later bullet explicitly updates them.
 

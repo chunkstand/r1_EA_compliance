@@ -18,6 +18,7 @@ from tests.support.extract_fixtures import CANONICAL_WORKBOOK
 from tests.support.extract_fixtures import CONFIG
 from tests.support.extract_fixtures import DOCX_CONTENT_TYPE
 from tests.support.extract_fixtures import WORKBOOK
+from tests.support.extract_fixtures import XLSX_CONTENT_TYPE
 from tests.support.extract_fixtures import _artifact_sha256
 from tests.support.extract_fixtures import _check
 from tests.support.extract_fixtures import _docx_body
@@ -27,6 +28,7 @@ from tests.support.extract_fixtures import _read_jsonl
 from tests.support.extract_fixtures import _write_download_run
 from tests.support.extract_fixtures import _write_download_run_records
 from tests.support.extract_fixtures import _xhtml_xml_body
+from tests.support.extract_fixtures import _xlsx_body
 from tests.support.extract_fixtures import _xml_body
 from tests.support.extract_fixtures import _zip_with_metadata_body
 from tests.support.extract_fixtures import canonical_config
@@ -227,6 +229,49 @@ class ExtractionBuildTests(unittest.TestCase):
                 encoding="utf-8"
             )
             self.assertIn("mitigation measures", text)
+
+    def test_build_extraction_reads_xlsx_rows_into_traceable_text_blocks(self) -> None:
+        config = canonical_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            body = _xlsx_body(
+                [
+                    ["Species", "Disposition", "Rationale"],
+                    ["Wolverine", "Retained", "Plan revision SCC workbook"],
+                    ["Whitebark pine", "Retained", "Plant SCC workbook"],
+                ]
+            )
+            _write_download_run(
+                output_dir,
+                "unit-download",
+                source_record_id="R1-SCC-NPC-004",
+                artifact_body=body,
+                content_type=XLSX_CONTENT_TYPE,
+                suffix=".xlsx",
+            )
+            build_review_catalog(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+                source_record_ids={"R1-SCC-NPC-004"},
+            )
+
+            result = build_extraction(output_dir=output_dir, id_filters={"R1-SCC-NPC-004"})
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["parser_counts"], {"openpyxl_xlsx_cells": 1})
+            manifest = _read_jsonl(result.extraction_manifest_path)
+            self.assertEqual(manifest[0]["status"], "extracted")
+            self.assertEqual(manifest[0]["parser_name"], "openpyxl_xlsx_cells")
+            extracted_text = Path(manifest[0]["text_path"]).read_text(encoding="utf-8")
+            self.assertIn("Wolverine", extracted_text)
+            self.assertIn("Whitebark pine", extracted_text)
+            chunks = _read_jsonl(result.chunks_path)
+            self.assertTrue(chunks)
+            self.assertEqual(chunks[0]["source_record_id"], "R1-SCC-NPC-004")
+            self.assertIn("[SCC Evaluation!A1:C1]", chunks[0]["text"])
 
     def test_build_extraction_uses_textutil_for_doc_artifacts(self) -> None:
         config = canonical_config()

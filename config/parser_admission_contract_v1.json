@@ -1,7 +1,7 @@
 {
   "schema_version": "parser-admission-contract-v1",
   "contract_id": "parser-admission-contract-v1",
-  "as_of_date": "2026-05-18",
+  "as_of_date": "2026-05-23",
   "status": "phase0_freeze",
   "parser_routes": [
     {
@@ -46,6 +46,14 @@
         "url_suffixes": [".docx"]
       },
       "expected_parser": "docx",
+      "admission_class": "direct_document"
+    },
+    {
+      "route_id": "xlsx_direct_document",
+      "match": {
+        "url_suffixes": [".xlsx"]
+      },
+      "expected_parser": "xlsx",
       "admission_class": "direct_document"
     },
     {

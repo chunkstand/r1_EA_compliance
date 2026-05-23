@@ -82,6 +82,88 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Full Canonical Direct-File Queue Milestone 3 SCC Structured-Export Slice Reduced Locally
+
+Latest implementation update on 2026-05-23:
+
+- Routed packet:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `reduced locally` for Milestone `3`; the SCC structured-export family is
+  now closed locally, the project-specific blocker family remains explicit,
+  and the next routed slice stays on the remaining export-backed families.
+- Workbook and queue truth:
+  `source-register-diff` now records `canonical_master_row_count=647`,
+  `canonical_only_source_count=647`, `canonical_queue_row_count=51`, and
+  workbook SHA
+  `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`;
+  `source-register-queue-audit` now passes with
+  `resolution_status_counts={"blocked":3,"planned":40,"resolved":8}`,
+  `resolved_current_or_project_applicable_count=8`,
+  `blocked_current_or_project_applicable_count=3`,
+  `unresolved_current_or_project_applicable_count=38`, and the same governed
+  historical/noncurrent rows (`FPS-380`, `SUP-007`).
+- Resolved queue families:
+  `R1-SCC-Q-CGNF-RATIONALES`, `R1-SCC-Q-FLAT-RATIONALES`,
+  `R1-SCC-Q-HLC-RATIONALES`, and `R1-SCC-Q-NPC-RATIONALES` now promote nine
+  workbook successors:
+  `R1-SCC-CGNF-005`, `R1-SCC-CGNF-006`, `R1-SCC-FLAT-005`,
+  `R1-SCC-FLAT-006`, `R1-SCC-FLAT-007`, `R1-SCC-HLC-005`,
+  `R1-SCC-HLC-006`, `R1-SCC-NPC-004`, and `R1-SCC-NPC-005`.
+- Active full-canonical catalog truth:
+  `catalog-build` now promotes the live catalog to
+  `source-set-4fb59e9eb43045cb` with download run
+  `queue-m3-full-canonical-merged-download-20260523`,
+  `source_count=647`, `artifact_count=635`,
+  `source_partition_counts={"active_review_corpus":594,"currentness_supersession_archive":53}`,
+  `status_counts={"downloaded_existing":635,"duplicate_content":12}`, and
+  the same workbook SHA.
+- Downstream truth on the strengthened source set:
+  `extract-build --reuse-existing --reuse-inventory-path .../source-set-4fb59e9eb43045cb/reuse_inventory/reuse_inventory.json`
+  now passes with `extracted_count=647`, `reused_count=646`,
+  `chunk_count=103063`, and `validation_passed=true`;
+  `extraction-accuracy-audit --source-set-id source-set-4fb59e9eb43045cb`
+  is green with `knowledge_base_admitted_source_record_ids=594`,
+  `knowledge_base_blocked_source_record_ids=0`, and
+  `explicitly_non_admitted_source_record_ids=53`;
+  `authority-currentness --source-set-id source-set-4fb59e9eb43045cb` is
+  green with `authority_family_count=460` and
+  `current_authority_source_record_count=594`; and
+  `retrieval-build --source-set-id source-set-4fb59e9eb43045cb` is
+  `validation_passed=true`, `reviewer_ready=true`, and
+  `verified_extraction_admitted_source_count=594`.
+- Extraction/runtime gate truth:
+  the live extraction manifest now records governed reuse provenance for
+  payload-cache reuse (`reused_existing`, `reuse_from`,
+  `reuse_source_set_id`, `reuse_payload_cache_path`,
+  `verified_reuse_admissible`), and the direct-document audit now treats
+  `.xlsx` workbook artifacts as admissible direct files rather than wrapper
+  pages.
+- Residual downstream split:
+  the live extraction/retrieval truth now sits on
+  `source-set-4fb59e9eb43045cb`, but `promotion-suite --manifest config/promotion_suite_v1.json`
+  remains pinned to `full_canonical_source_set_id=source-set-3f7d4578cafb0704`
+  and now truthfully reports
+  `full_canonical_failure_category_counts={"stale_artifact":2}` with
+  `full_canonical_corpus_ready=false`. Rebinding that downstream contract is
+  successor work under the source-truth lane rather than this queue slice.
+- Next routing:
+  stay on Milestone `3` in
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  for the remaining export-backed families and named blockers.
+- Verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources extract-build --output-dir source_library --reuse-existing --reuse-inventory-path source_library/derived/source-set-4fb59e9eb43045cb/reuse_inventory/reuse_inventory.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --manifest config/promotion_suite_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_source_register_loader.py tests/test_source_register_queue_resolution.py tests/test_source_register_schema.py tests/test_catalog.py tests/test_extract.py tests/test_extract_reuse.py tests/test_extraction_accuracy.py tests/test_download.py tests/test_preflight.py tests/test_dry_run.py tests/test_cli.py tests/test_retrieval_validation.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src tests`,
+  and `git diff --check`.
+
 ## Full Canonical Direct-File Queue Milestone 3 Alignment Pass
 
 Latest docs alignment on 2026-05-23:

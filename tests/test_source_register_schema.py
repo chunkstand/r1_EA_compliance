@@ -23,7 +23,7 @@ class SourceRegisterSchemaTests(unittest.TestCase):
 
         self.assertTrue(result["validation_passed"])
         self.assertEqual(result["sheet_count"], 13)
-        self.assertEqual(result["load_row_count"], 638)
+        self.assertEqual(result["load_row_count"], 647)
         self.assertEqual(result["queue_row_count"], 51)
         self.assertEqual(result["removed_row_count"], 3)
         self.assertEqual(result["stale_source_detector_count"], 5)
@@ -75,13 +75,13 @@ class SourceRegisterSchemaTests(unittest.TestCase):
         self.assertEqual(result["legacy_register_source_delta_count"], 160)
         self.assertEqual(result["legacy_register_gap_count"], 1)
         self.assertEqual(result["legacy_runtime_unique_source_count"], 350)
-        self.assertEqual(result["canonical_master_row_count"], 638)
+        self.assertEqual(result["canonical_master_row_count"], 647)
         self.assertEqual(result["canonical_queue_row_count"], 51)
         self.assertEqual(result["canonical_removed_row_count"], 3)
         self.assertEqual(result["canonical_stale_source_detector_count"], 5)
         self.assertEqual(result["canonical_shared_with_legacy_workbook_count"], 0)
         self.assertEqual(result["canonical_shared_with_source_delta_count"], 0)
-        self.assertEqual(result["canonical_only_source_count"], 638)
+        self.assertEqual(result["canonical_only_source_count"], 647)
         self.assertEqual(result["legacy_only_source_count"], 350)
         self.assertEqual(result["canonical_only_source_ids_sample"][0], "FED-001")
         self.assertEqual(result["legacy_only_source_ids_sample"][0], "R1EA-001")
@@ -138,6 +138,15 @@ class SourceRegisterSchemaTests(unittest.TestCase):
             "FPS-344": "https://www.federalregister.gov/d/2024-30342",
             "PROG-008": "https://www.fs.usda.gov/naturalresources/watershed/pubs/FS_National_Core_BMPs_April2012.pdf",
             "PROG-010": "https://fs-prod-nwcg.s3.us-gov-west-1.amazonaws.com/s3fs-public/publication/pms484.pdf",
+            "R1-SCC-CGNF-005": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/20210415_CG%20SCC%20Animal%20Rational_Objection%20Response.xlsx",
+            "R1-SCC-CGNF-006": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/20210415_CG%20SCC%20Plant%20Rational_Objection%20Response.xlsx",
+            "R1-SCC-FLAT-005": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/2018-11-09_SCC%20Terrestrial%20Wildlife%20Eval%20Post%20Objection_Flathead.xlsx",
+            "R1-SCC-FLAT-006": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/2018-11-09_SCC%20Aquatic%20Animal%20Post%20Objection_Flathead.xlsx",
+            "R1-SCC-FLAT-007": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/2018-11-09_SCC%20Plant%20Evaluations%20Revision_Flathead.xlsx",
+            "R1-SCC-HLC-005": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/2021-02-19%20HLC%20SCC_Animal%20Rational_Final_Post%20Objection.xlsx",
+            "R1-SCC-HLC-006": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/2021-02-19%20HLC%20SCC_Plant%20Rational_Final_Post%20Objection.xlsx",
+            "R1-SCC-NPC-004": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/NPC%20FPR%20SCC%20Animals%20January%202025.xlsx",
+            "R1-SCC-NPC-005": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/NPC%20FPR%20SCC%20Plants%20November%202023.xlsx",
             "STP-015": "https://www.deq.idaho.gov/water-quality/surface-water/total-maximum-daily-loads/",
             "STP-011": "https://idfg.idaho.gov/species/",
             "USDA-008": "https://www.fs.usda.gov/im/directives/",

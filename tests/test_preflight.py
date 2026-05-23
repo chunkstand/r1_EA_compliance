@@ -76,10 +76,10 @@ class PreflightTests(unittest.TestCase):
                 for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
                 if line.strip()
             ]
-            self.assertEqual(len(records), 638)
-            self.assertEqual(len(fetcher.calls), 638)
-            self.assertEqual(result.summary["checked_url_count"], 638)
-            self.assertEqual(result.summary["preflight_ok_count"], 638)
+            self.assertEqual(len(records), 647)
+            self.assertEqual(len(fetcher.calls), 647)
+            self.assertEqual(result.summary["checked_url_count"], 647)
+            self.assertEqual(result.summary["preflight_ok_count"], 647)
             self.assertEqual(result.summary["duplicate_url_count"], 0)
             self.assertEqual(result.summary["skipped_excluded_count"], 0)
             self.assertEqual(result.summary["failed_count"], 0)
@@ -217,9 +217,18 @@ class PreflightTests(unittest.TestCase):
     def test_preflight_accepts_supported_doc_and_image_content_types(self) -> None:
         config = load_config(CONFIG)
 
-        for content_type in ("application/msword", "image/jpeg"):
+        for content_type in (
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "image/jpeg",
+        ):
             with self.subTest(content_type=content_type):
-                suffix = ".doc" if content_type == "application/msword" else ".jpg"
+                if content_type == "application/msword":
+                    suffix = ".doc"
+                elif content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    suffix = ".xlsx"
+                else:
+                    suffix = ".jpg"
                 result = _classify_response(
                     http_status=200,
                     final_url=f"https://example.com/source{suffix}",

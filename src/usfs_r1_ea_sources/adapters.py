@@ -24,7 +24,7 @@ _BOX_PUBLIC_HOSTS = {"usfs-public.app.box.com", "usfs-public.box.com"}
 _BOX_PUBLIC_FILE_RE = re.compile(r"/(?:s|v)/[^/]+/file/(?P<file_id>\d+)(?:/|$)")
 _USFS_LEGACY_DIRECTIVES_HOSTS = {"www.fs.usda.gov", "fs.usda.gov"}
 _USFS_NATIONAL_DIRECTIVES_URL = "https://www.fs.usda.gov/about-agency/regulations-policies/national-directives"
-_DIRECT_DOCUMENT_EXTENSIONS = ("pdf", "doc", "docx")
+_DIRECT_DOCUMENT_EXTENSIONS = ("pdf", "doc", "docx", "xlsx")
 _USFS_HANDBOOK_TRANSMITTAL_FALLBACK_CODES = {"2509.18"}
 _USFS_MANUAL_DIRECT_DOCUMENT_URLS = {
     # Live-verified official direct-document targets for the current FSM family. Some chapters
@@ -376,6 +376,8 @@ def _direct_document_content_type(url: str) -> str | None:
         return "application/msword"
     if suffix == ".docx":
         return "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    if suffix == ".xlsx":
+        return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     return None
 
 

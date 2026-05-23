@@ -31,7 +31,8 @@ def test_queue_disposition_audit_matches_current_queue_baseline() -> None:
         "PROG-012",
         "PROG-013",
     ]
-    assert result["unresolved_current_or_project_applicable_count"] == 42
+    assert result["resolved_current_or_project_applicable_count"] == 8
+    assert result["unresolved_current_or_project_applicable_count"] == 38
     assert result["planned_disposition_counts"] == {
         "historical_scope_only": 2,
         "named_blocker": 3,
@@ -40,8 +41,8 @@ def test_queue_disposition_audit_matches_current_queue_baseline() -> None:
     }
     assert result["resolution_status_counts"] == {
         "blocked": 3,
-        "planned": 44,
-        "resolved": 4,
+        "planned": 40,
+        "resolved": 8,
     }
 
 
@@ -95,6 +96,38 @@ def test_queue_disposition_audit_fails_when_named_blocker_reference_is_not_a_pac
     checks = {check["name"]: check for check in result["checks"]}
     assert result["validation_passed"] is False
     assert checks["named_blocker_rows_reference_existing_packet"]["actual"] == ["PROG-011"]
+
+
+def test_queue_disposition_audit_fails_when_resolved_promotion_lacks_successor_target() -> None:
+    ledger = load_source_register_queue_resolution_ledger(LEDGER_PATH)
+    for entry in ledger["entries"]:
+        if entry["source_id"] == "FINAL-Q-HLC-001":
+            entry["target_successor_source_id"] = None
+            break
+
+    result = _run_with_temp_ledger(ledger)
+
+    checks = {check["name"]: check for check in result["checks"]}
+    assert result["validation_passed"] is False
+    assert checks["resolved_promotions_reference_successor_rows"]["actual"] == [
+        "FINAL-Q-HLC-001"
+    ]
+
+
+def test_queue_disposition_audit_fails_when_structured_export_successor_row_is_missing() -> None:
+    ledger = load_source_register_queue_resolution_ledger(LEDGER_PATH)
+    for entry in ledger["entries"]:
+        if entry["source_id"] == "R1-SCC-Q-CGNF-RATIONALES":
+            entry["target_successor_source_ids"] = ["R1-SCC-CGNF-005", "DOES-NOT-EXIST"]
+            break
+
+    result = _run_with_temp_ledger(ledger)
+
+    checks = {check["name"]: check for check in result["checks"]}
+    assert result["validation_passed"] is False
+    assert checks["resolved_promotion_successor_rows_exist_in_master"]["actual"] == [
+        "R1-SCC-Q-CGNF-RATIONALES"
+    ]
 
 
 def test_queue_disposition_audit_detects_identity_drift() -> None:
