@@ -47,14 +47,16 @@ Current routed state on 2026-05-22:
   verified admission to all `582` `active_review_corpus` rows through
   `canonical-source-register-active-current-admission`. The refreshed
   `extraction-accuracy-audit` and `retrieval-build` replays now agree on
-  `verified_extraction_admitted_source_count=569`,
+  `verified_extraction_admitted_source_count=579`,
   `verified_extraction_required_source_count=582`, and an explicit blocked
-  roster of `13` active-current rows. A handbook-wrapper adapter now promotes
-  `9` legacy USFS handbook rows through live National Directives contents PDFs;
-  the remaining blockers are `12` FSM/manual wrapper pages plus `USFS-026`,
-  whose current directives entry exposes only a transmittal link rather than a
-  live contents page. `FPS-344` remains admitted as a structured Federal
-  Register XML source. Latest reduced-slice commit:
+  roster of `3` active-current rows. The current worktree now also promotes
+  `10` legacy `fsm` wrapper rows through live USDA guidance PDF targets, while
+  the remaining blockers are `USFS-018` (`FSM 2410`), `USFS-024` (`FSM 2580`),
+  and `USFS-026` (`FSH 2509.18`). `USFS-018` and `USFS-024` still lack a
+  confirmed current direct-document path on the live official surfaces, and
+  `USFS-026` still exposes only a transmittal link rather than a live contents
+  page. `FPS-344` remains admitted as a structured Federal Register XML source.
+  The earlier handbook-wrapper reduced slice landed in
   `4650837` (`Reduce source-truth Milestone 2 handbook wrapper blockers`).
   `51`
   `Direct_File_Capture_Queue` rows remain outside the active load-bearing
@@ -65,7 +67,7 @@ Current routed state on 2026-05-22:
   green at `2 reviewer_ready + 1 typed_blocked`. That downstream gold packet
   remains active, but it is no longer the root routed lane while the
   full-canonical source-truth packet advances to Milestone `2` on the
-  remaining `13` direct-document blockers. The bounded Milestone `7` replay
+  remaining `3` direct-document blockers. The bounded Milestone `7` replay
   stayed red at `0/14` on the same five still-unmapped live authorities. The
   active generated diagnostic gold cases now build non-zero rule-claim-link
   artifacts, while the base `nepa-ea-v0` rule-claim-link summary remains a

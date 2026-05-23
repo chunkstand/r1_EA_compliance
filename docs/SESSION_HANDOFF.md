@@ -7,6 +7,51 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Source Truth Rebaseline Milestone 2 Reduced Manual Wrapper Slice
+
+This worktree slice further reduces Milestone `2` in
+`docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
+
+- outcome label:
+  `reduced`; a manual-wrapper adapter now admits `10` legacy `fsm` rows
+  through live USDA guidance PDF targets, and the packet remains reduced on the
+  `3` direct-document blockers still lacking a governed current document path
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/adapters.py`,
+  `tests/test_adapters_report.py`, and the local ignored refreshed download,
+  catalog, extraction, and retrieval artifacts under `source_library/`
+- live replay truth:
+  the refreshed `retrieval/summary.json` on
+  `source-set-f775524ab233ff27` now records
+  `verified_extraction_required_source_count=582`,
+  `verified_extraction_admitted_source_count=579`,
+  `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`,
+  `validation_passed=false`, and `reviewer_ready=false`
+- blocked roster:
+  `extraction-accuracy-audit` and retrieval validation now agree on `3`
+  blocked active-current rows:
+  `USFS-018` (`FSM 2410`), `USFS-024` (`FSM 2580`), and `USFS-026`
+  (`FSH 2509.18`); `USFS-018` and `USFS-024` still point at current official
+  manual pages without a confirmed direct-document path, while `USFS-026`
+  still exposes only a transmittal link
+- next routing:
+  continue with Milestone `2` in
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md` to resolve
+  the remaining `3` directives-wrapper direct-document blockers through
+  governed promotion or explicit exclusion
+- stale-reference audit:
+  the immediately following handbook-wrapper slice is preserved append-only
+  history only; this manual-wrapper slice supersedes the earlier `569/582`
+  plus `13`-blocker checkpoint for live routing
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_adapters_report.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/adapters.py tests/test_adapters_report.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src .venv/bin/python - <<'PY' ... run_download(... source_record_ids={"USFS-007","USFS-015","USFS-016","USFS-019","USFS-022","USFS-023","USFS-029","USFS-033","USFS-034","USFS-039"}, run_id="phase2-canonical-download-full-usfs-manual-wrapper-adapter-20260522") ... PY`,
+  `PYTHONPATH=src .venv/bin/python - <<'PY' ... build_extraction(output_dir=Path("source_library"), id_filters={"USFS-007","USFS-015","USFS-016","USFS-019","USFS-022","USFS-023","USFS-029","USFS-033","USFS-034","USFS-039"}, merge_selected_into_existing=True) ... PY`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f775524ab233ff27`, and
+  `git diff --check`
+
 ## Full Canonical Source Truth Rebaseline Milestone 2 Reduced Handbook Wrapper Slice
 
 This worktree slice further reduces Milestone `2` in

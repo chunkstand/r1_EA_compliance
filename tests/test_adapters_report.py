@@ -215,6 +215,31 @@ class AdapterAndReportTests(unittest.TestCase):
         )
         self.assertEqual(adapted.expected_content_type, "application/pdf")
 
+    def test_usfs_manual_adapter_maps_current_guidance_portal_pdf(self) -> None:
+        config = legacy_config()
+        adapted = adapt_download_url(
+            "https://www.fs.usda.gov/cgi-bin/Directives/get_dirs/fsm?1950=",
+            config.network,
+        )
+
+        self.assertIsNotNone(adapted)
+        self.assertEqual(adapted.adapter, "usfs_national_directives_manual_direct_document")
+        self.assertEqual(
+            adapted.url,
+            "https://www.usda.gov/sites/default/files/guidance-documents/"
+            "ForestService.Manual%201900%201950%20Environmental%20Policy%20and%20Procedures.pdf",
+        )
+        self.assertEqual(adapted.expected_content_type, "application/pdf")
+
+    def test_usfs_manual_adapter_returns_none_for_unmapped_manual_wrapper(self) -> None:
+        config = legacy_config()
+        adapted = adapt_download_url(
+            "https://www.fs.usda.gov/cgi-bin/Directives/get_dirs/fsm?2410=",
+            config.network,
+        )
+
+        self.assertIsNone(adapted)
+
     def test_report_builds_repair_queue_from_failed_manifest(self) -> None:
         config = legacy_config()
 

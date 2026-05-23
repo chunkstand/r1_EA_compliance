@@ -25,6 +25,51 @@ _BOX_PUBLIC_FILE_RE = re.compile(r"/(?:s|v)/[^/]+/file/(?P<file_id>\d+)(?:/|$)")
 _USFS_LEGACY_DIRECTIVES_HOSTS = {"www.fs.usda.gov", "fs.usda.gov"}
 _USFS_NATIONAL_DIRECTIVES_URL = "https://www.fs.usda.gov/about-agency/regulations-policies/national-directives"
 _DIRECT_DOCUMENT_EXTENSIONS = ("pdf", "doc", "docx")
+_USFS_MANUAL_DIRECT_DOCUMENT_URLS = {
+    # Live-verified USDA guidance portal download targets for the current FSM family. The local
+    # runtime can fetch these PDFs directly even when the intermediate USDA HTML guidance pages
+    # are flaky to retrieve from curl/urlopen.
+    "1950": (
+        "https://www.usda.gov/sites/default/files/guidance-documents/"
+        "ForestService.Manual%201900%201950%20Environmental%20Policy%20and%20Procedures.pdf"
+    ),
+    "2320": (
+        "https://www.usda.gov/sites/default/files/guidance-documents/"
+        "ForestService.Manual%202300%202320%20Wilderness%20Management.pdf"
+    ),
+    "2360": (
+        "https://www.usda.gov/sites/default/files/guidance-documents/"
+        "ForestService.Manual%202300%2060%20Heritage%20Program%20Managment.pdf"
+    ),
+    "2470": (
+        "https://www.usda.gov/sites/default/files/guidance-documents/"
+        "ForestService.Manual%202400%202470%20Silvicultural%20Practices.pdf"
+    ),
+    "2520": (
+        "https://www.usda.gov/sites/default/files/guidance-documents/"
+        "ForestService.Manual%202500%202520%20Watershed%20Protection%20and%20Management.pdf"
+    ),
+    "2550": (
+        "https://www.usda.gov/sites/default/files/guidance-documents/"
+        "ForestService.Manual%202500%202550%20Soil%20Management.pdf"
+    ),
+    "2720": (
+        "https://www.usda.gov/sites/default/files/guidance-documents/"
+        "ForestService.Manual%202700%202720%20Special%20Uses%20Administration.pdf"
+    ),
+    "2900": (
+        "https://www.usda.gov/sites/default/files/guidance-documents/"
+        "ForestService.Manual%202900%20Zero%20Code.pdf"
+    ),
+    "5140": (
+        "https://www.usda.gov/sites/default/files/guidance-documents/"
+        "ForestService.Manual%205100%205140%20Hazardous%20Fuels%20Management%20and%20Prescribed%20Fire.pdf"
+    ),
+    "7710": (
+        "https://www.usda.gov/sites/default/files/guidance-documents/"
+        "ForestService.Manual%207700%207710%20Travel%20Planning.pdf"
+    ),
+}
 
 
 def adapt_download_url(url: str, network: NetworkConfig) -> AdaptedURL | None:
@@ -136,11 +181,18 @@ def _adapt_usfs_legacy_directive_url(url: str, network: NetworkConfig) -> Adapte
     legacy_match = re.fullmatch(r"/cgi-bin/Directives/get_dirs/(?P<kind>fsh|fsm)", parsed.path)
     if not legacy_match:
         return None
-    if legacy_match.group("kind") != "fsh":
-        return None
     code = _legacy_directive_code(parsed.query)
     if not code:
         return None
+    if legacy_match.group("kind") == "fsm":
+        direct_document_url = _USFS_MANUAL_DIRECT_DOCUMENT_URLS.get(code)
+        if not direct_document_url:
+            return None
+        return AdaptedURL(
+            url=direct_document_url,
+            adapter="usfs_national_directives_manual_direct_document",
+            expected_content_type=_direct_document_content_type(direct_document_url),
+        )
     national_directives_page = _read_text_url_with_curl(_USFS_NATIONAL_DIRECTIVES_URL, network)
     if not national_directives_page:
         return None
