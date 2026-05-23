@@ -83,7 +83,8 @@ Use this file as the short current route before opening the large append-only do
   (`Resolve extraction fidelity Milestone 4`).
 - Direct-file capture packet status: Milestones `0`, `1`, and `2` in
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
-  are now resolved locally. The tracked
+  are now resolved locally through commit `85f087b`
+  (`Resolve direct-file queue Milestone 2`). The tracked
   `config/source_register_queue_resolution_ledger_v1.json` enumerates all
   `51` queue rows, `4` are now governed `resolved` promotions
   (`FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, `PROG-010`),

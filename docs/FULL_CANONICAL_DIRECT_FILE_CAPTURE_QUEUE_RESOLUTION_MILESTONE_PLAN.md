@@ -1,13 +1,14 @@
 # Full Canonical Direct-File Capture Queue Resolution Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet (`Milestones 0-2 resolved locally; Milestone 3 next`)
+Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 next`)
 Owner context: follow-on from the resolved full-canonical source-truth and compliance-gold
 rebaseline packets
 
 ## Latest Local Implementation
 
-Milestones `0`, `1`, and `2` are now resolved locally.
+Milestones `0`, `1`, and `2` are now resolved locally through commit `85f087b`
+(`Resolve direct-file queue Milestone 2`).
 
 - `config/source_register_queue_resolution_ledger_v1.json` now enumerates all
   `51` queue rows exactly once with `49` current/project-applicable rows, `2`
@@ -44,7 +45,8 @@ Open an explicit owner for the `51` deferred `Direct_File_Capture_Queue` rows so
 carrying them as a known but ownerless boundary outside the active canonical load-bearing surface.
 
 This packet exists to convert every queue row into one of four governed outcomes without weakening
-the already-resolved `581/581` active-current admission lane:
+the already-resolved active-current admission lane, whose current live successor
+is `585/585` on `source-set-3f7d4578cafb0704`:
 
 1. promoted to `Document_Register_Master` with direct document evidence;
 2. resolved through structured export and then promoted with file-level provenance;
@@ -99,14 +101,15 @@ while preserving current active-corpus truth:
 - no current/applicable queue row remains ownerless;
 - no queue row is promoted by treating a wrapper page, folder listing, or manual placeholder as a
   canonical direct document;
-- the active `581/581` current-admission lane remains green throughout the packet; and
+- the active `585/585` current-admission lane remains green throughout the packet or strengthens
+  through governed promotions; and
 - any remaining unresolved queue rows are explicit historical lineage or a named blocker packet, not
   an unowned side surface.
 
 ## Non-Goals
 
-- Do not reopen the resolved `581/581` active-current source-truth packet just to restate its
-  current success.
+- Do not reopen the resolved active-current source-truth packet just to restate the current
+  `585/585` successor baseline.
 - Do not weaken `extraction-accuracy-audit`, `retrieval-build`, `authority-currentness`, or
   `promotion-suite` to make queue work look green.
 - Do not admit wrapper pages, JS folders, reading-room placeholders, SCC listing pages, Box/Pinyon
@@ -232,7 +235,7 @@ while preserving current active-corpus truth:
 - Prevention gate:
   `authority-currentness`, `extraction-accuracy-audit`, `retrieval-build`, and `promotion-suite`
 - Fail threshold:
-  the promoted workbook regresses below `581/581` admitted active-current rows, produces a new
+  the promoted workbook regresses below `585/585` admitted active-current rows, produces a new
   blocked active-current row, or introduces a new full-canonical promotion-suite failure
 - Controlled violation:
   a focused fixture that promotes a queue row without valid direct-document evidence must fail
@@ -393,7 +396,7 @@ Acceptance criteria:
 
 - No current/applicable queue row remains outside the canonical target without promotion, explicit
   exclusion, historical scoping, or a named blocker packet.
-- The source-truth lane remains green on the active-current `581/581` baseline or an auditable
+- The source-truth lane remains green on the active-current `585/585` baseline or an auditable
   stronger successor count after legitimate promotions.
 - Routing docs no longer say that the queue is unresolved and ownerless.
 

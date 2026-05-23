@@ -31,9 +31,10 @@ Current routed state on 2026-05-23:
   through Milestone 10 Sequence 52: the tracked West Reservoir replay context
   uses repo-relative cached package authority, the stale reviewer-ready replay
   claim stays retired behind an explicit typed-blocked contract for
-  `west-reservoir-67436`, and the remaining live source-truth rebaseline lane
-  is now rerouted into
-  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
+  `west-reservoir-67436`, and the source-truth follow-on surfaced by that
+  sequence is now historically closed through `93a23b0`, with the live next
+  packet moved on to
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
 - The under-`800` follow-on packet in
   `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` is now fully resolved
   through Milestone `9`: the viewer family was the last oversized owner, the
@@ -70,7 +71,9 @@ Current routed state on 2026-05-23:
   `resolution_status_counts={"planned":47,"resolved":4}`,
   `unresolved_current_or_project_applicable_count=45`, the same `2`
   governed historical rows (`FPS-380`, `SUP-007`), and the next routed slice
-  is now Milestone `3` for export-backed families and named blockers.
+  is now Milestone `3` for export-backed families and named blockers. This
+  closeout landed in commit `85f087b`
+  (`Resolve direct-file queue Milestone 2`).
 - The downstream full-canonical compliance-gold packet is now resolved
   historically on pre-queue source set `source-set-f775524ab233ff27`:
   refreshed claims there record `claim_count=124458`,

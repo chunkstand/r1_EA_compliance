@@ -7,6 +7,36 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Direct-File Queue Milestone 2 Alignment Pass
+
+This docs-only follow-up closes the remaining route/checkpoint drift after
+Milestone `2` landed.
+
+- outcome label:
+  `aligned locally`; the routed docs stack now pins the actual Milestone `2`
+  closeout commit and retires the stale packet-local `581/581`
+  active-current wording in favor of the live `585/585` successor on
+  `source-set-3f7d4578cafb0704`
+- closeout commit:
+  `85f087b` (`Resolve direct-file queue Milestone 2`)
+- routed packet:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- stale-reference audit:
+  `README.md`, `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`,
+  this handoff note, the active queue packet, and the successor note in
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md` now all
+  pin the same Milestone `2` checkpoint, the same live `638/585`
+  strengthened boundary, and the same next routed slice: Milestone `3`
+- next routing:
+  the packet remains active and the next executable slice is Milestone `3`
+  in `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- verification:
+  targeted route grep across the routed queue docs,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  and `git diff --check`
+
 ## Full Canonical Direct-File Queue Milestone 2 Reduced Locally
 
 This implementation slice closes Milestone `2` in

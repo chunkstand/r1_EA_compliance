@@ -82,6 +82,37 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Full Canonical Direct-File Queue Milestone 2 Alignment Pass
+
+Latest docs alignment on 2026-05-23:
+
+- Routed packet:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `aligned locally`; the routed docs stack now pins the actual Milestone `2`
+  closeout commit and retires the stale packet-local `581/581`
+  active-current wording in favor of the live `585/585` successor on
+  `source-set-3f7d4578cafb0704`.
+- Closeout commit:
+  `85f087b` (`Resolve direct-file queue Milestone 2`).
+- Stale-reference audit:
+  `README.md`, `docs/CURRENT_ROUTING.md`, this current-state log,
+  `docs/SESSION_HANDOFF.md`,
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`,
+  and the successor note in
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md` now agree
+  on the Milestone `2` checkpoint, the live `638/585` successor boundary,
+  and Milestone `3` as the next routed slice.
+- Next routing:
+  the packet remains active and the next executable slice is Milestone `3`
+  in `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+- Verification:
+  targeted route grep across the routed queue docs,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  and `git diff --check`.
+
 ## Full Canonical Direct-File Queue Milestone 2 Reduced Locally
 
 Latest implementation update on 2026-05-23:
