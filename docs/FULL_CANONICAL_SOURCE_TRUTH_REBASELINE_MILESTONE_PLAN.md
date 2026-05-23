@@ -87,7 +87,8 @@ The latest queue follow-on now also narrows `FINAL-Q-LOLO-001` into
 planning-library blocker family because the live root Pinyon folder spans
 already-captured Lolo plan and SCC records plus broader assessment, notice,
 geospatial, and topic-support folders; that routing change also leaves the
-live source set and admitted-count boundary unchanged.
+live source set and admitted-count boundary unchanged. That blocker opener
+landed in commit `2d7d7c2` (`Open Lolo Pinyon blocker packet`).
 Older `634/581` references below remain the historical closeout baseline for
 commit `93a23b0` unless a later bullet explicitly updates them.
 

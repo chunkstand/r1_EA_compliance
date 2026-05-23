@@ -112,7 +112,8 @@ Use this file as the short current route before opening the large append-only do
   (`Open WILD-ESA NCDE blocker packet`).
   The latest slice now also routes `FINAL-Q-LOLO-001` to
   `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md` as an explicit
-  blocker family.
+  blocker family, and that closeout landed in commit `2d7d7c2`
+  (`Open Lolo Pinyon blocker packet`).
   The tracked `config/source_register_queue_resolution_ledger_v1.json`
   enumerates all `51` queue rows, preserves the `4` governed `resolved`
   promotions from Milestone `2` plus the `4` SCC structured-export families

@@ -128,6 +128,8 @@ Latest implementation update on 2026-05-23:
   public root folder is a 14-section planning library that overlaps existing
   Lolo plan and SCC rows while also carrying broader assessment, legal-notice,
   geospatial, and topical support surfaces.
+- Closeout commit:
+  `2d7d7c2` (`Open Lolo Pinyon blocker packet`).
 - Active full-canonical catalog truth:
   the live source set remains `source-set-4fb59e9eb43045cb` with
   `source_count=647`, `artifact_count=635`,

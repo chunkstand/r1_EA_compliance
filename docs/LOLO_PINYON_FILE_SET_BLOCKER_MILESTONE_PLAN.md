@@ -1,7 +1,7 @@
 # Lolo Pinyon File Set Blocker Milestone Plan
 
 Date: 2026-05-23
-Status: Active blocker packet (`Milestone 0 resolved locally; Milestone 1 next when the mixed Lolo plan-revision library is reconciled document-by-document into governed canonical successors or explicit exclusions`)
+Status: Active blocker packet (`Milestone 0 resolved locally through 2d7d7c2; Milestone 1 next when the mixed Lolo plan-revision library is reconciled document-by-document into governed canonical successors or explicit exclusions`)
 Owner context: the `FINAL-Q-LOLO-001` queue family points at a large mixed Pinyon planning library that overlaps existing canonical Lolo plan and SCC rows while also containing broader assessment, notice, geospatial, and topical support folders
 
 ## Purpose
@@ -19,7 +19,8 @@ support folders that are not yet classified document by document.
 
 ## Latest Local Implementation
 
-Milestone `0` is now resolved locally in the current slice.
+Milestone `0` is now resolved locally through commit `2d7d7c2`
+(`Open Lolo Pinyon blocker packet`).
 
 - `config/source_register_queue_resolution_ledger_v1.json` now routes
   `FINAL-Q-LOLO-001` to this exact packet path and marks it

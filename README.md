@@ -98,7 +98,8 @@ Current routed state on 2026-05-23:
   (`Open Flathead reading-room blocker packet`). The latest slices opened the
   NCDE amendment export blocker family for `WILD-ESA-Q001` in commit
   `3a8dd2d` (`Open WILD-ESA NCDE blocker packet`) and the Lolo Pinyon blocker
-  family for `FINAL-Q-LOLO-001`; the earlier Milestone `2`
+  family for `FINAL-Q-LOLO-001` in commit `2d7d7c2`
+  (`Open Lolo Pinyon blocker packet`); the earlier Milestone `2`
   direct-file promotion closeout remains commit `85f087b`
   (`Resolve direct-file queue Milestone 2`).
 - The downstream full-canonical compliance-gold packet is now resolved

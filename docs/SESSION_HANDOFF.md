@@ -20,6 +20,8 @@ single-family promotion.
   SCC structured-export, Flathead, and NCDE blocker slices remain in place,
   and the next routed slice stays on the remaining generic export-backed
   families
+- closeout commit:
+  `2d7d7c2` (`Open Lolo Pinyon blocker packet`)
 - routed packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - workbook and queue truth:
