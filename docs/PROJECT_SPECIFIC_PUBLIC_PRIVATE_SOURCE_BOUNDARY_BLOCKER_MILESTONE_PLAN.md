@@ -1,7 +1,7 @@
 # Project-Specific Public-Private Source Boundary Blocker Milestone Plan
 
 Date: 2026-05-23
-Status: Active blocker packet opened from `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md` Milestone `3`
+Status: Active blocker packet (`Milestone 0 resolved locally through 8b889a9; Milestone 1 next when a concrete project-specific source becomes load-bearing`)
 Owner context: project-specific consultation/agreement source rows that cannot be promoted truthfully until a concrete public project file or governed nonpublic citation path exists
 
 ## Purpose
@@ -17,6 +17,22 @@ project record:
 These rows cannot be promoted as canonical sources from the current workbook
 state because they intentionally describe a class of possible project-file
 documents rather than a verified public file URL.
+
+## Latest Local Implementation
+
+Milestone `0` is now resolved locally through commit `8b889a9`
+(`Open project-specific queue blocker packet`).
+
+- `config/source_register_queue_resolution_ledger_v1.json` now routes
+  `PROG-011`, `PROG-012`, and `PROG-013` to this exact packet path and marks
+  them `resolution_status="blocked"`.
+- `source-register-queue-audit` now fail-closes named blockers unless they
+  reference an existing tracked packet under `docs/`, and it reports
+  `blocked_current_or_project_applicable_count=3` with the blocker roster
+  `["PROG-011", "PROG-012", "PROG-013"]`.
+- Routed docs and handoff surfaces now pin this blocker-family opener as the
+  current Milestone `3` reduced slice while leaving the export-backed
+  families as the next routed work.
 
 ## Current Evidence
 

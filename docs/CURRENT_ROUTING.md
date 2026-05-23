@@ -89,6 +89,8 @@ Use this file as the short current route before opening the large append-only do
   (`Resolve direct-file queue Milestone 2`), and Milestone `3` is now
   reduced locally by opening the project-specific blocker family in
   `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`.
+  The blocker-family opener landed in commit `8b889a9`
+  (`Open project-specific queue blocker packet`).
   The tracked `config/source_register_queue_resolution_ledger_v1.json`
   enumerates all `51` queue rows, preserves the `4` governed `resolved`
   promotions (`FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`,

@@ -1,7 +1,7 @@
 # Full Canonical Direct-File Capture Queue Resolution Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction opened locally`)
+Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; export-backed Milestone 3 slice next`)
 Owner context: follow-on from the resolved full-canonical source-truth and compliance-gold
 rebaseline packets
 
@@ -9,7 +9,9 @@ rebaseline packets
 
 Milestones `0`, `1`, and `2` are now resolved locally through commit `85f087b`
 (`Resolve direct-file queue Milestone 2`). Milestone `3` is now reduced
-locally through the project-specific blocker-family opening slice.
+locally through commit `8b889a9`
+(`Open project-specific queue blocker packet`) for the project-specific
+blocker-family opening slice.
 
 - `config/source_register_queue_resolution_ledger_v1.json` now enumerates all
   `51` queue rows exactly once with `49` current/project-applicable rows, `2`

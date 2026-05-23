@@ -75,8 +75,10 @@ Current routed state on 2026-05-23:
   `blocked_current_or_project_applicable_count=3`,
   `unresolved_current_or_project_applicable_count=42`, the same `2`
   governed historical rows (`FPS-380`, `SUP-007`), and the next routed slice
-  remains Milestone `3` for the export-backed families. The earlier
-  Milestone `2` direct-file promotion closeout remains commit `85f087b`
+  remains Milestone `3` for the export-backed families. This blocker-family
+  opener landed in commit `8b889a9`
+  (`Open project-specific queue blocker packet`); the earlier Milestone `2`
+  direct-file promotion closeout remains commit `85f087b`
   (`Resolve direct-file queue Milestone 2`).
 - The downstream full-canonical compliance-gold packet is now resolved
   historically on pre-queue source set `source-set-f775524ab233ff27`:

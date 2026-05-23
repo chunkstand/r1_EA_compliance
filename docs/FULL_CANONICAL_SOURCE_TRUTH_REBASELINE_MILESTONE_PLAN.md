@@ -57,6 +57,8 @@ follow-on now further reduces the live queue surface by routing `PROG-011`,
 `PROG-012`, and `PROG-013` to
 `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
 as explicit blockers while leaving `source-set-3f7d4578cafb0704` unchanged.
+That blocker-family opener landed in commit `8b889a9`
+(`Open project-specific queue blocker packet`).
 Older `634/581` references below remain the historical closeout baseline for
 commit `93a23b0` unless a later bullet explicitly updates them.
 
