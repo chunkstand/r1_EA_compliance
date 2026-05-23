@@ -56,6 +56,8 @@ Current routed state on 2026-05-22:
   confirmed current direct-document path on the live official surfaces, and
   `USFS-026` still exposes only a transmittal link rather than a live contents
   page. `FPS-344` remains admitted as a structured Federal Register XML source.
+  Latest reduced-slice commit:
+  `96450be` (`Reduce source-truth Milestone 2 manual wrapper blockers`).
   The earlier handbook-wrapper reduced slice landed in
   `4650837` (`Reduce source-truth Milestone 2 handbook wrapper blockers`).
   `51`

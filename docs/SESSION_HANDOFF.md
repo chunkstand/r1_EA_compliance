@@ -16,6 +16,8 @@ This worktree slice further reduces Milestone `2` in
   `reduced`; a manual-wrapper adapter now admits `10` legacy `fsm` rows
   through live USDA guidance PDF targets, and the packet remains reduced on the
   `3` direct-document blockers still lacking a governed current document path
+- closeout commit:
+  `96450be` (`Reduce source-truth Milestone 2 manual wrapper blockers`)
 - implementation surfaces:
   `src/usfs_r1_ea_sources/adapters.py`,
   `tests/test_adapters_report.py`, and the local ignored refreshed download,

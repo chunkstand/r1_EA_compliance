@@ -15,8 +15,10 @@ National Directives contents PDFs, `10` manual wrapper rows now admit through
 live USDA guidance PDF targets, and the packet remains in Milestone 2 reduced
 on the remaining directives-wrapper blockers: `USFS-018` (`FSM 2410`),
 `USFS-024` (`FSM 2580`), and `USFS-026` (`FSH 2509.18`). The latest recorded
-Milestone 2 reduced local commit remains `4650837`
-(`Reduce source-truth Milestone 2 handbook wrapper blockers`); the earlier
+Milestone 2 reduced local commit is `96450be`
+(`Reduce source-truth Milestone 2 manual wrapper blockers`); the earlier
+Milestone 2 reduced handbook slice remains `4650837`
+(`Reduce source-truth Milestone 2 handbook wrapper blockers`), and the earlier
 Milestone 2 reduced slice remains `806cdf1`
 (`Reduce source-truth Milestone 2 blockers`). Milestone 1 closeout commit:
 `46bff61` (`Resolve source-truth rebaseline Milestone 1`).
@@ -344,6 +346,8 @@ Outcome label: `reduced`
 Current worktree checkpoint on 2026-05-22:
 
 - The latest local reduced-slice closeout commit is
+  `96450be` (`Reduce source-truth Milestone 2 manual wrapper blockers`).
+- The earlier Milestone 2 reduced handbook slice remains
   `4650837` (`Reduce source-truth Milestone 2 handbook wrapper blockers`).
 - The earlier Milestone 2 reduced slice remains
   `806cdf1` (`Reduce source-truth Milestone 2 blockers`).

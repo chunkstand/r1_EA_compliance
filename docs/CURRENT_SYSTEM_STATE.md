@@ -84,6 +84,8 @@ Latest worktree implementation on 2026-05-22:
   locally, `10` legacy `fsm` wrapper rows now admit through live USDA guidance
   PDF targets, and the packet remains reduced on the `3` direct-document
   blockers that still lack a governed current document path.
+- Closeout commit:
+  `96450be` (`Reduce source-truth Milestone 2 manual wrapper blockers`).
 - Earlier reduced-slice closeout:
   the handbook-wrapper slice remains recorded in `4650837`
   (`Reduce source-truth Milestone 2 handbook wrapper blockers`).

@@ -14,7 +14,8 @@ Use this file as the short current route before opening the large append-only do
 - Active source-truth packet status: Milestone `2` remains reduced; a follow-on
   manual-wrapper slice now admits `10` additional legacy USFS directive rows,
   and the next routed slice remains Milestone `2` on the remaining `3`
-  direct-document blockers
+  direct-document blockers through local commit `96450be`
+  (`Reduce source-truth Milestone 2 manual wrapper blockers`)
 - Active canonical-source mismatch: the live source set proves `634/634` extracted
   `Document_Register_Master` rows, and the current worktree now rebaselines verified admission to
   all `582` `active_review_corpus` rows through
