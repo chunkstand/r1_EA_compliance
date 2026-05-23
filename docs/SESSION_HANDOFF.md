@@ -17,6 +17,8 @@ This worktree slice resolves Milestone `1` in
   targets all `582` `active_review_corpus` rows under
   `canonical-source-register-active-current-admission`, and the packet advances
   to Milestone `2` reduced on the remaining direct-document blockers
+- closeout commit:
+  `46bff61` (`Resolve source-truth rebaseline Milestone 1`)
 - implementation surfaces:
   `config/verified_extraction_admission_contract.json`,
   `src/usfs_r1_ea_sources/extraction_accuracy.py`,
@@ -40,6 +42,10 @@ This worktree slice resolves Milestone `1` in
   continue with Milestone `2` in
   `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md` to resolve
   those `23` direct-document blockers through governed promotion or exclusion
+- stale-reference audit:
+  the immediately following packet-open section is preserved append-only
+  history only; this Milestone `1` closeout plus commit `46bff61` supersede
+  that earlier `343`-row route for live routing
 - verification:
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_accuracy.py -q`,
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_retrieval_validation.py -q`,

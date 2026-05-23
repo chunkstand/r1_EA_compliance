@@ -53,6 +53,8 @@ Current routed state on 2026-05-22:
   plus `FPS-344` on a Federal Register XML artifact), while `51`
   `Direct_File_Capture_Queue` rows remain outside the active load-bearing
   surface and the `52` archive rows still await Milestone `3` lineage closure.
+  Milestone `1` closeout commit:
+  `46bff61` (`Resolve source-truth rebaseline Milestone 1`).
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
   because `compliance-gold-eval` is red on the active full-canonical source set
   `source-set-f775524ab233ff27`; the tracked review-contract lane itself remains

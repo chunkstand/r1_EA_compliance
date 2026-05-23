@@ -10,7 +10,8 @@ shadow-filtered subset to all `582` active-current canonical rows via
 coverage is green, and the refreshed `extraction-accuracy-audit` plus
 `retrieval-build` replays now agree on `559` admitted plus `23` blocked
 active-current rows. The packet advances to Milestone 2 reduced on the
-remaining direct-document blockers.
+remaining direct-document blockers. Milestone 1 closeout commit:
+`46bff61` (`Resolve source-truth rebaseline Milestone 1`).
 
 Owner context: on 2026-05-22 the governing intent was clarified: the newest imported source set
 must fully replace the older source set as the canonical source of truth for this repository's
@@ -303,6 +304,8 @@ Current worktree checkpoint on 2026-05-22:
 - The refreshed retrieval replay on `source-set-f775524ab233ff27` now records
   the same `582` required active-current rows, `559` admitted rows, and `23`
   blocked rows.
+- The Milestone 1 closeout commit is
+  `46bff61` (`Resolve source-truth rebaseline Milestone 1`).
 
 1. Replace the current `canonical-source-register-active-review-admission` live target with a new
    full-canonical admission contract that reflects the intended Region 1 source truth.

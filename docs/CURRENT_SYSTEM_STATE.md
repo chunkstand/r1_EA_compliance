@@ -82,6 +82,8 @@ Latest worktree implementation on 2026-05-22:
 - Outcome label:
   `resolved` for Milestone `1`; the packet now advances to Milestone `2`
   reduced with the widened verified-admission replay landed locally.
+- Closeout commit:
+  `46bff61` (`Resolve source-truth rebaseline Milestone 1`).
 - Live replay truth:
   the refreshed retrieval replay on `source-set-f775524ab233ff27` records
   `verified_extraction_required_source_count=582`,
@@ -97,6 +99,11 @@ Latest worktree implementation on 2026-05-22:
   `51` `Direct_File_Capture_Queue` rows remain outside the active load-bearing
   surface, and the `52` `currentness_supersession_archive` rows still await the
   Milestone `3` lineage decision in the same packet.
+- Stale-reference audit:
+  the immediately following packet-open section in `docs/SESSION_HANDOFF.md`
+  and older `343`-row historical sections below in this append-only file remain
+  preserved history only; this Milestone `1` closeout and commit `46bff61`
+  supersede them for live routing.
 - Verification:
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_accuracy.py -q`,
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_retrieval_validation.py -q`,
