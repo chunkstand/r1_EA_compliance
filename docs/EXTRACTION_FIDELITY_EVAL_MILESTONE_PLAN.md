@@ -2,20 +2,25 @@
 
 Date: 2026-05-23
 
-Status: In progress on 2026-05-23. Milestone `0` and Milestone `1` are now
+Status: In progress on 2026-05-23. Milestones `0` through `2` are now
 resolved locally: the live owner split and `9/9` promotion baseline were
-re-locked from repo artifacts only, and the repo now ships
+re-locked from repo artifacts only, the repo now ships
 `config/extraction_fidelity_eval_v1.json`, `12` governed fidelity families,
 `24` tracked cases, fixture-backed controlled violations, and
-`tests/test_extraction_fidelity_eval.py` as the contract substrate. The full
-canonical source-truth lane is already resolved locally through `93a23b0`,
-the downstream full-canonical compliance-gold lane is already resolved
-locally through `8e0e02b`, and no active owner remains in that closed
-source-truth/gold route. This packet still owns the next upstream-standard
-raise: build a dedicated extraction-fidelity eval that proves fixture-backed
-extraction correctness directly, rather than trying to infer import and
-extraction truth from downstream gold breadth. The Milestone `0`/`1`
-closeout commit is `f2afa8f` (`Resolve extraction fidelity Milestones 0-1`).
+`tests/test_extraction_fidelity_eval.py` as the contract substrate, and the
+dedicated `extraction-fidelity-eval` producer now writes durable JSON and
+Markdown results under `source_library/evaluations/extraction_fidelity/`.
+The current green replay records `matched_case_count=24`,
+`parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
+`span_mismatch_count=10`, `boundary_mismatch_count=4`, and
+`negative_case_pass_count=12`. The full canonical source-truth lane is
+already resolved locally through `93a23b0`, the downstream full-canonical
+compliance-gold lane is already resolved locally through `8e0e02b`, and no
+active owner remains in that closed source-truth/gold route. This packet now
+owns the next upstream-standard raise: route the new artifact into
+upstream/promotion truth instead of leaving the older extraction umbrella as
+the effective owner. The Milestone `0`/`1` closeout commit is `f2afa8f`
+(`Resolve extraction fidelity Milestones 0-1`).
 
 Owner context: this plan follows
 `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`, which already created
@@ -472,6 +477,24 @@ PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources extraction-fidelity-eval -
 git diff --check
 ```
 
+Milestone 2 closeout note on 2026-05-23:
+
+- `src/usfs_r1_ea_sources/extraction_fidelity_eval.py` now owns the dedicated
+  offline fixture replay, manifest validation, fidelity metrics, and durable
+  JSON/Markdown outputs under
+  `source_library/evaluations/extraction_fidelity/`.
+- `src/usfs_r1_ea_sources/cli_eval.py` now registers
+  `extraction-fidelity-eval`, and the architecture/output-schema docs now
+  carry the new command and artifact owner.
+- The current green replay on the committed manifest records
+  `required_category_count=12`, `case_count=24`, `matched_case_count=24`,
+  `parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
+  `span_mismatch_count=10`, `boundary_mismatch_count=4`, and
+  `negative_case_pass_count=12`.
+- Next routing: execute Milestone `3` in this packet to narrow the older
+  upstream extraction umbrella and make the new artifact load-bearing in
+  upstream/promotion truth.
+
 ### Milestone 3 - Upstream And Promotion Routing Integration
 
 Outcome label: `resolved`
@@ -662,8 +685,8 @@ The final closeout must record:
 - [x] Milestone 0 rechecked the live owner split and route facts
 - [x] `config/extraction_fidelity_eval_v1.json` exists with governed required categories
 - [x] tracked fidelity fixtures and controlled violations exist
-- [ ] `extraction-fidelity-eval` is implemented and CLI-registered
-- [ ] dedicated results and report artifacts are documented
+- [x] `extraction-fidelity-eval` is implemented and CLI-registered
+- [x] dedicated results and report artifacts are documented
 - [ ] `upstream-eval` and promotion wiring consume the new owner truthfully
 - [x] `README.md`, routing docs, current-state docs, this plan, and handoff are aligned
 - [x] focused tests, lint, eval commands, and `git diff --check` passed

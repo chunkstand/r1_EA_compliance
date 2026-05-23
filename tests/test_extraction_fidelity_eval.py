@@ -3,6 +3,9 @@ from __future__ import annotations
 from collections import Counter
 from pathlib import Path
 import json
+import tempfile
+
+from usfs_r1_ea_sources.extraction_fidelity_eval import run_extraction_fidelity_eval
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,6 +44,69 @@ def test_extraction_fidelity_real_manifest_covers_required_categories_and_fixtur
     assert summary["case_count"] == 24
     assert summary["matched_case_count"] == 24
     assert all(check["passed"] for check in summary["contract_checks"])
+
+
+def test_extraction_fidelity_eval_runs_real_manifest_and_writes_outputs() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_extraction_fidelity_eval(
+            manifest_path=MANIFEST,
+            results_dir=Path(tmp) / "extraction-fidelity",
+        )
+
+        assert result.summary["passed"] is True
+        assert result.output_path.exists()
+        assert result.report_path.exists()
+        assert result.summary["required_category_count"] == 12
+        assert result.summary["case_count"] == 24
+        assert result.summary["matched_case_count"] == 24
+        assert result.summary["parser_route_mismatch_count"] == 1
+        assert result.summary["negative_case_pass_count"] == 12
+        assert result.summary["negative_case_fail_count"] == 0
+        assert all(check["passed"] for check in result.summary["contract_checks"])
+
+
+def test_extraction_fidelity_eval_records_controlled_violation_metrics() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_extraction_fidelity_eval(
+            manifest_path=MANIFEST,
+            results_dir=Path(tmp) / "extraction-fidelity",
+        )
+
+    ocr_case = _case(result.summary, "ocr-anchor-controlled-violation")
+    assert ocr_case["actual_producer_passed"] is False
+    assert (
+        ocr_case["details"]["metric_results"]["anchor_match_rate"]["missing_anchor_count"] > 0
+    )
+
+    boundary_case = _case(result.summary, "section-boundary-controlled-violation")
+    assert boundary_case["actual_producer_passed"] is False
+    assert (
+        boundary_case["details"]["metric_results"]["boundary_pair_match_rate"][
+            "boundary_mismatch_count"
+        ]
+        > 0
+    )
+
+    parser_case = _case(result.summary, "parser-route-identity-controlled-violation")
+    assert parser_case["actual_producer_passed"] is False
+    assert parser_case["details"]["metric_results"]["parser_route_match"]["passed"] is False
+
+    scope_case = _case(result.summary, "statute-scope-controlled-violation")
+    assert scope_case["actual_producer_passed"] is False
+    assert scope_case["details"]["metric_results"]["scope_match"]["passed"] is False
+    assert (
+        scope_case["details"]["metric_results"]["forbidden_anchor_absence_rate"][
+            "forbidden_anchor_present_count"
+        ]
+        > 0
+    )
+
+    wrapper_case = _case(result.summary, "direct-document-wrapper-controlled-violation")
+    assert wrapper_case["actual_producer_passed"] is False
+    assert (
+        wrapper_case["details"]["metric_results"]["required_check_match_rate"]["passed"] is True
+    )
+    assert wrapper_case["details"]["negative_case_passed"] is True
 
 
 def _manifest_contract_summary(manifest_path: Path) -> dict:
@@ -390,6 +456,10 @@ def _shape_error(
 
 def _check(summary: dict, name: str) -> dict:
     return next(check for check in summary["contract_checks"] if check["name"] == name)
+
+
+def _case(summary: dict, case_id: str) -> dict:
+    return next(case for case in summary["cases"] if case["case_id"] == case_id)
 
 
 def _read_json(path: Path) -> dict:

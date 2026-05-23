@@ -82,6 +82,38 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Extraction Fidelity Eval Milestone 2 Resolved Locally
+
+Latest implementation update on 2026-05-23:
+
+- Routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved locally` for Milestone `2`; Milestones `0` and `1` remain closed,
+  and Milestones `3` through `4` remain open.
+- Owner surface:
+  the repo now ships a dedicated
+  `src/usfs_r1_ea_sources/extraction_fidelity_eval.py` producer plus
+  `extraction-fidelity-eval` CLI registration and durable outputs under
+  `source_library/evaluations/extraction_fidelity/`.
+- Replay truth:
+  the committed manifest `config/extraction_fidelity_eval_v1.json` now runs
+  green at `required_category_count=12`, `case_count=24`,
+  `matched_case_count=24`, `parser_route_mismatch_count=1`,
+  `anchor_mismatch_count=13`, `span_mismatch_count=10`,
+  `boundary_mismatch_count=4`, `negative_case_pass_count=12`,
+  `negative_case_fail_count=0`, and `required_check_mismatch_count=0`.
+- Owner split:
+  `extraction_validation.json` remains structural extraction validation,
+  `extraction_accuracy_audit.json` remains live generated-corpus audit truth,
+  and `extraction_fidelity_eval_results.json` now exists as the dedicated
+  offline direct-fidelity artifact instead of a planned future owner only.
+- Next routing:
+  execute Milestone `3` in
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md` to narrow the older
+  `upstream-eval` extraction umbrella and make the new artifact load-bearing
+  in upstream/promotion routing.
+
 ## Extraction Fidelity Eval Milestones 0-1 Alignment Pass
 
 Latest docs alignment on 2026-05-23:

@@ -4122,6 +4122,94 @@ The audit summary also records:
 - `knowledge_base_blocked_source_record_ids`
 - `per_source_failures`
 
+## Extraction Fidelity Eval Outputs
+
+Default manifest: `config/extraction_fidelity_eval_v1.json`
+
+Path: `source_library/evaluations/extraction_fidelity/`
+
+The `extraction-fidelity-eval` command writes:
+
+- `extraction_fidelity_eval_results.json`
+- `extraction_fidelity_eval_report.md`
+
+The command replays tracked offline fixtures across OCR-heavy PDFs, table-dense PDFs, appendix and
+section boundaries, scoped XML, directive documents, forest-plan chapter/map/monitoring families,
+split-page continuations, parser-route identity, and direct-document wrapper negatives. It does not
+depend on live `source_library/` state beyond the target output directory where it writes its own
+results.
+
+`extraction_fidelity_eval_results.json` has schema version
+`extraction-fidelity-eval-results-v0` and includes:
+
+- `schema_version`
+- `manifest_path`
+- `results_dir`
+- `generated_at`
+- `passed`
+- `required_category_count`
+- `case_count`
+- `expected_pass_case_count`
+- `controlled_violation_case_count`
+- `matched_case_count`
+- `failed_case_ids`
+- `parser_route_mismatch_count`
+- `anchor_mismatch_count`
+- `span_mismatch_count`
+- `boundary_mismatch_count`
+- `negative_case_pass_count`
+- `negative_case_fail_count`
+- `required_check_mismatch_count`
+- `contract_checks`
+- `category_summaries`
+- `cases`
+- `output_path`
+- `report_path`
+
+Each category summary includes:
+
+- `category_id`
+- `required_metric_ids`
+- `route_identity_load_bearing`
+- `case_count`
+- `expected_pass_case_count`
+- `controlled_violation_case_count`
+- `matched_case_count`
+- `passed`
+- `status`
+- `failing_case_ids`
+- `parser_route_mismatch_count`
+- `anchor_mismatch_count`
+- `span_mismatch_count`
+- `boundary_mismatch_count`
+- `negative_case_pass_count`
+- `negative_case_fail_count`
+- `metric_outcomes`
+
+Each case result includes:
+
+- `case_id`
+- `category_id`
+- `case_type`
+- `fixture_path`
+- `scenario_id`
+- `expected_producer_passed`
+- `actual_producer_passed`
+- `assertion_passed`
+- `matched_expectation`
+- `details`
+- `error`
+
+The `details` payload records the extracted parser identity, source scope, audit status, failed
+check names, and metric-by-metric outcomes such as anchor match rates, missing-anchor counts,
+table-row preservation, boundary mismatch counts, scope-match status, required-check parity, and
+negative-case outcomes.
+
+`extraction_fidelity_eval_report.md` is the operator-facing Markdown summary. It records the
+aggregate pass state, matched-case count, parser/anchor/span/boundary mismatch totals, negative-case
+outcomes, category-level status rows, and any failed case IDs without requiring the raw JSON to be
+opened.
+
 ## Upstream Evaluation Outputs
 
 Path: `source_library/evaluations/upstream/`

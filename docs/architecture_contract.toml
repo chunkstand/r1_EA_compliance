@@ -394,6 +394,7 @@ modules = [
   "applicability_eval_summary",
   "applicability_eval_support",
   "draft_generation_eval",
+  "extraction_fidelity_eval",
   "forest_plan_component_retrieval_eval",
   "forest_plan_profile_eval",
   "gold_coverage_eval",
@@ -672,6 +673,8 @@ paths = [
 [[artifacts]]
 owner_layer = "eval"
 paths = [
+  "source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json",
+  "source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_report.md",
   "source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json",
   "source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json",
   "source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_report.md",
@@ -794,6 +797,7 @@ commands = [
   "applicability-eval",
   "applicability-gold-eval",
   "draft-generation-eval",
+  "extraction-fidelity-eval",
   "forest-plan-component-eval-coverage",
   "forest-plan-component-retrieval-eval",
   "forest-plan-profile-eval",

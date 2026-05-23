@@ -79,21 +79,21 @@ Current routed state on 2026-05-23:
   This closeout landed in commit `8e0e02b`
   (`Resolve full canonical compliance gold rebaseline`).
 - The active upstream-standard packet is now
-  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`. Milestone `0` and
-  Milestone `1` are resolved locally: the route facts and owner split are
-  re-locked against the live `9/9` promotion baseline, and the repo now ships
-  a checked-in extraction-fidelity contract substrate with
-  `config/extraction_fidelity_eval_v1.json`, `12` required fidelity families,
-  `24` tracked cases, fixture-backed controlled violations, and
-  `tests/test_extraction_fidelity_eval.py`. This first packet slice landed in
-  closeout commit `f2afa8f` (`Resolve extraction fidelity Milestones 0-1`).
-  The current upstream extraction lane is still green through `upstream-eval`
-  with `11` extraction categories and `22` extraction cases, and the live
-  full-canonical `extraction-accuracy-audit` is still green at `581/581`
-  admitted active rows. Milestone `2` is the next routed slice: implement the
-  dedicated `extraction-fidelity-eval` command and durable artifact owner
-  rather than pushing more import/extraction burden into downstream gold
-  coverage.
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`. Milestones `0` through
+  `2` are now resolved locally: the route facts and owner split remain
+  re-locked against the live `9/9` promotion baseline, the repo ships the
+  checked-in extraction-fidelity contract substrate under
+  `config/extraction_fidelity_eval_v1.json`, and the dedicated
+  `extraction-fidelity-eval` producer now writes durable results under
+  `source_library/evaluations/extraction_fidelity/`. The current green replay
+  records `12` governed families, `24` cases, `matched_case_count=24`,
+  `parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
+  `span_mismatch_count=10`, `boundary_mismatch_count=4`, and
+  `negative_case_pass_count=12`, while the live full-canonical
+  `extraction-accuracy-audit` remains green at `581/581` admitted active
+  rows. Milestone `3` is the next routed slice: make the new artifact
+  load-bearing in upstream/promotion routing instead of leaving the older
+  extraction umbrella as the effective owner.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 

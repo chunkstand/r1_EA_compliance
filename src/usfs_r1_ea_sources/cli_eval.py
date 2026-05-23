@@ -37,6 +37,9 @@ DEFAULT_DRAFT_GENERATION_CONFIG_PATH = _module_attr(
 DEFAULT_DRAFT_GENERATION_EVAL_PATH = _module_attr(
     "draft_generation_eval", "DEFAULT_EVAL_PATH"
 )
+DEFAULT_EXTRACTION_FIDELITY_EVAL_MANIFEST_PATH = _module_attr(
+    "extraction_fidelity_eval", "DEFAULT_EXTRACTION_FIDELITY_EVAL_MANIFEST_PATH"
+)
 DEFAULT_UPSTREAM_EVALUATION_MANIFEST_PATH = _module_attr(
     "upstream_evaluation", "DEFAULT_UPSTREAM_EVALUATION_MANIFEST_PATH"
 )
@@ -73,6 +76,10 @@ def run_applicability_gold_eval(**kwargs):
 
 def run_draft_generation_eval(**kwargs):
     return _module_attr("draft_generation_eval", "run_draft_generation_eval")(**kwargs)
+
+
+def run_extraction_fidelity_eval(**kwargs):
+    return _module_attr("extraction_fidelity_eval", "run_extraction_fidelity_eval")(**kwargs)
 
 
 def run_upstream_evaluation(**kwargs):
@@ -124,6 +131,7 @@ EVAL_COMMANDS = {
     "applicability-eval",
     "applicability-gold-eval",
     "draft-generation-eval",
+    "extraction-fidelity-eval",
     "forest-plan-component-eval-coverage",
     "forest-plan-component-retrieval-eval",
     "forest-plan-profile-eval",
@@ -195,6 +203,19 @@ COMMAND_SPECS = (
             _arg("--review-id"),
             _arg("--eval-file", default=DEFAULT_DRAFT_GENERATION_EVAL_PATH, type=Path),
             _arg("--config", default=DEFAULT_DRAFT_GENERATION_CONFIG_PATH, type=Path),
+            _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="extraction-fidelity-eval",
+        help="Run dedicated extraction-fidelity direct-eval fixtures.",
+        arguments=(
+            _arg(
+                "--manifest",
+                default=DEFAULT_EXTRACTION_FIDELITY_EVAL_MANIFEST_PATH,
+                type=Path,
+            ),
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
             _arg("--results-dir", type=Path),
         ),
     ),
@@ -348,6 +369,14 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 review_id=args.review_id,
                 eval_path=args.eval_file,
                 config_path=args.config,
+                results_dir=args.results_dir,
+            ),
+            success_key="passed",
+        ),
+        "extraction-fidelity-eval": EvalCommandHandler(
+            run=lambda args: run_extraction_fidelity_eval(
+                manifest_path=args.manifest,
+                output_dir=args.output_dir,
                 results_dir=args.results_dir,
             ),
             success_key="passed",

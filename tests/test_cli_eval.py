@@ -46,6 +46,25 @@ def test_upstream_eval_parser_accepts_manifest_and_results_dir() -> None:
     assert args.results_dir == Path("source_library/evaluations/upstream")
 
 
+def test_extraction_fidelity_eval_parser_accepts_manifest_and_results_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "extraction-fidelity-eval",
+            "--manifest",
+            "config/extraction_fidelity_eval_v1.json",
+            "--output-dir",
+            "source_library",
+            "--results-dir",
+            "source_library/evaluations/extraction_fidelity",
+        ]
+    )
+
+    assert args.command == "extraction-fidelity-eval"
+    assert args.manifest == Path("config/extraction_fidelity_eval_v1.json")
+    assert args.output_dir == Path("source_library")
+    assert args.results_dir == Path("source_library/evaluations/extraction_fidelity")
+
+
 def test_forest_plan_profile_eval_parser_accepts_manifest_and_results_dir() -> None:
     args = build_parser().parse_args(
         [
@@ -279,6 +298,42 @@ def test_upstream_eval_handler_propagates_manifest_and_results_dir(monkeypatch) 
     assert captured["manifest_path"] == Path("config/upstream_evaluation_v1.json")
     assert captured["output_dir"] == Path("library")
     assert captured["results_dir"] == Path("library/evaluations/upstream")
+
+
+def test_extraction_fidelity_eval_handler_propagates_manifest_and_results_dir(
+    monkeypatch,
+) -> None:
+    captured = {}
+
+    def fake_run_extraction_fidelity_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_eval,
+        "run_extraction_fidelity_eval",
+        fake_run_extraction_fidelity_eval,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "extraction-fidelity-eval",
+            "--manifest",
+            "config/extraction_fidelity_eval_v1.json",
+            "--output-dir",
+            "library",
+            "--results-dir",
+            "library/evaluations/extraction_fidelity",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 0
+    assert captured["manifest_path"] == Path("config/extraction_fidelity_eval_v1.json")
+    assert captured["output_dir"] == Path("library")
+    assert captured["results_dir"] == Path("library/evaluations/extraction_fidelity")
 
 
 def test_forest_plan_profile_eval_handler_propagates_manifest_and_results_dir(monkeypatch) -> None:

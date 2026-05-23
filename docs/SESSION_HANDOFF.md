@@ -7,6 +7,48 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Extraction Fidelity Eval Milestone 2 Resolved Locally
+
+This implementation slice closes Milestone `2` in
+`docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+
+- outcome label:
+  `resolved locally`; the dedicated extraction-fidelity producer now exists,
+  runs green on the committed manifest, and writes durable JSON/Markdown
+  artifacts under `source_library/evaluations/extraction_fidelity/`
+- routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/extraction_fidelity_eval.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `config/extraction_fidelity_eval_v1.json`,
+  `tests/test_extraction_fidelity_eval.py`,
+  `tests/test_cli_eval.py`,
+  `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`, and the routed docs stack
+- replay truth:
+  `extraction-fidelity-eval --manifest config/extraction_fidelity_eval_v1.json --output-dir source_library`
+  now records `required_category_count=12`, `case_count=24`,
+  `matched_case_count=24`, `parser_route_mismatch_count=1`,
+  `anchor_mismatch_count=13`, `span_mismatch_count=10`,
+  `boundary_mismatch_count=4`, `negative_case_pass_count=12`,
+  `negative_case_fail_count=0`, and `required_check_mismatch_count=0`
+- owner split:
+  `extraction_validation.json` remains structural validation,
+  `extraction_accuracy_audit.json` remains the live generated-corpus audit,
+  and `extraction_fidelity_eval_results.json` is now the dedicated offline
+  direct-fidelity artifact rather than a planned owner only
+- next routing:
+  execute Milestone `3` in
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md` to narrow the older
+  `upstream-eval` extraction umbrella and make the new artifact
+  load-bearing in upstream/promotion routing
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_fidelity_eval.py tests/test_cli_eval.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/extraction_fidelity_eval.py src/usfs_r1_ea_sources/cli_eval.py tests/test_extraction_fidelity_eval.py tests/test_cli_eval.py`,
+  and
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources extraction-fidelity-eval --manifest config/extraction_fidelity_eval_v1.json --output-dir source_library`
+
 ## Extraction Fidelity Eval Milestones 0-1 Alignment Pass
 
 This docs-only follow-up closes the remaining routing drift after the first

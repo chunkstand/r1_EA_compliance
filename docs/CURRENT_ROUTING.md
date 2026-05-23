@@ -56,18 +56,21 @@ Use this file as the short current route before opening the large append-only do
   `2` forests, `3` package styles, `2 reviewer_ready + 1 typed_blocked`
   tracked reviews, and zero threshold failures
 - Next routed follow-on: `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
-  owns the next standard raise for import/extraction truth. Milestone `0` and
-  Milestone `1` are now resolved locally: the repo-grounded owner split is
-  re-locked against the live `9/9` promotion baseline, and the new checked-in
-  contract substrate defines `12` required fidelity families and `24`
-  tracked cases under `config/extraction_fidelity_eval_v1.json`. The first
-  slice landed in commit `f2afa8f` (`Resolve extraction fidelity Milestones
-  0-1`). The current upstream extraction lane is still green through
-  `upstream-eval` with `11` extraction categories and `22` extraction cases,
-  and the live `extraction-accuracy-audit` is still green at `581/581`
-  admitted active-current rows. Milestone `2` is the next routed slice:
-  implement the dedicated `extraction-fidelity-eval` producer and route it
-  into upstream/promotion truth instead of reopening downstream gold coverage.
+  owns the next standard raise for import/extraction truth. Milestones `0`
+  through `2` are now resolved locally: the repo-grounded owner split stays
+  re-locked against the live `9/9` promotion baseline, the contract substrate
+  still defines `12` governed fidelity families and `24` tracked cases under
+  `config/extraction_fidelity_eval_v1.json`, and the dedicated
+  `extraction-fidelity-eval` producer now writes durable results under
+  `source_library/evaluations/extraction_fidelity/`. The current green replay
+  records `matched_case_count=24`, `parser_route_mismatch_count=1`,
+  `anchor_mismatch_count=13`, `span_mismatch_count=10`,
+  `boundary_mismatch_count=4`, and `negative_case_pass_count=12`, while the
+  live `extraction-accuracy-audit` remains green at `581/581` admitted
+  active-current rows. Milestone `3` is the next routed slice: narrow the
+  older `upstream-eval` extraction umbrella and make the new artifact
+  load-bearing in upstream/promotion truth instead of reopening downstream
+  gold coverage.
 - Active queue follow-on: the source-truth/gold lane remains resolved, but
   `51` `Direct_File_Capture_Queue` rows still remain outside the active
   load-bearing surface by workbook contract. That work is now explicitly
