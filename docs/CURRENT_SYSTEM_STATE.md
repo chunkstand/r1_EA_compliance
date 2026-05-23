@@ -82,6 +82,31 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Extraction Fidelity Eval Milestone 3 Alignment Pass
+
+Latest docs alignment on 2026-05-23:
+
+- Routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+- Outcome label:
+  `aligned locally`; the top docs stack now records the actual Milestone `3`
+  closeout commit and removes the remaining active-looking drift between the
+  local Milestone `3` implementation state and the older upper sections below
+  that still route the packet to Milestone `3` or still cite the older `9/9`
+  full-canonical baseline.
+- Closeout commit:
+  `4269f5e` (`Implement extraction fidelity Milestone 3`).
+- Stale-reference audit:
+  the immediately following Milestone `3` closeout section is still live, but
+  the lower `Milestone 2 Alignment Pass`, `Milestone 2 Resolved Locally`,
+  `Milestones 0-1 Alignment Pass`, and `Milestone 1 Started Locally`
+  sections become historical-only for next-step routing after `4269f5e`
+  wherever they still say the next routed slice is Milestone `3` or still
+  cite the older `9/9` full-canonical result floor.
+- Next routing:
+  the packet remains active and the next routed slice is now Milestone `4` in
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+
 ## Extraction Fidelity Eval Milestone 3 Resolved Locally
 
 Latest implementation update on 2026-05-23:

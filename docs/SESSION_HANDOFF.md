@@ -7,6 +7,37 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Extraction Fidelity Eval Milestone 3 Alignment Pass
+
+This docs-only follow-up closes the remaining routing drift after the
+Milestone `3` implementation slice landed.
+
+- outcome label:
+  `aligned locally`; the top routing/docs stack now records the actual
+  Milestone `3` closeout commit and retires the remaining active-looking
+  Milestone `3` next-step and `9/9` full-canonical baseline references below
+  as historical for routing
+- closeout commit:
+  `4269f5e` (`Implement extraction fidelity Milestone 3`)
+- routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- stale-reference audit:
+  the immediately following `Extraction Fidelity Eval Milestone 3 Resolved
+  Locally` section remains the live closeout summary, but the lower
+  `Milestone 2 Alignment Pass`, `Milestone 2 Resolved Locally`,
+  `Milestones 0-1 Alignment Pass`, and `Milestones 0-1 Resolved Locally`
+  sections are historical only after `4269f5e` wherever they still route the
+  packet to Milestone `3` or still cite the older `9/9` full-canonical
+  result floor
+- next routing:
+  the packet remains active and the next routed slice is now Milestone `4`
+  in `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- verification:
+  targeted route grep across `README.md`, `docs/CURRENT_ROUTING.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`, and `git diff --check`
+
 ## Extraction Fidelity Eval Milestone 3 Resolved Locally
 
 This implementation slice closes Milestone `3` in
