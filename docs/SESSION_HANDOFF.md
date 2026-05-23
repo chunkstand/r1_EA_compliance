@@ -16,6 +16,8 @@ active-looking route.
   `resolved historical reference`; the reduced
   `source-set-cac9c7d02b280825` checkpoint remains append-only blocker
   history only
+- closeout commit:
+  `4cf9451` (`Retire stale downstream freshness routing`)
 - routed packet:
   `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md`
 - successor chain:

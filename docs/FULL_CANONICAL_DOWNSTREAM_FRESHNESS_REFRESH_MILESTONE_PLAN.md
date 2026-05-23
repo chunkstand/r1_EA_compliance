@@ -11,7 +11,8 @@ Status: Historical closeout reference; reduced on 2026-05-19 for
 governing live local route is now `source-set-f775524ab233ff27` with
 source-truth `581/581` admitted, `53` explicit archive rows,
 `compliance-gold-eval` `14/14`, `gold-coverage-eval` `7/7`, and
-`promotion-suite` green.
+`promotion-suite` green. The docs-only retirement closeout commit is
+`4cf9451` (`Retire stale downstream freshness routing`).
 Owner context: `/Users/chunkstand/projects/usfs-r1-EA-sources` preserved
 historical full-canonical downstream refresh boundary; not an active live
 owner

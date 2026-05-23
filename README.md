@@ -242,7 +242,9 @@ Local active import baseline on 2026-05-20 after full canonical live source-set 
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
   are historical blocker context only. The governing live-promotion closeout
   packet `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md` is
-  now locally resolved on `source-set-f775524ab233ff27`.
+  now locally resolved on `source-set-f775524ab233ff27`. The latest docs-only
+  routing retirement closeout is `4cf9451` (`Retire stale downstream
+  freshness routing`).
 - The governed identity registry in
   `config/r1_forest_plan_identity_reconciliation_v1.json`
   now records the live `99` referenced legacy source-record IDs as

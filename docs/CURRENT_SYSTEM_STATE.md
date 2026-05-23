@@ -92,6 +92,8 @@ Latest docs-only routing retirement on 2026-05-23:
   `resolved historical reference`; the preserved `source-set-cac9c7d02b280825`
   freshness reduction is append-only blocker evidence only, not a live reduced
   owner.
+- Closeout commit:
+  `4cf9451` (`Retire stale downstream freshness routing`).
 - Successor chain:
   the live full-canonical route has since closed through
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`,

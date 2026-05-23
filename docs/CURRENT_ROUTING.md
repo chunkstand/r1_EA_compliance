@@ -62,7 +62,8 @@ Use this file as the short current route before opening the large append-only do
   `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md` and
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md` are
   preserved blocker context only; do not treat their reduced status lines as
-  live routing
+  live routing. The latest docs-only retirement closeout is `4cf9451`
+  (`Retire stale downstream freshness routing`)
 ## Deep Reads
 
 - `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
