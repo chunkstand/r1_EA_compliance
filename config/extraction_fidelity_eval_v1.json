@@ -1,0 +1,425 @@
+{
+  "schema_version": "extraction-fidelity-eval-v1",
+  "fixture_roots": [
+    "fixtures/extraction_fidelity_eval",
+    "../tests/fixtures/extraction_fidelity_eval"
+  ],
+  "output_schema": {
+    "required_summary_fields": [
+      "schema_version",
+      "manifest_path",
+      "results_dir",
+      "generated_at",
+      "required_category_count",
+      "case_count",
+      "matched_case_count",
+      "failed_case_ids",
+      "contract_checks",
+      "category_summaries",
+      "cases",
+      "passed"
+    ],
+    "required_category_summary_fields": [
+      "category_id",
+      "required_metric_ids",
+      "case_count",
+      "expected_pass_case_count",
+      "controlled_violation_case_count",
+      "matched_case_count",
+      "passed",
+      "status"
+    ],
+    "required_case_fields": [
+      "case_id",
+      "category_id",
+      "case_type",
+      "fixture_path",
+      "scenario_id",
+      "expected_producer_passed",
+      "actual_producer_passed",
+      "matched_expectation",
+      "details",
+      "error"
+    ]
+  },
+  "required_categories": [
+    {
+      "category_id": "ocr_anchor_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_text_anchors",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "anchor_match_rate",
+        "missing_anchor_count",
+        "parser_route_match"
+      ],
+      "route_identity_load_bearing": false
+    },
+    {
+      "category_id": "table_structure_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "expected_table_rows",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "table_row_match_rate",
+        "missing_table_row_count",
+        "parser_route_match"
+      ],
+      "route_identity_load_bearing": false
+    },
+    {
+      "category_id": "appendix_boundary_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_boundary_pairs",
+        "required_text_anchors",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "boundary_pair_match_rate",
+        "boundary_mismatch_count",
+        "anchor_match_rate"
+      ],
+      "route_identity_load_bearing": false
+    },
+    {
+      "category_id": "section_boundary_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_boundary_pairs",
+        "required_text_anchors",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "boundary_pair_match_rate",
+        "boundary_mismatch_count",
+        "anchor_match_rate"
+      ],
+      "route_identity_load_bearing": false
+    },
+    {
+      "category_id": "statute_scope_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_text_anchors",
+        "forbidden_text_anchors",
+        "expected_source_scope",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "anchor_match_rate",
+        "forbidden_anchor_absence_rate",
+        "scope_match",
+        "parser_route_match"
+      ],
+      "route_identity_load_bearing": true
+    },
+    {
+      "category_id": "directive_document_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_text_anchors",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "anchor_match_rate",
+        "missing_anchor_count",
+        "parser_route_match"
+      ],
+      "route_identity_load_bearing": true
+    },
+    {
+      "category_id": "forest_plan_chapter_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_boundary_pairs",
+        "required_text_anchors",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "boundary_pair_match_rate",
+        "boundary_mismatch_count",
+        "anchor_match_rate"
+      ],
+      "route_identity_load_bearing": false
+    },
+    {
+      "category_id": "forest_plan_map_label_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_text_anchors",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "anchor_match_rate",
+        "missing_anchor_count",
+        "parser_route_match"
+      ],
+      "route_identity_load_bearing": false
+    },
+    {
+      "category_id": "monitoring_report_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_text_anchors",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "anchor_match_rate",
+        "missing_anchor_count",
+        "parser_route_match"
+      ],
+      "route_identity_load_bearing": false
+    },
+    {
+      "category_id": "split_page_continuation_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_boundary_pairs",
+        "required_text_anchors",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "boundary_pair_match_rate",
+        "boundary_mismatch_count",
+        "anchor_match_rate"
+      ],
+      "route_identity_load_bearing": false
+    },
+    {
+      "category_id": "parser_route_identity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_text_anchors",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "parser_route_match",
+        "anchor_match_rate"
+      ],
+      "route_identity_load_bearing": true
+    },
+    {
+      "category_id": "direct_document_wrapper_negative",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_check_outcomes"
+      ],
+      "required_metric_ids": [
+        "negative_case_match_rate",
+        "required_check_match_rate"
+      ],
+      "route_identity_load_bearing": false
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "ocr-anchor-expected-pass",
+      "category_id": "ocr_anchor_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/ocr_anchor_fidelity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "ocr-anchor-controlled-violation",
+      "category_id": "ocr_anchor_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/ocr_anchor_fidelity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "table-structure-expected-pass",
+      "category_id": "table_structure_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/table_structure_fidelity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "table-structure-controlled-violation",
+      "category_id": "table_structure_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/table_structure_fidelity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "appendix-boundary-expected-pass",
+      "category_id": "appendix_boundary_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/appendix_boundary_fidelity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "appendix-boundary-controlled-violation",
+      "category_id": "appendix_boundary_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/appendix_boundary_fidelity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "section-boundary-expected-pass",
+      "category_id": "section_boundary_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/section_boundary_fidelity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "section-boundary-controlled-violation",
+      "category_id": "section_boundary_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/section_boundary_fidelity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "statute-scope-expected-pass",
+      "category_id": "statute_scope_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/statute_scope_fidelity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "statute-scope-controlled-violation",
+      "category_id": "statute_scope_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/statute_scope_fidelity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "directive-document-expected-pass",
+      "category_id": "directive_document_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/directive_document_fidelity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "directive-document-controlled-violation",
+      "category_id": "directive_document_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/directive_document_fidelity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "forest-plan-chapter-expected-pass",
+      "category_id": "forest_plan_chapter_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/forest_plan_chapter_fidelity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "forest-plan-chapter-controlled-violation",
+      "category_id": "forest_plan_chapter_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/forest_plan_chapter_fidelity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "forest-plan-map-label-expected-pass",
+      "category_id": "forest_plan_map_label_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/forest_plan_map_label_fidelity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "forest-plan-map-label-controlled-violation",
+      "category_id": "forest_plan_map_label_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/forest_plan_map_label_fidelity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "monitoring-report-expected-pass",
+      "category_id": "monitoring_report_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/monitoring_report_fidelity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "monitoring-report-controlled-violation",
+      "category_id": "monitoring_report_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/monitoring_report_fidelity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "split-page-continuation-expected-pass",
+      "category_id": "split_page_continuation_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/split_page_continuation_fidelity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "split-page-continuation-controlled-violation",
+      "category_id": "split_page_continuation_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/split_page_continuation_fidelity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "parser-route-identity-expected-pass",
+      "category_id": "parser_route_identity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/parser_route_identity.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "parser-route-identity-controlled-violation",
+      "category_id": "parser_route_identity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/parser_route_identity.json",
+      "scenario_id": "controlled_violation"
+    },
+    {
+      "case_id": "direct-document-wrapper-expected-pass",
+      "category_id": "direct_document_wrapper_negative",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "fixtures/extraction_fidelity_eval/direct_document_wrapper_negative.json",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "direct-document-wrapper-controlled-violation",
+      "category_id": "direct_document_wrapper_negative",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "fixtures/extraction_fidelity_eval/direct_document_wrapper_negative.json",
+      "scenario_id": "controlled_violation"
+    }
+  ]
+}

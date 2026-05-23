@@ -1,0 +1,120 @@
+{
+  "runner": "extraction_build",
+  "category_id": "table_structure_fidelity",
+  "scenarios": {
+    "expected_pass": {
+      "source_record_id": "UPEXT-FID-802",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-802",
+            "title": "Table Dense PDF Fidelity Source",
+            "url": "https://example.test/table-dense-fidelity-source.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-table-pass",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-802",
+            "status": "downloaded",
+            "title": "Table Dense PDF Fidelity Source",
+            "original_url": "https://example.test/table-dense-fidelity-source.pdf",
+            "artifact_path": "artifacts/raw/extraction-fidelity/table-dense-fidelity-source.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "TABLE 1 RESOURCE ACREAGE",
+                "Resource | Acres",
+                "Riparian habitat | 42",
+                "Old growth | 17"
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "expected_parser_name": "pypdf_text_fallback",
+      "expected_table_rows": [
+        {
+          "cells": [
+            "Riparian habitat",
+            "42"
+          ]
+        },
+        {
+          "cells": [
+            "Old growth",
+            "17"
+          ]
+        }
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    },
+    "controlled_violation": {
+      "source_record_id": "UPEXT-FID-802",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-802",
+            "title": "Table Dense PDF Fidelity Source",
+            "url": "https://example.test/table-dense-fidelity-source.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-table-fail",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-802",
+            "status": "downloaded",
+            "title": "Table Dense PDF Fidelity Source",
+            "original_url": "https://example.test/table-dense-fidelity-source.pdf",
+            "artifact_path": "artifacts/raw/extraction-fidelity/table-dense-fidelity-source.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "TABLE 1 RESOURCE ACREAGE",
+                "Resource | Acres",
+                "Riparian habitat | 42",
+                "Old growth | 17"
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_first_chunk_text",
+          "text": "flattened table text only"
+        }
+      ],
+      "expected_parser_name": "pypdf_text_fallback",
+      "expected_table_rows": [
+        {
+          "cells": [
+            "Riparian habitat",
+            "42"
+          ]
+        },
+        {
+          "cells": [
+            "Old growth",
+            "17"
+          ]
+        }
+      ],
+      "required_check_outcomes": {
+        "chunks_match_extracted_text_offsets": false
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "runner": "extraction_build",
+  "category_id": "statute_scope_fidelity",
+  "scenarios": {
+    "expected_pass": {
+      "workbook_path": "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx",
+      "source_record_id": "R1EA-014",
+      "download_run": {
+        "run_id": "extraction-fidelity-statute-pass",
+        "records": [
+          {
+            "source_record_id": "R1EA-014",
+            "status": "downloaded",
+            "title": "Scoped XML Fidelity Source",
+            "original_url": "https://example.test/scoped-xml-fidelity.xml",
+            "artifact_path": "artifacts/raw/extraction-fidelity/scoped-xml-fidelity.xml",
+            "artifact": {
+              "type": "xml",
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><DIV5 N=\"1b\" TYPE=\"PART\"><HEAD>PART 1b-NATIONAL ENVIRONMENT POLICY ACT</HEAD><DIV8 N=\"1b.5\" TYPE=\"SECTION\" hierarchy_metadata=\"{&quot;path&quot;:&quot;/on/date/title-7/section-1b.5&quot;}\"><HEAD>&#xA7; 1b.5 Environmental assessments.</HEAD><P>EA-only sibling content should not leak into section 1b.6.</P></DIV8><DIV8 N=\"1b.6\" TYPE=\"SECTION\" hierarchy_metadata=\"{&quot;path&quot;:&quot;/on/date/title-7/section-1b.6&quot;}\"><HEAD>&#xA7; 1b.6 Finding of no significant impact.</HEAD><P>FONSI content only.</P></DIV8></DIV5>"
+            },
+            "content_type": "application/xml",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "expected_parser_name": "legal_xml_builtin",
+      "required_text_anchors": [
+        "§ 1b.6 Finding of no significant impact",
+        "FONSI content only."
+      ],
+      "forbidden_text_anchors": [
+        "§ 1b.5 Environmental assessments",
+        "EA-only sibling content"
+      ],
+      "expected_source_scope": {
+        "type": "section",
+        "identifier": "1b.6"
+      },
+      "required_check_outcomes": {
+        "scoped_xml_text_matches_source_scope": true
+      }
+    },
+    "controlled_violation": {
+      "workbook_path": "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx",
+      "source_record_id": "R1EA-014",
+      "download_run": {
+        "run_id": "extraction-fidelity-statute-fail",
+        "records": [
+          {
+            "source_record_id": "R1EA-014",
+            "status": "downloaded",
+            "title": "Scoped XML Fidelity Source",
+            "original_url": "https://example.test/scoped-xml-fidelity.xml",
+            "artifact_path": "artifacts/raw/extraction-fidelity/scoped-xml-fidelity.xml",
+            "artifact": {
+              "type": "xml",
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><DIV5 N=\"1b\" TYPE=\"PART\"><HEAD>PART 1b-NATIONAL ENVIRONMENT POLICY ACT</HEAD><DIV8 N=\"1b.5\" TYPE=\"SECTION\" hierarchy_metadata=\"{&quot;path&quot;:&quot;/on/date/title-7/section-1b.5&quot;}\"><HEAD>&#xA7; 1b.5 Environmental assessments.</HEAD><P>EA-only sibling content should not leak into section 1b.6.</P></DIV8><DIV8 N=\"1b.6\" TYPE=\"SECTION\" hierarchy_metadata=\"{&quot;path&quot;:&quot;/on/date/title-7/section-1b.6&quot;}\"><HEAD>&#xA7; 1b.6 Finding of no significant impact.</HEAD><P>FONSI content only.</P></DIV8></DIV5>"
+            },
+            "content_type": "application/xml",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_extracted_text",
+          "text": "§ 1b.5 Environmental assessments.\nEA-only sibling content should not leak into section 1b.6."
+        }
+      ],
+      "expected_parser_name": "legal_xml_builtin",
+      "required_text_anchors": [
+        "§ 1b.6 Finding of no significant impact",
+        "FONSI content only."
+      ],
+      "forbidden_text_anchors": [
+        "§ 1b.5 Environmental assessments",
+        "EA-only sibling content"
+      ],
+      "expected_source_scope": {
+        "type": "section",
+        "identifier": "1b.6"
+      },
+      "required_check_outcomes": {
+        "scoped_xml_text_matches_source_scope": false
+      }
+    }
+  }
+}

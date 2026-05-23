@@ -1,0 +1,114 @@
+{
+  "runner": "extraction_build",
+  "category_id": "section_boundary_fidelity",
+  "scenarios": {
+    "expected_pass": {
+      "source_record_id": "UPEXT-FID-804",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-804",
+            "title": "Section Boundary Fidelity Source",
+            "url": "https://example.test/section-boundary-fidelity-source.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-section-pass",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-804",
+            "status": "downloaded",
+            "title": "Section Boundary Fidelity Source",
+            "original_url": "https://example.test/section-boundary-fidelity-source.pdf",
+            "artifact_path": "artifacts/raw/extraction-fidelity/section-boundary-fidelity-source.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "Section 7. Decision Notice",
+                "Section 7.1 Implementation Timing",
+                "Seasonal restrictions begin July 1.",
+                "Section 7.2 Monitoring",
+                "Monitoring completes the decision record."
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "expected_parser_name": "pypdf_text_fallback",
+      "required_text_anchors": [
+        "Section 7.1 Implementation Timing",
+        "Section 7.2 Monitoring"
+      ],
+      "required_boundary_pairs": [
+        {
+          "start_anchor": "Section 7.1 Implementation Timing",
+          "end_anchor": "Section 7.2 Monitoring"
+        }
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    },
+    "controlled_violation": {
+      "source_record_id": "UPEXT-FID-804",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-804",
+            "title": "Section Boundary Fidelity Source",
+            "url": "https://example.test/section-boundary-fidelity-source.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-section-fail",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-804",
+            "status": "downloaded",
+            "title": "Section Boundary Fidelity Source",
+            "original_url": "https://example.test/section-boundary-fidelity-source.pdf",
+            "artifact_path": "artifacts/raw/extraction-fidelity/section-boundary-fidelity-source.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "Section 7. Decision Notice",
+                "Section 7.1 Implementation Timing",
+                "Seasonal restrictions begin July 1.",
+                "Section 7.2 Monitoring",
+                "Monitoring completes the decision record."
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_extracted_text",
+          "text": "Section 7. Decision Notice\nSeasonal restrictions begin July 1."
+        }
+      ],
+      "expected_parser_name": "pypdf_text_fallback",
+      "required_text_anchors": [
+        "Section 7.1 Implementation Timing",
+        "Section 7.2 Monitoring"
+      ],
+      "required_boundary_pairs": [
+        {
+          "start_anchor": "Section 7.1 Implementation Timing",
+          "end_anchor": "Section 7.2 Monitoring"
+        }
+      ],
+      "required_check_outcomes": {
+        "text_files_match_manifest_hashes": false
+      }
+    }
+  }
+}

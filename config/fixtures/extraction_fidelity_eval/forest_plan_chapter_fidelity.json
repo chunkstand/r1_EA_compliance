@@ -1,0 +1,112 @@
+{
+  "runner": "extraction_build",
+  "category_id": "forest_plan_chapter_fidelity",
+  "scenarios": {
+    "expected_pass": {
+      "source_record_id": "UPEXT-FID-807",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-807",
+            "title": "Forest Plan Chapter Fidelity Source",
+            "url": "https://example.test/forest-plan-chapter-fidelity.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-forest-plan-chapter-pass",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-807",
+            "status": "downloaded",
+            "title": "Forest Plan Chapter Fidelity Source",
+            "original_url": "https://example.test/forest-plan-chapter-fidelity.pdf",
+            "artifact_path": "artifacts/raw/extraction-fidelity/forest-plan-chapter-fidelity.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "Chapter 2 Vegetation Management",
+                "Standard VEG-01 Retain old growth structure.",
+                "Guideline VEG-GDL-02 Maintain snag habitat.",
+                "End Chapter 2"
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "expected_parser_name": "pypdf_text_fallback",
+      "required_text_anchors": [
+        "Standard VEG-01 Retain old growth structure.",
+        "Guideline VEG-GDL-02 Maintain snag habitat."
+      ],
+      "required_boundary_pairs": [
+        {
+          "start_anchor": "Chapter 2 Vegetation Management",
+          "end_anchor": "End Chapter 2"
+        }
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    },
+    "controlled_violation": {
+      "source_record_id": "UPEXT-FID-807",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-807",
+            "title": "Forest Plan Chapter Fidelity Source",
+            "url": "https://example.test/forest-plan-chapter-fidelity.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-forest-plan-chapter-fail",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-807",
+            "status": "downloaded",
+            "title": "Forest Plan Chapter Fidelity Source",
+            "original_url": "https://example.test/forest-plan-chapter-fidelity.pdf",
+            "artifact_path": "artifacts/raw/extraction-fidelity/forest-plan-chapter-fidelity.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "Chapter 2 Vegetation Management",
+                "Standard VEG-01 Retain old growth structure.",
+                "Guideline VEG-GDL-02 Maintain snag habitat.",
+                "End Chapter 2"
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_extracted_text",
+          "text": "Chapter 2 Vegetation Management\nStandard VEG-01 Retain old growth structure."
+        }
+      ],
+      "expected_parser_name": "pypdf_text_fallback",
+      "required_text_anchors": [
+        "Standard VEG-01 Retain old growth structure.",
+        "Guideline VEG-GDL-02 Maintain snag habitat."
+      ],
+      "required_boundary_pairs": [
+        {
+          "start_anchor": "Chapter 2 Vegetation Management",
+          "end_anchor": "End Chapter 2"
+        }
+      ],
+      "required_check_outcomes": {
+        "text_files_match_manifest_hashes": false
+      }
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "runner": "extraction_build",
+  "category_id": "directive_document_fidelity",
+  "scenarios": {
+    "expected_pass": {
+      "source_record_id": "UPEXT-FID-806",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-806",
+            "title": "Directive Document Fidelity Source",
+            "url": "https://example.test/directive-document-fidelity.docx"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-directive-pass",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-806",
+            "status": "downloaded",
+            "title": "Directive Document Fidelity Source",
+            "original_url": "https://example.test/directive-document-fidelity.docx",
+            "artifact_path": "artifacts/raw/extraction-fidelity/directive-document-fidelity.docx",
+            "artifact": {
+              "type": "docx",
+              "paragraphs": [
+                "FSM 1950 - Environmental Policy and Procedures",
+                "Responsible officials shall maintain a written decision record.",
+                "Appeal periods begin after public notice."
+              ]
+            },
+            "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "expected_parser_name": "python_docx_zip_xml",
+      "required_text_anchors": [
+        "written decision record",
+        "Appeal periods begin after public notice."
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    },
+    "controlled_violation": {
+      "source_record_id": "UPEXT-FID-806",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-806",
+            "title": "Directive Document Fidelity Source",
+            "url": "https://example.test/directive-document-fidelity.docx"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-directive-fail",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-806",
+            "status": "downloaded",
+            "title": "Directive Document Fidelity Source",
+            "original_url": "https://example.test/directive-document-fidelity.docx",
+            "artifact_path": "artifacts/raw/extraction-fidelity/directive-document-fidelity.docx",
+            "artifact": {
+              "type": "docx",
+              "paragraphs": [
+                "FSM 1950 - Environmental Policy and Procedures",
+                "Responsible officials shall maintain a written decision record.",
+                "Appeal periods begin after public notice."
+              ]
+            },
+            "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_first_chunk_text",
+          "text": "tampered directive chunk"
+        }
+      ],
+      "expected_parser_name": "python_docx_zip_xml",
+      "required_text_anchors": [
+        "written decision record",
+        "Appeal periods begin after public notice."
+      ],
+      "required_check_outcomes": {
+        "chunks_match_extracted_text_offsets": false
+      }
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "runner": "extraction_build",
+  "category_id": "forest_plan_map_label_fidelity",
+  "scenarios": {
+    "expected_pass": {
+      "source_record_id": "UPEXT-FID-808",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-808",
+            "title": "Forest Plan Map Label Fidelity Source",
+            "url": "https://example.test/forest-plan-map-label-fidelity.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-forest-plan-map-pass",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-808",
+            "status": "downloaded",
+            "title": "Forest Plan Map Label Fidelity Source",
+            "original_url": "https://example.test/forest-plan-map-label-fidelity.pdf",
+            "artifact_path": "artifacts/raw/extraction-fidelity/forest-plan-map-label-fidelity.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "Map 3. Big Game Winter Range",
+                "Legend",
+                "Elk Winter Range",
+                "Moose Security Area",
+                "Closed Road"
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "expected_parser_name": "pypdf_text_fallback",
+      "required_text_anchors": [
+        "Elk Winter Range",
+        "Moose Security Area"
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    },
+    "controlled_violation": {
+      "source_record_id": "UPEXT-FID-808",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-808",
+            "title": "Forest Plan Map Label Fidelity Source",
+            "url": "https://example.test/forest-plan-map-label-fidelity.pdf"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-forest-plan-map-fail",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-808",
+            "status": "downloaded",
+            "title": "Forest Plan Map Label Fidelity Source",
+            "original_url": "https://example.test/forest-plan-map-label-fidelity.pdf",
+            "artifact_path": "artifacts/raw/extraction-fidelity/forest-plan-map-label-fidelity.pdf",
+            "artifact": {
+              "type": "pdf",
+              "lines": [
+                "Map 3. Big Game Winter Range",
+                "Legend",
+                "Elk Winter Range",
+                "Moose Security Area",
+                "Closed Road"
+              ]
+            },
+            "content_type": "application/pdf",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "mutations": [
+        {
+          "action": "overwrite_first_chunk_text",
+          "text": "legend only without map labels"
+        }
+      ],
+      "expected_parser_name": "pypdf_text_fallback",
+      "required_text_anchors": [
+        "Elk Winter Range",
+        "Moose Security Area"
+      ],
+      "required_check_outcomes": {
+        "chunks_match_extracted_text_offsets": false
+      }
+    }
+  }
+}

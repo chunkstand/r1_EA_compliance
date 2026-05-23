@@ -82,6 +82,41 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Extraction Fidelity Eval Milestone 1 Started Locally
+
+Latest implementation update on 2026-05-23:
+
+- Routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved locally` for Milestone `0` and Milestone `1`; Milestones `2`
+  through `4` remain open.
+- Owner boundary:
+  this remains a fresh upstream-standard packet, not a reopened
+  source-truth or downstream gold lane.
+- Milestone 0 lock:
+  the live owner split is re-locked from repo artifacts only:
+  `extraction_validation.json` remains structural validation,
+  `extraction_accuracy_audit.json` remains live generated-corpus audit truth,
+  the future `extraction_fidelity_eval_results.json` remains the dedicated
+  direct-eval owner target, and the current full-canonical promotion baseline
+  remains green at `passed_required_full_canonical_result_count=9`,
+  `required_full_canonical_result_count=9`.
+- Milestone 1 substrate:
+  the repo now ships `config/extraction_fidelity_eval_v1.json`,
+  `12` required fidelity families, `24` tracked cases, `12`
+  fixture-backed category files under
+  `config/fixtures/extraction_fidelity_eval/`, and contract-negative
+  manifests under `tests/fixtures/extraction_fidelity_eval/`.
+- Acceptance proof:
+  `tests/test_extraction_fidelity_eval.py` now passes the real manifest plus
+  the missing-category and out-of-tree fixture fail-closed checks.
+- Next routing:
+  implement Milestone `2` in
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md` to add the dedicated
+  `extraction-fidelity-eval` command, durable artifact schema, and report
+  owner before touching upstream/promotion wiring.
+
 ## Extraction Fidelity Eval Packet Proposed
 
 Latest planning update on 2026-05-23:

@@ -2,12 +2,17 @@
 
 Date: 2026-05-23
 
-Status: Proposed on 2026-05-23. This is a fresh standalone follow-on packet.
-The full canonical source-truth lane is already resolved locally through
-`93a23b0`, the downstream full-canonical compliance-gold lane is already
-resolved locally through `8e0e02b`, and no active owner remains in that closed
-source-truth/gold route. This packet owns the next upstream-standard raise:
-build a dedicated extraction-fidelity eval that proves fixture-backed
+Status: In progress on 2026-05-23. Milestone `0` and Milestone `1` are now
+resolved locally: the live owner split and `9/9` promotion baseline were
+re-locked from repo artifacts only, and the repo now ships
+`config/extraction_fidelity_eval_v1.json`, `12` governed fidelity families,
+`24` tracked cases, fixture-backed controlled violations, and
+`tests/test_extraction_fidelity_eval.py` as the contract substrate. The full
+canonical source-truth lane is already resolved locally through `93a23b0`,
+the downstream full-canonical compliance-gold lane is already resolved
+locally through `8e0e02b`, and no active owner remains in that closed
+source-truth/gold route. This packet still owns the next upstream-standard
+raise: build a dedicated extraction-fidelity eval that proves fixture-backed
 extraction correctness directly, rather than trying to infer import and
 extraction truth from downstream gold breadth.
 
@@ -351,6 +356,12 @@ rg -n "extraction_accuracy|upstream-eval|direct_eval_present|source-set-f775524a
 git diff --check
 ```
 
+Milestone 0 closeout note on 2026-05-23:
+
+- The repo-grounded refresh found no drift in the planned owner split, no
+  drift in the live full-canonical baseline, and no reason to reopen the
+  resolved source-truth or downstream gold lanes.
+
 ### Milestone 1 - Contract And Fixture Substrate
 
 Outcome label: `resolved`
@@ -400,6 +411,17 @@ Required verification:
 PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_fidelity_eval.py -q
 git diff --check
 ```
+
+Milestone 1 closeout note on 2026-05-23:
+
+- `config/extraction_fidelity_eval_v1.json` now defines `12` required
+  fidelity families and `24` tracked cases.
+- `config/fixtures/extraction_fidelity_eval/` now contains one tracked
+  expected-pass plus one controlled-violation scenario for each required
+  family.
+- `tests/test_extraction_fidelity_eval.py` now proves the real manifest,
+  missing-category fail-closed behavior, and out-of-tree fixture fail-closed
+  behavior.
 
 ### Milestone 2 - Dedicated Extraction-Fidelity Eval Producer
 
@@ -634,12 +656,12 @@ The final closeout must record:
 
 ## Closeout Checklist
 
-- [ ] Milestone 0 rechecked the live owner split and route facts
-- [ ] `config/extraction_fidelity_eval_v1.json` exists with governed required categories
-- [ ] tracked fidelity fixtures and controlled violations exist
+- [x] Milestone 0 rechecked the live owner split and route facts
+- [x] `config/extraction_fidelity_eval_v1.json` exists with governed required categories
+- [x] tracked fidelity fixtures and controlled violations exist
 - [ ] `extraction-fidelity-eval` is implemented and CLI-registered
 - [ ] dedicated results and report artifacts are documented
 - [ ] `upstream-eval` and promotion wiring consume the new owner truthfully
-- [ ] `README.md`, routing docs, current-state docs, this plan, and handoff are aligned
-- [ ] focused tests, lint, eval commands, and `git diff --check` passed
+- [x] `README.md`, routing docs, current-state docs, this plan, and handoff are aligned
+- [x] focused tests, lint, eval commands, and `git diff --check` passed
 - [ ] closeout commit hash is recorded in `docs/SESSION_HANDOFF.md`

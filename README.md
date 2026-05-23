@@ -78,15 +78,20 @@ Current routed state on 2026-05-23:
   adjudication in the gold contract rather than false source-backed misses.
   This closeout landed in commit `8e0e02b`
   (`Resolve full canonical compliance gold rebaseline`).
-- The next queued upstream-standard packet is now
-  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`. The current upstream
-  extraction lane is still green through `upstream-eval` with `11` extraction
-  categories and `22` extraction cases, and the live full-canonical
+- The active upstream-standard packet is now
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`. Milestone `0` and
+  Milestone `1` are resolved locally: the route facts and owner split are
+  re-locked against the live `9/9` promotion baseline, and the repo now ships
+  a checked-in extraction-fidelity contract substrate with
+  `config/extraction_fidelity_eval_v1.json`, `12` required fidelity families,
+  `24` tracked cases, fixture-backed controlled violations, and
+  `tests/test_extraction_fidelity_eval.py`. The current upstream extraction
+  lane is still green through `upstream-eval` with `11` extraction categories
+  and `22` extraction cases, and the live full-canonical
   `extraction-accuracy-audit` is still green at `581/581` admitted active
-  rows, but that direct-eval ownership remains too aggregate to be the final
-  fidelity standard. The queued packet will build a dedicated
-  `extraction-fidelity-eval` owner rather than pushing more import/extraction
-  burden into downstream gold coverage.
+  rows. Milestone `2` is the next routed slice: implement the dedicated
+  `extraction-fidelity-eval` command and durable artifact owner rather than
+  pushing more import/extraction burden into downstream gold coverage.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 

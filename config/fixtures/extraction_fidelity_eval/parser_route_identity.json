@@ -1,0 +1,84 @@
+{
+  "runner": "extraction_build",
+  "category_id": "parser_route_identity",
+  "scenarios": {
+    "expected_pass": {
+      "source_record_id": "UPEXT-FID-811",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-811",
+            "title": "Parser Route Identity Fidelity Source",
+            "url": "https://example.test/parser-route-identity.xml"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-parser-route-pass",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-811",
+            "status": "downloaded",
+            "title": "Parser Route Identity Fidelity Source",
+            "original_url": "https://example.test/parser-route-identity.xml",
+            "artifact_path": "artifacts/raw/extraction-fidelity/parser-route-identity.xml",
+            "artifact": {
+              "type": "xml",
+              "body": "<?xml version='1.0' encoding='UTF-8' ?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html><head><title>U.S. Code XHTML</title></head><body><h1>NEPA</h1><p>Text with dash entity &mdash; and traceability.</p></body></html>"
+            },
+            "content_type": "application/xml",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "expected_parser_name": "legal_xml_xhtml_fallback",
+      "required_text_anchors": [
+        "Text with dash entity",
+        "traceability."
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    },
+    "controlled_violation": {
+      "source_record_id": "UPEXT-FID-811",
+      "workbook": {
+        "ingest_rows": [
+          {
+            "source_record_id": "UPEXT-FID-811",
+            "title": "Parser Route Identity Fidelity Source",
+            "url": "https://example.test/parser-route-identity.xml"
+          }
+        ]
+      },
+      "download_run": {
+        "run_id": "extraction-fidelity-parser-route-fail",
+        "records": [
+          {
+            "source_record_id": "UPEXT-FID-811",
+            "status": "downloaded",
+            "title": "Parser Route Identity Fidelity Source",
+            "original_url": "https://example.test/parser-route-identity.xml",
+            "artifact_path": "artifacts/raw/extraction-fidelity/parser-route-identity.xml",
+            "artifact": {
+              "type": "xml",
+              "body": "<?xml version='1.0' encoding='UTF-8' ?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html><head><title>U.S. Code XHTML</title></head><body><h1>NEPA</h1><p>Text with dash entity &mdash; and traceability.</p></body></html>"
+            },
+            "content_type": "application/xml",
+            "validation_passed": true,
+            "fetch_timestamp": "2026-05-23T00:00:00Z"
+          }
+        ]
+      },
+      "expected_parser_name": "legal_xml_builtin",
+      "required_text_anchors": [
+        "Text with dash entity",
+        "traceability."
+      ],
+      "required_check_outcomes": {
+        "required_source_records_are_present_and_direct": true
+      }
+    }
+  }
+}

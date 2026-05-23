@@ -7,6 +7,49 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Extraction Fidelity Eval Milestones 0-1 Resolved Locally
+
+This implementation slice begins the routed upstream-standard packet in
+`docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md` and closes the first
+sequence: Milestone `0` freshness lock plus Milestone `1` contract and
+fixture substrate.
+
+- outcome label:
+  `resolved locally` for Milestone `0` and Milestone `1`; Milestones `2`
+  through `4` remain open
+- routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- owner boundary:
+  this remains upstream evaluation-strengthening work, not a reopened
+  source-truth or downstream gold packet
+- Milestone 0 lock:
+  the repo-grounded refresh found no drift in the intended owner split:
+  `extraction_validation.json` remains structural validation,
+  `extraction_accuracy_audit.json` remains live generated-corpus audit truth,
+  the dedicated future `extraction_fidelity_eval_results.json` remains the
+  direct-fidelity owner target, and the current full-canonical promotion
+  baseline remains green at `passed_required_full_canonical_result_count=9`,
+  `required_full_canonical_result_count=9`
+- Milestone 1 substrate:
+  `config/extraction_fidelity_eval_v1.json` now defines `12` required
+  fidelity families and `24` tracked cases, the repo now carries tracked
+  fixture-backed expected-pass and controlled-violation scenarios under
+  `config/fixtures/extraction_fidelity_eval/`, and the contract-negative
+  manifests live under `tests/fixtures/extraction_fidelity_eval/`
+- acceptance proof:
+  `tests/test_extraction_fidelity_eval.py` now proves the real manifest plus
+  fail-closed missing-category and out-of-tree fixture checks
+- next routing:
+  implement Milestone `2` in
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`: add the dedicated
+  `extraction-fidelity-eval` command, stable JSON/Markdown artifact schema,
+  and offline direct-eval producer before changing upstream/promotion wiring
+- verification:
+  `git status -sb`,
+  `rg -n "extraction_accuracy|upstream-eval|direct_eval_present|source-set-f775524ab233ff27" README.md docs/CURRENT_ROUTING.md docs/CURRENT_SYSTEM_STATE.md docs/SESSION_HANDOFF.md docs/EVALUATION_COVERAGE_REGISTER.md config/upstream_evaluation_v1.json tests/test_upstream_evaluation.py tests/test_extraction_accuracy.py`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_fidelity_eval.py -q`, and
+  `git diff --check`
+
 ## Full Canonical Direct-File Capture Queue Resolution Packet Opened
 
 This docs-only routing slice opens an explicit follow-on owner for the `51`

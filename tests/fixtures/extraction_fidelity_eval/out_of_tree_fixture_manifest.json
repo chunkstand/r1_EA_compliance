@@ -1,0 +1,45 @@
+{
+  "schema_version": "extraction-fidelity-eval-v1",
+  "fixture_roots": [
+    "../../../config/fixtures/extraction_fidelity_eval",
+    "."
+  ],
+  "output_schema": {
+    "required_summary_fields": [
+      "schema_version",
+      "passed"
+    ]
+  },
+  "required_categories": [
+    {
+      "category_id": "ocr_anchor_fidelity",
+      "minimum_expected_pass_cases": 1,
+      "minimum_controlled_violation_cases": 1,
+      "required_expectation_fields": [
+        "required_text_anchors",
+        "expected_parser_name"
+      ],
+      "required_metric_ids": [
+        "anchor_match_rate"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "ocr-out-of-tree-pass",
+      "category_id": "ocr_anchor_fidelity",
+      "case_type": "expected_pass",
+      "expected_producer_passed": true,
+      "fixture_path": "../../../README.md",
+      "scenario_id": "expected_pass"
+    },
+    {
+      "case_id": "ocr-out-of-tree-fail",
+      "category_id": "ocr_anchor_fidelity",
+      "case_type": "controlled_violation",
+      "expected_producer_passed": false,
+      "fixture_path": "../../../README.md",
+      "scenario_id": "controlled_violation"
+    }
+  ]
+}
