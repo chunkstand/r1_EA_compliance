@@ -216,9 +216,11 @@ Latest worktree implementation on 2026-05-23:
 - Remaining boundary:
   no active full-canonical source-truth or gold blocker remains routed in
   this lane. `51` `Direct_File_Capture_Queue` rows remain outside the active
-  load-bearing surface by workbook contract, and West Reservoir remains an
-  intentional `typed_blocked` replay quarantine rather than a promotion
-  blocker.
+  load-bearing surface by workbook contract, but that queue boundary is now
+  explicitly routed through
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  instead of remaining ownerless. West Reservoir remains an intentional
+  `typed_blocked` replay quarantine rather than a promotion blocker.
 - Stale-reference audit:
   the immediately following source-truth section and older append-only
   references that still route the downstream gold packet as active, still

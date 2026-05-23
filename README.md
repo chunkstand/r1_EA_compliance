@@ -59,7 +59,8 @@ Current routed state on 2026-05-23:
   results passing. This closeout landed in commit `93a23b0`
   (`Resolve source-truth archive boundary rebaseline`). `51`
   `Direct_File_Capture_Queue` rows remain outside the active load-bearing
-  surface by workbook contract.
+  surface by workbook contract, and the follow-on owner for those rows is now
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
 - The downstream full-canonical compliance-gold packet is now resolved
   locally on `source-set-f775524ab233ff27`: refreshed claims now record
   `claim_count=124458`, `source_record_count=539`, `validation_passed=true`,

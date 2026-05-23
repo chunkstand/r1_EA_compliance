@@ -9,6 +9,8 @@ Use this file as the short current route before opening the large append-only do
 - Next queued upstream packet: `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
 - Recent source-truth closeout: `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
 - Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- Active queue follow-on:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 ## Live Facts
 
 - Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
@@ -62,9 +64,12 @@ Use this file as the short current route before opening the large append-only do
   aggregate. The queued packet will build a dedicated
   `extraction-fidelity-eval` producer and route it into upstream/promotion
   truth instead of reopening downstream gold coverage.
-- No active full-canonical owner remains routed in the source-truth/gold
-  lane; `51` `Direct_File_Capture_Queue` rows remain outside the active
-  load-bearing surface by workbook contract, and West Reservoir remains an
+- Active queue follow-on: the source-truth/gold lane remains resolved, but
+  `51` `Direct_File_Capture_Queue` rows still remain outside the active
+  load-bearing surface by workbook contract. That work is now explicitly
+  routed through
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  rather than left as an ownerless boundary. West Reservoir remains an
   intentional `typed_blocked` replay quarantine rather than a promotion
   blocker
 - Historical `source-set-cac9c7d02b280825` / `source-set-9e7d85759951c279`
@@ -79,6 +84,7 @@ Use this file as the short current route before opening the large append-only do
 - `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
 - `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
 - `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` for the zero-oversized architecture closeout
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`

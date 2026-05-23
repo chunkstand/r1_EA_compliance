@@ -7,6 +7,39 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Direct-File Capture Queue Resolution Packet Opened
+
+This docs-only routing slice opens an explicit follow-on owner for the `51`
+`Direct_File_Capture_Queue` rows that remain outside the active load-bearing
+surface by workbook contract.
+
+- outcome label:
+  `resolved docs-only routing`; the queue is no longer described as a known
+  but ownerless boundary in live routing
+- routed packet:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- route opened from:
+  the resolved local closeouts in
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md` and
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- live queue truth:
+  workbook census on 2026-05-23 still shows `51` queue rows, with `49`
+  current/project-applicable rows, `2` historical/noncurrent rows
+  (`FPS-380`, `SUP-007`), and dominant queue reasons of `21`
+  folder/listing/manual-export placeholders, `10` forest-plan support rows
+  needing direct document URLs, `4` manual/project-record placeholders, `4`
+  placeholder rows, and `3` FEIS-volume rows with unresolved direct file URLs
+- next routing:
+  execute Milestone `0` then Milestone `1` in
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  before any bulk queue promotion work; do not reopen the resolved
+  source-truth/gold packets just to carry queue ownership
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_source_register_schema.py tests/test_source_register_proving.py tests/test_cli.py -q`, and
+  `git diff --check`
+
 ## Extraction Fidelity Eval Packet Proposed
 
 This docs-only routing slice adds the next queued upstream packet after the
