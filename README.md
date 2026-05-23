@@ -84,8 +84,14 @@ Current routed state on 2026-05-23:
   governed historical rows (`FPS-380`, `SUP-007`), and the next routed slice
   remains Milestone `3` for the remaining export-backed families
   (`WILD-ESA-Q001`, `FINAL-Q-LOLO-001`, `FINAL-Q-NPC-001`, `LEX-Q-001`).
-  The earlier project-specific blocker-family opener landed in commit `8b889a9`
-  (`Open project-specific queue blocker packet`); the earlier Milestone `2`
+  The project-specific blocker-family opener landed in commit `8b889a9`
+  (`Open project-specific queue blocker packet`), the SCC structured-export
+  closeout landed in commit `e78f491`
+  (`Resolve direct-file queue Milestone 3 SCC exports`) and was later routed
+  through docs-alignment commit `82e2195`
+  (`Align direct-file queue SCC slice docs`), and the Flathead reading-room
+  blocker opener landed in commit `eb09556`
+  (`Open Flathead reading-room blocker packet`); the earlier Milestone `2`
   direct-file promotion closeout remains commit `85f087b`
   (`Resolve direct-file queue Milestone 2`).
 - The downstream full-canonical compliance-gold packet is now resolved

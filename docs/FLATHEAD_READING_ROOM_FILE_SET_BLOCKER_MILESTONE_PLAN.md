@@ -1,7 +1,7 @@
 # Flathead Reading-Room File Set Blocker Milestone Plan
 
 Date: 2026-05-23
-Status: Active blocker packet (`Milestone 0 resolved locally in the current worktree; Milestone 1 next when the remaining Flathead reading-room documents are promoted or explicitly excluded with direct evidence`)
+Status: Active blocker packet (`Milestone 0 resolved locally through eb09556; Milestone 1 next when the remaining Flathead reading-room documents are promoted or explicitly excluded with direct evidence`)
 Owner context: the `FINAL-Q-FLAT-001` queue family partially overlaps already-promoted Flathead canonical rows, but the remaining public reading-room documents are not yet represented as governed row-level canonical sources
 
 ## Purpose
@@ -19,7 +19,8 @@ remaining members are not yet represented as governed row-level sources.
 
 ## Latest Local Implementation
 
-Milestone `0` is now resolved locally in the current worktree.
+Milestone `0` is now resolved locally through commit `eb09556`
+(`Open Flathead reading-room blocker packet`).
 
 - `config/source_register_queue_resolution_ledger_v1.json` now routes
   `FINAL-Q-FLAT-001` to this exact packet path and marks it

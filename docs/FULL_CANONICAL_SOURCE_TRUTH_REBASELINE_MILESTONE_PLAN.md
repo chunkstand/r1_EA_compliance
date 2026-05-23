@@ -73,7 +73,8 @@ The next queue follow-on now narrows `FINAL-Q-FLAT-001` into
 `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md` as an
 explicit blocker family because the Flathead reading-room public file set is
 only partially represented by current canonical rows; that routing change does
-not alter the live source set or admitted-count boundary.
+not alter the live source set or admitted-count boundary. That blocker opener
+landed in commit `eb09556` (`Open Flathead reading-room blocker packet`).
 Older `634/581` references below remain the historical closeout baseline for
 commit `93a23b0` unless a later bullet explicitly updates them.
 

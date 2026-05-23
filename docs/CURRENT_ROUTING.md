@@ -98,6 +98,12 @@ Use this file as the short current route before opening the large append-only do
   structured-export slice, and the Flathead reading-room blocker opener.
   The blocker-family opener landed in commit `8b889a9`
   (`Open project-specific queue blocker packet`).
+  The SCC structured-export implementation landed in commit `e78f491`
+  (`Resolve direct-file queue Milestone 3 SCC exports`) and the later
+  routing/docs alignment landed in commit `82e2195`
+  (`Align direct-file queue SCC slice docs`).
+  The Flathead reading-room blocker opener landed in commit `eb09556`
+  (`Open Flathead reading-room blocker packet`).
   The tracked `config/source_register_queue_resolution_ledger_v1.json`
   enumerates all `51` queue rows, preserves the `4` governed `resolved`
   promotions from Milestone `2` plus the `4` SCC structured-export families
