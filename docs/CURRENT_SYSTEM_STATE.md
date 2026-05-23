@@ -80,11 +80,13 @@ Latest worktree implementation on 2026-05-23:
 - Routed implementation packet:
   `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
 - Outcome label:
-  `reduced`; a follow-on Milestone `2` manual-wrapper slice is now live
-  locally, `12` legacy `fsm` wrapper rows now admit through live USDA guidance
-  or current Forest Service static-file PDF targets, and the packet remains
-  reduced on the `1` direct-document blocker that still lacks a governed
-  current document path.
+  `reduced`; a follow-on Milestone `2` manual-redirect slice is now live
+  locally, the packet now admits `12` legacy `fsm` wrapper rows through live
+  USDA guidance or current Forest Service static-file PDF targets, and it
+  remains reduced on the `1` direct-document blocker that still lacks a
+  governed current document path.
+- Closeout commit:
+  `53d59da` (`Reduce source-truth Milestone 2 manual redirect blockers`).
 - Previous reduced-slice closeout:
   `96450be` (`Reduce source-truth Milestone 2 manual wrapper blockers`).
 - Earlier reduced-slice closeout:

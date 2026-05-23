@@ -15,7 +15,9 @@ National Directives contents PDFs, and `12` manual wrapper rows now admit
 through live USDA guidance or current Forest Service static-file PDF targets.
 The packet remains in Milestone 2 reduced only on `USFS-026` (`FSH 2509.18`),
 whose live official surface still exposes only a transmittal link rather than
-a current contents page. The latest recorded Milestone 2 reduced local commit is `96450be`
+a current contents page. The latest recorded Milestone 2 reduced local commit is `53d59da`
+(`Reduce source-truth Milestone 2 manual redirect blockers`); the earlier
+Milestone 2 reduced manual-wrapper slice remains `96450be`
 (`Reduce source-truth Milestone 2 manual wrapper blockers`); the earlier
 Milestone 2 reduced handbook slice remains `4650837`
 (`Reduce source-truth Milestone 2 handbook wrapper blockers`), and the earlier

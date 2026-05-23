@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-22
+Date: 2026-05-23
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
@@ -16,6 +16,8 @@ This worktree slice further reduces Milestone `2` in
   `reduced`; current official direct-document targets now admit `USFS-018`
   (`FSM 2410`) and `USFS-024` (`FSM 2580`), so the packet remains reduced on
   only `1` directives-wrapper blocker: `USFS-026` (`FSH 2509.18`)
+- closeout commit:
+  `53d59da` (`Reduce source-truth Milestone 2 manual redirect blockers`)
 - implementation surfaces:
   `src/usfs_r1_ea_sources/adapters.py`,
   `tests/test_adapters_report.py`, and the local ignored refreshed download,

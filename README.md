@@ -14,7 +14,7 @@ normalized request packet, routes it to the supported document lane, and writes 
 artifacts under `source_library/document_plans/<request_id>/` without generating canonical lane
 outputs.
 
-Current routed state on 2026-05-22:
+Current routed state on 2026-05-23:
 
 - Live local catalog remains `source-set-f775524ab233ff27` in
   `source_library/catalog/source_set_manifest.json` with `source_count=634`,
@@ -55,8 +55,10 @@ Current routed state on 2026-05-22:
   (`FSM 2580`) now admit, and the lone remaining blocker is `USFS-026`
   (`FSH 2509.18`), whose live official surface still exposes only a
   transmittal link rather than a current contents page. `FPS-344` remains
-  admitted as a structured Federal Register XML source. The earlier
-  manual-wrapper reduced slice landed in
+  admitted as a structured Federal Register XML source. The latest
+  manual-redirect reduced slice landed in
+  `53d59da` (`Reduce source-truth Milestone 2 manual redirect blockers`). The
+  earlier manual-wrapper reduced slice landed in
   `96450be` (`Reduce source-truth Milestone 2 manual wrapper blockers`). The
   earlier handbook-wrapper reduced slice landed in
   `4650837` (`Reduce source-truth Milestone 2 handbook wrapper blockers`).

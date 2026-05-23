@@ -1,5 +1,5 @@
 # Current Routing
-Date: 2026-05-22
+Date: 2026-05-23
 Use this file as the short current route before opening the large append-only docs.
 ## First Stops
 
@@ -11,11 +11,12 @@ Use this file as the short current route before opening the large append-only do
 
 - Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
   `Document_Register_Master` / `source-set-f775524ab233ff27`
-- Active source-truth packet status: Milestone `2` remains reduced; a follow-on
-  manual-wrapper slice now admits `12` legacy USFS directive rows, including
-  `USFS-018` and `USFS-024` through live current official Forest Service
-  static-file PDFs, and the next routed slice remains Milestone `2` on the
-  remaining `1` direct-document blocker: `USFS-026` (`FSH 2509.18`)
+- Active source-truth packet status: Milestone `2` remains reduced; the latest
+  manual-redirect slice in `53d59da` now admits `12` legacy USFS directive
+  rows, including `USFS-018` and `USFS-024` through live current official
+  Forest Service static-file PDFs, and the next routed slice remains
+  Milestone `2` on the remaining `1` direct-document blocker: `USFS-026`
+  (`FSH 2509.18`)
 - Active canonical-source mismatch: the live source set proves `634/634` extracted
   `Document_Register_Master` rows, and the current worktree now rebaselines verified admission to
   all `582` `active_review_corpus` rows through
