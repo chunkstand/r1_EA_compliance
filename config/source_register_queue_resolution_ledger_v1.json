@@ -7,7 +7,7 @@
   "workbook_sha256": "2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49",
   "sheet_name": "Direct_File_Capture_Queue",
   "summary": {
-    "blocked_current_or_project_applicable_count": 3,
+    "blocked_current_or_project_applicable_count": 4,
     "current_or_project_applicable_count": 49,
     "historical_noncurrent_count": 2,
     "historical_noncurrent_source_ids": [
@@ -16,9 +16,9 @@
     ],
     "planned_disposition_counts": {
       "historical_scope_only": 2,
-      "named_blocker": 3,
+      "named_blocker": 4,
       "promote_direct_file": 37,
-      "promote_structured_export": 9
+      "promote_structured_export": 8
     },
     "queue_reason_counts": {
       "Box planning record cannot be represented as row-level document sources without export.": 1,
@@ -37,12 +37,12 @@
     },
     "queue_row_count": 51,
     "resolution_status_counts": {
-      "blocked": 3,
-      "planned": 40,
+      "blocked": 4,
+      "planned": 39,
       "resolved": 8
     },
     "resolved_current_or_project_applicable_count": 8,
-    "unresolved_current_or_project_applicable_count": 38
+    "unresolved_current_or_project_applicable_count": 37
   },
   "entries": [
     {
@@ -232,14 +232,14 @@
       "target_successor_source_id": null
     },
     {
-      "blocker_packet_reference": null,
+      "blocker_packet_reference": "docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md",
       "currentness_class": "current_or_project_applicable",
       "document_title": "Flathead 2018 Forest Plan Revision and 1986 Forest Plan public reading-room file set",
       "excel_row": 18,
-      "planned_disposition": "promote_structured_export",
+      "planned_disposition": "named_blocker",
       "queue_reason": "Reading-room widget/static page does not expose every direct file row in this environment.",
       "resolution_required": "Export reading-room file list; add any remaining actual documents as direct rows or document exclusion rationale.",
-      "resolution_status": "planned",
+      "resolution_status": "blocked",
       "source_id": "FINAL-Q-FLAT-001",
       "source_url": "https://www.fs.usda.gov/r01/flathead/planning/forest-plan",
       "target_successor_source_id": null

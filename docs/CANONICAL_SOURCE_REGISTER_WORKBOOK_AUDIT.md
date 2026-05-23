@@ -73,17 +73,19 @@ The queue baseline is now also tracked in
 `source-register-queue-audit` command currently proves:
 
 - all `51` queue `Source_ID` values appear exactly once in the ledger
-- `42` queue rows remain current/project-applicable and unresolved in the
+- `37` queue rows remain current/project-applicable and unresolved in the
   generic `planned` state
-- `3` current/project-applicable queue rows are now explicit `blocked`
-  project-specific placeholders: `PROG-011`, `PROG-012`, and `PROG-013`
+- `4` current/project-applicable queue rows are now explicit `blocked`
+  placeholders: `FINAL-Q-FLAT-001`, `PROG-011`, `PROG-012`, and `PROG-013`
 - `2` queue rows (`FPS-380`, `SUP-007`) are governed historical/noncurrent
-- queue resolution statuses are now `44` `planned`, `3` `blocked`, and `4`
+- queue resolution statuses are now `39` `planned`, `4` `blocked`, and `8`
   `resolved`
-- planned disposition counts are `37` `promote_direct_file`, `9`
-  `promote_structured_export`, `3` `named_blocker`, and `2`
+- planned disposition counts are `37` `promote_direct_file`, `8`
+  `promote_structured_export`, `4` `named_blocker`, and `2`
   `historical_scope_only`
-- the named-blocker family now routes to
+- the named-blocker families now route to
+  `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`
+  and
   `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
 - zero missing, unexpected, duplicated, or drifted queue rows
 

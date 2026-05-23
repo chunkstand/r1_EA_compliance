@@ -69,6 +69,11 @@ intentionally pinned to `full_canonical_source_set_id=source-set-3f7d4578cafb070
 and now reports `full_canonical_failure_category_counts={"stale_artifact":2}`
 until the downstream rebind packet reruns the full-canonical contract on
 `source-set-4fb59e9eb43045cb`.
+The next queue follow-on now narrows `FINAL-Q-FLAT-001` into
+`docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md` as an
+explicit blocker family because the Flathead reading-room public file set is
+only partially represented by current canonical rows; that routing change does
+not alter the live source set or admitted-count boundary.
 Older `634/581` references below remain the historical closeout baseline for
 commit `93a23b0` unless a later bullet explicitly updates them.
 
