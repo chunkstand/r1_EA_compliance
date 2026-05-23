@@ -6,6 +6,7 @@ Use this file as the short current route before opening the large append-only do
 - Document-routing work: `docs/AGENT_START_HERE.md`
 - Live system truth: `README.md`, then `docs/CURRENT_SYSTEM_STATE.md`
 - Recent closeout and next slice: `docs/SESSION_HANDOFF.md`
+- Next queued upstream packet: `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
 - Recent source-truth closeout: `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
 - Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
 ## Live Facts
@@ -52,6 +53,15 @@ Use this file as the short current route before opening the large append-only do
   `19/19` mapped high-priority families, `3` required review contracts,
   `2` forests, `3` package styles, `2 reviewer_ready + 1 typed_blocked`
   tracked reviews, and zero threshold failures
+- Next routed follow-on: `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+  owns the next standard raise for import/extraction truth. The current
+  upstream extraction lane is still green through `upstream-eval` with `11`
+  extraction categories and `22` extraction cases, and the live
+  `extraction-accuracy-audit` is still green at `581/581` admitted
+  active-current rows, but the extraction direct-eval owner remains too
+  aggregate. The queued packet will build a dedicated
+  `extraction-fidelity-eval` producer and route it into upstream/promotion
+  truth instead of reopening downstream gold coverage.
 - No active full-canonical owner remains routed in the source-truth/gold
   lane; `51` `Direct_File_Capture_Queue` rows remain outside the active
   load-bearing surface by workbook contract, and West Reservoir remains an
@@ -68,6 +78,7 @@ Use this file as the short current route before opening the large append-only do
 
 - `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
 - `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
 - `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` for the zero-oversized architecture closeout
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`

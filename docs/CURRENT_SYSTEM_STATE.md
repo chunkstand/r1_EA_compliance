@@ -82,6 +82,48 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Extraction Fidelity Eval Packet Proposed
+
+Latest planning update on 2026-05-23:
+
+- Routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+- Outcome label:
+  `proposed follow-on`; no implementation has landed yet.
+- Owner boundary:
+  this is a fresh upstream-standard packet, not a reopened source-truth or
+  downstream gold lane.
+- Current truth the plan is anchored to:
+  `config/upstream_evaluation_v1.json` still provides a green aggregate
+  upstream extraction lane with `11` required extraction categories and `22`
+  extraction cases inside `upstream-eval`, while the live full-canonical
+  `extraction_accuracy_audit.json` on `source-set-f775524ab233ff27` still
+  records `audited_record_count=581`,
+  `knowledge_base_admitted_source_record_ids=581`,
+  `knowledge_base_blocked_source_record_ids=0`, and
+  `explicitly_non_admitted_source_record_ids=53`.
+- Weakness being routed:
+  the repo still lacks a dedicated fixture-backed extraction-fidelity producer
+  with its own thresholds, per-category metrics, parser-route expectations,
+  and hard-negative ownership. Extraction direct-eval truth remains too
+  aggregate inside `upstream-eval` to be the long-term fidelity standard.
+- Planned owner split:
+  `extraction_validation.json` remains structural validation,
+  `extraction_accuracy_audit.json` remains live generated-corpus audit truth,
+  and the queued packet will add a dedicated
+  `extraction-fidelity-eval` direct-eval owner rather than pushing more
+  burden into `gold-coverage-eval`.
+- Readiness implication:
+  the current full-canonical promotion route remains green at
+  `passed_required_full_canonical_result_count=9`,
+  `required_full_canonical_result_count=9`. The queued packet is expected to
+  strengthen, and likely expand, the full-canonical readiness contract after a
+  dedicated fidelity artifact exists.
+- Next routing:
+  start with `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md` for the next
+  upstream implementation slice if the goal is to raise import/extraction
+  proof rather than downstream package breadth.
+
 ## Full Canonical Downstream Freshness Packet Retired For Live Routing
 
 Latest docs-only routing retirement on 2026-05-23:

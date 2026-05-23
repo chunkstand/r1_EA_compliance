@@ -7,6 +7,47 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Extraction Fidelity Eval Packet Proposed
+
+This docs-only routing slice adds the next queued upstream packet after the
+resolved source-truth and downstream gold lanes.
+
+- outcome label:
+  `proposed follow-on`; no implementation has landed yet
+- routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- owner boundary:
+  this is upstream evaluation-strengthening work, not a reopened
+  source-truth or gold packet
+- current truth the packet is anchored to:
+  `config/upstream_evaluation_v1.json` still owns a green aggregate upstream
+  extraction lane with `11` required extraction categories and `22`
+  extraction cases; the live full-canonical
+  `extraction_accuracy_audit.json` on `source-set-f775524ab233ff27` still
+  records `audited_record_count=581`,
+  `knowledge_base_admitted_source_record_ids=581`,
+  `knowledge_base_blocked_source_record_ids=0`, and
+  `explicitly_non_admitted_source_record_ids=53`; and default
+  `promotion-suite` is still green at `passed_required_full_canonical_result_count=9/9`
+- weakness being routed:
+  extraction direct-eval proof remains too aggregate inside `upstream-eval`;
+  the repo still lacks a dedicated fixture-backed extraction-fidelity
+  producer with per-category thresholds, parser-route expectations, and
+  explicit hard negatives
+- planned owner split:
+  `extraction_validation.json` remains structural validation,
+  `extraction_accuracy_audit.json` remains live generated-corpus audit truth,
+  and the new packet will add a dedicated `extraction-fidelity-eval` owner
+  rather than pushing more import/extraction burden into downstream gold
+  breadth
+- next routing:
+  implement `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md` if the next goal
+  is to raise import/extraction accuracy proof
+- verification:
+  targeted doc-route alignment against `README.md`, `docs/CURRENT_ROUTING.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `config/upstream_evaluation_v1.json`, and `git diff --check`
+
 ## Full Canonical Downstream Freshness Packet Retired For Live Routing
 
 This docs-only slice retires the preserved downstream-freshness packet as an
