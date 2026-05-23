@@ -62,7 +62,9 @@ Use this file as the short current route before opening the large append-only do
   still defines `12` governed fidelity families and `24` tracked cases under
   `config/extraction_fidelity_eval_v1.json`, and the dedicated
   `extraction-fidelity-eval` producer now writes durable results under
-  `source_library/evaluations/extraction_fidelity/`. The current green replay
+  `source_library/evaluations/extraction_fidelity/`. The Milestone `2`
+  closeout landed in commit `16fb8b2`
+  (`Implement extraction fidelity Milestone 2`). The current green replay
   records `matched_case_count=24`, `parser_route_mismatch_count=1`,
   `anchor_mismatch_count=13`, `span_mismatch_count=10`,
   `boundary_mismatch_count=4`, and `negative_case_pass_count=12`, while the

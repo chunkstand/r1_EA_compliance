@@ -20,27 +20,32 @@ active owner remains in that closed source-truth/gold route. This packet now
 owns the next upstream-standard raise: route the new artifact into
 upstream/promotion truth instead of leaving the older extraction umbrella as
 the effective owner. The Milestone `0`/`1` closeout commit is `f2afa8f`
-(`Resolve extraction fidelity Milestones 0-1`).
+(`Resolve extraction fidelity Milestones 0-1`), and the Milestone `2`
+closeout commit is `16fb8b2`
+(`Implement extraction fidelity Milestone 2`).
 
 Owner context: this plan follows
 `docs/UPSTREAM_EVALUATION_COVERAGE_MILESTONE_PLAN.md`, which already created
 `upstream-eval` and the upstream coverage register. That upstream packet closed
 the missing-eval gap for capture, catalog, and extraction category coverage,
-but the current extraction direct-eval proof is still bundled inside the
-aggregate `upstream-eval` lane. The repo now has three distinct upstream truth
-surfaces:
+but the current load-bearing extraction direct-eval route is still bundled
+inside the aggregate `upstream-eval` lane. The repo now has four distinct
+upstream truth surfaces:
 
 - `extract-build` structural validation in
   `diagnostics/extraction_validation.json`
 - live generated-corpus content audit in
   `diagnostics/extraction_accuracy_audit.json`
 - synthetic extraction cases inside `config/upstream_evaluation_v1.json`
+- dedicated offline fidelity proof in
+  `source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`
 
-What is still missing is a dedicated, reviewer-visible, thresholded fidelity
-producer that proves difficult extraction cases by span, boundary, layout,
-scope, parser-route, and negative-case expectations. This packet exists to add
-that owner cleanly without weakening the current audit and without moving the
-problem into downstream gold coverage.
+What is still missing is load-bearing routing that consumes the dedicated,
+reviewer-visible, thresholded fidelity producer now that it exists. The repo
+can already prove difficult extraction cases by span, boundary, layout,
+scope, parser-route, and negative-case expectations; the remaining gap is to
+make that artifact authoritative in upstream/promotion truth without weakening
+the current audit or moving the problem into downstream gold coverage.
 
 ## Purpose
 
@@ -73,8 +78,8 @@ fail closed when:
 - `tests/test_upstream_evaluation.py` currently proves the real manifest runs
   green with `required_category_count=19`, `case_count=38`, and
   `matched_case_count=38`. That confirms category presence and controlled
-  violations, but it does not create a dedicated extraction-fidelity artifact
-  with its own thresholds or per-category fidelity metrics.
+  violations, but it still treats extraction fidelity as one aggregate
+  upstream lane rather than the final dedicated owner.
 - `src/usfs_r1_ea_sources/extraction_accuracy.py` currently owns live
   generated-output checks for:
   `extraction_validation_passed`,
@@ -89,9 +94,8 @@ fail closed when:
   and PDF text crosschecks.
 - `tests/test_extraction_accuracy.py` already proves important audit behavior,
   including direct-parse admission guards and wrapper-page blocking for direct
-  document requirements. Those tests validate the audit owner, but they are not
-  yet assembled into a dedicated fidelity-eval command or routed promotion
-  artifact.
+  document requirements. Those tests validate the audit owner, while the new
+  fidelity command now owns the dedicated offline parser/span/boundary contract.
 - Live source-truth on `source-set-f775524ab233ff27` is currently green:
   `extraction_accuracy_audit.json` records `audited_record_count=581`,
   `knowledge_base_admitted_source_record_ids=581`,
@@ -110,8 +114,8 @@ fail closed when:
 
 ## Goal
 
-Create a dedicated extraction-fidelity eval producer and route it into the
-repo's upstream and promotion truth surfaces.
+Route the dedicated extraction-fidelity eval producer into the repo's
+upstream and promotion truth surfaces.
 
 Success means all of the following are true:
 
@@ -491,6 +495,8 @@ Milestone 2 closeout note on 2026-05-23:
   `parser_route_mismatch_count=1`, `anchor_mismatch_count=13`,
   `span_mismatch_count=10`, `boundary_mismatch_count=4`, and
   `negative_case_pass_count=12`.
+- The Milestone `2` closeout commit is `16fb8b2`
+  (`Implement extraction fidelity Milestone 2`).
 - Next routing: execute Milestone `3` in this packet to narrow the older
   upstream extraction umbrella and make the new artifact load-bearing in
   upstream/promotion truth.

@@ -7,6 +7,34 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Extraction Fidelity Eval Milestone 2 Alignment Pass
+
+This docs-only follow-up closes the remaining routing drift after the
+Milestone `2` implementation slice landed.
+
+- outcome label:
+  `aligned locally`; the top routing/docs stack now records the actual
+  Milestone `2` closeout commit and retires the remaining active-looking
+  Milestone `2` next-step references below as historical for routing
+- closeout commit:
+  `16fb8b2` (`Implement extraction fidelity Milestone 2`)
+- routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- stale-reference audit:
+  the immediately following `Extraction Fidelity Eval Milestone 2 Resolved
+  Locally` section remains the live closeout summary, but the lower
+  `Milestones 0-1 Alignment Pass` and `Milestones 0-1 Resolved Locally`
+  sections are historical only after `16fb8b2` wherever they still route the
+  packet to Milestone `2`
+- next routing:
+  the packet remains active and the next routed slice is now Milestone `3`
+  in `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- verification:
+  targeted route grep across `README.md`, `docs/CURRENT_ROUTING.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`, and `git diff --check`
+
 ## Extraction Fidelity Eval Milestone 2 Resolved Locally
 
 This implementation slice closes Milestone `2` in
@@ -33,6 +61,8 @@ This implementation slice closes Milestone `2` in
   `anchor_mismatch_count=13`, `span_mismatch_count=10`,
   `boundary_mismatch_count=4`, `negative_case_pass_count=12`,
   `negative_case_fail_count=0`, and `required_check_mismatch_count=0`
+- closeout commit:
+  `16fb8b2` (`Implement extraction fidelity Milestone 2`)
 - owner split:
   `extraction_validation.json` remains structural validation,
   `extraction_accuracy_audit.json` remains the live generated-corpus audit,
