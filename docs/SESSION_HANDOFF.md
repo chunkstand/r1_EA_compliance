@@ -20,6 +20,8 @@ clean single-family promotion.
   SCC structured-export, Flathead, NCDE, and Lolo blocker slices remain in
   place, and the next routed slice stays on the remaining generic export-backed
   family
+- closeout commit:
+  `2625aa2` (`Open NPC planning-record blocker packet`)
 - routed packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - workbook and queue truth:

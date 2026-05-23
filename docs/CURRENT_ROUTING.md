@@ -116,7 +116,8 @@ Use this file as the short current route before opening the large append-only do
   (`Open Lolo Pinyon blocker packet`).
   The latest slice now also routes `FINAL-Q-NPC-001` to
   `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md` as an
-  explicit blocker family.
+  explicit blocker family, and that closeout landed in commit `2625aa2`
+  (`Open NPC planning-record blocker packet`).
   The tracked `config/source_register_queue_resolution_ledger_v1.json`
   enumerates all `51` queue rows, preserves the `4` governed `resolved`
   promotions from Milestone `2` plus the `4` SCC structured-export families

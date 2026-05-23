@@ -1,7 +1,7 @@
 # Nez Perce-Clearwater Planning Record Blocker Milestone Plan
 
 Date: 2026-05-23
-Status: Active blocker packet (`Milestone 0 resolved locally; Milestone 1 next when the mixed NPC planning-record library is reconciled document-by-document into governed canonical successors or explicit exclusions`)
+Status: Active blocker packet (`Milestone 0 resolved locally through 2625aa2; Milestone 1 next when the mixed NPC planning-record library is reconciled document-by-document into governed canonical successors or explicit exclusions`)
 Owner context: the `FINAL-Q-NPC-001` queue family points at a large Box planning-record library that overlaps existing canonical NPC plan and SCC rows while also containing extensive FEIS-reference, objection-reference, consultation, amendment, infrastructure, and misc-support folders
 
 ## Purpose
@@ -19,7 +19,8 @@ classified document by document.
 
 ## Latest Local Implementation
 
-Milestone `0` is now resolved locally in the current slice.
+Milestone `0` is now resolved locally through commit `2625aa2`
+(`Open NPC planning-record blocker packet`).
 
 - `config/source_register_queue_resolution_ledger_v1.json` now routes
   `FINAL-Q-NPC-001` to this exact packet path and marks it

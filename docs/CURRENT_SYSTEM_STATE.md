@@ -133,6 +133,8 @@ Latest implementation update on 2026-05-23:
   library whose visible top-level folders already mix core plan documents with
   high-volume FEIS-reference, objection-reference, consultation, amendment,
   infrastructure, and misc-support surfaces.
+- Closeout commit:
+  `2625aa2` (`Open NPC planning-record blocker packet`).
 - Active full-canonical catalog truth:
   the live source set remains `source-set-4fb59e9eb43045cb` with
   `source_count=647`, `artifact_count=635`,

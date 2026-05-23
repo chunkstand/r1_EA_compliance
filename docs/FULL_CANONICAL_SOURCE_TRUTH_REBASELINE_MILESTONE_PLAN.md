@@ -96,7 +96,8 @@ a multi-page NPC planning-record library whose visible top-level folders mix
 core plan documents with high-volume FEIS-reference, objection-reference,
 consultation, amendment, infrastructure, and misc-support surfaces; that
 routing change also leaves the live source set and admitted-count boundary
-unchanged.
+unchanged. That blocker opener landed in commit `2625aa2`
+(`Open NPC planning-record blocker packet`).
 Older `634/581` references below remain the historical closeout baseline for
 commit `93a23b0` unless a later bullet explicitly updates them.
 

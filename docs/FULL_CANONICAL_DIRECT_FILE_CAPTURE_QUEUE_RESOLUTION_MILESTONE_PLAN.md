@@ -1,7 +1,7 @@
 # Full Canonical Direct-File Capture Queue Resolution Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; SCC structured-export Milestone 3 slice resolved locally through e78f491 and docs-aligned through 82e2195; Flathead reading-room blocker slice reduced locally through eb09556; WILD-ESA NCDE amendment blocker slice reduced locally through 3a8dd2d; Lolo Pinyon blocker slice reduced locally through 2d7d7c2; NPC planning-record blocker slice reduced locally; remaining export-backed Milestone 3 slice next`)
+Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; SCC structured-export Milestone 3 slice resolved locally through e78f491 and docs-aligned through 82e2195; Flathead reading-room blocker slice reduced locally through eb09556; WILD-ESA NCDE amendment blocker slice reduced locally through 3a8dd2d; Lolo Pinyon blocker slice reduced locally through 2d7d7c2; NPC planning-record blocker slice reduced locally through 2625aa2; remaining export-backed Milestone 3 slice next`)
 Owner context: follow-on from the resolved full-canonical source-truth and compliance-gold
 rebaseline packets
 
@@ -24,7 +24,8 @@ explicit blocker packet through commit `3a8dd2d`
 Pinyon family is now also reduced locally as an explicit blocker packet
 through commit `2d7d7c2` (`Open Lolo Pinyon blocker packet`). The mixed
 `FINAL-Q-NPC-001` Nez Perce-Clearwater planning-record family is now also
-reduced locally as an explicit blocker packet.
+reduced locally as an explicit blocker packet through commit `2625aa2`
+(`Open NPC planning-record blocker packet`).
 
 - `config/source_register_queue_resolution_ledger_v1.json` now enumerates all
   `51` queue rows exactly once with `49` current/project-applicable rows, `2`

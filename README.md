@@ -101,8 +101,8 @@ Current routed state on 2026-05-23:
   `3a8dd2d` (`Open WILD-ESA NCDE blocker packet`) and the Lolo Pinyon blocker
   family for `FINAL-Q-LOLO-001` in commit `2d7d7c2`
   (`Open Lolo Pinyon blocker packet`); the latest slice also opened the NPC
-  planning-record blocker family for `FINAL-Q-NPC-001`; the earlier
-  Milestone `2`
+  planning-record blocker family for `FINAL-Q-NPC-001` in commit `2625aa2`
+  (`Open NPC planning-record blocker packet`); the earlier Milestone `2`
   direct-file promotion closeout remains commit `85f087b`
   (`Resolve direct-file queue Milestone 2`).
 - The downstream full-canonical compliance-gold packet is now resolved
