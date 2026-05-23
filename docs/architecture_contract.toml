@@ -19,6 +19,7 @@ modules = [
   "records",
   "source_set_support",
   "source_register",
+  "source_register_queue_resolution",
   "source_register_validation",
   "source_partitions",
   "workbook",
@@ -699,6 +700,7 @@ name = "capture"
 commands = [
   "source-register-validate",
   "source-register-diff",
+  "source-register-queue-audit",
   "dry-run",
   "preflight",
   "download",

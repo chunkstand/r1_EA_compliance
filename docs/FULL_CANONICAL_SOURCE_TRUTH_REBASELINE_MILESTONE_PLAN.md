@@ -132,6 +132,10 @@ truth instead of the older `343`-row active-review subset.
   while `2` are explicitly historical/noncurrent (`FPS-380` and `SUP-007`).
 - `config/direct_file_readiness_contract_v1.json` still records queue status `phase0_freeze` and
   defines queue rows as non-load until direct-file promotion or explicit exclusion.
+- `config/source_register_queue_resolution_ledger_v1.json` and
+  `source-register-queue-audit` now lock the queue roster to a governed
+  Milestone `0`/`1` baseline with `49` unresolved current/project-applicable
+  rows and `2` governed historical rows; no queue row has been promoted yet.
 - `tests/test_extraction_accuracy.py` already proves the fail-closed negative case:
   wrapper pages are not admissible when a row requires a direct document artifact.
 - The downstream packet

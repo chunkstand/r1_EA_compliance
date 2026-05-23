@@ -61,6 +61,15 @@ Current routed state on 2026-05-23:
   `Direct_File_Capture_Queue` rows remain outside the active load-bearing
   surface by workbook contract, and the follow-on owner for those rows is now
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+- The direct-file capture queue packet now closes its baseline and audit gate
+  locally: `config/source_register_queue_resolution_ledger_v1.json` records
+  every `Direct_File_Capture_Queue` row exactly once, the new
+  `source-register-queue-audit` command passes with `49`
+  current/project-applicable rows, `2` governed historical rows
+  (`FPS-380`, `SUP-007`), and planned disposition counts of `37`
+  `promote_direct_file`, `9` `promote_structured_export`, `3`
+  `named_blocker`, and `2` `historical_scope_only`; the next routed slice in
+  that packet is now Milestone `2`.
 - The downstream full-canonical compliance-gold packet is now resolved
   locally on `source-set-f775524ab233ff27`: refreshed claims now record
   `claim_count=124458`, `source_record_count=539`, `validation_passed=true`,

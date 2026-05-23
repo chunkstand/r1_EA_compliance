@@ -175,6 +175,25 @@ def test_source_register_diff_parser_accepts_phase_zero_inputs() -> None:
     assert args.sheet_contract == Path("config/source_register_sheet_contract_v1.json")
 
 
+def test_source_register_queue_audit_parser_accepts_ledger_inputs() -> None:
+    args = build_parser().parse_args(
+        [
+            "source-register-queue-audit",
+            "--workbook",
+            "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+            "--ledger-path",
+            "config/source_register_queue_resolution_ledger_v1.json",
+            "--sheet-contract",
+            "config/source_register_sheet_contract_v1.json",
+        ]
+    )
+
+    assert args.command == "source-register-queue-audit"
+    assert args.workbook == Path("usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx")
+    assert args.ledger_path == Path("config/source_register_queue_resolution_ledger_v1.json")
+    assert args.sheet_contract == Path("config/source_register_sheet_contract_v1.json")
+
+
 def test_batch_download_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     args = build_parser().parse_args(
         [

@@ -21,12 +21,17 @@ from .source_register import (
     build_source_register_diff,
     validate_source_register,
 )
+from .source_register_queue_resolution import (
+    DEFAULT_SOURCE_REGISTER_QUEUE_RESOLUTION_LEDGER_PATH,
+    build_source_register_queue_disposition_audit,
+)
 from .validate_run import validate_run
 from .workbook import load_r1_forest_plan_document_register
 
 
 CAPTURE_COMMANDS = {
     "source-register-diff",
+    "source-register-queue-audit",
     "source-register-validate",
     "dry-run",
     "preflight",
@@ -76,6 +81,22 @@ def register_capture_commands(subparsers: argparse._SubParsersAction) -> None:
     source_register_diff.add_argument("--canonical-workbook", required=True, type=Path)
     source_register_diff.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
     source_register_diff.add_argument(
+        "--sheet-contract",
+        default=DEFAULT_SOURCE_REGISTER_SHEET_CONTRACT_PATH,
+        type=Path,
+    )
+
+    source_register_queue_audit = subparsers.add_parser(
+        "source-register-queue-audit",
+        help="Audit the queue-resolution ledger against the canonical workbook queue.",
+    )
+    source_register_queue_audit.add_argument("--workbook", required=True, type=Path)
+    source_register_queue_audit.add_argument(
+        "--ledger-path",
+        default=DEFAULT_SOURCE_REGISTER_QUEUE_RESOLUTION_LEDGER_PATH,
+        type=Path,
+    )
+    source_register_queue_audit.add_argument(
         "--sheet-contract",
         default=DEFAULT_SOURCE_REGISTER_SHEET_CONTRACT_PATH,
         type=Path,
@@ -199,6 +220,15 @@ def handle_capture_command(args: argparse.Namespace, parser: argparse.ArgumentPa
         )
         print_summary(result)
         return 0
+
+    if args.command == "source-register-queue-audit":
+        result = build_source_register_queue_disposition_audit(
+            workbook_path=args.workbook,
+            ledger_path=args.ledger_path,
+            sheet_contract_path=args.sheet_contract,
+        )
+        print_summary(result)
+        return 0 if result["validation_passed"] else 1
 
     if args.command == "dry-run":
         config = load_config(args.config)

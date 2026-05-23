@@ -7,6 +7,40 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Direct-File Queue Milestones 0-1 Resolved Locally
+
+This implementation slice closes the queue packet's baseline-and-audit entry
+gate without reopening the resolved source-truth or downstream-gold lanes.
+
+- outcome label:
+  `resolved locally` for Milestones `0` and `1`; the queue now has a tracked
+  machine-readable ledger plus a fail-closed audit command
+- routed packet:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- baseline truth:
+  `config/source_register_queue_resolution_ledger_v1.json` now records all
+  `51` queue rows exactly once with `49` current/project-applicable rows, `2`
+  governed historical/noncurrent rows (`FPS-380`, `SUP-007`), and planned
+  disposition counts of `37` `promote_direct_file`, `9`
+  `promote_structured_export`, `3` `named_blocker`, and `2`
+  `historical_scope_only`
+- audit truth:
+  `source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  now passes with zero missing, unexpected, duplicated, or drifted queue
+  rows, `unresolved_current_or_project_applicable_count=49`, and the full
+  unresolved roster exposed as a machine-readable field
+- next routing:
+  execute Milestone `2` in
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  for the low-complexity direct-file promotion families
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_source_register_schema.py tests/test_source_register_proving.py tests/test_source_register_queue_resolution.py tests/test_cli.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/source_register_queue_resolution.py src/usfs_r1_ea_sources/cli_capture.py tests/test_source_register_queue_resolution.py tests/test_cli.py tests/test_source_register_schema.py tests/test_source_register_proving.py tests/test_architecture_contract.py`,
+  and `git diff --check`
+
 ## Extraction Fidelity Eval Milestone 4 Gap-Close Alignment Pass
 
 This docs-only follow-up closes the last packet-local wording drift after the

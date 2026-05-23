@@ -82,6 +82,41 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Full Canonical Direct-File Queue Milestones 0-1 Resolved Locally
+
+Latest implementation update on 2026-05-23:
+
+- Routed packet:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved locally` for Milestones `0` and `1`; the queue now has a tracked
+  machine-readable ledger plus a fail-closed audit gate, but no queue rows
+  have been promoted yet.
+- Baseline truth:
+  `config/source_register_queue_resolution_ledger_v1.json` now records all
+  `51` `Direct_File_Capture_Queue` rows exactly once with `49`
+  current/project-applicable rows, `2` governed historical/noncurrent rows
+  (`FPS-380`, `SUP-007`), and planned disposition counts of `37`
+  `promote_direct_file`, `9` `promote_structured_export`, `3`
+  `named_blocker`, and `2` `historical_scope_only`.
+- Audit truth:
+  `source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
+  now passes with zero missing, unexpected, duplicated, or drifted queue
+  rows, `unresolved_current_or_project_applicable_count=49`, and the full
+  unresolved roster exposed as a machine-readable output field.
+- Next routing:
+  execute Milestone `2` in
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  for the low-complexity direct-file promotion families without reopening the
+  resolved source-truth or downstream-gold packets.
+- Verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_source_register_schema.py tests/test_source_register_proving.py tests/test_source_register_queue_resolution.py tests/test_cli.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/source_register_queue_resolution.py src/usfs_r1_ea_sources/cli_capture.py tests/test_source_register_queue_resolution.py tests/test_cli.py tests/test_source_register_schema.py tests/test_source_register_proving.py tests/test_architecture_contract.py`,
+  and `git diff --check`.
+
 ## Extraction Fidelity Eval Milestone 4 Gap-Close Alignment Pass
 
 Latest docs alignment on 2026-05-23:

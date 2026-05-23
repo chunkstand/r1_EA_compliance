@@ -1,9 +1,25 @@
 # Full Canonical Direct-File Capture Queue Resolution Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet
+Status: Active packet (`Milestones 0-1 resolved locally; Milestone 2 next`)
 Owner context: follow-on from the resolved full-canonical source-truth and compliance-gold
 rebaseline packets
+
+## Latest Local Implementation
+
+Milestones `0` and `1` are now resolved locally.
+
+- `config/source_register_queue_resolution_ledger_v1.json` now enumerates all
+  `51` queue rows exactly once with `49` current/project-applicable rows, `2`
+  historical/noncurrent rows (`FPS-380`, `SUP-007`), and planned disposition
+  counts of `37` `promote_direct_file`, `9`
+  `promote_structured_export`, `3` `named_blocker`, and `2`
+  `historical_scope_only`.
+- `source-register-queue-audit` now provides the machine-checked gate for the
+  queue packet and passes with zero missing, unexpected, duplicated, or
+  drifted rows.
+- The next routed slice is now Milestone `2` for low-complexity direct-file
+  promotion families.
 
 ## Purpose
 

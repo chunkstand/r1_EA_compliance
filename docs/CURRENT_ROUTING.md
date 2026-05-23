@@ -72,14 +72,15 @@ Use this file as the short current route before opening the large append-only do
   `full_canonical_source_set_id=source-set-f775524ab233ff27`. The Milestone
   `4` closeout landed in commit `abd0e4d`
   (`Resolve extraction fidelity Milestone 4`).
-- Next routed follow-on: the source-truth/gold lane remains resolved, but
-  `51` `Direct_File_Capture_Queue` rows still remain outside the active
-  load-bearing surface by workbook contract. That work is now explicitly
-  routed through
+- Direct-file capture packet status: Milestones `0` and `1` in
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
-  rather than left as an ownerless boundary. West Reservoir remains an
-  intentional `typed_blocked` replay quarantine rather than a promotion
-  blocker
+  are now resolved locally. The tracked
+  `config/source_register_queue_resolution_ledger_v1.json` enumerates all
+  `51` queue rows, `source-register-queue-audit` now passes with `49`
+  unresolved current/project-applicable rows and `2` historical/noncurrent
+  rows (`FPS-380`, `SUP-007`), and the next routed slice is now Milestone
+  `2` in that packet. West Reservoir remains an intentional `typed_blocked`
+  replay quarantine rather than a promotion blocker
 - Historical `source-set-cac9c7d02b280825` / `source-set-9e7d85759951c279`
   downstream packets in
   `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md` and
