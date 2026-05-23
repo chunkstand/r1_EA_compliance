@@ -71,11 +71,13 @@ DOCLING_PRIORITY_KEYWORDS = (
     "chapter/handbook pdf/doc",
 )
 DIRECT_DOCUMENT_REQUIRED_INSTRUCTION_KEYWORDS = (
-    "first export/download the direct file",
     "manual pinyon/box export",
     "extract direct usfs media file",
     "extract full direct file",
     "chapter/handbook pdf/doc",
+)
+WEB_SOURCE_DIRECT_DOCUMENT_REQUIRED_INSTRUCTION_KEYWORDS = (
+    "first export/download the direct file",
 )
 DOCLING_OCR_KEYWORDS = ("appendix maps", "map", "scanned", "ocr")
 MARKUP_TOKEN_RE = re.compile(r"</?[A-Za-z][A-Za-z0-9:_-]{0,30}>")
@@ -158,9 +160,14 @@ def _requires_direct_document_artifact(row: dict) -> bool:
     instruction_text = _normalized_planning_text(
         _canonical_metadata_text(row, "docling_instructions")
     )
-    return any(
+    if any(
         keyword in instruction_text
         for keyword in DIRECT_DOCUMENT_REQUIRED_INSTRUCTION_KEYWORDS
+    ):
+        return True
+    return parser_admission_class == "web_source" and any(
+        keyword in instruction_text
+        for keyword in WEB_SOURCE_DIRECT_DOCUMENT_REQUIRED_INSTRUCTION_KEYWORDS
     )
 
 

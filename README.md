@@ -47,10 +47,10 @@ Current routed state on 2026-05-22:
   verified admission to all `582` `active_review_corpus` rows through
   `canonical-source-register-active-current-admission`. The refreshed
   `extraction-accuracy-audit` and `retrieval-build` replays now agree on
-  `verified_extraction_admitted_source_count=559`,
+  `verified_extraction_admitted_source_count=560`,
   `verified_extraction_required_source_count=582`, and an explicit blocked
-  roster of `23` active-current rows (`22` Official USFS source-page wrappers
-  plus `FPS-344` on a Federal Register XML artifact), while `51`
+  roster of `22` active-current rows, all Official USFS source-page wrappers.
+  `FPS-344` is now admitted as a structured Federal Register XML source, while `51`
   `Direct_File_Capture_Queue` rows remain outside the active load-bearing
   surface and the `52` archive rows still await Milestone `3` lineage closure.
   Milestone `1` closeout commit:
@@ -61,7 +61,7 @@ Current routed state on 2026-05-22:
   green at `2 reviewer_ready + 1 typed_blocked`. That downstream gold packet
   remains active, but it is no longer the root routed lane while the
   full-canonical source-truth packet advances to Milestone `2` on the
-  remaining `23` direct-document blockers. The bounded Milestone `7` replay
+  remaining `22` direct-document blockers. The bounded Milestone `7` replay
   stayed red at `0/14` on the same five still-unmapped live authorities. The
   active generated diagnostic gold cases now build non-zero rule-claim-link
   artifacts, while the base `nepa-ea-v0` rule-claim-link summary remains a

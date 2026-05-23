@@ -13,13 +13,13 @@ Use this file as the short current route before opening the large append-only do
   `Document_Register_Master` / `source-set-f775524ab233ff27`
 - Active source-truth packet status: Milestone `1` is closed through local
   commit `46bff61` (`Resolve source-truth rebaseline Milestone 1`); the next
-  routed slice is Milestone `2` on the remaining `23` direct-document blockers
+  routed slice is Milestone `2` on the remaining `22` direct-document blockers
 - Active canonical-source mismatch: the live source set proves `634/634` extracted
   `Document_Register_Master` rows, and the current worktree now rebaselines verified admission to
   all `582` `active_review_corpus` rows through
   `canonical-source-register-active-current-admission`; the latest refreshed audit and retrieval
-  replays record `559` admitted, `582` required, and `23` explicitly blocked active-current rows
-  (`22` Official USFS source-page wrappers plus `FPS-344` on a Federal Register XML artifact),
+  replays record `560` admitted, `582` required, and `22` explicitly blocked active-current rows,
+  all Official USFS source-page wrappers,
   while `51` `Direct_File_Capture_Queue` rows remain outside the active load-bearing surface and
   the `52` archive rows still await Milestone `3` lineage closure
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or JS/TS cycles, no
@@ -39,7 +39,7 @@ Use this file as the short current route before opening the large append-only do
   `musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`,
   and `seven_county_nepa_scope`); the earlier review-time source-claim-link expectation drift is
   closed, but that packet is now downstream of the source-truth rebaseline because the live
-  verified-admission target is still blocked at `559/582` admitted current rows rather than a
+  verified-admission target is still blocked at `560/582` admitted current rows rather than a
   fully admitted canonical Region 1 corpus.
 ## Deep Reads
 

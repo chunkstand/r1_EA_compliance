@@ -7,6 +7,49 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Source Truth Rebaseline Milestone 2 Reduced
+
+This worktree slice reduces Milestone `2` in
+`docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
+
+- outcome label:
+  `reduced`; `FPS-344` is now admitted again as a structured Federal Register
+  XML source, and the packet remains reduced on the `22` Official USFS
+  source-page wrappers still blocked by the direct-document gate
+- implementation surfaces:
+  `src/usfs_r1_ea_sources/extract_common.py`,
+  `tests/test_extract.py`, and the local ignored refreshed extraction and
+  retrieval replays under
+  `source_library/derived/source-set-f775524ab233ff27/diagnostics/` and
+  `source_library/derived/source-set-f775524ab233ff27/retrieval/`
+- live replay truth:
+  the refreshed `retrieval/summary.json` on
+  `source-set-f775524ab233ff27` now records
+  `verified_extraction_required_source_count=582`,
+  `verified_extraction_admitted_source_count=560`,
+  `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`,
+  `validation_passed=false`, and `reviewer_ready=false`
+- blocked roster:
+  `extraction-accuracy-audit` and retrieval validation now agree on `22`
+  blocked active-current rows under the rebaselined contract, all Official
+  USFS source-page wrappers; `FPS-344` no longer appears in the blocked roster
+- next routing:
+  continue with Milestone `2` in
+  `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md` to resolve
+  the remaining `22` directives-wrapper direct-document blockers through
+  governed promotion, direct-file capture, or explicit exclusion
+- stale-reference audit:
+  the immediately following Milestone `1` section is preserved append-only
+  history only; this reduced slice supersedes the earlier `559/582` plus
+  `FPS-344` blocker checkpoint for live routing
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extract.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/extract_common.py tests/test_extract.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src .venv/bin/python -c 'from pathlib import Path; from usfs_r1_ea_sources.extract import build_extraction; build_extraction(output_dir=Path("source_library"), id_filters={"FPS-344"}, merge_selected_into_existing=True)'`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f775524ab233ff27`, and
+  `git diff --check`
+
 ## Full Canonical Source Truth Rebaseline Milestone 1 Resolved
 
 This worktree slice resolves Milestone `1` in

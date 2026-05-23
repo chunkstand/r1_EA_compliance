@@ -11,6 +11,8 @@ import unittest
 from usfs_r1_ea_sources.catalog import build_review_catalog
 import usfs_r1_ea_sources.extract as extract_module
 from usfs_r1_ea_sources.extract import build_extraction
+from usfs_r1_ea_sources.extract_common import _requires_direct_document_artifact
+from usfs_r1_ea_sources.source_register import load_source_register_rows
 
 from tests.support.extract_fixtures import CANONICAL_WORKBOOK
 from tests.support.extract_fixtures import CONFIG
@@ -32,6 +34,17 @@ from tests.support.extract_fixtures import legacy_config
 
 
 class ExtractionBuildTests(unittest.TestCase):
+    def test_generic_direct_file_instruction_only_upgrades_web_source_rows(self) -> None:
+        rows = {
+            row.source_record_id: row
+            for row in load_source_register_rows(CANONICAL_WORKBOOK)
+        }
+        fps_344 = rows["FPS-344"].to_workbook_source()
+        fps_180 = rows["FPS-180"].to_workbook_source()
+
+        self.assertFalse(_requires_direct_document_artifact({"metadata": fps_344.metadata}))
+        self.assertTrue(_requires_direct_document_artifact({"metadata": fps_180.metadata}))
+
     def test_clean_text_strips_markup_like_tokens_from_pdf_fallback_text(self) -> None:
         cleaned = extract_module._clean_text("VerDate 20<MAR>2000 alpha <i> beta")
 
