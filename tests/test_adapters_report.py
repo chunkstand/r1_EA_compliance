@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from usfs_r1_ea_sources.adapters import _ECFR_DATE_CACHE, adapt_download_url, latest_ecfr_date
+from usfs_r1_ea_sources.adapters import AdaptedURL, _ECFR_DATE_CACHE, adapt_download_url, latest_ecfr_date
 from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.download import DownloadFetchResult, run_download
 from usfs_r1_ea_sources.report import build_run_report, suggested_action
@@ -16,6 +16,7 @@ from usfs_r1_ea_sources.report import build_run_report, suggested_action
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
+CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
 CONFIG = ROOT / "config" / "downloader.toml"
 
 
@@ -25,6 +26,10 @@ def legacy_config():
         config,
         workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
     )
+
+
+def canonical_config():
+    return load_config(CONFIG)
 
 
 class AdapterAndReportTests(unittest.TestCase):
@@ -140,6 +145,76 @@ class AdapterAndReportTests(unittest.TestCase):
                         ["read token/with spaces+"],
                     )
 
+    def test_usfs_handbook_adapter_uses_national_directives_contents_pdf(self) -> None:
+        config = legacy_config()
+        portal = """
+        <html><body>
+        <a href="/about-agency/regulations-policies/handbook/190912-contents">1909.12 - Contents</a>
+        </body></html>
+        """
+        directive_page = """
+        <html><body>
+        <iframe
+          data-src="https://www.fs.usda.gov/sites/default/files/2023-12/wo_1909.12-2015-1_contents.pdf"
+        ></iframe>
+        </body></html>
+        """
+
+        def fake_read(url, _network):  # noqa: ANN001
+            if url.endswith("/national-directives"):
+                return portal
+            if url.endswith("/handbook/190912-contents"):
+                return directive_page
+            return None
+
+        with patch("usfs_r1_ea_sources.adapters._read_text_url_with_curl", side_effect=fake_read):
+            adapted = adapt_download_url(
+                "https://www.fs.usda.gov/cgi-bin/Directives/get_dirs/fsh?1909.12=",
+                config.network,
+            )
+
+        self.assertIsNotNone(adapted)
+        self.assertEqual(adapted.adapter, "usfs_national_directives_handbook_direct_document")
+        self.assertEqual(
+            adapted.url,
+            "https://www.fs.usda.gov/sites/default/files/2023-12/wo_1909.12-2015-1_contents.pdf",
+        )
+        self.assertEqual(adapted.expected_content_type, "application/pdf")
+
+    def test_usfs_handbook_adapter_uses_direct_download_link_when_present(self) -> None:
+        config = legacy_config()
+        portal = """
+        <html><body>
+        <a href="/about-agency/regulations-policies/handbook/620911-contents">6209.11 - Contents</a>
+        </body></html>
+        """
+        directive_page = """
+        <html><body>
+        <a href="https://www.fs.usda.gov/sites/default/files/2024-01/wo_6209.11-2019-1_contents.pdf">Download</a>
+        </body></html>
+        """
+
+        def fake_read(url, _network):  # noqa: ANN001
+            if url.endswith("/national-directives"):
+                return portal
+            if url.endswith("/handbook/620911-contents"):
+                return directive_page
+            return None
+
+        with patch("usfs_r1_ea_sources.adapters._read_text_url_with_curl", side_effect=fake_read):
+            adapted = adapt_download_url(
+                "https://www.fs.usda.gov/cgi-bin/Directives/get_dirs/fsh?6209.11=",
+                config.network,
+            )
+
+        self.assertIsNotNone(adapted)
+        self.assertEqual(adapted.adapter, "usfs_national_directives_handbook_direct_document")
+        self.assertEqual(
+            adapted.url,
+            "https://www.fs.usda.gov/sites/default/files/2024-01/wo_6209.11-2019-1_contents.pdf",
+        )
+        self.assertEqual(adapted.expected_content_type, "application/pdf")
+
     def test_report_builds_repair_queue_from_failed_manifest(self) -> None:
         config = legacy_config()
 
@@ -182,6 +257,62 @@ class AdapterAndReportTests(unittest.TestCase):
             self.assertEqual(len(report.summary["repair_rows"]), 1)
             self.assertIn("R1EA-008", report.text)
             self.assertIn("official API/export adapter", report.text)
+
+    def test_download_prefers_adapted_direct_document_suffix_over_stale_wrapper_html(self) -> None:
+        config = canonical_config()
+
+        def fake_fetcher(url, _network, _validation):  # noqa: ANN001
+            self.assertEqual(
+                url,
+                "https://www.fs.usda.gov/cgi-bin/Directives/get_dirs/fsh?1909.12=",
+            )
+            return DownloadFetchResult(
+                status="downloaded",
+                http_status=200,
+                final_url="https://www.fs.usda.gov/sites/default/files/2023-12/wo_1909.12-2015-1_contents.pdf",
+                redirect_chain=[],
+                content_type="application/pdf",
+                content_length=13,
+                body=b"%PDF-1.7\nbody",
+                attempt_count=1,
+                failure=None,
+                validation={"mode": "download", "passed": True, "reason": None},
+            )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            stale_artifact = (
+                output_dir
+                / "artifacts"
+                / "raw"
+                / "www-fs-usda-gov"
+                / "usfs-008_land-management-planning-handbook_deadbeef.html"
+            )
+            stale_artifact.parent.mkdir(parents=True, exist_ok=True)
+            stale_artifact.write_text("<html>legacy wrapper</html>", encoding="utf-8")
+
+            with patch(
+                "usfs_r1_ea_sources.download.adapt_download_url",
+                return_value=AdaptedURL(
+                    url="https://www.fs.usda.gov/sites/default/files/2023-12/wo_1909.12-2015-1_contents.pdf",
+                    adapter="usfs_national_directives_handbook_direct_document",
+                    expected_content_type="application/pdf",
+                ),
+            ):
+                result = run_download(
+                    workbook_path=CANONICAL_WORKBOOK,
+                    output_dir=output_dir,
+                    config=config,
+                    run_id="usfs-adapted-existing-test",
+                    id_filter="USFS-008",
+                    fetcher=fake_fetcher,
+                    sleep_fn=lambda _: None,
+                )
+
+            manifest_records = [json.loads(line) for line in result.manifest_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(len(manifest_records), 1)
+            self.assertEqual(manifest_records[0]["status"], "downloaded")
+            self.assertTrue(str(manifest_records[0]["artifact_path"]).endswith(".pdf"))
 
     def test_suggested_action_for_fs_404(self) -> None:
         action = suggested_action(

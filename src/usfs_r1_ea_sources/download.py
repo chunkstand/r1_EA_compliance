@@ -8,6 +8,7 @@ from urllib.parse import urlsplit
 import hashlib
 import json
 
+from .adapters import adapt_download_url
 from .capture_run_support import (
     build_capture_manifest_record,
     is_failure_status,
@@ -191,9 +192,15 @@ def run_download(
             continue
 
         first_record_by_url[source.normalized_url] = source.source_record_id
+        preferred_existing_artifact_suffixes = _preferred_existing_artifact_suffixes(source.effective_url)
+        if preferred_existing_artifact_suffixes is None:
+            preferred_existing_artifact_suffixes = _adapted_existing_artifact_suffixes(
+                source.effective_url,
+                config.network,
+            )
         existing = None if force else _find_existing_artifact(
             planned_path,
-            preferred_suffixes=_preferred_existing_artifact_suffixes(source.effective_url),
+            preferred_suffixes=preferred_existing_artifact_suffixes,
         )
         if existing:
             artifact_sha256 = sha256_file(existing)
@@ -495,6 +502,30 @@ def _preferred_existing_artifact_suffixes(url: str | None) -> set[str] | None:
         return {".jpeg"}
     if path.endswith(".png"):
         return {".png"}
+    return None
+
+
+def _adapted_existing_artifact_suffixes(url: str | None, network) -> set[str] | None:
+    parsed = urlsplit(url or "")
+    if parsed.netloc.lower() not in {"www.fs.usda.gov", "fs.usda.gov"}:
+        return None
+    if not parsed.path.startswith("/cgi-bin/Directives/get_dirs/"):
+        return None
+    adapted = adapt_download_url(url or "", network)
+    if adapted is None:
+        return None
+    suffixes = _preferred_existing_artifact_suffixes(adapted.url)
+    if suffixes is not None:
+        return suffixes
+    expected_content_type = (adapted.expected_content_type or "").lower()
+    if expected_content_type == "application/pdf":
+        return {".pdf"}
+    if expected_content_type == "application/msword":
+        return {".doc"}
+    if expected_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        return {".docx"}
+    if expected_content_type in {"application/xml", "text/xml"}:
+        return {".xml"}
     return None
 
 

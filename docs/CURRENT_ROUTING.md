@@ -11,16 +11,17 @@ Use this file as the short current route before opening the large append-only do
 
 - Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
   `Document_Register_Master` / `source-set-f775524ab233ff27`
-- Active source-truth packet status: Milestone `2` is reduced through local
-  commit `806cdf1` (`Reduce source-truth Milestone 2 blockers`); the next
-  routed slice remains Milestone `2` on the remaining `22`
+- Active source-truth packet status: Milestone `2` remains reduced; a follow-on
+  handbook-wrapper slice now admits `9` additional legacy USFS directive rows,
+  and the next routed slice remains Milestone `2` on the remaining `13`
   direct-document blockers
 - Active canonical-source mismatch: the live source set proves `634/634` extracted
   `Document_Register_Master` rows, and the current worktree now rebaselines verified admission to
   all `582` `active_review_corpus` rows through
   `canonical-source-register-active-current-admission`; the latest refreshed audit and retrieval
-  replays record `560` admitted, `582` required, and `22` explicitly blocked active-current rows,
-  all Official USFS source-page wrappers,
+  replays record `569` admitted, `582` required, and `13` explicitly blocked active-current rows:
+  `12` Official USFS manual/source-page wrappers plus `USFS-026`, whose live directives entry now
+  exposes only a transmittal link rather than a current contents page,
   while `51` `Direct_File_Capture_Queue` rows remain outside the active load-bearing surface and
   the `52` archive rows still await Milestone `3` lineage closure
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or JS/TS cycles, no
@@ -40,7 +41,7 @@ Use this file as the short current route before opening the large append-only do
   `musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`,
   and `seven_county_nepa_scope`); the earlier review-time source-claim-link expectation drift is
   closed, but that packet is now downstream of the source-truth rebaseline because the live
-  verified-admission target is still blocked at `560/582` admitted current rows rather than a
+  verified-admission target is still blocked at `569/582` admitted current rows rather than a
   fully admitted canonical Region 1 corpus.
 ## Deep Reads
 

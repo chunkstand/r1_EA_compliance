@@ -8,12 +8,15 @@ verified-admission contract has been rebaselined from the hidden `343`-row
 shadow-filtered subset to all `582` active-current canonical rows via
 `canonical-source-register-active-current-admission`, focused regression
 coverage is green, and the refreshed `extraction-accuracy-audit` plus
-`retrieval-build` replays now agree on `560` admitted plus `22` blocked
-active-current rows. `FPS-344` is back in the admitted set as a structured
-Federal Register XML source, and the packet remains in Milestone 2 reduced on
-the remaining USFS directive-wrapper blockers. Milestone 2 reduced local
-commit: `806cdf1` (`Reduce source-truth Milestone 2 blockers`). Milestone 1
-closeout commit: `46bff61` (`Resolve source-truth rebaseline Milestone 1`).
+`retrieval-build` replays now agree on `569` admitted plus `13` blocked
+active-current rows. `FPS-344` stays in the admitted set as a structured
+Federal Register XML source, `9` handbook wrapper rows now admit through live
+National Directives contents PDFs, and the packet remains in Milestone 2
+reduced on the remaining directives-wrapper blockers: `12` FSM/manual wrappers
+plus `USFS-026`, whose live directives listing exposes only a transmittal
+link. The first Milestone 2 reduced local commit remains `806cdf1`
+(`Reduce source-truth Milestone 2 blockers`). Milestone 1 closeout commit:
+`46bff61` (`Resolve source-truth rebaseline Milestone 1`).
 
 Owner context: on 2026-05-22 the governing intent was clarified: the newest imported source set
 must fully replace the older source set as the canonical source of truth for this repository's
@@ -45,24 +48,34 @@ truth instead of the older `343`-row active-review subset.
   `docling_instructions_not_contains` shadow filter is removed.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/retrieval/summary.json`
-  now records `verified_extraction_admitted_source_count=560`,
+  now records `verified_extraction_admitted_source_count=569`,
   `verified_extraction_required_source_count=582`, and
   `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/diagnostics/extraction_accuracy_audit.json`
   now records `audited_record_count=582`,
-  `knowledge_base_admitted_source_record_ids=560`,
-  `knowledge_base_blocked_source_record_ids=22`, and a single remaining failed
+  `knowledge_base_admitted_source_record_ids=569`,
+  `knowledge_base_blocked_source_record_ids=13`, and a single remaining failed
   gate:
   `direct_document_required_records_use_document_artifacts`.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/retrieval/retrieval_validation.json`
-  now derives the same truthful blocked roster of `22` active-current rows
-  under the rebaselined contract, all Official USFS source-page wrappers.
+  now derives the same truthful blocked roster of `13` active-current rows
+  under the rebaselined contract.
 - `FPS-344` now remains admissible as a structured Federal Register XML source
   because the generic listing-page direct-file instruction no longer upgrades
   authoritative structured-web rows into the direct-document bucket without a
   stronger row signal.
+- `9` handbook wrappers now admit through the live National Directives
+  contents-page path:
+  `USFS-008`, `USFS-013`, `USFS-014`, `USFS-017`, `USFS-025`, `USFS-028`,
+  `USFS-032`, `USFS-035`, and `USFS-037`.
+- The remaining blocked roster is now
+  `USFS-007`, `USFS-015`, `USFS-016`, `USFS-018`, `USFS-019`, `USFS-022`,
+  `USFS-023`, `USFS-024`, `USFS-026`, `USFS-029`, `USFS-033`, `USFS-034`, and
+  `USFS-039`: `12` FSM/manual wrapper rows plus `USFS-026`, whose live
+  directives entry exposes only a transmittal link rather than a current
+  contents page.
 - `README.md`, `AGENTS.md`, and the current workbook contract still define
   `Document_Register_Master=634` as the active load-bearing table while
   `Direct_File_Capture_Queue=51` remains a deferred non-load surface.
@@ -330,14 +343,19 @@ Current worktree checkpoint on 2026-05-22:
 - `FPS-344` is now back in the admitted set as a structured Federal Register
   XML source after the direct-document requirement stopped overfiring on its
   generic listing-page instruction clause.
+- A follow-on handbook-wrapper slice now adapts legacy `fsh` wrapper URLs
+  through the current National Directives contents pages and admits
+  `USFS-008`, `USFS-013`, `USFS-014`, `USFS-017`, `USFS-025`, `USFS-028`,
+  `USFS-032`, `USFS-035`, and `USFS-037` as direct-document rows.
 - The refreshed `extraction-accuracy-audit` and `retrieval-build` replays now
-  agree on `582` required active-current rows, `560` admitted rows, and `22`
-  blocked rows, all Official USFS source-page wrappers.
-- The remaining owner family is now purely the directives-wrapper lane; no
-  Federal Register row remains blocked in this milestone.
+  agree on `582` required active-current rows, `569` admitted rows, and `13`
+  blocked rows.
+- The remaining owner family is now the narrower directives-wrapper lane:
+  `12` FSM/manual wrappers plus `USFS-026`; no Federal Register row remains
+  blocked in this milestone.
 
 1. Resolve the currently excluded active-review families
-   (`22` Official USFS source-page wrappers) by
+   (`13` remaining directives-wrapper blockers) by
    promoting direct files, converting queue placeholders into real canonical rows, or moving rows
    into explicit historical/not-applicable lineage where the evidence proves they do not belong in
    the canonical target.
