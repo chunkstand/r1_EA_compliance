@@ -8,14 +8,14 @@ verified-admission contract has been rebaselined from the hidden `343`-row
 shadow-filtered subset to all `582` active-current canonical rows via
 `canonical-source-register-active-current-admission`, focused regression
 coverage is green, and the refreshed `extraction-accuracy-audit` plus
-`retrieval-build` replays now agree on `579` admitted plus `3` blocked
-active-current rows. `FPS-344` stays in the admitted set as a structured
+`retrieval-build` replays now agree on `581` admitted plus `1` blocked
+active-current row. `FPS-344` stays in the admitted set as a structured
 Federal Register XML source, `9` handbook wrapper rows now admit through live
-National Directives contents PDFs, `10` manual wrapper rows now admit through
-live USDA guidance PDF targets, and the packet remains in Milestone 2 reduced
-on the remaining directives-wrapper blockers: `USFS-018` (`FSM 2410`),
-`USFS-024` (`FSM 2580`), and `USFS-026` (`FSH 2509.18`). The latest recorded
-Milestone 2 reduced local commit is `96450be`
+National Directives contents PDFs, and `12` manual wrapper rows now admit
+through live USDA guidance or current Forest Service static-file PDF targets.
+The packet remains in Milestone 2 reduced only on `USFS-026` (`FSH 2509.18`),
+whose live official surface still exposes only a transmittal link rather than
+a current contents page. The latest recorded Milestone 2 reduced local commit is `96450be`
 (`Reduce source-truth Milestone 2 manual wrapper blockers`); the earlier
 Milestone 2 reduced handbook slice remains `4650837`
 (`Reduce source-truth Milestone 2 handbook wrapper blockers`), and the earlier
@@ -53,19 +53,19 @@ truth instead of the older `343`-row active-review subset.
   `docling_instructions_not_contains` shadow filter is removed.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/retrieval/summary.json`
-  now records `verified_extraction_admitted_source_count=579`,
+  now records `verified_extraction_admitted_source_count=581`,
   `verified_extraction_required_source_count=582`, and
   `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/diagnostics/extraction_accuracy_audit.json`
   now records `audited_record_count=582`,
-  `knowledge_base_admitted_source_record_ids=579`,
-  `knowledge_base_blocked_source_record_ids=3`, and a single remaining failed
+  `knowledge_base_admitted_source_record_ids=581`,
+  `knowledge_base_blocked_source_record_ids=1`, and a single remaining failed
   gate:
   `direct_document_required_records_use_document_artifacts`.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/retrieval/retrieval_validation.json`
-  now derives the same truthful blocked roster of `3` active-current rows
+  now derives the same truthful blocked roster of `1` active-current row
   under the rebaselined contract.
 - `FPS-344` now remains admissible as a structured Federal Register XML source
   because the generic listing-page direct-file instruction no longer upgrades
@@ -75,14 +75,13 @@ truth instead of the older `343`-row active-review subset.
   contents-page path:
   `USFS-008`, `USFS-013`, `USFS-014`, `USFS-017`, `USFS-025`, `USFS-028`,
   `USFS-032`, `USFS-035`, and `USFS-037`.
-- `10` manual wrappers now admit through live USDA guidance PDF targets:
+- `12` manual wrappers now admit through live USDA guidance or current Forest
+  Service static-file PDF targets:
   `USFS-007`, `USFS-015`, `USFS-016`, `USFS-019`, `USFS-022`, `USFS-023`,
-  `USFS-029`, `USFS-033`, `USFS-034`, and `USFS-039`.
-- The remaining blocked roster is now
-  `USFS-018` (`FSM 2410`), `USFS-024` (`FSM 2580`), and `USFS-026`
-  (`FSH 2509.18`). `USFS-018` and `USFS-024` still point at current official
-  manual pages without a confirmed direct-document path, while `USFS-026`
-  still exposes only a transmittal link rather than a current contents page.
+  `USFS-029`, `USFS-033`, `USFS-034`, `USFS-039`, `USFS-018`, and `USFS-024`.
+- The remaining blocked roster is now only `USFS-026` (`FSH 2509.18`), whose
+  live official surface still exposes only a transmittal link rather than a
+  current contents page.
 - `README.md`, `AGENTS.md`, and the current workbook contract still define
   `Document_Register_Master=634` as the active load-bearing table while
   `Direct_File_Capture_Queue=51` remains a deferred non-load surface.
@@ -316,7 +315,7 @@ Outcome label: `resolved`
 
 Outcome label: `resolved`
 
-Current worktree checkpoint on 2026-05-22:
+Current worktree checkpoint on 2026-05-23:
 
 - The checked-in live contract is now
   `canonical-source-register-active-current-admission`.
@@ -362,15 +361,18 @@ Current worktree checkpoint on 2026-05-22:
   direct USDA guidance PDFs and admits `USFS-007`, `USFS-015`, `USFS-016`,
   `USFS-019`, `USFS-022`, `USFS-023`, `USFS-029`, `USFS-033`, `USFS-034`, and
   `USFS-039` as direct-document rows.
+- The current worktree now further admits `USFS-018` (`FSM 2410`) and
+  `USFS-024` (`FSM 2580`) through live current official Forest Service
+  static-file PDFs exposed by the current directive surfaces.
 - The refreshed `extraction-accuracy-audit` and `retrieval-build` replays now
-  agree on `582` required active-current rows, `579` admitted rows, and `3`
-  blocked rows.
-- The remaining owner family is now the narrower directives-wrapper lane:
-  `USFS-018` (`FSM 2410`), `USFS-024` (`FSM 2580`), and `USFS-026`
-  (`FSH 2509.18`); no Federal Register row remains blocked in this milestone.
+  agree on `582` required active-current rows, `581` admitted rows, and `1`
+  blocked row.
+- The remaining owner family is now a single directives-wrapper row:
+  `USFS-026` (`FSH 2509.18`); no Federal Register row remains blocked in this
+  milestone.
 
 1. Resolve the currently excluded active-review families
-   (`3` remaining directives-wrapper blockers) by
+   (`1` remaining directives-wrapper blocker) by
    promoting direct files, converting queue placeholders into real canonical rows, or moving rows
    into explicit historical/not-applicable lineage where the evidence proves they do not belong in
    the canonical target.

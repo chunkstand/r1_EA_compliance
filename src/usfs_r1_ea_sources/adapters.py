@@ -26,13 +26,14 @@ _USFS_LEGACY_DIRECTIVES_HOSTS = {"www.fs.usda.gov", "fs.usda.gov"}
 _USFS_NATIONAL_DIRECTIVES_URL = "https://www.fs.usda.gov/about-agency/regulations-policies/national-directives"
 _DIRECT_DOCUMENT_EXTENSIONS = ("pdf", "doc", "docx")
 _USFS_MANUAL_DIRECT_DOCUMENT_URLS = {
-    # Live-verified USDA guidance portal download targets for the current FSM family. The local
-    # runtime can fetch these PDFs directly even when the intermediate USDA HTML guidance pages
-    # are flaky to retrieve from curl/urlopen.
+    # Live-verified official direct-document targets for the current FSM family. Some chapters
+    # now resolve through USDA guidance pages, while others still expose the current PDF on the
+    # Forest Service static file host after the public directive page redirects.
     "1950": (
         "https://www.usda.gov/sites/default/files/guidance-documents/"
         "ForestService.Manual%201900%201950%20Environmental%20Policy%20and%20Procedures.pdf"
     ),
+    "2410": "https://www.fs.usda.gov/sites/default/files/2023-12/wo_2400-2003-2_10.pdf",
     "2320": (
         "https://www.usda.gov/sites/default/files/guidance-documents/"
         "ForestService.Manual%202300%202320%20Wilderness%20Management.pdf"
@@ -53,6 +54,7 @@ _USFS_MANUAL_DIRECT_DOCUMENT_URLS = {
         "https://www.usda.gov/sites/default/files/guidance-documents/"
         "ForestService.Manual%202500%202550%20Soil%20Management.pdf"
     ),
+    "2580": "https://www.fs.usda.gov/sites/default/files/2023-12/wo_2500-1990-1_80.pdf",
     "2720": (
         "https://www.usda.gov/sites/default/files/guidance-documents/"
         "ForestService.Manual%202700%202720%20Special%20Uses%20Administration.pdf"

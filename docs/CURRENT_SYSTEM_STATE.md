@@ -75,16 +75,17 @@ described below.
 
 ## Full Canonical Source Truth Rebaseline Milestone 2 Reduced
 
-Latest worktree implementation on 2026-05-22:
+Latest worktree implementation on 2026-05-23:
 
 - Routed implementation packet:
   `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
 - Outcome label:
   `reduced`; a follow-on Milestone `2` manual-wrapper slice is now live
-  locally, `10` legacy `fsm` wrapper rows now admit through live USDA guidance
-  PDF targets, and the packet remains reduced on the `3` direct-document
-  blockers that still lack a governed current document path.
-- Closeout commit:
+  locally, `12` legacy `fsm` wrapper rows now admit through live USDA guidance
+  or current Forest Service static-file PDF targets, and the packet remains
+  reduced on the `1` direct-document blocker that still lacks a governed
+  current document path.
+- Previous reduced-slice closeout:
   `96450be` (`Reduce source-truth Milestone 2 manual wrapper blockers`).
 - Earlier reduced-slice closeout:
   the handbook-wrapper slice remains recorded in `4650837`
@@ -96,35 +97,36 @@ Latest worktree implementation on 2026-05-22:
   `source_library/derived/source-set-f775524ab233ff27/diagnostics/` and
   `source_library/derived/source-set-f775524ab233ff27/retrieval/`, plus the
   local download replays
-  `phase2-canonical-download-full-usfs-handbook-wrapper-adapter-20260522` and
-  `phase2-canonical-download-full-usfs-manual-wrapper-adapter-20260522`.
+  `phase2-canonical-download-full-usfs-handbook-wrapper-adapter-20260522`,
+  `phase2-canonical-download-full-usfs-manual-wrapper-adapter-20260522`, and
+  `phase2-canonical-download-full-usfs-manual-redirect-reduction-20260522`.
 - Live replay truth:
   the refreshed retrieval replay on `source-set-f775524ab233ff27` now records
   `verified_extraction_required_source_count=582`,
-  `verified_extraction_admitted_source_count=579`,
+  `verified_extraction_admitted_source_count=581`,
   `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`,
   `validation_passed=false`, and `reviewer_ready=false`.
 - Blocked roster:
-  `extraction-accuracy-audit` and retrieval validation now agree on `3`
-  blocked active-current rows under the rebaselined contract:
-  `USFS-018` (`FSM 2410`), `USFS-024` (`FSM 2580`), and `USFS-026`
-  (`FSH 2509.18`). `USFS-018` and `USFS-024` still point at current official
-  manual pages without a confirmed direct-document download path, while
-  `USFS-026` still exposes only a transmittal link.
+  `extraction-accuracy-audit` and retrieval validation now agree on `1`
+  blocked active-current row under the rebaselined contract:
+  `USFS-026` (`FSH 2509.18`). `USFS-018` (`FSM 2410`) and `USFS-024`
+  (`FSM 2580`) now admit through live current official Forest Service
+  static-file PDFs, while `USFS-026` still exposes only a transmittal link.
 - Remaining boundary:
   `51` `Direct_File_Capture_Queue` rows remain outside the active load-bearing
   surface, and the `52` `currentness_supersession_archive` rows still await the
   Milestone `3` lineage decision in the same packet.
 - Stale-reference audit:
   the immediately following Milestone `1` section and older append-only
-  references to `569/582`, `560/582`, or `559/582`, broader manual-family owner
-  language, and `FPS-344` as a direct-document blocker are now historical only;
-  this latest Milestone `2` reduced slice supersedes them for live routing.
+  references to `579/582`, `569/582`, `560/582`, or `559/582`, broader
+  manual-family owner language, and `FPS-344` as a direct-document blocker are
+  now historical only; this latest Milestone `2` reduced slice supersedes them
+  for live routing.
 - Verification:
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_adapters_report.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py -q`,
   `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/adapters.py tests/test_adapters_report.py tests/test_extraction_accuracy.py tests/test_retrieval_validation.py tests/test_architecture_contract.py`,
-  `PYTHONPATH=src .venv/bin/python - <<'PY' ... run_download(... source_record_ids={"USFS-007","USFS-015","USFS-016","USFS-019","USFS-022","USFS-023","USFS-029","USFS-033","USFS-034","USFS-039"}, run_id="phase2-canonical-download-full-usfs-manual-wrapper-adapter-20260522") ... PY`,
-  `PYTHONPATH=src .venv/bin/python - <<'PY' ... build_extraction(output_dir=Path("source_library"), id_filters={"USFS-007","USFS-015","USFS-016","USFS-019","USFS-022","USFS-023","USFS-029","USFS-033","USFS-034","USFS-039"}, merge_selected_into_existing=True) ... PY`,
+  `PYTHONPATH=src .venv/bin/python - <<'PY' ... run_download(... source_record_ids={"USFS-018","USFS-024"}, run_id="phase2-canonical-download-full-usfs-manual-redirect-reduction-20260522") ... PY`,
+  `PYTHONPATH=src .venv/bin/python - <<'PY' ... build_extraction(output_dir=Path("source_library"), id_filters={"USFS-018","USFS-024"}, merge_selected_into_existing=True) ... PY`,
   `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`,
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f775524ab233ff27`, and
   `git diff --check`.

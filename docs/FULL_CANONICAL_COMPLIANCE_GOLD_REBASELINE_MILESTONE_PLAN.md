@@ -2,15 +2,15 @@
 
 Date: 2026-05-22
 
-Status: Active; Milestone 0 resolved 2026-05-21 through `compliance_gold_eval_seq52_fix1` and `gold_coverage_eval_seq52_fix1`; Milestone 1 resolved 2026-05-21 through generated-case routing repair and owner-family split; Milestone 2 reduced 2026-05-21 through `compliance_gold_eval_seq52_fix6` and `gold_coverage_eval_seq52_fix6`; routed docs are aligned on the generated-vs-base rule-claim-link split, the narrower review-time source-claim drift is closed, and the packet remains active on five still-unmapped live authorities, but it is now explicitly downstream of the source-truth rebaseline packet while the live canonical admission boundary remains only `579/582` admitted current rows
+Status: Active; Milestone 0 resolved 2026-05-21 through `compliance_gold_eval_seq52_fix1` and `gold_coverage_eval_seq52_fix1`; Milestone 1 resolved 2026-05-21 through generated-case routing repair and owner-family split; Milestone 2 reduced 2026-05-21 through `compliance_gold_eval_seq52_fix6` and `gold_coverage_eval_seq52_fix6`; routed docs are aligned on the generated-vs-base rule-claim-link split, the narrower review-time source-claim drift is closed, and the packet remains active on five still-unmapped live authorities, but it is now explicitly downstream of the source-truth rebaseline packet while the live canonical admission boundary remains only `581/582` admitted current rows
 
 Owner context: the overall architecture umbrella is now closed on truthful routing, but the live
 full-canonical gold lane remains red on the active local catalog
 `source-set-f775524ab233ff27`. The source-truth packet now owns the admission-boundary rebaseline:
 the latest refreshed audit and retrieval replays prove `582` required active-current rows under
-`canonical-source-register-active-current-admission`, with `579` admitted and `3` blocked.
-This packet stays downstream while the source-truth lane resolves `USFS-018`, `USFS-024`, and
-`USFS-026` and re-establishes the truthful canonical target.
+`canonical-source-register-active-current-admission`, with `581` admitted and `1` blocked.
+This packet stays downstream while the source-truth lane resolves `USFS-026` and re-establishes
+the truthful canonical target.
 
 ## Purpose
 
