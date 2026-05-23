@@ -13,7 +13,9 @@ active-current rows under
 `0` blocked, and `reviewer_ready=true`, while the explicit full-canonical
 archive boundary now preserves `53`
 `currentness_supersession_archive` rows as governed lineage outside verified
-admission. This packet is now the next active routed owner.
+admission. The upstream source-truth closeout commit is `93a23b0`
+(`Resolve source-truth archive boundary rebaseline`). This packet is now the
+next active routed owner.
 
 ## Purpose
 

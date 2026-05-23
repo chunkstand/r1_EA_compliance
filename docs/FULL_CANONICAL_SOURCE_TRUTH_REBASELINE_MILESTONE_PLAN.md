@@ -29,7 +29,9 @@ results passing while the separate downstream gold lane remains red.
 `FPS-344` stays admitted as a structured Federal Register XML source, `9`
 handbook wrapper rows admit through live National Directives contents PDFs,
 and `12` manual wrapper rows admit through live USDA guidance or current
-Forest Service static-file PDF targets. The latest recorded Milestone 2
+Forest Service static-file PDF targets. The Milestone 3 closeout commit is
+`93a23b0` (`Resolve source-truth archive boundary rebaseline`).
+The latest recorded Milestone 2
 reduced local commit is `53d59da` (`Reduce source-truth Milestone 2 manual
 redirect blockers`); the earlier Milestone 2 reduced manual-wrapper slice
 remains `96450be` (`Reduce source-truth Milestone 2 manual wrapper

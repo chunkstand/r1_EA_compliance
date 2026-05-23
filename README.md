@@ -56,8 +56,10 @@ Current routed state on 2026-05-23:
   replacement `USFS-023`, `FPS-344` remains admitted as a structured Federal
   Register XML source, and `promotion-suite` now reports
   `full_canonical_corpus_ready=true` with `9/9` required full-canonical
-  results passing. `51` `Direct_File_Capture_Queue` rows remain outside the
-  active load-bearing surface by workbook contract.
+  results passing. This closeout landed in commit `93a23b0`
+  (`Resolve source-truth archive boundary rebaseline`). `51`
+  `Direct_File_Capture_Queue` rows remain outside the active load-bearing
+  surface by workbook contract.
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
   because `compliance-gold-eval` is red on the active full-canonical source
   set `source-set-f775524ab233ff27`; the tracked review-contract lane itself

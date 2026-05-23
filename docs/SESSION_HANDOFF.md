@@ -18,6 +18,8 @@ in `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
   lineage lane outside verified admission instead of leaving that boundary
   implicit, while preserving the earlier Milestone `2` closeout that archived
   `USFS-026` with replacement `USFS-023`
+- closeout commit:
+  `93a23b0` (`Resolve source-truth archive boundary rebaseline`)
 - previous resolved slice:
   the earlier active-current blocker closeout remains recorded immediately
   below in the Milestone `2` section

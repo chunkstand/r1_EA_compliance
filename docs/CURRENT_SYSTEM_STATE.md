@@ -90,6 +90,8 @@ Latest worktree implementation on 2026-05-23:
   outside verified admission, while preserving the earlier Milestone `2`
   blocker closeout that captured the live `FSH 2509.18` transmittal and
   archived `USFS-026` with replacement `USFS-023`.
+- Closeout commit:
+  `93a23b0` (`Resolve source-truth archive boundary rebaseline`).
 - Previous reduced-slice closeout:
   the manual-redirect slice remains recorded in `53d59da`
   (`Reduce source-truth Milestone 2 manual redirect blockers`).

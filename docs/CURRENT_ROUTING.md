@@ -15,8 +15,9 @@ Use this file as the short current route before opening the large append-only do
   rebaseline is now resolved locally; the latest worktree slice makes the `53`
   `currentness_supersession_archive` rows explicit governed full-canonical
   lineage outside verified admission, keeps `USFS-026` archived with
-  replacement `USFS-023`, and routes the next active owner to the downstream
-  compliance-gold packet
+  replacement `USFS-023`, closes in commit `93a23b0`
+  (`Resolve source-truth archive boundary rebaseline`), and routes the next
+  active owner to the downstream compliance-gold packet
 - Active canonical-source truth: the live source set proves `634/634`
   extracted `Document_Register_Master` rows, and the refreshed
   `canonical-source-register-active-current-admission` boundary now admits all
