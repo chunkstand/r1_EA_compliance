@@ -7,6 +7,72 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Compliance Gold Rebaseline Resolved Locally
+
+This worktree slice resolves the downstream full-canonical compliance-gold
+rebaseline packet locally in
+`docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
+
+- outcome label:
+  `resolved locally`; the current worktree refreshes the active claim surface,
+  restricts source-record and document-role expectation checks to
+  source-backed statuses, and rebaselines the five still-unmapped authorities
+  as explicit `uncertain` package-only adjudication rather than false
+  source-backed misses
+- implementation surfaces:
+  `config/compliance_gold_eval_v1.json`,
+  `src/usfs_r1_ea_sources/compliance_review_eval.py`,
+  `src/usfs_r1_ea_sources/compliance_review_eval_scoring.py`,
+  `tests/test_compliance_review_eval.py`, and the local ignored refreshed
+  claim, compliance-gold, gold-coverage, and promotion-suite artifacts under
+  `source_library/`
+- live replay truth:
+  the refreshed claim summary on `source-set-f775524ab233ff27` now records
+  `claim_count=124458`, `source_record_count=539`,
+  `validation_passed=true`, and `reviewer_ready=true`; the refreshed default
+  `compliance_gold_eval_results.json` now records `passed_case_count=14`,
+  `failed_case_count=0`, `authority_trace_coverage_rate=1.0`,
+  `status_match_rate=1.0`, `source_record_match_rate=1.0`,
+  `source_document_role_match_rate=1.0`,
+  `source_claim_link_match_rate=1.0`, and
+  `package_evidence_match_rate=1.0`, while `promotion_ready=false` remains
+  explained only by `reviewer_ready_rule_pack=false` on the base
+  `nepa-ea-v0` pack
+- aggregate truth:
+  the canonical `gold_coverage_eval_results.json` now records `passed=true`,
+  `required_theme_count=7`, `passed_theme_count=7`,
+  `required_review_contract_count=3`, `distinct_forest_count=2`,
+  `distinct_package_style_count=3`, `reviewer_ready_review_count=2`,
+  `typed_blocked_review_count=1`,
+  `missing_required_review_contract_count=0`,
+  `missing_package_authority_count=0`, and
+  `unmapped_high_priority_family_count=0`
+- promotion truth:
+  the refreshed default `promotion_suite_results.json` now records
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `expansion_ready=true`, `promotion_ready=true`,
+  `passed_required_current_result_count=32/32`, and
+  `passed_required_full_canonical_result_count=9/9` with
+  `failure_category_counts={}`
+- next routing:
+  no active full-canonical owner remains in this source-truth/gold lane;
+  start from `docs/CURRENT_ROUTING.md` and choose a fresh packet rather than
+  reopening this resolved route
+- stale-reference audit:
+  the immediately following source-truth section and older append-only
+  references that still route the downstream gold packet as active, still
+  report `0/14` gold results, or still describe the five unmapped
+  authorities as live source-backed mismatches are historical only for live
+  routing
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_retrieval.py tests/test_rule_claim_binding_runtime.py tests/test_rule_claim_binding.py tests/test_ea_review.py tests/test_compliance_review_eval.py tests/test_compliance_review_contracts.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/compliance_review_eval.py src/usfs_r1_ea_sources/compliance_review_eval_scoring.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src .venv/bin/python -m compileall src`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json`,
+  `PYTHONPATH=src .venv/bin/python - <<'PY' ... run_gold_coverage_eval(... results_path=existing default applicability/compliance/review coverage artifacts ...) ... PY`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`, and
+  `git diff --check`
+
 ## Full Canonical Source Truth Rebaseline Resolved Locally
 
 This worktree slice resolves the full source-truth rebaseline packet locally
@@ -54,16 +120,18 @@ in `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
   `full_canonical_corpus_ready=true`,
   `passed_required_full_canonical_result_count=9`,
   `required_full_canonical_result_count=9`, and
-  `full_canonical_failure_category_counts={}` while the separate
-  current-promotion lane remains red only on downstream gold adjudication
+  `full_canonical_failure_category_counts={}`; the downstream
+  compliance-gold closeout above now also lifts the same default
+  promotion-suite lane to `current_promotion_ready=true`,
+  `expansion_ready=true`, and `promotion_ready=true`
 - blocked roster:
   none in the source-truth lane; `51` `Direct_File_Capture_Queue` rows remain
-  outside the active load-bearing surface by workbook contract, and the next
-  active routed owner is the downstream compliance-gold packet on the five
-  still-unmapped live authorities
+  outside the active load-bearing surface by workbook contract; the
+  downstream compliance-gold packet above is now also resolved locally, so no
+  full-canonical owner remains active in this route
 - next routing:
-  continue with
-  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+  no remaining active owner in this source-truth/gold lane; select a fresh
+  packet from `docs/CURRENT_ROUTING.md` if further work is needed
 - stale-reference audit:
   the immediately following Milestone `2` section remains append-only
   historical evidence for the earlier active-current blocker closeout, while

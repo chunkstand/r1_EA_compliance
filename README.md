@@ -60,17 +60,21 @@ Current routed state on 2026-05-23:
   (`Resolve source-truth archive boundary rebaseline`). `51`
   `Direct_File_Capture_Queue` rows remain outside the active load-bearing
   surface by workbook contract.
-- Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
-  because `compliance-gold-eval` is red on the active full-canonical source
-  set `source-set-f775524ab233ff27`; the tracked review-contract lane itself
-  remains green at `2 reviewer_ready + 1 typed_blocked`. That downstream gold
-  packet is now the next active routed owner after the source-truth packet
-  closed its archive-lineage boundary rather than a remaining active-current
-  admission blocker. The bounded Milestone `7` replay stayed
-  red at `0/14` on the same five still-unmapped live authorities. The active
-  generated diagnostic gold cases now build non-zero rule-claim-link
-  artifacts, while the base `nepa-ea-v0` rule-claim-link summary remains a
-  separate zero-link structural surface.
+- The downstream full-canonical compliance-gold packet is now resolved
+  locally on `source-set-f775524ab233ff27`: refreshed claims now record
+  `claim_count=124458`, `source_record_count=539`, `validation_passed=true`,
+  and `reviewer_ready=true`; default `compliance-gold-eval` now passes
+  `14/14` adjudicated cases with `status_match_rate=1.0`,
+  `source_record_match_rate=1.0`, `source_document_role_match_rate=1.0`,
+  `source_claim_link_match_rate=1.0`, and `package_evidence_match_rate=1.0`;
+  default `gold-coverage-eval` now passes `7/7` required themes with
+  `19/19` mapped high-priority families, `3` required review contracts,
+  `2 reviewer_ready + 1 typed_blocked` tracked reviews, and zero threshold
+  failures; and the manifest-owned non-strict `promotion-suite` now reports
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `expansion_ready=true`, and `promotion_ready=true`. The five still-unmapped
+  authorities are now governed as explicit `uncertain` package-only
+  adjudication in the gold contract rather than false source-backed misses.
 - For live corpus/runtime truth use `docs/CURRENT_SYSTEM_STATE.md`. For routed
   work and recent closeout facts use `docs/SESSION_HANDOFF.md`.
 
@@ -1610,21 +1614,22 @@ package-style tags `clean_baseline`, `live_external_noisy`, and `typed_blocked_e
 fails closed when those required tags are missing. It emits `promotion_ready` only when the rule
 pack is a reviewer-ready generated applicability rule pack and adjudication checks plus the
 underlying compliance-review eval both pass.
-On 2026-05-21, the live replay against `source-set-f775524ab233ff27` is still red at `0/14`
-passed cases, but the governed source-record reconciliation surface
-`config/compliance_source_record_reconciliation_v1.json` removed the broad legacy/current source-ID
-drift: `authority_trace_coverage_rate` is now `1.0`, and the remaining source-record mismatches are
-limited to the five still-unmapped live authorities
+On 2026-05-23, the default replay against `source-set-f775524ab233ff27` passes `14/14` cases.
+The active claim extraction summary now records `claim_count=124458`,
+`source_record_count=539`, `validation_passed=true`, and `reviewer_ready=true`.
+The five authorities with no current canonical row
 (`apa_final_agency_action`, `directives_notice_comment_36cfr_216`,
 `musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`, and
-`seven_county_nepa_scope`). The earlier review-time source-claim-link expectation drift is now
-closed: the active claim extraction summary records `document_role_counts.state_requirement=298`,
-`STP-026` now emits `6` claims, and the generated gold contract only expects positive generated
-source-claim links for the two template rules that actually resolve them live. The generated diagnostic
-gold rule packs now emit non-zero rule-claim-link artifacts under
-`source_library/derived/source-set-f775524ab233ff27/rule_claim_links/generated-diagnostic-*/`,
-while the base `nepa-ea-v0` rule-claim-link summary remains a separate zero-link structural
-surface; the generated all-authorities-supported replay now records `rule_claim_link_count=200`.
+`seven_county_nepa_scope`) are now governed as explicit `uncertain`
+package-only adjudication, so the live gold lane no longer treats them as
+false source-backed misses. The default result now records
+`authority_trace_coverage_rate=1.0`, `status_match_rate=1.0`,
+`source_record_match_rate=1.0`, `source_document_role_match_rate=1.0`,
+`source_claim_link_match_rate=1.0`, `package_evidence_match_rate=1.0`, and
+`rule_claim_link_count=200` on the generated all-authorities-supported
+replay. `promotion_ready` remains `false` only because the base
+`nepa-ea-v0` rule pack is diagnostic rather than a reviewer-ready generated
+rule pack.
 Gold case IDs must be unique and safe for generated paths, and package fixture paths must stay under
 the gold file directory.
 
@@ -1685,11 +1690,14 @@ default applicability and compliance gold suites plus the manifest-owned
 high-priority family IDs, at least `3` tracked review contracts across at least `2` forests and
 `3` package-style tags, at least `2` reviewer-ready tracked reviews plus `1` typed-blocked review,
 and no missing package-authority declarations.
-On 2026-05-21, a bounded replay against fresh applicability, compliance, and real-package results
-still fails closed only because `compliance-gold-eval` is red on the active full-canonical source
-set. The fresh bounded `gold_coverage_eval_seq52_fix6` replay still records all seven theme groups,
-`2` forests, `3` package styles, and the `2 reviewer_ready + 1 typed_blocked` review-diversity
-contract with no threshold failures; only `compliance_gold_failed=1` keeps the aggregate red.
+On 2026-05-23, the canonical aggregate result at
+`source_library/reviews/gold_coverage_eval/gold_coverage_eval_results.json`
+passes with `required_theme_count=7`, `passed_theme_count=7`,
+`required_review_contract_count=3`, `distinct_forest_count=2`,
+`distinct_package_style_count=3`, `reviewer_ready_review_count=2`,
+`typed_blocked_review_count=1`, `missing_required_review_contract_count=0`,
+`missing_package_authority_count=0`, and
+`unmapped_high_priority_family_count=0`.
 
 Run the manifest-driven promotion suite:
 
@@ -1718,6 +1726,14 @@ those sidecars exist. The validation sidecars record JSON/Markdown/PDF/manifest 
 applicable, and promotion-suite checks those hashes against the local packet files.
 Default runs keep current-promotion failures in `failure_category_counts` and expansion-only gaps in
 `expansion_failure_category_counts`.
+On 2026-05-23, after refreshing the default compliance-gold and aggregate
+gold artifacts, the manifest-owned non-strict replay at
+`source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/`
+reports `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+`expansion_ready=true`, `promotion_ready=true`,
+`passed_required_current_result_count=32/32`, and
+`passed_required_full_canonical_result_count=9/9` with
+`failure_category_counts={}`.
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,
 `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
 `forest_plan_reviewer_not_ready`, `package_fixture_missing`, and graph-specific categories such as

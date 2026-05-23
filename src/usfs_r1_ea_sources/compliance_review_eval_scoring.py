@@ -100,13 +100,15 @@ def compliance_review_eval_case_result(
         expected_source_claim_links,
         finding_has_source_claim_links,
     )
-    expected_source_record_ids = expected_string_list_map(
+    expected_source_record_ids = source_backed_expected_string_list_map(
         effective_case,
         "expected_source_record_ids",
+        expected_statuses,
     )
-    expected_source_document_roles = expected_string_list_map(
+    expected_source_document_roles = source_backed_expected_string_list_map(
         effective_case,
         "expected_source_document_roles",
+        expected_statuses,
     )
     source_record_mismatches = expected_subset_mismatches(
         normalized_findings_by_rule,
@@ -402,6 +404,18 @@ def expected_string_list_map(case: dict, key: str) -> dict[str, list[str]]:
     return {
         str(rule_id): sorted({str(value) for value in values if str(value).strip()})
         for rule_id, values in (case.get(key) or {}).items()
+    }
+
+
+def source_backed_expected_string_list_map(
+    case: dict,
+    key: str,
+    expected_statuses: dict[str, str],
+) -> dict[str, list[str]]:
+    return {
+        rule_id: values
+        for rule_id, values in expected_string_list_map(case, key).items()
+        if expected_statuses.get(rule_id) in CLAIM_STATUSES
     }
 
 

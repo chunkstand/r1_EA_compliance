@@ -76,6 +76,82 @@ Older references below that still route the full-canonical source-truth packet
 as pending on Milestone `3`, still report `582/52` as the live active/archive
 split, or still treat the archive-lineage decision as open are historical only
 after the 2026-05-23 source-truth archive-boundary closeout described below.
+Older references below that still route the downstream compliance-gold packet
+as active, still report fresh full-canonical gold or aggregate gold replays
+as red, or still describe the current-promotion lane as red only on
+downstream gold adjudication are historical only after the 2026-05-23
+downstream gold closeout described below.
+
+## Full Canonical Compliance Gold Rebaseline Resolved Locally
+
+Latest worktree implementation on 2026-05-23:
+
+- Routed implementation packet:
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`.
+- Outcome label:
+  `resolved locally`; the current worktree closes the downstream
+  full-canonical gold packet by refreshing the active claim surface,
+  restricting source-record and document-role expectation checks to
+  source-backed statuses, and rebaselining the five still-unmapped
+  authorities as explicit `uncertain` package-only adjudication rather than
+  false source-backed misses.
+- Implementation surfaces:
+  `config/compliance_gold_eval_v1.json`,
+  `src/usfs_r1_ea_sources/compliance_review_eval.py`,
+  `src/usfs_r1_ea_sources/compliance_review_eval_scoring.py`,
+  `tests/test_compliance_review_eval.py`, and the local ignored refreshed
+  claim, compliance-gold, gold-coverage, and promotion-suite artifacts under
+  `source_library/`.
+- Live replay truth:
+  the refreshed claim summary on `source-set-f775524ab233ff27` now records
+  `claim_count=124458`, `source_record_count=539`,
+  `validation_passed=true`, and `reviewer_ready=true`. The refreshed default
+  `compliance_gold_eval_results.json` now records `passed_case_count=14`,
+  `failed_case_count=0`, `authority_trace_coverage_rate=1.0`,
+  `status_match_rate=1.0`, `source_record_match_rate=1.0`,
+  `source_document_role_match_rate=1.0`,
+  `source_claim_link_match_rate=1.0`, and
+  `package_evidence_match_rate=1.0`, while
+  `promotion_ready=false` remains explained only by
+  `reviewer_ready_rule_pack=false` on the base `nepa-ea-v0` rule pack.
+- Aggregate truth:
+  the canonical `gold_coverage_eval_results.json` now records `passed=true`,
+  `required_theme_count=7`, `passed_theme_count=7`,
+  `required_review_contract_count=3`, `distinct_forest_count=2`,
+  `distinct_package_style_count=3`, `reviewer_ready_review_count=2`,
+  `typed_blocked_review_count=1`,
+  `missing_required_review_contract_count=0`,
+  `missing_package_authority_count=0`, and
+  `unmapped_high_priority_family_count=0`.
+- Promotion truth:
+  the refreshed default `promotion_suite_results.json` now records
+  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+  `expansion_ready=true`, `promotion_ready=true`,
+  `passed_required_current_result_count=32`,
+  `required_current_result_count=32`,
+  `passed_required_full_canonical_result_count=9`,
+  `required_full_canonical_result_count=9`, and
+  `failure_category_counts={}`.
+- Remaining boundary:
+  no active full-canonical source-truth or gold blocker remains routed in
+  this lane. `51` `Direct_File_Capture_Queue` rows remain outside the active
+  load-bearing surface by workbook contract, and West Reservoir remains an
+  intentional `typed_blocked` replay quarantine rather than a promotion
+  blocker.
+- Stale-reference audit:
+  the immediately following source-truth section and older append-only
+  references that still route the downstream gold packet as active, still
+  report `0/14` gold results, or still describe the five unmapped
+  authorities as live source-backed mismatches are historical only; this
+  latest local closeout supersedes them for live routing.
+- Verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_retrieval.py tests/test_rule_claim_binding_runtime.py tests/test_rule_claim_binding.py tests/test_ea_review.py tests/test_compliance_review_eval.py tests/test_compliance_review_contracts.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/compliance_review_eval.py src/usfs_r1_ea_sources/compliance_review_eval_scoring.py tests/test_compliance_review_eval.py tests/test_compliance_gold_eval.py tests/test_gold_coverage_eval.py tests/test_promotion_suite.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src .venv/bin/python -m compileall src`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources compliance-gold-eval --output-dir source_library --gold-file config/compliance_gold_eval_v1.json --rule-pack config/compliance_rule_pack_nepa_ea_v0.json`,
+  `PYTHONPATH=src .venv/bin/python - <<'PY' ... run_gold_coverage_eval(... results_path=existing default applicability/compliance/review coverage artifacts ...) ... PY`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`, and
+  `git diff --check`.
 
 ## Full Canonical Source Truth Rebaseline Resolved Locally
 
@@ -131,8 +207,10 @@ Latest worktree implementation on 2026-05-23:
   records `full_canonical_corpus_ready=true`,
   `passed_required_full_canonical_result_count=9`,
   `required_full_canonical_result_count=9`, and
-  `full_canonical_failure_category_counts={}` while the separate
-  current-promotion lane remains red only on downstream gold adjudication.
+  `full_canonical_failure_category_counts={}`; the downstream
+  compliance-gold closeout above now also lifts the same default
+  promotion-suite lane to `current_promotion_ready=true`,
+  `expansion_ready=true`, and `promotion_ready=true`.
 - Blocked roster:
   none. `USFS-026` remains governed archive lineage evidence with replacement
   `USFS-023`, while `USFS-018` (`FSM 2410`) and `USFS-024` (`FSM 2580`)
@@ -141,8 +219,9 @@ Latest worktree implementation on 2026-05-23:
   selector omission.
 - Remaining boundary:
   `51` `Direct_File_Capture_Queue` rows remain outside the active load-bearing
-  surface by workbook contract; the next active owner is now the downstream
-  compliance-gold packet on the five still-unmapped live authorities.
+  surface by workbook contract; the downstream compliance-gold packet above is
+  now also resolved locally, so no full-canonical owner remains active in
+  this route.
 - Stale-reference audit:
   the immediately following Milestone `1` section and older append-only
   references to `582/52`, `581/582`, `579/582`, `569/582`, `560/582`, or

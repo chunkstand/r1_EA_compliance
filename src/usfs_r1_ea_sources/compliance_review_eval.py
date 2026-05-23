@@ -43,6 +43,9 @@ from .compliance_review_eval_scoring import (
     expected_subset_mismatches as _expected_subset_mismatches,
 )
 from .compliance_review_eval_scoring import (
+    source_backed_expected_string_list_map as _source_backed_expected_string_list_map,
+)
+from .compliance_review_eval_scoring import (
     finding_source_record_ids_with_aliases as _finding_source_record_ids_with_aliases,
 )
 from .compliance_review_eval_scoring import (
@@ -78,6 +81,7 @@ __all__ = [
     "_finding_source_record_ids_with_aliases",
     "_generated_diagnostic_rule_ids",
     "_normalized_eval_findings_by_rule",
+    "_source_backed_expected_string_list_map",
     "_validate_compliance_review_eval_cases_against_rule_pack",
     "run_compliance_review_eval",
 ]

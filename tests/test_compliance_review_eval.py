@@ -12,6 +12,7 @@ from usfs_r1_ea_sources.compliance_review_eval import _applicability_gate_is_dia
 from usfs_r1_ea_sources.compliance_review_eval import _expected_subset_mismatches
 from usfs_r1_ea_sources.compliance_review_eval import _finding_source_record_ids_with_aliases
 from usfs_r1_ea_sources.compliance_review_eval import _normalized_eval_findings_by_rule
+from usfs_r1_ea_sources.compliance_review_eval import _source_backed_expected_string_list_map
 from usfs_r1_ea_sources.compliance_review_eval import (
     _validate_compliance_review_eval_cases_against_rule_pack,
 )
@@ -237,6 +238,41 @@ class ComplianceReviewEvalTests(unittest.TestCase):
         )
         self.assertTrue(_applicability_gate_is_diagnostic({"mode": "base_rule_pack_diagnostic"}))
         self.assertFalse(_applicability_gate_is_diagnostic({"mode": "generated_rule_pack"}))
+
+    def test_uncertain_rules_do_not_require_source_backed_expectations(self) -> None:
+        case = {
+            "expected_statuses": {
+                "purpose_need": "uncertain",
+                "mitigation": "gap",
+            },
+            "expected_source_record_ids": {
+                "purpose_need": ["R1EA-001"],
+                "mitigation": ["R1EA-002"],
+            },
+            "expected_source_document_roles": {
+                "purpose_need": ["law"],
+                "mitigation": ["regulation"],
+            },
+        }
+
+        expected_statuses = case["expected_statuses"]
+
+        self.assertEqual(
+            _source_backed_expected_string_list_map(
+                case,
+                "expected_source_record_ids",
+                expected_statuses,
+            ),
+            {"mitigation": ["R1EA-002"]},
+        )
+        self.assertEqual(
+            _source_backed_expected_string_list_map(
+                case,
+                "expected_source_document_roles",
+                expected_statuses,
+            ),
+            {"mitigation": ["regulation"]},
+        )
 
     def test_compliance_review_eval_allows_generated_rule_pack_status_counts(self) -> None:
         case = {

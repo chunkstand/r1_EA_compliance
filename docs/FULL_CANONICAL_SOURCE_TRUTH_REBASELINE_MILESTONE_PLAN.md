@@ -25,7 +25,10 @@ outside the active verified-admission roster, the refreshed
 `verified_extraction_explicitly_non_admitted_source_count=53`, and the
 refreshed `promotion-suite` again reports
 `full_canonical_corpus_ready=true` with `9/9` required full-canonical
-results passing while the separate downstream gold lane remains red.
+results passing. The downstream compliance-gold rebaseline is now also
+resolved locally, and the refreshed default `promotion-suite` now reports
+`current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
+`expansion_ready=true`, and `promotion_ready=true`.
 `FPS-344` stays admitted as a structured Federal Register XML source, `9`
 handbook wrapper rows admit through live National Directives contents PDFs,
 and `12` manual wrapper rows admit through live USDA guidance or current
@@ -98,9 +101,10 @@ truth instead of the older `343`-row active-review subset.
   now records `full_canonical_corpus_ready=true`,
   `passed_required_full_canonical_result_count=9`,
   `required_full_canonical_result_count=9`, and
-  `full_canonical_failure_category_counts={}` while the separate
-  current-promotion lane remains intentionally red on downstream gold
-  adjudication work.
+  `full_canonical_failure_category_counts={}`. After the downstream
+  compliance-gold closeout, the same default result now also records
+  `current_promotion_ready=true`, `expansion_ready=true`, and
+  `promotion_ready=true`.
 - `FPS-344` now remains admissible as a structured Federal Register XML source
   because the generic listing-page direct-file instruction no longer upgrades
   authoritative structured-web rows into the direct-document bucket without a
