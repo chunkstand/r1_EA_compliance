@@ -81,6 +81,11 @@ as active, still report fresh full-canonical gold or aggregate gold replays
 as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
+Older references below that still treat `source-set-3f7d4578cafb0704`,
+`585/585` admitted rows, or
+`resolution_status_counts={"blocked":3,"planned":44,"resolved":4}` as the
+live full-canonical or queue truth are historical only after the 2026-05-23
+SCC structured-export slice described below.
 
 ## Full Canonical Direct-File Queue Milestone 3 SCC Structured-Export Slice Reduced Locally
 
@@ -164,7 +169,7 @@ Latest implementation update on 2026-05-23:
   `PYTHONPATH=src .venv/bin/python -m ruff check src tests`,
   and `git diff --check`.
 
-## Full Canonical Direct-File Queue Milestone 3 Alignment Pass
+## Historical Full Canonical Direct-File Queue Milestone 3 Alignment Pass
 
 Latest docs alignment on 2026-05-23:
 
@@ -173,7 +178,7 @@ Latest docs alignment on 2026-05-23:
 - Outcome label:
   `aligned locally`; the routed docs stack now pins the Milestone `3`
   blocker-family opener, the earlier Milestone `2` direct-file promotion
-  closeout, the live `585/585` successor boundary on
+  closeout, the then-live `585/585` successor boundary on
   `source-set-3f7d4578cafb0704`, and the same next routed slice.
 - Closeout commit:
   `8b889a9` (`Open project-specific queue blocker packet`).
@@ -184,7 +189,7 @@ Latest docs alignment on 2026-05-23:
   and the successor note in
   `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md` now agree
   on the Milestone `3` blocker-family opener `8b889a9`, the earlier
-  Milestone `2` promotion checkpoint `85f087b`, the live `638/585`
+  Milestone `2` promotion checkpoint `85f087b`, the then-live `638/585`
   successor boundary, and Milestone `3` export-backed families as the next
   routed slice.
 - Next routing:
@@ -199,7 +204,7 @@ Latest docs alignment on 2026-05-23:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
   and `git diff --check`.
 
-## Full Canonical Direct-File Queue Milestone 3 Reduced Locally
+## Historical Full Canonical Direct-File Queue Milestone 3 Reduced Locally
 
 Latest implementation update on 2026-05-23:
 

@@ -86,7 +86,7 @@ in `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.
   `PYTHONPATH=src .venv/bin/python -m ruff check src tests`,
   and `git diff --check`
 
-## Full Canonical Direct-File Queue Milestone 3 Alignment Pass
+## Historical Full Canonical Direct-File Queue Milestone 3 Alignment Pass
 
 This docs-only follow-up closes the remaining route/checkpoint drift after the
 Milestone `3` blocker-family opener landed.
@@ -94,7 +94,7 @@ Milestone `3` blocker-family opener landed.
 - outcome label:
   `aligned locally`; the routed docs stack now pins the Milestone `3`
   blocker-family opener, the earlier Milestone `2` direct-file promotion
-  closeout, the same live `585/585` successor on
+  closeout, the same then-live `585/585` successor on
   `source-set-3f7d4578cafb0704`, and the same next routed slice
 - closeout commit:
   `8b889a9` (`Open project-specific queue blocker packet`)
@@ -105,7 +105,7 @@ Milestone `3` blocker-family opener landed.
   this handoff note, the active queue packet, and the successor note in
   `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md` now all
   pin the same Milestone `3` blocker-family opener `8b889a9`, the earlier
-  Milestone `2` promotion checkpoint `85f087b`, the same live `638/585`
+  Milestone `2` promotion checkpoint `85f087b`, the same then-live `638/585`
   strengthened boundary, and the same next routed slice: Milestone `3`
 - next routing:
   the packet remains active and the next executable slice is still Milestone
@@ -119,7 +119,7 @@ Milestone `3` blocker-family opener landed.
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
   and `git diff --check`
 
-## Full Canonical Direct-File Queue Milestone 3 Reduced Locally
+## Historical Full Canonical Direct-File Queue Milestone 3 Reduced Locally
 
 This implementation slice reduces Milestone `3` in
 `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`.

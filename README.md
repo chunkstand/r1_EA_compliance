@@ -204,7 +204,7 @@ source-delta-required, `1` documented official-source gap), but
 `docs/R1_FOREST_PLAN_DOCUMENT_REGISTER_PROMOTION_REPORT.md` for the preserved
 promotion evidence.
 
-Local active import baseline on 2026-05-23 after direct-file queue Milestone 2:
+Historical local import baseline on 2026-05-23 after direct-file queue Milestone 2:
 
 - Active local catalog in `source_library/catalog/` is now full-register
   source set `source-set-3f7d4578cafb0704`, created from download run
@@ -243,7 +243,7 @@ Local active import baseline on 2026-05-23 after direct-file queue Milestone 2:
   `full_canonical_corpus_ready=true`, `current_promotion_ready=true`,
   `expansion_ready=true`, and `promotion_ready=true`.
 
-Local active import baseline on 2026-05-20 after full canonical live source-set promotion Milestone 4:
+Historical local import baseline on 2026-05-20 after full canonical live source-set promotion Milestone 4:
 
 - Active local catalog in `source_library/catalog/` is now full-register
   source set `source-set-f775524ab233ff27`, created on
