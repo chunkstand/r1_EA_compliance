@@ -7,6 +7,62 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Direct-File Queue Milestone 3 Lolo Pinyon Blocker Reduced Locally
+
+This implementation slice narrows the next mixed export-backed Milestone `3`
+queue family in
+`docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+without pretending that the `FINAL-Q-LOLO-001` root Pinyon folder is a clean
+single-family promotion.
+
+- outcome label:
+  `reduced locally`; `FINAL-Q-LOLO-001` is now an explicit blocker family, the
+  SCC structured-export, Flathead, and NCDE blocker slices remain in place,
+  and the next routed slice stays on the remaining generic export-backed
+  families
+- routed packet:
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- workbook and queue truth:
+  `source-register-diff` remains
+  `canonical_master_row_count=647`, `canonical_only_source_count=647`,
+  `canonical_queue_row_count=51`, and workbook SHA
+  `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`;
+  `source-register-queue-audit` now passes with
+  `resolution_status_counts={"blocked":6,"planned":37,"resolved":8}`,
+  `resolved_current_or_project_applicable_count=8`,
+  `blocked_current_or_project_applicable_count=6`,
+  `unresolved_current_or_project_applicable_count=35`, and governed
+  historical rows `FPS-380` and `SUP-007`
+- new blocker family:
+  `FINAL-Q-LOLO-001` now routes to
+  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md` because the live root
+  Pinyon folder mixes already-captured Lolo plan and SCC rows with broader
+  assessment, legal-notice, geospatial, and topical support surfaces
+- active catalog truth:
+  the live full-canonical catalog remains
+  `source-set-4fb59e9eb43045cb` with `source_count=647`,
+  `artifact_count=635`,
+  `source_partition_counts={"active_review_corpus":594,"currentness_supersession_archive":53}`,
+  and `status_counts={"downloaded_existing":635,"duplicate_content":12}`;
+  this slice changes queue governance only and does not change the catalog,
+  extraction, currentness, retrieval, or downstream promotion state
+- next routing:
+  stay on Milestone `3` in
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  for the remaining export-backed families `FINAL-Q-NPC-001` and `LEX-Q-001`,
+  while the active blocker packets are now
+  `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
+  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`,
+  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, and
+  `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_source_register_queue_resolution.py tests/test_source_register_schema.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check tests/test_source_register_queue_resolution.py`,
+  and `git diff --check`
+
 ## Full Canonical Direct-File Queue Milestone 3 NCDE Amendment Export Blocker Reduced Locally
 
 This implementation slice narrows the next mixed export-backed Milestone `3`

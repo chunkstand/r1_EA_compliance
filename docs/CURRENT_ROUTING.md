@@ -15,6 +15,7 @@ Use this file as the short current route before opening the large append-only do
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - Active blocker packets:
   `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
+  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
   `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, and
   `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
 
@@ -96,7 +97,7 @@ Use this file as the short current route before opening the large append-only do
   (`Resolve direct-file queue Milestone 2`), and Milestone `3` is now
   reduced locally through the project-specific blocker-family opener, the SCC
   structured-export slice, the Flathead reading-room blocker opener, and the
-  NCDE amendment export blocker opener.
+  NCDE amendment export blocker opener, and the Lolo Pinyon blocker opener.
   The blocker-family opener landed in commit `8b889a9`
   (`Open project-specific queue blocker packet`).
   The SCC structured-export implementation landed in commit `e78f491`
@@ -109,6 +110,9 @@ Use this file as the short current route before opening the large append-only do
   `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md` as an
   explicit blocker family, and that closeout landed in commit `3a8dd2d`
   (`Open WILD-ESA NCDE blocker packet`).
+  The latest slice now also routes `FINAL-Q-LOLO-001` to
+  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md` as an explicit
+  blocker family.
   The tracked `config/source_register_queue_resolution_ledger_v1.json`
   enumerates all `51` queue rows, preserves the `4` governed `resolved`
   promotions from Milestone `2` plus the `4` SCC structured-export families
@@ -117,15 +121,17 @@ Use this file as the short current route before opening the large append-only do
   `FINAL-Q-FLAT-001` to
   `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, routes
   `WILD-ESA-Q001` to
-  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, and
-  routes `PROG-011`, `PROG-012`, and `PROG-013` as explicit `blocked`
+  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, routes
+  `FINAL-Q-LOLO-001` to
+  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, and routes
+  `PROG-011`, `PROG-012`, and `PROG-013` as explicit `blocked`
   placeholders. `source-register-queue-audit` now passes with
-  `resolution_status_counts={"blocked":5,"planned":38,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=5`,
-  `unresolved_current_or_project_applicable_count=36`, and the same `2`
+  `resolution_status_counts={"blocked":6,"planned":37,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=6`,
+  `unresolved_current_or_project_applicable_count=35`, and the same `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`); the next routed slice
   remains Milestone `3` for the remaining export-backed families
-  `FINAL-Q-LOLO-001`, `FINAL-Q-NPC-001`, and `LEX-Q-001`.
+  `FINAL-Q-NPC-001` and `LEX-Q-001`.
   West Reservoir remains an intentional `typed_blocked` replay quarantine
   rather than a promotion blocker
 - Ad hoc full-canonical `phase-eval` status: do not treat the

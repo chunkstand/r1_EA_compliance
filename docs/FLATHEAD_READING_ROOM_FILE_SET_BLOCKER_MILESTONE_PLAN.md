@@ -256,6 +256,8 @@ git diff --check
   explicitly excluded.
 - The active direct-file queue packet remains the live next route; after this
   blocker-opening slice, continue Milestone `3` on the remaining export-backed
-  families `FINAL-Q-LOLO-001`, `FINAL-Q-NPC-001`, and `LEX-Q-001`, while the
-  overlapping amendment/map surfaces are now explicitly owned by
-  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`.
+  families `FINAL-Q-NPC-001` and `LEX-Q-001`, while the overlapping
+  amendment/map surfaces are now explicitly owned by
+  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md` and the
+  mixed Lolo planning-library surfaces are now explicitly owned by
+  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`.

@@ -2,12 +2,12 @@
   "schema_version": "source-register-queue-resolution-ledger-v1",
   "contract_id": "source-register-queue-resolution-ledger-v1",
   "as_of_date": "2026-05-23",
-  "status": "milestone3_wild_esa_ncde_blocker_family_opened",
+  "status": "milestone3_lolo_pinyon_blocker_family_opened",
   "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
   "workbook_sha256": "2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49",
   "sheet_name": "Direct_File_Capture_Queue",
   "summary": {
-    "blocked_current_or_project_applicable_count": 5,
+    "blocked_current_or_project_applicable_count": 6,
     "current_or_project_applicable_count": 49,
     "historical_noncurrent_count": 2,
     "historical_noncurrent_source_ids": [
@@ -16,9 +16,9 @@
     ],
     "planned_disposition_counts": {
       "historical_scope_only": 2,
-      "named_blocker": 5,
+      "named_blocker": 6,
       "promote_direct_file": 37,
-      "promote_structured_export": 7
+      "promote_structured_export": 6
     },
     "queue_reason_counts": {
       "Box planning record cannot be represented as row-level document sources without export.": 1,
@@ -37,12 +37,12 @@
     },
     "queue_row_count": 51,
     "resolution_status_counts": {
-      "blocked": 5,
-      "planned": 38,
+      "blocked": 6,
+      "planned": 37,
       "resolved": 8
     },
     "resolved_current_or_project_applicable_count": 8,
-    "unresolved_current_or_project_applicable_count": 36
+    "unresolved_current_or_project_applicable_count": 35
   },
   "entries": [
     {
@@ -479,14 +479,14 @@
       "target_successor_source_id": null
     },
     {
-      "blocker_packet_reference": null,
+      "blocker_packet_reference": "docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md",
       "currentness_class": "current_or_project_applicable",
       "document_title": "Lolo Forest Plan Revision Pinyon Public file set",
       "excel_row": 37,
-      "planned_disposition": "promote_structured_export",
+      "planned_disposition": "named_blocker",
       "queue_reason": "Box/Pinyon folder cannot be represented as row-level document sources without export.",
       "resolution_required": "Export Pinyon folder; add each document/data layer as direct row with date/version/hash.",
-      "resolution_status": "planned",
+      "resolution_status": "blocked",
       "source_id": "FINAL-Q-LOLO-001",
       "source_url": "https://usfs-public.app.box.com/v/PinyonPublic/folder/174926438550",
       "target_successor_source_id": null
