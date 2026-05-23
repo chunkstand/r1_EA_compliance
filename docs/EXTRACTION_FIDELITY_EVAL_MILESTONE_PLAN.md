@@ -128,10 +128,10 @@ fail closed when:
   `passed_required_full_canonical_result_count=10`,
   `required_full_canonical_result_count=10`, and
   `current_promotion_ready=true`.
-- The gap, therefore, is no longer missing source-truth, missing promotion,
-  or aggregate-owner routing. The remaining gap is the final live closeout
-  replay and docs alignment that proves the strengthened route stays green
-  with the live extraction audit.
+- The gap that motivated this packet is now closed: source-truth, promotion,
+  owner routing, and the final live closeout replay/docs alignment all stay
+  green together, proving the strengthened route remains compatible with the
+  live extraction audit.
 
 ## Goal
 

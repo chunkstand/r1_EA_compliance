@@ -82,6 +82,29 @@ as red, or still describe the current-promotion lane as red only on
 downstream gold adjudication are historical only after the 2026-05-23
 downstream gold closeout described below.
 
+## Extraction Fidelity Eval Milestone 4 Gap-Close Alignment Pass
+
+Latest docs alignment on 2026-05-23:
+
+- Routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`.
+- Outcome label:
+  `aligned locally`; routing truth is unchanged, and the resolved plan no
+  longer carries stale `Current Evidence` prose claiming a remaining
+  Milestone `4` live-closeout gap after the actual closeout landed.
+- Closeout commit:
+  `abd0e4d` (`Resolve extraction fidelity Milestone 4`).
+- Gap-close audit:
+  the packet stays resolved locally through Milestone `4`, the next
+  executable packet remains
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`,
+  and the only stale packet-local wording found in the active docs stack was
+  the now-retired plan sentence that still described live closeout and docs
+  alignment as an open gap.
+- Verification:
+  targeted route grep across the routed extraction-fidelity docs plus
+  `git diff --check`.
+
 ## Extraction Fidelity Eval Milestone 4 Alignment Pass
 
 Latest docs alignment on 2026-05-23:

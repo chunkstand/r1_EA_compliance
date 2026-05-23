@@ -7,6 +7,31 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Extraction Fidelity Eval Milestone 4 Gap-Close Alignment Pass
+
+This docs-only follow-up closes the last packet-local wording drift after the
+Milestone `4` closeout and prior hash-alignment pass.
+
+- outcome label:
+  `aligned locally`; the routed extraction-fidelity stack keeps the same
+  closeout hash and next packet, and the resolved plan no longer claims that
+  a Milestone `4` live-closeout/docs-alignment gap remains open
+- closeout commit:
+  `abd0e4d` (`Resolve extraction fidelity Milestone 4`)
+- routed packet:
+  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
+- gap-close audit:
+  top routing remains on
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`;
+  no hash drift was found in `README.md`, `docs/CURRENT_ROUTING.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, or this handoff; and the only stale live
+  wording found was the resolved plan sentence that still described the final
+  live closeout replay/docs alignment as a remaining gap
+- verification:
+  targeted route grep across the routed extraction-fidelity docs,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_fidelity_eval.py tests/test_extraction_accuracy.py tests/test_upstream_evaluation.py tests/test_promotion_suite_full_canonical.py -q`,
+  and `git diff --check`
+
 ## Extraction Fidelity Eval Milestone 4 Alignment Pass
 
 This docs-only follow-up pins the real Milestone `4` closeout hash across the
