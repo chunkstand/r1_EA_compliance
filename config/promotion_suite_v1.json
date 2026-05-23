@@ -1562,17 +1562,17 @@
         {
           "name": "full_canonical_active_review_corpus_count",
           "json_path": "source_partition_counts.active_review_corpus",
-          "equals": 582
+          "equals": 581
         },
         {
           "name": "full_canonical_currentness_supersession_archive_count",
           "json_path": "source_partition_counts.currentness_supersession_archive",
-          "equals": 52
+          "equals": 53
         },
         {
           "name": "full_canonical_downloaded_existing_count",
           "json_path": "status_counts.downloaded_existing",
-          "equals": 621
+          "equals": 620
         },
         {
           "name": "full_canonical_duplicate_content_count",
@@ -1628,12 +1628,74 @@
         {
           "name": "full_canonical_authority_currentness_active_review_corpus_count",
           "json_path": "summary.catalog_source_partition_counts.active_review_corpus",
-          "equals": 582
+          "equals": 581
         },
         {
           "name": "full_canonical_authority_currentness_currentness_supersession_archive_count",
           "json_path": "summary.catalog_source_partition_counts.currentness_supersession_archive",
-          "equals": 52
+          "equals": 53
+        },
+        {
+          "name": "full_canonical_authority_currentness_archive_only_count",
+          "json_path": "summary.source_currentness_counts.currentness_archive_only",
+          "equals": 47
+        },
+        {
+          "name": "full_canonical_authority_currentness_replacement_source_count",
+          "json_path": "summary.source_currentness_counts.replacement_source_confirmed",
+          "equals": 6
+        },
+        {
+          "name": "full_canonical_authority_currentness_current_authority_source_count",
+          "json_path": "summary.current_authority_source_record_count",
+          "equals": 581
+        }
+      ]
+    },
+    {
+      "id": "full_canonical_verified_admission_boundary",
+      "label": "Live full canonical verified-admission boundary",
+      "path": "derived/{full_canonical_source_set_id}/retrieval/summary.json",
+      "required_for_current_promotion": false,
+      "required_for_full_canonical_corpus": true,
+      "failure_category": "stale_artifact",
+      "checks": [
+        {
+          "name": "full_canonical_verified_admission_boundary_source_set",
+          "json_path": "source_set_id",
+          "equals": "source-set-f775524ab233ff27"
+        },
+        {
+          "name": "full_canonical_verified_admission_boundary_contract_ids",
+          "json_path": "verified_extraction_contract_ids",
+          "equals": [
+            "canonical-source-register-active-current-admission"
+          ]
+        },
+        {
+          "name": "full_canonical_verified_admission_required_source_count",
+          "json_path": "verified_extraction_required_source_count",
+          "equals": 581
+        },
+        {
+          "name": "full_canonical_verified_admission_admitted_source_count",
+          "json_path": "verified_extraction_admitted_source_count",
+          "equals": 581
+        },
+        {
+          "name": "full_canonical_verified_admission_explicitly_non_admitted_source_count",
+          "json_path": "verified_extraction_explicitly_non_admitted_source_count",
+          "equals": 53
+        },
+        {
+          "name": "full_canonical_verified_admission_validation_passed",
+          "json_path": "validation_passed",
+          "equals": true
+        },
+        {
+          "name": "full_canonical_verified_admission_reviewer_ready",
+          "json_path": "reviewer_ready",
+          "equals": true
         }
       ]
     },

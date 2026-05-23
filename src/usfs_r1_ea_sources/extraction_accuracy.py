@@ -117,6 +117,9 @@ def run_extraction_accuracy_audit(
         "required_direct_source_record_ids": sorted(audited_source_record_ids)
         if admission_requirements["require_direct_extraction"]
         else [],
+        "explicitly_non_admitted_source_record_ids": admission_requirements[
+            "non_admitted_source_record_ids"
+        ],
         "knowledge_base_admitted_source_record_ids": admitted_source_record_ids,
         "knowledge_base_blocked_source_record_ids": blocked_source_record_ids,
         "per_source_failures": {

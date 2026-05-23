@@ -27,7 +27,7 @@
     },
     {
       "contract_id": "canonical-source-register-active-current-admission",
-      "description": "Canonical source-register knowledge-base admission currently applies to every source_register_v1 row already classified into the active current-review corpus; direct-document gaps stay in the required roster and must fail closed until governed promotion or exclusion resolves them.",
+      "description": "Canonical source-register knowledge-base admission applies to every source_register_v1 row already classified into the active current-review corpus, while currentness/archive rows remain explicit full-canonical lineage evidence outside the verified-admission roster; direct-document gaps stay in the required roster and must fail closed until governed promotion or exclusion resolves them.",
       "required_record_selectors": [
         {
           "loader_contracts": [
@@ -37,6 +37,16 @@
             "active_review_corpus"
           ],
           "artifact_is_proving_placeholder": false
+        }
+      ],
+      "non_admitted_record_selectors": [
+        {
+          "loader_contracts": [
+            "source_register_v1"
+          ],
+          "source_partitions": [
+            "currentness_supersession_archive"
+          ]
         }
       ],
       "require_direct_extraction": true

@@ -7,6 +7,75 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Full Canonical Source Truth Rebaseline Resolved Locally
+
+This worktree slice resolves the full source-truth rebaseline packet locally
+in `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`.
+
+- outcome label:
+  `resolved locally`; the current worktree makes the `53`
+  `currentness_supersession_archive` rows an explicit governed full-canonical
+  lineage lane outside verified admission instead of leaving that boundary
+  implicit, while preserving the earlier Milestone `2` closeout that archived
+  `USFS-026` with replacement `USFS-023`
+- previous resolved slice:
+  the earlier active-current blocker closeout remains recorded immediately
+  below in the Milestone `2` section
+- implementation surfaces:
+  `config/verified_extraction_admission_contract.json`,
+  `config/promotion_suite_v1.json`,
+  `src/usfs_r1_ea_sources/extraction_admission.py`,
+  `src/usfs_r1_ea_sources/extraction_accuracy.py`,
+  `src/usfs_r1_ea_sources/retrieval_runtime.py`,
+  `tests/test_extraction_accuracy.py`,
+  `tests/test_promotion_suite_full_canonical.py`, and the local ignored
+  refreshed extraction, authority-currentness, retrieval, and promotion-suite
+  artifacts under `source_library/`
+- live replay truth:
+  the refreshed `extraction_accuracy_audit.json` on
+  `source-set-f775524ab233ff27` now records `audited_record_count=581`,
+  `knowledge_base_admitted_source_record_ids=581`,
+  `knowledge_base_blocked_source_record_ids=0`, and
+  `explicitly_non_admitted_source_record_ids=53`; the refreshed
+  `retrieval/summary.json` now records
+  `verified_extraction_required_source_count=581`,
+  `verified_extraction_admitted_source_count=581`,
+  `verified_extraction_explicitly_non_admitted_source_count=53`,
+  `validation_passed=true`, and `reviewer_ready=true`
+- currentness truth:
+  `authority_currentness_report.json` now records
+  `catalog_source_partition_counts={"active_review_corpus":581,"currentness_supersession_archive":53}`,
+  `source_currentness_counts={"confirmed_from_catalog":581,"currentness_archive_only":47,"replacement_source_confirmed":6}`,
+  `current_authority_source_record_count=581`, and `validation_passed=true`
+- promotion truth:
+  `promotion_suite_results.json` now records
+  `full_canonical_corpus_ready=true`,
+  `passed_required_full_canonical_result_count=9`,
+  `required_full_canonical_result_count=9`, and
+  `full_canonical_failure_category_counts={}` while the separate
+  current-promotion lane remains red only on downstream gold adjudication
+- blocked roster:
+  none in the source-truth lane; `51` `Direct_File_Capture_Queue` rows remain
+  outside the active load-bearing surface by workbook contract, and the next
+  active routed owner is the downstream compliance-gold packet on the five
+  still-unmapped live authorities
+- next routing:
+  continue with
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
+- stale-reference audit:
+  the immediately following Milestone `2` section remains append-only
+  historical evidence for the earlier active-current blocker closeout, while
+  older `582/52` or open-Milestone-`3` references are now historical only for
+  live routing
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_extraction_accuracy.py tests/test_promotion_suite_full_canonical.py tests/test_source_partitions.py tests/test_authority_currentness.py tests/test_retrieval_validation.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/extraction_admission.py src/usfs_r1_ea_sources/extraction_accuracy.py src/usfs_r1_ea_sources/retrieval_runtime.py tests/test_extraction_accuracy.py tests/test_promotion_suite_full_canonical.py tests/test_source_partitions.py tests/test_authority_currentness.py tests/test_retrieval_validation.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources authority-currentness --output-dir source_library --source-set-id source-set-f775524ab233ff27`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f775524ab233ff27`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`, and
+  `git diff --check`
+
 ## Full Canonical Source Truth Rebaseline Milestone 2 Resolved Locally
 
 This worktree slice resolves Milestone `2` locally in

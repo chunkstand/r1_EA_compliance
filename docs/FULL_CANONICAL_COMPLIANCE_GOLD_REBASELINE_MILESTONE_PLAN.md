@@ -1,17 +1,19 @@
 # Full Canonical Compliance Gold Rebaseline Milestone Plan
 
-Date: 2026-05-22
+Date: 2026-05-23
 
 Status: Active; Milestone 0 resolved 2026-05-21 through `compliance_gold_eval_seq52_fix1` and `gold_coverage_eval_seq52_fix1`; Milestone 1 resolved 2026-05-21 through generated-case routing repair and owner-family split; Milestone 2 reduced 2026-05-21 through `compliance_gold_eval_seq52_fix6` and `gold_coverage_eval_seq52_fix6`; routed docs are aligned on the generated-vs-base rule-claim-link split, the narrower review-time source-claim drift is closed, and the packet remains active on five still-unmapped live authorities, but it is now explicitly downstream of the source-truth rebaseline packet after the live canonical active-current admission boundary turned green at `581/581`
 
 Owner context: the overall architecture umbrella is now closed on truthful routing, but the live
 full-canonical gold lane remains red on the active local catalog
-`source-set-f775524ab233ff27`. The source-truth packet has now resolved the active-current
-admission-boundary rebaseline: the latest refreshed audit and retrieval replays prove `581`
-required active-current rows under `canonical-source-register-active-current-admission`, with
-`581` admitted, `0` blocked, and `reviewer_ready=true`. This packet stays downstream while the
-source-truth lane advances to Milestone `3` archive-lineage closure on the `53`
-`currentness_supersession_archive` rows.
+`source-set-f775524ab233ff27`. The source-truth packet is now resolved locally:
+the latest refreshed audit and retrieval replays prove `581` required
+active-current rows under
+`canonical-source-register-active-current-admission`, with `581` admitted,
+`0` blocked, and `reviewer_ready=true`, while the explicit full-canonical
+archive boundary now preserves `53`
+`currentness_supersession_archive` rows as governed lineage outside verified
+admission. This packet is now the next active routed owner.
 
 ## Purpose
 

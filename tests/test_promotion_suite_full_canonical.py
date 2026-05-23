@@ -33,12 +33,12 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
     assert active_catalog_checks["full_canonical_download_batch_run_ids"]["equals"] == []
     assert active_catalog_checks["full_canonical_source_count"]["equals"] == 634
     assert active_catalog_checks["full_canonical_artifact_count"]["equals"] == 622
-    assert active_catalog_checks["full_canonical_active_review_corpus_count"]["equals"] == 582
+    assert active_catalog_checks["full_canonical_active_review_corpus_count"]["equals"] == 581
     assert (
         active_catalog_checks["full_canonical_currentness_supersession_archive_count"]["equals"]
-        == 52
+        == 53
     )
-    assert active_catalog_checks["full_canonical_downloaded_existing_count"]["equals"] == 621
+    assert active_catalog_checks["full_canonical_downloaded_existing_count"]["equals"] == 620
     assert active_catalog_checks["full_canonical_duplicate_content_count"]["equals"] == 12
 
     active_validation = suite_results["full_canonical_catalog_validation"]
@@ -79,13 +79,84 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
         currentness_checks[
             "full_canonical_authority_currentness_active_review_corpus_count"
         ]["equals"]
-        == 582
+        == 581
     )
     assert (
         currentness_checks[
             "full_canonical_authority_currentness_currentness_supersession_archive_count"
         ]["equals"]
-        == 52
+        == 53
+    )
+    assert (
+        currentness_checks["full_canonical_authority_currentness_archive_only_count"]["equals"]
+        == 47
+    )
+    assert (
+        currentness_checks["full_canonical_authority_currentness_replacement_source_count"][
+            "equals"
+        ]
+        == 6
+    )
+    assert (
+        currentness_checks[
+            "full_canonical_authority_currentness_current_authority_source_count"
+        ]["equals"]
+        == 581
+    )
+
+    full_canonical_verified_admission = suite_results[
+        "full_canonical_verified_admission_boundary"
+    ]
+    assert full_canonical_verified_admission["required_for_current_promotion"] is False
+    assert full_canonical_verified_admission["required_for_full_canonical_corpus"] is True
+    assert (
+        full_canonical_verified_admission["path"]
+        == "derived/{full_canonical_source_set_id}/retrieval/summary.json"
+    )
+    verified_admission_checks = {
+        check["name"]: check for check in full_canonical_verified_admission["checks"]
+    }
+    assert (
+        verified_admission_checks["full_canonical_verified_admission_boundary_source_set"][
+            "equals"
+        ]
+        == FULL_CANONICAL_SOURCE_SET_ID
+    )
+    assert (
+        verified_admission_checks["full_canonical_verified_admission_boundary_contract_ids"][
+            "equals"
+        ]
+        == ["canonical-source-register-active-current-admission"]
+    )
+    assert (
+        verified_admission_checks["full_canonical_verified_admission_required_source_count"][
+            "equals"
+        ]
+        == 581
+    )
+    assert (
+        verified_admission_checks["full_canonical_verified_admission_admitted_source_count"][
+            "equals"
+        ]
+        == 581
+    )
+    assert (
+        verified_admission_checks[
+            "full_canonical_verified_admission_explicitly_non_admitted_source_count"
+        ]["equals"]
+        == 53
+    )
+    assert (
+        verified_admission_checks["full_canonical_verified_admission_validation_passed"][
+            "equals"
+        ]
+        is True
+    )
+    assert (
+        verified_admission_checks["full_canonical_verified_admission_reviewer_ready"][
+            "equals"
+        ]
+        is True
     )
 
     full_canonical_graph = suite_results["full_canonical_nepa_3d_source_set_graph_validation"]

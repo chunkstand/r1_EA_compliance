@@ -19,7 +19,7 @@ Current routed state on 2026-05-23:
 - Live local catalog remains `source-set-f775524ab233ff27` in
   `source_library/catalog/source_set_manifest.json` with `source_count=634`,
   `artifact_count=622`,
-  `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
+  `source_partition_counts={"active_review_corpus": 581, "currentness_supersession_archive": 53}`,
   and workbook SHA
   `1e7d7623f9633c37e953d74780c986426514d8a472082f3b95142266556505c8`.
 - `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
@@ -41,31 +41,30 @@ Current routed state on 2026-05-23:
   lines, no Python or JS/TS import cycles, no source module above the
   `20`-import fan-out gate, and an empty oversized-file inventory in
   `config/architecture_large_file_inventory_v1.json`.
-- The active source-truth Milestone `2` closeout is now live locally: the
+- The active source-truth rebaseline packet is now resolved locally: the
   local source set `source-set-f775524ab233ff27` proves `634/634` extracted
-  `Document_Register_Master` rows, and the refreshed
-  `extraction-accuracy-audit` plus `retrieval-build` replays now agree on
+  `Document_Register_Master` rows, the refreshed `extraction-accuracy-audit`
+  records `581` admitted active-current rows, `0` blocked rows, and `53`
+  explicit non-admitted archive/currentness rows, and the refreshed
+  `retrieval-build` replay agrees with
   `verified_extraction_admitted_source_count=581`,
-  `verified_extraction_required_source_count=581`, `validation_passed=true`,
-  and `reviewer_ready=true` under
+  `verified_extraction_required_source_count=581`,
+  `verified_extraction_explicitly_non_admitted_source_count=53`,
+  `validation_passed=true`, and `reviewer_ready=true` under
   `canonical-source-register-active-current-admission`. `USFS-026`
-  (`FSH 2509.18`) is no longer an active-current blocker: the live official
-  transmittal now lands as a direct PDF, and governed currentness lineage
-  retains the row as `currentness_supersession_archive` evidence because the
-  transmittal removes `FSH 2509.18` from the directive system and
-  incorporates the direction into `FSM 2550` (`USFS-023`). `FPS-344` remains
-  admitted as a structured Federal Register XML source. The immediately
-  preceding reduced slices remain `53d59da`, `96450be`, `4650837`, and
-  `806cdf1`. `51` `Direct_File_Capture_Queue` rows remain outside the active
-  load-bearing surface and the `53` archive rows now route into Milestone
-  `3` lineage closure.
+  (`FSH 2509.18`) remains governed currentness lineage evidence with
+  replacement `USFS-023`, `FPS-344` remains admitted as a structured Federal
+  Register XML source, and `promotion-suite` now reports
+  `full_canonical_corpus_ready=true` with `9/9` required full-canonical
+  results passing. `51` `Direct_File_Capture_Queue` rows remain outside the
+  active load-bearing surface by workbook contract.
 - Fresh bounded aggregate gold replay on 2026-05-21 still fails closed only
   because `compliance-gold-eval` is red on the active full-canonical source
   set `source-set-f775524ab233ff27`; the tracked review-contract lane itself
   remains green at `2 reviewer_ready + 1 typed_blocked`. That downstream gold
-  packet remains active, but it is now downstream of the source-truth
-  packet's Milestone `3` archive-lineage decision rather than a remaining
-  active-current admission blocker. The bounded Milestone `7` replay stayed
+  packet is now the next active routed owner after the source-truth packet
+  closed its archive-lineage boundary rather than a remaining active-current
+  admission blocker. The bounded Milestone `7` replay stayed
   red at `0/14` on the same five still-unmapped live authorities. The active
   generated diagnostic gold cases now build non-zero rule-claim-link
   artifacts, while the base `nepa-ea-v0` rule-claim-link summary remains a

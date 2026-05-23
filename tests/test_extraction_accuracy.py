@@ -349,6 +349,59 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
                 ["FOR-002"],
             )
 
+    def test_committed_verified_admission_contract_reports_explicit_archive_boundary(self) -> None:
+        config = canonical_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_download_run_records(
+                output_dir,
+                records=[
+                    {
+                        "source_record_id": "FED-001",
+                        "artifact_body": _html_body(),
+                        "suffix": ".html",
+                        "content_type": "text/html",
+                    },
+                    {
+                        "source_record_id": "SUP-004",
+                        "artifact_body": _html_body(),
+                        "suffix": ".html",
+                        "content_type": "text/html",
+                    },
+                ],
+            )
+            build_review_catalog(
+                workbook_path=CANONICAL_WORKBOOK,
+                output_dir=output_dir,
+                config=config,
+                config_path=CONFIG,
+                run_id="unit-download",
+                source_record_ids={"FED-001", "SUP-004"},
+            )
+            build_extraction(output_dir=output_dir, id_filters={"FED-001", "SUP-004"})
+
+            result = run_extraction_accuracy_audit(
+                output_dir=output_dir,
+                contract_path=VERIFIED_ADMISSION_CONTRACT,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(
+                result.summary["verified_extraction_admission_contracts"][0]["contract_id"],
+                "canonical-source-register-active-current-admission",
+            )
+            self.assertEqual(result.summary["audited_source_record_ids"], ["FED-001"])
+            self.assertEqual(
+                result.summary["explicitly_non_admitted_source_record_ids"],
+                ["SUP-004"],
+            )
+            self.assertEqual(
+                result.summary["verified_extraction_admission_contracts"][0][
+                    "non_admitted_source_record_ids"
+                ],
+                ["SUP-004"],
+            )
+
     def test_audit_accepts_zip_metadata_parser_for_direct_file_zip_artifact(self) -> None:
         config = canonical_config()
         with tempfile.TemporaryDirectory() as tmp:
@@ -444,6 +497,14 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
                                         "currentness_status_not_contains": ["Superseded"]
                                     }
                                 ],
+                                "non_admitted_record_selectors": [
+                                    {
+                                        "loader_contracts": ["source_register_v1"],
+                                        "source_partitions": [
+                                            "currentness_supersession_archive"
+                                        ]
+                                    }
+                                ],
                                 "require_direct_extraction": True
                             }
                         ],
@@ -468,6 +529,16 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
                 ["FED-001"],
             )
             self.assertEqual(result.summary["knowledge_base_blocked_source_record_ids"], [])
+            self.assertEqual(
+                result.summary["explicitly_non_admitted_source_record_ids"],
+                ["SUP-004"],
+            )
+            self.assertEqual(
+                result.summary["verified_extraction_admission_contracts"][0][
+                    "non_admitted_source_record_ids"
+                ],
+                ["SUP-004"],
+            )
 
 
 def _write_download_run(

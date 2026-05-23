@@ -70,6 +70,17 @@ def load_verified_extraction_admission_contract(
                 "description": str(raw_contract.get("description") or "").strip() or None,
                 "required_source_record_ids": required_source_record_ids,
                 "required_record_selectors": required_record_selectors,
+                "non_admitted_record_selectors": [
+                    _normalize_selector(
+                        selector,
+                        contract_id=contract_id,
+                        index=selector_index,
+                    )
+                    for selector_index, selector in enumerate(
+                        raw_contract.get("non_admitted_record_selectors", []),
+                        start=1,
+                    )
+                ],
                 "require_direct_extraction": bool(raw_contract.get("require_direct_extraction")),
             }
         )
@@ -99,6 +110,7 @@ def matched_verified_extraction_contracts(
     payload = load_verified_extraction_admission_contract(contract_path)
     matched_contracts = []
     required_source_record_ids: set[str] = set()
+    non_admitted_source_record_ids: set[str] = set()
     require_direct_extraction = False
     for contract in payload.get("contracts", []):
         contract_required_ids = set(contract.get("required_source_record_ids", []))
@@ -115,17 +127,32 @@ def matched_verified_extraction_contracts(
         if not contract_required_ids and not selector_source_record_ids:
             continue
         present_ids = sorted(contract_required_ids | selector_source_record_ids)
+        contract_non_admitted_ids = set()
+        for selector in contract.get("non_admitted_record_selectors", []):
+            contract_non_admitted_ids.update(
+                _selector_source_record_ids(
+                    record_map=record_map,
+                    selector=selector,
+                )
+            )
+        contract_non_admitted_ids.difference_update(present_ids)
         matched_contracts.append(
             {
                 "contract_id": contract.get("contract_id"),
                 "description": contract.get("description"),
                 "required_source_record_ids": present_ids,
                 "required_record_selectors": contract.get("required_record_selectors", []),
+                "non_admitted_record_selectors": contract.get(
+                    "non_admitted_record_selectors",
+                    [],
+                ),
+                "non_admitted_source_record_ids": sorted(contract_non_admitted_ids),
                 "matched_source_record_ids": present_ids,
                 "require_direct_extraction": bool(contract.get("require_direct_extraction")),
             }
         )
         required_source_record_ids.update(present_ids)
+        non_admitted_source_record_ids.update(contract_non_admitted_ids)
         require_direct_extraction = require_direct_extraction or bool(
             contract.get("require_direct_extraction")
         )
@@ -137,6 +164,7 @@ def matched_verified_extraction_contracts(
         ),
         "contracts": matched_contracts,
         "required_source_record_ids": sorted(required_source_record_ids),
+        "non_admitted_source_record_ids": sorted(non_admitted_source_record_ids),
         "require_direct_extraction": require_direct_extraction,
     }
 

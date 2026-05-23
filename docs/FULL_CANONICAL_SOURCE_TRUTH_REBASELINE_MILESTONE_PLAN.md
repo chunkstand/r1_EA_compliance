@@ -2,40 +2,50 @@
 
 Date: 2026-05-23
 
-Status: Active; Milestone 0 resolved on 2026-05-22 through the routed-doc
-packet open, Milestone 1 is resolved locally, and Milestone 2 is now resolved
-locally: the checked-in verified-admission contract has been rebaselined from
-the hidden `343`-row shadow-filtered subset to all `581` active-current
-canonical rows via `canonical-source-register-active-current-admission`,
-focused regression coverage is green, the live `FSH 2509.18` transmittal now
-lands as a direct PDF, governed currentness lineage retains `USFS-026` as
-`currentness_supersession_archive` evidence with replacement `USFS-023`, and
-the refreshed `extraction-accuracy-audit`, `authority-currentness`, and
-`retrieval-build` replays now agree on `581` admitted out of `581` required
-active-current rows with `validation_passed=true`, `reviewer_ready=true`, and
-`families_requiring_milestone_2_source_currentness=0`. `FPS-344` stays in the
-admitted set as a structured Federal Register XML source, `9` handbook
-wrapper rows now admit through live National Directives contents PDFs, and
-`12` manual wrapper rows now admit through live USDA guidance or current
-Forest Service static-file PDF targets. The `53`
-`currentness_supersession_archive` rows now route into Milestone 3 lineage
-closure. The latest recorded Milestone 2 reduced local commit is `53d59da`
-(`Reduce source-truth Milestone 2 manual redirect blockers`); the earlier
-Milestone 2 reduced manual-wrapper slice remains `96450be`
-(`Reduce source-truth Milestone 2 manual wrapper blockers`); the earlier
-Milestone 2 reduced handbook slice remains `4650837`
-(`Reduce source-truth Milestone 2 handbook wrapper blockers`), and the earlier
-Milestone 2 reduced slice remains `806cdf1`
-(`Reduce source-truth Milestone 2 blockers`). Milestone 1 closeout commit:
-`46bff61` (`Resolve source-truth rebaseline Milestone 1`).
+Status: Resolved locally; Milestone 0 resolved on 2026-05-22 through the
+routed-doc packet open, Milestone 1 is resolved locally, and Milestone 2 is
+resolved locally: the checked-in verified-admission contract has been
+rebaselined from the hidden `343`-row shadow-filtered subset to all `581`
+active-current canonical rows via
+`canonical-source-register-active-current-admission`, the live `FSH 2509.18`
+transmittal now lands as a direct PDF, governed currentness lineage retains
+`USFS-026` as `currentness_supersession_archive` evidence with replacement
+`USFS-023`, and the refreshed `extraction-accuracy-audit`,
+`authority-currentness`, and `retrieval-build` replays now agree on `581`
+admitted out of `581` required active-current rows with `validation_passed=true`,
+`reviewer_ready=true`, and `families_requiring_milestone_2_source_currentness=0`.
+Milestone 3 now resolves the archive boundary explicitly: the checked-in
+verified-admission contract declares the `53`
+`currentness_supersession_archive` rows as governed full-canonical lineage
+outside the active verified-admission roster, the refreshed
+`extraction-accuracy-audit` now records `53`
+`explicitly_non_admitted_source_record_ids`, `authority-currentness` records
+`47` `currentness_archive_only` rows plus `6`
+`replacement_source_confirmed` rows, `retrieval-build` records
+`verified_extraction_explicitly_non_admitted_source_count=53`, and the
+refreshed `promotion-suite` again reports
+`full_canonical_corpus_ready=true` with `9/9` required full-canonical
+results passing while the separate downstream gold lane remains red.
+`FPS-344` stays admitted as a structured Federal Register XML source, `9`
+handbook wrapper rows admit through live National Directives contents PDFs,
+and `12` manual wrapper rows admit through live USDA guidance or current
+Forest Service static-file PDF targets. The latest recorded Milestone 2
+reduced local commit is `53d59da` (`Reduce source-truth Milestone 2 manual
+redirect blockers`); the earlier Milestone 2 reduced manual-wrapper slice
+remains `96450be` (`Reduce source-truth Milestone 2 manual wrapper
+blockers`); the earlier Milestone 2 reduced handbook slice remains `4650837`
+(`Reduce source-truth Milestone 2 handbook wrapper blockers`), and the
+earlier Milestone 2 reduced slice remains `806cdf1` (`Reduce source-truth
+Milestone 2 blockers`). Milestone 1 closeout commit: `46bff61` (`Resolve
+source-truth rebaseline Milestone 1`).
 
 Owner context: on 2026-05-22 the governing intent was clarified: the newest imported source set
 must fully replace the older source set as the canonical source of truth for this repository's
 Region 1 NEPA review and document-generation system. Every applicable law, regulation, policy,
 directive, forest-plan authority, and necessary support source must either land in the canonical
 verified set or be explicitly classified as historical, removed-not-applicable, or still blocked by
-named direct-file capture work. The current repo contract does not yet encode that system
-definition.
+named direct-file capture work. This packet closes the remaining archive-boundary contract gap for
+the active canonical corpus.
 
 ## Purpose
 
@@ -55,18 +65,22 @@ truth instead of the older `343`-row active-review subset.
   `canonical-source-register-active-current-admission`, which selects every
   `source_register_v1` row already classified into
   `source_partitions=["active_review_corpus"]` with
-  `artifact_is_proving_placeholder=false`; the old
-  `docling_instructions_not_contains` shadow filter is removed.
+  `artifact_is_proving_placeholder=false`, and it now also declares
+  `source_partitions=["currentness_supersession_archive"]` as explicit governed
+  non-admitted lineage rows; the old `docling_instructions_not_contains`
+  shadow filter is removed.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/retrieval/summary.json`
   now records `verified_extraction_admitted_source_count=581`,
-  `verified_extraction_required_source_count=581`, and
+  `verified_extraction_required_source_count=581`,
+  `verified_extraction_explicitly_non_admitted_source_count=53`, and
   `verified_extraction_contract_ids=["canonical-source-register-active-current-admission"]`.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/diagnostics/extraction_accuracy_audit.json`
   now records `audited_record_count=581`,
   `knowledge_base_admitted_source_record_ids=581`,
-  `knowledge_base_blocked_source_record_ids=0`, and no failed gates.
+  `knowledge_base_blocked_source_record_ids=0`,
+  `explicitly_non_admitted_source_record_ids=53`, and no failed gates.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/retrieval/retrieval_validation.json`
   now derives the same truthful zero-blocker roster under the rebaselined
@@ -74,7 +88,17 @@ truth instead of the older `343`-row active-review subset.
 - The latest
   `source_library/derived/source-set-f775524ab233ff27/authority_currentness/authority_currentness_report.json`
   now records `families_requiring_milestone_2_source_currentness=0`,
+  `catalog_source_partition_counts={"active_review_corpus":581,"currentness_supersession_archive":53}`,
+  `source_currentness_counts={"confirmed_from_catalog":581,"currentness_archive_only":47,"replacement_source_confirmed":6}`,
   `current_authority_source_record_count=581`, and `validation_passed=true`.
+- The latest `promotion-suite` result at
+  `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
+  now records `full_canonical_corpus_ready=true`,
+  `passed_required_full_canonical_result_count=9`,
+  `required_full_canonical_result_count=9`, and
+  `full_canonical_failure_category_counts={}` while the separate
+  current-promotion lane remains intentionally red on downstream gold
+  adjudication work.
 - `FPS-344` now remains admissible as a structured Federal Register XML source
   because the generic listing-page direct-file instruction no longer upgrades
   authoritative structured-web rows into the direct-document bucket without a
@@ -102,10 +126,9 @@ truth instead of the older `343`-row active-review subset.
 - `tests/test_extraction_accuracy.py` already proves the fail-closed negative case:
   wrapper pages are not admissible when a row requires a direct document artifact.
 - The downstream packet
-  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` remains live, but it is still
-  measuring against the active-current verified-admission boundary above while the archive-lineage
-  decision is still open. Milestone 3 must finish so downstream gold work is aligned to the true
-  canonical target.
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` remains
+  live and is now aligned to the explicit active-current-plus-archive canonical
+  boundary above.
 
 ## Goal
 
@@ -400,14 +423,19 @@ Current worktree checkpoint on 2026-05-23:
 
 ### Milestone 3 - Archive And Historical Boundary Closure
 
-Outcome label: `reduced`
+Outcome label: `resolved`
 
-1. Decide whether the `53` `currentness_supersession_archive` rows are part of the full-canonical
-   verified target, a historical-only searchable lane, or a mixed contract with explicit
-   partition-aware admission.
-2. Update currentness/source-partition contracts so archive inclusion or exclusion is explicit and
-   test-backed.
-3. Re-run the currentness and partition gates to prove the new lineage boundary.
+1. The `53` `currentness_supersession_archive` rows now land as a mixed
+   full-canonical boundary: they remain searchable lineage/currentness evidence
+   inside the active canonical source set, but they are explicitly outside the
+   verified-admission roster.
+2. `config/verified_extraction_admission_contract.json` now carries explicit
+   `non_admitted_record_selectors` for the archive partition, and the focused
+   extraction/promotion regressions prove the boundary instead of relying on
+   selector omission.
+3. The refreshed currentness and partition gates remain green with
+   `581` active-current authority rows, `53` archive rows,
+   `47` archive-only lineage rows, and `6` replacement-source lineage rows.
 
 ### Milestone 4 - Full Verified-Admission Replay
 
@@ -557,13 +585,12 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- The likely longest pole is direct-file promotion for queue/manual-export families. If that work
-  becomes materially larger than one bounded milestone, split it into dedicated follow-on packets by
-  owner family, but keep this packet as the umbrella until the full-canonical target count and
-  blocker roster are explicit and replayed.
+- The active source-truth packet is now closed locally. The remaining `51`
+  queue rows stay explicit non-load workbook contract work rather than hidden
+  full-canonical admission debt.
 - The downstream packet
-  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` remains the next active lane
-  after this packet proves the full-canonical admission boundary.
+  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` is now the
+  next active lane after this packet's explicit archive-boundary closeout.
 - If the rebaseline proves some queue or archive rows are truly outside the final canonical source
   truth, that decision must be explicit in the workbook/currentness contracts and durable docs
   rather than preserved as an implicit operational convention.

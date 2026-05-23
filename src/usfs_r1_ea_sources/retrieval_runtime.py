@@ -183,6 +183,9 @@ def build_retrieval_index(
         "verified_extraction_admitted_source_count": len(
             (extraction_accuracy or {}).get("knowledge_base_admitted_source_record_ids", [])
         ),
+        "verified_extraction_explicitly_non_admitted_source_count": len(
+            verified_extraction_requirements["non_admitted_source_record_ids"]
+        ),
         "document_role_counts": dict(
             Counter(chunk.get("document_role") for chunk in indexed_chunks)
         ),
