@@ -109,6 +109,7 @@ def test_registry_keeps_lolo_profile_only_while_for_029_routes_to_active_packet(
     assert forest_row["routing_status"] == "profile_eval_guidance_only"
     assert forest_row["primary_example_id"] is None
     assert forest_row["queue_boundary_source_ids"] == ["FOR-029"]
+    assert "inspect the Tyler's Kitchen root package first" in forest_row["guidance_note"]
     assert "inherited phase-eval blocker" in forest_row["guidance_note"]
     assert for_029["planned_disposition"] == "named_blocker"
     assert for_029["resolution_status"] == "blocked"

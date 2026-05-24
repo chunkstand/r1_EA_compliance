@@ -40,6 +40,8 @@ The planner:
   pulling review artifacts.
 - The first concrete active expansion slice in that lane is now
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
+- For Lolo National Forest example-package review work, inspect the Tyler's
+  Kitchen packet first as the active Lolo example boundary.
 - That Lolo packet already carries the `FOR-029` queue-boundary reroute plus
   packet-local `v1-ea-eval` and forest-plan component coverage, but the Lolo
   forest row still stays `profile_eval_guidance_only` until the inherited

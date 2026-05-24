@@ -70,8 +70,9 @@ Use this file as the short current route before opening the large append-only do
   examples, `distinct_governed_example_forest_count=2`, and
   `profile_guidance_only_count=8`; the active Lolo
   `Tyler's Kitchen Fuels Reduction and Forest Health Project (66344)` packet
-  has already rerouted `FOR-029` out of master-promotion semantics, added a
-  tracked Lolo forest-plan component eval slot, and proved packet-local
+  is the example to inspect first for Lolo National Forest example-package
+  work; it has already rerouted `FOR-029` out of master-promotion semantics,
+  added a tracked Lolo forest-plan component eval slot, and proved packet-local
   `v1-ea-eval` plus component-eval coverage, but the forest row must stay
   `profile_eval_guidance_only` until the inherited review-scoped
   `phase-eval` direct-eval blocker on `source-set-5e65d845ce77e1a0` is

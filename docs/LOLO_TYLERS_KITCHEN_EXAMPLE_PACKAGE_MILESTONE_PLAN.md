@@ -27,6 +27,9 @@ It does not mean promoting package rows into `Document_Register_Master`.
 Current local outcome:
 
 - the full root package authority and replay identity are in place;
+- the Tyler's Kitchen packet is now the example to inspect first for Lolo
+  National Forest example-package work while this lane remains
+  `profile_eval_guidance_only`;
 - `FOR-029` is now truthfully routed as a packet-owned `named_blocker` row
   instead of a planned canonical promotion row;
 - packet-local `v1-ea-eval`, `forest-plan-component-eval`, and
@@ -40,8 +43,9 @@ Current local outcome:
 - `config/forest_specific_example_package_registry_v1.json` still routes
   `lolo-nf` as `profile_eval_guidance_only`, but the forest row now carries
   `queue_boundary_source_ids=["FOR-029"]` and the guidance note that Tyler's
-  Kitchen is the active packet boundary while the profile-eval contract remains
-  the routing floor until the inherited `phase-eval` blocker is cleared.
+  Kitchen should be reviewed first as the active Lolo example boundary while
+  the profile-eval contract remains the routing floor until the inherited
+  `phase-eval` blocker is cleared.
 - `source_library/reviews/forest_specific_example_package_eval/forest_specific_example_package_eval_results.json`
   is currently green but still shallow at `review_example_count=3`,
   `reviewer_ready_example_count=2`,
