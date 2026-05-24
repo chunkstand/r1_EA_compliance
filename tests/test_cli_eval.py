@@ -179,6 +179,25 @@ def test_real_package_review_coverage_eval_parser_accepts_manifest_and_results_d
     assert args.results_dir == Path("source_library/reviews/real_package_review_coverage_eval")
 
 
+def test_forest_specific_example_package_eval_parser_accepts_manifest_and_results_dir() -> None:
+    args = build_parser().parse_args(
+        [
+            "forest-specific-example-package-eval",
+            "--manifest",
+            "config/forest_specific_example_package_registry_v1.json",
+            "--output-dir",
+            "source_library",
+            "--results-dir",
+            "source_library/reviews/forest_specific_example_package_eval",
+        ]
+    )
+
+    assert args.command == "forest-specific-example-package-eval"
+    assert args.manifest == Path("config/forest_specific_example_package_registry_v1.json")
+    assert args.output_dir == Path("source_library")
+    assert args.results_dir == Path("source_library/reviews/forest_specific_example_package_eval")
+
+
 def test_phase_eval_handler_propagates_catalog_dir(monkeypatch) -> None:
     captured = {}
 
@@ -509,6 +528,44 @@ def test_gold_coverage_eval_handler_propagates_manifest_and_results_dir(monkeypa
     assert captured["manifest_path"] == Path("config/gold_coverage_v1.json")
     assert captured["output_dir"] == Path("library")
     assert captured["results_dir"] == Path("library/reviews/gold_coverage_eval")
+
+
+def test_forest_specific_example_package_eval_handler_propagates_manifest_and_results_dir(
+    monkeypatch,
+) -> None:
+    captured = {}
+
+    def fake_run_forest_specific_example_package_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_eval,
+        "run_forest_specific_example_package_eval",
+        fake_run_forest_specific_example_package_eval,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "forest-specific-example-package-eval",
+            "--output-dir",
+            "library",
+            "--manifest",
+            "config/forest_specific_example_package_registry_v1.json",
+            "--results-dir",
+            "library/reviews/forest_specific_example_package_eval",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["manifest_path"] == Path(
+        "config/forest_specific_example_package_registry_v1.json"
+    )
+    assert captured["results_dir"] == Path("library/reviews/forest_specific_example_package_eval")
 
 
 def test_draft_generation_eval_handler_propagates_options(monkeypatch) -> None:

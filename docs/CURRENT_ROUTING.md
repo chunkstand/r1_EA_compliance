@@ -64,6 +64,15 @@ Use this file as the short current route before opening the large append-only do
   `0` oversized code files, and this packet is now historical closeout only
 - The overall architecture umbrella is resolved after Milestone 10 Sequence 52.
 - West Reservoir stays an explicit `typed_blocked` replay quarantine.
+- Forest-specific example coverage lane: the new
+  `forest-specific-example-package-eval` aggregate gate is now green at
+  `forest_unit_count=10`, `covered_forest_count=10`,
+  `review_example_count=3`, `2 reviewer_ready + 1 typed_blocked` governed
+  examples, `distinct_governed_example_forest_count=2`, and
+  `profile_guidance_only_count=8`; the next truthful slice in
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` is adding
+  more governed real-package examples rather than changing the master or queue
+  boundary
 - Downstream gold packet status: the earlier full-canonical compliance-gold
   rebaseline remains historically resolved in commit `8e0e02b`
   (`Resolve full canonical compliance gold rebaseline`) on the pre-queue

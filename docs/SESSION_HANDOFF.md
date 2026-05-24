@@ -51,6 +51,44 @@ mistaken for shared canonical source-set input.
   `PYTHONPATH=src .venv/bin/python -m ruff check tests/test_forest_specific_example_package_registry.py tests/test_source_register_queue_resolution.py`,
   and `git diff --check`
 
+## Forest Specific Example Package Coverage Eval Added Locally
+
+This implementation slice adds the first dedicated aggregate eval for the
+parallel forest-specific example lane so typed per-forest routing is now
+machine-checked directly instead of only inferred from registry and shared-lane
+artifacts.
+
+- outcome label:
+  `added locally`; the routed packet remains
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- new aggregate owner:
+  `src/usfs_r1_ea_sources/forest_specific_example_package_eval.py` and
+  CLI command `forest-specific-example-package-eval`
+- live coverage truth:
+  `source_library/reviews/forest_specific_example_package_eval/forest_specific_example_package_eval_results.json`
+  now passes with `forest_unit_count=10`, `covered_forest_count=10`,
+  `failed_forest_count=0`, `review_example_count=3`,
+  `reviewer_ready_example_count=2`, `typed_blocked_example_count=1`,
+  `distinct_governed_example_forest_count=2`, and
+  `profile_guidance_only_count=8`
+- routing truth:
+  declared and actual routing-status counts both now stay
+  `{"profile_eval_guidance_only":8,"real_package_examples_available":1,"typed_blocked_example_available":1}`
+  with zero threshold failures and zero aggregate failure categories
+- master/catalog boundary:
+  this slice raises governance only on the parallel example lane; it does not
+  change the master workbook rows, queue truth, catalog, extraction,
+  retrieval, or downstream promotion state
+- next routing:
+  stay on the forest-specific example packet for additional governed per-forest
+  example additions; the remaining gap is example coverage depth, not queue or
+  master promotion routing
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_forest_specific_example_package_eval.py tests/test_forest_specific_example_package_registry.py tests/test_cli_eval.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/forest_specific_example_package_eval.py tests/test_forest_specific_example_package_eval.py tests/test_forest_specific_example_package_registry.py tests/test_cli_eval.py`,
+  and `git diff --check`
+
 ## Full Canonical Direct-File Queue Milestone 3 NPC Planning Record Blocker Reduced Locally
 
 This implementation slice narrows the next mixed export-backed Milestone `3`

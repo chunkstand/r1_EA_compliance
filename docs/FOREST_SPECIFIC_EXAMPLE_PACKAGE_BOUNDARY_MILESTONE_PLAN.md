@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 next when additional governed per-forest example packages are added`)
+Status: Active packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 next when additional governed per-forest example packages are added`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -26,6 +26,10 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.
+- `forest-specific-example-package-eval` now provides a fail-closed aggregate
+  contract over `config/forest_specific_example_package_registry_v1.json`,
+  reusing the governed real-package coverage lane plus the forest-plan profile
+  lane to prove explicit typed routing for every forest.
 - Under this boundary, `source-register-queue-audit` should now read
   `resolution_status_counts={"blocked":9,"planned":34,"resolved":8}` with
   `blocked_current_or_project_applicable_count=9` and
@@ -60,13 +64,16 @@ This packet exists to ensure:
 ## Scope
 
 - `config/forest_specific_example_package_registry_v1.json`
+- `src/usfs_r1_ea_sources/forest_specific_example_package_eval.py`
 - queue-ledger routing for `FOR-012` and `LEX-Q-001`
 - agent-facing routing docs:
   `docs/AGENT_START_HERE.md`, `README.md`, `docs/CURRENT_ROUTING.md`,
   `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`
+- eval registry and schema docs:
+  `docs/EVALUATION_COVERAGE_REGISTER.md` and `docs/OUTPUT_SCHEMAS.md`
 - direct-file queue and source-truth packet docs where East Crazy can no longer
   be described as a remaining canonical promotion family
-- focused contract tests for the registry and queue reroute
+- focused contract tests for the registry, aggregate eval, and queue reroute
 
 ## Owner Surfaces
 
@@ -77,6 +84,9 @@ This packet exists to ensure:
 - shared coverage contracts:
   `config/v1_real_package_review_coverage_v1.json`,
   `config/region1_forest_plan_profile_eval_coverage_v1.json`
+- aggregate eval command:
+  `src/usfs_r1_ea_sources/forest_specific_example_package_eval.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`
 - review authorities:
   `config/replay_contexts/v1-cg-ecid-compliance-review.json`,
   `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json`,
@@ -87,6 +97,8 @@ This packet exists to ensure:
   `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
 - tests:
   `tests/test_forest_specific_example_package_registry.py`,
+  `tests/test_forest_specific_example_package_eval.py`,
+  `tests/test_cli_eval.py`,
   `tests/test_source_register_queue_resolution.py`
 
 ## Routing Rules
@@ -150,6 +162,17 @@ Open the lane:
   full-canonical queue-promotion family.
 
 ### Milestone 1
+
+Add the aggregate coverage gate:
+
+- add a dedicated fail-closed aggregate eval over
+  `config/forest_specific_example_package_registry_v1.json`;
+- require explicit typed routing status coverage for every forest row;
+- reuse the real-package review coverage lane for governed example-slot truth;
+  and
+- reuse the forest-plan profile eval lane for profile-only fallback truth.
+
+### Milestone 2
 
 Broaden governed examples:
 

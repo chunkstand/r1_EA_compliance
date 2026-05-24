@@ -4341,6 +4341,44 @@ The current live replay on `2026-05-15` is green at `covered=10`,
 `phase-eval` and full-canonical `promotion-suite` gating, but it still proves profile-eval
 coverage only rather than reviewer-ready or live-package proof.
 
+## Forest-Specific Example Package Eval Outputs
+
+Default manifest: `config/forest_specific_example_package_registry_v1.json`
+
+Default path:
+`source_library/reviews/forest_specific_example_package_eval/`
+
+The `forest-specific-example-package-eval` command writes:
+
+- `forest_specific_example_package_eval_results.json`
+
+The aggregate registry has schema version `forest-specific-example-package-registry-v1` and
+records:
+
+- manifest identity, a parallel-surface note, and shared contract surfaces for the real-package
+  review coverage manifest and the forest-plan profile eval manifest
+- `coverage_thresholds` for required forest count, minimum governed example counts, distinct
+  governed-forest diversity, maximum profile-only routing count, and maximum failed-forest count
+- `review_examples`, each naming the governed review ID, expected contract status, coverage slot,
+  applicable forest IDs, and tracked review artifact families an agent should read
+- `forest_routing`, each naming exactly one Region 1 forest unit, its declared routing status,
+  applicable forest IDs, required fixture-family IDs, and the governed example IDs to consult when
+  they exist
+
+`forest_specific_example_package_eval_results.json` has schema version
+`forest-specific-example-package-eval-results-v1` and records:
+
+- manifest identity, output paths, and the resolved shared-contract manifest and results paths
+- top-level `passed`, `forest_unit_count`, `covered_forest_count`, `failed_forest_count`, and the
+  governed example counts
+- `declared_routing_status_counts` and `actual_routing_status_counts` so routing drift is explicit
+- `threshold_failures` plus aggregate `failure_category_counts`
+- `contract_checks` for manifest identity, roster uniqueness, shared-contract presence, results
+  schema identity, profile-roster alignment, and output-schema completeness
+- `forests`, each carrying the declared versus actual routing status, profile-eval presence and
+  pass state, fixture-family alignment, referenced example review results, and explicit failure
+  reasons
+
 ## Evidence Retrieval Outputs
 
 Path: `source_library/derived/<source_set_id>/retrieval/`

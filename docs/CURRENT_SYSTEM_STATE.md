@@ -59,6 +59,45 @@ Latest implementation update on 2026-05-23:
   `PYTHONPATH=src .venv/bin/python -m ruff check tests/test_forest_specific_example_package_registry.py tests/test_source_register_queue_resolution.py`,
   and `git diff --check`
 
+## Forest Specific Example Package Coverage Eval Added Locally
+
+Latest implementation update on 2026-05-23:
+
+- routed packet:
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- boundary outcome:
+  the parallel forest-specific example lane now has its own fail-closed
+  aggregate eval instead of relying only on indirect registry and shared-lane
+  checks
+- new aggregate owner:
+  `src/usfs_r1_ea_sources/forest_specific_example_package_eval.py` and
+  `forest-specific-example-package-eval`
+- live eval truth:
+  `source_library/reviews/forest_specific_example_package_eval/forest_specific_example_package_eval_results.json`
+  now passes with `forest_unit_count=10`, `covered_forest_count=10`,
+  `failed_forest_count=0`, `review_example_count=3`,
+  `2 reviewer_ready + 1 typed_blocked` governed examples,
+  `distinct_governed_example_forest_count=2`, and
+  `profile_guidance_only_count=8`
+- routing truth:
+  declared and actual routing counts both now stay
+  `{"profile_eval_guidance_only":8,"real_package_examples_available":1,"typed_blocked_example_available":1}`
+  with zero threshold failures and zero aggregate failure categories
+- master/catalog boundary:
+  this slice does not change `Document_Register_Master`, queue counts, the
+  active catalog, or downstream promotion truth; it raises governance on the
+  parallel example lane only
+- next routing:
+  stay on `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+  for additional governed per-forest example additions, with Flathead still
+  lacking a reviewer-ready benchmark and the remaining `8` forests still on
+  governed `profile_eval_guidance_only`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_forest_specific_example_package_eval.py tests/test_forest_specific_example_package_registry.py tests/test_cli_eval.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/forest_specific_example_package_eval.py tests/test_forest_specific_example_package_eval.py tests/test_forest_specific_example_package_registry.py tests/test_cli_eval.py`,
+  and `git diff --check`
+
 Routing note: the newest forest-plan identity-reconciliation closeout, full-canonical final-blocker closeout,
 downstream-freshness reduced closeout, import-completion closeout,
 operational-recovery, and gold-coverage sections below supersede older

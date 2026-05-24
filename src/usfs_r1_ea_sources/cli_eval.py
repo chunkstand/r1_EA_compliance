@@ -58,6 +58,10 @@ DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH = _module_attr(
     "real_package_review_coverage_eval",
     "DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH",
 )
+DEFAULT_FOREST_SPECIFIC_EXAMPLE_PACKAGE_REGISTRY_PATH = _module_attr(
+    "forest_specific_example_package_eval",
+    "DEFAULT_FOREST_SPECIFIC_EXAMPLE_PACKAGE_REGISTRY_PATH",
+)
 DEFAULT_GOLD_COVERAGE_MANIFEST_PATH = _module_attr(
     "gold_coverage_eval", "DEFAULT_GOLD_COVERAGE_MANIFEST_PATH"
 )
@@ -119,6 +123,13 @@ def run_real_package_review_coverage_eval(**kwargs):
     )(**kwargs)
 
 
+def run_forest_specific_example_package_eval(**kwargs):
+    return _module_attr(
+        "forest_specific_example_package_eval",
+        "run_forest_specific_example_package_eval",
+    )(**kwargs)
+
+
 def run_gold_coverage_eval(**kwargs):
     return _module_attr("gold_coverage_eval", "run_gold_coverage_eval")(**kwargs)
 
@@ -139,6 +150,7 @@ EVAL_COMMANDS = {
     "phase-eval",
     "v1-ea-eval",
     "real-package-review-coverage-eval",
+    "forest-specific-example-package-eval",
     "gold-coverage-eval",
     "promotion-suite",
 }
@@ -308,6 +320,19 @@ COMMAND_SPECS = (
         ),
     ),
     EvalCommandSpec(
+        name="forest-specific-example-package-eval",
+        help="Run the aggregate per-forest example-package coverage gate.",
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg(
+                "--manifest",
+                default=DEFAULT_FOREST_SPECIFIC_EXAMPLE_PACKAGE_REGISTRY_PATH,
+                type=Path,
+            ),
+            _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
         name="gold-coverage-eval",
         help="Run the aggregate gold coverage gate across adjudicated gold and real-review contracts.",
         arguments=(
@@ -436,6 +461,14 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
         ),
         "real-package-review-coverage-eval": EvalCommandHandler(
             run=lambda args: run_real_package_review_coverage_eval(
+                output_dir=args.output_dir,
+                manifest_path=args.manifest,
+                results_dir=args.results_dir,
+            ),
+            success_key="passed",
+        ),
+        "forest-specific-example-package-eval": EvalCommandHandler(
+            run=lambda args: run_forest_specific_example_package_eval(
                 output_dir=args.output_dir,
                 manifest_path=args.manifest,
                 results_dir=args.results_dir,

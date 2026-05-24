@@ -95,6 +95,14 @@ Current routed state on 2026-05-23:
   per-forest guidance surface in
   `config/forest_specific_example_package_registry_v1.json`. East Crazy is no
   longer the remaining export-backed family in the full-canonical queue lane.
+  The parallel example lane now also has a dedicated aggregate gate:
+  `forest-specific-example-package-eval` passes locally with
+  `forest_unit_count=10`, `covered_forest_count=10`,
+  `review_example_count=3`, `2 reviewer_ready + 1 typed_blocked` governed
+  examples, `distinct_governed_example_forest_count=2`, and
+  `profile_guidance_only_count=8`, so typed per-forest routing is now
+  machine-checked directly against the real-package review coverage lane and
+  the forest-plan profile eval lane.
   The project-specific blocker-family opener landed in commit `8b889a9`
   (`Open project-specific queue blocker packet`), the SCC structured-export
   closeout landed in commit `e78f491`

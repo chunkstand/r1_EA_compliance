@@ -41,6 +41,11 @@ The planner:
 - The registry maps examples to `applicable_to_forest_unit_ids`, tells you
   which shared eval contracts to read first, and lists the per-review artifact
   families to read for each governed example.
+- The aggregate gate for that lane is
+  `forest-specific-example-package-eval`, which writes
+  `source_library/reviews/forest_specific_example_package_eval/forest_specific_example_package_eval_results.json`
+  and proves the typed per-forest routing status still aligns with governed
+  review coverage and profile-eval fallback.
 
 ## Current Routing
 
