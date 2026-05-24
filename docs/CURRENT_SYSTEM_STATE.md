@@ -14,6 +14,51 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
+## Forest Specific Example Package Boundary Opened Locally
+
+Latest implementation update on 2026-05-23:
+
+- routed packet:
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- boundary outcome:
+  the repo now carries a tracked parallel example-package lane instead of
+  treating East Crazy as pending master-promotion work
+- new tracked contract:
+  `config/forest_specific_example_package_registry_v1.json` now covers all
+  `10` Region 1 forest units, tracks `3` governed example reviews
+  (`2 reviewer_ready`, `1 typed_blocked`), maps each example to
+  `applicable_to_forest_unit_ids`, and keeps the remaining `8` forests on
+  `profile_eval_guidance_only`
+- queue truth:
+  `FOR-012` and `LEX-Q-001` now route to
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` as
+  explicit `blocked` `named_blocker` rows; `source-register-queue-audit` now
+  passes with `resolution_status_counts={"blocked":9,"planned":34,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=9`,
+  `unresolved_current_or_project_applicable_count=32`, and governed
+  historical rows `FPS-380` and `SUP-007`
+- master/catalog boundary:
+  the active full-canonical catalog remains
+  `source-set-4fb59e9eb43045cb` with `source_count=647`,
+  `artifact_count=635`,
+  `source_partition_counts={"active_review_corpus":594,"currentness_supersession_archive":53}`,
+  and `status_counts={"downloaded_existing":635,"duplicate_content":12}`;
+  this slice changes queue governance and agent-routing surfaces only and does
+  not change `Document_Register_Master`, extraction, retrieval, or downstream
+  promotion results
+- next routing:
+  the forest-specific example packet is now the active per-forest guidance
+  lane, while
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  continues on the remaining planned direct-file roster outside East Crazy
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_forest_specific_example_package_registry.py tests/test_source_register_queue_resolution.py tests/test_source_register_schema.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check tests/test_forest_specific_example_package_registry.py tests/test_source_register_queue_resolution.py`,
+  and `git diff --check`
+
 Routing note: the newest forest-plan identity-reconciliation closeout, full-canonical final-blocker closeout,
 downstream-freshness reduced closeout, import-completion closeout,
 operational-recovery, and gold-coverage sections below supersede older

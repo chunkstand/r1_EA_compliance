@@ -1,0 +1,442 @@
+{
+  "schema_version": "forest-specific-example-package-registry-v1",
+  "contract_id": "region1-forest-specific-example-packages",
+  "version": "1.0.0",
+  "as_of_date": "2026-05-23",
+  "status": "parallel-forest-example-lane-opened",
+  "summary": {
+    "forest_unit_count": 10,
+    "profile_guidance_only_count": 8,
+    "review_example_count": 3,
+    "reviewer_ready_example_count": 2,
+    "typed_blocked_example_count": 1
+  },
+  "parallel_surface": {
+    "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+    "load_sheet_name": "Document_Register_Master",
+    "queue_sheet_name": "Direct_File_Capture_Queue",
+    "queue_emits_load_rows": false,
+    "note": "Forest-specific example packages stay parallel to the shared master document list and do not emit load rows into Document_Register_Master without a separate governed promotion decision."
+  },
+  "shared_contract_catalog": [
+    {
+      "shared_contract_id": "real_package_review_coverage_manifest",
+      "path": "config/v1_real_package_review_coverage_v1.json",
+      "read_purpose": "Tracked reviewer-ready and typed-blocked example review slots."
+    },
+    {
+      "shared_contract_id": "forest_plan_profile_eval_coverage_manifest",
+      "path": "config/region1_forest_plan_profile_eval_coverage_v1.json",
+      "read_purpose": "Per-forest fixture and eval coverage floor when a forest lacks a governed real package example."
+    },
+    {
+      "shared_contract_id": "agent_start_guidance",
+      "path": "docs/AGENT_START_HERE.md",
+      "read_purpose": "Top-level routing guidance for agent-driven document work."
+    },
+    {
+      "shared_contract_id": "forest_example_packet",
+      "path": "docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md",
+      "read_purpose": "Boundary rules for keeping project-specific examples parallel to the master document list."
+    },
+    {
+      "shared_contract_id": "review_packet_index_output_schema",
+      "path": "docs/OUTPUT_SCHEMAS.md",
+      "read_purpose": "Schema and validation expectations for review-packet sidecar artifacts when a package provides them."
+    }
+  ],
+  "artifact_family_catalog": [
+    {
+      "artifact_family_id": "real_package_review_coverage_slot",
+      "path_mode": "manifest_slot",
+      "path_hint": "config/v1_real_package_review_coverage_v1.json -> slots[]",
+      "read_purpose": "Expected contract status, package authority, and tracked eval file for a governed example review."
+    },
+    {
+      "artifact_family_id": "v1_review_eval",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/v1_ea_eval_results.json",
+      "read_purpose": "Review contract status and high-level eval summary."
+    },
+    {
+      "artifact_family_id": "phase_eval",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/phase_eval_results.json",
+      "read_purpose": "Cross-phase readiness and artifact-integrity gate for the review package."
+    },
+    {
+      "artifact_family_id": "applicability_validation",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/applicability/applicability_validation.json",
+      "read_purpose": "Fail-closed applicability validation for the package authority universe."
+    },
+    {
+      "artifact_family_id": "compliance_review",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/compliance_review.json",
+      "read_purpose": "Canonical compliance review findings when the package has a completed compliance lane."
+    },
+    {
+      "artifact_family_id": "compliance_review_eval",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/compliance_review_eval/compliance_review_eval_results.json",
+      "read_purpose": "Typed-blocked or replay-eval-only compliance status when canonical compliance review is intentionally unavailable."
+    },
+    {
+      "artifact_family_id": "forest_plan_component_eval",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/forest_plan_component_eval_results.json",
+      "read_purpose": "Forest plan component evaluation summary for the package."
+    },
+    {
+      "artifact_family_id": "review_packet_index",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/review_packet_index/review_packet_index.json",
+      "read_purpose": "Deterministic row ledger over the governed review packet when the package provides a full signer-facing index."
+    },
+    {
+      "artifact_family_id": "review_packet_index_validation",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/review_packet_index/review_packet_index_validation.json",
+      "read_purpose": "Fail-closed validation sidecar for the review packet index."
+    },
+    {
+      "artifact_family_id": "compliance_matrix_render_manifest",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/review_packet_index/compliance_matrix_render_manifest.json",
+      "read_purpose": "Rendered-row ledger for matrix-backed package artifacts when a full packet index is not yet present."
+    },
+    {
+      "artifact_family_id": "decision_support",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.json",
+      "read_purpose": "Responsible-official-facing synthesis over reviewed artifacts."
+    },
+    {
+      "artifact_family_id": "draft_generation",
+      "path_mode": "review_file",
+      "path_pattern": "source_library/reviews/<review_id>/draft_generation/draft_generation_package.json",
+      "read_purpose": "Governed reviewed-draft packet over existing audited artifacts."
+    },
+    {
+      "artifact_family_id": "final_qa_certification",
+      "path_mode": "review_dir",
+      "path_pattern": "source_library/reviews/<review_id>/final_qa/",
+      "read_purpose": "Final QA certification family when a package has a completed review closeout."
+    }
+  ],
+  "review_examples": [
+    {
+      "example_id": "cgnf-east-crazy-current-promotion",
+      "review_id": "v1-cg-ecid-compliance-review",
+      "forest_unit_id": "custer-gallatin-nf",
+      "forest_unit_label": "Custer Gallatin National Forest",
+      "package_label": "East Crazy Inspiration Divide Land Exchange",
+      "coverage_class_id": "current_promotion_reviewer_ready",
+      "coverage_slot_id": "east-crazies-current-promotion",
+      "expected_contract_status": "reviewer_ready",
+      "eval_file": "config/v1_ecid_real_ea_eval.json",
+      "package_authority": {
+        "replay_context_path": "config/replay_contexts/v1-cg-ecid-compliance-review.json"
+      },
+      "applicable_forest_unit_ids": [
+        "custer-gallatin-nf"
+      ],
+      "queue_lineage_source_ids": [
+        "FOR-012",
+        "LEX-Q-001"
+      ],
+      "agent_read_artifact_family_ids": [
+        "real_package_review_coverage_slot",
+        "v1_review_eval",
+        "phase_eval",
+        "applicability_validation",
+        "compliance_review",
+        "forest_plan_component_eval",
+        "review_packet_index",
+        "review_packet_index_validation",
+        "decision_support",
+        "draft_generation",
+        "final_qa_certification"
+      ],
+      "notes": "Project-specific Custer Gallatin example package. Use for forest-specific guidance only; do not promote its package rows into Document_Register_Master."
+    },
+    {
+      "example_id": "cgnf-south-plateau-expansion",
+      "review_id": "region1-expansion-south-plateau-landscape-treatment",
+      "forest_unit_id": "custer-gallatin-nf",
+      "forest_unit_label": "Custer Gallatin National Forest",
+      "package_label": "South Plateau Area Landscape Treatment Project",
+      "coverage_class_id": "expansion_reviewer_ready",
+      "coverage_slot_id": "south-plateau-reviewer-ready",
+      "expected_contract_status": "reviewer_ready",
+      "eval_file": "config/v1_south_plateau_real_ea_eval.json",
+      "package_authority": {
+        "replay_context_path": "config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json"
+      },
+      "applicable_forest_unit_ids": [
+        "custer-gallatin-nf"
+      ],
+      "queue_lineage_source_ids": [],
+      "agent_read_artifact_family_ids": [
+        "real_package_review_coverage_slot",
+        "v1_review_eval",
+        "phase_eval",
+        "applicability_validation",
+        "compliance_review",
+        "forest_plan_component_eval",
+        "compliance_matrix_render_manifest"
+      ],
+      "notes": "Supplemental reviewer-ready expansion package for Custer Gallatin. Use after East Crazy when a second project style is helpful."
+    },
+    {
+      "example_id": "flathead-west-reservoir-typed-blocked",
+      "review_id": "west-reservoir-67436",
+      "forest_unit_id": "flathead-nf",
+      "forest_unit_label": "Flathead National Forest",
+      "package_label": "West Reservoir Land Exchange",
+      "coverage_class_id": "alternate_package_typed_blocked",
+      "coverage_slot_id": "west-reservoir-typed-blocked",
+      "expected_contract_status": "typed_blocked",
+      "eval_file": "config/v1_west_reservoir_real_ea_eval.json",
+      "package_authority": {
+        "replay_context_path": "config/replay_contexts/west-reservoir-67436.json"
+      },
+      "applicable_forest_unit_ids": [
+        "flathead-nf"
+      ],
+      "queue_lineage_source_ids": [],
+      "agent_read_artifact_family_ids": [
+        "real_package_review_coverage_slot",
+        "v1_review_eval",
+        "phase_eval",
+        "applicability_validation",
+        "compliance_review_eval",
+        "forest_plan_component_eval"
+      ],
+      "notes": "Typed-blocked Flathead example package. Read it as a governed blocked example, not as a reviewer-ready benchmark."
+    }
+  ],
+  "forest_routing": [
+    {
+      "forest_unit_id": "custer-gallatin-nf",
+      "forest_unit_label": "Custer Gallatin National Forest",
+      "routing_status": "real_package_examples_available",
+      "applicable_to_forest_unit_ids": [
+        "custer-gallatin-nf"
+      ],
+      "primary_example_id": "cgnf-east-crazy-current-promotion",
+      "supplemental_example_ids": [
+        "cgnf-south-plateau-expansion"
+      ],
+      "shared_contract_ids": [
+        "forest_plan_profile_eval_coverage_manifest",
+        "real_package_review_coverage_manifest",
+        "review_packet_index_output_schema"
+      ],
+      "required_fixture_family_ids": [
+        "selected_profile_component_eval_seed"
+      ],
+      "queue_boundary_source_ids": [
+        "FOR-012",
+        "LEX-Q-001"
+      ],
+      "guidance_note": "Use the East Crazy package first; South Plateau is the alternate reviewer-ready expansion example for the same forest."
+    },
+    {
+      "forest_unit_id": "beaverhead-deerlodge-nf",
+      "forest_unit_label": "Beaverhead-Deerlodge National Forest",
+      "routing_status": "profile_eval_guidance_only",
+      "applicable_to_forest_unit_ids": [
+        "beaverhead-deerlodge-nf"
+      ],
+      "primary_example_id": null,
+      "supplemental_example_ids": [],
+      "shared_contract_ids": [
+        "forest_plan_profile_eval_coverage_manifest"
+      ],
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "management_area_positive",
+        "supporting_route_positive",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative",
+        "selected_profile_compliance"
+      ],
+      "queue_boundary_source_ids": [],
+      "guidance_note": "No governed Beaverhead-Deerlodge real package example exists yet; use the forest-plan profile eval contract as the routing floor."
+    },
+    {
+      "forest_unit_id": "bitterroot-nf",
+      "forest_unit_label": "Bitterroot National Forest",
+      "routing_status": "profile_eval_guidance_only",
+      "applicable_to_forest_unit_ids": [
+        "bitterroot-nf"
+      ],
+      "primary_example_id": null,
+      "supplemental_example_ids": [],
+      "shared_contract_ids": [
+        "forest_plan_profile_eval_coverage_manifest"
+      ],
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
+      ],
+      "queue_boundary_source_ids": [],
+      "guidance_note": "No governed Bitterroot real package example exists yet; use the tracked profile fixtures for applicability and forest-plan guidance."
+    },
+    {
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "forest_unit_label": "Dakota Prairie Grasslands",
+      "routing_status": "profile_eval_guidance_only",
+      "applicable_to_forest_unit_ids": [
+        "dakota-prairie-grasslands"
+      ],
+      "primary_example_id": null,
+      "supplemental_example_ids": [],
+      "shared_contract_ids": [
+        "forest_plan_profile_eval_coverage_manifest"
+      ],
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
+      ],
+      "queue_boundary_source_ids": [],
+      "guidance_note": "No governed Dakota Prairie example package exists yet; stay on the profile-eval floor until one is added."
+    },
+    {
+      "forest_unit_id": "flathead-nf",
+      "forest_unit_label": "Flathead National Forest",
+      "routing_status": "typed_blocked_example_available",
+      "applicable_to_forest_unit_ids": [
+        "flathead-nf"
+      ],
+      "primary_example_id": "flathead-west-reservoir-typed-blocked",
+      "supplemental_example_ids": [],
+      "shared_contract_ids": [
+        "forest_plan_profile_eval_coverage_manifest",
+        "real_package_review_coverage_manifest"
+      ],
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "management_area_positive",
+        "supporting_route_positive",
+        "currentness_positive",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative",
+        "selected_profile_compliance"
+      ],
+      "queue_boundary_source_ids": [],
+      "guidance_note": "The only governed Flathead example is West Reservoir and it remains typed-blocked; use it as a bounded cautionary example alongside the profile-eval floor."
+    },
+    {
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "forest_unit_label": "Helena-Lewis and Clark National Forest",
+      "routing_status": "profile_eval_guidance_only",
+      "applicable_to_forest_unit_ids": [
+        "helena-lewis-and-clark-nf"
+      ],
+      "primary_example_id": null,
+      "supplemental_example_ids": [],
+      "shared_contract_ids": [
+        "forest_plan_profile_eval_coverage_manifest"
+      ],
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
+      ],
+      "queue_boundary_source_ids": [],
+      "guidance_note": "No governed Helena-Lewis and Clark real package example exists yet; use the tracked profile fixtures for routing guidance."
+    },
+    {
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "forest_unit_label": "Idaho Panhandle National Forests",
+      "routing_status": "profile_eval_guidance_only",
+      "applicable_to_forest_unit_ids": [
+        "idaho-panhandle-nfs"
+      ],
+      "primary_example_id": null,
+      "supplemental_example_ids": [],
+      "shared_contract_ids": [
+        "forest_plan_profile_eval_coverage_manifest"
+      ],
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
+      ],
+      "queue_boundary_source_ids": [],
+      "guidance_note": "No governed Idaho Panhandle real package example exists yet; stay on the profile-eval floor until one is added."
+    },
+    {
+      "forest_unit_id": "kootenai-nf",
+      "forest_unit_label": "Kootenai National Forest",
+      "routing_status": "profile_eval_guidance_only",
+      "applicable_to_forest_unit_ids": [
+        "kootenai-nf"
+      ],
+      "primary_example_id": null,
+      "supplemental_example_ids": [],
+      "shared_contract_ids": [
+        "forest_plan_profile_eval_coverage_manifest"
+      ],
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
+      ],
+      "queue_boundary_source_ids": [],
+      "guidance_note": "No governed Kootenai real package example exists yet; use the profile-eval fixtures as the only approved guidance surface."
+    },
+    {
+      "forest_unit_id": "lolo-nf",
+      "forest_unit_label": "Lolo National Forest",
+      "routing_status": "profile_eval_guidance_only",
+      "applicable_to_forest_unit_ids": [
+        "lolo-nf"
+      ],
+      "primary_example_id": null,
+      "supplemental_example_ids": [],
+      "shared_contract_ids": [
+        "forest_plan_profile_eval_coverage_manifest"
+      ],
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
+      ],
+      "queue_boundary_source_ids": [],
+      "guidance_note": "No governed Lolo real package example exists yet; the profile-eval contract remains the routing floor."
+    },
+    {
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "forest_unit_label": "Nez Perce-Clearwater National Forests",
+      "routing_status": "profile_eval_guidance_only",
+      "applicable_to_forest_unit_ids": [
+        "nez-perce-clearwater-nfs"
+      ],
+      "primary_example_id": null,
+      "supplemental_example_ids": [],
+      "shared_contract_ids": [
+        "forest_plan_profile_eval_coverage_manifest"
+      ],
+      "required_fixture_family_ids": [
+        "scope_positive",
+        "scope_positive_with_ambiguous_context",
+        "custer_hard_negative",
+        "non_selected_non_custer_hard_negative"
+      ],
+      "queue_boundary_source_ids": [],
+      "guidance_note": "No governed Nez Perce-Clearwater real package example exists yet; use the profile-eval contract until a real package is added."
+    }
+  ]
+}

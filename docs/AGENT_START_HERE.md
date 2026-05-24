@@ -30,6 +30,18 @@ The planner:
 - Active workbook: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`
 - Active workbook table: `Document_Register_Master`
 
+## Parallel Example Guidance
+
+- Forest-specific example packages are not part of
+  `Document_Register_Master`.
+- For benchmark/example-package work, read
+  `config/forest_specific_example_package_registry_v1.json` and
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` before
+  pulling review artifacts.
+- The registry maps examples to `applicable_to_forest_unit_ids`, tells you
+  which shared eval contracts to read first, and lists the per-review artifact
+  families to read for each governed example.
+
 ## Current Routing
 
 - `docs/CURRENT_ROUTING.md` is the concise first stop for live repo routing.

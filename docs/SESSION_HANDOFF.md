@@ -7,6 +7,50 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Forest Specific Example Package Boundary Opened Locally
+
+This implementation slice opens a new parallel example-package lane so
+forest-specific benchmark packages stay available to agents without being
+mistaken for shared canonical source-set input.
+
+- outcome label:
+  `opened locally`; the new routed packet is
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- new tracked contract:
+  `config/forest_specific_example_package_registry_v1.json` now covers all
+  `10` Region 1 forest units, tracks `3` governed example reviews
+  (`2 reviewer_ready`, `1 typed_blocked`), and keeps the remaining `8`
+  forests on `profile_eval_guidance_only`
+- queue and routing truth:
+  `FOR-012` and `LEX-Q-001` now route to
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` as
+  explicit `blocked` `named_blocker` rows; `source-register-queue-audit` now
+  passes with `resolution_status_counts={"blocked":9,"planned":34,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=9`,
+  `unresolved_current_or_project_applicable_count=32`, and governed
+  historical rows `FPS-380` and `SUP-007`
+- master/catalog boundary:
+  the active full-canonical catalog remains
+  `source-set-4fb59e9eb43045cb` with `source_count=647`,
+  `artifact_count=635`,
+  `source_partition_counts={"active_review_corpus":594,"currentness_supersession_archive":53}`,
+  and `status_counts={"downloaded_existing":635,"duplicate_content":12}`;
+  this slice changes queue governance and agent routing only and does not
+  change the master workbook rows, catalog, extraction, retrieval, or
+  downstream promotion state
+- next routing:
+  the forest-specific example packet is now active for additional governed
+  per-forest example additions, while
+  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+  continues on the remaining planned direct-file roster outside East Crazy
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-diff --legacy-workbook usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx --legacy-register config/r1_forest_plan_document_register_draft.csv --canonical-workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_forest_specific_example_package_registry.py tests/test_source_register_queue_resolution.py tests/test_source_register_schema.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check tests/test_forest_specific_example_package_registry.py tests/test_source_register_queue_resolution.py`,
+  and `git diff --check`
+
 ## Full Canonical Direct-File Queue Milestone 3 NPC Planning Record Blocker Reduced Locally
 
 This implementation slice narrows the next mixed export-backed Milestone `3`

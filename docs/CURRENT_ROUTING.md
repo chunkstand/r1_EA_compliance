@@ -5,6 +5,9 @@ Use this file as the short current route before opening the large append-only do
 ## First Stops
 
 - Document-routing work: `docs/AGENT_START_HERE.md`
+- Forest-specific example guidance:
+  `config/forest_specific_example_package_registry_v1.json` and
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Live system truth: `README.md`, then `docs/CURRENT_SYSTEM_STATE.md`
 - Recent closeout and next slice: `docs/SESSION_HANDOFF.md`
 - Recent upstream closeout:
@@ -12,8 +15,11 @@ Use this file as the short current route before opening the large append-only do
 - Recent source-truth closeout: `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
 - Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
 - Next executable packet:
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- Adjacent active queue packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - Active blocker packets:
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`,
   `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
   `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, and
@@ -130,14 +136,18 @@ Use this file as the short current route before opening the large append-only do
   `FINAL-Q-LOLO-001` to
   `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, routes
   `FINAL-Q-NPC-001` to
-  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`, and
+  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`,
   routes `PROG-011`, `PROG-012`, and `PROG-013` as explicit `blocked`
-  placeholders. `source-register-queue-audit` now passes with
-  `resolution_status_counts={"blocked":7,"planned":36,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=7`,
-  `unresolved_current_or_project_applicable_count=34`, and the same `2`
-  historical/noncurrent rows (`FPS-380`, `SUP-007`); the next routed slice
-  remains Milestone `3` for the remaining export-backed family `LEX-Q-001`.
+  placeholders, and now routes the East Crazy example rows `FOR-012` and
+  `LEX-Q-001` to
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` as
+  explicit `blocked` example-package rows. `source-register-queue-audit` now
+  passes with `resolution_status_counts={"blocked":9,"planned":34,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=9`,
+  `unresolved_current_or_project_applicable_count=32`, and the same `2`
+  historical/noncurrent rows (`FPS-380`, `SUP-007`); East Crazy no longer
+  sits in the full-canonical queue packet as a remaining export-backed master
+  promotion family.
   West Reservoir remains an intentional `typed_blocked` replay quarantine
   rather than a promotion blocker
 - Ad hoc full-canonical `phase-eval` status: do not treat the

@@ -79,16 +79,22 @@ Current routed state on 2026-05-23:
   `FINAL-Q-LOLO-001` to
   `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, routes
   `FINAL-Q-NPC-001` to
-  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`, and
+  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`,
   routes the project-specific placeholder family `PROG-011`, `PROG-012`, and
   `PROG-013` to
   `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
-  as explicit `blocked` rows. `source-register-queue-audit` now passes with
-  `resolution_status_counts={"blocked":7,"planned":36,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=7`,
-  `unresolved_current_or_project_applicable_count=34`, the same `2`
-  governed historical rows (`FPS-380`, `SUP-007`), and the next routed slice
-  remains Milestone `3` for the remaining export-backed family `LEX-Q-001`.
+  as explicit `blocked` rows, and now routes East Crazy queue rows `FOR-012`
+  and `LEX-Q-001` to
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` so the
+  project package stays parallel to the shared master document list.
+  `source-register-queue-audit` now passes with
+  `resolution_status_counts={"blocked":9,"planned":34,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=9`,
+  `unresolved_current_or_project_applicable_count=32`, the same `2`
+  governed historical rows (`FPS-380`, `SUP-007`), and a new tracked
+  per-forest guidance surface in
+  `config/forest_specific_example_package_registry_v1.json`. East Crazy is no
+  longer the remaining export-backed family in the full-canonical queue lane.
   The project-specific blocker-family opener landed in commit `8b889a9`
   (`Open project-specific queue blocker packet`), the SCC structured-export
   closeout landed in commit `e78f491`
@@ -102,8 +108,10 @@ Current routed state on 2026-05-23:
   family for `FINAL-Q-LOLO-001` in commit `2d7d7c2`
   (`Open Lolo Pinyon blocker packet`); the latest slice also opened the NPC
   planning-record blocker family for `FINAL-Q-NPC-001` in commit `2625aa2`
-  (`Open NPC planning-record blocker packet`); the earlier Milestone `2`
-  direct-file promotion closeout remains commit `85f087b`
+  (`Open NPC planning-record blocker packet`). The newest active packet is now
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`, which
+  keeps example packages parallel to the master and routes them by applicable
+  forest. The earlier Milestone `2` direct-file promotion closeout remains commit `85f087b`
   (`Resolve direct-file queue Milestone 2`).
 - The downstream full-canonical compliance-gold packet is now resolved
   historically on pre-queue source set `source-set-f775524ab233ff27`:

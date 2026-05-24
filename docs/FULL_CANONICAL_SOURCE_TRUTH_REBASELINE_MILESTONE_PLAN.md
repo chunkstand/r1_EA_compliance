@@ -184,18 +184,21 @@ truth instead of the older `343`-row active-review subset.
 - Workbook queue census on 2026-05-23 now shows all `51`
   `Direct_File_Capture_Queue` rows preserved for audit lineage; `49` classify
   as current or project-applicable, `8` are now governed `resolved`
-  promotions, `6` are explicit `blocked` rows, `35`
+  promotions, `9` are explicit `blocked` rows, `32`
   current/project-applicable rows remain unresolved in the planned roster,
   and `2` are explicitly historical/noncurrent (`FPS-380` and `SUP-007`).
 - `config/direct_file_readiness_contract_v1.json` still records queue status `phase0_freeze` and
   defines queue rows as non-load until direct-file promotion or explicit exclusion.
 - `config/source_register_queue_resolution_ledger_v1.json` and
   `source-register-queue-audit` now lock the queue roster to the governed
-  post-LOLO-blocker state with
-  `resolution_status_counts={"blocked":6,"planned":37,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=6`,
-  `unresolved_current_or_project_applicable_count=35`, and the same `2`
-  governed historical rows.
+  post-example-package-reroute state with
+  `resolution_status_counts={"blocked":9,"planned":34,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=9`,
+  `unresolved_current_or_project_applicable_count=32`, and the same `2`
+  governed historical rows. `FOR-012` and `LEX-Q-001` now route to
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` because
+  East Crazy remains project-specific example guidance rather than shared
+  canonical source truth.
 - `tests/test_extraction_accuracy.py` already proves the fail-closed negative case:
   wrapper pages are not admissible when a row requires a direct document artifact.
 - The downstream packet
