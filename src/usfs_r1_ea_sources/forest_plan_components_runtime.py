@@ -300,6 +300,17 @@ def _component_finding(
             rationale = "The component is applicable and the EA package contains an explicit plan-consistency determination."
         else:
             rationale = "The component is applicable and the EA package contains matching evidence."
+    elif _requires_reviewer_resolution_without_scope_binding(
+        component=component,
+        package_determination=package_determination,
+    ):
+        applicability_status = "needs_reviewer_resolution"
+        finding_status = "needs_reviewer_resolution"
+        rationale = (
+            "The component inventory does not deterministically bind this standard to a "
+            "resolved geography, management area, or overlay, so reviewer resolution is "
+            "required before treating it as applicable."
+        )
     else:
         applicability_status = "applicable"
         finding_status = "gap"
@@ -360,6 +371,20 @@ def _component_finding(
             finding_status=finding_status,
         ),
     }
+
+
+def _requires_reviewer_resolution_without_scope_binding(
+    *,
+    component: dict,
+    package_determination: dict | None,
+) -> bool:
+    return (
+        component["component_type"] == "standard"
+        and not component.get("geographic_area_ids")
+        and not component.get("management_area_ids")
+        and not component.get("overlay_ids")
+        and package_determination is None
+    )
 
 
 def _compliance_status(*, component: dict, finding_status: str) -> str:

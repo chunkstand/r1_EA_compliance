@@ -1,0 +1,207 @@
+{
+  "schema_version": "applicability-adjudication-template-v0",
+  "adjudication_id": "region1-example-lolo-tylers-kitchen-66344-applicability-adjudication",
+  "created_at": "2026-05-24T18:47:46Z",
+  "review_id": "region1-example-lolo-tylers-kitchen-66344",
+  "source_set_id": "source-set-5e65d845ce77e1a0",
+  "decisions_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_decisions.jsonl",
+  "applicability_decisions_sha256": "85db4797f04a0791b3aed8754570ebf1b46390896fcb18b9de71b4d51f6823cb",
+  "allowed_final_statuses": [
+    "applicable",
+    "not_applicable"
+  ],
+  "allowed_dispositions": [
+    "human_applicable",
+    "human_not_applicable",
+    "pending"
+  ],
+  "resolved_dispositions": [
+    "human_applicable",
+    "human_not_applicable"
+  ],
+  "required_adjudication_fields": [
+    "adjudicated_at",
+    "adjudicated_by",
+    "source_type",
+    "rationale",
+    "supporting_citation_refs"
+  ],
+  "summary": {
+    "schema_version": "applicability-adjudication-template-summary-v0",
+    "created_at": "2026-05-24T18:47:46Z",
+    "review_id": "region1-example-lolo-tylers-kitchen-66344",
+    "source_set_id": "source-set-5e65d845ce77e1a0",
+    "decision_count": 67,
+    "adjudication_item_count": 4,
+    "pending_item_count": 0,
+    "decisions_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_decisions.jsonl",
+    "decisions_sha256": "85db4797f04a0791b3aed8754570ebf1b46390896fcb18b9de71b4d51f6823cb",
+    "output_path": "config/applicability_adjudications/region1-example-lolo-tylers-kitchen-66344.json",
+    "markdown_path": "/tmp/applicability_adjudication_worklist.md",
+    "instructions": "Replayable adjudication for the four Tyler's Kitchen applicability conflicts after live source-set and package review."
+  },
+  "items": [
+    {
+      "item_id": "applicability-adjudication-item:9f1b002c3a46711a",
+      "decision_id": "fccebe617df7a4c44bb92f88",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:region1_forest_plan_source_records:region1_forest_plan_source_records_authority_template",
+      "authority_category": "forest_plan",
+      "authority_document_role": "forest_plan",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "basis_type": "unresolved_evidence_conflict",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:region1_forest_plan_source_records:region1_forest_plan_source_records_authority_template",
+        "decision_id": "fccebe617df7a4c44bb92f88",
+        "status": "needs_adjudication"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "allowed_final_statuses": [
+        "applicable",
+        "not_applicable"
+      ],
+      "allowed_dispositions": [
+        "human_applicable",
+        "human_not_applicable",
+        "pending"
+      ],
+      "adjudicated_at": "2026-05-24T18:52:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: the Tyler's Kitchen package repeatedly evaluates Lolo Forest Plan standards, desired conditions, management areas, and forest-plan consistency. The isolated `No Management Area` table cue narrows one acreage slice and does not negate the broader forest-plan and overlay authority family implicated by the project.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-003 (ca40081e3ef5)",
+        "EA-PACKAGE-031 (ddcc91d5c270)",
+        "EA-PACKAGE-051 (88b6e15699f5)",
+        "R1PLAN-lolo-nf-01 (8572aa43ddae)"
+      ],
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "applicability-adjudication-item:184ea092ee2cf23f",
+      "decision_id": "adbdf2d03a6648680bf9280a",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "basis_type": "unresolved_evidence_conflict",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
+        "decision_id": "adbdf2d03a6648680bf9280a",
+        "status": "needs_adjudication"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "allowed_final_statuses": [
+        "applicable",
+        "not_applicable"
+      ],
+      "allowed_dispositions": [
+        "human_applicable",
+        "human_not_applicable",
+        "pending"
+      ],
+      "adjudicated_at": "2026-05-24T18:52:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: the package contains lynx, grizzly, listed-species, habitat, biological-assessment, and biological-opinion context that squarely triggers species-supporting review. Species-specific `no effect` and `no habitat` statements narrow individual taxa or critical-habitat determinations and do not negate the broader species authority family.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-017 (74a936fc567f)",
+        "EA-PACKAGE-038 (4f718996a7ee)",
+        "EA-PACKAGE-050 (01073a1e6a36)",
+        "EA-PACKAGE-054 (4ddaae382862)",
+        "R1EA-064 (18c912e31fa3)",
+        "R1EA-068 (e9b76942b577)"
+      ],
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "applicability-adjudication-item:85dba664d1c01a11",
+      "decision_id": "472790020adc26558cc4dcb9",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "basis_type": "unresolved_evidence_conflict",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
+        "decision_id": "472790020adc26558cc4dcb9",
+        "status": "needs_adjudication"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "allowed_final_statuses": [
+        "applicable",
+        "not_applicable"
+      ],
+      "allowed_dispositions": [
+        "human_applicable",
+        "human_not_applicable",
+        "pending"
+      ],
+      "adjudicated_at": "2026-05-24T18:52:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: Tyler's Kitchen is a fuels-reduction and forest-health project with vegetation treatments, prescribed fire, wildfire-risk analysis, and restoration actions. The `no vegetation treatment` and `no timber harvest` phrases are no-action or unsuitable-lands context and do not negate the governing proposed-action trigger for the vegetation and wildfire authority family.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-012 (e545809686b9)",
+        "EA-PACKAGE-015 (22dff39da065)",
+        "EA-PACKAGE-022 (b3c73f7c7585)",
+        "EA-PACKAGE-036 (3b2cda165d3e)",
+        "R1EA-056 (6fba4e682e0e)",
+        "R1EA-057 (38c600633e82)"
+      ],
+      "reviewer_notes": ""
+    },
+    {
+      "item_id": "applicability-adjudication-item:5273b33a67631db3",
+      "decision_id": "cba4301b1390cace8f7de153",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:wilderness_wsr_trails_designated_areas:wilderness_wsr_trails_designated_areas_authority_template",
+      "authority_category": "regulation",
+      "authority_document_role": "regulation",
+      "current_status": "needs_adjudication",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "expected_current": {
+        "basis_type": "unresolved_evidence_conflict",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:wilderness_wsr_trails_designated_areas:wilderness_wsr_trails_designated_areas_authority_template",
+        "decision_id": "cba4301b1390cace8f7de153",
+        "status": "needs_adjudication"
+      },
+      "final_status": "applicable",
+      "disposition": "human_applicable",
+      "allowed_final_statuses": [
+        "applicable",
+        "not_applicable"
+      ],
+      "allowed_dispositions": [
+        "human_applicable",
+        "human_not_applicable",
+        "pending"
+      ],
+      "adjudicated_at": "2026-05-24T18:52:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "codex_artifact_review",
+      "rationale": "Applicable for review: the package analyzes Silver King IRA overlap, Roadless Rule context, wilderness values, and related designated-area implications. The isolated `no wilderness values will be impacted` comment-response phrase narrows one effect statement and does not negate the broader wilderness, roadless, and designated-areas trigger for this project.",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-012 (e545809686b9)",
+        "EA-PACKAGE-022 (b3c73f7c7585)",
+        "EA-PACKAGE-029 (32559446efff)",
+        "R1EA-045 (ae6e9c7693ee)",
+        "R1EA-046 (a2b26cb1870a)",
+        "R1EA-047 (7a13763bd3b7)"
+      ],
+      "reviewer_notes": ""
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "applicability_status": "needs_reviewer_resolution",
+      "case_id": "lolo-unscoped-standard-open-queue",
+      "compliance_status": "needs_reviewer_resolution",
+      "component_id": "R1PLAN-lolo-nf-02-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21",
+      "component_type": "standard",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "R1PLAN-lolo-nf-02 (2eb7d9328189)"
+      ],
+      "reviewer_resolution_state": "open"
+    }
+  ],
+  "coverage_requirements": {
+    "minimum_cases_by_applicability_status": {
+      "needs_reviewer_resolution": 1
+    },
+    "minimum_cases_by_component_type": {
+      "standard": 1
+    },
+    "require_all_applicable_standards": true
+  },
+  "description": "Replay-scoped component eval for the Tyler's Kitchen Lolo example. Tracks the single raw reviewer-resolution standard that remains open in the component lane while the adjudication eval closes it for reviewer-ready forest-plan status.",
+  "eval_id": "lolo-tylers-kitchen-forest-plan-components-v0",
+  "metric_thresholds": {
+    "case_count": {
+      "min": 1
+    },
+    "compliance_status_match_rate": {
+      "min": 1.0
+    },
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "package_evidence_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "plan_source_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  },
+  "review_id": "region1-example-lolo-tylers-kitchen-66344",
+  "schema_version": "forest-plan-component-eval-v0",
+  "source_set_id": "source-set-5e65d845ce77e1a0"
+}

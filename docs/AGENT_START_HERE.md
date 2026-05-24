@@ -1,6 +1,6 @@
 # Agent Start Here
 
-Date: 2026-05-21
+Date: 2026-05-24
 
 Use this file as the first stop for agent-driven document work in this repo.
 It tells you which existing lane to use and when to refuse the request.
@@ -38,6 +38,12 @@ The planner:
   `config/forest_specific_example_package_registry_v1.json` and
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` before
   pulling review artifacts.
+- The first concrete active expansion slice in that lane is now
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
+- That Lolo packet already carries the `FOR-029` queue-boundary reroute plus
+  packet-local `v1-ea-eval` and forest-plan component coverage, but the Lolo
+  forest row still stays `profile_eval_guidance_only` until the inherited
+  review-scoped `phase-eval` blocker is cleared.
 - The registry maps examples to `applicable_to_forest_unit_ids`, tells you
   which shared eval contracts to read first, and lists the per-review artifact
   families to read for each governed example.
@@ -55,9 +61,8 @@ The planner:
   `docs/SESSION_HANDOFF.md`.
 - The umbrella architecture packet in
   `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` is now resolved
-  through Milestone 10 Sequence 52; the next routed follow-on is
-  `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md` after the
-  West Reservoir replay contract was explicitly typed-blocked and quarantined.
+  through Milestone 10 Sequence 52; use `docs/CURRENT_ROUTING.md` for the
+  live packet instead of older architecture follow-on references.
 
 ## Supported Lanes
 

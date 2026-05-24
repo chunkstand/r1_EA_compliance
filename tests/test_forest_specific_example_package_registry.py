@@ -96,6 +96,27 @@ def test_registry_queue_boundary_reroutes_east_crazy_out_of_master_promotion() -
         )
 
 
+def test_registry_keeps_lolo_profile_only_while_for_029_routes_to_active_packet() -> None:
+    registry = _load_json(REGISTRY_PATH)
+    queue_ledger = _load_json(QUEUE_LEDGER_PATH)
+
+    forest_row = next(
+        row for row in registry["forest_routing"] if row["forest_unit_id"] == "lolo-nf"
+    )
+    ledger_entries = {entry["source_id"]: entry for entry in queue_ledger["entries"]}
+    for_029 = ledger_entries["FOR-029"]
+
+    assert forest_row["routing_status"] == "profile_eval_guidance_only"
+    assert forest_row["primary_example_id"] is None
+    assert forest_row["queue_boundary_source_ids"] == ["FOR-029"]
+    assert "inherited phase-eval blocker" in forest_row["guidance_note"]
+    assert for_029["planned_disposition"] == "named_blocker"
+    assert for_029["resolution_status"] == "blocked"
+    assert for_029["blocker_packet_reference"] == (
+        "docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
+    )
+
+
 def test_registry_contract_paths_exist_and_review_patterns_stay_parameterized() -> None:
     registry = _load_json(REGISTRY_PATH)
 

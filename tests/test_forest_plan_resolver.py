@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 import json
 import tempfile
@@ -219,6 +220,56 @@ class ForestPlanResolverCoreTests(unittest.TestCase):
             validation = report["validation"]
             self.assertFalse(_check(validation, "all_applicable_standards_applied")["passed"])
 
+    def test_unscoped_standard_without_package_evidence_stays_reviewer_resolution_only(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            inventory_path = _write_unscoped_standard_inventory(
+                Path(tmp),
+                source_set_id=source_set_id,
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-unscoped-standard-reviewer-resolution",
+                component_inventory_path=inventory_path,
+            )
+
+            component_summary = result.summary["component_evaluation"]
+            self.assertTrue(component_summary["validation_passed"])
+            self.assertTrue(component_summary["reviewer_ready"])
+            self.assertEqual(
+                component_summary["finding_status_counts"],
+                {"needs_reviewer_resolution": 1},
+            )
+            self.assertEqual(component_summary["applicable_standard_count"], 0)
+            self.assertEqual(component_summary["applied_standard_count"], 0)
+            self.assertTrue(result.summary["reviewer_ready"])
+
+            report = json.loads(result.component_findings_path.read_text(encoding="utf-8"))
+            finding = report["findings"][0]
+            self.assertEqual(finding["applicability_status"], "needs_reviewer_resolution")
+            self.assertEqual(finding["finding_status"], "needs_reviewer_resolution")
+            self.assertEqual(finding["compliance_status"], "needs_reviewer_resolution")
+
+            queue = json.loads(
+                result.component_reviewer_resolution_queue_path.read_text(encoding="utf-8")
+            )
+            self.assertEqual(queue["item_count"], 1)
+            self.assertEqual(queue["items"][0]["reason"], "missing_package_evidence")
+
     def test_component_plan_consistency_yes_row_supplies_standard_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -427,3 +478,67 @@ class ForestPlanResolverCoreTests(unittest.TestCase):
             self.assertFalse(
                 _check(validation, "component_source_sets_match_review_source_set")["passed"]
             )
+
+
+def _write_unscoped_standard_inventory(path: Path, *, source_set_id: str) -> Path:
+    inventory_path = path / "unscoped_component_inventory.json"
+    source_record_id = "R1PLAN-custer-gallatin-nf-02"
+    artifact_sha256 = hashlib.sha256(source_record_id.encode("utf-8")).hexdigest()
+    component_text = (
+        "Standards (FP-STD-UNSCOPED) 01 Special prescriptions for these areas "
+        "will be developed by interdisciplinary teams that include a wildlife biologist."
+    )
+    content_sha256 = hashlib.sha256(component_text.encode("utf-8")).hexdigest()
+    source_chunk_ids = [f"chunk:{source_record_id}"]
+    inventory = {
+        "schema_version": "forest-plan-component-inventory-v0",
+        "inventory_id": "cg-unscoped-standard-inventory",
+        "source_set_id": source_set_id,
+        "components": [
+            {
+                "component_id": "cg-unscoped-std-01",
+                "forest_unit_id": "custer-gallatin-nf",
+                "plan_version": "2022",
+                "source_set_id": source_set_id,
+                "source_record_id": source_record_id,
+                "component_type": "standard",
+                "section_id": "chapter-3-unscoped-standard",
+                "section_heading": "Plan Components-Unscoped Standard",
+                "page": None,
+                "citation_label": "R1PLAN-custer-gallatin-nf-02 | test plan | artifact abc123",
+                "component_text": component_text,
+                "geographic_area_ids": [],
+                "management_area_ids": [],
+                "overlay_ids": [],
+                "resource_topics": ["special prescriptions for these areas"],
+                "activity_tags": ["wildlife biologist"],
+                "package_evidence_terms": [
+                    "special prescriptions for these areas",
+                    "interdisciplinary teams that include a wildlife biologist",
+                ],
+                "source_chunk_ids": source_chunk_ids,
+                "artifact_sha256": artifact_sha256,
+                "content_sha256": content_sha256,
+                "provenance": {
+                    "entity": {
+                        "type": "forest_plan_component",
+                        "source_record_id": source_record_id,
+                        "source_chunk_ids": source_chunk_ids,
+                        "artifact_sha256": artifact_sha256,
+                        "content_sha256": content_sha256,
+                    },
+                    "activity": {
+                        "type": "component_inventory_fixture",
+                        "created_at": "2026-05-24T00:00:00Z",
+                    },
+                    "agent": {
+                        "type": "deterministic_test_fixture",
+                        "name": "tests/test_forest_plan_resolver.py",
+                        "version": "forest-plan-component-inventory-v0",
+                    },
+                },
+            }
+        ],
+    }
+    inventory_path.write_text(json.dumps(inventory, indent=2), encoding="utf-8")
+    return inventory_path

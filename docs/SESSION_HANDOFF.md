@@ -1,11 +1,99 @@
 # Session Handoff
 
-Date: 2026-05-23
+Date: 2026-05-24
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
+
+## Lolo Tyler's Kitchen Packet Reduced Locally
+
+This implementation slice carried the active Lolo packet through the honest
+packet-local boundary, then stopped where the inherited review-scoped
+`phase-eval` gate stayed red.
+
+- outcome label:
+  `reduced locally`; the active packet remains
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- queue and routing truth:
+  `FOR-029` now routes to
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` as an explicit
+  `blocked` `named_blocker` row; `source-register-queue-audit` now passes
+  with `resolution_status_counts={"blocked":10,"planned":33,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=10`, and
+  `unresolved_current_or_project_applicable_count=31`
+- packet-local review truth:
+  `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`,
+  `config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
+  `config/forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json`,
+  `config/applicability_adjudications/region1-example-lolo-tylers-kitchen-66344.json`,
+  and
+  `config/forest_plan_component_adjudications/region1-example-lolo-tylers-kitchen-66344.json`
+  are now tracked; `v1-ea-eval` passes with
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true`; the tracked Lolo forest-plan component eval also
+  passes with `case_count=1`; and
+  `forest-plan-component-eval-coverage` now passes with
+  `required_review_count=4`, `covered_review_count=4`, and
+  `distinct_forest_count=3`
+- registry truth:
+  `config/forest_specific_example_package_registry_v1.json` still keeps
+  `lolo-nf` at `profile_eval_guidance_only`, but the forest row now carries
+  `queue_boundary_source_ids=["FOR-029"]` and the active packet guidance
+  note; `config/v1_real_package_review_coverage_v1.json` remains intentionally
+  unchanged because aggregate reviewer-ready promotion is not yet honest
+- blocker truth:
+  review-scoped `phase-eval` for
+  `region1-example-lolo-tylers-kitchen-66344` remains red with
+  `missing_direct_eval_phase_count=1` and
+  `threshold_failed_phase_count=1`; the blocking reasons are missing direct
+  extraction eval coverage plus retrieval direct-eval threshold failures on
+  `source-set-5e65d845ce77e1a0`, so Milestone 3 promotion stayed deferred
+- aggregate truth:
+  `real-package-review-coverage-eval` remains green at the pre-Lolo `3`-slot
+  baseline, and `forest-specific-example-package-eval` remains green at
+  `review_example_count=3`, `reviewer_ready_example_count=2`,
+  `typed_blocked_example_count=1`, and `profile_guidance_only_count=8`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver_scope.py tests/test_forest_plan_resolver.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py src/usfs_r1_ea_sources/forest_plan_resolver_mentions.py src/usfs_r1_ea_sources/forest_plan_resolver_validation.py tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver_scope.py tests/test_forest_plan_resolver.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library --manifest config/forest_plan_component_eval_coverage_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-queue-audit --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344`
+
+## Lolo Tyler's Kitchen Example Packet Queued Locally
+
+This docs-only planning slice opens the first standalone Milestone `2`
+follow-on under the forest-specific example package lane.
+
+- outcome label:
+  `queued locally`; the new packet is
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- selected package boundary:
+  the user-selected Lolo candidate is the root Box package
+  `Tyler's Kitchen Fuels Reduction and Forest Health Project (66344)`, not
+  only the `Decision` child folder; the root currently exposes `Decision`,
+  `Analysis`, `Consultation`, and `Scoping`
+- routing boundary:
+  `lolo-nf` still remains `profile_eval_guidance_only` in
+  `config/forest_specific_example_package_registry_v1.json`, but the next
+  queued slice now targets that exact gap instead of leaving Milestone `2`
+  generic
+- queue-boundary note:
+  the packet explicitly captures `FOR-029` as part of the Lolo example-lane
+  problem because that queue row still points at master-promotion semantics for
+  the Tyler's Kitchen project page
+- separation rule:
+  this packet does not replace or absorb
+  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`; `FINAL-Q-LOLO-001`
+  remains a separate full-canonical blocker family
+- verification:
+  `git diff --check`
 
 ## Forest Specific Example Package Boundary Opened Locally
 

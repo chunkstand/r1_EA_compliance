@@ -2117,7 +2117,7 @@
       "ambiguous_unit_terms": [
         "Lolo"
       ],
-      "active_plan_source_record_id": "R1PLAN-lolo-nf-02",
+      "active_plan_source_record_id": "FPS-298",
       "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Lolo National Forest promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
       "supporting_source_record_ids_by_role": {
         "planning_page": {
@@ -2125,31 +2125,31 @@
           "required_for": "currentness and document-set resolution"
         },
         "primary_land_management_plan": {
-          "source_record_id": "R1PLAN-lolo-nf-02",
+          "source_record_id": "FPS-298",
           "required_for": "plan component and area resolution"
         },
         "record_of_decision": {
-          "source_record_id": "R1PLAN-lolo-nf-03",
+          "source_record_id": "FPS-300",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "final_environmental_impact_statement": {
-          "source_record_id": "R1PLAN-lolo-nf-04",
+          "source_record_id": "FPS-299",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "final_environmental_impact_statement_appendices": {
-          "source_record_id": "R1PLAN-lolo-nf-05",
+          "source_record_id": "FPS-418",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_assessment": {
-          "source_record_id": "R1PLAN-lolo-nf-06",
+          "source_record_id": "FPS-419",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_opinion": {
-          "source_record_id": "R1PLAN-lolo-nf-07",
+          "source_record_id": "FPS-342",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "administrative_change": {
-          "source_record_id": "R1PLAN-lolo-nf-09",
+          "source_record_id": "FPS-421",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         }
       },
@@ -2163,10 +2163,26 @@
         "biological_opinion",
         "administrative_change"
       ],
-      "ranger_district_terms": [],
+      "ranger_district_terms": [
+        {
+          "entry_id": "district-missoula",
+          "category": "district",
+          "name": "Missoula Ranger District",
+          "aliases": []
+        }
+      ],
       "geographic_area_terms": [],
       "management_area_terms": [],
-      "overlay_terms": [],
+      "overlay_terms": [
+        {
+          "entry_id": "overlay-inventoried-roadless-area",
+          "category": "overlay",
+          "name": "Inventoried Roadless Area",
+          "aliases": [
+            "Inventoried Roadless Areas"
+          ]
+        }
+      ],
       "plan_component_types": [
         "desired_condition",
         "goal",

@@ -188,6 +188,31 @@ def load_region1_forest_plan_identity_reconciliation_registry(
     return registry
 
 
+def aliased_region1_forest_plan_source_record_ids(
+    *,
+    source_record_id: str | None = None,
+    source_record_ids: list[str] | tuple[str, ...] | None = None,
+    registry_path: Path = DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_REGISTRY_PATH,
+) -> list[str]:
+    values = _deduped_source_record_ids([source_record_id, *(source_record_ids or [])])
+    if not values:
+        return []
+    registry = load_region1_forest_plan_identity_reconciliation_registry(registry_path)
+    resolved_matches, _, canonical_source_record_ids = _registry_indexes(registry)
+    legacy_by_canonical: dict[str, list[str]] = defaultdict(list)
+    for legacy_source_record_id, canonical_source_record_id in resolved_matches.items():
+        legacy_by_canonical[canonical_source_record_id].append(legacy_source_record_id)
+
+    aliased_source_record_ids: list[str] = []
+    for value in values:
+        aliased_source_record_ids.append(value)
+        if value in resolved_matches:
+            aliased_source_record_ids.append(resolved_matches[value])
+        if value in canonical_source_record_ids:
+            aliased_source_record_ids.extend(sorted(legacy_by_canonical.get(value, ())))
+    return _deduped_source_record_ids(aliased_source_record_ids)
+
+
 def rebind_region1_forest_plan_inventory_build_manifest(
     *,
     manifest_path: Path = DEFAULT_FOREST_PLAN_INVENTORY_BUILD_MANIFEST_PATH,
@@ -436,6 +461,18 @@ def _catalog_row_urls(catalog_row: dict[str, Any]) -> set[str]:
 
 def _read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _deduped_source_record_ids(values: list[object]) -> list[str]:
+    deduped: list[str] = []
+    seen = set()
+    for value in values:
+        normalized = str(value or "").strip()
+        if not normalized or normalized in seen:
+            continue
+        seen.add(normalized)
+        deduped.append(normalized)
+    return deduped
 
 
 def _registry_indexes(

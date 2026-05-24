@@ -2,7 +2,7 @@
   "schema_version": "forest-specific-example-package-registry-v1",
   "contract_id": "region1-forest-specific-example-packages",
   "version": "1.1.0",
-  "as_of_date": "2026-05-23",
+  "as_of_date": "2026-05-24",
   "status": "parallel-forest-example-lane-opened",
   "coverage_thresholds": {
     "required_forest_unit_count": 10,
@@ -454,8 +454,10 @@
         "custer_hard_negative",
         "non_selected_non_custer_hard_negative"
       ],
-      "queue_boundary_source_ids": [],
-      "guidance_note": "No governed Lolo real package example exists yet; the profile-eval contract remains the routing floor."
+      "queue_boundary_source_ids": [
+        "FOR-029"
+      ],
+      "guidance_note": "The Tyler's Kitchen root package is the active Lolo example packet boundary and `FOR-029` is no longer treated as a master-promotion candidate, but the profile-eval contract remains the routing floor until the packet clears its inherited phase-eval blocker."
     },
     {
       "forest_unit_id": "nez-perce-clearwater-nfs",

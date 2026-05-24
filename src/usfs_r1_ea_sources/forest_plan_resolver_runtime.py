@@ -132,6 +132,11 @@ def run_forest_plan_resolver(
             index_path=index_path,
             source_set_id=source_set_id,
             required_source_record_ids=resolver_profile.required_source_record_ids,
+            optional_source_record_ids=tuple(
+                record.source_record_id
+                for role, record in resolver_profile.profile.supporting_source_record_ids_by_role.items()
+                if role == "planning_page"
+            ),
         )
         if not retrieval_readiness["passed"]:
             failed = ", ".join(

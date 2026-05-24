@@ -117,6 +117,47 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
             )
             self.assertTrue(result.summary["reviewer_ready"])
 
+    def test_profile_scope_ignores_project_external_other_forest_locations(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "The project area is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        "No new permanent or temporary roads are proposed.",
+                        (
+                            "There are no populations or individuals within the project area. "
+                            "The closest location is on the Bitterroot National Forest within the "
+                            "Sapphire Range."
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="profile-project-external-other-forest",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "custer_gallatin")
+            self.assertEqual(context["forest_unit"]["name"], "Custer Gallatin National Forest")
+            self.assertEqual(
+                [item["reason"] for item in context["unresolved_mentions"]],
+                [],
+            )
+            background_names = {
+                evidence["name"] for evidence in context["background_location_mentions"]
+            }
+            self.assertIn("Bitterroot National Forest", background_names)
+            self.assertTrue(result.summary["reviewer_ready"])
+
     def test_profile_scope_uses_header_location_and_excludes_reference_district(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -294,7 +335,8 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
                 profiles_path=profiles_path,
             )
 
-            readiness = result.summary["retrieval_readiness"]["required_source_records"]
+            retrieval_readiness = result.summary["retrieval_readiness"]
+            readiness = retrieval_readiness["required_source_records"]
             self.assertEqual(
                 readiness["required_source_record_ids"],
                 [
@@ -437,6 +479,60 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
             self.assertTrue(readiness["required_source_records"]["ready"])
             self.assertTrue(
                 _readiness_check(readiness, "retrieval_ready_for_forest_plan_resolver")["passed"]
+            )
+
+    def test_allows_missing_planning_page_when_plan_sources_are_indexed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(
+                output_dir,
+                missing_source_ids={"R1PLAN-custer-gallatin-nf-01"},
+            )
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                required_roles=[
+                    "planning_page",
+                    "primary_land_management_plan",
+                ],
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="cg-missing-planning-page",
+                profiles_path=profiles_path,
+            )
+
+            retrieval_readiness = result.summary["retrieval_readiness"]
+            readiness = retrieval_readiness["required_source_records"]
+            self.assertEqual(
+                readiness["missing_source_record_ids"],
+                ["R1PLAN-custer-gallatin-nf-01"],
+            )
+            self.assertEqual(readiness["blocking_missing_source_record_ids"], [])
+            self.assertEqual(
+                readiness["optional_missing_source_record_ids"],
+                ["R1PLAN-custer-gallatin-nf-01"],
+            )
+            self.assertTrue(readiness["ready"])
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertTrue(
+                _readiness_check(
+                    retrieval_readiness,
+                    "retrieval_ready_for_forest_plan_resolver",
+                )["passed"]
             )
 
     def test_requires_all_custer_gallatin_source_records_in_index(self) -> None:

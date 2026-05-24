@@ -14,6 +14,61 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
+## Lolo Tyler's Kitchen Packet Reduced Locally
+
+Latest implementation update on 2026-05-24:
+
+- routed packet:
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; the root Tyler's Kitchen package authority, replay
+  context, `FOR-029` queue reroute, packet-local Lolo review contracts, and
+  Lolo forest-plan component coverage are now tracked, but the packet stops
+  before registry promotion because the inherited review-scoped `phase-eval`
+  gate stays red on `source-set-5e65d845ce77e1a0`
+- queue and registry truth:
+  `FOR-029` now routes to
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` as an explicit
+  `blocked` `named_blocker` row; `source-register-queue-audit` now passes
+  with `resolution_status_counts={"blocked":10,"planned":33,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=10`,
+  `unresolved_current_or_project_applicable_count=31`, and the same governed
+  historical rows `FPS-380` and `SUP-007`; `lolo-nf` still remains
+  `profile_eval_guidance_only` in
+  `config/forest_specific_example_package_registry_v1.json`, but the row now
+  carries `queue_boundary_source_ids=["FOR-029"]` plus the active packet
+  guidance note
+- packet-local review truth:
+  `v1-ea-eval` for
+  `region1-example-lolo-tylers-kitchen-66344` now passes with
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true`; the tracked Lolo forest-plan component eval also
+  passes with `case_count=1`; and
+  `forest-plan-component-eval-coverage` now passes with
+  `required_review_count=4`, `covered_review_count=4`, and
+  `distinct_forest_count=3`
+- inherited blocker truth:
+  review-scoped `phase-eval` for
+  `region1-example-lolo-tylers-kitchen-66344` remains red with
+  `passed=false`, `reviewer_ready=false`,
+  `missing_direct_eval_phase_count=1`, and
+  `threshold_failed_phase_count=1`; the blocking reasons are missing direct
+  extraction eval coverage plus retrieval direct-eval threshold failures, so
+  promotion into `config/v1_real_package_review_coverage_v1.json` and the
+  forest-specific example registry remains deferred
+- aggregate lane truth:
+  `real-package-review-coverage-eval` stays green at the pre-Lolo `3`-slot
+  reviewer-ready/typed-blocked boundary, and
+  `forest-specific-example-package-eval` also stays green at
+  `review_example_count=3`, `reviewer_ready_example_count=2`,
+  `typed_blocked_example_count=1`, and `profile_guidance_only_count=8`
+
+Routing note: older references below that still describe the Lolo packet as
+queued-only, still report queue counts
+`resolution_status_counts={"blocked":9,"planned":34,"resolved":8}`, or still
+imply `lolo-nf` is next for immediate reviewer-ready promotion are historical
+after the 2026-05-24 Lolo reduced closeout described above.
+
 ## Forest Specific Example Package Boundary Opened Locally
 
 Latest implementation update on 2026-05-23:
@@ -88,10 +143,14 @@ Latest implementation update on 2026-05-23:
   active catalog, or downstream promotion truth; it raises governance on the
   parallel example lane only
 - next routing:
-  stay on `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
-  for additional governed per-forest example additions, with Flathead still
-  lacking a reviewer-ready benchmark and the remaining `8` forests still on
-  governed `profile_eval_guidance_only`
+  the first concrete follow-on is now
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, which aims to
+  move `lolo-nf` off `profile_eval_guidance_only` by governing the
+  `Tyler's Kitchen Fuels Reduction and Forest Health Project (66344)` package
+  as a parallel example package and rerouting `FOR-029` out of
+  master-promotion semantics; Flathead still lacks a reviewer-ready benchmark
+  and the remaining non-Lolo forests still stay on governed
+  `profile_eval_guidance_only`
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library`,
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_forest_specific_example_package_eval.py tests/test_forest_specific_example_package_registry.py tests/test_cli_eval.py tests/test_architecture_contract.py -q`,

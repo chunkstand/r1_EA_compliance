@@ -1,5 +1,5 @@
 # Current Routing
-Date: 2026-05-23
+Date: 2026-05-24
 Use this file as the short current route before opening the large append-only docs.
 
 ## First Stops
@@ -14,8 +14,8 @@ Use this file as the short current route before opening the large append-only do
   `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
 - Recent source-truth closeout: `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
 - Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
-- Next executable packet:
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- Active packet:
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - Adjacent active queue packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - Active blocker packets:
@@ -64,15 +64,18 @@ Use this file as the short current route before opening the large append-only do
   `0` oversized code files, and this packet is now historical closeout only
 - The overall architecture umbrella is resolved after Milestone 10 Sequence 52.
 - West Reservoir stays an explicit `typed_blocked` replay quarantine.
-- Forest-specific example coverage lane: the new
-  `forest-specific-example-package-eval` aggregate gate is now green at
-  `forest_unit_count=10`, `covered_forest_count=10`,
+- Forest-specific example coverage lane: `forest-specific-example-package-eval`
+  remains green at `forest_unit_count=10`, `covered_forest_count=10`,
   `review_example_count=3`, `2 reviewer_ready + 1 typed_blocked` governed
   examples, `distinct_governed_example_forest_count=2`, and
-  `profile_guidance_only_count=8`; the next truthful slice in
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` is adding
-  more governed real-package examples rather than changing the master or queue
-  boundary
+  `profile_guidance_only_count=8`; the active Lolo
+  `Tyler's Kitchen Fuels Reduction and Forest Health Project (66344)` packet
+  has already rerouted `FOR-029` out of master-promotion semantics, added a
+  tracked Lolo forest-plan component eval slot, and proved packet-local
+  `v1-ea-eval` plus component-eval coverage, but the forest row must stay
+  `profile_eval_guidance_only` until the inherited review-scoped
+  `phase-eval` direct-eval blocker on `source-set-5e65d845ce77e1a0` is
+  resolved
 - Downstream gold packet status: the earlier full-canonical compliance-gold
   rebaseline remains historically resolved in commit `8e0e02b`
   (`Resolve full canonical compliance gold rebaseline`) on the pre-queue
@@ -147,16 +150,19 @@ Use this file as the short current route before opening the large append-only do
   `FINAL-Q-NPC-001` to
   `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`,
   routes `PROG-011`, `PROG-012`, and `PROG-013` as explicit `blocked`
-  placeholders, and now routes the East Crazy example rows `FOR-012` and
-  `LEX-Q-001` to
+  placeholders, routes the East Crazy example rows `FOR-012` and `LEX-Q-001`
+  to
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` as
-  explicit `blocked` example-package rows. `source-register-queue-audit` now
-  passes with `resolution_status_counts={"blocked":9,"planned":34,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=9`,
-  `unresolved_current_or_project_applicable_count=32`, and the same `2`
+  explicit `blocked` example-package rows, and routes `FOR-029` to
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` as the active
+  Lolo example-package boundary. `source-register-queue-audit` now passes
+  with `resolution_status_counts={"blocked":10,"planned":33,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=10`,
+  `unresolved_current_or_project_applicable_count=31`, and the same `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`); East Crazy no longer
   sits in the full-canonical queue packet as a remaining export-backed master
-  promotion family.
+  promotion family, and `FOR-029` no longer presents as a planned canonical
+  promotion row.
   West Reservoir remains an intentional `typed_blocked` replay quarantine
   rather than a promotion blocker
 - Ad hoc full-canonical `phase-eval` status: do not treat the

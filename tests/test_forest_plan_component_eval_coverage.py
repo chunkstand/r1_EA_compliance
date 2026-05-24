@@ -22,7 +22,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 COMMITTED_MANIFEST = REPO_ROOT / "config" / "forest_plan_component_eval_coverage_v1.json"
 
 
-def test_committed_manifest_tracks_three_review_slots() -> None:
+def test_committed_manifest_tracks_four_review_slots() -> None:
     manifest = json.loads(COMMITTED_MANIFEST.read_text())
 
     assert manifest["schema_version"] == "forest-plan-component-eval-coverage-v1"
@@ -33,6 +33,7 @@ def test_committed_manifest_tracks_three_review_slots() -> None:
         "v1-cg-ecid-compliance-review",
         "v1-cg-ecid-source-delta-review",
         "west-reservoir-67436",
+        "region1-example-lolo-tylers-kitchen-66344",
     ]
     assert manifest["future_forest_expansion_policy"] == {
         "mode": "manifest_slots_only",
@@ -52,6 +53,12 @@ def test_committed_manifest_tracks_three_review_slots() -> None:
         slots["west-reservoir-67436"]["eval_file"]
         == "forest_plan_component_evals/west-reservoir-67436.json"
     )
+    assert (
+        slots["region1-example-lolo-tylers-kitchen-66344"]["eval_file"]
+        == "forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json"
+    )
+    assert manifest["coverage_thresholds"]["required_review_count"] == 4
+    assert manifest["coverage_thresholds"]["distinct_forest_count_min"] == 3
 
 
 def test_resolve_component_eval_file_reads_tracked_manifest_slot() -> None:

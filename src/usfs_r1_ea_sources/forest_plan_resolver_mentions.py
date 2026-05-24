@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from .forest_plan_identity_reconciliation import aliased_region1_forest_plan_source_record_ids
 from .forest_plan_resolver_location import _compiled_alias_pattern
 from .forest_plan_resolver_location import _location_evidence_role
 from .forest_plan_resolver_location import _term_found
@@ -14,18 +15,29 @@ def _plan_source_evidence(*, entry: GazetteerEntry, index_path: Path, limit: int
     if entry.source_record_id is None:
         return []
     query = " ".join(entry.terms)
-    result = query_retrieval_index(
-        index_path=index_path,
-        query=query,
-        limit=max(limit, 5),
-        document_role="forest_plan",
-        source_record_id=entry.source_record_id,
-    )
     filtered = [
         row
-        for row in result["results"]
+        for row in _query_plan_source_record_aliases(
+            index_path=index_path,
+            query=query,
+            limit=max(limit * 5, 25),
+            source_record_id=entry.source_record_id,
+            document_role="forest_plan",
+        )
         if _evidence_text_matches_entry(str(row.get("evidence_span", {}).get("text") or ""), entry)
     ]
+    if not filtered:
+        filtered = [
+            row
+            for row in _query_plan_source_record_aliases(
+                index_path=index_path,
+                query="",
+                limit=1000,
+                source_record_id=entry.source_record_id,
+                document_role="forest_plan",
+            )
+            if _evidence_text_matches_entry(str(row.get("evidence_span", {}).get("text") or ""), entry)
+        ]
     return filtered[:limit]
 
 def _supporting_plan_evidence(
@@ -82,21 +94,74 @@ def _supporting_plan_evidence(
 def _supporting_source_evidence(
     *, route: PlanEvidenceRoute, index_path: Path, limit: int
 ) -> list[dict]:
-    result = query_retrieval_index(
-        index_path=index_path,
-        query=route.source_query,
-        limit=max(limit, 5),
-        source_record_id=route.source_record_id,
-    )
     filtered = [
         row
-        for row in result["results"]
+        for row in _query_plan_source_record_aliases(
+            index_path=index_path,
+            query=route.source_query,
+            limit=max(limit, 5),
+            source_record_id=route.source_record_id,
+        )
         if _supporting_evidence_matches_route(
             str(row.get("evidence_span", {}).get("text") or ""),
             route,
         )
     ]
     return filtered[:limit]
+
+
+def _query_plan_source_record_aliases(
+    *,
+    index_path: Path,
+    query: str,
+    limit: int,
+    source_record_id: str,
+    document_role: str | None = None,
+) -> list[dict]:
+    results = []
+    for aliased_source_record_id in aliased_region1_forest_plan_source_record_ids(
+        source_record_id=source_record_id
+    ):
+        result = query_retrieval_index(
+            index_path=index_path,
+            query=query,
+            limit=limit,
+            document_role=document_role,
+            source_record_id=aliased_source_record_id,
+        )
+        results.extend(result["results"])
+    return _dedupe_retrieval_rows(results)
+
+
+def _dedupe_retrieval_rows(rows: list[dict]) -> list[dict]:
+    deduped_by_key: dict[tuple[object, ...], dict] = {}
+    for row in rows:
+        evidence_span = row.get("evidence_span") if isinstance(row.get("evidence_span"), dict) else {}
+        key = (
+            row.get("source_record_id"),
+            row.get("chunk_id"),
+            evidence_span.get("source_char_start"),
+            evidence_span.get("source_char_end"),
+            evidence_span.get("text"),
+        )
+        existing = deduped_by_key.get(key)
+        if existing is None or float(row.get("score") or 0.0) > float(existing.get("score") or 0.0):
+            deduped_by_key[key] = row
+    return sorted(
+        deduped_by_key.values(),
+        key=lambda row: (
+            -float(row.get("score") or 0.0),
+            str(row.get("source_record_id") or ""),
+            int(
+                (
+                    row.get("evidence_span")
+                    if isinstance(row.get("evidence_span"), dict)
+                    else {}
+                ).get("source_char_start")
+                or 0
+            ),
+        ),
+    )
 
 def _supporting_evidence_matches_route(text: str, route: PlanEvidenceRoute) -> bool:
     return any(_term_found(text, term) for term in route.source_terms)

@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
-Date: 2026-05-23
-Status: Active packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 next when additional governed per-forest example packages are added`)
+Date: 2026-05-24
+Status: Active packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 is now reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed but inherited review-scoped phase-eval gates still block promotion`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -20,6 +20,11 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   - South Plateau as the supplemental reviewer-ready expansion example for
     `custer-gallatin-nf`
   - West Reservoir as the governed `typed_blocked` example for `flathead-nf`
+- The active Lolo follow-on has now rerouted `FOR-029` to
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, added the
+  tracked replay context plus Lolo review/component eval contracts, and made
+  the Lolo forest-plan component slot load-bearing in
+  `config/forest_plan_component_eval_coverage_v1.json`.
 - The remaining `8` forests now route through
   `config/region1_forest_plan_profile_eval_coverage_v1.json` as
   `profile_eval_guidance_only` until a governed real package example exists.
@@ -31,9 +36,9 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   reusing the governed real-package coverage lane plus the forest-plan profile
   lane to prove explicit typed routing for every forest.
 - Under this boundary, `source-register-queue-audit` should now read
-  `resolution_status_counts={"blocked":9,"planned":34,"resolved":8}` with
-  `blocked_current_or_project_applicable_count=9` and
-  `unresolved_current_or_project_applicable_count=32`.
+  `resolution_status_counts={"blocked":10,"planned":33,"resolved":8}` with
+  `blocked_current_or_project_applicable_count=10` and
+  `unresolved_current_or_project_applicable_count=31`.
 
 ## Goal
 
@@ -181,3 +186,13 @@ Broaden governed examples:
 - keep existing `profile_eval_guidance_only` rows truthful until that happens;
   and
 - update the registry and focused tests in the same slice.
+
+Current active follow-on:
+
+- `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is the first
+  standalone Milestone 2 packet. It now owns the user-selected Lolo
+  `Tyler's Kitchen Fuels Reduction and Forest Health Project (66344)` package,
+  the related `FOR-029` queue-boundary reroute out of master-promotion
+  semantics, and the tracked Lolo forest-plan component slot, but it remains
+  reduced on the inherited review-scoped `phase-eval` direct-eval blocker for
+  `source-set-5e65d845ce77e1a0`.

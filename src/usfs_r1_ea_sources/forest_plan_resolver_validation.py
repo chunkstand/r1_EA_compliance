@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from .forest_plan_identity_reconciliation import aliased_region1_forest_plan_source_record_ids
 from .forest_plan_resolver_models import _is_profile_scope
 from .forest_plan_resolver_models import ForestPlanResolverProfile
 from .review_package_support import indexed_source_record_counts
@@ -106,14 +107,21 @@ def _check_required_custer_source_records_indexed(
             "details": {"not_applicable": True},
         }
     readiness = context.get("source_record_readiness") or {}
-    missing = list(readiness.get("missing_source_record_ids") or [])
+    if "blocking_missing_source_record_ids" in readiness:
+        missing = list(readiness.get("blocking_missing_source_record_ids") or [])
+    else:
+        missing = list(readiness.get("missing_source_record_ids") or [])
     return {
         "name": "required_custer_source_records_indexed",
         "passed": bool(readiness.get("ready")) and not missing,
         "details": {
             "required_source_record_ids": readiness.get("required_source_record_ids", []),
             "indexed_source_record_counts": readiness.get("indexed_source_record_counts", {}),
-            "missing_source_record_ids": missing,
+            "missing_source_record_ids": list(readiness.get("missing_source_record_ids") or []),
+            "blocking_missing_source_record_ids": missing,
+            "optional_missing_source_record_ids": list(
+                readiness.get("optional_missing_source_record_ids") or []
+            ),
         },
     }
 
@@ -298,15 +306,52 @@ def _retrieval_readiness_report(
     index_path: Path,
     source_set_id: str,
     required_source_record_ids: tuple[str, ...] = (),
+    optional_source_record_ids: tuple[str, ...] = (),
 ) -> dict:
     summary_path, validation_path, summary, validation = retrieval_artifacts(index_path)
-    indexed_source_counts = indexed_source_record_counts(index_path, required_source_record_ids)
+    alias_source_record_ids_by_required_id = {
+        source_record_id: tuple(
+            aliased_region1_forest_plan_source_record_ids(source_record_id=source_record_id)
+        )
+        for source_record_id in (*required_source_record_ids, *optional_source_record_ids)
+    }
+    indexed_alias_source_counts = indexed_source_record_counts(
+        index_path,
+        tuple(
+            sorted(
+                {
+                    aliased_source_record_id
+                    for aliased_source_record_ids in alias_source_record_ids_by_required_id.values()
+                    for aliased_source_record_id in aliased_source_record_ids
+                }
+            )
+        ),
+    )
+    indexed_source_counts = {
+        source_record_id: max(
+            (
+                indexed_alias_source_counts.get(aliased_source_record_id, 0)
+                for aliased_source_record_id in alias_source_record_ids_by_required_id.get(
+                    source_record_id,
+                    (source_record_id,),
+                )
+            ),
+            default=0,
+        )
+        for source_record_id in required_source_record_ids
+    }
     missing_source_record_ids = [
         source_record_id
         for source_record_id in required_source_record_ids
         if indexed_source_counts.get(source_record_id, 0) <= 0
     ]
-    required_source_records_ready = bool(required_source_record_ids) and not missing_source_record_ids
+    optional_source_record_id_set = set(optional_source_record_ids)
+    blocking_missing_source_record_ids = [
+        source_record_id
+        for source_record_id in missing_source_record_ids
+        if source_record_id not in optional_source_record_id_set
+    ]
+    required_source_records_ready = bool(required_source_record_ids) and not blocking_missing_source_record_ids
     resolver_ready = bool(
         summary
         and (
@@ -318,7 +363,24 @@ def _retrieval_readiness_report(
     required_source_records = {
         "required_source_record_ids": list(required_source_record_ids),
         "indexed_source_record_counts": indexed_source_counts,
+        "source_record_id_aliases": {
+            source_record_id: list(aliased_source_record_ids)
+            for source_record_id, aliased_source_record_ids in (
+                alias_source_record_ids_by_required_id.items()
+            )
+        },
+        "indexed_alias_source_record_counts": {
+            source_record_id: indexed_alias_source_counts.get(source_record_id, 0)
+            for source_record_id in sorted(indexed_alias_source_counts)
+        },
         "missing_source_record_ids": missing_source_record_ids,
+        "blocking_missing_source_record_ids": blocking_missing_source_record_ids,
+        "optional_source_record_ids": list(optional_source_record_ids),
+        "optional_missing_source_record_ids": [
+            source_record_id
+            for source_record_id in missing_source_record_ids
+            if source_record_id in optional_source_record_id_set
+        ],
         "ready": required_source_records_ready,
     }
     checks = [

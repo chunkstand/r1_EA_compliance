@@ -328,6 +328,32 @@ class ForestPlanProfileTests(unittest.TestCase):
             )
             self.assertEqual(len(coverage["fixtures"]), 4, forest_unit_id)
 
+    def test_lolo_profile_uses_canonical_plan_sources_and_live_context_terms(self) -> None:
+        profile = load_forest_plan_profile("lolo-nf")
+
+        self.assertEqual(profile.active_plan_source_record_id, "FPS-298")
+        self.assertEqual(
+            profile.required_source_record_ids,
+            (
+                "R1PLAN-lolo-nf-01",
+                "FPS-298",
+                "FPS-300",
+                "FPS-299",
+                "FPS-418",
+                "FPS-419",
+                "FPS-342",
+                "FPS-421",
+            ),
+        )
+        self.assertIn(
+            "Missoula Ranger District",
+            [entry.name for entry in profile.ranger_district_terms],
+        )
+        self.assertIn(
+            "Inventoried Roadless Area",
+            [entry.name for entry in profile.overlay_terms],
+        )
+
     def test_profiles_cover_all_tracked_region1_readiness_units(self) -> None:
         profiles = load_forest_plan_profiles()
         readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))

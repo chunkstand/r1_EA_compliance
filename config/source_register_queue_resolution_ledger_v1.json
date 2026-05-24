@@ -505,14 +505,14 @@
       "target_successor_source_id": null
     },
     {
-      "blocker_packet_reference": null,
+      "blocker_packet_reference": "docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md",
       "currentness_class": "current_or_project_applicable",
       "document_title": "Tyler's Kitchen Fuels Reduction and Forest Health Project",
       "excel_row": 39,
-      "planned_disposition": "promote_direct_file",
+      "planned_disposition": "named_blocker",
       "queue_reason": "Folder/listing/manual-export placeholder",
       "resolution_required": "Replace source page/folder/manual placeholder with direct document/file URL; then promote to Document_Register_Master if necessary.",
-      "resolution_status": "planned",
+      "resolution_status": "blocked",
       "source_id": "FOR-029",
       "source_url": "https://www.fs.usda.gov/r01/lolo/projects/66344",
       "target_successor_source_id": null

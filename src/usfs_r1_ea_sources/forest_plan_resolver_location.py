@@ -25,6 +25,8 @@ def _location_evidence_role(evidence: dict) -> str:
     if _is_negative_location_context(evidence):
         return "negative_location"
     decision_text = _location_context_text(evidence)
+    if _has_project_external_location_context(decision_text):
+        return "background_reference"
     if _has_incidental_forest_unit_context(decision_text):
         return "background_reference"
     if _is_affirmative_location_context(evidence) or _is_header_project_location_context(evidence):
@@ -32,6 +34,20 @@ def _location_evidence_role(evidence: dict) -> str:
     if evidence.get("category") in {"district", "forest_unit"}:
         return "background_reference"
     return "generic_mention"
+
+
+def _has_project_external_location_context(text: str) -> bool:
+    return bool(
+        re.search(
+            r"\bclosest\s+(?:known\s+)?locations?\b.{0,160}\b(?:is|are)\b.{0,120}\b"
+            r"(?:on|in|within)\b",
+            text,
+        )
+        or re.search(
+            r"\bnumerous\s+detections?\b.{0,200}\b(?:on|in|within)\b",
+            text,
+        )
+    )
 
 def _is_negative_location_context(evidence: dict) -> bool:
     text = _location_decision_window(evidence)

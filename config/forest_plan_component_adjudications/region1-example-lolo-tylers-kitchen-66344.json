@@ -1,0 +1,85 @@
+{
+  "schema_version": "forest-plan-component-adjudication-v0",
+  "adjudication_id": "region1-example-lolo-tylers-kitchen-66344-component-adjudication",
+  "title": "Forest Plan Component Adjudication",
+  "created_at": "2026-05-24T18:55:35.082068Z",
+  "review_id": "region1-example-lolo-tylers-kitchen-66344",
+  "source_set_id": "source-set-5e65d845ce77e1a0",
+  "component_findings_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_component_findings.json",
+  "reviewer_resolution_queue_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_reviewer_resolution_queue.json",
+  "adjudication": {
+    "status": "completed",
+    "method": "tracked_replay_artifact_review",
+    "adjudicated_by": [
+      "codex"
+    ],
+    "adjudicated_at": "2026-05-24T18:58:00Z",
+    "notes": "Tyler's Kitchen closes the lone Lolo component queue item as a scope false positive rather than a real EA omission."
+  },
+  "allowed_dispositions": [
+    "applicability_false_positive",
+    "component_inventory_overreach",
+    "evidence_linking_miss",
+    "package_section_chunking_miss",
+    "pending",
+    "retrieval_miss",
+    "true_ea_omission"
+  ],
+  "resolved_dispositions": [
+    "applicability_false_positive",
+    "component_inventory_overreach",
+    "evidence_linking_miss",
+    "package_section_chunking_miss",
+    "retrieval_miss",
+    "true_ea_omission"
+  ],
+  "summary": {
+    "schema_version": "forest-plan-component-adjudication-template-summary-v0",
+    "created_at": "2026-05-24T18:55:35.081889Z",
+    "review_id": "region1-example-lolo-tylers-kitchen-66344",
+    "source_set_id": "source-set-5e65d845ce77e1a0",
+    "review_dir": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344",
+    "component_findings_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_component_findings.json",
+    "reviewer_resolution_queue_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_reviewer_resolution_queue.json",
+    "queue_item_count": 1,
+    "template_item_count": 1,
+    "pending_item_count": 0,
+    "queue_reason_counts": {
+      "missing_package_evidence": 1
+    },
+    "component_type_counts": {
+      "standard": 1
+    },
+    "output_path": "config/forest_plan_component_adjudications/region1-example-lolo-tylers-kitchen-66344.json",
+    "markdown_path": "/tmp/region1-example-lolo-tylers-kitchen-66344-component-adjudication.md",
+    "instructions": "Tracked replay adjudication for the single Tyler's Kitchen Lolo component queue item."
+  },
+  "items": [
+    {
+      "item_id": "R1PLAN-lolo-nf-02-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21-missing_package_evidence",
+      "finding_id": "R1PLAN-lolo-nf-02-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21-finding",
+      "component_id": "R1PLAN-lolo-nf-02-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21",
+      "disposition": "applicability_false_positive",
+      "expected_current": {
+        "applicability_status": "needs_reviewer_resolution",
+        "compliance_status": "needs_reviewer_resolution",
+        "finding_status": "needs_reviewer_resolution",
+        "queue_reason": "missing_package_evidence"
+      },
+      "component_source_ref": {
+        "source_record_id": "R1PLAN-lolo-nf-02"
+      },
+      "plan_source_evidence_refs": [
+        {
+          "source_record_id": "R1PLAN-lolo-nf-02"
+        }
+      ],
+      "adjudicated_at": "2026-05-24T18:58:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "source_type": "package_scope_review",
+      "rationale": "The queued Lolo standard is an unscoped legacy prescription with no matched management-area, overlay, or package evidence binding in the Tyler's Kitchen review artifacts. Treating it as applicable would overstate project scope, so this queue item closes as an applicability false positive rather than a real EA omission."
+    }
+  ]
+}

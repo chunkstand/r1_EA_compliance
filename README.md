@@ -14,7 +14,7 @@ normalized request packet, routes it to the supported document lane, and writes 
 artifacts under `source_library/document_plans/<request_id>/` without generating canonical lane
 outputs.
 
-Current routed state on 2026-05-23:
+Current routed state on 2026-05-24:
 
 - Live local catalog is now `source-set-4fb59e9eb43045cb` in
   `source_library/catalog/source_set_manifest.json` with
@@ -88,13 +88,14 @@ Current routed state on 2026-05-23:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` so the
   project package stays parallel to the shared master document list.
   `source-register-queue-audit` now passes with
-  `resolution_status_counts={"blocked":9,"planned":34,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=9`,
-  `unresolved_current_or_project_applicable_count=32`, the same `2`
+  `resolution_status_counts={"blocked":10,"planned":33,"resolved":8}`,
+  `blocked_current_or_project_applicable_count=10`,
+  `unresolved_current_or_project_applicable_count=31`, the same `2`
   governed historical rows (`FPS-380`, `SUP-007`), and a new tracked
   per-forest guidance surface in
   `config/forest_specific_example_package_registry_v1.json`. East Crazy is no
-  longer the remaining export-backed family in the full-canonical queue lane.
+  longer the remaining export-backed family in the full-canonical queue lane,
+  and `FOR-029` no longer appears as a planned canonical promotion row.
   The parallel example lane now also has a dedicated aggregate gate:
   `forest-specific-example-package-eval` passes locally with
   `forest_unit_count=10`, `covered_forest_count=10`,
@@ -103,6 +104,13 @@ Current routed state on 2026-05-23:
   `profile_guidance_only_count=8`, so typed per-forest routing is now
   machine-checked directly against the real-package review coverage lane and
   the forest-plan profile eval lane.
+  The active Lolo packet is now
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`: it scopes the
+  `lolo-nf` Tyler's Kitchen package as a governed example-package boundary,
+  captures the `FOR-029` queue reroute out of master-promotion semantics, and
+  adds a tracked Lolo forest-plan component eval slot, but it stops honestly
+  at the inherited review-scoped `phase-eval` blocker on
+  `source-set-5e65d845ce77e1a0` rather than promoting `lolo-nf` prematurely.
   The project-specific blocker-family opener landed in commit `8b889a9`
   (`Open project-specific queue blocker packet`), the SCC structured-export
   closeout landed in commit `e78f491`
@@ -117,9 +125,11 @@ Current routed state on 2026-05-23:
   (`Open Lolo Pinyon blocker packet`); the latest slice also opened the NPC
   planning-record blocker family for `FINAL-Q-NPC-001` in commit `2625aa2`
   (`Open NPC planning-record blocker packet`). The newest active packet is now
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`, which
-  keeps example packages parallel to the master and routes them by applicable
-  forest. The earlier Milestone `2` direct-file promotion closeout remains commit `85f087b`
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, while
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` remains
+  the umbrella lane that keeps example packages parallel to the master and
+  routes them by applicable forest. The earlier Milestone `2` direct-file
+  promotion closeout remains commit `85f087b`
   (`Resolve direct-file queue Milestone 2`).
 - The downstream full-canonical compliance-gold packet is now resolved
   historically on pre-queue source set `source-set-f775524ab233ff27`:
