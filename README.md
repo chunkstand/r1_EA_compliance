@@ -76,9 +76,17 @@ Current routed state on 2026-05-25:
   contract itself now fails closed at selector entry with
   `current_promotion_contract.selector_passed=false`,
   `matched_slot_count=0`, `eligible_slot_count=0`, and
-  `passing_slot_count=0`. The remaining gap is review-local replay repair, not
-  another full-canonical or contract rebind, and the next truthful slice is
-  Milestone `1` ECID reviewer-ready replay repair.
+  `passing_slot_count=0`. Milestone `1` of that replay-repair packet is now
+  also reduced locally: ECID applicability replay now correctly rebuilds a
+  `396`-candidate authority universe with `329` Custer Gallatin component
+  candidates from the active Region 1 batch inventory and respects governed
+  legacy-to-current source-record reconciliation, but the same run still fails
+  on `candidates_have_source_evidence_available` (`failure_count=21`) and
+  `authority_family_template_candidates_cover_config`
+  (`missing_source_record_count=19`). The next truthful slice is now Milestone
+  `0` of `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`,
+  which owns the active authority-source binding blocker upstream of
+  packet-local ECID replay.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs

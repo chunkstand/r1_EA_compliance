@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from pathlib import Path
 
+from .applicability_candidate_assembly import selected_forest_plan_inventory_components
 from .applicability_contract_support import rule_source_record_id
 from .applicability_contract_support import string_groups
 from .applicability_contract_support import strings
@@ -445,6 +446,11 @@ def _check_forest_plan_component_candidates(
         profile.active_plan_source_record_id
         for profile in profiles.profiles
     }
+    required_profile_source_ids = sorted(
+        source_id
+        for source_id in forest_plan_rule_source_ids
+        if source_id and source_id in profile_source_ids
+    )
     inventory_profile_source_id = None
     inventory_forest_unit_id = ""
     if isinstance(component_inventory, dict):
@@ -456,26 +462,21 @@ def _check_forest_plan_component_candidates(
                 ).active_plan_source_record_id
             except KeyError:
                 inventory_profile_source_id = None
-    required = bool(
-        inventory_profile_source_id
-        and inventory_profile_source_id in forest_plan_rule_source_ids
-        and inventory_profile_source_id in profile_source_ids
+    required = bool(required_profile_source_ids)
+    selected_component_records = selected_forest_plan_inventory_components(
+        source_set_id=source_set_id,
+        profiles=profiles,
+        component_inventory=component_inventory,
+        allowed_forest_plan_source_record_ids=required_profile_source_ids,
     )
     component_candidates = [
         candidate
         for candidate in candidate_authorities
         if candidate.get("candidate_authority_type") == "forest_plan_component"
     ]
-    component_records = (
-        component_inventory.get("components", [])
-        if isinstance(component_inventory, dict)
-        and component_inventory.get("source_set_id") == source_set_id
-        and required
-        and isinstance(component_inventory.get("components"), list)
-        else []
-    )
     passed = (not required and not component_candidates) or (
-        bool(component_records) and len(component_candidates) == len(component_records)
+        bool(selected_component_records)
+        and len(component_candidates) == len(selected_component_records)
     )
     return {
         "name": "forest_plan_component_candidates_use_profile_inventory",
@@ -486,11 +487,18 @@ def _check_forest_plan_component_candidates(
                 source_id for source_id in forest_plan_rule_source_ids if source_id
             ),
             "profile_active_plan_source_record_ids": sorted(profile_source_ids),
+            "required_profile_source_record_ids": required_profile_source_ids,
             "inventory_forest_unit_id": inventory_forest_unit_id or None,
             "inventory_profile_source_record_id": inventory_profile_source_id,
-            "component_inventory_present": bool(component_records),
-            "component_inventory_count": len(component_records),
+            "component_inventory_present": bool(selected_component_records),
+            "component_inventory_count": len(selected_component_records),
             "component_candidate_count": len(component_candidates),
+            "selected_component_forest_unit_ids": sorted(
+                {
+                    profile.forest_unit_id
+                    for profile, _component in selected_component_records
+                }
+            ),
         },
     }
 

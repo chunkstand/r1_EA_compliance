@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from .records import aliased_source_record_ids
+
 
 def authority_document_role(rule_or_template: dict, catalog_record: dict | None) -> str | None:
     source_filters = (
@@ -111,3 +113,22 @@ def source_record_summary(record: dict | None) -> dict:
         "content_type": record.get("content_type"),
         "retrieved_at": record.get("retrieved_at"),
     }
+
+
+def catalog_resolved_source_record_ids(
+    source_record_ids: list[str] | tuple[str, ...],
+    *,
+    catalog_by_source_id: dict[str, dict],
+) -> list[str]:
+    resolved: list[str] = []
+    for source_record_id in strings(source_record_ids):
+        catalog_matches = [
+            candidate_id
+            for candidate_id in aliased_source_record_ids([source_record_id])
+            if candidate_id in catalog_by_source_id
+        ]
+        if catalog_matches:
+            resolved.extend(catalog_matches)
+            continue
+        resolved.append(source_record_id)
+    return dedupe_strings(resolved)

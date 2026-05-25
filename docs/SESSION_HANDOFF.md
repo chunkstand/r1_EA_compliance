@@ -7,6 +7,49 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Real Package Review Replay Repair Milestone 1 Reduced Locally
+
+This implementation slice fixed the active ECID applicability-universe routing
+bugs, then stopped where the remaining blocker became governed active-source
+authority binding rather than packet-local replay drift.
+
+- outcome label:
+  `reduced locally`; the ECID replay lane now gets past the old mixed Region 1
+  component inventory failure and legacy source-ID alias failure, but it still
+  cannot truthfully resume reviewer-ready replay on the active source set
+- implementation truth:
+  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`,
+  `src/usfs_r1_ea_sources/applicability_authority_family_templates.py`,
+  `src/usfs_r1_ea_sources/applicability_contract_support.py`,
+  `src/usfs_r1_ea_sources/applicability_authority_universe_builder.py`, and
+  `src/usfs_r1_ea_sources/applicability_authority_universe_contracts.py` now
+  scope mixed Region 1 component inventories to the review forest via the
+  rule-pack forest-plan source set and now resolve governed legacy source IDs
+  against active catalog aliases before candidate/source-evidence checks run
+- live replay truth:
+  `applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`
+  now rebuilds `candidate_authority_count=396` with
+  `forest_plan_component_candidate_count=329`,
+  `selected_component_forest_unit_ids=["custer-gallatin-nf"]`, and
+  `validation_passed=false`
+- remaining blocker truth:
+  the only failing authority-universe checks are now
+  `candidates_have_source_evidence_available` with `failure_count=21` and
+  `authority_family_template_candidates_cover_config` with
+  `missing_source_record_count=19`; existing governed reconciliation already
+  covers examples such as `R1EA-150`, but active-source binding gaps remain
+  for unresolved families that still reference records such as `R1EA-092`,
+  `R1EA-032`, `R1EA-037`, `R1EA-041`,
+  `R1PLAN-custer-gallatin-nf-06`, and
+  `R1PLAN-region-1-species-overlay-01`
+- next truthful slice:
+  Milestone `0` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_applicability_candidate_assembly.py tests/test_applicability.py tests/test_applicability_authority_family_templates.py tests/test_applicability_authority_universe_contracts.py tests/test_applicability_authority_universe_builder.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/applicability_contract_support.py src/usfs_r1_ea_sources/applicability_candidate_assembly.py src/usfs_r1_ea_sources/applicability_authority_family_templates.py src/usfs_r1_ea_sources/applicability_authority_universe_builder.py src/usfs_r1_ea_sources/applicability_authority_universe_contracts.py tests/test_applicability_candidate_assembly.py tests/test_applicability.py tests/test_applicability_authority_family_templates.py`
+
 ## Real Package Review Replay Repair Milestone 0 Reduced Locally
 
 This implementation slice carried the new replay-repair packet through the

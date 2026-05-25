@@ -146,6 +146,7 @@ def build_authority_universe_snapshot(
         template_set=authority_family_templates,
         catalog_by_source_id=catalog_by_source_id,
     )
+    forest_plan_rule_source_ids = _forest_plan_rule_source_record_ids(base_rule_pack)
     component_candidates = forest_plan_component_candidates(
         source_set_id=source_set_id,
         profiles=profiles,
@@ -153,6 +154,7 @@ def build_authority_universe_snapshot(
         component_inventory_path=forest_plan_component_inventory_path,
         component_inventory_sha256=component_inventory_sha256,
         catalog_by_source_id=catalog_by_source_id,
+        allowed_forest_plan_source_record_ids=forest_plan_rule_source_ids,
     )
     candidate_authorities = sorted(
         [*rule_candidates, *authority_family_candidates, *component_candidates],
@@ -440,6 +442,15 @@ def _default_forest_plan_component_inventory_path(output_dir: Path, source_set_i
         / "forest_plan_components"
         / "component_inventory.json"
     )
+
+
+def _forest_plan_rule_source_record_ids(rule_pack: dict) -> set[str]:
+    return {
+        str(rule.get("authority_source_record_id") or "").strip()
+        for rule in rule_pack.get("rules", [])
+        if rule.get("authority_category") == "forest_plan"
+        and str(rule.get("authority_source_record_id") or "").strip()
+    }
 
 
 def _records_by_key(records: list[dict], key: str) -> dict[str, list[dict]]:

@@ -178,9 +178,15 @@ layer rather than the slot-driven contract layer.
 - The active follow-on is
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, which owns ECID
   and South Plateau packet-local replay repair on
-  `source-set-4fb59e9eb43045cb`. Milestone `0` of that packet is now reduced
-  locally, and the next truthful slice is Milestone `1` ECID reviewer-ready
-  replay repair.
+  `source-set-4fb59e9eb43045cb`. Milestone `1` of that packet is now reduced
+  locally: ECID applicability replay now correctly rebuilds a
+  `396`-candidate authority universe with `329` Custer Gallatin component
+  candidates from the active Region 1 batch inventory and honors governed
+  legacy-to-current source-record reconciliation, but the same run still fails
+  on `candidates_have_source_evidence_available` (`failure_count=21`) and
+  `authority_family_template_candidates_cover_config`
+  (`missing_source_record_count=19`). The next truthful slice is now
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

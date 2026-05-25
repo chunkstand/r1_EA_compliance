@@ -166,6 +166,62 @@ class ApplicabilityCandidateAssemblyTests(unittest.TestCase):
             True,
         )
 
+    def test_rule_template_candidates_use_reconciled_catalog_source_record_ids(self) -> None:
+        candidates = rule_template_candidates(
+            source_set_id="source-set-test",
+            rule_pack={
+                "rule_pack_id": "unit-nepa-ea",
+                "version": "0.1.0",
+                "baseline_source_record_ids": ["R1EA-150"],
+                "rules": [
+                    {
+                        "id": "land_exchange_policy",
+                        "title": "Land exchange policy",
+                        "question": "Does the package require land-exchange policy review?",
+                        "requirement": "Evaluate source-backed land-exchange policy.",
+                        "severity": "medium",
+                        "authority_category": "agency_policy",
+                        "authority_source_record_id": "R1EA-150",
+                        "authority_document_role": "agency_policy",
+                        "applicability_mode": "baseline",
+                        "package_query": "land exchange",
+                        "package_terms": ["land exchange"],
+                        "source_query": "land exchange policy source",
+                        "source_filters": {
+                            "document_role": "agency_policy",
+                            "source_record_id": "R1EA-150",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id={
+                "LEX-USFS-002": _catalog_record(
+                    "LEX-USFS-002",
+                    "agency_policy",
+                    "agency_policy",
+                )
+            },
+            source_claim_links_by_rule={"land_exchange_policy": [{"link_id": "link:policy"}]},
+            source_claim_gaps_by_rule={},
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], ["LEX-USFS-002"])
+        self.assertEqual(
+            candidate["source_role_filters"]["source_record_ids"],
+            ["LEX-USFS-002"],
+        )
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            ["LEX-USFS-002"],
+        )
+        self.assertEqual(
+            candidate["graph_expansion_contract"]["neighbor_filters"]["source_record_ids"],
+            ["LEX-USFS-002"],
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
     def test_forest_plan_component_candidates_include_profile_and_inventory_contracts(
         self,
     ) -> None:
@@ -271,6 +327,88 @@ class ApplicabilityCandidateAssemblyTests(unittest.TestCase):
             {"forest_plan_scope_miss", "component_trigger_miss"},
         )
 
+    def test_forest_plan_component_candidates_filter_region_inventory_to_allowed_forest(
+        self,
+    ) -> None:
+        source_set_id = "source-set-test"
+        catalog_by_source_id = {
+            "R1PLAN-custer-gallatin-nf-02": _catalog_record(
+                "R1PLAN-custer-gallatin-nf-02",
+                "forest_plan",
+                "forest_plan",
+            ),
+            "R1PLAN-flathead-nf-02": _catalog_record(
+                "R1PLAN-flathead-nf-02",
+                "forest_plan",
+                "forest_plan",
+            ),
+        }
+        candidates = forest_plan_component_candidates(
+            source_set_id=source_set_id,
+            profiles=_profile_collection_with_flathead(),
+            component_inventory={
+                "inventory_id": "region1-inventory",
+                "source_set_id": source_set_id,
+                "forest_unit_id": None,
+                "plan_version": None,
+                "components": [
+                    {
+                        "component_id": "R1PLAN-custer-gallatin-nf-02-STD-01",
+                        "source_record_id": "R1PLAN-custer-gallatin-nf-02",
+                        "forest_unit_id": "custer-gallatin-nf",
+                        "plan_version": "2022",
+                        "component_type": "standard",
+                        "section_id": "std-01",
+                        "section_heading": "Plan Components",
+                        "artifact_sha256": hashlib.sha256(b"cg-component").hexdigest(),
+                        "source_chunk_ids": ["chunk:cg-std-01"],
+                        "package_evidence_terms": ["road"],
+                        "resource_topics": ["access"],
+                        "activity_tags": ["construction"],
+                        "geographic_area_ids": [],
+                        "management_area_ids": ["mgmt-crazy-mountains-bca"],
+                        "overlay_ids": [],
+                    },
+                    {
+                        "component_id": "R1PLAN-flathead-nf-02-GDL-01",
+                        "source_record_id": "R1PLAN-flathead-nf-02",
+                        "forest_unit_id": "flathead-nf",
+                        "plan_version": "2018",
+                        "component_type": "guideline",
+                        "section_id": "gdl-01",
+                        "section_heading": "Plan Components",
+                        "artifact_sha256": hashlib.sha256(b"flat-component").hexdigest(),
+                        "source_chunk_ids": ["chunk:flat-gdl-01"],
+                        "package_evidence_terms": ["trail"],
+                        "resource_topics": ["hydrology"],
+                        "activity_tags": ["maintenance"],
+                        "geographic_area_ids": [],
+                        "management_area_ids": ["mgmt-jewel-basin-hiking-area"],
+                        "overlay_ids": [],
+                    },
+                ],
+            },
+            component_inventory_path=Path(
+                "source_library/derived/source-set-test/forest_plan_components/component_inventory.json"
+            ),
+            component_inventory_sha256="inventory-sha256",
+            catalog_by_source_id=catalog_by_source_id,
+            allowed_forest_plan_source_record_ids={"R1PLAN-custer-gallatin-nf-02"},
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(
+            candidate["candidate_authority_id"],
+            "forest-plan-component:region1-inventory:R1PLAN-custer-gallatin-nf-02-STD-01",
+        )
+        self.assertEqual(candidate["forest_plan"]["forest_unit_id"], "custer-gallatin-nf")
+        self.assertEqual(candidate["forest_plan"]["plan_version"], "2022")
+        self.assertEqual(
+            candidate["forest_plan"]["active_plan_source_record_id"],
+            "R1PLAN-custer-gallatin-nf-02",
+        )
+
     def test_forest_plan_component_candidates_ignore_inventory_outside_source_set(self) -> None:
         candidates = forest_plan_component_candidates(
             source_set_id="source-set-test",
@@ -321,6 +459,37 @@ def _profile_collection() -> ForestPlanProfileCollection:
     return ForestPlanProfileCollection(
         schema_version="forest-plan-profiles-v0",
         profiles=(profile,),
+        known_other_forest_units=(),
+    )
+
+
+def _profile_collection_with_flathead() -> ForestPlanProfileCollection:
+    custer = _profile_collection().profiles[0]
+    flathead = ForestPlanProfile(
+        forest_unit_id="flathead-nf",
+        forest_unit_names=("Flathead National Forest",),
+        ambiguous_unit_terms=(),
+        active_plan_source_record_id="R1PLAN-flathead-nf-02",
+        supporting_source_record_ids_by_role={
+            "forest_plan": ForestPlanSourceRecord(
+                role="forest_plan",
+                source_record_id="R1PLAN-flathead-nf-02",
+                required_for="active plan",
+            ),
+        },
+        required_readiness_source_roles=("forest_plan",),
+        ranger_district_terms=(),
+        geographic_area_terms=(),
+        management_area_terms=(),
+        overlay_terms=(),
+        plan_component_types=("standard", "guideline"),
+        supporting_record_trigger_rules=(),
+        review_topics=("forest_plan",),
+        profile_data_source="unit-test",
+    )
+    return ForestPlanProfileCollection(
+        schema_version="forest-plan-profiles-v0",
+        profiles=(custer, flathead),
         known_other_forest_units=(),
     )
 

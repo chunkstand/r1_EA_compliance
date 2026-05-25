@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import Collection
 from pathlib import Path
 
 from .applicability_contract_support import authority_document_role
 from .applicability_contract_support import baseline_source_record_ids
+from .applicability_contract_support import catalog_resolved_source_record_ids
 from .applicability_contract_support import rule_source_record_id
 from .applicability_contract_support import source_record_summary
 from .applicability_contract_support import string_groups
@@ -67,7 +69,14 @@ def rule_template_candidates(
     candidates = []
     for rule in rule_pack.get("rules", []):
         rule_id = str(rule.get("id") or "")
-        source_record_id = rule_source_record_id(rule)
+        declared_source_record_id = rule_source_record_id(rule)
+        source_record_ids = catalog_resolved_source_record_ids(
+            [declared_source_record_id] if declared_source_record_id else [],
+            catalog_by_source_id=catalog_by_source_id,
+        )
+        source_record_id = (
+            source_record_ids[0] if source_record_ids else declared_source_record_id
+        )
         catalog_record = catalog_by_source_id.get(source_record_id or "")
         source_claim_links = source_claim_links_by_rule.get(rule_id, [])
         source_claim_gaps = source_claim_gaps_by_rule.get(rule_id, [])
@@ -75,6 +84,7 @@ def rule_template_candidates(
         source_role_filters = _rule_source_role_filters(
             rule=rule,
             source_record_id=source_record_id,
+            source_record_ids=source_record_ids,
             document_role=document_role,
         )
         package_section_filters = _rule_package_section_filters(rule)
@@ -91,10 +101,12 @@ def rule_template_candidates(
                 "source_set_id": source_set_id,
                 "authority_category": rule.get("authority_category"),
                 "authority_document_role": document_role,
-                "source_record_ids": [source_record_id] if source_record_id else [],
-                "source_records": [source_record_summary(catalog_record)]
-                if catalog_record
-                else [],
+                "source_record_ids": source_record_ids,
+                "source_records": [
+                    source_record_summary(catalog_by_source_id.get(candidate_source_record_id))
+                    for candidate_source_record_id in source_record_ids
+                    if catalog_by_source_id.get(candidate_source_record_id)
+                ],
                 "required_package_fact_types": required_package_fact_types,
                 "positive_trigger_groups": positive_trigger_groups,
                 "negative_trigger_groups": negative_trigger_groups,
@@ -102,6 +114,7 @@ def rule_template_candidates(
                 "package_section_filters": package_section_filters,
                 "required_source_evidence": _rule_required_source_evidence(
                     source_record_id=source_record_id,
+                    source_record_ids=source_record_ids,
                     document_role=document_role,
                     source_role_filters=source_role_filters,
                     source_claim_links=source_claim_links,
@@ -116,7 +129,7 @@ def rule_template_candidates(
                 "graph_expansion_contract": _rule_graph_expansion_contract(
                     rule=rule,
                     rule_id=rule_id,
-                    source_record_id=source_record_id,
+                    source_record_ids=source_record_ids,
                 ),
                 "dependency_contract": _rule_dependency_contract(rule),
                 "search_coverage_requirements": _rule_search_coverage_requirements(
@@ -164,24 +177,16 @@ def forest_plan_component_candidates(
     component_inventory_path: Path,
     component_inventory_sha256: str | None,
     catalog_by_source_id: dict[str, dict],
+    allowed_forest_plan_source_record_ids: Collection[str] | None = None,
 ) -> list[dict]:
-    if not isinstance(component_inventory, dict):
-        return []
-    if str(component_inventory.get("source_set_id") or "") != source_set_id:
-        return []
-    forest_unit_id = str(component_inventory.get("forest_unit_id") or "")
-    try:
-        profile = profiles.get(forest_unit_id)
-    except KeyError:
-        return []
     inventory_id = str(component_inventory.get("inventory_id") or "")
-    components = component_inventory.get("components")
-    if not isinstance(components, list):
-        return []
     candidates = []
-    for component in components:
-        if not isinstance(component, dict):
-            continue
+    for profile, component in selected_forest_plan_inventory_components(
+        source_set_id=source_set_id,
+        profiles=profiles,
+        component_inventory=component_inventory,
+        allowed_forest_plan_source_record_ids=allowed_forest_plan_source_record_ids,
+    ):
         component_id = str(component.get("component_id") or "")
         source_record_id = str(
             component.get("source_record_id") or profile.active_plan_source_record_id
@@ -244,7 +249,8 @@ def forest_plan_component_candidates(
                     "component_inventory_id": inventory_id,
                     "component_inventory_path": str(component_inventory_path),
                     "component_inventory_sha256": component_inventory_sha256,
-                    "plan_version": component_inventory.get("plan_version"),
+                    "plan_version": component.get("plan_version")
+                    or component_inventory.get("plan_version"),
                     "component_id": component_id,
                     "component_type": component.get("component_type"),
                     "section_id": component.get("section_id"),
@@ -271,6 +277,90 @@ def forest_plan_component_candidates(
             }
         )
     return candidates
+
+
+def selected_forest_plan_inventory_components(
+    *,
+    source_set_id: str,
+    profiles: ForestPlanProfileCollection,
+    component_inventory: dict | None,
+    allowed_forest_plan_source_record_ids: Collection[str] | None = None,
+) -> list[tuple[ForestPlanProfile, dict]]:
+    if not isinstance(component_inventory, dict):
+        return []
+    if str(component_inventory.get("source_set_id") or "") != source_set_id:
+        return []
+    components = component_inventory.get("components")
+    if not isinstance(components, list):
+        return []
+    allowed_source_ids = {
+        str(source_record_id).strip()
+        for source_record_id in allowed_forest_plan_source_record_ids or ()
+        if str(source_record_id).strip()
+    }
+    inventory_profile = _inventory_profile(profiles, component_inventory)
+    if inventory_profile is not None:
+        if (
+            allowed_source_ids
+            and inventory_profile.active_plan_source_record_id not in allowed_source_ids
+        ):
+            return []
+        return [
+            (inventory_profile, component)
+            for component in components
+            if isinstance(component, dict)
+        ]
+    if not allowed_source_ids:
+        return []
+    selected: list[tuple[ForestPlanProfile, dict]] = []
+    for component in components:
+        if not isinstance(component, dict):
+            continue
+        profile = _component_profile(profiles, component)
+        if profile is None:
+            continue
+        source_record_id = str(
+            component.get("source_record_id") or profile.active_plan_source_record_id
+        ).strip()
+        if (
+            source_record_id not in allowed_source_ids
+            and profile.active_plan_source_record_id not in allowed_source_ids
+        ):
+            continue
+        selected.append((profile, component))
+    return selected
+
+
+def _inventory_profile(
+    profiles: ForestPlanProfileCollection,
+    component_inventory: dict,
+) -> ForestPlanProfile | None:
+    forest_unit_id = str(component_inventory.get("forest_unit_id") or "").strip()
+    if not forest_unit_id:
+        return None
+    try:
+        return profiles.get(forest_unit_id)
+    except KeyError:
+        return None
+
+
+def _component_profile(
+    profiles: ForestPlanProfileCollection,
+    component: dict,
+) -> ForestPlanProfile | None:
+    forest_unit_id = str(component.get("forest_unit_id") or "").strip()
+    if forest_unit_id:
+        try:
+            return profiles.get(forest_unit_id)
+        except KeyError:
+            return None
+    source_record_id = str(component.get("source_record_id") or "").strip()
+    if not source_record_id:
+        return None
+    for profile in profiles.profiles:
+        if profile.active_plan_source_record_id == source_record_id:
+            return profile
+    return None
 
 
 def _rule_source_evidence_availability(
@@ -410,11 +500,12 @@ def _rule_source_role_filters(
     *,
     rule: dict,
     source_record_id: str | None,
+    source_record_ids: list[str],
     document_role: str | None,
 ) -> dict:
     source_filters = rule.get("source_filters") if isinstance(rule.get("source_filters"), dict) else {}
     return {
-        "source_record_ids": [source_record_id] if source_record_id else [],
+        "source_record_ids": source_record_ids,
         "document_roles": [document_role] if document_role else [],
         "authority_categories": strings([rule.get("authority_category")]),
         "source_filters": source_filters,
@@ -459,13 +550,14 @@ def _component_package_section_filters(component: dict) -> dict:
 def _rule_required_source_evidence(
     *,
     source_record_id: str | None,
+    source_record_ids: list[str],
     document_role: str | None,
     source_role_filters: dict,
     source_claim_links: list[dict],
     source_claim_gaps: list[dict],
 ) -> dict:
     return {
-        "source_record_ids": [source_record_id] if source_record_id else [],
+        "source_record_ids": source_record_ids,
         "document_roles": [document_role] if document_role else [],
         "source_role_filters": source_role_filters,
         "requires_catalog_record": True,
@@ -564,7 +656,7 @@ def _rule_graph_expansion_contract(
     *,
     rule: dict,
     rule_id: str,
-    source_record_id: str | None,
+    source_record_ids: list[str],
 ) -> dict:
     return {
         "contract_type": "rule_template_graph_expansion",
@@ -580,7 +672,7 @@ def _rule_graph_expansion_contract(
         ],
         "neighbor_filters": {
             "rule_ids": [rule_id] if rule_id else [],
-            "source_record_ids": [source_record_id] if source_record_id else [],
+            "source_record_ids": source_record_ids,
             "authority_categories": strings([rule.get("authority_category")]),
         },
     }

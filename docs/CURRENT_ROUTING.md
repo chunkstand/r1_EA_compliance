@@ -20,9 +20,12 @@ Use this file as the short current route before opening the large append-only do
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
 - Active promotion replay-repair packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- Active authority-source blocker packet:
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
 - Adjacent active queue packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - Active blocker packets:
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`,
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`,
   `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
@@ -76,9 +79,19 @@ Use this file as the short current route before opening the large append-only do
   contract now fails closed at the selector layer with
   `selector_passed=false`, `matched_slot_count=0`,
   `eligible_slot_count=0`, and `passing_slot_count=0` because the governed
-  reviewer-ready slot is mismatched. The next truthful slice is Milestone `1`
-  ECID reviewer-ready replay repair inside
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+  reviewer-ready slot is mismatched. Milestone `1` of
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` is now also
+  reduced locally: ECID applicability replay now correctly rebuilds a
+  `396`-candidate authority universe with `329` Custer Gallatin component
+  candidates from the active Region 1 batch inventory and honors governed
+  legacy-to-current source-record reconciliation, but the same run still fails
+  on `candidates_have_source_evidence_available` (`failure_count=21`) and
+  `authority_family_template_candidates_cover_config`
+  (`missing_source_record_count=19`). The next truthful slice is now
+  Milestone `0` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which owns
+  the active-source authority binding blocker upstream of packet-local ECID
+  replay
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty
@@ -210,6 +223,7 @@ Use this file as the short current route before opening the large append-only do
 - `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
 - `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
 - `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` for the zero-oversized architecture closeout
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`

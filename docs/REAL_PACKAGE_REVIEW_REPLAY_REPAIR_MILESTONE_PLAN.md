@@ -2,7 +2,7 @@
 
 Date: 2026-05-25
 
-Status: Milestone 0 reduced locally
+Status: Milestone 1 reduced locally
 
 Owner context: this is a fresh standalone follow-on packet opened after
 `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` closed through
@@ -356,6 +356,25 @@ PYTHONPATH=src uv run --extra dev pytest \
   tests/test_v1_ea_eval_forest_plan.py \
   tests/test_phase_eval.py -q
 ```
+
+Milestone 1 reduction on 2026-05-25:
+
+- The applicability universe owner now correctly narrows the active Region 1
+  batch component inventory to the ECID review forest and now resolves mapped
+  legacy authority source IDs against the active catalog surface.
+- `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  now rebuilds `candidate_authority_count=396` with
+  `forest_plan_component_candidate_count=329` on
+  `source-set-4fb59e9eb43045cb`, so the old `0`-component universe bug is no
+  longer the blocker.
+- The packet still cannot continue truthfully to reviewer-ready replay because
+  the active authority-universe validation now fails only on
+  `candidates_have_source_evidence_available` (`failure_count=21`) and
+  `authority_family_template_candidates_cover_config`
+  (`missing_source_record_count=19`).
+- The next truthful slice is now
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which owns
+  the governed active-source binding problem upstream of packet-local replay.
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 

@@ -159,6 +159,71 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
             ["law"],
         )
 
+    def test_candidates_use_reconciled_catalog_source_record_ids(self) -> None:
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "land-exchange-template",
+                        "authority_family_id": "land_exchange_policy",
+                        "rule_id": "land_exchange_template_rule",
+                        "title": "Land exchange template",
+                        "question": "Does the package include a land exchange?",
+                        "requirement": "Evaluate land-exchange policy applicability.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "agency_policy",
+                        "authority_document_role": "agency_policy",
+                        "authority_source_record_id": "R1EA-150",
+                        "source_record_ids": ["R1EA-150"],
+                        "package_query": "land exchange",
+                        "package_terms": ["land exchange"],
+                        "applies_if_package_terms": ["land exchange"],
+                        "does_not_apply_if_package_terms": ["no land exchange"],
+                        "source_query": "land exchange policy source",
+                        "source_filters": {
+                            "document_role": "agency_policy",
+                            "source_record_id": "R1EA-150",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id={
+                "LEX-USFS-002": {
+                    "source_record_id": "LEX-USFS-002",
+                    "title": "FSM 5410 - Appraisals",
+                    "citation_label": "LEX-USFS-002 | FSM 5410",
+                    "document_role": "agency_policy",
+                    "authority_level": "agency_policy",
+                    "source_status": "downloaded",
+                    "artifact_sha256": "sha-lex-usfs-002",
+                    "artifact_path": "artifacts/raw/LEX-USFS-002.pdf",
+                }
+            },
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], ["LEX-USFS-002"])
+        self.assertEqual(
+            candidate["source_role_filters"]["source_record_ids"],
+            ["LEX-USFS-002"],
+        )
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            ["LEX-USFS-002"],
+        )
+        self.assertEqual(
+            candidate["graph_expansion_contract"]["neighbor_filters"]["source_record_ids"],
+            ["LEX-USFS-002"],
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
 
 if __name__ == "__main__":
     unittest.main()

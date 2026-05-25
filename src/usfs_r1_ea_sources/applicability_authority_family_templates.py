@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from .applicability_contract_support import authority_document_role
+from .applicability_contract_support import catalog_resolved_source_record_ids
 from .applicability_contract_support import dedupe_groups
 from .applicability_contract_support import dedupe_strings
 from .applicability_contract_support import source_record_summary
@@ -41,11 +42,21 @@ def authority_family_template_candidates(
         template_id = str(template.get("template_id") or "")
         family_id = str(template.get("authority_family_id") or "")
         rule_id = str(template.get("rule_id") or template_id)
-        source_record_id = str(template.get("authority_source_record_id") or "").strip()
+        declared_source_record_id = str(template.get("authority_source_record_id") or "").strip()
+        declared_source_record_ids = _template_source_record_ids(
+            template,
+            declared_source_record_id,
+        )
+        source_record_ids = catalog_resolved_source_record_ids(
+            declared_source_record_ids,
+            catalog_by_source_id=catalog_by_source_id,
+        )
+        source_record_id = (
+            source_record_ids[0] if source_record_ids else declared_source_record_id
+        )
         catalog_record = catalog_by_source_id.get(source_record_id)
         document_role = authority_document_role(template, catalog_record)
         authority_category = str(template.get("authority_category") or "").strip()
-        source_record_ids = _template_source_record_ids(template, source_record_id)
         source_records = [
             source_record_summary(catalog_by_source_id.get(record_id))
             for record_id in source_record_ids
@@ -82,6 +93,7 @@ def authority_family_template_candidates(
                 "required_source_evidence": _authority_family_required_source_evidence(
                     template=template,
                     source_record_id=source_record_id,
+                    source_record_ids=source_record_ids,
                     document_role=document_role,
                     source_role_filters=source_role_filters,
                 ),
@@ -94,7 +106,7 @@ def authority_family_template_candidates(
                 "graph_expansion_contract": _authority_family_graph_expansion_contract(
                     template=template,
                     rule_id=rule_id,
-                    source_record_id=source_record_id,
+                    source_record_ids=source_record_ids,
                 ),
                 "dependency_contract": _authority_family_dependency_contract(template),
                 "search_coverage_requirements": _authority_family_search_coverage_requirements(
@@ -191,11 +203,12 @@ def _authority_family_required_source_evidence(
     *,
     template: dict,
     source_record_id: str | None,
+    source_record_ids: list[str],
     document_role: str | None,
     source_role_filters: dict,
 ) -> dict:
     return {
-        "source_record_ids": _template_source_record_ids(template, source_record_id or ""),
+        "source_record_ids": source_record_ids,
         "primary_source_record_id": source_record_id,
         "supporting_source_record_ids": strings(template.get("supporting_source_record_ids")),
         "excluded_source_record_ids": strings(template.get("excluded_source_record_ids")),
@@ -241,7 +254,7 @@ def _authority_family_graph_expansion_contract(
     *,
     template: dict,
     rule_id: str,
-    source_record_id: str | None,
+    source_record_ids: list[str],
 ) -> dict:
     dependency_contract = _authority_family_dependency_contract(template)
     return {
@@ -259,7 +272,7 @@ def _authority_family_graph_expansion_contract(
         "neighbor_filters": {
             "rule_ids": [rule_id] if rule_id else [],
             "authority_family_ids": strings([template.get("authority_family_id")]),
-            "source_record_ids": _template_source_record_ids(template, source_record_id or ""),
+            "source_record_ids": source_record_ids,
             "authority_categories": strings([template.get("authority_category")]),
             "supporting_source_record_ids": dependency_contract["supporting_source_record_ids"],
             "superseded_by_family_ids": dependency_contract["superseded_by_family_ids"],

@@ -250,7 +250,7 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
             self.assertTrue(result.summary["validation_passed"])
             self.assertEqual(result.summary["candidate_authority_count"], 5)
 
-    def test_snapshot_ignores_region_wide_component_inventory_without_top_level_forest_unit(
+    def test_snapshot_filters_region_wide_component_inventory_to_review_forest(
         self,
     ) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -294,7 +294,7 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["validation_passed"])
-            self.assertEqual(result.summary["forest_plan_component_candidate_count"], 0)
+            self.assertEqual(result.summary["forest_plan_component_candidate_count"], 1)
 
             snapshot = json.loads(result.snapshot_path.read_text(encoding="utf-8"))
             component_candidates = [
@@ -302,7 +302,15 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                 for candidate in snapshot["candidate_authorities"]
                 if candidate["candidate_authority_type"] == "forest_plan_component"
             ]
-            self.assertEqual(component_candidates, [])
+            self.assertEqual(len(component_candidates), 1)
+            self.assertEqual(
+                component_candidates[0]["forest_plan"]["forest_unit_id"],
+                "custer-gallatin-nf",
+            )
+            self.assertEqual(
+                component_candidates[0]["forest_plan"]["plan_version"],
+                "2022",
+            )
             component_check = _check(
                 snapshot["validation"],
                 "forest_plan_component_candidates_use_profile_inventory",
@@ -310,10 +318,14 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
             self.assertTrue(component_check["passed"])
             self.assertEqual(
                 component_check["details"]["component_candidate_count"],
-                0,
+                1,
             )
-            self.assertFalse(component_check["details"]["component_inventory_present"])
+            self.assertTrue(component_check["details"]["component_inventory_present"])
             self.assertIsNone(component_check["details"]["inventory_forest_unit_id"])
+            self.assertEqual(
+                component_check["details"]["selected_component_forest_unit_ids"],
+                ["custer-gallatin-nf"],
+            )
 
     def test_snapshot_includes_authority_family_rule_template_candidates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
