@@ -7,6 +7,29 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Authority-Source Blocker Plan Labels Aligned Locally
+
+This docs-only cleanup pass closes the remaining wording drift after the
+Milestone `1` owner-map closeout.
+
+- outcome label:
+  `resolved locally`; the active blocker plan and short-route summaries now
+  present the packet itself as resolved through Milestone `1` instead of
+  framing the live state as a Milestone `0` checkpoint
+- alignment truth:
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` now marks
+  the older Milestone `0` “next slice” note as historical, and
+  `README.md`, `docs/CURRENT_ROUTING.md`, and
+  `docs/POST_V1_PROMOTION_SUITE.md` now describe the active authority-source
+  blocker packet directly rather than saying “Milestone `0` ... resolved
+  through Milestone `1`”
+- state impact:
+  no runtime, catalog, or applicability truth changed; the live route remains
+  Milestone `2` governed repair in
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `git diff --check`
+
 ## Active Authority Source Binding Blocker Milestone 1 Resolved Locally
 
 This implementation slice closes the owner-selection step for the active

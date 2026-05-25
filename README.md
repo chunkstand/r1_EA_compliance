@@ -25,7 +25,7 @@ Current routed state on 2026-05-25:
   and workbook SHA
   `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
 - `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
-  catalog, and architecture routing.
+  catalog, architecture, and active packet routing.
 - The current architecture packet in
   `docs/OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md` is now resolved
   through Milestone 10 Sequence 52: the tracked West Reservoir replay context
@@ -83,10 +83,10 @@ Current routed state on 2026-05-25:
   legacy-to-current source-record reconciliation, but the same run still fails
   on `candidates_have_source_evidence_available` (`failure_count=21`) and
   `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=19`). Milestone `0` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
-  resolved locally through Milestone `1`: the live blocker inventory is
-  frozen as `21` failing source-evidence candidates (`16`
+  (`missing_source_record_count=19`). The active authority-source blocker
+  packet in `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+  is now resolved locally through Milestone `1`: the live blocker inventory
+  is frozen as `21` failing source-evidence candidates (`16`
   authority-family templates plus `5` rule templates) and `19` missing
   source-record template groups, and that inventory is now classified into
   `16` reconciliation-owned template families, `3` forest-plan identity

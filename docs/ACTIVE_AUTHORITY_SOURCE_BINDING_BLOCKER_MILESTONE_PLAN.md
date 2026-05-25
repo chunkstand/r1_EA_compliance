@@ -199,9 +199,10 @@ Milestone 0 resolution on 2026-05-25:
   `R1PLAN-region-1-species-overlay-01`,
   `R1PLAN-region-1-species-overlay-02`, and the land-exchange-only
   `R1EA-125` through `R1EA-162` family.
-- The next truthful slice is now Milestone `1` in this same packet:
-  classify every frozen blocker ID to one governed owner before any repair
-  attempts begin.
+- Historical next truthful slice at the Milestone `0` baseline-freeze
+  checkpoint:
+  Milestone `1` in this same packet; the live route after the Milestone `1`
+  owner-selection closeout is Milestone `2` governed repair.
 
 ### Milestone 1 - Classification And Owner Selection
 
