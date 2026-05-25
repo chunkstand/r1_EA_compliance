@@ -110,7 +110,7 @@ Latest implementation update on 2026-05-25:
   current-source additions or forest-plan support admissions, while the
   separate `11` source-evidence failures still consist of the six remaining
   authority-family candidates plus the five base-rule current-source gaps
-- next routing:
+- historical next routing at that retirement checkpoint:
   the next truthful slice remains Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
   continuing with the true current-source addition and forest-plan support

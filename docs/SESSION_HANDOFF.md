@@ -7,6 +7,45 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Authority Current-Source Gap Plan Alignment Closed Locally
+
+This docs-only slice closes the remaining plan-surface alignment drift after
+the governed `FED-044` reduction without changing the live blocker state or
+next routed slice.
+
+- outcome label:
+  `resolved locally`; the active blocker packet now names the same active
+  replay-gate evidence and source-register test owners that were already used
+  in the verified Milestone `2` reduction
+- alignment truth:
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` now
+  points its active catalog evidence surface at
+  `source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate`
+  instead of the historical default catalog path, and its focused test roster
+  now explicitly includes
+  `tests/test_source_register_loader.py`,
+  `tests/test_source_register_schema.py`,
+  `tests/test_catalog.py`,
+  `tests/test_dry_run.py`, and
+  `tests/test_preflight.py`
+- historical prose cleanup:
+  `docs/CURRENT_SYSTEM_STATE.md` and this handoff now label the pre-`FED-044`
+  retirement checkpoint and earlier packet-alignment checkpoint as historical
+  route notes so the stale `fbad...` / `11` / `11` state no longer reads as
+  live routing
+- live route truth:
+  the active blocker still remains Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` on the
+  current scoped replay state
+  `authority_universe_sha256=e26758f4da964e965211f754487748b3a0404a1bbb10be0fec7f97f22deaf5f9`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=10`; the next truthful slice is still the
+  governed water-family additions for `R1EA-083` through `R1EA-090` and
+  `R1EA-115` through `R1EA-118`
+- verification:
+  `git diff --check`,
+  `git diff --cached --check`
+
 ## Active Authority Current-Source Gap Blocker Milestone 2 Reduced Further Locally
 
 This implementation slice closes the governed `R1EA-093` air/conformity
@@ -80,8 +119,8 @@ state or next routed slice.
   `tests/test_authority_family_rule_templates.py` plus
   `tests/test_authority_universe_inventory.py` in the focused verification
   roster
-- live route truth:
-  the active blocker remains Milestone `2` of
+- historical route truth at that alignment checkpoint:
+  the active blocker then remained Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` on the
   same `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`,
   `source_evidence_failure_count=11`, and
@@ -123,7 +162,7 @@ remaining current-source and forest-plan owner work is done.
   current-source additions or forest-plan support admissions, while the
   separate `11` source-evidence failures still consist of the six remaining
   authority-family candidates plus the five base-rule current-source gaps
-- next truthful slice:
+- historical next truthful slice at that retirement checkpoint:
   Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
   continuing with the true current-source addition and forest-plan support

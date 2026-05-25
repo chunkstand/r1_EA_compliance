@@ -150,7 +150,8 @@ Completion means all of the following are true:
 
 - current source-truth and active catalog evidence:
   `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
-  `source_library/catalog/source_catalog.jsonl`,
+  `source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate/source_catalog.jsonl`,
+  `source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate/source_set_manifest.json`,
   `source_library/manifests/*.jsonl`
 - governed authority-source config:
   `config/authority_family_rule_templates_nepa_ea_v1.json`,
@@ -170,6 +171,11 @@ Completion means all of the following are true:
   `src/usfs_r1_ea_sources/applicability_authority_family_templates.py`,
   `src/usfs_r1_ea_sources/applicability_authority_universe_contracts.py`
 - focused tests:
+  `tests/test_source_register_loader.py`,
+  `tests/test_source_register_schema.py`,
+  `tests/test_catalog.py`,
+  `tests/test_dry_run.py`,
+  `tests/test_preflight.py`,
   `tests/test_applicability_authority_family_templates.py`,
   `tests/test_authority_family_rule_templates.py`,
   `tests/test_authority_universe_inventory.py`,
