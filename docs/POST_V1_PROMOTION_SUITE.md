@@ -193,8 +193,13 @@ layer rather than the slot-driven contract layer.
   missing source-record template groups on
   `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`,
   and no untouched exact current-catalog URL matches remain for the reduced
-  missing-ID inventory. The new active blocker packet is now
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`.
+  missing-ID inventory. Milestone `1` of the new active blocker packet
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+  is now also resolved locally: the remaining stale IDs are now split among
+  template retire/replace work, true current-source additions, forest-plan
+  support admissions, and five base-rule current-source decisions. The live
+  applicability replay is unchanged at `11` / `17`, and the next truthful
+  slice is Milestone `2` governed repair in that same packet.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

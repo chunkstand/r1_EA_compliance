@@ -97,10 +97,13 @@ Use this file as the short current route before opening the large append-only do
   source-evidence failures and `17` missing source-record template groups on
   `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`.
   No untouched exact current-catalog URL matches remain for the reduced
-  missing-ID inventory. The new active blocker packet is now
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`, which
-  owns the remaining workbook/template/rule-pack current-source repair
-  upstream of packet-local ECID replay
+  missing-ID inventory. Milestone `1` of the new active blocker packet
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+  is now also resolved locally: the remaining stale IDs are now split among
+  template retire/replace work, true current-source additions, forest-plan
+  support admissions, and five base-rule current-source decisions. The live
+  applicability replay is unchanged at `11` / `17`, and the next truthful
+  slice is Milestone `2` governed repair in that same packet
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

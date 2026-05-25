@@ -391,10 +391,17 @@ Milestone 1 reduction on 2026-05-25:
   `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`.
   No untouched exact current-catalog URL matches remain for the reduced
   missing-ID inventory.
-- The next truthful slice is now Milestone `0` of
+- Milestone `1` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` is now
+  resolved locally; the remaining stale IDs are now split among template
+  retire/replace work, true current-source additions, forest-plan support
+  admissions, and five base-rule current-source decisions while the live
+  replay remains unchanged at `11` source-evidence failures and `17` missing
+  template groups.
+- The next truthful slice is now Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
-  which owns the remaining workbook/template/rule-pack current-source repair
-  upstream of packet-local replay.
+  which owns the governed source-truth, template, forest-plan, and rule-pack
+  repairs upstream of packet-local replay.
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 

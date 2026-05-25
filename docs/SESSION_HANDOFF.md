@@ -7,6 +7,41 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Active Authority Current-Source Gap Blocker Milestone 1 Resolved Locally
+
+This implementation slice closes the owner-classification gate for the active
+current-source blocker packet before any governed repair lands.
+
+- outcome label:
+  `resolved locally`; the remaining stale IDs now have one governed owner map
+  before Milestone `2` repair begins
+- owner map truth:
+  template retire/replace work in
+  `config/authority_family_rule_templates_nepa_ea_v1.json` now owns
+  `R1EA-038`, `R1EA-043`, `R1EA-068`, `R1EA-125` through `R1EA-149`,
+  `R1EA-151` through `R1EA-156`, and explicit retirement of
+  `R1EA-160` through `R1EA-162`; governed current-source additions now own
+  the remaining air, water, cultural, wildlife, hazardous-material,
+  invasive/farmland/drinking-water, wildfire/minerals, and
+  designated-areas rows; forest-plan support admission now owns the remaining
+  `R1PLAN-*` support rows; and
+  `config/compliance_rule_pack_nepa_ea_v0.json` now stays the owner for the
+  five base-rule current-source decisions
+- live replay truth:
+  `applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`
+  remains unchanged at `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`,
+  `validation_passed=false`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=17`
+- next truthful slice:
+  Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `git diff --check`
+
 ## Active Authority Current-Source Gap Blocker Milestone 0 Resolved Locally
 
 This implementation slice opens the remaining ECID applicability residue as a
@@ -31,9 +66,11 @@ its exact-match lane.
   current-catalog URL matches for the remaining missing IDs, so the live
   blocker is governed workbook/template/rule-pack current-source debt rather
   than more reconciliation-only work
-- next truthful slice:
+- historical next truthful slice at that baseline-freeze checkpoint:
   Milestone `1` of
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`; the
+  live route after the Milestone `1` owner-map closeout is recorded in the
+  newer section above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
   `git diff --check`
