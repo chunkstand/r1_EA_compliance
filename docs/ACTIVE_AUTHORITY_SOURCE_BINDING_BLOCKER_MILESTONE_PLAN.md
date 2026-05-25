@@ -2,7 +2,7 @@
 
 Date: 2026-05-25
 
-Status: Milestone 0 resolved locally
+Status: Active packet (`Milestone 0 resolved locally; Milestone 1 classification and owner selection next`)
 
 Owner context: this is a fresh standalone blocker packet opened from
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` after Milestone `1`

@@ -51,9 +51,11 @@ the replay-repair Milestone `1` reduction.
   no runtime, artifact, or test truth changed; the live blocker remains the
   active-source authority binding gap recorded in the immediately following
   replay-repair Milestone `1` reduced section
-- next truthful slice:
+- historical next truthful slice at that routing-alignment checkpoint:
   Milestone `0` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the live
+  route after the blocker Milestone `0` closeout is recorded in the newer
+  section above
 - verification:
   `git diff --check`
 
@@ -92,9 +94,11 @@ authority binding rather than packet-local replay drift.
   `R1EA-032`, `R1EA-037`, `R1EA-041`,
   `R1PLAN-custer-gallatin-nf-06`, and
   `R1PLAN-region-1-species-overlay-01`
-- next truthful slice:
+- historical next truthful slice at that replay-repair reduction checkpoint:
   Milestone `0` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the live
+  route after the blocker Milestone `0` closeout is recorded in the newer
+  section above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_applicability_candidate_assembly.py tests/test_applicability.py tests/test_applicability_authority_family_templates.py tests/test_applicability_authority_universe_contracts.py tests/test_applicability_authority_universe_builder.py -q`,
@@ -134,9 +138,11 @@ baseline inventory gate and then stopped before ECID artifact regeneration.
   `nepa-knowledge-graph-export`;
   South Plateau slot entrypoint -> `v1-ea-eval` plus replay-context-backed
   `compliance-review`
-- next truthful slice:
+- historical next truthful slice at that replay baseline checkpoint:
   Milestone `1` ECID reviewer-ready replay repair in
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`; that route was
+  later reduced and then handed off to the authority-source blocker packet
+  recorded above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,

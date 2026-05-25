@@ -75,11 +75,11 @@ Latest implementation update on 2026-05-25:
   for families that still reference records such as `R1EA-092`, `R1EA-032`,
   `R1EA-037`, `R1EA-041`, `R1PLAN-custer-gallatin-nf-06`, and
   `R1PLAN-region-1-species-overlay-01`
-- next routing:
-  the next truthful slice is Milestone `0` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which now
-  owns the governed active-source binding problem upstream of ECID packet-local
-  replay
+- historical next routing at this replay-repair reduction checkpoint:
+  the next truthful slice was Milestone `0` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the live
+  route after the blocker Milestone `0` closeout is recorded in the newer
+  section above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_applicability_candidate_assembly.py tests/test_applicability.py tests/test_applicability_authority_family_templates.py tests/test_applicability_authority_universe_contracts.py tests/test_applicability_authority_universe_builder.py -q`,
@@ -117,9 +117,11 @@ Latest implementation update on 2026-05-25:
   `final-qa-certification`, ECID/South Plateau replay-context-backed
   `compliance-review`, and the ECID review overlay
   `nepa-knowledge-graph-export`
-- next routing:
-  the next truthful slice is Milestone `1` ECID reviewer-ready replay repair
-  inside `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- historical next routing at this replay baseline checkpoint:
+  the next truthful slice was Milestone `1` ECID reviewer-ready replay repair
+  inside `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`; that
+  route was later reduced and then handed off to the authority-source blocker
+  packet recorded above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
