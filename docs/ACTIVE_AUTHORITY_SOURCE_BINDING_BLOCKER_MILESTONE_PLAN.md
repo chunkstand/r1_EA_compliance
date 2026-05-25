@@ -327,11 +327,13 @@ Milestone 2 reduction on 2026-05-25:
   problem. It is now a governed current-source truth problem spanning stale
   template/rule-pack references and forest-plan support rows that still lack
   current canonical coverage.
-- The next truthful slice is no longer Milestone `3` in this packet. The live
-  route now moves to
+- Historical next truthful slice at the Milestone `2` governed-repair
+  checkpoint:
+  the live route at that time moved to
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
-  which freezes the reduced `11` / `17` residue and owns the remaining
-  current-source repair before the replay-repair packet can resume.
+  which first froze the reduced `11` / `17` residue and then resolved its
+  Milestone `1` owner map. The current live route after that follow-on
+  closeout is Milestone `2` governed repair in the current-source-gap packet.
 
 ### Milestone 3 - Replay Resume Handoff
 

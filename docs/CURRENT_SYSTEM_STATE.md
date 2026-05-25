@@ -105,10 +105,12 @@ Latest implementation update on 2026-05-25:
   the live replay is now reduced from `21` source-evidence failures and `19`
   missing source-record template groups to `11` and `17`; the remaining
   blocker is no longer principally a source-binding problem
-- next routing:
-  the next truthful slice is no longer Milestone `3` in this packet; the live
-  route now moves to
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- historical next routing at that binding-repair reduction checkpoint:
+  the next truthful slice was no longer Milestone `3` in this packet; the
+  route then moved to
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`. The
+  live route after the Milestone `1` owner-map closeout is recorded in the
+  newer section above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_applicability_authority_family_templates.py tests/test_applicability_candidate_assembly.py tests/test_applicability.py tests/test_applicability_authority_universe_contracts.py tests/test_applicability_authority_universe_builder.py tests/test_rule_claim_binding_runtime.py tests/test_architecture_contract.py -q`,
   `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/records.py src/usfs_r1_ea_sources/applicability_contract_support.py tests/test_applicability_authority_family_templates.py`,
