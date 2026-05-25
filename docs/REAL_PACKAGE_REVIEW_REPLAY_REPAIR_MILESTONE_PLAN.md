@@ -401,17 +401,19 @@ Milestone 1 reduction on 2026-05-25:
 - Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` is now
   reduced further locally through the governed land-exchange retirement
-  closeout, the governed `R1EA-093` current-source addition lane, and the
-  governed water-family current-source additions. The reviewer-facing default
-  catalog remains historical, but the active scoped applicability replay now
-  runs on `source-set-0de012afc6fc589c` and reports
-  `authority_universe_sha256=d29319326b85120bb2ab434cd98e65b232e2cabb11e0ce5522e8f3dc4b076835`,
-  `source_evidence_failure_count=9`, and
-  `missing_source_record_count=7`. The land-exchange template, the
+  closeout, the governed `R1EA-093` current-source addition lane, the
+  governed water-family current-source additions, and the governed wildlife
+  current-source additions. The reviewer-facing default catalog remains
+  historical, but the active scoped applicability replay now runs on
+  `source-set-d5243d000edd5bf9` and reports
+  `authority_universe_sha256=534faf72b2771a3258ba8a4400a6f4cc097d171e975c914f5d143c84d332b7c6`,
+  `source_evidence_failure_count=8`, and
+  `missing_source_record_count=6`. The land-exchange template, the
   air/conformity lane, the water-family lane, the cultural-resource/state-SHPO
-  lane, and the shared tribal-overlap lane no longer appear in the
-  missing-template inventory, and the next truthful slice remains Milestone
-  `2` in that same packet beginning with the wildlife additions.
+  lane, the shared tribal-overlap lane, and the wildlife lane no longer
+  appear in the missing-template inventory, and the next truthful slice
+  remains Milestone `2` in that same packet beginning with the
+  hazardous-material addition.
 - The next truthful slice is now Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
   which still owns the remaining source-truth, forest-plan, and rule-pack

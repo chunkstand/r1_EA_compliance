@@ -26,14 +26,15 @@ Current routed state on 2026-05-25:
   `status_counts={"downloaded_existing": 635, "duplicate_content": 12}`,
   and workbook SHA
   `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
-- The committed canonical workbook now carries `668` retained master rows after
-  admitting the governed cultural-resource current sources `FED-052` through
-  `FED-059` plus `STP-035` on top of the earlier water-family additions. The
-  active current-source-gap replay now uses the scoped catalog gate at
-  `source_library/runs/current-source-gap-cultural-catalog-gate/catalog_gate`
-  with `source_set_id=source-set-0de012afc6fc589c`, `source_count=668`,
-  `artifact_count=656`, and
-  `source_partition_counts={"active_review_corpus": 615, "currentness_supersession_archive": 53}`.
+- The committed canonical workbook now carries `671` retained master rows after
+  admitting the governed wildlife current sources `FED-060` through
+  `FED-062` on top of the earlier water-family, cultural-resource, and shared
+  tribal-overlap additions. The active current-source-gap replay now uses the
+  scoped catalog gate at
+  `source_library/runs/current-source-gap-wildlife-catalog-gate/catalog_gate`
+  with `source_set_id=source-set-d5243d000edd5bf9`, `source_count=671`,
+  `artifact_count=659`, and
+  `source_partition_counts={"active_review_corpus": 618, "currentness_supersession_archive": 53}`.
 - `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
   catalog, architecture, and active packet routing.
 - The current architecture packet in
@@ -111,16 +112,15 @@ Current routed state on 2026-05-25:
   current-source addition lane, and the governed water-family current-source
   additions. The reviewer-facing default catalog remains historical, but the
   active scoped applicability replay now runs on
-  `source-set-0de012afc6fc589c` and reports
-  `authority_universe_sha256=d29319326b85120bb2ab434cd98e65b232e2cabb11e0ce5522e8f3dc4b076835`,
-  `source_evidence_failure_count=9`, and
-  `missing_source_record_count=7`. The cultural-resource/state-SHPO and
-  shared tribal-overlap templates no longer appear in the missing-template
-  inventory. The remaining blocker is now the governed wildlife,
+  `source-set-d5243d000edd5bf9` and reports
+  `authority_universe_sha256=534faf72b2771a3258ba8a4400a6f4cc097d171e975c914f5d143c84d332b7c6`,
+  `source_evidence_failure_count=8`, and
+  `missing_source_record_count=6`. The wildlife template no longer appears in
+  the missing-template inventory. The remaining blocker is now the governed
   hazardous-material, invasive/farmland/drinking-water, minerals,
   forest-plan support, vegetation/fire, wilderness-designated-area, and five
-  base-rule current-source decisions, beginning with the wildlife additions in
-  the same Milestone `2` packet.
+  base-rule current-source decisions, beginning with the hazardous-material
+  addition lane in the same Milestone `2` packet.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs

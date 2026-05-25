@@ -21,25 +21,24 @@ history below.
 - live blocker state:
   reviewer-facing default catalog remains historical
   `source-set-4fb59e9eb43045cb`; the active scoped replay gate is
-  `source-set-0de012afc6fc589c` under
-  `source_library/runs/current-source-gap-cultural-catalog-gate/catalog_gate`;
+  `source-set-d5243d000edd5bf9` under
+  `source_library/runs/current-source-gap-wildlife-catalog-gate/catalog_gate`;
   `applicability-authority-universe` is still red at
-  `authority_universe_sha256=d29319326b85120bb2ab434cd98e65b232e2cabb11e0ce5522e8f3dc4b076835`,
-  `source_evidence_failure_count=9`, and
-  `missing_source_record_count=7`
+  `authority_universe_sha256=534faf72b2771a3258ba8a4400a6f4cc097d171e975c914f5d143c84d332b7c6`,
+  `source_evidence_failure_count=8`, and
+  `missing_source_record_count=6`
 - next truthful slice:
-  Milestone `2` wildlife current-source additions for `R1EA-097` through
-  `R1EA-100` in `eagle_efh_and_special_wildlife_sources`
+  Milestone `2` hazardous-material current-source addition for `R1EA-109` in
+  `hazardous_materials_site_condition`
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
 
-## Active Authority Current-Source Gap Blocker Milestone 2 Cultural Lane Reduced Locally
+## Active Authority Current-Source Gap Blocker Milestone 2 Wildlife Lane Reduced Locally
 
 This implementation slice closes the governed
-`cultural_resource_protection_and_state_shpo_sources` current-source addition
-lane plus the shared `tribal_consultation_trust_sacred_sites` overlap without
-pretending the remaining wildlife, hazardous-material,
+`eagle_efh_and_special_wildlife_sources` current-source addition lane without
+pretending the remaining hazardous-material,
 invasive/farmland/drinking-water, minerals, forest-plan support,
 vegetation/fire, wilderness, or base-rule owners are done.
 
@@ -47,12 +46,11 @@ vegetation/fire, wilderness, or base-rule owners are done.
   `reduced locally`; the live blocker is smaller again, but Milestone `2`
   remains open
 - implementation truth:
-  the canonical workbook now carries `668` retained master rows after adding
-  `FED-052` through `FED-059` and `STP-035`,
+  the canonical workbook now carries `671` retained master rows after adding
+  `FED-060` through `FED-062`,
   `config/compliance_source_record_reconciliation_v1.json` now maps
-  `R1EA-072`, `R1EA-074`, `R1EA-076` through `R1EA-080`,
-  `R1EA-113`, `R1EA-114`, and `R1EA-120` through `R1EA-123` to governed
-  current rows, and matching regressions now cover the source register
+  `R1EA-097` through `R1EA-100` to governed current rows, and matching
+  regressions now cover the source register
   loader/schema/catalog/dry-run/preflight surfaces plus
   `tests/test_applicability_authority_family_templates.py`
 - live replay truth:
@@ -60,44 +58,43 @@ vegetation/fire, wilderness, or base-rule owners are done.
   `source-set-4fb59e9eb43045cb` at `647` source rows, `635` artifacts, and
   `594` admitted `active_review_corpus` rows. The active same-slice replay
   gate now lives at
-  `source_library/runs/current-source-gap-cultural-catalog-gate/catalog_gate`
-  as `source-set-0de012afc6fc589c` with `668` source rows, `656` artifacts,
-  and `615` admitted `active_review_corpus` rows. On that scoped gate,
+  `source_library/runs/current-source-gap-wildlife-catalog-gate/catalog_gate`
+  as `source-set-d5243d000edd5bf9` with `671` source rows, `659` artifacts,
+  and `618` admitted `active_review_corpus` rows. On that scoped gate,
   `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
   now reports `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`,
-  `authority_universe_sha256=d29319326b85120bb2ab434cd98e65b232e2cabb11e0ce5522e8f3dc4b076835`,
+  `authority_universe_sha256=534faf72b2771a3258ba8a4400a6f4cc097d171e975c914f5d143c84d332b7c6`,
   `validation_passed=false`,
-  `source_evidence_failure_count=9`, and
-  `missing_source_record_count=7`
+  `source_evidence_failure_count=8`, and
+  `missing_source_record_count=6`
 - component inventory truth:
-  because the cultural additions did not change forest-plan source
+  because the wildlife additions did not change forest-plan source
   membership, the scoped replay carries the existing Region 1 forest-plan
   component inventory forward under
-  `source_library/derived/source-set-0de012afc6fc589c/forest_plan_components/component_inventory.json`
+  `source_library/derived/source-set-d5243d000edd5bf9/forest_plan_components/component_inventory.json`
 - remaining blocker truth:
   the land-exchange template, the air/conformity lane, the water-family lane,
-  the cultural-resource/state-SHPO lane, and the shared tribal-overlap lane
-  no longer appear in the missing-template inventory. The remaining
-  missing-template families are now the governed eagle/EFH/special-wildlife,
+  the cultural-resource/state-SHPO lane, the shared tribal-overlap lane, and
+  the wildlife lane no longer appear in the missing-template inventory. The
+  remaining missing-template families are now the governed
   hazardous-materials, invasive/farmland/drinking-water, minerals,
-  forest-plan support, vegetation/fire, and
-  wilderness-designated-area owner groups, while the separate `9`
-  source-evidence failures now consist of the four remaining authority-family
-  candidates plus the five base-rule current-source gaps
+  forest-plan support, vegetation/fire, and wilderness-designated-area owner
+  groups, while the separate `8` source-evidence failures now consist of the
+  three remaining authority-family candidates plus the five base-rule
+  current-source gaps
 - next truthful slice:
   Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
-  beginning with the governed wildlife current-source additions in
-  `eagle_efh_and_special_wildlife_sources`
-  (`R1EA-097` through `R1EA-100`)
+  beginning with the governed hazardous-material current-source addition in
+  `hazardous_materials_site_condition` (`R1EA-109`)
 - verification:
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_catalog.py tests/test_dry_run.py tests/test_preflight.py tests/test_applicability_authority_family_templates.py tests/test_authority_family_rule_templates.py tests/test_authority_universe_inventory.py tests/test_rule_claim_binding_runtime.py tests/test_architecture_contract.py -q`,
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
   `PYTHONPATH=src .venv/bin/python -m ruff check tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_catalog.py tests/test_dry_run.py tests/test_preflight.py tests/test_applicability_authority_family_templates.py tests/test_authority_family_rule_templates.py tests/test_authority_universe_inventory.py`,
-  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-cultural`,
-  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-cultural --catalog-dir source_library/runs/current-source-gap-cultural-catalog-gate/catalog_gate`,
-  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-cultural-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-cultural-catalog-gate/catalog_gate/source_set_manifest.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-wildlife`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-wildlife --catalog-dir source_library/runs/current-source-gap-wildlife-catalog-gate/catalog_gate`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-wildlife-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-wildlife-catalog-gate/catalog_gate/source_set_manifest.json`,
   `jq empty config/compliance_source_record_reconciliation_v1.json`,
   `git diff --check`
 

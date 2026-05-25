@@ -34,7 +34,7 @@ def test_source_register_loader_dispatch_returns_workbook_source_compatibility_r
 
     sources = load_canonical_sources(CANONICAL_WORKBOOK, workbook_config)
 
-    assert len(sources) == 668
+    assert len(sources) == 671
     assert all(source.sheet == "Document_Register_Master" for source in sources)
     assert all(source.metadata["loader_contract"] == SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT for source in sources)
     assert all(source.metadata["row_state"] == "load_ready_master_row" for source in sources)
@@ -143,6 +143,24 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     us_code_row = rows["FED-029"]
     assert us_code_row.parser_admission_class == "structured_web_source"
     assert us_code_row.expected_parser == "html"
+
+    eagle_permits_row = rows["FED-060"]
+    assert eagle_permits_row.parser_admission_class == "structured_web_source"
+    assert eagle_permits_row.expected_parser == "html"
+    assert eagle_permits_row.authority_document_class_id == "authority_document"
+    assert eagle_permits_row.jurisdiction_scope_id == "scope:federal-us"
+
+    efh_statute_row = rows["FED-061"]
+    assert efh_statute_row.parser_admission_class == "structured_web_source"
+    assert efh_statute_row.expected_parser == "html"
+    assert efh_statute_row.authority_document_class_id == "authority_document"
+    assert efh_statute_row.jurisdiction_scope_id == "scope:federal-us"
+
+    efh_regulation_row = rows["FED-062"]
+    assert efh_regulation_row.parser_admission_class == "structured_web_source"
+    assert efh_regulation_row.expected_parser == "html"
+    assert efh_regulation_row.authority_document_class_id == "authority_document"
+    assert efh_regulation_row.jurisdiction_scope_id == "scope:federal-us"
 
     challenge_repair_row = rows["FPS-344"]
     assert challenge_repair_row.parser_admission_class == "structured_web_source"

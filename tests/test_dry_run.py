@@ -36,8 +36,8 @@ class DryRunTests(unittest.TestCase):
         sources = load_canonical_sources(CANONICAL_WORKBOOK, config.workbook)
         excluded_urls = load_excluded_urls(CANONICAL_WORKBOOK, config.workbook)
 
-        self.assertEqual(len(sources), 668)
-        self.assertEqual(len({source.normalized_url for source in sources}), 668)
+        self.assertEqual(len(sources), 671)
+        self.assertEqual(len({source.normalized_url for source in sources}), 671)
         self.assertEqual(len(excluded_urls), 0)
 
     def test_dry_run_writes_manifest_and_reports(self) -> None:
@@ -61,10 +61,10 @@ class DryRunTests(unittest.TestCase):
                 for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
                 if line.strip()
             ]
-            self.assertEqual(len(manifest_records), 668)
-            self.assertEqual(result.summary["canonical_rows"], 668)
-            self.assertEqual(result.summary["unique_canonical_urls"], 668)
-            self.assertEqual(result.summary["planned_count"], 668)
+            self.assertEqual(len(manifest_records), 671)
+            self.assertEqual(result.summary["canonical_rows"], 671)
+            self.assertEqual(result.summary["unique_canonical_urls"], 671)
+            self.assertEqual(result.summary["planned_count"], 671)
             self.assertEqual(result.summary["duplicate_url_count"], 0)
             self.assertEqual(result.summary["skipped_excluded_count"], 0)
             self.assertTrue(result.summary["validation_passed"])
@@ -90,8 +90,8 @@ class DryRunTests(unittest.TestCase):
                 host_filter="www.ecfr.gov",
             )
 
-            self.assertEqual(result.summary["filtered_rows"], 40)
-            self.assertEqual(result.summary["status_counts"]["planned"], 40)
+            self.assertEqual(result.summary["filtered_rows"], 42)
+            self.assertEqual(result.summary["status_counts"]["planned"], 42)
             self.assertNotIn("duplicate_url", result.summary["status_counts"])
 
     def test_dry_run_rejects_legacy_source_delta_under_canonical_loader(self) -> None:

@@ -402,6 +402,26 @@
       "notes": "Canonical EO 13186 row."
     },
     {
+      "legacy_source_record_id": "R1EA-097",
+      "current_source_record_ids": ["FED-029"],
+      "notes": "Canonical Bald and Golden Eagle Protection Act row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-098",
+      "current_source_record_ids": ["FED-060"],
+      "notes": "Canonical eagle-permits regulation row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-099",
+      "current_source_record_ids": ["FED-061"],
+      "notes": "Canonical Magnuson-Stevens fish-habitat statute row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-100",
+      "current_source_record_ids": ["FED-062"],
+      "notes": "Canonical EFH consultation regulation row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-103",
       "current_source_record_ids": ["FED-042"],
       "notes": "Canonical floodplain-management executive-order row via exact active-catalog URL lineage."
