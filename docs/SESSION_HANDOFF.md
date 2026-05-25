@@ -21,19 +21,84 @@ history below.
 - live blocker state:
   reviewer-facing default catalog remains historical
   `source-set-4fb59e9eb43045cb`; the active scoped replay gate is
-  `source-set-87f6d2c309e0c88b` under
-  `source_library/runs/current-source-gap-hazardous-catalog-gate/catalog_gate`;
+  `source-set-ef887e7bfb6fa76f` under
+  `source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate`;
   `applicability-authority-universe` is still red at
-  `authority_universe_sha256=588d3abc81e0e4129943d5ed0087f2cb268844d4f062ddde70b5fccad194b33e`,
+  `authority_universe_sha256=7b8fc39075cccf3f98b26fde246c3fb3b14932361797e035accccf895ecd43bb`,
   `source_evidence_failure_count=8`, and
-  `missing_source_record_count=5`
+  `missing_source_record_count=4`
 - next truthful slice:
-  Milestone `2` invasive/farmland/drinking-water current-source additions in
-  `invasive_pesticide_soils_farmland_drinking_water`
-  (`R1EA-101`, `R1EA-102`, `R1EA-105`, `R1EA-106`, `R1EA-111`, `R1EA-112`)
+  Milestone `2` minerals current-source addition in
+  `minerals_energy_authorities` (`R1EA-063`)
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## Active Authority Current-Source Gap Blocker Milestone 2 Invasive Lane Reduced Locally
+
+This implementation slice closes the governed
+`invasive_pesticide_soils_farmland_drinking_water` current-source addition
+lane without pretending the remaining minerals, forest-plan support,
+vegetation/fire, wilderness-designated-area, or five base-rule owners are
+done.
+
+- outcome label:
+  `reduced locally`; the live blocker is smaller again, but Milestone `2`
+  remains open
+- implementation truth:
+  the canonical workbook now carries `678` retained master rows after adding
+  `FED-064` through `FED-069`,
+  `config/compliance_source_record_reconciliation_v1.json` now maps
+  `R1EA-101`, `R1EA-102`, `R1EA-105`, `R1EA-106`, `R1EA-111`, and
+  `R1EA-112` to those governed current rows, and matching regressions now
+  cover the source register loader/schema/catalog/dry-run/preflight surfaces
+  plus `tests/test_applicability_authority_family_templates.py`
+- live replay truth:
+  the reviewer-facing default catalog remains historical
+  `source-set-4fb59e9eb43045cb` at `647` source rows, `635` artifacts, and
+  `594` admitted `active_review_corpus` rows. The active same-slice replay
+  gate now lives at
+  `source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate`
+  as `source-set-ef887e7bfb6fa76f` with `678` source rows, `666` artifacts,
+  and `625` admitted `active_review_corpus` rows. On that scoped gate,
+  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  now reports `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=7b8fc39075cccf3f98b26fde246c3fb3b14932361797e035accccf895ecd43bb`,
+  `validation_passed=false`,
+  `source_evidence_failure_count=8`, and
+  `missing_source_record_count=4`
+- component inventory truth:
+  because the invasive/farmland/drinking-water additions did not change
+  forest-plan source membership, the scoped replay carries the existing
+  Region 1 forest-plan component inventory forward under
+  `source_library/derived/source-set-ef887e7bfb6fa76f/forest_plan_components/component_inventory.json`
+  with the inventory ownership rebound to the active source set
+- remaining blocker truth:
+  the land-exchange template, the air/conformity lane, the water-family lane,
+  the cultural-resource/state-SHPO lane, the shared tribal-overlap lane, the
+  wildlife lane, the hazardous-material lane, and the
+  invasive/farmland/drinking-water lane no longer appear in the
+  missing-template inventory. The remaining missing-template families are now
+  the governed minerals, forest-plan support, vegetation/fire, and
+  wilderness-designated-area owner groups, while the separate `8`
+  source-evidence failures still consist of the three remaining
+  authority-family candidates plus the five base-rule current-source gaps
+- next truthful slice:
+  Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
+  beginning with the governed minerals current-source addition in
+  `minerals_energy_authorities` (`R1EA-063`)
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py tests/test_source_register_loader.py tests/test_dry_run.py tests/test_preflight.py tests/test_catalog.py tests/test_applicability_authority_family_templates.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-invasive`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources validate-run --output-dir source_library --run-id queue-m3-full-canonical-merged-download-20260525-invasive`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-invasive --catalog-dir source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate/source_set_manifest.json`,
+  `jq empty config/compliance_source_record_reconciliation_v1.json`,
+  `git diff --check`
 
 ## Active Authority Current-Source Gap Blocker Milestone 2 Hazardous Lane Reduced Locally
 

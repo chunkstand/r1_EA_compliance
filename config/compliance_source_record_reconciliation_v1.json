@@ -422,6 +422,16 @@
       "notes": "Canonical EFH consultation regulation row added to the source register."
     },
     {
+      "legacy_source_record_id": "R1EA-101",
+      "current_source_record_ids": ["FED-064"],
+      "notes": "Canonical Farmland Protection Policy Act row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-102",
+      "current_source_record_ids": ["FED-065"],
+      "notes": "Canonical FPPA regulation row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-103",
       "current_source_record_ids": ["FED-042"],
       "notes": "Canonical floodplain-management executive-order row via exact active-catalog URL lineage."
@@ -430,6 +440,16 @@
       "legacy_source_record_id": "R1EA-104",
       "current_source_record_ids": ["FED-043"],
       "notes": "Canonical EO 11990 wetlands row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-105",
+      "current_source_record_ids": ["FED-066"],
+      "notes": "Canonical Safe Drinking Water Act row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-106",
+      "current_source_record_ids": ["FED-067"],
+      "notes": "Canonical underground-injection regulation row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-107",
@@ -450,6 +470,16 @@
       "legacy_source_record_id": "R1EA-110",
       "current_source_record_ids": ["FED-035"],
       "notes": "Canonical FIFRA row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-111",
+      "current_source_record_ids": ["FED-068"],
+      "notes": "Canonical EPA federal-facilities FIFRA guidance row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-112",
+      "current_source_record_ids": ["FED-069"],
+      "notes": "Canonical EO 13112 as amended by EO 13751 row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-113",

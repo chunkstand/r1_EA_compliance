@@ -34,7 +34,7 @@ def test_source_register_loader_dispatch_returns_workbook_source_compatibility_r
 
     sources = load_canonical_sources(CANONICAL_WORKBOOK, workbook_config)
 
-    assert len(sources) == 672
+    assert len(sources) == 678
     assert all(source.sheet == "Document_Register_Master" for source in sources)
     assert all(source.metadata["loader_contract"] == SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT for source in sources)
     assert all(source.metadata["row_state"] == "load_ready_master_row" for source in sources)
@@ -167,6 +167,42 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     assert ncp_regulation_row.expected_parser == "html"
     assert ncp_regulation_row.authority_document_class_id == "authority_document"
     assert ncp_regulation_row.jurisdiction_scope_id == "scope:federal-us"
+
+    farmland_statute_row = rows["FED-064"]
+    assert farmland_statute_row.parser_admission_class == "structured_web_source"
+    assert farmland_statute_row.expected_parser == "html"
+    assert farmland_statute_row.authority_document_class_id == "authority_document"
+    assert farmland_statute_row.jurisdiction_scope_id == "scope:federal-us"
+
+    farmland_regulation_row = rows["FED-065"]
+    assert farmland_regulation_row.parser_admission_class == "structured_web_source"
+    assert farmland_regulation_row.expected_parser == "html"
+    assert farmland_regulation_row.authority_document_class_id == "authority_document"
+    assert farmland_regulation_row.jurisdiction_scope_id == "scope:federal-us"
+
+    drinking_water_statute_row = rows["FED-066"]
+    assert drinking_water_statute_row.parser_admission_class == "structured_web_source"
+    assert drinking_water_statute_row.expected_parser == "html"
+    assert drinking_water_statute_row.authority_document_class_id == "authority_document"
+    assert drinking_water_statute_row.jurisdiction_scope_id == "scope:federal-us"
+
+    uic_regulation_row = rows["FED-067"]
+    assert uic_regulation_row.parser_admission_class == "structured_web_source"
+    assert uic_regulation_row.expected_parser == "html"
+    assert uic_regulation_row.authority_document_class_id == "authority_document"
+    assert uic_regulation_row.jurisdiction_scope_id == "scope:federal-us"
+
+    fifra_guidance_row = rows["FED-068"]
+    assert fifra_guidance_row.parser_admission_class == "web_source"
+    assert fifra_guidance_row.expected_parser == "html"
+    assert fifra_guidance_row.authority_document_class_id == "authority_document"
+    assert fifra_guidance_row.jurisdiction_scope_id == "scope:federal-us"
+
+    invasive_species_row = rows["FED-069"]
+    assert invasive_species_row.parser_admission_class == "structured_web_source"
+    assert invasive_species_row.expected_parser == "html"
+    assert invasive_species_row.authority_document_class_id == "authority_document"
+    assert invasive_species_row.jurisdiction_scope_id == "scope:federal-us"
 
     challenge_repair_row = rows["FPS-344"]
     assert challenge_repair_row.parser_admission_class == "structured_web_source"

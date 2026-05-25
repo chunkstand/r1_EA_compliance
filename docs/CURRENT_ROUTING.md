@@ -45,13 +45,14 @@ Use this file as the short current route before opening the large append-only do
 ## Live Facts
 
 - Active workbook/table: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
-  `Document_Register_Master` with `672` retained master rows after the
-  governed hazardous-material addition `FED-063` on top of the earlier
-  water-family, cultural-resource, shared tribal-overlap, and wildlife
-  additions. Reviewer-facing default catalog remains historical
+  `Document_Register_Master` with `678` retained master rows after the
+  governed invasive/farmland/drinking-water additions `FED-064` through
+  `FED-069` on top of the earlier water-family, cultural-resource, shared
+  tribal-overlap, wildlife, and hazardous-material additions.
+  Reviewer-facing default catalog remains historical
   `source-set-4fb59e9eb43045cb`, while the active current-source-gap replay
-  gate is `source-set-87f6d2c309e0c88b` under
-  `source_library/runs/current-source-gap-hazardous-catalog-gate/catalog_gate`
+  gate is `source-set-ef887e7bfb6fa76f` under
+  `source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate`
 - Active source-truth packet status: the full canonical source-truth
   rebaseline remains historically resolved in commit `93a23b0`
   (`Resolve source-truth archive boundary rebaseline`); the queue Milestone 2
@@ -120,18 +121,19 @@ Use this file as the short current route before opening the large append-only do
   land-exchange retirement closeout, the governed `R1EA-093`
   current-source addition lane, the governed water-family current-source
   additions, the governed cultural-resource/state-SHPO and shared
-  tribal-overlap additions, the governed wildlife additions, and the governed
-  hazardous-material addition lane. The reviewer-facing default catalog
-  remains historical, but the active scoped applicability replay now runs on
-  `source-set-87f6d2c309e0c88b` and reports
-  `authority_universe_sha256=588d3abc81e0e4129943d5ed0087f2cb268844d4f062ddde70b5fccad194b33e`,
+  tribal-overlap additions, the governed wildlife additions, the governed
+  hazardous-material addition lane, and the governed
+  invasive/farmland/drinking-water addition lane. The reviewer-facing default
+  catalog remains historical, but the active scoped applicability replay now
+  runs on `source-set-ef887e7bfb6fa76f` and reports
+  `authority_universe_sha256=7b8fc39075cccf3f98b26fde246c3fb3b14932361797e035accccf895ecd43bb`,
   `source_evidence_failure_count=8`, and
-  `missing_source_record_count=5`. The hazardous-material template no longer
-  appears in the missing-template inventory. The remaining blocker is now the
-  governed invasive/farmland/drinking-water, minerals, forest-plan support,
+  `missing_source_record_count=4`. The invasive/farmland/drinking-water
+  template no longer appears in the missing-template inventory. The remaining
+  blocker is now the governed minerals, forest-plan support,
   vegetation/fire, wilderness-designated-area, and the five base-rule
-  current-source decisions, beginning with the invasive/farmland/drinking-water
-  additions in the same Milestone `2` packet
+  current-source decisions, beginning with the minerals addition in the same
+  Milestone `2` packet
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

@@ -787,6 +787,86 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
         )
         self.assertTrue(candidate["source_evidence_availability"]["available"])
 
+    def test_candidates_resolve_invasive_farmland_drinking_water_current_source_additions(
+        self,
+    ) -> None:
+        expected_source_record_ids = [
+            "R1-008",
+            "FED-064",
+            "FED-065",
+            "FED-066",
+            "FED-067",
+            "FED-035",
+            "FED-068",
+            "FED-069",
+        ]
+        catalog_by_source_id = {
+            source_record_id: {
+                "source_record_id": source_record_id,
+                "title": source_record_id,
+                "citation_label": source_record_id,
+                "document_role": "law",
+                "authority_level": "federal" if source_record_id.startswith("FED-") else "region",
+                "source_status": "downloaded_existing",
+                "artifact_sha256": f"sha-{source_record_id.lower()}",
+                "artifact_path": f"artifacts/raw/{source_record_id}.html",
+            }
+            for source_record_id in expected_source_record_ids
+        }
+
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "invasive-current-source-template",
+                        "authority_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+                        "rule_id": "invasive_current_source_template_rule",
+                        "title": "Invasive species and drinking-water current source template",
+                        "question": "Does the package trigger invasive-species, farmland, pesticide, or drinking-water review?",
+                        "requirement": "Evaluate invasive-species, farmland, pesticide, and drinking-water review.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "mixed",
+                        "authority_document_role": "law",
+                        "authority_source_record_id": "R1EA-112",
+                        "source_record_ids": [
+                            "R1EA-030",
+                            "R1EA-101",
+                            "R1EA-102",
+                            "R1EA-105",
+                            "R1EA-106",
+                            "R1EA-110",
+                            "R1EA-111",
+                            "R1EA-112",
+                        ],
+                        "package_query": "invasive species pesticides farmland drinking water",
+                        "package_terms": ["invasive species", "pesticides", "farmland", "drinking water"],
+                        "applies_if_package_terms": ["invasive species", "drinking water"],
+                        "does_not_apply_if_package_terms": ["no invasive species"],
+                        "source_query": "invasive species authority source",
+                        "source_filters": {
+                            "source_record_id": "R1EA-112",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id=catalog_by_source_id,
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], expected_source_record_ids)
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            expected_source_record_ids,
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
     def test_candidates_resolve_cultural_and_state_shpo_current_source_additions(self) -> None:
         expected_source_record_ids = [
             "FED-052",

@@ -23,7 +23,7 @@ class SourceRegisterSchemaTests(unittest.TestCase):
 
         self.assertTrue(result["validation_passed"])
         self.assertEqual(result["sheet_count"], 13)
-        self.assertEqual(result["load_row_count"], 672)
+        self.assertEqual(result["load_row_count"], 678)
         self.assertEqual(result["queue_row_count"], 51)
         self.assertEqual(result["removed_row_count"], 3)
         self.assertEqual(result["stale_source_detector_count"], 5)
@@ -75,13 +75,13 @@ class SourceRegisterSchemaTests(unittest.TestCase):
         self.assertEqual(result["legacy_register_source_delta_count"], 160)
         self.assertEqual(result["legacy_register_gap_count"], 1)
         self.assertEqual(result["legacy_runtime_unique_source_count"], 350)
-        self.assertEqual(result["canonical_master_row_count"], 672)
+        self.assertEqual(result["canonical_master_row_count"], 678)
         self.assertEqual(result["canonical_queue_row_count"], 51)
         self.assertEqual(result["canonical_removed_row_count"], 3)
         self.assertEqual(result["canonical_stale_source_detector_count"], 5)
         self.assertEqual(result["canonical_shared_with_legacy_workbook_count"], 0)
         self.assertEqual(result["canonical_shared_with_source_delta_count"], 0)
-        self.assertEqual(result["canonical_only_source_count"], 672)
+        self.assertEqual(result["canonical_only_source_count"], 678)
         self.assertEqual(result["legacy_only_source_count"], 350)
         self.assertEqual(result["canonical_only_source_ids_sample"][0], "FED-001")
         self.assertEqual(result["legacy_only_source_ids_sample"][0], "R1EA-001")
@@ -151,6 +151,12 @@ class SourceRegisterSchemaTests(unittest.TestCase):
             "FED-061": "https://uscode.house.gov/view.xhtml?req=(title:16%20section:1855%20edition:prelim)",
             "FED-062": "https://www.ecfr.gov/current/title-50/chapter-VI/part-600/subpart-K",
             "FED-063": "https://www.ecfr.gov/current/title-40/chapter-I/subchapter-J/part-300",
+            "FED-064": "https://uscode.house.gov/view.xhtml?path=/prelim@title7/chapter73&edition=prelim",
+            "FED-065": "https://www.ecfr.gov/current/title-7/subtitle-B/chapter-VI/subchapter-F/part-658",
+            "FED-066": "https://uscode.house.gov/view.xhtml?path=/prelim@title42/chapter6A/subchapter12&edition=prelim",
+            "FED-067": "https://www.ecfr.gov/current/title-40/chapter-I/subchapter-D/part-144",
+            "FED-068": "https://www.epa.gov/enforcement/federal-insecticide-fungicide-and-rodenticide-act-fifra-and-federal-facilities",
+            "FED-069": "https://www.federalregister.gov/documents/2016/12/08/2016-29519/safeguarding-the-nation-from-the-impacts-of-invasive-species",
             "FPS-117": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/custergallatin/CNF%20FPAdjustment%20001.pdf",
             "FINAL-Q-HLC-001": "https://www.fs.usda.gov/sites/nfs/files/r01/helena-lewisclark/publication/V3%20Maps%20EIS%202021%20Forest%20Plan.pdf",
             "FINAL-Q-HLC-002": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/helena-lewisclark/Volume%204%20-%20HLCNF%20Plan.pdf",

@@ -44,16 +44,16 @@ ahead of that downstream stack.
   `source-set-4fb59e9eb43045cb` with `source_count=647`,
   `artifact_count=635`, and
   `source_partition_counts={"active_review_corpus": 594, "currentness_supersession_archive": 53}`.
-- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-wildlife --catalog-dir source_library/runs/current-source-gap-wildlife-catalog-gate/catalog_gate`
+- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-invasive --catalog-dir source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate`
   now builds the active blocker replay gate as
-  `source-set-d5243d000edd5bf9` with `source_count=671`,
-  `artifact_count=659`, and
-  `source_partition_counts={"active_review_corpus": 618, "currentness_supersession_archive": 53}`.
-- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-wildlife-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-wildlife-catalog-gate/catalog_gate/source_set_manifest.json`
+  `source-set-ef887e7bfb6fa76f` with `source_count=678`,
+  `artifact_count=666`, and
+  `source_partition_counts={"active_review_corpus": 625, "currentness_supersession_archive": 53}`.
+- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate/source_set_manifest.json`
   now rebuilds the ECID applicability universe at
   `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`,
-  `authority_universe_sha256=534faf72b2771a3258ba8a4400a6f4cc097d171e975c914f5d143c84d332b7c6`,
+  `authority_universe_sha256=7b8fc39075cccf3f98b26fde246c3fb3b14932361797e035accccf895ecd43bb`,
   and `validation_passed=false`.
 - `candidates_have_source_evidence_available` is now reduced from `21` failing
   candidates to `8`: the remaining three authority-family candidates are
@@ -67,7 +67,7 @@ ahead of that downstream stack.
   `organic_act_16usc_475`,
   `seven_county_nepa_scope`).
 - `authority_family_template_candidates_cover_config` is now reduced from `19`
-  failing template groups to `6`. The admitted-current replacement lane plus
+  failing template groups to `4`. The admitted-current replacement lane plus
   the governed land-exchange retirement closeout now cover `R1EA-038`,
   `R1EA-043`, `R1EA-068`, `R1EA-125` through `R1EA-149` (except
   already-bound `R1EA-146`), `R1EA-151` through `R1EA-156`, and the retired
@@ -78,10 +78,11 @@ ahead of that downstream stack.
   plus `STP-031` through `STP-034`, the governed cultural-resource lane is
   now closed through workbook rows `FED-052` through `FED-059` plus `STP-035`,
   and the governed wildlife lane is now closed through workbook rows
-  `FED-060` through `FED-062`. The remaining groups still point at source IDs
+  `FED-060` through `FED-062`, while the governed hazardous-material lane is
+  now closed through workbook row `FED-063` and the governed
+  invasive/farmland/drinking-water lane is now closed through workbook rows
+  `FED-064` through `FED-069`. The remaining groups still point at source IDs
   such as:
-  `R1EA-109`,
-  `R1EA-101`, `R1EA-102`, `R1EA-105`, `R1EA-106`, `R1EA-111`, `R1EA-112`,
   `R1EA-063`,
   `R1EA-056` through `R1EA-062`,
   `R1EA-045`, `R1EA-046`, `R1EA-051`, `R1EA-054`, `R1EA-055`,
@@ -487,19 +488,27 @@ Milestone 2 reduction on 2026-05-25:
   `source_library/runs/current-source-gap-hazardous-catalog-gate/catalog_gate`
   now proves `source-set-87f6d2c309e0c88b` with `672` source rows, `660`
   artifacts, and `619` admitted active-current rows.
+- The governed invasive/farmland/drinking-water current-source addition lane
+  is now also closed: the canonical workbook admits `FED-064` through
+  `FED-069`,
+  `config/compliance_source_record_reconciliation_v1.json` now maps
+  `R1EA-101`, `R1EA-102`, `R1EA-105`, `R1EA-106`, `R1EA-111`, and
+  `R1EA-112` to those current rows, and a same-slice scoped catalog gate at
+  `source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate`
+  now proves `source-set-ef887e7bfb6fa76f` with `678` source rows, `666`
+  artifacts, and `625` admitted active-current rows.
 - The live ECID replay remains red, but the blocker is now smaller at
-  `authority_universe_sha256=588d3abc81e0e4129943d5ed0087f2cb268844d4f062ddde70b5fccad194b33e`,
+  `authority_universe_sha256=7b8fc39075cccf3f98b26fde246c3fb3b14932361797e035accccf895ecd43bb`,
   `source_evidence_failure_count=8`, and
-  `missing_source_record_count=5`.
+  `missing_source_record_count=4`.
 - All remaining missing-template families are now true current-source
   additions or forest-plan support admissions.
 - Milestone `2` therefore remains open. The next truthful sub-slice in this
-  same packet is the governed invasive/farmland/drinking-water current-source
-  addition lane for `invasive_pesticide_soils_farmland_drinking_water`,
-  beginning with `R1EA-101`, `R1EA-102`, `R1EA-105`, `R1EA-106`,
-  `R1EA-111`, and `R1EA-112`, after which the live blocker should continue
-  through the remaining minerals, forest-plan support, vegetation/fire,
-  wilderness-designated-area, and five base-rule owner decisions.
+  same packet is the governed minerals current-source addition lane for
+  `minerals_energy_authorities`, beginning with `R1EA-063`, after which the
+  live blocker should continue through the remaining forest-plan support,
+  vegetation/fire, wilderness-designated-area, and five base-rule owner
+  decisions.
 
 ### Milestone 3 - Replay Resume Handoff
 

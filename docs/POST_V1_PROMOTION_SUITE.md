@@ -203,18 +203,19 @@ layer rather than the slot-driven contract layer.
   current-source addition lane, the governed water-family current-source
   additions, the governed cultural-resource/state-SHPO and shared
   tribal-overlap current-source additions, the governed wildlife
-  current-source additions, and the governed hazardous-material current-source
+  current-source additions, the governed hazardous-material current-source
+  addition, and the governed invasive/farmland/drinking-water current-source
   addition. The reviewer-facing default catalog remains historical, but the
   active scoped applicability replay now runs on
-  `source-set-87f6d2c309e0c88b` and reports
-  `authority_universe_sha256=588d3abc81e0e4129943d5ed0087f2cb268844d4f062ddde70b5fccad194b33e`,
+  `source-set-ef887e7bfb6fa76f` and reports
+  `authority_universe_sha256=7b8fc39075cccf3f98b26fde246c3fb3b14932361797e035accccf895ecd43bb`,
   `source_evidence_failure_count=8`, and
-  `missing_source_record_count=5`. The hazardous-material template no longer
-  appears in the missing-template inventory. The remaining blocker is now the
-  governed invasive/farmland/drinking-water, minerals, forest-plan support,
+  `missing_source_record_count=4`. The invasive/farmland/drinking-water
+  template no longer appears in the missing-template inventory. The remaining
+  blocker is now the governed minerals, forest-plan support,
   vegetation/fire, wilderness-designated-area, and the five base-rule
-  current-source decisions, beginning with the invasive/farmland/drinking-water
-  additions in the same Milestone `2` packet.
+  current-source decisions, beginning with the minerals addition in the same
+  Milestone `2` packet.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:
