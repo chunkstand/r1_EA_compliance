@@ -5,6 +5,7 @@ import json
 import re
 from pathlib import Path
 
+from usfs_r1_ea_sources.applicability_contract_support import catalog_resolved_source_record_ids
 from usfs_r1_ea_sources.package_fact_graph import _base_term_specs
 
 
@@ -40,25 +41,34 @@ def test_authority_family_templates_have_milestone_3_contracts() -> None:
 
     for template in template_rows:
         family = families_by_id[template["authority_family_id"]]
-        primary_source = catalog_by_id[template["authority_source_record_id"]]
+        resolved_primary_source_ids = catalog_resolved_source_record_ids(
+            [template["authority_source_record_id"]],
+            catalog_by_source_id=catalog_by_id,
+        )
         assert family["status"] == "active"
         assert family["rule_template_ids"] == [template["rule_id"]]
         assert template["rule_id"] in family["coverage_requirements"][
             "authority_family_rule_template_ids"
         ]
         assert template["source_record_ids"] == family["source_record_ids"]
+        assert template.get("excluded_source_record_ids", []) == family["source_record_mapping"].get(
+            "excluded_source_record_ids",
+            [],
+        )
         assert template["package_fact_types"] == family["package_fact_types"]
         assert template["applies_if_package_terms"]
         assert template["applies_if_package_term_groups"]
         assert template["does_not_apply_if_package_terms"]
         assert template["source_evidence_requirements"]
-        assert primary_source["artifact_sha256"]
-        assert primary_source["source_status"] in {
-            "downloaded",
-            "downloaded_existing",
-            "duplicate_content",
-            "duplicate_url",
-        }
+        if resolved_primary_source_ids and resolved_primary_source_ids[0] in catalog_by_id:
+            primary_source = catalog_by_id[resolved_primary_source_ids[0]]
+            assert primary_source["artifact_sha256"]
+            assert primary_source["source_status"] in {
+                "downloaded",
+                "downloaded_existing",
+                "duplicate_content",
+                "duplicate_url",
+            }
 
 
 def test_authority_family_template_coverage_maps_every_template() -> None:
@@ -69,6 +79,7 @@ def test_authority_family_template_coverage_maps_every_template() -> None:
     assert coverage["template_set_id"] == templates["template_set_id"]
 
     template_rule_ids = {template["rule_id"] for template in templates["templates"]}
+    template_rows_by_rule_id = {template["rule_id"]: template for template in templates["templates"]}
     coverage_rule_ids = {
         entry["rule_template_id"] for entry in coverage["coverage_entries"]
     }
@@ -87,6 +98,8 @@ def test_authority_family_template_coverage_maps_every_template() -> None:
     ]
     assert duplicate_families == []
     for entry in coverage["coverage_entries"]:
+        template = template_rows_by_rule_id[entry["rule_template_id"]]
+        assert entry["source_record_ids"] == template["source_record_ids"]
         assert entry["milestone_4_eval_followup_required"] is False
         assert set(entry["required_eval_case_ids"]) == {
             "seed-expanded-authority-positive",

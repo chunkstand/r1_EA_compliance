@@ -400,16 +400,16 @@ Milestone 1 reduction on 2026-05-25:
   groups at the owner-map checkpoint.
 - Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` is now
-  reduced locally through admitted current replacement mappings; the same live
-  ECID replay is now narrower at `11` source-evidence failures and `12`
-  missing template groups on
-  `authority_universe_sha256=fbef2df67ba4c69be081a85ecea0fa88e666c03a9d55fa66b10d3655b72bc115`.
-  The only remaining template-owned gap is the explicit retirement of
-  `R1EA-160`, `R1EA-161`, and `R1EA-162`.
+  reduced further locally through the governed land-exchange retirement
+  closeout; the same live ECID replay remains at `11`
+  source-evidence failures and is now down to `11` missing template groups on
+  `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`.
+  The land-exchange template no longer appears in the missing-template
+  inventory.
 - The next truthful slice is now Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
-  which still owns the remaining template-retirement, source-truth,
-  forest-plan, and rule-pack repairs upstream of packet-local replay.
+  which still owns the remaining source-truth, forest-plan, and rule-pack
+  repairs upstream of packet-local replay.
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 

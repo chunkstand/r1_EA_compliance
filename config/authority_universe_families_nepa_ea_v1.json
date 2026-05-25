@@ -1518,10 +1518,7 @@
           "R1EA-153",
           "R1EA-154",
           "R1EA-155",
-          "R1EA-156",
-          "R1EA-160",
-          "R1EA-161",
-          "R1EA-162"
+          "R1EA-156"
         ],
         "authority_family_rule_template_ids": [
           "land_exchange_fs_policy_and_project_references_authority_template"
@@ -1555,10 +1552,7 @@
         "R1EA-153",
         "R1EA-154",
         "R1EA-155",
-        "R1EA-156",
-        "R1EA-160",
-        "R1EA-161",
-        "R1EA-162"
+        "R1EA-156"
       ],
       "source_record_mapping": {
         "catalog_source_record_ids": [
@@ -1568,13 +1562,12 @@
           "R1EA-153",
           "R1EA-154",
           "R1EA-155",
-          "R1EA-156",
+          "R1EA-156"
+        ],
+        "excluded_source_record_ids": [
           "R1EA-160",
           "R1EA-161",
           "R1EA-162"
-        ],
-        "excluded_source_record_ids": [
-          "R1EA-160"
         ],
         "mapped_source_record_ids": [
           "R1EA-150",
@@ -1583,10 +1576,7 @@
           "R1EA-153",
           "R1EA-154",
           "R1EA-155",
-          "R1EA-156",
-          "R1EA-160",
-          "R1EA-161",
-          "R1EA-162"
+          "R1EA-156"
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],

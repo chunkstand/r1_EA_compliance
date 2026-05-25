@@ -39,7 +39,7 @@ applicability validation.
   now rebuilds the ECID applicability universe at
   `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`,
-  `authority_universe_sha256=fbef2df67ba4c69be081a85ecea0fa88e666c03a9d55fa66b10d3655b72bc115`,
+  `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`,
   and `validation_passed=false`.
 - `candidates_have_source_evidence_available` is now reduced from `21` failing
   candidates to `11`: the remaining six authority-family candidates are
@@ -56,9 +56,11 @@ applicability validation.
   `organic_act_16usc_475`,
   `seven_county_nepa_scope`).
 - `authority_family_template_candidates_cover_config` is now reduced from `19`
-  failing template groups to `12`. The admitted-current replacement lane now
-  covers `R1EA-038`, `R1EA-043`, `R1EA-068`, `R1EA-125` through `R1EA-149`
-  (except already-bound `R1EA-146`), and `R1EA-151` through `R1EA-156`. The
+  failing template groups to `11`. The admitted-current replacement lane plus
+  the governed land-exchange retirement closeout now cover `R1EA-038`,
+  `R1EA-043`, `R1EA-068`, `R1EA-125` through `R1EA-149` (except
+  already-bound `R1EA-146`), `R1EA-151` through `R1EA-156`, and the retired
+  non-controlling project-reference rows `R1EA-160` through `R1EA-162`. The
   remaining groups still point at source IDs such as:
   `R1EA-093`,
   `R1EA-083` through `R1EA-090` and `R1EA-115` through `R1EA-118`,
@@ -66,7 +68,6 @@ applicability validation.
   `R1EA-097` through `R1EA-100`,
   `R1EA-109`,
   `R1EA-101`, `R1EA-102`, `R1EA-105`, `R1EA-106`, `R1EA-111`, `R1EA-112`,
-  `R1EA-160`, `R1EA-161`, and `R1EA-162`,
   `R1EA-063`,
   `R1EA-056` through `R1EA-062`,
   `R1EA-045`, `R1EA-046`, `R1EA-051`, `R1EA-054`, `R1EA-055`,
@@ -409,20 +410,29 @@ Milestone 2 reduction on 2026-05-25:
   `land_exchange_regulatory_requirements`,
   `land_exchange_statutory_authorities`, and the non-retired handbook/policy
   rows in `land_exchange_fs_policy_and_project_references`.
+- `config/authority_family_rule_templates_nepa_ea_v1.json`,
+  `config/compliance_rule_pack_nepa_ea_v0.json`,
+  `config/authority_family_rule_template_coverage_nepa_ea_v1.json`, and
+  `config/authority_universe_families_nepa_ea_v1.json` now retire
+  `R1EA-160`, `R1EA-161`, and `R1EA-162` into the excluded non-controlling
+  mapping class while preserving governed family membership for workbook
+  traceability.
 - The live ECID replay remains red, but the blocker is smaller at
-  `authority_universe_sha256=fbef2df67ba4c69be081a85ecea0fa88e666c03a9d55fa66b10d3655b72bc115`,
+  `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`,
   `source_evidence_failure_count=11`, and
-  `missing_source_record_count=12`.
-- The remaining template-owned gap is now narrowed to the explicit
-  `R1EA-160`, `R1EA-161`, and `R1EA-162` retirements in
-  `land_exchange_fs_policy_and_project_references`. All other remaining
-  missing-template families are true current-source additions or forest-plan
-  support admissions.
+  `missing_source_record_count=11`.
+- The governed land-exchange retirement closeout now moves `R1EA-160`,
+  `R1EA-161`, and `R1EA-162` into the excluded non-controlling mapping class
+  for `land_exchange_fs_policy_and_project_references`. The land-exchange
+  template no longer appears in the missing-template inventory.
+- All remaining missing-template families are now true current-source
+  additions or forest-plan support admissions.
 - Milestone `2` therefore remains open. The next truthful sub-slice in this
-  same packet is the governed retirement of
-  `R1EA-160`, `R1EA-161`, and `R1EA-162`, after which the live blocker should
-  consist only of current-source additions, forest-plan support admissions,
-  and the five base-rule decisions.
+  same packet is the governed current-source addition lane, beginning with
+  `R1EA-093` in `clean_air_act_conformity_air_quality`, after which the live
+  blocker should continue through the remaining water, cultural, wildlife,
+  hazardous-material, invasive/farmland/drinking-water, minerals, forest-plan
+  support, and five base-rule owner decisions.
 
 ### Milestone 3 - Replay Resume Handoff
 
@@ -467,20 +477,26 @@ Acceptance criteria:
 ```bash
 PYTHONPATH=src .venv/bin/python -m pytest \
   tests/test_applicability_authority_family_templates.py \
+  tests/test_authority_family_rule_templates.py \
+  tests/test_authority_universe_inventory.py \
   tests/test_rule_claim_binding_runtime.py \
   tests/test_architecture_contract.py -q
 
 PYTHONPATH=src .venv/bin/python -m ruff check \
-  src/usfs_r1_ea_sources/records.py \
-  src/usfs_r1_ea_sources/applicability_contract_support.py \
-  tests/test_applicability_authority_family_templates.py
+  tests/test_applicability_authority_family_templates.py \
+  tests/test_authority_family_rule_templates.py \
+  tests/test_authority_universe_inventory.py
 
 PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review \
   --source-set-id source-set-4fb59e9eb43045cb
 
-jq empty config/compliance_source_record_reconciliation_v1.json
+jq empty \
+  config/authority_family_rule_templates_nepa_ea_v1.json \
+  config/compliance_rule_pack_nepa_ea_v0.json \
+  config/authority_family_rule_template_coverage_nepa_ea_v1.json \
+  config/authority_universe_families_nepa_ea_v1.json
 git diff --check
 ```
 
@@ -518,6 +534,7 @@ git diff --check
   That means the next slice must stay disciplined about workbook/template
   ownership and must not drift back into runtime heuristics.
 - Next truthful slice: Milestone `2` in this packet. Land the governed
-  `R1EA-160`/`R1EA-161`/`R1EA-162` retirement edits, then continue with the
-  remaining current-source additions, forest-plan support admissions, and
-  base-rule owner decisions needed to clear the ECID applicability blocker.
+  current-source addition work beginning with `R1EA-093` in
+  `clean_air_act_conformity_air_quality`, then continue with the remaining
+  current-source additions, forest-plan support admissions, and base-rule
+  owner decisions needed to clear the ECID applicability blocker.

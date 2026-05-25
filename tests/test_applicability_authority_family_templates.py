@@ -545,6 +545,83 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
         )
         self.assertTrue(candidate["source_evidence_availability"]["available"])
 
+    def test_candidates_keep_retired_excluded_rows_out_of_required_source_record_ids(self) -> None:
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "land-exchange-template",
+                        "authority_family_id": "land_exchange_policy",
+                        "rule_id": "land_exchange_template_rule",
+                        "title": "Land exchange template",
+                        "question": "Does the package include a land exchange?",
+                        "requirement": "Evaluate land-exchange policy applicability.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "agency_policy",
+                        "authority_document_role": "agency_policy",
+                        "authority_source_record_id": "R1EA-150",
+                        "source_record_ids": ["R1EA-150", "R1EA-151"],
+                        "supporting_source_record_ids": ["R1EA-151"],
+                        "excluded_source_record_ids": ["R1EA-160", "R1EA-161", "R1EA-162"],
+                        "package_query": "land exchange",
+                        "package_terms": ["land exchange"],
+                        "applies_if_package_terms": ["land exchange"],
+                        "does_not_apply_if_package_terms": ["not a land exchange"],
+                        "source_query": "land exchange policy source",
+                        "source_filters": {
+                            "document_role": "agency_policy",
+                            "source_record_id": "R1EA-150",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id={
+                "R1EA-150": {
+                    "source_record_id": "R1EA-150",
+                    "title": "Land exchange policy",
+                    "citation_label": "R1EA-150 | Policy",
+                    "document_role": "agency_policy",
+                    "authority_level": "agency_policy",
+                    "source_status": "downloaded_existing",
+                    "artifact_sha256": "sha-land-policy",
+                    "artifact_path": "artifacts/raw/R1EA-150.pdf",
+                },
+                "R1EA-151": {
+                    "source_record_id": "R1EA-151",
+                    "title": "Land exchange handbook support",
+                    "citation_label": "R1EA-151 | Handbook",
+                    "document_role": "agency_policy",
+                    "authority_level": "agency_policy",
+                    "source_status": "downloaded_existing",
+                    "artifact_sha256": "sha-land-support",
+                    "artifact_path": "artifacts/raw/R1EA-151.pdf",
+                },
+            },
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], ["R1EA-150", "R1EA-151"])
+        self.assertEqual(
+            candidate["source_role_filters"]["excluded_source_record_ids"],
+            ["R1EA-160", "R1EA-161", "R1EA-162"],
+        )
+        self.assertEqual(
+            candidate["required_source_evidence"]["excluded_source_record_ids"],
+            ["R1EA-160", "R1EA-161", "R1EA-162"],
+        )
+        self.assertEqual(
+            candidate["dependency_contract"]["excluded_source_record_ids"],
+            ["R1EA-160", "R1EA-161", "R1EA-162"],
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
 
 if __name__ == "__main__":
     unittest.main()

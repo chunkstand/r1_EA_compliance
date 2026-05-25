@@ -9,44 +9,47 @@ For a short current route before this append-only log, start with `docs/CURRENT_
 
 ## Active Authority Current-Source Gap Blocker Milestone 2 Reduced Locally
 
-This implementation slice closes the admitted-current replacement class for the
-active current-source blocker packet without pretending the remaining
-retirement and source-truth work is done.
+This implementation slice closes the governed land-exchange retirement
+sub-slice for the active current-source blocker packet without pretending the
+remaining current-source and forest-plan owner work is done.
 
 - outcome label:
   `reduced locally`; the live blocker is smaller, but Milestone `2` remains
   open
 - implementation truth:
-  `config/compliance_source_record_reconciliation_v1.json` now binds admitted
-  current catalog replacements for the legacy template-owned rows in
-  `grassland_bankhead_jones_authorities`,
-  `roads_access_special_use_action_authorities`,
-  `species_supporting_sources_and_overlays`,
-  `land_exchange_regulatory_requirements`,
-  `land_exchange_statutory_authorities`, and the non-retired handbook/policy
-  rows in `land_exchange_fs_policy_and_project_references`
+  the governed land-exchange retirement closeout now lives in
+  `config/authority_family_rule_templates_nepa_ea_v1.json`,
+  `config/compliance_rule_pack_nepa_ea_v0.json`,
+  `config/authority_family_rule_template_coverage_nepa_ea_v1.json`, and
+  `config/authority_universe_families_nepa_ea_v1.json`; `R1EA-160`,
+  `R1EA-161`, and `R1EA-162` now remain mapped only as excluded
+  non-controlling project-reference rows while the active family contract
+  stays on the current directive/support rows
 - live replay truth:
   `applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`
   now reports `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`,
-  `authority_universe_sha256=fbef2df67ba4c69be081a85ecea0fa88e666c03a9d55fa66b10d3655b72bc115`,
+  `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`,
   `validation_passed=false`,
   `source_evidence_failure_count=11`, and
-  `missing_source_record_count=12`
+  `missing_source_record_count=11`
 - remaining blocker truth:
-  the only remaining template-owned family gap is now the explicit retirement
-  of `R1EA-160`, `R1EA-161`, and `R1EA-162`; the rest of the missing-template
-  inventory is true current-source additions or forest-plan support admissions
+  the land-exchange template no longer appears in the missing-template
+  inventory; the remaining missing-template families are now only true
+  current-source additions or forest-plan support admissions, while the
+  separate `11` source-evidence failures still consist of the six remaining
+  authority-family candidates plus the five base-rule current-source gaps
 - next truthful slice:
   Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
-  starting with the governed `R1EA-160` / `R1EA-161` / `R1EA-162`
-  retirement closeout
+  continuing with the true current-source addition and forest-plan support
+  owner classes now that the governed `R1EA-160` / `R1EA-161` / `R1EA-162`
+  retirement closeout is done
 - verification:
-  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_applicability_authority_family_templates.py tests/test_rule_claim_binding_runtime.py tests/test_architecture_contract.py -q`,
-  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/records.py src/usfs_r1_ea_sources/applicability_contract_support.py tests/test_applicability_authority_family_templates.py`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_applicability_authority_family_templates.py tests/test_authority_family_rule_templates.py tests/test_authority_universe_inventory.py tests/test_rule_claim_binding_runtime.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check tests/test_applicability_authority_family_templates.py tests/test_authority_family_rule_templates.py tests/test_authority_universe_inventory.py`,
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
-  `jq empty config/compliance_source_record_reconciliation_v1.json`,
+  `jq empty config/authority_family_rule_templates_nepa_ea_v1.json config/compliance_rule_pack_nepa_ea_v0.json config/authority_family_rule_template_coverage_nepa_ea_v1.json config/authority_universe_families_nepa_ea_v1.json`,
   `git diff --check`
 
 ## Active Authority Current-Source Gap Blocker Milestone 1 Resolved Locally

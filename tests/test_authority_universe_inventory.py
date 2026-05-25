@@ -4,8 +4,10 @@ from collections import Counter
 import json
 from pathlib import Path
 
+from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT
+from usfs_r1_ea_sources.config import WorkbookConfig
 from usfs_r1_ea_sources.config import load_config
-from usfs_r1_ea_sources.workbook import load_canonical_sources
+from usfs_r1_ea_sources.workbook import load_legacy_canonical_sources
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -99,19 +101,29 @@ def test_authority_inventory_maps_every_rule_pack_rule_once() -> None:
 def test_authority_inventory_maps_every_workbook_source_record() -> None:
     inventory = _load_json(INVENTORY_PATH)
     config = load_config(DOWNLOADER_CONFIG_PATH)
-    sources = load_canonical_sources(WORKBOOK_PATH, config.workbook)
+    legacy_workbook_config = WorkbookConfig(
+        loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT,
+        canonical_sheets=("Ingest_Checklist", "R1_Forest_Plans"),
+        exclusion_sheet="Scope_Exclusions",
+        header_row=4,
+        overrides_path=config.workbook.overrides_path,
+    )
+    sources = load_legacy_canonical_sources(WORKBOOK_PATH, legacy_workbook_config)
     workbook_ids = {source.source_record_id for source in sources}
     family_ids = {family["family_id"] for family in inventory["authority_families"]}
-    family_source_ids = {
+    mapped_family_source_ids = {
         source_record_id
         for family in inventory["authority_families"]
-        for source_record_id in family["source_record_ids"]
+        for source_record_id in (
+            list(family["source_record_ids"])
+            + list(family["source_record_mapping"].get("excluded_source_record_ids", []))
+        )
     }
     crosswalk = inventory["source_record_crosswalk"]
 
     assert {row["source_record_id"] for row in crosswalk} == workbook_ids
-    assert workbook_ids.issubset(family_source_ids)
-    assert family_source_ids.issubset(workbook_ids)
+    assert workbook_ids.issubset(mapped_family_source_ids)
+    assert mapped_family_source_ids.issubset(workbook_ids)
     assert inventory["summary"]["orphan_source_record_ids"] == []
     assert inventory["summary"]["source_record_crosswalk_count"] == len(sources)
     assert inventory["summary"]["workbook_source_record_count"] == len(sources)
@@ -131,6 +143,16 @@ def test_authority_inventory_maps_every_workbook_source_record() -> None:
     excluded_project_reference = next(row for row in crosswalk if row["source_record_id"] == "R1EA-160")
     assert excluded_project_reference["mapping_status"] == "mapped_source_url_excluded"
     assert excluded_project_reference["primary_family_id"] == "land_exchange_fs_policy_and_project_references"
+    land_exchange_family = next(
+        family
+        for family in inventory["authority_families"]
+        if family["family_id"] == "land_exchange_fs_policy_and_project_references"
+    )
+    assert land_exchange_family["source_record_mapping"]["excluded_source_record_ids"] == [
+        "R1EA-160",
+        "R1EA-161",
+        "R1EA-162",
+    ]
 
 
 def test_authority_inventory_has_no_stale_milestone_2_gap_text() -> None:

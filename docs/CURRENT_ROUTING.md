@@ -102,13 +102,16 @@ Use this file as the short current route before opening the large append-only do
   is now also resolved locally: the remaining stale IDs are now split among
   template retire/replace work, true current-source additions, forest-plan
   support admissions, and five base-rule current-source decisions. Milestone
-  `2` in that same packet is now reduced locally through admitted current
-  replacement mappings: the live applicability replay is now `11`
-  source-evidence failures and `12` missing template groups on
-  `authority_universe_sha256=fbef2df67ba4c69be081a85ecea0fa88e666c03a9d55fa66b10d3655b72bc115`.
-  The remaining template-owned gap is only the explicit retirement of
-  `R1EA-160` through `R1EA-162`, and the next truthful slice remains the rest
-  of Milestone `2` in that same packet
+  `2` in that same packet is now reduced further locally through the governed
+  land-exchange retirement closeout: the live applicability replay remains at
+  `11` source-evidence failures and is now down to `11` missing template
+  groups on
+  `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`.
+  The land-exchange template no longer appears in the missing-template
+  inventory. The remaining blocker is now only true current-source additions,
+  forest-plan support admissions, and the five base-rule current-source
+  decisions, so the next truthful slice remains the rest of Milestone `2` in
+  that same packet
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

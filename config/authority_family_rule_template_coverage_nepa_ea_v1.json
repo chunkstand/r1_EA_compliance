@@ -481,7 +481,9 @@
         "R1EA-153",
         "R1EA-154",
         "R1EA-155",
-        "R1EA-156",
+        "R1EA-156"
+      ],
+      "excluded_source_record_ids": [
         "R1EA-160",
         "R1EA-161",
         "R1EA-162"
