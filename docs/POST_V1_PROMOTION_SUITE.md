@@ -156,7 +156,7 @@ status, or last local signal does not prove the declared profile.
 
 ## Current Local Result
 
-The current routed truth on 2026-05-24 is now red at the review-local replay
+The current routed truth on 2026-05-25 is now red at the review-local replay
 layer rather than the slot-driven contract layer.
 
 - `source_library/reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json`

@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-24
+Date: 2026-05-25
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
@@ -86,7 +86,7 @@ stopping where the remaining red proved review-local rather than architectural.
   `v1-cg-ecid-compliance-review` plus
   `region1-expansion-south-plateau-landscape-treatment`; West Reservoir still
   truthfully reports `actual_contract_status="typed_blocked"`
-- promotion-suite truth:
+- historical promotion-suite truth at 2026-05-24 closeout:
   non-strict `promotion-suite` still reports
   `full_canonical_corpus_ready=true`,
   `passed_required_full_canonical_result_count=10/10`,
@@ -108,6 +108,10 @@ stopping where the remaining red proved review-local rather than architectural.
   `PYTHONPATH=src .venv/bin/python -m compileall src`,
   `jq empty config/promotion_suite_v1.json config/v1_real_package_review_coverage_v1.json`,
   `git diff --check`
+
+Routing note: this section is the 2026-05-24 contract closeout snapshot. The
+current live selector truth is the 2026-05-25 replay-repair baseline recorded
+in `Real Package Review Replay Repair Milestone 0 Reduced Locally` above.
 
 ## Promotion Suite Slot-Driven Contract Milestone 3 Reduced Locally
 

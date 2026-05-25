@@ -14,7 +14,7 @@ normalized request packet, routes it to the supported document lane, and writes 
 artifacts under `source_library/document_plans/<request_id>/` without generating canonical lane
 outputs.
 
-Current routed state on 2026-05-24:
+Current routed state on 2026-05-25:
 
 - Live local catalog is now `source-set-4fb59e9eb43045cb` in
   `source_library/catalog/source_set_manifest.json` with

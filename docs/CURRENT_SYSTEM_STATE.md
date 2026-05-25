@@ -70,7 +70,7 @@ Latest implementation update on 2026-05-24:
   `reviewer_ready_slot_count=0`, and reviewer-ready slot mismatches for ECID
   current promotion plus South Plateau reviewer-ready expansion, while West
   Reservoir still truthfully passes as `typed_blocked`
-- aggregate readiness truth:
+- historical aggregate readiness truth at 2026-05-24 closeout:
   non-strict `promotion-suite` now reports
   `full_canonical_corpus_ready=true`,
   `passed_required_full_canonical_result_count=10/10`,
@@ -97,6 +97,11 @@ Latest implementation update on 2026-05-24:
   `PYTHONPATH=src .venv/bin/python -m compileall src`,
   `jq empty config/promotion_suite_v1.json config/v1_real_package_review_coverage_v1.json`,
   `git diff --check`
+
+Routing note: this section is a historical 2026-05-24 contract closeout
+snapshot. The current live selector truth is the 2026-05-25 replay-repair
+baseline recorded in `Real Package Review Replay Repair Milestone 0 Reduced
+Locally` above.
 
 ## Lolo Tyler's Kitchen Packet Reduced Locally
 
