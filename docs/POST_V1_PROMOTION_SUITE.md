@@ -12,6 +12,22 @@ Default manifest:
 config/promotion_suite_v1.json
 ```
 
+The manifest now uses schema version `promotion-suite-v1`. Milestone 1 adds a
+typed `current_promotion_contract` section that declares:
+
+- governed slot selection from `config/v1_real_package_review_coverage_v1.json`
+  plus the aggregate
+  `reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json`
+- same-slot review artifact families and suite-level families for the
+  current-promotion lane
+- quorum settings for eligible and passing current-promotion slots
+- explicit reference canaries so a fixed proving packet remains visible after
+  slot-driven runtime separation lands
+
+The runtime still computes `current_promotion_ready` from the existing
+`required_for_current_promotion` result flags until the follow-on runtime slice
+replaces that fixed review-case aggregation path.
+
 Default outputs:
 
 ```text

@@ -1870,6 +1870,13 @@ promoted East Crazy V1 evidence from post-V1 real-package expansion work. Use
 When recording both normal and strict expansion results, send the strict run to a separate
 `--results-dir` or rerun the normal suite last so the default suite output remains the current
 promotion signal.
+The manifest now uses schema version `promotion-suite-v1` and declares a
+`current_promotion_contract` with governed coverage-class slot selection,
+same-slot review-family constraints, quorum settings, and explicit reference
+canaries. This Milestone 1 schema slice makes the slot-driven boundary
+executable without yet changing the runtime `current_promotion_ready`
+calculation; the follow-on runtime slice still needs to replace the remaining
+fixed review-case aggregation path.
 The manifest also requires the applicability seed and gold eval artifacts that prove Milestone 4
 authority-family positive/negative, unresolved, and adjudication coverage. It also requires NEPA 3D
 source-set and V1 review graph validation/summary artifacts for the current graph-readiness claim.

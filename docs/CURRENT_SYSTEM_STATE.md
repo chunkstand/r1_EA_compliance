@@ -14,6 +14,33 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
+## Promotion Suite Slot-Driven Contract Milestone 1 Reduced Locally
+
+Latest implementation update on 2026-05-24:
+
+- routed packet:
+  `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; manifest schema `promotion-suite-v1` now declares
+  `current_promotion_contract` with governed coverage-class slot selection,
+  same-slot review families, quorum settings, and an explicit ECID reference
+  canary
+- rebaseline truth:
+  Milestone 0 found a clean checkout and no equivalent slot-driven selector or
+  canary implementation already landed under another name; the governed roster
+  still has exactly one
+  `current_promotion_reviewer_ready` slot at implementation start
+- remaining blocker truth:
+  the runtime still computes `current_promotion_ready` from the older fixed
+  `required_for_current_promotion` aggregation path, so the next slice is
+  runtime slot-driven separation rather than review-local ECID artifact replay
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_promotion_suite.py tests/test_promotion_suite_contract_validation.py tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite_full_canonical.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_cli_eval.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/promotion_suite_support.py src/usfs_r1_ea_sources/promotion_suite_validation.py tests/support/promotion_suite_fixtures.py tests/test_promotion_suite.py tests/test_promotion_suite_contract_validation.py`,
+  `jq empty config/promotion_suite_v1.json`,
+  `git diff --check`
+
 ## Lolo Tyler's Kitchen Packet Reduced Locally
 
 Latest implementation update on 2026-05-24:

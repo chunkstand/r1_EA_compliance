@@ -26,6 +26,16 @@ def write_suite_fixture(tmp_path: Path) -> tuple[Path, Path]:
         },
     )
     write_json(
+        tmp_path / "config" / "review_coverage.json",
+        {
+            "schema_version": "real-package-review-coverage-v1",
+            "id": "fixture-review-coverage",
+            "required_coverage_class_ids": ["current_promotion_reviewer_ready"],
+            "slots": [],
+            "coverage_thresholds": {},
+        },
+    )
+    write_json(
         manifest_path,
         {
             "schema_version": PROMOTION_SUITE_SCHEMA_VERSION,
@@ -36,6 +46,42 @@ def write_suite_fixture(tmp_path: Path) -> tuple[Path, Path]:
             "rule_pack_version": "1.0.0",
             "expected_rule_count": 2,
             "expected_baseline_source_record_count": 2,
+            "current_promotion_contract": {
+                "require_rule_pack_result": True,
+                "slot_selector": {
+                    "selector_type": "governed_coverage_class",
+                    "coverage_manifest_path": "config/review_coverage.json",
+                    "coverage_results_path": "reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json",
+                    "coverage_class_ids": ["current_promotion_reviewer_ready"],
+                    "allowed_contract_statuses": ["reviewer_ready"],
+                },
+                "quorum": {
+                    "eligible_slot_count_min": 1,
+                    "passing_slot_count_min": 1,
+                },
+                "artifact_families": [
+                    {
+                        "id": "suite-baseline",
+                        "family_scope": "suite",
+                        "suite_result_ids": ["phase_eval_core"],
+                    },
+                    {
+                        "id": "review-slot-artifacts",
+                        "family_scope": "review_slot",
+                        "review_result_ids": ["v1_ea_eval", "matrix_pdf"],
+                        "slot_binding": "same_slot",
+                        "source_set_binding": "current_promotion_source_set",
+                        "passing_slot_count_min": 1,
+                    },
+                ],
+                "reference_canaries": [
+                    {
+                        "id": "case-1-canary",
+                        "review_case_id": "case-1",
+                        "required": True,
+                    }
+                ],
+            },
             "review_cases": [
                 {
                     "id": "case-1",

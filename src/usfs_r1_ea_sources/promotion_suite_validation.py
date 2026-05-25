@@ -51,6 +51,15 @@ def _validate_manifest(manifest: dict[str, Any]) -> None:
             "Promotion suite manifest with required_for_full_canonical_corpus results must define "
             "full_canonical_source_set_id."
         )
+    current_promotion_contract = manifest.get("current_promotion_contract")
+    if current_promotion_contract is not None:
+        if not isinstance(current_promotion_contract, dict):
+            raise ValueError("Promotion suite current_promotion_contract must be an object.")
+        _validate_current_promotion_contract(
+            current_promotion_contract,
+            review_cases=manifest.get("review_cases", []),
+            suite_results=manifest.get("suite_results", []),
+        )
     expansion_result_ids_by_review_id = _required_expansion_result_ids_by_review_id(
         manifest
     )
@@ -75,6 +84,199 @@ def _required_expansion_result_ids_by_review_id(
         if result_ids:
             result_ids_by_review_id[review_id] = result_ids
     return result_ids_by_review_id
+
+
+def _validate_current_promotion_contract(
+    contract: dict[str, Any],
+    *,
+    review_cases: list[dict[str, Any]],
+    suite_results: list[dict[str, Any]],
+) -> None:
+    selector = contract.get("slot_selector")
+    if not isinstance(selector, dict):
+        raise ValueError("Promotion suite current_promotion_contract requires slot_selector.")
+    _validate_current_promotion_selector(selector)
+
+    quorum = contract.get("quorum")
+    if not isinstance(quorum, dict):
+        raise ValueError("Promotion suite current_promotion_contract requires quorum.")
+    for key in ("eligible_slot_count_min", "passing_slot_count_min"):
+        value = quorum.get(key)
+        if not isinstance(value, int) or value < 1:
+            raise ValueError(
+                "Promotion suite current_promotion_contract quorum values must be "
+                f"positive integers; {key!r} is invalid."
+            )
+
+    canaries = contract.get("reference_canaries")
+    if not isinstance(canaries, list) or not canaries:
+        raise ValueError(
+            "Promotion suite current_promotion_contract requires at least one "
+            "reference_canary."
+        )
+    review_case_ids = {str(case.get("id") or "") for case in review_cases}
+    review_result_ids = {
+        str(result.get("id") or "")
+        for case in review_cases
+        for result in case.get("results", [])
+    }
+    suite_result_ids = {str(result.get("id") or "") for result in suite_results}
+    for canary in canaries:
+        if not isinstance(canary, dict):
+            raise ValueError(
+                "Promotion suite current_promotion_contract reference_canaries must contain "
+                "objects."
+            )
+        _validate_safe_id(str(canary.get("id") or ""), "reference canary id")
+        review_case_id = str(canary.get("review_case_id") or "")
+        _validate_safe_id(review_case_id, "reference canary review case id")
+        if review_case_id not in review_case_ids:
+            raise ValueError(
+                "Promotion suite reference canary review_case_id must match a declared "
+                f"review case; got {review_case_id!r}."
+            )
+
+    families = contract.get("artifact_families")
+    if not isinstance(families, list) or not families:
+        raise ValueError(
+            "Promotion suite current_promotion_contract requires artifact_families."
+        )
+    seen_family_ids: set[str] = set()
+    for family in families:
+        _validate_current_promotion_family(
+            family,
+            review_result_ids=review_result_ids,
+            suite_result_ids=suite_result_ids,
+            seen_family_ids=seen_family_ids,
+        )
+
+
+def _validate_current_promotion_selector(selector: dict[str, Any]) -> None:
+    for forbidden_key in ("review_id", "review_ids", "review_case_id", "review_case_ids"):
+        if forbidden_key in selector:
+            raise ValueError(
+                "Promotion suite current_promotion slot_selector must resolve governed "
+                f"coverage classes, not hard-coded {forbidden_key} selectors."
+            )
+    selector_type = str(selector.get("selector_type") or "")
+    if selector_type != "governed_coverage_class":
+        raise ValueError(
+            "Promotion suite current_promotion slot_selector.selector_type must be "
+            "'governed_coverage_class'."
+        )
+    for key in ("coverage_manifest_path", "coverage_results_path"):
+        if not str(selector.get(key) or "").strip():
+            raise ValueError(
+                "Promotion suite current_promotion slot_selector is missing "
+                f"{key!r}."
+            )
+    coverage_class_ids = selector.get("coverage_class_ids")
+    if not isinstance(coverage_class_ids, list) or not coverage_class_ids:
+        raise ValueError(
+            "Promotion suite current_promotion slot_selector requires coverage_class_ids."
+        )
+    for coverage_class_id in coverage_class_ids:
+        _validate_safe_id(str(coverage_class_id or ""), "coverage class id")
+    allowed_contract_statuses = selector.get("allowed_contract_statuses")
+    if (
+        not isinstance(allowed_contract_statuses, list)
+        or not allowed_contract_statuses
+    ):
+        raise ValueError(
+            "Promotion suite current_promotion slot_selector requires "
+            "allowed_contract_statuses."
+        )
+    for contract_status in allowed_contract_statuses:
+        _validate_safe_id(str(contract_status or ""), "allowed contract status")
+
+
+def _validate_current_promotion_family(
+    family: dict[str, Any],
+    *,
+    review_result_ids: set[str],
+    suite_result_ids: set[str],
+    seen_family_ids: set[str],
+) -> None:
+    if not isinstance(family, dict):
+        raise ValueError(
+            "Promotion suite current_promotion artifact_families must contain objects."
+        )
+    family_id = str(family.get("id") or "")
+    _validate_safe_id(family_id, "current promotion family id")
+    if family_id in seen_family_ids:
+        raise ValueError(
+            f"Promotion suite current_promotion artifact_families contains duplicate id "
+            f"{family_id!r}."
+        )
+    seen_family_ids.add(family_id)
+    for forbidden_key in (
+        "checks",
+        "json_path",
+        "equals",
+        "min",
+        "contains_all",
+        "non_empty",
+        "starts_with",
+        "file_sha256_matches",
+    ):
+        if forbidden_key in family:
+            raise ValueError(
+                "Promotion suite current_promotion family "
+                f"{family_id!r} embeds packet-local checks; keep packet-specific counts and "
+                "assertions in focused validators instead."
+            )
+    family_scope = str(family.get("family_scope") or "")
+    if family_scope == "suite":
+        result_ids = family.get("suite_result_ids")
+        if not isinstance(result_ids, list) or not result_ids:
+            raise ValueError(
+                f"Promotion suite current_promotion suite family {family_id!r} requires "
+                "suite_result_ids."
+            )
+        for result_id in result_ids:
+            safe_result_id = str(result_id or "")
+            _validate_safe_id(safe_result_id, "suite family result id")
+            if safe_result_id not in suite_result_ids:
+                raise ValueError(
+                    f"Promotion suite current_promotion suite family {family_id!r} "
+                    f"references unknown suite_result_id {safe_result_id!r}."
+                )
+        return
+    if family_scope != "review_slot":
+        raise ValueError(
+            "Promotion suite current_promotion family_scope must be 'suite' or "
+            f"'review_slot'; got {family_scope!r}."
+        )
+    if str(family.get("slot_binding") or "") != "same_slot":
+        raise ValueError(
+            f"Promotion suite current_promotion review_slot family {family_id!r} must use "
+            "slot_binding='same_slot' so artifacts cannot be mixed across slots."
+        )
+    if str(family.get("source_set_binding") or "") != "current_promotion_source_set":
+        raise ValueError(
+            f"Promotion suite current_promotion review_slot family {family_id!r} must use "
+            "source_set_binding='current_promotion_source_set'."
+        )
+    passing_slot_count_min = family.get("passing_slot_count_min")
+    if not isinstance(passing_slot_count_min, int) or passing_slot_count_min < 1:
+        raise ValueError(
+            f"Promotion suite current_promotion review_slot family {family_id!r} must define "
+            "a positive passing_slot_count_min."
+        )
+    result_ids = family.get("review_result_ids")
+    if not isinstance(result_ids, list) or not result_ids:
+        raise ValueError(
+            f"Promotion suite current_promotion review_slot family {family_id!r} requires "
+            "review_result_ids."
+        )
+    for result_id in result_ids:
+        safe_result_id = str(result_id or "")
+        _validate_safe_id(safe_result_id, "review slot family result id")
+        if safe_result_id not in review_result_ids:
+            raise ValueError(
+                f"Promotion suite current_promotion review_slot family {family_id!r} "
+                f"references unknown review_result_id {safe_result_id!r}."
+            )
 
 
 def _validate_expansion_slot_spec(

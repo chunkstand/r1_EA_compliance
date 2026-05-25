@@ -3706,10 +3706,13 @@ The `promotion-suite` command writes:
 - `promotion_suite_results.json`
 - `promotion_suite_report.md`
 
-The manifest has schema version `promotion-suite-v0` and records:
+The manifest has schema version `promotion-suite-v1` and records:
 
 - suite ID, source-set ID, rule-pack path, rule-pack ID, rule-pack version, expected rule count, and
   expected baseline source-record count
+- `current_promotion_contract`, which declares governed coverage-class slot
+  selection, current-promotion quorum, suite and same-slot review artifact
+  families, and explicit reference canaries
 - review cases with review IDs, package labels, required current-promotion results, artifact paths,
   and JSON or file-header checks
 - suite-level results such as core phase-eval readiness, post-V1 applicability phase readiness,

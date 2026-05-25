@@ -2,16 +2,17 @@
 
 Date: 2026-05-24
 
-Status: Queued
+Status: Milestone 1 reduced locally
 
 Owner context: This is a fresh standalone follow-on packet for the promotion-suite contract. It
 does not replace the active Lolo example packet in `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
-and it does not reopen the already-closed full-canonical source-set rebind. The live checkout is
-also currently dirty across `config/promotion_suite_v1.json`, promotion-suite tests, and adjacent
-source-set refresh surfaces, so Milestone 0 must begin with a freshness and overlap pass before
-implementation starts. This packet is complete only after the contract refactor, focused tests,
-durable docs, handoff updates, and one local atomic closeout commit land together. A verified but
-uncommitted slice is only ready-to-close.
+and it does not reopen the already-closed full-canonical source-set rebind. Milestone 0 now
+records that the 2026-05-24 rebaseline found a clean checkout, no equivalent slot-driven selector
+or canary implementation already landed under another name, and the governed roster still exposes
+exactly one `current_promotion_reviewer_ready` slot at implementation start. This packet is
+complete only after the contract refactor, focused tests, durable docs, handoff updates, and one
+local atomic closeout commit land together. A verified but uncommitted slice is only
+ready-to-close.
 
 ## Purpose
 

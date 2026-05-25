@@ -1,5 +1,5 @@
 {
-  "schema_version": "promotion-suite-v0",
+  "schema_version": "promotion-suite-v1",
   "id": "post-v1-region1-ea-promotion-suite",
   "label": "Post-V1 Region 1 EA promotion suite",
   "source_set_id": "source-set-4fb59e9eb43045cb",
@@ -9,6 +9,116 @@
   "rule_pack_version": "0.4.0",
   "expected_rule_count": 48,
   "expected_baseline_source_record_count": 26,
+  "current_promotion_contract": {
+    "require_rule_pack_result": true,
+    "slot_selector": {
+      "selector_type": "governed_coverage_class",
+      "coverage_manifest_path": "config/v1_real_package_review_coverage_v1.json",
+      "coverage_results_path": "reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json",
+      "coverage_class_ids": [
+        "current_promotion_reviewer_ready"
+      ],
+      "allowed_contract_statuses": [
+        "reviewer_ready"
+      ]
+    },
+    "quorum": {
+      "eligible_slot_count_min": 1,
+      "passing_slot_count_min": 1
+    },
+    "artifact_families": [
+      {
+        "id": "current_suite_baseline",
+        "family_scope": "suite",
+        "suite_result_ids": [
+          "phase_eval_core",
+          "nepa_3d_source_set_graph_validation",
+          "nepa_3d_source_set_graph_summary",
+          "compliance_review_eval",
+          "compliance_gold_eval",
+          "applicability_eval_authority_family_coverage",
+          "applicability_gold_eval_authority_family_adjudication",
+          "gold_coverage_eval"
+        ]
+      },
+      {
+        "id": "current_review_core_artifacts",
+        "family_scope": "review_slot",
+        "review_result_ids": [
+          "compliance_validation",
+          "compliance_review",
+          "compliance_matrix",
+          "compliance_matrix_pdf",
+          "v1_ea_eval"
+        ],
+        "slot_binding": "same_slot",
+        "source_set_binding": "current_promotion_source_set",
+        "passing_slot_count_min": 1
+      },
+      {
+        "id": "current_review_packet_contract",
+        "family_scope": "review_slot",
+        "review_result_ids": [
+          "review_packet_row_inventory",
+          "compliance_matrix_render_manifest",
+          "review_packet_index",
+          "review_packet_index_pdf",
+          "review_packet_index_validation"
+        ],
+        "slot_binding": "same_slot",
+        "source_set_binding": "current_promotion_source_set",
+        "passing_slot_count_min": 1
+      },
+      {
+        "id": "current_review_decision_support",
+        "family_scope": "review_slot",
+        "review_result_ids": [
+          "decision_support_report",
+          "decision_support_manifest",
+          "decision_support_pdf"
+        ],
+        "slot_binding": "same_slot",
+        "source_set_binding": "current_promotion_source_set",
+        "passing_slot_count_min": 1
+      },
+      {
+        "id": "current_review_final_qa",
+        "family_scope": "review_slot",
+        "review_result_ids": [
+          "final_qa_certification_report",
+          "final_qa_certification_manifest",
+          "final_qa_certification_pdf",
+          "final_qa_certification_validation"
+        ],
+        "slot_binding": "same_slot",
+        "source_set_binding": "current_promotion_source_set",
+        "passing_slot_count_min": 1
+      },
+      {
+        "id": "current_review_supporting_outputs",
+        "family_scope": "review_slot",
+        "review_result_ids": [
+          "authority_family_provenance",
+          "non_applicable_authority_appendix",
+          "authority_reviewer_resolution_report",
+          "litigation_risk_summary",
+          "nepa_3d_review_graph_validation",
+          "nepa_3d_review_graph_summary"
+        ],
+        "slot_binding": "same_slot",
+        "source_set_binding": "current_promotion_source_set",
+        "passing_slot_count_min": 1
+      }
+    ],
+    "reference_canaries": [
+      {
+        "id": "ecid_reference_canary",
+        "label": "East Crazies proving packet",
+        "review_case_id": "v1-cg-ecid",
+        "required": true
+      }
+    ]
+  },
   "review_cases": [
     {
       "id": "v1-cg-ecid",

@@ -7,6 +7,43 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Promotion Suite Slot-Driven Contract Milestone 1 Reduced Locally
+
+This implementation slice carried the queued promotion-suite contract packet
+through Milestone `1`, then stopped before runtime slot resolution so the next
+step remains the true contract delta.
+
+- outcome label:
+  `reduced locally`; manifest schema `promotion-suite-v1` now declares
+  `current_promotion_contract` with governed coverage-class slot selection,
+  same-slot review families, quorum settings, and an explicit ECID reference
+  canary
+- Milestone 0 rebaseline:
+  the checkout is now clean, no equivalent slot-driven selector or canary
+  implementation had already landed under another name, and the governed
+  `config/v1_real_package_review_coverage_v1.json` roster still exposes
+  exactly one `current_promotion_reviewer_ready` slot
+- packet-local improvement:
+  `src/usfs_r1_ea_sources/promotion_suite_validation.py` now validates the
+  slot-driven contract shape, rejects hard-coded review-ID slot selectors,
+  rejects review families that could mix artifacts across slots, and rejects
+  inline packet-local checks inside current-promotion family definitions;
+  `tests/test_promotion_suite.py` no longer relies on
+  `manifest["review_cases"][0]`; and the new
+  `tests/test_promotion_suite_contract_validation.py` guards the contract
+  against review-ID, mixed-slot, and inline-check regressions
+- remaining blocker truth:
+  `src/usfs_r1_ea_sources/promotion_suite.py` still computes
+  `current_promotion_ready` from the older fixed
+  `required_for_current_promotion` review-case and suite-result aggregation,
+  so Milestone `2` remains the next truthful slice
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_promotion_suite.py tests/test_promotion_suite_contract_validation.py tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite_full_canonical.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_cli_eval.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/promotion_suite_support.py src/usfs_r1_ea_sources/promotion_suite_validation.py tests/support/promotion_suite_fixtures.py tests/test_promotion_suite.py tests/test_promotion_suite_contract_validation.py`,
+  `jq empty config/promotion_suite_v1.json`,
+  `git diff --check`
+
 ## Active Source-Set Contract Refresh Reduced Locally
 
 This implementation slice finished the repo-owned active-source-set rebind and

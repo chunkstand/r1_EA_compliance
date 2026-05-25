@@ -16,7 +16,7 @@ Use this file as the short current route before opening the large append-only do
 - Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
 - Active packet:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-- Queued downstream contract packet:
+- Downstream contract packet in progress:
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
 - Adjacent active queue packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
@@ -59,11 +59,14 @@ Use this file as the short current route before opening the large append-only do
   `passed_required_full_canonical_result_count=10/10`. The remaining live
   promotion blocker is the current-review lane, where stale or missing
   `v1-cg-ecid-compliance-review` compliance/applicability artifacts still keep
-  `current_promotion_ready=false`. A fresh standalone follow-on packet now
-  exists at `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` to
-  remove the one-review structural coupling in `promotion-suite` without
-  treating the ECID review-local replay refresh as equivalent to contract
-  repair
+  `current_promotion_ready=false`. Milestone `1` of
+  `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` is now reduced
+  locally: manifest schema `promotion-suite-v1` declares governed
+  `current_promotion_contract` slot selectors, same-slot review families, and
+  explicit ECID reference canaries, but the runtime still computes
+  `current_promotion_ready` from the older fixed required-result aggregation.
+  The next slice is runtime slot-driven separation, not ECID artifact replay
+  refresh disguised as contract work
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

@@ -5,6 +5,37 @@ import json
 from tests.support.promotion_suite_fixtures import COMMITTED_PROMOTION_SUITE
 
 
+def test_committed_promotion_suite_declares_slot_driven_current_contract() -> None:
+    manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
+    contract = manifest["current_promotion_contract"]
+    selector = contract["slot_selector"]
+
+    assert selector["selector_type"] == "governed_coverage_class"
+    assert selector["coverage_manifest_path"] == "config/v1_real_package_review_coverage_v1.json"
+    assert (
+        selector["coverage_results_path"]
+        == "reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json"
+    )
+    assert selector["coverage_class_ids"] == ["current_promotion_reviewer_ready"]
+    assert selector["allowed_contract_statuses"] == ["reviewer_ready"]
+    assert contract["quorum"] == {
+        "eligible_slot_count_min": 1,
+        "passing_slot_count_min": 1,
+    }
+    family_ids = {family["id"] for family in contract["artifact_families"]}
+    assert family_ids == {
+        "current_suite_baseline",
+        "current_review_core_artifacts",
+        "current_review_packet_contract",
+        "current_review_decision_support",
+        "current_review_final_qa",
+        "current_review_supporting_outputs",
+    }
+    reference_canary = contract["reference_canaries"][0]
+    assert reference_canary["review_case_id"] == "v1-cg-ecid"
+    assert reference_canary["required"] is True
+
+
 def test_committed_promotion_suite_requires_milestone_4_applicability_gates() -> None:
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
     suite_results = {result["id"]: result for result in manifest["suite_results"]}
@@ -97,7 +128,7 @@ def test_committed_promotion_suite_requires_milestone_4_applicability_gates() ->
 def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
     suite_results = {result["id"]: result for result in manifest["suite_results"]}
-    review_case = manifest["review_cases"][0]
+    review_case = {case["id"]: case for case in manifest["review_cases"]}["v1-cg-ecid"]
     results = {result["id"]: result for result in review_case["results"]}
 
     phase = suite_results["phase_eval_core"]
