@@ -401,15 +401,17 @@ Milestone 1 reduction on 2026-05-25:
 - Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` is now
   reduced further locally through the governed land-exchange retirement
-  closeout plus the governed `R1EA-093` current-source addition lane. The
-  reviewer-facing default catalog remains historical, but the active scoped
-  applicability replay now runs on `source-set-583e2d0ca9c793f6` and reports
-  `authority_universe_sha256=e26758f4da964e965211f754487748b3a0404a1bbb10be0fec7f97f22deaf5f9`,
+  closeout, the governed `R1EA-093` current-source addition lane, and the
+  governed water-family current-source additions. The reviewer-facing default
+  catalog remains historical, but the active scoped applicability replay now
+  runs on `source-set-d5c008d39a65eb11` and reports
+  `authority_universe_sha256=eef53c92383c90bb0ab1921ba7c45072a8e33f464b6193399c12fb23d908729b`,
   `source_evidence_failure_count=11`, and
-  `missing_source_record_count=10`. The land-exchange template no longer
-  appears in the missing-template inventory, the air/conformity lane is now
-  closed through `FED-044`, and the next truthful slice remains Milestone `2`
-  in that same packet beginning with the water-family additions.
+  `missing_source_record_count=9`. The land-exchange template, the
+  air/conformity lane, and the water-family lane no longer appear in the
+  missing-template inventory, and the next truthful slice remains Milestone
+  `2` in that same packet beginning with the cultural-resource/state-SHPO and
+  tribal-overlap additions.
 - The next truthful slice is now Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
   which still owns the remaining source-truth, forest-plan, and rule-pack

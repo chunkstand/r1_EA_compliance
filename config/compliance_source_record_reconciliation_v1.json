@@ -302,9 +302,44 @@
       "notes": "Canonical Clean Water Act row via exact active-catalog URL lineage."
     },
     {
+      "legacy_source_record_id": "R1EA-083",
+      "current_source_record_ids": ["FED-045"],
+      "notes": "Canonical Clean Water Act section 401 row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-084",
+      "current_source_record_ids": ["FED-046"],
+      "notes": "Canonical Clean Water Act section 402 NPDES row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-085",
+      "current_source_record_ids": ["FED-047"],
+      "notes": "Canonical Clean Water Act section 404 statute row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-086",
+      "current_source_record_ids": ["FED-048"],
+      "notes": "Canonical Rivers and Harbors Act section 10 row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-087",
+      "current_source_record_ids": ["FED-049"],
+      "notes": "Canonical Corps regulatory program row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-088",
+      "current_source_record_ids": ["FED-050"],
+      "notes": "Canonical Corps section 10 permit regulation row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-089",
       "current_source_record_ids": ["FED-017"],
       "notes": "Canonical Corps section 404 permits row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-090",
+      "current_source_record_ids": ["FED-051"],
+      "notes": "Canonical Corps permit-processing regulation row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-091",
@@ -355,6 +390,26 @@
       "legacy_source_record_id": "R1EA-110",
       "current_source_record_ids": ["FED-035"],
       "notes": "Canonical FIFRA row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-115",
+      "current_source_record_ids": ["STP-031"],
+      "notes": "Canonical Montana water-permitting and section 401 row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-116",
+      "current_source_record_ids": ["STP-032"],
+      "notes": "Canonical Idaho section 401 certification row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-117",
+      "current_source_record_ids": ["STP-033"],
+      "notes": "Canonical North Dakota section 401 certification row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-118",
+      "current_source_record_ids": ["STP-034"],
+      "notes": "Canonical South Dakota section 401 certification row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-119",

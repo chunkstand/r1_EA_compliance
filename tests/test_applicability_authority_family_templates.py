@@ -559,6 +559,96 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
         )
         self.assertTrue(candidate["source_evidence_availability"]["available"])
 
+    def test_candidates_resolve_clean_water_family_current_source_additions(self) -> None:
+        expected_source_record_ids = [
+            "FED-022",
+            "FED-045",
+            "FED-046",
+            "FED-047",
+            "FED-048",
+            "FED-049",
+            "FED-050",
+            "FED-017",
+            "FED-051",
+            "FED-029",
+            "STP-031",
+            "STP-032",
+            "STP-033",
+            "STP-034",
+        ]
+        catalog_by_source_id = {
+            source_record_id: {
+                "source_record_id": source_record_id,
+                "title": source_record_id,
+                "citation_label": source_record_id,
+                "document_role": "law",
+                "authority_level": "federal" if source_record_id.startswith("FED-") else "state_partner",
+                "source_status": "downloaded_existing",
+                "artifact_sha256": f"sha-{source_record_id.lower()}",
+                "artifact_path": f"artifacts/raw/{source_record_id}.html",
+            }
+            for source_record_id in expected_source_record_ids
+        }
+
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "clean-water-current-source-template",
+                        "authority_family_id": "clean_water_act_wotus_permits",
+                        "rule_id": "clean_water_current_source_template_rule",
+                        "title": "Clean Water Act and WOTUS permits template",
+                        "question": "Does the package trigger Clean Water Act or WOTUS permit review?",
+                        "requirement": "Evaluate Clean Water Act, Corps permit, and state 401 review.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "mixed",
+                        "authority_document_role": "law",
+                        "authority_source_record_id": "R1EA-082",
+                        "source_record_ids": [
+                            "R1EA-082",
+                            "R1EA-083",
+                            "R1EA-084",
+                            "R1EA-085",
+                            "R1EA-086",
+                            "R1EA-087",
+                            "R1EA-088",
+                            "R1EA-089",
+                            "R1EA-090",
+                            "R1EA-091",
+                            "R1EA-115",
+                            "R1EA-116",
+                            "R1EA-117",
+                            "R1EA-118",
+                        ],
+                        "package_query": "clean water act permits",
+                        "package_terms": ["clean water act", "wetlands", "waters of the united states"],
+                        "applies_if_package_terms": ["clean water act", "wetlands"],
+                        "does_not_apply_if_package_terms": ["no wetlands"],
+                        "source_query": "clean water act authority source",
+                        "source_filters": {
+                            "source_record_id": "R1EA-082",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id=catalog_by_source_id,
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], expected_source_record_ids)
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            expected_source_record_ids,
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
     def test_candidates_use_forest_plan_identity_aliases_when_catalog_only_has_canonical_row(self) -> None:
         candidates = authority_family_template_candidates(
             source_set_id="source-set-unit",

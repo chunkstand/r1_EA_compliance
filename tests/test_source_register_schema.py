@@ -23,7 +23,7 @@ class SourceRegisterSchemaTests(unittest.TestCase):
 
         self.assertTrue(result["validation_passed"])
         self.assertEqual(result["sheet_count"], 13)
-        self.assertEqual(result["load_row_count"], 648)
+        self.assertEqual(result["load_row_count"], 659)
         self.assertEqual(result["queue_row_count"], 51)
         self.assertEqual(result["removed_row_count"], 3)
         self.assertEqual(result["stale_source_detector_count"], 5)
@@ -75,13 +75,13 @@ class SourceRegisterSchemaTests(unittest.TestCase):
         self.assertEqual(result["legacy_register_source_delta_count"], 160)
         self.assertEqual(result["legacy_register_gap_count"], 1)
         self.assertEqual(result["legacy_runtime_unique_source_count"], 350)
-        self.assertEqual(result["canonical_master_row_count"], 648)
+        self.assertEqual(result["canonical_master_row_count"], 659)
         self.assertEqual(result["canonical_queue_row_count"], 51)
         self.assertEqual(result["canonical_removed_row_count"], 3)
         self.assertEqual(result["canonical_stale_source_detector_count"], 5)
         self.assertEqual(result["canonical_shared_with_legacy_workbook_count"], 0)
         self.assertEqual(result["canonical_shared_with_source_delta_count"], 0)
-        self.assertEqual(result["canonical_only_source_count"], 648)
+        self.assertEqual(result["canonical_only_source_count"], 659)
         self.assertEqual(result["legacy_only_source_count"], 350)
         self.assertEqual(result["canonical_only_source_ids_sample"][0], "FED-001")
         self.assertEqual(result["legacy_only_source_ids_sample"][0], "R1EA-001")
@@ -131,6 +131,13 @@ class SourceRegisterSchemaTests(unittest.TestCase):
             "FED-039": "https://www.govinfo.gov/content/pkg/FR-1996-05-29/html/96-13597.htm",
             "FED-043": "https://www.archives.gov/federal-register/codification/executive-order/11990.html",
             "FED-044": "https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-93/subpart-B",
+            "FED-045": "https://uscode.house.gov/view.xhtml?req=(title:33%20section:1341%20edition:prelim)",
+            "FED-046": "https://uscode.house.gov/view.xhtml?req=(title:33%20section:1342%20edition:prelim)",
+            "FED-047": "https://uscode.house.gov/view.xhtml?req=(title:33%20section:1344%20edition:prelim)",
+            "FED-048": "https://uscode.house.gov/view.xhtml?req=(title:33%20section:403%20edition:prelim)",
+            "FED-049": "https://www.ecfr.gov/current/title-33/chapter-II/part-320",
+            "FED-050": "https://www.ecfr.gov/current/title-33/chapter-II/part-322",
+            "FED-051": "https://www.ecfr.gov/current/title-33/chapter-II/part-325",
             "FED-029": "https://uscode.house.gov/view.xhtml?path=/prelim@title16/chapter5A&edition=prelim",
             "FPS-117": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/custergallatin/CNF%20FPAdjustment%20001.pdf",
             "FINAL-Q-HLC-001": "https://www.fs.usda.gov/sites/nfs/files/r01/helena-lewisclark/publication/V3%20Maps%20EIS%202021%20Forest%20Plan.pdf",
@@ -149,6 +156,10 @@ class SourceRegisterSchemaTests(unittest.TestCase):
             "R1-SCC-NPC-004": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/NPC%20FPR%20SCC%20Animals%20January%202025.xlsx",
             "R1-SCC-NPC-005": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/r01/NPC%20FPR%20SCC%20Plants%20November%202023.xlsx",
             "STP-015": "https://www.deq.idaho.gov/water-quality/surface-water/total-maximum-daily-loads/",
+            "STP-031": "https://deq.mt.gov/water/assistance",
+            "STP-032": "https://www.deq.idaho.gov/permits/water-quality-permits-certifications/water-quality-certifications/",
+            "STP-033": "https://deq.nd.gov/WQ/5_Special_Projects/default.aspx",
+            "STP-034": "https://danr.sd.gov/OfficeOfWater/SurfaceWaterQuality/waterqualitystandards/401Certifications.aspx",
             "STP-011": "https://idfg.idaho.gov/species/",
             "USDA-008": "https://www.fs.usda.gov/im/directives/",
             "USDA-009": "https://www.ams.usda.gov/about-ams/accessibility",

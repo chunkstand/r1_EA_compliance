@@ -26,13 +26,14 @@ Current routed state on 2026-05-25:
   `status_counts={"downloaded_existing": 635, "duplicate_content": 12}`,
   and workbook SHA
   `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
-- The committed canonical workbook now carries `648` retained master rows after
-  adding `FED-044` (`General Conformity`, `40 CFR part 93 subpart B`). The
-  active current-source-gap replay now uses the scoped catalog gate at
-  `source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate`
-  with `source_set_id=source-set-583e2d0ca9c793f6`, `source_count=648`,
-  `artifact_count=636`, and
-  `source_partition_counts={"active_review_corpus": 595, "currentness_supersession_archive": 53}`.
+- The committed canonical workbook now carries `659` retained master rows after
+  admitting the governed water-family current sources `FED-045` through
+  `FED-051` and `STP-031` through `STP-034`. The active current-source-gap
+  replay now uses the scoped catalog gate at
+  `source_library/runs/current-source-gap-clean-water-catalog-gate/catalog_gate`
+  with `source_set_id=source-set-d5c008d39a65eb11`, `source_count=659`,
+  `artifact_count=647`, and
+  `source_partition_counts={"active_review_corpus": 606, "currentness_supersession_archive": 53}`.
 - `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
   catalog, architecture, and active packet routing.
 - The current architecture packet in
@@ -106,18 +107,19 @@ Current routed state on 2026-05-25:
   template retire/replace work, true current-source additions, forest-plan
   support admissions, and five base-rule current-source decisions. Milestone
   `2` in that same packet is now reduced further locally through the governed
-  land-exchange retirement closeout plus the governed `R1EA-093`
-  current-source addition lane. The reviewer-facing default catalog remains
-  historical, but the active scoped applicability replay now runs on
-  `source-set-583e2d0ca9c793f6` and reports
-  `authority_universe_sha256=e26758f4da964e965211f754487748b3a0404a1bbb10be0fec7f97f22deaf5f9`,
+  land-exchange retirement closeout, the governed `R1EA-093`
+  current-source addition lane, and the governed water-family current-source
+  additions. The reviewer-facing default catalog remains historical, but the
+  active scoped applicability replay now runs on
+  `source-set-d5c008d39a65eb11` and reports
+  `authority_universe_sha256=eef53c92383c90bb0ab1921ba7c45072a8e33f464b6193399c12fb23d908729b`,
   `source_evidence_failure_count=11`, and
-  `missing_source_record_count=10`. The land-exchange template no longer
-  appears in the missing-template inventory, and the air/conformity lane is
-  now closed through `FED-044`. The remaining blocker is now the rest of the
-  governed current-source additions, forest-plan support admissions, and the
-  five base-rule current-source decisions, beginning with the water-family
-  additions in the same Milestone `2` packet.
+  `missing_source_record_count=9`. The water-family template no longer
+  appears in the missing-template inventory. The remaining blocker is now the
+  governed cultural, wildlife, hazardous-material,
+  invasive/farmland/drinking-water, minerals, forest-plan support, and the
+  five base-rule current-source decisions, beginning with the cultural-resource
+  and tribal-overlap rows in the same Milestone `2` packet.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs
