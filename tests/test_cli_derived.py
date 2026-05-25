@@ -175,7 +175,7 @@ def test_retrieval_build_parser_accepts_archived_catalog_dir() -> None:
             "--output-dir",
             "source_library",
             "--source-set-id",
-            "source-set-7e2652d23e764068",
+            "source-set-4fb59e9eb43045cb",
             "--catalog-dir",
             "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
         ]
@@ -194,7 +194,7 @@ def test_evidence_graph_build_parser_accepts_archived_catalog_dir() -> None:
             "--output-dir",
             "source_library",
             "--source-set-id",
-            "source-set-7e2652d23e764068",
+            "source-set-4fb59e9eb43045cb",
             "--catalog-dir",
             "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
             "--allow-partial-retrieval",
@@ -248,7 +248,7 @@ def test_rule_claim_link_parser_accepts_allow_partial_claims() -> None:
             "--output-dir",
             "source_library",
             "--source-set-id",
-            "source-set-7e2652d23e764068",
+            "source-set-4fb59e9eb43045cb",
             "--allow-partial-claims",
         ]
     )
@@ -266,9 +266,9 @@ def test_forest_plan_source_delta_readiness_parser_accepts_sequence_four_inputs(
             "--merged-catalog-gate-dir",
             "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
             "--extraction-source-set-id",
-            "source-set-7e2652d23e764068",
+            "source-set-4fb59e9eb43045cb",
             "--reuse-inventory-path",
-            "source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json",
+            "source_library/derived/source-set-4fb59e9eb43045cb/reuse_inventory/reuse_inventory.json",
         ]
     )
 
@@ -276,9 +276,9 @@ def test_forest_plan_source_delta_readiness_parser_accepts_sequence_four_inputs(
     assert args.merged_catalog_gate_dir == Path(
         "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate"
     )
-    assert args.extraction_source_set_id == "source-set-7e2652d23e764068"
+    assert args.extraction_source_set_id == "source-set-4fb59e9eb43045cb"
     assert args.reuse_inventory_path == Path(
-        "source_library/derived/source-set-7e2652d23e764068/reuse_inventory/reuse_inventory.json"
+        "source_library/derived/source-set-4fb59e9eb43045cb/reuse_inventory/reuse_inventory.json"
     )
 
 

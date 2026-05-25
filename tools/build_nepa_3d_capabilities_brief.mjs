@@ -22,30 +22,6 @@ const qaDir = process.env.NEPA_3D_BRIEF_QA_DIR || path.join("/tmp", "nepa_3d_cap
 const briefHtmlPath = path.join(outDir, "nepa_3d_capabilities_brief.html");
 const briefPdfPath = path.join(outDir, "nepa_3d_capabilities_brief.pdf");
 
-const sourceSetSummaryPath = path.join(
-  repoRoot,
-  "source_library",
-  "derived",
-  "source-set-ba8d0feae79501b8",
-  "knowledge_graph",
-  "nepa_3d_graph_summary.json"
-);
-const sourceSetValidationPath = path.join(
-  repoRoot,
-  "source_library",
-  "derived",
-  "source-set-ba8d0feae79501b8",
-  "knowledge_graph",
-  "nepa_3d_graph_validation.json"
-);
-const sourceSetGraphPath = path.join(
-  repoRoot,
-  "source_library",
-  "derived",
-  "source-set-ba8d0feae79501b8",
-  "knowledge_graph",
-  "nepa_3d_graph.json"
-);
 const catalogManifestPath = path.join(repoRoot, "source_library", "catalog", "source_set_manifest.json");
 const promotionSuitePath = path.join(
   repoRoot,
@@ -55,14 +31,10 @@ const promotionSuitePath = path.join(
   "post-v1-region1-ea-promotion-suite",
   "promotion_suite_results.json"
 );
-const phaseEvalPath = path.join(
-  repoRoot,
-  "source_library",
-  "derived",
-  "source-set-ba8d0feae79501b8",
-  "evidence_graph",
-  "phase_eval_results.json"
-);
+
+function sourceSetDerivedPath(sourceSetId, ...segments) {
+  return path.join(repoRoot, "source_library", "derived", sourceSetId, ...segments);
+}
 
 const chromeCandidates = [
   process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
@@ -97,12 +69,24 @@ async function main() {
 }
 
 async function currentMetrics() {
-  const summary = await readJsonIfExists(sourceSetSummaryPath);
-  const validation = await readJsonIfExists(sourceSetValidationPath);
-  const graph = await readJsonIfExists(sourceSetGraphPath);
   const catalog = await readJsonIfExists(catalogManifestPath);
+  const activeSourceSetId = catalog?.source_set_id;
+  if (!activeSourceSetId) {
+    throw new Error(`Missing source_set_id in ${path.relative(repoRoot, catalogManifestPath)}.`);
+  }
+  const summary = await readJsonIfExists(
+    sourceSetDerivedPath(activeSourceSetId, "knowledge_graph", "nepa_3d_graph_summary.json")
+  );
+  const validation = await readJsonIfExists(
+    sourceSetDerivedPath(activeSourceSetId, "knowledge_graph", "nepa_3d_graph_validation.json")
+  );
+  const graph = await readJsonIfExists(
+    sourceSetDerivedPath(activeSourceSetId, "knowledge_graph", "nepa_3d_graph.json")
+  );
   const promotion = await readJsonIfExists(promotionSuitePath);
-  const phaseEval = await readJsonIfExists(phaseEvalPath);
+  const phaseEval = await readJsonIfExists(
+    sourceSetDerivedPath(activeSourceSetId, "evidence_graph", "phase_eval_results.json")
+  );
   const validationChecks =
     summary?.validation_check_count || (Array.isArray(validation?.checks) ? validation.checks.length : 0);
   const currentGateTotal = promotion?.required_current_result_count || 0;
@@ -117,6 +101,7 @@ async function currentMetrics() {
   ).length;
 
   return {
+    activeSourceSetId,
     activeReviewCorpus: summary?.source_partition_counts?.active_review_corpus || 0,
     candidateBlockedSources: summary?.source_partition_counts?.candidate_blocked_source || 0,
     sourceRecords: catalog?.source_count || summary?.catalog_source_record_count || 0,

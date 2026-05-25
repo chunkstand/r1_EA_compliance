@@ -33,7 +33,7 @@ def test_document_lane_registry_is_generic_and_scoped_to_three_generator_lanes()
     assert all(lane["expected_output_files"] for lane in registry["lanes"])
     registry_text = (REPO_ROOT / DEFAULT_LANE_REGISTRY_PATH).read_text(encoding="utf-8")
     assert "v1-cg-ecid-compliance-review" not in registry_text
-    assert "source-set-ba8d0feae79501b8" not in registry_text
+    assert "source-set-4fb59e9eb43045cb" not in registry_text
 
 
 def test_document_request_schema_accepts_supported_and_refusal_fixtures() -> None:

@@ -25,7 +25,7 @@ Latest implementation update on 2026-05-24:
   context, `FOR-029` queue reroute, packet-local Lolo review contracts, and
   Lolo forest-plan component coverage are now tracked, but the packet stops
   before registry promotion because the inherited review-scoped `phase-eval`
-  gate stays red on `source-set-5e65d845ce77e1a0`
+  gate stays red against the active `source-set-4fb59e9eb43045cb` contract
 - queue and registry truth:
   `FOR-029` now routes to
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` as an explicit

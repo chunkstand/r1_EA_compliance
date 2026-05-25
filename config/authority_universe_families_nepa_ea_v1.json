@@ -91,7 +91,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -181,7 +181,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -326,7 +326,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -476,7 +476,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -578,7 +578,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -634,7 +634,7 @@
         "missing_source_record_requirements": [
           "Milestone 2 documented the current source non-addition for this candidate; a later scoped workbook/source delta must add official Title VI and USDA nondiscrimination sources before this family can become source_only or active."
         ],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "candidate",
       "supersession": null
@@ -737,7 +737,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -818,7 +818,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -893,7 +893,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -958,7 +958,7 @@
         ],
         "mapping_status": "mapped_superseded_replacement_sources",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "superseded",
       "supersession": {
@@ -1060,7 +1060,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -1143,7 +1143,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -1233,7 +1233,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -1334,7 +1334,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -1457,7 +1457,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -1590,7 +1590,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -1745,7 +1745,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -1894,7 +1894,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -1981,7 +1981,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -2070,7 +2070,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -2186,7 +2186,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -2262,7 +2262,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -2390,7 +2390,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -2500,7 +2500,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -2591,7 +2591,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -2686,7 +2686,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -2879,7 +2879,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -2964,7 +2964,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -3081,7 +3081,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -3198,7 +3198,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -3293,7 +3293,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -3461,7 +3461,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -3571,7 +3571,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -3646,7 +3646,7 @@
         ],
         "mapping_status": "mapped_active_rule_pack_family",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null
@@ -3762,7 +3762,7 @@
         ],
         "mapping_status": "mapped_authority_family_rule_template",
         "missing_source_record_requirements": [],
-        "source_set_id": "source-set-ba8d0feae79501b8"
+        "source_set_id": "source-set-4fb59e9eb43045cb"
       },
       "status": "active",
       "supersession": null,
@@ -3944,11 +3944,11 @@
     "authority_family_count": 35,
     "documented_source_non_addition_count": 1,
     "failed_family_count": 0,
-    "report_path": "source_library/derived/source-set-ba8d0feae79501b8/authority_currentness/authority_currentness_report.json",
+    "report_path": "source_library/derived/source-set-4fb59e9eb43045cb/authority_currentness/authority_currentness_report.json",
     "schema_version": "authority-currentness-report-v0",
     "source_currentness_confirmed_family_count": 33,
     "source_currentness_record_count": 207,
-    "source_set_id": "source-set-ba8d0feae79501b8",
+    "source_set_id": "source-set-4fb59e9eb43045cb",
     "status": "passed",
     "superseded_replacement_confirmed_family_count": 1
   },
@@ -5737,7 +5737,7 @@
   "source_set": {
     "review_sources_sqlite_path": "source_library/catalog/review_sources.sqlite",
     "source_catalog_path": "source_library/catalog/source_catalog.jsonl",
-    "source_set_id": "source-set-ba8d0feae79501b8"
+    "source_set_id": "source-set-4fb59e9eb43045cb"
   },
   "status_definitions": {
     "active": "Source records, rule templates, trigger contracts, evidence filters, and eval coverage are implemented for the represented family slice.",
@@ -5755,7 +5755,7 @@
     "mapped_rule_count": 48,
     "mapped_source_record_count": 190,
     "milestone_2_source_currentness_gate_status": "passed",
-    "milestone_2_source_currentness_report_path": "source_library/derived/source-set-ba8d0feae79501b8/authority_currentness/authority_currentness_report.json",
+    "milestone_2_source_currentness_report_path": "source_library/derived/source-set-4fb59e9eb43045cb/authority_currentness/authority_currentness_report.json",
     "orphan_rule_ids": [],
     "orphan_source_record_ids": [],
     "required_authority_requirement_count": 18,

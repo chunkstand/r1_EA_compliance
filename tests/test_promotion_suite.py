@@ -280,10 +280,11 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     )
     summary_checks = {check["name"]: check for check in source_graph_summary["checks"]}
     assert summary_checks["source_set_graph_source_set_matches"]["equals"] == (
-        "source-set-ba8d0feae79501b8"
+        "source-set-4fb59e9eb43045cb"
     )
     assert summary_checks["source_set_graph_node_count"]["min"] == 1
     assert summary_checks["source_set_graph_validation_checks"]["min"] == 62
+    assert summary_checks["source_set_graph_region1_blocked_profiles_cleared"]["equals"] == 0
 
     review_graph = results["nepa_3d_review_graph_validation"]
     assert review_graph["required_for_current_promotion"] is True
@@ -327,7 +328,7 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     generated_checks = {check["name"]: check for check in generated["checks"]}
     assert generated_checks["generated_rule_pack_validation_passed"]["equals"] is True
     assert generated_checks["generated_rule_count"]["equals"] == 46
-    assert generated_checks["source_set_matches"]["equals"] == "source-set-ba8d0feae79501b8"
+    assert generated_checks["source_set_matches"]["equals"] == "source-set-4fb59e9eb43045cb"
 
     compliance = ecid_results["compliance_review"]
     assert compliance["failure_category"] == "forest_plan_reviewer_not_ready"
@@ -371,7 +372,7 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     }
     assert south_plateau_generated_checks["generated_rule_count"]["equals"] == 61
     assert south_plateau_generated_checks["source_set_matches"]["equals"] == (
-        "source-set-ba8d0feae79501b8"
+        "source-set-4fb59e9eb43045cb"
     )
 
     south_plateau_compliance = south_plateau_results["compliance_review"]
@@ -436,7 +437,7 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert slot["ready"] is True
     assert "failure_category" not in slot
     assert slot["review_id"] == "region1-expansion-ecid-preliminary-ea"
-    assert slot["source_set_id"] == "source-set-ba8d0feae79501b8"
+    assert slot["source_set_id"] == "source-set-4fb59e9eb43045cb"
     assert "Preliminary Environmental Assessment" in slot["package_path"]
     assert set(ecid_results).issubset(ecid_gate_artifacts)
     assert slot["last_local_signal"]["package_chunk_count"] == 160
@@ -465,7 +466,7 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert third_slot["ready"] is True
     assert "failure_category" not in third_slot
     assert third_slot["review_id"] == "region1-expansion-south-plateau-landscape-treatment"
-    assert third_slot["source_set_id"] == "source-set-ba8d0feae79501b8"
+    assert third_slot["source_set_id"] == "source-set-4fb59e9eb43045cb"
     assert third_slot["forest_plan_profile"] == "custer_gallatin"
     assert "South Plateau" in third_slot["label"]
     assert "South Plateau" in third_slot["project_metadata"]["project_name"]

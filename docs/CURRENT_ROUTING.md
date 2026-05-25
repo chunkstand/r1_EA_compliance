@@ -16,6 +16,8 @@ Use this file as the short current route before opening the large append-only do
 - Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
 - Active packet:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- Queued downstream contract packet:
+  `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
 - Adjacent active queue packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - Active blocker packets:
@@ -50,13 +52,18 @@ Use this file as the short current route before opening the large append-only do
   `verified_extraction_admitted_source_count=594`,
   `verified_extraction_required_source_count=594`, and
   `verified_extraction_explicitly_non_admitted_source_count=53`
-- Full-canonical downstream split: the live extraction/retrieval truth now
-  sits on `source-set-4fb59e9eb43045cb`, but `promotion-suite` is still
-  pinned to `full_canonical_source_set_id=source-set-3f7d4578cafb0704` and
-  now reports `full_canonical_corpus_ready=false` with
-  `full_canonical_failure_category_counts={"stale_artifact":2}` until the
-  source-truth follow-on reruns the downstream contract on the strengthened
-  source set
+- Full-canonical downstream split: the live extraction/retrieval truth and the
+  manifest-owned full-canonical promotion slot now both sit on
+  `source-set-4fb59e9eb43045cb`; `promotion-suite` now reports
+  `full_canonical_corpus_ready=true` with
+  `passed_required_full_canonical_result_count=10/10`. The remaining live
+  promotion blocker is the current-review lane, where stale or missing
+  `v1-cg-ecid-compliance-review` compliance/applicability artifacts still keep
+  `current_promotion_ready=false`. A fresh standalone follow-on packet now
+  exists at `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` to
+  remove the one-review structural coupling in `promotion-suite` without
+  treating the ECID review-local replay refresh as equivalent to contract
+  repair
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty
@@ -75,14 +82,14 @@ Use this file as the short current route before opening the large append-only do
   added a tracked Lolo forest-plan component eval slot, and proved packet-local
   `v1-ea-eval` plus component-eval coverage, but the forest row must stay
   `profile_eval_guidance_only` until the inherited review-scoped
-  `phase-eval` direct-eval blocker on `source-set-5e65d845ce77e1a0` is
+  `phase-eval` direct-eval blocker on `source-set-4fb59e9eb43045cb` is
   resolved
 - Downstream gold packet status: the earlier full-canonical compliance-gold
   rebaseline remains historically resolved in commit `8e0e02b`
-  (`Resolve full canonical compliance gold rebaseline`) on the pre-queue
-  `source-set-f775524ab233ff27` baseline; this Milestone 2 slice did not
-  rerun full-canonical claim extraction, rule-claim binding, or compliance
-  review on `source-set-3f7d4578cafb0704`
+  (`Resolve full canonical compliance gold rebaseline`) on the same active
+  `source-set-4fb59e9eb43045cb` baseline; the gold artifacts stay green, but
+  current promotion is no longer treated as green until the ECID review-local
+  compliance/applicability artifact family is refreshed on that source set
 - Default `compliance-gold-eval` still passes `14/14` adjudicated cases with
   `status_match_rate=1.0`, `source_record_match_rate=1.0`,
   `source_document_role_match_rate=1.0`,
@@ -102,12 +109,12 @@ Use this file as the short current route before opening the large append-only do
   `matched_case_count=24`, `parser_route_mismatch_count=1`,
   `anchor_mismatch_count=13`, `span_mismatch_count=10`,
   `boundary_mismatch_count=4`, and `negative_case_pass_count=12`; the live
-  `extraction-accuracy-audit --output-dir source_library --source-set-id source-set-3f7d4578cafb0704`
+  `extraction-accuracy-audit --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb`
   rerun is now green at `585/585` admitted active-current rows with `0`
   blocked rows and `53` explicit archive/currentness rows; the narrowed
   `upstream-eval` replay remains green at `16/16`; and full-canonical
   `promotion-suite` stays green at `10/10` required full-canonical results
-  with `full_canonical_source_set_id=source-set-3f7d4578cafb0704`. The
+  with `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`. The
   Milestone `4` closeout itself landed in commit `abd0e4d`
   (`Resolve extraction fidelity Milestone 4`).
 - Direct-file capture packet status: Milestones `0`, `1`, and `2` in
@@ -167,7 +174,7 @@ Use this file as the short current route before opening the large append-only do
   West Reservoir remains an intentional `typed_blocked` replay quarantine
   rather than a promotion blocker
 - Ad hoc full-canonical `phase-eval` status: do not treat the
-  `source-set-3f7d4578cafb0704` ad hoc `phase-eval` replay as the live
+  `source-set-4fb59e9eb43045cb` ad hoc `phase-eval` replay as the live
   promotion gate; it still lacks extraction, retrieval, claim-extraction,
   and rule-claim direct-eval coverage on the strengthened full-canonical
   source set and remains outside this packet's acceptance boundary

@@ -23,7 +23,7 @@ PLANNED_REQUEST_CLASSES = {
     "reviewed_draft_packet",
 }
 PROVING_BINDING_MARKERS = (
-    "source-set-ba8d0feae79501b8",
+    "source-set-4fb59e9eb43045cb",
     "v1-cg-ecid-compliance-review",
 )
 UNSUPPORTED_REQUEST_REFUSALS = {

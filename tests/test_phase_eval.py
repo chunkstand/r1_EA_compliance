@@ -30,7 +30,7 @@ from tests.support.phase_eval_fixtures import write_jsonl
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_WORKBOOK = REPO_ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
-FULL_CANONICAL_SOURCE_SET_ID = "source-set-3f7d4578cafb0704"
+FULL_CANONICAL_SOURCE_SET_ID = "source-set-4fb59e9eb43045cb"
 
 
 class PhaseEvalTests(unittest.TestCase):

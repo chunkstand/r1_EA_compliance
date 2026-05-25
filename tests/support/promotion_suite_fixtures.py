@@ -9,8 +9,8 @@ from usfs_r1_ea_sources.promotion_suite import PROMOTION_SUITE_SCHEMA_VERSION
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 COMMITTED_PROMOTION_SUITE = REPO_ROOT / "config" / "promotion_suite_v1.json"
-FULL_CANONICAL_SOURCE_SET_ID = "source-set-3f7d4578cafb0704"
-FULL_CANONICAL_DOWNLOAD_RUN_ID = "queue-m2-full-canonical-merged-download-20260523"
+FULL_CANONICAL_SOURCE_SET_ID = "source-set-4fb59e9eb43045cb"
+FULL_CANONICAL_DOWNLOAD_RUN_ID = "queue-m3-full-canonical-merged-download-20260523"
 
 
 def write_suite_fixture(tmp_path: Path) -> tuple[Path, Path]:

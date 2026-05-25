@@ -9,8 +9,9 @@ from usfs_r1_ea_sources.phase_eval_direct_eval import load_phase_eval_direct_eva
 from usfs_r1_ea_sources.phase_eval_direct_eval import resolve_phase_eval_direct_eval_coverage
 
 
-FULL_CANONICAL_SOURCE_SET_ID = "source-set-3f7d4578cafb0704"
-CURRENT_PROMOTION_SOURCE_SET_ID = "source-set-ba8d0feae79501b8"
+FULL_CANONICAL_SOURCE_SET_ID = "source-set-4fb59e9eb43045cb"
+CURRENT_PROMOTION_SOURCE_SET_ID = "source-set-4fb59e9eb43045cb"
+NON_FULL_CANONICAL_SOURCE_SET_ID = "source-set-non-full-canonical"
 
 
 def test_committed_phase_eval_direct_eval_contract_tracks_required_phases() -> None:
@@ -90,7 +91,7 @@ def test_phase_eval_direct_eval_skips_full_canonical_only_source_set_gates() -> 
     with tempfile.TemporaryDirectory() as tmp:
         summary = resolve_phase_eval_direct_eval_coverage(
             output_dir=Path(tmp),
-            source_set_id=CURRENT_PROMOTION_SOURCE_SET_ID,
+            source_set_id=NON_FULL_CANONICAL_SOURCE_SET_ID,
         )
 
     assert "nepa_3d_source_set_graph" not in summary["source_set_phase_statuses"]

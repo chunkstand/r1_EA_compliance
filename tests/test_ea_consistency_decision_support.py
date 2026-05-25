@@ -133,7 +133,7 @@ def test_sequence_1_config_owns_sections_confirmations_and_eval_expectations() -
 
     assert config["schema_version"] == "ea-consistency-decision-support-config-v1"
     assert config["review_id"] == "v1-cg-ecid-compliance-review"
-    assert config["source_set_id"] == "source-set-ba8d0feae79501b8"
+    assert config["source_set_id"] == "source-set-4fb59e9eb43045cb"
     assert config["section_order"] == REQUIRED_SECTIONS
     assert config["manual_draft_policy"]["root_east_crazies_drafts_are_canonical"] is False
 

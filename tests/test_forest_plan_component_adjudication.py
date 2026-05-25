@@ -243,7 +243,7 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
         )
         self.assertEqual(
             adjudication["source_set_id"],
-            "source-set-ba8d0feae79501b8",
+            "source-set-4fb59e9eb43045cb",
         )
         self.assertEqual(
             adjudication["adjudication_id"],

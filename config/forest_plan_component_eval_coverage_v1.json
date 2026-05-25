@@ -49,7 +49,7 @@
       "label": "East Crazies current-promotion component eval",
       "review_id": "v1-cg-ecid-compliance-review",
       "forest_unit_id": "custer-gallatin-nf",
-      "expected_source_set_id": "source-set-ba8d0feae79501b8",
+      "expected_source_set_id": "source-set-4fb59e9eb43045cb",
       "eval_file": "forest_plan_component_eval_seed.json",
       "required": true
     },
@@ -58,7 +58,7 @@
       "label": "East Crazies source-delta replay component eval",
       "review_id": "v1-cg-ecid-source-delta-review",
       "forest_unit_id": "custer-gallatin-nf",
-      "expected_source_set_id": "source-set-8a4005c8a083af1a",
+      "expected_source_set_id": "source-set-4fb59e9eb43045cb",
       "eval_file": "forest_plan_component_evals/v1-cg-ecid-source-delta-review.json",
       "required": true
     },
@@ -67,7 +67,7 @@
       "label": "West Reservoir Flathead component eval",
       "review_id": "west-reservoir-67436",
       "forest_unit_id": "flathead-nf",
-      "expected_source_set_id": "source-set-5e65d845ce77e1a0",
+      "expected_source_set_id": "source-set-4fb59e9eb43045cb",
       "eval_file": "forest_plan_component_evals/west-reservoir-67436.json",
       "required": true
     },
@@ -76,7 +76,7 @@
       "label": "Lolo Tyler's Kitchen component eval",
       "review_id": "region1-example-lolo-tylers-kitchen-66344",
       "forest_unit_id": "lolo-nf",
-      "expected_source_set_id": "source-set-5e65d845ce77e1a0",
+      "expected_source_set_id": "source-set-4fb59e9eb43045cb",
       "eval_file": "forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json",
       "required": true
     }

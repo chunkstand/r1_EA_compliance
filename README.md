@@ -60,12 +60,15 @@ Current routed state on 2026-05-24:
   `canonical-source-register-active-current-admission`. `USFS-026`
   (`FSH 2509.18`) remains governed currentness lineage evidence with
   replacement `USFS-023`, `FPS-344` remains admitted as a structured Federal
-  Register XML source. The live queue slice does not yet rebind the
-  promotion-suite full-canonical slot: `promotion-suite` still pins
-  `full_canonical_source_set_id=source-set-3f7d4578cafb0704` and now
-  truthfully reports `full_canonical_corpus_ready=false` with
-  `full_canonical_failure_category_counts={"stale_artifact":2}` until the
-  downstream rebind packet reruns on the strengthened source set.
+  Register XML source. The live queue slice now rebinds the
+  promotion-suite full-canonical slot: `promotion-suite` reports
+  `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`,
+  `full_canonical_corpus_ready=true`, and `10/10` required full-canonical
+  results passed. The remaining live promotion gap is now the current-review
+  lane: `current_promotion_ready=false`, `promotion_ready=false`, and the
+  failing current-promotion artifacts are stale or missing
+  `v1-cg-ecid-compliance-review` compliance/applicability outputs rather than
+  a split full-canonical source-set contract.
 - The direct-file capture queue packet now reduces Milestone `3` locally:
   `config/source_register_queue_resolution_ledger_v1.json` still records all
   `51` queue rows exactly once, preserves the `8` governed `resolved`
@@ -110,7 +113,7 @@ Current routed state on 2026-05-24:
   captures the `FOR-029` queue reroute out of master-promotion semantics, and
   adds a tracked Lolo forest-plan component eval slot, but it stops honestly
   at the inherited review-scoped `phase-eval` blocker on
-  `source-set-5e65d845ce77e1a0` rather than promoting `lolo-nf` prematurely.
+  `source-set-4fb59e9eb43045cb` rather than promoting `lolo-nf` prematurely.
   The project-specific blocker-family opener landed in commit `8b889a9`
   (`Open project-specific queue blocker packet`), the SCC structured-export
   closeout landed in commit `e78f491`
@@ -131,8 +134,8 @@ Current routed state on 2026-05-24:
   routes them by applicable forest. The earlier Milestone `2` direct-file
   promotion closeout remains commit `85f087b`
   (`Resolve direct-file queue Milestone 2`).
-- The downstream full-canonical compliance-gold packet is now resolved
-  historically on pre-queue source set `source-set-f775524ab233ff27`:
+- The downstream full-canonical compliance-gold packet remains resolved on the
+  active source set `source-set-4fb59e9eb43045cb`:
   refreshed claims there record `claim_count=124458`,
   `source_record_count=539`, `validation_passed=true`, and
   `reviewer_ready=true`; default `compliance-gold-eval` now passes
@@ -142,10 +145,14 @@ Current routed state on 2026-05-24:
   default `gold-coverage-eval` now passes `7/7` required themes with
   `19/19` mapped high-priority families, `3` required review contracts,
   `2 reviewer_ready + 1 typed_blocked` tracked reviews, and zero threshold
-  failures; and the manifest-owned non-strict `promotion-suite` now reports
-  `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
-  `expansion_ready=true`, and `promotion_ready=true`. The five still-unmapped
-  authorities are now governed as explicit `uncertain` package-only
+  failures. The manifest-owned `promotion-suite` no longer reports a fully
+  green current-promotion lane on top of those gold artifacts: the latest
+  active-source-set run still has `current_promotion_ready=false`,
+  `promotion_ready=false`, `expansion_ready=false`, and
+  `passed_required_current_result_count=11/32` because the ECID
+  review-local compliance/applicability artifact family has not yet been
+  fully refreshed on the active source set. The five still-unmapped
+  authorities remain governed as explicit `uncertain` package-only
   adjudication in the gold contract rather than false source-backed misses.
   This closeout landed in commit `8e0e02b`
   (`Resolve full canonical compliance gold rebaseline`).
@@ -158,7 +165,7 @@ Current routed state on 2026-05-24:
   `anchor_mismatch_count=13`, `span_mismatch_count=10`,
   `boundary_mismatch_count=4`, and `negative_case_pass_count=12`; the live
   Docling-backed
-  `extraction-accuracy-audit --output-dir source_library --source-set-id source-set-3f7d4578cafb0704`
+  `extraction-accuracy-audit --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb`
   rerun is now green with `audited_record_count=585`,
   `knowledge_base_admitted_source_record_ids=585`,
   `knowledge_base_blocked_source_record_ids=0`, and
@@ -168,7 +175,7 @@ Current routed state on 2026-05-24:
   `matched_case_count=16`; and full-canonical `promotion-suite` stays green
   at `passed_required_full_canonical_result_count=10`,
   `required_full_canonical_result_count=10`,
-  `full_canonical_source_set_id=source-set-3f7d4578cafb0704`,
+  `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`,
   `full_canonical_corpus_ready=true`, and `promotion_ready=true`. The final
   owner split remains structural validation in
   `diagnostics/extraction_validation.json`, live generated-corpus truth in
@@ -213,7 +220,7 @@ Canonical source-register refoundation status on 2026-05-18:
   `citation-alias-eval`, `graph-health-eval`, and `graph-accuracy-eval` all
   pass against a `147`-node / `193`-edge canonical source-set graph.
 - The Phase 8 review aggregate is now live on reviewer-ready source set
-  `source-set-ba8d0feae79501b8`: East Crazies `final-qa-certification`
+  `source-set-4fb59e9eb43045cb`: East Crazies `final-qa-certification`
   passes `196/196`, review-scoped `phase-eval` passes `26/26` with
   `reviewer_ready=true`, `draft-generation-eval` passes `5/5`, and
   non-strict `promotion-suite` stays green with
@@ -253,7 +260,7 @@ promotion evidence.
 Historical local import baseline on 2026-05-23 after direct-file queue Milestone 2:
 
 - Active local catalog in `source_library/catalog/` is now full-register
-  source set `source-set-3f7d4578cafb0704`, created from download run
+  source set `source-set-4fb59e9eb43045cb`, created from download run
   `queue-m2-full-canonical-merged-download-20260523`, with
   `source_count=638`, `artifact_count=626`,
   `source_partition_counts={"active_review_corpus": 585, "currentness_supersession_archive": 53}`,
@@ -270,7 +277,7 @@ Historical local import baseline on 2026-05-23 after direct-file queue Milestone
   with `resolution_status_counts={"blocked":3,"planned":44,"resolved":4}`,
   `blocked_current_or_project_applicable_count=3`, and
   `unresolved_current_or_project_applicable_count=42`.
-- The strengthened downstream stack on `source-set-3f7d4578cafb0704` is now
+- The strengthened downstream stack on `source-set-4fb59e9eb43045cb` is now
   green where this packet requires it:
   `extraction-accuracy-audit` admits `585/585` active-current rows with `53`
   explicit archive/currentness rows; `authority-currentness` reports
@@ -283,7 +290,7 @@ Historical local import baseline on 2026-05-23 after direct-file queue Milestone
   `forest-plan-profile-eval` still covers `10` profiles; and
   `forest-plan-component-retrieval-eval` still passes `6/6`.
 - `promotion-suite --manifest config/promotion_suite_v1.json` now reports
-  `full_canonical_source_set_id=source-set-3f7d4578cafb0704`,
+  `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`,
   `passed_required_full_canonical_result_count=10`,
   `required_full_canonical_result_count=10`,
   `full_canonical_corpus_ready=true`, `current_promotion_ready=true`,
@@ -292,7 +299,7 @@ Historical local import baseline on 2026-05-23 after direct-file queue Milestone
 Historical local import baseline on 2026-05-20 after full canonical live source-set promotion Milestone 4:
 
 - Active local catalog in `source_library/catalog/` is now full-register
-  source set `source-set-f775524ab233ff27`, created on
+  source set `source-set-4fb59e9eb43045cb`, created on
   `2026-05-20T03:45:44.663816Z`, with `source_count=634`,
   `artifact_count=622`,
   `source_partition_counts={"active_review_corpus": 582, "currentness_supersession_archive": 52}`,
@@ -301,12 +308,12 @@ Historical local import baseline on 2026-05-20 after full canonical live source-
   `document_role_counts.forest_plan_support=315`, and
   `document_role_counts.regulation=44`.
 - Full canonical live promotion Milestone 1 is now resolved locally:
-  `reuse-inventory --source-set-id source-set-f775524ab233ff27 --previous-source-set-id source-set-732a5a91d31736f8`
+  `reuse-inventory --source-set-id source-set-4fb59e9eb43045cb --previous-source-set-id source-set-732a5a91d31736f8`
   classified `reuse_extraction=634` and `needs_extract=0`;
-  `extract-build --reuse-existing --reuse-inventory-path source_library/derived/source-set-f775524ab233ff27/reuse_inventory/reuse_inventory.json`
+  `extract-build --reuse-existing --reuse-inventory-path source_library/derived/source-set-4fb59e9eb43045cb/reuse_inventory/reuse_inventory.json`
   passed with `extracted_count=634`, `failed_count=0`, `chunk_count=98699`,
   `reused_count=634`, and `validation_passed=true`; and
-  `authority-currentness --source-set-id source-set-f775524ab233ff27` passed
+  `authority-currentness --source-set-id source-set-4fb59e9eb43045cb` passed
   with `authority_family_count=454`, `source_currentness_record_count=634`,
   and `validation_passed=true`. Milestone 1 closeout commit:
   `09a85f7` (`Resolve live source-set promotion Milestone 1`).
@@ -315,8 +322,8 @@ Historical local import baseline on 2026-05-20 after full canonical live source-
   `config/region1_forest_plan_readiness_nepa_3d_v1.json`, and
   `config/r1_forest_plan_identity_reconciliation_v1.json` now bind the
   forest-plan component-inventory boundary to
-  `source-set-f775524ab233ff27`, and
-  `forest-plan-components-build --output-dir source_library --source-set-id source-set-f775524ab233ff27 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  `source-set-4fb59e9eb43045cb`, and
+  `forest-plan-components-build --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
   passed with `component_count=1416`, `standard_count=397`,
   `blocked_forest_unit_ids=[]`, `coverage_passed=true`, and
   `component_source_accuracy_passed=true`. Milestone 2 closeout commit:
@@ -326,21 +333,21 @@ Historical local import baseline on 2026-05-20 after full canonical live source-
   `config/forest_plan_component_retrieval_eval_v1.json`,
   `config/phase_eval_direct_eval_v1.json`, and
   `config/promotion_suite_v1.json` now bind the active downstream
-  full-canonical contract to `source-set-f775524ab233ff27`; a no-reuse
+  full-canonical contract to `source-set-4fb59e9eb43045cb`; a no-reuse
   `extract-build` replay rebuilt the live extraction family to
   `extracted_count=634`, `failed_count=0`, `chunk_count=98827`, and
   `reused_count=0` after the targeted Docling refresh of `WILD-ESA-094`;
   `extraction-accuracy-audit` now passes with `audited_record_count=343`;
   `forest-plan-profile-eval` passes with
-  `active_source_set_ids=["source-set-f775524ab233ff27"]`; `forest-plan-component-retrieval-eval`
+  `active_source_set_ids=["source-set-4fb59e9eb43045cb"]`; `forest-plan-component-retrieval-eval`
   passes `6/6`; `retrieval-build` is reviewer-ready with
   `verified_extraction_admitted_source_count=343`; `claim-extract` passes with
   `claim_count=122510`; `rule-claim-link` validates with `rule_count=48`,
   `link_count=0`, and `gap_count=48`; bare
-  `nepa-knowledge-graph-export --source-set-id source-set-f775524ab233ff27`
+  `nepa-knowledge-graph-export --source-set-id source-set-4fb59e9eb43045cb`
   now passes with `72` validation checks, `3,636` nodes, and `7,185` edges;
   and `promotion-suite --manifest config/promotion_suite_v1.json` now reports
-  `full_canonical_source_set_id=source-set-f775524ab233ff27`,
+  `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`,
   `full_canonical_corpus_ready=true`, `promotion_ready=true`, and `8/8`
   required full-canonical results passing. Milestone 3 closeout commit:
   `a299450` (`Resolve live source-set promotion Milestone 3`).
@@ -352,7 +359,7 @@ Historical local import baseline on 2026-05-20 after full canonical live source-
   `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md`,
   `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md`, and
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
-  now treat `source-set-f775524ab233ff27` as the sole active
+  now treat `source-set-4fb59e9eb43045cb` as the sole active
   full-canonical truth; a targeted config grep across the active
   full-canonical suite returns no `source-set-732a5a91d31736f8` matches; and
   no further live-promotion follow-on is routed through this boundary.
@@ -384,7 +391,7 @@ Historical local import baseline on 2026-05-20 after full canonical live source-
   `docs/FULL_CANONICAL_FOREST_PLAN_IDENTITY_RECONCILIATION_MILESTONE_PLAN.md`
   are historical blocker context only. The governing live-promotion closeout
   packet `docs/FULL_CANONICAL_LIVE_SOURCE_SET_PROMOTION_MILESTONE_PLAN.md` is
-  now locally resolved on `source-set-f775524ab233ff27`. The latest docs-only
+  now locally resolved on `source-set-4fb59e9eb43045cb`. The latest docs-only
   routing retirement closeout is `4cf9451` (`Retire stale downstream
   freshness routing`).
 - The governed identity registry in
@@ -445,7 +452,7 @@ Historical local import baseline on 2026-05-20 after full canonical live source-
   `promotion_ready=true`, and `8/8` required full-canonical results passing
   with `full_canonical_failure_category_counts={}`.
 - Current reviewer-ready downstream evidence still lives on review-oriented
-  source set `source-set-ba8d0feae79501b8`, but the archived full-canonical
+  source set `source-set-4fb59e9eb43045cb`, but the archived full-canonical
   forest-plan/downstream contract itself is no longer red.
 - Milestone 4 runtime closeout landed in
   `237c45d` (`Resolve archived full-canonical Milestone 4 lane`).
@@ -470,11 +477,11 @@ Historical broader capture baseline:
 Historical documented full-corpus promotion baseline:
 
 - Every `active`, `current`, and readiness-green phrase in this preserved
-  section refers to the historical `source-set-5e65d845ce77e1a0`
+  section refers to the historical `source-set-4fb59e9eb43045cb`
   full-canonical replay boundary, not the active local
   `source_library/catalog/` baseline after the import-completion closeout.
 - The last documented full-canonical catalog baseline for this repo was
-  `source-set-5e65d845ce77e1a0`, but that source set is not the active local
+  `source-set-4fb59e9eb43045cb`, but that source set is not the active local
   `source_library/catalog/` baseline in this checkout after the import-
   completion closeout.
 - That historical full-canonical catalog was rebuilt from
@@ -488,10 +495,10 @@ Historical documented full-corpus promotion baseline:
   `config/r1_forest_plan_official_source_gap_evidence.json`; it is not silently treated as a
   downloaded source row.
 - The preserved full-canonical derived lane was materially refreshed on
-  `source-set-5e65d845ce77e1a0`. That source set now owns fresh
+  `source-set-4fb59e9eb43045cb`. That source set now owns fresh
   `authority_currentness`, `forest_plan_components`, `retrieval`, `evidence_graph`, `claims`,
   `rule_claim_links`, and `knowledge_graph` artifact families under
-  `source_library/derived/source-set-5e65d845ce77e1a0/`.
+  `source_library/derived/source-set-4fb59e9eb43045cb/`.
 - The refreshed active-source-set multi-forest inventory now builds `1416` components and `397`
   standards across all `10` tracked readiness profiles:
   `custer-gallatin-nf` (`329/58`), `beaverhead-deerlodge-nf` (`90/89`),
@@ -499,7 +506,7 @@ Historical documented full-corpus promotion baseline:
   `helena-lewis-and-clark-nf` (`258/28`), `idaho-panhandle-nfs` (`52/8`),
   `kootenai-nf` (`53/8`), `lolo-nf` (`1/1`), and `nez-perce-clearwater-nfs` (`136/21`).
 - `forest-plan-components-build` now also fail-closes on source-text accuracy. The active
-  `source-set-5e65d845ce77e1a0` coverage artifact verifies each emitted component against its
+  `source-set-4fb59e9eb43045cb` coverage artifact verifies each emitted component against its
   canonical source chunk, artifact hash, and parser round-trip from extracted text, and the live
   build currently records `component_source_accuracy_passed=true` with
   `component_source_accuracy_failure_count=0`.
@@ -512,7 +519,7 @@ Historical documented full-corpus promotion baseline:
   `6,212` edges.
 - The Flathead direct-extraction admission gap is now closed on `2026-05-12`: all `17` tracked
   Flathead forest-plan/support/currentness records were re-extracted directly from the active local
-  source artifacts on `source-set-5e65d845ce77e1a0`, the targeted
+  source artifacts on `source-set-4fb59e9eb43045cb`, the targeted
   `extraction-accuracy-audit` passed with `17/17` required records admitted and `0` blocked, and
   retrieval now records
   `verified_extraction_contract_ids=["flathead-forest-plan-direct-extraction"]` with
@@ -529,12 +536,12 @@ Historical documented full-corpus promotion baseline:
   `nez-perce-clearwater-nfs` now classify as `document_role=forest_plan` instead of blanket
   `forest_plan_support`, while ordinary supplemental register rows remain support-scoped.
 - The tracked inventory-build manifest, Region 1 readiness config, and post-V1 promotion-suite
-  contract are now aligned to `source-set-5e65d845ce77e1a0`. The refreshed readiness truth now
+  contract are now aligned to `source-set-4fb59e9eb43045cb`. The refreshed readiness truth now
   promotes all `10` tracked forests/grasslands, with no remaining active full-canonical
   parser/inventory blockers.
 - The repo now also ships a standalone component-retrieval eval contract at
   `config/forest_plan_component_retrieval_eval_v1.json`. The latest live replay on active source
-  set `source-set-5e65d845ce77e1a0` writes
+  set `source-set-4fb59e9eb43045cb` writes
   `source_library/evaluations/forest_plan_component_retrieval/forest_plan_component_retrieval_eval_results.json`
   and passes with `6` cases (`4` expected-pass, `2` hard negatives),
   `component_retrieval_precision=1.0`,
@@ -571,19 +578,19 @@ Historical documented full-corpus promotion baseline:
   ba8d-scoped ECID expansion `phase-eval` replay now leave both non-strict and strict
   `promotion-suite` replays green with `expansion_failure_category_counts={}`.
 
-The reviewer-ready downstream V1 source set remains `source-set-ba8d0feae79501b8`. That lane still
+The reviewer-ready downstream V1 source set remains `source-set-4fb59e9eb43045cb`. That lane still
 owns the promoted East Crazies review artifacts, the Custer Gallatin component inventory, and the
 current promotion/final-QA contract. Older reviewer-ready downstream artifacts under
 `source-set-e364ea220cffd938` remain useful only as prior 147-row evidence.
 
 The latest fully replayed merged support-document source-set surface remains archived under
 `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`
-as `source-set-8a4005c8a083af1a`. That archived replay is still the freshest all-green merged
+as `source-set-4fb59e9eb43045cb`. That archived replay is still the freshest all-green merged
 source-set evidence surface: extraction `349/349`, retrieval eval `12/12`, evidence graph
 `153,198` nodes / `533,949` edges, claim extraction `101,856` claims, rule-claim binding `211`
 links / `0` gaps, refreshed NEPA 3D source-set graph `1,789` nodes / `2,808` edges, and
 source-set `phase-eval` `7/7` with `reviewer_ready=true`. The merged-corpus East Crazies replay on
-`source-set-8a4005c8a083af1a` now has tracked applicability adjudications at
+`source-set-4fb59e9eb43045cb` now has tracked applicability adjudications at
 `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`. The replay-scoped
 applicability lane now validates with `56` applicable authorities, `340` non-applicable
 authorities, `0` unresolved decisions, and a regenerated `56`-rule generated rule pack. The same
@@ -630,7 +637,7 @@ replay is
 Sequence 6 forest-profile readiness integration is now implemented in the same readiness report.
 That earlier live replay separated configured profiles from register-only tracking rows, but that
 state is now historical. On the active full-canonical source set
-`source-set-5e65d845ce77e1a0`, configured profile readiness is now `10` graph-ready profiles and
+`source-set-4fb59e9eb43045cb`, configured profile readiness is now `10` graph-ready profiles and
 `0` blocked profiles. The readiness surface still preserves explicit source blockers where they
 exist, but they no longer block the active full-canonical profile roster.
 
@@ -657,7 +664,7 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   preserved official-source gap (`R1PLAN-kootenai-nf-18`).
 - refreshed source-delta capture is archived under
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/`, with scoped
-  source set `source-set-bfe49a94e22fd1e2` and merged source set `source-set-8a4005c8a083af1a`.
+  source set `source-set-bfe49a94e22fd1e2` and merged source set `source-set-4fb59e9eb43045cb`.
 - external Docling OCR replay clears all seven former PDF parser blockers. The merged extraction
   replay now validates with `349/349` required rows extracted, `0` failed rows, and `75,745`
   chunks.
@@ -672,7 +679,7 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
   `custer-gallatin-nf` until Beaverhead has a validated component inventory.
 - merged-corpus review replay is now explicit under
   `source_library/reviews/v1-cg-ecid-source-delta-review/`. The review-scoped replay against
-  `source-set-8a4005c8a083af1a` now carries a tracked applicability adjudication contract at
+  `source-set-4fb59e9eb43045cb` now carries a tracked applicability adjudication contract at
   `config/applicability_adjudications/v1-cg-ecid-source-delta-review.json`. Replaying that
   contract closes all `7` prior applicability conflicts: applicability validation now passes with
   `56` applicable authorities, `340` non-applicable authorities, `0` unresolved decisions, and a
@@ -692,7 +699,7 @@ Latest refresh on 2026-05-10 supersedes that partial Sequence 7 state:
 - replay-context hardening is now implemented for that archived review lane. Tracked replay
   authority lives at `config/replay_contexts/v1-cg-ecid-source-delta-review.json`, and
   `phase-eval --review-id v1-cg-ecid-source-delta-review` now auto-resolves the archived
-  `source-set-8a4005c8a083af1a` plus merged catalog gate instead of silently falling back to the
+  `source-set-4fb59e9eb43045cb` plus merged catalog gate instead of silently falling back to the
   active catalog. The remaining replay repair work is now content-only: forest-plan component
   repair plus replay-scoped compliance/gold-eval regeneration.
 - `applicability-authority-universe` now accepts `--catalog-path` and `--source-set-manifest-path`
@@ -753,7 +760,7 @@ them. NEPA 3D Milestone 1 now defines the source-set/review graph export contrac
 display status, review readiness, required provenance, edge endpoint compatibility, lens metadata,
 and readiness blockers. NEPA 3D Milestone 3 now adds the read-only
 `nepa-knowledge-graph-export` source-set builder. The live export for
-`source-set-ba8d0feae79501b8` passes `62` validation checks with `1,470` nodes, `2,648` edges, all
+`source-set-4fb59e9eb43045cb` passes `62` validation checks with `1,470` nodes, `2,648` edges, all
 `35` authority families, all `190` catalog source records, all `48` base rules, all `19`
 authority-family templates, `211` rule-claim links, and `329` forest-plan components. NEPA 3D
 Milestone 4 now adds the review-specific overlay for `v1-cg-ecid-compliance-review`: the export
@@ -778,7 +785,7 @@ load time from `source_library/catalog/source_set_manifest.json`, prefers that c
 when a matching graph export exists, otherwise falls back to the newest graph-capable source set
 under `source_library/derived/`, and only offers review overlays whose graph summaries match the
 selected source set. The checked-in fallback manifest currently points to
-`source-set-8a4005c8a083af1a`, while the live catalog source set is `source-set-5e65d845ce77e1a0`
+`source-set-4fb59e9eb43045cb`, while the live catalog source set is `source-set-4fb59e9eb43045cb`
 and now supplies the default graph export. A fresh load opens on the full
 validated knowledge base by default, covering laws, regulations, policies, forest plans, and
 supporting documents for the resolved source set; scene buttons remain above Lens and narrow from
@@ -1136,7 +1143,7 @@ finding graph with source-claim support. The `v1-ea-eval` command scores the cur
 Inspiration Divide real EA review against the V1 contract, including the explicit pending
 conditional-adjudication policy. The `compliance-gold-eval` command runs the 14-case adjudication
 promotion gate and is currently the active full-canonical red lane on
-`source-set-f775524ab233ff27`. The `promotion-suite` command checks manifest-declared readiness evidence for the
+`source-set-4fb59e9eb43045cb`. The `promotion-suite` command checks manifest-declared readiness evidence for the
 current V1 review and post-V1 expansion slots. The active compliance rule pack is `0.4.0`: it
 declares the 26 workbook `Scope=Baseline` source records explicitly and contains 48 total authority
 rules.
@@ -1485,7 +1492,7 @@ The command writes
 `source_library/evaluations/forest_plan_profile/forest_plan_profile_eval_report.md`. It reads the
 tracked readiness roster from `config/region1_forest_plan_readiness_nepa_3d_v1.json` plus the
 runtime profile roster from `config/forest_plan_profiles.json`, binds the aggregate gate to active
-source set `source-set-5e65d845ce77e1a0`, and fails closed until every validated Region 1 profile
+source set `source-set-4fb59e9eb43045cb`, and fails closed until every validated Region 1 profile
 is `covered`. The current live replay is green at `covered=10`,
 `fixture_contract_defined=0`, and `not_started=0`. Beaverhead-Deerlodge and Flathead still carry
 the richer reviewer-ready-profile floor, while the seven tracking-only profiles now clear the lane
@@ -1762,7 +1769,7 @@ package-style tags `clean_baseline`, `live_external_noisy`, and `typed_blocked_e
 fails closed when those required tags are missing. It emits `promotion_ready` only when the rule
 pack is a reviewer-ready generated applicability rule pack and adjudication checks plus the
 underlying compliance-review eval both pass.
-On 2026-05-23, the default replay against `source-set-f775524ab233ff27` passes `14/14` cases.
+On 2026-05-23, the default replay against `source-set-4fb59e9eb43045cb` passes `14/14` cases.
 The active claim extraction summary now records `claim_count=124458`,
 `source_record_count=539`, `validation_passed=true`, and `reviewer_ready=true`.
 The five authorities with no current canonical row
@@ -1997,7 +2004,7 @@ claim ID, claim type, score, matched terms, citation label, chunk ID, artifact h
 source offsets. Rule-claim outputs are versioned by rule-pack ID and version. Old
 `0.3.0`/20-rule link, coverage, compliance-eval, and gold-eval artifacts should be treated as stale
 for base-pack diagnostics. Current base rule-claim and coverage evidence must come from the
-regenerated `0.4.0`/44-rule artifacts for `source-set-ba8d0feae79501b8`; reviewer-ready V1
+regenerated `0.4.0`/44-rule artifacts for `source-set-4fb59e9eb43045cb`; reviewer-ready V1
 compliance evidence must come from the generated applicability rule pack for the review.
 
 Run the seed rule-claim eval gate:

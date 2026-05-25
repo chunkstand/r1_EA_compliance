@@ -7,6 +7,79 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Active Source-Set Contract Refresh Reduced Locally
+
+This implementation slice finished the repo-owned active-source-set rebind and
+then stopped where the remaining blockers became review-local replay truth
+rather than stale repo contracts.
+
+- outcome label:
+  `reduced locally`; the repo-owned runtime/test/viewer/source-set contracts
+  now point at `source-set-4fb59e9eb43045cb`
+- repo contract refresh:
+  `config/phase_eval_direct_eval_v1.json`,
+  `config/promotion_suite_v1.json`,
+  `config/r1_forest_plan_identity_reconciliation_v1.json`,
+  `viewer/nepa-3d/manifest.json`,
+  `tools/build_nepa_3d_capabilities_brief.mjs`,
+  `src/usfs_r1_ea_sources/document_plan.py`, and the matching tests now bind to
+  the active source set; the source-delta review adjudication configs also now
+  declare `source_set_id=source-set-4fb59e9eb43045cb`
+- live promotion truth:
+  `promotion-suite --output-dir source_library` now reports
+  `current_promotion_source_set_id=source-set-4fb59e9eb43045cb`,
+  `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`,
+  `full_canonical_corpus_ready=true`, and
+  `passed_required_full_canonical_result_count=10/10`; the active NEPA 3D
+  source-set graph now passes with `region1_forest_plan_graph_ready_profile_count=10`
+  and `region1_forest_plan_blocked_profile_count=0`
+- remaining blocker truth:
+  current promotion remains red at `passed_required_current_result_count=11/32`
+  because the ECID review-local compliance/applicability artifact family is
+  still stale or missing on the active source set; the visible failure families
+  are `stale_artifact`, `unsupported_package_evidence`,
+  `missing_matrix_render_row`, `missing_packet_index_row`, and
+  `adjudication_needed`, and `compliance_review_eval` still reports the older
+  review-local source-set identity inside `source_library/reviews/`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_document_plan.py tests/test_ea_consistency_decision_support.py tests/test_forest_plan_component_adjudication.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profile_eval_contracts.py tests/test_nepa_3d_viewer.py tests/test_phase_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_forest_plan_identity_reconciliation.py tests/test_promotion_suite.py tests/test_cli_eval.py tests/test_cli_derived.py tests/test_promotion_suite_full_canonical.py tests/test_forest_plan_component_eval_coverage.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library`
+
+## Promotion Suite Slot-Driven Contract Packet Queued Locally
+
+This docs-only planning slice opens a fresh standalone follow-on packet for the
+promotion-suite architecture boundary so the aggregate current-promotion
+contract no longer depends structurally on one fixed proving review.
+
+- outcome label:
+  `queued locally`; the new packet is
+  `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
+- routed weakness:
+  `config/promotion_suite_v1.json` still declares one
+  `required_for_current_promotion` review case
+  (`v1-cg-ecid-compliance-review`), `src/usfs_r1_ea_sources/promotion_suite.py`
+  still computes `current_promotion_ready` from that fixed review-case lane,
+  and `tests/test_promotion_suite.py` still locks ECID-specific packet counts
+  and `manifest["review_cases"][0]` into the aggregate suite contract
+- intended improvement:
+  the queued packet rewrites current promotion as a slot-driven layered
+  contract using `config/v1_real_package_review_coverage_v1.json` and
+  `real-package-review-coverage-eval` as the governed slot owner, keeps
+  suite-level readiness, slot-driven current promotion, and fixed canary
+  packet truth separate, and requires packet-specific counts to remain in
+  packet-local validators rather than the aggregate suite
+- explicit boundary:
+  this packet does not replace the active Lolo example packet, does not reopen
+  the already-green full-canonical source-set rebind, and does not claim a
+  broader live current-promotion roster than the governed slot manifest
+  actually proves
+- next-step rule:
+  Milestone 0 of the new packet must begin with a freshness and overlap pass,
+  because the live checkout already contains unrelated dirty edits across the
+  promotion-suite config, tests, and adjacent source-set refresh surfaces
+- verification:
+  `git diff --check`
+
 ## Lolo Tyler's Kitchen Packet Reduced Locally
 
 This implementation slice carried the active Lolo packet through the honest
@@ -49,7 +122,8 @@ packet-local boundary, then stopped where the inherited review-scoped
   `missing_direct_eval_phase_count=1` and
   `threshold_failed_phase_count=1`; the blocking reasons are missing direct
   extraction eval coverage plus retrieval direct-eval threshold failures on
-  `source-set-5e65d845ce77e1a0`, so Milestone 3 promotion stayed deferred
+  the active `source-set-4fb59e9eb43045cb` contract, so Milestone 3 promotion
+  stayed deferred
 - aggregate truth:
   `real-package-review-coverage-eval` remains green at the pre-Lolo `3`-slot
   baseline, and `forest-specific-example-package-eval` remains green at

@@ -66,17 +66,16 @@ authority-family templates. It also requires the authority-family reviewer-repor
 promoted V1 review: authority-family provenance, non-applicable authority appendix,
 reviewer-resolution report, and deterministic litigation-risk summary.
 
-The default manifest now also records two different source-set identities on purpose:
+The default manifest now binds both active source-set identities to the same
+current local corpus:
 
-- `current_promotion_source_set_id=source-set-ba8d0feae79501b8` for the reviewer-ready East Crazies
-  V1 lane.
-- `full_canonical_source_set_id=source-set-5e65d845ce77e1a0` for the active full canonical catalog
-  rebuilt from the base workbook batch plus the 2026-05-10 refresh batch.
+- `current_promotion_source_set_id=source-set-4fb59e9eb43045cb`
+- `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`
 
-The archived fully replayed merged support-document surface remains
-`source-set-8a4005c8a083af1a`. That archived source set is still the freshest all-green merged
-extraction/retrieval/graph replay, but it is no longer the active `source_library/catalog/`
-identity after full-corpus promotion under the current code.
+Older source-set references below are historical run notes. The current local
+question is no longer which source set owns the repo contract; it is whether
+the review-local ECID compliance/applicability artifacts have been fully
+replayed onto that active source set.
 
 ## Failure Taxonomy
 
@@ -169,20 +168,24 @@ V1 review-bound phase eval now passes `20/20` phases, the non-strict promotion s
 Strict expansion now fails closed only on the South Plateau forest-plan blocker while still passing
 `26/26` required current-promotion results.
 
-Full-corpus promotion closeout on 2026-05-10 added active-catalog checks to the default manifest.
-The current local non-strict run now reports `current_promotion_ready=true`,
-`full_canonical_corpus_ready=true`, `promotion_ready=true`, and `expansion_ready=false`. The
-active catalog checks now pin `source_library/catalog/source_set_manifest.json`,
-`catalog_validation.json`, `authority_currentness`, and the NEPA 3D graph surfaces to full
-canonical source set `source-set-5e65d845ce77e1a0` with `350` source rows, `319` artifacts, `160`
-supplemental source-delta rows, preserved gap `R1PLAN-kootenai-nf-18`, and
-`full_canonical_failure_category_counts={}`. The refreshed active NEPA 3D source-set export now
-passes with `66` checks, `0` failed checks, `2,132` nodes, `3,872` edges,
-`region1_forest_plan_graph_ready_profile_count=5`, and
-`region1_forest_plan_blocked_profile_count=5`.
-The remaining blocker is specific: the active source-set export still points at
-`source_library/derived/source-set-8a4005c8a083af1a/forest_plan_components/component_inventory.json`
-instead of an active-source-set-owned `forest_plan_components/` artifact family.
+Full-corpus promotion closeout on 2026-05-10 added active-catalog checks to the
+default manifest. The latest local non-strict run on 2026-05-25 now reports
+`full_canonical_corpus_ready=true` and
+`passed_required_full_canonical_result_count=10/10` on
+`source-set-4fb59e9eb43045cb`, while `current_promotion_ready=false`,
+`promotion_ready=false`, and `expansion_ready=false`. The active catalog checks
+now pin `source_library/catalog/source_set_manifest.json`,
+`catalog_validation.json`, `authority_currentness`, and the NEPA 3D graph
+surfaces to the active source set with `647` source rows, `635` artifacts,
+`594` admitted active-review rows, and `53` explicit archive/currentness rows.
+The refreshed active NEPA 3D source-set export now passes with `72` checks,
+`0` failed checks, `3,677` nodes, `7,262` edges,
+`region1_forest_plan_graph_ready_profile_count=10`, and
+`region1_forest_plan_blocked_profile_count=0`. The remaining blocker is no
+longer a split source-set graph ownership problem; it is the stale or missing
+current-promotion ECID compliance/applicability artifact family, including
+`compliance_review_eval` still carrying the older review-local source-set
+identity.
 
 The South Plateau expansion slot remains `ready=false` and carries
 `forest_plan_reviewer_not_ready`. The previous ambiguous-scope blocker is closed:

@@ -3,7 +3,7 @@
   "adjudication_id": "region1-example-lolo-tylers-kitchen-66344-applicability-adjudication",
   "created_at": "2026-05-24T18:47:46Z",
   "review_id": "region1-example-lolo-tylers-kitchen-66344",
-  "source_set_id": "source-set-5e65d845ce77e1a0",
+  "source_set_id": "source-set-4fb59e9eb43045cb",
   "decisions_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_decisions.jsonl",
   "applicability_decisions_sha256": "85db4797f04a0791b3aed8754570ebf1b46390896fcb18b9de71b4d51f6823cb",
   "allowed_final_statuses": [
@@ -30,7 +30,7 @@
     "schema_version": "applicability-adjudication-template-summary-v0",
     "created_at": "2026-05-24T18:47:46Z",
     "review_id": "region1-example-lolo-tylers-kitchen-66344",
-    "source_set_id": "source-set-5e65d845ce77e1a0",
+    "source_set_id": "source-set-4fb59e9eb43045cb",
     "decision_count": 67,
     "adjudication_item_count": 4,
     "pending_item_count": 0,

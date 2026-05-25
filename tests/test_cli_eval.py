@@ -15,7 +15,7 @@ def test_phase_eval_parser_accepts_archived_catalog_dir() -> None:
             "--output-dir",
             "source_library",
             "--source-set-id",
-            "source-set-7e2652d23e764068",
+            "source-set-4fb59e9eb43045cb",
             "--catalog-dir",
             "source_library/runs/r1-forest-plan-source-delta-capture-20260510-batches/merged_catalog_gate",
         ]

@@ -26,44 +26,29 @@ def test_nepa_3d_viewer_manifest_lists_graph_capable_fallback_exports() -> None:
 
     assert manifest["schema_version"] == "nepa-3d-viewer-manifest-v1"
     assert manifest["runtime"]["graph_runtime"] == "3d-force-graph"
-    assert manifest["default_source_set_id"] == "source-set-8a4005c8a083af1a"
+    assert manifest["default_source_set_id"] == "source-set-4fb59e9eb43045cb"
     assert manifest["default_review_id"] is None
 
     datasets = {dataset["dataset_id"]: dataset for dataset in manifest["datasets"]}
-    current_fallback = datasets["source-set-8a4005c8a083af1a"]
-    source_delta = datasets["source-set-7e2652d23e764068"]
-    promoted_v1 = datasets["source-set-ba8d0feae79501b8"]
-    review = datasets["v1-cg-ecid-compliance-review"]
+    current_fallback = datasets["source-set-4fb59e9eb43045cb"]
 
     assert manifest["runtime"]["three_runtime_url"].endswith("three@0.149.0/build/three.min.js")
     assert manifest["runtime"]["graph_runtime_url"].endswith(
         "3d-force-graph@1.76.0/dist/3d-force-graph.min.js"
     )
-    for source_set_id, dataset in [
-        ("source-set-8a4005c8a083af1a", current_fallback),
-        ("source-set-7e2652d23e764068", source_delta),
-        ("source-set-ba8d0feae79501b8", promoted_v1),
-    ]:
-        assert dataset["scope"] == "source_set"
-        assert dataset["source_set_id"] == source_set_id
-        assert dataset["review_id"] is None
-        assert dataset["graph_path"].startswith("../../source_library/")
-        assert dataset["graph_path"].endswith(
-            f"source_library/derived/{source_set_id}/knowledge_graph/nepa_3d_graph.json"
-        )
-        assert dataset["summary_path"].endswith(
-            f"source_library/derived/{source_set_id}/knowledge_graph/nepa_3d_graph_summary.json"
-        )
-        assert dataset["validation_path"].endswith(
-            f"source_library/derived/{source_set_id}/knowledge_graph/nepa_3d_graph_validation.json"
-        )
-
-    assert review["scope"] == "review_overlay"
-    assert review["source_set_id"] == promoted_v1["source_set_id"]
-    assert review["review_id"] == "v1-cg-ecid-compliance-review"
-    assert review["graph_path"].startswith("../../source_library/")
-    assert review["graph_path"].endswith(
-        "source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph.json"
+    assert list(datasets) == ["source-set-4fb59e9eb43045cb"]
+    assert current_fallback["scope"] == "source_set"
+    assert current_fallback["source_set_id"] == "source-set-4fb59e9eb43045cb"
+    assert current_fallback["review_id"] is None
+    assert current_fallback["graph_path"].startswith("../../source_library/")
+    assert current_fallback["graph_path"].endswith(
+        "source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph.json"
+    )
+    assert current_fallback["summary_path"].endswith(
+        "source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph_summary.json"
+    )
+    assert current_fallback["validation_path"].endswith(
+        "source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph_validation.json"
     )
 
 

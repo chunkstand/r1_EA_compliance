@@ -2,8 +2,8 @@
   "schema_version": "promotion-suite-v0",
   "id": "post-v1-region1-ea-promotion-suite",
   "label": "Post-V1 Region 1 EA promotion suite",
-  "source_set_id": "source-set-ba8d0feae79501b8",
-  "full_canonical_source_set_id": "source-set-3f7d4578cafb0704",
+  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "full_canonical_source_set_id": "source-set-4fb59e9eb43045cb",
   "rule_pack_path": "config/compliance_rule_pack_nepa_ea_v0.json",
   "rule_pack_id": "nepa-ea-v0",
   "rule_pack_version": "0.4.0",
@@ -46,7 +46,7 @@
             {
               "name": "source_set_matches",
               "json_path": "summary.source_set_id",
-              "equals": "source-set-ba8d0feae79501b8",
+              "equals": "source-set-4fb59e9eb43045cb",
               "failure_category": "stale_artifact"
             },
             {
@@ -133,7 +133,7 @@
             {
               "name": "row_inventory_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8"
+              "equals": "source-set-4fb59e9eb43045cb"
             },
             {
               "name": "row_inventory_applicable_authorities",
@@ -177,7 +177,7 @@
             {
               "name": "render_manifest_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8"
+              "equals": "source-set-4fb59e9eb43045cb"
             },
             {
               "name": "render_manifest_passed",
@@ -216,7 +216,7 @@
             {
               "name": "review_packet_index_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8"
+              "equals": "source-set-4fb59e9eb43045cb"
             },
             {
               "name": "review_packet_index_applicable_authorities",
@@ -279,7 +279,7 @@
             {
               "name": "review_packet_index_validation_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8"
+              "equals": "source-set-4fb59e9eb43045cb"
             },
             {
               "name": "review_packet_index_validation_passed",
@@ -338,7 +338,7 @@
             {
               "name": "decision_support_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8"
+              "equals": "source-set-4fb59e9eb43045cb"
             },
             {
               "name": "decision_support_status",
@@ -402,7 +402,7 @@
             {
               "name": "decision_support_manifest_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8"
+              "equals": "source-set-4fb59e9eb43045cb"
             },
             {
               "name": "decision_support_manifest_validation_status",
@@ -445,7 +445,7 @@
             {
               "name": "final_qa_report_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8"
+              "equals": "source-set-4fb59e9eb43045cb"
             },
             {
               "name": "final_qa_machine_replay_passed",
@@ -489,7 +489,7 @@
             {
               "name": "final_qa_manifest_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8"
+              "equals": "source-set-4fb59e9eb43045cb"
             },
             {
               "name": "final_qa_manifest_validation_status",
@@ -532,7 +532,7 @@
             {
               "name": "final_qa_validation_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8"
+              "equals": "source-set-4fb59e9eb43045cb"
             },
             {
               "name": "final_qa_validation_passed",
@@ -709,7 +709,7 @@
             {
               "name": "review_graph_source_set_matches",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8",
+              "equals": "source-set-4fb59e9eb43045cb",
               "failure_category": "graph_stale_artifact"
             },
             {
@@ -772,7 +772,7 @@
             {
               "name": "eval_source_set_matches",
               "json_path": "contract.source_set_id",
-              "equals": "source-set-ba8d0feae79501b8",
+              "equals": "source-set-4fb59e9eb43045cb",
               "failure_category": "stale_artifact"
             }
           ]
@@ -852,7 +852,7 @@
             {
               "name": "source_set_matches",
               "json_path": "summary.source_set_id",
-              "equals": "source-set-ba8d0feae79501b8",
+              "equals": "source-set-4fb59e9eb43045cb",
               "failure_category": "stale_artifact"
             }
           ]
@@ -888,7 +888,7 @@
             {
               "name": "source_set_matches",
               "json_path": "summary.source_set_id",
-              "equals": "source-set-ba8d0feae79501b8",
+              "equals": "source-set-4fb59e9eb43045cb",
               "failure_category": "stale_artifact"
             },
             {
@@ -1101,7 +1101,7 @@
             {
               "name": "phase_eval_source_set_matches",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8",
+              "equals": "source-set-4fb59e9eb43045cb",
               "failure_category": "stale_artifact"
             },
             {
@@ -1196,7 +1196,7 @@
             {
               "name": "source_set_matches",
               "json_path": "summary.source_set_id",
-              "equals": "source-set-ba8d0feae79501b8",
+              "equals": "source-set-4fb59e9eb43045cb",
               "failure_category": "stale_artifact"
             }
           ]
@@ -1232,7 +1232,7 @@
             {
               "name": "source_set_matches",
               "json_path": "summary.source_set_id",
-              "equals": "source-set-ba8d0feae79501b8",
+              "equals": "source-set-4fb59e9eb43045cb",
               "failure_category": "stale_artifact"
             },
             {
@@ -1306,7 +1306,7 @@
             {
               "name": "forest_plan_context_source_set_matches",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8",
+              "equals": "source-set-4fb59e9eb43045cb",
               "failure_category": "stale_artifact"
             },
             {
@@ -1492,7 +1492,7 @@
             {
               "name": "phase_eval_source_set_matches",
               "json_path": "source_set_id",
-              "equals": "source-set-ba8d0feae79501b8",
+              "equals": "source-set-4fb59e9eb43045cb",
               "failure_category": "stale_artifact"
             },
             {
@@ -1537,12 +1537,12 @@
         {
           "name": "full_canonical_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-3f7d4578cafb0704"
+          "equals": "source-set-4fb59e9eb43045cb"
         },
         {
           "name": "full_canonical_download_run_id_matches",
           "json_path": "download_run_id",
-          "equals": "queue-m2-full-canonical-merged-download-20260523"
+          "equals": "queue-m3-full-canonical-merged-download-20260523"
         },
         {
           "name": "full_canonical_download_batch_run_ids",
@@ -1552,17 +1552,17 @@
         {
           "name": "full_canonical_source_count",
           "json_path": "source_count",
-          "equals": 638
+          "equals": 647
         },
         {
           "name": "full_canonical_artifact_count",
           "json_path": "artifact_count",
-          "equals": 626
+          "equals": 635
         },
         {
           "name": "full_canonical_active_review_corpus_count",
           "json_path": "source_partition_counts.active_review_corpus",
-          "equals": 585
+          "equals": 594
         },
         {
           "name": "full_canonical_currentness_supersession_archive_count",
@@ -1572,7 +1572,7 @@
         {
           "name": "full_canonical_downloaded_existing_count",
           "json_path": "status_counts.downloaded_existing",
-          "equals": 622
+          "equals": 635
         },
         {
           "name": "full_canonical_duplicate_content_count",
@@ -1597,7 +1597,7 @@
         {
           "name": "full_canonical_catalog_validation_source_set",
           "json_path": "source_set_id",
-          "equals": "source-set-3f7d4578cafb0704"
+          "equals": "source-set-4fb59e9eb43045cb"
         }
       ]
     },
@@ -1617,7 +1617,7 @@
         {
           "name": "full_canonical_authority_currentness_source_set",
           "json_path": "source_set_id",
-          "equals": "source-set-3f7d4578cafb0704",
+          "equals": "source-set-4fb59e9eb43045cb",
           "failure_category": "graph_stale_artifact"
         },
         {
@@ -1628,7 +1628,7 @@
         {
           "name": "full_canonical_authority_currentness_active_review_corpus_count",
           "json_path": "summary.catalog_source_partition_counts.active_review_corpus",
-          "equals": 585
+          "equals": 594
         },
         {
           "name": "full_canonical_authority_currentness_currentness_supersession_archive_count",
@@ -1648,7 +1648,7 @@
         {
           "name": "full_canonical_authority_currentness_current_authority_source_count",
           "json_path": "summary.current_authority_source_record_count",
-          "equals": 585
+          "equals": 594
         }
       ]
     },
@@ -1663,7 +1663,7 @@
         {
           "name": "full_canonical_verified_admission_boundary_source_set",
           "json_path": "source_set_id",
-          "equals": "source-set-3f7d4578cafb0704"
+          "equals": "source-set-4fb59e9eb43045cb"
         },
         {
           "name": "full_canonical_verified_admission_boundary_contract_ids",
@@ -1675,12 +1675,12 @@
         {
           "name": "full_canonical_verified_admission_required_source_count",
           "json_path": "verified_extraction_required_source_count",
-          "equals": 585
+          "equals": 594
         },
         {
           "name": "full_canonical_verified_admission_admitted_source_count",
           "json_path": "verified_extraction_admitted_source_count",
-          "equals": 585
+          "equals": 594
         },
         {
           "name": "full_canonical_verified_admission_explicitly_non_admitted_source_count",
@@ -1735,13 +1735,13 @@
         {
           "name": "full_canonical_source_set_graph_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-3f7d4578cafb0704",
+          "equals": "source-set-4fb59e9eb43045cb",
           "failure_category": "graph_stale_artifact"
         },
         {
           "name": "full_canonical_source_set_graph_catalog_source_record_count",
           "json_path": "catalog_source_record_count",
-          "equals": 638,
+          "equals": 647,
           "failure_category": "graph_missing_source_record"
         },
         {
@@ -1801,7 +1801,7 @@
           "name": "full_canonical_forest_plan_profile_eval_source_set_matches",
           "json_path": "active_source_set_ids",
           "equals": [
-            "source-set-3f7d4578cafb0704"
+            "source-set-4fb59e9eb43045cb"
           ],
           "failure_category": "stale_artifact"
         },
@@ -1854,14 +1854,14 @@
         {
           "name": "full_canonical_forest_plan_component_retrieval_eval_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-3f7d4578cafb0704",
+          "equals": "source-set-4fb59e9eb43045cb",
           "failure_category": "stale_artifact"
         },
         {
           "name": "full_canonical_forest_plan_component_retrieval_eval_active_source_set_matches",
           "json_path": "expected_active_source_set_ids",
           "equals": [
-            "source-set-3f7d4578cafb0704"
+            "source-set-4fb59e9eb43045cb"
           ],
           "failure_category": "stale_artifact"
         },
@@ -1928,12 +1928,12 @@
         {
           "name": "full_canonical_forest_plan_component_eval_coverage_required_review_count",
           "json_path": "required_review_count",
-          "equals": 3
+          "equals": 4
         },
         {
           "name": "full_canonical_forest_plan_component_eval_coverage_covered_review_count",
           "json_path": "covered_review_count",
-          "equals": 3
+          "equals": 4
         },
         {
           "name": "full_canonical_forest_plan_component_eval_coverage_required_review_ids",
@@ -1941,7 +1941,8 @@
           "contains_all": [
             "v1-cg-ecid-compliance-review",
             "v1-cg-ecid-source-delta-review",
-            "west-reservoir-67436"
+            "west-reservoir-67436",
+            "region1-example-lolo-tylers-kitchen-66344"
           ]
         },
         {
@@ -1950,13 +1951,14 @@
           "contains_all": [
             "v1-cg-ecid-compliance-review",
             "v1-cg-ecid-source-delta-review",
-            "west-reservoir-67436"
+            "west-reservoir-67436",
+            "region1-example-lolo-tylers-kitchen-66344"
           ]
         },
         {
           "name": "full_canonical_forest_plan_component_eval_coverage_distinct_forest_count",
           "json_path": "distinct_forest_count",
-          "min": 2
+          "min": 3
         },
         {
           "name": "full_canonical_forest_plan_component_eval_coverage_missing_contract_count",
@@ -2068,7 +2070,7 @@
         {
           "name": "phase_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-ba8d0feae79501b8"
+          "equals": "source-set-4fb59e9eb43045cb"
         },
         {
           "name": "core_passed_phase_count",
@@ -2176,7 +2178,7 @@
         {
           "name": "source_set_graph_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-ba8d0feae79501b8",
+          "equals": "source-set-4fb59e9eb43045cb",
           "failure_category": "graph_stale_artifact"
         },
         {
@@ -2200,9 +2202,9 @@
           "equals": 0
         },
         {
-          "name": "source_set_graph_region1_blocked_profiles_visible",
+          "name": "source_set_graph_region1_blocked_profiles_cleared",
           "json_path": "region1_forest_plan_blocked_profile_count",
-          "min": 1,
+          "equals": 0,
           "failure_category": "graph_region1_profile_gap"
         }
       ]
@@ -2243,7 +2245,7 @@
         {
           "name": "compliance_review_eval_source_set",
           "json_path": "source_set_id",
-          "equals": "source-set-ba8d0feae79501b8",
+          "equals": "source-set-4fb59e9eb43045cb",
           "failure_category": "stale_artifact"
         }
       ]
@@ -2515,7 +2517,7 @@
       "required_for_current_promotion": false,
       "review_id": "region1-expansion-ecid-preliminary-ea",
       "package_path": "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)/Preliminary Environmental Assessment",
-      "source_set_id": "source-set-ba8d0feae79501b8",
+      "source_set_id": "source-set-4fb59e9eb43045cb",
       "expected_gate_artifacts": [
         {
           "id": "package_manifest",
@@ -2607,7 +2609,7 @@
       "required_for_current_promotion": false,
       "review_id": "region1-expansion-south-plateau-landscape-treatment",
       "package_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment",
-      "source_set_id": "source-set-ba8d0feae79501b8",
+      "source_set_id": "source-set-4fb59e9eb43045cb",
       "forest_plan_profile": "custer_gallatin",
       "project_metadata": {
         "official_project_page": "https://www.fs.usda.gov/r01/custergallatin/projects/archive/57353",

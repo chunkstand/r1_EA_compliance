@@ -1,6 +1,6 @@
 {
   "schema_version": "nepa-3d-viewer-manifest-v1",
-  "default_source_set_id": "source-set-8a4005c8a083af1a",
+  "default_source_set_id": "source-set-4fb59e9eb43045cb",
   "default_review_id": null,
   "runtime": {
     "three_runtime_url": "https://unpkg.com/three@0.149.0/build/three.min.js",
@@ -9,44 +9,14 @@
   },
   "datasets": [
     {
-      "dataset_id": "source-set-8a4005c8a083af1a",
-      "label": "Source Set: source-set-8a4005c8a083af1a",
+      "dataset_id": "source-set-4fb59e9eb43045cb",
+      "label": "Source Set: source-set-4fb59e9eb43045cb",
       "scope": "source_set",
-      "source_set_id": "source-set-8a4005c8a083af1a",
+      "source_set_id": "source-set-4fb59e9eb43045cb",
       "review_id": null,
-      "graph_path": "../../source_library/derived/source-set-8a4005c8a083af1a/knowledge_graph/nepa_3d_graph.json",
-      "summary_path": "../../source_library/derived/source-set-8a4005c8a083af1a/knowledge_graph/nepa_3d_graph_summary.json",
-      "validation_path": "../../source_library/derived/source-set-8a4005c8a083af1a/knowledge_graph/nepa_3d_graph_validation.json"
-    },
-    {
-      "dataset_id": "source-set-7e2652d23e764068",
-      "label": "Source Set: source-set-7e2652d23e764068",
-      "scope": "source_set",
-      "source_set_id": "source-set-7e2652d23e764068",
-      "review_id": null,
-      "graph_path": "../../source_library/derived/source-set-7e2652d23e764068/knowledge_graph/nepa_3d_graph.json",
-      "summary_path": "../../source_library/derived/source-set-7e2652d23e764068/knowledge_graph/nepa_3d_graph_summary.json",
-      "validation_path": "../../source_library/derived/source-set-7e2652d23e764068/knowledge_graph/nepa_3d_graph_validation.json"
-    },
-    {
-      "dataset_id": "source-set-ba8d0feae79501b8",
-      "label": "Source Set: source-set-ba8d0feae79501b8",
-      "scope": "source_set",
-      "source_set_id": "source-set-ba8d0feae79501b8",
-      "review_id": null,
-      "graph_path": "../../source_library/derived/source-set-ba8d0feae79501b8/knowledge_graph/nepa_3d_graph.json",
-      "summary_path": "../../source_library/derived/source-set-ba8d0feae79501b8/knowledge_graph/nepa_3d_graph_summary.json",
-      "validation_path": "../../source_library/derived/source-set-ba8d0feae79501b8/knowledge_graph/nepa_3d_graph_validation.json"
-    },
-    {
-      "dataset_id": "v1-cg-ecid-compliance-review",
-      "label": "Review Overlay: v1-cg-ecid-compliance-review",
-      "scope": "review_overlay",
-      "source_set_id": "source-set-ba8d0feae79501b8",
-      "review_id": "v1-cg-ecid-compliance-review",
-      "graph_path": "../../source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph.json",
-      "summary_path": "../../source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph_summary.json",
-      "validation_path": "../../source_library/reviews/v1-cg-ecid-compliance-review/knowledge_graph/nepa_3d_graph_validation.json"
+      "graph_path": "../../source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph.json",
+      "summary_path": "../../source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph_summary.json",
+      "validation_path": "../../source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph_validation.json"
     }
   ]
 }

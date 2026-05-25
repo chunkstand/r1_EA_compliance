@@ -2,7 +2,7 @@
   "schema_version": "forest-plan-component-eval-v0",
   "eval_id": "east-crazies-forest-plan-components-source-delta-replay-v0",
   "review_id": "v1-cg-ecid-source-delta-review",
-  "source_set_id": "source-set-8a4005c8a083af1a",
+  "source_set_id": "source-set-4fb59e9eb43045cb",
   "description": "Replay-scoped adjudicated component-level eval cases for the East Crazy Inspiration Divide merged-corpus review. Covers the current replay applicable standards plus representative non-standard positives, negatives, and queue-bound cases.",
   "coverage_requirements": {
     "require_all_applicable_standards": true,
