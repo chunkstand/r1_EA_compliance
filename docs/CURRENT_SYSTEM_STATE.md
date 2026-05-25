@@ -14,6 +14,70 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
+## Active Authority Current-Source Gap Blocker Milestone 0 Resolved Locally
+
+Latest implementation update on 2026-05-25:
+
+- routed packet:
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `resolved locally`; the post-binding ECID applicability residue is now
+  frozen as a separate current-source truth packet before any workbook or
+  template retirement/addition work begins
+- baseline truth:
+  `applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`
+  now reports `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`,
+  `validation_passed=false`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=17`
+- current-source gap truth:
+  the exact-match binding lane is now exhausted; a local audit across
+  `source_library/manifests/*.jsonl` and
+  `source_library/catalog/source_catalog.jsonl` returns no untouched exact
+  current-catalog URL matches for the remaining missing IDs, so the live
+  blocker is now governed workbook/template/rule-pack current-source debt
+- next routing:
+  the next truthful slice is Milestone `1` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`, which
+  now owns owner classification for the remaining current-source gaps before
+  packet-local replay can resume
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `git diff --check`
+
+## Active Authority Source Binding Blocker Milestone 2 Reduced Locally
+
+Latest implementation update on 2026-05-25:
+
+- routed packet:
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; the governed binding layer now covers the exact current
+  rows already present in the active catalog, but the ECID applicability
+  universe still stops on a smaller remaining current-source truth blocker
+- binding repair truth:
+  `src/usfs_r1_ea_sources/records.py` now reuses the committed forest-plan
+  identity registry snapshot while building shared alias sets, and
+  `config/compliance_source_record_reconciliation_v1.json` now binds the
+  exact current catalog rows already present for the remaining
+  reconciliation-owned ECID authorities and Region 1 overlay support rows
+- reduced blocker truth:
+  the live replay is now reduced from `21` source-evidence failures and `19`
+  missing source-record template groups to `11` and `17`; the remaining
+  blocker is no longer principally a source-binding problem
+- next routing:
+  the next truthful slice is no longer Milestone `3` in this packet; the live
+  route now moves to
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_applicability_authority_family_templates.py tests/test_applicability_candidate_assembly.py tests/test_applicability.py tests/test_applicability_authority_universe_contracts.py tests/test_applicability_authority_universe_builder.py tests/test_rule_claim_binding_runtime.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/records.py src/usfs_r1_ea_sources/applicability_contract_support.py tests/test_applicability_authority_family_templates.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `jq empty config/compliance_source_record_reconciliation_v1.json`,
+  `git diff --check`
+
 ## Active Authority Source Binding Blocker Milestone 1 Resolved Locally
 
 Latest implementation update on 2026-05-25:

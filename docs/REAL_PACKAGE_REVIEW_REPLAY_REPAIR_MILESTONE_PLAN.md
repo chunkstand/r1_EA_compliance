@@ -382,9 +382,19 @@ Milestone 1 reduction on 2026-05-25:
   `16` reconciliation-owned template families,
   `3` forest-plan identity rebind families, and
   `5` base-rule current-source gaps.
-- The next truthful slice is now Milestone `2` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which
-  owns governed blocker repair upstream of packet-local replay.
+- Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
+  reduced locally; the shared binding owners now cover the exact current rows
+  already present in the active catalog, and the live ECID applicability
+  replay is reduced to `11` source-evidence failures and `17` missing
+  source-record template groups on
+  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`.
+  No untouched exact current-catalog URL matches remain for the reduced
+  missing-ID inventory.
+- The next truthful slice is now Milestone `0` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
+  which owns the remaining workbook/template/rule-pack current-source repair
+  upstream of packet-local replay.
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 

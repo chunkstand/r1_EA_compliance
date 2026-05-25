@@ -2,7 +2,8 @@
 
 Date: 2026-05-25
 
-Status: Active packet (`Milestones 0-1 resolved locally; Milestone 2 governed repair next`)
+Status: Reduced locally through Milestone `2`; live route moved to
+`docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
 
 Owner context: this is a fresh standalone blocker packet opened from
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` after Milestone `1`
@@ -291,7 +292,7 @@ Milestone 1 resolution on 2026-05-25:
 
 ### Milestone 2 - Governed Repair
 
-Outcome label: resolved
+Outcome label: reduced
 
 Purpose: repair the chosen owner surfaces without weakening applicability
 validation.
@@ -308,6 +309,32 @@ Acceptance criteria:
 - `applicability-authority-universe` passes for ECID on
   `source-set-4fb59e9eb43045cb`.
 - No new skips, xfails, or relaxed checks are introduced.
+
+Milestone 2 reduction on 2026-05-25:
+
+- The governed binding layer now lands in the shared owners rather than inside
+  packet-local replay code: `records.py` now reuses the committed
+  forest-plan identity registry snapshot when building alias sets, and
+  `config/compliance_source_record_reconciliation_v1.json` now binds the
+  exact active catalog rows that already existed for the remaining
+  reconciliation-owned ECID authorities.
+- The live ECID applicability-universe replay now reduces from
+  `21` source-evidence failures and `19` missing source-record template groups
+  to `11` and `17` respectively on
+  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`.
+- The exact-match binding lane is now exhausted: a local audit across
+  `source_library/manifests/*.jsonl` and
+  `source_library/catalog/source_catalog.jsonl` returns no untouched exact
+  current-catalog URL matches for the remaining missing IDs.
+- The remaining blocker is therefore no longer principally a source-binding
+  problem. It is now a governed current-source truth problem spanning stale
+  template/rule-pack references and forest-plan support rows that still lack
+  current canonical coverage.
+- The next truthful slice is no longer Milestone `3` in this packet. The live
+  route now moves to
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
+  which freezes the reduced `11` / `17` residue and owns the remaining
+  current-source repair before the replay-repair packet can resume.
 
 ### Milestone 3 - Replay Resume Handoff
 

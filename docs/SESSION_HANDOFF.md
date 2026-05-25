@@ -7,6 +7,67 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Active Authority Current-Source Gap Blocker Milestone 0 Resolved Locally
+
+This implementation slice opens the remaining ECID applicability residue as a
+fresh current-source truth packet after the governed binding repair exhausts
+its exact-match lane.
+
+- outcome label:
+  `resolved locally`; the remaining blocker is now frozen in
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+  before any workbook/template retirement or addition work begins
+- live baseline truth:
+  `applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`
+  now reports `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`,
+  `validation_passed=false`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=17`
+- current-source gap truth:
+  a local audit across `source_library/manifests/*.jsonl` and
+  `source_library/catalog/source_catalog.jsonl` now returns no untouched exact
+  current-catalog URL matches for the remaining missing IDs, so the live
+  blocker is governed workbook/template/rule-pack current-source debt rather
+  than more reconciliation-only work
+- next truthful slice:
+  Milestone `1` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `git diff --check`
+
+## Active Authority Source Binding Blocker Milestone 2 Reduced Locally
+
+This implementation slice closes the shared binding repair honestly, then
+hands the remaining residue to the new current-source truth packet.
+
+- outcome label:
+  `reduced locally`; the shared binding layer now covers the exact current
+  rows already present in the active catalog, but the ECID applicability
+  universe still stops on a smaller remaining current-source truth blocker
+- implementation truth:
+  `src/usfs_r1_ea_sources/records.py` now reuses the committed forest-plan
+  identity registry snapshot while building alias sets, and
+  `config/compliance_source_record_reconciliation_v1.json` now binds the
+  exact current catalog rows already present for the remaining
+  reconciliation-owned ECID authorities and Region 1 overlay support rows
+- reduced replay truth:
+  the live replay is now reduced from `21` source-evidence failures and `19`
+  missing source-record template groups to `11` and `17`
+- next truthful slice:
+  the live route is no longer Milestone `3` in
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; it now
+  moves to Milestone `1` in
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_applicability_authority_family_templates.py tests/test_applicability_candidate_assembly.py tests/test_applicability.py tests/test_applicability_authority_universe_contracts.py tests/test_applicability_authority_universe_builder.py tests/test_rule_claim_binding_runtime.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/records.py src/usfs_r1_ea_sources/applicability_contract_support.py tests/test_applicability_authority_family_templates.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `jq empty config/compliance_source_record_reconciliation_v1.json`,
+  `git diff --check`
+
 ## Authority-Source Blocker Plan Labels Aligned Locally
 
 This docs-only cleanup pass closes the remaining wording drift after the

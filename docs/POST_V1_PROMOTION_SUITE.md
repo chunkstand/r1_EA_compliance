@@ -185,10 +185,16 @@ layer rather than the slot-driven contract layer.
   legacy-to-current source-record reconciliation, but the same run still fails
   on `candidates_have_source_evidence_available` (`failure_count=21`) and
   `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=19`). The active authority-source blocker
+  (`missing_source_record_count=19`). The authority-source binding blocker
   packet in `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
-  is now resolved locally through Milestone `1`, and the next truthful slice
-  is Milestone `2` of that blocker packet.
+  is now reduced locally through Milestone `2`: the exact current rows already
+  present in the active catalog are now governably bound, the live ECID
+  applicability replay is reduced to `11` source-evidence failures and `17`
+  missing source-record template groups on
+  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`,
+  and no untouched exact current-catalog URL matches remain for the reduced
+  missing-ID inventory. The new active blocker packet is now
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

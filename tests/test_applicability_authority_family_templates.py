@@ -224,6 +224,120 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
         )
         self.assertTrue(candidate["source_evidence_availability"]["available"])
 
+    def test_candidates_use_reconciled_current_handbook_row(self) -> None:
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "forest-plan-handbook-template",
+                        "authority_family_id": "forest_service_planning_handbook_amendments",
+                        "rule_id": "forest_plan_handbook_template_rule",
+                        "title": "Forest planning handbook template",
+                        "question": "Does the package depend on planning handbook direction?",
+                        "requirement": "Evaluate planning handbook applicability.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "agency_policy",
+                        "authority_document_role": "agency_policy",
+                        "authority_source_record_id": "R1EA-032",
+                        "source_record_ids": ["R1EA-032"],
+                        "package_query": "forest planning handbook",
+                        "package_terms": ["forest planning handbook"],
+                        "applies_if_package_terms": ["forest planning handbook"],
+                        "does_not_apply_if_package_terms": ["no forest planning handbook"],
+                        "source_query": "forest planning handbook source",
+                        "source_filters": {
+                            "document_role": "agency_policy",
+                            "source_record_id": "R1EA-032",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id={
+                "USFS-008": {
+                    "source_record_id": "USFS-008",
+                    "title": "Land Management Planning Handbook",
+                    "citation_label": "USFS-008 | FSH 1909.12",
+                    "document_role": "agency_policy",
+                    "authority_level": "agency_policy",
+                    "source_status": "downloaded",
+                    "artifact_sha256": "sha-usfs-008",
+                    "artifact_path": "artifacts/raw/USFS-008.pdf",
+                }
+            },
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], ["USFS-008"])
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            ["USFS-008"],
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
+    def test_candidates_use_forest_plan_identity_aliases_when_catalog_only_has_canonical_row(self) -> None:
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "forest-plan-ba-template",
+                        "authority_family_id": "region1_forest_plan_source_records",
+                        "rule_id": "forest_plan_ba_template_rule",
+                        "title": "Forest plan biological assessment template",
+                        "question": "Does the package depend on the forest-plan biological assessment?",
+                        "requirement": "Evaluate forest-plan biological assessment applicability.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "forest_plan_support",
+                        "authority_document_role": "forest_plan_support",
+                        "authority_source_record_id": "R1PLAN-custer-gallatin-nf-06",
+                        "source_record_ids": ["R1PLAN-custer-gallatin-nf-06"],
+                        "package_query": "forest plan biological assessment",
+                        "package_terms": ["forest plan biological assessment"],
+                        "applies_if_package_terms": ["forest plan biological assessment"],
+                        "does_not_apply_if_package_terms": ["no forest plan biological assessment"],
+                        "source_query": "forest plan biological assessment source",
+                        "source_filters": {
+                            "document_role": "forest_plan_support",
+                            "source_record_id": "R1PLAN-custer-gallatin-nf-06",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id={
+                "FPS-074": {
+                    "source_record_id": "FPS-074",
+                    "title": "Biological Assessment for Custer Gallatin Land Management Plan",
+                    "citation_label": "FPS-074 | Custer Gallatin biological assessment",
+                    "document_role": "forest_plan_support",
+                    "authority_level": "forest_plan_support",
+                    "source_status": "downloaded",
+                    "artifact_sha256": "sha-fps-074",
+                    "artifact_path": "artifacts/raw/FPS-074.pdf",
+                }
+            },
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], ["FPS-074"])
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            ["FPS-074"],
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
 
 if __name__ == "__main__":
     unittest.main()

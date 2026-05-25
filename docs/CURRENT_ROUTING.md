@@ -20,12 +20,14 @@ Use this file as the short current route before opening the large append-only do
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
 - Blocked parent replay-repair packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
-- Active current slice:
+- Blocked parent authority-binding packet:
   `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- Active current slice:
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
 - Adjacent active queue packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - Active blocker packets:
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`,
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`,
   `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
@@ -87,17 +89,18 @@ Use this file as the short current route before opening the large append-only do
   legacy-to-current source-record reconciliation, but the same run still fails
   on `candidates_have_source_evidence_available` (`failure_count=21`) and
   `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=19`). The active authority-source blocker
+  (`missing_source_record_count=19`). The authority-source binding blocker
   packet in `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
-  is now resolved locally through Milestone `1`: the blocker baseline stays
-  frozen at the same `396` / `329` applicability universe result with `21`
-  failing source-evidence candidates and `19` missing source-record template
-  groups, and the owner map now splits that inventory into `16`
-  reconciliation-owned template families, `3` forest-plan identity rebind
-  families, and `5` base-rule current-source gaps. The next truthful slice is
-  now Milestone `2` of that packet, which owns the governed repair work for
-  the active-source authority binding blocker upstream of packet-local ECID
-  replay
+  is now reduced locally through Milestone `2`: the shared binding owners now
+  cover the exact current rows already present in the active catalog, and the
+  live ECID applicability replay is reduced to `11`
+  source-evidence failures and `17` missing source-record template groups on
+  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`.
+  No untouched exact current-catalog URL matches remain for the reduced
+  missing-ID inventory. The new active blocker packet is now
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`, which
+  owns the remaining workbook/template/rule-pack current-source repair
+  upstream of packet-local ECID replay
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty
@@ -230,6 +233,7 @@ Use this file as the short current route before opening the large append-only do
 - `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
 - `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` for the zero-oversized architecture closeout
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`

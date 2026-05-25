@@ -147,9 +147,19 @@
       "notes": "Canonical Region 1 directives index."
     },
     {
+      "legacy_source_record_id": "R1EA-030",
+      "current_source_record_ids": ["R1-008"],
+      "notes": "Canonical Region 1 soil-management supplement row via exact active-catalog URL lineage."
+    },
+    {
       "legacy_source_record_id": "R1EA-031",
       "current_source_record_ids": ["USFS-027"],
       "notes": "Canonical FSM 2670 species-policy row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-032",
+      "current_source_record_ids": ["USFS-008"],
+      "notes": "Canonical Land Management Planning Handbook row via exact active-catalog URL lineage."
     },
     {
       "legacy_source_record_id": "R1EA-033",
@@ -167,9 +177,64 @@
       "notes": "Canonical Organic Administration Act management-authority row."
     },
     {
+      "legacy_source_record_id": "R1EA-036",
+      "current_source_record_ids": ["FED-005"],
+      "notes": "Canonical travel-management row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-037",
+      "current_source_record_ids": ["FED-006"],
+      "notes": "Canonical Bankhead-Jones administration row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-039",
+      "current_source_record_ids": ["FED-007"],
+      "notes": "Canonical range-management row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-040",
+      "current_source_record_ids": ["FED-008"],
+      "notes": "Canonical timber-sale row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-041",
+      "current_source_record_ids": ["FED-009"],
+      "notes": "Canonical minerals row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-042",
+      "current_source_record_ids": ["FED-010"],
+      "notes": "Canonical land-uses row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-044",
+      "current_source_record_ids": ["FED-012"],
+      "notes": "Canonical prohibitions row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-047",
+      "current_source_record_ids": ["FED-013"],
+      "notes": "Canonical wilderness row via exact active-catalog URL lineage."
+    },
+    {
       "legacy_source_record_id": "R1EA-049",
       "current_source_record_ids": ["FED-014"],
       "notes": "Canonical roadless/special-areas row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-052",
+      "current_source_record_ids": ["FED-027"],
+      "notes": "Canonical Wilderness Act row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-053",
+      "current_source_record_ids": ["FED-028"],
+      "notes": "Canonical Wild and Scenic Rivers Act row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-064",
+      "current_source_record_ids": ["FED-031"],
+      "notes": "Canonical Endangered Species Act row via exact active-catalog URL lineage."
     },
     {
       "legacy_source_record_id": "R1EA-065",
@@ -187,6 +252,11 @@
       "notes": "Canonical Region 1 species-of-conservation-concern row."
     },
     {
+      "legacy_source_record_id": "R1EA-069",
+      "current_source_record_ids": ["R1-004"],
+      "notes": "Canonical Northern Rockies lynx row via exact active-catalog URL lineage."
+    },
+    {
       "legacy_source_record_id": "R1EA-070",
       "current_source_record_ids": ["FED-024"],
       "notes": "Canonical NHPA section 106 row."
@@ -195,6 +265,41 @@
       "legacy_source_record_id": "R1EA-071",
       "current_source_record_ids": ["FED-015"],
       "notes": "Canonical 36 CFR part 800 row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-073",
+      "current_source_record_ids": ["FED-025"],
+      "notes": "Canonical Archaeological Resources Protection Act row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-075",
+      "current_source_record_ids": ["FED-026"],
+      "notes": "Canonical Native American Graves Protection and Repatriation Act row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-081",
+      "current_source_record_ids": ["FED-038"],
+      "notes": "Canonical tribal-consultation executive-order row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-082",
+      "current_source_record_ids": ["FED-022"],
+      "notes": "Canonical Clean Water Act row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-089",
+      "current_source_record_ids": ["FED-017"],
+      "notes": "Canonical Corps section 404 permits row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-091",
+      "current_source_record_ids": ["FED-029"],
+      "notes": "Canonical current 16 U.S.C. chapter 5A row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-092",
+      "current_source_record_ids": ["FED-023"],
+      "notes": "Canonical Clean Air Act row via exact active-catalog URL lineage."
     },
     {
       "legacy_source_record_id": "R1EA-094",
@@ -207,9 +312,29 @@
       "notes": "Canonical EO 13186 row."
     },
     {
+      "legacy_source_record_id": "R1EA-103",
+      "current_source_record_ids": ["FED-042"],
+      "notes": "Canonical floodplain-management executive-order row via exact active-catalog URL lineage."
+    },
+    {
       "legacy_source_record_id": "R1EA-104",
       "current_source_record_ids": ["FED-043"],
       "notes": "Canonical EO 11990 wetlands row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-107",
+      "current_source_record_ids": ["FED-037"],
+      "notes": "Canonical Resource Conservation and Recovery Act row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-108",
+      "current_source_record_ids": ["FED-036"],
+      "notes": "Canonical CERCLA row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-110",
+      "current_source_record_ids": ["FED-035"],
+      "notes": "Canonical FIFRA row via exact active-catalog URL lineage."
     },
     {
       "legacy_source_record_id": "R1EA-119",
@@ -237,9 +362,49 @@
       "notes": "Canonical land-exchange policy/reference coverage now spans the main program row plus FSM/FSH support rows."
     },
     {
+      "legacy_source_record_id": "R1EA-155",
+      "current_source_record_ids": ["LEX-USFS-002"],
+      "notes": "Canonical FSM 5410 appraisals row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-157",
+      "current_source_record_ids": ["FED-020"],
+      "notes": "Canonical Uniform Relocation Assistance row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-158",
+      "current_source_record_ids": ["USDA-002"],
+      "notes": "Canonical Environmental Assessment row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-159",
+      "current_source_record_ids": ["FED-002"],
+      "notes": "Canonical project-level predecisional review row via exact active-catalog URL lineage."
+    },
+    {
       "legacy_source_record_id": "R1PLAN-custer-gallatin-nf-02",
       "current_source_record_ids": ["FOR-009"],
       "notes": "Canonical Custer Gallatin land-management-plan row."
+    },
+    {
+      "legacy_source_record_id": "R1PLAN-region-1-grassland-overlay-01",
+      "current_source_record_ids": ["FED-006"],
+      "notes": "Canonical Region 1 grassland overlay row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1PLAN-region-1-northern-region-01",
+      "current_source_record_ids": ["R1-001"],
+      "notes": "Canonical Northern Region planning row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1PLAN-region-1-species-overlay-01",
+      "current_source_record_ids": ["R1-003"],
+      "notes": "Canonical Region 1 species overlay row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1PLAN-region-1-species-overlay-02",
+      "current_source_record_ids": ["R1-004"],
+      "notes": "Canonical Region 1 lynx overlay row via exact active-catalog URL lineage."
     }
   ]
 }

@@ -83,16 +83,18 @@ Current routed state on 2026-05-25:
   legacy-to-current source-record reconciliation, but the same run still fails
   on `candidates_have_source_evidence_available` (`failure_count=21`) and
   `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=19`). The active authority-source blocker
+  (`missing_source_record_count=19`). The authority-source binding blocker
   packet in `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
-  is now resolved locally through Milestone `1`: the live blocker inventory
-  is frozen as `21` failing source-evidence candidates (`16`
-  authority-family templates plus `5` rule templates) and `19` missing
-  source-record template groups, and that inventory is now classified into
-  `16` reconciliation-owned template families, `3` forest-plan identity
-  rebind families, and `5` base-rule current-source gaps. The next truthful
-  slice is now Milestone `2` of that blocker packet, which owns the governed
-  repair work upstream of packet-local ECID replay.
+  is now reduced locally through Milestone `2`: the shared binding owners now
+  cover the exact current rows already present in the active catalog, and the
+  live ECID applicability replay is reduced to `11`
+  source-evidence failures and `17` missing source-record template groups on
+  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`.
+  No untouched exact current-catalog URL matches remain for the reduced
+  missing-ID inventory. The new active blocker packet is now
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`, which
+  owns the remaining workbook/template/rule-pack current-source repair
+  upstream of packet-local ECID replay.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs
