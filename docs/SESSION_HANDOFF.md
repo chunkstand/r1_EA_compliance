@@ -7,6 +7,27 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Authority-Source Blocker Routing Aligned Locally
+
+This docs-only cleanup pass closes the remaining short-route ambiguity after
+the replay-repair Milestone `1` reduction.
+
+- outcome label:
+  `resolved locally`; `docs/CURRENT_ROUTING.md` now treats
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as the blocked
+  parent packet and presents
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` as the
+  singular active current slice
+- state impact:
+  no runtime, artifact, or test truth changed; the live blocker remains the
+  active-source authority binding gap recorded in the immediately following
+  replay-repair Milestone `1` reduced section
+- next truthful slice:
+  Milestone `0` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `git diff --check`
+
 ## Real Package Review Replay Repair Milestone 1 Reduced Locally
 
 This implementation slice fixed the active ECID applicability-universe routing
