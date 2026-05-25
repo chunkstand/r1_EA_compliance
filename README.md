@@ -69,6 +69,10 @@ Current routed state on 2026-05-24:
   failing current-promotion artifacts are stale or missing
   `v1-cg-ecid-compliance-review` compliance/applicability outputs rather than
   a split full-canonical source-set contract.
+- The promotion-suite contract packet is now reduced through Milestone `3`:
+  the shared manifest keeps slot-driven freshness/status truth while
+  packet-local ECID semantic counts stay enforced in focused validator configs
+  and tests.
 - The direct-file capture queue packet now reduces Milestone `3` locally:
   `config/source_register_queue_resolution_ledger_v1.json` still records all
   `51` queue rows exactly once, preserves the `8` governed `resolved`
@@ -1877,6 +1881,8 @@ canaries. The runtime now computes `current_promotion_ready` from governed
 review-coverage slot results, same-slot family evaluation, and quorum checks,
 while reporting fixed reference canaries separately so proving-packet
 regressions remain visible without defining the whole promotion gate.
+ECID packet-local semantic counts now stay in focused validator configs and
+tests rather than being duplicated in the shared promotion-suite manifest.
 The manifest also requires the applicability seed and gold eval artifacts that prove Milestone 4
 authority-family positive/negative, unresolved, and adjudication coverage. It also requires NEPA 3D
 source-set and V1 review graph validation/summary artifacts for the current graph-readiness claim.

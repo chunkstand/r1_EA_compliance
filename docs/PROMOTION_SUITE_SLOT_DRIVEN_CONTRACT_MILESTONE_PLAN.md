@@ -2,7 +2,7 @@
 
 Date: 2026-05-24
 
-Status: Milestone 2 reduced locally
+Status: Milestone 3 reduced locally
 
 Owner context: This is a fresh standalone follow-on packet for the promotion-suite contract. It
 does not replace the active Lolo example packet in `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
@@ -41,18 +41,20 @@ only one such slot.
 - `config/promotion_suite_v1.json` currently has exactly one
   `required_for_current_promotion` review case:
   `v1-cg-ecid-compliance-review`.
-- `src/usfs_r1_ea_sources/promotion_suite.py` computes `current_promotion_ready` by requiring the
-  rule pack plus all required current review results plus all required current suite results to
-  pass, which makes the single current review case the whole current-promotion gate.
+- `src/usfs_r1_ea_sources/promotion_suite.py` now routes
+  `current_promotion_ready` through the focused
+  `src/usfs_r1_ea_sources/promotion_suite_current.py` owner, which evaluates the governed slot
+  selector, same-slot review families, suite families, source-set binding, quorum, and separate
+  ECID reference canaries.
 - `config/v1_real_package_review_coverage_v1.json` already owns the broader slot abstraction with
   the required coverage classes `current_promotion_reviewer_ready`,
   `alternate_package_typed_blocked`, and `expansion_reviewer_ready`.
 - `src/usfs_r1_ea_sources/real_package_review_coverage_eval.py` already produces a governed summary
   of covered slots, covered coverage classes, distinct forests, package-style counts, and threshold
   failures.
-- `tests/test_promotion_suite.py` currently asserts ECID-specific aggregate paths, packet-local
-  counts, and `manifest["review_cases"][0]`, which locks the aggregate contract to one review
-  packet instead of a slot-driven selector.
+- `tests/test_promotion_suite.py` now treats packet-local counts as focused-owner truth and fails
+  if ECID review-packet, decision-support, final-QA, provenance, review-graph, or review-bound
+  phase-count checks are reintroduced into the shared aggregate contract.
 - The short route in `docs/CURRENT_ROUTING.md` already records that the full-canonical source-set
   contract is green on `source-set-4fb59e9eb43045cb` and the remaining live blocker is the ECID
   review-local current-promotion lane, not the source-set lane itself.

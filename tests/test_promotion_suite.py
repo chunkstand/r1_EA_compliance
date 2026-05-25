@@ -132,10 +132,9 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     results = {result["id"]: result for result in review_case["results"]}
 
     phase = suite_results["phase_eval_core"]
-    assert phase["path"] == "reviews/v1-cg-ecid-compliance-review/phase_eval_results.json"
+    assert phase["required_for_current_promotion"] is True
     phase_checks = {check["name"]: check for check in phase["checks"]}
-    assert phase_checks["core_passed_phase_count"]["min"] == 19
-    assert phase_checks["core_reviewer_ready_phase_count"]["min"] == 19
+    assert phase_checks["phase_source_set_matches"]["equals"] == "source-set-4fb59e9eb43045cb"
     assert phase_checks["phase_eval_contract_id"]["equals"] == "phase-eval-direct-eval-v1"
     assert phase_checks["phase_eval_proxy_only_phase_count"]["equals"] == 0
     assert phase_checks["phase_eval_missing_direct_eval_phase_count"]["equals"] == 0
@@ -157,28 +156,16 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
 
     decision_support = results["decision_support_report"]
     assert decision_support["required_for_current_promotion"] is True
-    assert (
-        decision_support["path"]
-        == "reviews/{review_id}/decision_support/ea_consistency_decision_support.json"
-    )
     decision_checks = {check["name"]: check for check in decision_support["checks"]}
     assert decision_checks["decision_support_schema"]["equals"] == (
         "ea-consistency-decision-support-report-v1"
     )
     assert decision_checks["decision_support_status"]["equals"] == "reviewer_ready"
     assert decision_checks["decision_support_validation_passed"]["equals"] is True
-    assert decision_checks["decision_support_applicable_authorities"]["equals"] == 37
-    assert decision_checks["decision_support_non_applicable_authorities"]["equals"] == 340
-    assert decision_checks["decision_support_forest_plan_components"]["equals"] == 329
-    assert decision_checks["decision_support_applicable_standards"]["equals"] == 12
     assert decision_checks["decision_support_legal_conclusion_boundary"]["equals"] is False
 
     decision_manifest = results["decision_support_manifest"]
     assert decision_manifest["required_for_current_promotion"] is True
-    assert (
-        decision_manifest["path"]
-        == "reviews/{review_id}/decision_support/ea_consistency_decision_support_manifest.json"
-    )
     manifest_checks = {check["name"]: check for check in decision_manifest["checks"]}
     assert manifest_checks["decision_support_manifest_schema"]["equals"] == (
         "ea-consistency-decision-support-manifest-v1"
@@ -187,34 +174,20 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
 
     decision_pdf = results["decision_support_pdf"]
     assert decision_pdf["required_for_current_promotion"] is True
-    assert (
-        decision_pdf["path"]
-        == "reviews/{review_id}/decision_support/ea_consistency_decision_support.pdf"
-    )
     pdf_checks = {check["name"]: check for check in decision_pdf["checks"]}
     assert pdf_checks["decision_support_pdf_header_valid"]["starts_with"] == "%PDF-"
 
     final_qa = results["final_qa_certification_report"]
     assert final_qa["required_for_current_promotion"] is True
-    assert (
-        final_qa["path"]
-        == "reviews/{review_id}/final_qa/east_crazies_final_qa_certification.json"
-    )
     final_qa_checks = {check["name"]: check for check in final_qa["checks"]}
     assert final_qa_checks["final_qa_report_schema"]["equals"] == (
         "east-crazies-final-qa-certification-report-v1"
     )
     assert final_qa_checks["final_qa_machine_replay_passed"]["equals"] == "passed"
-    assert final_qa_checks["final_qa_finding_count"]["equals"] == 37
-    assert final_qa_checks["final_qa_accepted_v1_risk_visible"]["equals"] == 14
     assert final_qa_checks["final_qa_legal_conclusion_boundary"]["equals"] is False
 
     final_qa_manifest = results["final_qa_certification_manifest"]
     assert final_qa_manifest["required_for_current_promotion"] is True
-    assert (
-        final_qa_manifest["path"]
-        == "reviews/{review_id}/final_qa/east_crazies_final_qa_certification_manifest.json"
-    )
     final_qa_manifest_checks = {
         check["name"]: check for check in final_qa_manifest["checks"]
     }
@@ -225,19 +198,11 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
 
     final_qa_pdf = results["final_qa_certification_pdf"]
     assert final_qa_pdf["required_for_current_promotion"] is True
-    assert (
-        final_qa_pdf["path"]
-        == "reviews/{review_id}/final_qa/east_crazies_final_qa_certification.pdf"
-    )
     final_qa_pdf_checks = {check["name"]: check for check in final_qa_pdf["checks"]}
     assert final_qa_pdf_checks["final_qa_pdf_header_valid"]["starts_with"] == "%PDF-"
 
     final_qa_validation = results["final_qa_certification_validation"]
     assert final_qa_validation["required_for_current_promotion"] is True
-    assert (
-        final_qa_validation["path"]
-        == "reviews/{review_id}/final_qa/east_crazies_final_qa_certification_validation.json"
-    )
     final_qa_validation_checks = {
         check["name"]: check for check in final_qa_validation["checks"]
     }
@@ -262,16 +227,13 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
 
     provenance = results["authority_family_provenance"]
     assert provenance["required_for_current_promotion"] is True
-    assert provenance["path"] == "reviews/{review_id}/authority_family_provenance.json"
     provenance_checks = {check["name"]: check for check in provenance["checks"]}
     assert provenance_checks["authority_provenance_generated_mode"]["equals"] is True
-    assert provenance_checks["authority_provenance_finding_count"]["equals"] == 37
     assert provenance_checks["authority_provenance_family_ids_present"]["equals"] == []
     assert provenance_checks["authority_provenance_candidate_ids_present"]["equals"] == []
 
     appendix = results["non_applicable_authority_appendix"]
     assert appendix["required_for_current_promotion"] is True
-    assert appendix["path"] == "reviews/{review_id}/non_applicable_authority_appendix.json"
     appendix_checks = {check["name"]: check for check in appendix["checks"]}
     assert appendix_checks["non_applicable_authority_count"]["min"] == 1
     assert appendix_checks["non_applicable_authorities_have_coverage"]["equals"] is True
@@ -279,14 +241,12 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
 
     resolution = results["authority_reviewer_resolution_report"]
     assert resolution["required_for_current_promotion"] is True
-    assert resolution["path"] == "reviews/{review_id}/authority_reviewer_resolution_report.json"
     resolution_checks = {check["name"]: check for check in resolution["checks"]}
     assert resolution_checks["authority_resolution_pending_count"]["equals"] == 0
     assert resolution_checks["authority_resolution_report_passed"]["equals"] is True
 
     risk = results["litigation_risk_summary"]
     assert risk["required_for_current_promotion"] is True
-    assert risk["path"] == "reviews/{review_id}/litigation_risk_summary.json"
     risk_checks = {check["name"]: check for check in risk["checks"]}
     assert risk_checks["litigation_risk_flags_present"]["min"] == 1
     assert risk_checks["litigation_risk_no_legal_conclusions"]["equals"] == 0
@@ -319,10 +279,6 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
 
     review_graph = results["nepa_3d_review_graph_validation"]
     assert review_graph["required_for_current_promotion"] is True
-    assert (
-        review_graph["path"]
-        == "reviews/{review_id}/knowledge_graph/nepa_3d_graph_validation.json"
-    )
     assert review_graph["failure_category"] == "graph_viewer_export_invalid"
     review_graph_checks = {check["name"]: check for check in review_graph["checks"]}
     assert review_graph_checks["review_graph_validation_passed"]["equals"] is True
@@ -330,18 +286,96 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
 
     review_graph_summary = results["nepa_3d_review_graph_summary"]
     assert review_graph_summary["required_for_current_promotion"] is True
-    assert (
-        review_graph_summary["path"]
-        == "reviews/{review_id}/knowledge_graph/nepa_3d_graph_summary.json"
-    )
     review_summary_checks = {
         check["name"]: check for check in review_graph_summary["checks"]
     }
     assert review_summary_checks["review_graph_review_id_matches"]["equals"] == (
         "v1-cg-ecid-compliance-review"
     )
-    assert review_summary_checks["review_graph_decision_count"]["equals"] == 377
     assert review_summary_checks["review_graph_validation_checks"]["min"] == 76
+
+
+def test_committed_promotion_suite_defers_packet_local_counts_to_focused_owners() -> None:
+    manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
+    suite_results = {result["id"]: result for result in manifest["suite_results"]}
+    review_case = {case["id"]: case for case in manifest["review_cases"]}["v1-cg-ecid"]
+    results = {result["id"]: result for result in review_case["results"]}
+
+    phase_check_names = {check["name"] for check in suite_results["phase_eval_core"]["checks"]}
+    assert {"core_passed_phase_count", "core_reviewer_ready_phase_count"}.isdisjoint(
+        phase_check_names
+    )
+
+    decision_support_check_names = {
+        check["name"] for check in results["decision_support_report"]["checks"]
+    }
+    assert {
+        "decision_support_applicable_authorities",
+        "decision_support_non_applicable_authorities",
+        "decision_support_forest_plan_components",
+        "decision_support_applicable_standards",
+    }.isdisjoint(decision_support_check_names)
+
+    final_qa_check_names = {
+        check["name"] for check in results["final_qa_certification_report"]["checks"]
+    }
+    assert {
+        "final_qa_finding_count",
+        "final_qa_accepted_v1_risk_visible",
+    }.isdisjoint(final_qa_check_names)
+
+    review_packet_check_names = {
+        check["name"] for check in results["review_packet_row_inventory"]["checks"]
+    }
+    assert {
+        "row_inventory_applicable_authorities",
+        "row_inventory_non_applicable_authorities",
+        "row_inventory_forest_plan_components",
+        "row_inventory_applicable_standards",
+    }.isdisjoint(review_packet_check_names)
+
+    render_manifest_check_names = {
+        check["name"] for check in results["compliance_matrix_render_manifest"]["checks"]
+    }
+    assert {
+        "render_manifest_authority_rows",
+        "render_manifest_forest_plan_rows",
+    }.isdisjoint(render_manifest_check_names)
+
+    review_packet_index_check_names = {
+        check["name"] for check in results["review_packet_index"]["checks"]
+    }
+    assert {
+        "review_packet_index_applicable_authorities",
+        "review_packet_index_non_applicable_authorities",
+        "review_packet_index_forest_plan_components",
+        "review_packet_index_applicable_standards",
+    }.isdisjoint(review_packet_index_check_names)
+
+    review_packet_validation_check_names = {
+        check["name"] for check in results["review_packet_index_validation"]["checks"]
+    }
+    assert {
+        "review_packet_index_failed_check_count",
+        "review_packet_index_validation_applicable_authorities",
+        "review_packet_index_validation_non_applicable_authorities",
+        "review_packet_index_validation_forest_plan_components",
+        "review_packet_index_validation_applicable_standards",
+    }.isdisjoint(review_packet_validation_check_names)
+
+    provenance_check_names = {
+        check["name"] for check in results["authority_family_provenance"]["checks"]
+    }
+    assert "authority_provenance_finding_count" not in provenance_check_names
+
+    review_graph_check_names = {
+        check["name"] for check in results["nepa_3d_review_graph_summary"]["checks"]
+    }
+    assert {
+        "review_graph_decision_count",
+        "review_graph_generated_rule_count",
+        "review_graph_compliance_finding_count",
+    }.isdisjoint(review_graph_check_names)
 
 def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> None:
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))

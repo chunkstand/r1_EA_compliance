@@ -59,14 +59,14 @@ Use this file as the short current route before opening the large append-only do
   `passed_required_full_canonical_result_count=10/10`. The remaining live
   promotion blocker is the current-review lane, where stale or missing
   `v1-cg-ecid-compliance-review` compliance/applicability artifacts still keep
-  `current_promotion_ready=false`. Milestone `2` of
+  `current_promotion_ready=false`. Milestone `3` of
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` is now reduced
-  locally: runtime `current_promotion_ready` now evaluates the governed
-  `current_promotion_contract` selector, same-slot family pass state, and
-  quorum summary through the focused
-  `src/usfs_r1_ea_sources/promotion_suite_current.py` owner while reporting
-  fixed ECID canaries separately. The next slice is Milestone `3`
-  packet-local invariant migration, not review-local ECID replay refresh
+  locally: the aggregate promotion manifest no longer carries ECID packet-local
+  review-packet, decision-support, final-QA, review-graph, or phase-count
+  invariants, `tests/test_promotion_suite.py` now fails if those counts return
+  to the shared contract, and focused packet-local validation still fail-closes
+  on count drift. The next slice is Milestone `4` live replay, docs closeout,
+  and one atomic commit, not review-local ECID replay refresh
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

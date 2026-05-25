@@ -83,6 +83,12 @@ contract details:
 - family results for suite-level and same-slot review artifact families
 - separate reference-canary pass/fail state and failure categories
 
+Packet-local ECID semantic counts now stay in their focused owners such as
+`config/ea_consistency_decision_support_v1.json`,
+`config/east_crazies_final_qa_certification_v1.json`, and the matching focused
+validator tests. The shared `promotion-suite` manifest keeps aggregate
+freshness, status, and canary truth, not duplicate packet-local count locks.
+
 The default manifest keeps two real-package expansion slots: the ECID preliminary-EA slot is ready,
 and the South Plateau Area Landscape Treatment Project slot is selected but blocked on
 `forest_plan_reviewer_not_ready`. Open expansion slots do not block the current V1 promotion claim,

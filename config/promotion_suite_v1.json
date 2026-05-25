@@ -244,26 +244,6 @@
               "name": "row_inventory_source_set",
               "json_path": "source_set_id",
               "equals": "source-set-4fb59e9eb43045cb"
-            },
-            {
-              "name": "row_inventory_applicable_authorities",
-              "json_path": "summary.applicable_authority_count",
-              "equals": 37
-            },
-            {
-              "name": "row_inventory_non_applicable_authorities",
-              "json_path": "summary.non_applicable_authority_count",
-              "equals": 340
-            },
-            {
-              "name": "row_inventory_forest_plan_components",
-              "json_path": "summary.forest_plan_component_row_count",
-              "equals": 79
-            },
-            {
-              "name": "row_inventory_applicable_standards",
-              "json_path": "summary.applicable_standard_count",
-              "equals": 12
             }
           ]
         },
@@ -293,16 +273,6 @@
               "name": "render_manifest_passed",
               "json_path": "summary.passed",
               "equals": true
-            },
-            {
-              "name": "render_manifest_authority_rows",
-              "json_path": "summary.authority_row_count",
-              "equals": 37
-            },
-            {
-              "name": "render_manifest_forest_plan_rows",
-              "json_path": "summary.forest_plan_row_count",
-              "equals": 79
             }
           ]
         },
@@ -327,26 +297,6 @@
               "name": "review_packet_index_source_set",
               "json_path": "source_set_id",
               "equals": "source-set-4fb59e9eb43045cb"
-            },
-            {
-              "name": "review_packet_index_applicable_authorities",
-              "json_path": "row_inventory_summary.applicable_authority_count",
-              "equals": 37
-            },
-            {
-              "name": "review_packet_index_non_applicable_authorities",
-              "json_path": "row_inventory_summary.non_applicable_authority_count",
-              "equals": 340
-            },
-            {
-              "name": "review_packet_index_forest_plan_components",
-              "json_path": "row_inventory_summary.forest_plan_component_row_count",
-              "equals": 79
-            },
-            {
-              "name": "review_packet_index_applicable_standards",
-              "json_path": "row_inventory_summary.applicable_standard_count",
-              "equals": 12
             },
             {
               "name": "review_packet_index_render_manifest_passed",
@@ -400,31 +350,6 @@
               "name": "review_packet_index_validation_reviewer_ready",
               "json_path": "reviewer_ready",
               "equals": true
-            },
-            {
-              "name": "review_packet_index_failed_check_count",
-              "json_path": "summary.failed_check_count",
-              "equals": 0
-            },
-            {
-              "name": "review_packet_index_validation_applicable_authorities",
-              "json_path": "summary.applicable_authority_count",
-              "equals": 37
-            },
-            {
-              "name": "review_packet_index_validation_non_applicable_authorities",
-              "json_path": "summary.non_applicable_authority_count",
-              "equals": 340
-            },
-            {
-              "name": "review_packet_index_validation_forest_plan_components",
-              "json_path": "summary.forest_plan_component_row_count",
-              "equals": 79
-            },
-            {
-              "name": "review_packet_index_validation_applicable_standards",
-              "json_path": "summary.applicable_standard_count",
-              "equals": 12
             }
           ]
         },
@@ -464,26 +389,6 @@
               "name": "decision_support_manifest_passed",
               "json_path": "manifest.validation_status",
               "equals": "passed"
-            },
-            {
-              "name": "decision_support_applicable_authorities",
-              "json_path": "applicable_authority_summary.applicable_authority_count",
-              "equals": 37
-            },
-            {
-              "name": "decision_support_non_applicable_authorities",
-              "json_path": "non_applicable_authority_boundary.non_applicable_authority_count",
-              "equals": 340
-            },
-            {
-              "name": "decision_support_forest_plan_components",
-              "json_path": "forest_plan_consistency.component_finding_count",
-              "equals": 329
-            },
-            {
-              "name": "decision_support_applicable_standards",
-              "json_path": "forest_plan_consistency.applicable_standard_count",
-              "equals": 12
             },
             {
               "name": "decision_support_legal_conclusion_boundary",
@@ -561,16 +466,6 @@
               "name": "final_qa_machine_replay_passed",
               "json_path": "gate_replay_summary.machine_replay_status",
               "equals": "passed"
-            },
-            {
-              "name": "final_qa_finding_count",
-              "json_path": "finding_qa.authority_finding_count",
-              "equals": 37
-            },
-            {
-              "name": "final_qa_accepted_v1_risk_visible",
-              "json_path": "accepted_v1_risk_ledger.accepted_pending_count",
-              "equals": 14
             },
             {
               "name": "final_qa_legal_conclusion_boundary",
@@ -702,11 +597,6 @@
               "equals": true
             },
             {
-              "name": "authority_provenance_finding_count",
-              "json_path": "summary.finding_authority_provenance_count",
-              "equals": 37
-            },
-            {
               "name": "authority_provenance_family_ids_present",
               "json_path": "summary.findings_missing_authority_family_ids",
               "equals": []
@@ -827,23 +717,6 @@
               "json_path": "review_id",
               "equals": "v1-cg-ecid-compliance-review",
               "failure_category": "graph_stale_artifact"
-            },
-            {
-              "name": "review_graph_decision_count",
-              "json_path": "review_decision_count",
-              "equals": 377,
-              "failure_category": "graph_missing_applicability_decision"
-            },
-            {
-              "name": "review_graph_generated_rule_count",
-              "json_path": "generated_rule_count",
-              "equals": 37,
-              "failure_category": "graph_missing_applicability_decision"
-            },
-            {
-              "name": "review_graph_compliance_finding_count",
-              "json_path": "compliance_finding_count",
-              "equals": 37
             },
             {
               "name": "review_graph_validation_checks",
@@ -2181,16 +2054,6 @@
           "name": "phase_source_set_matches",
           "json_path": "source_set_id",
           "equals": "source-set-4fb59e9eb43045cb"
-        },
-        {
-          "name": "core_passed_phase_count",
-          "json_path": "passed_phase_count",
-          "min": 19
-        },
-        {
-          "name": "core_reviewer_ready_phase_count",
-          "json_path": "reviewer_ready_phase_count",
-          "min": 19
         },
         {
           "name": "phase_eval_contract_id",

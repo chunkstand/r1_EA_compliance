@@ -3713,6 +3713,9 @@ The manifest has schema version `promotion-suite-v1` and records:
 - `current_promotion_contract`, which declares governed coverage-class slot
   selection, current-promotion quorum, suite and same-slot review artifact
   families, and explicit reference canaries
+- packet-local ECID counts stay in focused validator configs and tests; the
+  shared promotion-suite manifest keeps aggregate freshness/status checks
+  rather than duplicating packet-local semantic-count locks
 - review cases with review IDs, package labels, required current-promotion results, artifact paths,
   and JSON or file-header checks
 - suite-level results such as core phase-eval readiness, post-V1 applicability phase readiness,

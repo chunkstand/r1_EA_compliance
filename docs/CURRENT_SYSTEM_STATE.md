@@ -14,17 +14,16 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
-## Promotion Suite Slot-Driven Contract Milestone 2 Reduced Locally
+## Promotion Suite Slot-Driven Contract Milestone 3 Reduced Locally
 
 Latest implementation update on 2026-05-24:
 
 - routed packet:
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
 - packet outcome:
-  `reduced locally`; runtime `current_promotion_ready` now evaluates the
-  governed `current_promotion_contract` selector, same-slot family pass state,
-  and quorum summary, while fixed ECID reference canaries are reported
-  separately in the results and Markdown report
+  `reduced locally`; the aggregate promotion manifest now keeps
+  slot-driven freshness/status truth in the shared contract while packet-local
+  ECID counts stay owned by focused validators and tests
 - rebaseline truth:
   Milestone 0 found a clean checkout and no equivalent slot-driven selector or
   canary implementation already landed under another name; the governed roster
@@ -35,16 +34,21 @@ Latest implementation update on 2026-05-24:
   resolves governed slots, same-slot family pass state, source-set binding,
   quorum checks, and separate canary status; `promotion_suite_results.json`
   is now schema version `promotion-suite-results-v1`
+- contract-boundary truth:
+  `config/promotion_suite_v1.json` no longer embeds ECID packet-local review
+  packet counts, decision-support counts, final-QA counts, provenance counts,
+  review-graph counts, or the old review-bound phase-count thresholds in the
+  shared aggregate manifest; `tests/test_promotion_suite.py` now asserts those
+  checks stay absent from the shared contract, and
+  `tests/test_ea_consistency_decision_support_validation.py` still proves
+  packet-local count drift fails closed in its focused owner
 - remaining blocker truth:
-  packet-local ECID semantic counts and other proving-packet invariants still
-  live in the aggregate manifest contract, so Milestone 3 remains the next
-  truthful slice
+  the next truthful slice is Milestone 4 live replay, durable docs closeout,
+  and the local atomic commit for the packet
 - verification:
-  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_promotion_suite.py tests/test_promotion_suite_current_runtime.py tests/test_promotion_suite_contract_validation.py tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite_forest_profile.py tests/test_promotion_suite_full_canonical.py -q`,
-  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_cli_eval.py tests/test_architecture_contract.py -q`,
-  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/promotion_suite.py src/usfs_r1_ea_sources/promotion_suite_current.py src/usfs_r1_ea_sources/promotion_suite_report.py src/usfs_r1_ea_sources/promotion_suite_summary.py src/usfs_r1_ea_sources/promotion_suite_support.py tests/support/promotion_suite_fixtures.py tests/test_promotion_suite_current_runtime.py`,
-  `PYTHONPATH=src .venv/bin/python -m compileall src`,
-  `jq empty config/promotion_suite_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_promotion_suite.py tests/test_promotion_suite_current_runtime.py tests/test_promotion_suite_full_canonical.py tests/test_ea_consistency_decision_support.py tests/test_ea_consistency_decision_support_validation.py tests/test_final_qa_certification.py tests/test_phase_eval.py tests/test_cli_eval.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src tests`,
+  `jq empty config/promotion_suite_v1.json config/v1_real_package_review_coverage_v1.json`,
   `git diff --check`
 
 ## Lolo Tyler's Kitchen Packet Reduced Locally

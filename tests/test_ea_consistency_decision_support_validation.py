@@ -91,6 +91,31 @@ def test_sequence_4_validation_gate_fails_on_invalid_pdf(
     assert "invalid_report_pdf_header" in validation.summary["failure_categories"]
 
 
+def test_sequence_4_validation_gate_fails_on_packet_local_count_drift(
+    tmp_path: Path,
+) -> None:
+    output_dir, config_path, expected_path = _write_sequence_2_fixture(tmp_path)
+    result = run_ea_consistency_decision_support(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+    )
+    report = _read_json(result.report_path)
+    report["applicable_authority_summary"]["applicable_authority_count"] = 99
+    _write_json_file(result.report_path, report)
+
+    validation = validate_ea_consistency_decision_support_report(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+    )
+
+    assert validation.summary["passed"] is False
+    assert "count_drift" in validation.summary["failure_categories"]
+
+
 def test_gap_close_validation_gate_fails_on_missing_markdown_supervisor_context(
     tmp_path: Path,
 ) -> None:

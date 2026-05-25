@@ -132,3 +132,100 @@ def test_promotion_suite_current_contract_fails_source_set_bound_slot_family(
     assert review_family["failure_categories"] == ["stale_artifact"]
     markdown = result.markdown_path.read_text(encoding="utf-8")
     assert "## Current Promotion Contract" in markdown
+
+
+def test_promotion_suite_current_contract_fails_when_review_slot_family_is_split_across_slots(
+    tmp_path: Path,
+) -> None:
+    manifest_path, output_dir = write_suite_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    review_slot_family = manifest["current_promotion_contract"]["artifact_families"][1]
+    review_slot_family["review_result_ids"] = ["v1_ea_eval", "matrix_pdf"]
+    manifest["review_cases"][0]["results"] = [
+        {
+            "id": "v1_ea_eval",
+            "path": "reviews/{review_id}/v1_ea_eval_results.json",
+            "failure_category": "stale_artifact",
+            "checks": [
+                {
+                    "name": "v1_passed",
+                    "json_path": "summary.passed",
+                    "equals": True,
+                }
+            ],
+        }
+    ]
+    manifest["review_cases"].append(
+        {
+            "id": "case-2",
+            "review_id": "review-2",
+            "results": [
+                {
+                    "id": "matrix_pdf",
+                    "path": "reviews/{review_id}/compliance_matrix.pdf",
+                    "format": "binary",
+                    "failure_category": "stale_artifact",
+                    "checks": [
+                        {
+                            "name": "pdf_header",
+                            "starts_with": "%PDF-",
+                        }
+                    ],
+                }
+            ],
+        }
+    )
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    coverage_results_path = (
+        output_dir
+        / "reviews"
+        / "real_package_review_coverage_eval"
+        / "real_package_review_coverage_eval_results.json"
+    )
+    coverage_results = json.loads(coverage_results_path.read_text(encoding="utf-8"))
+    coverage_results["slots"].append(
+        {
+            "slot_id": "fixture-current-promotion-slot-2",
+            "label": "Fixture current promotion slot 2",
+            "review_id": "review-2",
+            "package_label": "Fixture package 2",
+            "coverage_class_id": "current_promotion_reviewer_ready",
+            "required": True,
+            "contract_status": "reviewer_ready",
+            "actual_contract_status": "reviewer_ready",
+            "passed": True,
+            "source_set_id": "source-set-1",
+            "summary_path": "reviews/review-2/compliance_matrix.pdf",
+            "failure_category_counts": {},
+            "forest_plan_failure_category_counts": {},
+            "package_authority": {
+                "passed": True,
+                "failure_reasons": [],
+                "mode": "replay_context",
+            },
+        }
+    )
+    coverage_results_path.write_text(
+        json.dumps(coverage_results, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (output_dir / "reviews" / "review-2").mkdir(parents=True, exist_ok=True)
+    (output_dir / "reviews" / "review-2" / "compliance_matrix.pdf").write_bytes(b"%PDF-1.4\n")
+
+    result = run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
+    current_contract = result.summary["current_promotion_contract"]
+    review_family = next(
+        family
+        for family in current_contract["family_results"]
+        if family["family_scope"] == "review_slot"
+    )
+    slot_results = {row["review_id"]: row for row in review_family["slot_results"]}
+
+    assert result.summary["current_promotion_ready"] is False
+    assert result.summary["failure_category_counts"] == {"unsupported_package_evidence": 1}
+    assert current_contract["eligible_slot_count"] == 2
+    assert current_contract["passing_slot_count"] == 0
+    assert review_family["passed"] is False
+    assert slot_results["review-1"]["missing_result_ids"] == ["matrix_pdf"]
+    assert slot_results["review-2"]["missing_result_ids"] == ["v1_ea_eval"]
