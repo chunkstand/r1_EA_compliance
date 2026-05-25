@@ -203,15 +203,16 @@ layer rather than the slot-driven contract layer.
   current-source addition lane, and the governed water-family current-source
   additions. The reviewer-facing default catalog remains historical, but the
   active scoped applicability replay now runs on
-  `source-set-d5c008d39a65eb11` and reports
-  `authority_universe_sha256=eef53c92383c90bb0ab1921ba7c45072a8e33f464b6193399c12fb23d908729b`,
-  `source_evidence_failure_count=11`, and
-  `missing_source_record_count=9`. The water-family template no longer
-  appears in the missing-template inventory. The remaining blocker is now the
-  governed cultural, wildlife, hazardous-material,
-  invasive/farmland/drinking-water, minerals, forest-plan support, and the
-  five base-rule current-source decisions, beginning with the cultural-resource
-  and tribal-overlap rows in the same Milestone `2` packet.
+  `source-set-0de012afc6fc589c` and reports
+  `authority_universe_sha256=d29319326b85120bb2ab434cd98e65b232e2cabb11e0ce5522e8f3dc4b076835`,
+  `source_evidence_failure_count=9`, and
+  `missing_source_record_count=7`. The cultural-resource/state-SHPO and
+  shared tribal-overlap templates no longer appear in the missing-template
+  inventory. The remaining blocker is now the governed wildlife,
+  hazardous-material, invasive/farmland/drinking-water, minerals,
+  forest-plan support, vegetation/fire, wilderness-designated-area, and the
+  five base-rule current-source decisions, beginning with the wildlife rows in
+  the same Milestone `2` packet.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

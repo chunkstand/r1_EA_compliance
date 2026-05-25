@@ -34,7 +34,7 @@ def test_source_register_loader_dispatch_returns_workbook_source_compatibility_r
 
     sources = load_canonical_sources(CANONICAL_WORKBOOK, workbook_config)
 
-    assert len(sources) == 659
+    assert len(sources) == 668
     assert all(source.sheet == "Document_Register_Master" for source in sources)
     assert all(source.metadata["loader_contract"] == SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT for source in sources)
     assert all(source.metadata["row_state"] == "load_ready_master_row" for source in sources)
@@ -100,6 +100,24 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     assert cwa_401_row.authority_document_class_id == "authority_document"
     assert cwa_401_row.jurisdiction_scope_id == "scope:federal-us"
 
+    nhpa_110_row = rows["FED-052"]
+    assert nhpa_110_row.parser_admission_class == "structured_web_source"
+    assert nhpa_110_row.expected_parser == "html"
+    assert nhpa_110_row.authority_document_class_id == "authority_document"
+    assert nhpa_110_row.jurisdiction_scope_id == "scope:federal-us"
+
+    arpa_uniform_row = rows["FED-053"]
+    assert arpa_uniform_row.parser_admission_class == "structured_web_source"
+    assert arpa_uniform_row.expected_parser == "html"
+    assert arpa_uniform_row.authority_document_class_id == "authority_document"
+    assert arpa_uniform_row.jurisdiction_scope_id == "scope:federal-us"
+
+    nagpra_regulations_row = rows["FED-054"]
+    assert nagpra_regulations_row.parser_admission_class == "structured_web_source"
+    assert nagpra_regulations_row.expected_parser == "html"
+    assert nagpra_regulations_row.authority_document_class_id == "authority_document"
+    assert nagpra_regulations_row.jurisdiction_scope_id == "scope:federal-us"
+
     corps_regulatory_row = rows["FED-049"]
     assert corps_regulatory_row.parser_admission_class == "structured_web_source"
     assert corps_regulatory_row.expected_parser == "html"
@@ -111,6 +129,12 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     assert montana_401_row.expected_parser == "html"
     assert montana_401_row.authority_document_class_id == "authority_document"
     assert montana_401_row.jurisdiction_scope_id == "scope:ea-project-review"
+
+    washington_dahp_row = rows["STP-035"]
+    assert washington_dahp_row.parser_admission_class == "web_source"
+    assert washington_dahp_row.expected_parser == "html"
+    assert washington_dahp_row.authority_document_class_id == "authority_document"
+    assert washington_dahp_row.jurisdiction_scope_id == "scope:ea-project-review"
 
     sacred_sites_row = rows["FED-039"]
     assert sacred_sites_row.parser_admission_class == "structured_web_source"

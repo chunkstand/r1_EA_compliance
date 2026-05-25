@@ -45,12 +45,13 @@ Use this file as the short current route before opening the large append-only do
 ## Live Facts
 
 - Active workbook/table: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
-  `Document_Register_Master` with `659` retained master rows after the
-  governed water-family additions `FED-045` through `FED-051` and
-  `STP-031` through `STP-034`. Reviewer-facing default catalog remains
-  historical `source-set-4fb59e9eb43045cb`, while the active current-source-gap
-  replay gate is `source-set-d5c008d39a65eb11` under
-  `source_library/runs/current-source-gap-clean-water-catalog-gate/catalog_gate`
+  `Document_Register_Master` with `668` retained master rows after the
+  governed cultural-resource additions `FED-052` through `FED-059` plus
+  `STP-035` on top of the earlier water-family additions. Reviewer-facing
+  default catalog remains historical `source-set-4fb59e9eb43045cb`, while the
+  active current-source-gap replay gate is `source-set-0de012afc6fc589c`
+  under
+  `source_library/runs/current-source-gap-cultural-catalog-gate/catalog_gate`
 - Active source-truth packet status: the full canonical source-truth
   rebaseline remains historically resolved in commit `93a23b0`
   (`Resolve source-truth archive boundary rebaseline`); the queue Milestone 2
@@ -120,15 +121,16 @@ Use this file as the short current route before opening the large append-only do
   current-source addition lane, and the governed water-family current-source
   additions. The reviewer-facing default catalog remains historical, but the
   active scoped applicability replay now runs on
-  `source-set-d5c008d39a65eb11` and reports
-  `authority_universe_sha256=eef53c92383c90bb0ab1921ba7c45072a8e33f464b6193399c12fb23d908729b`,
-  `source_evidence_failure_count=11`, and
-  `missing_source_record_count=9`. The water-family template no longer
-  appears in the missing-template inventory. The remaining blocker is now the
-  governed cultural, wildlife, hazardous-material,
-  invasive/farmland/drinking-water, minerals, forest-plan support, and the
-  five base-rule current-source decisions, beginning with the cultural-resource
-  and tribal-overlap rows in the same Milestone `2` packet
+  `source-set-0de012afc6fc589c` and reports
+  `authority_universe_sha256=d29319326b85120bb2ab434cd98e65b232e2cabb11e0ce5522e8f3dc4b076835`,
+  `source_evidence_failure_count=9`, and
+  `missing_source_record_count=7`. The cultural-resource/state-SHPO and
+  shared tribal-overlap templates no longer appear in the missing-template
+  inventory. The remaining blocker is now the governed wildlife,
+  hazardous-material, invasive/farmland/drinking-water, minerals,
+  forest-plan support, vegetation/fire, wilderness-designated-area, and the
+  five base-rule current-source decisions, beginning with the wildlife
+  additions in the same Milestone `2` packet
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

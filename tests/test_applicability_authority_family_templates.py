@@ -649,6 +649,158 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
         )
         self.assertTrue(candidate["source_evidence_availability"]["available"])
 
+    def test_candidates_resolve_cultural_and_state_shpo_current_source_additions(self) -> None:
+        expected_source_record_ids = [
+            "FED-052",
+            "FED-025",
+            "FED-053",
+            "FED-026",
+            "FED-054",
+            "FED-055",
+            "FED-056",
+            "FED-057",
+            "FED-039",
+            "FED-058",
+            "FED-059",
+            "STP-027",
+            "STP-028",
+            "STP-029",
+            "STP-035",
+        ]
+        catalog_by_source_id = {
+            source_record_id: {
+                "source_record_id": source_record_id,
+                "title": source_record_id,
+                "citation_label": source_record_id,
+                "document_role": "law",
+                "authority_level": "federal" if source_record_id.startswith("FED-") else "state_partner",
+                "source_status": "downloaded_existing",
+                "artifact_sha256": f"sha-{source_record_id.lower()}",
+                "artifact_path": f"artifacts/raw/{source_record_id}.html",
+            }
+            for source_record_id in expected_source_record_ids
+        }
+
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "cultural-current-source-template",
+                        "authority_family_id": "cultural_resource_protection_and_state_shpo_sources",
+                        "rule_id": "cultural_current_source_template_rule",
+                        "title": "Cultural-resource and SHPO current source template",
+                        "question": "Does the package trigger cultural-resource, sacred-site, or SHPO review?",
+                        "requirement": "Evaluate cultural-resource, sacred-site, and state SHPO review.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "mixed",
+                        "authority_document_role": "law",
+                        "authority_source_record_id": "R1EA-072",
+                        "source_record_ids": [
+                            "R1EA-072",
+                            "R1EA-073",
+                            "R1EA-074",
+                            "R1EA-075",
+                            "R1EA-076",
+                            "R1EA-077",
+                            "R1EA-078",
+                            "R1EA-079",
+                            "R1EA-080",
+                            "R1EA-113",
+                            "R1EA-114",
+                            "R1EA-120",
+                            "R1EA-121",
+                            "R1EA-122",
+                            "R1EA-123",
+                        ],
+                        "package_query": "cultural resources sacred sites shpo",
+                        "package_terms": ["historic properties", "tribal consultation", "sacred sites"],
+                        "applies_if_package_terms": ["historic properties", "sacred sites"],
+                        "does_not_apply_if_package_terms": ["no historic properties"],
+                        "source_query": "cultural resource authority source",
+                        "source_filters": {
+                            "source_record_id": "R1EA-072",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id=catalog_by_source_id,
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], expected_source_record_ids)
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            expected_source_record_ids,
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
+    def test_candidates_resolve_shared_tribal_overlap_current_source_additions(self) -> None:
+        expected_source_record_ids = ["FED-055", "FED-039", "FED-038"]
+        catalog_by_source_id = {
+            source_record_id: {
+                "source_record_id": source_record_id,
+                "title": source_record_id,
+                "citation_label": source_record_id,
+                "document_role": "law",
+                "authority_level": "federal",
+                "source_status": "downloaded_existing",
+                "artifact_sha256": f"sha-{source_record_id.lower()}",
+                "artifact_path": f"artifacts/raw/{source_record_id}.html",
+            }
+            for source_record_id in expected_source_record_ids
+        }
+
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "tribal-current-source-template",
+                        "authority_family_id": "tribal_consultation_trust_sacred_sites",
+                        "rule_id": "tribal_current_source_template_rule",
+                        "title": "Tribal consultation current source template",
+                        "question": "Does the package trigger tribal consultation or sacred-site review?",
+                        "requirement": "Evaluate tribal consultation and sacred-site review.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "mixed",
+                        "authority_document_role": "law",
+                        "authority_source_record_id": "R1EA-081",
+                        "source_record_ids": ["R1EA-077", "R1EA-080", "R1EA-081"],
+                        "package_query": "tribal consultation sacred sites",
+                        "package_terms": ["tribal consultation", "sacred sites"],
+                        "applies_if_package_terms": ["tribal consultation", "sacred sites"],
+                        "does_not_apply_if_package_terms": ["no tribal consultation"],
+                        "source_query": "tribal consultation authority source",
+                        "source_filters": {
+                            "source_record_id": "R1EA-081",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id=catalog_by_source_id,
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], expected_source_record_ids)
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            expected_source_record_ids,
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
     def test_candidates_use_forest_plan_identity_aliases_when_catalog_only_has_canonical_row(self) -> None:
         candidates = authority_family_template_candidates(
             source_set_id="source-set-unit",

@@ -282,14 +282,49 @@
       "notes": "Canonical 36 CFR part 800 row."
     },
     {
+      "legacy_source_record_id": "R1EA-072",
+      "current_source_record_ids": ["FED-052"],
+      "notes": "Canonical NHPA section 110 preservation-responsibilities row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-073",
       "current_source_record_ids": ["FED-025"],
       "notes": "Canonical Archaeological Resources Protection Act row via exact active-catalog URL lineage."
     },
     {
+      "legacy_source_record_id": "R1EA-074",
+      "current_source_record_ids": ["FED-053"],
+      "notes": "Canonical ARPA uniform-regulations row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-075",
       "current_source_record_ids": ["FED-026"],
       "notes": "Canonical Native American Graves Protection and Repatriation Act row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-076",
+      "current_source_record_ids": ["FED-054"],
+      "notes": "Canonical NAGPRA regulations row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-077",
+      "current_source_record_ids": ["FED-055"],
+      "notes": "Canonical Cultural and Heritage Cooperation Authority row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-078",
+      "current_source_record_ids": ["FED-056"],
+      "notes": "Canonical AIRFA row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-079",
+      "current_source_record_ids": ["FED-057"],
+      "notes": "Canonical RFRA row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-080",
+      "current_source_record_ids": ["FED-039"],
+      "notes": "Canonical Indian Sacred Sites executive-order row."
     },
     {
       "legacy_source_record_id": "R1EA-081",
@@ -392,6 +427,16 @@
       "notes": "Canonical FIFRA row via exact active-catalog URL lineage."
     },
     {
+      "legacy_source_record_id": "R1EA-113",
+      "current_source_record_ids": ["FED-058"],
+      "notes": "Canonical Paleontological Resources Preservation Act row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-114",
+      "current_source_record_ids": ["FED-059"],
+      "notes": "Canonical Federal Cave Resources Protection Act row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-115",
       "current_source_record_ids": ["STP-031"],
       "notes": "Canonical Montana water-permitting and section 401 row added to the source register."
@@ -415,6 +460,26 @@
       "legacy_source_record_id": "R1EA-119",
       "current_source_record_ids": ["STP-026"],
       "notes": "Canonical Montana SHPO row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-120",
+      "current_source_record_ids": ["STP-027"],
+      "notes": "Canonical Idaho SHPO project-review source covered by the active Idaho SHPO row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-121",
+      "current_source_record_ids": ["STP-028"],
+      "notes": "Canonical North Dakota SHPO project-review source covered by the active North Dakota SHPO row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-122",
+      "current_source_record_ids": ["STP-029"],
+      "notes": "Canonical South Dakota SHPO project-review source covered by the active South Dakota SHPO row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-123",
+      "current_source_record_ids": ["STP-035"],
+      "notes": "Canonical Washington DAHP project-review row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-124",
