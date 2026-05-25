@@ -14,7 +14,7 @@ Use this file as the short current route before opening the large append-only do
   `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
 - Recent source-truth closeout: `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
 - Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
-- Active packet:
+- Active example packet:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - Promotion contract closeout:
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
@@ -101,8 +101,10 @@ Use this file as the short current route before opening the large append-only do
   rebaseline remains historically resolved in commit `8e0e02b`
   (`Resolve full canonical compliance gold rebaseline`) on the same active
   `source-set-4fb59e9eb43045cb` baseline; the gold artifacts stay green, but
-  current promotion is no longer treated as green until the ECID review-local
-  compliance/applicability artifact family is refreshed on that source set
+  current promotion is no longer treated as green until the ECID
+  current-promotion artifact family is refreshed on that source set, and the
+  governed real-package coverage lane also remains red until the South Plateau
+  reviewer-ready expansion slot is repaired
 - Default `compliance-gold-eval` still passes `14/14` adjudicated cases with
   `status_match_rate=1.0`, `source_record_match_rate=1.0`,
   `source_document_role_match_rate=1.0`,

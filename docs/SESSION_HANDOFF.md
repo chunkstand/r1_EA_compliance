@@ -7,6 +7,27 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Promotion Routing Labels Aligned Locally
+
+This docs-only cleanup pass closed the remaining short-route ambiguity left
+after the Milestone `4` closeout.
+
+- outcome label:
+  `resolved locally`; `docs/CURRENT_ROUTING.md` now distinguishes the active
+  Lolo example packet from the active promotion replay-repair packet instead
+  of presenting the Lolo lane as the singular active packet
+- routing clarification:
+  the downstream gold-lane note now says the live red state is not only the
+  ECID current-promotion artifact family; the governed real-package coverage
+  lane also remains red until the South Plateau reviewer-ready expansion slot
+  is repaired
+- state impact:
+  no runtime, manifest, or test state changed; this pass only removed route
+  ambiguity so the next slice stays aligned with
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- verification:
+  `git diff --check`
+
 ## Promotion Suite Slot-Driven Contract Milestone 4 Resolved Locally
 
 This implementation slice closed the queued promotion-suite contract packet by
