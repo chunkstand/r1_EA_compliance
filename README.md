@@ -26,16 +26,17 @@ Current routed state on 2026-05-25:
   `status_counts={"downloaded_existing": 635, "duplicate_content": 12}`,
   and workbook SHA
   `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
-- The committed canonical workbook now carries `678` retained master rows after
-  admitting the governed invasive/farmland/drinking-water current-source
-  additions `FED-064` through `FED-069` on top of the earlier water-family,
+- The committed canonical workbook now carries `679` retained master rows after
+  admitting the governed minerals current-source addition `FED-070`
+  (`Executive Order 14241 - Immediate Measures To Increase American Mineral Production`)
+  on top of the earlier invasive/farmland/drinking-water, water-family,
   cultural-resource, shared tribal-overlap, wildlife, and hazardous-material
   additions. The active current-source-gap replay now uses the scoped catalog
   gate at
-  `source_library/runs/current-source-gap-invasive-catalog-gate/catalog_gate`
-  with `source_set_id=source-set-ef887e7bfb6fa76f`, `source_count=678`,
-  `artifact_count=666`, and
-  `source_partition_counts={"active_review_corpus": 625, "currentness_supersession_archive": 53}`.
+  `source_library/runs/current-source-gap-minerals-catalog-gate/catalog_gate`
+  with `source_set_id=source-set-a57779ac966f0bda`, `source_count=679`,
+  `artifact_count=667`, and
+  `source_partition_counts={"active_review_corpus": 626, "currentness_supersession_archive": 53}`.
 - `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
   catalog, architecture, and active packet routing.
 - The current architecture packet in
@@ -113,18 +114,18 @@ Current routed state on 2026-05-25:
   current-source addition lane, the governed water-family current-source
   additions, the governed cultural-resource/state-SHPO and shared
   tribal-overlap additions, the governed wildlife additions, the governed
-  hazardous-material addition lane, and the governed
-  invasive/farmland/drinking-water addition lane. The reviewer-facing default
-  catalog remains historical, but the active scoped applicability replay now
-  runs on `source-set-ef887e7bfb6fa76f` and reports
-  `authority_universe_sha256=7b8fc39075cccf3f98b26fde246c3fb3b14932361797e035accccf895ecd43bb`,
+  hazardous-material addition lane, the governed
+  invasive/farmland/drinking-water addition lane, and the governed minerals
+  current-source addition lane. The reviewer-facing default catalog remains
+  historical, but the active scoped applicability replay now runs on
+  `source-set-a57779ac966f0bda` and reports
+  `authority_universe_sha256=5ae1aeab77f1ff775ad4d012c9ae65b2fd70d09b33363922fa535207dc72333e`,
   `source_evidence_failure_count=8`, and
-  `missing_source_record_count=4`. The invasive/farmland/drinking-water
-  template no longer appears in the missing-template inventory. The remaining
-  blocker is now the governed minerals, forest-plan support,
-  vegetation/fire, wilderness-designated-area, and five base-rule
-  current-source decisions, beginning with the minerals addition in the same
-  Milestone `2` packet.
+  `missing_source_record_count=3`. The minerals template no longer appears in
+  the missing-template inventory. The remaining blocker is now the governed
+  forest-plan support, vegetation/fire, wilderness-designated-area, and five
+  base-rule current-source decisions, beginning with the forest-plan support
+  admissions in the same Milestone `2` packet.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs

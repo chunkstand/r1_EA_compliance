@@ -242,6 +242,11 @@
       "notes": "Canonical Wild and Scenic Rivers Act row via exact active-catalog URL lineage."
     },
     {
+      "legacy_source_record_id": "R1EA-063",
+      "current_source_record_ids": ["FED-070"],
+      "notes": "Canonical EO 14241 minerals policy-overlay row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-064",
       "current_source_record_ids": ["FED-031"],
       "notes": "Canonical Endangered Species Act row via exact active-catalog URL lineage."
