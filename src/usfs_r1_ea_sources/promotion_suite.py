@@ -7,6 +7,7 @@ from typing import Any
 from .promotion_suite_artifacts import _artifact_result
 from .promotion_suite_artifacts import _review_case_result
 from .promotion_suite_artifacts import _rule_pack_result
+from .promotion_suite_current import _current_promotion_contract_result
 from .promotion_suite_expansion import _expansion_slot_result
 from .promotion_suite_report import _markdown_report
 from .promotion_suite_summary import _expansion_failure_category_counts
@@ -98,10 +99,23 @@ def run_promotion_suite(
     required_expansion_suite_results = [
         result for result in suite_results if result["required_for_expansion"]
     ]
+    current_promotion_contract = _current_promotion_contract_result(
+        manifest=manifest,
+        manifest_path=manifest_path,
+        context=context,
+        output_dir=output_dir,
+        rule_pack_result=rule_pack_result,
+        review_results=review_results,
+        suite_results=suite_results,
+    )
     current_promotion_ready = (
-        rule_pack_result["passed"]
-        and all(result["passed"] for result in required_review_results)
-        and all(result["passed"] for result in required_suite_results)
+        current_promotion_contract["passed"]
+        if current_promotion_contract is not None
+        else (
+            rule_pack_result["passed"]
+            and all(result["passed"] for result in required_review_results)
+            and all(result["passed"] for result in required_suite_results)
+        )
     )
     full_canonical_corpus_ready = bool(context["full_canonical_source_set_id"]) and bool(
         required_full_canonical_results
@@ -119,6 +133,7 @@ def run_promotion_suite(
         review_results=review_results,
         suite_results=suite_results,
         expansion_slots=expansion_slots,
+        current_promotion_contract=current_promotion_contract,
         strict_expansion=strict_expansion,
     )
     expansion_failure_category_counts = _expansion_failure_category_counts(
@@ -176,6 +191,13 @@ def run_promotion_suite(
         ),
         "expansion_artifacts_ready": expansion_artifacts_ready,
         "failure_category_counts": dict(sorted(failure_category_counts.items())),
+        "reference_canary_failure_category_counts": dict(
+            sorted(
+                (
+                    current_promotion_contract or {}
+                ).get("reference_canary_failure_category_counts", {}).items()
+            )
+        ),
         "full_canonical_failure_category_counts": dict(
             sorted(full_canonical_failure_category_counts.items())
         ),
@@ -189,6 +211,7 @@ def run_promotion_suite(
             if not result["passed"]
         ),
         "rule_pack_result": rule_pack_result,
+        "current_promotion_contract": current_promotion_contract,
         "review_cases": review_results,
         "suite_results": suite_results,
         "expansion_slots": expansion_slots,

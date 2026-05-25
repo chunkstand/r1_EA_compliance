@@ -153,7 +153,39 @@ def write_suite_fixture(tmp_path: Path) -> tuple[Path, Path]:
     )
     write_json(
         output_dir / "reviews" / "review-1" / "v1_ea_eval_results.json",
-        {"summary": {"passed": True}},
+        {"source_set_id": "source-set-1", "summary": {"passed": True}},
+    )
+    write_json(
+        output_dir
+        / "reviews"
+        / "real_package_review_coverage_eval"
+        / "real_package_review_coverage_eval_results.json",
+        {
+            "schema_version": "real-package-review-coverage-results-v1",
+            "passed": True,
+            "slots": [
+                {
+                    "slot_id": "fixture-current-promotion-slot",
+                    "label": "Fixture current promotion slot",
+                    "review_id": "review-1",
+                    "package_label": "Fixture package",
+                    "coverage_class_id": "current_promotion_reviewer_ready",
+                    "required": True,
+                    "contract_status": "reviewer_ready",
+                    "actual_contract_status": "reviewer_ready",
+                    "passed": True,
+                    "source_set_id": "source-set-1",
+                    "summary_path": "reviews/review-1/v1_ea_eval_results.json",
+                    "failure_category_counts": {},
+                    "forest_plan_failure_category_counts": {},
+                    "package_authority": {
+                        "passed": True,
+                        "failure_reasons": [],
+                        "mode": "replay_context",
+                    },
+                }
+            ],
+        },
     )
     (output_dir / "reviews" / "review-1").mkdir(parents=True, exist_ok=True)
     (output_dir / "reviews" / "review-1" / "compliance_matrix.pdf").write_bytes(

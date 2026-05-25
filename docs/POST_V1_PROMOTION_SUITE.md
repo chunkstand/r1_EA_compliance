@@ -24,9 +24,10 @@ typed `current_promotion_contract` section that declares:
 - explicit reference canaries so a fixed proving packet remains visible after
   slot-driven runtime separation lands
 
-The runtime still computes `current_promotion_ready` from the existing
-`required_for_current_promotion` result flags until the follow-on runtime slice
-replaces that fixed review-case aggregation path.
+The runtime now computes `current_promotion_ready` from the governed
+coverage-class selector, same-slot family evaluation, and quorum checks. Fixed
+reference canaries are reported separately and do not define the
+`current_promotion_ready` gate.
 
 Default outputs:
 
@@ -60,8 +61,10 @@ strict mode even though current promotion remains ready without `--strict-expans
 
 The result now separates four statuses:
 
-- `current_promotion_ready`: the tracked V1 review and suite-level eval artifacts satisfy the
-  manifest for the current Custer Gallatin proving case.
+- `current_promotion_ready`: the governed current-promotion slot selector finds
+  enough eligible reviewer-ready slots, the same-slot and suite families pass,
+  and the current-promotion quorum is satisfied for the current Custer
+  Gallatin proving case.
 - `full_canonical_corpus_ready`: the active `source_library/catalog/` contract matches the promoted
   full canonical corpus under the current code, and the active full-canonical source set also has
   its own `authority_currentness` plus NEPA 3D source-set graph artifacts. This is intentionally
@@ -71,6 +74,14 @@ The result now separates four statuses:
   manifest-declared `required_for_expansion` artifact check passes.
 - `promotion_ready`: equal to `current_promotion_ready` unless `--strict-expansion` is supplied;
   strict mode also requires `expansion_ready`.
+
+The results summary now also records the slot-driven current-promotion
+contract details:
+
+- governed slot rows with eligibility, source-set match, and contract-pass
+  status
+- family results for suite-level and same-slot review artifact families
+- separate reference-canary pass/fail state and failure categories
 
 The default manifest keeps two real-package expansion slots: the ECID preliminary-EA slot is ready,
 and the South Plateau Area Landscape Treatment Project slot is selected but blocked on
@@ -123,6 +134,8 @@ The suite uses explicit failure categories so a failed run points at the next en
 Current-promotion failures are reported in `failure_category_counts`. Expansion-only failures are
 reported separately in `expansion_failure_category_counts`; they enter `failure_category_counts`
 only when strict mode is used.
+Reference-canary failures are reported separately in
+`reference_canary_failure_category_counts`.
 
 Selected expansion slots are validated as contracts, not placeholders. A selected not-ready slot
 must define review ID, source set, package path, expected gate artifacts, next action, and a typed

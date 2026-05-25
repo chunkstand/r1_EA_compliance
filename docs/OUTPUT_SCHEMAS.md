@@ -3722,11 +3722,13 @@ The manifest has schema version `promotion-suite-v1` and records:
   verified review artifacts, not only expansion-slot manifest text
 - expansion slots for additional real Region 1 EA packages, with acceptance signals and next actions
 
-`promotion_suite_results.json` has schema version `promotion-suite-results-v0` and records:
+`promotion_suite_results.json` has schema version `promotion-suite-results-v1` and records:
 
 - `current_promotion_ready`, `expansion_artifacts_ready`, `expansion_ready`, and `promotion_ready`
 - manifest path, output path, Markdown report path, source set, rule-pack identity, and strict mode
 - rule-pack check results
+- `current_promotion_contract`, including selector checks, quorum checks,
+  governed slot rows, family results, and reference-canary results
 - per-review artifact checks, including compliance validation, compliance review, compliance
   matrix, compliance matrix PDF header, V1 real-EA eval, and NEPA 3D review graph
   validation/summary artifacts
@@ -3742,6 +3744,8 @@ The manifest has schema version `promotion-suite-v1` and records:
   when the manifest provides them
 - current-promotion `failure_category_counts` and expansion-only
   `expansion_failure_category_counts`
+- `reference_canary_failure_category_counts` for fixed canary regressions that
+  should stay visible without defining `current_promotion_ready`
 - failure-category counts using `missing_source`, `extraction_miss`, `retrieval_miss`,
   `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
   `forest_plan_reviewer_not_ready`, `package_fixture_missing`, and graph-specific categories such

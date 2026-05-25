@@ -14,30 +14,36 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
-## Promotion Suite Slot-Driven Contract Milestone 1 Reduced Locally
+## Promotion Suite Slot-Driven Contract Milestone 2 Reduced Locally
 
 Latest implementation update on 2026-05-24:
 
 - routed packet:
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
 - packet outcome:
-  `reduced locally`; manifest schema `promotion-suite-v1` now declares
-  `current_promotion_contract` with governed coverage-class slot selection,
-  same-slot review families, quorum settings, and an explicit ECID reference
-  canary
+  `reduced locally`; runtime `current_promotion_ready` now evaluates the
+  governed `current_promotion_contract` selector, same-slot family pass state,
+  and quorum summary, while fixed ECID reference canaries are reported
+  separately in the results and Markdown report
 - rebaseline truth:
   Milestone 0 found a clean checkout and no equivalent slot-driven selector or
   canary implementation already landed under another name; the governed roster
   still has exactly one
   `current_promotion_reviewer_ready` slot at implementation start
+- runtime-owner truth:
+  the focused `src/usfs_r1_ea_sources/promotion_suite_current.py` owner now
+  resolves governed slots, same-slot family pass state, source-set binding,
+  quorum checks, and separate canary status; `promotion_suite_results.json`
+  is now schema version `promotion-suite-results-v1`
 - remaining blocker truth:
-  the runtime still computes `current_promotion_ready` from the older fixed
-  `required_for_current_promotion` aggregation path, so the next slice is
-  runtime slot-driven separation rather than review-local ECID artifact replay
+  packet-local ECID semantic counts and other proving-packet invariants still
+  live in the aggregate manifest contract, so Milestone 3 remains the next
+  truthful slice
 - verification:
-  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_promotion_suite.py tests/test_promotion_suite_contract_validation.py tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite_full_canonical.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_promotion_suite.py tests/test_promotion_suite_current_runtime.py tests/test_promotion_suite_contract_validation.py tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite_forest_profile.py tests/test_promotion_suite_full_canonical.py -q`,
   `PYTHONPATH=src .venv/bin/python -m pytest tests/test_cli_eval.py tests/test_architecture_contract.py -q`,
-  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/promotion_suite_support.py src/usfs_r1_ea_sources/promotion_suite_validation.py tests/support/promotion_suite_fixtures.py tests/test_promotion_suite.py tests/test_promotion_suite_contract_validation.py`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/promotion_suite.py src/usfs_r1_ea_sources/promotion_suite_current.py src/usfs_r1_ea_sources/promotion_suite_report.py src/usfs_r1_ea_sources/promotion_suite_summary.py src/usfs_r1_ea_sources/promotion_suite_support.py tests/support/promotion_suite_fixtures.py tests/test_promotion_suite_current_runtime.py`,
+  `PYTHONPATH=src .venv/bin/python -m compileall src`,
   `jq empty config/promotion_suite_v1.json`,
   `git diff --check`
 

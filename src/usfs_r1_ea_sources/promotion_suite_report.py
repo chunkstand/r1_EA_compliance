@@ -3,6 +3,7 @@ from __future__ import annotations
 
 def _markdown_report(summary: dict[str, object]) -> str:
     full_canonical_source_set_id = summary.get("full_canonical_source_set_id") or "None"
+    current_contract = summary.get("current_promotion_contract") or {}
     lines = [
         "# Promotion Suite Report",
         "",
@@ -16,15 +17,100 @@ def _markdown_report(summary: dict[str, object]) -> str:
         f"- Promotion ready: `{summary['promotion_ready']}`",
         f"- Strict expansion: `{summary['strict_expansion']}`",
         f"- Failure categories: `{summary['failure_category_counts']}`",
+        f"- Reference canary failure categories: `{summary.get('reference_canary_failure_category_counts', {})}`",
         f"- Full canonical failure categories: `{summary['full_canonical_failure_category_counts']}`",
         f"- Expansion failure categories: `{summary['expansion_failure_category_counts']}`",
         f"- Open expansion slots: `{summary['open_expansion_slot_count']}`",
         "",
+    ]
+    if current_contract:
+        lines.extend(
+            [
+                "## Current Promotion Contract",
+                "",
+                f"- Selector passed: `{current_contract['selector_passed']}`",
+                f"- Quorum passed: `{current_contract['quorum_passed']}`",
+                f"- Eligible governed slots: `{current_contract['eligible_slot_count']}`",
+                f"- Passing governed slots: `{current_contract['passing_slot_count']}`",
+                f"- Reference canary ready: `{current_contract['reference_canary_ready']}`",
+                "",
+                "### Governed Slots",
+                "",
+                "| Slot | Review ID | Coverage Class | Eligible | Contract Passed | Source Set | Failed Categories |",
+                "| --- | --- | --- | --- | --- | --- | --- |",
+            ]
+        )
+        for slot in current_contract["governed_slots"]:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        _md_cell(slot["slot_id"]),
+                        _md_cell(slot["review_id"]),
+                        _md_cell(slot["coverage_class_id"]),
+                        _md_cell(slot["eligible"]),
+                        _md_cell(slot.get("contract_passed")),
+                        _md_cell(slot.get("source_set_id") or ""),
+                        _md_cell(", ".join(slot.get("failure_categories") or []) or "None"),
+                    ]
+                )
+                + " |"
+            )
+        lines.extend(
+            [
+                "",
+                "### Family Results",
+                "",
+                "| Family | Scope | Passed | Passing Slots | Failed Categories |",
+                "| --- | --- | --- | --- | --- |",
+            ]
+        )
+        for family in current_contract["family_results"]:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        _md_cell(family["id"]),
+                        _md_cell(family["family_scope"]),
+                        _md_cell(family["passed"]),
+                        _md_cell(family.get("passing_slot_count")),
+                        _md_cell(", ".join(family.get("failure_categories") or []) or "None"),
+                    ]
+                )
+                + " |"
+            )
+        lines.extend(
+            [
+                "",
+                "### Reference Canaries",
+                "",
+                "| Canary | Review Case | Review ID | Passed | Failed Categories |",
+                "| --- | --- | --- | --- | --- |",
+            ]
+        )
+        for canary in current_contract["reference_canaries"]:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        _md_cell(canary["id"]),
+                        _md_cell(canary["review_case_id"]),
+                        _md_cell(canary.get("review_id") or ""),
+                        _md_cell(canary["passed"]),
+                        _md_cell(", ".join(canary.get("failure_categories") or []) or "None"),
+                    ]
+                )
+                + " |"
+            )
+        lines.append("")
+    lines.extend(
+        [
         "## Review Cases",
         "",
         "| Case | Review ID | Ready | Failed Categories |",
         "| --- | --- | --- | --- |",
-    ]
+        ]
+    )
     for case in summary["review_cases"]:
         lines.append(
             "| "

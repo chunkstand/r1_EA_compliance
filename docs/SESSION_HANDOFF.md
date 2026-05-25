@@ -7,6 +7,42 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Promotion Suite Slot-Driven Contract Milestone 2 Reduced Locally
+
+This implementation slice carried the queued promotion-suite contract packet
+through Milestone `2`, then stopped before packet-local invariant migration so
+the next step remains the true remaining delta.
+
+- outcome label:
+  `reduced locally`; runtime `current_promotion_ready` now evaluates the
+  governed `current_promotion_contract` selector, same-slot family pass state,
+  and quorum summary, while fixed ECID reference canaries are reported
+  separately
+- runtime owner:
+  the new focused owner
+  `src/usfs_r1_ea_sources/promotion_suite_current.py` now resolves governed
+  review-coverage slots, source-set binding, family pass state, and separate
+  reference-canary status; `docs/architecture_contract.toml` now declares that
+  owner in the eval layer
+- packet-local improvement:
+  `promotion-suite` no longer depends on review-case order for
+  `current_promotion_ready`; strict expansion still reports expansion artifact
+  failures separately; and `promotion_suite_results.json` now writes schema
+  version `promotion-suite-results-v1` with `current_promotion_contract`
+  selector/quorum/family/canary details plus
+  `reference_canary_failure_category_counts`
+- remaining blocker truth:
+  aggregate promotion still carries ECID-specific semantic counts and other
+  packet-local proving invariants inside the shared manifest contract, so
+  Milestone `3` remains the next truthful slice
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_promotion_suite.py tests/test_promotion_suite_current_runtime.py tests/test_promotion_suite_contract_validation.py tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite_forest_profile.py tests/test_promotion_suite_full_canonical.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_cli_eval.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/promotion_suite.py src/usfs_r1_ea_sources/promotion_suite_current.py src/usfs_r1_ea_sources/promotion_suite_report.py src/usfs_r1_ea_sources/promotion_suite_summary.py src/usfs_r1_ea_sources/promotion_suite_support.py tests/support/promotion_suite_fixtures.py tests/test_promotion_suite_current_runtime.py`,
+  `PYTHONPATH=src .venv/bin/python -m compileall src`,
+  `jq empty config/promotion_suite_v1.json config/v1_real_package_review_coverage_v1.json`,
+  `git diff --check`
+
 ## Promotion Suite Slot-Driven Contract Milestone 1 Reduced Locally
 
 This implementation slice carried the queued promotion-suite contract packet

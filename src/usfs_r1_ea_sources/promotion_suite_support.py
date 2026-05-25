@@ -9,7 +9,7 @@ import re
 
 
 PROMOTION_SUITE_SCHEMA_VERSION = "promotion-suite-v1"
-PROMOTION_SUITE_RESULTS_SCHEMA_VERSION = "promotion-suite-results-v0"
+PROMOTION_SUITE_RESULTS_SCHEMA_VERSION = "promotion-suite-results-v1"
 DEFAULT_PROMOTION_SUITE_PATH = Path("config/promotion_suite_v1.json")
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 MISSING = object()

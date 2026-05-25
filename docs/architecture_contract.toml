@@ -403,6 +403,7 @@ modules = [
   "incremental_graph_refresh_eval",
   "promotion_suite",
   "promotion_suite_artifacts",
+  "promotion_suite_current",
   "promotion_suite_expansion",
   "promotion_suite_report",
   "promotion_suite_summary",

@@ -2,7 +2,7 @@
 
 Date: 2026-05-24
 
-Status: Milestone 1 reduced locally
+Status: Milestone 2 reduced locally
 
 Owner context: This is a fresh standalone follow-on packet for the promotion-suite contract. It
 does not replace the active Lolo example packet in `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
