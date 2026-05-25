@@ -187,6 +187,11 @@
       "notes": "Canonical Bankhead-Jones administration row via exact active-catalog URL lineage."
     },
     {
+      "legacy_source_record_id": "R1EA-038",
+      "current_source_record_ids": ["LEX-FED-002"],
+      "notes": "Canonical Bankhead-Jones land-exchange/disposition row for the surviving acquired-lands authority support."
+    },
+    {
       "legacy_source_record_id": "R1EA-039",
       "current_source_record_ids": ["FED-007"],
       "notes": "Canonical range-management row via exact active-catalog URL lineage."
@@ -205,6 +210,11 @@
       "legacy_source_record_id": "R1EA-042",
       "current_source_record_ids": ["FED-010"],
       "notes": "Canonical land-uses row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-043",
+      "current_source_record_ids": ["FED-010", "LEX-USFS-006"],
+      "notes": "Canonical rights-of-way support now spans current land-uses plus FSM 5460 acquisition rows."
     },
     {
       "legacy_source_record_id": "R1EA-044",
@@ -250,6 +260,11 @@
       "legacy_source_record_id": "R1EA-067",
       "current_source_record_ids": ["R1-003"],
       "notes": "Canonical Region 1 species-of-conservation-concern row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-068",
+      "current_source_record_ids": ["R1-003"],
+      "notes": "Canonical Northern Region species-support row."
     },
     {
       "legacy_source_record_id": "R1EA-069",
@@ -347,9 +362,109 @@
       "notes": "Canonical land-exchange regulatory coverage now spans CFR plus Region 1 and FSH implementation rows."
     },
     {
+      "legacy_source_record_id": "R1EA-125",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-126",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-127",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-128",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-129",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-130",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-131",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-132",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-133",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-134",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-135",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
+      "legacy_source_record_id": "R1EA-136",
+      "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
+      "notes": "Canonical land-exchange regulatory support now rides the current CFR plus Region 1 and FSH implementation cluster."
+    },
+    {
       "legacy_source_record_id": "R1EA-137",
       "current_source_record_ids": ["FED-032", "LEX-FED-003", "LEX-FED-004", "LEX-FED-006", "LEX-FED-011"],
       "notes": "Canonical land-exchange statutory-authority coverage is now split across FLPMA and supporting statutory rows."
+    },
+    {
+      "legacy_source_record_id": "R1EA-138",
+      "current_source_record_ids": ["LEX-FED-005"],
+      "notes": "Canonical Weeks Act reservations row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-139",
+      "current_source_record_ids": ["LEX-FED-006"],
+      "notes": "Canonical Weeks Act exchange/acquisition row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-140",
+      "current_source_record_ids": ["LEX-FED-007"],
+      "notes": "Canonical congressional land-exchange oversight row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-141",
+      "current_source_record_ids": ["LEX-FED-003"],
+      "notes": "Canonical General Exchange Act/public-school exchange row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-142",
+      "current_source_record_ids": ["LEX-FED-006"],
+      "notes": "Canonical acquired-NFS land exchange support now rides the current acquisition-authority row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-143",
+      "current_source_record_ids": ["LEX-FED-008"],
+      "notes": "Canonical Organic Administration Act management-authority row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-144",
+      "current_source_record_ids": ["LEX-FED-010"],
+      "notes": "Canonical FLPMA declaration-of-policy row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-145",
+      "current_source_record_ids": ["LEX-FED-011"],
+      "notes": "Canonical FLPMA acquisition row."
     },
     {
       "legacy_source_record_id": "R1EA-146",
@@ -357,14 +472,54 @@
       "notes": "Canonical FLPMA exchange row."
     },
     {
+      "legacy_source_record_id": "R1EA-147",
+      "current_source_record_ids": ["LEX-FED-012"],
+      "notes": "Canonical FLPMA regulations-authority row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-148",
+      "current_source_record_ids": ["LEX-FED-001"],
+      "notes": "Canonical USDA land acquisition/disposition row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-149",
+      "current_source_record_ids": ["LEX-FED-002"],
+      "notes": "Canonical Bankhead-Jones land-exchange/disposition row."
+    },
+    {
       "legacy_source_record_id": "R1EA-150",
       "current_source_record_ids": ["USFS-035", "LEX-USFS-002", "LEX-USFS-003", "LEX-USFS-004", "LEX-USFS-006", "LEX-USFS-007"],
       "notes": "Canonical land-exchange policy/reference coverage now spans the main program row plus FSM/FSH support rows."
     },
     {
+      "legacy_source_record_id": "R1EA-151",
+      "current_source_record_ids": ["LEX-USFS-012"],
+      "notes": "Canonical FSH 5409.13 sections 30-36 row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-152",
+      "current_source_record_ids": ["LEX-USFS-013"],
+      "notes": "Canonical FSH 5409.13 sections 37-39 row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-153",
+      "current_source_record_ids": ["LEX-USFS-014"],
+      "notes": "Canonical FSH 5409.13 title-evidence row."
+    },
+    {
+      "legacy_source_record_id": "R1EA-154",
+      "current_source_record_ids": ["LEX-USFS-015"],
+      "notes": "Canonical FSH 5409.13 reservations/outstanding-rights row."
+    },
+    {
       "legacy_source_record_id": "R1EA-155",
       "current_source_record_ids": ["LEX-USFS-002"],
       "notes": "Canonical FSM 5410 appraisals row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-156",
+      "current_source_record_ids": ["LEX-USFS-002"],
+      "notes": "Canonical current appraisal-policy row for the retired FSH 5409.12 Chapter 40 support reference."
     },
     {
       "legacy_source_record_id": "R1EA-157",

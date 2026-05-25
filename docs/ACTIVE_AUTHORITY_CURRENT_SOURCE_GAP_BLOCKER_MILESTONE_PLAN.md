@@ -2,7 +2,7 @@
 
 Date: 2026-05-25
 
-Status: Active packet (`Milestone 1 resolved locally; Milestone 2 governed repair next`)
+Status: Active packet (`Milestone 1 resolved locally; Milestone 2 reduced locally and remaining governed repair next`)
 
 Owner context: this is a fresh standalone blocker packet opened from
 `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` after
@@ -39,7 +39,7 @@ applicability validation.
   now rebuilds the ECID applicability universe at
   `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`,
-  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`,
+  `authority_universe_sha256=fbef2df67ba4c69be081a85ecea0fa88e666c03a9d55fa66b10d3655b72bc115`,
   and `validation_passed=false`.
 - `candidates_have_source_evidence_available` is now reduced from `21` failing
   candidates to `11`: the remaining six authority-family candidates are
@@ -56,20 +56,18 @@ applicability validation.
   `organic_act_16usc_475`,
   `seven_county_nepa_scope`).
 - `authority_family_template_candidates_cover_config` is now reduced from `19`
-  failing template groups to `17`. The remaining groups still point at source
-  IDs such as:
+  failing template groups to `12`. The admitted-current replacement lane now
+  covers `R1EA-038`, `R1EA-043`, `R1EA-068`, `R1EA-125` through `R1EA-149`
+  (except already-bound `R1EA-146`), and `R1EA-151` through `R1EA-156`. The
+  remaining groups still point at source IDs such as:
   `R1EA-093`,
   `R1EA-083` through `R1EA-090` and `R1EA-115` through `R1EA-118`,
   `R1EA-072`, `R1EA-074`, `R1EA-076` through `R1EA-080`,
   `R1EA-097` through `R1EA-100`,
-  `R1EA-038`,
   `R1EA-109`,
   `R1EA-101`, `R1EA-102`, `R1EA-105`, `R1EA-106`, `R1EA-111`, `R1EA-112`,
-  `R1EA-125` through `R1EA-162` (minus the rows already rebound by exact
-  current matches),
+  `R1EA-160`, `R1EA-161`, and `R1EA-162`,
   `R1EA-063`,
-  `R1EA-043`, `R1EA-143`,
-  `R1EA-068`,
   `R1EA-056` through `R1EA-062`,
   `R1EA-045`, `R1EA-046`, `R1EA-051`, `R1EA-054`, `R1EA-055`,
   and remaining forest-plan support rows such as
@@ -381,7 +379,7 @@ Milestone 1 resolution on 2026-05-25:
 
 ### Milestone 2 - Governed Source-Truth Repair
 
-Outcome label: resolved
+Outcome label: reduced
 
 Purpose: land the chosen source-truth, template, or rule-pack repairs without
 weakening the applicability gates.
@@ -398,6 +396,31 @@ Acceptance criteria:
 - `applicability-authority-universe` passes for ECID on
   `source-set-4fb59e9eb43045cb`.
 - No new skips, xfails, or relaxed checks are introduced.
+
+Milestone 2 reduction on 2026-05-25:
+
+- `config/compliance_source_record_reconciliation_v1.json` now binds admitted
+  current catalog replacements for the template-owned legacy rows in
+  `grassland_bankhead_jones_authorities`,
+  `roads_access_special_use_action_authorities`,
+  `species_supporting_sources_and_overlays`,
+  `land_exchange_regulatory_requirements`,
+  `land_exchange_statutory_authorities`, and the non-retired handbook/policy
+  rows in `land_exchange_fs_policy_and_project_references`.
+- The live ECID replay remains red, but the blocker is smaller at
+  `authority_universe_sha256=fbef2df67ba4c69be081a85ecea0fa88e666c03a9d55fa66b10d3655b72bc115`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=12`.
+- The remaining template-owned gap is now narrowed to the explicit
+  `R1EA-160`, `R1EA-161`, and `R1EA-162` retirements in
+  `land_exchange_fs_policy_and_project_references`. All other remaining
+  missing-template families are true current-source additions or forest-plan
+  support admissions.
+- Milestone `2` therefore remains open. The next truthful sub-slice in this
+  same packet is the governed retirement of
+  `R1EA-160`, `R1EA-161`, and `R1EA-162`, after which the live blocker should
+  consist only of current-source additions, forest-plan support admissions,
+  and the five base-rule decisions.
 
 ### Milestone 3 - Replay Resume Handoff
 
@@ -493,6 +516,6 @@ git diff --check
   That means the next slice must stay disciplined about workbook/template
   ownership and must not drift back into runtime heuristics.
 - Next truthful slice: Milestone `2` in this packet. Land the governed
-  template retire/replace edits, current-source additions, forest-plan support
-  admissions, and base-rule owner decisions needed to clear the remaining
-  ECID applicability blocker.
+  `R1EA-160`/`R1EA-161`/`R1EA-162` retirement edits, then continue with the
+  remaining current-source additions, forest-plan support admissions, and
+  base-rule owner decisions needed to clear the ECID applicability blocker.

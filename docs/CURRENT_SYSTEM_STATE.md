@@ -14,6 +14,52 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
+## Active Authority Current-Source Gap Blocker Milestone 2 Reduced Locally
+
+Latest implementation update on 2026-05-25:
+
+- routed packet:
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; the admitted-current replacement class is now repaired,
+  but the ECID applicability blocker still remains open
+- implementation truth:
+  `config/compliance_source_record_reconciliation_v1.json` now binds admitted
+  current catalog replacements for the legacy template-owned rows in
+  `grassland_bankhead_jones_authorities`,
+  `roads_access_special_use_action_authorities`,
+  `species_supporting_sources_and_overlays`,
+  `land_exchange_regulatory_requirements`,
+  `land_exchange_statutory_authorities`, and the non-retired handbook/policy
+  rows in `land_exchange_fs_policy_and_project_references`; the matching
+  regression lives in
+  `tests/test_applicability_authority_family_templates.py`
+- live replay truth:
+  `applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`
+  now reports `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=fbef2df67ba4c69be081a85ecea0fa88e666c03a9d55fa66b10d3655b72bc115`,
+  `validation_passed=false`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=12`
+- remaining blocker truth:
+  the only remaining template-owned family gap is now the explicit retirement
+  of `R1EA-160`, `R1EA-161`, and `R1EA-162` inside
+  `land_exchange_fs_policy_and_project_references`; the rest of the missing
+  template inventory is now true current-source additions or forest-plan
+  support admissions
+- next routing:
+  the next truthful slice remains Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
+  starting with the governed `R1EA-160` / `R1EA-161` / `R1EA-162`
+  retirement closeout
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_applicability_authority_family_templates.py tests/test_rule_claim_binding_runtime.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check src/usfs_r1_ea_sources/records.py src/usfs_r1_ea_sources/applicability_contract_support.py tests/test_applicability_authority_family_templates.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `jq empty config/compliance_source_record_reconciliation_v1.json`,
+  `git diff --check`
+
 ## Active Authority Current-Source Gap Blocker Milestone 1 Resolved Locally
 
 Latest implementation update on 2026-05-25:

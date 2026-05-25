@@ -95,9 +95,14 @@ Current routed state on 2026-05-25:
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
   is now also resolved locally: the remaining stale IDs are now split among
   template retire/replace work, true current-source additions, forest-plan
-  support admissions, and five base-rule current-source decisions. The live
-  applicability replay is unchanged at `11` / `17`, and the next truthful
-  slice is Milestone `2` governed repair in that same packet.
+  support admissions, and five base-rule current-source decisions. Milestone
+  `2` in that same packet is now reduced locally through admitted current
+  replacement mappings: the live applicability replay is now `11`
+  source-evidence failures and `12` missing template groups on
+  `authority_universe_sha256=fbef2df67ba4c69be081a85ecea0fa88e666c03a9d55fa66b10d3655b72bc115`.
+  The remaining template-owned gap is only the explicit retirement of
+  `R1EA-160` through `R1EA-162`, and the next truthful slice remains the rest
+  of Milestone `2` in that same packet.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs
