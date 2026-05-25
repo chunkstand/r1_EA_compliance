@@ -89,11 +89,12 @@ Latest implementation update on 2026-05-25:
   `validation_passed=false`,
   `source_evidence_failure_count=11`, and
   `missing_source_record_count=17`
-- next routing:
-  the next truthful slice is Milestone `2` of
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
-  which now owns the governed source-truth, template, forest-plan, and
-  rule-pack repair work itself
+- historical next routing at that owner-map checkpoint:
+  Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+  owned the governed source-truth, template, forest-plan, and rule-pack
+  repair work itself; the live route after the later Milestone `2` reduction
+  is recorded in the newer section above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
   `git diff --check`

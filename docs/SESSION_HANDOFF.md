@@ -77,9 +77,11 @@ current-source blocker packet before any governed repair lands.
   `validation_passed=false`,
   `source_evidence_failure_count=11`, and
   `missing_source_record_count=17`
-- next truthful slice:
+- historical next truthful slice at that owner-map checkpoint:
   Milestone `2` of
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`;
+  the live route after the later Milestone `2` reduction is recorded in the
+  newer section above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
   `git diff --check`

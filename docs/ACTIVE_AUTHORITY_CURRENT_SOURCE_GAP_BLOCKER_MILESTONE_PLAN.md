@@ -373,9 +373,11 @@ Milestone 1 resolution on 2026-05-25:
   `config/r1_forest_plan_document_register_draft.csv`, and
   base-rule replacement or retirement in
   `config/compliance_rule_pack_nepa_ea_v0.json`.
-- The next truthful slice is now Milestone `2` in this same packet: land the
-  governed template, source-truth, and rule-pack repairs while preserving the
-  failing applicability gates.
+- The historical next truthful slice at this owner-map checkpoint was
+  Milestone `2` in this same packet: land the governed template, source-truth,
+  and rule-pack repairs while preserving the failing applicability gates. The
+  live route after the later Milestone `2` reduction is recorded in the newer
+  reduction note below.
 
 ### Milestone 2 - Governed Source-Truth Repair
 
