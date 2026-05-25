@@ -16,70 +16,67 @@ reviewer-ready roster inside
 
 ## Purpose
 
-Restore truthful active-source authority binding for the reviewer-ready
-applicability universe on `source-set-4fb59e9eb43045cb`.
+Record the now-reduced authority-source binding packet honestly and route the
+remaining ECID applicability residue to its new governed owner.
 
-The ECID replay-repair lane no longer fails first on mixed forest-plan
-inventory shape or legacy source-ID aliasing. Those bugs are now repaired in
-the applicability universe owners. The remaining blocker is upstream of
-packet-local replay:
+This packet opened to repair the shared authority-source binding layer for the
+reviewer-ready applicability universe on `source-set-4fb59e9eb43045cb`. That
+binding lane is now reduced, not live:
 
-- `applicability-authority-universe` for
-  `v1-cg-ecid-compliance-review` now rebuilds a correctly scoped authority
-  universe with `candidate_authority_count=396` and
-  `forest_plan_component_candidate_count=329`
-- the same run still fails validation on
-  `candidates_have_source_evidence_available` with `failure_count=21`
-  and on
-  `authority_family_template_candidates_cover_config` with
-  `missing_source_record_count=19`
-- because applicability validation cannot pass, generated reviewer-ready rule
-  pack replay cannot resume truthfully, so the ECID reviewer-ready slot cannot
-  be repaired inside the replay-local packet yet
+- the applicability-universe owners already repaired the earlier mixed
+  forest-plan inventory and legacy source-ID routing bugs
+- this packet then landed the exact current-row reconciliation and shared alias
+  reuse that were already supported by the active catalog and committed
+  forest-plan identity registry
+- after that repair, the ECID applicability replay no longer stops on the old
+  `21` / `19` binding baseline; it now stops on a smaller remaining
+  current-source truth blocker (`11` source-evidence failures and `17`
+  missing-source template groups) that is owned by
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
 
-This packet exists to classify and repair those authority-source binding gaps
-through governed source-record reconciliation or active-source coverage, then
-hand control back to the replay-repair packet.
+This packet therefore remains as the reduced closeout record for the governed
+binding layer rather than as the live blocker plan.
 
 ## Current Evidence
 
-- `source_library/reviews/v1-cg-ecid-compliance-review/applicability/authority_universe_snapshot.json`
-  now reports:
+- This packet's historical Milestone `0-1` baseline was the
+  `21`-candidate / `19`-template blocker inventory frozen before governed
+  repair began.
+- After Milestone `2`, the live ECID replay now reports
   `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`,
   `validation_passed=false`,
-  `failed_check_names=["candidates_have_source_evidence_available","authority_family_template_candidates_cover_config"]`,
-  `source_evidence_failure_count=21`, and
-  `missing_source_record_count=19`.
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=17`.
 - The mixed Region 1 inventory boundary is now behaving correctly for ECID:
   `selected_component_forest_unit_ids=["custer-gallatin-nf"]` even though the
   default `component_inventory.json` is a batch inventory with
   `forest_unit_id=null`.
-- Existing governed reconciliation already covers some active aliases, for
-  example `R1EA-150 -> ["USFS-035","LEX-USFS-002","LEX-USFS-003","LEX-USFS-004","LEX-USFS-006","LEX-USFS-007"]`,
-  and the active rule-claim links already use those reconciled source records.
-- Remaining blocker examples after the alias repair include missing active
-  source bindings for authority-family and rule-pack references such as
-  `R1EA-092`, `R1EA-032`, `R1EA-037`, `R1EA-041`,
-  `R1PLAN-custer-gallatin-nf-06`, and
+- Existing governed reconciliation now also covers the exact current rows that
+  were already present in the active catalog for legacy IDs such as
+  `R1EA-030`, `R1EA-032`, `R1EA-037`, `R1EA-082`, `R1EA-092`,
+  `R1EA-155`, and Region 1 overlay support rows such as
+  `R1PLAN-region-1-grassland-overlay-01` and
   `R1PLAN-region-1-species-overlay-01`.
+- No untouched exact current-catalog URL matches remain for the reduced
+  missing-ID inventory. The remaining blocker is now current-source truth
+  debt rather than more shared binding drift.
 
 ## Goal
 
-Repair the governed authority-source binding layer so the active applicability
-universe can pass on `source-set-4fb59e9eb43045cb` without weakening source
-evidence requirements.
+Preserve an honest record of what this packet closed and where the remaining
+blocker moved.
 
-Completion means all of the following are true:
+This packet's scoped goal is now reduced and closed by routing:
 
-- The missing authority-source IDs are classified as either:
-  governed reconciliation gaps, true active-source coverage gaps, or obsolete
-  references that must be removed only through governed source-truth owners.
-- The selected owner surface is repaired with focused tests and durable docs.
-- `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
-  passes on the active source set.
-- The replay-repair packet can resume from truthful applicability validation
-  instead of stale artifacts or bypasses.
+- the shared authority-source binding layer is reduced through the exact
+  current-row repair it honestly owned
+- the remaining applicability blocker is explicitly rerouted to
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+  instead of staying mislabeled as live binding work here
+- packet-local replay remains blocked until that new current-source truth
+  packet clears
 
 ## Non-Goals
 

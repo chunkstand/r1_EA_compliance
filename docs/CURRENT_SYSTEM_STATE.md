@@ -112,10 +112,11 @@ Latest implementation update on 2026-05-25:
   overlays/support rows to the active `FOR-*`, `FINAL-*`, `FPS-*`, and
   `R1-*` plan-supporting corpus; and the five rule rows still have no current
   canonical row in the active catalog
-- next routing:
-  the next truthful slice is Milestone `2` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which now
-  owns governed repair across those three owner classes
+- historical next routing at this Milestone `1` owner-map checkpoint:
+  the next truthful slice was Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the live
+  route after the Milestone `2` reduction is recorded in the newer sections
+  above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
   `git diff --check`

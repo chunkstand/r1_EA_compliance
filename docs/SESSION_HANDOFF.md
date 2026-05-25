@@ -84,10 +84,12 @@ Milestone `1` owner-map closeout.
   `docs/POST_V1_PROMOTION_SUITE.md` now describe the active authority-source
   blocker packet directly rather than saying “Milestone `0` ... resolved
   through Milestone `1`”
-- state impact:
-  no runtime, catalog, or applicability truth changed; the live route remains
-  Milestone `2` governed repair in
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- historical state impact at that earlier alignment checkpoint:
+  no runtime, catalog, or applicability truth changed; the live route at that
+  time remained Milestone `2` governed repair in
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the
+  current live route after the Milestone `2` reduction is recorded in the
+  newer sections above
 - verification:
   `git diff --check`
 
@@ -123,9 +125,11 @@ authority-source blocker packet before governed repair begins.
   forest-plan owner still depends on rebinding stale `R1PLAN-*`
   overlays/support rows to the active `FOR-*`, `FINAL-*`, `FPS-*`, and
   `R1-*` plan-supporting corpus
-- next truthful slice:
+- historical next truthful slice at this Milestone `1` owner-map checkpoint:
   Milestone `2` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the live
+  route after the Milestone `2` reduction is recorded in the newer sections
+  above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
   `git diff --check`
