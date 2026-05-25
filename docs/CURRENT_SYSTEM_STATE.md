@@ -14,6 +14,41 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
+## Active Authority Source Binding Blocker Milestone 0 Resolved Locally
+
+Latest implementation update on 2026-05-25:
+
+- routed packet:
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `resolved locally`; the active-source authority binding blocker is now
+  frozen as a concrete baseline on the active source set before any governed
+  repair begins
+- baseline truth:
+  `applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`
+  still reports `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `selected_component_forest_unit_ids=["custer-gallatin-nf"]`, and
+  `validation_passed=false`
+- blocker split:
+  the repaired routing bugs stay retired as blockers:
+  `forest_plan_component_candidates_use_profile_inventory` now passes on the
+  ECID review forest, and governed legacy source-ID reconciliation still
+  covers active aliases such as `R1EA-150`; the live blocker inventory is now
+  frozen as `21` failing `candidates_have_source_evidence_available`
+  candidates (`16` authority-family templates plus `5` rule templates) and
+  `19` failing `authority_family_template_candidates_cover_config`
+  family-template groups, including Region 1 forest-plan/species overlays and
+  the land-exchange-only `R1EA-125` through `R1EA-162` family
+- next routing:
+  the next truthful slice is Milestone `1` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which now
+  owns governed blocker classification and owner selection before any repair
+  attempt
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `git diff --check`
+
 ## Real Package Review Replay Repair Milestone 1 Reduced Locally
 
 Latest implementation update on 2026-05-25:

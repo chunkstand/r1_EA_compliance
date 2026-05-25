@@ -87,11 +87,14 @@ Use this file as the short current route before opening the large append-only do
   legacy-to-current source-record reconciliation, but the same run still fails
   on `candidates_have_source_evidence_available` (`failure_count=21`) and
   `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=19`). The next truthful slice is now
-  Milestone `0` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which owns
-  the active-source authority binding blocker upstream of packet-local ECID
-  replay
+  (`missing_source_record_count=19`). Milestone `0` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
+  resolved locally: the blocker baseline is frozen at the same `396` /
+  `329` applicability universe result with `21` failing source-evidence
+  candidates and `19` missing source-record template groups. The next
+  truthful slice is now Milestone `1` of that packet, which owns governed
+  classification and owner selection for the active-source authority binding
+  blocker upstream of packet-local ECID replay
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

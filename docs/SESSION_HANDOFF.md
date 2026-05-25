@@ -7,6 +7,35 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Active Authority Source Binding Blocker Milestone 0 Resolved Locally
+
+This implementation slice closes the baseline-freeze step for the active
+authority-source blocker packet before any governed repair work begins.
+
+- outcome label:
+  `resolved locally`; the blocker packet now carries a concrete frozen
+  applicability baseline on `source-set-4fb59e9eb43045cb`
+- baseline truth:
+  `applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`
+  still reports `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `selected_component_forest_unit_ids=["custer-gallatin-nf"]`, and
+  `validation_passed=false`
+- blocker split:
+  the old mixed-inventory and legacy-alias routing bugs remain retired as live
+  blockers; the frozen remaining inventory is `21`
+  `candidates_have_source_evidence_available` failures (`16`
+  authority-family templates plus `5` rule templates) and `19`
+  `authority_family_template_candidates_cover_config` family-template groups,
+  including Region 1 forest-plan/species overlays and the land-exchange-only
+  `R1EA-125` through `R1EA-162` authority family
+- next truthful slice:
+  Milestone `1` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `git diff --check`
+
 ## Authority-Source Blocker Routing Aligned Locally
 
 This docs-only cleanup pass closes the remaining short-route ambiguity after

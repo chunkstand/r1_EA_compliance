@@ -372,9 +372,13 @@ Milestone 1 reduction on 2026-05-25:
   `candidates_have_source_evidence_available` (`failure_count=21`) and
   `authority_family_template_candidates_cover_config`
   (`missing_source_record_count=19`).
-- The next truthful slice is now
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which owns
-  the governed active-source binding problem upstream of packet-local replay.
+- Milestone `0` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
+  resolved locally; it freezes that blocker inventory as `21` failing
+  source-evidence candidates and `19` missing source-record template groups.
+- The next truthful slice is now Milestone `1` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which
+  owns governed blocker classification upstream of packet-local replay.
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 

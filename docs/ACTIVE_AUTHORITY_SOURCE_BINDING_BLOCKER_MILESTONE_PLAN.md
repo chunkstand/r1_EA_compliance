@@ -2,7 +2,7 @@
 
 Date: 2026-05-25
 
-Status: Milestone 0 opened locally
+Status: Milestone 0 resolved locally
 
 Owner context: this is a fresh standalone blocker packet opened from
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` after Milestone `1`
@@ -120,7 +120,7 @@ Completion means all of the following are true:
 
 ### Milestone 0 - Missing Binding Baseline
 
-Outcome label: opened
+Outcome label: resolved
 
 Purpose: freeze the post-repair blocker set before any governed source-binding
  edits begin.
@@ -149,6 +149,55 @@ PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-un
   --review-id v1-cg-ecid-compliance-review \
   --source-set-id source-set-4fb59e9eb43045cb
 ```
+
+Milestone 0 resolution on 2026-05-25:
+
+- The baseline rerun still fails exactly where the replay-repair Milestone `1`
+  reduction handed off: `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `selected_component_forest_unit_ids=["custer-gallatin-nf"]`, and
+  `validation_passed=false` on `source-set-4fb59e9eb43045cb`.
+- The old routing bugs are now frozen as repaired rather than live blockers:
+  `forest_plan_component_candidates_use_profile_inventory` passes on the ECID
+  review forest, and governed legacy source-ID reconciliation still resolves
+  examples such as `R1EA-150` against active catalog aliases.
+- `candidates_have_source_evidence_available` now freezes a `21`-candidate
+  blocker set: `16` authority-family templates
+  (`clean_air_act_conformity_air_quality`,
+  `clean_water_act_wotus_permits`,
+  `cultural_resource_protection_and_state_shpo_sources`,
+  `eagle_efh_and_special_wildlife_sources`,
+  `floodplain_management_eo11988`,
+  `forest_service_planning_handbook_amendments`,
+  `grassland_bankhead_jones_authorities`,
+  `hazardous_materials_site_condition`,
+  `invasive_pesticide_soils_farmland_drinking_water`,
+  `minerals_energy_authorities`,
+  `region1_forest_plan_source_records`,
+  `roads_access_special_use_action_authorities`,
+  `species_supporting_sources_and_overlays`,
+  `tribal_consultation_trust_sacred_sites`,
+  `vegetation_wildfire_forest_health_authorities`,
+  `wilderness_wsr_trails_designated_areas`) plus `5` rule templates
+  (`apa_final_agency_action`, `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`, `organic_act_16usc_475`,
+  `seven_county_nepa_scope`).
+- `authority_family_template_candidates_cover_config` now freezes a `19`
+  family-template coverage blocker set. Representative missing source-record
+  clusters include `R1EA-092` and `R1EA-093` (air quality),
+  `R1EA-082` through `R1EA-091` plus `R1EA-115` through `R1EA-118`
+  (clean water / WOTUS), `R1EA-072` through `R1EA-080` plus
+  `R1EA-113`, `R1EA-114`, and `R1EA-120` through `R1EA-123`
+  (cultural / SHPO / tribal), `R1EA-032`, `R1EA-037`, `R1EA-038`,
+  `R1EA-041`, `R1EA-063`, `R1EA-143`, `R1PLAN-custer-gallatin-nf-06`,
+  `R1PLAN-custer-gallatin-nf-07`,
+  `R1PLAN-region-1-grassland-overlay-01`,
+  `R1PLAN-region-1-species-overlay-01`,
+  `R1PLAN-region-1-species-overlay-02`, and the land-exchange-only
+  `R1EA-125` through `R1EA-162` family.
+- The next truthful slice is now Milestone `1` in this same packet:
+  classify every frozen blocker ID to one governed owner before any repair
+  attempts begin.
 
 ### Milestone 1 - Classification And Owner Selection
 

@@ -185,8 +185,10 @@ layer rather than the slot-driven contract layer.
   legacy-to-current source-record reconciliation, but the same run still fails
   on `candidates_have_source_evidence_available` (`failure_count=21`) and
   `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=19`). The next truthful slice is now
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`.
+  (`missing_source_record_count=19`). Milestone `0` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
+  resolved locally, and the next truthful slice is Milestone `1` of that
+  blocker packet.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:
