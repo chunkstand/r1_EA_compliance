@@ -65,18 +65,20 @@ Use this file as the short current route before opening the large append-only do
   runtime now drives `current_promotion_ready` from governed slot selection,
   same-slot families, quorum, and separate reference canaries. The remaining
   live promotion blocker is now the review-local replay lane, not the contract
-  packet itself. `real-package-review-coverage-eval` is red at
+  packet itself. Milestone `0` of
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` is now reduced
+  locally: `real-package-review-coverage-eval` is red at
   `reviewer_ready_slot_count=0` with ECID current promotion and South Plateau
   reviewer-ready expansion both reporting `actual_contract_status="mismatch"`
   while West Reservoir still passes as `typed_blocked`. Non-strict
   `promotion-suite` still reports `current_promotion_ready=false`,
-  `promotion_ready=false`, and `expansion_ready=false`, but the slot-driven
-  contract itself proves `current_promotion_contract.selector_passed=true` and
-  `current_promotion_contract.quorum_passed=false` at
-  `eligible_slot_count=1` and `passing_slot_count=0`. The next routed packet is
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, which owns ECID
-  and South Plateau review-local replay repair rather than another contract
-  refactor
+  `promotion_ready=false`, and `expansion_ready=false`; the current-promotion
+  contract now fails closed at the selector layer with
+  `selector_passed=false`, `matched_slot_count=0`,
+  `eligible_slot_count=0`, and `passing_slot_count=0` because the governed
+  reviewer-ready slot is mismatched. The next truthful slice is Milestone `1`
+  ECID reviewer-ready replay repair inside
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

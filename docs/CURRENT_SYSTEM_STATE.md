@@ -14,6 +14,46 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
+## Real Package Review Replay Repair Milestone 0 Reduced Locally
+
+Latest implementation update on 2026-05-25:
+
+- routed packet:
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; the packet now carries a fresh replay baseline over the
+  active `source-set-4fb59e9eb43045cb` truth before ECID or South Plateau
+  repair begins
+- aggregate coverage truth:
+  `real-package-review-coverage-eval` now reports `passed=false`,
+  `reviewer_ready_slot_count=0`,
+  `missing_coverage_class_ids=["current_promotion_reviewer_ready","expansion_reviewer_ready"]`,
+  and reviewer-ready slot mismatches for both ECID current promotion and South
+  Plateau reviewer-ready expansion while West Reservoir still truthfully passes
+  as `typed_blocked`
+- current-promotion selector truth:
+  non-strict `promotion-suite` still reports
+  `current_promotion_ready=false`,
+  `promotion_ready=false`, and `expansion_ready=false`, but the
+  current-promotion contract now fails at the selector layer with
+  `selector_passed=false`, `matched_slot_count=0`,
+  `eligible_slot_count=0`, `passing_slot_count=0`,
+  `quorum_passed=false`, and `reference_canary_ready=false`
+- owner-command truth:
+  Milestone `0` now records the concrete repair entrypoints for the failing
+  families: `phase-eval`, `compliance-review-eval`, `v1-ea-eval`,
+  `review-packet-index`, `ea-consistency-document`,
+  `final-qa-certification`, ECID/South Plateau replay-context-backed
+  `compliance-review`, and the ECID review overlay
+  `nepa-knowledge-graph-export`
+- next routing:
+  the next truthful slice is Milestone `1` ECID reviewer-ready replay repair
+  inside `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  `git diff --check`
+
 ## Promotion Suite Slot-Driven Contract Milestone 4 Resolved Locally
 
 Latest implementation update on 2026-05-24:

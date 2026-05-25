@@ -2,7 +2,7 @@
 
 Date: 2026-05-24
 
-Status: queued locally
+Status: Milestone 0 reduced locally
 
 Owner context: this is a fresh standalone follow-on packet opened after
 `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` closed through
@@ -57,12 +57,15 @@ weakening the governed slot roster or reopening the contract refactor.
   `expansion_ready=false`, `passed_required_current_result_count=11`,
   `required_current_result_count=32`, and
   `failure_category_counts={"adjudication_needed":1,"graph_stale_artifact":1,"missing_matrix_render_row":1,"missing_packet_index_row":1,"stale_artifact":5,"unsupported_package_evidence":2}`.
-- The same promotion-suite result proves the contract refactor is working:
-  `current_promotion_contract.selector_passed=true`,
-  `current_promotion_contract.quorum_passed=false`,
-  `eligible_slot_count=1`, `passing_slot_count=0`, and
-  `reference_canary_ready=false`. The red state is review-local replay debt,
-  not selector or quorum drift.
+- The same promotion-suite result now fails closed at the selector layer
+  because the governed reviewer-ready slot result itself is mismatched:
+  `current_promotion_contract.selector_passed=false`,
+  `matched_slot_count=0`, `eligible_slot_count=0`,
+  `passing_slot_count=0`, `quorum_passed=false`,
+  `reference_canary_ready=false`, and
+  `failure_category_counts={"stale_artifact":1,"unsupported_package_evidence":1}`.
+  The red state still belongs to review-local replay debt, not to selector or
+  quorum code drift.
 
 ## Goal
 
@@ -265,6 +268,45 @@ PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
   --output-dir source_library \
   --manifest config/promotion_suite_v1.json
 ```
+
+Milestone 0 live baseline on 2026-05-25:
+
+- `real-package-review-coverage-eval` is now red at
+  `reviewer_ready_slot_count=0`,
+  `missing_required_slot_count=2`, and
+  `missing_coverage_class_ids=["current_promotion_reviewer_ready","expansion_reviewer_ready"]`.
+- ECID current promotion currently reports
+  `actual_contract_status="mismatch"`,
+  `broader_ea_passed=false`, `forest_plan_passed=false`, and
+  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_section_mismatch":8}`.
+- South Plateau reviewer-ready expansion currently reports
+  `actual_contract_status="mismatch"`,
+  `broader_ea_passed=false`, `forest_plan_passed=false`, and
+  `failure_category_counts={"forest_plan_matrix_miss":1,"review_artifact_missing":4}`.
+- West Reservoir remains the accepted typed-blocked quarantine at
+  `actual_contract_status="typed_blocked"`.
+- Non-strict `promotion-suite` remains red at
+  `passed_required_current_result_count=11/32`, but its current-promotion
+  contract now fails earlier than the previous snapshot:
+  `selector_passed=false`, `matched_slot_count=0`,
+  `eligible_slot_count=0`, `passing_slot_count=0`,
+  `quorum_passed=false`, and `reference_canary_ready=false`.
+- The only suite-level stale artifacts are now
+  `phase_eval_core` and `compliance_review_eval`; the same current-promotion
+  packet still also lacks passing families for
+  `current_review_core_artifacts`,
+  `current_review_packet_contract`,
+  `current_review_decision_support`,
+  `current_review_final_qa`, and
+  `current_review_supporting_outputs`.
+- Owner-command map recorded for the next repair slice:
+  `current_suite_baseline` -> `phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review` and `compliance-review-eval --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb --eval-file config/compliance_review_eval_seed.json`
+- `current_review_core_artifacts` -> `v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review` plus the ECID replay-context-backed `compliance-review` artifact family when the review outputs themselves are stale
+- `current_review_packet_contract` -> `review-packet-index --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+- `current_review_decision_support` -> `ea-consistency-document --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+- `current_review_final_qa` -> `final-qa-certification --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+- `current_review_supporting_outputs` -> ECID `compliance-review` for provenance/appendix/resolution/risk artifacts plus `nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb --review-id v1-cg-ecid-compliance-review`
+- South Plateau slot repair entrypoint -> `v1-ea-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment` plus the tracked South Plateau replay-context-backed `compliance-review` family when reviewer-ready outputs are stale
 
 ### Milestone 1 - ECID Reviewer-Ready Replay Repair
 

@@ -65,17 +65,20 @@ Current routed state on 2026-05-24:
   `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`,
   `full_canonical_corpus_ready=true`, and `10/10` required full-canonical
   results passed. The remaining live promotion gap is now the current-review
-  lane: `real-package-review-coverage-eval` is now red at
+  lane: Milestone `0` of
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` is now reduced
+  locally, and `real-package-review-coverage-eval` is now red at
   `reviewer_ready_slot_count=0` with ECID current promotion plus South Plateau
   reviewer-ready expansion both reporting `actual_contract_status="mismatch"`
   while West Reservoir still passes as `typed_blocked`; non-strict
   `promotion-suite` reports `current_promotion_ready=false`,
   `promotion_ready=false`, and `expansion_ready=false`, but the slot-driven
-  contract itself now proves
-  `current_promotion_contract.selector_passed=true` and
-  `current_promotion_contract.quorum_passed=false` at
-  `eligible_slot_count=1` and `passing_slot_count=0`. The remaining gap is
-  review-local replay repair, not another full-canonical or contract rebind.
+  contract itself now fails closed at selector entry with
+  `current_promotion_contract.selector_passed=false`,
+  `matched_slot_count=0`, `eligible_slot_count=0`, and
+  `passing_slot_count=0`. The remaining gap is review-local replay repair, not
+  another full-canonical or contract rebind, and the next truthful slice is
+  Milestone `1` ECID reviewer-ready replay repair.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs
@@ -1901,15 +1904,16 @@ while reporting fixed reference canaries separately so proving-packet
 regressions remain visible without defining the whole promotion gate.
 ECID packet-local semantic counts now stay in focused validator configs and
 tests rather than being duplicated in the shared promotion-suite manifest.
-The latest non-strict local replay on 2026-05-24 still reports
+The latest non-strict local replay on 2026-05-25 still reports
 `full_canonical_corpus_ready=true` with `10/10` required full-canonical
 results passed on `source-set-4fb59e9eb43045cb`, but
 `current_promotion_ready=false`, `promotion_ready=false`,
 `expansion_ready=false`, and `passed_required_current_result_count=11/32`.
-Inside the slot-driven contract, the selector passes but quorum fails at
-`eligible_slot_count=1` and `passing_slot_count=0`, while the ECID reference
-canary stays red. This is now treated as review-local replay debt rather than
-another promotion-suite contract refactor.
+Inside the slot-driven contract, the selector now fails closed at
+`matched_slot_count=0`, `eligible_slot_count=0`, and
+`passing_slot_count=0`, while quorum also fails and the ECID reference canary
+stays red. This is now treated as review-local replay debt rather than another
+promotion-suite contract refactor.
 The manifest also requires the applicability seed and gold eval artifacts that prove Milestone 4
 authority-family positive/negative, unresolved, and adjudication coverage. It also requires NEPA 3D
 source-set and V1 review graph validation/summary artifacts for the current graph-readiness claim.

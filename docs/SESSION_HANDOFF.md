@@ -7,6 +7,48 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Real Package Review Replay Repair Milestone 0 Reduced Locally
+
+This implementation slice carried the new replay-repair packet through the
+baseline inventory gate and then stopped before ECID artifact regeneration.
+
+- outcome label:
+  `reduced locally`; the packet now has a fresh live replay baseline on
+  `source-set-4fb59e9eb43045cb` and a concrete owner-command map for each
+  failing family
+- aggregate coverage truth:
+  `real-package-review-coverage-eval` now reports
+  `reviewer_ready_slot_count=0`,
+  `missing_coverage_class_ids=["current_promotion_reviewer_ready","expansion_reviewer_ready"]`,
+  ECID `actual_contract_status="mismatch"`, South Plateau
+  `actual_contract_status="mismatch"`, and West Reservoir still
+  `actual_contract_status="typed_blocked"`
+- current-promotion selector truth:
+  non-strict `promotion-suite` still reports
+  `passed_required_current_result_count=11/32`, but the current-promotion
+  contract now fails at selector entry with `selector_passed=false`,
+  `matched_slot_count=0`, `eligible_slot_count=0`, and
+  `passing_slot_count=0`; the suite-level stale artifacts are
+  `phase_eval_core` and `compliance_review_eval`
+- owner-command map:
+  suite baseline -> `phase-eval` plus `compliance-review-eval`;
+  ECID core review artifacts -> `v1-ea-eval` plus replay-context-backed
+  `compliance-review`;
+  ECID packet contract -> `review-packet-index`;
+  ECID decision support -> `ea-consistency-document`;
+  ECID final QA -> `final-qa-certification`;
+  ECID supporting outputs -> `compliance-review` plus review-overlay
+  `nepa-knowledge-graph-export`;
+  South Plateau slot entrypoint -> `v1-ea-eval` plus replay-context-backed
+  `compliance-review`
+- next truthful slice:
+  Milestone `1` ECID reviewer-ready replay repair in
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  `git diff --check`
+
 ## Promotion Routing Labels Aligned Locally
 
 This docs-only cleanup pass closed the remaining short-route ambiguity left

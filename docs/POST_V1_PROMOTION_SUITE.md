@@ -169,14 +169,18 @@ layer rather than the slot-driven contract layer.
   `current_promotion_ready=false`, `promotion_ready=false`,
   `expansion_ready=false`, and `passed_required_current_result_count=11/32`.
   Inside the slot-driven contract,
-  `current_promotion_contract.selector_passed=true` but
-  `current_promotion_contract.quorum_passed=false` at
-  `eligible_slot_count=1` and `passing_slot_count=0`, so the contract refactor
-  itself is not the blocker.
+  `current_promotion_contract.selector_passed=false`,
+  `matched_slot_count=0`, `eligible_slot_count=0`,
+  `passing_slot_count=0`, and
+  `current_promotion_contract.quorum_passed=false`, so the contract refactor
+  itself is still not the blocker; the governed reviewer-ready slot result is
+  simply not currently eligible.
 - The active follow-on is
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, which owns ECID
   and South Plateau packet-local replay repair on
-  `source-set-4fb59e9eb43045cb`.
+  `source-set-4fb59e9eb43045cb`. Milestone `0` of that packet is now reduced
+  locally, and the next truthful slice is Milestone `1` ECID reviewer-ready
+  replay repair.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:
