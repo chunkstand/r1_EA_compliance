@@ -7,6 +7,33 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Fresh Session Start
+
+Use this section to begin a new thread without rereading the older append-only
+history below.
+
+- Start order:
+  read `docs/CURRENT_ROUTING.md`, then this section, then open
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` if the
+  next session is continuing implementation
+- active packet:
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- live blocker state:
+  reviewer-facing default catalog remains historical
+  `source-set-4fb59e9eb43045cb`; the active scoped replay gate is
+  `source-set-583e2d0ca9c793f6` under
+  `source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate`;
+  `applicability-authority-universe` is still red at
+  `authority_universe_sha256=e26758f4da964e965211f754487748b3a0404a1bbb10be0fec7f97f22deaf5f9`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=10`
+- next truthful slice:
+  Milestone `2` water-family current-source additions for `R1EA-083` through
+  `R1EA-090` and `R1EA-115` through `R1EA-118`
+- session reminder:
+  the newer sections immediately below are current; older `fbad...` / `11` /
+  `11` checkpoint notes are historical context only
+
 ## Authority Current-Source Gap Plan Alignment Closed Locally
 
 This docs-only slice closes the remaining plan-surface alignment drift after

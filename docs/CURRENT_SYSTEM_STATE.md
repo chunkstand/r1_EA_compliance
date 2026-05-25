@@ -11,8 +11,9 @@ deterministic EA package review commands, and it now contains preserved legacy
 baseline artifacts, the active full-register canonical import, and
 reviewer-ready downstream lanes.
 
-For a short current route before this append-only state log, start with
-`docs/CURRENT_ROUTING.md`.
+For a fresh session start before this append-only state log, read
+`docs/CURRENT_ROUTING.md` first and then the newest section at the top of
+`docs/SESSION_HANDOFF.md`.
 
 ## Active Authority Current-Source Gap Blocker Milestone 2 Reduced Further Locally
 

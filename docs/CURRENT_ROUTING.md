@@ -2,6 +2,14 @@
 Date: 2026-05-25
 Use this file as the short current route before opening the large append-only docs.
 
+## New Session Start
+
+- Read this file first for the live route.
+- Read the top section of `docs/SESSION_HANDOFF.md` next for the exact active
+  packet, blocker counts, and next truthful slice.
+- Open `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+  only after those two docs if the next session is continuing implementation.
+
 ## First Stops
 
 - Document-routing work: `docs/AGENT_START_HERE.md`

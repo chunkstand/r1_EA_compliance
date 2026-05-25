@@ -8,11 +8,13 @@ workbook-defined source rows into a local, auditable source library, then builds
 retrieval, evidence graph, source-claim graph, rule-claim binding, and deterministic EA package
 review artifacts on top of that corpus.
 
-For agent-driven document work, start with `docs/AGENT_START_HERE.md`. For the concise live
-repo route, start with `docs/CURRENT_ROUTING.md`. The public `document-plan` command validates a
-normalized request packet, routes it to the supported document lane, and writes planning-only
-artifacts under `source_library/document_plans/<request_id>/` without generating canonical lane
-outputs.
+For agent-driven document work, start with `docs/AGENT_START_HERE.md`. For a
+fresh session start, read `docs/CURRENT_ROUTING.md` first and then the top of
+`docs/SESSION_HANDOFF.md`. The public `document-plan` command validates a
+normalized request packet, routes it to the supported document lane, and
+writes planning-only artifacts under
+`source_library/document_plans/<request_id>/` without generating canonical
+lane outputs.
 
 Current routed state on 2026-05-25:
 
