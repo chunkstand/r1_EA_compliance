@@ -7,6 +7,45 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Active Authority Source Binding Blocker Milestone 1 Resolved Locally
+
+This implementation slice closes the owner-selection step for the active
+authority-source blocker packet before governed repair begins.
+
+- outcome label:
+  `resolved locally`; the frozen ECID authority-source blocker inventory now
+  has one governed owner per blocker family
+- owner map truth:
+  `16` template families now route to
+  `config/compliance_source_record_reconciliation_v1.json` as legacy-to-current
+  reconciliation work; `3` `R1PLAN-*`-dependent template families
+  (`grassland_bankhead_jones_authorities`,
+  `region1_forest_plan_source_records`,
+  `species_supporting_sources_and_overlays`) now route to the forest-plan
+  identity rebind boundary across reconciliation plus template config; and the
+  `5` base-rule failures
+  (`apa_final_agency_action`,
+  `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`,
+  `organic_act_16usc_475`,
+  `seven_county_nepa_scope`) remain source-truth additions-or-retirements
+  because their reconciliation entries already exist with
+  `current_source_record_ids=[]`
+- evidence boundary:
+  the reconciliation-owned families already have current active rows in the
+  catalog under IDs such as `FED-023`, `FED-022`, `FED-024`, `FED-042`,
+  `FED-036`, `USFS-033`, `USFS-034`, `R1-030`, `STP-026`,
+  `LEX-USFS-002`, `LEX-USFS-012`, `LEX-FED-003`, and `USFS-035`, while the
+  forest-plan owner still depends on rebinding stale `R1PLAN-*`
+  overlays/support rows to the active `FOR-*`, `FINAL-*`, `FPS-*`, and
+  `R1-*` plan-supporting corpus
+- next truthful slice:
+  Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `git diff --check`
+
 ## Active Authority Source Binding Blocker Milestone 0 Resolved Locally
 
 This implementation slice closes the baseline-freeze step for the active
@@ -29,9 +68,11 @@ authority-source blocker packet before any governed repair work begins.
   `authority_family_template_candidates_cover_config` family-template groups,
   including Region 1 forest-plan/species overlays and the land-exchange-only
   `R1EA-125` through `R1EA-162` authority family
-- next truthful slice:
+- historical next truthful slice at that baseline-freeze checkpoint:
   Milestone `1` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the live
+  route after the Milestone `1` owner-map closeout is recorded in the newer
+  section above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
   `git diff --check`
@@ -54,7 +95,7 @@ the replay-repair Milestone `1` reduction.
 - historical next truthful slice at that routing-alignment checkpoint:
   Milestone `0` of
   `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the live
-  route after the blocker Milestone `0` closeout is recorded in the newer
+  route after the blocker Milestones `0-1` closeouts is recorded in the newer
   section above
 - verification:
   `git diff --check`
@@ -97,7 +138,7 @@ authority binding rather than packet-local replay drift.
 - historical next truthful slice at that replay-repair reduction checkpoint:
   Milestone `0` of
   `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the live
-  route after the blocker Milestone `0` closeout is recorded in the newer
+  route after the blocker Milestones `0-1` closeouts is recorded in the newer
   section above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,

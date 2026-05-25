@@ -2,7 +2,7 @@
 
 Date: 2026-05-25
 
-Status: Active packet (`Milestone 0 resolved locally; Milestone 1 classification and owner selection next`)
+Status: Active packet (`Milestones 0-1 resolved locally; Milestone 2 governed repair next`)
 
 Owner context: this is a fresh standalone blocker packet opened from
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` after Milestone `1`
@@ -91,6 +91,10 @@ Completion means all of the following are true:
 
 ## Owner Surfaces
 
+- canonical source-truth and active catalog evidence:
+  `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `source_library/catalog/source_catalog.jsonl`,
+  and any source-truth packet that governs missing active authority rows
 - governed reconciliation and source-binding config:
   `config/compliance_source_record_reconciliation_v1.json`,
   `config/authority_family_rule_templates_nepa_ea_v1.json`,
@@ -221,6 +225,68 @@ Acceptance criteria:
 
 - Every remaining blocker ID has one owner and one next command surface.
 - No missing ID remains as an unclassified “maybe stale” note.
+
+Milestone 1 resolution on 2026-05-25:
+
+- The frozen blocker inventory now resolves into three governed owner classes
+  with one next repair surface each.
+- Reconciliation expansion owner:
+  `config/compliance_source_record_reconciliation_v1.json` is the next repair
+  surface for `clean_air_act_conformity_air_quality`,
+  `clean_water_act_wotus_permits`,
+  `cultural_resource_protection_and_state_shpo_sources`,
+  `eagle_efh_and_special_wildlife_sources`,
+  `floodplain_management_eo11988`,
+  `forest_service_planning_handbook_amendments`,
+  `hazardous_materials_site_condition`,
+  `invasive_pesticide_soils_farmland_drinking_water`,
+  `land_exchange_fs_policy_and_project_references`,
+  `land_exchange_regulatory_requirements`,
+  `land_exchange_statutory_authorities`,
+  `minerals_energy_authorities`,
+  `roads_access_special_use_action_authorities`,
+  `tribal_consultation_trust_sacred_sites`,
+  `vegetation_wildfire_forest_health_authorities`, and
+  `wilderness_wsr_trails_designated_areas`. The active catalog already carries
+  current rows for those families under current IDs such as `FED-023`,
+  `FED-022`, `FED-024`, `FED-042`, `FED-036`, `USFS-033`, `USFS-034`,
+  `R1-030`, `STP-026`, `LEX-USFS-002`, `LEX-USFS-012`, `LEX-FED-003`, and
+  `USFS-035`, but the legacy `R1EA-*` family members are not yet governably
+  rebound in the reconciliation file.
+- Forest-plan identity rebind owner:
+  the next repair surface for
+  `grassland_bankhead_jones_authorities`,
+  `region1_forest_plan_source_records`, and
+  `species_supporting_sources_and_overlays` is the combined
+  `config/compliance_source_record_reconciliation_v1.json` plus
+  `config/authority_family_rule_templates_nepa_ea_v1.json` forest-plan
+  identity boundary. These families still depend on stale `R1PLAN-*`
+  overlays/support rows such as
+  `R1PLAN-region-1-grassland-overlay-01`,
+  `R1PLAN-custer-gallatin-nf-06`,
+  `R1PLAN-custer-gallatin-nf-07`,
+  `R1PLAN-region-1-species-overlay-01`, and
+  `R1PLAN-region-1-species-overlay-02`, while the active plan/supporting
+  corpus now lives under `FOR-*`, `FINAL-*`, `FPS-*`, and `R1-*` IDs; the
+  reconciliation file currently binds only `R1PLAN-custer-gallatin-nf-02` to
+  `FOR-009`.
+- Source-truth addition-or-retirement owner:
+  the next repair surface for
+  `apa_final_agency_action`,
+  `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`,
+  `organic_act_16usc_475`, and
+  `seven_county_nepa_scope`
+  is the canonical source-truth/workbook boundary plus
+  `config/compliance_rule_pack_nepa_ea_v0.json`. Their reconciliation entries
+  already exist but each records `current_source_record_ids=[]`, and active
+  catalog scans found no current canonical row for Seven County, APA final
+  agency action, 36 CFR part 216, MUSYA, or Organic Administration Act
+  section 475, so Milestone `2` must either add current rows or formally
+  retire those authorities through governed owners.
+- No blocker family remains unowned after classification. The next truthful
+  slice is now Milestone `2` in this same packet: land the governed repair
+  against those three owner classes and rerun the ECID applicability universe.
 
 ### Milestone 2 - Governed Repair
 

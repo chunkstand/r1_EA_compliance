@@ -89,12 +89,15 @@ Use this file as the short current route before opening the large append-only do
   `authority_family_template_candidates_cover_config`
   (`missing_source_record_count=19`). Milestone `0` of
   `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
-  resolved locally: the blocker baseline is frozen at the same `396` /
-  `329` applicability universe result with `21` failing source-evidence
-  candidates and `19` missing source-record template groups. The next
-  truthful slice is now Milestone `1` of that packet, which owns governed
-  classification and owner selection for the active-source authority binding
-  blocker upstream of packet-local ECID replay
+  resolved locally through Milestone `1`: the blocker baseline stays frozen at
+  the same `396` / `329` applicability universe result with `21` failing
+  source-evidence candidates and `19` missing source-record template groups,
+  and the owner map now splits that inventory into `16`
+  reconciliation-owned template families, `3` forest-plan identity rebind
+  families, and `5` base-rule current-source gaps. The next truthful slice is
+  now Milestone `2` of that packet, which owns the governed repair work for
+  the active-source authority binding blocker upstream of packet-local ECID
+  replay
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

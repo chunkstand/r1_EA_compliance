@@ -14,6 +14,48 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
+## Active Authority Source Binding Blocker Milestone 1 Resolved Locally
+
+Latest implementation update on 2026-05-25:
+
+- routed packet:
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `resolved locally`; the frozen ECID authority-source blocker inventory now
+  has a governed owner map before any repair begins
+- owner map truth:
+  the live `21` source-evidence candidate failures and `19` missing
+  source-record template groups now split into three repair owners:
+  `16` template families are reconciliation-owned in
+  `config/compliance_source_record_reconciliation_v1.json`,
+  `3` `R1PLAN-*`-dependent template families
+  (`grassland_bankhead_jones_authorities`,
+  `region1_forest_plan_source_records`,
+  `species_supporting_sources_and_overlays`) are forest-plan identity rebind
+  work across reconciliation plus template config, and the `5` base rule rows
+  (`apa_final_agency_action`,
+  `directives_notice_comment_36cfr_216`,
+  `musuya_multiple_use_sustained_yield`,
+  `organic_act_16usc_475`,
+  `seven_county_nepa_scope`) remain true current-source gaps with explicit
+  empty reconciliation entries
+- evidence boundary:
+  the reconciliation-owned families already have current active-row evidence in
+  the catalog under current IDs such as `FED-023`, `FED-022`, `FED-024`,
+  `FED-042`, `FED-036`, `USFS-033`, `USFS-034`, `R1-030`, `STP-026`,
+  `LEX-USFS-002`, `LEX-USFS-012`, `LEX-FED-003`, and `USFS-035`; the
+  forest-plan identity owner still depends on rebinding stale `R1PLAN-*`
+  overlays/support rows to the active `FOR-*`, `FINAL-*`, `FPS-*`, and
+  `R1-*` plan-supporting corpus; and the five rule rows still have no current
+  canonical row in the active catalog
+- next routing:
+  the next truthful slice is Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which now
+  owns governed repair across those three owner classes
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `git diff --check`
+
 ## Active Authority Source Binding Blocker Milestone 0 Resolved Locally
 
 Latest implementation update on 2026-05-25:
@@ -40,11 +82,11 @@ Latest implementation update on 2026-05-25:
   `19` failing `authority_family_template_candidates_cover_config`
   family-template groups, including Region 1 forest-plan/species overlays and
   the land-exchange-only `R1EA-125` through `R1EA-162` family
-- next routing:
-  the next truthful slice is Milestone `1` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which now
-  owns governed blocker classification and owner selection before any repair
-  attempt
+- historical next routing at this baseline-freeze checkpoint:
+  the next truthful slice was Milestone `1` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the live
+  route after the Milestone `1` owner-map closeout is recorded in the newer
+  section above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
   `git diff --check`
@@ -78,7 +120,7 @@ Latest implementation update on 2026-05-25:
 - historical next routing at this replay-repair reduction checkpoint:
   the next truthful slice was Milestone `0` of
   `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`; the live
-  route after the blocker Milestone `0` closeout is recorded in the newer
+  route after the blocker Milestones `0-1` closeouts is recorded in the newer
   section above
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,

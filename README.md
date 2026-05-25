@@ -85,13 +85,14 @@ Current routed state on 2026-05-25:
   `authority_family_template_candidates_cover_config`
   (`missing_source_record_count=19`). Milestone `0` of
   `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
-  resolved locally: the live blocker inventory is frozen as `21` failing
-  source-evidence candidates (`16` authority-family templates plus `5` rule
-  templates) and `19` missing source-record template groups, including the
-  Region 1 forest-plan/species overlays and the land-exchange-only authority
-  families. The next truthful slice is now Milestone `1` of that blocker
-  packet, which owns governed classification and owner selection upstream of
-  packet-local ECID replay.
+  resolved locally through Milestone `1`: the live blocker inventory is
+  frozen as `21` failing source-evidence candidates (`16`
+  authority-family templates plus `5` rule templates) and `19` missing
+  source-record template groups, and that inventory is now classified into
+  `16` reconciliation-owned template families, `3` forest-plan identity
+  rebind families, and `5` base-rule current-source gaps. The next truthful
+  slice is now Milestone `2` of that blocker packet, which owns the governed
+  repair work upstream of packet-local ECID replay.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs

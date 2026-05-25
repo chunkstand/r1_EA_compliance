@@ -376,9 +376,15 @@ Milestone 1 reduction on 2026-05-25:
   `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
   resolved locally; it freezes that blocker inventory as `21` failing
   source-evidence candidates and `19` missing source-record template groups.
-- The next truthful slice is now Milestone `1` of
+- Milestone `1` of
+  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
+  resolved locally; it classifies that same inventory into
+  `16` reconciliation-owned template families,
+  `3` forest-plan identity rebind families, and
+  `5` base-rule current-source gaps.
+- The next truthful slice is now Milestone `2` of
   `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`, which
-  owns governed blocker classification upstream of packet-local replay.
+  owns governed blocker repair upstream of packet-local replay.
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 
