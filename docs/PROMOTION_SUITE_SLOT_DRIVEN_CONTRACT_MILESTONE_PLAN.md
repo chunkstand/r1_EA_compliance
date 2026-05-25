@@ -2,7 +2,7 @@
 
 Date: 2026-05-24
 
-Status: Milestone 3 reduced locally
+Status: Milestone 4 resolved locally
 
 Owner context: This is a fresh standalone follow-on packet for the promotion-suite contract. It
 does not replace the active Lolo example packet in `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
@@ -10,9 +10,10 @@ and it does not reopen the already-closed full-canonical source-set rebind. Mile
 records that the 2026-05-24 rebaseline found a clean checkout, no equivalent slot-driven selector
 or canary implementation already landed under another name, and the governed roster still exposes
 exactly one `current_promotion_reviewer_ready` slot at implementation start. This packet is
-complete only after the contract refactor, focused tests, durable docs, handoff updates, and one
-local atomic closeout commit land together. A verified but uncommitted slice is only
-ready-to-close.
+complete through Milestone `4`: the contract refactor, focused tests, durable docs, handoff
+updates, and one local atomic closeout commit now land together. The live replay proved the
+remaining red as review-local slot debt rather than contract drift, and that follow-on now lives in
+`docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`.
 
 ## Purpose
 
@@ -56,8 +57,17 @@ only one such slot.
   if ECID review-packet, decision-support, final-QA, provenance, review-graph, or review-bound
   phase-count checks are reintroduced into the shared aggregate contract.
 - The short route in `docs/CURRENT_ROUTING.md` already records that the full-canonical source-set
-  contract is green on `source-set-4fb59e9eb43045cb` and the remaining live blocker is the ECID
-  review-local current-promotion lane, not the source-set lane itself.
+  contract is green on `source-set-4fb59e9eb43045cb` and the remaining live blocker is the
+  review-local real-package replay lane, not the source-set or contract lane itself.
+- Live Milestone `4` replay on 2026-05-24 now proves the refactored contract against the active
+  local artifacts: `real-package-review-coverage-eval` reports
+  `reviewer_ready_slot_count=0` with ECID and South Plateau reviewer-ready slot mismatches while
+  West Reservoir still passes as `typed_blocked`, and non-strict `promotion-suite` reports
+  `full_canonical_corpus_ready=true`, `current_promotion_ready=false`,
+  `current_promotion_contract.selector_passed=true`, and
+  `current_promotion_contract.quorum_passed=false` at `eligible_slot_count=1` and
+  `passing_slot_count=0`. The packet is therefore structurally closed, and the remaining work is
+  routed to `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`.
 
 ## Goal
 

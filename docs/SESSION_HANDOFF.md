@@ -7,6 +7,45 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Promotion Suite Slot-Driven Contract Milestone 4 Resolved Locally
+
+This implementation slice closed the queued promotion-suite contract packet by
+replaying the refactored aggregate against the live local artifacts, then
+stopping where the remaining red proved review-local rather than architectural.
+
+- outcome label:
+  `resolved locally`; the slot-driven contract packet is done, and the
+  remaining blocker is now routed as review-local replay repair instead of
+  another promotion-suite contract refactor
+- live aggregate replay truth:
+  `real-package-review-coverage-eval` now reports `passed=false`,
+  `reviewer_ready_slot_count=0`, and reviewer-ready slot mismatches for
+  `v1-cg-ecid-compliance-review` plus
+  `region1-expansion-south-plateau-landscape-treatment`; West Reservoir still
+  truthfully reports `actual_contract_status="typed_blocked"`
+- promotion-suite truth:
+  non-strict `promotion-suite` still reports
+  `full_canonical_corpus_ready=true`,
+  `passed_required_full_canonical_result_count=10/10`,
+  `current_promotion_ready=false`, `promotion_ready=false`,
+  and `expansion_ready=false`, but the contract refactor itself proves
+  `current_promotion_contract.selector_passed=true` and
+  `current_promotion_contract.quorum_passed=false` at
+  `eligible_slot_count=1` and `passing_slot_count=0`; the red state comes from
+  stale or missing ECID and South Plateau packet-local artifacts, not from
+  selector or quorum drift
+- next routed packet:
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, which owns the
+  ECID and South Plateau replay-repair lane on
+  `source-set-4fb59e9eb43045cb`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_promotion_suite.py tests/test_promotion_suite_full_canonical.py tests/test_ea_consistency_decision_support.py tests/test_final_qa_certification.py tests/test_phase_eval.py tests/test_cli_eval.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m compileall src`,
+  `jq empty config/promotion_suite_v1.json config/v1_real_package_review_coverage_v1.json`,
+  `git diff --check`
+
 ## Promotion Suite Slot-Driven Contract Milestone 3 Reduced Locally
 
 This implementation slice carried the queued promotion-suite contract packet

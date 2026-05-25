@@ -16,8 +16,10 @@ Use this file as the short current route before opening the large append-only do
 - Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
 - Active packet:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-- Downstream contract packet in progress:
+- Promotion contract closeout:
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
+- Active promotion replay-repair packet:
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - Adjacent active queue packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - Active blocker packets:
@@ -56,17 +58,25 @@ Use this file as the short current route before opening the large append-only do
   manifest-owned full-canonical promotion slot now both sit on
   `source-set-4fb59e9eb43045cb`; `promotion-suite` now reports
   `full_canonical_corpus_ready=true` with
-  `passed_required_full_canonical_result_count=10/10`. The remaining live
-  promotion blocker is the current-review lane, where stale or missing
-  `v1-cg-ecid-compliance-review` compliance/applicability artifacts still keep
-  `current_promotion_ready=false`. Milestone `3` of
-  `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` is now reduced
-  locally: the aggregate promotion manifest no longer carries ECID packet-local
-  review-packet, decision-support, final-QA, review-graph, or phase-count
-  invariants, `tests/test_promotion_suite.py` now fails if those counts return
-  to the shared contract, and focused packet-local validation still fail-closes
-  on count drift. The next slice is Milestone `4` live replay, docs closeout,
-  and one atomic commit, not review-local ECID replay refresh
+  `passed_required_full_canonical_result_count=10/10`. The promotion-suite
+  contract packet is now resolved locally through Milestone `4`: the aggregate
+  manifest no longer carries ECID packet-local review-packet,
+  decision-support, final-QA, review-graph, or phase-count invariants, and the
+  runtime now drives `current_promotion_ready` from governed slot selection,
+  same-slot families, quorum, and separate reference canaries. The remaining
+  live promotion blocker is now the review-local replay lane, not the contract
+  packet itself. `real-package-review-coverage-eval` is red at
+  `reviewer_ready_slot_count=0` with ECID current promotion and South Plateau
+  reviewer-ready expansion both reporting `actual_contract_status="mismatch"`
+  while West Reservoir still passes as `typed_blocked`. Non-strict
+  `promotion-suite` still reports `current_promotion_ready=false`,
+  `promotion_ready=false`, and `expansion_ready=false`, but the slot-driven
+  contract itself proves `current_promotion_contract.selector_passed=true` and
+  `current_promotion_contract.quorum_passed=false` at
+  `eligible_slot_count=1` and `passing_slot_count=0`. The next routed packet is
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, which owns ECID
+  and South Plateau review-local replay repair rather than another contract
+  refactor
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty
@@ -195,6 +205,7 @@ Use this file as the short current route before opening the large append-only do
 - `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
 - `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
 - `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` for the zero-oversized architecture closeout
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`

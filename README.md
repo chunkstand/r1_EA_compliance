@@ -65,14 +65,22 @@ Current routed state on 2026-05-24:
   `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`,
   `full_canonical_corpus_ready=true`, and `10/10` required full-canonical
   results passed. The remaining live promotion gap is now the current-review
-  lane: `current_promotion_ready=false`, `promotion_ready=false`, and the
-  failing current-promotion artifacts are stale or missing
-  `v1-cg-ecid-compliance-review` compliance/applicability outputs rather than
-  a split full-canonical source-set contract.
-- The promotion-suite contract packet is now reduced through Milestone `3`:
+  lane: `real-package-review-coverage-eval` is now red at
+  `reviewer_ready_slot_count=0` with ECID current promotion plus South Plateau
+  reviewer-ready expansion both reporting `actual_contract_status="mismatch"`
+  while West Reservoir still passes as `typed_blocked`; non-strict
+  `promotion-suite` reports `current_promotion_ready=false`,
+  `promotion_ready=false`, and `expansion_ready=false`, but the slot-driven
+  contract itself now proves
+  `current_promotion_contract.selector_passed=true` and
+  `current_promotion_contract.quorum_passed=false` at
+  `eligible_slot_count=1` and `passing_slot_count=0`. The remaining gap is
+  review-local replay repair, not another full-canonical or contract rebind.
+- The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs
-  and tests.
+  and tests, and the next routed follow-on is now
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`.
 - The direct-file capture queue packet now reduces Milestone `3` locally:
   `config/source_register_queue_resolution_ledger_v1.json` still records all
   `51` queue rows exactly once, preserves the `8` governed `resolved`
@@ -1834,6 +1842,16 @@ checks package-authority ownership for each slot, requires the three coverage cl
 `current_promotion_reviewer_ready`, `alternate_package_typed_blocked`, and
 `expansion_reviewer_ready`, and reports covered review IDs, ready-versus-blocked slot counts,
 distinct forest/package-style counts, and any missing authority or slot failures.
+The latest local replay on 2026-05-24 is red at `reviewer_ready_slot_count=0`.
+West Reservoir still truthfully passes as `typed_blocked`, but ECID current
+promotion and South Plateau reviewer-ready expansion both now report
+`actual_contract_status="mismatch"`. ECID currently fails with
+`baseline_source_record_missing=26`, `rule_section_mismatch=8`,
+`review_artifact_missing=4`, `citation_requirement_miss=4`, and
+`forest_plan_matrix_miss=1`; South Plateau currently fails with
+`review_artifact_missing=4` and `forest_plan_matrix_miss=1`. The active routed
+repair packet for that live red state is
+`docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`.
 
 Run the aggregate gold coverage gate:
 
@@ -1883,6 +1901,15 @@ while reporting fixed reference canaries separately so proving-packet
 regressions remain visible without defining the whole promotion gate.
 ECID packet-local semantic counts now stay in focused validator configs and
 tests rather than being duplicated in the shared promotion-suite manifest.
+The latest non-strict local replay on 2026-05-24 still reports
+`full_canonical_corpus_ready=true` with `10/10` required full-canonical
+results passed on `source-set-4fb59e9eb43045cb`, but
+`current_promotion_ready=false`, `promotion_ready=false`,
+`expansion_ready=false`, and `passed_required_current_result_count=11/32`.
+Inside the slot-driven contract, the selector passes but quorum fails at
+`eligible_slot_count=1` and `passing_slot_count=0`, while the ECID reference
+canary stays red. This is now treated as review-local replay debt rather than
+another promotion-suite contract refactor.
 The manifest also requires the applicability seed and gold eval artifacts that prove Milestone 4
 authority-family positive/negative, unresolved, and adjudication coverage. It also requires NEPA 3D
 source-set and V1 review graph validation/summary artifacts for the current graph-readiness claim.
@@ -1894,14 +1921,8 @@ those sidecars exist. The validation sidecars record JSON/Markdown/PDF/manifest 
 applicable, and promotion-suite checks those hashes against the local packet files.
 Default runs keep current-promotion failures in `failure_category_counts` and expansion-only gaps in
 `expansion_failure_category_counts`.
-On 2026-05-23, after refreshing the default compliance-gold and aggregate
-gold artifacts, the manifest-owned non-strict replay at
-`source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/`
-reports `current_promotion_ready=true`, `full_canonical_corpus_ready=true`,
-`expansion_ready=true`, `promotion_ready=true`,
-`passed_required_current_result_count=32/32`, and
-`passed_required_full_canonical_result_count=10/10` with
-`failure_category_counts={}`.
+The earlier all-green 2026-05-23 non-strict replay is now historical only
+after the 2026-05-24 live replay repair boundary described above.
 Failure categories include `missing_source`, `extraction_miss`, `retrieval_miss`,
 `applicability_miss`, `unsupported_package_evidence`, `stale_artifact`, `adjudication_needed`,
 `forest_plan_reviewer_not_ready`, `package_fixture_missing`, and graph-specific categories such as

@@ -156,11 +156,30 @@ status, or last local signal does not prove the declared profile.
 
 ## Current Local Result
 
-The latest South Plateau forest-plan context pass was run locally on 2026-05-07 for the selected
-South Plateau fixture contract. The package import, applicability-first run, adjudication replay,
-generated review artifacts, and Custer Gallatin context resolution are now in place; strict
-expansion remains intentionally blocked until the forest-plan component adjudication worklist is
-completed:
+The current routed truth on 2026-05-24 is now red at the review-local replay
+layer rather than the slot-driven contract layer.
+
+- `source_library/reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json`
+  reports `passed=false`, `reviewer_ready_slot_count=0`, and reviewer-ready
+  slot mismatches for ECID current promotion plus South Plateau reviewer-ready
+  expansion, while West Reservoir still truthfully passes as `typed_blocked`.
+- `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
+  reports `full_canonical_corpus_ready=true`,
+  `passed_required_full_canonical_result_count=10/10`,
+  `current_promotion_ready=false`, `promotion_ready=false`,
+  `expansion_ready=false`, and `passed_required_current_result_count=11/32`.
+  Inside the slot-driven contract,
+  `current_promotion_contract.selector_passed=true` but
+  `current_promotion_contract.quorum_passed=false` at
+  `eligible_slot_count=1` and `passing_slot_count=0`, so the contract refactor
+  itself is not the blocker.
+- The active follow-on is
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, which owns ECID
+  and South Plateau packet-local replay repair on
+  `source-set-4fb59e9eb43045cb`.
+
+Historical South Plateau expansion build context from the earlier green
+expansion pass remains below:
 
 - imported `26` official South Plateau PDFs from the project Box folder;
 - extracted `26/26` package files into `3,671` chunks with `.venv-docling`;
@@ -204,7 +223,7 @@ Strict expansion now fails closed only on the South Plateau forest-plan blocker 
 `26/26` required current-promotion results.
 
 Full-corpus promotion closeout on 2026-05-10 added active-catalog checks to the
-default manifest. The latest local non-strict run on 2026-05-25 now reports
+default manifest. The latest local non-strict run on 2026-05-24 now reports
 `full_canonical_corpus_ready=true` and
 `passed_required_full_canonical_result_count=10/10` on
 `source-set-4fb59e9eb43045cb`, while `current_promotion_ready=false`,
@@ -218,9 +237,13 @@ The refreshed active NEPA 3D source-set export now passes with `72` checks,
 `region1_forest_plan_graph_ready_profile_count=10`, and
 `region1_forest_plan_blocked_profile_count=0`. The remaining blocker is no
 longer a split source-set graph ownership problem; it is the stale or missing
-current-promotion ECID compliance/applicability artifact family, including
-`compliance_review_eval` still carrying the older review-local source-set
-identity.
+review-local artifact family across the governed ECID and South Plateau slots.
+ECID still keeps current promotion red through stale compliance/applicability,
+packet-index, decision-support, final-QA, provenance, and review-graph
+surfaces, including `compliance_review_eval` still carrying the older
+review-local source-set identity; South Plateau also still mismatches its
+governed reviewer-ready slot through `review_artifact_missing` and
+`forest_plan_matrix_miss`.
 
 The South Plateau expansion slot remains `ready=false` and carries
 `forest_plan_reviewer_not_ready`. The previous ambiguous-scope blocker is closed:

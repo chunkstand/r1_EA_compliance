@@ -14,40 +14,47 @@ reviewer-ready downstream lanes.
 For a short current route before this append-only state log, start with
 `docs/CURRENT_ROUTING.md`.
 
-## Promotion Suite Slot-Driven Contract Milestone 3 Reduced Locally
+## Promotion Suite Slot-Driven Contract Milestone 4 Resolved Locally
 
 Latest implementation update on 2026-05-24:
 
 - routed packet:
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
 - packet outcome:
-  `reduced locally`; the aggregate promotion manifest now keeps
-  slot-driven freshness/status truth in the shared contract while packet-local
-  ECID counts stay owned by focused validators and tests
-- rebaseline truth:
-  Milestone 0 found a clean checkout and no equivalent slot-driven selector or
-  canary implementation already landed under another name; the governed roster
-  still has exactly one
-  `current_promotion_reviewer_ready` slot at implementation start
+  `resolved locally`; the aggregate promotion contract now keeps slot-driven
+  freshness/status truth in the shared manifest, packet-local ECID counts stay
+  owned by focused validators and tests, and the live replay proves the
+  remaining red is review-local replay debt rather than contract drift
+- replay truth:
+  `real-package-review-coverage-eval` now reports `passed=false`,
+  `reviewer_ready_slot_count=0`, and reviewer-ready slot mismatches for ECID
+  current promotion plus South Plateau reviewer-ready expansion, while West
+  Reservoir still truthfully passes as `typed_blocked`
+- aggregate readiness truth:
+  non-strict `promotion-suite` now reports
+  `full_canonical_corpus_ready=true`,
+  `passed_required_full_canonical_result_count=10/10`,
+  `current_promotion_ready=false`, `promotion_ready=false`,
+  and `expansion_ready=false`; inside the slot-driven contract,
+  `current_promotion_contract.selector_passed=true` but
+  `current_promotion_contract.quorum_passed=false` at
+  `eligible_slot_count=1` and `passing_slot_count=0`, and the ECID reference
+  canary stays red because its packet-local artifact family is stale
 - runtime-owner truth:
   the focused `src/usfs_r1_ea_sources/promotion_suite_current.py` owner now
   resolves governed slots, same-slot family pass state, source-set binding,
   quorum checks, and separate canary status; `promotion_suite_results.json`
-  is now schema version `promotion-suite-results-v1`
-- contract-boundary truth:
-  `config/promotion_suite_v1.json` no longer embeds ECID packet-local review
-  packet counts, decision-support counts, final-QA counts, provenance counts,
-  review-graph counts, or the old review-bound phase-count thresholds in the
-  shared aggregate manifest; `tests/test_promotion_suite.py` now asserts those
-  checks stay absent from the shared contract, and
-  `tests/test_ea_consistency_decision_support_validation.py` still proves
-  packet-local count drift fails closed in its focused owner
-- remaining blocker truth:
-  the next truthful slice is Milestone 4 live replay, durable docs closeout,
-  and the local atomic commit for the packet
+  remains schema version `promotion-suite-results-v1`
+- next routing:
+  the active follow-on is now
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, which owns the
+  ECID and South Plateau review-local replay repair lane on
+  `source-set-4fb59e9eb43045cb`
 - verification:
-  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_promotion_suite.py tests/test_promotion_suite_current_runtime.py tests/test_promotion_suite_full_canonical.py tests/test_ea_consistency_decision_support.py tests/test_ea_consistency_decision_support_validation.py tests/test_final_qa_certification.py tests/test_phase_eval.py tests/test_cli_eval.py -q`,
-  `PYTHONPATH=src .venv/bin/python -m ruff check src tests`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_promotion_suite.py tests/test_promotion_suite_full_canonical.py tests/test_ea_consistency_decision_support.py tests/test_final_qa_certification.py tests/test_phase_eval.py tests/test_cli_eval.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m compileall src`,
   `jq empty config/promotion_suite_v1.json config/v1_real_package_review_coverage_v1.json`,
   `git diff --check`
 
