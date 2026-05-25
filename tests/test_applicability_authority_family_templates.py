@@ -719,6 +719,74 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
         )
         self.assertTrue(candidate["source_evidence_availability"]["available"])
 
+    def test_candidates_resolve_hazardous_current_source_addition(self) -> None:
+        expected_source_record_ids = [
+            "FED-037",
+            "FED-036",
+            "FED-063",
+        ]
+        catalog_by_source_id = {
+            source_record_id: {
+                "source_record_id": source_record_id,
+                "title": source_record_id,
+                "citation_label": source_record_id,
+                "document_role": "law",
+                "authority_level": "federal",
+                "source_status": "downloaded_existing",
+                "artifact_sha256": f"sha-{source_record_id.lower()}",
+                "artifact_path": f"artifacts/raw/{source_record_id}.html",
+            }
+            for source_record_id in expected_source_record_ids
+        }
+
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "hazardous-current-source-template",
+                        "authority_family_id": "hazardous_materials_site_condition",
+                        "rule_id": "hazardous_current_source_template_rule",
+                        "title": "Hazardous-material current source template",
+                        "question": "Does the package trigger hazardous-material or site-condition review?",
+                        "requirement": "Evaluate hazardous-materials, contamination, and response-action review.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "mixed",
+                        "authority_document_role": "law",
+                        "authority_source_record_id": "R1EA-107",
+                        "source_record_ids": [
+                            "R1EA-107",
+                            "R1EA-108",
+                            "R1EA-109",
+                        ],
+                        "package_query": "hazardous materials contamination cleanup",
+                        "package_terms": ["hazardous materials", "contamination", "spill response"],
+                        "applies_if_package_terms": ["hazardous materials", "contamination"],
+                        "does_not_apply_if_package_terms": ["no hazardous materials"],
+                        "source_query": "hazardous materials authority source",
+                        "source_filters": {
+                            "source_record_id": "R1EA-107",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id=catalog_by_source_id,
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], expected_source_record_ids)
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            expected_source_record_ids,
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
     def test_candidates_resolve_cultural_and_state_shpo_current_source_additions(self) -> None:
         expected_source_record_ids = [
             "FED-052",

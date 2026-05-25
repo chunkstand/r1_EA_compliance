@@ -200,19 +200,21 @@ layer rather than the slot-driven contract layer.
   support admissions, and five base-rule current-source decisions. Milestone
   `2` in that same packet is now reduced further locally through the governed
   land-exchange retirement closeout, the governed `R1EA-093`
-  current-source addition lane, and the governed water-family current-source
-  additions. The reviewer-facing default catalog remains historical, but the
+  current-source addition lane, the governed water-family current-source
+  additions, the governed cultural-resource/state-SHPO and shared
+  tribal-overlap current-source additions, the governed wildlife
+  current-source additions, and the governed hazardous-material current-source
+  addition. The reviewer-facing default catalog remains historical, but the
   active scoped applicability replay now runs on
-  `source-set-d5243d000edd5bf9` and reports
-  `authority_universe_sha256=534faf72b2771a3258ba8a4400a6f4cc097d171e975c914f5d143c84d332b7c6`,
+  `source-set-87f6d2c309e0c88b` and reports
+  `authority_universe_sha256=588d3abc81e0e4129943d5ed0087f2cb268844d4f062ddde70b5fccad194b33e`,
   `source_evidence_failure_count=8`, and
-  `missing_source_record_count=6`. The wildlife template no longer appears in
-  the missing-template inventory. The remaining blocker is now the governed
-  hazardous-material, invasive/farmland/drinking-water, minerals,
-  forest-plan support, vegetation/fire, wilderness-designated-area, and the
-  five base-rule current-source decisions, beginning with the hazardous-material
-  row in
-  the same Milestone `2` packet.
+  `missing_source_record_count=5`. The hazardous-material template no longer
+  appears in the missing-template inventory. The remaining blocker is now the
+  governed invasive/farmland/drinking-water, minerals, forest-plan support,
+  vegetation/fire, wilderness-designated-area, and the five base-rule
+  current-source decisions, beginning with the invasive/farmland/drinking-water
+  additions in the same Milestone `2` packet.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

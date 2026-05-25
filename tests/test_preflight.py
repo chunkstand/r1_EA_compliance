@@ -76,10 +76,10 @@ class PreflightTests(unittest.TestCase):
                 for line in result.manifest_path.read_text(encoding="utf-8").splitlines()
                 if line.strip()
             ]
-            self.assertEqual(len(records), 671)
-            self.assertEqual(len(fetcher.calls), 671)
-            self.assertEqual(result.summary["checked_url_count"], 671)
-            self.assertEqual(result.summary["preflight_ok_count"], 671)
+            self.assertEqual(len(records), 672)
+            self.assertEqual(len(fetcher.calls), 672)
+            self.assertEqual(result.summary["checked_url_count"], 672)
+            self.assertEqual(result.summary["preflight_ok_count"], 672)
             self.assertEqual(result.summary["duplicate_url_count"], 0)
             self.assertEqual(result.summary["skipped_excluded_count"], 0)
             self.assertEqual(result.summary["failed_count"], 0)
@@ -156,9 +156,9 @@ class PreflightTests(unittest.TestCase):
                 sleep_fn=lambda _: None,
             )
 
-            self.assertEqual(result.summary["filtered_rows"], 42)
-            self.assertEqual(result.summary["checked_url_count"], 42)
-            self.assertEqual(result.summary["preflight_ok_count"], 42)
+            self.assertEqual(result.summary["filtered_rows"], 43)
+            self.assertEqual(result.summary["checked_url_count"], 43)
+            self.assertEqual(result.summary["preflight_ok_count"], 43)
             self.assertEqual(result.summary["duplicate_url_count"], 0)
 
     def test_legacy_preflight_promotes_r1_forest_plan_source_delta_only(self) -> None:

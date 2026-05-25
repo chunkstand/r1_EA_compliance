@@ -479,18 +479,26 @@ Milestone 2 reduction on 2026-05-25:
   `source_library/runs/current-source-gap-wildlife-catalog-gate/catalog_gate`
   now proves `source-set-d5243d000edd5bf9` with `671` source rows, `659`
   artifacts, and `618` admitted active-current rows.
+- The governed hazardous-material current-source addition lane is now also
+  closed: the canonical workbook admits `FED-063`
+  (`National Contingency Plan, 40 CFR part 300`),
+  `config/compliance_source_record_reconciliation_v1.json` now maps
+  `R1EA-109` to that current row, and a same-slice scoped catalog gate at
+  `source_library/runs/current-source-gap-hazardous-catalog-gate/catalog_gate`
+  now proves `source-set-87f6d2c309e0c88b` with `672` source rows, `660`
+  artifacts, and `619` admitted active-current rows.
 - The live ECID replay remains red, but the blocker is now smaller at
-  `authority_universe_sha256=534faf72b2771a3258ba8a4400a6f4cc097d171e975c914f5d143c84d332b7c6`,
+  `authority_universe_sha256=588d3abc81e0e4129943d5ed0087f2cb268844d4f062ddde70b5fccad194b33e`,
   `source_evidence_failure_count=8`, and
-  `missing_source_record_count=6`.
+  `missing_source_record_count=5`.
 - All remaining missing-template families are now true current-source
   additions or forest-plan support admissions.
 - Milestone `2` therefore remains open. The next truthful sub-slice in this
-  same packet is the governed hazardous-material current-source addition lane
-  for `hazardous_materials_site_condition`, beginning with `R1EA-109`, after
-  which the live blocker should continue through the remaining
-  invasive/farmland/drinking-water, minerals, forest-plan support,
-  vegetation/fire,
+  same packet is the governed invasive/farmland/drinking-water current-source
+  addition lane for `invasive_pesticide_soils_farmland_drinking_water`,
+  beginning with `R1EA-101`, `R1EA-102`, `R1EA-105`, `R1EA-106`,
+  `R1EA-111`, and `R1EA-112`, after which the live blocker should continue
+  through the remaining minerals, forest-plan support, vegetation/fire,
   wilderness-designated-area, and five base-rule owner decisions.
 
 ### Milestone 3 - Replay Resume Handoff

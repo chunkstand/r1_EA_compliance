@@ -442,6 +442,11 @@
       "notes": "Canonical CERCLA row via exact active-catalog URL lineage."
     },
     {
+      "legacy_source_record_id": "R1EA-109",
+      "current_source_record_ids": ["FED-063"],
+      "notes": "Canonical National Contingency Plan regulation row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-110",
       "current_source_record_ids": ["FED-035"],
       "notes": "Canonical FIFRA row via exact active-catalog URL lineage."
