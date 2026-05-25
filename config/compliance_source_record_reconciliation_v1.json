@@ -317,6 +317,11 @@
       "notes": "Canonical Clean Air Act row via exact active-catalog URL lineage."
     },
     {
+      "legacy_source_record_id": "R1EA-093",
+      "current_source_record_ids": ["FED-044"],
+      "notes": "Canonical general-conformity regulation row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-094",
       "current_source_record_ids": ["FED-030"],
       "notes": "Canonical MBTA row."

@@ -199,15 +199,18 @@ layer rather than the slot-driven contract layer.
   template retire/replace work, true current-source additions, forest-plan
   support admissions, and five base-rule current-source decisions. Milestone
   `2` in that same packet is now reduced further locally through the governed
-  land-exchange retirement closeout: the live applicability replay remains at
-  `11` source-evidence failures and is now down to `11` missing template
-  groups on
-  `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`.
-  The land-exchange template no longer appears in the missing-template
-  inventory. The remaining blocker is now only true current-source additions,
-  forest-plan support admissions, and the five base-rule current-source
-  decisions, so the next truthful slice remains the rest of Milestone `2` in
-  that same packet.
+  land-exchange retirement closeout plus the governed `R1EA-093`
+  current-source addition lane. The reviewer-facing default catalog remains
+  historical, but the active scoped applicability replay now runs on
+  `source-set-583e2d0ca9c793f6` and reports
+  `authority_universe_sha256=e26758f4da964e965211f754487748b3a0404a1bbb10be0fec7f97f22deaf5f9`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=10`. The land-exchange template no longer
+  appears in the missing-template inventory, and the air/conformity lane is
+  now closed through `FED-044`. The remaining blocker is now the rest of the
+  governed current-source additions, forest-plan support admissions, and the
+  five base-rule current-source decisions, beginning with the water-family
+  additions in the same Milestone `2` packet.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

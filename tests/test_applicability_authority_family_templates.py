@@ -218,9 +218,80 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
             candidate["required_source_evidence"]["source_record_ids"],
             ["LEX-USFS-002"],
         )
+
+    def test_candidates_resolve_supporting_source_record_ids_into_catalog_rows(self) -> None:
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "air-quality-template",
+                        "authority_family_id": "clean_air_act_conformity_air_quality",
+                        "rule_id": "clean_air_act_conformity_air_quality_authority_template",
+                        "title": "Clean Air Act and conformity template",
+                        "question": "Does the package trigger air-quality or conformity review?",
+                        "requirement": "Evaluate Clean Air Act and general-conformity applicability.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "law",
+                        "authority_document_role": "law",
+                        "authority_source_record_id": "R1EA-092",
+                        "source_record_ids": ["R1EA-092", "R1EA-093"],
+                        "supporting_source_record_ids": ["R1EA-093"],
+                        "package_query": "air quality conformity",
+                        "package_terms": ["air quality", "conformity"],
+                        "applies_if_package_terms": ["air quality", "conformity"],
+                        "does_not_apply_if_package_terms": ["no conformity determination"],
+                        "source_query": "Clean Air Act and general conformity source",
+                        "source_filters": {
+                            "document_role": "law",
+                            "source_record_id": "R1EA-092",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id={
+                "FED-023": {
+                    "source_record_id": "FED-023",
+                    "title": "Clean Air Act",
+                    "citation_label": "FED-023 | Clean Air Act",
+                    "document_role": "law",
+                    "authority_level": "law",
+                    "source_status": "downloaded_existing",
+                    "artifact_sha256": "sha-fed-023",
+                    "artifact_path": "artifacts/raw/FED-023.html",
+                },
+                "FED-044": {
+                    "source_record_id": "FED-044",
+                    "title": "General Conformity",
+                    "citation_label": "FED-044 | General Conformity",
+                    "document_role": "regulation",
+                    "authority_level": "federal",
+                    "source_status": "downloaded_existing",
+                    "artifact_sha256": "sha-fed-044",
+                    "artifact_path": "artifacts/raw/FED-044.xml",
+                },
+            },
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], ["FED-023", "FED-044"])
+        self.assertEqual(
+            [record["source_record_id"] for record in candidate["source_records"]],
+            ["FED-023", "FED-044"],
+        )
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            ["FED-023", "FED-044"],
+        )
         self.assertEqual(
             candidate["graph_expansion_contract"]["neighbor_filters"]["source_record_ids"],
-            ["LEX-USFS-002"],
+            ["FED-023", "FED-044"],
         )
         self.assertTrue(candidate["source_evidence_availability"]["available"])
 

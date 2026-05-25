@@ -8,7 +8,8 @@ Owner context: this is a fresh standalone blocker packet opened from
 `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` after
 Milestone `2` reduced the ECID applicability-universe blocker to a smaller
 remaining current-source truth set. It owns the source-truth, template, and
-rule-pack work still required on `source-set-4fb59e9eb43045cb`. It does not
+rule-pack work still required on the ECID current-source-gap replay gate. It
+does not
 reopen the replay-local ECID packet, the slot-driven promotion-suite contract
 packet, or the already-landed governed reconciliation and alias repairs.
 
@@ -31,15 +32,28 @@ The prior blocker packet repaired the shared binding layer honestly:
   governed current-source owners” work
 
 This packet exists to close that remaining current-source gap without weakening
-applicability validation.
+applicability validation. The reviewer-facing default catalog and promotion
+suite remain pinned to historical `source-set-4fb59e9eb43045cb`; this packet
+may use a same-slice scoped catalog gate when the governed workbook truth moves
+ahead of that downstream stack.
 
 ## Current Evidence
 
-- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`
+- The reviewer-facing default catalog still lives at
+  `source_library/catalog/source_set_manifest.json` as
+  `source-set-4fb59e9eb43045cb` with `source_count=647`,
+  `artifact_count=635`, and
+  `source_partition_counts={"active_review_corpus": 594, "currentness_supersession_archive": 53}`.
+- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-fed044 --catalog-dir source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate`
+  now builds the active blocker replay gate as
+  `source-set-583e2d0ca9c793f6` with `source_count=648`,
+  `artifact_count=636`, and
+  `source_partition_counts={"active_review_corpus": 595, "currentness_supersession_archive": 53}`.
+- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate/source_set_manifest.json`
   now rebuilds the ECID applicability universe at
   `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`,
-  `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`,
+  `authority_universe_sha256=e26758f4da964e965211f754487748b3a0404a1bbb10be0fec7f97f22deaf5f9`,
   and `validation_passed=false`.
 - `candidates_have_source_evidence_available` is now reduced from `21` failing
   candidates to `11`: the remaining six authority-family candidates are
@@ -56,13 +70,14 @@ applicability validation.
   `organic_act_16usc_475`,
   `seven_county_nepa_scope`).
 - `authority_family_template_candidates_cover_config` is now reduced from `19`
-  failing template groups to `11`. The admitted-current replacement lane plus
+  failing template groups to `10`. The admitted-current replacement lane plus
   the governed land-exchange retirement closeout now cover `R1EA-038`,
   `R1EA-043`, `R1EA-068`, `R1EA-125` through `R1EA-149` (except
   already-bound `R1EA-146`), `R1EA-151` through `R1EA-156`, and the retired
   non-controlling project-reference rows `R1EA-160` through `R1EA-162`. The
-  remaining groups still point at source IDs such as:
-  `R1EA-093`,
+  governed `R1EA-093` current-source addition is now closed through workbook
+  row `FED-044` plus same-slice reconciliation. The remaining groups still
+  point at source IDs such as:
   `R1EA-083` through `R1EA-090` and `R1EA-115` through `R1EA-118`,
   `R1EA-072`, `R1EA-074`, `R1EA-076` through `R1EA-080`,
   `R1EA-097` through `R1EA-100`,
@@ -93,8 +108,8 @@ applicability validation.
 ## Goal
 
 Repair or retire the remaining stale current-source references through governed
-source-truth owners so the ECID applicability universe can pass on
-`source-set-4fb59e9eb43045cb`.
+source-truth owners so the ECID applicability universe can pass on the active
+current-source-gap replay gate.
 
 Completion means all of the following are true:
 
@@ -103,7 +118,7 @@ Completion means all of the following are true:
   template/rule-pack replacement,
   or explicit retirement of obsolete authority references.
 - `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
-  passes on the active source set.
+  passes on the active current-source-gap replay gate.
 - The replay-repair packet can resume from truthful applicability validation
   rather than stale or partial current-source coverage.
 
@@ -118,7 +133,7 @@ Completion means all of the following are true:
 ## Scope
 
 - Remaining ECID applicability-universe current-source gaps on the active
-  source set
+  current-source-gap replay gate
 - Governed workbook/current-catalog/template/rule-pack changes needed to add,
   replace, or retire the remaining stale authority references
 - Focused docs and handoff updates that route the next truthful slice
@@ -336,7 +351,6 @@ Milestone 1 resolution on 2026-05-25:
   `source_library/catalog/source_catalog.jsonl` for the surviving air,
   water, cultural, wildlife, hazardous-material, invasive/farmland/drinking
   water, wildfire/minerals, and designated-areas clusters:
-  `R1EA-093`;
   `R1EA-083` through `R1EA-090` and `R1EA-115` through `R1EA-118`;
   `R1EA-072`, `R1EA-074`, `R1EA-076` through `R1EA-080`,
   `R1EA-113`, `R1EA-114`, and `R1EA-120` through `R1EA-123`;
@@ -401,7 +415,7 @@ Implementation:
 Acceptance criteria:
 
 - `applicability-authority-universe` passes for ECID on
-  `source-set-4fb59e9eb43045cb`.
+  the active current-source-gap replay gate.
 - No new skips, xfails, or relaxed checks are introduced.
 
 Milestone 2 reduction on 2026-05-25:
@@ -421,20 +435,28 @@ Milestone 2 reduction on 2026-05-25:
   `R1EA-160`, `R1EA-161`, and `R1EA-162` into the excluded non-controlling
   mapping class while preserving governed family membership for workbook
   traceability.
-- The live ECID replay remains red, but the blocker is smaller at
-  `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`,
-  `source_evidence_failure_count=11`, and
-  `missing_source_record_count=11`.
 - The governed land-exchange retirement closeout now moves `R1EA-160`,
   `R1EA-161`, and `R1EA-162` into the excluded non-controlling mapping class
   for `land_exchange_fs_policy_and_project_references`. The land-exchange
   template no longer appears in the missing-template inventory.
+- The governed `R1EA-093` current-source addition lane is now closed: the
+  canonical workbook admits `FED-044` (`General Conformity`, `40 CFR part 93
+  subpart B`), `config/compliance_source_record_reconciliation_v1.json` now
+  maps `R1EA-093` to that current row, and a same-slice scoped catalog gate at
+  `source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate`
+  now proves `source-set-583e2d0ca9c793f6` with `648` source rows, `636`
+  artifacts, and `595` admitted active-current rows.
+- The live ECID replay remains red, but the blocker is now smaller at
+  `authority_universe_sha256=e26758f4da964e965211f754487748b3a0404a1bbb10be0fec7f97f22deaf5f9`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=10`.
 - All remaining missing-template families are now true current-source
   additions or forest-plan support admissions.
 - Milestone `2` therefore remains open. The next truthful sub-slice in this
-  same packet is the governed current-source addition lane, beginning with
-  `R1EA-093` in `clean_air_act_conformity_air_quality`, after which the live
-  blocker should continue through the remaining water, cultural, wildlife,
+  same packet is the governed current-source addition lane for
+  `clean_water_act_wotus_permits`, beginning with `R1EA-083` through
+  `R1EA-090` and `R1EA-115` through `R1EA-118`, after which the live blocker
+  should continue through the remaining cultural, wildlife,
   hazardous-material, invasive/farmland/drinking-water, minerals, forest-plan
   support, and five base-rule owner decisions.
 
@@ -480,27 +502,51 @@ Acceptance criteria:
 
 ```bash
 PYTHONPATH=src .venv/bin/python -m pytest \
+  tests/test_source_register_loader.py \
+  tests/test_source_register_schema.py \
+  tests/test_catalog.py \
+  tests/test_dry_run.py \
+  tests/test_preflight.py \
   tests/test_applicability_authority_family_templates.py \
   tests/test_authority_family_rule_templates.py \
   tests/test_authority_universe_inventory.py \
   tests/test_rule_claim_binding_runtime.py \
   tests/test_architecture_contract.py -q
 
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx
+
 PYTHONPATH=src .venv/bin/python -m ruff check \
+  tests/test_source_register_loader.py \
+  tests/test_source_register_schema.py \
+  tests/test_catalog.py \
+  tests/test_dry_run.py \
+  tests/test_preflight.py \
   tests/test_applicability_authority_family_templates.py \
   tests/test_authority_family_rule_templates.py \
   tests/test_authority_universe_inventory.py
 
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
+  --output-dir source_library \
+  --run-id current-source-gap-fed-044-20260525 \
+  --id FED-044
+
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build \
+  --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
+  --output-dir source_library \
+  --config config/downloader.toml \
+  --run-id queue-m3-full-canonical-merged-download-20260525-fed044 \
+  --catalog-dir source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate
+
 PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review \
-  --source-set-id source-set-4fb59e9eb43045cb
+  --catalog-path source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate/source_catalog.jsonl \
+  --source-set-manifest-path source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate/source_set_manifest.json
 
 jq empty \
-  config/authority_family_rule_templates_nepa_ea_v1.json \
-  config/compliance_rule_pack_nepa_ea_v0.json \
-  config/authority_family_rule_template_coverage_nepa_ea_v1.json \
-  config/authority_universe_families_nepa_ea_v1.json
+  config/compliance_source_record_reconciliation_v1.json
 git diff --check
 ```
 
@@ -538,7 +584,8 @@ git diff --check
   That means the next slice must stay disciplined about workbook/template
   ownership and must not drift back into runtime heuristics.
 - Next truthful slice: Milestone `2` in this packet. Land the governed
-  current-source addition work beginning with `R1EA-093` in
-  `clean_air_act_conformity_air_quality`, then continue with the remaining
-  current-source additions, forest-plan support admissions, and base-rule
-  owner decisions needed to clear the ECID applicability blocker.
+  current-source addition work for `clean_water_act_wotus_permits`,
+  beginning with `R1EA-083` through `R1EA-090` and `R1EA-115` through
+  `R1EA-118`, then continue with the remaining current-source additions,
+  forest-plan support admissions, and base-rule owner decisions needed to
+  clear the ECID applicability blocker.

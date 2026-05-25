@@ -23,7 +23,7 @@ class SourceRegisterSchemaTests(unittest.TestCase):
 
         self.assertTrue(result["validation_passed"])
         self.assertEqual(result["sheet_count"], 13)
-        self.assertEqual(result["load_row_count"], 647)
+        self.assertEqual(result["load_row_count"], 648)
         self.assertEqual(result["queue_row_count"], 51)
         self.assertEqual(result["removed_row_count"], 3)
         self.assertEqual(result["stale_source_detector_count"], 5)
@@ -75,13 +75,13 @@ class SourceRegisterSchemaTests(unittest.TestCase):
         self.assertEqual(result["legacy_register_source_delta_count"], 160)
         self.assertEqual(result["legacy_register_gap_count"], 1)
         self.assertEqual(result["legacy_runtime_unique_source_count"], 350)
-        self.assertEqual(result["canonical_master_row_count"], 647)
+        self.assertEqual(result["canonical_master_row_count"], 648)
         self.assertEqual(result["canonical_queue_row_count"], 51)
         self.assertEqual(result["canonical_removed_row_count"], 3)
         self.assertEqual(result["canonical_stale_source_detector_count"], 5)
         self.assertEqual(result["canonical_shared_with_legacy_workbook_count"], 0)
         self.assertEqual(result["canonical_shared_with_source_delta_count"], 0)
-        self.assertEqual(result["canonical_only_source_count"], 647)
+        self.assertEqual(result["canonical_only_source_count"], 648)
         self.assertEqual(result["legacy_only_source_count"], 350)
         self.assertEqual(result["canonical_only_source_ids_sample"][0], "FED-001")
         self.assertEqual(result["legacy_only_source_ids_sample"][0], "R1EA-001")
@@ -130,6 +130,7 @@ class SourceRegisterSchemaTests(unittest.TestCase):
             "FED-041": "https://www.govinfo.gov/content/pkg/FR-1999-02-08/html/99-3184.htm",
             "FED-039": "https://www.govinfo.gov/content/pkg/FR-1996-05-29/html/96-13597.htm",
             "FED-043": "https://www.archives.gov/federal-register/codification/executive-order/11990.html",
+            "FED-044": "https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-93/subpart-B",
             "FED-029": "https://uscode.house.gov/view.xhtml?path=/prelim@title16/chapter5A&edition=prelim",
             "FPS-117": "https://www.fs.usda.gov/sites/nfs/files/legacy-media/custergallatin/CNF%20FPAdjustment%20001.pdf",
             "FINAL-Q-HLC-001": "https://www.fs.usda.gov/sites/nfs/files/r01/helena-lewisclark/publication/V3%20Maps%20EIS%202021%20Forest%20Plan.pdf",

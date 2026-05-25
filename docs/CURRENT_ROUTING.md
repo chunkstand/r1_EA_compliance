@@ -36,8 +36,12 @@ Use this file as the short current route before opening the large append-only do
 
 ## Live Facts
 
-- Active workbook/table/catalog: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
-  `Document_Register_Master` / `source-set-4fb59e9eb43045cb`
+- Active workbook/table: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
+  `Document_Register_Master` with `648` retained master rows after the
+  governed `FED-044` addition. Reviewer-facing default catalog remains
+  historical `source-set-4fb59e9eb43045cb`, while the active current-source-gap
+  replay gate is `source-set-583e2d0ca9c793f6` under
+  `source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate`
 - Active source-truth packet status: the full canonical source-truth
   rebaseline remains historically resolved in commit `93a23b0`
   (`Resolve source-truth archive boundary rebaseline`); the queue Milestone 2
@@ -103,15 +107,18 @@ Use this file as the short current route before opening the large append-only do
   template retire/replace work, true current-source additions, forest-plan
   support admissions, and five base-rule current-source decisions. Milestone
   `2` in that same packet is now reduced further locally through the governed
-  land-exchange retirement closeout: the live applicability replay remains at
-  `11` source-evidence failures and is now down to `11` missing template
-  groups on
-  `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`.
-  The land-exchange template no longer appears in the missing-template
-  inventory. The remaining blocker is now only true current-source additions,
-  forest-plan support admissions, and the five base-rule current-source
-  decisions, so the next truthful slice remains the rest of Milestone `2` in
-  that same packet
+  land-exchange retirement closeout plus the governed `R1EA-093`
+  current-source addition lane. The reviewer-facing default catalog remains
+  historical, but the active scoped applicability replay now runs on
+  `source-set-583e2d0ca9c793f6` and reports
+  `authority_universe_sha256=e26758f4da964e965211f754487748b3a0404a1bbb10be0fec7f97f22deaf5f9`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=10`. The land-exchange template no longer
+  appears in the missing-template inventory, and the air/conformity lane is
+  now closed through `FED-044`. The remaining blocker is now the rest of the
+  governed current-source additions, forest-plan support admissions, and the
+  five base-rule current-source decisions, beginning with the water-family
+  additions in the same Milestone `2` packet
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

@@ -7,7 +7,62 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
-## Active Authority Current-Source Gap Packet Alignment Closed Locally
+## Active Authority Current-Source Gap Blocker Milestone 2 Reduced Further Locally
+
+This implementation slice closes the governed `R1EA-093` air/conformity
+current-source addition lane on top of the earlier admitted-current
+replacement and land-exchange retirement work without pretending the remaining
+water, forest-plan, and base-rule owners are done.
+
+- outcome label:
+  `reduced locally`; the live blocker is smaller again, but Milestone `2`
+  remains open
+- implementation truth:
+  the canonical workbook now carries `648` retained master rows after adding
+  `FED-044` (`General Conformity`, `40 CFR part 93 subpart B`),
+  `config/compliance_source_record_reconciliation_v1.json` now maps
+  `R1EA-093` to `FED-044`, and matching regressions now cover the source
+  register loader/schema/catalog/dry-run/preflight surfaces plus
+  `tests/test_applicability_authority_family_templates.py`
+- live replay truth:
+  the reviewer-facing default catalog remains historical
+  `source-set-4fb59e9eb43045cb` at `647` source rows, `635` artifacts, and
+  `594` admitted `active_review_corpus` rows. The active same-slice replay
+  gate now lives at
+  `source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate`
+  as `source-set-583e2d0ca9c793f6` with `648` source rows, `636` artifacts,
+  and `595` admitted `active_review_corpus` rows. On that scoped gate,
+  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  now reports `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=e26758f4da964e965211f754487748b3a0404a1bbb10be0fec7f97f22deaf5f9`,
+  `validation_passed=false`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=10`
+- remaining blocker truth:
+  the land-exchange template and the air/conformity lane no longer appear in
+  the missing-template inventory. The remaining missing-template families are
+  now only true current-source additions or forest-plan support admissions,
+  while the separate `11` source-evidence failures still consist of the six
+  remaining authority-family candidates plus the five base-rule current-source
+  gaps
+- next truthful slice:
+  Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
+  beginning with the governed water-family additions in
+  `clean_water_act_wotus_permits` for `R1EA-083` through `R1EA-090` and
+  `R1EA-115` through `R1EA-118`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m pytest tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_catalog.py tests/test_dry_run.py tests/test_preflight.py tests/test_applicability_authority_family_templates.py tests/test_authority_family_rule_templates.py tests/test_authority_universe_inventory.py tests/test_rule_claim_binding_runtime.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src .venv/bin/python -m ruff check tests/test_source_register_loader.py tests/test_source_register_schema.py tests/test_catalog.py tests/test_dry_run.py tests/test_preflight.py tests/test_applicability_authority_family_templates.py tests/test_authority_family_rule_templates.py tests/test_authority_universe_inventory.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --run-id current-source-gap-fed-044-20260525 --id FED-044`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-fed044 --catalog-dir source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-fed-044-catalog-gate/catalog_gate/source_set_manifest.json`,
+  `jq empty config/compliance_source_record_reconciliation_v1.json`,
+  `git diff --check`
+
+## Historical Current-Source Gap Packet Alignment Closeout
 
 This docs-only slice closes the remaining active-packet alignment gap after the
 governed land-exchange retirement reduction without changing the live blocker
@@ -36,7 +91,7 @@ state or next routed slice.
   `git diff --check`,
   `git diff --cached --check`
 
-## Active Authority Current-Source Gap Blocker Milestone 2 Reduced Locally
+## Historical Current-Source Gap Milestone 2 Retirement Checkpoint
 
 This implementation slice closes the governed land-exchange retirement
 sub-slice for the active current-source blocker packet without pretending the
