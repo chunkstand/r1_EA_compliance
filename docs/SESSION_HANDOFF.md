@@ -7,6 +7,35 @@ that lane supersedes older sections below when they disagree.
 
 For a short current route before this append-only log, start with `docs/CURRENT_ROUTING.md`.
 
+## Active Authority Current-Source Gap Packet Alignment Closed Locally
+
+This docs-only slice closes the remaining active-packet alignment gap after the
+governed land-exchange retirement reduction without changing the live blocker
+state or next routed slice.
+
+- outcome label:
+  `resolved locally`; the active packet now names the same owner/test surfaces
+  that were already used in the verified Milestone `2` retirement closeout
+- alignment truth:
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` now
+  explicitly includes
+  `config/authority_family_rule_template_coverage_nepa_ea_v1.json` and
+  `config/authority_universe_families_nepa_ea_v1.json` in the governed
+  authority-source config surface, and
+  `tests/test_authority_family_rule_templates.py` plus
+  `tests/test_authority_universe_inventory.py` in the focused verification
+  roster
+- live route truth:
+  the active blocker remains Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` on the
+  same `authority_universe_sha256=fbadccedec1ae953ba751dfe95e73f43e6e44731141f06b291cd7294e68afdfd`,
+  `source_evidence_failure_count=11`, and
+  `missing_source_record_count=11` replay state; the next truthful slice is
+  still the governed `R1EA-093` current-source addition lane
+- verification:
+  `git diff --check`,
+  `git diff --cached --check`
+
 ## Active Authority Current-Source Gap Blocker Milestone 2 Reduced Locally
 
 This implementation slice closes the governed land-exchange retirement

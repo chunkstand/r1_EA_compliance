@@ -140,7 +140,9 @@ Completion means all of the following are true:
 - governed authority-source config:
   `config/authority_family_rule_templates_nepa_ea_v1.json`,
   `config/compliance_rule_pack_nepa_ea_v0.json`,
-  `config/compliance_source_record_reconciliation_v1.json`
+  `config/compliance_source_record_reconciliation_v1.json`,
+  `config/authority_family_rule_template_coverage_nepa_ea_v1.json`,
+  `config/authority_universe_families_nepa_ea_v1.json`
 - remaining forest-plan support/source-truth owners:
   `config/r1_forest_plan_identity_reconciliation_v1.json`,
   `config/r1_forest_plan_document_register_draft.csv`,
@@ -154,6 +156,8 @@ Completion means all of the following are true:
   `src/usfs_r1_ea_sources/applicability_authority_universe_contracts.py`
 - focused tests:
   `tests/test_applicability_authority_family_templates.py`,
+  `tests/test_authority_family_rule_templates.py`,
+  `tests/test_authority_universe_inventory.py`,
   `tests/test_rule_claim_binding_runtime.py`,
   `tests/test_architecture_contract.py`
 - routing docs:
