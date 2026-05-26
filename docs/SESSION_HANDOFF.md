@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-25
+Date: 2026-05-26
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
@@ -18,6 +18,45 @@ history below.
   the next session is continuing implementation
 - active packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- replay owner-boundary child packet:
+  `docs/APPLICABILITY_COMPLIANCE_REPLAY_OWNER_BOUNDARY_MILESTONE_PLAN.md`
+- extraction/direct-eval owner-boundary child packet:
+  `docs/EXTRACTION_DIRECT_EVAL_OWNER_BOUNDARY_MILESTONE_PLAN.md`
+- architecture governance closeout packet:
+  `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`
+- architecture doc-ownership closeout child:
+  `docs/CURRENT_ROUTING_DOC_OWNERSHIP_BOUNDARY_MILESTONE_PLAN.md`
+- replay owner-boundary note:
+  the new applicability/compliance child packet isolates broad replay-owner
+  concentration in `build_applicability_decisions(...)` and
+  `run_compliance_review(...)`. It does not replace the parent packet's next
+  truthful runtime slice, which remains ECID broader-EA review-local artifact
+  / source-record alignment on `source-set-f70ea11e04ae3d53`, then South
+  Plateau forest-plan replay on that same source set
+- extraction/direct-eval owner-boundary note:
+  the new extraction/direct-eval child packet preserves the closed
+  `extraction-fidelity-eval` and `phase_eval_direct_eval.py` contracts while
+  splitting the remaining large producer owners in
+  `extraction_fidelity_eval.py` and
+  `phase_eval_direct_eval_source_set.py`. It does not replace the parent
+  replay packet's current runtime blocker, which remains ECID broader-EA and
+  review-direct-eval family debt on `source-set-f70ea11e04ae3d53`
+- architecture note:
+  `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` is now resolved
+  locally. The exact rebaseline probe command
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`
+  now reports `472` code files and `9` code files above `800`,
+  `docs/CURRENT_ROUTING.md` is back to `32` lines, and
+  `tests/test_architecture_contract.py` plus
+  `tests/test_architecture_quality.py` are green again. The 2026-05-21
+  under-`800` closeout remains historical truth; the remaining live issue is
+  the explicitly routed oversized-file backlog in
+  `config/architecture_large_file_inventory_v1.json`, with the next
+  architecture-specific follow-on starting from
+  `src/usfs_r1_ea_sources/extraction_fidelity_eval.py`,
+  `src/usfs_r1_ea_sources/extract_runtime.py`,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py`, and
+  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`
 - live blocker state:
   the full-canonical local corpus still sits at historical
   `source-set-4fb59e9eb43045cb`, but reviewer-facing replay contexts plus the
@@ -74,6 +113,50 @@ history below.
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## Architecture Governance Rebaseline Resolved Locally
+
+This docs-and-gate slice restores truthful architecture governance on the
+current repo state without rewriting the historical zero-oversized closeout as
+if it had been false at the time.
+
+- outcome label:
+  `resolved locally`; stale architecture governance drift is closed, and the
+  remaining architecture issue is now the live oversized backlog itself rather
+  than stale zero-oversized readbacks
+- routed packet:
+  `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`
+- implementation truth:
+  `config/architecture_large_file_inventory_v1.json` now records the exact
+  reopened backlog at `9` code files above `800`, grouped as `4` source owners
+  and `5` test owners with focused follow-on test surfaces. The narrower
+  `docs/CURRENT_ROUTING_DOC_OWNERSHIP_BOUNDARY_MILESTONE_PLAN.md` child packet
+  is also resolved locally inside this broader closeout: `README.md` no longer
+  owns a dated routed-state block, `docs/CURRENT_ROUTING.md` is back to `32`
+  lines, and `tests/test_architecture_quality.py` now enforces doc ownership
+  instead of requiring repeated volatile prose across multiple docs
+- live architecture truth:
+  the exact probe command
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`
+  now reports `472` code files, `9` code files above `800`, no Python or JS/TS
+  import cycles, and no source module above the `20`-import fan-out gate. The
+  2026-05-21 under-`800` packet remains historical truth, while the reopened
+  2026-05-26 backlog is current repo drift after that closeout
+- next architecture follow-on:
+  open a separate owner-reduction packet from
+  `config/architecture_large_file_inventory_v1.json`, starting with
+  `src/usfs_r1_ea_sources/extraction_fidelity_eval.py`,
+  `src/usfs_r1_ea_sources/extract_runtime.py`,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py`, and
+  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`, then the five
+  reopened oversized test owners
+- verification:
+  `git status -sb`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check tests/test_architecture_contract.py tests/test_architecture_quality.py`,
+  `PYTHONPATH=src python -m compileall tests/test_architecture_quality.py tests/test_architecture_contract.py`,
+  `wc -l docs/CURRENT_ROUTING.md`, and `git diff --check`
 
 ## Aligned ECID Compliance Replay And Inventory Mapping Reduced Locally
 

@@ -15,6 +15,58 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Architecture Governance Rebaseline Resolved Locally
+
+Latest docs-and-gate rebaseline on 2026-05-26:
+
+- routed packet:
+  `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`
+- packet outcome:
+  `resolved locally`; architecture governance is green again against current
+  repo truth, and the remaining issue is now the live oversized-file backlog
+  itself rather than stale zero-oversized control-plane claims
+- implementation truth:
+  `config/architecture_large_file_inventory_v1.json` now records the exact
+  reopened 2026-05-26 backlog at `9` code files above `800`, grouped as `4`
+  source owners and `5` test owners with focused follow-on test surfaces.
+  `tests/test_architecture_quality.py` now fail-closes on exact inventory
+  membership, stale empty-closeout payloads, an overlong
+  `docs/CURRENT_ROUTING.md`, dated routed-state ownership in `README.md`, and
+  volatile current-state duplication outside this file plus the top of
+  `docs/SESSION_HANDOFF.md`
+- live architecture truth:
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`
+  now reports `472` code files, `9` code files above `800`, no Python or JS/TS
+  import cycles, and no source module above the `20`-import fan-out gate.
+  `docs/CURRENT_ROUTING.md` is back under its enforced short-route cap, while
+  the 2026-05-21 under-`800` closeout remains historical truth rather than a
+  false record; the current weakness was later governance drift plus later code
+  growth after that closeout
+- remaining architecture debt:
+  the live oversized backlog is now routed explicitly from the inventory:
+  `src/usfs_r1_ea_sources/extraction_fidelity_eval.py`,
+  `src/usfs_r1_ea_sources/extract_runtime.py`,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py`,
+  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`,
+  `tests/test_applicability_authority_family_templates.py`,
+  `tests/test_promotion_suite_full_canonical.py`,
+  `tests/test_extraction_accuracy.py`,
+  `tests/test_forest_plan_resolver_scope.py`, and `tests/test_catalog.py`
+- next routing:
+  keep the live implementation route on
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` for reviewer-facing
+  replay repair. The next architecture-specific follow-on should be a separate
+  owner-reduction packet opened from
+  `config/architecture_large_file_inventory_v1.json`, starting with the four
+  source owners above and then the five test owners
+- verification:
+  `git status -sb`,
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check tests/test_architecture_contract.py tests/test_architecture_quality.py`,
+  `PYTHONPATH=src python -m compileall tests/test_architecture_quality.py tests/test_architecture_contract.py`,
+  `wc -l docs/CURRENT_ROUTING.md`, and `git diff --check`
+
 ## Aligned ECID Compliance Replay And Inventory Mapping Reduced Locally
 
 Latest implementation update on 2026-05-25:

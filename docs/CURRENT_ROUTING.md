@@ -1,277 +1,32 @@
 # Current Routing
-Date: 2026-05-25
-Use this file as the short current route before opening the large append-only docs.
+Date: 2026-05-26
+Use this file as the short current route before opening the append-only docs.
 
 ## New Session Start
 
-- Read this file first for the live route.
-- Read the top section of `docs/SESSION_HANDOFF.md` next for the exact active
-  packet, blocker counts, and next truthful slice.
-- Open `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` only after
-  those two docs if the next session is continuing implementation.
+- Read this file first.
+- Read the top of `docs/SESSION_HANDOFF.md` next for the active packet,
+  current architecture note, and next truthful slice.
+- Read `docs/CURRENT_SYSTEM_STATE.md` next for tracked volatile repo state.
+- Open `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` only if the
+  next session is continuing implementation.
 
-## First Stops
+## Active Route
 
-- Document-routing work: `docs/AGENT_START_HERE.md`
-- Forest-specific example guidance:
-  `config/forest_specific_example_package_registry_v1.json` and
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
-- Live system truth: `README.md`, then `docs/CURRENT_SYSTEM_STATE.md`
-- Recent closeout and next slice: `docs/SESSION_HANDOFF.md`
-- Recent upstream closeout:
-  `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
-- Recent source-truth closeout: `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
-- Recent gold closeout: `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
-- Active example packet:
-  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-- Promotion contract closeout:
-  `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
-- Active replay-repair packet:
+- Active implementation packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
-- Historical reviewer-facing alignment packet:
-  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`
-- Recent upstream current-source closeout:
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
-- Blocked parent authority-binding packet:
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
-- Adjacent active queue packet:
-  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
-- Active blocker packets:
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`,
-  `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
-  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
-  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, and
-  `docs/PROJECT_SPECIFIC_PUBLIC_PRIVATE_SOURCE_BOUNDARY_BLOCKER_MILESTONE_PLAN.md`
-
-## Live Facts
-
-- Active workbook/table: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
-  `Document_Register_Master` with `708` retained master rows after the
-  governed wilderness/designated-area and base-rule current-source additions
-  (`FED-078` through `FED-087`) on top of the earlier vegetation/fire,
-  forest-plan support, minerals, invasive/farmland/drinking-water,
-  water-family, cultural-resource, shared tribal-overlap, wildlife, and
-  hazardous-material additions. Reviewer-facing default catalog remains
-  historical `source-set-4fb59e9eb43045cb`, while the active scoped replay
-  gate is `source-set-f70ea11e04ae3d53` under
-  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
-- Active source-truth packet status: the full canonical source-truth
-  rebaseline remains historically resolved in commit `93a23b0`
-  (`Resolve source-truth archive boundary rebaseline`); the queue Milestone 2
-  and Milestone 3 SCC follow-ons now strengthen that live boundary from the
-  older `634/581` baseline to a governed `647/594` successor while keeping
-  the same `53`
-  `currentness_supersession_archive` rows explicit lineage outside verified
-  admission
-- Active canonical-source truth: the live source set now proves `647/647`
-  extracted `Document_Register_Master` rows on
-  `source-set-4fb59e9eb43045cb`; the refreshed
-  `canonical-source-register-active-current-admission` boundary admits all
-  `594/594` `active_review_corpus` rows while explicitly keeping `53`
-  archive/currentness rows outside the verified-admission roster;
-  `authority-currentness` reports
-  `current_authority_source_record_count=594` and `authority_family_count=460`;
-  `retrieval-build` reports `validation_passed=true`,
-  `reviewer_ready=true`,
-  `verified_extraction_admitted_source_count=594`,
-  `verified_extraction_required_source_count=594`, and
-  `verified_extraction_explicitly_non_admitted_source_count=53`
-- Full-canonical downstream split: the live extraction/retrieval truth and the
-  manifest-owned full-canonical promotion slot still sit on
-  `source-set-4fb59e9eb43045cb`, and `promotion-suite` still reports
-  `full_canonical_corpus_ready=true` with
-  `passed_required_full_canonical_result_count=10/10`. Reviewer-facing replay
-  preflight is now separately aligned to the scoped gate at
-  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
-  on `source-set-f70ea11e04ae3d53`: ECID and South replay contexts plus their
-  `v1-ea-eval` contracts now point there, `applicability-authority-universe`
-  passes for both reviews with `candidate_authority_count=396`,
-  `forest_plan_component_candidate_count=329`, and
-  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`,
-  and both `applicability-context-build` and `applicability-retrieve` reruns
-  now pass on that same governed source set. Governed replay adjudication is
-  now also green there: current-review applicability adjudications now live at
-  `config/applicability_adjudications/v1-cg-ecid-compliance-review.json` and
-  `config/applicability_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
-  `applicability-validate` now passes for both reviews
-  (`55 applicable / 341 non-applicable` for ECID and
-  `64 applicable / 332 non-applicable` for South), and
-  `applicability-generate-rule-pack` now passes with `55` ECID generated rules
-  and `64` South generated rules on `source-set-f70ea11e04ae3d53`. ECID's
-  aligned Custer inventory and compliance lane is now also green there:
-  `forest-plan-components-build` resolves the Custer Gallatin plan through
-  `FOR-009` with `component_count=329`, `standard_count=58`,
-  `coverage_passed=true`, and `component_source_accuracy_passed=true`, while
-  ECID `compliance-review` is again `reviewer_ready=true`,
-  `validation_passed=true`, and its forest-plan component adjudication and
-  evaluation subchecks are both `reviewer_ready=true`. South remains the live
-  forest-plan blocker on the same source set with `reviewer_ready=false`,
-  `component_count=329`, `reviewer_resolution_count=34`,
-  `needs_reviewer_resolution_count=1`, `gap_count=33`,
-  `applied_standard_count=22/25`, and stale component adjudication eval
-  checks `["source_set_mismatch","queue_item_count_mismatch","resolved_item_count_mismatch"]`.
-  ECID `v1-ea-eval` still remains `contract_status="mismatch"`, but its
-  remaining drift is now broader-EA only:
-  `forest_plan_passed=true`, `broader_ea_passed=false`,
-  `failure_category_counts={"baseline_source_record_mismatch":26,"conditional_expectation_missing":18,"source_record_mismatch":17}`,
-  and `forest_plan_failure_category_counts={}`.
-  South remains `contract_status="mismatch"` with
-  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
-  ECID `phase-eval` now runs on `source-set-f70ea11e04ae3d53` with
-  `review_direct_eval_status="direct_eval_identity_mismatch"` and remains red
-  at `15/31` passed phases. `compliance_review` is no longer a failing phase
-  there; the remaining blocker family is missing direct eval coverage for
-  retrieval, claim extraction, and rule-claim binding plus reviewer-facing
-  replay debt in decision support, review packet, final QA, and aggregate
-  evaluation coverage.
-  `real-package-review-coverage-eval` remains red at
-  `reviewer_ready_slot_count=0` with ECID current promotion and South Plateau
-  reviewer-ready expansion both `actual_contract_status="mismatch"`, while
-  West Reservoir still passes as `typed_blocked`. Non-strict `promotion-suite`
-  remains red at `passed_required_current_result_count=11/32`,
-  `current_promotion_ready=false`, `promotion_ready=false`, and
-  `expansion_ready=false`; the current-promotion contract still fails closed
-  at selector/quorum entry with `selector_passed=false`,
-  `matched_slot_count=0`, `eligible_slot_count=0`, and
-  `passing_slot_count=0`. The reviewer-facing source-set alignment blocker is
-  now resolved locally, and the next truthful slice returns to
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, beginning with
-  ECID broader-EA review-local artifact / source-record alignment on aligned
-  `source-set-f70ea11e04ae3d53`, then South Plateau forest-plan,
-  adjudication-refresh, and reviewer-facing packet repair.
-- Architecture gate: `462` code files, `0` above `800` lines, no Python or
-  JS/TS cycles, no local module above the `20`-import fan-out gate, and the
-  oversized-file inventory is empty
-- Under-`800` follow-on: Milestones `0-9` are resolved; the repo remains at
-  `0` oversized code files, and this packet is now historical closeout only
-- The overall architecture umbrella is resolved after Milestone 10 Sequence 52.
-- West Reservoir stays an explicit `typed_blocked` replay quarantine.
-- Forest-specific example coverage lane: `forest-specific-example-package-eval`
-  remains green at `forest_unit_count=10`, `covered_forest_count=10`,
-  `review_example_count=3`, `2 reviewer_ready + 1 typed_blocked` governed
-  examples, `distinct_governed_example_forest_count=2`, and
-  `profile_guidance_only_count=8`; the active Lolo
-  `Tyler's Kitchen Fuels Reduction and Forest Health Project (66344)` packet
-  is the example to inspect first for Lolo National Forest example-package
-  work; it has already rerouted `FOR-029` out of master-promotion semantics,
-  added a tracked Lolo forest-plan component eval slot, and proved packet-local
-  `v1-ea-eval` plus component-eval coverage, but the forest row must stay
-  `profile_eval_guidance_only` until the inherited packet-local replay repair
-  on aligned reviewer-facing `source-set-f70ea11e04ae3d53` is resolved
-- Downstream gold packet status: the earlier full-canonical compliance-gold
-  rebaseline remains historically resolved in commit `8e0e02b`
-  (`Resolve full canonical compliance gold rebaseline`) on the same active
-  `source-set-4fb59e9eb43045cb` baseline; the gold artifacts stay green, but
-  current promotion is no longer treated as green until the ECID
-  current-promotion artifact family is refreshed on that source set, and the
-  governed real-package coverage lane also remains red until the South Plateau
-  reviewer-ready expansion slot is repaired
-- Default `compliance-gold-eval` still passes `14/14` adjudicated cases with
-  `status_match_rate=1.0`, `source_record_match_rate=1.0`,
-  `source_document_role_match_rate=1.0`,
-  `source_claim_link_match_rate=1.0`, and
-  `package_evidence_match_rate=1.0`; the five still-unmapped authorities
-  remain explicit `uncertain` package-only adjudication rather than false
-  source-backed misses, and `promotion_ready=false` there only because the
-  base `nepa-ea-v0` rule pack is diagnostic rather than reviewer-ready
-- Default `gold-coverage-eval` still passes with `7/7` required themes,
-  `19/19` mapped high-priority families, `3` required review contracts,
-  `2` forests, `3` package styles, `2 reviewer_ready + 1 typed_blocked`
-  tracked reviews, and zero threshold failures
-- Recent upstream closeout: the extraction-fidelity packet remains resolved
-  locally through Milestone `4`. The dedicated
-  `extraction-fidelity-eval --manifest config/extraction_fidelity_eval_v1.json --output-dir source_library`
-  replay remains green with `12` governed families, `24` tracked cases,
-  `matched_case_count=24`, `parser_route_mismatch_count=1`,
-  `anchor_mismatch_count=13`, `span_mismatch_count=10`,
-  `boundary_mismatch_count=4`, and `negative_case_pass_count=12`; the live
-  `extraction-accuracy-audit --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb`
-  rerun is now green at `585/585` admitted active-current rows with `0`
-  blocked rows and `53` explicit archive/currentness rows; the narrowed
-  `upstream-eval` replay remains green at `16/16`; and full-canonical
-  `promotion-suite` stays green at `10/10` required full-canonical results
-  with `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`. The
-  Milestone `4` closeout itself landed in commit `abd0e4d`
-  (`Resolve extraction fidelity Milestone 4`).
-- Direct-file capture packet status: Milestones `0`, `1`, and `2` in
-  `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
-  remain resolved locally through commit `85f087b`
-  (`Resolve direct-file queue Milestone 2`), and Milestone `3` is now
-  reduced locally through the project-specific blocker-family opener, the SCC
-  structured-export slice, the Flathead reading-room blocker opener, and the
-  NCDE amendment export blocker opener, and the Lolo Pinyon blocker opener.
-  The blocker-family opener landed in commit `8b889a9`
-  (`Open project-specific queue blocker packet`).
-  The SCC structured-export implementation landed in commit `e78f491`
-  (`Resolve direct-file queue Milestone 3 SCC exports`) and the later
-  routing/docs alignment landed in commit `82e2195`
-  (`Align direct-file queue SCC slice docs`).
-  The Flathead reading-room blocker opener landed in commit `eb09556`
-  (`Open Flathead reading-room blocker packet`).
-  The latest slice now routes `WILD-ESA-Q001` to
-  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md` as an
-  explicit blocker family, and that closeout landed in commit `3a8dd2d`
-  (`Open WILD-ESA NCDE blocker packet`).
-  The latest slice now also routes `FINAL-Q-LOLO-001` to
-  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md` as an explicit
-  blocker family, and that closeout landed in commit `2d7d7c2`
-  (`Open Lolo Pinyon blocker packet`).
-  The latest slice now also routes `FINAL-Q-NPC-001` to
-  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md` as an
-  explicit blocker family, and that closeout landed in commit `2625aa2`
-  (`Open NPC planning-record blocker packet`).
-  The tracked `config/source_register_queue_resolution_ledger_v1.json`
-  enumerates all `51` queue rows, preserves the `4` governed `resolved`
-  promotions from Milestone `2` plus the `4` SCC structured-export families
-  (`R1-SCC-Q-CGNF-RATIONALES`, `R1-SCC-Q-FLAT-RATIONALES`,
-  `R1-SCC-Q-HLC-RATIONALES`, `R1-SCC-Q-NPC-RATIONALES`), now routes
-  `FINAL-Q-FLAT-001` to
-  `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, routes
-  `WILD-ESA-Q001` to
-  `docs/NCDE_GRIZZLY_BEAR_AMENDMENT_EXPORT_BLOCKER_MILESTONE_PLAN.md`, routes
-  `FINAL-Q-LOLO-001` to
-  `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`, routes
-  `FINAL-Q-NPC-001` to
-  `docs/NEZ_PERCE_CLEARWATER_PLANNING_RECORD_BLOCKER_MILESTONE_PLAN.md`,
-  routes `PROG-011`, `PROG-012`, and `PROG-013` as explicit `blocked`
-  placeholders, routes the East Crazy example rows `FOR-012` and `LEX-Q-001`
-  to
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` as
-  explicit `blocked` example-package rows, and routes `FOR-029` to
-  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` as the active
-  Lolo example-package boundary. `source-register-queue-audit` now passes
-  with `resolution_status_counts={"blocked":10,"planned":33,"resolved":8}`,
-  `blocked_current_or_project_applicable_count=10`,
-  `unresolved_current_or_project_applicable_count=31`, and the same `2`
-  historical/noncurrent rows (`FPS-380`, `SUP-007`); East Crazy no longer
-  sits in the full-canonical queue packet as a remaining export-backed master
-  promotion family, and `FOR-029` no longer presents as a planned canonical
-  promotion row.
-  West Reservoir remains an intentional `typed_blocked` replay quarantine
-  rather than a promotion blocker
-- Ad hoc full-canonical `phase-eval` status: do not treat the
-  `source-set-4fb59e9eb43045cb` ad hoc `phase-eval` replay as the live
-  promotion gate; it still lacks extraction, retrieval, claim-extraction,
-  and rule-claim direct-eval coverage on the strengthened full-canonical
-  source set and remains outside this packet's acceptance boundary
-- Historical `source-set-cac9c7d02b280825` / `source-set-9e7d85759951c279`
-  downstream packets in
-  `docs/FULL_CANONICAL_DOWNSTREAM_FRESHNESS_REFRESH_MILESTONE_PLAN.md` and
-  `docs/FULL_CANONICAL_FINAL_BLOCKER_RESOLUTION_MILESTONE_PLAN.md` are
-  preserved blocker context only; do not treat their reduced status lines as
-  live routing. The latest docs-only retirement closeout is `4cf9451`
-  (`Retire stale downstream freshness routing`)
+- Document-routing entrypoint: `docs/AGENT_START_HERE.md`
+- Live architecture governance state:
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
+  `docs/ARCHITECTURE.md`, and
+  `config/architecture_large_file_inventory_v1.json`
 
 ## Deep Reads
 
-- `docs/FULL_CANONICAL_SOURCE_TRUTH_REBASELINE_MILESTONE_PLAN.md`
-- `docs/FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md`
-- `docs/EXTRACTION_FIDELITY_EVAL_MILESTONE_PLAN.md`
-- `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
-- `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
-- `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
-- `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
-- `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md` for the zero-oversized architecture closeout
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`
 - `docs/ARCHITECTURE.md`
+- `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`
+- `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`
+- `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
+- `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`

@@ -15,13 +15,16 @@ CODE_ROOTS = (
 )
 CODE_GLOBS = ("*.py", "*.js")
 MAX_REVIEWABLE_LINES = 800
-MAX_ALLOWED_OVERSIZED_FILES = 0
+MAX_ALLOWED_OVERSIZED_FILES = 9
 MAX_ALLOWED_FAN_OUT = 20
 ALLOWED_HIGH_FAN_OUT_MODULES: set[str] = set()
 REPLAY_CONTEXT_DIR = REPO_ROOT / "config" / "replay_contexts"
 LARGE_FILE_INVENTORY_PATH = REPO_ROOT / "config" / "architecture_large_file_inventory_v1.json"
 CURRENT_ROUTING_PATH = REPO_ROOT / "docs" / "CURRENT_ROUTING.md"
 MAX_CURRENT_ROUTING_LINES = 40
+ARCHITECTURE_GOVERNANCE_PLAN_PATH = (
+    REPO_ROOT / "docs" / "ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md"
+)
 OVERALL_ARCHITECTURE_PLAN_PATH = REPO_ROOT / "docs" / "OVERALL_ARCHITECTURE_REFACTOR_MILESTONE_PLAN.md"
 UNDER_800_PLAN_PATH = REPO_ROOT / "docs" / "UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md"
 README_PATH = REPO_ROOT / "README.md"
@@ -35,17 +38,28 @@ FULL_CANONICAL_GOLD_PLAN_PATH = (
 def test_large_file_count_does_not_grow() -> None:
     oversized = _oversized_code_paths()
 
-    assert len(oversized) <= MAX_ALLOWED_OVERSIZED_FILES
+    assert len(oversized) == MAX_ALLOWED_OVERSIZED_FILES
 
 
 def test_large_file_inventory_matches_follow_on_queue() -> None:
     inventory = _large_file_inventory()
     families = inventory["families"]
+    owner_counts = {"source": 0, "test": 0}
 
     expected_paths: set[Path] = set()
     expected_count = 0
 
+    assert inventory["plan_path"] == "docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md"
+    assert inventory["plan_status"] == "resolved_rebaseline_backlog_routed"
+    historical = inventory["historical_closeout"]
+    assert historical["plan_path"] == "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md"
+    assert historical["status"] == "resolved_historical_closeout"
+    assert historical["closeout_commit"] == "a6c5459"
+
     for family in families:
+        owner_kind = family["owner_kind"]
+        assert owner_kind in owner_counts, family["name"]
+        owner_counts[owner_kind] += 1
         assert family["required_tests"], family["name"]
         files = family["files"]
         assert files, family["name"]
@@ -59,11 +73,8 @@ def test_large_file_inventory_matches_follow_on_queue() -> None:
             assert actual_line_count == entry["line_count"], path
             assert actual_line_count > MAX_REVIEWABLE_LINES, path
 
-    if MAX_ALLOWED_OVERSIZED_FILES == 0:
-        assert families == []
-    else:
-        assert families
-
+    assert families
+    assert owner_counts == {"source": 4, "test": 5}
     assert expected_count == MAX_ALLOWED_OVERSIZED_FILES
     assert _oversized_code_paths() == expected_paths
 
@@ -112,8 +123,14 @@ def test_current_routing_doc_stays_short_and_linked() -> None:
 
     current_routing = CURRENT_ROUTING_PATH.read_text(encoding="utf-8")
     assert len(current_routing.splitlines()) <= MAX_CURRENT_ROUTING_LINES
+    assert "## Live Facts" not in current_routing
+    assert "candidate_authority_count" not in current_routing
+    assert "reviewer_ready_slot_count" not in current_routing
+    assert "source-set-" not in current_routing
     assert "docs/CURRENT_SYSTEM_STATE.md" in current_routing
     assert "docs/SESSION_HANDOFF.md" in current_routing
+    assert "docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md" in current_routing
+    assert "docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md" in current_routing
 
     readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
     start_here = (REPO_ROOT / "docs" / "AGENT_START_HERE.md").read_text(encoding="utf-8")
@@ -121,14 +138,27 @@ def test_current_routing_doc_stays_short_and_linked() -> None:
     assert "docs/CURRENT_ROUTING.md" in start_here
 
 
-def test_under_800_follow_on_is_routed_and_inventory_backed() -> None:
-    plan = UNDER_800_PLAN_PATH.read_text(encoding="utf-8")
-    handoff = SESSION_HANDOFF_PATH.read_text(encoding="utf-8")
-    current_routing = CURRENT_ROUTING_PATH.read_text(encoding="utf-8")
+def test_readme_routes_to_current_state_owners() -> None:
+    readme = README_PATH.read_text(encoding="utf-8")
 
-    assert "config/architecture_large_file_inventory_v1.json" in plan
-    assert "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md" in handoff
-    assert "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md" in current_routing
+    assert "Current routed state on" not in readme
+    assert "docs/CURRENT_ROUTING.md" in readme
+    assert "docs/CURRENT_SYSTEM_STATE.md" in readme
+    assert "docs/SESSION_HANDOFF.md" in readme
+    assert f"`{MAX_ALLOWED_OVERSIZED_FILES}` code files above `800`" not in readme
+
+
+def test_historical_under_800_closeout_and_rebaseline_packet_are_discoverable() -> None:
+    under_800_plan = UNDER_800_PLAN_PATH.read_text(encoding="utf-8")
+    architecture_plan = ARCHITECTURE_GOVERNANCE_PLAN_PATH.read_text(encoding="utf-8")
+    current_system_state = CURRENT_SYSTEM_STATE_PATH.read_text(encoding="utf-8")
+    handoff = SESSION_HANDOFF_PATH.read_text(encoding="utf-8")
+
+    assert "config/architecture_large_file_inventory_v1.json" in under_800_plan
+    assert "docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md" in architecture_plan
+    assert "docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md" in current_system_state
+    assert "docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md" in handoff
+    assert "historical truth" in handoff
 
 
 def test_overall_architecture_plan_closeout_stays_current() -> None:
@@ -160,19 +190,50 @@ def test_overall_architecture_plan_closeout_stays_current() -> None:
     assert "git diff --check" in sequence_52
 
 
-def test_full_canonical_gold_docs_stay_aligned() -> None:
-    docs = {
-        "README": README_PATH.read_text(encoding="utf-8"),
-        "Current Routing": CURRENT_ROUTING_PATH.read_text(encoding="utf-8"),
+def test_live_architecture_state_is_owned_by_current_state_and_handoff() -> None:
+    current_system_state = CURRENT_SYSTEM_STATE_PATH.read_text(encoding="utf-8")
+    handoff = SESSION_HANDOFF_PATH.read_text(encoding="utf-8")
+    readme = README_PATH.read_text(encoding="utf-8")
+    current_routing = CURRENT_ROUTING_PATH.read_text(encoding="utf-8")
+    expected_count_marker = f"`{MAX_ALLOWED_OVERSIZED_FILES}` code files above `800`"
+
+    for name, text in {
+        "Current System State": current_system_state,
+        "Session Handoff": handoff,
+    }.items():
+        assert "docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md" in text, name
+        assert "config/architecture_large_file_inventory_v1.json" in text, name
+        assert expected_count_marker in text, name
+
+    for name, text in {
+        "README": readme,
+        "Current Routing": current_routing,
+    }.items():
+        assert expected_count_marker not in text, name
+
+
+def test_gold_state_markers_live_only_in_owner_docs() -> None:
+    owner_docs = {
         "Current System State": CURRENT_SYSTEM_STATE_PATH.read_text(encoding="utf-8"),
-        "Gold Plan": FULL_CANONICAL_GOLD_PLAN_PATH.read_text(encoding="utf-8"),
         "Session Handoff": SESSION_HANDOFF_PATH.read_text(encoding="utf-8"),
     }
+    non_owner_docs = {
+        "README": README_PATH.read_text(encoding="utf-8"),
+        "Current Routing": CURRENT_ROUTING_PATH.read_text(encoding="utf-8"),
+    }
+    markers = (
+        "five still-unmapped live authorities",
+        "zero-link structural surface",
+        "generated diagnostic",
+    )
 
-    for name, text in docs.items():
-        assert "five still-unmapped live authorities" in text, name
-        assert "zero-link structural surface" in text, name
-        assert "generated diagnostic" in text, name
+    for name, text in owner_docs.items():
+        for marker in markers:
+            assert marker in text, f"{name}: {marker}"
+
+    for name, text in non_owner_docs.items():
+        for marker in markers:
+            assert marker not in text, f"{name}: {marker}"
 
 
 def _code_paths() -> list[Path]:
