@@ -16,6 +16,18 @@ from usfs_r1_ea_sources.applicability_decisions import build_applicability_decis
 from tests.support.applicability_decision_fixtures import _write_decision_fixture
 
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+COMMITTED_ECID_ADJUDICATION = (
+    REPO_ROOT / "config" / "applicability_adjudications" / "v1-cg-ecid-compliance-review.json"
+)
+COMMITTED_SOUTH_ADJUDICATION = (
+    REPO_ROOT
+    / "config"
+    / "applicability_adjudications"
+    / "region1-expansion-south-plateau-landscape-treatment.json"
+)
+
+
 def test_template_pins_unresolved_decisions_directly() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         fixture = _write_decision_fixture(Path(tmp))
@@ -43,6 +55,31 @@ def test_template_pins_unresolved_decisions_directly() -> None:
         assert "Applicability Adjudication Worklist" in result.markdown_path.read_text(
             encoding="utf-8"
         )
+
+
+def test_custom_output_path_uses_review_specific_worklist_name() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        fixture = _write_decision_fixture(Path(tmp))
+        build_applicability_decisions(
+            output_dir=fixture["output_dir"],
+            review_id=fixture["review_id"],
+            source_set_id=fixture["source_set_id"],
+        )
+
+        output_path = Path(tmp) / "config" / "east-crazy-applicability.json"
+        result = write_applicability_adjudication_template(
+            output_dir=fixture["output_dir"],
+            review_id=fixture["review_id"],
+            source_set_id=fixture["source_set_id"],
+            output_path=output_path,
+        )
+
+        assert result.output_path == output_path
+        assert result.markdown_path == output_path.with_name(
+            "east-crazy-applicability.worklist.md"
+        )
+        template = json.loads(result.output_path.read_text(encoding="utf-8"))
+        assert template["summary"]["markdown_path"] == str(result.markdown_path)
 
 
 def test_eval_reports_pending_items_then_passes_after_completion() -> None:
@@ -152,3 +189,31 @@ def _complete_adjudication(path: Path) -> None:
             set(item.get("supporting_citation_refs") or ["UNIT-CITATION-001"])
         )
     path.write_text(json.dumps(template, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def test_committed_ecid_current_adjudication_tracks_aligned_source_set() -> None:
+    adjudication = json.loads(COMMITTED_ECID_ADJUDICATION.read_text(encoding="utf-8"))
+
+    assert adjudication["schema_version"] == "applicability-adjudication-template-v0"
+    assert adjudication["review_id"] == "v1-cg-ecid-compliance-review"
+    assert adjudication["source_set_id"] == "source-set-f70ea11e04ae3d53"
+    assert adjudication["summary"]["markdown_path"].endswith(
+        "v1-cg-ecid-compliance-review.worklist.md"
+    )
+    assert len(adjudication["items"]) == 7
+    assert all(item["final_status"] == "applicable" for item in adjudication["items"])
+    assert all(item["disposition"] == "human_applicable" for item in adjudication["items"])
+
+
+def test_committed_south_current_adjudication_tracks_aligned_source_set() -> None:
+    adjudication = json.loads(COMMITTED_SOUTH_ADJUDICATION.read_text(encoding="utf-8"))
+
+    assert adjudication["schema_version"] == "applicability-adjudication-template-v0"
+    assert adjudication["review_id"] == "region1-expansion-south-plateau-landscape-treatment"
+    assert adjudication["source_set_id"] == "source-set-f70ea11e04ae3d53"
+    assert adjudication["summary"]["markdown_path"].endswith(
+        "region1-expansion-south-plateau-landscape-treatment.worklist.md"
+    )
+    assert len(adjudication["items"]) == 6
+    assert all(item["final_status"] == "applicable" for item in adjudication["items"])
+    assert all(item["disposition"] == "human_applicable" for item in adjudication["items"])

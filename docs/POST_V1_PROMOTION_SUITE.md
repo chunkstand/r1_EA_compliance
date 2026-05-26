@@ -186,14 +186,27 @@ layer rather than the slot-driven contract layer.
   `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`, and
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-  The remaining promotion blocker is therefore packet-local replay debt on the
-  aligned reviewer-facing lane: `applicability-validate` now fails only on
-  unresolved adjudication debt (`needs_adjudication_authority_count=7` for
-  ECID and `6` for South Plateau, both with
-  `generated_rule_pack_ready=false`), ECID and South `v1-ea-eval` remain
-  `contract_status="mismatch"` on review-local artifact/source-record/section
-  failures, and ECID `phase-eval` remains red on packet-local downstream
-  phases plus `evaluation_coverage` direct-eval identity mismatch.
+  Governed replay adjudication is now also green on that source set:
+  `applicability-validate` now passes for both reviews
+  (`55 applicable / 341 non-applicable` for ECID and
+  `64 applicable / 332 non-applicable` for South), and
+  `applicability-generate-rule-pack` now passes with `55` ECID generated rules
+  and `64` South generated rules. The remaining promotion blocker is now the
+  aligned reviewer-facing forest-plan and downstream packet lane: live
+  `forest-plan-resolve` reruns on `source-set-f70ea11e04ae3d53` currently
+  drive both ECID and South to `329` reviewer-resolution component items with
+  `applicable_count=0`, `supported_count=0`, and `reviewer_ready=false`, so
+  the historical component direct-eval slot cannot simply be rebound to the
+  reviewer-facing source set without a real repair. ECID `v1-ea-eval` now
+  remains `contract_status="mismatch"` with
+  `failure_category_counts={"applicable_standard_not_evaluated":2,"baseline_source_record_missing":26,"citation_requirement_miss":4,"conditional_false_negative":1,"forest_plan_component_miss":1,"forest_plan_matrix_miss":1,"forest_plan_reviewer_not_ready":1,"forest_plan_reviewer_resolution_open":1,"forest_plan_standard_reviewer_resolution_open":1,"review_artifact_missing":4,"rule_section_mismatch":10,"source_record_mismatch":19}`.
+  South remains `contract_status="mismatch"` with
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
+  ECID `phase-eval` remains red with
+  `review_direct_eval_status="direct_eval_identity_mismatch"` and the
+  downstream packet family still blocked behind compliance review,
+  forest-plan component eval, decision support, review packet, final QA, and
+  evaluation coverage.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

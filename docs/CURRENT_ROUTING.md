@@ -89,15 +89,30 @@ Use this file as the short current route before opening the large append-only do
   `forest_plan_component_candidate_count=329`, and
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`,
   and both `applicability-context-build` and `applicability-retrieve` reruns
-  now pass on that same governed source set. The remaining live blocker is now
-  packet-local replay repair on the aligned reviewer-facing lane:
-  `applicability-validate` fails only on unresolved adjudication debt
-  (`needs_adjudication_authority_count=7` for ECID and `6` for South Plateau,
-  both with `generated_rule_pack_ready=false`), ECID and South
-  `v1-ea-eval` reruns remain `contract_status="mismatch"` on review-local
-  artifact/source-record/section failures, and ECID `phase-eval` now runs on
-  `source-set-f70ea11e04ae3d53` but remains red on packet-local downstream
-  phases plus `evaluation_coverage` direct-eval identity mismatch.
+  now pass on that same governed source set. Governed replay adjudication is
+  now also green there: current-review applicability adjudications now live at
+  `config/applicability_adjudications/v1-cg-ecid-compliance-review.json` and
+  `config/applicability_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  `applicability-validate` now passes for both reviews
+  (`55 applicable / 341 non-applicable` for ECID and
+  `64 applicable / 332 non-applicable` for South), and
+  `applicability-generate-rule-pack` now passes with `55` ECID generated rules
+  and `64` South generated rules on `source-set-f70ea11e04ae3d53`. The
+  remaining live blocker is now the aligned reviewer-facing forest-plan and
+  downstream packet lane: live `forest-plan-resolve` reruns on
+  `source-set-f70ea11e04ae3d53` currently drive both ECID and South to
+  `needs_reviewer_resolution_count=329`,
+  `reviewer_resolution_count=329`, `applicable_count=0`,
+  `supported_count=0`, and `reviewer_ready=false`, so the old component
+  direct-eval slot cannot simply be rebound to the reviewer-facing source set
+  without a real repair. ECID `v1-ea-eval` now remains
+  `contract_status="mismatch"` with
+  `failure_category_counts={"applicable_standard_not_evaluated":2,"baseline_source_record_missing":26,"citation_requirement_miss":4,"conditional_false_negative":1,"forest_plan_component_miss":1,"forest_plan_matrix_miss":1,"forest_plan_reviewer_not_ready":1,"forest_plan_reviewer_resolution_open":1,"forest_plan_standard_reviewer_resolution_open":1,"review_artifact_missing":4,"rule_section_mismatch":10,"source_record_mismatch":19}`.
+  South remains `contract_status="mismatch"` with
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
+  ECID `phase-eval` now runs on `source-set-f70ea11e04ae3d53` with
+  `review_direct_eval_status="direct_eval_identity_mismatch"` and remains red
+  on the downstream packet family plus evaluation coverage.
   `real-package-review-coverage-eval` remains red at
   `reviewer_ready_slot_count=0` with ECID current promotion and South Plateau
   reviewer-ready expansion both `actual_contract_status="mismatch"`, while

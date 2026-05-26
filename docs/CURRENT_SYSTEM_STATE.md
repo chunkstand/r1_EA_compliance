@@ -51,30 +51,42 @@ Latest implementation update on 2026-05-25:
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`,
   and `validation_passed=true`. `applicability-context-build` and
   `applicability-retrieve` now also pass for both reviews on that same source
-  set. `applicability-validate` now fails only on unresolved adjudication
-  debt: ECID reports `needs_adjudication_authority_count=7`,
-  `unresolved_authority_count=7`, and South reports
-  `needs_adjudication_authority_count=6`,
-  `unresolved_authority_count=6`; both remain
-  `generated_rule_pack_ready=false`. ECID `v1-ea-eval` now runs on
-  `source-set-f70ea11e04ae3d53` and remains `contract_status="mismatch"` with
-  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_section_mismatch":8,"source_record_mismatch":17}`.
-  South `v1-ea-eval` now also runs on `source-set-f70ea11e04ae3d53` and
-  remains `contract_status="mismatch"` with
-  `failure_category_counts={"conditional_false_negative":6,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"source_record_mismatch":25}`.
-  ECID `phase-eval` now runs on `source-set-f70ea11e04ae3d53` and remains
-  `reviewer_ready=false` on packet-local downstream phases plus
-  `evaluation_coverage` direct-eval identity mismatch
+  set, and governed replay adjudication is now green there as well: committed
+  current-review applicability adjudications now live at
+  `config/applicability_adjudications/v1-cg-ecid-compliance-review.json` and
+  `config/applicability_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  `applicability-validate` now passes for both reviews
+  (`55 applicable / 341 non-applicable` for ECID and
+  `64 applicable / 332 non-applicable` for South), and
+  `applicability-generate-rule-pack` now passes with `55` ECID generated rules
+  and `64` South generated rules on `source-set-f70ea11e04ae3d53`. The newly
+  exposed blocker is the aligned reviewer-facing forest-plan replay lane:
+  live `forest-plan-resolve` reruns on `source-set-f70ea11e04ae3d53`
+  currently drive both ECID and South to
+  `needs_reviewer_resolution_count=329`,
+  `reviewer_resolution_count=329`, `applicable_count=0`,
+  `supported_count=0`, and `reviewer_ready=false`, so the old component
+  direct-eval slot cannot simply be rebound to the reviewer-facing source set
+  without a real repair. ECID `v1-ea-eval` now remains
+  `contract_status="mismatch"` with
+  `failure_category_counts={"applicable_standard_not_evaluated":2,"baseline_source_record_missing":26,"citation_requirement_miss":4,"conditional_false_negative":1,"forest_plan_component_miss":1,"forest_plan_matrix_miss":1,"forest_plan_reviewer_not_ready":1,"forest_plan_reviewer_resolution_open":1,"forest_plan_standard_reviewer_resolution_open":1,"review_artifact_missing":4,"rule_section_mismatch":10,"source_record_mismatch":19}`.
+  South now remains `contract_status="mismatch"` with
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
+  ECID `phase-eval` now runs on `source-set-f70ea11e04ae3d53` with
+  `review_direct_eval_status="direct_eval_identity_mismatch"` and remains red
+  on the downstream packet family plus evaluation coverage
 - remaining blocker truth:
-  the reviewer-facing authority-surface mismatch is gone. The remaining live
-  blocker is packet-local replay repair on the aligned reviewer-facing source
-  set: applicability adjudication and rule-pack generation, review-local
-  compliance/matrix/render artifacts, forest-plan matrix coverage, and the
-  ECID phase-eval downstream family
+  the reviewer-facing authority-surface mismatch and the aligned applicability
+  adjudication debt are gone. The remaining live blocker is packet-local
+  replay repair on the aligned reviewer-facing source set, led by the
+  forest-plan component replay lane and then the downstream compliance,
+  matrix/render, decision-support, packet-index, final-QA, and evaluation
+  coverage families
 - next routing:
   resume `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
-  beginning with ECID and South packet-local reviewer-ready artifact repair on
-  aligned `source-set-f70ea11e04ae3d53`
+  beginning with the aligned reviewer-facing forest-plan component replay
+  blocker and then the ECID and South packet-local reviewer-ready downstream
+  artifact families on `source-set-f70ea11e04ae3d53`
 - verification:
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
   `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`,

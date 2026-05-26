@@ -86,7 +86,7 @@ def write_applicability_adjudication_template(
     output_path = Path(output_path) if output_path else (
         applicability_dir / "applicability_adjudication_template.json"
     )
-    markdown_path = output_path.with_name("applicability_adjudication_worklist.md")
+    markdown_path = _adjudication_worklist_path(output_path)
     items = [
         _adjudication_template_item(decision)
         for decision in decisions
@@ -280,6 +280,12 @@ def _adjudication_template_item(decision: dict[str, Any]) -> dict[str, Any]:
         "supporting_citation_refs": evidence_refs,
         "reviewer_notes": "",
     }
+
+
+def _adjudication_worklist_path(output_path: Path) -> Path:
+    if output_path.name == "applicability_adjudication_template.json":
+        return output_path.with_name("applicability_adjudication_worklist.md")
+    return output_path.parent / f"{output_path.stem}.worklist.md"
 
 
 def _adjudication_worklist_markdown(template: dict[str, Any]) -> str:

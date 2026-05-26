@@ -4,7 +4,8 @@ Date: 2026-05-25
 
 Status: Active packet (`Milestone 0` baseline inventory is historical,
 reviewer-facing source-set alignment is now resolved locally, and the next
-truthful slice is packet-local ECID and South Plateau replay repair on aligned
+truthful slice is the aligned reviewer-facing forest-plan component replay
+blocker inside packet-local ECID and South Plateau repair on
 `source-set-f70ea11e04ae3d53`)
 
 Owner context: this standalone follow-on packet opened after
@@ -29,17 +30,25 @@ or the West Reservoir typed-blocked quarantine.
   the aligned source set with `candidate_authority_count=396` and
   `forest_plan_component_candidate_count=329`.
 - `applicability-context-build` and `applicability-retrieve` now pass for
-  both reviews on the aligned source set. `applicability-validate` now fails
-  only on unresolved adjudication debt: ECID reports
-  `needs_adjudication_authority_count=7`,
-  `unresolved_authority_count=7`, and South reports
-  `needs_adjudication_authority_count=6`,
-  `unresolved_authority_count=6`; both remain
-  `generated_rule_pack_ready=false`.
+  both reviews on the aligned source set, and governed replay adjudication is
+  now also green there: current-review applicability adjudications now live at
+  `config/applicability_adjudications/v1-cg-ecid-compliance-review.json` and
+  `config/applicability_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  `applicability-validate` now passes for both reviews
+  (`55 applicable / 341 non-applicable` for ECID and
+  `64 applicable / 332 non-applicable` for South), and
+  `applicability-generate-rule-pack` now passes with `55` ECID generated rules
+  and `64` South generated rules on `source-set-f70ea11e04ae3d53`.
 - ECID and South `v1-ea-eval` reruns now bind to
   `source-set-f70ea11e04ae3d53` and remain `contract_status="mismatch"` on
-  packet-local review artifacts rather than reviewer-facing source-set
-  authority coverage.
+  packet-local review artifacts plus the aligned forest-plan component lane.
+- Live `forest-plan-resolve` reruns on `source-set-f70ea11e04ae3d53`
+  currently drive both ECID and South to
+  `needs_reviewer_resolution_count=329`,
+  `reviewer_resolution_count=329`, `applicable_count=0`,
+  `supported_count=0`, and `reviewer_ready=false`, so the historical
+  component direct-eval slot cannot simply be rebound to the reviewer-facing
+  source set without a real component replay repair.
 - ECID `phase-eval` now also binds to `source-set-f70ea11e04ae3d53`; the
   remaining red is packet-local downstream family debt plus
   `evaluation_coverage` direct-eval identity mismatch, not a false extraction
@@ -74,11 +83,11 @@ weakening the governed slot roster or reopening the contract refactor.
 - The ECID governed slot `east-crazies-current-promotion` currently reports
   `actual_contract_status="mismatch"`, `broader_ea_passed=false`,
   `forest_plan_passed=false`, and
-  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_section_mismatch":8,"source_record_mismatch":17}`.
+  `failure_category_counts={"applicable_standard_not_evaluated":2,"baseline_source_record_missing":26,"citation_requirement_miss":4,"conditional_false_negative":1,"forest_plan_component_miss":1,"forest_plan_matrix_miss":1,"forest_plan_reviewer_not_ready":1,"forest_plan_reviewer_resolution_open":1,"forest_plan_standard_reviewer_resolution_open":1,"review_artifact_missing":4,"rule_section_mismatch":10,"source_record_mismatch":19}`.
 - The South Plateau governed slot `south-plateau-reviewer-ready` currently
   reports `actual_contract_status="mismatch"`, `broader_ea_passed=false`,
   `forest_plan_passed=false`, and
-  `failure_category_counts={"conditional_false_negative":6,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"source_record_mismatch":25}`.
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
 - West Reservoir still truthfully reports
   `actual_contract_status="typed_blocked"` and remains outside the repair
   target for this packet.
@@ -109,8 +118,8 @@ weakening the governed slot roster or reopening the contract refactor.
 - Reviewer-facing source-set alignment is no longer the blocker. Both ECID and
   South Plateau `applicability-authority-universe` reruns now pass on aligned
   `source-set-f70ea11e04ae3d53`, while `applicability-validate`,
-  `v1-ea-eval`, and ECID `phase-eval` remain red on packet-local artifact and
-  adjudication debt.
+  `v1-ea-eval`, live forest-plan replay, and ECID `phase-eval` remain red on
+  packet-local artifact and component-replay debt.
 
 ## Goal
 
@@ -416,26 +425,37 @@ Milestone 1 live next-slice baseline on 2026-05-26:
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
 - `applicability-context-build` and `applicability-retrieve` now also pass for
   ECID on the aligned source set.
-- `applicability-validate --review-id v1-cg-ecid-compliance-review` now fails
-  only on unresolved adjudication debt:
-  `decision_status_counts={"applicable":48,"needs_adjudication":7,"not_applicable":341}`,
-  `needs_adjudication_authority_count=7`,
-  `unresolved_authority_count=7`, and
-  `generated_rule_pack_ready=false`.
+- Governed replay adjudication is now green for ECID on the aligned source
+  set: committed current-review adjudication now lives at
+  `config/applicability_adjudications/v1-cg-ecid-compliance-review.json`,
+  `applicability-validate --review-id v1-cg-ecid-compliance-review` now
+  passes with
+  `decision_status_counts={"applicable":55,"not_applicable":341}`,
+  `needs_adjudication_authority_count=0`,
+  `unresolved_authority_count=0`, and
+  `generated_rule_pack_ready=true`, and
+  `applicability-generate-rule-pack --review-id v1-cg-ecid-compliance-review`
+  now passes with `generated_rule_count=55`.
+- Live `forest-plan-resolve --review-id v1-cg-ecid-compliance-review` on the
+  aligned source set exposes the next blocker rather than clearing it:
+  `needs_reviewer_resolution_count=329`,
+  `reviewer_resolution_count=329`, `applicable_count=0`,
+  `supported_count=0`, and `reviewer_ready=false`.
 - `v1-ea-eval --review-id v1-cg-ecid-compliance-review` now runs on
   `source-set-f70ea11e04ae3d53` and remains `contract_status="mismatch"` with
-  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_section_mismatch":8,"source_record_mismatch":17}`.
+  `failure_category_counts={"applicable_standard_not_evaluated":2,"baseline_source_record_missing":26,"citation_requirement_miss":4,"conditional_false_negative":1,"forest_plan_component_miss":1,"forest_plan_matrix_miss":1,"forest_plan_reviewer_not_ready":1,"forest_plan_reviewer_resolution_open":1,"forest_plan_standard_reviewer_resolution_open":1,"review_artifact_missing":4,"rule_section_mismatch":10,"source_record_mismatch":19}`.
 - `phase-eval --review-id v1-cg-ecid-compliance-review` now also runs on
   `source-set-f70ea11e04ae3d53`; remaining failed phases include
-  `applicability_validation`, `generated_rule_pack`, `compliance_review`,
-  `forest_plan_component_eval`, `decision_support_report`,
+  `compliance_review`, `forest_plan_component_eval`,
+  `decision_support_report`,
   `review_packet_index`, `final_qa_certification_report`, and
-  `evaluation_coverage`, with the last one still carrying
+  `evaluation_coverage`; `applicability_validation` and `generated_rule_pack`
+  are no longer the blocker, but `review_direct_eval_status` remains
   `direct_eval_identity_mismatch`.
 - The next truthful slice is ECID packet-local replay repair on aligned
-  `source-set-f70ea11e04ae3d53`, beginning with adjudication/rule-pack truth
-  and then the review-local compliance, packet, decision-support, final-QA,
-  and supporting-output families.
+  `source-set-f70ea11e04ae3d53`, beginning with the forest-plan component
+  replay blocker and then the review-local compliance, packet,
+  decision-support, final-QA, and supporting-output families.
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 
@@ -492,21 +512,32 @@ Milestone 2 live next-slice baseline on 2026-05-26:
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
 - `applicability-context-build` and `applicability-retrieve` now also pass for
   South Plateau on the aligned source set.
-- `applicability-validate --review-id
-  region1-expansion-south-plateau-landscape-treatment` now fails only on
-  unresolved adjudication debt:
-  `decision_status_counts={"applicable":58,"needs_adjudication":6,"not_applicable":332}`,
-  `needs_adjudication_authority_count=6`,
-  `unresolved_authority_count=6`, and
-  `generated_rule_pack_ready=false`.
+- Governed replay adjudication is now green for South Plateau on the aligned
+  source set: committed current-review adjudication now lives at
+  `config/applicability_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  `applicability-validate --review-id
+  region1-expansion-south-plateau-landscape-treatment` now passes with
+  `decision_status_counts={"applicable":64,"not_applicable":332}`,
+  `needs_adjudication_authority_count=0`,
+  `unresolved_authority_count=0`, and
+  `generated_rule_pack_ready=true`, and
+  `applicability-generate-rule-pack --review-id
+  region1-expansion-south-plateau-landscape-treatment` now passes with
+  `generated_rule_count=64`.
+- Live `forest-plan-resolve --review-id
+  region1-expansion-south-plateau-landscape-treatment` on the aligned source
+  set exposes the same next blocker:
+  `needs_reviewer_resolution_count=329`,
+  `reviewer_resolution_count=329`, `applicable_count=0`,
+  `supported_count=0`, and `reviewer_ready=false`.
 - `v1-ea-eval --review-id
   region1-expansion-south-plateau-landscape-treatment` now runs on
   `source-set-f70ea11e04ae3d53` and remains `contract_status="mismatch"` with
-  `failure_category_counts={"conditional_false_negative":6,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"source_record_mismatch":25}`.
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
 - The next truthful slice after ECID remains South Plateau packet-local replay
-  repair on aligned `source-set-f70ea11e04ae3d53`, especially adjudication,
-  generated rule-pack, review-local compliance artifacts, and forest-plan
-  matrix coverage.
+  repair on aligned `source-set-f70ea11e04ae3d53`, especially the
+  forest-plan component replay blocker and then the review-local compliance
+  artifacts and forest-plan matrix coverage.
 
 ### Milestone 3 - Aggregate Replay, Docs, And Closeout
 

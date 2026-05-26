@@ -28,21 +28,99 @@ history below.
   there with `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`, and
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-  The remaining live blocker is packet-local replay debt on that aligned
-  reviewer-facing source set: `applicability-validate` now fails only on
-  unresolved adjudication debt (`needs_adjudication_authority_count=7` for
-  ECID and `6` for South Plateau, both with
-  `generated_rule_pack_ready=false`), ECID and South `v1-ea-eval` remain
-  `contract_status="mismatch"` on review-local artifact/source-record/section
-  failures, and ECID `phase-eval` remains red on packet-local downstream
-  phases plus `evaluation_coverage` direct-eval identity mismatch
+  Governed replay adjudication is now also green there: current-review
+  applicability adjudications now live at
+  `config/applicability_adjudications/v1-cg-ecid-compliance-review.json` and
+  `config/applicability_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  `applicability-validate` now passes for both reviews
+  (`55 applicable / 341 non-applicable` for ECID and
+  `64 applicable / 332 non-applicable` for South), and
+  `applicability-generate-rule-pack` now passes with `55` ECID generated rules
+  and `64` South generated rules on `source-set-f70ea11e04ae3d53`. The
+  remaining live blocker is now the aligned reviewer-facing forest-plan and
+  downstream packet lane: live `forest-plan-resolve` reruns on
+  `source-set-f70ea11e04ae3d53` currently drive both ECID and South to
+  `needs_reviewer_resolution_count=329`,
+  `reviewer_resolution_count=329`, `applicable_count=0`,
+  `supported_count=0`, and `reviewer_ready=false`, so the historical
+  component direct-eval slot cannot simply be rebound to the reviewer-facing
+  source set without a real repair. ECID `v1-ea-eval` now remains
+  `contract_status="mismatch"` with
+  `failure_category_counts={"applicable_standard_not_evaluated":2,"baseline_source_record_missing":26,"citation_requirement_miss":4,"conditional_false_negative":1,"forest_plan_component_miss":1,"forest_plan_matrix_miss":1,"forest_plan_reviewer_not_ready":1,"forest_plan_reviewer_resolution_open":1,"forest_plan_standard_reviewer_resolution_open":1,"review_artifact_missing":4,"rule_section_mismatch":10,"source_record_mismatch":19}`.
+  South remains `contract_status="mismatch"` with
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
+  ECID `phase-eval` remains red with
+  `review_direct_eval_status="direct_eval_identity_mismatch"` and the
+  downstream packet family still blocked behind compliance review,
+  forest-plan component eval, decision support, review packet, final QA, and
+  evaluation coverage
 - next truthful slice:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
-  beginning with ECID packet-local replay repair on aligned
-  `source-set-f70ea11e04ae3d53`, then South Plateau packet-local replay repair
+  beginning with the aligned reviewer-facing forest-plan component replay
+  blocker and then the downstream compliance/packet repair families on
+  `source-set-f70ea11e04ae3d53`
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## Applicability Adjudication And Rule-Pack Truth Reduced Locally
+
+This implementation slice closes the aligned reviewer-facing applicability
+adjudication debt and exposes the next real blocker.
+
+- outcome label:
+  `reduced locally`; aligned reviewer-facing applicability replay is now
+  reviewer-ready, but the aligned forest-plan component lane is not
+- implementation truth:
+  `src/usfs_r1_ea_sources/applicability_adjudication.py` now preserves the
+  historical review-local worklist filename while giving custom governed
+  adjudication exports unique `<review>.worklist.md` names. Current-review
+  governed adjudications now live at
+  `config/applicability_adjudications/v1-cg-ecid-compliance-review.json` and
+  `config/applicability_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  with focused regressions in `tests/test_applicability_adjudication.py`
+- live replay truth:
+  `applicability-adjudication-eval`, `applicability-adjudication-apply`,
+  `applicability-validate`, and `applicability-generate-rule-pack` now all
+  pass for ECID and South on `source-set-f70ea11e04ae3d53`. ECID now reports
+  `55 applicable`, `341 non-applicable`, `0 needs_adjudication`, and `55`
+  generated rules; South now reports `64 applicable`, `332 non-applicable`,
+  `0 needs_adjudication`, and `64` generated rules. The newly exposed blocker
+  is the aligned reviewer-facing forest-plan replay lane: live
+  `forest-plan-resolve` reruns on `source-set-f70ea11e04ae3d53` currently
+  drive both ECID and South to `329` reviewer-resolution component items with
+  `applicable_count=0`, `supported_count=0`, and `reviewer_ready=false`.
+  ECID `v1-ea-eval` now remains `contract_status="mismatch"` with
+  `failure_category_counts={"applicable_standard_not_evaluated":2,"baseline_source_record_missing":26,"citation_requirement_miss":4,"conditional_false_negative":1,"forest_plan_component_miss":1,"forest_plan_matrix_miss":1,"forest_plan_reviewer_not_ready":1,"forest_plan_reviewer_resolution_open":1,"forest_plan_standard_reviewer_resolution_open":1,"review_artifact_missing":4,"rule_section_mismatch":10,"source_record_mismatch":19}`.
+  South remains `contract_status="mismatch"` with
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
+  ECID `phase-eval` no longer fails on applicability adjudication or generated
+  rule-pack truth, but it still remains
+  `review_direct_eval_status="direct_eval_identity_mismatch"` and red on the
+  downstream packet family because the historical component direct-eval slot
+  cannot be rebound to `source-set-f70ea11e04ae3d53` without a real component
+  repair
+- next truthful slice:
+  continue `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  beginning with the aligned reviewer-facing forest-plan component replay
+  blocker and then the downstream compliance review, decision support, review
+  packet, final-QA, and evaluation-coverage families
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-template --output-dir source_library --review-id v1-cg-ecid-compliance-review --output-path config/applicability_adjudications/v1-cg-ecid-compliance-review.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-template --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment --output-path config/applicability_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --adjudication-file config/applicability_adjudications/v1-cg-ecid-compliance-review.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-apply --output-dir source_library --review-id v1-cg-ecid-compliance-review --adjudication-file config/applicability_adjudications/v1-cg-ecid-compliance-review.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment --adjudication-file config/applicability_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-apply --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment --adjudication-file config/applicability_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --output-dir source_library --review-id v1-cg-ecid-compliance-review --package-path 'source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)' --source-set-id source-set-f70ea11e04ae3d53 --reuse-package-cache`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment --package-path source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment --source-set-id source-set-f70ea11e04ae3d53 --reuse-package-cache`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
 
 ## Reviewer-Facing Source-Set Alignment Resolved Locally
 
