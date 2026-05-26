@@ -15,6 +15,76 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## South Plateau Reviewer-Ready Expansion Restored Locally
+
+Latest implementation update on 2026-05-26:
+
+- routed packet:
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; the governed South Plateau reviewer-ready expansion lane
+  is now green on aligned reviewer-facing `source-set-f70ea11e04ae3d53`, and
+  the remaining aggregate blocker has shifted to the historical ECID
+  preliminary-EA expansion review-case artifact family rather than South
+  forest-plan replay
+- implementation truth:
+  South replay-local applicability/source alignment, forest-plan adjudication,
+  broader-EA source-evidence expectations, and promotion-suite slot contracts
+  now line up on reviewer-facing `source-set-f70ea11e04ae3d53`. The packet
+  now accepts adjudication-backed forest-plan readiness in
+  `src/usfs_r1_ea_sources/compliance_validation_checks.py`, promotes
+  applicability decision source evidence in
+  `src/usfs_r1_ea_sources/v1_ea_eval_rule_expectations.py`, and refreshes the
+  South contract and promotion manifest truth in
+  `config/v1_south_plateau_real_ea_eval.json`,
+  `config/forest_plan_component_adjudications/region1-expansion-south-plateau-landscape-treatment.json`,
+  and `config/promotion_suite_v1.json` with matching regressions in
+  `tests/test_v1_ea_eval.py`,
+  `tests/test_forest_plan_component_adjudication.py`, and
+  `tests/test_promotion_suite.py`
+- live replay truth:
+  `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`
+  now reports `contract_status="reviewer_ready"`,
+  `broader_ea_passed=true`, and `forest_plan_passed=true` with
+  `failure_category_counts={}`. Review `phase-eval` now passes `27/27` with
+  `reviewer_ready=true`, `review_direct_eval_status="direct_eval_present"`,
+  `missing_direct_eval_phase_count=0`, and
+  `threshold_failed_phase_count=0`. `real-package-review-coverage-eval` now
+  reports `passed=true`, `reviewer_ready_slot_count=2`,
+  `missing_required_slot_count=0`, and `missing_coverage_class_ids=[]`.
+  Non-strict `promotion-suite` remains green for current promotion and now has
+  no open expansion slots: `current_promotion_ready=true`,
+  `promotion_ready=true`, `expansion_ready=false`,
+  `open_expansion_slot_count=0`, `open_expansion_artifact_count=6`,
+  `passed_required_current_result_count=32/32`, and
+  `passed_required_expansion_result_count=20/26`. Strict expansion now fails
+  closed only on
+  `failure_category_counts={"forest_plan_reviewer_not_ready":3,"stale_artifact":3}`
+  for the remaining ECID preliminary review case
+- remaining blocker truth:
+  South Plateau is no longer the blocker. The remaining packet-local blocker is
+  `region1-expansion-ecid-preliminary-ea`, which still lacks the six
+  downstream compliance/provenance artifacts required by strict expansion:
+  `compliance_validation.json`, `compliance_review.json`,
+  `compliance_matrix.json`, `compliance_matrix.pdf`,
+  `authority_family_provenance.json`, and
+  `non_applicable_authority_appendix.json`. That historical lane is split:
+  applicability validation and review phase eval remain on
+  `source-set-ba8d0feae79501b8`, while the generated rule pack and expansion
+  slot contract point at `source-set-4fb59e9eb43045cb`
+- next routing:
+  resume `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  beginning with ECID preliminary-EA historical expansion compliance /
+  provenance artifact repair or truthful contract reroute on that split lane,
+  then finish aggregate packet closeout
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json --results-dir source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion --strict-expansion`
+
 ## Architecture Governance Rebaseline Resolved Locally
 
 Latest docs-and-gate rebaseline on 2026-05-26:

@@ -269,43 +269,50 @@ def check_forest_plan_component_gate(forest_plan_summary: dict) -> dict:
     required = _forest_plan_component_gate_required(scope_status)
     component_evaluation = forest_plan_summary.get("component_evaluation") or {}
     component_adjudication = forest_plan_summary.get("component_adjudication") or {}
+    component_reviewer_ready = component_evaluation.get("reviewer_ready")
+    component_adjudication_reviewer_ready = component_adjudication.get("reviewer_ready")
+    details = {
+        "required": required,
+        "scope_status": scope_status,
+        "component_reviewer_ready": component_reviewer_ready,
+        "component_evaluation_reviewer_ready": component_reviewer_ready,
+        "component_adjudication_reviewer_ready": component_adjudication_reviewer_ready,
+        "component_inventory_coverage_passed": component_evaluation.get(
+            "component_inventory_coverage_passed"
+        ),
+        "applicable_standard_coverage_passed": component_evaluation.get(
+            "applicable_standard_coverage_passed"
+        ),
+        "component_evaluation_validation_passed": component_evaluation.get(
+            "validation_passed"
+        ),
+        "component_adjudication_validation_passed": component_adjudication.get(
+            "validation_passed"
+        ),
+        "component_evaluation_system_miss_count": component_evaluation.get(
+            "system_miss_count",
+        ),
+        "component_adjudication_system_miss_count": component_adjudication.get(
+            "system_miss_count",
+        ),
+        "component_adjudication_real_ea_omission_count": component_adjudication.get(
+            "real_ea_omission_count",
+        ),
+    }
     if not required:
         return {
             "name": "forest_plan_component_gate_reviewer_ready",
             "passed": True,
-            "details": {
-                "required": False,
-                "scope_status": scope_status,
-                "component_evaluation_reviewer_ready": component_evaluation.get("reviewer_ready"),
-                "component_adjudication_reviewer_ready": component_adjudication.get(
-                    "reviewer_ready"
-                ),
-            },
+            "details": details,
         }
+    gate_reviewer_ready = bool(component_reviewer_ready) or bool(
+        component_adjudication_reviewer_ready
+    )
+    details["component_gate_reviewer_ready"] = gate_reviewer_ready
     return {
         "name": "forest_plan_component_gate_reviewer_ready",
-        "passed": bool(component_evaluation.get("reviewer_ready"))
-        and bool(component_adjudication.get("reviewer_ready")),
-        "details": {
-            "required": True,
-            "scope_status": scope_status,
-            "component_evaluation_reviewer_ready": component_evaluation.get("reviewer_ready"),
-            "component_adjudication_reviewer_ready": component_adjudication.get(
-                "reviewer_ready"
-            ),
-            "component_evaluation_validation_passed": component_evaluation.get(
-                "validation_passed"
-            ),
-            "component_adjudication_validation_passed": component_adjudication.get(
-                "validation_passed"
-            ),
-            "component_evaluation_system_miss_count": component_evaluation.get(
-                "system_miss_count",
-            ),
-            "component_adjudication_real_ea_omission_count": component_adjudication.get(
-                "real_ea_omission_count",
-            ),
-        },
+        "passed": gate_reviewer_ready,
+        "details": details,
     }
 
 

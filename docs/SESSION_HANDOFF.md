@@ -32,9 +32,9 @@ history below.
   the new applicability/compliance child packet isolates broad replay-owner
   concentration in `build_applicability_decisions(...)` and
   `run_compliance_review(...)`. It does not replace the parent packet's next
-  truthful runtime slice, which is now South Plateau packet-local forest-plan
-  replay / adjudication refresh on aligned
-  `source-set-f70ea11e04ae3d53`, then aggregate docs / closeout on that same
+  truthful runtime slice, which is now ECID preliminary-EA historical
+  expansion compliance / provenance artifact repair or truthful reroute on the
+  split `ba8...` / `4fb...` lane, then aggregate docs / closeout on that same
   packet
 - extraction/direct-eval owner-boundary note:
   the new extraction/direct-eval child packet preserves the closed
@@ -43,8 +43,8 @@ history below.
   `extraction_fidelity_eval.py` and
   `phase_eval_direct_eval_source_set.py`. It does not replace the parent
   replay packet's current runtime slice, which no longer sits in ECID
-  direct-eval debt and is now South Plateau packet-local replay repair on
-  `source-set-f70ea11e04ae3d53`
+  direct-eval debt or South replay debt and is now the ECID preliminary-EA
+  historical downstream artifact family
 - queued oversized-test owner note:
   the new oversized-test child packet isolates the five live `>800` test
   owners and keeps `tests/test_compliance_review.py` behind its existing
@@ -114,34 +114,68 @@ history below.
   `passed_required_current_result_count=32/32`. The truthful ECID
   packet-scoped graph signal remains
   `region1_forest_plan_blocked_profile_count=9`, not a fake full-Region-1
-  zero-blocker claim. The governed real-package coverage gate is now narrowed
-  to the remaining South slot:
-  `real-package-review-coverage-eval` reports
-  `reviewer_ready_slot_count=1`, `missing_required_slot_count=1`, and
-  `missing_coverage_class_ids=["expansion_reviewer_ready"]`; West Reservoir
-  remains truthful `typed_blocked`. Strict-expansion promotion still fails
-  closed with
-  `failure_category_counts={"adjudication_needed":2,"forest_plan_reviewer_not_ready":7,"stale_artifact":10,"unsupported_package_evidence":2}`,
-  `open_expansion_slot_count=1`, and `open_expansion_artifact_count=19`.
-  South remains the live forest-plan blocker on the same
-  source set with `reviewer_ready=false`, `component_count=329`,
-  `reviewer_resolution_count=34`, `needs_reviewer_resolution_count=1`,
-  `gap_count=33`, `applied_standard_count=22/25`, and stale component
-  adjudication eval checks
-  `["source_set_mismatch","queue_item_count_mismatch","resolved_item_count_mismatch"]`.
-  South remains `contract_status="mismatch"` with
-  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9}`.
-  South is now the remaining packet-local replay debt; ECID broader-EA,
-  direct-eval, final-QA, and current-promotion aggregate replay are no longer
-  the blocker
+  zero-blocker claim. South is now also green on the same aligned source set:
+  `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`
+  now reports `contract_status="reviewer_ready"` with no blocker categories,
+  review `phase-eval` passes `27/27` with
+  `review_direct_eval_status="direct_eval_present"`, and the governed
+  `real-package-review-coverage-eval` now reports
+  `reviewer_ready_slot_count=2`, `missing_required_slot_count=0`, and
+  `missing_coverage_class_ids=[]`; West Reservoir remains truthful
+  `typed_blocked`. Strict-expansion promotion still fails closed, but now only
+  on the historical ECID preliminary-EA review case:
+  `failure_category_counts={"forest_plan_reviewer_not_ready":3,"stale_artifact":3}`,
+  `open_expansion_slot_count=0`, and `open_expansion_artifact_count=6`.
+  The only remaining failed review case is
+  `region1-expansion-ecid-preliminary-ea`, which still lacks
+  `compliance_validation.json`, `compliance_review.json`,
+  `compliance_matrix.json`, `compliance_matrix.pdf`,
+  `authority_family_provenance.json`, and
+  `non_applicable_authority_appendix.json`. That lane is historically split:
+  applicability validation and phase eval still point at
+  `source-set-ba8d0feae79501b8`, while the generated rule pack and expansion
+  slot contract point at `source-set-4fb59e9eb43045cb`. A direct
+  `applicability-validate` rerun against today's derived corpus reopens broad
+  stale-source-set failures there, so the next slice must either rebuild that
+  historical lane coherently or truthfully reroute the strict-expansion
+  contract rather than faking a local pass
 - next truthful slice:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
-  beginning with South Plateau packet-local forest-plan replay / adjudication
-  refresh on aligned `source-set-f70ea11e04ae3d53`, then aggregate docs /
-  closeout for the same packet
+  beginning with ECID preliminary-EA historical expansion compliance /
+  provenance artifact repair or truthful strict-expansion contract reroute,
+  then aggregate docs / closeout for the same packet
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## South Plateau Reviewer-Ready Expansion Restored Locally
+
+This implementation slice closes the South Plateau reviewer-ready expansion
+slot on aligned reviewer-facing `source-set-f70ea11e04ae3d53`.
+
+- outcome label:
+  `reduced locally`; South is now green, governed reviewer-ready slot coverage
+  is green, and the remaining aggregate blocker is the historical ECID
+  preliminary-EA downstream compliance/provenance artifact family
+- live South truth:
+  `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`
+  now reports `contract_status="reviewer_ready"`,
+  `broader_ea_passed=true`, and `forest_plan_passed=true` with
+  `failure_category_counts={}`; review `phase-eval` now passes `27/27` with
+  `review_direct_eval_status="direct_eval_present"`,
+  `missing_direct_eval_phase_count=0`, and
+  `threshold_failed_phase_count=0`; `real-package-review-coverage-eval` now
+  reports `passed=true`, `reviewer_ready_slot_count=2`, and
+  `missing_required_slot_count=0`
+- aggregate truth:
+  non-strict `promotion-suite` remains green for current promotion and now has
+  `open_expansion_slot_count=0`, `open_expansion_artifact_count=6`,
+  `passed_required_current_result_count=32/32`, and
+  `passed_required_expansion_result_count=20/26`; strict expansion now fails
+  only on `region1-expansion-ecid-preliminary-ea`
+- next slice:
+  stay on the same parent packet, but reroute from South to the historical
+  ECID preliminary-EA expansion review-case artifact family
 
 ## ECID Current-Promotion Replay Resolved Locally
 

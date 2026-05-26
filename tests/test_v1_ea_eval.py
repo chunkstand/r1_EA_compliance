@@ -183,6 +183,72 @@ class V1EAReviewEvalTests(unittest.TestCase):
             self.assertEqual(ce_result["actual_status"], "not_applicable")
             self.assertEqual(ce_result["actual_applicability"], "not_applicable")
 
+    def test_v1_eval_uses_applicability_decision_source_alignment_for_existing_row(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            report = _read_json(review_dir / "compliance_review.json")
+            finding = next(
+                finding for finding in report["findings"] if finding["rule_id"] == "esa_section_7"
+            )
+            finding["source_library_evidence"] = None
+            finding["source_library_evidence_citation"] = None
+            finding["source_claim_links"] = []
+            finding["source_claim_link_count"] = 0
+            _write_json(review_dir / "compliance_review.json", report)
+            matrix = _read_json(review_dir / "compliance_matrix.json")
+            row = next(row for row in matrix["rows"] if row["rule_id"] == "esa_section_7")
+            row["source_library_evidence"] = None
+            row["applied_source_record_ids"] = []
+            row["applied_source_document_roles"] = []
+            _write_json(review_dir / "compliance_matrix.json", matrix)
+            _write_jsonl(
+                review_dir / "applicability" / "applicability_decisions.jsonl",
+                [
+                    {
+                        "schema_version": "applicability-decisions-v0",
+                        "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:esa_section_7",
+                        "rule_template": {"rule_id": "esa_section_7"},
+                        "status": "applicable",
+                        "source_record_ids": ["R1EA-065"],
+                        "authority_document_role": "law",
+                        "package_evidence_spans": [
+                            {
+                                "citation_label": "EA-PACKAGE-001",
+                                "text_snippet": "The package requires ESA section 7 consultation.",
+                            }
+                        ],
+                        "source_library_evidence_spans": [
+                            {
+                                "citation_label": "R1EA-065",
+                                "source_record_id": "R1EA-065",
+                                "text_excerpt": "ESA section 7 consultation authority.",
+                            }
+                        ],
+                    }
+                ],
+            )
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            output = _read_json(result.output_path)
+            conditional_result = next(
+                item for item in output["conditional_results"] if item["rule_id"] == "esa_section_7"
+            )
+            self.assertTrue(conditional_result["source_record_match"])
+            self.assertTrue(conditional_result["source_document_role_match"])
+            self.assertEqual(conditional_result["actual_source_record_ids"], ["R1EA-065"])
+            self.assertEqual(conditional_result["actual_source_document_roles"], ["law"])
+
     def test_v1_eval_bridges_missing_forest_plan_authority_row_from_component_lane(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

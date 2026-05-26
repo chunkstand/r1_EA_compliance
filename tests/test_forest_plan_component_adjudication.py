@@ -307,7 +307,7 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
         )
         self.assertEqual(
             adjudication["source_set_id"],
-            "source-set-4fb59e9eb43045cb",
+            "source-set-f70ea11e04ae3d53",
         )
         self.assertEqual(
             adjudication["adjudication_id"],
@@ -316,7 +316,7 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
         self.assertEqual(adjudication["adjudication"]["status"], "completed")
         self.assertEqual(adjudication["adjudication"]["method"], "tracked_replay_artifact_review")
         items = adjudication["items"]
-        self.assertEqual(len(items), 31)
+        self.assertEqual(len(items), 34)
         self.assertTrue(all(item["disposition"] == "applicability_false_positive" for item in items))
         self.assertTrue(all(item["source_type"] == "package_scope_review" for item in items))
 

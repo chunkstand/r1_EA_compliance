@@ -101,103 +101,103 @@
       "rule_id": "floodplain_management_eo11988_authority_template"
     },
     {
-      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_R1PLAN-custer-gallatin-nf-02-FW-DC-CWN-01 explicitly applicable.",
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_FOR-009-FW-DC-CWN-01 explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
         "forest_plan"
       ],
       "expected_source_record_ids": [
-        "R1PLAN-custer-gallatin-nf-02"
+        "FOR-009"
       ],
-      "rule_id": "forest_plan_component_R1PLAN-custer-gallatin-nf-02-FW-DC-CWN-01"
+      "rule_id": "forest_plan_component_FOR-009-FW-DC-CWN-01"
     },
     {
-      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_R1PLAN-custer-gallatin-nf-02-FW-DC-NNL-01 explicitly applicable.",
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_FOR-009-FW-DC-NNL-01 explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
         "forest_plan"
       ],
       "expected_source_record_ids": [
-        "R1PLAN-custer-gallatin-nf-02"
+        "FOR-009"
       ],
-      "rule_id": "forest_plan_component_R1PLAN-custer-gallatin-nf-02-FW-DC-NNL-01"
+      "rule_id": "forest_plan_component_FOR-009-FW-DC-NNL-01"
     },
     {
-      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_R1PLAN-custer-gallatin-nf-02-FW-DC-SA-01 explicitly applicable.",
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_FOR-009-FW-DC-SA-01 explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
         "forest_plan"
       ],
       "expected_source_record_ids": [
-        "R1PLAN-custer-gallatin-nf-02"
+        "FOR-009"
       ],
-      "rule_id": "forest_plan_component_R1PLAN-custer-gallatin-nf-02-FW-DC-SA-01"
+      "rule_id": "forest_plan_component_FOR-009-FW-DC-SA-01"
     },
     {
-      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_R1PLAN-custer-gallatin-nf-02-FW-DC-WLPD-01 explicitly applicable.",
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_FOR-009-FW-DC-WLPD-01 explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
         "forest_plan"
       ],
       "expected_source_record_ids": [
-        "R1PLAN-custer-gallatin-nf-02"
+        "FOR-009"
       ],
-      "rule_id": "forest_plan_component_R1PLAN-custer-gallatin-nf-02-FW-DC-WLPD-01"
+      "rule_id": "forest_plan_component_FOR-009-FW-DC-WLPD-01"
     },
     {
-      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_R1PLAN-custer-gallatin-nf-02-MG-DC-GRREA-01 explicitly applicable.",
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_FOR-009-MG-DC-GRREA-01 explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
         "forest_plan"
       ],
       "expected_source_record_ids": [
-        "R1PLAN-custer-gallatin-nf-02"
+        "FOR-009"
       ],
-      "rule_id": "forest_plan_component_R1PLAN-custer-gallatin-nf-02-MG-DC-GRREA-01"
+      "rule_id": "forest_plan_component_FOR-009-MG-DC-GRREA-01"
     },
     {
-      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_R1PLAN-custer-gallatin-nf-02-MG-DC-HREA-01 explicitly applicable.",
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_FOR-009-MG-DC-HREA-01 explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
         "forest_plan"
       ],
       "expected_source_record_ids": [
-        "R1PLAN-custer-gallatin-nf-02"
+        "FOR-009"
       ],
-      "rule_id": "forest_plan_component_R1PLAN-custer-gallatin-nf-02-MG-DC-HREA-01"
+      "rule_id": "forest_plan_component_FOR-009-MG-DC-HREA-01"
     },
     {
-      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_R1PLAN-custer-gallatin-nf-02-MG-DC-SCREA-01 explicitly applicable.",
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_FOR-009-MG-DC-SCREA-01 explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
         "forest_plan"
       ],
       "expected_source_record_ids": [
-        "R1PLAN-custer-gallatin-nf-02"
+        "FOR-009"
       ],
-      "rule_id": "forest_plan_component_R1PLAN-custer-gallatin-nf-02-MG-DC-SCREA-01"
+      "rule_id": "forest_plan_component_FOR-009-MG-DC-SCREA-01"
     },
     {
-      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_R1PLAN-custer-gallatin-nf-02-MG-DC-YRREA-01 explicitly applicable.",
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_FOR-009-MG-DC-YRREA-01 explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
         "forest_plan"
       ],
       "expected_source_record_ids": [
-        "R1PLAN-custer-gallatin-nf-02"
+        "FOR-009"
       ],
-      "rule_id": "forest_plan_component_R1PLAN-custer-gallatin-nf-02-MG-DC-YRREA-01"
+      "rule_id": "forest_plan_component_FOR-009-MG-DC-YRREA-01"
     },
     {
-      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_R1PLAN-custer-gallatin-nf-02-MG-SUIT-CDNST-01 explicitly applicable.",
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_plan_component_FOR-009-MG-SUIT-CDNST-01 explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
         "forest_plan"
       ],
       "expected_source_record_ids": [
-        "R1PLAN-custer-gallatin-nf-02"
+        "FOR-009"
       ],
-      "rule_id": "forest_plan_component_R1PLAN-custer-gallatin-nf-02-MG-SUIT-CDNST-01"
+      "rule_id": "forest_plan_component_FOR-009-MG-SUIT-CDNST-01"
     },
     {
       "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps forest_service_planning_handbook_amendments_authority_template explicitly applicable.",
@@ -206,7 +206,7 @@
         "agency_policy"
       ],
       "expected_source_record_ids": [
-        "R1EA-032"
+        "USFS-008"
       ],
       "rule_id": "forest_service_planning_handbook_amendments_authority_template"
     },
@@ -255,6 +255,18 @@
       "rule_id": "land_exchange_fs_policy_and_project_references_authority_template"
     },
     {
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps land_exchange_fs_policy_and_project_references explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "agency_policy"
+      ],
+      "expected_source_record_ids": [
+        "LEX-USFS-002",
+        "LEX-USFS-007"
+      ],
+      "rule_id": "land_exchange_fs_policy_and_project_references"
+    },
+    {
       "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps land_exchange_regulatory_requirements_authority_template explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
@@ -266,6 +278,17 @@
       "rule_id": "land_exchange_regulatory_requirements_authority_template"
     },
     {
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps land_exchange_regulatory_requirements explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "FED-011"
+      ],
+      "rule_id": "land_exchange_regulatory_requirements"
+    },
+    {
       "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps land_exchange_statutory_authorities_authority_template explicitly applicable.",
       "expected_applicability": "applicable",
       "expected_source_document_roles": [
@@ -275,6 +298,19 @@
         "R1EA-137"
       ],
       "rule_id": "land_exchange_statutory_authorities_authority_template"
+    },
+    {
+      "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps land_exchange_statutory_authorities explicitly applicable.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "LEX-FED-003",
+        "LEX-FED-004",
+        "LEX-FED-006"
+      ],
+      "rule_id": "land_exchange_statutory_authorities"
     },
     {
       "classification_rationale": "Current region1-expansion-south-plateau-landscape-treatment reviewer-ready contract keeps mbta_migratory_birds explicitly applicable.",

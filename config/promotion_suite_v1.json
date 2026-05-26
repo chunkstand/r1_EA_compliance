@@ -1084,7 +1084,7 @@
             {
               "name": "phase_eval_source_set_matches",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb",
+              "equals": "source-set-ba8d0feae79501b8",
               "failure_category": "stale_artifact"
             },
             {
@@ -1134,12 +1134,12 @@
             {
               "name": "applicable_authority_count",
               "json_path": "summary.applicable_authority_count",
-              "equals": 61
+              "equals": 64
             },
             {
               "name": "non_applicable_authority_count",
               "json_path": "summary.non_applicable_authority_count",
-              "equals": 331
+              "equals": 332
             },
             {
               "name": "needs_adjudication_authority_count",
@@ -1169,17 +1169,17 @@
             {
               "name": "generated_rule_count",
               "json_path": "summary.generated_rule_count",
-              "equals": 61
+              "equals": 64
             },
             {
               "name": "applicable_authority_count",
               "json_path": "summary.applicable_authority_count",
-              "equals": 61
+              "equals": 64
             },
             {
               "name": "source_set_matches",
               "json_path": "summary.source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb",
+              "equals": "source-set-f70ea11e04ae3d53",
               "failure_category": "stale_artifact"
             }
           ]
@@ -1215,7 +1215,7 @@
             {
               "name": "source_set_matches",
               "json_path": "summary.source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb",
+              "equals": "source-set-f70ea11e04ae3d53",
               "failure_category": "stale_artifact"
             },
             {
@@ -1233,7 +1233,7 @@
             {
               "name": "rule_count",
               "json_path": "summary.rule_count",
-              "equals": 61
+              "equals": 64
             },
             {
               "name": "baseline_source_record_count",
@@ -1244,13 +1244,13 @@
             {
               "name": "rule_claim_gap_count",
               "json_path": "summary.rule_claim_gap_count",
-              "equals": 0,
+              "equals": 1,
               "failure_category": "missing_source"
             },
             {
               "name": "rule_claim_link_count",
               "json_path": "summary.rule_claim_link_count",
-              "equals": 280,
+              "equals": 308,
               "failure_category": "missing_source"
             },
             {
@@ -1289,7 +1289,7 @@
             {
               "name": "forest_plan_context_source_set_matches",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb",
+              "equals": "source-set-f70ea11e04ae3d53",
               "failure_category": "stale_artifact"
             },
             {
@@ -1323,17 +1323,17 @@
             {
               "name": "matrix_row_count",
               "json_path": "summary.row_count",
-              "equals": 61
+              "equals": 64
             },
             {
               "name": "matrix_forest_plan_row_count",
               "json_path": "summary.forest_plan_compliance_row_count",
-              "equals": 152
+              "equals": 158
             },
             {
               "name": "matrix_forest_plan_applicable_standard_row_count",
               "json_path": "summary.forest_plan_compliance_applicable_standard_row_count",
-              "equals": 24
+              "equals": 25
             },
             {
               "name": "matrix_reviewer_ready",
@@ -1374,7 +1374,7 @@
             {
               "name": "authority_provenance_finding_count",
               "json_path": "summary.finding_authority_provenance_count",
-              "equals": 61
+              "equals": 64
             },
             {
               "name": "authority_resolution_pending_count",
@@ -1394,7 +1394,7 @@
             {
               "name": "non_applicable_authority_count",
               "json_path": "summary.non_applicable_authority_count",
-              "equals": 331
+              "equals": 332
             },
             {
               "name": "non_applicable_authorities_have_coverage",
@@ -1475,7 +1475,7 @@
             {
               "name": "phase_eval_source_set_matches",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb",
+              "equals": "source-set-f70ea11e04ae3d53",
               "failure_category": "stale_artifact"
             },
             {
@@ -1491,7 +1491,7 @@
             {
               "name": "phase_eval_passed_phase_count",
               "json_path": "passed_phase_count",
-              "equals": 19
+              "equals": 27
             },
             {
               "name": "phase_eval_declared_review_contract",
@@ -2582,7 +2582,7 @@
       "required_for_current_promotion": false,
       "review_id": "region1-expansion-south-plateau-landscape-treatment",
       "package_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment",
-      "source_set_id": "source-set-4fb59e9eb43045cb",
+      "source_set_id": "source-set-f70ea11e04ae3d53",
       "forest_plan_profile": "custer_gallatin",
       "project_metadata": {
         "official_project_page": "https://www.fs.usda.gov/r01/custergallatin/projects/archive/57353",
@@ -2686,9 +2686,9 @@
         "authority_universe_validation_passed": true,
         "package_fact_graph_validation_passed": true,
         "applicability_retrieval_validation_passed": true,
-        "candidate_authority_count": 392,
-        "applicable_authority_count": 61,
-        "non_applicable_authority_count": 331,
+        "candidate_authority_count": 396,
+        "applicable_authority_count": 64,
+        "non_applicable_authority_count": 332,
         "needs_adjudication_authority_count": 0,
         "unresolved_authority_count": 0,
         "remaining_adjudication_authority_family_ids": [],
@@ -2708,41 +2708,41 @@
         "adjudication_apply_passed": true,
         "adjudication_applied_item_count": 6,
         "adjudication_remaining_unresolved_authority_count": 0,
-        "applicability_decisions_sha256": "09b9558edf24dbf5ea53e10420c1d8826f212feab4415099ada400cf6d697515",
-        "applicable_authorities_sha256": "2dcd85437ba62dafb685e96310c60d571f2061f97e62f82787476da69e84cf40",
-        "non_applicable_authorities_sha256": "90da249fb11840333d80526b97f069de52f7563c473c42c01685e20c354ef6a5",
+        "applicability_decisions_sha256": "84bb557e2d2109946fce0223b12c4ffbf5ebfb79740793429ce3770d699da201",
+        "applicable_authorities_sha256": "8ebb94a44d98a9384f2d4c42a8802384ac9c2dcf77c4e373c70a57c741896f44",
+        "non_applicable_authorities_sha256": "ab855d83113070782adb6446a6ed2cd63603098a53769c8b7d1c8e468fb47b67",
         "adjudication_eval_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_eval.json",
         "adjudication_apply_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/applicability_adjudication_apply.json",
         "generated_rule_pack_validation_passed": true,
-        "generated_rule_count": 61,
-        "generated_rule_pack_sha256": "39663183f91ad309fcfad60a17d0d88b371e184df8f06664cadd612b5c7aebec",
+        "generated_rule_count": 64,
+        "generated_rule_pack_sha256": "db65f6d0a18ef990ea284dd3076ed99a7235238142a05a843ac5284064a4cfe8",
         "generated_rule_pack_validation_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/applicability/generated_rule_pack_validation.json",
         "compliance_validation_passed": true,
-        "compliance_finding_count": 61,
+        "compliance_finding_count": 64,
         "compliance_finding_status_counts": {
           "gap": 1,
-          "pass": 41,
+          "pass": 44,
           "uncertain": 19
         },
-        "rule_claim_link_count": 280,
-        "rule_claim_gap_count": 0,
+        "rule_claim_link_count": 308,
+        "rule_claim_gap_count": 1,
         "forest_plan_context_validation_passed": true,
         "forest_plan_context_reviewer_ready": true,
         "forest_plan_context_project_location_signal_count": 1,
         "forest_plan_context_geographic_area_count": 2,
-        "forest_plan_context_management_area_count": 9,
-        "forest_plan_context_overlay_count": 4,
+        "forest_plan_context_management_area_count": 12,
+        "forest_plan_context_overlay_count": 5,
         "forest_plan_context_supporting_plan_evidence_count": 5,
         "forest_plan_context_unresolved_mention_count": 0,
         "forest_plan_component_count": 329,
         "forest_plan_component_standard_count": 58,
-        "forest_plan_component_applicable_count": 152,
-        "forest_plan_component_applicable_standard_count": 24,
-        "forest_plan_component_applied_standard_count": 21,
-        "forest_plan_component_supported_count": 121,
-        "forest_plan_component_gap_count": 31,
-        "forest_plan_component_not_applicable_count": 177,
-        "forest_plan_component_reviewer_resolution_count": 31,
+        "forest_plan_component_applicable_count": 158,
+        "forest_plan_component_applicable_standard_count": 25,
+        "forest_plan_component_applied_standard_count": 22,
+        "forest_plan_component_supported_count": 125,
+        "forest_plan_component_gap_count": 33,
+        "forest_plan_component_not_applicable_count": 170,
+        "forest_plan_component_reviewer_resolution_count": 34,
         "forest_plan_component_validation_passed": false,
         "forest_plan_component_reviewer_ready": false,
         "forest_plan_component_inventory_coverage_passed": true,
@@ -2750,12 +2750,12 @@
         "forest_plan_component_adjudication_template_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/forest_plan_component_adjudication_template.json",
         "forest_plan_component_adjudication_eval_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/forest_plan_component_adjudication_eval.json",
         "forest_plan_component_adjudication_eval_passed": true,
-        "forest_plan_component_adjudication_resolved_count": 31,
+        "forest_plan_component_adjudication_resolved_count": 34,
         "forest_plan_component_adjudication_pending_count": 0,
         "forest_plan_component_adjudication_real_ea_omission_count": 0,
-        "forest_plan_component_adjudication_system_miss_count": 31,
-        "compliance_matrix_forest_plan_row_count": 152,
-        "compliance_matrix_forest_plan_applicable_standard_row_count": 24,
+        "forest_plan_component_adjudication_system_miss_count": 34,
+        "compliance_matrix_forest_plan_row_count": 158,
+        "compliance_matrix_forest_plan_applicable_standard_row_count": 25,
         "compliance_review_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_review.json",
         "compliance_validation_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_validation.json",
         "compliance_matrix_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/compliance_matrix.json",
@@ -2765,8 +2765,8 @@
         "authority_reviewer_resolution_report_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/authority_reviewer_resolution_report.json",
         "litigation_risk_summary_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/litigation_risk_summary.json",
         "phase_eval_reviewer_ready": true,
-        "phase_eval_passed_phase_count": 19,
-        "phase_eval_phase_count": 19,
+        "phase_eval_passed_phase_count": 27,
+        "phase_eval_phase_count": 27,
         "phase_eval_path": "source_library/reviews/region1-expansion-south-plateau-landscape-treatment/phase_eval_results.json",
         "forest_plan_scope_status": "custer_gallatin",
         "forest_plan_component_gate_required": true

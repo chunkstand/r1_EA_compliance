@@ -339,6 +339,8 @@ def _augment_with_decision_evidence(
         return finding, row
     package_evidence = surrogate.get("package_evidence")
     source_evidence = surrogate.get("source_library_evidence")
+    applied_source_record_ids = _strings(surrogate.get("applied_source_record_ids"))
+    applied_source_document_roles = _strings(surrogate.get("applied_source_document_roles"))
     if not package_evidence and not source_evidence:
         return finding, row
     if isinstance(finding, dict):
@@ -347,12 +349,40 @@ def _augment_with_decision_evidence(
             finding["applicability_decision_evidence"] = package_evidence
         if source_evidence:
             finding["applicability_decision_source_evidence"] = source_evidence
+        if applied_source_record_ids:
+            finding["applied_source_record_ids"] = sorted(
+                {
+                    *(_strings(finding.get("applied_source_record_ids"))),
+                    *applied_source_record_ids,
+                }
+            )
+        if applied_source_document_roles:
+            finding["applied_source_document_roles"] = sorted(
+                {
+                    *(_strings(finding.get("applied_source_document_roles"))),
+                    *applied_source_document_roles,
+                }
+            )
     if isinstance(row, dict):
         row = dict(row)
         if package_evidence:
             row["applicability_decision_evidence"] = package_evidence
         if source_evidence:
             row["applicability_decision_source_evidence"] = source_evidence
+        if applied_source_record_ids:
+            row["applied_source_record_ids"] = sorted(
+                {
+                    *(_strings(row.get("applied_source_record_ids"))),
+                    *applied_source_record_ids,
+                }
+            )
+        if applied_source_document_roles:
+            row["applied_source_document_roles"] = sorted(
+                {
+                    *(_strings(row.get("applied_source_document_roles"))),
+                    *applied_source_document_roles,
+                }
+            )
     return finding, row
 
 
@@ -440,7 +470,12 @@ def _actual_package_section_ids(
 
 def _actual_source_record_ids(finding: dict[str, Any], row: dict[str, Any]) -> list[str]:
     values = set(str(value) for value in row.get("applied_source_record_ids", []) if value)
-    for key in ("source_library_evidence", "source_evidence"):
+    values.update(str(value) for value in finding.get("applied_source_record_ids", []) if value)
+    for key in (
+        "source_library_evidence",
+        "source_evidence",
+        "applicability_decision_source_evidence",
+    ):
         evidence = finding.get(key) or row.get(key) or {}
         if evidence.get("source_record_id"):
             values.add(str(evidence["source_record_id"]))
@@ -468,7 +503,14 @@ def _expected_source_record_ids_match(
 
 def _actual_document_roles(finding: dict[str, Any], row: dict[str, Any]) -> list[str]:
     values = set(str(value) for value in row.get("applied_source_document_roles", []) if value)
-    for key in ("source_library_evidence", "source_evidence"):
+    values.update(
+        str(value) for value in finding.get("applied_source_document_roles", []) if value
+    )
+    for key in (
+        "source_library_evidence",
+        "source_evidence",
+        "applicability_decision_source_evidence",
+    ):
         evidence = finding.get(key) or row.get(key) or {}
         if evidence.get("document_role"):
             values.add(str(evidence["document_role"]))
