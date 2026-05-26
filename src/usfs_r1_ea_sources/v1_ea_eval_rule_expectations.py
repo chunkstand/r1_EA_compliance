@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from .records import aliased_source_record_ids
 from .v1_ea_eval_support import _chunk_text
 from .v1_ea_eval_support import _evidence_text
 from .v1_ea_eval_support import _expectation_terms
@@ -89,7 +90,11 @@ def _evaluate_baseline_alignment(
         source_passed = (
             True
             if not require_source_record_match
-            else not expected_source_id or expected_source_id in actual_source_ids
+            else not expected_source_id
+            or _expected_source_record_ids_match(
+                [str(expected_source_id)],
+                actual_source_ids,
+            )
         )
         role_passed = (
             True
@@ -219,7 +224,7 @@ def _evaluate_rule_source_section(
         str(value) for value in expectation.get("expected_source_record_ids", [])
     )
     actual_sources = _actual_source_record_ids(finding, row)
-    source_match = not expected_sources or set(expected_sources).issubset(actual_sources)
+    source_match = _expected_source_record_ids_match(expected_sources, actual_sources)
     if not source_match:
         failure_categories.append("source_record_mismatch")
 
@@ -447,6 +452,18 @@ def _actual_source_record_ids(finding: dict[str, Any], row: dict[str, Any]) -> l
     if compact.get("source_record_id"):
         values.add(str(compact["source_record_id"]))
     return sorted(values)
+
+
+def _expected_source_record_ids_match(
+    expected_source_ids: list[str],
+    actual_source_ids: list[str],
+) -> bool:
+    if not expected_source_ids:
+        return True
+    if not actual_source_ids:
+        return False
+    actual_aliases = set(aliased_source_record_ids(actual_source_ids))
+    return all(str(expected_source_id) in actual_aliases for expected_source_id in expected_source_ids)
 
 
 def _actual_document_roles(finding: dict[str, Any], row: dict[str, Any]) -> list[str]:

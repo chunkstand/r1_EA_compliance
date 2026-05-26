@@ -203,6 +203,7 @@ def build_derived_command_specs(
             help="Validate proving-slice semantic relationship coverage and endpoint rules.",
             arguments=(
                 _output_dir_arg(),
+                _arg("--source-set-id"),
                 _arg("--report-path", type=Path),
                 _arg(
                     "--eval-path",
@@ -217,6 +218,7 @@ def build_derived_command_specs(
             help="Validate proving-slice alias resolution and blocked-alias context handling.",
             arguments=(
                 _output_dir_arg(),
+                _arg("--source-set-id"),
                 _arg("--report-path", type=Path),
                 _arg("--output-path", type=Path),
             ),
@@ -226,6 +228,7 @@ def build_derived_command_specs(
             help="Validate proving-slice graph health metrics and required lenses.",
             arguments=(
                 _output_dir_arg(),
+                _arg("--source-set-id"),
                 _arg("--report-path", type=Path),
                 _arg(
                     "--contract-path",
@@ -240,6 +243,7 @@ def build_derived_command_specs(
             help="Validate proving-slice graph node classes, lenses, and justification paths.",
             arguments=(
                 _output_dir_arg(),
+                _arg("--source-set-id"),
                 _arg("--report-path", type=Path),
                 _arg("--eval-path", default=defaults.graph_accuracy_eval_path, type=Path),
                 _arg("--output-path", type=Path),

@@ -4,8 +4,10 @@ from dataclasses import dataclass
 from pathlib import Path
 import json
 
+from .source_register_proving import build_source_set_semantic_proving_report
 from .source_register_proving import default_proving_output_path
 from .source_register_proving import load_proving_report
+from .source_register_proving import resolve_latest_proving_context
 
 
 AUTHORITY_RELATIONSHIP_EVAL_SCHEMA_VERSION = "authority-relationship-eval-report-v1"
@@ -24,6 +26,7 @@ class AuthorityRelationshipEvalResult:
 def run_authority_relationship_eval(
     *,
     output_dir: Path,
+    source_set_id: str | None = None,
     report_path: Path | None = None,
     eval_path: Path = DEFAULT_AUTHORITY_RELATIONSHIP_EVAL_PATH,
     relationship_types_path: Path = DEFAULT_AUTHORITY_RELATIONSHIP_TYPES_PATH,
@@ -31,7 +34,11 @@ def run_authority_relationship_eval(
     output_path: Path | None = None,
 ) -> AuthorityRelationshipEvalResult:
     output_dir = Path(output_dir)
-    report = load_proving_report(output_dir, report_path)
+    report, resolved_report_path = _load_semantic_report(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        report_path=report_path,
+    )
     eval_payload = json.loads(Path(eval_path).read_text(encoding="utf-8"))
     relationship_types_payload = json.loads(
         Path(relationship_types_path).read_text(encoding="utf-8")
@@ -167,9 +174,7 @@ def run_authority_relationship_eval(
     payload = {
         "schema_version": AUTHORITY_RELATIONSHIP_EVAL_SCHEMA_VERSION,
         "source_set_id": report["source_set_id"],
-        "report_path": str(
-            report_path if report_path is not None else report["summary"]["report_path"]
-        ),
+        "report_path": str(resolved_report_path),
         "checks": checks,
         "relationship_type_counts": report["semantic_relationships"]["relationship_type_counts"],
         "path_pattern_counts": report["semantic_relationships"]["path_pattern_counts"],
@@ -191,6 +196,26 @@ def _check(name: str, passed: bool, expected, actual) -> dict:
         "expected": expected,
         "actual": actual,
     }
+
+
+def _load_semantic_report(
+    *,
+    output_dir: Path,
+    source_set_id: str | None,
+    report_path: Path | None,
+) -> tuple[dict, Path]:
+    if report_path is not None:
+        resolved_report_path = Path(report_path)
+        return load_proving_report(output_dir, resolved_report_path), resolved_report_path
+    if source_set_id:
+        result = build_source_set_semantic_proving_report(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+        return load_proving_report(output_dir, result.report_path), result.report_path
+    context = resolve_latest_proving_context(output_dir)
+    resolved_report_path = Path(context["report_path"])
+    return load_proving_report(output_dir, resolved_report_path), resolved_report_path
 
 
 def _class_matches_allowed(

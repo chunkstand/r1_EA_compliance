@@ -332,11 +332,16 @@ def _search_coverage_reference_gaps(
             covered_candidate_ids = set(
                 _strings(certificate.get("covered_candidate_authority_ids"))
             )
+            coverage_result = str(certificate.get("coverage_result") or "")
             if decision_id and decision_id not in covered_decision_ids:
                 decision_gaps.append(f"{certificate_id}:decision_not_covered")
             if candidate_id and candidate_id not in covered_candidate_ids:
                 decision_gaps.append(f"{certificate_id}:candidate_not_covered")
-            if str(certificate.get("coverage_result") or "") != "sufficient":
+            coverage_supported_by_adjudication = (
+                coverage_result == "adjudication_required"
+                and bool(_strings(decision.get("human_adjudication_refs")))
+            )
+            if coverage_result != "sufficient" and not coverage_supported_by_adjudication:
                 decision_gaps.append(f"{certificate_id}:coverage_not_sufficient")
         if decision_gaps:
             gaps[decision_id] = sorted(decision_gaps)

@@ -14,6 +14,7 @@ from .ea_consistency_decision_support_models import _dict_list
 from .ea_consistency_decision_support_models import _list
 from .ea_consistency_decision_support_models import _sha256_file
 from .ea_consistency_decision_support_models import _strings
+from .ea_consistency_decision_support_models import _resolved_source_library_evidence
 from .ea_consistency_decision_support_models import _utc_now
 from .ea_consistency_decision_support_rendering import _applicable_standard_rows
 from .ea_consistency_decision_support_rendering import _authority_family_id
@@ -165,12 +166,21 @@ def _applicable_authority_summary(
 
 def _authority_findings(context: _DecisionSupportContext) -> list[dict[str, Any]]:
     confirmation_by_rule = _confirmation_ids_by_selector(context, "authority_finding", "rule_id")
+    findings_by_rule = {
+        str(finding.get("rule_id")): finding
+        for finding in _dict_list(context.payload("compliance_review").get("findings"))
+        if finding.get("rule_id")
+    }
     rows = []
     for row in sorted(
         _dict_list(context.payload("compliance_matrix").get("rows")),
         key=lambda value: str(value.get("rule_id")),
     ):
         rule_id = str(row.get("rule_id"))
+        source_evidence = _resolved_source_library_evidence(
+            row,
+            findings_by_rule.get(rule_id),
+        )
         rows.append(
             {
                 "rule_id": rule_id,
@@ -189,7 +199,7 @@ def _authority_findings(context: _DecisionSupportContext) -> list[dict[str, Any]
                 "source_claim_ids": _strings(row.get("source_claim_ids")),
                 "limitations": _strings(row.get("limitations")),
                 "ea_package_evidence": [_evidence(row.get("ea_package_evidence"))],
-                "source_library_evidence": [_evidence(row.get("source_library_evidence"))],
+                "source_library_evidence": [_evidence(source_evidence)],
                 "trace_ids": [
                     _trace(
                         f"trace:authority:{rule_id}",
@@ -200,6 +210,7 @@ def _authority_findings(context: _DecisionSupportContext) -> list[dict[str, Any]
                 ],
                 "source_selectors": [
                     _selector(context.artifacts["compliance_matrix"].path, f"rule_id={rule_id}"),
+                    _selector(context.artifacts["compliance_review"].path, f"rule_id={rule_id}"),
                     _selector(
                         context.artifacts["applicable_authorities"].path,
                         f"candidate_authority_id={row.get('candidate_authority_id')}",

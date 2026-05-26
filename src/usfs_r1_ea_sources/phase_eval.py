@@ -13,6 +13,7 @@ from .catalog_surface import resolve_catalog_dir_for_source_set
 from .phase_eval_direct_eval import apply_source_set_phase_direct_eval_gate
 from .phase_eval_direct_eval import build_evaluation_coverage_phase
 from .phase_eval_direct_eval import resolve_phase_eval_direct_eval_coverage
+from .phase_eval_direct_eval_source_set import _downstream_result_path
 from .phase_eval_review_phases import build_review_scoped_phases
 from .phase_eval_source_set_phases import build_source_set_phases
 from .phase_eval_source_set_phases import load_semantic_report
@@ -142,7 +143,11 @@ def run_phase_aligned_eval(
         rule_claim_dir = derived_source_dir / "rule_claim_links"
     rule_claim_validation_path = rule_claim_dir / "rule_claim_link_validation.json"
     rule_claim_summary_path = rule_claim_dir / "summary.json"
-    rule_claim_eval_path = rule_claim_dir / "rule_claim_link_eval_results.json"
+    rule_claim_eval_path = _downstream_result_path(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        lane_id="rule_claim_eval",
+    )
     if not rule_claim_summary_path.exists():
         candidates = sorted((derived_source_dir / "rule_claim_links").glob("*/*/summary.json"))
         if candidates:

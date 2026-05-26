@@ -6,6 +6,7 @@ from pathlib import Path
 import json
 import re
 
+from .catalog_surface import resolve_catalog_dir_for_source_set
 from .catalog import build_review_catalog
 from .config import DEFAULT_CONFIG_PATH
 from .config import SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT
@@ -31,6 +32,7 @@ DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH = Path(
 DEFAULT_LATEST_PROVING_CONTEXT_RELATIVE_PATH = Path(
     "derived/source_register_proving/latest_context.json"
 )
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 @dataclass(frozen=True)
@@ -352,10 +354,194 @@ def load_proving_report(output_dir: Path, report_path: Path | None = None) -> di
     return payload
 
 
+def build_source_set_semantic_proving_report(
+    *,
+    output_dir: Path,
+    source_set_id: str,
+    manifest_path: Path = DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH,
+    source_set_manifest_path: Path | None = None,
+    catalog_path: Path | None = None,
+    report_path: Path | None = None,
+) -> SourceRegisterProvingResult:
+    output_dir = Path(output_dir)
+    manifest_path = Path(manifest_path)
+    explicit_catalog_dir = None
+    if catalog_path is not None:
+        explicit_catalog_dir = Path(catalog_path).parent
+    elif source_set_manifest_path is not None:
+        explicit_catalog_dir = Path(source_set_manifest_path).parent
+    catalog_dir = resolve_catalog_dir_for_source_set(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        catalog_dir=explicit_catalog_dir,
+    )
+    resolved_source_set_manifest_path = (
+        Path(source_set_manifest_path)
+        if source_set_manifest_path is not None
+        else catalog_dir / "source_set_manifest.json"
+    )
+    resolved_catalog_path = (
+        Path(catalog_path) if catalog_path is not None else catalog_dir / "source_catalog.jsonl"
+    )
+    manifest = load_source_register_proving_manifest(manifest_path)
+    source_set_manifest = json.loads(
+        resolved_source_set_manifest_path.read_text(encoding="utf-8")
+    )
+    workbook_path = _workbook_path_from_source_set_manifest(
+        source_set_manifest=source_set_manifest,
+        source_set_manifest_path=resolved_source_set_manifest_path,
+    )
+    workbook_rows = load_source_register_rows(workbook_path)
+    workbook_rows_by_id = {row.source_record_id: row for row in workbook_rows}
+    catalog_rows = _read_jsonl(resolved_catalog_path)
+    catalog_source_record_ids = {
+        str(row.get("source_record_id") or "")
+        for row in catalog_rows
+        if str(row.get("source_set_id") or source_set_id) == source_set_id
+        and str(row.get("source_record_id") or "").strip()
+    }
+    load_ready_source_record_ids = [
+        str(source_record_id)
+        for source_record_id in manifest.get("load_ready_source_record_ids", [])
+        if str(source_record_id or "").strip()
+    ]
+    queue_source_record_ids = [
+        str(source_record_id)
+        for source_record_id in manifest.get("queue_source_record_ids", [])
+        if str(source_record_id or "").strip()
+    ]
+    missing_workbook_source_record_ids = sorted(
+        source_record_id
+        for source_record_id in load_ready_source_record_ids
+        if source_record_id not in workbook_rows_by_id
+    )
+    missing_catalog_source_record_ids = sorted(
+        source_record_id
+        for source_record_id in load_ready_source_record_ids
+        if source_record_id not in catalog_source_record_ids
+    )
+    selected_rows = [
+        workbook_rows_by_id[source_record_id]
+        for source_record_id in load_ready_source_record_ids
+        if source_record_id in workbook_rows_by_id
+    ]
+    relationships = _build_relationships(
+        manifest=manifest,
+        rows_by_id=workbook_rows_by_id,
+    )
+    alias_report = _build_alias_report(
+        manifest=manifest,
+        selected_rows=selected_rows,
+    )
+    validation_checks = [
+        {
+            "name": "source_set_manifest_source_set_matches",
+            "passed": str(source_set_manifest.get("source_set_id") or "") == source_set_id,
+            "expected": source_set_id,
+            "actual": source_set_manifest.get("source_set_id"),
+        },
+        {
+            "name": "semantic_proving_slice_load_ready_rows_present_in_workbook",
+            "passed": not missing_workbook_source_record_ids,
+            "expected": [],
+            "actual": missing_workbook_source_record_ids,
+        },
+        {
+            "name": "semantic_proving_slice_load_ready_rows_present_in_catalog",
+            "passed": not missing_catalog_source_record_ids,
+            "expected": [],
+            "actual": missing_catalog_source_record_ids,
+        },
+    ]
+    validation_passed = all(check["passed"] for check in validation_checks)
+    resolved_report_path = (
+        Path(report_path)
+        if report_path is not None
+        else output_dir
+        / "derived"
+        / source_set_id
+        / "source_register_proving"
+        / "proving_slice_report.json"
+    )
+    relationships_path = resolved_report_path.parent / "relationships.json"
+    report = {
+        "schema_version": PROVING_SLICE_REPORT_SCHEMA_VERSION,
+        "source_set_id": source_set_id,
+        "manifest_path": str(manifest_path),
+        "manifest_sha256": sha256_file(manifest_path),
+        "workbook_path": str(workbook_path),
+        "workbook_sha256": sha256_file(workbook_path),
+        "inputs": {
+            "catalog_dir": str(catalog_dir),
+            "source_catalog_path": str(resolved_catalog_path),
+            "source_set_manifest_path": str(resolved_source_set_manifest_path),
+        },
+        "slice": {
+            "load_ready_source_record_ids": load_ready_source_record_ids,
+            "queue_source_record_ids": queue_source_record_ids,
+            "load_ready_source_count": len(load_ready_source_record_ids),
+            "queue_source_count": len(queue_source_record_ids),
+            "coverage_groups": manifest.get("coverage_groups", []),
+            "supersession_expectations": manifest.get("supersession_expectations", []),
+            "relationship_expectations": manifest.get("relationship_expectations", []),
+        },
+        "alias_report": alias_report,
+        "semantic_relationships": {
+            "relationship_count": len(relationships),
+            "relationship_type_counts": dict(
+                Counter(relationship["relationship_type"] for relationship in relationships)
+            ),
+            "path_pattern_counts": dict(
+                Counter(relationship["path_pattern_id"] for relationship in relationships)
+            ),
+            "relationships": relationships,
+        },
+        "validation": {
+            "passed": validation_passed,
+            "checks": validation_checks,
+        },
+        "summary": {
+            "validation_passed": validation_passed,
+            "source_set_id": source_set_id,
+            "load_ready_source_count": len(load_ready_source_record_ids),
+            "relationship_count": len(relationships),
+            "report_path": str(resolved_report_path),
+        },
+    }
+    _write_json(relationships_path, {"relationships": relationships})
+    _write_json(resolved_report_path, report)
+    return SourceRegisterProvingResult(
+        report_path=resolved_report_path,
+        summary=report["summary"],
+    )
+
+
 def default_proving_output_path(output_dir: Path, filename: str) -> Path:
     context = resolve_latest_proving_context(output_dir)
     report_path = Path(context["report_path"])
     return report_path.parent / filename
+
+
+def _workbook_path_from_source_set_manifest(
+    *,
+    source_set_manifest: dict,
+    source_set_manifest_path: Path,
+) -> Path:
+    workbook_path_value = str(source_set_manifest.get("workbook_path") or "").strip()
+    if not workbook_path_value:
+        raise FileNotFoundError(
+            "source_set_manifest.json is missing workbook_path for semantic proving reuse: "
+            f"{source_set_manifest_path}"
+        )
+    workbook_path = Path(workbook_path_value)
+    if not workbook_path.is_absolute():
+        workbook_path = REPO_ROOT / workbook_path
+    if not workbook_path.exists():
+        raise FileNotFoundError(
+            "Workbook declared by source-set manifest does not exist: "
+            f"{workbook_path}"
+        )
+    return workbook_path
 
 
 def _build_authority_inventory(
@@ -733,10 +919,12 @@ def _read_jsonl(path: Path) -> list[dict]:
 
 
 def _write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as handle:
         for row in rows:
             handle.write(json.dumps(row, sort_keys=True) + "\n")

@@ -1,9 +1,9 @@
 {
   "schema_version": "east-crazies-final-qa-expected-summary-v1",
   "fixture_id": "v1-ecid-final-qa-expected-summary",
-  "as_of_date": "2026-05-18",
+  "as_of_date": "2026-05-26",
   "review_id": "v1-cg-ecid-compliance-review",
-  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
   "expected_report_schema_version": "east-crazies-final-qa-certification-report-v1",
   "expected_manifest_schema_version": "east-crazies-final-qa-certification-manifest-v1",
   "expected_output_dir": "source_library/reviews/v1-cg-ecid-compliance-review/final_qa/",
@@ -31,18 +31,19 @@
     "package_file_count": 43,
     "package_chunk_count": 1265,
     "baseline_source_record_count": 26,
-    "candidate_authority_count": 377,
-    "applicable_authority_count": 37,
-    "non_applicable_authority_count": 340,
+    "candidate_authority_count": 396,
+    "applicable_authority_count": 55,
+    "non_applicable_authority_count": 341,
     "unresolved_authority_count": 0,
-    "generated_rule_count": 37,
-    "authority_finding_count": 37,
+    "generated_rule_count": 55,
+    "authority_finding_count": 55,
     "authority_finding_status_counts": {
-      "pass": 37
+      "pass": 37,
+      "uncertain": 18
     },
-    "rule_claim_link_count": 162,
+    "rule_claim_link_count": 268,
     "rule_claim_gap_count": 0,
-    "compliance_matrix_authority_row_count": 37,
+    "compliance_matrix_authority_row_count": 55,
     "forest_plan_component_count": 329,
     "forest_plan_supported_component_count": 79,
     "forest_plan_not_applicable_component_count": 250,
@@ -51,15 +52,15 @@
     "applicable_standard_count": 12,
     "applied_standard_count": 12,
     "forest_plan_component_eval_case_count": 35,
-    "phase_eval_phase_count": 25,
-    "phase_eval_passed_phase_count": 25,
+    "phase_eval_phase_count": 32,
+    "phase_eval_passed_phase_count": 32,
     "promotion_suite_required_current_result_count": 28,
     "promotion_suite_passed_required_current_result_count": 28,
-    "review_packet_index_applicable_authority_count": 37,
-    "review_packet_index_non_applicable_authority_count": 340,
+    "review_packet_index_applicable_authority_count": 55,
+    "review_packet_index_non_applicable_authority_count": 341,
     "review_packet_index_forest_plan_component_row_count": 79,
     "review_packet_index_applicable_standard_count": 12,
-    "review_packet_index_render_manifest_authority_row_count": 37,
+    "review_packet_index_render_manifest_authority_row_count": 55,
     "review_packet_index_render_manifest_forest_plan_row_count": 79,
     "review_packet_index_validation_failed_check_count": 0,
     "accepted_v1_risk_count": 14,
@@ -67,26 +68,26 @@
     "litigation_risk_legal_conclusion_count": 0
   },
   "input_hashes": {
-    "decision_support_report_sha256": "5aee9f98a24277f3929efd4c83a632a314d2b56c47b62b81d7994e693dc8b739",
-    "decision_support_markdown_sha256": "db0df2b322a95e0dc24133461e1d6ebd0b82d23c85d39a970d5a6fb566286953",
-    "decision_support_pdf_sha256": "12e25edccb666b76890424b1b3c939663f28ec423a8c7752abf4a522b4e7cb97",
-    "decision_support_manifest_sha256": "bf7adfce988393c2d135c1a1eb8baa9ae74aba3d2e09b5326ec92486a24e55ce",
-    "review_packet_row_inventory_sha256": "1440ef5e5ce18a37c832059a3041608eecb61980110575d588273e14ca991ef0",
-    "compliance_matrix_render_manifest_sha256": "cff293fbe1ebc9d1de545d825f2972f10de4c13d6584eb4d4fd99e41a42e2e1b",
-    "review_packet_index_sha256": "9f7d05fa89a061687f291bf9ac329ef7a8a7d3e788e722a3096177ce326060b3",
-    "review_packet_index_validation_sha256": "706c4eefddf3a64e13f6ab240a951ff3f06d544b4ce4a9efc1ae7cd58aaf36dc",
-    "review_packet_index_pdf_sha256": "7dc35807f2a2032fdfef71c1ef915abdcc17109e8033a699334ba26fe43a00ab",
-    "v1_ea_eval_results_sha256": "6c1308882647444a374d47004f6232d9029b4fdea9c92e3e5c874c6a4514dec9",
-    "phase_eval_results_sha256": "6bfad3ac6c795984364044ca6b503ad62f8ba865c207c793f0eb3e066a9a444a",
-    "promotion_suite_results_sha256": "ccc5f9579e9e1cab41bb6286c2200efd277db762a98cdc77bc32acc3a40570a7",
-    "compliance_validation_sha256": "c46eddc026ad9209c5dc85418fa1e5e2fa3522707962e62b767cde8ca87647bf",
-    "applicability_validation_sha256": "86d7ea0eb2c0f2662e88ac159959211e8739db66573e7a624d057d376db878a1",
-    "generated_rule_pack_validation_sha256": "fb24989fda3da446198f6608efe3370dd3978b1ec8e86d318399865f4b0449cb",
-    "compliance_matrix_sha256": "646975378dd6058a1b03aaee9d296157fe5765fac9d06754824510de26406eb2",
-    "compliance_matrix_pdf_sha256": "2195e3e036df35f7d80720cb263b010263d25e76730c7eb1d76c5a5151214db5",
-    "compliance_review_sha256": "4cbed34d6f6b8b6f91343d6e35d75c1c49caaeb89707417e2ac3b614e597c3f3",
-    "forest_plan_context_summary_sha256": "45ab75e7a2e0cb973ac97a53fa20e49df9f0da6f9928c6dac615047bf2ee8cb2",
-    "forest_plan_component_eval_results_sha256": "d8b19f898c638a105e57e892fb31e70ada40c8f3a06b553f9d73d34181563850"
+    "decision_support_report_sha256": "011486a4028c6643b8339b6376d0a018effb58bf8ef9351bae140c2f4ce23796",
+    "decision_support_markdown_sha256": "486780938a22825e788c0232feec3730c88a01c8e0e0c4b674952a225e744112",
+    "decision_support_pdf_sha256": "65dba3624c26df97c2fec5c247fe8bf9e5469a9ca8079d665a15f9e2d52fee88",
+    "decision_support_manifest_sha256": "5d491038ce206dac184fabcb424d814bf88388a5f53660adbeefb0f32d4bd49d",
+    "review_packet_row_inventory_sha256": "60aa9dc01186a1377221ac451e4f6c142901774503d0f9d51f7e50bf3ff5bd57",
+    "compliance_matrix_render_manifest_sha256": "1af70754cffeea68cdd923106c76b78a9b155019d45c046f81134dcb22e52c5e",
+    "review_packet_index_sha256": "c2f9f2465cd88cd223215e3ad762e89cf893ec0d4b4e7ccdbcee07f52c9ca40a",
+    "review_packet_index_validation_sha256": "cb158614543535725a7640977c7b914319d563141580c746e7309875a23c3d6b",
+    "review_packet_index_pdf_sha256": "63eea1288815e27285d959c75e05e2e5134bcafc0fed09287aa5f20ea36ca837",
+    "compliance_validation_sha256": "3534b2e866450aecf24becdd6e70eac1f4ba49fb402a2c9bb9c29b681da8868c",
+    "applicability_validation_sha256": "283063019cceb07541a55729f9e162781883b89b49df2b6a66894de451f4d29c",
+    "generated_rule_pack_validation_sha256": "a2ac14659408ccbfb3f96dada9fb72591d7191eb7e0bc18396a55ccc617caba9",
+    "compliance_matrix_sha256": "5c4ac5e9bf50a13ad53e54c44d26b9de23e64d6dd7c4efc6df20d97a5e266c79",
+    "compliance_matrix_pdf_sha256": "266cfa66c08b1a91160e36a616b56bbec70f7f9cefe0e83802890f7fde830406",
+    "compliance_review_sha256": "64d98809d404955e13e1eb3faf3fe8a589305b9ca2e0968cc9b337552ca2c47a",
+    "forest_plan_context_summary_sha256": "3e4e0967ecca088b4e8b0a56baf0176a149fd0bd77cb9a525c2805084c3503b8",
+    "forest_plan_component_eval_results_sha256": "f9e53de9282cf7010431b51e5dcdd7090732d65696ef7478522e895b93657124",
+    "phase_eval_results_sha256": "724560a45a221fa6c975dd71c7accece4c52ccd50d238a1f7854d880fc9b5770",
+    "promotion_suite_results_sha256": "6e24cd7de7f8f6724819213db512772e98e806379c971552821d1ae81ec05ab5",
+    "v1_ea_eval_results_sha256": "82da013f98e3cc2223c9791ff6ee33207aab162792ccf1a0480d5aa363d60dcf"
   },
   "required_fixture_rows": {
     "applicable_authority": {
@@ -99,16 +100,16 @@
         "land_exchange_statutory_authorities"
       ],
       "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:flpma_section_206_land_exchange",
-      "applicability_decision_id": "694954992c945904708b2967",
+      "applicability_decision_id": "8481f9bd6b41845d8d792578",
       "status": "pass",
       "applicability_status": "applicable",
       "applicability_mode": "conditional",
       "ea_package_citation": "EA-PACKAGE-002 (11a5c8ac5c14)",
-      "source_library_citation": "R1EA-146 (727d4cf0dced)",
+      "source_library_citation": "FED-032 (fcfb0f28844d)",
       "source_claim_ids": [
-        "claim:37f59d47924397aaae9d3328",
-        "claim:dad607bad083f296f180e05b",
-        "claim:6bde2a03cdbfcd25599cc7fa"
+        "claim:189bd47fa701fbaa348eafa5",
+        "claim:5b610ceba040bcef85afa5e7",
+        "claim:0f84edbc9625fd0667383156"
       ],
       "source_selectors": [
         {
@@ -119,19 +120,19 @@
     },
     "non_applicable_authority": {
       "candidate_authority_id": "rule-template:nepa-ea-v0:0.4.0:directives_notice_comment_36cfr_216",
-      "decision_id": "4798417e93d038b92991762f",
+      "decision_id": "cb6f64d8ade874b614e37dc5",
       "authority_category": "regulation",
       "basis_type": "absent_trigger_evidence",
       "status": "not_applicable",
       "source_record_ids": [
-        "R1EA-027"
+        "FED-080"
       ],
       "search_coverage_certificate_ids": [
-        "1a2043fba159114bdbc8d610"
+        "bc9c7a3712b036ae80976e7d"
       ],
       "rationale": "Required positive package trigger groups were not found within the recorded search boundary.",
       "coverage_certificate": {
-        "coverage_certificate_id": "1a2043fba159114bdbc8d610",
+        "coverage_certificate_id": "bc9c7a3712b036ae80976e7d",
         "coverage_class": "absent_trigger_evidence",
         "coverage_result": "sufficient",
         "missing_query_variants": []
@@ -144,14 +145,14 @@
       ]
     },
     "forest_plan_standard": {
-      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01",
+      "component_id": "FOR-009-FW-STD-RMZ-01",
       "component_key": "FW-STD-RMZ-01",
       "component_type": "standard",
       "applicability_status": "applicable",
       "compliance_status": "complies",
       "finding_status": "supported",
       "ea_package_citation": "EA-PACKAGE-042 (bebc890bc3da)",
-      "forest_plan_citation": "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)",
+      "forest_plan_citation": "FOR-009 (ff30e8b4530e)",
       "source_selectors": [
         {
           "artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_applicable_standard_coverage.json",
@@ -164,7 +165,7 @@
       "category": "non_applicable_authority_boundary",
       "deterministic_basis": true,
       "legal_conclusion": false,
-      "risk_flag_count": 340,
+      "risk_flag_count": 348,
       "severity": "informational",
       "source_artifact_path": "source_library/reviews/v1-cg-ecid-compliance-review/litigation_risk_summary.json",
       "source_selector": "summary.risk_category_counts"

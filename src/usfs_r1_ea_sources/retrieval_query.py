@@ -4,6 +4,7 @@ from contextlib import closing
 from pathlib import Path
 import sqlite3
 
+from .records import aliased_source_record_ids
 from .retrieval_common import STOPWORDS, TOKEN_RE, _json_list
 
 
@@ -29,6 +30,10 @@ def query_retrieval_index(
     if not index_path.exists():
         raise FileNotFoundError(f"Missing retrieval index: {index_path}")
 
+    display_source_record_filter_ids = _display_filter_ids(
+        source_record_id=source_record_id,
+        source_record_ids=source_record_ids,
+    )
     source_record_filter_ids = _normalized_filter_ids(
         source_record_id=source_record_id,
         source_record_ids=source_record_ids,
@@ -42,12 +47,13 @@ def query_retrieval_index(
         "host": host,
     }
     if source_record_ids is not None:
-        filters["source_record_ids"] = source_record_filter_ids
-    elif source_record_filter_ids:
-        filters["source_record_id"] = source_record_filter_ids[0]
+        filters["source_record_ids"] = display_source_record_filter_ids
+    elif display_source_record_filter_ids:
+        filters["source_record_id"] = display_source_record_filter_ids[0]
     if not query.strip() and not any(value for value in filters.values()):
         raise ValueError("retrieval query requires query text or at least one filter")
     terms = _tokenize(query)
+    phrases = _query_phrases(query)
     with closing(sqlite3.connect(index_path)) as connection:
         connection.row_factory = sqlite3.Row
         rows = _load_candidate_rows(
@@ -58,6 +64,7 @@ def query_retrieval_index(
             source_record_ids=source_record_filter_ids,
             host=host,
         )
+    term_weights = _query_term_weights(terms, phrases)
 
     scored: list[tuple[float, sqlite3.Row, list[str]]] = []
     for row in rows:
@@ -66,7 +73,15 @@ def query_retrieval_index(
             continue
         if citation and not _citation_matches(citation, row):
             continue
-        score = _score_row(row, terms=terms, query=query, topics=topics, review_topic=review_topic)
+        score = _score_row(
+            row,
+            terms=terms,
+            phrases=phrases,
+            query=query,
+            topics=topics,
+            review_topic=review_topic,
+            term_weights=term_weights,
+        )
         if terms and score <= 0:
             continue
         scored.append((score, row, topics))
@@ -124,6 +139,20 @@ def _load_candidate_rows(
 
 
 def _normalized_filter_ids(
+    *,
+    source_record_id: str | None = None,
+    source_record_ids: list[str] | tuple[str, ...] | None = None,
+) -> list[str] | None:
+    normalized = _display_filter_ids(
+        source_record_id=source_record_id,
+        source_record_ids=source_record_ids,
+    )
+    if not normalized:
+        return None
+    return aliased_source_record_ids(normalized) or None
+
+
+def _display_filter_ids(
     *,
     source_record_id: str | None = None,
     source_record_ids: list[str] | tuple[str, ...] | None = None,
@@ -193,10 +222,7 @@ def _row_value(row: sqlite3.Row, key: str, default: object | None = None) -> obj
 
 
 def _evidence_span(text: str, terms: list[str], source_chunk_start: int) -> dict:
-    lower = text.lower()
-    starts = [lower.find(term.lower()) for term in terms if lower.find(term.lower()) >= 0]
-    first = min(starts) if starts else 0
-    start = max(0, first - 140)
+    start = _best_evidence_span_start(text, terms=terms, span_length=480)
     end = min(len(text), start + 480)
     start = max(0, min(start, max(0, end - 480)))
     span_text = text[start:end].strip()
@@ -213,13 +239,73 @@ def _evidence_span(text: str, terms: list[str], source_chunk_start: int) -> dict
     }
 
 
+def _best_evidence_span_start(text: str, *, terms: list[str], span_length: int) -> int:
+    if not text or span_length <= 0:
+        return 0
+    normalized_terms = [str(term or "").strip().lower() for term in dict.fromkeys(terms)]
+    normalized_terms = [term for term in normalized_terms if term]
+    if not normalized_terms:
+        return 0
+    lower = text.lower()
+    matches: list[tuple[int, int, str]] = []
+    for term in normalized_terms:
+        start = 0
+        while True:
+            index = lower.find(term, start)
+            if index < 0:
+                break
+            matches.append((index, index + len(term), term))
+            start = index + 1
+    if not matches:
+        return 0
+    matches.sort(key=lambda item: (item[0], item[1], item[2]))
+    best_window: tuple[int, int] | None = None
+    best_score = (-1, -1, span_length + 1)
+    right = 0
+    active_terms: dict[str, int] = {}
+    for left, (left_start, _, _) in enumerate(matches):
+        while right < len(matches) and matches[right][0] < left_start + span_length:
+            right_start, _, right_term = matches[right]
+            if right_start >= left_start:
+                active_terms[right_term] = active_terms.get(right_term, 0) + 1
+            right += 1
+        window = matches[left:right]
+        if window:
+            coverage = len(active_terms)
+            density = len(window)
+            occupied = window[-1][1] - window[0][0]
+            score = (coverage, density, -occupied)
+            if score > best_score:
+                best_score = score
+                best_window = (window[0][0], window[-1][1])
+        left_term = matches[left][2]
+        next_count = active_terms.get(left_term, 0) - 1
+        if next_count <= 0:
+            active_terms.pop(left_term, None)
+        else:
+            active_terms[left_term] = next_count
+    if best_window is None:
+        return 0
+    window_start, window_end = best_window
+    if window_end - window_start >= span_length:
+        return max(0, min(window_start, max(0, len(text) - span_length)))
+    center = (window_start + window_end) // 2
+    start = max(0, center - (span_length // 2))
+    start = min(start, max(0, len(text) - span_length))
+    if start + span_length < window_end:
+        start = max(0, window_end - span_length)
+    return start
+
+
 def _score_row(
     row: sqlite3.Row,
     *,
     terms: list[str],
+    phrases: list[str],
     query: str,
     topics: list[str],
     review_topic: str | None,
+    term_weights: dict[str, float] | None = None,
 ) -> float:
     if not terms:
         return 0.1
@@ -242,15 +328,23 @@ def _score_row(
             topic_text,
         ]
     )
-    score = 0.8 * _term_hit_fraction(terms, text=metadata_text)
-    score += 0.55 * _term_hit_fraction(terms, text=text)
-    score += 0.55 * _term_hit_fraction(terms, text=title)
-    score += 0.2 * _term_hit_fraction(terms, text=heading)
-    score += 0.2 * _term_hit_fraction(terms, text=topic_text)
+    score = 0.8 * _term_hit_fraction(terms, text=metadata_text, term_weights=term_weights)
+    score += 0.55 * _term_hit_fraction(terms, text=text, term_weights=term_weights)
+    score += 0.55 * _term_hit_fraction(terms, text=title, term_weights=term_weights)
+    score += 0.2 * _term_hit_fraction(terms, text=heading, term_weights=term_weights)
+    score += 0.2 * _term_hit_fraction(terms, text=topic_text, term_weights=term_weights)
     score += 0.15 * _term_hit_fraction(
         terms,
         text=" ".join([document_role, support_document_role, authority_level]),
+        term_weights=term_weights,
     )
+    score += 0.65 * _term_cluster_score(terms, text=text)
+    score += 0.35 * _term_cluster_score(terms, text=title)
+    score += 0.2 * _term_cluster_score(terms, text=heading)
+    score += 0.45 * _phrase_hit_fraction(phrases, text=text)
+    score += 0.35 * _phrase_hit_fraction(phrases, text=title)
+    score += 0.2 * _phrase_hit_fraction(phrases, text=heading)
+    score += 0.15 * _phrase_hit_fraction(phrases, text=metadata_text)
     lower_query = query.strip().lower()
     lower_title = title.lower()
     lower_metadata = metadata_text.lower()
@@ -269,16 +363,102 @@ def _score_row(
     return score
 
 
-def _term_hit_fraction(terms: list[str], *, text: str) -> float:
+def _term_hit_fraction(
+    terms: list[str],
+    *,
+    text: str,
+    term_weights: dict[str, float] | None = None,
+) -> float:
     if not terms:
         return 0.0
     token_set = set(_tokenize(text))
-    return sum(1 for term in terms if _contains_term(term, token_set, text)) / len(terms)
+    weights = term_weights or {}
+    matched_weight = 0.0
+    total_weight = 0.0
+    for term in terms:
+        weight = weights.get(term, 1.0)
+        total_weight += weight
+        if _contains_term(term, token_set, text):
+            matched_weight += weight
+    if total_weight <= 0:
+        return 0.0
+    return matched_weight / total_weight
+
+
+def _query_term_weights(terms: list[str], phrases: list[str]) -> dict[str, float]:
+    if not terms:
+        return {}
+    phrase_term_counts: dict[str, int] = {}
+    for phrase in phrases:
+        for token in set(_tokenize(phrase)):
+            phrase_term_counts[token] = phrase_term_counts.get(token, 0) + 1
+    weights: dict[str, float] = {}
+    for term in terms:
+        length_bonus = min(0.8, max(len(term) - 5, 0) * 0.08)
+        phrase_bonus = min(0.25, phrase_term_counts.get(term, 0) * 0.05)
+        weights[term] = 1.0 + length_bonus + phrase_bonus
+    return weights
+
+
+def _term_cluster_score(terms: list[str], *, text: str) -> float:
+    tokens = _tokenize(text)
+    if len(tokens) < 2 or not terms:
+        return 0.0
+    normalized_terms = list(dict.fromkeys(terms))
+    positions: list[tuple[int, str]] = []
+    for index, token in enumerate(tokens):
+        for term in normalized_terms:
+            if _token_matches_term(token, term):
+                positions.append((index, term))
+    if not positions:
+        return 0.0
+    max_span = max(4, len(normalized_terms) + 4)
+    best = 0.0
+    left = 0
+    term_counts: dict[str, int] = {}
+    for right, (right_index, term) in enumerate(positions):
+        term_counts[term] = term_counts.get(term, 0) + 1
+        while left <= right and right_index - positions[left][0] + 1 > max_span:
+            left_term = positions[left][1]
+            next_count = term_counts[left_term] - 1
+            if next_count <= 0:
+                term_counts.pop(left_term, None)
+            else:
+                term_counts[left_term] = next_count
+            left += 1
+        span = max(1, right_index - positions[left][0] + 1)
+        coverage = len(term_counts) / len(normalized_terms)
+        density = len(term_counts) / span
+        best = max(best, coverage * density * max_span)
+    return min(best, 1.0)
+
+
+def _token_matches_term(token: str, term: str) -> bool:
+    return (
+        token == term
+        or token.startswith(term)
+        or term.startswith(token)
+        or _common_prefix_length(token, term) >= 5
+    )
 
 
 def _title_or_topic_has_compound_match(terms: list[str], text: str) -> bool:
     matched = [term for term in terms if term in text]
     return len(matched) >= 2
+
+
+def _phrase_hit_fraction(phrases: list[str], *, text: str) -> float:
+    if not phrases:
+        return 0.0
+    lower = text.lower()
+    if not lower:
+        return 0.0
+    match_scores = [
+        min(1.0, len(_tokenize(phrase)) / 4.0)
+        for phrase in phrases
+        if phrase in lower
+    ]
+    return max(match_scores, default=0.0)
 
 
 def _contains_term(term: str, token_set: set[str], text: str) -> bool:
@@ -287,7 +467,42 @@ def _contains_term(term: str, token_set: set[str], text: str) -> bool:
     lower = text.lower()
     if term in lower:
         return True
-    return any(token.startswith(term) or term.startswith(token) for token in token_set)
+    return any(
+        token.startswith(term)
+        or term.startswith(token)
+        or _common_prefix_length(token, term) >= 5
+        for token in token_set
+    )
+
+
+def _common_prefix_length(left: str, right: str) -> int:
+    size = 0
+    for left_char, right_char in zip(left, right, strict=False):
+        if left_char != right_char:
+            break
+        size += 1
+    return size
+
+
+def _query_phrases(query: str) -> list[str]:
+    raw_tokens = [
+        token.strip("'-.")
+        for token in TOKEN_RE.findall(query.lower())
+        if len(token.strip("'-.") or "") >= 2
+    ]
+    phrases: list[str] = []
+    seen = set()
+    max_size = min(4, len(raw_tokens))
+    for size in range(max_size, 1, -1):
+        for start in range(0, len(raw_tokens) - size + 1):
+            tokens = raw_tokens[start : start + size]
+            if not any(token not in STOPWORDS for token in tokens):
+                continue
+            phrase = " ".join(tokens).strip()
+            if phrase and phrase not in seen:
+                seen.add(phrase)
+                phrases.append(phrase)
+    return phrases
 
 
 def _tokenize(value: str) -> list[str]:

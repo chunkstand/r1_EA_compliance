@@ -2,7 +2,7 @@
   "schema_version": "draft-generation-config-v1",
   "generator_version": "draft-generation-v1",
   "review_id": "v1-cg-ecid-compliance-review",
-  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
   "human_review_caveat": "This generated draft supports human review. It does not replace responsible-official, line-officer, counsel, or specialist judgment, and it is not a legal sufficiency determination or final agency decision.",
   "prohibited_phrases": [
     "legal sufficiency certified",

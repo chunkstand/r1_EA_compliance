@@ -767,6 +767,9 @@ def _downstream_result_path(
         except (FileNotFoundError, ValueError):
             pass
         rule_claim_root = output_dir / "derived" / source_set_id / "rule_claim_links"
+        candidates = sorted(rule_claim_root.glob("*/*/rule_claim_link_eval_results.json"))
+        if candidates:
+            return candidates[0]
         candidates = sorted(rule_claim_root.glob("*/*/summary.json"))
         if candidates:
             return candidates[0].parent / "rule_claim_link_eval_results.json"

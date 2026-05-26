@@ -416,7 +416,7 @@ def _collect_input_state(
         source_selector="compliance_matrix.rows",
     )
     actual_counts = _derive_actual_counts(data_by_key, checks)
-    _validate_actual_counts(actual_counts, config, checks)
+    _validate_actual_counts(actual_counts, config, data_by_key, checks)
     _validate_source_pdf_header(review_id, output_dir, checks)
     return {
         "checks": checks,

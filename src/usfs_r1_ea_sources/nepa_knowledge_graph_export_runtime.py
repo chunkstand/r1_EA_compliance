@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from .catalog_surface import resolve_catalog_dir_for_source_set
 from .nepa_3d_graph_contract import annotate_nepa_3d_graph_validation_checks
 from .nepa_3d_graph_contract import build_nepa_3d_lens_metadata
 from .nepa_3d_graph_contract import DEFAULT_NEPA_3D_GRAPH_CONTRACT_PATH
@@ -33,6 +34,7 @@ from .nepa_knowledge_graph_export_models import _source_set_node_id
 from .nepa_knowledge_graph_export_models import _write_json
 from .nepa_knowledge_graph_export_models import _write_jsonl
 from .nepa_knowledge_graph_export_region1 import _load_region1_forest_plan_readiness
+from .nepa_knowledge_graph_export_region1 import normalize_source_register_region1_readiness
 from .nepa_knowledge_graph_export_review_overlay import _add_review_overlay
 from .nepa_knowledge_graph_export_review_validation import _review_overlay_validation_checks
 from .nepa_knowledge_graph_export_rule_templates import _add_authority_family_templates
@@ -82,7 +84,15 @@ def build_nepa_knowledge_graph_export(
     """Build the source-set NEPA 3D graph export from audited catalog and derived artifacts."""
 
     output_dir = Path(output_dir)
-    source_set_manifest_path = source_set_manifest_path or output_dir / "catalog" / "source_set_manifest.json"
+    resolved_catalog_dir = _resolved_catalog_dir(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        catalog_path=catalog_path,
+        catalog_graph_nodes_path=catalog_graph_nodes_path,
+        catalog_graph_edges_path=catalog_graph_edges_path,
+        source_set_manifest_path=source_set_manifest_path,
+    )
+    source_set_manifest_path = source_set_manifest_path or resolved_catalog_dir / "source_set_manifest.json"
     manifest = _read_json(source_set_manifest_path)
     source_set_id = source_set_id or str(manifest["source_set_id"])
     derived_dir = output_dir / "derived" / source_set_id
@@ -94,9 +104,9 @@ def build_nepa_knowledge_graph_export(
     summary_path = graph_dir / "nepa_3d_graph_summary.json"
     validation_path = graph_dir / "nepa_3d_graph_validation.json"
 
-    catalog_path = catalog_path or output_dir / "catalog" / "source_catalog.jsonl"
-    catalog_graph_nodes_path = catalog_graph_nodes_path or output_dir / "catalog" / "source_graph_nodes.jsonl"
-    catalog_graph_edges_path = catalog_graph_edges_path or output_dir / "catalog" / "source_graph_edges.jsonl"
+    catalog_path = catalog_path or resolved_catalog_dir / "source_catalog.jsonl"
+    catalog_graph_nodes_path = catalog_graph_nodes_path or resolved_catalog_dir / "source_graph_nodes.jsonl"
+    catalog_graph_edges_path = catalog_graph_edges_path or resolved_catalog_dir / "source_graph_edges.jsonl"
     authority_currentness_path = (
         authority_currentness_path
         or derived_dir / "authority_currentness" / "authority_currentness_report.json"
@@ -122,17 +132,17 @@ def build_nepa_knowledge_graph_export(
         if is_source_register_v1
         else None
     )
+    currentness = _read_json(authority_currentness_path)
     if is_source_register_v1 and authority_inventory_path == DEFAULT_AUTHORITY_INVENTORY_PATH:
-        if proving_context is None:
-            raise FileNotFoundError(
-                "Canonical source-register graph export requires a proving context with "
-                "authority inventory for the active source set."
-            )
-        authority_inventory_path = Path(proving_context["authority_inventory_path"])
+        authority_inventory_path = _resolved_source_register_authority_inventory_path(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            currentness=currentness,
+            proving_context=proving_context,
+        )
 
     contract = load_nepa_3d_graph_contract(graph_contract_path)
     inventory = _read_json(authority_inventory_path)
-    currentness = _read_json(authority_currentness_path)
     jurisdiction_scope_register = load_jurisdiction_scope_register(
         DEFAULT_JURISDICTION_SCOPE_REGISTER_PATH
     )
@@ -163,6 +173,12 @@ def build_nepa_knowledge_graph_export(
             _read_json(forest_plan_components_path)
             if forest_plan_components_path.exists()
             else {"schema_version": "forest-plan-component-inventory-v0", "source_set_id": source_set_id, "components": []}
+        )
+        region1_forest_plan_readiness = normalize_source_register_region1_readiness(
+            region1_forest_plan_readiness,
+            source_set_id=source_set_id,
+            forest_components=forest_components,
+            forest_plan_components_path=forest_plan_components_path,
         )
     else:
         rule_pack = load_rule_pack(rule_pack_path)
@@ -446,3 +462,55 @@ def build_nepa_knowledge_graph_export(
         validation_path=validation_path,
         summary=summary,
     )
+
+
+def _resolved_catalog_dir(
+    *,
+    output_dir: Path,
+    source_set_id: str | None,
+    catalog_path: Path | None,
+    catalog_graph_nodes_path: Path | None,
+    catalog_graph_edges_path: Path | None,
+    source_set_manifest_path: Path | None,
+) -> Path:
+    for explicit_path in (
+        catalog_path,
+        catalog_graph_nodes_path,
+        catalog_graph_edges_path,
+        source_set_manifest_path,
+    ):
+        if explicit_path is not None:
+            return Path(explicit_path).parent
+    return resolve_catalog_dir_for_source_set(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+    )
+
+
+def _resolved_source_register_authority_inventory_path(
+    *,
+    output_dir: Path,
+    source_set_id: str,
+    currentness: dict,
+    proving_context: dict | None,
+) -> Path:
+    currentness_input_path = _currentness_input_path(currentness, "authority_inventory_path")
+    if currentness_input_path is not None:
+        return currentness_input_path
+    if proving_context is None:
+        raise FileNotFoundError(
+            "Canonical source-register graph export requires an authority-currentness report "
+            "or proving context with authority inventory for the requested source set."
+        )
+    return Path(proving_context["authority_inventory_path"])
+
+
+def _currentness_input_path(currentness: dict, key: str) -> Path | None:
+    inputs = currentness.get("inputs")
+    if not isinstance(inputs, dict):
+        return None
+    value = str(inputs.get(key) or "").strip()
+    if not value:
+        return None
+    path = Path(value)
+    return path if path.exists() else None

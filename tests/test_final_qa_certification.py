@@ -2,6 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from usfs_r1_ea_sources.final_qa_certification_counts import (
+    _current_promotion_suite_self_reference_allowed,
+)
+from usfs_r1_ea_sources.final_qa_certification_report import _source_library_pointer
+
 from tests.support.final_qa_certification_fixtures import _read_json
 
 
@@ -51,15 +56,16 @@ EXPECTED_COUNTS = {
     "package_file_count": 43,
     "package_chunk_count": 1265,
     "baseline_source_record_count": 26,
-    "candidate_authority_count": 377,
-    "applicable_authority_count": 37,
-    "non_applicable_authority_count": 340,
+    "candidate_authority_count": 396,
+    "applicable_authority_count": 55,
+    "non_applicable_authority_count": 341,
     "unresolved_authority_count": 0,
-    "generated_rule_count": 37,
-    "authority_finding_count": 37,
-    "rule_claim_link_count": 162,
+    "generated_rule_count": 55,
+    "authority_finding_count": 55,
+    "authority_finding_status_counts": {"pass": 37, "uncertain": 18},
+    "rule_claim_link_count": 268,
     "rule_claim_gap_count": 0,
-    "compliance_matrix_authority_row_count": 37,
+    "compliance_matrix_authority_row_count": 55,
     "forest_plan_component_count": 329,
     "forest_plan_supported_component_count": 79,
     "forest_plan_not_applicable_component_count": 250,
@@ -68,15 +74,15 @@ EXPECTED_COUNTS = {
     "applicable_standard_count": 12,
     "applied_standard_count": 12,
     "forest_plan_component_eval_case_count": 35,
-    "phase_eval_phase_count": 25,
-    "phase_eval_passed_phase_count": 25,
+    "phase_eval_phase_count": 32,
+    "phase_eval_passed_phase_count": 32,
     "promotion_suite_required_current_result_count": 28,
     "promotion_suite_passed_required_current_result_count": 28,
-    "review_packet_index_applicable_authority_count": 37,
-    "review_packet_index_non_applicable_authority_count": 340,
+    "review_packet_index_applicable_authority_count": 55,
+    "review_packet_index_non_applicable_authority_count": 341,
     "review_packet_index_forest_plan_component_row_count": 79,
     "review_packet_index_applicable_standard_count": 12,
-    "review_packet_index_render_manifest_authority_row_count": 37,
+    "review_packet_index_render_manifest_authority_row_count": 55,
     "review_packet_index_render_manifest_forest_plan_row_count": 79,
     "review_packet_index_validation_failed_check_count": 0,
     "accepted_v1_risk_count": 14,
@@ -125,6 +131,64 @@ ACCEPTED_PENDING_RULE_IDS = {
     "usda_nepa_applicant_docs_7cfr_1b10",
 }
 
+
+def test_review_packet_gate_allows_final_qa_bootstrap_only_for_downstream_row_mirrors() -> None:
+    gate = {
+        "gate_name": "review_packet_index_validation",
+        "required_pass_selector": "passed",
+        "expected_value": True,
+    }
+    validation = {
+        "checks": [
+            {
+                "name": "decision_support_authority_rows_match_applicability",
+                "passed": False,
+            },
+            {
+                "name": "final_qa_authority_rows_match_applicability",
+                "passed": False,
+            },
+        ]
+    }
+
+    assert (
+        _current_promotion_suite_self_reference_allowed(
+            gate=gate,
+            data=validation,
+            expected_counts={},
+        )
+        is True
+    )
+
+
+def test_review_packet_gate_rejects_unrelated_packet_validation_drift() -> None:
+    gate = {
+        "gate_name": "review_packet_index_validation",
+        "required_pass_selector": "passed",
+        "expected_value": True,
+    }
+    validation = {
+        "checks": [
+            {
+                "name": "final_qa_authority_rows_match_applicability",
+                "passed": False,
+            },
+            {
+                "name": "packet_index_authority_rows_match_compliance_matrix",
+                "passed": False,
+            },
+        ]
+    }
+
+    assert (
+        _current_promotion_suite_self_reference_allowed(
+            gate=gate,
+            data=validation,
+            expected_counts={},
+        )
+        is False
+    )
+
 EXPECTED_LAND_EXCHANGE_ROW_SOURCES = {
     "flpma_section_206_land_exchange": "R1EA-146",
     "land_exchange_fs_policy_and_project_references": "R1EA-150",
@@ -138,7 +202,7 @@ def test_sequence_1_config_owns_sections_gates_counts_and_signoff() -> None:
 
     assert config["schema_version"] == "east-crazies-final-qa-certification-config-v1"
     assert config["review_id"] == "v1-cg-ecid-compliance-review"
-    assert config["source_set_id"] == "source-set-4fb59e9eb43045cb"
+    assert config["source_set_id"] == "source-set-f70ea11e04ae3d53"
     assert config["section_order"] == REQUIRED_SECTIONS
     assert set(config["required_gate_names"]) == REQUIRED_GATES
     assert config["manual_draft_policy"]["root_east_crazies_drafts_are_canonical"] is False
@@ -155,20 +219,22 @@ def test_sequence_1_config_owns_sections_gates_counts_and_signoff() -> None:
 
     count_fields = {row["field"]: row for row in config["required_count_fields"]}
     expected_count_fields = set(EXPECTED_COUNTS) - {"authority_finding_status_counts"}
-    expected_count_fields.add("authority_finding_status_counts.pass")
+    expected_count_fields.update(
+        {
+            "authority_finding_status_counts.pass",
+            "authority_finding_status_counts.uncertain",
+        }
+    )
     assert set(count_fields) == expected_count_fields
     for field, expected in EXPECTED_COUNTS.items():
         if field == "authority_finding_status_counts":
-            assert count_fields["authority_finding_status_counts.pass"]["expected"] == (
-                expected["pass"]
-            )
+            for status, value in expected.items():
+                key = f"authority_finding_status_counts.{status}"
+                assert count_fields[key]["expected"] == value
+                assert count_fields[key]["source_selector"]
         else:
             assert count_fields[field]["expected"] == expected
-        assert count_fields[
-            field if field != "authority_finding_status_counts" else (
-                "authority_finding_status_counts.pass"
-            )
-        ]["source_selector"]
+            assert count_fields[field]["source_selector"]
 
     signoff_fields = {row["field"] for row in config["reviewer_signoff_fields"]}
     assert {
@@ -246,7 +312,8 @@ def test_sequence_1_config_and_expected_summary_stay_aligned() -> None:
     config_count_fields = {row["field"]: row["expected"] for row in config["required_count_fields"]}
     for field, value in expected["expected_counts"].items():
         if field == "authority_finding_status_counts":
-            assert config_count_fields["authority_finding_status_counts.pass"] == value["pass"]
+            for status, count in value.items():
+                assert config_count_fields[f"authority_finding_status_counts.{status}"] == count
         else:
             assert config_count_fields[field] == value
 
@@ -258,7 +325,6 @@ def test_expected_summary_locks_current_counts_hashes_and_representative_rows() 
     assert expected["required_sections"] == REQUIRED_SECTIONS
     for key, value in EXPECTED_COUNTS.items():
         assert expected["expected_counts"][key] == value
-    assert expected["expected_counts"]["authority_finding_status_counts"]["pass"] == 37
 
     assert set(expected["input_hashes"]) >= {
         "decision_support_report_sha256",
@@ -286,6 +352,7 @@ def test_expected_summary_locks_current_counts_hashes_and_representative_rows() 
     assert applicable["authority_family_id"] == "land_exchange_statutory_authorities"
     assert applicable["status"] == "pass"
     assert applicable["applicability_status"] == "applicable"
+    assert applicable["source_library_citation"] == "FED-032 (fcfb0f28844d)"
     assert applicable["source_selectors"]
 
     required_land_exchange_rows = {
@@ -302,11 +369,13 @@ def test_expected_summary_locks_current_counts_hashes_and_representative_rows() 
 
     non_applicable = expected["required_fixture_rows"]["non_applicable_authority"]
     assert non_applicable["status"] == "not_applicable"
+    assert non_applicable["source_record_ids"] == ["FED-080"]
     assert non_applicable["coverage_certificate"]["coverage_result"] == "sufficient"
     assert non_applicable["coverage_certificate"]["missing_query_variants"] == []
     assert non_applicable["source_selectors"]
 
     standard = expected["required_fixture_rows"]["forest_plan_standard"]
+    assert standard["component_id"] == "FOR-009-FW-STD-RMZ-01"
     assert standard["component_key"] == "FW-STD-RMZ-01"
     assert standard["applicability_status"] == "applicable"
     assert standard["compliance_status"] == "complies"
@@ -316,6 +385,7 @@ def test_expected_summary_locks_current_counts_hashes_and_representative_rows() 
     assert risk["category"] == "non_applicable_authority_boundary"
     assert risk["deterministic_basis"] is True
     assert risk["legal_conclusion"] is False
+    assert risk["risk_flag_count"] == 348
     assert risk["source_artifact_path"].endswith("litigation_risk_summary.json")
 
 
@@ -393,6 +463,27 @@ def test_minimal_report_fixture_keeps_citations_selectors_and_risk_boundaries() 
         "reviewer_signature",
         "review_date",
         "reviewer_notes",
+    }
+
+
+def test_source_library_pointer_falls_back_to_claim_trace_when_direct_evidence_missing() -> None:
+    pointer = _source_library_pointer(
+        {
+            "authority_source_record_id": "R1EA-092",
+            "source_claim_ids": ["claim:123", "claim:456"],
+            "source_library_citation": None,
+            "source_library_evidence": None,
+        },
+        source_set_id="source-set-test",
+    )
+
+    assert pointer == {
+        "artifact_path": "source_library/derived/source-set-test/claims/claims.jsonl",
+        "chunk_id": "claim:123",
+        "citation_label": None,
+        "source_record_id": "R1EA-092",
+        "artifact_sha256": None,
+        "content_sha256": None,
     }
 
 

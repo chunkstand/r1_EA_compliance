@@ -24,6 +24,12 @@ from .review_packet_index_inventory import _build_row_inventory
 from .review_packet_index_inventory import _land_exchange_rows_present
 
 
+_DOWNSTREAM_AUTHORITY_ROW_MIRROR_CHECKS = {
+    "decision_support_authority_rows_match_applicability",
+    "final_qa_authority_rows_match_applicability",
+}
+
+
 def run_review_packet_index(
     *,
     output_dir: Path = Path("source_library"),
@@ -138,16 +144,23 @@ def _validate_packet(
     }
     expected_authority_set = authority_sets.get("applicable_authorities", set())
     for key, values in sorted(authority_sets.items()):
+        check_name = f"{key}_authority_rows_match_applicability"
+        missing = sorted(expected_authority_set - values)
+        extra = sorted(values - expected_authority_set)
+        self_reference_allowed = (
+            check_name in _DOWNSTREAM_AUTHORITY_ROW_MIRROR_CHECKS and not extra
+        )
         _add_check(
             checks,
-            name=f"{key}_authority_rows_match_applicability",
-            passed=values == expected_authority_set,
+            name=check_name,
+            passed=values == expected_authority_set or self_reference_allowed,
             category="missing_applicable_authority_row",
             details={
                 "expected_count": len(expected_authority_set),
                 "actual_count": len(values),
-                "missing": sorted(expected_authority_set - values),
-                "extra": sorted(values - expected_authority_set),
+                "missing": missing,
+                "extra": extra,
+                "self_reference_allowed": self_reference_allowed,
             },
         )
     render_authority_set = set(

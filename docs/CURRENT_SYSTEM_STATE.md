@@ -73,6 +73,65 @@ Latest docs-and-gate rebaseline on 2026-05-26:
   `rg -n "Canonical source-register refoundation status on|Historical local import baseline on|current_promotion_ready|reviewer_ready=true|source-set-[0-9a-f]{16}" README.md`,
   and `git diff --check`
 
+## ECID Current-Promotion Replay Resolved Locally
+
+Latest implementation update on 2026-05-26:
+
+- routed packet:
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; ECID current-promotion replay is now green end to end on
+  reviewer-facing `source-set-f70ea11e04ae3d53`, and the remaining live packet
+  blocker is now South Plateau forest-plan replay / adjudication refresh
+  rather than ECID broader-EA, direct-eval, final-QA, or promotion drift
+- implementation truth:
+  the ECID repair now spans the broader review-local packet family: aligned
+  direct-eval contracts for retrieval / claim / rule-claim, decision-support
+  evidence fallback, review-packet and final-QA self-reference accounting,
+  knowledge-graph proving backfill, and truthful promotion-suite graph
+  expectations for the packet-scoped `source-set-f70ea11e04ae3d53`. The live
+  ECID packet boundary remains `55` applicable, `341` non-applicable, and
+  `396` candidate authorities
+- live replay truth:
+  `v1-ea-eval --review-id v1-cg-ecid-compliance-review` now reports
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true` with no remaining failure categories. The
+  `review_packet_index` validation is green with `failed_check_count=0`.
+  `ea-consistency-document` is green on the aligned packet, source-set graph
+  evals now pass with `authority_path_count=17`,
+  `relationship_type_count=7`, `orphan_node_count=0`, and
+  `disconnected_component_count=1`, `draft-generation-eval` passes `5/5`,
+  `final-qa-certification` reruns green with `198` passing checks and
+  `machine_replay_status="passed"`, review-scoped `phase-eval` now passes
+  `33/33` with `reviewer_ready=true`,
+  `review_direct_eval_status="direct_eval_present"`,
+  `missing_direct_eval_phase_count=0`, and
+  `threshold_failed_phase_count=0`, and non-strict `promotion-suite` now
+  reports `current_promotion_ready=true`, `promotion_ready=true`, and
+  `passed_required_current_result_count=32/32`. The truthful packet-scoped
+  source-set graph still carries `region1_forest_plan_blocked_profile_count=9`
+  rather than a fake zero-blocker full-Region-1 claim
+- remaining blocker truth:
+  South Plateau now carries the remaining packet-local replay debt on the same
+  aligned source set. ECID broader-EA, direct-eval, final-QA, and
+  current-promotion aggregate replay are no longer the blocker
+- next routing:
+  resume `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  beginning with South Plateau packet-local forest-plan replay / adjudication
+  refresh on aligned `source-set-f70ea11e04ae3d53`, then finish the packet's
+  aggregate docs / closeout slice
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources draft-generate --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources draft-generation-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_authority_currentness.py tests/test_claim_extraction_eval.py tests/test_ea_consistency_decision_support.py tests/test_ea_consistency_decision_support_report.py tests/test_final_qa_certification.py tests/test_graph_accuracy_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_nepa_knowledge_graph_export_review.py tests/test_phase_eval_direct_eval_contracts.py tests/test_promotion_suite.py tests/test_promotion_suite_full_canonical.py tests/test_retrieval.py tests/test_retrieval_eval.py tests/test_review_packet_index.py tests/test_rule_claim_binding_eval.py tests/test_rule_claim_binding_runtime.py tests/test_v1_ea_eval.py tests/test_architecture_contract.py -q`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_compliance_phase_eval.py tests/test_phase_eval.py tests/test_draft_generation.py tests/test_draft_generation_eval.py tests/test_cli_derived.py tests/test_cli_eval.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/authority_currentness.py src/usfs_r1_ea_sources/authority_relationship_eval.py src/usfs_r1_ea_sources/citation_alias_eval.py src/usfs_r1_ea_sources/claim_extraction_eval.py src/usfs_r1_ea_sources/cli_derived.py src/usfs_r1_ea_sources/cli_derived_registration.py src/usfs_r1_ea_sources/ea_consistency_decision_support_inputs.py src/usfs_r1_ea_sources/ea_consistency_decision_support_models.py src/usfs_r1_ea_sources/ea_consistency_decision_support_report.py src/usfs_r1_ea_sources/final_qa_certification_counts.py src/usfs_r1_ea_sources/final_qa_certification_report.py src/usfs_r1_ea_sources/final_qa_certification_runtime.py src/usfs_r1_ea_sources/graph_accuracy_eval.py src/usfs_r1_ea_sources/graph_health_eval.py src/usfs_r1_ea_sources/nepa_knowledge_graph_export_common.py src/usfs_r1_ea_sources/nepa_knowledge_graph_export_forest_plan.py src/usfs_r1_ea_sources/nepa_knowledge_graph_export_region1.py src/usfs_r1_ea_sources/nepa_knowledge_graph_export_review_validation.py src/usfs_r1_ea_sources/nepa_knowledge_graph_export_runtime.py src/usfs_r1_ea_sources/phase_eval.py src/usfs_r1_ea_sources/phase_eval_direct_eval_review.py src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py src/usfs_r1_ea_sources/retrieval_eval_runtime.py src/usfs_r1_ea_sources/retrieval_query.py src/usfs_r1_ea_sources/review_packet_index_outputs.py src/usfs_r1_ea_sources/rule_claim_binding_eval.py src/usfs_r1_ea_sources/rule_claim_binding_runtime.py src/usfs_r1_ea_sources/rule_claim_binding_validation.py src/usfs_r1_ea_sources/source_register_proving.py src/usfs_r1_ea_sources/v1_ea_eval_rule_expectations.py tests/test_authority_currentness.py tests/test_claim_extraction_eval.py tests/test_ea_consistency_decision_support.py tests/test_ea_consistency_decision_support_report.py tests/test_final_qa_certification.py tests/test_graph_accuracy_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_nepa_knowledge_graph_export_review.py tests/test_phase_eval_direct_eval_contracts.py tests/test_promotion_suite.py tests/test_promotion_suite_full_canonical.py tests/test_retrieval.py tests/test_retrieval_eval.py tests/test_review_packet_index.py tests/test_rule_claim_binding_eval.py tests/test_rule_claim_binding_runtime.py tests/test_v1_ea_eval.py tests/support/compliance_phase_eval_fixtures.py tests/test_compliance_phase_eval.py tests/test_phase_eval.py tests/test_draft_generation.py tests/test_draft_generation_eval.py tests/test_cli_derived.py tests/test_cli_eval.py`,
+  `PYTHONPATH=src python -m compileall src/usfs_r1_ea_sources tests/test_authority_currentness.py tests/test_claim_extraction_eval.py tests/test_ea_consistency_decision_support.py tests/test_ea_consistency_decision_support_report.py tests/test_final_qa_certification.py tests/test_graph_accuracy_eval.py tests/test_nepa_knowledge_graph_export.py tests/test_nepa_knowledge_graph_export_review.py tests/test_phase_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_promotion_suite.py tests/test_promotion_suite_full_canonical.py tests/test_retrieval.py tests/test_retrieval_eval.py tests/test_review_packet_index.py tests/test_rule_claim_binding_eval.py tests/test_rule_claim_binding_runtime.py tests/test_v1_ea_eval.py tests/test_draft_generation.py tests/test_draft_generation_eval.py tests/test_cli_derived.py tests/test_cli_eval.py`,
+  and `git diff --check`
+
 ## Aligned ECID Compliance Replay And Inventory Mapping Reduced Locally
 
 Latest implementation update on 2026-05-25:

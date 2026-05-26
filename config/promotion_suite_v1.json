@@ -2,7 +2,7 @@
   "schema_version": "promotion-suite-v1",
   "id": "post-v1-region1-ea-promotion-suite",
   "label": "Post-V1 Region 1 EA promotion suite",
-  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
   "full_canonical_source_set_id": "source-set-4fb59e9eb43045cb",
   "rule_pack_path": "config/compliance_rule_pack_nepa_ea_v0.json",
   "rule_pack_id": "nepa-ea-v0",
@@ -156,7 +156,7 @@
             {
               "name": "source_set_matches",
               "json_path": "summary.source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb",
+              "equals": "source-set-f70ea11e04ae3d53",
               "failure_category": "stale_artifact"
             },
             {
@@ -174,7 +174,7 @@
             {
               "name": "rule_count",
               "json_path": "summary.rule_count",
-              "equals": 37
+              "equals": 55
             },
             {
               "name": "baseline_source_record_count",
@@ -200,7 +200,7 @@
             {
               "name": "matrix_row_count",
               "json_path": "summary.row_count",
-              "equals": 37
+              "equals": 55
             },
             {
               "name": "matrix_reviewer_ready",
@@ -240,11 +240,11 @@
               "json_path": "review_id",
               "equals": "v1-cg-ecid-compliance-review"
             },
-            {
-              "name": "row_inventory_source_set",
-              "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb"
-            }
+        {
+          "name": "row_inventory_source_set",
+          "json_path": "source_set_id",
+          "equals": "source-set-f70ea11e04ae3d53"
+        }
           ]
         },
         {
@@ -264,11 +264,11 @@
               "json_path": "review_id",
               "equals": "v1-cg-ecid-compliance-review"
             },
-            {
-              "name": "render_manifest_source_set",
-              "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb"
-            },
+        {
+          "name": "render_manifest_source_set",
+          "json_path": "source_set_id",
+          "equals": "source-set-f70ea11e04ae3d53"
+        },
             {
               "name": "render_manifest_passed",
               "json_path": "summary.passed",
@@ -296,7 +296,7 @@
             {
               "name": "review_packet_index_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb"
+              "equals": "source-set-f70ea11e04ae3d53"
             },
             {
               "name": "review_packet_index_render_manifest_passed",
@@ -339,7 +339,7 @@
             {
               "name": "review_packet_index_validation_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb"
+              "equals": "source-set-f70ea11e04ae3d53"
             },
             {
               "name": "review_packet_index_validation_passed",
@@ -373,7 +373,7 @@
             {
               "name": "decision_support_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb"
+              "equals": "source-set-f70ea11e04ae3d53"
             },
             {
               "name": "decision_support_status",
@@ -417,7 +417,7 @@
             {
               "name": "decision_support_manifest_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb"
+              "equals": "source-set-f70ea11e04ae3d53"
             },
             {
               "name": "decision_support_manifest_validation_status",
@@ -460,7 +460,7 @@
             {
               "name": "final_qa_report_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb"
+              "equals": "source-set-f70ea11e04ae3d53"
             },
             {
               "name": "final_qa_machine_replay_passed",
@@ -494,7 +494,7 @@
             {
               "name": "final_qa_manifest_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb"
+              "equals": "source-set-f70ea11e04ae3d53"
             },
             {
               "name": "final_qa_manifest_validation_status",
@@ -537,7 +537,7 @@
             {
               "name": "final_qa_validation_source_set",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb"
+              "equals": "source-set-f70ea11e04ae3d53"
             },
             {
               "name": "final_qa_validation_passed",
@@ -709,7 +709,7 @@
             {
               "name": "review_graph_source_set_matches",
               "json_path": "source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb",
+              "equals": "source-set-f70ea11e04ae3d53",
               "failure_category": "graph_stale_artifact"
             },
             {
@@ -755,7 +755,7 @@
             {
               "name": "eval_source_set_matches",
               "json_path": "contract.source_set_id",
-              "equals": "source-set-4fb59e9eb43045cb",
+              "equals": "source-set-f70ea11e04ae3d53",
               "failure_category": "stale_artifact"
             }
           ]
@@ -2053,7 +2053,7 @@
         {
           "name": "phase_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-4fb59e9eb43045cb"
+          "equals": "source-set-f70ea11e04ae3d53"
         },
         {
           "name": "phase_eval_contract_id",
@@ -2151,7 +2151,7 @@
         {
           "name": "source_set_graph_source_set_matches",
           "json_path": "source_set_id",
-          "equals": "source-set-4fb59e9eb43045cb",
+          "equals": "source-set-f70ea11e04ae3d53",
           "failure_category": "graph_stale_artifact"
         },
         {
@@ -2175,9 +2175,9 @@
           "equals": 0
         },
         {
-          "name": "source_set_graph_region1_blocked_profiles_cleared",
+          "name": "source_set_graph_region1_blocked_profile_count_matches",
           "json_path": "region1_forest_plan_blocked_profile_count",
-          "equals": 0,
+          "equals": 9,
           "failure_category": "graph_region1_profile_gap"
         }
       ]
@@ -2218,7 +2218,7 @@
         {
           "name": "compliance_review_eval_source_set",
           "json_path": "source_set_id",
-          "equals": "source-set-4fb59e9eb43045cb",
+          "equals": "source-set-f70ea11e04ae3d53",
           "failure_category": "stale_artifact"
         }
       ]

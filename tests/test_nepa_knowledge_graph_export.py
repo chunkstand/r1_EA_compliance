@@ -6,10 +6,12 @@ import tempfile
 from usfs_r1_ea_sources.nepa_knowledge_graph_export import build_nepa_knowledge_graph_export
 
 from tests.support.nepa_knowledge_graph_export_fixtures import REPO_ROOT
+from tests.support.nepa_knowledge_graph_export_fixtures import _catalog_row
 from tests.support.nepa_knowledge_graph_export_fixtures import _read_json
 from tests.support.nepa_knowledge_graph_export_fixtures import _read_jsonl
 from tests.support.nepa_knowledge_graph_export_fixtures import _rewrite_catalog_as_source_register_v1
 from tests.support.nepa_knowledge_graph_export_fixtures import _write_json
+from tests.support.nepa_knowledge_graph_export_fixtures import _write_jsonl
 from tests.support.nepa_knowledge_graph_export_fixtures import _write_minimal_source_set
 
 
@@ -205,6 +207,49 @@ def test_nepa_knowledge_graph_export_builds_source_register_v1_graph_from_region
         assert checks["nepa_3d_graph_region1_promoted_profiles_have_inventory"]["passed"]
 
 
+def test_nepa_knowledge_graph_export_links_region1_requirement_nodes_to_forest_units() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-test"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        readiness = _read_json(paths["region1_readiness"])
+        readiness["field_directive_requirements"].append(
+            {
+                "requirement_id": "unit-specific-field-supplements",
+                "requirement_type": "unit_field_directive_supplements",
+                "readiness_status": "source_delta_required",
+                "source_record_id": None,
+            }
+        )
+        _write_json(paths["region1_readiness"], readiness)
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            authority_inventory_path=paths["authority_inventory"],
+            authority_family_rule_templates_path=paths["templates"],
+            forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
+            rule_pack_path=paths["rule_pack"],
+        )
+
+        edges = _read_jsonl(result.edges_path)
+        component_node_id = "forest_plan_component:region1-field-directive:unit-specific-field-supplements"
+        belongs_to_targets = {
+            edge["target_node_id"]
+            for edge in edges
+            if edge["edge_type"] == "BELONGS_TO_FOREST_UNIT"
+            and edge["source_node_id"] == component_node_id
+        }
+
+        assert result.summary["validation_passed"]
+        assert belongs_to_targets == {
+            "forest_unit:other-test-forest",
+            "forest_unit:test-forest",
+        }
+
+
 def test_nepa_knowledge_graph_export_accepts_stale_proving_context_id_when_manifest_matches() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"
@@ -244,3 +289,305 @@ def test_nepa_knowledge_graph_export_accepts_stale_proving_context_id_when_manif
         assert result.summary["validation_passed"]
         assert result.summary["authority_family_count"] == 3
         assert result.summary["forest_plan_profile_count"] == 1
+
+
+def test_nepa_knowledge_graph_export_resolves_requested_source_set_from_archived_catalog_surface() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-target"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        _rewrite_catalog_as_source_register_v1(output_dir, source_set_id=source_set_id)
+        archived_catalog_dir = (
+            output_dir / "runs" / "current-source-gap-closeout-catalog-gate" / "catalog_gate"
+        )
+        archived_catalog_dir.mkdir(parents=True, exist_ok=True)
+        for filename in (
+            "source_set_manifest.json",
+            "source_catalog.jsonl",
+            "source_graph_nodes.jsonl",
+            "source_graph_edges.jsonl",
+        ):
+            (output_dir / "catalog" / filename).replace(archived_catalog_dir / filename)
+        _write_json(
+            output_dir / "catalog" / "source_set_manifest.json",
+            {
+                "source_set_id": "source-set-root",
+                "created_at": "2026-05-06T00:00:00Z",
+                "source_count": 1,
+                "artifact_count": 1,
+            },
+        )
+        _write_jsonl(
+            output_dir / "catalog" / "source_catalog.jsonl",
+            [_catalog_row("source-set-root", "ROOT-001", "Root-only row", "downloaded")],
+        )
+        _write_jsonl(
+            output_dir / "catalog" / "source_graph_nodes.jsonl",
+            [{"id": "source:ROOT-001", "type": "Source", "source_record_id": "ROOT-001"}],
+        )
+        _write_jsonl(
+            output_dir / "catalog" / "source_graph_edges.jsonl",
+            [
+                {
+                    "id": "source:ROOT-001|SUPPORTS_REVIEW_TOPIC|topic:root",
+                    "source": "source:ROOT-001",
+                    "target": "topic:root",
+                    "relationship": "SUPPORTS_REVIEW_TOPIC",
+                }
+            ],
+        )
+        currentness_path = (
+            output_dir
+            / "derived"
+            / source_set_id
+            / "authority_currentness"
+            / "authority_currentness_report.json"
+        )
+        currentness = _read_json(currentness_path)
+        currentness["inputs"] = {
+            "authority_inventory_path": str(paths["authority_inventory"]),
+        }
+        _write_json(currentness_path, currentness)
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
+        )
+
+        graph = _read_json(result.graph_path)
+        inputs_by_name = {
+            entry["name"]: entry
+            for entry in graph["inputs"]
+            if isinstance(entry, dict) and entry.get("name")
+        }
+        assert result.summary["validation_passed"]
+        assert inputs_by_name["source_set_manifest"]["path"].endswith(
+            "current-source-gap-closeout-catalog-gate/catalog_gate/source_set_manifest.json"
+        )
+        assert inputs_by_name["source_catalog"]["path"].endswith(
+            "current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl"
+        )
+
+
+def test_nepa_knowledge_graph_export_uses_requested_source_set_semantic_report() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-live"
+        stale_source_set_id = "source-set-stale"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        _rewrite_catalog_as_source_register_v1(output_dir, source_set_id=source_set_id)
+
+        stale_proving_dir = output_dir / "derived" / stale_source_set_id / "source_register_proving"
+        stale_proving_dir.mkdir(parents=True, exist_ok=True)
+        _write_json(stale_proving_dir / "proving_slice_report.json", {"schema_version": "unit-proving-report"})
+        stale_catalog_dir = output_dir / "catalog-stale"
+        stale_catalog_dir.mkdir(parents=True, exist_ok=True)
+        _write_json(
+            stale_catalog_dir / "source_set_manifest.json",
+            {
+                "source_set_id": stale_source_set_id,
+                "created_at": "2026-05-06T00:00:00Z",
+                "source_count": 1,
+                "artifact_count": 1,
+            },
+        )
+        _write_json(
+            output_dir / "derived" / "source_register_proving" / "latest_context.json",
+            {
+                "schema_version": "source-register-proving-context-v1",
+                "source_set_id": stale_source_set_id,
+                "report_path": str((stale_proving_dir / "proving_slice_report.json").resolve()),
+                "catalog_dir": str((output_dir / "catalog").resolve()),
+                "source_catalog_path": str((output_dir / "catalog" / "source_catalog.jsonl").resolve()),
+                "source_set_manifest_path": str(
+                    (stale_catalog_dir / "source_set_manifest.json").resolve()
+                ),
+            },
+        )
+
+        proving_dir = output_dir / "derived" / source_set_id / "source_register_proving"
+        proving_dir.mkdir(parents=True, exist_ok=True)
+        _write_json(
+            proving_dir / "proving_slice_report.json",
+            {
+                "schema_version": "source-register-proving-slice-report-v1",
+                "source_set_id": source_set_id,
+                "inputs": {
+                    "catalog_dir": str((output_dir / "catalog").resolve()),
+                    "source_catalog_path": str((output_dir / "catalog" / "source_catalog.jsonl").resolve()),
+                    "source_set_manifest_path": str(
+                        (output_dir / "catalog" / "source_set_manifest.json").resolve()
+                    ),
+                },
+                "semantic_relationships": {"relationships": []},
+            },
+        )
+        _write_json(
+            proving_dir / "relationships.json",
+            {
+                "relationships": [
+                    {
+                        "relationship_id": "test-implements",
+                        "relationship_type": "IMPLEMENTS",
+                        "path_pattern_id": "higher-authority-to-component",
+                        "relationship_basis": "Unit test semantic relationship",
+                        "evidence_basis_type": "workbook_curated",
+                        "source_class_id": "authority_document",
+                        "source_id": "authority_document:nepa-act",
+                        "target_class_id": "authority_section",
+                        "target_id": "authority_section:nepa-act#4332",
+                        "supporting_source_record_ids": ["R1EA-001"],
+                        "status": "active",
+                    }
+                ]
+            },
+        )
+        currentness_path = (
+            output_dir
+            / "derived"
+            / source_set_id
+            / "authority_currentness"
+            / "authority_currentness_report.json"
+        )
+        currentness = _read_json(currentness_path)
+        currentness["inputs"] = {
+            "authority_inventory_path": str(paths["authority_inventory"]),
+        }
+        _write_json(currentness_path, currentness)
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
+        )
+
+        graph = _read_json(result.graph_path)
+        relationship_types = {
+            node.get("metadata", {}).get("relationship_type")
+            for node in graph["nodes"]
+            if node.get("node_type") == "authority_path"
+        }
+
+        assert result.summary["validation_passed"]
+        assert "IMPLEMENTS" in relationship_types
+        assert "GOVERNS_FOREST_UNIT" in relationship_types
+
+
+def test_nepa_knowledge_graph_export_backfills_missing_relationships_file() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-live"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        _rewrite_catalog_as_source_register_v1(output_dir, source_set_id=source_set_id)
+
+        proving_dir = output_dir / "derived" / source_set_id / "source_register_proving"
+        proving_dir.mkdir(parents=True, exist_ok=True)
+        _write_json(
+            proving_dir / "proving_slice_report.json",
+            {
+                "schema_version": "source-register-proving-slice-report-v1",
+                "source_set_id": source_set_id,
+                "inputs": {
+                    "catalog_dir": str((output_dir / "catalog").resolve()),
+                    "source_catalog_path": str((output_dir / "catalog" / "source_catalog.jsonl").resolve()),
+                    "source_set_manifest_path": str(
+                        (output_dir / "catalog" / "source_set_manifest.json").resolve()
+                    ),
+                },
+                "semantic_relationships": {
+                    "relationships": [
+                        {
+                            "relationship_id": "test-implements",
+                            "relationship_type": "IMPLEMENTS",
+                            "path_pattern_id": "higher-authority-to-component",
+                            "relationship_basis": "Unit test semantic relationship",
+                            "evidence_basis_type": "workbook_curated",
+                            "source_class_id": "authority_document",
+                            "source_id": "authority_document:nepa-act",
+                            "target_class_id": "authority_section",
+                            "target_id": "authority_section:nepa-act#4332",
+                            "supporting_source_record_ids": ["R1EA-001"],
+                            "status": "active",
+                        }
+                    ]
+                },
+            },
+        )
+        currentness_path = (
+            output_dir
+            / "derived"
+            / source_set_id
+            / "authority_currentness"
+            / "authority_currentness_report.json"
+        )
+        currentness = _read_json(currentness_path)
+        currentness["inputs"] = {
+            "authority_inventory_path": str(paths["authority_inventory"]),
+        }
+        _write_json(currentness_path, currentness)
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
+        )
+
+        graph = _read_json(result.graph_path)
+        relationship_types = {
+            node.get("metadata", {}).get("relationship_type")
+            for node in graph["nodes"]
+            if node.get("node_type") == "authority_path"
+        }
+
+        assert result.summary["validation_passed"]
+        assert (proving_dir / "relationships.json").exists()
+        assert "IMPLEMENTS" in relationship_types
+
+
+def test_nepa_knowledge_graph_export_uses_profile_plan_node_for_readiness_path() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-test"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        _rewrite_catalog_as_source_register_v1(output_dir, source_set_id=source_set_id)
+
+        readiness = _read_json(paths["region1_readiness"])
+        readiness["profile_rows"][0]["active_plan_source_record_id"] = "R1PLAN-ALT-001"
+        _write_json(paths["region1_readiness"], readiness)
+        currentness_path = (
+            output_dir
+            / "derived"
+            / source_set_id
+            / "authority_currentness"
+            / "authority_currentness_report.json"
+        )
+        currentness = _read_json(currentness_path)
+        currentness["inputs"] = {
+            "authority_inventory_path": str(paths["authority_inventory"]),
+        }
+        _write_json(currentness_path, currentness)
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
+        )
+
+        graph = _read_json(result.graph_path)
+        authority_path_ids = {
+            node["node_id"]
+            for node in graph["nodes"]
+            if node.get("node_type") == "authority_path"
+        }
+
+        assert result.summary["validation_passed"]
+        assert "authority_path:region1-readiness-test-forest-governs-forest-unit" in authority_path_ids

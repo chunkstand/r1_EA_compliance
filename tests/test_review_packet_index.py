@@ -86,7 +86,7 @@ def test_review_packet_index_exposes_land_exchange_rows_as_first_class_section()
         )
 
 
-def test_review_packet_index_fails_when_final_qa_drops_applicable_row() -> None:
+def test_review_packet_index_allows_bootstrap_when_final_qa_drops_applicable_row() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"
         review_id = "review-1"
@@ -104,10 +104,44 @@ def test_review_packet_index_fails_when_final_qa_drops_applicable_row() -> None:
 
         result = run_review_packet_index(output_dir=output_dir, review_id=review_id)
 
+        assert result.summary["passed"] is True
+        validation = _read_json(result.validation_path)
+        check = _validation_check(validation, "final_qa_authority_rows_match_applicability")
+        assert check["passed"] is True
+        assert check["details"]["self_reference_allowed"] is True
+        assert validation["summary"]["failed_check_count"] == 0
+        assert validation["summary"]["failure_category_counts"] == {}
+
+
+def test_review_packet_index_still_fails_when_final_qa_invents_extra_row() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        review_id = "review-1"
+        review_dir = output_dir / "reviews" / review_id
+        _write_minimal_review(review_dir, review_id=review_id)
+        _write_json(
+            review_dir / "final_qa" / "east_crazies_final_qa_certification.json",
+            {
+                "review_id": review_id,
+                "source_set_id": "source-set-test",
+                "finding_qa": {
+                    "findings": [
+                        {"rule_id": "purpose_need"},
+                        {"rule_id": "invented_rule"},
+                    ]
+                },
+                "residual_blockers_and_stop_conditions": {"blockers": []},
+            },
+        )
+
+        result = run_review_packet_index(output_dir=output_dir, review_id=review_id)
+
         assert result.summary["passed"] is False
-        assert result.summary["failure_category_counts"] == {
-            "missing_applicable_authority_row": 1
-        }
+        validation = _read_json(result.validation_path)
+        check = _validation_check(validation, "final_qa_authority_rows_match_applicability")
+        assert check["passed"] is False
+        assert check["details"]["self_reference_allowed"] is False
+        assert check["details"]["extra"] == ["invented_rule"]
 
 
 def _write_minimal_review(review_dir: Path, *, review_id: str) -> None:

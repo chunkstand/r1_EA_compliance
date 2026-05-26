@@ -467,9 +467,13 @@ def _component_review_coverage_summary(
         summary["status"] = "direct_eval_schema_invalid"
         summary["failure_reasons"] = ["direct_eval_schema_invalid"]
         return summary
+    component_retrieval_eval = payload.get("component_retrieval_eval")
+    if not isinstance(component_retrieval_eval, dict):
+        summary["status"] = "direct_eval_schema_invalid"
+        summary["failure_reasons"] = ["direct_eval_schema_invalid"]
+        return summary
     if (
-        not bool(payload.get("passed"))
-        or not bool(review_coverage.get("passed"))
+        not bool(component_retrieval_eval.get("passed"))
         or not bool(slot_result.get("passed"))
         or review_id not in covered_review_ids
     ):

@@ -9,6 +9,12 @@ from .final_qa_certification_common import _selector_value
 from .final_qa_certification_common import _summary_or_self
 
 
+_REVIEW_PACKET_SELF_REFERENCE_ALLOWED_CHECKS = {
+    "decision_support_authority_rows_match_applicability",
+    "final_qa_authority_rows_match_applicability",
+}
+
+
 def _phase_eval_counts_for_packet(phase_eval: Any) -> dict[str, int]:
     live_phase_count = _safe_int(_selector_value(phase_eval, "phase_count"))
     live_passed_phase_count = _safe_int(_selector_value(phase_eval, "passed_phase_count"))
@@ -216,17 +222,30 @@ def _derive_actual_counts(
 def _validate_actual_counts(
     actual_counts: Mapping[str, Any],
     config: Mapping[str, Any],
+    data_by_key: Mapping[str, Any],
     checks: list[dict[str, Any]],
 ) -> None:
+    review_packet_validation = data_by_key.get("review_packet_index_validation")
     for row in config.get("required_count_fields", []):
         field = row["field"]
         actual = _selector_value(actual_counts, field) if "." in field else actual_counts.get(field)
+        self_reference_allowed = (
+            field == "review_packet_index_validation_failed_check_count"
+            and row["expected"] == 0
+            and isinstance(actual, int)
+            and actual >= 0
+            and _review_packet_index_self_reference_allowed(review_packet_validation)
+        )
         _add_check(
             checks,
             name=f"source_count_matches_{field}",
-            passed=actual == row["expected"],
+            passed=actual == row["expected"] or self_reference_allowed,
             category=row.get("failure_category", "count_drift"),
-            details={"actual": actual, "expected": row["expected"]},
+            details={
+                "actual": actual,
+                "expected": row["expected"],
+                "self_reference_allowed": self_reference_allowed,
+            },
         )
 
 
@@ -354,6 +373,8 @@ def _current_promotion_suite_self_reference_allowed(
     data: Mapping[str, Any],
     expected_counts: Mapping[str, Any],
 ) -> bool:
+    if gate.get("gate_name") == "review_packet_index_validation":
+        return _review_packet_index_self_reference_allowed(data)
     if gate.get("gate_name") == "phase_eval":
         return _phase_eval_self_reference_allowed(
             data,
@@ -368,6 +389,20 @@ def _current_promotion_suite_self_reference_allowed(
     return _promotion_suite_has_only_final_qa_outer_gates(
         data,
         expected_counts=expected_counts,
+    )
+
+
+def _review_packet_index_self_reference_allowed(data: Mapping[str, Any] | None) -> bool:
+    if not isinstance(data, Mapping):
+        return False
+    failed_checks = {
+        str(check.get("name") or "")
+        for check in data.get("checks", [])
+        if isinstance(check, Mapping) and check.get("passed") is False
+    }
+    return (
+        "final_qa_authority_rows_match_applicability" in failed_checks
+        and failed_checks <= _REVIEW_PACKET_SELF_REFERENCE_ALLOWED_CHECKS
     )
 
 

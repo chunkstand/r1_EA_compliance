@@ -193,6 +193,50 @@ class AuthorityCurrentnessTests(unittest.TestCase):
             checks = {check["name"]: check for check in report["validation"]["checks"]}
             self.assertFalse(checks["candidate_families_have_source_addition_decisions"]["passed"])
 
+    def test_report_resolves_catalog_rows_through_source_record_aliases(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            output_dir = tmp_path / "source_library"
+            inventory_path = tmp_path / "authority_inventory.json"
+            decisions_path = tmp_path / "source_addition_decisions.json"
+            _write_catalog(
+                output_dir,
+                rows=[
+                    _catalog_row(
+                        source_record_id="USDA-003",
+                        title="USDA FONSI notification rule",
+                    )
+                ],
+            )
+            inventory = _inventory(
+                families=[
+                    {
+                        "family_id": "fonsi_notification",
+                        "status": "source_only",
+                        "source_record_ids": ["R1EA-014"],
+                        "open_inventory_gaps": [],
+                    }
+                ]
+            )
+            _write_json(inventory_path, inventory)
+            _write_json(decisions_path, {"schema_version": "test-decisions", "decisions": []})
+
+            result = build_authority_currentness_report(
+                output_dir=output_dir,
+                authority_inventory_path=inventory_path,
+                source_addition_decisions_path=decisions_path,
+            )
+
+            report = _read_json(result.report_path)
+            self.assertTrue(report["validation"]["passed"])
+            record = report["source_currentness_records"][0]
+            self.assertEqual(record["source_record_id"], "R1EA-014")
+            self.assertEqual(record["source_title"], "USDA FONSI notification rule")
+            self.assertEqual(record["citation_label"], "USDA-003 citation")
+            self.assertTrue(record["counts_as_current_authority"])
+            family = report["family_currentness"][0]
+            self.assertEqual(family["currentness_status"], "source_currentness_confirmed")
+
     def test_stale_milestone_2_inventory_gap_fails_alignment(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
@@ -465,6 +509,68 @@ class AuthorityCurrentnessTests(unittest.TestCase):
             checks = {check["name"]: check for check in report["validation"]["checks"]}
             self.assertTrue(checks["inventory_source_set_matches_manifest"]["passed"])
 
+    def test_report_resolves_requested_source_set_from_archived_catalog_surface(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            output_dir = tmp_path / "source_library"
+            inventory_path = tmp_path / "authority_inventory.json"
+            decisions_path = tmp_path / "source_addition_decisions.json"
+            _write_catalog(
+                output_dir,
+                rows=[_catalog_row(source_record_id="ROOT-001")],
+                source_set_id="source-set-root",
+            )
+            archived_catalog_dir = (
+                output_dir / "runs" / "current-source-gap-closeout-catalog-gate" / "catalog_gate"
+            )
+            _write_catalog_surface(
+                archived_catalog_dir,
+                rows=[
+                    {
+                        **_catalog_row(source_record_id="R1EA-001", title="Aligned source"),
+                        "source_set_id": "source-set-target",
+                    },
+                    {
+                        **_catalog_row(source_record_id="R1EA-002", title="Replacement source"),
+                        "source_set_id": "source-set-target",
+                    },
+                    {
+                        **_catalog_row(
+                            source_record_id="R1EA-160",
+                            title="Excluded source",
+                            source_status="skipped_excluded",
+                            artifact_path=None,
+                            artifact_sha256=None,
+                            artifact_byte_size=None,
+                        ),
+                        "source_set_id": "source-set-target",
+                    },
+                ],
+                source_set_id="source-set-target",
+            )
+            _write_json(inventory_path, _inventory())
+            _write_json(decisions_path, _decisions())
+
+            result = build_authority_currentness_report(
+                output_dir=output_dir,
+                source_set_id="source-set-target",
+                authority_inventory_path=inventory_path,
+                source_addition_decisions_path=decisions_path,
+            )
+
+            report = _read_json(result.report_path)
+            self.assertTrue(report["validation"]["passed"])
+            self.assertEqual(
+                report["inputs"]["catalog_path"],
+                str(archived_catalog_dir / "source_catalog.jsonl"),
+            )
+            self.assertTrue(
+                all(
+                    record["currentness_status"] != "missing_catalog_record"
+                    for record in report["source_currentness_records"]
+                )
+            )
+
     def test_canonical_source_register_projection_builds_projected_inputs_and_lineage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
@@ -528,13 +634,29 @@ def _write_catalog(
     *,
     rows: list[dict],
     workbook_path: str | None = None,
+    source_set_id: str = "source-set-current",
 ) -> None:
     catalog_dir = output_dir / "catalog"
+    _write_catalog_surface(
+        catalog_dir,
+        rows=rows,
+        workbook_path=workbook_path,
+        source_set_id=source_set_id,
+    )
+
+
+def _write_catalog_surface(
+    catalog_dir: Path,
+    *,
+    rows: list[dict],
+    workbook_path: str | None = None,
+    source_set_id: str = "source-set-current",
+) -> None:
     catalog_dir.mkdir(parents=True, exist_ok=True)
     _write_json(
         catalog_dir / "source_set_manifest.json",
         {
-            "source_set_id": "source-set-current",
+            "source_set_id": source_set_id,
             "created_at": "2026-05-01T00:00:00Z",
             "source_count": len(rows),
             "artifact_count": sum(1 for row in rows if row.get("artifact_path")),

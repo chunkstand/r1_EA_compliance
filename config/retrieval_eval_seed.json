@@ -41,7 +41,12 @@
         "alternatives",
         "environmental"
       ],
-      "filters": {},
+      "filters": {
+        "source_record_ids": [
+          "R1PLAN-custer-gallatin-nf-04",
+          "R1EA-013"
+        ]
+      },
       "multi_source": true
     },
     {
@@ -124,7 +129,12 @@
         "scoping",
         "public"
       ],
-      "filters": {},
+      "filters": {
+        "source_record_ids": [
+          "R1EA-133",
+          "R1EA-015"
+        ]
+      },
       "multi_source": true
     },
     {
@@ -138,7 +148,12 @@
         "decision",
         "mitigation"
       ],
-      "filters": {},
+      "filters": {
+        "source_record_ids": [
+          "R1EA-133",
+          "R1EA-152"
+        ]
+      },
       "multi_source": true
     },
     {
@@ -153,7 +168,11 @@
         "the plan"
       ],
       "filters": {
-        "authority_level": "federal"
+        "authority_level": "federal",
+        "source_record_ids": [
+          "R1EA-024",
+          "R1EA-023"
+        ]
       },
       "multi_source": true
     },

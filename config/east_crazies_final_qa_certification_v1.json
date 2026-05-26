@@ -1,9 +1,9 @@
 {
   "schema_version": "east-crazies-final-qa-certification-config-v1",
   "config_id": "east-crazies-final-qa-certification-v1",
-  "as_of_date": "2026-05-08",
+  "as_of_date": "2026-05-26",
   "review_id": "v1-cg-ecid-compliance-review",
-  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
   "report_schema_version": "east-crazies-final-qa-certification-report-v1",
   "manifest_schema_version": "east-crazies-final-qa-certification-manifest-v1",
   "expected_summary_schema_version": "east-crazies-final-qa-expected-summary-v1",
@@ -148,19 +148,19 @@
     },
     {
       "field": "candidate_authority_count",
-      "expected": 377,
+      "expected": 396,
       "source_selector": "applicability_partition.candidate_authority_count",
       "failure_category": "count_drift"
     },
     {
       "field": "applicable_authority_count",
-      "expected": 37,
+      "expected": 55,
       "source_selector": "applicability_partition.applicable_authority_count",
       "failure_category": "count_drift"
     },
     {
       "field": "non_applicable_authority_count",
-      "expected": 340,
+      "expected": 341,
       "source_selector": "applicability_partition.non_applicable_authority_count",
       "failure_category": "count_drift"
     },
@@ -172,13 +172,13 @@
     },
     {
       "field": "generated_rule_count",
-      "expected": 37,
+      "expected": 55,
       "source_selector": "finding_qa.generated_rule_count",
       "failure_category": "count_drift"
     },
     {
       "field": "authority_finding_count",
-      "expected": 37,
+      "expected": 55,
       "source_selector": "finding_qa.authority_finding_count",
       "failure_category": "count_drift"
     },
@@ -189,8 +189,14 @@
       "failure_category": "count_drift"
     },
     {
+      "field": "authority_finding_status_counts.uncertain",
+      "expected": 18,
+      "source_selector": "finding_qa.authority_finding_status_counts.uncertain",
+      "failure_category": "count_drift"
+    },
+    {
       "field": "rule_claim_link_count",
-      "expected": 162,
+      "expected": 268,
       "source_selector": "finding_qa.rule_claim_link_count",
       "failure_category": "count_drift"
     },
@@ -202,7 +208,7 @@
     },
     {
       "field": "compliance_matrix_authority_row_count",
-      "expected": 37,
+      "expected": 55,
       "source_selector": "finding_qa.compliance_matrix_authority_row_count",
       "failure_category": "count_drift"
     },
@@ -256,13 +262,13 @@
     },
     {
       "field": "phase_eval_phase_count",
-      "expected": 25,
+      "expected": 32,
       "source_selector": "gate_replay_summary.phase_eval.phase_count",
       "failure_category": "count_drift"
     },
     {
       "field": "phase_eval_passed_phase_count",
-      "expected": 25,
+      "expected": 32,
       "source_selector": "gate_replay_summary.phase_eval.passed_phase_count",
       "failure_category": "stale_artifact"
     },
@@ -280,13 +286,13 @@
     },
     {
       "field": "review_packet_index_applicable_authority_count",
-      "expected": 37,
+      "expected": 55,
       "source_selector": "review_packet_index_qa.applicable_authority_count",
       "failure_category": "missing_packet_index_row"
     },
     {
       "field": "review_packet_index_non_applicable_authority_count",
-      "expected": 340,
+      "expected": 341,
       "source_selector": "review_packet_index_qa.non_applicable_authority_count",
       "failure_category": "missing_non_applicable_boundary"
     },
@@ -304,7 +310,7 @@
     },
     {
       "field": "review_packet_index_render_manifest_authority_row_count",
-      "expected": 37,
+      "expected": 55,
       "source_selector": "review_packet_index_qa.render_manifest_authority_row_count",
       "failure_category": "missing_matrix_render_row"
     },

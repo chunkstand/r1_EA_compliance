@@ -350,7 +350,9 @@ def _add_source_register_region1_semantic_paths(
             continue
         forest_unit_node_id = _forest_unit_node_id(forest_unit_id)
         forest_plan_node_id = f"forest_plan:{forest_unit_id}:{plan_source_record_id}"
-        if forest_unit_node_id not in builder.nodes or forest_plan_node_id not in builder.nodes:
+        if forest_plan_node_id not in builder.nodes:
+            forest_plan_node_id = _existing_forest_plan_node_id(builder, forest_unit_id)
+        if forest_unit_node_id not in builder.nodes or forest_plan_node_id is None:
             continue
         display = _region1_profile_display(readiness)
         blockers = _region1_profile_readiness_blockers(readiness)
@@ -468,6 +470,19 @@ def _add_source_register_region1_semantic_paths(
             )
 
 
+def _existing_forest_plan_node_id(
+    builder: _GraphBuilder,
+    forest_unit_id: str,
+) -> str | None:
+    matches = [
+        node_id
+        for node_id, node in builder.nodes.items()
+        if str(node.get("node_type") or "") == "forest_plan"
+        and str(_dict(node.get("provenance")).get("forest_code") or "") == forest_unit_id
+    ]
+    return sorted(matches)[0] if matches else None
+
+
 def _add_region1_requirement_nodes(
     builder: _GraphBuilder,
     *,
@@ -521,6 +536,17 @@ def _add_region1_requirement_nodes(
             review_readiness_status="blocked" if blockers else "not_review_specific",
             blockers=blockers,
         )
+        _add_region1_requirement_forest_unit_edges(
+            builder,
+            source_set_id=source_set_id,
+            component_node_id=component_node_id,
+            region1_forest_plan_readiness=region1_forest_plan_readiness,
+            requirement_kind="field_directive_requirement",
+            requirement_id=requirement_id,
+            display_status="readiness_blocked" if blockers else "active",
+            review_readiness_status="blocked" if blockers else "not_review_specific",
+            blockers=blockers,
+        )
 
     for requirement in _dict_list(region1_forest_plan_readiness.get("overlay_requirements")):
         overlay_id = str(requirement.get("overlay_id") or "")
@@ -568,6 +594,17 @@ def _add_region1_requirement_nodes(
             review_readiness_status="blocked" if blockers else "not_review_specific",
             blockers=blockers,
         )
+        _add_region1_requirement_forest_unit_edges(
+            builder,
+            source_set_id=source_set_id,
+            component_node_id=component_node_id,
+            region1_forest_plan_readiness=region1_forest_plan_readiness,
+            requirement_kind="overlay_requirement",
+            requirement_id=overlay_id,
+            display_status="readiness_blocked" if blockers else "active",
+            review_readiness_status="blocked" if blockers else "not_review_specific",
+            blockers=blockers,
+        )
 
 
 def _add_region1_requirement_source_edges(
@@ -595,6 +632,41 @@ def _add_region1_requirement_source_edges(
             provenance={
                 "source_set_id": source_set_id,
                 "source_record_id": source_record_id,
+                "requirement_kind": requirement_kind,
+                "requirement_id": requirement_id,
+            },
+            readiness_blockers=blockers,
+        )
+
+
+def _add_region1_requirement_forest_unit_edges(
+    builder: _GraphBuilder,
+    *,
+    source_set_id: str,
+    component_node_id: str,
+    region1_forest_plan_readiness: dict[str, Any],
+    requirement_kind: str,
+    requirement_id: str,
+    display_status: str,
+    review_readiness_status: str,
+    blockers: list[str],
+) -> None:
+    for readiness in _region1_profile_readiness_rows(region1_forest_plan_readiness):
+        forest_unit_id = str(readiness.get("forest_unit_id") or "")
+        if not forest_unit_id:
+            continue
+        forest_unit_node_id = _forest_unit_node_id(forest_unit_id)
+        if forest_unit_node_id not in builder.nodes:
+            continue
+        builder.add_edge(
+            edge_type="BELONGS_TO_FOREST_UNIT",
+            source_node_id=component_node_id,
+            target_node_id=forest_unit_node_id,
+            display_status=display_status,
+            review_readiness_status=review_readiness_status,
+            provenance={
+                "source_set_id": source_set_id,
+                "forest_code": forest_unit_id,
                 "requirement_kind": requirement_kind,
                 "requirement_id": requirement_id,
             },

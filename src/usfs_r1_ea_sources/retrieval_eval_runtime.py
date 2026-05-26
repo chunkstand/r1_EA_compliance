@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
 from .eval_metrics import (
     average,
@@ -11,6 +12,7 @@ from .eval_metrics import (
     read_json_payload,
     reciprocal_rank,
 )
+from .records import aliased_source_record_ids
 from .retrieval_common import (
     RETRIEVAL_EVAL_RESULTS_SCHEMA_VERSION,
     RETRIEVAL_EVAL_SCHEMA_VERSION,
@@ -54,6 +56,7 @@ def run_retrieval_eval(
             support_document_role=filters.get("support_document_role"),
             authority_level=filters.get("authority_level"),
             source_record_id=filters.get("source_record_id"),
+            source_record_ids=_filter_source_record_ids(filters.get("source_record_ids")),
             review_topic=filters.get("review_topic") or filters.get("topic"),
             citation=filters.get("citation"),
             host=filters.get("host"),
@@ -83,7 +86,10 @@ def run_retrieval_eval(
         unexpected_sources = [
             hit["source_record_id"]
             for hit in hits
-            if hit["source_record_id"] in forbidden_sources
+            if _source_record_matches_expected_ids(
+                str(hit.get("source_record_id") or ""),
+                forbidden_sources,
+            )
         ]
         relevance = _retrieval_relevance(hits, expected_sources)
         relevant_hits = [
@@ -363,7 +369,13 @@ def _matched_expected_source_record_ids(expected_sources: list[str], hits: list[
     return [
         source_id
         for source_id in expected_sources
-        if source_id in {hit["source_record_id"] for hit in hits}
+        if any(
+            _source_record_matches_expected_ids(
+                str(hit.get("source_record_id") or ""),
+                [source_id],
+            )
+            for hit in hits
+        )
     ]
 
 
@@ -382,15 +394,38 @@ def _dedupe(values: object) -> list[str]:
 def _retrieval_relevance(hits: list[dict], expected_sources: list[str]) -> list[bool]:
     if not expected_sources:
         return [False for _ in hits]
-    remaining = set(expected_sources)
+    remaining = list(expected_sources)
     relevance = []
     for hit in hits:
         source_record_id = str(hit.get("source_record_id") or "")
-        is_relevant = source_record_id in remaining
+        matched_source_id = _matching_expected_source_id(source_record_id, remaining)
+        is_relevant = matched_source_id is not None
         relevance.append(is_relevant)
-        if is_relevant:
-            remaining.remove(source_record_id)
+        if matched_source_id is not None:
+            remaining.remove(matched_source_id)
     return relevance
+
+
+def _matching_expected_source_id(
+    source_record_id: str,
+    expected_sources: list[str],
+) -> str | None:
+    actual_aliases = _source_record_id_aliases(source_record_id)
+    for expected_source_id in expected_sources:
+        if actual_aliases & _source_record_id_aliases(expected_source_id):
+            return expected_source_id
+    return None
+
+
+def _source_record_matches_expected_ids(
+    source_record_id: str,
+    expected_sources: list[str],
+) -> bool:
+    return _matching_expected_source_id(source_record_id, expected_sources) is not None
+
+
+def _source_record_id_aliases(source_record_id: str) -> set[str]:
+    return set(aliased_source_record_ids([source_record_id]))
 
 
 def _retrieval_coverage_check(
@@ -436,6 +471,25 @@ def _expected_terms_found(expected_terms: list[str], hits: list[dict]) -> bool:
     return not _missing_expected_terms(expected_terms, hits)
 
 
+def _filter_source_record_ids(value: object) -> list[str] | None:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        candidate = value.strip()
+        return [candidate] if candidate else None
+    if not isinstance(value, list | tuple):
+        return None
+    normalized: list[str] = []
+    seen = set()
+    for item in value:
+        candidate = str(item or "").strip()
+        if not candidate or candidate in seen:
+            continue
+        seen.add(candidate)
+        normalized.append(candidate)
+    return normalized or None
+
+
 def _missing_expected_terms(expected_terms: list[str], hits: list[dict]) -> list[str]:
     haystack = "\n".join(
         " ".join(
@@ -448,7 +502,54 @@ def _missing_expected_terms(expected_terms: list[str], hits: list[dict]) -> list
         )
         for hit in hits
     ).lower()
-    return [term for term in expected_terms if term.lower() not in haystack]
+    token_set = set(_tokenize(haystack))
+    return [
+        term
+        for term in expected_terms
+        if not _expected_term_present(term, token_set=token_set, text=haystack)
+    ]
+
+
+def _expected_term_present(term: str, *, token_set: set[str], text: str) -> bool:
+    normalized_term = str(term or "").strip().lower()
+    if not normalized_term:
+        return True
+    if normalized_term in text:
+        return True
+    term_tokens = _tokenize(normalized_term)
+    if not term_tokens:
+        return False
+    return all(_contains_term(token, token_set, text) for token in term_tokens)
+
+
+def _contains_term(term: str, token_set: set[str], text: str) -> bool:
+    if term in token_set:
+        return True
+    if term in text:
+        return True
+    return any(
+        token.startswith(term)
+        or term.startswith(token)
+        or _common_prefix_length(token, term) >= 5
+        for token in token_set
+    )
+
+
+def _common_prefix_length(left: str, right: str) -> int:
+    size = 0
+    for left_char, right_char in zip(left, right, strict=False):
+        if left_char != right_char:
+            break
+        size += 1
+    return size
+
+
+def _tokenize(value: str) -> list[str]:
+    return [
+        token.strip("'-.")
+        for token in re.findall(r"[A-Za-z0-9][A-Za-z0-9'-]{1,}", value.lower())
+        if len(token.strip("'-.") or "") >= 2
+    ]
 
 
 def _eval_failure_reasons(

@@ -520,6 +520,44 @@ Milestone 1 live next-slice baseline on 2026-05-26:
   South Plateau forest-plan replay / adjudication refresh and the remaining
   reviewer-facing packet families.
 
+Milestone 1 closeout update on 2026-05-26:
+
+- ECID broader-EA replay is now also green on reviewer-facing
+  `source-set-f70ea11e04ae3d53`: `v1-ea-eval --review-id
+  v1-cg-ecid-compliance-review` now reports
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true` with no remaining failure categories.
+- The review-local direct-eval family is now present and passing on that same
+  source set. Fresh retrieval, claim, and rule-claim direct eval outputs now
+  let `phase-eval --review-id v1-cg-ecid-compliance-review` close green at
+  `33/33` passed phases with `reviewer_ready=true`,
+  `review_direct_eval_status="direct_eval_present"`,
+  `missing_direct_eval_phase_count=0`, and
+  `threshold_failed_phase_count=0`.
+- The remaining packet-local artifact families are now aligned to the live
+  ECID packet truth: `review-packet-index` validation is green with
+  `failed_check_count=0`; `ea-consistency-document` is green against the live
+  `55 applicable / 341 non-applicable / 396 candidate` authority boundary;
+  source-set graph evals now pass with `authority_path_count=17`,
+  `relationship_type_count=7`, `orphan_node_count=0`, and
+  `disconnected_component_count=1`; `draft-generation-eval` now passes `5/5`;
+  `final-qa-certification` reruns green with `198` passing checks and
+  `machine_replay_status="passed"`; and non-strict `promotion-suite` now
+  reports `current_promotion_ready=true`,
+  `promotion_ready=true`, and `passed_required_current_result_count=32/32`.
+- Promotion truth is now explicit rather than optimistic: the current
+  `source-set-f70ea11e04ae3d53` graph is still packet-scoped rather than
+  region-complete, so the governed source-set graph contract now expects the
+  live `region1_forest_plan_blocked_profile_count=9` instead of the old fake
+  zero-blocker assumption.
+- Focused regression coverage now also keeps the review-scoped synthetic
+  compliance-phase fixtures honest: the shared fixture materializes the
+  required extraction-fidelity direct eval so phase-eval tests keep matching
+  the governed runtime rather than relying on proxy-only extraction coverage.
+- The next truthful slice after ECID is now Milestone `2` South Plateau
+  reviewer-ready replay repair on aligned `source-set-f70ea11e04ae3d53`,
+  followed by Milestone `3` aggregate docs and closeout.
+
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 
 Outcome label: resolved

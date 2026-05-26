@@ -2,6 +2,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from usfs_r1_ea_sources.ea_consistency_decision_support_inputs import (
+    _review_packet_count_bootstrap_allowed,
+    _review_packet_bootstrap_allowed,
+)
+from usfs_r1_ea_sources.ea_consistency_decision_support_models import (
+    _resolved_source_library_evidence,
+)
+
 from tests.support.ea_consistency_decision_support_fixtures import _assert_evidence
 from tests.support.ea_consistency_decision_support_fixtures import _assert_traceable_row
 from tests.support.ea_consistency_decision_support_fixtures import _read_json
@@ -35,11 +43,11 @@ REQUIRED_SECTIONS = [
 ]
 
 EXPECTED_COUNTS = {
-    "applicable_authority_count": 37,
-    "non_applicable_authority_count": 340,
-    "candidate_authority_count": 377,
-    "authority_finding_count": 37,
-    "non_applicable_search_coverage_certificate_count": 340,
+    "applicable_authority_count": 55,
+    "non_applicable_authority_count": 341,
+    "candidate_authority_count": 396,
+    "authority_finding_count": 55,
+    "non_applicable_search_coverage_certificate_count": 348,
     "forest_plan_component_finding_count": 329,
     "forest_plan_supported_component_count": 79,
     "forest_plan_not_applicable_component_count": 250,
@@ -49,13 +57,13 @@ EXPECTED_COUNTS = {
     "forest_plan_applied_standard_count": 12,
     "authority_reviewer_resolution_pending_count": 0,
     "forest_plan_reviewer_resolution_item_count": 0,
-    "litigation_risk_flag_count": 340,
+    "litigation_risk_flag_count": 348,
     "litigation_risk_legal_conclusion_count": 0,
-    "review_packet_index_applicable_authority_count": 37,
-    "review_packet_index_non_applicable_authority_count": 340,
+    "review_packet_index_applicable_authority_count": 55,
+    "review_packet_index_non_applicable_authority_count": 341,
     "review_packet_index_forest_plan_component_row_count": 79,
     "review_packet_index_applicable_standard_count": 12,
-    "review_packet_index_render_manifest_authority_row_count": 37,
+    "review_packet_index_render_manifest_authority_row_count": 55,
     "review_packet_index_render_manifest_forest_plan_row_count": 79,
     "review_packet_index_validation_failed_check_count": 0,
     "package_file_count": 43,
@@ -128,12 +136,98 @@ EXPECTED_STANDARD_KEYS = {
 }
 
 
+def test_review_packet_bootstrap_allows_only_stale_downstream_row_mirrors() -> None:
+    validation = {
+        "checks": [
+            {
+                "name": "decision_support_authority_rows_match_applicability",
+                "passed": False,
+            },
+            {
+                "name": "final_qa_authority_rows_match_applicability",
+                "passed": False,
+            },
+        ]
+    }
+
+    assert _review_packet_bootstrap_allowed(validation) is True
+
+
+def test_review_packet_bootstrap_rejects_unrelated_packet_validation_failures() -> None:
+    validation = {
+        "checks": [
+            {
+                "name": "decision_support_authority_rows_match_applicability",
+                "passed": False,
+            },
+            {
+                "name": "packet_index_authority_rows_match_compliance_matrix",
+                "passed": False,
+            },
+        ]
+    }
+
+    assert _review_packet_bootstrap_allowed(validation) is False
+
+
+def test_review_packet_count_bootstrap_allows_intermediate_failed_check_count() -> None:
+    validation = {
+        "checks": [
+            {
+                "name": "decision_support_authority_rows_match_applicability",
+                "passed": False,
+            }
+        ]
+    }
+
+    assert (
+        _review_packet_count_bootstrap_allowed(
+            key="review_packet_index_validation_failed_check_count",
+            actual_value=1,
+            expected_value=0,
+            validation=validation,
+        )
+        is True
+    )
+
+
+def test_source_library_evidence_falls_back_to_source_claim_link() -> None:
+    evidence = _resolved_source_library_evidence(
+        row={},
+        finding={
+            "source_claim_links": [
+                {
+                    "artifact_path": "source.html",
+                    "artifact_sha256": "sha256-source-artifact",
+                    "chunk_id": "chunk:source-claim",
+                    "citation_label": "FED-023 (test)",
+                    "claim_text": "Synthetic authority claim text.",
+                    "content_sha256": "sha256-source-content",
+                    "document_role": "law",
+                    "parser_name": "parser",
+                    "parser_version": "1.0",
+                    "source_char_end": 28,
+                    "source_char_start": 0,
+                    "source_record_id": "FED-023",
+                }
+            ]
+        },
+    )
+
+    assert evidence["source_record_id"] == "FED-023"
+    assert evidence["citation_label"] == "FED-023 (test)"
+    assert evidence["document_role"] == "law"
+    assert evidence["artifact_sha256"] == "sha256-source-artifact"
+    assert evidence["content_sha256"] == "sha256-source-content"
+    assert evidence["text"] == "Synthetic authority claim text."
+
+
 def test_sequence_1_config_owns_sections_confirmations_and_eval_expectations() -> None:
     config = _read_json(CONFIG_PATH)
 
     assert config["schema_version"] == "ea-consistency-decision-support-config-v1"
     assert config["review_id"] == "v1-cg-ecid-compliance-review"
-    assert config["source_set_id"] == "source-set-4fb59e9eb43045cb"
+    assert config["source_set_id"] == "source-set-f70ea11e04ae3d53"
     assert config["section_order"] == REQUIRED_SECTIONS
     assert config["manual_draft_policy"]["root_east_crazies_drafts_are_canonical"] is False
 
@@ -171,7 +265,10 @@ def test_expected_summary_locks_pass_8_counts_hashes_samples_and_failures() -> N
     assert expected["required_sections"] == REQUIRED_SECTIONS
     for key, value in EXPECTED_COUNTS.items():
         assert expected["expected_counts"][key] == value
-    assert expected["expected_counts"]["authority_finding_status_counts"]["pass"] == 37
+    assert expected["expected_counts"]["authority_finding_status_counts"] == {
+        "pass": 37,
+        "uncertain": 18,
+    }
 
     assert len(expected["input_hashes"]) >= 18
     assert set(expected["input_hashes"]) >= {
@@ -193,6 +290,12 @@ def test_expected_summary_locks_pass_8_counts_hashes_samples_and_failures() -> N
     assert applicable["authority_family_id"] == "land_exchange_statutory_authorities"
     assert applicable["applicability_status"] == "applicable"
     assert applicable["status"] == "pass"
+    assert applicable["source_library_citation"] == "FED-032 (fcfb0f28844d)"
+    assert applicable["source_claim_ids"] == [
+        "claim:189bd47fa701fbaa348eafa5",
+        "claim:5b610ceba040bcef85afa5e7",
+        "claim:0f84edbc9625fd0667383156",
+    ]
     assert applicable["limitations"] == []
 
     required_land_exchange_rows = {

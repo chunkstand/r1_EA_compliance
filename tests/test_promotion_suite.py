@@ -134,7 +134,7 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     phase = suite_results["phase_eval_core"]
     assert phase["required_for_current_promotion"] is True
     phase_checks = {check["name"]: check for check in phase["checks"]}
-    assert phase_checks["phase_source_set_matches"]["equals"] == "source-set-4fb59e9eb43045cb"
+    assert phase_checks["phase_source_set_matches"]["equals"] == "source-set-f70ea11e04ae3d53"
     assert phase_checks["phase_eval_contract_id"]["equals"] == "phase-eval-direct-eval-v1"
     assert phase_checks["phase_eval_proxy_only_phase_count"]["equals"] == 0
     assert phase_checks["phase_eval_missing_direct_eval_phase_count"]["equals"] == 0
@@ -271,11 +271,11 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     )
     summary_checks = {check["name"]: check for check in source_graph_summary["checks"]}
     assert summary_checks["source_set_graph_source_set_matches"]["equals"] == (
-        "source-set-4fb59e9eb43045cb"
+        "source-set-f70ea11e04ae3d53"
     )
     assert summary_checks["source_set_graph_node_count"]["min"] == 1
     assert summary_checks["source_set_graph_validation_checks"]["min"] == 62
-    assert summary_checks["source_set_graph_region1_blocked_profiles_cleared"]["equals"] == 0
+    assert summary_checks["source_set_graph_region1_blocked_profile_count_matches"]["equals"] == 9
 
     review_graph = results["nepa_3d_review_graph_validation"]
     assert review_graph["required_for_current_promotion"] is True

@@ -25,15 +25,16 @@ def _build_report(
     data_by_key = input_state["data_by_key"]
     counts = input_state["actual_counts"]
     now = _utc_now()
+    source_set_id = str(config["source_set_id"])
+    review_id = str(config["review_id"])
 
     gate_results = _gate_results(config, data_by_key)
     accepted_risk = _accepted_v1_risk_ledger(expected, data_by_key)
     finding_rows = _finding_rows_from_matrix(
         data_by_key.get("compliance_matrix", {}),
+        source_set_id=source_set_id,
         fallback=expected["required_fixture_rows"]["applicable_authority"],
     )
-    source_set_id = str(config["source_set_id"])
-    review_id = str(config["review_id"])
 
     manifest = {
         "schema_version": config["manifest_schema_version"],
@@ -376,6 +377,7 @@ def _forest_plan_standard_row(row: Mapping[str, Any]) -> dict[str, Any]:
 def _finding_rows_from_matrix(
     matrix: Any,
     *,
+    source_set_id: str,
     fallback: Mapping[str, Any],
 ) -> list[dict[str, Any]]:
     rows = matrix.get("rows", []) if isinstance(matrix, Mapping) else []
@@ -427,7 +429,10 @@ def _finding_rows_from_matrix(
                         "selector": f"rows[rule_id={rule_id}]",
                     },
                     "ea_package_evidence": _evidence_pointer(row.get("ea_package_evidence")),
-                    "source_library_evidence": _evidence_pointer(row.get("source_library_evidence")),
+                    "source_library_evidence": _source_library_pointer(
+                        row,
+                        source_set_id=source_set_id,
+                    ),
                 },
             }
         )
@@ -452,6 +457,27 @@ def _evidence_pointer(evidence: Any) -> dict[str, Any] | None:
         "source_record_id": evidence.get("source_record_id"),
         "artifact_sha256": evidence.get("artifact_sha256"),
         "content_sha256": evidence.get("content_sha256"),
+    }
+
+
+def _source_library_pointer(
+    row: Mapping[str, Any],
+    *,
+    source_set_id: str,
+) -> dict[str, Any] | None:
+    direct = _evidence_pointer(row.get("source_library_evidence"))
+    if direct is not None:
+        return direct
+    source_claim_ids = row.get("source_claim_ids") or []
+    if not source_claim_ids:
+        return None
+    return {
+        "artifact_path": f"source_library/derived/{source_set_id}/claims/claims.jsonl",
+        "chunk_id": source_claim_ids[0],
+        "citation_label": row.get("source_library_citation"),
+        "source_record_id": row.get("authority_source_record_id"),
+        "artifact_sha256": None,
+        "content_sha256": None,
     }
 
 

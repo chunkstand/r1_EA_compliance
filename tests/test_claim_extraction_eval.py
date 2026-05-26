@@ -7,6 +7,8 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.claim_extraction_eval import _load_eval_contract
+from usfs_r1_ea_sources.claim_extraction_eval import _claim_relevance
+from usfs_r1_ea_sources.claim_extraction_eval import _expected_terms_found
 from usfs_r1_ea_sources.claim_extraction_eval import _load_validated_claims_for_eval
 from usfs_r1_ea_sources.claim_extraction_eval import _query_claims
 
@@ -100,6 +102,96 @@ class ClaimExtractionEvalTests(unittest.TestCase):
         self.assertEqual([result["claim_id"] for result in results], ["claim:1", "claim:2"])
         self.assertGreater(results[0]["score"], results[1]["score"])
 
+    def test_query_claims_source_record_filter_supports_aliases(self) -> None:
+        results = _query_claims(
+            [
+                _claim(
+                    claim_id="claim:1",
+                    source_record_id="USDA-003",
+                    claim_text="Notification shall be in the manner used to consult.",
+                )
+            ],
+            query="notification consult",
+            filters={"source_record_id": "R1EA-014"},
+            limit=5,
+        )
+
+        self.assertEqual([result["claim_id"] for result in results], ["claim:1"])
+
+    def test_claim_relevance_treats_aliased_source_record_ids_as_matches(self) -> None:
+        relevance = _claim_relevance(
+            [
+                _claim(
+                    claim_id="claim:1",
+                    source_record_id="USDA-003",
+                    claim_text="Notification shall be in the manner used to consult.",
+                )
+            ],
+            expected_sources=["R1EA-014"],
+            expected_claim_types=[],
+            expected_terms=[],
+        )
+
+        self.assertEqual(relevance, [True])
+
+    def test_claim_relevance_accepts_term_signal_when_expected_type_is_on_another_hit(self) -> None:
+        relevance = _claim_relevance(
+            [
+                _claim(
+                    claim_id="claim:1",
+                    source_record_id="USDA-004",
+                    claim_text=(
+                        "USDA subcomponents shall make documents associated with the NEPA review "
+                        "available pursuant to the Freedom of Information Act."
+                    ),
+                    claim_type="obligation",
+                )
+            ],
+            expected_sources=["R1EA-015"],
+            expected_claim_types=["condition"],
+            expected_terms=["documents associated with the NEPA review"],
+        )
+
+        self.assertEqual(relevance, [True])
+
+    def test_expected_terms_found_accepts_morphology_tolerant_phrase_matches(self) -> None:
+        self.assertTrue(
+            _expected_terms_found(
+                ["independent evaluation"],
+                [
+                    _claim(
+                        claim_id="claim:1",
+                        source_record_id="USDA-005",
+                        claim_text=(
+                            "The subcomponent shall independently evaluate the information "
+                            "or documentation submitted."
+                        ),
+                    )
+                ],
+            )
+        )
+
+    def test_claim_relevance_does_not_double_count_consumed_alias_matches(self) -> None:
+        relevance = _claim_relevance(
+            [
+                _claim(
+                    claim_id="claim:1",
+                    source_record_id="USDA-003",
+                    claim_text="Notification shall be in the manner used to consult.",
+                ),
+                _claim(
+                    claim_id="claim:2",
+                    source_record_id="USDA-003",
+                    claim_text="Notification shall be in the manner used to consult.",
+                ),
+            ],
+            expected_sources=["R1EA-014"],
+            expected_claim_types=[],
+            expected_terms=[],
+        )
+
+        self.assertEqual(relevance, [True, False])
+
     def test_load_validated_claims_for_eval_requires_readiness_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             claims_path = Path(tmp) / "derived" / "source-set-test" / "claims" / "claims.jsonl"
@@ -120,10 +212,11 @@ def _claim(
     claim_text: str = "USDA shall make the FONSI available to the public.",
     review_topics: list[str] | None = None,
     title: str = "FONSI availability",
+    claim_type: str = "obligation",
 ) -> dict:
     return {
         "claim_id": claim_id,
-        "claim_type": "obligation",
+        "claim_type": claim_type,
         "claim_text": claim_text,
         "source_record_id": source_record_id,
         "chunk_id": f"chunk:{claim_id}",

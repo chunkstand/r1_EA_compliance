@@ -25,23 +25,42 @@ class GraphHealthEvalResult:
 def run_graph_health_eval(
     *,
     output_dir: Path,
+    source_set_id: str | None = None,
     report_path: Path | None = None,
     contract_path: Path = DEFAULT_GRAPH_HEALTH_CONTRACT_PATH,
     output_path: Path | None = None,
 ) -> GraphHealthEvalResult:
     output_dir = Path(output_dir)
     contract = json.loads(Path(contract_path).read_text(encoding="utf-8"))
-    source_set_id = _resolve_source_set_id(output_dir)
-    graph_path = output_dir / "derived" / source_set_id / "knowledge_graph" / DEFAULT_GRAPH_FILENAME
+    if report_path is not None:
+        report = load_proving_report(output_dir, report_path)
+        payload = _run_proving_mode(
+            report=report,
+            contract=contract,
+            output_path=output_path
+            or default_proving_output_path(output_dir, DEFAULT_GRAPH_REPORT_FILENAME),
+        )
+        payload["output_path"].write_text(
+            json.dumps(payload["body"], indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        return GraphHealthEvalResult(
+            output_path=payload["output_path"],
+            summary=payload["body"]["summary"],
+        )
+    resolved_source_set_id = source_set_id or _resolve_source_set_id(output_dir)
+    graph_path = (
+        output_dir / "derived" / resolved_source_set_id / "knowledge_graph" / DEFAULT_GRAPH_FILENAME
+    )
     if graph_path.exists():
         payload = _run_knowledge_graph_mode(
-            source_set_id=source_set_id,
+            source_set_id=resolved_source_set_id,
             graph_path=graph_path,
             contract=contract,
             output_path=output_path or graph_path.parent / DEFAULT_GRAPH_REPORT_FILENAME,
         )
     else:
-        report = load_proving_report(output_dir, report_path)
+        report = load_proving_report(output_dir)
         payload = _run_proving_mode(
             report=report,
             contract=contract,

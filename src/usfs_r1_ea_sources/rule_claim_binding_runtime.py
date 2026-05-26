@@ -49,6 +49,7 @@ def _build_links(
         scored = []
         query = _rule_query(rule)
         terms = _tokenize(query)
+        phrases = _query_phrases(query)
         resolved_source_record_ids = reconciled_source_record_ids(
             source_record_id=(rule.get("source_filters") or {}).get("source_record_id")
         )
@@ -59,7 +60,13 @@ def _build_links(
                 source_record_ids=resolved_source_record_ids,
             ):
                 continue
-            score, matched_terms = _score_rule_claim(rule, claim, terms=terms, query=query)
+            score, matched_terms = _score_rule_claim(
+                rule,
+                claim,
+                terms=terms,
+                phrases=phrases,
+                query=query,
+            )
             if terms and score <= 0:
                 continue
             scored.append((score, matched_terms, claim))
@@ -212,6 +219,7 @@ def _score_rule_claim(
     claim: dict,
     *,
     terms: list[str],
+    phrases: list[str],
     query: str,
 ) -> tuple[float, list[str]]:
     text = _claim_search_text(claim)
@@ -220,6 +228,7 @@ def _score_rule_claim(
     if not terms:
         return 0.1, []
     score = len(matched_terms) / len(terms)
+    score += 0.35 * _phrase_hit_fraction(phrases, text=text)
     query_value = str(rule.get("source_query") or "").strip().lower()
     if query_value and query_value in text.lower():
         score += 0.35
@@ -323,7 +332,55 @@ def _host_matches(filter_value: str, claim: dict) -> bool:
 def _contains_term(term: str, token_set: set[str], text: str) -> bool:
     if " " in term:
         return term.lower() in text.lower()
-    return term.lower() in token_set
+    normalized = term.lower()
+    if normalized in token_set:
+        return True
+    lower = text.lower()
+    if normalized in lower:
+        return True
+    return any(
+        token.startswith(normalized)
+        or normalized.startswith(token)
+        or _common_prefix_length(token, normalized) >= 5
+        for token in token_set
+    )
+
+
+def _common_prefix_length(left: str, right: str) -> int:
+    size = 0
+    for left_char, right_char in zip(left, right, strict=False):
+        if left_char != right_char:
+            break
+        size += 1
+    return size
+
+
+def _phrase_hit_fraction(phrases: list[str], *, text: str) -> float:
+    if not phrases:
+        return 0.0
+    lower = text.lower()
+    if not lower:
+        return 0.0
+    match_scores = [
+        min(1.0, len(_tokenize(phrase)) / 4.0)
+        for phrase in phrases
+        if phrase in lower
+    ]
+    return max(match_scores, default=0.0)
+
+
+def _query_phrases(query: str) -> list[str]:
+    raw_tokens = _tokenize(query)
+    phrases: list[str] = []
+    seen = set()
+    max_size = min(4, len(raw_tokens))
+    for size in range(max_size, 1, -1):
+        for start in range(0, len(raw_tokens) - size + 1):
+            phrase = " ".join(raw_tokens[start : start + size]).strip()
+            if phrase and phrase not in seen:
+                seen.add(phrase)
+                phrases.append(phrase)
+    return phrases
 
 
 def _normalized_source_record_ids(

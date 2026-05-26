@@ -10,6 +10,8 @@ from .nepa_knowledge_graph_export_models import _dict
 from .nepa_knowledge_graph_export_models import _read_json
 from .nepa_knowledge_graph_export_models import _strings
 from .nepa_knowledge_graph_export_region1 import _region1_readiness_summary
+from .source_register_proving import build_source_set_semantic_proving_report
+from .source_register_proving import load_proving_report
 from .source_register_proving import resolve_latest_proving_context
 
 
@@ -263,14 +265,102 @@ def _source_register_proving_context_for_source_set(
     try:
         context = resolve_latest_proving_context(output_dir)
     except (FileNotFoundError, ValueError, json.JSONDecodeError):
-        return None
-    if str(context.get("source_set_id") or "") == source_set_id:
-        return context
-    manifest_path_value = str(context.get("source_set_manifest_path") or "").strip()
-    if not manifest_path_value:
-        return None
+        context = None
+    if context is not None:
+        context_report_path = Path(str(context.get("report_path") or ""))
+        try:
+            context_report = (
+                load_proving_report(output_dir, context_report_path)
+                if context_report_path
+                else None
+            )
+        except (FileNotFoundError, ValueError, json.JSONDecodeError):
+            context_report = None
+        if str(context.get("source_set_id") or "") == source_set_id:
+            if context_report is None or _ensure_relationships_json(
+                report_path=context_report_path,
+                report=context_report,
+            ):
+                return context
+        manifest_path_value = str(context.get("source_set_manifest_path") or "").strip()
+        if manifest_path_value:
+            try:
+                manifest = _read_json(manifest_path_value)
+            except (FileNotFoundError, ValueError, json.JSONDecodeError):
+                manifest = None
+            if str(_dict(manifest).get("source_set_id") or "") == source_set_id:
+                if context_report is None or _ensure_relationships_json(
+                    report_path=context_report_path,
+                    report=context_report,
+                ):
+                    return context
+
+    proving_dir = output_dir / "derived" / source_set_id / "source_register_proving"
+    report_path = proving_dir / "proving_slice_report.json"
+    relationships_path = proving_dir / "relationships.json"
+    if not report_path.exists():
+        try:
+            build_source_set_semantic_proving_report(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                report_path=report_path,
+            )
+        except (FileNotFoundError, ValueError, json.JSONDecodeError):
+            return None
     try:
-        manifest = _read_json(manifest_path_value)
+        report = load_proving_report(output_dir, report_path)
     except (FileNotFoundError, ValueError, json.JSONDecodeError):
         return None
-    return context if str(manifest.get("source_set_id") or "") == source_set_id else None
+    if str(report.get("source_set_id") or "") != source_set_id:
+        return None
+    if not relationships_path.exists() and not _ensure_relationships_json(
+        report_path=report_path,
+        report=report,
+    ):
+        try:
+            build_source_set_semantic_proving_report(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                report_path=report_path,
+            )
+        except (FileNotFoundError, ValueError, json.JSONDecodeError):
+            return None
+        try:
+            report = load_proving_report(output_dir, report_path)
+        except (FileNotFoundError, ValueError, json.JSONDecodeError):
+            return None
+        if str(report.get("source_set_id") or "") != source_set_id or not _ensure_relationships_json(
+            report_path=report_path,
+            report=report,
+        ):
+            return None
+    inputs = _dict(report.get("inputs"))
+    resolved_context = {
+        "schema_version": "source-register-proving-context-v1",
+        "source_set_id": source_set_id,
+        "report_path": str(report_path),
+        "catalog_dir": inputs.get("catalog_dir"),
+        "source_catalog_path": inputs.get("source_catalog_path"),
+        "source_set_manifest_path": inputs.get("source_set_manifest_path"),
+    }
+    authority_inventory_path = proving_dir / "authority_inventory.json"
+    if authority_inventory_path.exists():
+        resolved_context["authority_inventory_path"] = str(authority_inventory_path)
+    source_addition_decisions_path = proving_dir / "source_addition_decisions.json"
+    if source_addition_decisions_path.exists():
+        resolved_context["source_addition_decisions_path"] = str(source_addition_decisions_path)
+    return resolved_context
+
+
+def _ensure_relationships_json(*, report_path: Path, report: dict[str, Any]) -> bool:
+    relationships_path = report_path.parent / "relationships.json"
+    if relationships_path.exists():
+        return True
+    relationships = _dict(report.get("semantic_relationships")).get("relationships")
+    if not isinstance(relationships, list):
+        return False
+    relationships_path.write_text(
+        json.dumps({"relationships": relationships}, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return True

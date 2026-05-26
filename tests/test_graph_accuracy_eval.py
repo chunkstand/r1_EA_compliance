@@ -19,6 +19,8 @@ from usfs_r1_ea_sources.retrieval import build_retrieval_index
 from usfs_r1_ea_sources.source_register_proving import resolve_authority_currentness_inputs
 
 from tests.test_source_register_proving import build_test_proving_slice
+from tests.support.nepa_knowledge_graph_export_fixtures import _catalog_row
+from tests.support.nepa_knowledge_graph_export_fixtures import _write_jsonl
 from tests.support.phase_eval_fixtures import phase
 
 
@@ -216,6 +218,91 @@ def test_canonical_graph_eval_commands_pass_on_exported_knowledge_graph() -> Non
 
         assert currentness_summary["validation_passed"] is True
         assert export_summary["validation_passed"] is True
+        assert ontology_eval.summary["passed"] is True
+        assert relationship_eval.summary["passed"] is True
+        assert alias_eval.summary["passed"] is True
+        assert graph_health.summary["passed"] is True
+        assert graph_accuracy.summary["passed"] is True
+        assert phase(phase_eval.summary, "authority_ontology")["passed"] is True
+        assert phase(phase_eval.summary, "authority_relationships")["passed"] is True
+        assert phase(phase_eval.summary, "citation_aliases")["passed"] is True
+        assert phase(phase_eval.summary, "graph_health")["passed"] is True
+        assert phase(phase_eval.summary, "graph_accuracy")["passed"] is True
+
+
+def test_canonical_graph_eval_commands_target_requested_source_set_from_archived_catalog_surface() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        output_dir = Path(tmp_dir) / "source_library"
+        source_set_id, _, _ = _build_canonical_knowledge_graph(output_dir)
+
+        archived_catalog_dir = (
+            output_dir / "runs" / "current-source-gap-closeout-catalog-gate" / "catalog_gate"
+        )
+        archived_catalog_dir.mkdir(parents=True, exist_ok=True)
+        for filename in (
+            "source_set_manifest.json",
+            "source_catalog.jsonl",
+            "source_graph_nodes.jsonl",
+            "source_graph_edges.jsonl",
+            "catalog_validation.json",
+        ):
+            (output_dir / "catalog" / filename).replace(archived_catalog_dir / filename)
+        _write_json(
+            output_dir / "catalog" / "source_set_manifest.json",
+            {
+                "source_set_id": "source-set-root",
+                "created_at": "2026-05-26T00:00:00Z",
+                "source_count": 1,
+                "artifact_count": 1,
+                "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+            },
+        )
+        _write_jsonl(
+            output_dir / "catalog" / "source_catalog.jsonl",
+            [_catalog_row("source-set-root", "ROOT-001", "Root-only row", "downloaded")],
+        )
+        _write_jsonl(
+            output_dir / "catalog" / "source_graph_nodes.jsonl",
+            [{"id": "source:ROOT-001", "type": "Source", "source_record_id": "ROOT-001"}],
+        )
+        _write_jsonl(
+            output_dir / "catalog" / "source_graph_edges.jsonl",
+            [
+                {
+                    "id": "source:ROOT-001|SUPPORTS_REVIEW_TOPIC|topic:root",
+                    "source": "source:ROOT-001",
+                    "target": "topic:root",
+                    "relationship": "SUPPORTS_REVIEW_TOPIC",
+                }
+            ],
+        )
+        _write_json(
+            output_dir / "catalog" / "catalog_validation.json",
+            {"passed": True, "source_set_id": "source-set-root"},
+        )
+
+        ontology_eval = run_authority_ontology_validate(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+        relationship_eval = run_authority_relationship_eval(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+        alias_eval = run_citation_alias_eval(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+        graph_health = run_graph_health_eval(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+        graph_accuracy = run_graph_accuracy_eval(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+        phase_eval = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
+
         assert ontology_eval.summary["passed"] is True
         assert relationship_eval.summary["passed"] is True
         assert alias_eval.summary["passed"] is True

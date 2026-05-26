@@ -134,3 +134,75 @@ def test_nepa_knowledge_graph_export_builds_review_specific_overlay() -> None:
         assert nepa_phase["details"]["review_id"] == review_id
         assert nepa_phase["details"]["validation_check_count"] == 80
         assert nepa_phase["details"]["failure_category_counts"] == {}
+
+
+def test_nepa_knowledge_graph_export_allows_human_adjudicated_coverage_certificates() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        source_set_id = "source-set-test"
+        review_id = "review-test"
+        paths = _write_minimal_source_set(output_dir, source_set_id=source_set_id)
+        _write_minimal_review_overlay(output_dir, source_set_id=source_set_id, review_id=review_id)
+
+        applicability_dir = output_dir / "reviews" / review_id / "applicability"
+        decisions_path = applicability_dir / "applicability_decisions.jsonl"
+        decisions = _read_jsonl(decisions_path)
+        decisions[0]["basis_type"] = "human_adjudication"
+        decisions[0]["search_coverage_certificate_ids"] = ["coverage-adjudicated"]
+        decisions[0]["human_adjudication_refs"] = [
+            {
+                "adjudication_id": "review-test-adjudication",
+                "disposition": "human_applicable",
+            }
+        ]
+        decisions_path.write_text(
+            "\n".join(_json_line(row) for row in decisions) + "\n",
+            encoding="utf-8",
+        )
+
+        search_coverage_path = applicability_dir / "search_coverage_certificates.json"
+        search_coverage = _read_json(search_coverage_path)
+        search_coverage["certificates"].append(
+            {
+                "coverage_certificate_id": "coverage-adjudicated",
+                "covered_candidate_authority_ids": [
+                    "rule-template:nepa-ea-v0:0.1.0:nepa_rule"
+                ],
+                "covered_decision_ids": ["decision-applicable"],
+                "coverage_result": "adjudication_required",
+            }
+        )
+        search_coverage_path.write_text(
+            _json_document(search_coverage),
+            encoding="utf-8",
+        )
+
+        result = build_nepa_knowledge_graph_export(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            review_id=review_id,
+            graph_contract_path=REPO_ROOT / "config" / "nepa_3d_graph_contract_v1.json",
+            authority_inventory_path=paths["authority_inventory"],
+            authority_family_rule_templates_path=paths["templates"],
+            forest_plan_profiles_path=paths["forest_profiles"],
+            region1_forest_plan_readiness_path=paths["region1_readiness"],
+            rule_pack_path=paths["rule_pack"],
+        )
+
+        graph = _read_json(result.graph_path)
+        checks = {check["name"]: check for check in graph["validation"]["checks"]}
+
+        assert result.summary["validation_passed"]
+        assert checks["nepa_3d_review_graph_search_coverage_references_resolve"]["passed"]
+
+
+def _json_document(payload: dict) -> str:
+    import json
+
+    return json.dumps(payload, indent=2, sort_keys=True) + "\n"
+
+
+def _json_line(payload: dict) -> str:
+    import json
+
+    return json.dumps(payload, sort_keys=True)

@@ -5,8 +5,10 @@ from pathlib import Path
 import json
 import re
 
+from .catalog_surface import resolve_catalog_dir_for_source_set
 from .authority_currentness_projection import _project_source_register_currentness_inputs
 from .authority_currentness_validation import _summary, _validation
+from .records import aliased_source_record_ids
 from .records import sha256_file
 from .source_partitions import ACTIVE_REVIEW_CORPUS
 from .source_partitions import CURRENTNESS_SUPERSESSION_ARCHIVE
@@ -73,11 +75,17 @@ def build_authority_currentness_report(
     authority_inventory_path = Path(authority_inventory_path)
     source_addition_decisions_path = Path(source_addition_decisions_path)
     source_partition_contract_path = Path(source_partition_contract_path)
-    catalog_path = Path(catalog_path) if catalog_path else output_dir / "catalog" / "source_catalog.jsonl"
+    resolved_catalog_dir = _resolved_catalog_dir(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        catalog_path=catalog_path,
+        source_set_manifest_path=source_set_manifest_path,
+    )
+    catalog_path = Path(catalog_path) if catalog_path else resolved_catalog_dir / "source_catalog.jsonl"
     source_set_manifest_path = (
         Path(source_set_manifest_path)
         if source_set_manifest_path
-        else output_dir / "catalog" / "source_set_manifest.json"
+        else resolved_catalog_dir / "source_set_manifest.json"
     )
 
     inventory = _read_json(authority_inventory_path)
@@ -105,11 +113,7 @@ def build_authority_currentness_report(
 
     inventory = _read_json(authority_inventory_path)
     source_addition_decisions = _read_source_addition_decisions(source_addition_decisions_path)
-    catalog_by_source_record_id = {
-        str(row.get("source_record_id") or ""): row
-        for row in catalog_rows
-        if row.get("source_record_id")
-    }
+    catalog_by_source_record_id = _catalog_rows_by_aliased_source_record_id(catalog_rows)
     decisions_by_family_id = {
         str(decision.get("authority_family_id") or ""): decision
         for decision in source_addition_decisions.get("decisions", [])
@@ -219,6 +223,38 @@ def build_authority_currentness_report(
     _write_json(output_path, report)
 
     return AuthorityCurrentnessResult(report_path=output_path, summary=summary)
+
+
+def _resolved_catalog_dir(
+    *,
+    output_dir: Path,
+    source_set_id: str | None,
+    catalog_path: Path | None,
+    source_set_manifest_path: Path | None,
+) -> Path:
+    if catalog_path is not None:
+        return Path(catalog_path).parent
+    if source_set_manifest_path is not None:
+        return Path(source_set_manifest_path).parent
+    return resolve_catalog_dir_for_source_set(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+    )
+
+
+def _catalog_rows_by_aliased_source_record_id(catalog_rows: list[dict]) -> dict[str, dict]:
+    rows_by_source_record_id = {
+        str(row.get("source_record_id") or ""): row
+        for row in catalog_rows
+        if str(row.get("source_record_id") or "").strip()
+    }
+    for row in catalog_rows:
+        source_record_id = str(row.get("source_record_id") or "").strip()
+        if not source_record_id:
+            continue
+        for alias_source_record_id in aliased_source_record_ids([source_record_id]):
+            rows_by_source_record_id.setdefault(alias_source_record_id, row)
+    return rows_by_source_record_id
 
 
 def _source_currentness_record(

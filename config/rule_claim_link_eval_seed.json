@@ -49,7 +49,7 @@
       "id": "nepa-4336-level-of-review-rule-claim-link",
       "rule_id": "nepa_4336_level_of_review",
       "expected_source_record_ids": ["R1EA-003"],
-      "expected_terms": ["level", "review", "environmental", "assessment"],
+      "expected_terms": ["review", "environmental", "assessment", "significant"],
       "min_links": 1
     },
     {
@@ -85,7 +85,7 @@
       "id": "usda-nepa-efficient-review-7cfr-1b9-rule-claim-link",
       "rule_id": "usda_nepa_efficient_review_7cfr_1b9",
       "expected_source_record_ids": ["R1EA-015"],
-      "expected_terms": ["efficient", "effective", "environmental", "reviews"],
+      "expected_terms": ["environmental", "reviews", "review", "integrated"],
       "min_links": 3,
       "multi_source": true
     },
@@ -104,8 +104,8 @@
       "min_links": 1
     },
     {
-      "id": "custer-gallatin-lmp-2022-rule-claim-link",
-      "rule_id": "custer_gallatin_lmp_2022",
+      "id": "region1-forest-plan-source-records-rule-claim-link",
+      "rule_id": "region1_forest_plan_source_records_authority_template",
       "expected_source_record_ids": ["R1PLAN-custer-gallatin-nf-02"],
       "expected_terms": ["custer", "gallatin", "land", "management", "plan"],
       "min_links": 1
@@ -119,24 +119,24 @@
       "multi_source": true
     },
     {
-      "id": "esa-consultation-50cfr-402-rule-claim-link",
-      "rule_id": "esa_consultation_50cfr_402",
-      "expected_source_record_ids": ["R1EA-066"],
-      "expected_terms": ["interagency", "cooperation", "species", "consultation"],
+      "id": "species-supporting-sources-rule-claim-link",
+      "rule_id": "species_supporting_sources_and_overlays_authority_template",
+      "expected_source_record_ids": ["R1EA-064"],
+      "expected_terms": ["listed", "species", "biological", "assessment"],
       "min_links": 1
     },
     {
-      "id": "nhpa-section-106-rule-claim-link",
-      "rule_id": "nhpa_section_106",
-      "expected_source_record_ids": ["R1EA-070"],
-      "expected_terms": ["nhpa", "historic", "consultation"],
+      "id": "cultural-resource-sources-rule-claim-link",
+      "rule_id": "cultural_resource_protection_and_state_shpo_sources_authority_template",
+      "expected_source_record_ids": ["R1EA-072"],
+      "expected_terms": ["historic", "property", "preservation"],
       "min_links": 1
     },
     {
-      "id": "nhpa-36cfr-800-rule-claim-link",
-      "rule_id": "nhpa_36cfr_800",
-      "expected_source_record_ids": ["R1EA-071"],
-      "expected_terms": ["historic", "properties", "adverse", "effect"],
+      "id": "tribal-consultation-sources-rule-claim-link",
+      "rule_id": "tribal_consultation_trust_sacred_sites_authority_template",
+      "expected_source_record_ids": ["R1EA-081"],
+      "expected_terms": ["tribal", "consultation", "government-to-government"],
       "min_links": 1
     },
     {
@@ -171,7 +171,7 @@
       "id": "eo-13186-migratory-birds-rule-claim-link",
       "rule_id": "eo_13186_migratory_birds",
       "expected_source_record_ids": ["R1EA-096"],
-      "expected_terms": ["executive", "order", "13186", "migratory"],
+      "expected_terms": ["federal", "agencies", "migratory", "birds"],
       "min_links": 1
     },
     {

@@ -427,6 +427,7 @@ def _run_authority_ontology_validate(args: argparse.Namespace):
 def _run_authority_relationship_eval(args: argparse.Namespace):
     return run_authority_relationship_eval(
         output_dir=args.output_dir,
+        source_set_id=args.source_set_id,
         report_path=args.report_path,
         eval_path=args.eval_path,
         output_path=args.output_path,
@@ -436,6 +437,7 @@ def _run_authority_relationship_eval(args: argparse.Namespace):
 def _run_citation_alias_eval(args: argparse.Namespace):
     return run_citation_alias_eval(
         output_dir=args.output_dir,
+        source_set_id=args.source_set_id,
         report_path=args.report_path,
         output_path=args.output_path,
     )
@@ -444,6 +446,7 @@ def _run_citation_alias_eval(args: argparse.Namespace):
 def _run_graph_health_eval(args: argparse.Namespace):
     return run_graph_health_eval(
         output_dir=args.output_dir,
+        source_set_id=args.source_set_id,
         report_path=args.report_path,
         contract_path=args.contract_path,
         output_path=args.output_path,
@@ -453,6 +456,7 @@ def _run_graph_health_eval(args: argparse.Namespace):
 def _run_graph_accuracy_eval(args: argparse.Namespace):
     return run_graph_accuracy_eval(
         output_dir=args.output_dir,
+        source_set_id=args.source_set_id,
         report_path=args.report_path,
         eval_path=args.eval_path,
         output_path=args.output_path,

@@ -14,7 +14,7 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
     manifest = json.loads(COMMITTED_PROMOTION_SUITE.read_text(encoding="utf-8"))
     suite_results = {result["id"]: result for result in manifest["suite_results"]}
 
-    assert manifest["source_set_id"] == "source-set-4fb59e9eb43045cb"
+    assert manifest["source_set_id"] == "source-set-f70ea11e04ae3d53"
     assert manifest["full_canonical_source_set_id"] == FULL_CANONICAL_SOURCE_SET_ID
 
     active_catalog = suite_results["full_canonical_catalog_manifest"]

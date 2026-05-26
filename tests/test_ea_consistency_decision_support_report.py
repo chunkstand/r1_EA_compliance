@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import hashlib
+import json
 
 from usfs_r1_ea_sources.ea_consistency_decision_support import (
     run_ea_consistency_decision_support,
@@ -10,6 +12,14 @@ from tests.support.ea_consistency_decision_support_fixtures import _assert_evide
 from tests.support.ea_consistency_decision_support_fixtures import _assert_traceable_row
 from tests.support.ea_consistency_decision_support_fixtures import _read_json
 from tests.support.ea_consistency_decision_support_fixtures import _write_sequence_2_fixture
+
+
+def _write_json(path: Path, payload: dict) -> None:
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def test_sequence_2_generator_writes_canonical_report_family(tmp_path: Path) -> None:
@@ -52,6 +62,63 @@ def test_sequence_2_generator_writes_canonical_report_family(tmp_path: Path) -> 
     assert non_applicable["status"] == "not_applicable"
     assert non_applicable["search_coverage"][0]["coverage_result"] == "sufficient"
     _assert_traceable_row(non_applicable)
+
+
+def test_sequence_2_generator_uses_source_claim_link_fallback_when_matrix_row_lacks_source_evidence(
+    tmp_path: Path,
+) -> None:
+    output_dir, config_path, expected_path = _write_sequence_2_fixture(tmp_path)
+    review_dir = output_dir / "reviews" / "review-test"
+
+    matrix = _read_json(review_dir / "compliance_matrix.json")
+    matrix["rows"][0].pop("source_library_evidence", None)
+    _write_json(review_dir / "compliance_matrix.json", matrix)
+
+    review = _read_json(review_dir / "compliance_review.json")
+    review["findings"] = [
+        {
+            "rule_id": "sample_authority",
+            "source_claim_links": [
+                {
+                    "artifact_path": "source.html",
+                    "artifact_sha256": "sha256-source-artifact",
+                    "chunk_id": "chunk:source-claim",
+                    "citation_label": "R1EA-TEST-CLAIM (test)",
+                    "claim_text": "Synthetic claim evidence excerpt.",
+                    "content_sha256": "sha256-source-content",
+                    "document_role": "executive_order",
+                    "parser_name": "parser",
+                    "parser_version": "1.0",
+                    "source_char_end": 33,
+                    "source_char_start": 0,
+                    "source_record_id": "R1EA-TEST",
+                }
+            ],
+        }
+    ]
+    _write_json(review_dir / "compliance_review.json", review)
+
+    expected = _read_json(expected_path)
+    expected["input_hashes"]["compliance_matrix_sha256"] = _sha256(
+        review_dir / "compliance_matrix.json"
+    )
+    expected["input_hashes"]["compliance_review_sha256"] = _sha256(
+        review_dir / "compliance_review.json"
+    )
+    _write_json(expected_path, expected)
+
+    result = run_ea_consistency_decision_support(
+        output_dir=output_dir,
+        review_id="review-test",
+        config_path=config_path,
+        expected_summary_path=expected_path,
+    )
+
+    assert result.summary["passed"] is True
+    report = _read_json(result.report_path)
+    authority = report["authority_findings"][0]
+    _assert_evidence(authority["source_library_evidence"][0])
+    assert authority["source_library_evidence"][0]["citation_label"] == "R1EA-TEST-CLAIM (test)"
 
 
 def test_sequence_5_rendering_frontloads_supervisor_review_context(tmp_path: Path) -> None:

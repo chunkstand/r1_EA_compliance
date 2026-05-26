@@ -330,6 +330,71 @@ class V1EAReviewEvalTests(unittest.TestCase):
             self.assertEqual(metrics["conditional_actual_applicable_count"], 2)
             self.assertLess(metrics["conditional_actual_applicable_source_record_match_rate"], 1.0)
 
+    def test_v1_eval_allows_reconciled_source_record_ids_for_baseline_and_conditional_rules(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            report = _read_json(review_dir / "compliance_review.json")
+            matrix = _read_json(review_dir / "compliance_matrix.json")
+
+            baseline_finding = next(
+                finding
+                for finding in report["findings"]
+                if finding["rule_id"] == "usda_nepa_ea_7cfr_1b5"
+            )
+            baseline_finding["source_library_evidence"]["source_record_id"] = "USDA-002"
+            baseline_finding["source_library_evidence"]["citation_label"] = "source:USDA-002"
+            baseline_finding["source_claim_links"][0]["source_record_id"] = "USDA-002"
+            baseline_row = next(
+                row for row in matrix["rows"] if row["rule_id"] == "usda_nepa_ea_7cfr_1b5"
+            )
+            baseline_row["source_library_evidence"]["source_record_id"] = "USDA-002"
+            baseline_row["source_library_evidence"]["citation_label"] = "source:USDA-002"
+            baseline_row["applied_source_record_ids"] = ["USDA-002"]
+
+            conditional_finding = next(
+                finding for finding in report["findings"] if finding["rule_id"] == "esa_section_7"
+            )
+            conditional_finding["source_library_evidence"]["source_record_id"] = "FED-031"
+            conditional_finding["source_library_evidence"]["citation_label"] = "source:FED-031"
+            conditional_finding["source_claim_links"][0]["source_record_id"] = "FED-031"
+            conditional_row = next(
+                row for row in matrix["rows"] if row["rule_id"] == "esa_section_7"
+            )
+            conditional_row["source_library_evidence"]["source_record_id"] = "FED-031"
+            conditional_row["source_library_evidence"]["citation_label"] = "source:FED-031"
+            conditional_row["applied_source_record_ids"] = ["FED-031"]
+
+            _write_json(review_dir / "compliance_review.json", report)
+            _write_json(review_dir / "compliance_matrix.json", matrix)
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            output = _read_json(result.output_path)
+            baseline_result = next(
+                item
+                for item in output["baseline_results"]
+                if item["rule_id"] == "usda_nepa_ea_7cfr_1b5"
+            )
+            conditional_result = next(
+                item
+                for item in output["conditional_results"]
+                if item["rule_id"] == "esa_section_7"
+            )
+            self.assertTrue(baseline_result["source_record_match"])
+            self.assertEqual(baseline_result["actual_source_record_ids"], ["USDA-002"])
+            self.assertTrue(conditional_result["source_record_match"])
+            self.assertEqual(conditional_result["actual_source_record_ids"], ["FED-031"])
+
     def test_v1_eval_enforces_section_alignment_for_adjudicate_when_applicable(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -558,7 +623,7 @@ class V1EAReviewEvalTests(unittest.TestCase):
         )
         policy = contract["conditional_adjudication_policy"]
 
-        self.assertEqual(len(contract["conditional_source_expectations"]), 22)
+        self.assertEqual(len(contract["conditional_source_expectations"]), 40)
         self.assertEqual(len(adjudicate_rule_ids), 14)
         self.assertEqual(policy["mode"], "accepted_pending_v1")
         self.assertEqual(policy["accepted_pending_count"], 14)

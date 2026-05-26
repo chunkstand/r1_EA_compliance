@@ -89,6 +89,57 @@ def _normalize_source_delta_region1_readiness(report: dict[str, Any]) -> dict[st
     }
 
 
+def normalize_source_register_region1_readiness(
+    readiness: dict[str, Any],
+    *,
+    source_set_id: str,
+    forest_components: dict[str, Any],
+    forest_plan_components_path: Path,
+) -> dict[str, Any]:
+    components_by_unit: dict[str, list[dict[str, Any]]] = {}
+    for component in _dict_list(forest_components.get("components")):
+        forest_unit_id = str(component.get("forest_unit_id") or "")
+        if not forest_unit_id:
+            continue
+        components_by_unit.setdefault(forest_unit_id, []).append(component)
+    coverage_path = forest_plan_components_path.parent / "component_inventory_build_coverage.json"
+    normalized_rows = []
+    for row in _region1_profile_readiness_rows(readiness):
+        normalized_row = dict(row)
+        forest_unit_id = str(normalized_row.get("forest_unit_id") or "")
+        components = components_by_unit.get(forest_unit_id, [])
+        if components:
+            component_inventory_validation = _dict(
+                normalized_row.get("component_inventory_validation")
+            )
+            component_inventory_validation.update(
+                {
+                    "artifact_path": str(coverage_path),
+                    "component_count": len(components),
+                    "standard_count": sum(
+                        1
+                        for component in components
+                        if str(component.get("component_type") or "") == "standard"
+                    ),
+                    "status": "validated",
+                }
+            )
+            normalized_row["graph_promotion_status"] = "promoted"
+            normalized_row["component_inventory_validation"] = component_inventory_validation
+        else:
+            normalized_row["graph_promotion_status"] = "blocked"
+            normalized_row["component_inventory_validation"] = {
+                "status": "component_inventory_build_required"
+            }
+        normalized_rows.append(normalized_row)
+    return {
+        **readiness,
+        "source_set_id": source_set_id,
+        "region1_completeness_claim": False,
+        "profile_rows": normalized_rows,
+    }
+
+
 def _source_delta_graph_promotion_status(
     *,
     baseline_row: dict[str, Any],

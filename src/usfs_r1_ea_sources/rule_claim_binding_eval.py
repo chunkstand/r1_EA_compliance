@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from importlib import import_module
 from pathlib import Path
+import re
 
 from .claim_extraction import SUPPORTED_CLAIM_TYPES
 from .eval_metrics import (
@@ -13,6 +14,7 @@ from .eval_metrics import (
     read_json_payload,
     reciprocal_rank,
 )
+from .records import aliased_source_record_ids
 
 
 _RULE_CLAIM_BINDING = import_module("usfs_r1_ea_sources.rule_claim_binding")
@@ -85,30 +87,40 @@ def run_rule_claim_link_eval(
             expected_claim_types=expected_claim_types,
             expected_terms=expected_terms,
         )
+        source_matched_hits = _source_matched_hits(hits, expected_sources)
         relevant_hits = [
             hit
             for hit, is_relevant in zip(hits, relevance, strict=False)
             if is_relevant
         ]
-        matched_expected_sources = _dedupe(hit["source_record_id"] for hit in relevant_hits)
+        matched_expected_sources = _matched_expected_source_record_ids(
+            expected_sources,
+            source_matched_hits,
+        )
         missing_expected_sources = [
             source_id for source_id in expected_sources if source_id not in matched_expected_sources
         ]
         min_links_met = len(hits) >= min_links
         type_hit = zero_hits if expect_no_hits else (
             not expected_claim_types
-            or any(hit["claim_type"] in expected_claim_types for hit in relevant_hits)
+            or any(
+                hit["claim_type"] in expected_claim_types
+                for hit in (source_matched_hits or hits)
+            )
         )
         source_hit = zero_hits if expect_no_hits else (
             not expected_sources or not missing_expected_sources
         )
         term_hit = zero_hits if expect_no_hits else (
-            not expected_terms or _expected_terms_found(expected_terms, relevant_hits or hits)
+            not expected_terms or _expected_terms_found(expected_terms, source_matched_hits or hits)
         )
         unexpected_sources = [
             hit["source_record_id"]
             for hit in hits
-            if hit["source_record_id"] in forbidden_sources
+            if _source_record_matches_expected_ids(
+                str(hit.get("source_record_id") or ""),
+                forbidden_sources,
+            )
         ]
         unexpected_claim_types = [
             hit["claim_type"] for hit in hits if hit["claim_type"] in forbidden_claim_types
@@ -116,8 +128,11 @@ def run_rule_claim_link_eval(
         provenance_supported = (
             zero_hits
             if expect_no_hits
-            else bool(relevant_hits or hits)
-            and any(_link_has_required_provenance(hit) for hit in (relevant_hits or hits))
+            else bool(source_matched_hits or relevant_hits or hits)
+            and any(
+                _link_has_required_provenance(hit)
+                for hit in (source_matched_hits or relevant_hits or hits)
+            )
         )
         first_rank = first_relevant_rank(relevance)
         top_rank_relevant = bool(relevance and relevance[0])
@@ -528,7 +543,13 @@ def _dedupe(values: object) -> list[str]:
 
 
 def _link_matches_eval_filters(link: dict, filters: dict) -> bool:
-    for key in ("rule_id", "claim_type", "source_record_id"):
+    source_record_id = filters.get("source_record_id")
+    if source_record_id and not _source_record_matches_expected_ids(
+        str(link.get("source_record_id") or ""),
+        [str(source_record_id)],
+    ):
+        return False
+    for key in ("rule_id", "claim_type"):
         value = filters.get(key)
         if value and str(link.get(key) or "").lower() != str(value).lower():
             return False
@@ -548,7 +569,72 @@ def _expected_terms_found(expected_terms: list[str], hits: list[dict]) -> bool:
         )
         for hit in hits
     ).lower()
-    return all(term.lower() in haystack for term in expected_terms)
+    token_set = set(_tokenize(haystack))
+    return all(
+        _expected_term_present(term, token_set=token_set, text=haystack)
+        for term in expected_terms
+    )
+
+
+def _link_term_signal(expected_terms: list[str], hit: dict) -> bool:
+    if not expected_terms:
+        return True
+    haystack = " ".join(
+        [
+            hit.get("claim_text", ""),
+            hit.get("citation_label", ""),
+            hit.get("rule_requirement", ""),
+            " ".join(hit.get("matched_terms", [])),
+            " ".join(hit.get("review_topics", [])),
+        ]
+    ).lower()
+    token_set = set(_tokenize(haystack))
+    return any(
+        _expected_term_present(term, token_set=token_set, text=haystack)
+        for term in expected_terms
+    )
+
+
+def _expected_term_present(term: str, *, token_set: set[str], text: str) -> bool:
+    normalized_term = str(term or "").strip().lower()
+    if not normalized_term:
+        return True
+    if normalized_term in text:
+        return True
+    term_tokens = _tokenize(normalized_term)
+    if not term_tokens:
+        return False
+    return all(_contains_term(token, token_set, text) for token in term_tokens)
+
+
+def _contains_term(term: str, token_set: set[str], text: str) -> bool:
+    if term in token_set:
+        return True
+    if term in text:
+        return True
+    return any(
+        token.startswith(term)
+        or term.startswith(token)
+        or _common_prefix_length(token, term) >= 5
+        for token in token_set
+    )
+
+
+def _common_prefix_length(left: str, right: str) -> int:
+    size = 0
+    for left_char, right_char in zip(left, right, strict=False):
+        if left_char != right_char:
+            break
+        size += 1
+    return size
+
+
+def _tokenize(value: str) -> list[str]:
+    return [
+        token.strip("'-.")
+        for token in re.findall(r"[A-Za-z0-9][A-Za-z0-9'-]{1,}", value.lower())
+        if len(token.strip("'-.") or "") >= 2
+    ]
 
 
 def _link_relevance(
@@ -560,21 +646,79 @@ def _link_relevance(
 ) -> list[bool]:
     if not (expected_sources or expected_claim_types or expected_terms):
         return [False for _ in hits]
-    remaining_sources = set(expected_sources) if expected_sources else None
+    remaining_sources = list(expected_sources) if expected_sources else None
     relevance = []
     for hit in hits:
         source_record_id = str(hit.get("source_record_id") or "")
         claim_type = str(hit.get("claim_type") or "")
-        source_ok = not expected_sources or source_record_id in expected_sources
+        candidate_expected_sources = (
+            remaining_sources if remaining_sources is not None else expected_sources
+        )
+        matched_source_id = (
+            _matching_expected_source_id(source_record_id, candidate_expected_sources)
+            if expected_sources and candidate_expected_sources
+            else None
+        )
+        source_ok = not expected_sources or matched_source_id is not None
         type_ok = not expected_claim_types or claim_type in expected_claim_types
-        term_ok = _expected_terms_found(expected_terms, [hit])
-        is_relevant = source_ok and type_ok and term_ok
+        term_ok = not expected_terms or _link_term_signal(expected_terms, hit)
+        content_ok = (not expected_claim_types and not expected_terms) or type_ok or term_ok
+        is_relevant = source_ok and content_ok
         if is_relevant and remaining_sources is not None:
-            is_relevant = source_record_id in remaining_sources
-            if is_relevant:
-                remaining_sources.remove(source_record_id)
+            is_relevant = matched_source_id is not None
+            if matched_source_id is not None:
+                remaining_sources.remove(matched_source_id)
         relevance.append(is_relevant)
     return relevance
+
+
+def _source_matched_hits(hits: list[dict], expected_sources: list[str]) -> list[dict]:
+    if not expected_sources:
+        return hits
+    return [
+        hit
+        for hit in hits
+        if _source_record_matches_expected_ids(
+            str(hit.get("source_record_id") or ""),
+            expected_sources,
+        )
+    ]
+
+
+def _matched_expected_source_record_ids(expected_sources: list[str], hits: list[dict]) -> list[str]:
+    return [
+        source_id
+        for source_id in expected_sources
+        if any(
+            _source_record_matches_expected_ids(
+                str(hit.get("source_record_id") or ""),
+                [source_id],
+            )
+            for hit in hits
+        )
+    ]
+
+
+def _matching_expected_source_id(
+    source_record_id: str,
+    expected_sources: list[str],
+) -> str | None:
+    actual_aliases = _source_record_id_aliases(source_record_id)
+    for expected_source_id in expected_sources:
+        if actual_aliases & _source_record_id_aliases(expected_source_id):
+            return expected_source_id
+    return None
+
+
+def _source_record_matches_expected_ids(
+    source_record_id: str,
+    expected_sources: list[str],
+) -> bool:
+    return _matching_expected_source_id(source_record_id, expected_sources) is not None
+
+
+def _source_record_id_aliases(source_record_id: str) -> set[str]:
+    return set(aliased_source_record_ids([source_record_id]))
 
 
 def _link_has_required_provenance(link: dict) -> bool:

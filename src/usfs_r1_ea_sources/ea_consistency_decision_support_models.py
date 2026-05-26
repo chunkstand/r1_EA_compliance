@@ -114,6 +114,51 @@ def _strings(value: Any) -> list[str]:
     return []
 
 
+def _source_claim_link_evidence(link: dict[str, Any]) -> dict[str, Any]:
+    text = str(link.get("claim_text") or "").strip()
+    return {
+        "chunk_id": link.get("chunk_id"),
+        "source_record_id": link.get("source_record_id"),
+        "document_role": link.get("document_role"),
+        "citation_label": link.get("citation_label"),
+        "artifact_sha256": link.get("artifact_sha256"),
+        "content_sha256": link.get("content_sha256"),
+        "text": text,
+        "evidence_span": {
+            "text": text,
+            "source_char_start": link.get("source_char_start"),
+            "source_char_end": link.get("source_char_end"),
+            "chunk_char_start": link.get("chunk_char_start"),
+            "chunk_char_end": link.get("chunk_char_end"),
+        },
+        "provenance": {
+            "artifact_path": link.get("artifact_path"),
+            "artifact_sha256": link.get("artifact_sha256"),
+            "content_sha256": link.get("content_sha256"),
+            "source_text_path": link.get("source_text_path"),
+            "parser_name": link.get("parser_name"),
+            "parser_version": link.get("parser_version"),
+        },
+    }
+
+
+def _resolved_source_library_evidence(
+    row: dict[str, Any],
+    finding: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    direct = _dict(row.get("source_library_evidence"))
+    if direct:
+        return direct
+    finding = _dict(finding)
+    direct = _dict(finding.get("source_library_evidence"))
+    if direct:
+        return direct
+    for link in _dict_list(finding.get("source_claim_links")):
+        if link.get("source_record_id") and link.get("citation_label"):
+            return _source_claim_link_evidence(link)
+    return {}
+
+
 def _int(*values: Any) -> int:
     for value in values:
         if isinstance(value, bool):

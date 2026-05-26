@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from usfs_r1_ea_sources.rule_claim_binding_runtime import _build_links
 from usfs_r1_ea_sources.rule_claim_binding_runtime import _claim_matches_rule_filters
+from usfs_r1_ea_sources.rule_claim_binding_runtime import _query_phrases
 from usfs_r1_ea_sources.rule_claim_binding_runtime import _score_rule_claim
 from usfs_r1_ea_sources.rule_claim_binding_runtime import _tokenize
 
@@ -63,6 +64,7 @@ def test_score_rule_claim_returns_expected_terms_and_topic_bonus() -> None:
         rule,
         claim,
         terms=_tokenize(" ".join([rule["source_query"], rule["requirement"], rule["title"]])),
+        phrases=_query_phrases(" ".join([rule["source_query"], rule["requirement"], rule["title"]])),
         query=rule["source_query"],
     )
 
@@ -149,6 +151,34 @@ def test_build_links_orders_matches_and_emits_explicit_gap() -> None:
             "validation_status": "explicit_no_claim_gap",
         }
     ]
+
+
+def test_score_rule_claim_treats_reviews_and_review_as_related_terms() -> None:
+    rule = {
+        "id": "efficient_review",
+        "title": "Efficient review rule",
+        "requirement": "Support efficient environmental reviews.",
+        "source_query": "efficient effective environmental reviews",
+        "package_terms": ["environmental", "reviews"],
+        "source_filters": {"review_topic": "environmental_review"},
+    }
+    claim = _claim(
+        claim_id="claim:R1EA-015:1",
+        source_record_id="R1EA-015",
+        claim_text="USDA subcomponents should reduce delay in the environmental review process.",
+        review_topics=["Environmental review"],
+    )
+
+    score, matched_terms = _score_rule_claim(
+        rule,
+        claim,
+        terms=_tokenize(" ".join([rule["source_query"], rule["requirement"], rule["title"]])),
+        phrases=_query_phrases(" ".join([rule["source_query"], rule["requirement"], rule["title"]])),
+        query=rule["source_query"],
+    )
+
+    assert "reviews" in matched_terms
+    assert score > 0
 
 
 def _claim(

@@ -12,6 +12,7 @@ from usfs_r1_ea_sources.phase_eval_direct_eval import resolve_phase_eval_direct_
 FULL_CANONICAL_SOURCE_SET_ID = "source-set-4fb59e9eb43045cb"
 CURRENT_PROMOTION_SOURCE_SET_ID = "source-set-f70ea11e04ae3d53"
 NON_FULL_CANONICAL_SOURCE_SET_ID = "source-set-non-full-canonical"
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_committed_phase_eval_direct_eval_contract_tracks_required_phases() -> None:
@@ -312,6 +313,79 @@ def test_phase_eval_direct_eval_rejects_threshold_failures() -> None:
     assert retrieval["threshold_failures"]
 
 
+def test_phase_eval_direct_eval_prefers_existing_rule_claim_eval_results() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        source_set_id = "source-set-test"
+        decoy_dir = (
+            output_dir
+            / "derived"
+            / source_set_id
+            / "rule_claim_links"
+            / "aaa-decoy"
+            / "applicability-v0"
+        )
+        decoy_dir.mkdir(parents=True, exist_ok=True)
+        (decoy_dir / "summary.json").write_text("{}", encoding="utf-8")
+        live_dir = (
+            output_dir
+            / "derived"
+            / source_set_id
+            / "rule_claim_links"
+            / "zzz-live"
+            / "applicability-v0"
+        )
+        live_dir.mkdir(parents=True, exist_ok=True)
+        (live_dir / "summary.json").write_text("{}", encoding="utf-8")
+        (live_dir / "rule_claim_link_eval_results.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "rule-claim-link-eval-results-v1",
+                    "eval_id": "rule-claim-direct-eval-v1",
+                    "source_set_id": source_set_id,
+                    "passed": False,
+                    "case_count": 10,
+                    "hard_negative_case_count": 3,
+                    "metrics": {
+                        "case_count": 10,
+                        "hard_negative_case_count": 3,
+                    },
+                        "contract": {
+                            "sha256": hashlib.sha256(
+                                (REPO_ROOT / "config" / "rule_claim_link_eval_seed.json").read_bytes()
+                            ).hexdigest()
+                        },
+                    "checks": [
+                        {
+                            "name": "eval_cases_pass",
+                            "passed": False,
+                            "details": {"case_count": 10, "failed_case_ids": ["case-1"]},
+                        },
+                        {
+                            "name": "metric_thresholds_met",
+                            "passed": False,
+                            "details": {"failures": [{"metric": "mrr", "actual": 0.5, "min": 0.9}]},
+                        },
+                    ],
+                },
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+
+    rule_claim = summary["source_set_phase_statuses"]["rule_claim_binding"]
+    assert rule_claim["summary_path"].endswith(
+        "zzz-live/applicability-v0/rule_claim_link_eval_results.json"
+    )
+    assert rule_claim["status"] == "direct_eval_failed"
+    assert rule_claim["failure_reasons"] == ["direct_eval_threshold_failed"]
+
+
 def test_phase_eval_direct_eval_rejects_profile_eval_threshold_failures() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         output_dir = Path(tmp)
@@ -527,6 +601,66 @@ def test_phase_eval_direct_eval_accepts_component_review_coverage_for_tracked_re
         "forest_plan_component_eval_coverage",
     ]
     assert review_scope["missing_summary_ids"] == []
+
+
+def test_phase_eval_direct_eval_accepts_slot_green_when_component_coverage_is_red_for_other_reviews() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        review_dir = output_dir / "reviews" / "v1-cg-ecid-compliance-review"
+        review_dir.mkdir(parents=True, exist_ok=True)
+        (review_dir / "v1_ea_eval_results.json").write_text(
+            json.dumps(
+                _v1_ea_eval_payload(
+                    review_id="v1-cg-ecid-compliance-review",
+                    source_set_id=CURRENT_PROMOTION_SOURCE_SET_ID,
+                ),
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+        coverage_dir = output_dir / "reviews" / "real_package_review_coverage_eval"
+        coverage_dir.mkdir(parents=True, exist_ok=True)
+        (coverage_dir / "real_package_review_coverage_eval_results.json").write_text(
+            json.dumps(
+                _real_package_review_coverage_payload(
+                    review_id="v1-cg-ecid-compliance-review",
+                ),
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+        component_eval_dir = output_dir / "evaluations" / "forest_plan_component_eval_coverage"
+        component_eval_dir.mkdir(parents=True, exist_ok=True)
+        payload = _forest_plan_component_eval_coverage_payload(
+            review_id="v1-cg-ecid-compliance-review",
+        )
+        payload["passed"] = False
+        payload["review_component_eval_coverage"]["passed"] = False
+        payload["review_component_eval_coverage"]["covered_review_count"] = 1
+        (
+            component_eval_dir / "forest_plan_component_eval_coverage_results.json"
+        ).write_text(
+            json.dumps(payload, sort_keys=True),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=CURRENT_PROMOTION_SOURCE_SET_ID,
+            review_id="v1-cg-ecid-compliance-review",
+            review_dir=review_dir,
+        )
+
+    review_scope = summary["review_scope"]
+    assert review_scope["status"] == "direct_eval_present"
+    assert review_scope["passed"] is True
+    component_summary = next(
+        item
+        for item in review_scope["summaries"]
+        if item["summary_id"] == "forest_plan_component_eval_coverage"
+    )
+    assert component_summary["status"] == "direct_eval_present"
+    assert component_summary["passed"] is True
 
 
 def _forest_plan_profile_eval_payload(

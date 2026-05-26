@@ -10,6 +10,8 @@ import unittest
 
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 from usfs_r1_ea_sources.retrieval import query_retrieval_index
+from usfs_r1_ea_sources.retrieval_query import _contains_term
+from usfs_r1_ea_sources.retrieval_query import _tokenize
 
 from tests.support.retrieval_fixtures import _chunk
 from tests.support.retrieval_fixtures import _write_catalog_sqlite
@@ -135,6 +137,210 @@ class RetrievalTests(unittest.TestCase):
             self.assertEqual(query["hit_count"], 1)
             self.assertEqual(query["results"][0]["source_record_id"], "FED-001")
             self.assertEqual(query["filters"]["source_record_ids"], ["R1EA-001", "FED-001"])
+
+    def test_retrieval_query_expands_aliased_source_record_filter_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["FED-001"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="FED-001",
+                        title="National Environmental Policy Act",
+                        document_role="law",
+                        authority_level="federal",
+                        citation_label="FED-001 | National Environmental Policy Act | artifact abc123",
+                        text="The National Environmental Policy Act requires environmental review.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"FED-001": ["NEPA"]})
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="environmental review",
+                source_record_id="R1EA-001",
+            )
+
+            self.assertEqual(query["hit_count"], 1)
+            self.assertEqual(query["results"][0]["source_record_id"], "FED-001")
+            self.assertEqual(query["filters"]["source_record_id"], "R1EA-001")
+
+    def test_retrieval_query_prefers_exact_query_phrase_matches(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["FED-003", "FED-004"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="FED-003",
+                        title="National Forest System Land Management Planning",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="FED-003 | Planning rule | artifact abc123",
+                        text=(
+                            "The responsible official shall approve the project or activity "
+                            "only after determining consistency with the applicable plan components."
+                        ),
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="FED-004",
+                        title="National Forest System Land Management Planning",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="FED-004 | Planning record | artifact def456",
+                        text=(
+                            "The planning record includes approval documentation and other "
+                            "documents associated with applicable components."
+                        ),
+                    ),
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    "FED-003": ["Planning rule"],
+                    "FED-004": ["Planning record"],
+                },
+            )
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="project or activity applicable plan components",
+            )
+
+            self.assertEqual(query["results"][0]["source_record_id"], "FED-003")
+            self.assertIn("project or activity", query["results"][0]["evidence_span"]["text"].lower())
+
+    def test_retrieval_query_weights_rare_terms_over_generic_nepa_overlap(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["USFS-001", "FPS-068"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="USFS-001",
+                        title="Environmental Planning and NEPA page",
+                        document_role="agency_guidance",
+                        authority_level="federal",
+                        citation_label="USFS-001 | NEPA page | artifact abc123",
+                        text=(
+                            "Environmental planning under NEPA can occur at many levels "
+                            "of the Forest Service and may use several review tools."
+                        ),
+                    ),
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="FPS-068",
+                        title=(
+                            "Purpose and Need, Alternatives, Affected Environment and "
+                            "Environmental Consequences"
+                        ),
+                        document_role="environmental_impact_statement",
+                        authority_level="federal",
+                        citation_label="FPS-068 | FEIS volume 1 | artifact def456",
+                        text=(
+                            "This section compares alternatives and analyzes environmental "
+                            "effects and consequences for the proposed action."
+                        ),
+                    ),
+                ],
+            )
+            _write_catalog_sqlite(
+                output_dir,
+                {
+                    "USFS-001": ["NEPA"],
+                    "FPS-068": ["Alternatives"],
+                },
+            )
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="NEPA alternatives environmental effects",
+            )
+
+            self.assertEqual(query["results"][0]["source_record_id"], "FPS-068")
+
+    def test_retrieval_query_centers_span_on_densest_query_term_cluster(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["USDA-005"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="USDA-005",
+                        title="Documentation prepared by applicant or third party",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="USDA-005 | Applicant docs | artifact abc123",
+                        text=(
+                            "Documentation prepared by applicant or third party may be used "
+                            "under agency supervision. The subcomponent will work with the "
+                            "applicant to define the purpose and need and independently "
+                            "evaluate the information submitted to determine whether the "
+                            "documentation is sufficient."
+                        ),
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"USDA-005": ["Applicant documentation"]})
+            result = build_retrieval_index(output_dir=output_dir, source_set_id=source_set_id)
+
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="applicant third party independent evaluation",
+                source_record_id="USDA-005",
+            )
+
+            span_text = query["results"][0]["evidence_span"]["text"].lower()
+            self.assertIn("independently evaluate", span_text)
+            self.assertIn("applicant", span_text)
+
+    def test_retrieval_term_matching_treats_evaluation_and_evaluate_as_related(self) -> None:
+        text = "The subcomponent shall independently evaluate the information submitted."
+        self.assertTrue(
+            _contains_term(
+                "evaluation",
+                set(_tokenize(text)),
+                text,
+            )
+        )
 
     def test_retrieval_query_supports_citation_filter(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

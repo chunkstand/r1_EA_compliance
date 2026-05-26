@@ -38,6 +38,7 @@ def _write_graph_phase_outputs(output_dir: Path, source_set_id: str) -> None:
         encoding="utf-8",
     )
     _write_upstream_evaluation_phase_outputs(output_dir)
+    _write_extraction_fidelity_phase_outputs(output_dir)
     _write_downstream_direct_eval_phase_outputs(output_dir, source_set_id)
 
 
@@ -55,6 +56,31 @@ def _write_upstream_evaluation_phase_outputs(output_dir: Path) -> None:
                     {"lane_id": "extraction", "status": "direct_eval_present"},
                 ],
                 "failed_case_ids": [],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _write_extraction_fidelity_phase_outputs(output_dir: Path) -> None:
+    path = (
+        output_dir
+        / "evaluations"
+        / "extraction_fidelity"
+        / "extraction_fidelity_eval_results.json"
+    )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "extraction-fidelity-eval-results-v0",
+                "passed": True,
+                "required_category_count": 12,
+                "case_count": 24,
+                "matched_case_count": 24,
+                "failed_case_ids": [],
+                "contract_checks": [],
             },
             sort_keys=True,
         ),

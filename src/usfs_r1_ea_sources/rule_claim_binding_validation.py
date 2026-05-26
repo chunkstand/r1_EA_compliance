@@ -12,6 +12,7 @@ from .rule_claim_binding_runtime import RULE_CLAIM_LINK_SCHEMA_VERSION
 from .rule_claim_binding_runtime import _claim_matches_rule_filters
 from .rule_claim_binding_runtime import _gap_id
 from .rule_claim_binding_runtime import _link_id
+from .rule_claim_binding_runtime import _query_phrases
 from .rule_claim_binding_runtime import _rule_query
 from .rule_claim_binding_runtime import _score_rule_claim
 from .rule_claim_binding_runtime import _tokenize
@@ -430,7 +431,8 @@ def _check_link_scores_and_terms(rule_pack: dict, links: list[dict]) -> dict:
     failures = []
     for link in links:
         rule = rules_by_id.get(str(link.get("rule_id") or ""))
-        terms = _tokenize(_rule_query(rule or {}))
+        query = _rule_query(rule or {})
+        terms = _tokenize(query)
         expected_score = None
         expected_terms = []
         if rule:
@@ -438,7 +440,8 @@ def _check_link_scores_and_terms(rule_pack: dict, links: list[dict]) -> dict:
                 rule,
                 link,
                 terms=terms,
-                query=_rule_query(rule),
+                phrases=_query_phrases(query),
+                query=query,
             )
             expected_score = round(expected_score, 6)
         try:

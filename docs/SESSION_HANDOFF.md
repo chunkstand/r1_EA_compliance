@@ -32,17 +32,19 @@ history below.
   the new applicability/compliance child packet isolates broad replay-owner
   concentration in `build_applicability_decisions(...)` and
   `run_compliance_review(...)`. It does not replace the parent packet's next
-  truthful runtime slice, which remains ECID broader-EA review-local artifact
-  / source-record alignment on `source-set-f70ea11e04ae3d53`, then South
-  Plateau forest-plan replay on that same source set
+  truthful runtime slice, which is now South Plateau packet-local forest-plan
+  replay / adjudication refresh on aligned
+  `source-set-f70ea11e04ae3d53`, then aggregate docs / closeout on that same
+  packet
 - extraction/direct-eval owner-boundary note:
   the new extraction/direct-eval child packet preserves the closed
   `extraction-fidelity-eval` and `phase_eval_direct_eval.py` contracts while
   splitting the remaining large producer owners in
   `extraction_fidelity_eval.py` and
   `phase_eval_direct_eval_source_set.py`. It does not replace the parent
-  replay packet's current runtime blocker, which remains ECID broader-EA and
-  review-direct-eval family debt on `source-set-f70ea11e04ae3d53`
+  replay packet's current runtime slice, which no longer sits in ECID
+  direct-eval debt and is now South Plateau packet-local replay repair on
+  `source-set-f70ea11e04ae3d53`
 - queued oversized-test owner note:
   the new oversized-test child packet isolates the five live `>800` test
   owners and keeps `tests/test_compliance_review.py` behind its existing
@@ -95,35 +97,79 @@ history below.
   `config/forest_plan_component_adjudications/v1-cg-ecid-compliance-review.json`;
   and ECID `compliance-review` is again `reviewer_ready=true`,
   `validation_passed=true`, with forest-plan component adjudication and
-  evaluation both `reviewer_ready=true`. South remains the live forest-plan
-  blocker on the same source set with `reviewer_ready=false`,
-  `component_count=329`, `reviewer_resolution_count=34`,
-  `needs_reviewer_resolution_count=1`, `gap_count=33`,
-  `applied_standard_count=22/25`, and stale component adjudication eval
-  checks `["source_set_mismatch","queue_item_count_mismatch","resolved_item_count_mismatch"]`.
-  ECID `v1-ea-eval` still remains `contract_status="mismatch"`, but its
-  remaining drift is now broader-EA only:
-  `forest_plan_passed=true`, `broader_ea_passed=false`,
-  `failure_category_counts={"baseline_source_record_mismatch":26,"conditional_expectation_missing":18,"source_record_mismatch":17}`,
-  and `forest_plan_failure_category_counts={}`.
+  evaluation both `reviewer_ready=true`. ECID broader-EA replay is now also
+  green on that same source set: `v1-ea-eval` now reports
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`,
+  `forest_plan_passed=true`, and no remaining failure categories; source-set
+  graph evals now pass with `authority_path_count=17`,
+  `relationship_type_count=7`, `orphan_node_count=0`, and
+  `disconnected_component_count=1`; review-packet validation is green with
+  `failed_check_count=0`; `draft-generation-eval` passes `5/5`; final QA
+  reruns green with `198` passing checks and
+  `machine_replay_status="passed"`; review-scoped `phase-eval` now passes
+  `33/33` with `review_direct_eval_status="direct_eval_present"`,
+  `missing_direct_eval_phase_count=0`, and
+  `threshold_failed_phase_count=0`; and non-strict `promotion-suite` now
+  reports `current_promotion_ready=true`, `promotion_ready=true`, and
+  `passed_required_current_result_count=32/32`. The truthful ECID
+  packet-scoped graph signal remains
+  `region1_forest_plan_blocked_profile_count=9`, not a fake full-Region-1
+  zero-blocker claim. South remains the live forest-plan blocker on the same
+  source set with `reviewer_ready=false`, `component_count=329`,
+  `reviewer_resolution_count=34`, `needs_reviewer_resolution_count=1`,
+  `gap_count=33`, `applied_standard_count=22/25`, and stale component
+  adjudication eval checks
+  `["source_set_mismatch","queue_item_count_mismatch","resolved_item_count_mismatch"]`.
   South remains `contract_status="mismatch"` with
   `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
-  ECID `phase-eval` remains red at `15/31` passed phases with
-  `review_direct_eval_status="direct_eval_identity_mismatch"`.
-  `compliance_review` is no longer a failing phase there; the remaining
-  blocker family is missing direct eval coverage for retrieval,
-  claim extraction, and rule-claim binding plus reviewer-facing replay debt
-  in decision support, review packet, final QA, aggregate evaluation
-  coverage, and the downstream graph/export phases
+  South is now the remaining packet-local replay debt; ECID broader-EA,
+  direct-eval, final-QA, and current-promotion aggregate replay are no longer
+  the blocker
 - next truthful slice:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
-  beginning with ECID broader-EA review-local artifact / source-record
-  alignment on aligned `source-set-f70ea11e04ae3d53`, then South Plateau
-  forest-plan replay / adjudication refresh and the remaining reviewer-facing
-  packet families on that same source set
+  beginning with South Plateau packet-local forest-plan replay / adjudication
+  refresh on aligned `source-set-f70ea11e04ae3d53`, then aggregate docs /
+  closeout for the same packet
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## ECID Current-Promotion Replay Resolved Locally
+
+This implementation slice closes the ECID review-local current-promotion replay
+family on the aligned reviewer-facing source set.
+
+- outcome label:
+  `reduced locally`; ECID is now green end to end on
+  `source-set-f70ea11e04ae3d53`, and South Plateau now carries the remaining
+  packet-local replay debt
+- live ECID truth:
+  `v1-ea-eval --review-id v1-cg-ecid-compliance-review` now reports
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true`; source-set graph evals pass with
+  `authority_path_count=17`, `relationship_type_count=7`,
+  `orphan_node_count=0`, and `disconnected_component_count=1`;
+  `review-packet-index` validation is green with `failed_check_count=0`;
+  `draft-generation-eval` passes `5/5`; `final-qa-certification` reruns green
+  with `198` passing checks and `machine_replay_status="passed"`; review
+  `phase-eval` now passes `33/33` with
+  `review_direct_eval_status="direct_eval_present"`,
+  `missing_direct_eval_phase_count=0`, and
+  `threshold_failed_phase_count=0`; and non-strict `promotion-suite` now
+  reports `current_promotion_ready=true`, `promotion_ready=true`, and
+  `passed_required_current_result_count=32/32`
+- important contract nuance:
+  the repaired current-promotion graph contract now uses the truthful scoped
+  source-set signal `region1_forest_plan_blocked_profile_count=9` rather than
+  pretending the ECID packet source set is Region-1 complete
+- test harness update:
+  the shared synthetic compliance phase-eval fixture now materializes the
+  required extraction-fidelity direct-eval artifact so review-scoped phase-eval
+  tests keep matching the governed runtime instead of relying on proxy-only
+  extraction coverage
+- next slice:
+  resume the same parent packet at South Plateau packet-local forest-plan
+  replay / adjudication refresh, then finish aggregate docs / closeout
 
 ## Architecture Governance Rebaseline Resolved Locally
 

@@ -7,6 +7,8 @@ import tempfile
 import unittest
 
 from usfs_r1_ea_sources.rule_claim_binding_eval import _load_eval_contract
+from usfs_r1_ea_sources.rule_claim_binding_eval import _expected_terms_found
+from usfs_r1_ea_sources.rule_claim_binding_eval import _link_relevance
 from usfs_r1_ea_sources.rule_claim_binding_eval import _load_validated_links_for_eval
 from usfs_r1_ea_sources.rule_claim_binding_eval import _query_links
 
@@ -106,6 +108,100 @@ class RuleClaimBindingEvalTests(unittest.TestCase):
         self.assertEqual([result["claim_id"] for result in results], ["claim:1", "claim:2"])
         self.assertGreater(results[0]["score"], results[1]["score"])
 
+    def test_query_links_source_record_filter_supports_aliases(self) -> None:
+        results = _query_links(
+            [
+                _link(
+                    link_id="rule-claim-link:1",
+                    claim_id="claim:1",
+                    source_record_id="FED-001",
+                )
+            ],
+            rule_id="purpose_need",
+            filters={"source_record_id": "R1EA-001"},
+            limit=5,
+        )
+
+        self.assertEqual([result["claim_id"] for result in results], ["claim:1"])
+
+    def test_link_relevance_treats_aliased_source_record_ids_as_matches(self) -> None:
+        relevance = _link_relevance(
+            [
+                _link(
+                    link_id="rule-claim-link:1",
+                    claim_id="claim:1",
+                    source_record_id="FED-001",
+                )
+            ],
+            expected_sources=["R1EA-001"],
+            expected_claim_types=[],
+            expected_terms=[],
+        )
+
+        self.assertEqual(relevance, [True])
+
+    def test_link_relevance_accepts_term_signal_when_expected_type_is_on_another_hit(self) -> None:
+        relevance = _link_relevance(
+            [
+                _link(
+                    link_id="rule-claim-link:1",
+                    claim_id="claim:1",
+                    source_record_id="FED-001",
+                    claim_text=(
+                        "Such environmental assessment shall be a concise public document "
+                        "prepared by a Federal agency."
+                    ),
+                    claim_type="obligation",
+                    matched_terms=["environmental", "assessment"],
+                )
+            ],
+            expected_sources=["R1EA-003"],
+            expected_claim_types=["condition"],
+            expected_terms=["environmental", "assessment"],
+        )
+
+        self.assertEqual(relevance, [True])
+
+    def test_expected_terms_found_accepts_morphology_tolerant_phrase_matches(self) -> None:
+        self.assertTrue(
+            _expected_terms_found(
+                ["programmatic environmental documents"],
+                [
+                    _link(
+                        link_id="rule-claim-link:1",
+                        claim_id="claim:1",
+                        source_record_id="FED-001",
+                        claim_text=(
+                            "Programmatic environmental document means an environmental "
+                            "assessment analyzing environmental effects."
+                        ),
+                    )
+                ],
+            )
+        )
+
+    def test_link_relevance_does_not_double_count_consumed_alias_matches(self) -> None:
+        relevance = _link_relevance(
+            [
+                _link(
+                    link_id="rule-claim-link:1",
+                    claim_id="claim:1",
+                    source_record_id="FED-001",
+                ),
+                _link(
+                    link_id="rule-claim-link:2",
+                    claim_id="claim:2",
+                    source_record_id="FED-001",
+                    rank=2,
+                ),
+            ],
+            expected_sources=["R1EA-001"],
+            expected_claim_types=[],
+            expected_terms=[],
+        )
+
+        self.assertEqual(relevance, [True, False])
+
     def test_load_validated_links_for_eval_requires_readiness_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             links_path = (
@@ -137,6 +233,7 @@ def _link(
     score: float = 0.8,
     matched_terms: list[str] | None = None,
     rank: int = 1,
+    claim_type: str = "guidance",
 ) -> dict:
     return {
         "link_id": link_id,
@@ -149,7 +246,7 @@ def _link(
         "score": score,
         "matched_terms": matched_terms or ["purpose", "need"],
         "claim_id": claim_id,
-        "claim_type": "guidance",
+        "claim_type": claim_type,
         "claim_text": claim_text,
         "source_record_id": source_record_id,
         "chunk_id": f"chunk:{claim_id}",

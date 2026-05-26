@@ -4,8 +4,10 @@ from dataclasses import dataclass
 from pathlib import Path
 import json
 
+from .source_register_proving import build_source_set_semantic_proving_report
 from .source_register_proving import default_proving_output_path
 from .source_register_proving import load_proving_report
+from .source_register_proving import resolve_latest_proving_context
 
 
 CITATION_ALIAS_EVAL_SCHEMA_VERSION = "citation-alias-eval-report-v1"
@@ -21,11 +23,16 @@ class CitationAliasEvalResult:
 def run_citation_alias_eval(
     *,
     output_dir: Path,
+    source_set_id: str | None = None,
     report_path: Path | None = None,
     output_path: Path | None = None,
 ) -> CitationAliasEvalResult:
     output_dir = Path(output_dir)
-    report = load_proving_report(output_dir, report_path)
+    report, _ = _load_semantic_report(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        report_path=report_path,
+    )
     alias_report = report["alias_report"]
     expected_rows = alias_report["expected_rows"]
     blocked_rows = [
@@ -87,6 +94,26 @@ def _check(name: str, passed: bool, expected, actual) -> dict:
         "expected": expected,
         "actual": actual,
     }
+
+
+def _load_semantic_report(
+    *,
+    output_dir: Path,
+    source_set_id: str | None,
+    report_path: Path | None,
+) -> tuple[dict, Path]:
+    if report_path is not None:
+        resolved_report_path = Path(report_path)
+        return load_proving_report(output_dir, resolved_report_path), resolved_report_path
+    if source_set_id:
+        result = build_source_set_semantic_proving_report(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+        )
+        return load_proving_report(output_dir, result.report_path), result.report_path
+    context = resolve_latest_proving_context(output_dir)
+    resolved_report_path = Path(context["report_path"])
+    return load_proving_report(output_dir, resolved_report_path), resolved_report_path
 
 
 def _default_output_path(*, output_dir: Path, source_set_id: str) -> Path:
