@@ -15,6 +15,48 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## ECID Preliminary Historical Lane Rebaseline Blocked Locally
+
+Latest implementation update on 2026-05-26:
+
+- routed packet:
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+- packet outcome:
+  `blocked locally`; Sequence 0 landed the fail-closed ready-slot source-set
+  gate, but fresh Sequence 1 proving found no current truthful closure path
+- implementation truth:
+  ready expansion slots now fail closed when any JSON
+  `expected_gate_artifact` proves a different `source_set_id` than the slot's
+  declared `source_set_id`. This closes the loophole where a later session
+  could flip `region1-real-ea-slot-1` to `ready` while its gate artifacts
+  still came from mixed historical source sets
+- live blocker truth:
+  `source-set-4fb59e9eb43045cb` is not a viable rebuild lane under the current
+  code: its source-set `phase_eval_results.json` is still
+  `passed=false` with `passed_phase_count=10/33`. The older
+  `source-set-ba8d0feae79501b8` closure assumption is also stale under current
+  artifacts: a fresh
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`
+  now fails with `source_set_stale=398`, `partition_gap=329`,
+  `missing_candidate_decision=4`, `unresolved_authority=4`, and
+  `provenance_gap=1`, so rule-pack regeneration stops before compliance
+  review. The tracked governed replacement candidate
+  `region1-example-lolo-tylers-kitchen-66344` is also not currently ready for
+  this slot: its review `phase_eval_results.json` is `passed=false` with
+  `passed_phase_count=19/23`
+- next routing:
+  keep `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+  as the active packet only as a blocked lane. The next truthful follow-on is
+  a dedicated rebaseline blocker packet; do not flip the ECID historical slot
+  to `ready`, shrink the manifest, or reuse another non-ready placeholder
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite.py tests/test_real_package_review_coverage_eval.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/promotion_suite_expansion.py tests/test_promotion_suite_expansion_slots.py`,
+  `jq '{source_set_id, passed, passed_phase_count, phase_count}' source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8 --validation-path /tmp/<temp>/applicability_validation.json`,
+  and
+  `jq '{source_set_id, passed, passed_phase_count, phase_count}' source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json`
+
 ## ECID Preliminary Historical Expansion Truthfully Rerouted Locally
 
 Latest implementation update on 2026-05-26:
@@ -63,7 +105,8 @@ Latest implementation update on 2026-05-26:
 - next routing:
   the standalone follow-on is now
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`.
-  Start there with Sequence 0 if more work is requested on this lane
+  See the newer `## ECID Preliminary Historical Lane Rebaseline Blocked
+  Locally` section above for the current blocked-state truth before continuing
 - verification:
   `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
   `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,

@@ -282,6 +282,7 @@ def test_promotion_suite_rejects_ready_slot_missing_review_gate_contract(
     with pytest.raises(ValueError, match="expansion_review"):
         run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
 
+
 def test_promotion_suite_expansion_requires_required_expansion_artifacts(tmp_path: Path) -> None:
     manifest_path, output_dir = write_suite_fixture(tmp_path)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -337,6 +338,57 @@ def test_promotion_suite_expansion_requires_required_expansion_artifacts(tmp_pat
     }
     assert result.summary["open_expansion_slot_count"] == 0
     assert result.summary["open_expansion_artifact_count"] == 1
+
+
+def test_promotion_suite_blocks_ready_slot_with_mismatched_gate_artifact_source_set(
+    tmp_path: Path,
+) -> None:
+    manifest_path, output_dir = write_suite_fixture(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["review_cases"][0]["results"][0]["required_for_current_promotion"] = False
+    manifest["review_cases"][0]["results"][0]["required_for_expansion"] = True
+    manifest["expansion_slots"][0] = {
+        "id": "slot-1",
+        "status": "ready",
+        "ready": True,
+        "review_id": "review-1",
+        "package_path": "source_library/reviews/_intake/review-1",
+        "source_set_id": "source-set-1",
+        "expected_gate_artifacts": [
+            {
+                "id": "v1_ea_eval",
+                "path": "reviews/{review_id}/v1_ea_eval_results.json",
+            }
+        ],
+        "next_action": "Keep the slot ready.",
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    write_json(
+        output_dir / "reviews" / "review-1" / "v1_ea_eval_results.json",
+        {"source_set_id": "source-set-2", "summary": {"passed": True}},
+    )
+
+    result = run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
+
+    slot = result.summary["expansion_slots"][0]
+    assert result.summary["expansion_ready"] is False
+    assert result.summary["open_expansion_slot_count"] == 1
+    assert slot["ready"] is False
+    assert slot["failure_categories"] == ["stale_artifact"]
+    assert slot["gate_artifact_source_set_checks"] == [
+        {
+            "name": "v1_ea_eval_source_set_matches_slot",
+            "passed": False,
+            "expected": ["source-set-1"],
+            "actual": ["source-set-2"],
+            "failure_category": "stale_artifact",
+            "details": {
+                "path": str(
+                    output_dir / "reviews" / "review-1" / "v1_ea_eval_results.json"
+                )
+            },
+        }
+    ]
 
 
 def test_promotion_suite_fails_missing_required_artifact(tmp_path: Path) -> None:

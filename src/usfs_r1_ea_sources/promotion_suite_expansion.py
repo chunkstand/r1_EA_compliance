@@ -8,18 +8,35 @@ from .promotion_suite_support import _check_result
 from .promotion_suite_support import _equals_check
 from .promotion_suite_support import _json_path
 from .promotion_suite_support import _read_json
+from .promotion_suite_support import _resolve_output_path
 
 
 def _expansion_slot_result(slot: dict[str, Any], *, output_dir: Path) -> dict[str, Any]:
     manifest_ready = bool(slot.get("ready", False))
     category = str(slot.get("failure_category") or "package_fixture_missing")
     profile_checks = _forest_plan_profile_slot_checks(slot, output_dir=output_dir)
+    source_set_checks = _gate_artifact_source_set_checks(
+        slot,
+        output_dir=output_dir,
+        enabled=manifest_ready,
+    )
     failed_profile_categories = [
         check["failure_category"] for check in profile_checks if not check["passed"]
     ]
-    ready = manifest_ready and not failed_profile_categories
+    failed_source_set_categories = [
+        check["failure_category"] for check in source_set_checks if not check["passed"]
+    ]
+    ready = (
+        manifest_ready
+        and not failed_profile_categories
+        and not failed_source_set_categories
+    )
     failure_categories = sorted(
-        set(([] if manifest_ready else [category]) + failed_profile_categories)
+        set(
+            ([] if manifest_ready else [category])
+            + failed_profile_categories
+            + failed_source_set_categories
+        )
     )
     result = {
         "id": slot["id"],
@@ -36,6 +53,8 @@ def _expansion_slot_result(slot: dict[str, Any], *, output_dir: Path) -> dict[st
     }
     if profile_checks:
         result["forest_plan_profile_checks"] = profile_checks
+    if source_set_checks:
+        result["gate_artifact_source_set_checks"] = source_set_checks
     for key in (
         "review_id",
         "source_set_id",
@@ -48,6 +67,63 @@ def _expansion_slot_result(slot: dict[str, Any], *, output_dir: Path) -> dict[st
         if key in slot:
             result[key] = slot[key]
     return result
+
+
+def _gate_artifact_source_set_checks(
+    slot: dict[str, Any],
+    *,
+    output_dir: Path,
+    enabled: bool,
+) -> list[dict[str, Any]]:
+    if not enabled:
+        return []
+    slot_source_set_id = str(slot.get("source_set_id") or "").strip()
+    review_id = str(slot.get("review_id") or "").strip()
+    if not slot_source_set_id or not review_id:
+        return []
+
+    checks: list[dict[str, Any]] = []
+    for artifact in slot.get("expected_gate_artifacts", []):
+        artifact_id = str(artifact.get("id") or "").strip()
+        artifact_path = str(artifact.get("path") or "").strip()
+        if not artifact_id or not artifact_path or not artifact_path.endswith(".json"):
+            continue
+        resolved_path = _resolve_output_path(
+            artifact_path.format(review_id=review_id),
+            output_dir,
+        )
+        if not resolved_path.exists():
+            continue
+        payload = _read_json(resolved_path)
+        discovered_source_set_ids = sorted(_collect_source_set_ids(payload))
+        if not discovered_source_set_ids:
+            continue
+        checks.append(
+            _check_result(
+                name=f"{artifact_id}_source_set_matches_slot",
+                passed=discovered_source_set_ids == [slot_source_set_id],
+                expected=[slot_source_set_id],
+                actual=discovered_source_set_ids,
+                failure_category="stale_artifact",
+                details={"path": str(resolved_path)},
+            )
+        )
+    return checks
+
+
+def _collect_source_set_ids(payload: Any) -> set[str]:
+    discovered: set[str] = set()
+    if isinstance(payload, dict):
+        for key, value in payload.items():
+            if key == "source_set_id":
+                source_set_id = str(value or "").strip()
+                if source_set_id:
+                    discovered.add(source_set_id)
+            discovered.update(_collect_source_set_ids(value))
+    elif isinstance(payload, list):
+        for value in payload:
+            discovered.update(_collect_source_set_ids(value))
+    return discovered
 
 
 def _forest_plan_profile_slot_checks(

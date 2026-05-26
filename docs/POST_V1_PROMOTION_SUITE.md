@@ -162,7 +162,8 @@ report includes selected-slot review IDs, package paths, and failure categories 
 blocker is visible without inspecting raw JSON. A slot that declares `forest_plan_profile` must also
 have expansion gate contracts for `compliance_review`, `forest_plan_context_summary`, and
 `phase_eval`; the runtime slot check fails closed if the artifact scope, validation, reviewer-ready
-status, or last local signal does not prove the declared profile.
+status, or last local signal does not prove the declared profile. Ready slots now also fail closed
+if any JSON `expected_gate_artifact` proves a different `source_set_id` than the slot contract.
 
 ## Current Local Result
 
@@ -215,6 +216,11 @@ family.
   slot contract point at `source-set-4fb59e9eb43045cb`. The six downstream
   compliance / provenance artifacts remain absent locally, but they are no
   longer falsely counted as live required expansion artifacts on this packet.
+  Fresh rebaseline proving on 2026-05-26 also showed that the older `ba8...`
+  closure assumption is stale under current live artifacts, `4fb...` remains
+  source-set `phase-eval` red (`10/33`), and the tracked Lolo replacement
+  candidate remains review `phase-eval` red (`19/23`), so no truthful ready
+  closure path is currently proven.
   Any further work there should start in
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`, not
   in another South replay pass or by reopening the resolved replay-repair

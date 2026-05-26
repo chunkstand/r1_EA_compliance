@@ -135,16 +135,61 @@ history below.
   `source-set-4fb59e9eb43045cb` for generated rule-pack / slot identity; the
   six downstream compliance/provenance artifacts remain absent locally, but
   they are no longer falsely counted as live required expansion artifacts on
-  this packet
+  this packet. Fresh Sequence 1 rebaseline proving on 2026-05-26 is now also
+  part of the live blocker truth: `source-set-4fb...` still fails source-set
+  `phase-eval` (`10/33`), a fresh
+  `applicability-validate --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`
+  now fails under current artifacts with `source_set_stale=398`,
+  `partition_gap=329`, `missing_candidate_decision=4`,
+  `unresolved_authority=4`, and `provenance_gap=1`, and the tracked Lolo
+  replacement candidate remains review `phase-eval` red (`19/23`)
 - next truthful slice:
-  start with Sequence 0 in
+  Sequence 0 fail-closed slot gating is complete. The packet is now blocked
+  after fresh rebaseline proving, so the next truthful slice is to open a
+  dedicated blocker follow-on from
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`.
-  Do not reopen
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
-  packet
+  Do not reopen `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as
+  a new runtime packet
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## ECID Preliminary Historical Lane Rebaseline Blocked Locally
+
+This implementation slice landed the Sequence 0 fail-closed slot gate and then
+hit the plan's stop condition during fresh Sequence 1 proving.
+
+- outcome label:
+  `blocked locally`; the packet remains active, but there is no current
+  truthful closure path under live artifacts
+- implementation truth:
+  ready expansion slots now fail closed when any JSON
+  `expected_gate_artifact` proves a different `source_set_id` than the slot's
+  declared slot contract. This prevents a future session from marking the
+  ECID historical slot ready while its gate artifacts still span mixed source
+  sets
+- fresh proving truth:
+  `source-set-4fb59e9eb43045cb` still fails source-set `phase-eval`
+  (`passed=false`, `passed_phase_count=10/33`); a fresh
+  `applicability-validate` rerun on
+  `source-set-ba8d0feae79501b8` now fails under current artifacts with
+  `source_set_stale=398`, `partition_gap=329`,
+  `missing_candidate_decision=4`, `unresolved_authority=4`, and
+  `provenance_gap=1`; and the tracked governed replacement candidate
+  `region1-example-lolo-tylers-kitchen-66344` remains review `phase-eval` red
+  (`passed=false`, `passed_phase_count=19/23`)
+- next routing:
+  keep the current packet only as blocked historical-lane truth. The next
+  requested work should open a dedicated blocker follow-on for rebaseline
+  drift and replacement-lane readiness rather than flipping the slot, reducing
+  the manifest floor, or swapping in another non-ready placeholder
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite.py tests/test_real_package_review_coverage_eval.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/promotion_suite_expansion.py tests/test_promotion_suite_expansion_slots.py`,
+  `jq '{source_set_id, passed, passed_phase_count, phase_count}' source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8 --validation-path /tmp/<temp>/applicability_validation.json`,
+  and
+  `jq '{source_set_id, passed, passed_phase_count, phase_count}' source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json`
 
 ## ECID Preliminary Historical Expansion Truthfully Rerouted Locally
 

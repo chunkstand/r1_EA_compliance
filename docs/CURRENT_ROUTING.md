@@ -13,18 +13,22 @@ Use this file as the short current route before opening the append-only docs.
 - Active packet:
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
 - Live next slice:
-  start with Sequence 0 in
-  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`:
-  rebaseline the split `ba8...` / `4fb...` ECID preliminary historical lane,
-  then choose one truthful closure path: coherent one-source-set rebuild or
-  governed ready-slot replacement
+  Sequence 0 fail-closed slot gating is now landed, but the packet is
+  currently blocked after fresh rebaseline proving on 2026-05-26. The next
+  truthful slice is to open a dedicated blocker follow-on for the ECID
+  preliminary historical lane rather than flipping the slot to `ready`,
+  shrinking the manifest, or reopening
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - Aggregate truth:
   ECID current promotion and South Plateau reviewer-ready expansion are
   green; non-strict `promotion-suite` is `current_promotion_ready=true` and
   `promotion_ready=true`; strict expansion now fails only because the ECID
   preliminary-EA historical slot is truthfully `selected_not_ready` with
   `failure_category="historical_source_set_split"` (`1` open expansion slot,
-  `0` open expansion artifacts)
+  `0` open expansion artifacts`). Fresh Sequence 1 proving also found that the
+  old `ba8...` closure assumption is stale under current artifacts, `4fb...`
+  remains phase-eval red, and the tracked Lolo replacement candidate is not
+  phase-eval-ready
 - Document-routing entrypoint: `docs/AGENT_START_HERE.md`
 - Live architecture state:
   `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,

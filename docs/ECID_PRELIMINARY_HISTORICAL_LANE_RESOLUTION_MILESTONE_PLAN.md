@@ -2,7 +2,8 @@
 
 Date: 2026-05-26
 
-Status: Active planned follow-on (`Sequence 0` not started)
+Status: Blocked after Sequence 1 rebaseline proving (`Sequence 0` complete; no truthful closure
+path currently proven)
 
 Owner context: This is a fresh standalone follow-on milestone plan. It starts only after
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` closed locally and committed. It owns
@@ -13,6 +14,30 @@ promotion, the South Plateau reviewer-ready expansion slot, the slot-driven prom
 architecture packet, or the West Reservoir typed-blocked quarantine. If the live slot roster,
 package authority, or source-set IDs drift before implementation starts, Sequence 0 must refresh
 this plan before code or config changes begin.
+
+Latest execution note on 2026-05-26:
+
+- Sequence 0 is now implemented. The promotion-suite runtime now fails ready expansion slots
+  closed when any JSON `expected_gate_artifact` proves a different `source_set_id` than the slot's
+  declared contract, and focused promotion-suite tests now enforce that gate.
+- Fresh Sequence 1 rebaseline proving invalidated the older closure assumptions recorded when this
+  plan was opened:
+  - `source-set-4fb59e9eb43045cb` is still not a viable rebuild lane under the current code. Its
+    source-set `phase_eval_results.json` remains `passed=false` with `passed_phase_count=10/33`.
+  - `source-set-ba8d0feae79501b8` is no longer a clean rebuild lane under current live artifacts.
+    A fresh
+    `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`
+    now fails with `source_set_stale=398`, `partition_gap=329`,
+    `missing_candidate_decision=4`, `unresolved_authority=4`, and
+    `provenance_gap=1`, so rule-pack regeneration stops before compliance review can restart.
+  - The tracked governed replacement candidate
+    `region1-example-lolo-tylers-kitchen-66344` is not currently ready to replace the ECID
+    historical slot. Its review `phase_eval_results.json` is `passed=false` with
+    `passed_phase_count=19/23`.
+- Current packet truth: the plan is blocked at its own stop condition. Do not flip
+  `region1-real-ea-slot-1` to `ready`, do not weaken the manifest floor, and do not swap in
+  another non-ready placeholder. The next truthful follow-on is a dedicated blocker packet for
+  rebaseline drift and replacement-lane readiness.
 
 ## Purpose
 
