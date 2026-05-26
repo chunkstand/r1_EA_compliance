@@ -25,6 +25,10 @@ Latest docs-and-gate rebaseline on 2026-05-26:
   `resolved locally`; architecture governance is green again against current
   repo truth, and the remaining issue is now the live oversized-file backlog
   itself rather than stale zero-oversized control-plane claims
+- closeout commit:
+  initial control-plane implementation landed in `182bfd6`
+  (`Rebaseline architecture governance control plane`); this current-state
+  readback keeps the resolved packet and docs parity aligned
 - implementation truth:
   `config/architecture_large_file_inventory_v1.json` now records the exact
   reopened 2026-05-26 backlog at `9` code files above `800`, grouped as `4`

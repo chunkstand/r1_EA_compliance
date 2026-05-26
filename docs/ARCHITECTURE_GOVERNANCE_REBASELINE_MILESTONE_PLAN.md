@@ -174,6 +174,16 @@ wc -l docs/CURRENT_ROUTING.md
 rg -n "0 code files above `800` lines|empty oversized-file inventory|under-`800` follow-on" README.md docs/CURRENT_ROUTING.md docs/ARCHITECTURE.md docs/CURRENT_SYSTEM_STATE.md docs/SESSION_HANDOFF.md
 ```
 
+Closeout on 2026-05-26:
+
+- The baseline was reproduced before edits: the probe showed `9` oversized code files,
+  `docs/CURRENT_ROUTING.md` was `277` lines, and the focused architecture pytest slice failed on
+  the stale empty inventory, the zero-oversized count expectation, the overlong route doc, and the
+  repeated volatile-text gate.
+- Historical/current distinction remained intact: the packet records the 2026-05-21 under-`800`
+  closeout as truthful historical state, and the later 2026-05-26 drift as a separate reopened
+  control-plane issue.
+
 ### Milestone `1`: Exact oversized-file inventory and architecture-quality gate rebaseline
 
 Outcome label: `resolved`
@@ -204,6 +214,15 @@ PYTHONPATH=src python -m compileall tests/test_architecture_quality.py tests/tes
 git diff --check
 ```
 
+Closeout on 2026-05-26:
+
+- `config/architecture_large_file_inventory_v1.json` now records the exact live backlog with
+  `as_of=2026-05-26`, `plan_status="resolved_rebaseline_backlog_routed"`, `4` source-owner
+  families, and `5` test-owner families.
+- `tests/test_architecture_quality.py` now fails closed on exact oversized-file membership, stale
+  empty-closeout payloads, README ownership drift, and route doc overgrowth instead of relying on
+  the retired zero-oversized baseline.
+
 ### Milestone `2`: Short-route contract and doc-ownership contract restoration
 
 Outcome label: `resolved`
@@ -231,6 +250,12 @@ rg -n "docs/CURRENT_SYSTEM_STATE.md|docs/SESSION_HANDOFF.md" docs/CURRENT_ROUTIN
 git diff --check
 ```
 
+Closeout on 2026-05-26:
+
+- `docs/CURRENT_ROUTING.md` was reduced to `32` lines and now acts only as a short route.
+- Volatile architecture state was removed from `README.md` and `docs/CURRENT_ROUTING.md` and
+  re-owned by `docs/CURRENT_SYSTEM_STATE.md` plus the top of `docs/SESSION_HANDOFF.md`.
+
 ### Milestone `3`: Current-state readback, handoff routing, and closeout alignment
 
 Outcome label: `resolved`
@@ -257,6 +282,15 @@ rg -n "0 code files above `800` lines|empty oversized-file inventory" README.md 
 git diff --check
 ```
 
+Closeout on 2026-05-26:
+
+- `README.md`, `docs/ARCHITECTURE.md`, `docs/CURRENT_SYSTEM_STATE.md`, and the top of
+  `docs/SESSION_HANDOFF.md` now distinguish the historical 2026-05-21 zero-oversized closeout
+  from the reopened 2026-05-26 backlog.
+- The remaining architecture follow-on is now explicitly routed from
+  `config/architecture_large_file_inventory_v1.json`, starting with the four reopened source
+  owners and then the five reopened test owners.
+
 ## Required Implementation Artifacts
 
 - updated `config/architecture_large_file_inventory_v1.json`
@@ -280,6 +314,9 @@ git diff --check
 - update `docs/CURRENT_SYSTEM_STATE.md` with the new current architecture-governance state
 - update `README.md` and `docs/ARCHITECTURE.md` only to the level needed to keep public/current
   architecture truth aligned without duplicating volatile deep state
+- record the initial control-plane closeout commit `182bfd6`
+  (`Rebaseline architecture governance control plane`) in routed current-state docs as the
+  implementation commit that restored a green architecture gate
 
 ## Required Verification Gates
 
@@ -333,7 +370,7 @@ git diff --check
 - Leave unrelated runtime, corpus, and generated-output surfaces untouched.
 - Include the machine-readable inventory update, focused architecture tests, route/current-state
   docs, this plan, and handoff updates in the same local atomic commit.
-- Record the closeout commit hash in `docs/SESSION_HANDOFF.md`.
+- Record the implementation closeout commit hash in `docs/SESSION_HANDOFF.md`.
 - Treat the packet as incomplete until that local commit exists.
 
 ## Residual Risks And Next Milestone Routing
@@ -359,3 +396,7 @@ Expected next routed architecture follow-on after this packet:
 That follow-on should be written as a separate owner-reduction packet after this governance packet
 is green, so future sessions start from truthful current architecture state instead of from stale
 zero-oversized claims.
+
+Initial implementation closeout commit:
+
+- `182bfd6` (`Rebaseline architecture governance control plane`)

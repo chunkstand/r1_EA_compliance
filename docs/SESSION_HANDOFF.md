@@ -22,6 +22,8 @@ history below.
   `docs/APPLICABILITY_COMPLIANCE_REPLAY_OWNER_BOUNDARY_MILESTONE_PLAN.md`
 - extraction/direct-eval owner-boundary child packet:
   `docs/EXTRACTION_DIRECT_EVAL_OWNER_BOUNDARY_MILESTONE_PLAN.md`
+- queued oversized-test owner child packet:
+  `docs/OVERSIZED_TEST_OWNER_BOUNDARY_MILESTONE_PLAN.md`
 - architecture governance closeout packet:
   `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`
 - architecture doc-ownership closeout child:
@@ -41,6 +43,12 @@ history below.
   `phase_eval_direct_eval_source_set.py`. It does not replace the parent
   replay packet's current runtime blocker, which remains ECID broader-EA and
   review-direct-eval family debt on `source-set-f70ea11e04ae3d53`
+- queued oversized-test owner note:
+  the new oversized-test child packet isolates the five live `>800` test
+  owners and keeps `tests/test_compliance_review.py` behind its existing
+  boundary gate. It is queued behind the current four source-owner
+  architecture backlog entries; it does not replace the active replay packet
+  or the source-owner follow-ons
 - architecture note:
   `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` is now resolved
   locally. The exact rebaseline probe command
@@ -56,7 +64,9 @@ history below.
   `src/usfs_r1_ea_sources/extraction_fidelity_eval.py`,
   `src/usfs_r1_ea_sources/extract_runtime.py`,
   `src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py`, and
-  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`
+  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`. The initial
+  control-plane implementation closeout landed in `182bfd6`
+  (`Rebaseline architecture governance control plane`)
 - live blocker state:
   the full-canonical local corpus still sits at historical
   `source-set-4fb59e9eb43045cb`, but reviewer-facing replay contexts plus the
@@ -124,6 +134,11 @@ if it had been false at the time.
   `resolved locally`; stale architecture governance drift is closed, and the
   remaining architecture issue is now the live oversized backlog itself rather
   than stale zero-oversized readbacks
+- closeout commit:
+  initial control-plane implementation landed in `182bfd6`
+  (`Rebaseline architecture governance control plane`); this append-only
+  closeout note keeps the broader packet, the resolved child packet, and the
+  live doc set aligned
 - routed packet:
   `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`
 - implementation truth:

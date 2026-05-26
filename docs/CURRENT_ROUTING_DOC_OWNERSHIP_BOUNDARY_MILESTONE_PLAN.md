@@ -166,6 +166,12 @@ rg -n "Current routed state on|## Live Facts|five still-unmapped live authoritie
 git diff --check
 ```
 
+Closeout on 2026-05-26:
+
+- The baseline was reproduced before edits: `docs/CURRENT_ROUTING.md` was `277` lines, `README.md`
+  still owned a dated routed-state block, and the architecture-quality gate still rewarded
+  repeated volatile prose across multiple docs.
+
 ### Milestone `1`: Short-route contract restoration
 
 Outcome label: `resolved`
@@ -189,6 +195,11 @@ rg -n "## Live Facts|candidate_authority_count|reviewer_ready_slot_count|source-
 git diff --check
 ```
 
+Closeout on 2026-05-26:
+
+- `docs/CURRENT_ROUTING.md` is now `32` lines and no longer carries a `## Live Facts` section,
+  live source-set counts, or replay-state tokens.
+
 ### Milestone `2`: README ownership reduction
 
 Outcome label: `resolved`
@@ -210,6 +221,12 @@ rg -n "Current routed state on" README.md
 rg -n "docs/CURRENT_ROUTING.md|docs/CURRENT_SYSTEM_STATE.md|docs/SESSION_HANDOFF.md" README.md
 git diff --check
 ```
+
+Closeout on 2026-05-26:
+
+- `README.md` no longer owns the dated routed-state block and now points readers back to
+  `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and the
+  tracked architecture inventory.
 
 ### Milestone `3`: Architecture-quality gate conversion
 
@@ -235,6 +252,12 @@ PYTHONPATH=src python -m compileall tests/test_architecture_quality.py
 git diff --check
 ```
 
+Closeout on 2026-05-26:
+
+- `tests/test_architecture_quality.py` now checks ownership boundaries directly: short-route
+  limits, README route ownership, current-state/handoff ownership of volatile architecture text,
+  and exact inventory truth.
+
 ### Milestone `4`: Current-state and handoff closeout alignment
 
 Outcome label: `resolved`
@@ -244,7 +267,8 @@ Work:
 - Ensure the removed duplicated state still exists in the correct owners:
   - `docs/CURRENT_SYSTEM_STATE.md`
   - top section of `docs/SESSION_HANDOFF.md`
-- Add the exact next routing note for this child packet in the handoff while the packet is queued.
+- Record this child packet in the handoff as a resolved closeout child inside the broader
+  architecture-governance rebaseline.
 - Keep the broader architecture governance packet as umbrella context only.
 
 Required verification:
@@ -254,6 +278,13 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_quality.py -q
 rg -n "docs/CURRENT_ROUTING_DOC_OWNERSHIP_BOUNDARY_MILESTONE_PLAN.md|candidate_authority_count|reviewer_ready_slot_count|actual_contract_status" docs/SESSION_HANDOFF.md docs/CURRENT_SYSTEM_STATE.md
 git diff --check
 ```
+
+Closeout on 2026-05-26:
+
+- `docs/CURRENT_SYSTEM_STATE.md` and the top of `docs/SESSION_HANDOFF.md` retain the live
+  architecture state removed from `README.md` and `docs/CURRENT_ROUTING.md`.
+- This child packet is now recorded in the handoff as a resolved closeout child rather than a
+  queued next step.
 
 ## Required Implementation Artifacts
 
@@ -267,8 +298,8 @@ git diff --check
 ## Required Documentation And Handoff Updates
 
 - keep this plan current with milestone status and final closeout wording
-- update the top section of `docs/SESSION_HANDOFF.md` to route future docs-only architecture work
-  through this child packet first
+- update the top section of `docs/SESSION_HANDOFF.md` to record this child as a resolved closeout
+  inside the broader architecture-governance rebaseline
 - update `docs/CURRENT_SYSTEM_STATE.md` if live state text is relocated out of route/README surfaces
 - keep `docs/AGENT_START_HERE.md` aligned if its link guidance changes indirectly
 
@@ -313,19 +344,25 @@ git diff --check
 - Leave unrelated runtime, corpus, and inventory work untouched.
 - Include the updated route doc, README, current-state/hand-off docs, focused architecture test,
   and this plan in the same local atomic commit.
-- Record the closeout commit hash in `docs/SESSION_HANDOFF.md`.
+- Record the parent implementation closeout commit hash in `docs/SESSION_HANDOFF.md`.
 - Treat the packet as incomplete until that local commit exists.
 
 ## Residual Risks And Next Milestone Routing
 
 If this packet closes correctly, the remaining architecture issue is no longer route/README
-duplication. The remaining issue returns to the broader architecture governance umbrella:
+duplication. The remaining issue is the separately routed oversized-file backlog:
 
-- oversized-file inventory and gate rebaseline
-- truthful current architecture count readback
-- next routed hotspot packet for the live `9` oversized files
+- source-owner backlog beginning with
+  `src/usfs_r1_ea_sources/extraction_fidelity_eval.py`,
+  `src/usfs_r1_ea_sources/extract_runtime.py`,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py`, and
+  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`
+- then the reopened oversized test owners from `config/architecture_large_file_inventory_v1.json`
 
-Those broader issues stay owned by
-`docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`. This packet should close before any
-future session tries to resolve the broader architecture-control-plane drift, because a truthful
-short route and clear doc ownership make the later packet cheaper to execute and close out.
+Those remaining owner-reduction issues now start from the resolved umbrella packet
+`docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` and its live inventory artifact rather
+than from this child packet.
+
+Parent implementation closeout commit:
+
+- `182bfd6` (`Rebaseline architecture governance control plane`)

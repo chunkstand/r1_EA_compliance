@@ -1,6 +1,6 @@
 # Agentic Repo Best Practices Guide
 
-Date: 2026-05-21
+Date: 2026-05-26
 
 This guide turns current primary-source guidance on software architecture, code health, and
 agentic engineering into repo practices for `usfs-r1-EA-sources`.
@@ -118,7 +118,7 @@ by humans and coding agents.
 
 ## Current Repo Evaluation
 
-Evaluation date: 2026-05-21
+Evaluation date: 2026-05-26
 
 ### Strong
 
@@ -183,39 +183,42 @@ Evaluation date: 2026-05-21
 
 #### Reviewability of large modules
 
-- The repo has good boundaries on paper, and the oversized-owner lane is now closed; the remaining
-  risk is concentration near the `800`-line ridge plus churn-heavy hotspots.
+- The repo still has strong boundaries on paper, but the live oversized backlog has reopened and is
+  now an explicit architecture follow-on.
 - Evidence from `architecture_probe.py`:
-  - `0` code files now exceed `800` lines;
-  - the largest current source owners sit at or below the gate, led by
-    `claim_extraction_eval.py=800`, `extract_runtime.py=796`,
-    `ea_consistency_decision_support_inputs.py=794`, and
-    `applicability_decisions.py=793`;
-  - top churn hotspots now include `tests/test_compliance_review.py`, `evidence_graph.py`, and
-    `tests/test_cli.py`.
+  - `9` code files now exceed `800` lines;
+  - the largest reopened owners are
+    `tests/test_applicability_authority_family_templates.py=1407`,
+    `src/usfs_r1_ea_sources/extraction_fidelity_eval.py=1144`,
+    `tests/test_promotion_suite_full_canonical.py=913`,
+    `src/usfs_r1_ea_sources/extract_runtime.py=852`, and
+    `tests/test_extraction_accuracy.py=847`;
+  - top churn hotspots still include `tests/test_compliance_review.py`,
+    `evidence_graph.py`, `tests/test_promotion_suite.py`, `tests/test_cli.py`,
+    and `tests/test_catalog.py`.
 - Assessment:
-  - good architecture direction;
-  - remaining architecture-paydown work should start from current hotspot and near-threshold
-    evidence, not the old oversized queue.
+  - architecture direction is still sound;
+  - the next paydown should start from the reopened explicit backlog in
+    `config/architecture_large_file_inventory_v1.json`, not from broad aesthetic cleanup.
 
 ### Weak
 
-#### Cheap governance only just reached the hotspot layer
+#### Cheap governance now works again, but it no longer proves a closed backlog
 
-- The repo has dependency and debt gates, and the large-file/fan-out protection now holds a live
-  zero-oversized baseline.
+- The repo still has meaningful dependency and debt gates, and the architecture control plane is
+  truthful again after the 2026-05-26 rebaseline.
 - Evidence:
-  - `tests/test_architecture_quality.py` now guards the current `0`-file `>800` line baseline,
-    blocks new `>20` fan-out source modules with no current exceptions, and pins
+  - `tests/test_architecture_quality.py` now guards exact oversized-file membership, blocks stale
+    empty-closeout inventory payloads, enforces the short-route contract, and pins
     `docs/ARCHITECTURE.md` as the canonical tracked architecture path;
-  - the under-`800` follow-on packet is now resolved through Milestone `9`, so the former oversized
-    owner queue is closed and the inventory file is empty;
-  - the gate is intentionally conservative and now blocks both queue growth and reopen.
+  - `config/architecture_large_file_inventory_v1.json` now records the reopened `9`-file backlog
+    explicitly instead of pretending the queue is empty;
+  - the under-`800` packet remains historical truth, but later code growth reopened live debt that
+    now has to be paid down honestly.
 - Assessment:
-  - governance is now meaningfully better;
-  - the active follow-on is no longer Milestone `9` cleanup; it is maintaining the closed baseline
-    while the broader repo route stays on the full-canonical gold packet and other non-architecture
-    lanes.
+  - governance is meaningfully better because the repo now tells the truth about the reopened debt;
+  - the next architecture task is owner reduction from the live inventory while the broader repo
+    route remains on reviewer-facing replay repair.
 
 #### Hermeticity and long-form routing are still open debt
 
@@ -231,56 +234,63 @@ Evaluation date: 2026-05-21
 
 ## Live Command Evidence
 
-The following commands were run during this assessment:
+The following commands were rerun during this 2026-05-26 refresh:
 
 ```bash
-git status -sb
 python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20
-PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py tests/test_debt_contract.py -q
-PYTHONPATH=src python -m usfs_r1_ea_sources --help
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py -q
+PYTHONPATH=src uv run --extra dev ruff check tests/test_architecture_contract.py tests/test_architecture_quality.py
+PYTHONPATH=src python -m compileall tests/test_architecture_quality.py tests/test_architecture_contract.py
+wc -l docs/CURRENT_ROUTING.md
 ```
 
 Observed results:
 
-- `git status -sb`: clean worktree on `main`.
-- `architecture_probe.py`: no Python or JS cycles; `0` code files over `800` lines; top hotspot
-  `tests/test_compliance_review.py`; no source module above fan-out `20`; and no `tests/` or
-  `tests/support/` owner above the `800`-line reviewability gate.
-- `tests/test_architecture_contract.py`, `tests/test_architecture_quality.py`, and
-  `tests/test_debt_contract.py`: all pass together after the Milestone `9` closeout.
-- CLI help: `document-plan` is exposed on the public command surface.
+- `architecture_probe.py`: `472` code files, `9` code files over `800` lines, no Python or JS/TS
+  import cycles, and no source module above fan-out `20`.
+- `tests/test_architecture_contract.py` and `tests/test_architecture_quality.py`: `16` focused
+  tests passed together after the rebaseline.
+- `ruff check`: passed on the focused architecture tests.
+- `python -m compileall`: passed on the focused architecture tests.
+- `wc -l docs/CURRENT_ROUTING.md`: `32`.
 
 ## Priority Queue
 
 ### 1. Remove Mechanical Routing And Hermeticity Drift
 
-- Keep the resolved under-`800` packet historical and avoid reintroducing it as active debt.
+- Keep the resolved under-`800` packet historical and avoid reintroducing it as active truth for a
+  repo that now has reopened oversized owners.
 - Preserve the explicit West Reservoir typed-blocked quarantine instead of reviving stale
   reviewer-ready claims.
 - Keep `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`,
-  `docs/AGENT_START_HERE.md`, and the umbrella architecture packet aligned on one explicit
-  next-step truth.
-- Route any new hotspot-owner paydown from a fresh rebaseline rather than the old Milestone `9`
-  queue.
+  `docs/AGENT_START_HERE.md`, and the resolved architecture-governance packet aligned on one
+  explicit next-step truth.
+- Route any new hotspot-owner paydown from the live inventory rebaseline, not from the retired
+  Milestone `9` queue.
 
 ### 2. Keep The Cheap Architecture Gates Green
 
 - Do not let the size, fan-out, debt, or path-drift checks go stale while the broader repo route
-  stays on the full-canonical gold and quarantine lanes.
+  stays on `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` and architecture paydown
+  remains a secondary follow-on lane.
 
 ### 3. Resume Remaining Runtime And Viewer Hotspots After The Routing Closeout
 
-- If another hotspot paydown packet is opened, start from the current ridge and hotspot evidence:
-  `claim_extraction_eval.py=800`, `extract_runtime.py=796`,
-  `ea_consistency_decision_support_inputs.py=794`, `applicability_decisions.py=793`,
-  and churn-heavy surfaces such as `tests/test_compliance_review.py` and `evidence_graph.py`.
+- If another hotspot paydown packet is opened, start from the explicit reopened backlog first:
+  `extraction_fidelity_eval.py=1144`, `extract_runtime.py=852`,
+  `phase_eval_direct_eval_source_set.py=839`,
+  `applicability_candidate_assembly.py=814`,
+  `tests/test_applicability_authority_family_templates.py=1407`,
+  `tests/test_promotion_suite_full_canonical.py=913`,
+  `tests/test_extraction_accuracy.py=847`,
+  `tests/test_forest_plan_resolver_scope.py=829`, and `tests/test_catalog.py=820`.
 - Do not refactor by aesthetic preference alone; keep using hotspot and ownership evidence.
 
 ## Bottom Line
 
 This repo is already stronger than average on architecture legibility, artifact auditability,
-security boundaries, and milestone discipline. The current main gap is no longer agent-entrypoint
-completeness or oversized test-owner sprawl. The under-`800` hotspot packet is now closed; the
-current discipline task is to keep that baseline closed while the active repo route stays on the
-full-canonical gold and quarantine work. The next architecture paydown should start from current
-hotspot and near-threshold evidence, not from the retired Milestone `9` queue.
+security boundaries, and milestone discipline. The current main gap is no longer whether the repo
+can enforce architecture rules at all; it is that the live oversized backlog has reopened and now
+needs owner-by-owner reduction on top of a truthful control plane. The next architecture paydown
+should start from `config/architecture_large_file_inventory_v1.json` and the active hotspot
+evidence while the primary implementation route stays on reviewer-facing replay repair.
