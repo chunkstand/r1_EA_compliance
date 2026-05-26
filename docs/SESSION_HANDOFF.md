@@ -36,32 +36,101 @@ history below.
   (`55 applicable / 341 non-applicable` for ECID and
   `64 applicable / 332 non-applicable` for South), and
   `applicability-generate-rule-pack` now passes with `55` ECID generated rules
-  and `64` South generated rules on `source-set-f70ea11e04ae3d53`. The
-  remaining live blocker is now the aligned reviewer-facing forest-plan and
-  downstream packet lane: live `forest-plan-resolve` reruns on
-  `source-set-f70ea11e04ae3d53` currently drive both ECID and South to
-  `needs_reviewer_resolution_count=329`,
-  `reviewer_resolution_count=329`, `applicable_count=0`,
-  `supported_count=0`, and `reviewer_ready=false`, so the historical
-  component direct-eval slot cannot simply be rebound to the reviewer-facing
-  source set without a real repair. ECID `v1-ea-eval` now remains
-  `contract_status="mismatch"` with
-  `failure_category_counts={"applicable_standard_not_evaluated":2,"baseline_source_record_missing":26,"citation_requirement_miss":4,"conditional_false_negative":1,"forest_plan_component_miss":1,"forest_plan_matrix_miss":1,"forest_plan_reviewer_not_ready":1,"forest_plan_reviewer_resolution_open":1,"forest_plan_standard_reviewer_resolution_open":1,"review_artifact_missing":4,"rule_section_mismatch":10,"source_record_mismatch":19}`.
+  and `64` South generated rules on `source-set-f70ea11e04ae3d53`. ECID
+  aligned forest-plan replay is now reduced locally rather than still fully
+  red: `forest_plan_context_summary.json` reports `reviewer_ready=true` with
+  `component_count=329`, `applicable_count=79`,
+  `reviewer_resolution_count=0`, and `applied_standard_count=12/12`;
+  `forest-plan-component-eval` now passes `35/35`; and
+  `forest-plan-component-eval-coverage` now covers
+  `v1-cg-ecid-compliance-review` with current slot `passed=true`,
+  `stale_identity=false`, and `unresolved_review=false`. South remains the
+  live forest-plan blocker on the same source set with `reviewer_ready=false`,
+  `component_count=329`, `reviewer_resolution_count=34`,
+  `needs_reviewer_resolution_count=1`, `gap_count=33`, and
+  `applied_standard_count=22/25`. ECID `v1-ea-eval` still remains
+  `contract_status="mismatch"`, but its forest-plan failure family is now
+  reduced to `forest_plan_failure_category_counts={"forest_plan_matrix_miss":1}`;
+  the remaining broader-EA categories are
+  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"review_artifact_missing":4,"rule_section_mismatch":8,"source_record_mismatch":17}`.
   South remains `contract_status="mismatch"` with
   `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
   ECID `phase-eval` remains red with
-  `review_direct_eval_status="direct_eval_identity_mismatch"` and the
-  downstream packet family still blocked behind compliance review,
-  forest-plan component eval, decision support, review packet, final QA, and
-  evaluation coverage
+  `review_direct_eval_status="direct_eval_identity_mismatch"` because
+  `v1-ea-eval` is still mismatched and required direct evals are still
+  missing for retrieval, claim extraction, and rule-claim binding; the
+  remaining downstream packet family is compliance review, decision support,
+  review packet, final QA, and aggregate evaluation coverage
 - next truthful slice:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
-  beginning with the aligned reviewer-facing forest-plan component replay
-  blocker and then the downstream compliance/packet repair families on
-  `source-set-f70ea11e04ae3d53`
+  beginning with ECID packet-local compliance review / compliance-matrix
+  replay on aligned `source-set-f70ea11e04ae3d53`, then South Plateau replay
+  repair on that same source set
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## Aligned ECID Forest-Plan Replay Reduced Locally
+
+This implementation slice clears the fake ECID forest-plan component replay
+drift on aligned `source-set-f70ea11e04ae3d53` and exposes the next truthful
+packet-local blocker.
+
+- outcome label:
+  `reduced locally`; ECID aligned forest-plan component replay is now green,
+  but reviewer-facing compliance/matrix replay remains open and South Plateau
+  still carries real forest-plan review debt
+- implementation truth:
+  `src/usfs_r1_ea_sources/forest_plan_components_common.py`,
+  `src/usfs_r1_ea_sources/forest_plan_component_eval_cases.py`,
+  `src/usfs_r1_ea_sources/forest_plan_component_eval_validation.py`,
+  `src/usfs_r1_ea_sources/forest_plan_component_adjudication_eval.py`, and
+  `src/usfs_r1_ea_sources/v1_ea_eval_forest_plan.py` now normalize
+  `FOR-009-*` and `R1PLAN-custer-gallatin-nf-02-*` identities through the
+  governed Region 1 reconciliation registry across component eval,
+  adjudication eval, coverage validation, and review-level forest-plan
+  expectations. The ECID component direct-eval contract surfaces now also
+  point at aligned `source-set-f70ea11e04ae3d53` in
+  `config/forest_plan_component_eval_seed.json` and
+  `config/forest_plan_component_eval_coverage_v1.json`, with focused
+  regressions in `tests/test_forest_plan_component_eval.py`,
+  `tests/test_forest_plan_component_adjudication.py`,
+  `tests/test_forest_plan_component_eval_coverage.py`,
+  `tests/test_v1_ea_eval_forest_plan.py`, and
+  `tests/test_phase_eval_direct_eval_contracts.py`
+- live replay truth:
+  ECID `forest_plan_context_summary.json` now reports `reviewer_ready=true`
+  with `component_count=329`, `applicable_count=79`,
+  `reviewer_resolution_count=0`, and `applied_standard_count=12/12`;
+  `forest-plan-component-eval --review-id v1-cg-ecid-compliance-review` now
+  passes `35/35`; and `forest-plan-component-eval-coverage` now covers
+  `v1-cg-ecid-compliance-review` with current slot `passed=true`,
+  `stale_identity=false`, and `unresolved_review=false`. South Plateau still
+  reports `reviewer_ready=false`, `component_count=329`,
+  `reviewer_resolution_count=34`, `needs_reviewer_resolution_count=1`,
+  `gap_count=33`, and `applied_standard_count=22/25`. ECID `v1-ea-eval`
+  still remains `contract_status="mismatch"`, but its forest-plan failure
+  family is now reduced to
+  `forest_plan_failure_category_counts={"forest_plan_matrix_miss":1}`; the
+  remaining broader-EA categories are
+  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"review_artifact_missing":4,"rule_section_mismatch":8,"source_record_mismatch":17}`.
+  `real-package-review-coverage-eval` remains red at
+  `reviewer_ready_slot_count=0`, but ECID is no longer absent from
+  `forest-plan-component-eval-coverage`: that aggregate now reports
+  `covered_review_count=1`, `stale_identity_count=2`, and
+  `unresolved_review_count=3`
+- next truthful slice:
+  continue `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  beginning with ECID packet-local compliance review / compliance-matrix
+  replay on aligned `source-set-f70ea11e04ae3d53`, then South Plateau replay
+  repair and the still-unresolved aggregate coverage slots
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_component_eval.py tests/test_forest_plan_component_adjudication.py tests/test_forest_plan_component_eval_coverage.py tests/test_phase_eval_direct_eval_contracts.py tests/test_v1_ea_eval_forest_plan.py tests/test_v1_ea_eval_contracts.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
 
 ## Applicability Adjudication And Rule-Pack Truth Reduced Locally
 

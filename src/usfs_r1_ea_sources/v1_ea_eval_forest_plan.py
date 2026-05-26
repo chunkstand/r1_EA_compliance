@@ -5,6 +5,7 @@ from typing import Any
 from .v1_ea_eval_support import _collect_list_values_by_key
 from .v1_ea_eval_support import _collect_values_by_key
 from .v1_ea_eval_support import _nested_get
+from .forest_plan_components_common import normalize_forest_plan_component_identifier
 
 
 def _evaluate_forest_plan(
@@ -23,10 +24,13 @@ def _evaluate_forest_plan(
     geo_ids = _collect_values_by_key(context, {"geographic_area_id", "entry_id", "area_id"})
     management_ids = _collect_values_by_key(context, {"management_area_id", "entry_id"})
     overlay_ids = _collect_values_by_key(context, {"overlay_id", "entry_id"})
-    component_ids = _collect_values_by_key(
-        component_findings,
-        {"component_id", "standard_id", "entry_id"},
-    )
+    component_ids = {
+        normalize_forest_plan_component_identifier(component_id)
+        for component_id in _collect_values_by_key(
+            component_findings,
+            {"component_id", "standard_id", "entry_id"},
+        )
+    }
     applicable_standard_ids = _applicable_standard_ids(standard_coverage, component_findings)
     pending_reviewer_resolution_count = _pending_reviewer_resolution_count(artifacts)
     pending_standard_reviewer_resolution_count = _pending_standard_reviewer_resolution_count(
@@ -106,7 +110,8 @@ def _evaluate_forest_plan(
             failure_category="forest_plan_component_miss",
         )
     expected_component_ids = {
-        str(value) for value in expectations.get("expected_component_ids", [])
+        normalize_forest_plan_component_identifier(value)
+        for value in expectations.get("expected_component_ids", [])
     }
     if expected_component_ids:
         add_result(
@@ -117,7 +122,8 @@ def _evaluate_forest_plan(
             failure_category="forest_plan_component_miss",
         )
     expected_standards = {
-        str(value) for value in expectations.get("expected_applicable_standard_ids", [])
+        normalize_forest_plan_component_identifier(value)
+        for value in expectations.get("expected_applicable_standard_ids", [])
     }
     if expected_standards:
         add_result(
@@ -385,7 +391,7 @@ def _applicable_standard_ids(
         if applicable:
             for key in ("standard_id", "component_id", "entry_id"):
                 if row.get(key):
-                    values.add(str(row[key]))
+                    values.add(normalize_forest_plan_component_identifier(row[key]))
     for finding in component_findings.get("findings", []):
         if not isinstance(finding, dict):
             continue
@@ -394,7 +400,7 @@ def _applicable_standard_ids(
         if applicable and is_standard:
             for key in ("standard_id", "component_id", "entry_id"):
                 if finding.get(key):
-                    values.add(str(finding[key]))
+                    values.add(normalize_forest_plan_component_identifier(finding[key]))
     return values
 
 

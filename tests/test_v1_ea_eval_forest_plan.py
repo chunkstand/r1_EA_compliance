@@ -13,6 +13,60 @@ from usfs_r1_ea_sources.v1_ea_eval import run_v1_ea_review_eval
 
 
 class V1EAReviewEvalForestPlanTests(unittest.TestCase):
+    def test_v1_eval_accepts_region1_alias_matched_forest_plan_component_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+
+            component_findings = _read_json(review_dir / "forest_plan_component_findings.json")
+            component_findings["findings"] = [
+                {
+                    **component_findings["findings"][0],
+                    "component_id": "FOR-009-BC-DC-CMBCA-01",
+                },
+                {
+                    **component_findings["findings"][1],
+                    "component_id": "FOR-009-BC-STD-CMBCA-01",
+                },
+                {
+                    **component_findings["findings"][2],
+                    "component_id": "FOR-009-BC-SUIT-CMBCA-01",
+                },
+            ]
+            _write_json(review_dir / "forest_plan_component_findings.json", component_findings)
+
+            standard_coverage = _read_json(
+                review_dir / "forest_plan_applicable_standard_coverage.json"
+            )
+            standard_coverage["standards"][0]["standard_id"] = "FOR-009-BC-STD-CMBCA-01"
+            _write_json(
+                review_dir / "forest_plan_applicable_standard_coverage.json",
+                standard_coverage,
+            )
+
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+            contract = _read_json(eval_file)
+            contract["forest_plan"]["expected_component_ids"] = [
+                "R1PLAN-custer-gallatin-nf-02-BC-DC-CMBCA-01",
+                "R1PLAN-custer-gallatin-nf-02-BC-STD-CMBCA-01",
+                "R1PLAN-custer-gallatin-nf-02-BC-SUIT-CMBCA-01",
+            ]
+            contract["forest_plan"]["expected_applicable_standard_ids"] = [
+                "R1PLAN-custer-gallatin-nf-02-BC-STD-CMBCA-01",
+            ]
+            _write_json(eval_file, contract)
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertTrue(result.summary["forest_plan_passed"])
+            self.assertEqual(result.summary["forest_plan_failure_category_counts"], {})
+
     def test_v1_eval_tracks_standard_resolution_queue_separately(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

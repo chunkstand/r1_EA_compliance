@@ -19,6 +19,7 @@ from .forest_plan_component_adjudication_models import REQUIRED_ADJUDICATION_FIE
 from .forest_plan_component_adjudication_models import RESOLVED_DISPOSITIONS
 from .forest_plan_component_adjudication_models import SAFE_ID_RE
 from .forest_plan_component_adjudication_models import SYSTEM_MISS_DISPOSITIONS
+from .forest_plan_components_common import normalize_forest_plan_prefixed_identifier
 
 def _item_results(
     *,
@@ -149,9 +150,15 @@ def _adjudication_duplicate_count(
 
 def _item_key(item: dict[str, Any]) -> tuple[str, str, str]:
     return (
-        str(item.get("item_id") or ""),
-        str(item.get("finding_id") or ""),
-        str(item.get("component_id") or ""),
+        normalize_forest_plan_prefixed_identifier(item.get("item_id") or "", separators=("-",)),
+        normalize_forest_plan_prefixed_identifier(
+            item.get("finding_id") or "",
+            separators=("-",),
+        ),
+        normalize_forest_plan_prefixed_identifier(
+            item.get("component_id") or "",
+            separators=("-",),
+        ),
     )
 
 def _expected_current(adjudication: dict[str, Any]) -> dict[str, Any]:

@@ -116,6 +116,72 @@ class ForestPlanComponentEvalTests(unittest.TestCase):
                 },
             )
 
+    def test_component_eval_accepts_region1_alias_matched_component_ids_and_citations(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "component-eval"
+            _write_review_artifacts(review_dir)
+
+            findings_path = review_dir / "forest_plan_component_findings.json"
+            findings = json.loads(findings_path.read_text(encoding="utf-8"))
+            alias_component_id = "FOR-009-FW-STD-RMZ-01"
+            findings["components"][0]["component_id"] = alias_component_id
+            findings["findings"][0]["component_id"] = alias_component_id
+            findings["findings"][0]["finding_id"] = f"{alias_component_id}-finding"
+            findings["findings"][0]["plan_source_evidence"][0]["citation_label"] = (
+                "FOR-009 (ff30e8b4530e)"
+            )
+            findings_path.write_text(
+                json.dumps(findings, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+
+            coverage_path = review_dir / "forest_plan_applicable_standard_coverage.json"
+            coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+            coverage["standards"][0]["component_id"] = alias_component_id
+            coverage["standards"][0]["plan_source_citations"] = ["FOR-009 (ff30e8b4530e)"]
+            coverage_path.write_text(
+                json.dumps(coverage, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+
+            eval_file = root / "component_eval.json"
+            _write_eval_contract(
+                eval_file,
+                cases=[
+                    {
+                        "case_id": "std-1-alias-match",
+                        "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01",
+                        "component_type": "standard",
+                        "applicability_status": "applicable",
+                        "applicable_standard": True,
+                        "compliance_status": "complies",
+                        "package_section": "EA section 3.1",
+                        "plan_source_citations": [
+                            "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
+                        ],
+                        "package_evidence_citations": ["PKG-001"],
+                        "reviewer_resolution_state": "closed",
+                    }
+                ],
+                thresholds={
+                    "component_applicability_precision": {"min": 1.0},
+                    "component_applicability_recall": {"min": 1.0},
+                    "applicable_standard_recall": {"min": 1.0},
+                    "reviewer_resolution_state_match_rate": {"min": 1.0},
+                },
+                coverage_requirements={"require_all_applicable_standards": True},
+            )
+
+            result = run_forest_plan_component_eval(
+                output_dir=root / "source_library",
+                review_id="component-eval",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["passed_case_count"], 1)
+
     def test_component_eval_checks_all_review_artifact_identities(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

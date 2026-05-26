@@ -99,16 +99,20 @@ authority-family templates. It also requires the authority-family reviewer-repor
 promoted V1 review: authority-family provenance, non-applicable authority appendix,
 reviewer-resolution report, and deterministic litigation-risk summary.
 
-The default manifest now binds both active source-set identities to the same
-current local corpus:
+The default manifest now keeps the full-canonical source set explicit while
+the current-promotion lane resolves through the governed real-package slot
+contract:
 
-- `current_promotion_source_set_id=source-set-4fb59e9eb43045cb`
 - `full_canonical_source_set_id=source-set-4fb59e9eb43045cb`
+- current promotion truth is derived from
+  `config/v1_real_package_review_coverage_v1.json` and the governed
+  reviewer-facing slot results rather than one manifest-level
+  `current_promotion_source_set_id`
 
 Older source-set references below are historical run notes. The current local
 question is no longer which source set owns the repo contract; it is whether
-the review-local ECID compliance/applicability artifacts have been fully
-replayed onto that active source set.
+the reviewer-facing packet-local artifacts truthfully satisfy the governed
+slots on aligned `source-set-f70ea11e04ae3d53`.
 
 ## Failure Taxonomy
 
@@ -191,22 +195,32 @@ layer rather than the slot-driven contract layer.
   (`55 applicable / 341 non-applicable` for ECID and
   `64 applicable / 332 non-applicable` for South), and
   `applicability-generate-rule-pack` now passes with `55` ECID generated rules
-  and `64` South generated rules. The remaining promotion blocker is now the
-  aligned reviewer-facing forest-plan and downstream packet lane: live
-  `forest-plan-resolve` reruns on `source-set-f70ea11e04ae3d53` currently
-  drive both ECID and South to `329` reviewer-resolution component items with
-  `applicable_count=0`, `supported_count=0`, and `reviewer_ready=false`, so
-  the historical component direct-eval slot cannot simply be rebound to the
-  reviewer-facing source set without a real repair. ECID `v1-ea-eval` now
-  remains `contract_status="mismatch"` with
-  `failure_category_counts={"applicable_standard_not_evaluated":2,"baseline_source_record_missing":26,"citation_requirement_miss":4,"conditional_false_negative":1,"forest_plan_component_miss":1,"forest_plan_matrix_miss":1,"forest_plan_reviewer_not_ready":1,"forest_plan_reviewer_resolution_open":1,"forest_plan_standard_reviewer_resolution_open":1,"review_artifact_missing":4,"rule_section_mismatch":10,"source_record_mismatch":19}`.
+  and `64` South generated rules. ECID aligned forest-plan replay is now
+  reduced locally rather than still fully red:
+  `forest_plan_context_summary.json` reports `reviewer_ready=true` with
+  `component_count=329`, `applicable_count=79`,
+  `reviewer_resolution_count=0`, and `applied_standard_count=12/12`;
+  `forest-plan-component-eval` now passes `35/35`; and
+  `forest-plan-component-eval-coverage` now covers
+  `v1-cg-ecid-compliance-review` with current slot `passed=true`,
+  `stale_identity=false`, and `unresolved_review=false`. South remains the
+  live forest-plan blocker on the same source set with `reviewer_ready=false`,
+  `component_count=329`, `reviewer_resolution_count=34`,
+  `needs_reviewer_resolution_count=1`, `gap_count=33`, and
+  `applied_standard_count=22/25`. ECID `v1-ea-eval` still remains
+  `contract_status="mismatch"`, but its forest-plan failure family is now
+  reduced to `forest_plan_failure_category_counts={"forest_plan_matrix_miss":1}`;
+  the remaining broader-EA categories are
+  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"review_artifact_missing":4,"rule_section_mismatch":8,"source_record_mismatch":17}`.
   South remains `contract_status="mismatch"` with
   `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
   ECID `phase-eval` remains red with
-  `review_direct_eval_status="direct_eval_identity_mismatch"` and the
-  downstream packet family still blocked behind compliance review,
-  forest-plan component eval, decision support, review packet, final QA, and
-  evaluation coverage.
+  `review_direct_eval_status="direct_eval_identity_mismatch"`, but the
+  current-promotion component-eval slot is no longer stale there. The
+  remaining blocker family is missing direct eval coverage for retrieval,
+  claim extraction, and rule-claim binding plus packet-local reviewer-facing
+  replay debt in compliance review, decision support, review packet, final QA,
+  and evaluation coverage.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

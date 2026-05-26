@@ -49,7 +49,7 @@
       "label": "East Crazies current-promotion component eval",
       "review_id": "v1-cg-ecid-compliance-review",
       "forest_unit_id": "custer-gallatin-nf",
-      "expected_source_set_id": "source-set-4fb59e9eb43045cb",
+      "expected_source_set_id": "source-set-f70ea11e04ae3d53",
       "eval_file": "forest_plan_component_eval_seed.json",
       "required": true
     },

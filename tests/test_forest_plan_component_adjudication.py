@@ -151,6 +151,70 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
             self.assertEqual(failures["adjudication_pending"], 1)
             self.assertEqual(failures["adjudication_expectation_mismatch"], 1)
 
+    def test_eval_accepts_region1_alias_matched_queue_and_adjudication_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = _write_review_artifacts(root)
+
+            findings_path = review_dir / "forest_plan_component_findings.json"
+            queue_path = review_dir / "forest_plan_reviewer_resolution_queue.json"
+            findings = _read_json(findings_path)
+            queue = _read_json(queue_path)
+            review_aliases = {
+                "fp-std-01": "FOR-009-FW-STD-RMZ-01",
+                "fp-gdl-01": "FOR-009-FW-GDL-REC-01",
+            }
+            for component in findings["components"]:
+                component_id = review_aliases.get(component["component_id"])
+                if component_id:
+                    component["component_id"] = component_id
+            for finding in findings["findings"]:
+                component_id = review_aliases.get(finding["component_id"])
+                if component_id:
+                    finding["component_id"] = component_id
+                    finding["finding_id"] = f"{component_id}-finding"
+            for item in queue["items"]:
+                component_id = review_aliases.get(item["component_id"])
+                if component_id:
+                    item["component_id"] = component_id
+                    item["finding_id"] = f"{component_id}-finding"
+                    item["item_id"] = f"{component_id}-missing_package_evidence"
+            findings_path.write_text(
+                json.dumps(findings, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+            queue_path.write_text(
+                json.dumps(queue, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+
+            adjudication_file = root / "adjudication.json"
+            _write_adjudication(adjudication_file)
+            adjudication = _read_json(adjudication_file)
+            adjudication_aliases = {
+                "fp-std-01": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01",
+                "fp-gdl-01": "R1PLAN-custer-gallatin-nf-02-FW-GDL-REC-01",
+            }
+            for item in adjudication["items"]:
+                component_id = adjudication_aliases.get(item["component_id"])
+                if component_id:
+                    item["component_id"] = component_id
+                    item["finding_id"] = f"{component_id}-finding"
+                    item["item_id"] = f"{component_id}-missing_package_evidence"
+            adjudication_file.write_text(
+                json.dumps(adjudication, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+
+            result = run_forest_plan_component_adjudication_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                adjudication_file=adjudication_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["resolved_adjudication_count"], 2)
+
     def test_eval_fails_incomplete_resolved_adjudication(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections import Counter
 from typing import Any
 
+from .forest_plan_components_common import normalize_forest_plan_citation_label
+from .forest_plan_components_common import normalize_forest_plan_component_identifier
 from .forest_plan_component_eval_models import RESOLVED_COMPLIANCE_STATUSES
 
 def _evaluate_cases(*, cases: list[dict[str, Any]], artifacts: dict[str, Any]) -> list[dict[str, Any]]:
@@ -30,10 +32,11 @@ def _case_result(
     queue_component_ids: set[str],
 ) -> dict[str, Any]:
     component_id = str(case.get("component_id") or "")
+    normalized_component_id = normalize_forest_plan_component_identifier(component_id)
     finding = finding or {}
     component = component or {}
     actual = _actual_case_values(
-        component_id=component_id,
+        component_id=normalized_component_id,
         finding=finding,
         component=component,
         standard_row=standard_row,
@@ -255,7 +258,7 @@ def _findings_by_component(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     if not isinstance(findings, list):
         return {}
     return {
-        str(finding.get("component_id")): finding
+        normalize_forest_plan_component_identifier(finding.get("component_id")): finding
         for finding in findings
         if isinstance(finding, dict) and finding.get("component_id")
     }
@@ -265,7 +268,7 @@ def _components_by_id(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     if not isinstance(components, list):
         return {}
     return {
-        str(component.get("component_id")): component
+        normalize_forest_plan_component_identifier(component.get("component_id")): component
         for component in components
         if isinstance(component, dict) and component.get("component_id")
     }
@@ -275,7 +278,7 @@ def _standard_rows_by_component(coverage: dict[str, Any]) -> dict[str, dict[str,
     if not isinstance(standards, list):
         return {}
     return {
-        str(row.get("component_id")): row
+        normalize_forest_plan_component_identifier(row.get("component_id")): row
         for row in standards
         if isinstance(row, dict) and row.get("component_id")
     }
@@ -285,7 +288,7 @@ def _queue_component_ids(queue: dict[str, Any]) -> set[str]:
     if not isinstance(items, list):
         return set()
     return {
-        str(item.get("component_id"))
+        normalize_forest_plan_component_identifier(item.get("component_id"))
         for item in items
         if isinstance(item, dict) and item.get("component_id")
     }
@@ -330,8 +333,12 @@ def _citation_labels(evidence_items: object) -> list[str]:
     )
 
 def _citations_match(actual: object, expected: object) -> bool:
-    actual_values = set(_string_values(actual))
-    expected_values = set(_string_values(expected))
+    actual_values = {
+        normalize_forest_plan_citation_label(value) for value in _string_values(actual)
+    }
+    expected_values = {
+        normalize_forest_plan_citation_label(value) for value in _string_values(expected)
+    }
     return actual_values == expected_values
 
 def _section_matches(actual: object, expected: object) -> bool:

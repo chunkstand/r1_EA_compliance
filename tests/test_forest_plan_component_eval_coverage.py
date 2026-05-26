@@ -59,6 +59,10 @@ def test_committed_manifest_tracks_four_review_slots() -> None:
     )
     assert manifest["coverage_thresholds"]["required_review_count"] == 4
     assert manifest["coverage_thresholds"]["distinct_forest_count_min"] == 3
+    assert (
+        slots["v1-cg-ecid-compliance-review"]["expected_source_set_id"]
+        == "source-set-f70ea11e04ae3d53"
+    )
 
 
 def test_resolve_component_eval_file_reads_tracked_manifest_slot() -> None:

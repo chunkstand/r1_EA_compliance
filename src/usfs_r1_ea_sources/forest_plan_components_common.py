@@ -3,7 +3,15 @@ from __future__ import annotations
 import re
 from collections import Counter
 from datetime import UTC, datetime
+from functools import lru_cache
+from pathlib import Path
 
+from .forest_plan_identity_reconciliation import (
+    DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_REGISTRY_PATH,
+)
+from .forest_plan_identity_reconciliation import (
+    load_region1_forest_plan_identity_reconciliation_registry,
+)
 from .forest_plan_components_models import FOREST_PLAN_COMPONENT_FINDINGS_SCHEMA_VERSION, FOREST_PLAN_COMPONENT_INVENTORY_SCHEMA_VERSION, LEADING_COMPONENT_LABEL_RE, MODAL_BOUNDARY_RE, TERM_STOPWORDS, TOKEN_RE
 
 
@@ -154,3 +162,64 @@ def _duplicate_values(values: list[str]) -> list[str]:
 
 def _utc_now() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+
+
+@lru_cache(maxsize=1)
+def _forest_plan_source_record_alias_pairs(
+    registry_path: str = str(DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_REGISTRY_PATH),
+) -> tuple[tuple[str, str], ...]:
+    try:
+        registry = load_region1_forest_plan_identity_reconciliation_registry(Path(registry_path))
+    except (FileNotFoundError, ValueError):
+        return ()
+    alias_to_preferred: dict[str, str] = {}
+    for key in (
+        "exact_url_matched_source_records",
+        "governed_catalog_rebound_source_records",
+    ):
+        entries = registry.get(key)
+        if not isinstance(entries, list):
+            continue
+        for entry in entries:
+            if not isinstance(entry, dict):
+                continue
+            legacy_source_record_id = str(entry.get("legacy_source_record_id") or "").strip()
+            canonical_source_record_id = str(entry.get("canonical_source_record_id") or "").strip()
+            if not legacy_source_record_id or not canonical_source_record_id:
+                continue
+            preferred_source_record_id = (
+                legacy_source_record_id
+                if legacy_source_record_id.startswith("R1PLAN-")
+                else canonical_source_record_id
+            )
+            alias_to_preferred[legacy_source_record_id] = preferred_source_record_id
+            alias_to_preferred[canonical_source_record_id] = preferred_source_record_id
+    return tuple(
+        sorted(alias_to_preferred.items(), key=lambda item: len(item[0]), reverse=True)
+    )
+
+
+def normalize_forest_plan_prefixed_identifier(
+    value: object,
+    *,
+    separators: tuple[str, ...] = ("-",),
+) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    for alias_source_record_id, preferred_source_record_id in _forest_plan_source_record_alias_pairs():
+        if text == alias_source_record_id:
+            return preferred_source_record_id
+        for separator in separators:
+            prefix = f"{alias_source_record_id}{separator}"
+            if text.startswith(prefix):
+                return preferred_source_record_id + text[len(alias_source_record_id) :]
+    return text
+
+
+def normalize_forest_plan_component_identifier(value: object) -> str:
+    return normalize_forest_plan_prefixed_identifier(value, separators=("-",))
+
+
+def normalize_forest_plan_citation_label(value: object) -> str:
+    return normalize_forest_plan_prefixed_identifier(value, separators=(" (", " |"))

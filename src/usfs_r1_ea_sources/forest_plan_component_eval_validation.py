@@ -5,6 +5,7 @@ from typing import Any
 
 from .forest_plan_component_eval_cases import _dedupe
 from .forest_plan_component_eval_models import FOREST_PLAN_COMPONENT_EVAL_SCHEMA_VERSION
+from .forest_plan_components_common import normalize_forest_plan_component_identifier
 
 def _checks(
     *,
@@ -63,9 +64,12 @@ def _check_case_coverage_requirements(
         }
     failures = []
     if requirements.get("require_all_applicable_standards"):
-        actual_applicable_standards = set(_applicable_standard_component_ids(artifacts))
+        actual_applicable_standards = {
+            normalize_forest_plan_component_identifier(component_id)
+            for component_id in _applicable_standard_component_ids(artifacts)
+        }
         expected_applicable_standard_cases = {
-            result["component_id"]
+            normalize_forest_plan_component_identifier(result["component_id"])
             for result in case_results
             if result["expected"].get("applicable_standard") is True
         }
