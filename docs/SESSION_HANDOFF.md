@@ -178,6 +178,10 @@ downstream artifacts exist.
 This implementation slice closes the South Plateau reviewer-ready expansion
 slot on aligned reviewer-facing `source-set-f70ea11e04ae3d53`.
 
+This section is now historical checkpoint context only. The live aggregate
+truth moved forward in `## ECID Preliminary Historical Expansion Truthfully
+Rerouted Locally` above.
+
 - outcome label:
   `reduced locally`; South is now green, governed reviewer-ready slot coverage
   is green, and the remaining aggregate blocker is the historical ECID
@@ -193,14 +197,13 @@ slot on aligned reviewer-facing `source-set-f70ea11e04ae3d53`.
   reports `passed=true`, `reviewer_ready_slot_count=2`, and
   `missing_required_slot_count=0`
 - aggregate truth:
-  non-strict `promotion-suite` remains green for current promotion and now has
-  `open_expansion_slot_count=0`, `open_expansion_artifact_count=6`,
-  `passed_required_current_result_count=32/32`, and
-  `passed_required_expansion_result_count=20/26`; strict expansion now fails
-  only on `region1-expansion-ecid-preliminary-ea`
+  this historical checkpoint had already cleared South, but the later reroute
+  closeout above now supersedes its older aggregate promotion counts and slot
+  framing
 - next slice:
-  stay on the same parent packet, but reroute from South to the historical
-  ECID preliminary-EA expansion review-case artifact family
+  historical next slice at that checkpoint: stay on the same parent packet,
+  but reroute from South to the historical ECID preliminary-EA expansion
+  review-case artifact family. Current live routing is recorded above
 
 ## ECID Current-Promotion Replay Resolved Locally (Historical Mid-Packet Checkpoint)
 

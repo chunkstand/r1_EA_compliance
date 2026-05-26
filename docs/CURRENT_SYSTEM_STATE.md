@@ -74,6 +74,10 @@ Latest implementation update on 2026-05-26:
 
 Latest implementation update on 2026-05-26:
 
+This section is now historical checkpoint context for the South Plateau repair
+slice. The live aggregate truth moved forward in
+`## ECID Preliminary Historical Expansion Truthfully Rerouted Locally` above.
+
 - routed packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - packet outcome:
@@ -106,32 +110,21 @@ Latest implementation update on 2026-05-26:
   `missing_direct_eval_phase_count=0`, and
   `threshold_failed_phase_count=0`. `real-package-review-coverage-eval` now
   reports `passed=true`, `reviewer_ready_slot_count=2`,
-  `missing_required_slot_count=0`, and `missing_coverage_class_ids=[]`.
-  Non-strict `promotion-suite` remains green for current promotion and now has
-  no open expansion slots: `current_promotion_ready=true`,
-  `promotion_ready=true`, `expansion_ready=false`,
-  `open_expansion_slot_count=0`, `open_expansion_artifact_count=6`,
-  `passed_required_current_result_count=32/32`, and
-  `passed_required_expansion_result_count=20/26`. Strict expansion now fails
-  closed only on
-  `failure_category_counts={"forest_plan_reviewer_not_ready":3,"stale_artifact":3}`
-  for the remaining ECID preliminary review case
+  `missing_required_slot_count=0`, and `missing_coverage_class_ids=[]`. The
+  later reroute closeout above now supersedes this section's older aggregate
+  promotion counts
 - remaining blocker truth:
   South Plateau is no longer the blocker. The remaining packet-local blocker is
-  `region1-expansion-ecid-preliminary-ea`, which still lacks the six
-  downstream compliance/provenance artifacts required by strict expansion:
-  `compliance_validation.json`, `compliance_review.json`,
-  `compliance_matrix.json`, `compliance_matrix.pdf`,
-  `authority_family_provenance.json`, and
-  `non_applicable_authority_appendix.json`. That historical lane is split:
-  applicability validation and review phase eval remain on
-  `source-set-ba8d0feae79501b8`, while the generated rule pack and expansion
-  slot contract point at `source-set-4fb59e9eb43045cb`
+  `region1-expansion-ecid-preliminary-ea`. In this historical checkpoint it
+  was still expressed as a missing downstream compliance/provenance artifact
+  family on a split source-set lane. The live top-of-file reroute section now
+  records the later truthful selected-not-ready slot contract that superseded
+  this earlier framing
 - next routing:
-  resume `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
-  beginning with ECID preliminary-EA historical expansion compliance /
-  provenance artifact repair or truthful contract reroute on that split lane,
-  then finish aggregate packet closeout
+  historical next routing at that checkpoint: resume
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` on the ECID
+  preliminary-EA split historical lane. Current live routing is recorded in
+  the reroute closeout section above
 - verification:
   `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`,
   `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`,

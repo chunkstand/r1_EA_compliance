@@ -191,9 +191,10 @@ family.
   `expansion_ready=false`,
   `failure_category_counts={"historical_source_set_split":1}`,
   `open_expansion_slot_count=1`, and `open_expansion_artifact_count=0`.
-- The active follow-on remains
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, but the live
-  blocker has shifted again. Reviewer-facing source-set alignment plus ECID
+- The resolved closeout packet remains documented in
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`; the live
+  current-promotion and governed South Plateau truths remain unchanged.
+  Reviewer-facing source-set alignment plus ECID
   current-promotion replay remain green on
   `source-set-f70ea11e04ae3d53`: ECID `v1-ea-eval` is back to
   `contract_status="reviewer_ready"`, review `phase-eval` passes `33/33`
