@@ -90,10 +90,10 @@ validator tests. The shared `promotion-suite` manifest keeps aggregate
 freshness, status, and canary truth, not duplicate packet-local count locks.
 
 The default manifest keeps two real-package expansion slots: the ECID preliminary-EA slot is ready,
-and the South Plateau Area Landscape Treatment Project slot is selected but blocked on
-`forest_plan_reviewer_not_ready`. Open expansion slots do not block the current V1 promotion claim,
-but they make broader readiness gaps visible to future agents. Current promotion does require the
-applicability seed and gold eval artifacts that prove
+and the South Plateau Area Landscape Treatment Project slot is selected but not ready. Open
+expansion slots do not block the current V1 promotion claim, but they make broader readiness gaps
+visible to future agents. Current promotion does require the applicability seed and gold eval
+artifacts that prove
 positive, negative, unresolved, replay-adjudicated, and arbitration-field coverage for the expanded
 authority-family templates. It also requires the authority-family reviewer-report artifacts for the
 promoted V1 review: authority-family provenance, non-applicable authority appendix,
@@ -160,67 +160,49 @@ status, or last local signal does not prove the declared profile.
 
 ## Current Local Result
 
-The current routed truth on 2026-05-25 is now red at the review-local replay
-layer rather than the slot-driven contract layer.
+The current routed truth on 2026-05-26 is green for current promotion and red
+only for the remaining South Plateau expansion family.
 
 - `source_library/reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json`
-  reports `passed=false`, `reviewer_ready_slot_count=0`, and reviewer-ready
-  slot mismatches for ECID current promotion plus South Plateau reviewer-ready
-  expansion, while West Reservoir still truthfully passes as `typed_blocked`.
+  reports `passed=false`, but the governed current-promotion lane is now
+  repaired: `reviewer_ready_slot_count=1`,
+  `missing_required_slot_count=1`, and
+  `missing_coverage_class_ids=["expansion_reviewer_ready"]`. ECID current
+  promotion now passes as `reviewer_ready`; West Reservoir remains truthful
+  `typed_blocked`; South Plateau remains the only missing reviewer-ready slot.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  reports `full_canonical_corpus_ready=true`,
-  `passed_required_full_canonical_result_count=10/10`,
-  `current_promotion_ready=false`, `promotion_ready=false`,
-  `expansion_ready=false`, and `passed_required_current_result_count=11/32`.
-  Inside the slot-driven contract,
-  `current_promotion_contract.selector_passed=false`,
-  `matched_slot_count=0`, `eligible_slot_count=0`,
-  `passing_slot_count=0`, and
-  `current_promotion_contract.quorum_passed=false`, so the contract refactor
-  itself is still not the blocker; the governed reviewer-ready slot result is
-  simply not currently eligible.
-- The active follow-on is
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, which owns ECID
-  and South Plateau packet-local replay repair on the aligned reviewer-facing
-  source set. The reviewer-facing source-set alignment blocker is now
-  historical closeout: ECID and South replay contexts plus their
-  `v1-ea-eval` contracts now point at
-  `source-set-f70ea11e04ae3d53`, and both
-  `applicability-authority-universe` reruns there now pass with
-  `candidate_authority_count=396`,
-  `forest_plan_component_candidate_count=329`, and
-  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-  Governed replay adjudication is now also green on that source set:
-  `applicability-validate` now passes for both reviews
-  (`55 applicable / 341 non-applicable` for ECID and
-  `64 applicable / 332 non-applicable` for South), and
-  `applicability-generate-rule-pack` now passes with `55` ECID generated rules
-  and `64` South generated rules. ECID's aligned Custer inventory and
-  compliance lane is now also green there: `forest-plan-components-build`
-  resolves the Custer Gallatin plan through `FOR-009` with
-  `component_count=329`, `standard_count=58`,
-  `coverage_passed=true`, and `component_source_accuracy_passed=true`, while
-  ECID `compliance-review` is again `reviewer_ready=true`,
-  `validation_passed=true`, and its forest-plan component adjudication and
-  evaluation subchecks are both `reviewer_ready=true`. South remains the
-  live forest-plan blocker on the same source set with `reviewer_ready=false`,
-  `component_count=329`, `reviewer_resolution_count=34`,
-  `needs_reviewer_resolution_count=1`, `gap_count=33`,
-  `applied_standard_count=22/25`, and stale component adjudication eval
-  checks `["source_set_mismatch","queue_item_count_mismatch","resolved_item_count_mismatch"]`.
-  ECID `v1-ea-eval` still remains `contract_status="mismatch"`, but its
-  remaining drift is now broader-EA only:
-  `forest_plan_passed=true`, `broader_ea_passed=false`,
-  `failure_category_counts={"baseline_source_record_mismatch":26,"conditional_expectation_missing":18,"source_record_mismatch":17}`,
-  and `forest_plan_failure_category_counts={}`.
-  South remains `contract_status="mismatch"` with
-  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
-  ECID `phase-eval` remains red with
-  `review_direct_eval_status="direct_eval_identity_mismatch"` at `15/31`
-  passed phases. `compliance_review` is no longer a failing phase there; the
-  remaining blocker family is missing direct eval coverage for retrieval,
-  claim extraction, and rule-claim binding plus reviewer-facing replay debt
-  in decision support, review packet, final QA, and evaluation coverage.
+  now reports `full_canonical_corpus_ready=true`,
+  `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `passed_required_current_result_count=32/32`,
+  `passed_required_expansion_result_count=6/26`, and
+  `failure_category_counts={}`.
+- `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/promotion_suite_results.json`
+  still fails closed exactly where it should:
+  `current_promotion_ready=true`, `promotion_ready=false`,
+  `expansion_ready=false`,
+  `failure_category_counts={"adjudication_needed":2,"forest_plan_reviewer_not_ready":7,"stale_artifact":10,"unsupported_package_evidence":2}`,
+  `open_expansion_slot_count=1`, and `open_expansion_artifact_count=19`.
+- The active follow-on remains
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, but the live
+  blocker has narrowed. Reviewer-facing source-set alignment plus ECID
+  current-promotion replay are now green on
+  `source-set-f70ea11e04ae3d53`: ECID `v1-ea-eval` is back to
+  `contract_status="reviewer_ready"`, review `phase-eval` passes `33/33`
+  with `review_direct_eval_status="direct_eval_present"`,
+  `review-packet-index` validation is green, final QA reruns green, and the
+  source-set graph contract now truthfully expects the packet-scoped
+  `region1_forest_plan_blocked_profile_count=9`.
+- South Plateau remains the live expansion blocker on the same aligned source
+  set. `v1-ea-eval --review-id
+  region1-expansion-south-plateau-landscape-treatment` still reports
+  `contract_status="mismatch"`,
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9}`,
+  and `forest_plan_failure_category_counts={"forest_plan_matrix_miss":1}`.
+  The missing review artifacts are still
+  `compliance_review.json`, `compliance_matrix.json`,
+  `compliance_validation.json`, and `authority_explanation_paths.json`.
+  The next truthful slice is therefore South Plateau packet-local replay /
+  adjudication repair, not another ECID current-promotion pass.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:
@@ -260,43 +242,37 @@ expansion pass remains below:
   `failure_category_counts={"forest_plan_reviewer_not_ready": 6}`, and
   `expansion_failure_category_counts={"forest_plan_reviewer_not_ready": 6}`.
 
-A later final-QA promotion pass added current-promotion checks for the final QA packet family. The
-V1 review-bound phase eval now passes `20/20` phases, the non-strict promotion suite passes
-`26/26` required current-promotion results, and the current gates report `failure_category_counts={}`.
-Strict expansion now fails closed only on the South Plateau forest-plan blocker while still passing
-`26/26` required current-promotion results.
+A later historical final-QA promotion pass added current-promotion checks for the final QA packet
+family. That earlier pass is no longer the live aggregate count boundary; current 2026-05-26 truth
+is summarized above in `## Current Local Result`.
 
-Full-corpus promotion closeout on 2026-05-10 added active-catalog checks to the
-default manifest. The latest local non-strict run on 2026-05-24 now reports
-`full_canonical_corpus_ready=true` and
-`passed_required_full_canonical_result_count=10/10` on
-`source-set-4fb59e9eb43045cb`, while `current_promotion_ready=false`,
-`promotion_ready=false`, and `expansion_ready=false`. The active catalog checks
-now pin `source_library/catalog/source_set_manifest.json`,
+Full-corpus promotion closeout on 2026-05-10 added active-catalog checks to
+the default manifest and remains green. The latest local non-strict run on
+2026-05-26 reports `full_canonical_corpus_ready=true`,
+`passed_required_full_canonical_result_count=10/10`,
+`current_promotion_ready=true`, `promotion_ready=true`, and
+`expansion_ready=false`. The active catalog checks still pin
+`source_library/catalog/source_set_manifest.json`,
 `catalog_validation.json`, `authority_currentness`, and the NEPA 3D graph
-surfaces to the active source set with `647` source rows, `635` artifacts,
-`594` admitted active-review rows, and `53` explicit archive/currentness rows.
-The refreshed active NEPA 3D source-set export now passes with `72` checks,
-`0` failed checks, `3,677` nodes, `7,262` edges,
-`region1_forest_plan_graph_ready_profile_count=10`, and
-`region1_forest_plan_blocked_profile_count=0`. The remaining blocker is no
-longer a split source-set graph ownership problem; it is the stale or missing
-review-local artifact family across the governed ECID and South Plateau slots.
-ECID still keeps current promotion red through stale compliance/applicability,
-packet-index, decision-support, final-QA, provenance, and review-graph
-surfaces, including `compliance_review_eval` still carrying the older
-review-local source-set identity; South Plateau also still mismatches its
-governed reviewer-ready slot through `review_artifact_missing` and
-`forest_plan_matrix_miss`.
+surfaces to the active catalog source set, while the reviewer-facing ECID
+packet now uses the aligned `source-set-f70ea11e04ae3d53` current-promotion
+lane. The remaining blocker is no longer ECID current promotion or split
+source-set ownership; it is the stale or missing South Plateau review-local
+artifact family under the governed reviewer-ready expansion slot.
 
-The South Plateau expansion slot remains `ready=false` and carries
-`forest_plan_reviewer_not_ready`. The previous ambiguous-scope blocker is closed:
-`forest_plan_context_summary.json` now records `scope_status="custer_gallatin"` and
-`validation_passed=true`. The blocker is the `31` pending component adjudications required before
-the component gate, compliance validation, South Plateau phase eval, and strict expansion can pass.
-The promotion manifest includes the component findings, reviewer-resolution queue, adjudication
-template, adjudication eval, compliance outputs, forest-plan context summary, and review-scoped
-phase-eval artifact checks rather than a slot flag alone.
+The South Plateau expansion slot remains `ready=false` and still carries the
+governed `forest_plan_reviewer_not_ready` slot status. The previous
+ambiguous-scope blocker is closed: `forest_plan_context_summary.json` records
+`scope_status="custer_gallatin"` and `validation_passed=true`. The current
+blocker family is broader than one old worklist count: the live South replay
+still reports `reviewer_ready=false`, `reviewer_resolution_count=34`,
+`needs_reviewer_resolution_count=1`, `gap_count=33`, and
+`applied_standard_count=22/25`, while the paired component adjudication eval
+is stale on `source_set_mismatch`, `queue_item_count_mismatch`, and
+`resolved_item_count_mismatch`. Strict expansion therefore remains red on the
+combined South review-local debt surfaced as `adjudication_needed`,
+`forest_plan_reviewer_not_ready`, `stale_artifact`, and
+`unsupported_package_evidence`.
 
 The Sequence 6 alignment pass also reconciled each ready expansion slot's `expected_gate_artifacts`
 with its matching `required_for_expansion` review-case checks. Manifest validation now rejects ready

@@ -96,6 +96,24 @@ Latest implementation update on 2026-05-26:
   `v1-ea-eval --review-id v1-cg-ecid-compliance-review` now reports
   `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
   `forest_plan_passed=true` with no remaining failure categories. The
+  governed real-package coverage gate is now narrowed to the remaining South
+  slot: `real-package-review-coverage-eval` reports
+  `reviewer_ready_slot_count=1`, `missing_required_slot_count=1`, and
+  `missing_coverage_class_ids=["expansion_reviewer_ready"]`.
+  West Reservoir remains truthful `typed_blocked`. The current South slot
+  still reports `contract_status="mismatch"` with
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9}`.
+  The non-strict promotion path now stays green only for current promotion,
+  while strict expansion still fails closed on South Plateau debt. The
+  current non-strict `promotion-suite` result reports
+  `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, and `passed_required_current_result_count=32/32`;
+  the strict-expansion result reports `current_promotion_ready=true`,
+  `promotion_ready=false`, `expansion_ready=false`,
+  `open_expansion_slot_count=1`, and `open_expansion_artifact_count=19`.
+  The strict-expansion failure categories are
+  `{"adjudication_needed":2,"forest_plan_reviewer_not_ready":7,"stale_artifact":10,"unsupported_package_evidence":2}`.
+  The
   `review_packet_index` validation is green with `failed_check_count=0`.
   `ea-consistency-document` is green on the aligned packet, source-set graph
   evals now pass with `authority_path_count=17`,

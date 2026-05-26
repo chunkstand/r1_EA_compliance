@@ -56,9 +56,9 @@ history below.
   locally. The exact rebaseline probe command
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`
   now reports `472` code files and `9` code files above `800`,
-  `docs/CURRENT_ROUTING.md` is back to `32` lines, `README.md` is back to a
-  stable public-entrypoint role instead of carrying live source-set/replay
-  state, and `tests/test_architecture_contract.py` plus
+  `docs/CURRENT_ROUTING.md` is back under its enforced short-route cap,
+  `README.md` is back to a stable public-entrypoint role instead of carrying
+  live source-set/replay state, and `tests/test_architecture_contract.py` plus
   `tests/test_architecture_quality.py` are green again. The 2026-05-21
   under-`800` closeout remains historical truth; the remaining live issue is
   the explicitly routed oversized-file backlog in
@@ -114,14 +114,23 @@ history below.
   `passed_required_current_result_count=32/32`. The truthful ECID
   packet-scoped graph signal remains
   `region1_forest_plan_blocked_profile_count=9`, not a fake full-Region-1
-  zero-blocker claim. South remains the live forest-plan blocker on the same
+  zero-blocker claim. The governed real-package coverage gate is now narrowed
+  to the remaining South slot:
+  `real-package-review-coverage-eval` reports
+  `reviewer_ready_slot_count=1`, `missing_required_slot_count=1`, and
+  `missing_coverage_class_ids=["expansion_reviewer_ready"]`; West Reservoir
+  remains truthful `typed_blocked`. Strict-expansion promotion still fails
+  closed with
+  `failure_category_counts={"adjudication_needed":2,"forest_plan_reviewer_not_ready":7,"stale_artifact":10,"unsupported_package_evidence":2}`,
+  `open_expansion_slot_count=1`, and `open_expansion_artifact_count=19`.
+  South remains the live forest-plan blocker on the same
   source set with `reviewer_ready=false`, `component_count=329`,
   `reviewer_resolution_count=34`, `needs_reviewer_resolution_count=1`,
   `gap_count=33`, `applied_standard_count=22/25`, and stale component
   adjudication eval checks
   `["source_set_mismatch","queue_item_count_mismatch","resolved_item_count_mismatch"]`.
   South remains `contract_status="mismatch"` with
-  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9}`.
   South is now the remaining packet-local replay debt; ECID broader-EA,
   direct-eval, final-QA, and current-promotion aggregate replay are no longer
   the blocker
@@ -195,7 +204,8 @@ if it had been false at the time.
   `docs/CURRENT_ROUTING_DOC_OWNERSHIP_BOUNDARY_MILESTONE_PLAN.md` child packet
   is also resolved locally inside this broader closeout: `README.md` is back
   to a stable public-entrypoint role with no live source-set or replay-state
-  ownership, `docs/CURRENT_ROUTING.md` is back to `32` lines, and
+  ownership, `docs/CURRENT_ROUTING.md` is back under its enforced short-route
+  cap, and
   `tests/test_architecture_quality.py` now enforces doc ownership instead of
   requiring repeated volatile prose across multiple docs
 - live architecture truth:

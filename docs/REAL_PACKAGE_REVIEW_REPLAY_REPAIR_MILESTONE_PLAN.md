@@ -4,10 +4,11 @@ Date: 2026-05-25
 
 Status: Active packet (`Milestone 0` baseline inventory is historical,
 reviewer-facing source-set alignment is now resolved locally, ECID aligned
-forest-plan inventory plus compliance replay are now reduced locally, and the
-next truthful slice is ECID broader-EA review-local artifact / source-record
-alignment inside packet-local ECID and South Plateau repair on
-`source-set-f70ea11e04ae3d53`)
+forest-plan inventory plus compliance replay are now reduced locally, ECID
+current-promotion replay is now green on reviewer-facing
+`source-set-f70ea11e04ae3d53`, and the next truthful slice is South Plateau
+packet-local forest-plan replay / adjudication refresh on that same source
+set before aggregate closeout)
 
 Owner context: this standalone follow-on packet opened after
 `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` closed through
@@ -78,17 +79,18 @@ or the West Reservoir typed-blocked quarantine.
   `gap_count=33`, `applied_standard_count=22/25`, and stale component
   adjudication eval checks
   `["source_set_mismatch","queue_item_count_mismatch","resolved_item_count_mismatch"]`.
-- ECID and South `v1-ea-eval` reruns now bind to
-  `source-set-f70ea11e04ae3d53` and remain `contract_status="mismatch"` on
-  packet-local reviewer-facing artifacts, but ECID now reports
-  `forest_plan_passed=true`, `broader_ea_passed=false`,
-  `failure_category_counts={"baseline_source_record_mismatch":26,"conditional_expectation_missing":18,"source_record_mismatch":17}`,
-  and `forest_plan_failure_category_counts={}`.
-- ECID `phase-eval` now also binds to `source-set-f70ea11e04ae3d53`; the
-  remaining red is packet-local broader-EA and downstream family debt plus
-  `evaluation_coverage` direct-eval identity mismatch and missing direct eval
-  coverage for retrieval, claim extraction, and rule-claim binding, not
-  `compliance_review` or a false extraction owner dependency.
+- ECID `v1-ea-eval` now also closes green on the aligned source set with
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`,
+  `forest_plan_passed=true`, and no remaining failure categories.
+- ECID review `phase-eval` now also closes green there with `33/33` passed
+  phases, `reviewer_ready=true`,
+  `review_direct_eval_status="direct_eval_present"`,
+  `missing_direct_eval_phase_count=0`, and
+  `threshold_failed_phase_count=0`.
+- Non-strict `promotion-suite` is now truthful again for current promotion:
+  `current_promotion_ready=true`, `promotion_ready=true`, and
+  `passed_required_current_result_count=32/32`. The remaining aggregate red is
+  the reviewer-ready expansion lane, not ECID current promotion.
 
 ## Purpose
 
@@ -97,15 +99,18 @@ contract closeout.
 
 The promotion-suite contract packet is done: the aggregate gate now chooses the
 current-promotion lane from governed slots instead of one hard-coded review
-packet. The remaining red is no longer contract architecture drift. It is
-review-local replay drift inside the governed reviewer-ready slots on aligned
-reviewer-facing `source-set-f70ea11e04ae3d53`:
+packet. The remaining red is no longer contract architecture drift. It is the
+remaining South Plateau review-local replay debt inside the governed
+reviewer-ready expansion slot on aligned reviewer-facing
+`source-set-f70ea11e04ae3d53`:
 
-- East Crazies current promotion no longer satisfies its tracked
-  `v1-ea-eval` contract on the active source set
-- South Plateau no longer satisfies its governed reviewer-ready expansion slot
-- the aggregate real-package and promotion-suite replays stay red until those
-  packet-local artifacts are refreshed or honestly fail closed
+- East Crazies current promotion now satisfies its tracked `v1-ea-eval`
+  contract on the active source set
+- South Plateau still does not satisfy its governed reviewer-ready expansion
+  slot
+- the aggregate real-package coverage gate and strict-expansion promotion path
+  stay red until that packet-local South Plateau artifact family is refreshed
+  or honestly fails closed
 
 This packet exists to repair those review-local artifact families without
 weakening the governed slot roster or reopening the contract refactor.
@@ -113,35 +118,30 @@ weakening the governed slot roster or reopening the contract refactor.
 ## Current Evidence
 
 - `source_library/reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json`
-  reports `passed=false`, `reviewer_ready_slot_count=0`,
-  `missing_required_slot_count=2`, and
-  `failure_category_counts={"insufficient_reviewer_ready_slots":1,"missing_required_coverage_class":2,"missing_required_slot":1,"slot_contract_status_mismatch":2}`.
-- The ECID governed slot `east-crazies-current-promotion` currently reports
-  `actual_contract_status="mismatch"`, `broader_ea_passed=false`,
-  `forest_plan_passed=true`, and
-  `failure_category_counts={"baseline_source_record_mismatch":26,"conditional_expectation_missing":18,"source_record_mismatch":17}`.
+  now reports `passed=false`, `reviewer_ready_slot_count=1`,
+  `missing_required_slot_count=1`, and
+  `failure_category_counts={"insufficient_reviewer_ready_slots":1,"missing_required_coverage_class":1,"missing_required_slot":1,"slot_contract_status_mismatch":1}`.
+- The ECID governed slot `east-crazies-current-promotion` now reports
+  `actual_contract_status="reviewer_ready"`,
+  `broader_ea_passed=true`, `forest_plan_passed=true`, and
+  `failure_category_counts={}`.
 - The South Plateau governed slot `south-plateau-reviewer-ready` currently
   reports `actual_contract_status="mismatch"`, `broader_ea_passed=false`,
   `forest_plan_passed=false`, and
-  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9}`.
 - West Reservoir still truthfully reports
   `actual_contract_status="typed_blocked"` and remains outside the repair
   target for this packet.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  reports `full_canonical_corpus_ready=true`,
-  `current_promotion_ready=false`, `promotion_ready=false`,
-  `expansion_ready=false`, `passed_required_current_result_count=11`,
-  `required_current_result_count=32`, and
-  `failure_category_counts={"stale_artifact":1,"unsupported_package_evidence":2}`.
-- The same promotion-suite result now fails closed at the selector layer
-  because the governed reviewer-ready slot result itself is mismatched:
-  `current_promotion_contract.selector_passed=false`,
-  `matched_slot_count=0`, `eligible_slot_count=0`,
-  `passing_slot_count=0`, `quorum_passed=false`,
-  `reference_canary_ready=false`, and
-  `failure_category_counts={"stale_artifact":1,"unsupported_package_evidence":2}`.
-  The red state still belongs to review-local replay debt, not to selector or
-  quorum code drift.
+  now reports `full_canonical_corpus_ready=true`,
+  `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `passed_required_current_result_count=32`,
+  `required_current_result_count=32`, and `failure_category_counts={}`.
+- Strict-expansion `promotion-suite` still fails closed on the South Plateau
+  family with `current_promotion_ready=true`, `promotion_ready=false`,
+  `expansion_ready=false`,
+  `failure_category_counts={"adjudication_needed":2,"forest_plan_reviewer_not_ready":7,"stale_artifact":10,"unsupported_package_evidence":2}`,
+  `open_expansion_slot_count=1`, and `open_expansion_artifact_count=19`.
 - The scoped replay-precondition chain is now green on
   `source-set-f70ea11e04ae3d53` under
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`:
@@ -153,9 +153,9 @@ weakening the governed slot roster or reopening the contract refactor.
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
 - Reviewer-facing source-set alignment is no longer the blocker. Both ECID and
   South Plateau `applicability-authority-universe` reruns now pass on aligned
-  `source-set-f70ea11e04ae3d53`, while ECID broader-EA `v1-ea-eval`, South
-  live forest-plan replay, and ECID `phase-eval` remain red on packet-local
-  reviewer-facing artifact debt.
+  `source-set-f70ea11e04ae3d53`, and ECID broader-EA plus review-direct-eval
+  replay are now also green there. South live forest-plan replay remains the
+  packet-local reviewer-facing artifact blocker.
 - `source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`
   now reports `covered_review_count=1`,
   `covered_review_ids=["v1-cg-ecid-compliance-review"]`,
@@ -165,23 +165,21 @@ weakening the governed slot roster or reopening the contract refactor.
 
 ## Goal
 
-Restore truthful reviewer-ready replay status for the governed ECID and South
-Plateau slots on aligned reviewer-facing `source-set-f70ea11e04ae3d53` so the
-aggregate
-`real-package-review-coverage-eval` and non-strict `promotion-suite` replays
-stop failing on stale or missing packet-local artifacts.
+Restore truthful reviewer-ready replay status for the remaining governed South
+Plateau slot on aligned reviewer-facing `source-set-f70ea11e04ae3d53` and
+close the aggregate replay packet without reopening the now-green ECID
+current-promotion lane.
 
 Completion means all of the following are true:
 
-- `v1-ea-eval --review-id v1-cg-ecid-compliance-review` again satisfies the
-  governed reviewer-ready contract on the active source set.
 - `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`
   again satisfies the governed reviewer-ready expansion contract on the active
   source set.
 - `real-package-review-coverage-eval` no longer reports reviewer-ready slot
-  mismatches for those governed slots.
-- non-strict `promotion-suite` reports current-promotion truth from the active
-  replayed artifacts rather than stale review-local failures.
+  mismatches for the governed slot set.
+- the aggregate promotion signals remain truthful: non-strict current
+  promotion stays green from repaired ECID packet-local artifacts, while
+  strict-expansion closes only when the South Plateau slot is truly ready.
 
 ## Non-Goals
 
@@ -560,7 +558,7 @@ Milestone 1 closeout update on 2026-05-26:
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 
-Outcome label: resolved
+Outcome label: reduced
 
 Purpose: restore the governed South Plateau reviewer-ready expansion slot to
 truthful reviewer-ready status on the active source set.
@@ -633,7 +631,7 @@ Milestone 2 live next-slice baseline on 2026-05-26:
 - `v1-ea-eval --review-id
   region1-expansion-south-plateau-landscape-treatment` now runs on
   `source-set-f70ea11e04ae3d53` and remains `contract_status="mismatch"` with
-  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
+  `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9}`.
 - The next truthful slice after ECID remains South Plateau packet-local replay
   repair on aligned `source-set-f70ea11e04ae3d53`, especially the remaining
   forest-plan reviewer-resolution / gap lane and then the review-local
@@ -641,7 +639,7 @@ Milestone 2 live next-slice baseline on 2026-05-26:
 
 ### Milestone 3 - Aggregate Replay, Docs, And Closeout
 
-Outcome label: resolved
+Outcome label: reduced
 
 Purpose: prove the repaired review-local slots at the aggregate layer and land
 the durable closeout.
@@ -692,6 +690,24 @@ PYTHONPATH=src python -m compileall src
 jq empty config/v1_real_package_review_coverage_v1.json config/promotion_suite_v1.json
 git diff --check
 ```
+
+Milestone 3 live alignment update on 2026-05-26:
+
+- `real-package-review-coverage-eval` is now narrowed to the remaining South
+  blocker with `reviewer_ready_slot_count=1`,
+  `missing_required_slot_count=1`, and
+  `missing_coverage_class_ids=["expansion_reviewer_ready"]`.
+- Non-strict `promotion-suite` is again truthful for current promotion with
+  `current_promotion_ready=true`, `promotion_ready=true`, and
+  `passed_required_current_result_count=32/32`; strict expansion remains red
+  only on the South packet family with
+  `failure_category_counts={"adjudication_needed":2,"forest_plan_reviewer_not_ready":7,"stale_artifact":10,"unsupported_package_evidence":2}`.
+- The durable doc set now reflects that live state:
+  `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`, `docs/POST_V1_PROMOTION_SUITE.md`, and this plan
+  now route to South Plateau as the next truthful slice. `README.md` was
+  checked and remains intentionally unchanged because it delegates volatile
+  replay truth to the current-state docs instead of duplicating it.
 
 ## Required Implementation Artifacts
 
