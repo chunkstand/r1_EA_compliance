@@ -7,7 +7,7 @@ Use this file as the short current route before opening the large append-only do
 - Read this file first for the live route.
 - Read the top section of `docs/SESSION_HANDOFF.md` next for the exact active
   packet, blocker counts, and next truthful slice.
-- Open `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- Open `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
   only after those two docs if the next session is continuing implementation.
 
 ## First Stops
@@ -26,16 +26,15 @@ Use this file as the short current route before opening the large append-only do
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - Promotion contract closeout:
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
-- Blocked parent replay-repair packet:
+- Active replay-repair packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- Recent upstream current-source closeout:
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
 - Blocked parent authority-binding packet:
   `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
-- Active current slice:
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
 - Adjacent active queue packet:
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`
 - Active blocker packets:
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`,
   `docs/FLATHEAD_READING_ROOM_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_PINYON_FILE_SET_BLOCKER_MILESTONE_PLAN.md`,
@@ -45,15 +44,15 @@ Use this file as the short current route before opening the large append-only do
 ## Live Facts
 
 - Active workbook/table: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
-  `Document_Register_Master` with `698` retained master rows after the
-  governed vegetation/fire current-source additions on top of the earlier
+  `Document_Register_Master` with `708` retained master rows after the
+  governed wilderness/designated-area and base-rule current-source additions
+  (`FED-078` through `FED-087`) on top of the earlier vegetation/fire,
   forest-plan support, minerals, invasive/farmland/drinking-water,
   water-family, cultural-resource, shared tribal-overlap, wildlife, and
-  hazardous-material additions.
-  Reviewer-facing default catalog remains historical
-  `source-set-4fb59e9eb43045cb`, while the active current-source-gap replay
-  gate is `source-set-e57ea1d39b859bc8` under
-  `source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate`
+  hazardous-material additions. Reviewer-facing default catalog remains
+  historical `source-set-4fb59e9eb43045cb`, while the active scoped replay
+  gate is `source-set-f70ea11e04ae3d53` under
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
 - Active source-truth packet status: the full canonical source-truth
   rebaseline remains historically resolved in commit `93a23b0`
   (`Resolve source-truth archive boundary rebaseline`); the queue Milestone 2
@@ -102,10 +101,7 @@ Use this file as the short current route before opening the large append-only do
   reduced locally: ECID applicability replay now correctly rebuilds a
   `396`-candidate authority universe with `329` Custer Gallatin component
   candidates from the active Region 1 batch inventory and honors governed
-  legacy-to-current source-record reconciliation, but the same run still fails
-  on `candidates_have_source_evidence_available` (`failure_count=21`) and
-  `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=19`). The authority-source binding blocker
+  legacy-to-current source-record reconciliation. The authority-source binding blocker
   packet in `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
   is now reduced locally through Milestone `2`: the shared binding owners now
   cover the exact current rows already present in the active catalog, and the
@@ -127,15 +123,21 @@ Use this file as the short current route before opening the large append-only do
   invasive/farmland/drinking-water addition lane, the governed minerals
   current-source addition lane, the governed forest-plan support admission
   lane, and the governed vegetation/fire current-source addition lane. The
-  reviewer-facing default catalog remains historical, but the active scoped
-  applicability replay now runs on `source-set-e57ea1d39b859bc8` and reports
-  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
-  `source_evidence_failure_count=6`, and
-  `missing_source_record_count=1`. The vegetation/fire family no longer
-  appears in the missing-template inventory. The remaining blocker is now the
-  governed wilderness/designated-area family and the five base-rule
-  current-source decisions, beginning with
-  `wilderness_wsr_trails_designated_areas`
+  reviewer-facing default catalog remains historical, but the upstream
+  current-source blocker is now exhausted on the scoped replay gate:
+  `source-set-f70ea11e04ae3d53` rebuilds the same `396` candidate authorities
+  with `329` forest-plan component candidates, and both
+  `candidates_have_source_evidence_available` and
+  `authority_family_template_candidates_cover_config` now pass at
+  `0` remaining source-truth misses. The same ECID applicability replay still
+  fails, but only on
+  `rule_template_candidates_have_source_claim_linkage`
+  (`failure_count=48`) because the scoped gate has no
+  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
+  records `rule_claim_links_path=null`. The next truthful slice therefore
+  returns to `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  beginning with the scoped `source-set-f70ea11e04ae3d53` derived-artifact
+  replay chain before reviewer-ready repair can continue.
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

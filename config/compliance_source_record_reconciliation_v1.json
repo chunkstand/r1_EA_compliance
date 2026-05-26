@@ -98,13 +98,13 @@
     },
     {
       "legacy_source_record_id": "R1EA-020",
-      "current_source_record_ids": [],
-      "notes": "No current canonical row is routed yet for Seven County v. Eagle County."
+      "current_source_record_ids": ["FED-078"],
+      "notes": "Canonical Seven County Supreme Court slip-opinion row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-021",
-      "current_source_record_ids": [],
-      "notes": "No current canonical row is routed yet for APA final-agency-action authority."
+      "current_source_record_ids": ["FED-079"],
+      "notes": "Canonical APA reviewability section row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-022",
@@ -133,8 +133,8 @@
     },
     {
       "legacy_source_record_id": "R1EA-027",
-      "current_source_record_ids": [],
-      "notes": "No current canonical row is routed yet for 36 CFR part 216 notice-and-comment authority."
+      "current_source_record_ids": ["FED-080"],
+      "notes": "Canonical 36 CFR part 216 current GovInfo CFR row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-028",
@@ -163,13 +163,13 @@
     },
     {
       "legacy_source_record_id": "R1EA-033",
-      "current_source_record_ids": [],
-      "notes": "No current canonical row is routed yet for MUSYA."
+      "current_source_record_ids": ["FED-081"],
+      "notes": "Canonical Multiple-Use Sustained-Yield Act policy section row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-034",
-      "current_source_record_ids": [],
-      "notes": "No current canonical row is routed yet for Organic Administration Act section 475."
+      "current_source_record_ids": ["FED-082"],
+      "notes": "Canonical Organic Administration Act section 475 row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-035",
@@ -222,6 +222,16 @@
       "notes": "Canonical prohibitions row via exact active-catalog URL lineage."
     },
     {
+      "legacy_source_record_id": "R1EA-045",
+      "current_source_record_ids": ["FED-083"],
+      "notes": "Canonical cave-resources current GovInfo CFR row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-046",
+      "current_source_record_ids": ["FED-084"],
+      "notes": "Canonical paleontological-resources current GovInfo CFR row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-047",
       "current_source_record_ids": ["FED-013"],
       "notes": "Canonical wilderness row via exact active-catalog URL lineage."
@@ -232,6 +242,11 @@
       "notes": "Canonical roadless/special-areas row."
     },
     {
+      "legacy_source_record_id": "R1EA-051",
+      "current_source_record_ids": ["FED-085"],
+      "notes": "Canonical wild-and-scenic-rivers current GovInfo CFR row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-052",
       "current_source_record_ids": ["FED-027"],
       "notes": "Canonical Wilderness Act row via exact active-catalog URL lineage."
@@ -240,6 +255,16 @@
       "legacy_source_record_id": "R1EA-053",
       "current_source_record_ids": ["FED-028"],
       "notes": "Canonical Wild and Scenic Rivers Act row via exact active-catalog URL lineage."
+    },
+    {
+      "legacy_source_record_id": "R1EA-054",
+      "current_source_record_ids": ["FED-086"],
+      "notes": "Canonical National Trails System Act chapter row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-055",
+      "current_source_record_ids": ["FED-087"],
+      "notes": "Canonical Montana Wilderness Study Act public-law row added to the source register."
     },
     {
       "legacy_source_record_id": "R1EA-056",

@@ -948,6 +948,94 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
         )
         self.assertTrue(candidate["source_evidence_availability"]["available"])
 
+    def test_candidates_resolve_wilderness_current_source_additions(self) -> None:
+        expected_source_record_ids = [
+            "FED-083",
+            "FED-084",
+            "FED-013",
+            "FED-085",
+            "FED-027",
+            "FED-028",
+            "FED-086",
+            "FED-087",
+        ]
+        catalog_by_source_id = {
+            source_record_id: {
+                "source_record_id": source_record_id,
+                "title": source_record_id,
+                "citation_label": source_record_id,
+                "document_role": "regulation" if source_record_id in {"FED-083", "FED-084", "FED-085"} else "law",
+                "authority_level": "federal",
+                "source_status": "downloaded_existing",
+                "artifact_sha256": f"sha-{source_record_id.lower()}",
+                "artifact_path": f"artifacts/raw/{source_record_id}.pdf",
+            }
+            for source_record_id in expected_source_record_ids
+        }
+
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "wilderness-current-source-template",
+                        "authority_family_id": "wilderness_wsr_trails_designated_areas",
+                        "rule_id": "wilderness_current_source_template_rule",
+                        "title": "Wilderness current source template",
+                        "question": "Does the package trigger wilderness, WSR, trails, cave, paleontology, or designated-area review?",
+                        "requirement": "Evaluate wilderness, WSR, trails, and designated-area authorities.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "regulation",
+                        "authority_document_role": "regulation",
+                        "authority_source_record_id": "R1EA-045",
+                        "source_record_ids": [
+                            "R1EA-045",
+                            "R1EA-046",
+                            "R1EA-047",
+                            "R1EA-051",
+                            "R1EA-052",
+                            "R1EA-053",
+                            "R1EA-054",
+                            "R1EA-055",
+                        ],
+                        "package_query": "wilderness WSR trails cave paleontology designated area",
+                        "package_terms": [
+                            "wilderness",
+                            "wild and scenic river",
+                            "national trail",
+                            "cave",
+                            "paleontology",
+                            "designated area",
+                        ],
+                        "applies_if_package_terms": [
+                            "wilderness",
+                            "wild and scenic river",
+                        ],
+                        "does_not_apply_if_package_terms": ["no designated areas"],
+                        "source_query": "wilderness designated area authority source",
+                        "source_filters": {
+                            "source_record_id": "R1EA-045",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id=catalog_by_source_id,
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], expected_source_record_ids)
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            expected_source_record_ids,
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
     def test_candidates_resolve_invasive_farmland_drinking_water_current_source_additions(
         self,
     ) -> None:

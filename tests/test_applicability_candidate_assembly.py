@@ -222,6 +222,80 @@ class ApplicabilityCandidateAssemblyTests(unittest.TestCase):
         )
         self.assertTrue(candidate["source_evidence_availability"]["available"])
 
+    def test_rule_template_candidates_resolve_base_rule_current_source_additions(self) -> None:
+        rule_pack = {
+            "rule_pack_id": "unit-nepa-ea",
+            "version": "0.1.0",
+            "baseline_source_record_ids": [
+                "R1EA-020",
+                "R1EA-021",
+                "R1EA-033",
+                "R1EA-034",
+            ],
+            "rules": [
+                _rule_template("seven_county_nepa_scope", "R1EA-020", "case_law", "case_law"),
+                _rule_template("apa_final_agency_action", "R1EA-021", "law", "law"),
+                _rule_template(
+                    "directives_notice_comment_36cfr_216",
+                    "R1EA-027",
+                    "regulation",
+                    "regulation",
+                    applicability_mode="conditional",
+                ),
+                _rule_template(
+                    "musuya_multiple_use_sustained_yield",
+                    "R1EA-033",
+                    "law",
+                    "law",
+                ),
+                _rule_template("organic_act_16usc_475", "R1EA-034", "law", "law"),
+            ],
+        }
+        catalog_by_source_id = {
+            "FED-078": _catalog_record("FED-078", "case_law", "case_law"),
+            "FED-079": _catalog_record("FED-079", "law", "law"),
+            "FED-080": _catalog_record("FED-080", "regulation", "regulation"),
+            "FED-081": _catalog_record("FED-081", "law", "law"),
+            "FED-082": _catalog_record("FED-082", "law", "law"),
+        }
+
+        candidates = rule_template_candidates(
+            source_set_id="source-set-test",
+            rule_pack=rule_pack,
+            catalog_by_source_id=catalog_by_source_id,
+            source_claim_links_by_rule={
+                "seven_county_nepa_scope": [{"link_id": "link:seven_county"}],
+                "apa_final_agency_action": [{"link_id": "link:apa"}],
+                "directives_notice_comment_36cfr_216": [{"link_id": "link:part216"}],
+                "musuya_multiple_use_sustained_yield": [{"link_id": "link:musuya"}],
+                "organic_act_16usc_475": [{"link_id": "link:organic475"}],
+            },
+            source_claim_gaps_by_rule={},
+        )
+
+        by_id = {candidate["candidate_authority_id"]: candidate for candidate in candidates}
+        self.assertEqual(
+            by_id["rule-template:unit-nepa-ea:0.1.0:seven_county_nepa_scope"]["source_record_ids"],
+            ["FED-078"],
+        )
+        self.assertEqual(
+            by_id["rule-template:unit-nepa-ea:0.1.0:apa_final_agency_action"]["source_record_ids"],
+            ["FED-079"],
+        )
+        self.assertEqual(
+            by_id["rule-template:unit-nepa-ea:0.1.0:directives_notice_comment_36cfr_216"]["source_record_ids"],
+            ["FED-080"],
+        )
+        self.assertEqual(
+            by_id["rule-template:unit-nepa-ea:0.1.0:musuya_multiple_use_sustained_yield"]["source_record_ids"],
+            ["FED-081"],
+        )
+        self.assertEqual(
+            by_id["rule-template:unit-nepa-ea:0.1.0:organic_act_16usc_475"]["source_record_ids"],
+            ["FED-082"],
+        )
+        self.assertTrue(all(candidate["source_evidence_availability"]["available"] for candidate in candidates))
+
     def test_forest_plan_component_candidates_include_profile_and_inventory_contracts(
         self,
     ) -> None:
@@ -520,4 +594,32 @@ def _catalog_record(
         "artifact_byte_size": 128,
         "content_type": "text/plain",
         "retrieved_at": "2026-05-03T00:00:00Z",
+    }
+
+
+def _rule_template(
+    rule_id: str,
+    authority_source_record_id: str,
+    authority_category: str,
+    authority_document_role: str,
+    *,
+    applicability_mode: str = "baseline",
+) -> dict:
+    return {
+        "id": rule_id,
+        "title": f"{rule_id} title",
+        "question": f"{rule_id} question?",
+        "requirement": f"{rule_id} requirement.",
+        "severity": "medium",
+        "authority_category": authority_category,
+        "authority_source_record_id": authority_source_record_id,
+        "authority_document_role": authority_document_role,
+        "applicability_mode": applicability_mode,
+        "package_query": rule_id,
+        "package_terms": [rule_id],
+        "source_query": f"{rule_id} source",
+        "source_filters": {
+            "document_role": authority_document_role,
+            "source_record_id": authority_source_record_id,
+        },
     }

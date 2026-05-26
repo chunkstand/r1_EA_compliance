@@ -23,7 +23,7 @@ class SourceRegisterSchemaTests(unittest.TestCase):
 
         self.assertTrue(result["validation_passed"])
         self.assertEqual(result["sheet_count"], 13)
-        self.assertEqual(result["load_row_count"], 698)
+        self.assertEqual(result["load_row_count"], 708)
         self.assertEqual(result["queue_row_count"], 51)
         self.assertEqual(result["removed_row_count"], 3)
         self.assertEqual(result["stale_source_detector_count"], 5)
@@ -75,13 +75,13 @@ class SourceRegisterSchemaTests(unittest.TestCase):
         self.assertEqual(result["legacy_register_source_delta_count"], 160)
         self.assertEqual(result["legacy_register_gap_count"], 1)
         self.assertEqual(result["legacy_runtime_unique_source_count"], 350)
-        self.assertEqual(result["canonical_master_row_count"], 698)
+        self.assertEqual(result["canonical_master_row_count"], 708)
         self.assertEqual(result["canonical_queue_row_count"], 51)
         self.assertEqual(result["canonical_removed_row_count"], 3)
         self.assertEqual(result["canonical_stale_source_detector_count"], 5)
         self.assertEqual(result["canonical_shared_with_legacy_workbook_count"], 12)
         self.assertEqual(result["canonical_shared_with_source_delta_count"], 0)
-        self.assertEqual(result["canonical_only_source_count"], 686)
+        self.assertEqual(result["canonical_only_source_count"], 696)
         self.assertEqual(result["legacy_only_source_count"], 338)
         self.assertEqual(result["canonical_only_source_ids_sample"][0], "FED-001")
         self.assertEqual(result["legacy_only_source_ids_sample"][0], "R1EA-001")
@@ -165,6 +165,16 @@ class SourceRegisterSchemaTests(unittest.TestCase):
             "FED-075": "https://uscode.house.gov/view.xhtml?req=(title:16%20section:6592b%20edition:prelim)",
             "FED-076": "https://uscode.house.gov/view.xhtml?req=(title:16%20section:6592c%20edition:prelim)",
             "FED-077": "https://www.federalregister.gov/documents/2025/03/06/2025-03695/immediate-expansion-of-american-timber-production",
+            "FED-078": "https://www.supremecourt.gov/opinions/24pdf/23-975_m648.pdf",
+            "FED-079": "https://uscode.house.gov/view.xhtml?req=(title:5%20section:704%20edition:prelim)",
+            "FED-080": "https://www.govinfo.gov/content/pkg/CFR-2025-title36-vol2/pdf/CFR-2025-title36-vol2-part216.pdf",
+            "FED-081": "https://uscode.house.gov/view.xhtml?req=(title:16%20section:528%20edition:prelim)",
+            "FED-082": "https://uscode.house.gov/view.xhtml?req=(title:16%20section:475%20edition:prelim)",
+            "FED-083": "https://www.govinfo.gov/content/pkg/CFR-2025-title36-vol2/pdf/CFR-2025-title36-vol2-part290.pdf",
+            "FED-084": "https://www.govinfo.gov/content/pkg/CFR-2025-title36-vol2/pdf/CFR-2025-title36-vol2-part291.pdf",
+            "FED-085": "https://www.govinfo.gov/content/pkg/CFR-2025-title36-vol2/pdf/CFR-2025-title36-vol2-part297.pdf",
+            "FED-086": "https://uscode.house.gov/view.xhtml?path=/prelim@title16/chapter27&edition=prelim",
+            "FED-087": "https://www.govinfo.gov/content/pkg/STATUTE-91/pdf/STATUTE-91-Pg1243.pdf",
             "R1PLAN-region-1-northern-region-02": "https://www.fs.usda.gov/r01/forests-grasslands",
             "R1PLAN-beaverhead-deerlodge-nf-01": "https://www.fs.usda.gov/r01/beaverhead-deerlodge/planning",
             "R1PLAN-bitterroot-nf-01": "https://www.fs.usda.gov/r01/bitterroot/planning",

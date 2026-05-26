@@ -34,7 +34,7 @@ def test_source_register_loader_dispatch_returns_workbook_source_compatibility_r
 
     sources = load_canonical_sources(CANONICAL_WORKBOOK, workbook_config)
 
-    assert len(sources) == 698
+    assert len(sources) == 708
     assert all(source.sheet == "Document_Register_Master" for source in sources)
     assert all(source.metadata["loader_contract"] == SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT for source in sources)
     assert all(source.metadata["row_state"] == "load_ready_master_row" for source in sources)
@@ -251,6 +251,66 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     assert timber_overlay_row.expected_parser == "html"
     assert timber_overlay_row.authority_document_class_id == "authority_document"
     assert timber_overlay_row.jurisdiction_scope_id == "scope:federal-us"
+
+    seven_county_row = rows["FED-078"]
+    assert seven_county_row.parser_admission_class == "direct_document"
+    assert seven_county_row.expected_parser == "pdf"
+    assert seven_county_row.authority_document_class_id == "authority_document"
+    assert seven_county_row.jurisdiction_scope_id == "scope:federal-us"
+
+    apa_reviewability_row = rows["FED-079"]
+    assert apa_reviewability_row.parser_admission_class == "structured_web_source"
+    assert apa_reviewability_row.expected_parser == "html"
+    assert apa_reviewability_row.authority_document_class_id == "authority_document"
+    assert apa_reviewability_row.jurisdiction_scope_id == "scope:federal-us"
+
+    directives_notice_row = rows["FED-080"]
+    assert directives_notice_row.parser_admission_class == "direct_document"
+    assert directives_notice_row.expected_parser == "pdf"
+    assert directives_notice_row.authority_document_class_id == "authority_document"
+    assert directives_notice_row.jurisdiction_scope_id == "scope:federal-us"
+
+    musya_row = rows["FED-081"]
+    assert musya_row.parser_admission_class == "structured_web_source"
+    assert musya_row.expected_parser == "html"
+    assert musya_row.authority_document_class_id == "authority_document"
+    assert musya_row.jurisdiction_scope_id == "scope:federal-us"
+
+    organic_purposes_row = rows["FED-082"]
+    assert organic_purposes_row.parser_admission_class == "structured_web_source"
+    assert organic_purposes_row.expected_parser == "html"
+    assert organic_purposes_row.authority_document_class_id == "authority_document"
+    assert organic_purposes_row.jurisdiction_scope_id == "scope:federal-us"
+
+    cave_resources_row = rows["FED-083"]
+    assert cave_resources_row.parser_admission_class == "direct_document"
+    assert cave_resources_row.expected_parser == "pdf"
+    assert cave_resources_row.authority_document_class_id == "authority_document"
+    assert cave_resources_row.jurisdiction_scope_id == "scope:federal-us"
+
+    paleontology_row = rows["FED-084"]
+    assert paleontology_row.parser_admission_class == "direct_document"
+    assert paleontology_row.expected_parser == "pdf"
+    assert paleontology_row.authority_document_class_id == "authority_document"
+    assert paleontology_row.jurisdiction_scope_id == "scope:federal-us"
+
+    wsr_regulation_row = rows["FED-085"]
+    assert wsr_regulation_row.parser_admission_class == "direct_document"
+    assert wsr_regulation_row.expected_parser == "pdf"
+    assert wsr_regulation_row.authority_document_class_id == "authority_document"
+    assert wsr_regulation_row.jurisdiction_scope_id == "scope:federal-us"
+
+    trails_row = rows["FED-086"]
+    assert trails_row.parser_admission_class == "structured_web_source"
+    assert trails_row.expected_parser == "html"
+    assert trails_row.authority_document_class_id == "authority_document"
+    assert trails_row.jurisdiction_scope_id == "scope:federal-us"
+
+    montana_wsa_row = rows["FED-087"]
+    assert montana_wsa_row.parser_admission_class == "direct_document"
+    assert montana_wsa_row.expected_parser == "pdf"
+    assert montana_wsa_row.authority_document_class_id == "authority_document"
+    assert montana_wsa_row.jurisdiction_scope_id == "scope:federal-us"
 
     region_forest_index_row = rows["R1PLAN-region-1-northern-region-02"]
     assert region_forest_index_row.parser_admission_class == "structured_web_source"

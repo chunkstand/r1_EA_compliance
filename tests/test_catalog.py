@@ -57,13 +57,13 @@ class CatalogTests(unittest.TestCase):
             records = _read_jsonl(result.source_catalog_path)
             manifest = json.loads(result.source_set_manifest_path.read_text(encoding="utf-8"))
 
-            self.assertEqual(len(records), 698)
-            self.assertEqual(manifest["source_count"], 698)
-            self.assertEqual(manifest["unique_url_count"], 698)
-            self.assertEqual(manifest["status_counts"], {"planned": 698})
+            self.assertEqual(len(records), 708)
+            self.assertEqual(manifest["source_count"], 708)
+            self.assertEqual(manifest["unique_url_count"], 708)
+            self.assertEqual(manifest["status_counts"], {"planned": 708})
             self.assertIsNone(manifest["overrides_path"])
             self.assertIsNone(manifest["overrides_sha256"])
-            self.assertEqual(result.summary["source_count"], 698)
+            self.assertEqual(result.summary["source_count"], 708)
             self.assertGreater(result.summary["review_topic_count"], 0)
             self.assertTrue(result.summary["validation_passed"])
             self.assertTrue(result.validation_path.exists())
@@ -82,7 +82,7 @@ class CatalogTests(unittest.TestCase):
             self.assertTrue(fed001["review_topics"])
             self.assertEqual(
                 manifest["source_partition_counts"],
-                {"candidate_blocked_source": 698},
+                {"candidate_blocked_source": 708},
             )
             self.assertNotIn("source_document", manifest["document_role_counts"])
 
@@ -94,10 +94,10 @@ class CatalogTests(unittest.TestCase):
                     "SELECT count(*) FROM sources WHERE source_partition = ?",
                     ("candidate_blocked_source",),
                 ).fetchone()[0]
-            self.assertEqual(source_count, 698)
+            self.assertEqual(source_count, 708)
             self.assertGreater(topic_count, 0)
-            self.assertEqual(citation_count, 698)
-            self.assertEqual(partition_count, 698)
+            self.assertEqual(citation_count, 708)
+            self.assertEqual(partition_count, 708)
 
     def test_build_review_catalog_rejects_legacy_source_delta_when_canonical_loader_active(self) -> None:
         config = load_config(CONFIG)

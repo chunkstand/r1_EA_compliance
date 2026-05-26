@@ -26,16 +26,17 @@ Current routed state on 2026-05-25:
   `status_counts={"downloaded_existing": 635, "duplicate_content": 12}`,
   and workbook SHA
   `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
-- The committed canonical workbook now carries `698` retained master rows after
-  admitting the governed vegetation/fire current-source additions on top of
-  the earlier forest-plan support, minerals,
+- The committed canonical workbook now carries `708` retained master rows after
+  admitting the governed wilderness/designated-area and base-rule
+  current-source additions (`FED-078` through `FED-087`) on top of the
+  earlier vegetation/fire, forest-plan support, minerals,
   invasive/farmland/drinking-water, water-family, cultural-resource, shared
   tribal-overlap, wildlife, and hazardous-material additions. The active
-  current-source-gap replay now uses the scoped catalog gate at
-  `source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate`
-  with `source_set_id=source-set-e57ea1d39b859bc8`, `source_count=698`,
-  `artifact_count=686`, and
-  `source_partition_counts={"active_review_corpus": 645, "currentness_supersession_archive": 53}`.
+  scoped replay now uses the catalog gate at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
+  with `source_set_id=source-set-f70ea11e04ae3d53`, `source_count=708`,
+  `artifact_count=696`, and
+  `source_partition_counts={"active_review_corpus": 655, "currentness_supersession_archive": 53}`.
 - `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
   catalog, architecture, and active packet routing.
 - The current architecture packet in
@@ -92,10 +93,7 @@ Current routed state on 2026-05-25:
   also reduced locally: ECID applicability replay now correctly rebuilds a
   `396`-candidate authority universe with `329` Custer Gallatin component
   candidates from the active Region 1 batch inventory and respects governed
-  legacy-to-current source-record reconciliation, but the same run still fails
-  on `candidates_have_source_evidence_available` (`failure_count=21`) and
-  `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=19`). The authority-source binding blocker
+  legacy-to-current source-record reconciliation. The authority-source binding blocker
   packet in `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
   is now reduced locally through Milestone `2`: the shared binding owners now
   cover the exact current rows already present in the active catalog, and the
@@ -117,15 +115,18 @@ Current routed state on 2026-05-25:
   invasive/farmland/drinking-water addition lane, the governed minerals
   current-source addition lane, the governed forest-plan support admission
   lane, and the governed vegetation/fire current-source addition lane. The
-  reviewer-facing default catalog remains historical, but the active scoped
-  applicability replay now runs on `source-set-e57ea1d39b859bc8` and reports
-  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
-  `source_evidence_failure_count=6`, and
-  `missing_source_record_count=1`. The vegetation/fire family no longer
-  appears in the missing-template inventory. The remaining blocker is now the
-  governed wilderness/designated-area family and five base-rule current-source
-  decisions, beginning with `wilderness_wsr_trails_designated_areas` in the
-  same Milestone `2` packet.
+  reviewer-facing default catalog remains historical, but the upstream
+  current-source blocker is now exhausted on `source-set-f70ea11e04ae3d53`:
+  the scoped ECID applicability replay no longer fails
+  `candidates_have_source_evidence_available` or
+  `authority_family_template_candidates_cover_config`, but it still fails on
+  `rule_template_candidates_have_source_claim_linkage`
+  (`failure_count=48`) because the scoped gate has no
+  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
+  records `rule_claim_links_path=null`. The next truthful slice therefore
+  returns to `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  beginning with the scoped derived-artifact replay chain on
+  `source-set-f70ea11e04ae3d53`.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs

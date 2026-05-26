@@ -14,25 +14,92 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` if the
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` if the
   next session is continuing implementation
 - active packet:
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - live blocker state:
   reviewer-facing default catalog remains historical
   `source-set-4fb59e9eb43045cb`; the active scoped replay gate is
-  `source-set-e57ea1d39b859bc8` under
-  `source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate`;
+  `source-set-f70ea11e04ae3d53` under
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`;
   `applicability-authority-universe` is still red at
-  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
-  `source_evidence_failure_count=6`, and
-  `missing_source_record_count=1`
+  `authority_universe_sha256=5a7f58afc84a4701bfc23e3da53651f674a0975394514dfa4d815d23ca6a2094`,
+  but the current-source checks are now clear:
+  `source_evidence_failure_count=0` and
+  `missing_source_record_count=0`; the remaining failing check is
+  `rule_template_candidates_have_source_claim_linkage`
+  (`failure_count=48`, `rule_claim_links_path=null`)
 - next truthful slice:
-  Milestone `2` wilderness/designated-area current-source additions in
-  `wilderness_wsr_trails_designated_areas`
+  replay-local derived-artifact regeneration on
+  `source-set-f70ea11e04ae3d53`, beginning with extraction/retrieval reuse or
+  rebuild, then `claim-extract`, then `rule-claim-link`, then rerun
+  `applicability-authority-universe`
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## Active Authority Current-Source Gap Closeout To Replay Boundary
+
+This implementation slice closes the remaining governed wilderness/designated-area
+and base-rule current-source additions without pretending the scoped ECID replay
+is reviewer-ready.
+
+- outcome label:
+  `reduced locally`; the current-source blocker inventory is exhausted, but the
+  replay is still red on a different owner surface
+- implementation truth:
+  the canonical workbook now carries `708` retained master rows after
+  admitting `FED-078` through `FED-087`,
+  `config/compliance_source_record_reconciliation_v1.json` now maps
+  `R1EA-020`, `R1EA-021`, `R1EA-027`, `R1EA-033`, `R1EA-034`,
+  `R1EA-045`, `R1EA-046`, `R1EA-051`, `R1EA-054`, and `R1EA-055` to those
+  governed current rows, and matching regressions now cover the source
+  register loader/schema/catalog/dry-run/preflight surfaces plus
+  applicability candidate and authority-family template coverage
+- live replay truth:
+  the reviewer-facing default catalog remains historical
+  `source-set-4fb59e9eb43045cb` at `647` source rows, `635` artifacts, and
+  `594` admitted `active_review_corpus` rows. The active same-slice replay
+  gate now lives at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
+  as `source-set-f70ea11e04ae3d53` with `708` source rows, `696` artifacts,
+  and `655` admitted `active_review_corpus` rows. On that scoped gate,
+  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  now reports `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=5a7f58afc84a4701bfc23e3da53651f674a0975394514dfa4d815d23ca6a2094`,
+  `validation_passed=false`, `source_evidence_failure_count=0`, and
+  `missing_source_record_count=0`
+- component inventory truth:
+  because the closeout additions did not change forest-plan source membership,
+  the scoped replay carries the existing Region 1 forest-plan component
+  inventory forward under
+  `source_library/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json`
+  with the inventory ownership rebound to the active source set
+- remaining blocker truth:
+  the current-source gap inventory itself is now clear. The remaining failing
+  applicability check is
+  `rule_template_candidates_have_source_claim_linkage`
+  (`failure_count=48`) because the scoped gate has no
+  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
+  records `rule_claim_links_path=null`
+- next truthful slice:
+  return control to
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, beginning with
+  the scoped `source-set-f70ea11e04ae3d53` derived-artifact replay chain:
+  reuse or rebuild extraction/retrieval as needed, then `claim-extract`, then
+  `rule-claim-link`, then rerun `applicability-authority-universe`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py tests/test_source_register_loader.py tests/test_dry_run.py tests/test_preflight.py tests/test_catalog.py tests/test_applicability_authority_family_templates.py tests/test_applicability_candidate_assembly.py tests/test_authority_family_rule_templates.py tests/test_authority_universe_inventory.py tests/test_rule_claim_binding_runtime.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-current-gap-closeout`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources validate-run --output-dir source_library --run-id queue-m3-full-canonical-merged-download-20260525-current-gap-closeout`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-current-gap-closeout --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_set_manifest.json`,
+  `jq empty config/compliance_source_record_reconciliation_v1.json`,
+  `git diff --check`
 
 ## Active Authority Current-Source Gap Blocker Milestone 2 Vegetation Lane Reduced Locally
 

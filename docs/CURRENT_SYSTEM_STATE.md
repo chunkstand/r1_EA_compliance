@@ -15,6 +15,75 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Active Authority Current-Source Gap Closeout To Replay Boundary Reduced Locally
+
+Latest implementation update on 2026-05-25:
+
+- routed packet:
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; the governed current-source inventory is now exhausted,
+  but the scoped ECID applicability replay still remains red on a replay-local
+  derived-artifact gap
+- implementation truth:
+  the canonical workbook now carries `708` retained master rows after adding
+  `FED-078` through `FED-087`,
+  `config/compliance_source_record_reconciliation_v1.json` now also maps
+  `R1EA-020`, `R1EA-021`, `R1EA-027`, `R1EA-033`, `R1EA-034`,
+  `R1EA-045`, `R1EA-046`, `R1EA-051`, `R1EA-054`, and `R1EA-055` to those
+  governed current rows, and matching regressions now live in
+  `tests/test_source_register_loader.py`,
+  `tests/test_source_register_schema.py`,
+  `tests/test_catalog.py`,
+  `tests/test_dry_run.py`,
+  `tests/test_preflight.py`,
+  `tests/test_applicability_authority_family_templates.py`, and
+  `tests/test_applicability_candidate_assembly.py`
+- live replay truth:
+  the reviewer-facing default catalog remains historical
+  `source-set-4fb59e9eb43045cb` at `647` source rows, `635` artifacts, and
+  `594` admitted `active_review_corpus` rows. The active same-slice replay
+  gate now lives at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
+  as `source-set-f70ea11e04ae3d53` with `708` source rows, `696` artifacts,
+  and `655` admitted `active_review_corpus` rows. Because the closeout
+  additions did not change forest-plan source membership, the scoped replay
+  carries the existing Region 1 component inventory forward under
+  `source_library/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json`
+  with the inventory ownership rebound to the active source set. On that
+  scoped gate,
+  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  now reports `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=5a7f58afc84a4701bfc23e3da53651f674a0975394514dfa4d815d23ca6a2094`,
+  `validation_passed=false`,
+  `source_evidence_failure_count=0`, and
+  `missing_source_record_count=0`
+- remaining blocker truth:
+  the wilderness/designated-area family and the five base-rule current-source
+  gaps no longer appear in the missing-template or source-evidence inventory.
+  The remaining failing applicability check is now
+  `rule_template_candidates_have_source_claim_linkage`
+  (`failure_count=48`) because the scoped gate has no
+  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
+  records `rule_claim_links_path=null`
+- next routing:
+  the next truthful slice returns to
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, beginning with
+  the scoped `source-set-f70ea11e04ae3d53` derived-artifact replay chain:
+  reuse or rebuild extraction/retrieval as needed, then `claim-extract`, then
+  `rule-claim-link`, then rerun `applicability-authority-universe`
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py tests/test_source_register_loader.py tests/test_dry_run.py tests/test_preflight.py tests/test_catalog.py tests/test_applicability_authority_family_templates.py tests/test_applicability_candidate_assembly.py tests/test_authority_family_rule_templates.py tests/test_authority_universe_inventory.py tests/test_rule_claim_binding_runtime.py tests/test_architecture_contract.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-current-gap-closeout`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources validate-run --output-dir source_library --run-id queue-m3-full-canonical-merged-download-20260525-current-gap-closeout`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-current-gap-closeout --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_set_manifest.json`,
+`jq empty config/compliance_source_record_reconciliation_v1.json`,
+`git diff --check`
+
 ## Active Authority Current-Source Gap Blocker Milestone 2 Vegetation Lane Reduced Locally
 
 Latest implementation update on 2026-05-25:

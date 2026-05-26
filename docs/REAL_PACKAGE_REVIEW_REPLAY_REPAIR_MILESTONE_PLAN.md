@@ -7,13 +7,16 @@ Status: Milestone 1 reduced locally
 Owner context: this is a fresh standalone follow-on packet opened after
 `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` closed through
 Milestone `4`. It owns review-local replay repair for the governed real-package
-slots on active source set `source-set-4fb59e9eb43045cb`. It does not reopen
-the slot-driven promotion-suite contract architecture, the full-canonical
-source-set contract, or the West Reservoir typed-blocked quarantine. This
-packet is complete only after the required review-local slots are replayed back
-to truthful reviewer-ready state, the aggregate replays are rerun, durable docs
-and handoff are updated, and one local atomic closeout commit lands. A verified
-but uncommitted slice is only ready-to-close.
+slots on reviewer-facing source set `source-set-4fb59e9eb43045cb` and now also
+owns the scoped replay-precondition rebuild on
+`source-set-f70ea11e04ae3d53` after the upstream current-source blocker closed
+its governed source-truth inventory there. It does not reopen the slot-driven
+promotion-suite contract architecture, the full-canonical source-set contract,
+or the West Reservoir typed-blocked quarantine. This packet is complete only
+after the required review-local slots are replayed back to truthful
+reviewer-ready state, the aggregate replays are rerun, durable docs and handoff
+are updated, and one local atomic closeout commit lands. A verified but
+uncommitted slice is only ready-to-close.
 
 ## Purpose
 
@@ -66,6 +69,18 @@ weakening the governed slot roster or reopening the contract refactor.
   `failure_category_counts={"stale_artifact":1,"unsupported_package_evidence":1}`.
   The red state still belongs to review-local replay debt, not to selector or
   quorum code drift.
+- The upstream current-source blocker is now exhausted on scoped gate
+  `source-set-f70ea11e04ae3d53` under
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`:
+  `applicability-authority-universe` there now reports
+  `source_evidence_failure_count=0`,
+  `missing_source_record_count=0`, and
+  `authority_universe_sha256=5a7f58afc84a4701bfc23e3da53651f674a0975394514dfa4d815d23ca6a2094`,
+  but still fails on
+  `rule_template_candidates_have_source_claim_linkage`
+  (`failure_count=48`) because the scoped gate has no
+  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
+  records `rule_claim_links_path=null`.
 
 ## Goal
 
@@ -406,24 +421,26 @@ Milestone 1 reduction on 2026-05-25:
   current-source additions, the governed hazardous-material current-source
   addition, the governed invasive/farmland/drinking-water current-source
   addition, the governed minerals current-source addition lane, the governed
-  forest-plan support admission lane, and the governed vegetation/fire
-  current-source addition lane. The reviewer-facing default catalog remains
-  historical, but the active scoped applicability replay now runs on
-  `source-set-e57ea1d39b859bc8` and reports
-  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
-  `source_evidence_failure_count=6`, and
-  `missing_source_record_count=1`. The land-exchange template, the
-  air/conformity lane, the water-family lane, the cultural-resource/state-SHPO
-  lane, the shared tribal-overlap lane, the wildlife lane, the
-  hazardous-material lane, the invasive/farmland/drinking-water lane, and the
-  minerals lane, the forest-plan support lane, and the vegetation/fire lane no
-  longer appear in the missing-template inventory, and the next truthful slice
-  remains Milestone `2` in that same packet beginning with the
-  wilderness/designated-area lane.
-- The next truthful slice is now Milestone `2` of
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
-  which still owns the remaining source-truth, forest-plan, and rule-pack
-  repairs upstream of packet-local replay.
+  forest-plan support admission lane, the governed vegetation/fire
+  current-source addition lane, the governed wilderness/designated-area lane,
+  and the five base-rule current-source additions. The reviewer-facing default
+  catalog remains historical, but the active scoped applicability replay now
+  runs on `source-set-f70ea11e04ae3d53` and reports
+  `authority_universe_sha256=5a7f58afc84a4701bfc23e3da53651f674a0975394514dfa4d815d23ca6a2094`,
+  `source_evidence_failure_count=0`, and
+  `missing_source_record_count=0`. The upstream current-source inventory is
+  therefore exhausted.
+- The packet still cannot continue truthfully to reviewer-ready replay because
+  the same scoped authority-universe validation now fails only on
+  `rule_template_candidates_have_source_claim_linkage`
+  (`failure_count=48`) and records `rule_claim_links_path=null`; the scoped
+  gate has no extraction/retrieval/claim/rule-claim derived artifacts yet.
+- The next truthful slice is now back inside this replay-repair packet on the
+  scoped gate `source-set-f70ea11e04ae3d53`: reuse or rebuild the required
+  extraction/retrieval artifacts, then run `claim-extract`, then
+  `rule-claim-link`, then rerun
+  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  before returning to broader ECID reviewer-ready repair.
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 

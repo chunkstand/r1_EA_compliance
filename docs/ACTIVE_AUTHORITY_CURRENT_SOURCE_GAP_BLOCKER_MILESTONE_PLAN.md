@@ -2,7 +2,7 @@
 
 Date: 2026-05-25
 
-Status: Active packet (`Milestone 1 resolved locally; Milestone 2 reduced locally and remaining governed repair next`)
+Status: Historical upstream blocker packet (`Milestone 1 resolved locally; Milestone 2 reduced locally through current-source closeout; remaining replay-local blocker handed back upstream`)
 
 Owner context: this is a fresh standalone blocker packet opened from
 `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` after
@@ -44,28 +44,21 @@ ahead of that downstream stack.
   `source-set-4fb59e9eb43045cb` with `source_count=647`,
   `artifact_count=635`, and
   `source_partition_counts={"active_review_corpus": 594, "currentness_supersession_archive": 53}`.
-- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-vegetation --catalog-dir source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate`
-  now builds the active blocker replay gate as
-  `source-set-e57ea1d39b859bc8` with `source_count=698`,
-  `artifact_count=686`, and
-  `source_partition_counts={"active_review_corpus": 645, "currentness_supersession_archive": 53}`.
-- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate/source_set_manifest.json`
+- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-current-gap-closeout --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
+  now builds the blocker closeout replay gate as
+  `source-set-f70ea11e04ae3d53` with `source_count=708`,
+  `artifact_count=696`, and
+  `source_partition_counts={"active_review_corpus": 655, "currentness_supersession_archive": 53}`.
+- `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_set_manifest.json`
   now rebuilds the ECID applicability universe at
   `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`,
-  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
+  `authority_universe_sha256=5a7f58afc84a4701bfc23e3da53651f674a0975394514dfa4d815d23ca6a2094`,
   and `validation_passed=false`.
-- `candidates_have_source_evidence_available` is now reduced from `21` failing
-  candidates to `6`: the remaining authority-family candidate is
-  `wilderness_wsr_trails_designated_areas`, plus the five base-rule current
-  source gaps
-  (`apa_final_agency_action`,
-  `directives_notice_comment_36cfr_216`,
-  `musuya_multiple_use_sustained_yield`,
-  `organic_act_16usc_475`,
-  `seven_county_nepa_scope`).
-- `authority_family_template_candidates_cover_config` is now reduced from `19`
-  failing template groups to `1`. The admitted-current replacement lane plus
+- `candidates_have_source_evidence_available` now passes with
+  `failure_count=0`.
+- `authority_family_template_candidates_cover_config` now passes with
+  `missing_source_record_count=0`. The admitted-current replacement lane plus
   the governed land-exchange retirement closeout now cover `R1EA-038`,
   `R1EA-043`, `R1EA-068`, `R1EA-125` through `R1EA-149` (except
   already-bound `R1EA-146`), `R1EA-151` through `R1EA-156`, and the retired
@@ -81,15 +74,22 @@ ahead of that downstream stack.
   invasive/farmland/drinking-water lane is now closed through workbook rows
   `FED-064` through `FED-069`, while the governed minerals lane is now closed
   through workbook row `FED-070`, the governed forest-plan support lane is
-  now closed through the admitted `R1PLAN-*` planning and index pages, and
-  the governed vegetation/fire lane is now closed through workbook rows
-  `FED-071` through `FED-077`. The remaining group still points at source IDs
-  `R1EA-045`, `R1EA-046`, `R1EA-051`, `R1EA-054`, and `R1EA-055`.
+  now closed through the admitted `R1PLAN-*` planning and index pages, the
+  governed vegetation/fire lane is now closed through workbook rows
+  `FED-071` through `FED-077`, and the governed wilderness/designated-area
+  plus base-rule closeout is now closed through workbook rows `FED-078`
+  through `FED-087`.
 - A local exact-current-match audit against
   `source_library/manifests/*.jsonl` and
   `source_library/catalog/source_catalog.jsonl` now returns no untouched exact
   current-catalog URL matches for the remaining missing IDs. The exact-match
   reconciliation lane is exhausted.
+- The only remaining failing applicability check is now
+  `rule_template_candidates_have_source_claim_linkage`
+  (`failure_count=48`) because the scoped gate has no
+  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
+  records `rule_claim_links_path=null`. That replay-local gap is outside this
+  packet's source-truth owner boundary.
 
 ## Goal
 
@@ -497,17 +497,28 @@ Milestone 2 reduction on 2026-05-25:
   `source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate`
   now proves `source-set-e57ea1d39b859bc8` with `698` source rows, `686`
   artifacts, and `645` admitted active-current rows.
-- The live ECID replay remains red, but the blocker is now smaller at
-  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
-  `source_evidence_failure_count=6`, and
-  `missing_source_record_count=1`.
-- All remaining missing-template families are now true current-source
-  additions.
-- Milestone `2` therefore remains open. The next truthful sub-slice in this
-  same packet is the governed wilderness/designated-area current-source lane
-  for `wilderness_wsr_trails_designated_areas` (`R1EA-045`, `R1EA-046`,
-  `R1EA-051`, `R1EA-054`, and `R1EA-055`), after which the live blocker
-  should continue through the five base-rule owner decisions.
+- The governed wilderness/designated-area and five base-rule current-source
+  addition lane is now also closed: the canonical workbook admits `FED-078`
+  through `FED-087`,
+  `config/compliance_source_record_reconciliation_v1.json` now maps
+  `R1EA-020`, `R1EA-021`, `R1EA-027`, `R1EA-033`, `R1EA-034`,
+  `R1EA-045`, `R1EA-046`, `R1EA-051`, `R1EA-054`, and `R1EA-055` to those
+  current rows, and a same-slice scoped catalog gate at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
+  now proves `source-set-f70ea11e04ae3d53` with `708` source rows, `696`
+  artifacts, and `655` admitted active-current rows.
+- On that scoped gate, `candidates_have_source_evidence_available` now passes
+  with `failure_count=0` and
+  `authority_family_template_candidates_cover_config` now passes with
+  `missing_source_record_count=0`.
+- The live ECID replay still remains red, but only on
+  `rule_template_candidates_have_source_claim_linkage`
+  (`failure_count=48`) because the scoped gate has no
+  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
+  records `rule_claim_links_path=null`.
+- Milestone `2` therefore exhausts the source-truth owner inventory even
+  though the broader applicability replay does not yet pass. The remaining
+  blocker is replay-local rather than workbook/current-source truth.
 
 ### Milestone 3 - Replay Resume Handoff
 
@@ -520,13 +531,16 @@ Implementation:
 
 1. Update routing docs so
    `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` becomes the
-   active packet again only after ECID applicability validation passes.
+   active packet again once the governed current-source inventory is closed and
+   any remaining red checks fall outside this packet's owner boundary.
 2. Record the exact replay-resume command chain for the next packet.
 3. Close this blocker packet with one local atomic commit.
 
 Acceptance criteria:
 
-- The replay-repair packet is routed live again only after this blocker passes.
+- The replay-repair packet is routed live again only after the current-source
+  inventory is honestly cleared and the remaining blocker is no longer
+  source-truth owned.
 - The docs name the exact resume commands and the post-clear owner boundary.
 
 ## Required Implementation Artifacts
@@ -579,20 +593,20 @@ PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download \
   --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
   --output-dir source_library \
   --config config/downloader.toml \
-  --run-id queue-m3-full-canonical-merged-download-20260525-clean-water
+  --run-id queue-m3-full-canonical-merged-download-20260525-current-gap-closeout
 
 PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build \
   --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx \
   --output-dir source_library \
   --config config/downloader.toml \
-  --run-id queue-m3-full-canonical-merged-download-20260525-clean-water \
-  --catalog-dir source_library/runs/current-source-gap-clean-water-catalog-gate/catalog_gate
+  --run-id queue-m3-full-canonical-merged-download-20260525-current-gap-closeout \
+  --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate
 
 PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review \
-  --catalog-path source_library/runs/current-source-gap-clean-water-catalog-gate/catalog_gate/source_catalog.jsonl \
-  --source-set-manifest-path source_library/runs/current-source-gap-clean-water-catalog-gate/catalog_gate/source_set_manifest.json
+  --catalog-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl \
+  --source-set-manifest-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_set_manifest.json
 
 jq empty \
   config/compliance_source_record_reconciliation_v1.json
@@ -607,8 +621,10 @@ git diff --check
   governed source-truth evidence.
 - No stale authority reference is removed without a documented replacement or
   explicit retirement owner.
-- The blocked replay-repair packet stays blocked until ECID applicability
-  validation passes.
+- The replay-repair packet stays blocked only while the remaining blocker is
+  still source-truth owned; once the current-source inventory is honestly
+  clear, any remaining replay-local failure must route back upstream instead of
+  being misclassified as another workbook gap.
 
 ## Stop Conditions
 
@@ -628,17 +644,14 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- Residual risk: several remaining families now look like true current-source
-  additions or explicit retirement decisions rather than simple alias work.
-  That means the next slice must stay disciplined about workbook/template
-  ownership and must not drift back into runtime heuristics.
-- Next truthful slice: Milestone `2` in this packet. Land the governed
-  cultural-resource/state-SHPO current-source addition work for
-  `cultural_resource_protection_and_state_shpo_sources`,
-  beginning with `R1EA-072`, `R1EA-074`, `R1EA-076` through `R1EA-080`,
-  `R1EA-113`, `R1EA-114`, and `R1EA-120` through `R1EA-123`, plus the shared
-  `tribal_consultation_trust_sacred_sites` overlap on `R1EA-077` and
-  `R1EA-080`, then continue with the remaining wildlife,
-  hazardous-material, invasive/farmland/drinking-water, minerals,
-  forest-plan support admissions, and base-rule owner decisions needed to
-  clear the ECID applicability blocker.
+- Residual risk: the scoped closeout gate still lacks
+  extraction/retrieval/claim/rule-claim derived artifacts, so a future agent
+  could mistake the remaining replay-local linkage failure for another
+  source-truth miss.
+- Next truthful slice: return to
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` on scoped gate
+  `source-set-f70ea11e04ae3d53`. Reuse or rebuild the required
+  extraction/retrieval artifacts, then run `claim-extract`, then
+  `rule-claim-link`, then rerun
+  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  before resuming broader ECID reviewer-ready replay repair.

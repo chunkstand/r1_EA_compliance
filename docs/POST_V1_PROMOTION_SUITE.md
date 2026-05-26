@@ -177,15 +177,11 @@ layer rather than the slot-driven contract layer.
   simply not currently eligible.
 - The active follow-on is
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, which owns ECID
-  and South Plateau packet-local replay repair on
-  `source-set-4fb59e9eb43045cb`. Milestone `1` of that packet is now reduced
-  locally: ECID applicability replay now correctly rebuilds a
+  and South Plateau packet-local replay repair. Milestone `1` of that packet
+  is now reduced locally: ECID applicability replay now correctly rebuilds a
   `396`-candidate authority universe with `329` Custer Gallatin component
   candidates from the active Region 1 batch inventory and honors governed
-  legacy-to-current source-record reconciliation, but the same run still fails
-  on `candidates_have_source_evidence_available` (`failure_count=21`) and
-  `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=19`). The authority-source binding blocker
+  legacy-to-current source-record reconciliation. The authority-source binding blocker
   packet in `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
   is now reduced locally through Milestone `2`: the exact current rows already
   present in the active catalog are now governably bound, the live ECID
@@ -207,16 +203,16 @@ layer rather than the slot-driven contract layer.
   addition, the governed invasive/farmland/drinking-water current-source
   addition, the governed minerals current-source addition lane, the governed
   forest-plan support admission lane, and the governed vegetation/fire
-  current-source addition lane. The reviewer-facing default catalog remains
-  historical, but the active scoped applicability replay now runs on
-  `source-set-e57ea1d39b859bc8` and reports
-  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
-  `source_evidence_failure_count=6`, and
-  `missing_source_record_count=1`. The vegetation/fire family no longer
-  appears in the missing-template inventory. The remaining blocker is now the
-  governed wilderness/designated-area family and the five base-rule
-  current-source decisions, beginning with the wilderness/designated-area lane
-  in the same Milestone `2` packet.
+  current-source addition lane. That upstream blocker is now exhausted on the
+  scoped gate `source-set-f70ea11e04ae3d53`: the ECID applicability replay no
+  longer fails `candidates_have_source_evidence_available` or
+  `authority_family_template_candidates_cover_config`, but it still fails on
+  `rule_template_candidates_have_source_claim_linkage`
+  (`failure_count=48`) because the scoped gate has no
+  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
+  records `rule_claim_links_path=null`. The next truthful slice inside the
+  replay-repair packet is now the scoped derived-artifact replay chain on
+  `source-set-f70ea11e04ae3d53`.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

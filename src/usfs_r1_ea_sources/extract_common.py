@@ -58,7 +58,10 @@ DIRECT_DOCUMENT_URL_CLASSES = {
     "Official Forest Service directive PDF",
     "Official Forest Service directive document",
     "Official Forest Service/RMRS PDF",
+    "Official GovInfo CFR PDF",
+    "Official GovInfo PDF",
     "Official USDA guidance PDF",
+    "Official Supreme Court PDF",
     "Official USFS direct file",
 }
 DOCLING_PRIORITY_KEYWORDS = (
