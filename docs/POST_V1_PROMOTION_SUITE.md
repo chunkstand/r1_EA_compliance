@@ -220,11 +220,16 @@ family.
   closure assumption is stale under current live artifacts, `4fb...` remains
   source-set `phase-eval` red (`10/33`), and the tracked Lolo replacement
   candidate remains review `phase-eval` red (`19/23`), so no truthful ready
-  closure path is currently proven. The blocked parent record for that stop
-  condition remains
+  closure path is currently proven. Blocker Milestone 1 has now also ruled out
+  a bounded historical-source-set rebuild path under current artifacts:
+  `4fb...` still fails across upstream/downstream `phase-eval` families, and
+  fresh `ba8...` `applicability-validate` plus
+  `applicability-generate-rule-pack` still fail on stale/partition/provenance
+  drift. The blocked parent record for that stop condition remains
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`.
   Any further live work there should start in
-  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 2 replacement-readiness classification,
   not in another South replay pass or by reopening the resolved replay-repair
   packet.
 

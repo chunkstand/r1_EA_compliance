@@ -17,11 +17,11 @@ Use this file as the short current route before opening the append-only docs.
 - Active packet:
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - Live next slice:
-  Milestone 1 in the blocker packet now owns the next truthful slice:
-  classify whether the remaining ECID preliminary historical blocker still has
-  a bounded historical-source-set rebuild path on `ba8...` or `4fb...` before
-  opening any replacement-ready-slot follow-on. Do not flip the slot to
-  `ready`, shrink the manifest, or reopen
+  Milestone 1 is now complete: neither historical source set remains a
+  bounded rebuild lane under current artifacts. Milestone 2 in the blocker
+  packet now owns the next truthful slice: classify whether any tracked
+  governed replacement can become ready without weakening the manifest floor.
+  Do not flip the slot to `ready`, shrink the manifest, or reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - Aggregate truth:
   ECID current promotion and South Plateau reviewer-ready expansion are
@@ -31,8 +31,9 @@ Use this file as the short current route before opening the append-only docs.
   `failure_category="historical_source_set_split"` (`1` open expansion slot,
   `0` open expansion artifacts`). Fresh Sequence 1 proving also found that the
   old `ba8...` closure assumption is stale under current artifacts, `4fb...`
-  remains phase-eval red, and the tracked Lolo replacement candidate is not
-  phase-eval-ready
+  remains phase-eval red, and Milestone 1 has now ruled out a bounded
+  historical-source-set rebuild path before replacement-readiness
+  classification begins
 - Document-routing entrypoint: `docs/AGENT_START_HERE.md`
 - Live architecture state:
   `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,

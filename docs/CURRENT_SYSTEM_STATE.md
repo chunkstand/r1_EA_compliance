@@ -15,24 +15,33 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## ECID Preliminary Historical Rebaseline Blocker Opened Locally
+## ECID Preliminary Historical Rebuild Path Exhausted Locally
 
 Latest implementation update on 2026-05-26:
 
 - routed packet:
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - packet outcome:
-  `reduced locally`; the parent ECID historical-lane packet stays preserved as
-  the stop-condition record, but the live route is now a narrower blocker
-  packet for rebaseline-drift and replacement-readiness classification
-- closing commit hash:
-  `8cb20fb` (`Open ECID historical blocker follow-on`)
+  `reduced locally`; blocker Milestone 1 is now complete, and no bounded
+  historical-source-set rebuild path remains under current artifacts
 - implementation truth:
-  the repo now names the blocker packet exactly instead of leaving the next
-  slice as a generic "open a dedicated blocker follow-on" instruction. The new
-  packet keeps `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
-  as the historical parent that landed the fail-closed ready-slot source-set
-  guard and froze the three red closure signals that stopped the lane
+  `source-set-4fb59e9eb43045cb` is not a narrow rebuild lane. Its current
+  source-set `phase_eval_results.json` still reports `passed=false` with
+  `passed_phase_count=10/33`, and the failing phases still span upstream and
+  downstream families including `extraction`, `retrieval`,
+  `claim_extraction`, `rule_claim_binding`, `downstream_direct_evaluation`,
+  `generated_rule_pack`, `compliance_review`, `review_packet_index`, and
+  `evaluation_coverage`, with missing direct-eval and proxy-only failure
+  reasons still present. `source-set-ba8d0feae79501b8` is also not a bounded
+  rebuild lane: a fresh
+  `applicability-validate --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`
+  still exits red, and the validation artifact continues to show
+  `missing_candidate_decision=4`, `partition_gap=329`, `provenance_gap=1`,
+  `source_set_stale=398`, and a candidate-authority split between four
+  missing land-exchange rule-template authorities and a large unexpected
+  Custer Gallatin forest-plan component family. Fresh
+  `applicability-generate-rule-pack` on `ba8...` still fails closed because
+  `applicability_validation.json` is stale for current artifacts
 - live blocker truth:
   strict expansion still fails only on the ECID preliminary historical slot
   under `historical_source_set_split`; `source-set-4fb59e9eb43045cb` remains
@@ -46,13 +55,15 @@ Latest implementation update on 2026-05-26:
 - next routing:
   continue in
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 1 to classify historical-source-set feasibility before opening
-  any replacement-ready-slot follow-on. Do not continue live runtime work in
-  the blocked parent packet
+  at Milestone 2 to classify whether any tracked governed replacement can
+  become ready without weakening the manifest floor. Do not open a historical
+  source-set rebuild child packet from current artifacts
 - verification:
-  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
-  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
-  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  `jq '{source_set_id, passed, passed_phase_count, phase_count}' source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`,
+  `jq '.phases | map(select(.passed == false) | {name, reviewer_ready, failure_reasons})' source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8 --validation-path /tmp/ecid_preliminary_ba8_applicability_validation_20260526.json`,
+  `jq '{source_set_id, passed, reviewer_ready, failed_checks: [.checks[] | select(.passed == false) | .details]}' /tmp/ecid_preliminary_ba8_applicability_validation_20260526.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`,
   and `git diff --check`
 
 ## ECID Preliminary Historical Lane Rebaseline Blocked Locally

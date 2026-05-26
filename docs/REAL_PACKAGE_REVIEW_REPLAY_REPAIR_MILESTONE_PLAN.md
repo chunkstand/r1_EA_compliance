@@ -745,7 +745,10 @@ Milestone 3 live alignment update on 2026-05-26:
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   instead of this packet, while
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
-  remains the blocked parent stop-condition record. `README.md` was
+  remains the blocked parent stop-condition record. That successor blocker has
+  now also completed Milestone 1 by ruling out a bounded historical
+  source-set rebuild path under current artifacts, so its next live slice is
+  Milestone 2 replacement-readiness classification. `README.md` was
   checked and remains intentionally unchanged because it delegates volatile
   replay truth to the current-state docs instead of duplicating it.
 

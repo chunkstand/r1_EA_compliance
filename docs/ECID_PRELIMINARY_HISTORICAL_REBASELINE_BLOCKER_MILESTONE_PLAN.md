@@ -2,10 +2,9 @@
 
 Date: 2026-05-26
 
-Status: Active reduced blocker packet (`Milestone 0` exact blocker packet and
-routing reset resolved locally through `8cb20fb`; live work is now
-`Milestone 1` historical-source-set feasibility classification, not slot
-closure)
+Status: Active reduced blocker packet (`Milestones 0-1 resolved locally; no
+bounded historical-source-set rebuild path remains under current artifacts;
+live work is now Milestone 2 governed replacement-readiness classification`)
 
 Owner context: standalone blocker follow-on opened after the parent ECID
 historical-lane packet proved that none of the three currently visible closure
@@ -75,7 +74,8 @@ implementation continues.
   `historical_source_set_split`, with `open_expansion_slot_count=1` and
   `open_expansion_artifact_count=0`.
 - The historical rebuild branch is currently unproven on both known source
-  sets:
+  sets, and Milestone 1 now confirms that neither remains a bounded rebuild
+  path under current artifacts:
   - `source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`
     remains `passed=false` with `passed_phase_count=10/33`.
   - A fresh
@@ -368,6 +368,38 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack \
   --source-set-id <candidate_historical_source_set_id>
 ```
 
+Milestone 1 resolution on 2026-05-26:
+
+- outcome label:
+  `reduced locally`; no bounded historical-source-set rebuild path remains
+  under current artifacts, so the blocker advances to Milestone 2 instead of
+  opening `docs/ECID_PRELIMINARY_HISTORICAL_SOURCE_SET_REBUILD_MILESTONE_PLAN.md`
+- resolution truth:
+  `source-set-4fb59e9eb43045cb` remains source-set `phase-eval` red at
+  `10/33`, and its failing phases still span upstream and downstream families
+  including `extraction`, `retrieval`, `claim_extraction`,
+  `rule_claim_binding`, `downstream_direct_evaluation`,
+  `generated_rule_pack`, `compliance_review`, `review_packet_index`, and
+  `evaluation_coverage`. That makes `4fb...` a broad source-set/runtime lane,
+  not a narrow historical review-case rebuild. `source-set-ba8d0feae79501b8`
+  also remains infeasible under current artifacts: fresh
+  `applicability-validate` still fails on `missing_candidate_decision=4`,
+  `partition_gap=329`, `provenance_gap=1`, and `source_set_stale=398`, with
+  the validation artifact still showing four missing land-exchange
+  rule-template authorities plus a large unexpected Custer Gallatin
+  forest-plan component family. Fresh
+  `applicability-generate-rule-pack` still fails closed on `ba8...` because
+  `applicability_validation.json` is stale for current artifacts
+- focused verification:
+  `jq '{source_set_id, passed, passed_phase_count, phase_count}' source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`,
+  `jq '.phases | map(select(.passed == false) | {name, reviewer_ready, failure_reasons})' source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8 --validation-path /tmp/ecid_preliminary_ba8_applicability_validation_20260526.json`,
+  `jq '{source_set_id, passed, reviewer_ready, failed_checks: [.checks[] | select(.passed == false) | .details]}' /tmp/ecid_preliminary_ba8_applicability_validation_20260526.json`,
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`
+- next routing:
+  continue with Milestone 2 in this blocker packet.
+
 ### Milestone 2 - Governed Replacement-Readiness Classification
 
 Outcome label: reduced
@@ -542,8 +574,8 @@ git diff --check
 
 ## Closeout Checklist
 
-- [ ] Milestone 0 opened this blocker packet and reset current-facing routing.
-- [ ] Milestone 1 recorded an exact historical-source-set feasibility result.
+- [x] Milestone 0 opened this blocker packet and reset current-facing routing.
+- [x] Milestone 1 recorded an exact historical-source-set feasibility result.
 - [ ] Milestone 2 recorded an exact replacement-readiness result if needed.
 - [ ] Milestone 3 named one exact next owner or one narrower feasibility stop.
 - [ ] The verified tracked slice was committed atomically.

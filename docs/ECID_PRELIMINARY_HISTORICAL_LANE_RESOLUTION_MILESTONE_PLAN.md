@@ -43,6 +43,10 @@ Latest execution note on 2026-05-26:
   replacement-lane readiness.
 - The docs-only blocker-opening closeout that moved live routing to that
   successor landed in `8cb20fb` (`Open ECID historical blocker follow-on`).
+- The successor blocker packet has since completed Milestone 1 by ruling out a
+  bounded historical-source-set rebuild path on both `4fb...` and `ba8...`
+  under current artifacts. The next live slice there is now Milestone 2
+  replacement-readiness classification.
 
 This plan now remains as the blocked historical parent record for the
 fail-closed ready-slot gate and the stop-condition evidence above. Continue
