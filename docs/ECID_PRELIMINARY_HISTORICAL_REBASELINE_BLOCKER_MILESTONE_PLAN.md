@@ -2,9 +2,10 @@
 
 Date: 2026-05-26
 
-Status: Active reduced blocker packet (`Milestones 0-1 resolved locally; no
+Status: Active reduced blocker packet (`Milestones 0-2 resolved locally; no
 bounded historical-source-set rebuild path remains under current artifacts;
-live work is now Milestone 2 governed replacement-readiness classification`)
+no tracked governed replacement is currently proven; live work is now
+Milestone 3 exact child-route or feasibility-stop closeout`)
 
 Owner context: standalone blocker follow-on opened after the parent ECID
 historical-lane packet proved that none of the three currently visible closure
@@ -12,9 +13,12 @@ paths is ready under live artifacts. `source-set-4fb59e9eb43045cb` still fails
 source-set `phase-eval` at `10/33`, `source-set-ba8d0feae79501b8` now fails
 fresh `applicability-validate` with `source_set_stale=398`,
 `partition_gap=329`, `missing_candidate_decision=4`,
-`unresolved_authority=4`, and `provenance_gap=1`, and the tracked governed
-replacement candidate `region1-example-lolo-tylers-kitchen-66344` remains
-review `phase-eval` red at `19/23`. This packet owns exact blocker
+`unresolved_authority=4`, and `provenance_gap=1`; fresh
+`v1-ea-eval --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`
+now fails `contract_status="mismatch"` because the eval contract expects
+`source-set-4fb59e9eb43045cb` while the live review artifacts report
+`source-set-5e65d845ce77e1a0`; and fresh review `phase-eval` for that tracked
+replacement candidate remains red at `12/29`. This packet owns exact blocker
 classification and the next truthful owner route only. It does not flip the
 ECID historical slot to `ready`, lower the governed expansion floor, reopen
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, or claim a
@@ -30,7 +34,7 @@ under current artifacts:
 
 - no coherent historical-source-set rebuild is currently proven on either
   known source set; and
-- no tracked governed ready-slot replacement is currently reviewer-ready.
+- no tracked governed ready-slot replacement is currently proven.
 
 This blocker packet exists to keep that fact explicit, freeze the evidence that
 forced the stop condition, and open exactly one narrower implementation owner
@@ -84,8 +88,18 @@ implementation continues.
     `partition_gap=329`, `missing_candidate_decision=4`,
     `unresolved_authority=4`, and `provenance_gap=1`.
 - The tracked governed replacement branch is also currently unproven:
+  fresh `v1-ea-eval` on
+  `region1-example-lolo-tylers-kitchen-66344` now fails
+  `contract_status="mismatch"` because the tracked eval contract still points
+  at `source-set-4fb59e9eb43045cb` while the live review artifacts report
+  `source-set-5e65d845ce77e1a0`, and fresh
   `source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json`
-  remains `passed=false` with `passed_phase_count=19/23`.
+  now remains `passed=false` with `passed_phase_count=12/29`.
+- The governed replacement roster is still unchanged under current manifests:
+  `real-package-review-coverage-eval` remains green with covered reviews
+  limited to East Crazies, West Reservoir, and South Plateau, and
+  non-strict `promotion-suite` still reports only the ECID historical slot and
+  South Plateau in the expansion roster.
 - The current slot contract remains unchanged and must stay fail-closed during
   blocker routing:
   `config/promotion_suite_v1.json` still records
@@ -433,7 +447,8 @@ Verification:
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval \
   --output-dir source_library \
-  --review-id region1-example-lolo-tylers-kitchen-66344
+  --review-id region1-example-lolo-tylers-kitchen-66344 \
+  --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json
 
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
@@ -447,6 +462,41 @@ PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
   --output-dir source_library \
   --manifest config/promotion_suite_v1.json
 ```
+
+Milestone 2 resolution on 2026-05-26:
+
+- outcome label:
+  `reduced locally`; no tracked governed replacement is currently proven
+  under live artifacts, so the blocker advances to Milestone 3 instead of
+  opening `docs/ECID_PRELIMINARY_HISTORICAL_REPLACEMENT_READY_SLOT_MILESTONE_PLAN.md`
+- resolution truth:
+  fresh Lolo candidate proving fails on both contract identity and readiness.
+  `v1-ea-eval` now exits red with `contract_status="mismatch"` because
+  `config/v1_lolo_tylers_kitchen_real_ea_eval.json` still expects
+  `source-set-4fb59e9eb43045cb` while the live review artifacts report
+  `source-set-5e65d845ce77e1a0`. Fresh review `phase-eval` also remains red
+  at `12/29` on `source-set-4fb59e9eb43045cb`, with failing phases spanning
+  missing direct-eval coverage (`retrieval`, `claim_extraction`,
+  `rule_claim_binding`, `evaluation_coverage`) plus review-local
+  source-set-mismatch phases including `applicability_validation`,
+  `compliance_review`, `forest_plan_component_eval`, and
+  `forest_plan_component_adjudication`. The governed aggregate roster remains
+  unchanged under current manifests: fresh
+  `real-package-review-coverage-eval` is still green with covered reviews
+  limited to East Crazies, West Reservoir, and South Plateau, and fresh
+  non-strict `promotion-suite` still keeps only the ECID historical slot and
+  South Plateau in the expansion roster while failing closed only on
+  `historical_source_set_split`
+- focused verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344`,
+  `jq '{review_id: .summary.review_id, source_set_id: .summary.source_set_id, passed: .summary.passed, contract_status: .summary.contract_status, actual_overall_passed: .summary.actual_overall_passed, broader_ea_passed: .summary.broader_ea_passed, forest_plan_passed: .summary.forest_plan_passed, failed_checks: [.summary.checks[] | select(.passed == false) | {name, details}]}' source_library/reviews/region1-example-lolo-tylers-kitchen-66344/v1_ea_eval_results.json`,
+  `jq '{review_id, source_set_id, passed, passed_phase_count, phase_count, reviewer_ready, missing_direct_eval_phase_count, proxy_only_phase_count, failed_phase_names: [.phases[] | select(.passed == false) | .name]}' source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+- next routing:
+  continue with Milestone 3 in this blocker packet.
 
 ### Milestone 3 - Exact Child-Route Or Feasibility-Stop Closeout
 
@@ -566,9 +616,9 @@ git diff --check
 - If Milestone 2 finds a viable governed replacement candidate, the next live
   work should move to
   `docs/ECID_PRELIMINARY_HISTORICAL_REPLACEMENT_READY_SLOT_MILESTONE_PLAN.md`.
-- If neither path is currently supportable, route the next live work into a
-  narrower feasibility blocker instead of reopening the parent lane or the
-  replay-repair packet.
+- If Milestone 2 does not find a viable governed replacement candidate,
+  Milestone 3 must route the next live work into a narrower feasibility
+  blocker instead of reopening the parent lane or the replay-repair packet.
 - Once this blocker packet routes onward, `docs/CURRENT_ROUTING.md` should name
   the child packet directly and this blocker should become historical context.
 
@@ -576,6 +626,6 @@ git diff --check
 
 - [x] Milestone 0 opened this blocker packet and reset current-facing routing.
 - [x] Milestone 1 recorded an exact historical-source-set feasibility result.
-- [ ] Milestone 2 recorded an exact replacement-readiness result if needed.
+- [x] Milestone 2 recorded an exact replacement-readiness result if needed.
 - [ ] Milestone 3 named one exact next owner or one narrower feasibility stop.
 - [ ] The verified tracked slice was committed atomically.

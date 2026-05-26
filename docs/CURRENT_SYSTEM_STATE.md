@@ -15,6 +15,55 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## ECID Preliminary Governed Replacement Still Unproven Locally
+
+Latest implementation update on 2026-05-26:
+
+- routed packet:
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; blocker Milestone 2 is now complete, and no tracked
+  governed replacement is currently proven under live artifacts
+- implementation truth:
+  fresh Lolo candidate proving now fails before any replacement-ready route
+  can be named. `v1-ea-eval --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`
+  exits red with `contract_status="mismatch"` because the eval contract still
+  expects `source-set-4fb59e9eb43045cb` while the live review artifacts now
+  report `source-set-5e65d845ce77e1a0`. Fresh review
+  `phase-eval --review-id region1-example-lolo-tylers-kitchen-66344`
+  also remains red at `12/29` on `source-set-4fb59e9eb43045cb`, with failing
+  phases spanning missing direct-eval coverage
+  (`retrieval`, `claim_extraction`, `rule_claim_binding`,
+  `evaluation_coverage`) plus review-local source-set mismatch phases
+  including `applicability_validation`, `compliance_review`,
+  `forest_plan_component_eval`, and
+  `forest_plan_component_adjudication`
+- live blocker truth:
+  the governed coverage and promotion aggregates remain stable and do not open
+  a replacement route on their own. Fresh
+  `real-package-review-coverage-eval` stays green with
+  `reviewer_ready_slot_count=2`, `typed_blocked_slot_count=1`,
+  `missing_required_slot_count=0`, and covered reviews still limited to
+  East Crazies, West Reservoir, and South Plateau. Fresh non-strict
+  `promotion-suite` remains `current_promotion_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=false`, with the only live
+  expansion failure still
+  `expansion_failure_category_counts={"historical_source_set_split":1}` on
+  the ECID historical slot. No governed Lolo slot is admitted from current
+  manifest truth
+- next routing:
+  continue in
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 3 to name one exact child packet or one narrower feasibility
+  stop from the Milestones 1-2 evidence bundle. Do not open a replacement-ready
+  child packet from the current tracked candidate set
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
+
 ## ECID Preliminary Historical Rebuild Path Exhausted Locally
 
 Latest implementation update on 2026-05-26:

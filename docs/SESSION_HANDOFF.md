@@ -146,16 +146,20 @@ history below.
   `applicability-validate --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`
   now fails under current artifacts with `source_set_stale=398`,
   `partition_gap=329`, `missing_candidate_decision=4`,
-  `unresolved_authority=4`, and `provenance_gap=1`, and the tracked Lolo
-  replacement candidate remains review `phase-eval` red (`19/23`)
+  `unresolved_authority=4`, and `provenance_gap=1`. Fresh Milestone 2
+  replacement proving now tightens the tracked Lolo blocker as well:
+  `v1-ea-eval --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`
+  now fails `contract_status="mismatch"` because the eval contract still
+  expects `source-set-4fb...` while the live review artifacts report
+  `source-set-5e65...`, and fresh review `phase-eval` remains red at `12/29`
 - next truthful slice:
-  blocker Milestone 1 is now complete: neither `source-set-4fb...` nor
-  `source-set-ba8...` remains a bounded historical-source-set rebuild lane
-  under current artifacts. Milestone 2 in
+  blocker Milestone 2 is now complete: neither a bounded
+  historical-source-set rebuild path nor any tracked governed replacement
+  path is currently proven under live artifacts. Milestone 3 in
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  is now the next truthful slice: classify whether any tracked governed
-  replacement can become ready without weakening the manifest floor. Do not
-  reopen
+  is now the next truthful slice: name one exact child packet or one narrower
+  feasibility stop from the blocker evidence bundle without weakening the
+  manifest floor. Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
   packet
 - session reminder:
@@ -201,6 +205,52 @@ historical blocker packet.
   `jq '{source_set_id, passed, reviewer_ready, failed_checks: [.checks[] | select(.passed == false) | .details]}' /tmp/ecid_preliminary_ba8_applicability_validation_20260526.json`,
   `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`,
   and `git diff --check`
+
+## ECID Preliminary Governed Replacement Still Unproven Locally
+
+This implementation slice closes blocker Milestone 2 in the active ECID
+historical blocker packet.
+
+- outcome label:
+  `reduced locally`; no tracked governed replacement is currently proven
+  under live artifacts, so the blocker now advances to Milestone 3 exact
+  child-route or feasibility-stop closeout rather than opening a
+  replacement-ready child packet
+- implementation truth:
+  fresh Lolo candidate proving now fails before any ready replacement route
+  can be named. `v1-ea-eval` now exits red with
+  `contract_status="mismatch"` because
+  `config/v1_lolo_tylers_kitchen_real_ea_eval.json` still expects
+  `source-set-4fb59e9eb43045cb` while the live Lolo review artifacts report
+  `source-set-5e65d845ce77e1a0`. Fresh review `phase-eval` also remains red
+  at `12/29` on `source-set-4fb59e9eb43045cb`, with failing phases spanning
+  missing direct-eval coverage (`retrieval`, `claim_extraction`,
+  `rule_claim_binding`, `evaluation_coverage`) plus review-local
+  source-set-mismatch phases including `applicability_validation`,
+  `compliance_review`, `forest_plan_component_eval`, and
+  `forest_plan_component_adjudication`
+- live blocker truth:
+  fresh `real-package-review-coverage-eval` remains green with
+  `reviewer_ready_slot_count=2`, `typed_blocked_slot_count=1`,
+  `missing_required_slot_count=0`, and covered reviews still limited to East
+  Crazies, West Reservoir, and South Plateau; fresh non-strict
+  `promotion-suite` remains `current_promotion_ready=true`,
+  `promotion_ready=true`, and `expansion_ready=false`, with only
+  `historical_source_set_split` still open on the ECID historical slot. No
+  governed Lolo slot is admitted from the current coverage or expansion
+  roster
+- next routing:
+  continue in
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 3 to name one exact child packet or one narrower feasibility
+  stop from the Milestones 1-2 evidence bundle. Do not open a
+  replacement-ready child packet from the current tracked candidate set
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
 
 ## ECID Preliminary Historical Lane Rebaseline Blocked Locally
 

@@ -229,9 +229,12 @@ family.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`.
   Any further live work there should start in
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 2 replacement-readiness classification,
-  not in another South replay pass or by reopening the resolved replay-repair
-  packet.
+  at Milestone 3 exact child-route or feasibility-stop closeout. Fresh
+  blocker proving has now also shown that the tracked Lolo replacement path is
+  not currently supportable: `v1-ea-eval` fails on a `4fb...` versus `5e65...`
+  review-identity split and fresh review `phase-eval` remains red at `12/29`.
+  Do not route back into another South replay pass or reopen the resolved
+  replay-repair packet.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:
