@@ -205,16 +205,17 @@ layer rather than the slot-driven contract layer.
   tribal-overlap current-source additions, the governed wildlife
   current-source additions, the governed hazardous-material current-source
   addition, the governed invasive/farmland/drinking-water current-source
-  addition, and the governed minerals current-source addition lane. The
-  reviewer-facing default catalog remains historical, but the active scoped
-  applicability replay now runs on `source-set-a57779ac966f0bda` and reports
-  `authority_universe_sha256=5ae1aeab77f1ff775ad4d012c9ae65b2fd70d09b33363922fa535207dc72333e`,
-  `source_evidence_failure_count=8`, and
-  `missing_source_record_count=3`. The minerals template no longer appears in
-  the missing-template inventory. The remaining blocker is now the governed
-  forest-plan support, vegetation/fire, wilderness-designated-area, and the
-  five base-rule current-source decisions, beginning with the forest-plan
-  support admissions in the same Milestone `2` packet.
+  addition, the governed minerals current-source addition lane, and the
+  governed forest-plan support admission lane. The reviewer-facing default
+  catalog remains historical, but the active scoped applicability replay now
+  runs on `source-set-1cbc5bbb602b60bc` and reports
+  `authority_universe_sha256=cd7fef2e31ee124d123ec188c8f9555092dc13d5ad14bd0c4fe07d8d8f46c698`,
+  `source_evidence_failure_count=7`, and
+  `missing_source_record_count=2`. The forest-plan support family no longer
+  appears in the missing-template inventory. The remaining blocker is now the
+  governed vegetation/fire family, the wilderness/designated-area family, and
+  the five base-rule current-source decisions, beginning with the
+  vegetation/fire lane in the same Milestone `2` packet.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

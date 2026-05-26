@@ -34,7 +34,7 @@ def test_source_register_loader_dispatch_returns_workbook_source_compatibility_r
 
     sources = load_canonical_sources(CANONICAL_WORKBOOK, workbook_config)
 
-    assert len(sources) == 679
+    assert len(sources) == 691
     assert all(source.sheet == "Document_Register_Master" for source in sources)
     assert all(source.metadata["loader_contract"] == SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT for source in sources)
     assert all(source.metadata["row_state"] == "load_ready_master_row" for source in sources)
@@ -209,6 +209,18 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     assert minerals_overlay_row.expected_parser == "html"
     assert minerals_overlay_row.authority_document_class_id == "authority_document"
     assert minerals_overlay_row.jurisdiction_scope_id == "scope:federal-us"
+
+    region_forest_index_row = rows["R1PLAN-region-1-northern-region-02"]
+    assert region_forest_index_row.parser_admission_class == "structured_web_source"
+    assert region_forest_index_row.expected_parser == "html"
+    assert region_forest_index_row.authority_document_class_id == "authority_document"
+    assert region_forest_index_row.jurisdiction_scope_id == "scope:usfs-region-1"
+
+    beaverhead_planning_row = rows["R1PLAN-beaverhead-deerlodge-nf-01"]
+    assert beaverhead_planning_row.parser_admission_class == "structured_web_source"
+    assert beaverhead_planning_row.expected_parser == "html"
+    assert beaverhead_planning_row.authority_document_class_id == "authority_document"
+    assert beaverhead_planning_row.jurisdiction_scope_id == "scope:region1-forest-unit"
 
     challenge_repair_row = rows["FPS-344"]
     assert challenge_repair_row.parser_admission_class == "structured_web_source"
