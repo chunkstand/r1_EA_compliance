@@ -215,9 +215,22 @@ layer rather than the slot-driven contract layer.
   now passes with `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`, and
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-  The next truthful slice inside the replay-repair packet now returns to
-  broader ECID packet-local reviewer-ready repair rather than source-truth or
-  derived-artifact prerequisites.
+  The replay-repair packet now stops truthfully there. Reviewer-facing reruns
+  on historical `source-set-4fb59e9eb43045cb` are still upstream-blocked for
+  both ECID and South Plateau:
+  `applicability-authority-universe` reports
+  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`,
+  `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `validation_passed=false`,
+  `candidates_have_source_evidence_available failure_count=10`, and
+  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
+  ECID `v1-ea-eval` remains `contract_status="mismatch"` with missing
+  review-local compliance artifacts, and `phase-eval` no longer carries a
+  false upstream extraction direct-eval dependency because extraction
+  ownership is now explicitly routed through `extraction-fidelity-eval`. The
+  next truthful slice is now
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

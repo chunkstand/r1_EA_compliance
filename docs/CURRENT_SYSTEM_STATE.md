@@ -15,6 +15,62 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Reviewer-Facing Source-Set Alignment Blocker Opened Locally
+
+Latest implementation update on 2026-05-25:
+
+- routed packet:
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; the stale replay route is now retired, the
+  `phase-eval` extraction direct-eval owner is aligned locally, and the live
+  blocker is now the reviewer-facing source-set authority surface rather than
+  the scoped replay-precondition chain
+- implementation truth:
+  `config/phase_eval_direct_eval_v1.json` now binds the extraction phase to
+  `producer="extraction_fidelity_evaluation"` with
+  `results_path=evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`,
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py` now validates
+  that direct-eval owner explicitly, and focused regressions now live in
+  `tests/test_phase_eval_direct_eval_contracts.py` and
+  `tests/test_phase_eval.py`
+- live replay truth:
+  the scoped gate on `source-set-f70ea11e04ae3d53` remains green through
+  `applicability-authority-universe` with
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`,
+  but reviewer-facing reruns on historical `source-set-4fb59e9eb43045cb`
+  remain upstream-blocked. Both ECID and South Plateau
+  `applicability-authority-universe` runs now report
+  `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`,
+  `validation_passed=false`,
+  `candidates_have_source_evidence_available failure_count=10`, and
+  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
+  ECID `v1-ea-eval` remains `contract_status="mismatch"` with missing
+  review-local compliance artifacts, and `phase-eval` still fails on stale
+  review-local artifacts plus the same reviewer-facing source-set debt rather
+  than a false upstream extraction direct-eval miss
+- remaining blocker truth:
+  packet-local review reruns on `source-set-4fb59e9eb43045cb` cannot
+  truthfully restore reviewer-ready slots until the reviewer-facing source-set
+  authority surfaces, replay contexts, and eval contracts are aligned to one
+  governed source-set truth
+- next routing:
+  resume Milestone `1` of
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`,
+  beginning with the reviewer-facing source-set owner map, applicability
+  reruns for both ECID and South Plateau, and the governed replay-context /
+  contract alignment updates those commands require
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py -q`
+
 ## Scoped Replay Derived-Artifact Chain Reduced Locally
 
 Latest implementation update on 2026-05-25:

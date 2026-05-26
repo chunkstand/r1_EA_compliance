@@ -322,6 +322,12 @@ def _validate_contract(payload: dict[str, Any]) -> None:
             raise ValueError(
                 f"forest-plan-profile direct-eval phase {phase_name!r} requires results_path"
             )
+        if producer == "extraction_fidelity_evaluation" and not str(
+            spec.get("results_path") or ""
+        ).strip():
+            raise ValueError(
+                f"extraction-fidelity direct-eval phase {phase_name!r} requires results_path"
+            )
         if producer == "forest_plan_component_retrieval_evaluation" and not str(
             spec.get("results_path") or ""
         ).strip():

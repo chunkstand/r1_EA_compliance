@@ -7,7 +7,7 @@ Use this file as the short current route before opening the large append-only do
 - Read this file first for the live route.
 - Read the top section of `docs/SESSION_HANDOFF.md` next for the exact active
   packet, blocker counts, and next truthful slice.
-- Open `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- Open `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`
   only after those two docs if the next session is continuing implementation.
 
 ## First Stops
@@ -26,7 +26,9 @@ Use this file as the short current route before opening the large append-only do
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - Promotion contract closeout:
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
-- Active replay-repair packet:
+- Active reviewer-facing alignment packet:
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`
+- Historical replay-repair packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - Recent upstream current-source closeout:
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
@@ -138,10 +140,21 @@ Use this file as the short current route before opening the large append-only do
   `rule_template_candidate_count=48`,
   `authority_family_rule_template_candidate_count=19`, and
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-  The next truthful slice now returns to
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` for broader ECID
-  reviewer-ready repair on packet-local review artifacts rather than source
-  truth or derived-artifact prerequisites.
+  The replay-repair packet now stops truthfully there. Live reviewer-facing
+  reruns on `source-set-4fb59e9eb43045cb` are still upstream-blocked for both
+  ECID and South Plateau: `applicability-authority-universe` reports
+  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`,
+  `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `validation_passed=false`,
+  `candidates_have_source_evidence_available failure_count=10`, and
+  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
+  ECID `v1-ea-eval` therefore remains `contract_status="mismatch"` with
+  missing review-local compliance artifacts, and `phase-eval` now fails only
+  on stale review-local artifacts plus that same reviewer-facing source-set
+  debt after the local direct-eval alignment fix moved extraction ownership to
+  `extraction-fidelity-eval`. The next truthful slice is now
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`.
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty
@@ -159,9 +172,8 @@ Use this file as the short current route before opening the large append-only do
   work; it has already rerouted `FOR-029` out of master-promotion semantics,
   added a tracked Lolo forest-plan component eval slot, and proved packet-local
   `v1-ea-eval` plus component-eval coverage, but the forest row must stay
-  `profile_eval_guidance_only` until the inherited review-scoped
-  `phase-eval` direct-eval blocker on `source-set-4fb59e9eb43045cb` is
-  resolved
+  `profile_eval_guidance_only` until the inherited reviewer-facing source-set
+  alignment blocker on `source-set-4fb59e9eb43045cb` is resolved
 - Downstream gold packet status: the earlier full-canonical compliance-gold
   rebaseline remains historically resolved in commit `8e0e02b`
   (`Resolve full canonical compliance gold rebaseline`) on the same active

@@ -5,6 +5,7 @@ from typing import Any
 import hashlib
 
 from .phase_eval_direct_eval_support import DOWNSTREAM_DIRECT_EVAL_MANIFEST_SCHEMA_VERSION
+from .phase_eval_direct_eval_support import EXTRACTION_FIDELITY_EVAL_RESULTS_SCHEMA_VERSION
 from .phase_eval_direct_eval_support import FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_RESULTS_SCHEMA_VERSION
 from .phase_eval_direct_eval_support import FOREST_PLAN_PROFILE_EVAL_RESULTS_SCHEMA_VERSION
 from .phase_eval_direct_eval_support import UPSTREAM_EVALUATION_RESULTS_SCHEMA_VERSION
@@ -104,6 +105,14 @@ def _source_set_phase_status(
             downstream_manifest_path=downstream_manifest_path,
             downstream_manifest=downstream_manifest,
         )
+    if producer == "extraction_fidelity_evaluation":
+        return _extraction_fidelity_phase_status(
+            phase_name=phase_name,
+            coverage_class=coverage_class,
+            lane_id=str(spec["lane_id"]),
+            output_dir=output_dir,
+            results_path_value=spec.get("results_path"),
+        )
     if producer == "forest_plan_profile_evaluation":
         return _forest_plan_profile_phase_status(
             phase_name=phase_name,
@@ -202,6 +211,73 @@ def _upstream_phase_status(
                 "metric": "upstream_lane_status",
                 "reason": str(lane_summary.get("status") or "direct_eval_failed"),
                 "failed_case_ids": lane_summary.get("failing_case_ids", []),
+            }
+        ]
+        return base
+    base["status"] = "direct_eval_present"
+    base["direct_eval_present"] = True
+    base["direct_eval_passed"] = True
+    return base
+
+
+def _extraction_fidelity_phase_status(
+    *,
+    phase_name: str,
+    coverage_class: str,
+    lane_id: str,
+    output_dir: Path,
+    results_path_value: object,
+) -> dict[str, Any]:
+    result_path = _resolve_repo_path(output_dir, results_path_value)
+    result = _read_json_if_exists(result_path)
+    base = {
+        "phase_name": phase_name,
+        "producer": "extraction_fidelity_evaluation",
+        "coverage_class": coverage_class,
+        "summary_present": isinstance(result, dict),
+        "summary_path": str(result_path),
+        "direct_eval_present": False,
+        "direct_eval_passed": False,
+        "case_count": None,
+        "hard_negative_case_count": None,
+        "threshold_failures": [],
+        "failure_reasons": [],
+        "contract_id": lane_id,
+        "details": {
+            "lane_id": lane_id,
+            "results_path": str(result_path),
+        },
+    }
+    if not isinstance(result, dict):
+        base["status"] = "direct_eval_missing"
+        base["failure_reasons"] = ["missing_required_direct_eval"]
+        return base
+    if (
+        result.get("schema_version")
+        != EXTRACTION_FIDELITY_EVAL_RESULTS_SCHEMA_VERSION
+    ):
+        base["status"] = "direct_eval_schema_invalid"
+        base["failure_reasons"] = ["direct_eval_schema_invalid"]
+        base["details"]["schema_version"] = result.get("schema_version")
+        return base
+    base["case_count"] = _int_or_none(result.get("case_count"))
+    base["details"].update(
+        {
+            "required_category_count": _int_or_none(result.get("required_category_count")),
+            "matched_case_count": _int_or_none(result.get("matched_case_count")),
+            "failed_case_ids": list(result.get("failed_case_ids") or []),
+            "failed_contract_check_names": _failed_contract_check_names(result),
+        }
+    )
+    if not bool(result.get("passed")):
+        base["status"] = "direct_eval_failed"
+        base["direct_eval_present"] = True
+        base["failure_reasons"] = ["direct_eval_threshold_failed"]
+        base["threshold_failures"] = [
+            {
+                "metric": "extraction_fidelity_eval",
+                "failed_case_ids": list(result.get("failed_case_ids") or []),
+                "failed_contract_check_names": _failed_contract_check_names(result),
             }
         ]
         return base

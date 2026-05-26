@@ -291,9 +291,30 @@ class PhaseEvalTests(unittest.TestCase):
                         "lane_summaries": [
                             {"lane_id": "capture", "status": "direct_eval_present"},
                             {"lane_id": "catalog", "status": "direct_eval_present"},
-                            {"lane_id": "extraction", "status": "direct_eval_present"},
                         ],
                         "failed_case_ids": [],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            extraction_fidelity_results_path = (
+                output_dir
+                / "evaluations"
+                / "extraction_fidelity"
+                / "extraction_fidelity_eval_results.json"
+            )
+            extraction_fidelity_results_path.parent.mkdir(parents=True, exist_ok=True)
+            extraction_fidelity_results_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "extraction-fidelity-eval-results-v0",
+                        "passed": True,
+                        "required_category_count": 12,
+                        "case_count": 24,
+                        "matched_case_count": 24,
+                        "failed_case_ids": [],
+                        "contract_checks": [],
                     },
                     sort_keys=True,
                 ),

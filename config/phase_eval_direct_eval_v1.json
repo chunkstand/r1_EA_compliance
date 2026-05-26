@@ -22,7 +22,8 @@
       "coverage_class": "direct_eval_required",
       "lane_id": "extraction",
       "phase_name": "extraction",
-      "producer": "upstream_evaluation"
+      "producer": "extraction_fidelity_evaluation",
+      "results_path": "evaluations/extraction_fidelity/extraction_fidelity_eval_results.json"
     },
     {
       "coverage_class": "direct_eval_required",

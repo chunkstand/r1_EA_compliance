@@ -2,21 +2,40 @@
 
 Date: 2026-05-25
 
-Status: Milestone 1 reduced locally
+Status: Milestone 1 reduced locally; replay reruns stopped at the
+reviewer-facing source-set alignment blocker
 
-Owner context: this is a fresh standalone follow-on packet opened after
+Owner context: this standalone follow-on packet opened after
 `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` closed through
-Milestone `4`. It owns review-local replay repair for the governed real-package
-slots on reviewer-facing source set `source-set-4fb59e9eb43045cb` and now also
-owns the scoped replay-precondition rebuild on
-`source-set-f70ea11e04ae3d53` after the upstream current-source blocker closed
-its governed source-truth inventory there. It does not reopen the slot-driven
-promotion-suite contract architecture, the full-canonical source-set contract,
-or the West Reservoir typed-blocked quarantine. This packet is complete only
-after the required review-local slots are replayed back to truthful
-reviewer-ready state, the aggregate replays are rerun, durable docs and handoff
-are updated, and one local atomic closeout commit lands. A verified but
-uncommitted slice is only ready-to-close.
+Milestone `4`. It owns the review-local replay-repair lane and the scoped
+replay-precondition rebuild on `source-set-f70ea11e04ae3d53`, but it no longer
+owns the newly proven reviewer-facing source-set alignment blocker. That
+follow-on now lives in
+`docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`. This
+packet remains the historical replay-repair reference once that alignment
+blocker clears and control returns to packet-local reviewer-ready artifact
+repair. It does not reopen the slot-driven promotion-suite contract
+architecture, the full-canonical source-set contract, or the West Reservoir
+typed-blocked quarantine.
+
+## Latest Local Implementation
+
+- The scoped replay-precondition chain on `source-set-f70ea11e04ae3d53` is
+  now green through `applicability-authority-universe` with
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
+- `phase-eval` no longer carries a false extraction direct-eval dependency on
+  `upstream-eval`; extraction ownership now routes explicitly through
+  `extraction-fidelity-eval`.
+- Live packet-local reruns on reviewer-facing `source-set-4fb59e9eb43045cb`
+  stop upstream: both ECID and South Plateau
+  `applicability-authority-universe` runs now report
+  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`,
+  `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `candidates_have_source_evidence_available failure_count=10`, and
+  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
+- The next truthful slice is therefore the reviewer-facing source-set
+  alignment packet, not more packet-local replay on `source-set-4fb59e9eb43045cb`.
 
 ## Purpose
 
@@ -46,7 +65,7 @@ weakening the governed slot roster or reopening the contract refactor.
 - The ECID governed slot `east-crazies-current-promotion` currently reports
   `actual_contract_status="mismatch"`, `broader_ea_passed=false`,
   `forest_plan_passed=false`, and
-  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_section_mismatch":8}`.
+  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":10,"conditional_false_negative":4,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_section_mismatch":6}`.
 - The South Plateau governed slot `south-plateau-reviewer-ready` currently
   reports `actual_contract_status="mismatch"`, `broader_ea_passed=false`,
   `forest_plan_passed=false`, and
@@ -69,18 +88,22 @@ weakening the governed slot roster or reopening the contract refactor.
   `failure_category_counts={"stale_artifact":1,"unsupported_package_evidence":1}`.
   The red state still belongs to review-local replay debt, not to selector or
   quorum code drift.
-- The upstream current-source blocker is now exhausted on scoped gate
+- The scoped replay-precondition chain is now green on
   `source-set-f70ea11e04ae3d53` under
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`:
   `applicability-authority-universe` there now reports
-  `source_evidence_failure_count=0`,
-  `missing_source_record_count=0`, and
-  `authority_universe_sha256=5a7f58afc84a4701bfc23e3da53651f674a0975394514dfa4d815d23ca6a2094`,
-  but still fails on
-  `rule_template_candidates_have_source_claim_linkage`
-  (`failure_count=48`) because the scoped gate has no
-  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
-  records `rule_claim_links_path=null`.
+  `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `rule_template_candidate_count=48`,
+  `authority_family_rule_template_candidate_count=19`, and
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
+- The live blocker is no longer scoped replay prerequisites. Packet-local
+  replay on reviewer-facing `source-set-4fb59e9eb43045cb` is upstream-blocked:
+  both ECID and South Plateau `applicability-authority-universe` runs now
+  report `validation_passed=false` on
+  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`
+  with `candidates_have_source_evidence_available failure_count=10` and
+  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
 
 ## Goal
 

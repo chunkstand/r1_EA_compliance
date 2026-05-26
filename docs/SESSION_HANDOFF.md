@@ -14,10 +14,10 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` if the
-  next session is continuing implementation
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md` if
+  the next session is continuing implementation
 - active packet:
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`
 - live blocker state:
   reviewer-facing default catalog remains historical
   `source-set-4fb59e9eb43045cb`; the active scoped replay gate is
@@ -32,14 +32,59 @@ history below.
   v1-cg-ecid-compliance-review` now passes there with
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`
 - next truthful slice:
-  broader ECID reviewer-ready repair inside
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, beginning with
-  `v1-ea-eval`, `phase-eval`, and the mapped ECID packet-local review
-  artifacts for current suite baseline, review packet, decision support, final
-  QA, and supporting outputs
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`,
+  beginning with the reviewer-facing source-set owner map, ECID and South
+  Plateau applicability reruns on the governed reviewer-facing source set, and
+  the replay-context / eval-contract updates those commands require
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## Reviewer-Facing Source-Set Alignment Blocker Opened Locally
+
+This implementation slice retires the stale replay route and opens a fresh
+blocker packet around the live reviewer-facing source-set mismatch.
+
+- outcome label:
+  `reduced locally`; the replay-precondition lane stays green, but replay on
+  reviewer-facing `source-set-4fb59e9eb43045cb` is now truthfully blocked
+  upstream and routed to a standalone alignment packet
+- implementation truth:
+  `config/phase_eval_direct_eval_v1.json` now binds extraction direct-eval to
+  `producer="extraction_fidelity_evaluation"` with
+  `results_path=evaluations/extraction_fidelity/extraction_fidelity_eval_results.json`;
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py` now validates
+  that owner explicitly; and focused regressions now live in
+  `tests/test_phase_eval_direct_eval_contracts.py` and
+  `tests/test_phase_eval.py`
+- live replay truth:
+  the scoped gate on `source-set-f70ea11e04ae3d53` remains green through
+  `applicability-authority-universe` with
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`,
+  but both ECID and South Plateau reviewer-facing
+  `applicability-authority-universe` reruns on
+  `source-set-4fb59e9eb43045cb` now report
+  `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`,
+  `validation_passed=false`,
+  `candidates_have_source_evidence_available failure_count=10`, and
+  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
+  ECID `v1-ea-eval` remains `contract_status="mismatch"` with missing
+  review-local compliance artifacts, and `phase-eval` now fails only on stale
+  review-local artifacts plus that same reviewer-facing source-set debt rather
+  than a false upstream extraction direct-eval miss
+- next truthful slice:
+  resume Milestone `1` of
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment --source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py -q`
 
 ## Scoped Replay Derived-Artifact Chain Reduced Locally
 

@@ -135,9 +135,21 @@ Current routed state on 2026-05-25:
   `rule_template_candidate_count=48`,
   `authority_family_rule_template_candidate_count=19`, and
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-  The next truthful slice now returns to
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` for broader ECID
-  reviewer-ready repair across packet-local review artifacts.
+  The replay-repair packet now stops truthfully there. Live reviewer-facing
+  reruns on `source-set-4fb59e9eb43045cb` are still upstream-blocked for both
+  ECID and South Plateau: `applicability-authority-universe` reports
+  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`,
+  `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `validation_passed=false`,
+  `candidates_have_source_evidence_available failure_count=10`, and
+  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
+  ECID `v1-ea-eval` therefore remains `contract_status="mismatch"` with
+  missing review-local compliance artifacts, and `phase-eval` now fails only
+  on stale review-local artifacts plus that same reviewer-facing source-set
+  debt after the local direct-eval alignment fix moved extraction ownership to
+  `extraction-fidelity-eval`. The next truthful slice is now
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs
@@ -186,7 +198,7 @@ Current routed state on 2026-05-25:
   `lolo-nf` Tyler's Kitchen package as a governed example-package boundary,
   captures the `FOR-029` queue reroute out of master-promotion semantics, and
   adds a tracked Lolo forest-plan component eval slot, but it stops honestly
-  at the inherited review-scoped `phase-eval` blocker on
+  at the inherited reviewer-facing source-set alignment blocker on
   `source-set-4fb59e9eb43045cb` rather than promoting `lolo-nf` prematurely.
   The project-specific blocker-family opener landed in commit `8b889a9`
   (`Open project-specific queue blocker packet`), the SCC structured-export
