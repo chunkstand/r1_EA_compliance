@@ -143,17 +143,20 @@ Latest docs-and-gate rebaseline on 2026-05-26:
   `rg -n "Canonical source-register refoundation status on|Historical local import baseline on|current_promotion_ready|reviewer_ready=true|source-set-[0-9a-f]{16}" README.md`,
   and `git diff --check`
 
-## ECID Current-Promotion Replay Resolved Locally
+## ECID Current-Promotion Replay Resolved Locally (Historical Mid-Packet Checkpoint)
+
+This section records the intermediate packet state before the later South
+Plateau repair summarized above.
 
 Latest implementation update on 2026-05-26:
 
 - routed packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - packet outcome:
-  `reduced locally`; ECID current-promotion replay is now green end to end on
-  reviewer-facing `source-set-f70ea11e04ae3d53`, and the remaining live packet
-  blocker is now South Plateau forest-plan replay / adjudication refresh
-  rather than ECID broader-EA, direct-eval, final-QA, or promotion drift
+  `reduced locally`; ECID current-promotion replay is green end to end on
+  reviewer-facing `source-set-f70ea11e04ae3d53`. At this historical checkpoint,
+  South Plateau still remained to be repaired; current top-of-file routing has
+  since moved past South to the ECID preliminary-EA historical expansion lane
 - implementation truth:
   the ECID repair now spans the broader review-local packet family: aligned
   direct-eval contracts for retrieval / claim / rule-claim, decision-support
@@ -200,14 +203,17 @@ Latest implementation update on 2026-05-26:
   source-set graph still carries `region1_forest_plan_blocked_profile_count=9`
   rather than a fake zero-blocker full-Region-1 claim
 - remaining blocker truth:
-  South Plateau now carries the remaining packet-local replay debt on the same
-  aligned source set. ECID broader-EA, direct-eval, final-QA, and
-  current-promotion aggregate replay are no longer the blocker
+  At this checkpoint, South Plateau carried the remaining packet-local replay
+  debt on the same aligned source set. ECID broader-EA, direct-eval, final-QA,
+  and current-promotion aggregate replay were no longer the blocker. Current
+  top-of-file routing has since moved past South to the ECID preliminary-EA
+  historical expansion lane
 - next routing:
-  resume `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
-  beginning with South Plateau packet-local forest-plan replay / adjudication
-  refresh on aligned `source-set-f70ea11e04ae3d53`, then finish the packet's
-  aggregate docs / closeout slice
+  historical next routing at that checkpoint: resume
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, beginning with
+  South Plateau packet-local forest-plan replay / adjudication refresh on
+  aligned `source-set-f70ea11e04ae3d53`, then finish the packet's aggregate
+  docs / closeout slice
 - verification:
   `PYTHONPATH=src python -m usfs_r1_ea_sources draft-generate --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
   `PYTHONPATH=src python -m usfs_r1_ea_sources draft-generation-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,

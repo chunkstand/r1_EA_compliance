@@ -177,15 +177,20 @@ slot on aligned reviewer-facing `source-set-f70ea11e04ae3d53`.
   stay on the same parent packet, but reroute from South to the historical
   ECID preliminary-EA expansion review-case artifact family
 
-## ECID Current-Promotion Replay Resolved Locally
+## ECID Current-Promotion Replay Resolved Locally (Historical Mid-Packet Checkpoint)
+
+This section records the packet state before the later South Plateau repair
+summarized above in `## Fresh Session Start`.
 
 This implementation slice closes the ECID review-local current-promotion replay
 family on the aligned reviewer-facing source set.
 
 - outcome label:
-  `reduced locally`; ECID is now green end to end on
-  `source-set-f70ea11e04ae3d53`, and South Plateau now carries the remaining
-  packet-local replay debt
+  `reduced locally`; ECID is green end to end on
+  `source-set-f70ea11e04ae3d53`. At this historical checkpoint, South Plateau
+  still carried the remaining packet-local replay debt; the current live next
+  slice has since moved past South to the ECID preliminary-EA historical
+  expansion lane
 - live ECID truth:
   `v1-ea-eval --review-id v1-cg-ecid-compliance-review` now reports
   `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
@@ -211,8 +216,11 @@ family on the aligned reviewer-facing source set.
   tests keep matching the governed runtime instead of relying on proxy-only
   extraction coverage
 - next slice:
-  resume the same parent packet at South Plateau packet-local forest-plan
-  replay / adjudication refresh, then finish aggregate docs / closeout
+  historical next slice at that checkpoint: resume the same parent packet at
+  South Plateau packet-local forest-plan replay / adjudication refresh, then
+  finish aggregate docs / closeout. The current live next slice is now the
+  ECID preliminary-EA historical expansion lane recorded in
+  `## Fresh Session Start`
 
 ## Architecture Governance Rebaseline Resolved Locally
 

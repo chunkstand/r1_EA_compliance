@@ -89,10 +89,12 @@ Packet-local ECID semantic counts now stay in their focused owners such as
 validator tests. The shared `promotion-suite` manifest keeps aggregate
 freshness, status, and canary truth, not duplicate packet-local count locks.
 
-The default manifest keeps two real-package expansion slots: the ECID preliminary-EA slot is ready,
-and the South Plateau Area Landscape Treatment Project slot is selected but not ready. Open
-expansion slots do not block the current V1 promotion claim, but they make broader readiness gaps
-visible to future agents. Current promotion does require the applicability seed and gold eval
+The default manifest keeps two real-package expansion slots: the South Plateau Area Landscape
+Treatment Project slot is now reviewer-ready, while the ECID preliminary-EA historical review slot
+remains selected but not expansion-ready because its downstream compliance / provenance artifact
+family is still missing on a split historical source-set lane. Open expansion artifacts do not
+block the current V1 promotion claim, but they make broader readiness gaps visible to future
+agents. Current promotion does require the applicability seed and gold eval
 artifacts that prove
 positive, negative, unresolved, replay-adjudicated, and arbitration-field coverage for the expanded
 authority-family templates. It also requires the authority-family reviewer-report artifacts for the

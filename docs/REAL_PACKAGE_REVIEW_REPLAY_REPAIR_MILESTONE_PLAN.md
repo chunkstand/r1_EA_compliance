@@ -17,8 +17,10 @@ Milestone `4`. It owns the review-local replay-repair lane and the scoped
 replay-precondition rebuild on `source-set-f70ea11e04ae3d53`. The
 reviewer-facing source-set alignment blocker is now historical closeout in
 `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`, and
-this packet is active again for packet-local reviewer-ready artifact repair on
-the aligned reviewer-facing source set. It does not reopen the slot-driven
+this packet is active again for the remaining ECID preliminary-EA historical
+expansion lane plus aggregate closeout. The aligned reviewer-facing source-set
+repairs for ECID current promotion and South Plateau are now historical
+completed slices inside this packet. It does not reopen the slot-driven
 promotion-suite contract architecture, the full-canonical source-set contract,
 or the West Reservoir typed-blocked quarantine.
 
@@ -215,12 +217,15 @@ Completion means all of the following are true:
 
 ## Scope
 
-- ECID review-local replay repair on the active source set
-- South Plateau review-local replay repair on the active source set
-- tracked replay-context and review-eval config alignment for those two slots
-- aggregate replay confirmation for
-  `real-package-review-coverage-eval` and non-strict `promotion-suite`
-- focused docs and handoff updates that describe the repaired live result
+- ECID preliminary-EA historical expansion review-case artifact family on its
+  split `source-set-ba8d0feae79501b8` / `source-set-4fb59e9eb43045cb` lane
+- truthful strict-expansion contract or routing updates for that historical
+  review case when repair is not supportable
+- aggregate replay confirmation that
+  `real-package-review-coverage-eval` stays green and `promotion-suite`
+  remains truthful for both non-strict and strict-expansion modes
+- focused docs and handoff updates that describe the repaired or rerouted live
+  result without reopening already-green reviewer-ready slots
 
 ## Out Of Scope
 
@@ -231,29 +236,26 @@ Completion means all of the following are true:
 
 ## Owner Surfaces
 
-- governed review-slot contracts:
+- governed aggregate contracts:
   `config/v1_real_package_review_coverage_v1.json`,
+  `config/promotion_suite_v1.json`
+- preserved reviewer-ready slot contracts that must stay green while the
+  historical lane is handled:
   `config/v1_ecid_real_ea_eval.json`,
   `config/v1_south_plateau_real_ea_eval.json`
-- tracked replay context:
-  `config/replay_contexts/v1-cg-ecid-compliance-review.json`,
-  `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json`
-- packet-local review owners that may need focused replay or contract repair:
-  `config/ea_consistency_decision_support_v1.json`,
-  `config/east_crazies_final_qa_certification_v1.json`,
-  `src/usfs_r1_ea_sources/v1_ea_eval.py`,
+- historical expansion review-case owners that may need focused replay repair
+  or truthful reroute:
   `src/usfs_r1_ea_sources/real_package_review_coverage_eval.py`,
   `src/usfs_r1_ea_sources/promotion_suite.py`,
-  and the matching review-local artifact families under
-  `source_library/reviews/<review_id>/`
+  and the review-local artifact family under
+  `source_library/reviews/region1-expansion-ecid-preliminary-ea/`
 - focused tests and fixtures:
-  `tests/test_v1_ea_eval.py`,
-  `tests/test_v1_ea_eval_contracts.py`,
-  `tests/test_v1_ea_eval_forest_plan.py`,
   `tests/test_real_package_review_coverage_eval.py`,
   `tests/test_promotion_suite.py`,
   `tests/test_promotion_suite_current_runtime.py`,
   `tests/test_promotion_suite_full_canonical.py`,
+  `tests/test_v1_ea_eval.py`,
+  `tests/test_v1_ea_eval_contracts.py`,
   `tests/test_phase_eval.py`,
   `tests/test_cli_eval.py`,
   `tests/test_architecture_contract.py`
@@ -298,25 +300,28 @@ Completion means all of the following are true:
   Future-Codex misuse scenario: a later agent edits the manifest instead of the
   review-local artifacts; the gate must catch the shortcut.
 
-- Weak point forecast: ECID is repaired but South Plateau is left mismatched,
-  so the repo reports a smaller blocker while the governed coverage gate stays
-  red.
+- Weak point forecast: a later agent handles the ECID preliminary historical
+  lane by reopening South Plateau or ECID current-promotion drift, so the repo
+  reports progress while the governed reviewer-ready slots stop being truthful.
   Owner surface:
   `source_library/reviews/real_package_review_coverage_eval/`,
+  `config/v1_ecid_real_ea_eval.json`,
   `config/v1_south_plateau_real_ea_eval.json`,
   `tests/test_real_package_review_coverage_eval.py`
   Prevention gate: packet closeout requires both governed reviewer-ready slots
-  to satisfy their contracts, not only the current-promotion slot.
-  Fail threshold: ECID is green but `real-package-review-coverage-eval` still
-  reports a South Plateau mismatch.
-  Controlled violation: rerun the aggregate after only ECID repair; the packet
-  must remain open.
-  Future-Codex misuse scenario: a future agent optimizes for current promotion
-  only and leaves aggregate slot truth broken; the aggregate gate must fail.
+  to stay green while the ECID preliminary lane is repaired or rerouted.
+  Fail threshold: strict-expansion work regresses either current reviewer-ready
+  slot.
+  Controlled violation: change the historical preliminary lane but leave
+  either governed reviewer-ready slot mismatched; the aggregate gate must
+  reopen.
+  Future-Codex misuse scenario: a future agent treats the historical expansion
+  lane as permission to ignore the already-green current slots; the aggregate
+  gate must fail.
 
 - Weak point forecast: the repair work expands into unnecessary corpus or
   downloader reruns and obscures the review-local root cause.
-  Owner surface: this plan, `docs/SESSION_HANDOFF.md`, and the replay-context
+  Owner surface: this plan, `docs/SESSION_HANDOFF.md`, and the historical-lane
   owners above
   Prevention gate: each milestone must name the exact review-local command or
   artifact family being repaired before broader workflows are considered.
@@ -328,23 +333,26 @@ Completion means all of the following are true:
   because it is easier than tracing the review-local artifact family; the plan
   keeps the packet focused.
 
-- Weak point forecast: regenerated review artifacts still point at stale source
-  set or package-authority context, so the same mismatch returns on the next
-  replay.
+- Weak point forecast: the historical ECID preliminary lane is refreshed on
+  mismatched `source-set-ba8d0feae79501b8` / `source-set-4fb59e9eb43045cb`
+  identities, or the contract is rerouted without making that split explicit,
+  so strict expansion looks repaired while the lane remains incoherent.
   Owner surface:
-  `config/replay_contexts/v1-cg-ecid-compliance-review.json`,
-  `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json`,
-  `tests/test_v1_ea_eval_contracts.py`,
-  `tests/test_phase_eval.py`
-  Prevention gate: packet-local replay verification must prove the repaired
-  artifacts bind to `source-set-f70ea11e04ae3d53` and the tracked package
-  authority before aggregate closeout.
-  Fail threshold: slot-level reruns pass locally but still emit stale
-  source-set or package-authority signals into aggregate gates.
-  Controlled violation: point a replay-context fixture at the wrong source set;
-  the contract tests must fail closed.
-  Future-Codex misuse scenario: a later agent refreshes files in place without
-  checking replay-context binding; the contract tests must catch the drift.
+  `config/promotion_suite_v1.json`,
+  `source_library/reviews/region1-expansion-ecid-preliminary-ea/`,
+  `tests/test_promotion_suite.py`,
+  `tests/test_promotion_suite_full_canonical.py`
+  Prevention gate: packet-local verification must prove either a coherent
+  historical-lane identity or an explicit truthful reroute before aggregate
+  closeout.
+  Fail threshold: the aggregate gate changes color while the preliminary lane
+  still mixes source-set identities or claims missing artifacts exist.
+  Controlled violation: reroute the historical slot without updating the
+  manifest-declared artifact expectations; the promotion-suite tests must fail
+  closed.
+  Future-Codex misuse scenario: a later agent patches the aggregate result
+  without resolving or declaring the split historical identity; the gate must
+  catch the shortcut.
 
 ## Milestone Sequence
 
@@ -570,9 +578,9 @@ Milestone 1 closeout update on 2026-05-26:
   compliance-phase fixtures honest: the shared fixture materializes the
   required extraction-fidelity direct eval so phase-eval tests keep matching
   the governed runtime rather than relying on proxy-only extraction coverage.
-- The next truthful slice after South is now Milestone `2` ECID
-  preliminary-EA historical expansion artifact repair or truthful contract
-  reroute, followed by Milestone `3` aggregate docs and closeout.
+- The next truthful slice is now Milestone `2` ECID preliminary-EA
+  historical expansion artifact repair or truthful contract reroute, followed
+  by Milestone `3` aggregate docs and closeout.
 
 ### Milestone 2 - ECID Preliminary Expansion Artifact Repair
 
@@ -715,12 +723,15 @@ Milestone 3 live alignment update on 2026-05-26:
 
 ## Required Implementation Artifacts
 
-- repaired ECID review-local artifact family on the active source set
-- repaired South Plateau review-local artifact family on the active source set
-- any tracked replay-context or review-eval config updates required to keep the
-  reviewer-ready slots truthful
-- focused regression coverage for any repaired slot-contract edge case
-- updated docs and handoff that record the repaired aggregate result
+- repaired or truthfully rerouted ECID preliminary-EA historical expansion
+  review-case artifact family
+- any manifest or contract updates required to keep ECID current promotion and
+  South Plateau reviewer-ready truth stable while the historical lane is
+  handled
+- focused regression coverage for any repaired or rerouted aggregate-contract
+  edge case
+- updated docs and handoff that record the repaired or rerouted aggregate
+  result
 
 ## Required Documentation And Handoff Updates
 
@@ -733,14 +744,17 @@ Milestone 3 live alignment update on 2026-05-26:
 
 ## Required Verification Gates
 
-- slot-level `v1-ea-eval` replays for ECID and South Plateau
-- ECID `phase-eval --review-id` replay when its suite-level artifact family is
-  touched
 - `real-package-review-coverage-eval`
 - non-strict `promotion-suite`
-- focused `pytest` coverage for `v1_ea_eval`, real-package coverage, promotion
-  suite, CLI, phase-eval, and architecture boundaries when touched
-- `ruff check src tests`, `compileall`, and `git diff --check`
+- strict-expansion `promotion-suite`
+- targeted `region1-expansion-ecid-preliminary-ea` replay or contract checks
+  when the historical review-case lane is touched
+- slot-level `v1-ea-eval` or `phase-eval` replays for ECID and South only if a
+  change risks reopening the already-green reviewer-ready slots
+- focused `pytest` coverage for real-package coverage, promotion suite,
+  `v1_ea_eval`, phase-eval, CLI, and architecture boundaries when touched
+- `ruff check src tests`, `compileall`, and `git diff --check` when code or
+  config owners change; `git diff --check` always
 
 ## Acceptance Criteria
 
