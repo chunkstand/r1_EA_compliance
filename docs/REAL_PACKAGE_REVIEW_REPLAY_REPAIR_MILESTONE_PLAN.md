@@ -2,14 +2,16 @@
 
 Date: 2026-05-25
 
-Status: Active packet (`Milestone 0` baseline inventory is historical,
+Status: Resolved locally (`Milestone 0` baseline inventory is historical,
 reviewer-facing source-set alignment is now resolved locally, ECID aligned
 forest-plan inventory plus compliance replay are now reduced locally, ECID
 current-promotion replay is now green on reviewer-facing
 `source-set-f70ea11e04ae3d53`, South Plateau reviewer-ready expansion is now
-also green there, and the next truthful slice is the ECID preliminary-EA
-historical expansion compliance / provenance artifact family on its split
-historical source-set lane before aggregate closeout)
+also green there, and the historical ECID preliminary-EA lane is now
+truthfully rerouted as a selected-not-ready strict-expansion slot on its split
+historical source-set contract. Any future work there should open a fresh
+follow-on rather than reopening this packet to reassert missing downstream
+artifacts)
 
 Owner context: this standalone follow-on packet opened after
 `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` closed through
@@ -95,19 +97,16 @@ or the West Reservoir typed-blocked quarantine.
 - `real-package-review-coverage-eval` is now green with
   `passed=true`, `reviewer_ready_slot_count=2`,
   `missing_required_slot_count=0`, and `missing_coverage_class_ids=[]`.
-- The remaining aggregate red is now the strict-expansion ECID preliminary-EA
-  historical review-case family, not ECID current promotion or South replay:
-  `promotion-suite` now reports `open_expansion_slot_count=0`,
-  `open_expansion_artifact_count=6`, and
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready":3,"stale_artifact":3}`.
-  The only failed review case is `region1-expansion-ecid-preliminary-ea`,
-  which still lacks `compliance_validation.json`, `compliance_review.json`,
-  `compliance_matrix.json`, `compliance_matrix.pdf`,
-  `authority_family_provenance.json`, and
-  `non_applicable_authority_appendix.json`. That lane is historically split:
-  applicability validation and phase eval remain on
-  `source-set-ba8d0feae79501b8`, while the generated rule pack and expansion
-  slot contract remain on `source-set-4fb59e9eb43045cb`
+- The remaining strict-expansion red is now routed truthfully through the
+  historical ECID preliminary-EA slot rather than through six false live
+  artifact requirements. Non-strict `promotion-suite` now reports
+  `open_expansion_slot_count=1`, `open_expansion_artifact_count=0`, and
+  `expansion_failure_category_counts={"historical_source_set_split":1}`.
+  Strict expansion now fails closed only because
+  `region1-expansion-ecid-preliminary-ea` is a selected-not-ready slot on a
+  split historical lane: applicability validation and phase eval remain on
+  `source-set-ba8d0feae79501b8`, while the generated rule pack and slot
+  identity remain on `source-set-4fb59e9eb43045cb`
 
 ## Purpose
 
@@ -148,18 +147,18 @@ weakening the governed slot roster or reopening the contract refactor.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
   now reports `full_canonical_corpus_ready=true`,
   `current_promotion_ready=true`, `promotion_ready=true`,
-  `expansion_ready=false`, `open_expansion_slot_count=0`,
-  `open_expansion_artifact_count=6`,
+  `expansion_ready=false`, `open_expansion_slot_count=1`,
+  `open_expansion_artifact_count=0`,
   `passed_required_current_result_count=32`,
   `required_current_result_count=32`,
-  `passed_required_expansion_result_count=20`,
-  `required_expansion_result_count=26`, and `failure_category_counts={}`.
+  `passed_required_expansion_result_count=19`,
+  `required_expansion_result_count=20`, and `failure_category_counts={}`.
 - Strict-expansion `promotion-suite` now fails closed only on the ECID
-  preliminary-EA historical review-case family with
+  preliminary-EA historical selected-not-ready slot with
   `current_promotion_ready=true`, `promotion_ready=false`,
   `expansion_ready=false`,
-  `failure_category_counts={"forest_plan_reviewer_not_ready":3,"stale_artifact":3}`,
-  `open_expansion_slot_count=0`, and `open_expansion_artifact_count=6`.
+  `failure_category_counts={"historical_source_set_split":1}`,
+  `open_expansion_slot_count=1`, and `open_expansion_artifact_count=0`.
 - The scoped replay-precondition chain is now green on
   `source-set-f70ea11e04ae3d53` under
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`:
@@ -172,9 +171,10 @@ weakening the governed slot roster or reopening the contract refactor.
 - Reviewer-facing source-set alignment is no longer the blocker. Both ECID and
   South Plateau `applicability-authority-universe` reruns now pass on aligned
   `source-set-f70ea11e04ae3d53`, and ECID broader-EA plus review-direct-eval
-  replay are now also green there. South replay is also green; the remaining
-  blocker is the historical ECID preliminary-EA downstream compliance /
-  provenance artifact family on its split legacy source-set surfaces.
+  replay are now also green there. South replay is also green; strict
+  expansion now truthfully routes the remaining historical ECID preliminary-EA
+  work through a selected-not-ready slot on its split legacy source-set
+  surfaces.
 - `source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`
   now reports `covered_review_count=1`,
   `covered_review_ids=["v1-cg-ecid-compliance-review"]`,
@@ -649,6 +649,26 @@ Milestone 2 live next-slice baseline on 2026-05-26:
   coherent historical-lane rebuild or strict-expansion contract reroute, not a
   fake local pass.
 
+Milestone 2 closeout update on 2026-05-26:
+
+- The historical ECID preliminary-EA lane is now truthfully rerouted instead
+  of falsely reported as a ready slot with six live required artifact misses.
+- `config/promotion_suite_v1.json` now keeps applicability validation,
+  generated rule-pack validation, forest-plan component adjudication
+  template/eval, and review-scoped phase eval as the live required expansion
+  evidence for `region1-expansion-ecid-preliminary-ea`, while demoting the six
+  absent downstream compliance/provenance artifacts from active
+  required-expansion counting on this packet.
+- Expansion slot `region1-real-ea-slot-1` now reports
+  `status="selected_not_ready"` with
+  `failure_category="historical_source_set_split"`, explicit
+  `source-set-ba8d0feae79501b8` / `source-set-4fb59e9eb43045cb` split-signal
+  evidence, and a next action that routes any future work into a fresh
+  standalone follow-on.
+- Strict-expansion `promotion-suite` now fails closed only on that selected
+  slot with `open_expansion_slot_count=1`, `open_expansion_artifact_count=0`,
+  and `failure_category_counts={"historical_source_set_split":1}`.
+
 ### Milestone 3 - Aggregate Replay, Docs, And Closeout
 
 Outcome label: reduced
@@ -711,13 +731,14 @@ Milestone 3 live alignment update on 2026-05-26:
 - Non-strict `promotion-suite` is again truthful for current promotion with
   `current_promotion_ready=true`, `promotion_ready=true`, and
   `passed_required_current_result_count=32/32`; strict expansion remains red
-  only on the ECID preliminary-EA historical review-case family with
-  `failure_category_counts={"forest_plan_reviewer_not_ready":3,"stale_artifact":3}`.
+  only on the ECID preliminary-EA historical selected-not-ready slot with
+  `failure_category_counts={"historical_source_set_split":1}`,
+  `open_expansion_slot_count=1`, and `open_expansion_artifact_count=0`.
 - The durable doc set now reflects that live state:
   `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/SESSION_HANDOFF.md`, `docs/POST_V1_PROMOTION_SUITE.md`, and this plan
-  now route to the ECID preliminary-EA historical expansion lane as the next
-  truthful slice. `README.md` was
+  now record the truthful reroute closeout and route any future historical-lane
+  rebuild into a fresh follow-on instead of this packet. `README.md` was
   checked and remains intentionally unchanged because it delegates volatile
   replay truth to the current-state docs instead of duplicating it.
 

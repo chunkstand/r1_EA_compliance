@@ -382,12 +382,31 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     review_cases = {case["id"]: case for case in manifest["review_cases"]}
     ecid_case = review_cases["region1-expansion-ecid-preliminary-ea"]
     ecid_results = {result["id"]: result for result in ecid_case["results"]}
+    rerouted_result_ids = {
+        "compliance_validation",
+        "compliance_review",
+        "compliance_matrix",
+        "compliance_matrix_pdf",
+        "authority_family_provenance",
+        "non_applicable_authority_appendix",
+    }
+    still_required_result_ids = {
+        "applicability_validation",
+        "generated_rule_pack_validation",
+        "forest_plan_component_adjudication_template",
+        "forest_plan_component_adjudication_eval",
+        "phase_eval",
+    }
 
     assert ecid_case["required_for_current_promotion"] is False
     assert ecid_case["review_id"] == "region1-expansion-ecid-preliminary-ea"
     for result in ecid_results.values():
         assert result["required_for_current_promotion"] is False
-        assert result["required_for_expansion"] is True
+        assert result["required_for_expansion"] is (
+            result["id"] in still_required_result_ids
+        )
+    assert rerouted_result_ids.isdisjoint(still_required_result_ids)
+    assert rerouted_result_ids | still_required_result_ids == set(ecid_results)
 
     generated = ecid_results["generated_rule_pack_validation"]
     generated_checks = {check["name"]: check for check in generated["checks"]}
@@ -498,9 +517,9 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     slot = slots["region1-real-ea-slot-1"]
     ecid_gate_artifacts = {artifact["id"] for artifact in slot["expected_gate_artifacts"]}
 
-    assert slot["status"] == "ready"
-    assert slot["ready"] is True
-    assert "failure_category" not in slot
+    assert slot["status"] == "selected_not_ready"
+    assert slot["ready"] is False
+    assert slot["failure_category"] == "historical_source_set_split"
     assert slot["review_id"] == "region1-expansion-ecid-preliminary-ea"
     assert slot["source_set_id"] == "source-set-4fb59e9eb43045cb"
     assert "Preliminary Environmental Assessment" in slot["package_path"]
@@ -512,8 +531,15 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert slot["last_local_signal"]["needs_adjudication_authority_count"] == 0
     assert slot["last_local_signal"]["remaining_adjudication_authority_family_ids"] == []
     assert slot["last_local_signal"]["applicability_validation_passed"] is True
+    assert (
+        slot["last_local_signal"]["applicability_validation_source_set_id"]
+        == "source-set-ba8d0feae79501b8"
+    )
     assert slot["last_local_signal"]["generated_rule_pack_ready"] is True
-    assert slot["last_local_signal"]["compliance_review_reviewer_ready"] is True
+    assert (
+        slot["last_local_signal"]["generated_rule_pack_source_set_id"]
+        == "source-set-4fb59e9eb43045cb"
+    )
     assert slot["last_local_signal"]["rule_claim_link_count"] == 211
     assert slot["last_local_signal"]["rule_claim_gap_count"] == 0
     assert slot["last_local_signal"]["forest_plan_component_reviewer_resolution_count"] == 158
@@ -523,6 +549,22 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
         slot["last_local_signal"]["forest_plan_component_adjudication_system_miss_count"]
         == 0
     )
+    assert slot["last_local_signal"]["phase_eval_source_set_id"] == (
+        "source-set-ba8d0feae79501b8"
+    )
+    assert slot["last_local_signal"]["split_source_set_ids"] == [
+        "source-set-ba8d0feae79501b8",
+        "source-set-4fb59e9eb43045cb",
+    ]
+    assert slot["last_local_signal"]["missing_required_artifact_ids"] == [
+        "compliance_validation",
+        "compliance_review",
+        "compliance_matrix",
+        "compliance_matrix_pdf",
+        "authority_family_provenance",
+        "non_applicable_authority_appendix",
+    ]
+    assert slot["last_local_signal"]["reroute_required"] is True
 
     third_slot = slots["region1-real-ea-slot-2"]
     gate_artifacts = {artifact["id"] for artifact in third_slot["expected_gate_artifacts"]}

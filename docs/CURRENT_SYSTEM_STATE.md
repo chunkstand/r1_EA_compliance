@@ -15,6 +15,61 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## ECID Preliminary Historical Expansion Truthfully Rerouted Locally
+
+Latest implementation update on 2026-05-26:
+
+- routed packet:
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- packet outcome:
+  `resolved locally`; the remaining strict-expansion drift is no longer
+  reported as six live required artifacts. The historical ECID
+  preliminary-EA lane is now a selected-not-ready slot on an explicit split
+  source-set contract while current promotion and the governed South Plateau
+  slot remain green
+- implementation truth:
+  `config/promotion_suite_v1.json` now truthfully reroutes the historical
+  ECID preliminary-EA slot by keeping only its applicability validation,
+  generated rule-pack validation, forest-plan component adjudication
+  template/eval, and review-scoped phase-eval as live required expansion
+  artifacts. The six missing downstream compliance/provenance artifacts are no
+  longer counted as active strict-expansion requirements on this packet. The
+  slot now reports `status="selected_not_ready"` with
+  `failure_category="historical_source_set_split"` and explicit
+  `source-set-ba8d0feae79501b8` / `source-set-4fb59e9eb43045cb` split-signal
+  evidence in its last-local-signal payload; `tests/test_promotion_suite.py`
+  now enforces that committed contract
+- live replay truth:
+  `real-package-review-coverage-eval` still reports `passed=true`,
+  `reviewer_ready_slot_count=2`, `missing_required_slot_count=0`, and
+  `missing_coverage_class_ids=[]`. Non-strict `promotion-suite` now reports
+  `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `open_expansion_slot_count=1`,
+  `open_expansion_artifact_count=0`,
+  `passed_required_current_result_count=32/32`,
+  `passed_required_expansion_result_count=19/20`, and
+  `expansion_failure_category_counts={"historical_source_set_split":1}`.
+  Strict expansion now fails closed only because that rerouted historical slot
+  is selected-not-ready:
+  `failure_category_counts={"historical_source_set_split":1}`,
+  `open_expansion_slot_count=1`, and `open_expansion_artifact_count=0`
+- remaining blocker truth:
+  the historical lane still spans `source-set-ba8d0feae79501b8` for
+  applicability validation / phase eval and
+  `source-set-4fb59e9eb43045cb` for generated rule-pack / slot identity. The
+  six downstream compliance/provenance artifacts are still absent locally, but
+  the suite no longer falsely claims they are live required expansion
+  artifacts on this packet
+- next routing:
+  no further runtime slice remains inside this packet. If more work is
+  requested, open a fresh follow-on for coherent historical-lane rebuild or
+  governed slot replacement
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  and
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json --results-dir source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion --strict-expansion`
+
 ## South Plateau Reviewer-Ready Expansion Restored Locally
 
 Latest implementation update on 2026-05-26:

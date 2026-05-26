@@ -91,10 +91,13 @@ freshness, status, and canary truth, not duplicate packet-local count locks.
 
 The default manifest keeps two real-package expansion slots: the South Plateau Area Landscape
 Treatment Project slot is now reviewer-ready, while the ECID preliminary-EA historical review slot
-remains selected but not expansion-ready because its downstream compliance / provenance artifact
-family is still missing on a split historical source-set lane. Open expansion artifacts do not
-block the current V1 promotion claim, but they make broader readiness gaps visible to future
-agents. Current promotion does require the applicability seed and gold eval
+remains selected but not expansion-ready because its historical lane is split across
+`source-set-ba8d0feae79501b8` and `source-set-4fb59e9eb43045cb`. The slot now stays
+typed `selected_not_ready` under `historical_source_set_split` instead of pretending six
+downstream compliance / provenance artifacts are still live required expansion outputs on this
+packet. Open expansion slots do not block the current V1 promotion claim, but they make broader
+readiness gaps visible to future agents. Current promotion does require the applicability seed and
+gold eval
 artifacts that prove
 positive, negative, unresolved, replay-adjudicated, and arbitration-field coverage for the expanded
 authority-family templates. It also requires the authority-family reviewer-report artifacts for the
@@ -126,6 +129,7 @@ The suite uses explicit failure categories so a failed run points at the next en
 - `applicability_miss`
 - `unsupported_package_evidence`
 - `stale_artifact`
+- `historical_source_set_split`
 - `adjudication_needed`
 - `forest_plan_reviewer_not_ready`
 - `package_fixture_missing`
@@ -175,18 +179,18 @@ family.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
   now reports `full_canonical_corpus_ready=true`,
   `current_promotion_ready=true`, `promotion_ready=true`,
-  `expansion_ready=false`, `open_expansion_slot_count=0`,
-  `open_expansion_artifact_count=6`,
+  `expansion_ready=false`, `open_expansion_slot_count=1`,
+  `open_expansion_artifact_count=0`,
   `passed_required_current_result_count=32/32`,
-  `passed_required_expansion_result_count=20/26`, and
+  `passed_required_expansion_result_count=19/20`, and
   `failure_category_counts={}` with
-  `expansion_failure_category_counts={"forest_plan_reviewer_not_ready":3,"stale_artifact":3}`.
+  `expansion_failure_category_counts={"historical_source_set_split":1}`.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/promotion_suite_results.json`
   still fails closed exactly where it should:
   `current_promotion_ready=true`, `promotion_ready=false`,
   `expansion_ready=false`,
-  `failure_category_counts={"forest_plan_reviewer_not_ready":3,"stale_artifact":3}`,
-  `open_expansion_slot_count=0`, and `open_expansion_artifact_count=6`.
+  `failure_category_counts={"historical_source_set_split":1}`,
+  `open_expansion_slot_count=1`, and `open_expansion_artifact_count=0`.
 - The active follow-on remains
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, but the live
   blocker has shifted again. Reviewer-facing source-set alignment plus ECID
@@ -203,17 +207,15 @@ family.
   review `phase-eval` now passes `27/27` with
   `review_direct_eval_status="direct_eval_present"`.
 - The remaining strict-expansion blocker is the historical ECID preliminary-EA
-  review case `region1-expansion-ecid-preliminary-ea`. It now fails only the
-  six missing downstream artifacts:
-  `compliance_validation.json`, `compliance_review.json`,
-  `compliance_matrix.json`, `compliance_matrix.pdf`,
-  `authority_family_provenance.json`, and
-  `non_applicable_authority_appendix.json`. That lane is historically split:
-  applicability validation and phase eval still point at
-  `source-set-ba8d0feae79501b8`, while the generated rule pack and slot
-  contract point at `source-set-4fb59e9eb43045cb`. The next truthful slice is
-  therefore ECID preliminary-EA historical expansion artifact repair or
-  contract reroute, not another South replay pass.
+  review case `region1-expansion-ecid-preliminary-ea`. It now fails only
+  because the slot is truthfully `selected_not_ready` under
+  `historical_source_set_split`: applicability validation and phase eval still
+  point at `source-set-ba8d0feae79501b8`, while the generated rule pack and
+  slot contract point at `source-set-4fb59e9eb43045cb`. The six downstream
+  compliance / provenance artifacts remain absent locally, but they are no
+  longer falsely counted as live required expansion artifacts on this packet.
+  Any further work there should be a fresh historical-lane rebuild or
+  governed slot-replacement follow-on, not another South replay pass.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

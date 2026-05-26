@@ -845,7 +845,7 @@
           "label": "ECID compliance validation",
           "path": "reviews/{review_id}/compliance_validation.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "forest_plan_reviewer_not_ready",
           "checks": [
             {
@@ -860,7 +860,7 @@
           "label": "ECID compliance review summary",
           "path": "reviews/{review_id}/compliance_review.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "forest_plan_reviewer_not_ready",
           "checks": [
             {
@@ -922,7 +922,7 @@
           "label": "ECID compliance matrix JSON",
           "path": "reviews/{review_id}/compliance_matrix.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "forest_plan_reviewer_not_ready",
           "checks": [
             {
@@ -948,7 +948,7 @@
           "path": "reviews/{review_id}/compliance_matrix.pdf",
           "format": "binary",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "stale_artifact",
           "checks": [
             {
@@ -962,7 +962,7 @@
           "label": "ECID authority-family provenance",
           "path": "reviews/{review_id}/authority_family_provenance.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "stale_artifact",
           "checks": [
             {
@@ -987,7 +987,7 @@
           "label": "ECID non-applicable authority appendix",
           "path": "reviews/{review_id}/non_applicable_authority_appendix.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "stale_artifact",
           "checks": [
             {
@@ -2485,8 +2485,9 @@
     {
       "id": "region1-real-ea-slot-1",
       "label": "Second real Region 1 EA package: ECID preliminary EA",
-      "status": "ready",
-      "ready": true,
+      "status": "selected_not_ready",
+      "ready": false,
+      "failure_category": "historical_source_set_split",
       "required_for_current_promotion": false,
       "review_id": "region1-expansion-ecid-preliminary-ea",
       "package_path": "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)/Preliminary Environmental Assessment",
@@ -2551,10 +2552,10 @@
         "unresolved_authority_count": 0,
         "remaining_adjudication_authority_family_ids": [],
         "applicability_validation_passed": true,
+        "applicability_validation_source_set_id": "source-set-ba8d0feae79501b8",
         "generated_rule_pack_ready": true,
         "generated_rule_count": 46,
-        "compliance_validation_passed": true,
-        "compliance_review_reviewer_ready": true,
+        "generated_rule_pack_source_set_id": "source-set-4fb59e9eb43045cb",
         "rule_claim_link_count": 211,
         "rule_claim_gap_count": 0,
         "forest_plan_applicable_standard_count": 29,
@@ -2569,10 +2570,24 @@
         "forest_plan_component_adjudication_template_path": "source_library/reviews/region1-expansion-ecid-preliminary-ea/forest_plan_component_adjudication_template.json",
         "forest_plan_component_adjudication_eval_path": "source_library/reviews/region1-expansion-ecid-preliminary-ea/forest_plan_component_adjudication_eval.json",
         "phase_eval_passed": true,
-        "phase_eval_reviewer_ready": true
+        "phase_eval_reviewer_ready": true,
+        "phase_eval_source_set_id": "source-set-ba8d0feae79501b8",
+        "split_source_set_ids": [
+          "source-set-ba8d0feae79501b8",
+          "source-set-4fb59e9eb43045cb"
+        ],
+        "missing_required_artifact_ids": [
+          "compliance_validation",
+          "compliance_review",
+          "compliance_matrix",
+          "compliance_matrix_pdf",
+          "authority_family_provenance",
+          "non_applicable_authority_appendix"
+        ],
+        "reroute_required": true
       },
-      "next_action": "Keep this ECID expansion slot ready while future expansion slots are added through their own verified artifact checks.",
-      "acceptance_signal": "The preliminary-EA review passes applicability validation and phase-eval without weakening source-record, document-role, citation, section, forest-plan, or validation gates."
+      "next_action": "Keep this historical ECID expansion slot selected but not ready until a fresh follow-on rebuilds the lane on one coherent source set or formally replaces the split historical contract.",
+      "acceptance_signal": "The preliminary-EA slot may return to ready only after applicability, generated rule-pack, phase-eval, and downstream compliance/provenance artifacts all agree on one historical source set."
     },
     {
       "id": "region1-real-ea-slot-2",

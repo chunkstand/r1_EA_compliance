@@ -32,10 +32,12 @@ history below.
   the new applicability/compliance child packet isolates broad replay-owner
   concentration in `build_applicability_decisions(...)` and
   `run_compliance_review(...)`. It does not replace the parent packet's next
-  truthful runtime slice, which is now ECID preliminary-EA historical
-  expansion compliance / provenance artifact repair or truthful reroute on the
-  split `ba8...` / `4fb...` lane, then aggregate docs / closeout on that same
-  packet
+  truthful aggregate closeout truth: the parent packet's historical ECID
+  preliminary-EA lane is now truthfully rerouted as a selected-not-ready
+  strict-expansion slot on the split `ba8...` / `4fb...` lane. Any future
+  work there should open a fresh follow-on for coherent historical-lane
+  rebuild or governed slot replacement rather than reopening this packet to
+  fake the missing downstream artifacts
 - extraction/direct-eval owner-boundary note:
   the new extraction/direct-eval child packet preserves the closed
   `extraction-fidelity-eval` and `phase_eval_direct_eval.py` contracts while
@@ -122,31 +124,54 @@ history below.
   `real-package-review-coverage-eval` now reports
   `reviewer_ready_slot_count=2`, `missing_required_slot_count=0`, and
   `missing_coverage_class_ids=[]`; West Reservoir remains truthful
-  `typed_blocked`. Strict-expansion promotion still fails closed, but now only
-  on the historical ECID preliminary-EA review case:
-  `failure_category_counts={"forest_plan_reviewer_not_ready":3,"stale_artifact":3}`,
-  `open_expansion_slot_count=0`, and `open_expansion_artifact_count=6`.
-  The only remaining failed review case is
-  `region1-expansion-ecid-preliminary-ea`, which still lacks
-  `compliance_validation.json`, `compliance_review.json`,
-  `compliance_matrix.json`, `compliance_matrix.pdf`,
-  `authority_family_provenance.json`, and
-  `non_applicable_authority_appendix.json`. That lane is historically split:
-  applicability validation and phase eval still point at
-  `source-set-ba8d0feae79501b8`, while the generated rule pack and expansion
-  slot contract point at `source-set-4fb59e9eb43045cb`. A direct
-  `applicability-validate` rerun against today's derived corpus reopens broad
-  stale-source-set failures there, so the next slice must either rebuild that
-  historical lane coherently or truthfully reroute the strict-expansion
-  contract rather than faking a local pass
+  `typed_blocked`. Strict-expansion promotion still fails closed, but it now
+  does so truthfully through the rerouted historical ECID preliminary-EA slot:
+  `failure_category_counts={"historical_source_set_split":1}`,
+  `open_expansion_slot_count=1`, and `open_expansion_artifact_count=0`.
+  The historical lane still spans `source-set-ba8d0feae79501b8` for
+  applicability validation / phase eval and
+  `source-set-4fb59e9eb43045cb` for generated rule-pack / slot identity; the
+  six downstream compliance/provenance artifacts remain absent locally, but
+  they are no longer falsely counted as live required expansion artifacts on
+  this packet
 - next truthful slice:
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
-  beginning with ECID preliminary-EA historical expansion compliance /
-  provenance artifact repair or truthful strict-expansion contract reroute,
-  then aggregate docs / closeout for the same packet
+  no further runtime slice remains inside
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`. If a future
+  session continues this lane, open a fresh standalone follow-on for coherent
+  historical-lane rebuild or governed slot replacement
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## ECID Preliminary Historical Expansion Truthfully Rerouted Locally
+
+This implementation slice closes the stale strict-expansion aggregate claim on
+the historical ECID preliminary-EA lane without pretending the missing
+downstream artifacts exist.
+
+- outcome label:
+  `resolved locally`; the historical ECID preliminary-EA lane is now a
+  selected-not-ready strict-expansion slot rather than a false ready slot with
+  six live required artifact misses
+- live reroute truth:
+  non-strict `promotion-suite` now reports
+  `current_promotion_ready=true`, `promotion_ready=true`,
+  `expansion_ready=false`, `open_expansion_slot_count=1`,
+  `open_expansion_artifact_count=0`, and
+  `expansion_failure_category_counts={"historical_source_set_split":1}`.
+  Strict expansion now fails closed only on that selected-not-ready slot with
+  `failure_category_counts={"historical_source_set_split":1}`
+- contract truth:
+  the historical ECID preliminary-EA slot now keeps applicability validation,
+  generated rule-pack validation, forest-plan component adjudication
+  template/eval, and phase eval as its live required expansion evidence while
+  demoting the absent downstream compliance/provenance artifacts from the
+  aggregate required-expansion count. The slot's last-local-signal payload now
+  records the split `ba8...` / `4fb...` source-set evidence explicitly
+- next routing:
+  if more work is requested on this lane, open a fresh follow-on for coherent
+  historical-lane rebuild or governed slot replacement rather than reopening
+  this packet's aggregate reroute closeout
 
 ## South Plateau Reviewer-Ready Expansion Restored Locally
 

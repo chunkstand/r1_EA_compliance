@@ -10,14 +10,17 @@ Use this file as the short current route before opening the append-only docs.
 - Active packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - Live next slice:
-  ECID preliminary-EA historical expansion compliance / provenance artifact
-  repair or truthful contract reroute on the split historical source-set lane
+  truthful strict-expansion reroute is now landed locally; if this lane
+  continues, open a fresh follow-on for coherent ECID preliminary-EA
+  historical-lane rebuild or governed slot replacement rather than reopening
+  the current packet to reassert missing downstream artifacts
 - Aggregate truth:
   ECID current promotion and South Plateau reviewer-ready expansion are
   green; non-strict `promotion-suite` is `current_promotion_ready=true` and
-  `promotion_ready=true`; the remaining strict-expansion blocker is the ECID
-  preliminary-EA historical review-case artifact family (`6` missing
-  expansion artifacts, `0` open expansion slots)
+  `promotion_ready=true`; strict expansion now fails only because the ECID
+  preliminary-EA historical slot is truthfully `selected_not_ready` with
+  `failure_category="historical_source_set_split"` (`1` open expansion slot,
+  `0` open expansion artifacts)
 - Document-routing entrypoint: `docs/AGENT_START_HERE.md`
 - Live architecture state:
   `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
