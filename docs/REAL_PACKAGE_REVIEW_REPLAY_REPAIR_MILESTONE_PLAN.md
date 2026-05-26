@@ -2,40 +2,48 @@
 
 Date: 2026-05-25
 
-Status: Milestone 1 reduced locally; replay reruns stopped at the
-reviewer-facing source-set alignment blocker
+Status: Active packet (`Milestone 0` baseline inventory is historical,
+reviewer-facing source-set alignment is now resolved locally, and the next
+truthful slice is packet-local ECID and South Plateau replay repair on aligned
+`source-set-f70ea11e04ae3d53`)
 
 Owner context: this standalone follow-on packet opened after
 `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` closed through
 Milestone `4`. It owns the review-local replay-repair lane and the scoped
-replay-precondition rebuild on `source-set-f70ea11e04ae3d53`, but it no longer
-owns the newly proven reviewer-facing source-set alignment blocker. That
-follow-on now lives in
-`docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`. This
-packet remains the historical replay-repair reference once that alignment
-blocker clears and control returns to packet-local reviewer-ready artifact
-repair. It does not reopen the slot-driven promotion-suite contract
-architecture, the full-canonical source-set contract, or the West Reservoir
-typed-blocked quarantine.
+replay-precondition rebuild on `source-set-f70ea11e04ae3d53`. The
+reviewer-facing source-set alignment blocker is now historical closeout in
+`docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`, and
+this packet is active again for packet-local reviewer-ready artifact repair on
+the aligned reviewer-facing source set. It does not reopen the slot-driven
+promotion-suite contract architecture, the full-canonical source-set contract,
+or the West Reservoir typed-blocked quarantine.
 
 ## Latest Local Implementation
 
-- The scoped replay-precondition chain on `source-set-f70ea11e04ae3d53` is
-  now green through `applicability-authority-universe` with
+- The scoped replay-precondition chain on `source-set-f70ea11e04ae3d53`
+  remains green through `applicability-authority-universe` with
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-- `phase-eval` no longer carries a false extraction direct-eval dependency on
-  `upstream-eval`; extraction ownership now routes explicitly through
-  `extraction-fidelity-eval`.
-- Live packet-local reruns on reviewer-facing `source-set-4fb59e9eb43045cb`
-  stop upstream: both ECID and South Plateau
-  `applicability-authority-universe` runs now report
-  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`,
-  `candidate_authority_count=396`,
-  `forest_plan_component_candidate_count=329`,
-  `candidates_have_source_evidence_available failure_count=10`, and
-  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
-- The next truthful slice is therefore the reviewer-facing source-set
-  alignment packet, not more packet-local replay on `source-set-4fb59e9eb43045cb`.
+- Reviewer-facing replay contexts plus ECID and South `v1-ea-eval` contracts
+  now also point at that same governed `source-set-f70ea11e04ae3d53` truth.
+- Both reviewer-facing `applicability-authority-universe` reruns now pass on
+  the aligned source set with `candidate_authority_count=396` and
+  `forest_plan_component_candidate_count=329`.
+- `applicability-context-build` and `applicability-retrieve` now pass for
+  both reviews on the aligned source set. `applicability-validate` now fails
+  only on unresolved adjudication debt: ECID reports
+  `needs_adjudication_authority_count=7`,
+  `unresolved_authority_count=7`, and South reports
+  `needs_adjudication_authority_count=6`,
+  `unresolved_authority_count=6`; both remain
+  `generated_rule_pack_ready=false`.
+- ECID and South `v1-ea-eval` reruns now bind to
+  `source-set-f70ea11e04ae3d53` and remain `contract_status="mismatch"` on
+  packet-local review artifacts rather than reviewer-facing source-set
+  authority coverage.
+- ECID `phase-eval` now also binds to `source-set-f70ea11e04ae3d53`; the
+  remaining red is packet-local downstream family debt plus
+  `evaluation_coverage` direct-eval identity mismatch, not a false extraction
+  owner dependency.
 
 ## Purpose
 
@@ -45,7 +53,8 @@ contract closeout.
 The promotion-suite contract packet is done: the aggregate gate now chooses the
 current-promotion lane from governed slots instead of one hard-coded review
 packet. The remaining red is no longer contract architecture drift. It is
-review-local replay drift inside the governed reviewer-ready slots:
+review-local replay drift inside the governed reviewer-ready slots on aligned
+reviewer-facing `source-set-f70ea11e04ae3d53`:
 
 - East Crazies current promotion no longer satisfies its tracked
   `v1-ea-eval` contract on the active source set
@@ -65,11 +74,11 @@ weakening the governed slot roster or reopening the contract refactor.
 - The ECID governed slot `east-crazies-current-promotion` currently reports
   `actual_contract_status="mismatch"`, `broader_ea_passed=false`,
   `forest_plan_passed=false`, and
-  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":10,"conditional_false_negative":4,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_section_mismatch":6}`.
+  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_section_mismatch":8,"source_record_mismatch":17}`.
 - The South Plateau governed slot `south-plateau-reviewer-ready` currently
   reports `actual_contract_status="mismatch"`, `broader_ea_passed=false`,
   `forest_plan_passed=false`, and
-  `failure_category_counts={"forest_plan_matrix_miss":1,"review_artifact_missing":4}`.
+  `failure_category_counts={"conditional_false_negative":6,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"source_record_mismatch":25}`.
 - West Reservoir still truthfully reports
   `actual_contract_status="typed_blocked"` and remains outside the repair
   target for this packet.
@@ -78,14 +87,14 @@ weakening the governed slot roster or reopening the contract refactor.
   `current_promotion_ready=false`, `promotion_ready=false`,
   `expansion_ready=false`, `passed_required_current_result_count=11`,
   `required_current_result_count=32`, and
-  `failure_category_counts={"adjudication_needed":1,"graph_stale_artifact":1,"missing_matrix_render_row":1,"missing_packet_index_row":1,"stale_artifact":5,"unsupported_package_evidence":2}`.
+  `failure_category_counts={"stale_artifact":1,"unsupported_package_evidence":2}`.
 - The same promotion-suite result now fails closed at the selector layer
   because the governed reviewer-ready slot result itself is mismatched:
   `current_promotion_contract.selector_passed=false`,
   `matched_slot_count=0`, `eligible_slot_count=0`,
   `passing_slot_count=0`, `quorum_passed=false`,
   `reference_canary_ready=false`, and
-  `failure_category_counts={"stale_artifact":1,"unsupported_package_evidence":1}`.
+  `failure_category_counts={"stale_artifact":1,"unsupported_package_evidence":2}`.
   The red state still belongs to review-local replay debt, not to selector or
   quorum code drift.
 - The scoped replay-precondition chain is now green on
@@ -97,18 +106,17 @@ weakening the governed slot roster or reopening the contract refactor.
   `rule_template_candidate_count=48`,
   `authority_family_rule_template_candidate_count=19`, and
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-- The live blocker is no longer scoped replay prerequisites. Packet-local
-  replay on reviewer-facing `source-set-4fb59e9eb43045cb` is upstream-blocked:
-  both ECID and South Plateau `applicability-authority-universe` runs now
-  report `validation_passed=false` on
-  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`
-  with `candidates_have_source_evidence_available failure_count=10` and
-  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
+- Reviewer-facing source-set alignment is no longer the blocker. Both ECID and
+  South Plateau `applicability-authority-universe` reruns now pass on aligned
+  `source-set-f70ea11e04ae3d53`, while `applicability-validate`,
+  `v1-ea-eval`, and ECID `phase-eval` remain red on packet-local artifact and
+  adjudication debt.
 
 ## Goal
 
 Restore truthful reviewer-ready replay status for the governed ECID and South
-Plateau slots on `source-set-4fb59e9eb43045cb` so the aggregate
+Plateau slots on aligned reviewer-facing `source-set-f70ea11e04ae3d53` so the
+aggregate
 `real-package-review-coverage-eval` and non-strict `promotion-suite` replays
 stop failing on stale or missing packet-local artifacts.
 
@@ -262,7 +270,7 @@ Completion means all of the following are true:
   `tests/test_v1_ea_eval_contracts.py`,
   `tests/test_phase_eval.py`
   Prevention gate: packet-local replay verification must prove the repaired
-  artifacts bind to `source-set-4fb59e9eb43045cb` and the tracked package
+  artifacts bind to `source-set-f70ea11e04ae3d53` and the tracked package
   authority before aggregate closeout.
   Fail threshold: slot-level reruns pass locally but still emit stale
   source-set or package-authority signals into aggregate gates.
@@ -338,12 +346,12 @@ Milestone 0 live baseline on 2026-05-25:
   `current_review_final_qa`, and
   `current_review_supporting_outputs`.
 - Owner-command map recorded for the next repair slice:
-  `current_suite_baseline` -> `phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review` and `compliance-review-eval --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb --eval-file config/compliance_review_eval_seed.json`
+  `current_suite_baseline` -> `phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review` and `compliance-review-eval --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --eval-file config/compliance_review_eval_seed.json`
 - `current_review_core_artifacts` -> `v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review` plus the ECID replay-context-backed `compliance-review` artifact family when the review outputs themselves are stale
 - `current_review_packet_contract` -> `review-packet-index --output-dir source_library --review-id v1-cg-ecid-compliance-review`
 - `current_review_decision_support` -> `ea-consistency-document --output-dir source_library --review-id v1-cg-ecid-compliance-review`
 - `current_review_final_qa` -> `final-qa-certification --output-dir source_library --review-id v1-cg-ecid-compliance-review`
-- `current_review_supporting_outputs` -> ECID `compliance-review` for provenance/appendix/resolution/risk artifacts plus `nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb --review-id v1-cg-ecid-compliance-review`
+- `current_review_supporting_outputs` -> ECID `compliance-review` for provenance/appendix/resolution/risk artifacts plus `nepa-knowledge-graph-export --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id v1-cg-ecid-compliance-review`
 - South Plateau slot repair entrypoint -> `v1-ea-eval --output-dir source_library --review-id region1-expansion-south-plateau-landscape-treatment` plus the tracked South Plateau replay-context-backed `compliance-review` family when reviewer-ready outputs are stale
 
 ### Milestone 1 - ECID Reviewer-Ready Replay Repair
@@ -363,7 +371,8 @@ Implementation:
    repair proves the contract itself is correct but the local replay inputs were
    stale.
 3. Re-run the ECID packet-local gates until the governed reviewer-ready slot
-   is truthful again on `source-set-4fb59e9eb43045cb`.
+   is truthful again on aligned reviewer-facing
+   `source-set-f70ea11e04ae3d53`.
 
 Acceptance criteria:
 
@@ -373,8 +382,8 @@ Acceptance criteria:
 - `phase-eval --review-id v1-cg-ecid-compliance-review` no longer reports the
   stale current-promotion core artifacts that feed the aggregate suite-level
   checks.
-- The repaired packet-local artifacts bind to
-  `source-set-4fb59e9eb43045cb` and the tracked replay-context package
+- The repaired packet-local artifacts bind to aligned reviewer-facing
+  `source-set-f70ea11e04ae3d53` and the tracked replay-context package
   authority.
 
 Verification:
@@ -395,90 +404,38 @@ PYTHONPATH=src uv run --extra dev pytest \
   tests/test_phase_eval.py -q
 ```
 
-Milestone 1 reduction on 2026-05-25:
+Milestone 1 live next-slice baseline on 2026-05-26:
 
-- The applicability universe owner now correctly narrows the active Region 1
-  batch component inventory to the ECID review forest and now resolves mapped
-  legacy authority source IDs against the active catalog surface.
-- `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
-  now rebuilds `candidate_authority_count=396` with
-  `forest_plan_component_candidate_count=329` on
-  `source-set-4fb59e9eb43045cb`, so the old `0`-component universe bug is no
-  longer the blocker.
-- The packet still cannot continue truthfully to reviewer-ready replay because
-  the active authority-universe validation now fails only on
-  `candidates_have_source_evidence_available` (`failure_count=21`) and
-  `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=19`).
-- Milestone `0` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
-  resolved locally; it freezes that blocker inventory as `21` failing
-  source-evidence candidates and `19` missing source-record template groups.
-- Milestone `1` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
-  resolved locally; it classifies that same inventory into
-  `16` reconciliation-owned template families,
-  `3` forest-plan identity rebind families, and
-  `5` base-rule current-source gaps.
-- Milestone `2` of
-  `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md` is now
-  reduced locally; the shared binding owners now cover the exact current rows
-  already present in the active catalog, and the live ECID applicability
-  replay is reduced to `11` source-evidence failures and `17` missing
-  source-record template groups on
-  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`.
-  No untouched exact current-catalog URL matches remain for the reduced
-  missing-ID inventory.
-- Milestone `1` of
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` is now
-  resolved locally; the remaining stale IDs are now split among template
-  retire/replace work, true current-source additions, forest-plan support
-  admissions, and five base-rule current-source decisions while the live
-  replay remains at `11` source-evidence failures and `17` missing template
-  groups at the owner-map checkpoint.
-- Milestone `2` of
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md` is now
-  reduced further locally through the governed land-exchange retirement
-  closeout, the governed `R1EA-093` current-source addition lane, the
-  governed water-family current-source additions, the governed wildlife
-  current-source additions, the governed hazardous-material current-source
-  addition, the governed invasive/farmland/drinking-water current-source
-  addition, the governed minerals current-source addition lane, the governed
-  forest-plan support admission lane, the governed vegetation/fire
-  current-source addition lane, the governed wilderness/designated-area lane,
-  and the five base-rule current-source additions. The reviewer-facing default
-  catalog remains historical, but the active scoped applicability replay now
-  runs on `source-set-f70ea11e04ae3d53` and reports
-  `authority_universe_sha256=5a7f58afc84a4701bfc23e3da53651f674a0975394514dfa4d815d23ca6a2094`,
-  `source_evidence_failure_count=0`, and
-  `missing_source_record_count=0`. The upstream current-source inventory is
-  therefore exhausted.
-- The scoped replay-precondition slice on `source-set-f70ea11e04ae3d53` is
-  now also reduced locally through the derived-artifact rebuild:
-  `reuse-inventory` classified `647` reusable rows and `61` fresh extraction
-  rows, `extract-build` completed `708/708` extracted rows with
-  `validation_passed=true`, `extraction-accuracy-audit` passed on `655`
-  admitted active-current rows and `102769` audited chunks, `retrieval-build`
-  is `reviewer_ready=true` with `105496` indexed chunks and
-  `verified_extraction_admitted_source_count=655`,
-  `verified_extraction_required_source_count=655`, and
-  `verified_extraction_explicitly_non_admitted_source_count=53`,
-  `claim-extract` is `reviewer_ready=true` with `claim_count=134828`,
-  `source_record_count=606`, and zero retrieval-binding or offset mismatches,
-  and `rule-claim-link` is `reviewer_ready=true` with `48/48` linked rules,
-  `233` links, and `0` gaps.
-- The same scoped applicability replay now passes on
-  `source-set-f70ea11e04ae3d53`: `applicability-authority-universe` reports
+- Reviewer-facing source-set alignment is now complete: the ECID replay
+  context, `v1-ea-eval` contract, and applicability CLI catalog resolution
+  all bind to `source-set-f70ea11e04ae3d53`.
+- `applicability-authority-universe --review-id
+  v1-cg-ecid-compliance-review` now passes on that aligned source set with
   `candidate_authority_count=396`,
-  `forest_plan_component_candidate_count=329`,
-  `rule_template_candidate_count=48`,
-  `authority_family_rule_template_candidate_count=19`, and
+  `forest_plan_component_candidate_count=329`, and
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-- The next truthful slice now returns to broader ECID reviewer-ready repair on
-  packet-local review artifacts: rerun `v1-ea-eval`,
-  `phase-eval --review-id v1-cg-ecid-compliance-review`, and the mapped ECID
-  current-review owner commands for review packet, decision support, final QA,
-  compliance-review supporting outputs, and suite-level freshness.
+- `applicability-context-build` and `applicability-retrieve` now also pass for
+  ECID on the aligned source set.
+- `applicability-validate --review-id v1-cg-ecid-compliance-review` now fails
+  only on unresolved adjudication debt:
+  `decision_status_counts={"applicable":48,"needs_adjudication":7,"not_applicable":341}`,
+  `needs_adjudication_authority_count=7`,
+  `unresolved_authority_count=7`, and
+  `generated_rule_pack_ready=false`.
+- `v1-ea-eval --review-id v1-cg-ecid-compliance-review` now runs on
+  `source-set-f70ea11e04ae3d53` and remains `contract_status="mismatch"` with
+  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_section_mismatch":8,"source_record_mismatch":17}`.
+- `phase-eval --review-id v1-cg-ecid-compliance-review` now also runs on
+  `source-set-f70ea11e04ae3d53`; remaining failed phases include
+  `applicability_validation`, `generated_rule_pack`, `compliance_review`,
+  `forest_plan_component_eval`, `decision_support_report`,
+  `review_packet_index`, `final_qa_certification_report`, and
+  `evaluation_coverage`, with the last one still carrying
+  `direct_eval_identity_mismatch`.
+- The next truthful slice is ECID packet-local replay repair on aligned
+  `source-set-f70ea11e04ae3d53`, beginning with adjudication/rule-pack truth
+  and then the review-local compliance, packet, decision-support, final-QA,
+  and supporting-output families.
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 
@@ -496,7 +453,8 @@ Implementation:
    when the repair proves the contract is still right but the local replay
    state was stale.
 3. Re-run the South Plateau packet-local gate until the reviewer-ready slot is
-   truthful again on `source-set-4fb59e9eb43045cb`.
+   truthful again on aligned reviewer-facing
+   `source-set-f70ea11e04ae3d53`.
 
 Acceptance criteria:
 
@@ -522,6 +480,33 @@ PYTHONPATH=src uv run --extra dev pytest \
   tests/test_v1_ea_eval_forest_plan.py \
   tests/test_real_package_review_coverage_eval.py -q
 ```
+
+Milestone 2 live next-slice baseline on 2026-05-26:
+
+- Reviewer-facing South Plateau replay is now aligned to
+  `source-set-f70ea11e04ae3d53`.
+- `applicability-authority-universe --review-id
+  region1-expansion-south-plateau-landscape-treatment` now passes there with
+  `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`, and
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
+- `applicability-context-build` and `applicability-retrieve` now also pass for
+  South Plateau on the aligned source set.
+- `applicability-validate --review-id
+  region1-expansion-south-plateau-landscape-treatment` now fails only on
+  unresolved adjudication debt:
+  `decision_status_counts={"applicable":58,"needs_adjudication":6,"not_applicable":332}`,
+  `needs_adjudication_authority_count=6`,
+  `unresolved_authority_count=6`, and
+  `generated_rule_pack_ready=false`.
+- `v1-ea-eval --review-id
+  region1-expansion-south-plateau-landscape-treatment` now runs on
+  `source-set-f70ea11e04ae3d53` and remains `contract_status="mismatch"` with
+  `failure_category_counts={"conditional_false_negative":6,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"source_record_mismatch":25}`.
+- The next truthful slice after ECID remains South Plateau packet-local replay
+  repair on aligned `source-set-f70ea11e04ae3d53`, especially adjudication,
+  generated rule-pack, review-local compliance artifacts, and forest-plan
+  matrix coverage.
 
 ### Milestone 3 - Aggregate Replay, Docs, And Closeout
 
@@ -609,7 +594,7 @@ git diff --check
 ## Acceptance Criteria
 
 - The packet closes only if the governed reviewer-ready slots again tell the
-  truth on `source-set-4fb59e9eb43045cb`.
+  truth on aligned reviewer-facing `source-set-f70ea11e04ae3d53`.
 - Aggregate green must come from repaired review-local evidence, not easier
   slot requirements.
 - West Reservoir remains an explicit typed-blocked quarantine and does not
@@ -629,6 +614,10 @@ git diff --check
 
 ## Local Commit Closeout Policy
 
+- `complete-after-commit` rule: no milestone in this plan may be marked
+  complete, `resolved`, or `reduced` until verification passes, durable
+  docs/handoff updates land, and the local atomic commit exists. A verified
+  but uncommitted slice is only ready-to-close.
 - Keep the repair packet review-local and atomic.
 - Stage only the verified replay-repair slice: tracked config, focused code or
   tests if needed, docs, and handoff updates.
@@ -636,6 +625,8 @@ git diff --check
   changes or the user explicitly approves it.
 - Commit locally at the end of the repaired milestone sequence. Do not leave a
   verified but uncommitted milestone behind.
+- Preserve anti-test-weakening rules: do not weaken or loosen gates, skip
+  checks, or delete negative coverage to make the closeout pass.
 
 ## Residual Risks And Next Routing
 

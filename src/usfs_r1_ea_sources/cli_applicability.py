@@ -15,6 +15,9 @@ from .applicability_validation import validate_applicability_run
 from .applicability_validation import write_applicability_adjudication_template
 from .cli_common import print_summary
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .replay_context import ReplayContextMismatchError
+from .replay_context import load_replay_context
+from .replay_context import tracked_replay_context_path
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 
 
@@ -170,6 +173,9 @@ def handle_applicability_command(
     args: argparse.Namespace,
     parser: argparse.ArgumentParser,
 ) -> int | None:
+    if args.command in APPLICABILITY_COMMANDS:
+        _apply_tracked_replay_context(args)
+
     if args.command == "applicability-authority-universe":
         result = build_authority_universe_snapshot(
             output_dir=args.output_dir,
@@ -329,3 +335,51 @@ def _add_review_source_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--output-dir", default=Path("source_library"), type=Path)
     parser.add_argument("--review-id", required=True)
     parser.add_argument("--source-set-id")
+
+
+def _apply_tracked_replay_context(args: argparse.Namespace) -> None:
+    review_id = str(getattr(args, "review_id", "") or "").strip()
+    if not review_id:
+        return
+    replay_context_path = tracked_replay_context_path(Path(args.output_dir), review_id)
+    if not replay_context_path.exists():
+        return
+    replay_context = load_replay_context(replay_context_path)
+    if args.source_set_id is None:
+        args.source_set_id = replay_context.source_set_id
+    elif args.source_set_id != replay_context.source_set_id:
+        raise ReplayContextMismatchError(
+            "source_set_id override does not match tracked replay context for "
+            f"{review_id}"
+        )
+    if args.command == "applicability-authority-universe":
+        _align_tracked_path_arg(
+            args,
+            "catalog_path",
+            replay_context.resolved_source_catalog_path,
+            review_id,
+        )
+        _align_tracked_path_arg(
+            args,
+            "source_set_manifest_path",
+            replay_context.resolved_source_set_manifest_path,
+            review_id,
+        )
+
+
+def _align_tracked_path_arg(
+    args: argparse.Namespace,
+    field_name: str,
+    expected_path: Path,
+    review_id: str,
+) -> None:
+    current = getattr(args, field_name, None)
+    if current is None:
+        setattr(args, field_name, expected_path)
+        return
+    resolved_current = Path(current).resolve()
+    if resolved_current != expected_path:
+        raise ReplayContextMismatchError(
+            f"{field_name} override does not match tracked replay context for {review_id}"
+        )
+    setattr(args, field_name, resolved_current)

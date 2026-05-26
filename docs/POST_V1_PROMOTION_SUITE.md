@@ -177,60 +177,23 @@ layer rather than the slot-driven contract layer.
   simply not currently eligible.
 - The active follow-on is
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, which owns ECID
-  and South Plateau packet-local replay repair. Milestone `1` of that packet
-  is now reduced locally: ECID applicability replay now correctly rebuilds a
-  `396`-candidate authority universe with `329` Custer Gallatin component
-  candidates from the active Region 1 batch inventory and honors governed
-  legacy-to-current source-record reconciliation. The authority-source binding blocker
-  packet in `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
-  is now reduced locally through Milestone `2`: the exact current rows already
-  present in the active catalog are now governably bound, the live ECID
-  applicability replay is reduced to `11` source-evidence failures and `17`
-  missing source-record template groups on
-  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`,
-  and no untouched exact current-catalog URL matches remain for the reduced
-  missing-ID inventory. Milestone `1` of the new active blocker packet
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
-  is now also resolved locally: the remaining stale IDs are now split among
-  template retire/replace work, true current-source additions, forest-plan
-  support admissions, and five base-rule current-source decisions. Milestone
-  `2` in that same packet is now reduced further locally through the governed
-  land-exchange retirement closeout, the governed `R1EA-093`
-  current-source addition lane, the governed water-family current-source
-  additions, the governed cultural-resource/state-SHPO and shared
-  tribal-overlap current-source additions, the governed wildlife
-  current-source additions, the governed hazardous-material current-source
-  addition, the governed invasive/farmland/drinking-water current-source
-  addition, the governed minerals current-source addition lane, the governed
-  forest-plan support admission lane, and the governed vegetation/fire
-  current-source addition lane. That upstream blocker is now exhausted on the
-  scoped gate `source-set-f70ea11e04ae3d53`, and the same replay-precondition
-  lane is now rebuilt end to end: `extract-build` completed `708/708`
-  extracted rows with `647` reused rows and `61` fresh parses,
-  `extraction-accuracy-audit` passed on `655` admitted active-current rows,
-  `retrieval-build`, `claim-extract`, and `rule-claim-link` are each now
-  `reviewer_ready=true`, `rule-claim-link` covers all `48` rules with `233`
-  links and `0` gaps, and the scoped
-  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
-  now passes with `candidate_authority_count=396`,
+  and South Plateau packet-local replay repair on the aligned reviewer-facing
+  source set. The reviewer-facing source-set alignment blocker is now
+  historical closeout: ECID and South replay contexts plus their
+  `v1-ea-eval` contracts now point at
+  `source-set-f70ea11e04ae3d53`, and both
+  `applicability-authority-universe` reruns there now pass with
+  `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`, and
   `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-  The replay-repair packet now stops truthfully there. Reviewer-facing reruns
-  on historical `source-set-4fb59e9eb43045cb` are still upstream-blocked for
-  both ECID and South Plateau:
-  `applicability-authority-universe` reports
-  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`,
-  `candidate_authority_count=396`,
-  `forest_plan_component_candidate_count=329`,
-  `validation_passed=false`,
-  `candidates_have_source_evidence_available failure_count=10`, and
-  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
-  ECID `v1-ea-eval` remains `contract_status="mismatch"` with missing
-  review-local compliance artifacts, and `phase-eval` no longer carries a
-  false upstream extraction direct-eval dependency because extraction
-  ownership is now explicitly routed through `extraction-fidelity-eval`. The
-  next truthful slice is now
-  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`.
+  The remaining promotion blocker is therefore packet-local replay debt on the
+  aligned reviewer-facing lane: `applicability-validate` now fails only on
+  unresolved adjudication debt (`needs_adjudication_authority_count=7` for
+  ECID and `6` for South Plateau, both with
+  `generated_rule_pack_ready=false`), ECID and South `v1-ea-eval` remain
+  `contract_status="mismatch"` on review-local artifact/source-record/section
+  failures, and ECID `phase-eval` remains red on packet-local downstream
+  phases plus `evaluation_coverage` direct-eval identity mismatch.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

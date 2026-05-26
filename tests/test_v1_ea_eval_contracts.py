@@ -18,6 +18,8 @@ from usfs_r1_ea_sources.v1_ea_eval import run_v1_ea_review_eval
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+COMMITTED_ECID_CONTRACT = REPO_ROOT / "config" / "v1_ecid_real_ea_eval.json"
+COMMITTED_SOUTH_PLATEAU_CONTRACT = REPO_ROOT / "config" / "v1_south_plateau_real_ea_eval.json"
 COMMITTED_WEST_RESERVOIR_CONTRACT = REPO_ROOT / "config" / "v1_west_reservoir_real_ea_eval.json"
 
 
@@ -168,3 +170,21 @@ class V1EAReviewEvalContractTests(unittest.TestCase):
                 entry["classification_rationale"],
             )
             self.assertNotIn("reviewer-ready contract", entry["classification_rationale"])
+
+    def test_committed_reviewer_ready_contracts_bind_to_scoped_alignment_source_set(self) -> None:
+        ecid = json.loads(COMMITTED_ECID_CONTRACT.read_text(encoding="utf-8"))
+        south = json.loads(COMMITTED_SOUTH_PLATEAU_CONTRACT.read_text(encoding="utf-8"))
+
+        self.assertEqual(ecid["review_id"], "v1-cg-ecid-compliance-review")
+        self.assertEqual(
+            ecid["source_set_id"],
+            "source-set-f70ea11e04ae3d53",
+        )
+        self.assertEqual(
+            south["review_id"],
+            "region1-expansion-south-plateau-landscape-treatment",
+        )
+        self.assertEqual(
+            south["source_set_id"],
+            "source-set-f70ea11e04ae3d53",
+        )

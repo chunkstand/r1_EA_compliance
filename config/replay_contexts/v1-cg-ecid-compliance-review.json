@@ -1,6 +1,6 @@
 {
-  "catalog_dir": "source_library/catalog",
+  "catalog_dir": "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate",
   "package_path": "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)",
   "review_id": "v1-cg-ecid-compliance-review",
-  "source_set_id": "source-set-4fb59e9eb43045cb"
+  "source_set_id": "source-set-f70ea11e04ae3d53"
 }

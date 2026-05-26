@@ -1,6 +1,6 @@
 {
-  "catalog_dir": "source_library/catalog",
+  "catalog_dir": "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate",
   "package_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment",
   "review_id": "region1-expansion-south-plateau-landscape-treatment",
-  "source_set_id": "source-set-4fb59e9eb43045cb"
+  "source_set_id": "source-set-f70ea11e04ae3d53"
 }

@@ -7,8 +7,8 @@ Use this file as the short current route before opening the large append-only do
 - Read this file first for the live route.
 - Read the top section of `docs/SESSION_HANDOFF.md` next for the exact active
   packet, blocker counts, and next truthful slice.
-- Open `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`
-  only after those two docs if the next session is continuing implementation.
+- Open `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` only after
+  those two docs if the next session is continuing implementation.
 
 ## First Stops
 
@@ -26,10 +26,10 @@ Use this file as the short current route before opening the large append-only do
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - Promotion contract closeout:
   `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md`
-- Active reviewer-facing alignment packet:
-  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`
-- Historical replay-repair packet:
+- Active replay-repair packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- Historical reviewer-facing alignment packet:
+  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`
 - Recent upstream current-source closeout:
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
 - Blocked parent authority-binding packet:
@@ -77,84 +77,39 @@ Use this file as the short current route before opening the large append-only do
   `verified_extraction_required_source_count=594`, and
   `verified_extraction_explicitly_non_admitted_source_count=53`
 - Full-canonical downstream split: the live extraction/retrieval truth and the
-  manifest-owned full-canonical promotion slot now both sit on
-  `source-set-4fb59e9eb43045cb`; `promotion-suite` now reports
+  manifest-owned full-canonical promotion slot still sit on
+  `source-set-4fb59e9eb43045cb`, and `promotion-suite` still reports
   `full_canonical_corpus_ready=true` with
-  `passed_required_full_canonical_result_count=10/10`. The promotion-suite
-  contract packet is now resolved locally through Milestone `4`: the aggregate
-  manifest no longer carries ECID packet-local review-packet,
-  decision-support, final-QA, review-graph, or phase-count invariants, and the
-  runtime now drives `current_promotion_ready` from governed slot selection,
-  same-slot families, quorum, and separate reference canaries. The remaining
-  live promotion blocker is now the review-local replay lane, not the contract
-  packet itself. Milestone `0` of
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` is now reduced
-  locally: `real-package-review-coverage-eval` is red at
+  `passed_required_full_canonical_result_count=10/10`. Reviewer-facing replay
+  preflight is now separately aligned to the scoped gate at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
+  on `source-set-f70ea11e04ae3d53`: ECID and South replay contexts plus their
+  `v1-ea-eval` contracts now point there, `applicability-authority-universe`
+  passes for both reviews with `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`, and
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`,
+  and both `applicability-context-build` and `applicability-retrieve` reruns
+  now pass on that same governed source set. The remaining live blocker is now
+  packet-local replay repair on the aligned reviewer-facing lane:
+  `applicability-validate` fails only on unresolved adjudication debt
+  (`needs_adjudication_authority_count=7` for ECID and `6` for South Plateau,
+  both with `generated_rule_pack_ready=false`), ECID and South
+  `v1-ea-eval` reruns remain `contract_status="mismatch"` on review-local
+  artifact/source-record/section failures, and ECID `phase-eval` now runs on
+  `source-set-f70ea11e04ae3d53` but remains red on packet-local downstream
+  phases plus `evaluation_coverage` direct-eval identity mismatch.
+  `real-package-review-coverage-eval` remains red at
   `reviewer_ready_slot_count=0` with ECID current promotion and South Plateau
-  reviewer-ready expansion both reporting `actual_contract_status="mismatch"`
-  while West Reservoir still passes as `typed_blocked`. Non-strict
-  `promotion-suite` still reports `current_promotion_ready=false`,
-  `promotion_ready=false`, and `expansion_ready=false`; the current-promotion
-  contract now fails closed at the selector layer with
-  `selector_passed=false`, `matched_slot_count=0`,
-  `eligible_slot_count=0`, and `passing_slot_count=0` because the governed
-  reviewer-ready slot is mismatched. Milestone `1` of
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` is now also
-  reduced locally: ECID applicability replay now correctly rebuilds a
-  `396`-candidate authority universe with `329` Custer Gallatin component
-  candidates from the active Region 1 batch inventory and honors governed
-  legacy-to-current source-record reconciliation. The authority-source binding blocker
-  packet in `docs/ACTIVE_AUTHORITY_SOURCE_BINDING_BLOCKER_MILESTONE_PLAN.md`
-  is now reduced locally through Milestone `2`: the shared binding owners now
-  cover the exact current rows already present in the active catalog, and the
-  live ECID applicability replay is reduced to `11`
-  source-evidence failures and `17` missing source-record template groups on
-  `authority_universe_sha256=2f99cee2bf5bdbb148cc4b97b5c8d00d370baf9e1a8cb72e623a99226534dc22`.
-  No untouched exact current-catalog URL matches remain for the reduced
-  missing-ID inventory. Milestone `1` of the new active blocker packet
-  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
-  is now also resolved locally: the remaining stale IDs are now split among
-  template retire/replace work, true current-source additions, forest-plan
-  support admissions, and five base-rule current-source decisions. Milestone
-  `2` in that same packet is now reduced further locally through the governed
-  land-exchange retirement closeout, the governed `R1EA-093`
-  current-source addition lane, the governed water-family current-source
-  additions, the governed cultural-resource/state-SHPO and shared
-  tribal-overlap additions, the governed wildlife additions, the governed
-  hazardous-material addition lane, the governed
-  invasive/farmland/drinking-water addition lane, the governed minerals
-  current-source addition lane, the governed forest-plan support admission
-  lane, and the governed vegetation/fire current-source addition lane. The
-  reviewer-facing default catalog remains historical, but the upstream
-  current-source blocker is now exhausted on the scoped replay gate, and that
-  same `source-set-f70ea11e04ae3d53` lane now has its derived-artifact chain
-  rebuilt end to end: `extract-build` completed `708/708` extracted rows with
-  `647` reused rows and `61` fresh parses, `extraction-accuracy-audit` passed
-  on `655` admitted active-current rows, `retrieval-build` is
-  `reviewer_ready=true`, `claim-extract` is `reviewer_ready=true` with
-  `claim_count=134828`, `rule-claim-link` is `reviewer_ready=true` with
-  `48/48` linked rules, `233` links, and `0` gaps, and
-  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
-  now passes there with `candidate_authority_count=396`,
-  `forest_plan_component_candidate_count=329`,
-  `rule_template_candidate_count=48`,
-  `authority_family_rule_template_candidate_count=19`, and
-  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
-  The replay-repair packet now stops truthfully there. Live reviewer-facing
-  reruns on `source-set-4fb59e9eb43045cb` are still upstream-blocked for both
-  ECID and South Plateau: `applicability-authority-universe` reports
-  `authority_universe_sha256=1d0385d00ac80eb1975b9ccfce137e13c37a0751800b98c0a9fff7a3d1790d6b`,
-  `candidate_authority_count=396`,
-  `forest_plan_component_candidate_count=329`,
-  `validation_passed=false`,
-  `candidates_have_source_evidence_available failure_count=10`, and
-  `authority_family_template_candidates_cover_config missing_source_record_count=11`.
-  ECID `v1-ea-eval` therefore remains `contract_status="mismatch"` with
-  missing review-local compliance artifacts, and `phase-eval` now fails only
-  on stale review-local artifacts plus that same reviewer-facing source-set
-  debt after the local direct-eval alignment fix moved extraction ownership to
-  `extraction-fidelity-eval`. The next truthful slice is now
-  `docs/REVIEWER_FACING_SOURCE_SET_ALIGNMENT_BLOCKER_MILESTONE_PLAN.md`.
+  reviewer-ready expansion both `actual_contract_status="mismatch"`, while
+  West Reservoir still passes as `typed_blocked`. Non-strict `promotion-suite`
+  remains red at `passed_required_current_result_count=11/32`,
+  `current_promotion_ready=false`, `promotion_ready=false`, and
+  `expansion_ready=false`; the current-promotion contract still fails closed
+  at selector/quorum entry with `selector_passed=false`,
+  `matched_slot_count=0`, `eligible_slot_count=0`, and
+  `passing_slot_count=0`. The reviewer-facing source-set alignment blocker is
+  now resolved locally, and the next truthful slice returns to
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`.
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty
@@ -172,8 +127,8 @@ Use this file as the short current route before opening the large append-only do
   work; it has already rerouted `FOR-029` out of master-promotion semantics,
   added a tracked Lolo forest-plan component eval slot, and proved packet-local
   `v1-ea-eval` plus component-eval coverage, but the forest row must stay
-  `profile_eval_guidance_only` until the inherited reviewer-facing source-set
-  alignment blocker on `source-set-4fb59e9eb43045cb` is resolved
+  `profile_eval_guidance_only` until the inherited packet-local replay repair
+  on aligned reviewer-facing `source-set-f70ea11e04ae3d53` is resolved
 - Downstream gold packet status: the earlier full-canonical compliance-gold
   rebaseline remains historically resolved in commit `8e0e02b`
   (`Resolve full canonical compliance gold rebaseline`) on the same active

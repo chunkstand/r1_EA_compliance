@@ -20,8 +20,9 @@ class ReplayContextTests(unittest.TestCase):
 
         self.assertEqual(
             context.catalog_dir,
-            Path("source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate"),
+            Path("source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate"),
         )
+        self.assertEqual(context.source_set_id, "source-set-f70ea11e04ae3d53")
 
     def test_tracked_south_plateau_replay_context_uses_archived_current_promotion_catalog_surface(
         self,
@@ -37,8 +38,9 @@ class ReplayContextTests(unittest.TestCase):
 
         self.assertEqual(
             context.catalog_dir,
-            Path("source_library/runs/corpus-update-2026-05-01-cg-support-batches/catalog_gate"),
+            Path("source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate"),
         )
+        self.assertEqual(context.source_set_id, "source-set-f70ea11e04ae3d53")
         self.assertEqual(
             context.package_path,
             Path("source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment"),

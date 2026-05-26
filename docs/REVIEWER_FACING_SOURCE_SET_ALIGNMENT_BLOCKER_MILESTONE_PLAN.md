@@ -1,7 +1,10 @@
 # Reviewer-Facing Source-Set Alignment Blocker Milestone Plan
 
 Date: 2026-05-25
-Status: Active packet (`Milestone 0` gate-and-routing opener resolved locally; `Milestone 1` reviewer-facing authority-surface alignment is next)
+Status: Resolved locally (`Milestone 0` gate-and-routing opener, `Milestone 1`
+reviewer-facing authority-surface alignment, and `Milestone 2`
+replay-preflight reroute closeout are all resolved locally; control has
+returned to `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`)
 Owner context: standalone blocker follow-on opened after
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` proved that the
 scoped replay-precondition lane on `source-set-f70ea11e04ae3d53` is green but
@@ -10,6 +13,33 @@ blocked. This packet owns reviewer-facing source-set alignment only. It does
 not pretend packet-local review artifacts are repaired, and it does not reopen
 full-canonical source capture, downloader, or slot-driven promotion-suite
 architecture.
+
+## Latest Local Implementation
+
+- Reviewer-facing replay contexts for ECID and South Plateau now point at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
+  on `source-set-f70ea11e04ae3d53`.
+- The reviewer-facing ECID and South `v1-ea-eval` contracts now also bind to
+  `source-set-f70ea11e04ae3d53`.
+- `src/usfs_r1_ea_sources/cli_applicability.py` now auto-loads tracked
+  replay-context catalog and manifest paths for applicability commands and
+  fails closed on mismatched explicit source-set or catalog overrides.
+- Both reviewer-facing `applicability-authority-universe` reruns now pass on
+  the same governed source set with `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`, and
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
+- `applicability-context-build` and `applicability-retrieve` now pass for
+  both reviews on that aligned source set.
+- Remaining red is no longer reviewer-facing authority-surface debt.
+  `applicability-validate` now fails only on unresolved adjudication debt
+  (`needs_adjudication_authority_count=7` for ECID and `6` for South Plateau),
+  ECID and South `v1-ea-eval` remain `contract_status="mismatch"` on
+  packet-local artifact/source-record/section issues, and ECID `phase-eval`
+  remains red on packet-local downstream phases plus
+  `evaluation_coverage` direct-eval identity mismatch.
+- The next truthful slice is therefore packet-local replay repair in
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, not more
+  reviewer-facing source-set alignment work.
 
 ## Purpose
 
