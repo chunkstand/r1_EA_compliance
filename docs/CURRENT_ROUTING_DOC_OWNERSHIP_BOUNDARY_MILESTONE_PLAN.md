@@ -3,8 +3,9 @@
 Date: 2026-05-26
 
 Status: resolved locally 2026-05-26 inside the broader architecture-governance rebaseline; the
-short-route contract is restored and volatile live state now routes back through
-`docs/CURRENT_SYSTEM_STATE.md` plus `docs/SESSION_HANDOFF.md`
+short-route contract is restored, `README.md` is back to a stable public entrypoint, and volatile
+live state now routes back through `docs/CURRENT_SYSTEM_STATE.md` plus
+`docs/SESSION_HANDOFF.md`
 
 Owner context: This is a fresh standalone child packet. It does not append more work into
 `docs/CURRENT_ROUTING.md` itself, and it does not reopen the full
@@ -35,8 +36,8 @@ own volatile truth, and the architecture-quality gate should enforce that bounda
 ### Live boundary drift on 2026-05-26
 
 - `docs/CURRENT_ROUTING.md` is `277` lines long even though it declares itself the short first stop.
-- `README.md` still contains a dated `Current routed state on 2026-05-25:` section with deep live
-  replay, corpus, and architecture status details.
+- `README.md` still contains a dated `Current routed state on 2026-05-25:` section plus broader
+  distributed live replay, corpus, and architecture status details.
 - `tests/test_architecture_quality.py` currently enforces:
   - `docs/CURRENT_ROUTING.md` line-count plus link presence via
     `test_current_routing_doc_stays_short_and_linked()`
@@ -54,7 +55,8 @@ own volatile truth, and the architecture-quality gate should enforce that bounda
 ### Intended durable ownership after this packet
 
 - `docs/CURRENT_ROUTING.md`: short first-stop route only
-- `README.md`: stable public entrypoint that links to current route and deeper state docs
+- `README.md`: stable public entrypoint that links to current route and deeper state docs instead
+  of carrying distributed live source-set and replay-state narration
 - `docs/CURRENT_SYSTEM_STATE.md`: canonical tracked owner for volatile current repo state
 - `docs/SESSION_HANDOFF.md`: canonical fresh-session owner for current packet, current blocker, and
   next truthful slice
@@ -115,7 +117,7 @@ Out of scope:
 - `docs/CURRENT_ROUTING.md` may contain start order, active packet pointers, and links to deeper
   docs only. It must not carry a `## Live Facts`-style state section after closeout.
 - `README.md` may explain the product, public entrypoints, and where current state lives, but it
-  must not own a dated routed-state block.
+  must not own a dated routed-state block, live source-set IDs, or replay-status counters.
 - Volatile counts, replay mismatches, source-set IDs, blocker counts, and next truthful slice text
   belong in `docs/CURRENT_SYSTEM_STATE.md` and the top section of `docs/SESSION_HANDOFF.md`.
 - The test gate must prefer ownership assertions over repeated token assertions. If the same live
@@ -130,7 +132,7 @@ Out of scope:
 | --- | --- | --- | --- | --- | --- | --- |
 | `0` | The packet starts from stale or mis-scoped evidence and only trims prose cosmetically | this plan, `docs/CURRENT_ROUTING.md`, `README.md`, `tests/test_architecture_quality.py` | baseline `wc -l`, focused pytest, targeted grep for duplicated live-state blocks | the baseline does not reproduce the long route doc, dated README state block, and current brittle test shape | the pre-edit baseline must still show the duplicated-state problem before any rewrite starts | a future session shortens one paragraph but leaves the ownership boundary broken |
 | `1` | `docs/CURRENT_ROUTING.md` is shortened, but the deep state is merely hidden or moved into another route doc | `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md` | focused pytest, `wc -l`, grep for disallowed route sections/tokens | `docs/CURRENT_ROUTING.md` remains above `40` lines, still has `## Live Facts`, or still carries volatile state blocks | require a failing negative-path assertion for long or state-heavy current-routing content | a future session keeps adding packet facts back into `docs/CURRENT_ROUTING.md` because the line cap alone is easy to game |
-| `2` | `README.md` keeps duplicating volatile state because the gate only checks links and not ownership | `README.md`, `tests/test_architecture_quality.py` | focused pytest plus targeted grep for dated routed-state blocks | `README.md` still contains a dated routed-state section or deep replay-state prose after closeout | require a negative-path assertion that fails when README owns a dated current-state section | a future session updates live counts in README because the current-state doc feels too deep |
+| `2` | `README.md` keeps duplicating volatile state because the gate only checks links and not ownership | `README.md`, `tests/test_architecture_quality.py` | focused pytest plus targeted grep for dated routed-state blocks and live source-set markers | `README.md` still contains a dated routed-state section, live source-set IDs, or deep replay-state prose after closeout | require a negative-path assertion that fails when README owns a dated or distributed live current-state section | a future session updates live counts in README because the current-state doc feels too deep |
 | `3` | The test gate still encodes repeated volatile phrases across multiple docs instead of one canonical owner | `tests/test_architecture_quality.py` | focused pytest, controlled test rewrite review | the gate still requires the same live volatile phrases in `README.md`, `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md` | replace the repeated-token assertion with ownership-based assertions and prove the old pattern would fail | a future session greens the suite by copying one more live phrase into another doc |
 | `4` | Closeout leaves no explicit owner for live state or no explicit next architecture routing | `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, this plan | focused pytest, targeted grep, `git diff --check` | current state is no longer duplicated, but the volatile truth is not clearly owned in tracked current-state docs | targeted readback must confirm both owner docs still carry the live state after route/README cleanup | a future session removes duplicated state everywhere and accidentally strands the live route with no canonical current owner |
 
@@ -206,7 +208,8 @@ Outcome label: `resolved`
 
 Work:
 
-- Remove the dated routed-state block from `README.md`.
+- Remove the dated routed-state block and the remaining distributed live
+  corpus/replay baselines from `README.md`.
 - Replace it with a stable pointer to:
   - `docs/CURRENT_ROUTING.md` for the short route
   - `docs/CURRENT_SYSTEM_STATE.md` for tracked current state
@@ -217,16 +220,19 @@ Required verification:
 
 ```bash
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_quality.py -q
+wc -l README.md
 rg -n "Current routed state on" README.md
+rg -n "Canonical source-register refoundation status on|Historical local import baseline on|current_promotion_ready|reviewer_ready=true|source-set-[0-9a-f]{16}" README.md
 rg -n "docs/CURRENT_ROUTING.md|docs/CURRENT_SYSTEM_STATE.md|docs/SESSION_HANDOFF.md" README.md
 git diff --check
 ```
 
 Closeout on 2026-05-26:
 
-- `README.md` no longer owns the dated routed-state block and now points readers back to
-  `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and the
-  tracked architecture inventory.
+- `README.md` is now back to a stable public-entrypoint role. It no longer owns the dated
+  routed-state block or distributed live source-set/replay baselines, and it points readers back
+  to `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and
+  the tracked architecture inventory.
 
 ### Milestone `3`: Architecture-quality gate conversion
 
@@ -237,7 +243,7 @@ Work:
 - Replace the brittle repeated-text alignment expectation in
   `tests/test_architecture_quality.py` with ownership-boundary assertions such as:
   - `docs/CURRENT_ROUTING.md` stays short and free of deep-state sections
-  - `README.md` does not own a dated routed-state block
+  - `README.md` stays concise and does not own dated or distributed live current-state prose
   - `docs/CURRENT_SYSTEM_STATE.md` and `docs/SESSION_HANDOFF.md` remain the canonical owners for
     volatile current-state wording
 - If helper extraction is needed, keep the negative-path assertions at least as strong as the
@@ -255,8 +261,8 @@ git diff --check
 Closeout on 2026-05-26:
 
 - `tests/test_architecture_quality.py` now checks ownership boundaries directly: short-route
-  limits, README route ownership, current-state/handoff ownership of volatile architecture text,
-  and exact inventory truth.
+  limits, README stable-entrypoint ownership, current-state/handoff ownership of volatile
+  architecture text, and exact inventory truth.
 
 ### Milestone `4`: Current-state and handoff closeout alignment
 
@@ -311,7 +317,9 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_quality.py -q
 PYTHONPATH=src uv run --extra dev ruff check tests/test_architecture_quality.py
 PYTHONPATH=src python -m compileall tests/test_architecture_quality.py
 wc -l docs/CURRENT_ROUTING.md
+wc -l README.md
 rg -n "Current routed state on|## Live Facts|five still-unmapped live authorities|zero-link structural surface|generated diagnostic" README.md docs/CURRENT_ROUTING.md
+rg -n "Canonical source-register refoundation status on|Historical local import baseline on|current_promotion_ready|reviewer_ready=true|source-set-[0-9a-f]{16}" README.md
 git diff --check
 ```
 
@@ -319,6 +327,7 @@ git diff --check
 
 - `docs/CURRENT_ROUTING.md` is `<= 40` lines and no longer contains a deep live-state section.
 - `README.md` no longer contains a dated routed-state block.
+- `README.md` no longer carries distributed live source-set IDs or replay-status counters.
 - `README.md` still points users to `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
   `docs/SESSION_HANDOFF.md`.
 - `tests/test_architecture_quality.py` passes while enforcing doc ownership roles directly.

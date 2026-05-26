@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -17,6 +18,7 @@ CODE_GLOBS = ("*.py", "*.js")
 MAX_REVIEWABLE_LINES = 800
 MAX_ALLOWED_OVERSIZED_FILES = 9
 MAX_ALLOWED_FAN_OUT = 20
+MAX_README_LINES = 220
 ALLOWED_HIGH_FAN_OUT_MODULES: set[str] = set()
 REPLAY_CONTEXT_DIR = REPO_ROOT / "config" / "replay_contexts"
 LARGE_FILE_INVENTORY_PATH = REPO_ROOT / "config" / "architecture_large_file_inventory_v1.json"
@@ -33,6 +35,16 @@ SESSION_HANDOFF_PATH = REPO_ROOT / "docs" / "SESSION_HANDOFF.md"
 FULL_CANONICAL_GOLD_PLAN_PATH = (
     REPO_ROOT / "docs" / "FULL_CANONICAL_COMPLIANCE_GOLD_REBASELINE_MILESTONE_PLAN.md"
 )
+README_VOLATILE_MARKERS = (
+    "Current routed state on",
+    "Canonical source-register refoundation status on",
+    "Historical local import baseline on",
+    "current_promotion_ready",
+    "reviewer_ready=true",
+    "candidate_authority_count",
+    "failure_category_counts=",
+)
+README_LIVE_SOURCE_SET_PATTERN = re.compile(r"source-set-[0-9a-f]{16}")
 
 
 def test_large_file_count_does_not_grow() -> None:
@@ -141,11 +153,14 @@ def test_current_routing_doc_stays_short_and_linked() -> None:
 def test_readme_routes_to_current_state_owners() -> None:
     readme = README_PATH.read_text(encoding="utf-8")
 
-    assert "Current routed state on" not in readme
+    assert len(readme.splitlines()) <= MAX_README_LINES
     assert "docs/CURRENT_ROUTING.md" in readme
     assert "docs/CURRENT_SYSTEM_STATE.md" in readme
     assert "docs/SESSION_HANDOFF.md" in readme
     assert f"`{MAX_ALLOWED_OVERSIZED_FILES}` code files above `800`" not in readme
+    for marker in README_VOLATILE_MARKERS:
+        assert marker not in readme, marker
+    assert README_LIVE_SOURCE_SET_PATTERN.search(readme) is None
 
 
 def test_historical_under_800_closeout_and_rebaseline_packet_are_discoverable() -> None:

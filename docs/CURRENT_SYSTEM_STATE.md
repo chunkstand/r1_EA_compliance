@@ -33,11 +33,11 @@ Latest docs-and-gate rebaseline on 2026-05-26:
   `config/architecture_large_file_inventory_v1.json` now records the exact
   reopened 2026-05-26 backlog at `9` code files above `800`, grouped as `4`
   source owners and `5` test owners with focused follow-on test surfaces.
-  `tests/test_architecture_quality.py` now fail-closes on exact inventory
-  membership, stale empty-closeout payloads, an overlong
-  `docs/CURRENT_ROUTING.md`, dated routed-state ownership in `README.md`, and
-  volatile current-state duplication outside this file plus the top of
-  `docs/SESSION_HANDOFF.md`
+  `README.md` is now a stable public entrypoint instead of a second
+  current-state log, and `tests/test_architecture_quality.py` now fail-closes
+  on exact inventory membership, stale empty-closeout payloads, an overlong
+  `docs/CURRENT_ROUTING.md`, volatile README drift, and current-state
+  duplication outside this file plus the top of `docs/SESSION_HANDOFF.md`
 - live architecture truth:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`
   now reports `472` code files, `9` code files above `800`, no Python or JS/TS
@@ -69,7 +69,9 @@ Latest docs-and-gate rebaseline on 2026-05-26:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py tests/test_architecture_quality.py -q`,
   `PYTHONPATH=src uv run --extra dev ruff check tests/test_architecture_contract.py tests/test_architecture_quality.py`,
   `PYTHONPATH=src python -m compileall tests/test_architecture_quality.py tests/test_architecture_contract.py`,
-  `wc -l docs/CURRENT_ROUTING.md`, and `git diff --check`
+  `wc -l docs/CURRENT_ROUTING.md README.md`,
+  `rg -n "Canonical source-register refoundation status on|Historical local import baseline on|current_promotion_ready|reviewer_ready=true|source-set-[0-9a-f]{16}" README.md`,
+  and `git diff --check`
 
 ## Aligned ECID Compliance Replay And Inventory Mapping Reduced Locally
 

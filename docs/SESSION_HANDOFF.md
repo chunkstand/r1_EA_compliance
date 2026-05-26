@@ -54,8 +54,9 @@ history below.
   locally. The exact rebaseline probe command
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`
   now reports `472` code files and `9` code files above `800`,
-  `docs/CURRENT_ROUTING.md` is back to `32` lines, and
-  `tests/test_architecture_contract.py` plus
+  `docs/CURRENT_ROUTING.md` is back to `32` lines, `README.md` is back to a
+  stable public-entrypoint role instead of carrying live source-set/replay
+  state, and `tests/test_architecture_contract.py` plus
   `tests/test_architecture_quality.py` are green again. The 2026-05-21
   under-`800` closeout remains historical truth; the remaining live issue is
   the explicitly routed oversized-file backlog in
@@ -146,10 +147,11 @@ if it had been false at the time.
   reopened backlog at `9` code files above `800`, grouped as `4` source owners
   and `5` test owners with focused follow-on test surfaces. The narrower
   `docs/CURRENT_ROUTING_DOC_OWNERSHIP_BOUNDARY_MILESTONE_PLAN.md` child packet
-  is also resolved locally inside this broader closeout: `README.md` no longer
-  owns a dated routed-state block, `docs/CURRENT_ROUTING.md` is back to `32`
-  lines, and `tests/test_architecture_quality.py` now enforces doc ownership
-  instead of requiring repeated volatile prose across multiple docs
+  is also resolved locally inside this broader closeout: `README.md` is back
+  to a stable public-entrypoint role with no live source-set or replay-state
+  ownership, `docs/CURRENT_ROUTING.md` is back to `32` lines, and
+  `tests/test_architecture_quality.py` now enforces doc ownership instead of
+  requiring repeated volatile prose across multiple docs
 - live architecture truth:
   the exact probe command
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20`
