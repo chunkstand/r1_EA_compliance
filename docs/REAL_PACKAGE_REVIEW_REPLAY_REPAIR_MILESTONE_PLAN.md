@@ -11,8 +11,10 @@ also green there, and the historical ECID preliminary-EA lane is now
 truthfully rerouted as a selected-not-ready strict-expansion slot on its split
 historical source-set contract. Any future work there should open a fresh
 follow-on rather than reopening this packet to reassert missing downstream
-artifacts. The named routed successor is
-`docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`)
+artifacts. The live routed successor is now
+`docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`, with
+`docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+preserved as the blocked historical parent record)
 
 Owner context: this standalone follow-on packet opened after
 `docs/PROMOTION_SUITE_SLOT_DRIVEN_CONTRACT_MILESTONE_PLAN.md` closed through
@@ -739,9 +741,11 @@ Milestone 3 live alignment update on 2026-05-26:
   `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/SESSION_HANDOFF.md`, `docs/POST_V1_PROMOTION_SUITE.md`, and this plan
   now record the truthful reroute closeout and route any future historical-lane
-  rebuild into
+  blocker work into
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  instead of this packet, while
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
-  instead of this packet. `README.md` was
+  remains the blocked parent stop-condition record. `README.md` was
   checked and remains intentionally unchanged because it delegates volatile
   replay truth to the current-state docs instead of duplicating it.
 

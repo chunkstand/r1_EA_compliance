@@ -4,20 +4,24 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then
   `docs/CURRENT_SYSTEM_STATE.md`.
-- Open `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+- Open
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   when continuing implementation on the remaining ECID preliminary historical
-  lane. Open
+  blocker lane. Open
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md` only as
+  the blocked parent record for the fail-closed slot gate and stop-condition
+  evidence. Open
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` only as the
   resolved predecessor packet when you need its historical closeout context.
 ## Active Route
 - Active packet:
-  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - Live next slice:
-  Sequence 0 fail-closed slot gating is now landed, but the packet is
-  currently blocked after fresh rebaseline proving on 2026-05-26. The next
-  truthful slice is to open a dedicated blocker follow-on for the ECID
-  preliminary historical lane rather than flipping the slot to `ready`,
-  shrinking the manifest, or reopening
+  Milestone 1 in the blocker packet now owns the next truthful slice:
+  classify whether the remaining ECID preliminary historical blocker still has
+  a bounded historical-source-set rebuild path on `ba8...` or `4fb...` before
+  opening any replacement-ready-slot follow-on. Do not flip the slot to
+  `ready`, shrink the manifest, or reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - Aggregate truth:
   ECID current promotion and South Plateau reviewer-ready expansion are
@@ -37,6 +41,7 @@ Use this file as the short current route before opening the append-only docs.
 - Core: `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
   `docs/ARCHITECTURE.md`
 - Follow-ons:
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`,
   `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`,

@@ -220,10 +220,12 @@ family.
   closure assumption is stale under current live artifacts, `4fb...` remains
   source-set `phase-eval` red (`10/33`), and the tracked Lolo replacement
   candidate remains review `phase-eval` red (`19/23`), so no truthful ready
-  closure path is currently proven.
-  Any further work there should start in
-  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`, not
-  in another South replay pass or by reopening the resolved replay-repair
+  closure path is currently proven. The blocked parent record for that stop
+  condition remains
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`.
+  Any further live work there should start in
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  not in another South replay pass or by reopening the resolved replay-repair
   packet.
 
 Historical South Plateau expansion build context from the earlier green

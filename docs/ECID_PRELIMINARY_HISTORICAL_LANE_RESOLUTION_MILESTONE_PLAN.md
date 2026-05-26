@@ -2,8 +2,9 @@
 
 Date: 2026-05-26
 
-Status: Blocked after Sequence 1 rebaseline proving (`Sequence 0` complete; no truthful closure
-path currently proven)
+Status: Historical blocked parent packet after Sequence 1 rebaseline proving (`Sequence 0`
+complete locally; live route moved through
+`docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`)
 
 Owner context: This is a fresh standalone follow-on milestone plan. It starts only after
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` closed locally and committed. It owns
@@ -36,8 +37,16 @@ Latest execution note on 2026-05-26:
     `passed_phase_count=19/23`.
 - Current packet truth: the plan is blocked at its own stop condition. Do not flip
   `region1-real-ea-slot-1` to `ready`, do not weaken the manifest floor, and do not swap in
-  another non-ready placeholder. The next truthful follow-on is a dedicated blocker packet for
-  rebaseline drift and replacement-lane readiness.
+  another non-ready placeholder. The live successor route is now
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  which owns the dedicated blocker follow-on for rebaseline drift and
+  replacement-lane readiness.
+
+This plan now remains as the blocked historical parent record for the
+fail-closed ready-slot gate and the stop-condition evidence above. Continue
+live work in
+`docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+rather than resuming runtime implementation sequences here.
 
 ## Purpose
 

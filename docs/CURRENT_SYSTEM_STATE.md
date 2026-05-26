@@ -15,6 +15,44 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## ECID Preliminary Historical Rebaseline Blocker Opened Locally
+
+Latest implementation update on 2026-05-26:
+
+- routed packet:
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; the parent ECID historical-lane packet stays preserved as
+  the stop-condition record, but the live route is now a narrower blocker
+  packet for rebaseline-drift and replacement-readiness classification
+- implementation truth:
+  the repo now names the blocker packet exactly instead of leaving the next
+  slice as a generic "open a dedicated blocker follow-on" instruction. The new
+  packet keeps `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+  as the historical parent that landed the fail-closed ready-slot source-set
+  guard and froze the three red closure signals that stopped the lane
+- live blocker truth:
+  strict expansion still fails only on the ECID preliminary historical slot
+  under `historical_source_set_split`; `source-set-4fb59e9eb43045cb` remains
+  source-set `phase-eval` red at `10/33`;
+  `source-set-ba8d0feae79501b8` still fails fresh
+  `applicability-validate` with `source_set_stale=398`, `partition_gap=329`,
+  `missing_candidate_decision=4`, `unresolved_authority=4`, and
+  `provenance_gap=1`; and the tracked governed replacement candidate
+  `region1-example-lolo-tylers-kitchen-66344` remains review `phase-eval` red
+  at `19/23`
+- next routing:
+  continue in
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 1 to classify historical-source-set feasibility before opening
+  any replacement-ready-slot follow-on. Do not continue live runtime work in
+  the blocked parent packet
+- verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  and `git diff --check`
+
 ## ECID Preliminary Historical Lane Rebaseline Blocked Locally
 
 Latest implementation update on 2026-05-26:
@@ -45,10 +83,11 @@ Latest implementation update on 2026-05-26:
   this slot: its review `phase_eval_results.json` is `passed=false` with
   `passed_phase_count=19/23`
 - next routing:
-  keep `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
-  as the active packet only as a blocked lane. The next truthful follow-on is
-  a dedicated rebaseline blocker packet; do not flip the ECID historical slot
-  to `ready`, shrink the manifest, or reuse another non-ready placeholder
+  this section is now historical blocked-parent context only. Continue in
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  which owns the exact blocker classification and next-packet routing. Do not
+  flip the ECID historical slot to `ready`, shrink the manifest, or reuse
+  another non-ready placeholder
 - verification:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite.py tests/test_real_package_review_coverage_eval.py -q`,
   `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/promotion_suite_expansion.py tests/test_promotion_suite_expansion_slots.py`,
@@ -103,10 +142,10 @@ Latest implementation update on 2026-05-26:
   the suite no longer falsely claims they are live required expansion
   artifacts on this packet
 - next routing:
-  the standalone follow-on is now
-  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`.
-  See the newer `## ECID Preliminary Historical Lane Rebaseline Blocked
-  Locally` section above for the current blocked-state truth before continuing
+  the later blocked-parent reroute above is now also historical. Current live
+  work starts in
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`;
+  see the top-of-file blocker-opened section for the current next slice
 - verification:
   `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
   `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,

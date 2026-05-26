@@ -14,9 +14,12 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md` if
-  the next session is continuing implementation on the ECID historical lane
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md` if
+  the next session is continuing implementation on the ECID historical blocker
+  lane
 - active packet:
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- blocked historical parent packet:
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
 - resolved predecessor packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
@@ -38,8 +41,10 @@ history below.
   preliminary-EA lane is now truthfully rerouted as a selected-not-ready
   strict-expansion slot on the split `ba8...` / `4fb...` lane. Future work
   there now routes through
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  with
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
-  rather than reopening this packet to fake the missing downstream artifacts
+  preserved as the blocked parent record rather than the live runtime packet
 - extraction/direct-eval owner-boundary note:
   the new extraction/direct-eval child packet preserves the closed
   `extraction-fidelity-eval` and `phase_eval_direct_eval.py` contracts while
@@ -144,15 +149,52 @@ history below.
   `unresolved_authority=4`, and `provenance_gap=1`, and the tracked Lolo
   replacement candidate remains review `phase-eval` red (`19/23`)
 - next truthful slice:
-  Sequence 0 fail-closed slot gating is complete. The packet is now blocked
-  after fresh rebaseline proving, so the next truthful slice is to open a
-  dedicated blocker follow-on from
-  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`.
-  Do not reopen `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as
-  a new runtime packet
+  the dedicated blocker follow-on is now open at
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  Milestone 1 there is the next truthful slice: classify whether the remaining
+  blocker still has a bounded historical-source-set rebuild path before any
+  replacement-ready-slot follow-on opens. Do not reopen
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
+  packet
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## ECID Preliminary Historical Rebaseline Blocker Opened Locally
+
+This docs-and-routing slice opens the exact blocker packet that the parent
+historical-lane plan called for after its fresh rebaseline proving stop
+condition.
+
+- outcome label:
+  `queued locally`; the new active packet is
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- implementation truth:
+  the route no longer leaves the next slice generic. The new blocker packet
+  isolates rebaseline-drift and replacement-readiness classification while
+  preserving
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+  as the blocked parent record for the fail-closed slot gate and the three red
+  closure signals that stopped that lane
+- live blocker truth:
+  strict expansion still fails only on the ECID preliminary historical slot
+  under `historical_source_set_split`; `source-set-4fb...` remains source-set
+  `phase-eval` red at `10/33`; `source-set-ba8...` still fails fresh
+  `applicability-validate` with `source_set_stale=398`, `partition_gap=329`,
+  `missing_candidate_decision=4`, `unresolved_authority=4`, and
+  `provenance_gap=1`; and the tracked governed replacement candidate
+  `region1-example-lolo-tylers-kitchen-66344` remains review `phase-eval` red
+  at `19/23`
+- next routing:
+  continue in
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 1 for historical-source-set feasibility classification before
+  opening any replacement-ready-slot packet
+- verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  and `git diff --check`
 
 ## ECID Preliminary Historical Lane Rebaseline Blocked Locally
 
@@ -179,10 +221,10 @@ hit the plan's stop condition during fresh Sequence 1 proving.
   `region1-example-lolo-tylers-kitchen-66344` remains review `phase-eval` red
   (`passed=false`, `passed_phase_count=19/23`)
 - next routing:
-  keep the current packet only as blocked historical-lane truth. The next
-  requested work should open a dedicated blocker follow-on for rebaseline
-  drift and replacement-lane readiness rather than flipping the slot, reducing
-  the manifest floor, or swapping in another non-ready placeholder
+  this section is now historical blocked-parent truth only. Continue in
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  rather than flipping the slot, reducing the manifest floor, or swapping in
+  another non-ready placeholder
 - verification:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_promotion_suite_expansion_slots.py tests/test_promotion_suite.py tests/test_real_package_review_coverage_eval.py -q`,
   `PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/promotion_suite_expansion.py tests/test_promotion_suite_expansion_slots.py`,
@@ -217,8 +259,8 @@ downstream artifacts exist.
   aggregate required-expansion count. The slot's last-local-signal payload now
   records the split `ba8...` / `4fb...` source-set evidence explicitly
 - next routing:
-  if more work is requested on this lane, continue in
-  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+  later routing superseded this note. Current live work starts in
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   rather than reopening this packet's aggregate reroute closeout
 
 ## ECID Preliminary Historical Lane Follow-On Opened
