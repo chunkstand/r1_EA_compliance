@@ -14,9 +14,11 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` if
-  the next session is continuing implementation
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md` if
+  the next session is continuing implementation on the ECID historical lane
 - active packet:
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+- resolved predecessor packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - replay owner-boundary child packet:
   `docs/APPLICABILITY_COMPLIANCE_REPLAY_OWNER_BOUNDARY_MILESTONE_PLAN.md`
@@ -34,10 +36,10 @@ history below.
   `run_compliance_review(...)`. It does not replace the parent packet's next
   truthful aggregate closeout truth: the parent packet's historical ECID
   preliminary-EA lane is now truthfully rerouted as a selected-not-ready
-  strict-expansion slot on the split `ba8...` / `4fb...` lane. Any future
-  work there should open a fresh follow-on for coherent historical-lane
-  rebuild or governed slot replacement rather than reopening this packet to
-  fake the missing downstream artifacts
+  strict-expansion slot on the split `ba8...` / `4fb...` lane. Future work
+  there now routes through
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+  rather than reopening this packet to fake the missing downstream artifacts
 - extraction/direct-eval owner-boundary note:
   the new extraction/direct-eval child packet preserves the closed
   `extraction-fidelity-eval` and `phase_eval_direct_eval.py` contracts while
@@ -135,10 +137,11 @@ history below.
   they are no longer falsely counted as live required expansion artifacts on
   this packet
 - next truthful slice:
-  no further runtime slice remains inside
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`. If a future
-  session continues this lane, open a fresh standalone follow-on for coherent
-  historical-lane rebuild or governed slot replacement
+  start with Sequence 0 in
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`.
+  Do not reopen
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
+  packet
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
@@ -169,9 +172,38 @@ downstream artifacts exist.
   aggregate required-expansion count. The slot's last-local-signal payload now
   records the split `ba8...` / `4fb...` source-set evidence explicitly
 - next routing:
-  if more work is requested on this lane, open a fresh follow-on for coherent
-  historical-lane rebuild or governed slot replacement rather than reopening
-  this packet's aggregate reroute closeout
+  if more work is requested on this lane, continue in
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+  rather than reopening this packet's aggregate reroute closeout
+
+## ECID Preliminary Historical Lane Follow-On Opened
+
+This docs-only planning slice opens the standalone follow-on packet that the
+reroute closeout named for the remaining strict-expansion ECID preliminary-EA
+lane.
+
+- outcome label:
+  `queued locally`; the new active packet is
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+- routed weakness:
+  strict expansion still fails only because
+  `region1-expansion-ecid-preliminary-ea` is selected-not-ready under
+  `historical_source_set_split`, with applicability validation / phase-eval on
+  `source-set-ba8d0feae79501b8`, generated rule-pack / slot identity on
+  `source-set-4fb59e9eb43045cb`, and six downstream compliance/provenance
+  artifacts still absent locally
+- intended improvement:
+  the new packet forces Sequence 0 rebaseline first, then requires exactly one
+  truthful closure path: coherent one-source-set rebuild or governed ready-slot
+  replacement. It explicitly forbids shrinking the slot floor or reviving the
+  closed replay-repair packet as a runtime workaround
+- explicit boundary:
+  this packet does not reopen ECID current-promotion replay, South Plateau
+  repair, slot-driven promotion-suite architecture, or West Reservoir
+  typed-blocked routing
+- verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+  and `git diff --check`
 
 ## South Plateau Reviewer-Ready Expansion Restored Locally
 

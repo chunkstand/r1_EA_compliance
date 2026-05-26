@@ -215,8 +215,10 @@ family.
   slot contract point at `source-set-4fb59e9eb43045cb`. The six downstream
   compliance / provenance artifacts remain absent locally, but they are no
   longer falsely counted as live required expansion artifacts on this packet.
-  Any further work there should be a fresh historical-lane rebuild or
-  governed slot-replacement follow-on, not another South replay pass.
+  Any further work there should start in
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`, not
+  in another South replay pass or by reopening the resolved replay-repair
+  packet.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

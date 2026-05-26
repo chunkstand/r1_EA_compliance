@@ -4,16 +4,20 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then
   `docs/CURRENT_SYSTEM_STATE.md`.
-- Open `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` only when
-  continuing implementation.
+- Open `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+  when continuing implementation on the remaining ECID preliminary historical
+  lane. Open
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` only as the
+  resolved predecessor packet when you need its historical closeout context.
 ## Active Route
 - Active packet:
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
 - Live next slice:
-  truthful strict-expansion reroute is now landed locally; if this lane
-  continues, open a fresh follow-on for coherent ECID preliminary-EA
-  historical-lane rebuild or governed slot replacement rather than reopening
-  the current packet to reassert missing downstream artifacts
+  start with Sequence 0 in
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`:
+  rebaseline the split `ba8...` / `4fb...` ECID preliminary historical lane,
+  then choose one truthful closure path: coherent one-source-set rebuild or
+  governed ready-slot replacement
 - Aggregate truth:
   ECID current promotion and South Plateau reviewer-ready expansion are
   green; non-strict `promotion-suite` is `current_promotion_ready=true` and
@@ -29,6 +33,7 @@ Use this file as the short current route before opening the append-only docs.
 - Core: `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
   `docs/ARCHITECTURE.md`
 - Follow-ons:
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`,
   `docs/UNDER_800_HOTSPOT_REDUCTION_MILESTONE_PLAN.md`,
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`,

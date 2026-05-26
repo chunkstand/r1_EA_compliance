@@ -61,9 +61,9 @@ Latest implementation update on 2026-05-26:
   the suite no longer falsely claims they are live required expansion
   artifacts on this packet
 - next routing:
-  no further runtime slice remains inside this packet. If more work is
-  requested, open a fresh follow-on for coherent historical-lane rebuild or
-  governed slot replacement
+  the standalone follow-on is now
+  `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`.
+  Start there with Sequence 0 if more work is requested on this lane
 - verification:
   `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
   `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
