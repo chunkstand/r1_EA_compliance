@@ -41,6 +41,8 @@ Latest execution note on 2026-05-26:
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   which owns the dedicated blocker follow-on for rebaseline drift and
   replacement-lane readiness.
+- The docs-only blocker-opening closeout that moved live routing to that
+  successor landed in `8cb20fb` (`Open ECID historical blocker follow-on`).
 
 This plan now remains as the blocked historical parent record for the
 fail-closed ready-slot gate and the stop-condition evidence above. Continue
@@ -86,7 +88,8 @@ uncommitted result is only ready-to-close.
 
 - `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and the top of
   `docs/SESSION_HANDOFF.md` all agree that the live next slice is no longer inside the resolved
-  replay-repair packet; the remaining work is the standalone ECID preliminary historical lane.
+  replay-repair packet; the remaining work is now the standalone blocker
+  follow-on for the ECID preliminary historical lane.
 - `config/promotion_suite_v1.json` currently declares review case
   `region1-expansion-ecid-preliminary-ea` plus expansion slot `region1-real-ea-slot-1` with:
   - `status="selected_not_ready"`

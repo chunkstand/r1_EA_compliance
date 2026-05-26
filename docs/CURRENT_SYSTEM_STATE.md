@@ -25,6 +25,8 @@ Latest implementation update on 2026-05-26:
   `reduced locally`; the parent ECID historical-lane packet stays preserved as
   the stop-condition record, but the live route is now a narrower blocker
   packet for rebaseline-drift and replacement-readiness classification
+- closing commit hash:
+  `8cb20fb` (`Open ECID historical blocker follow-on`)
 - implementation truth:
   the repo now names the blocker packet exactly instead of leaving the next
   slice as a generic "open a dedicated blocker follow-on" instruction. The new

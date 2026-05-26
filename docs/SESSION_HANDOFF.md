@@ -167,8 +167,10 @@ historical-lane plan called for after its fresh rebaseline proving stop
 condition.
 
 - outcome label:
-  `queued locally`; the new active packet is
+  `resolved locally`; the new active packet is
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- closing commit hash:
+  `8cb20fb` (`Open ECID historical blocker follow-on`)
 - implementation truth:
   the route no longer leaves the next slice generic. The new blocker packet
   isolates rebaseline-drift and replacement-readiness classification while
@@ -202,8 +204,8 @@ This implementation slice landed the Sequence 0 fail-closed slot gate and then
 hit the plan's stop condition during fresh Sequence 1 proving.
 
 - outcome label:
-  `blocked locally`; the packet remains active, but there is no current
-  truthful closure path under live artifacts
+  `blocked locally`; at that checkpoint the packet was still active, but there
+  is no current truthful closure path under live artifacts
 - implementation truth:
   ready expansion slots now fail closed when any JSON
   `expected_gate_artifact` proves a different `source_set_id` than the slot's

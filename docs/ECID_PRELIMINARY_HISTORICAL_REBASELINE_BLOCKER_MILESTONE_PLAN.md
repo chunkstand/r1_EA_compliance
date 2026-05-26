@@ -3,8 +3,9 @@
 Date: 2026-05-26
 
 Status: Active reduced blocker packet (`Milestone 0` exact blocker packet and
-routing reset is resolved locally; live work is now `Milestone 1`
-historical-source-set feasibility classification, not slot closure)
+routing reset resolved locally through `8cb20fb`; live work is now
+`Milestone 1` historical-source-set feasibility classification, not slot
+closure)
 
 Owner context: standalone blocker follow-on opened after the parent ECID
 historical-lane packet proved that none of the three currently visible closure
@@ -305,6 +306,22 @@ python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milest
 
 git diff --check
 ```
+
+Milestone 0 resolution on 2026-05-26:
+
+- closing commit hash:
+  `8cb20fb` (`Open ECID historical blocker follow-on`)
+- resolution truth:
+  the blocker packet is now open as the exact active route, the parent ECID
+  historical-lane plan is preserved as blocked historical context, and the
+  current-facing docs no longer leave the next owner generic.
+- focused verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  and `git diff --check`
+- next routing:
+  continue with Milestone 1 in this blocker packet.
 
 ### Milestone 1 - Historical Source-Set Feasibility Classification
 
