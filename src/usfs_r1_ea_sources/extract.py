@@ -226,13 +226,14 @@ def _try_extract_docling_external(
     ocr_enabled: bool,
     timeout_seconds: float | None,
     python_path: Path,
+    facade_module=None,
 ) -> ExtractionPayload | None:
     return extract_docling_support._try_extract_docling_external(
         artifact_path,
         ocr_enabled=ocr_enabled,
         timeout_seconds=timeout_seconds,
         python_path=python_path,
-        facade_module=_self(),
+        facade_module=facade_module or _self(),
     )
 
 
@@ -241,12 +242,13 @@ def _try_extract_docling_isolated(
     *,
     ocr_enabled: bool,
     timeout_seconds: float,
+    facade_module=None,
 ) -> ExtractionPayload | None:
     return extract_docling_support._try_extract_docling_isolated(
         artifact_path,
         ocr_enabled=ocr_enabled,
         timeout_seconds=timeout_seconds,
-        facade_module=_self(),
+        facade_module=facade_module or _self(),
     )
 
 

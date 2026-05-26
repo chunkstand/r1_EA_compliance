@@ -15,6 +15,59 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Scoped Replay Derived-Artifact Chain Reduced Locally
+
+Latest implementation update on 2026-05-25:
+
+- routed packet:
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; the scoped replay-precondition lane is now green, but the
+  broader ECID reviewer-ready replay repair remains open
+- implementation truth:
+  on `source-set-f70ea11e04ae3d53`, `reuse-inventory` classified `647`
+  reusable extraction rows and `61` fresh extraction rows. `extract-build`
+  then completed `708/708` extracted rows with `105496` chunks and
+  `validation_passed=true`; `extraction-accuracy-audit` passed on `655`
+  admitted active-current rows and `102769` audited chunks; `retrieval-build`
+  is `reviewer_ready=true` with
+  `verified_extraction_admitted_source_count=655`,
+  `verified_extraction_required_source_count=655`, and
+  `verified_extraction_explicitly_non_admitted_source_count=53`;
+  `claim-extract` is `reviewer_ready=true` with `claim_count=134828`,
+  `source_record_count=606`, and zero retrieval-binding or offset mismatches;
+  `rule-claim-link` is `reviewer_ready=true` with `48/48` linked rules,
+  `233` links, and `0` gaps
+- live replay truth:
+  `applicability-authority-universe --review-id
+  v1-cg-ecid-compliance-review --source-set-id source-set-f70ea11e04ae3d53`
+  now passes with `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `rule_template_candidate_count=48`,
+  `authority_family_rule_template_candidate_count=19`, and
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`
+- remaining blocker truth:
+  the current-source misses and derived-artifact prerequisites are no longer
+  the blocker. The remaining live work returns to ECID packet-local
+  reviewer-ready artifacts on the governed real-package replay lane
+- next routing:
+  resume Milestone `1` of
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, beginning with
+  ECID `v1-ea-eval`, `phase-eval`, and the mapped current-review owner
+  commands for review packet, decision support, final QA, and supporting
+  outputs
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources reuse-inventory --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate --previous-source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extract-build --output-dir source_library --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate --reuse-existing --reuse-inventory-path source_library/derived/source-set-f70ea11e04ae3d53/reuse_inventory/reuse_inventory.json`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources claim-extract --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources rule-claim-link --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-f70ea11e04ae3d53 --catalog-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_set_manifest.json`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract_pdf_fallbacks.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `git diff --check`
+
 ## Active Authority Current-Source Gap Closeout To Replay Boundary Reduced Locally
 
 Latest implementation update on 2026-05-25:

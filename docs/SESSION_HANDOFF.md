@@ -23,21 +23,70 @@ history below.
   `source-set-4fb59e9eb43045cb`; the active scoped replay gate is
   `source-set-f70ea11e04ae3d53` under
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`;
-  `applicability-authority-universe` is still red at
-  `authority_universe_sha256=5a7f58afc84a4701bfc23e3da53651f674a0975394514dfa4d815d23ca6a2094`,
-  but the current-source checks are now clear:
-  `source_evidence_failure_count=0` and
-  `missing_source_record_count=0`; the remaining failing check is
-  `rule_template_candidates_have_source_claim_linkage`
-  (`failure_count=48`, `rule_claim_links_path=null`)
+  the scoped replay-precondition chain there is now rebuilt end to end:
+  `extract-build` completed `708/708` extracted rows with `647` reused rows
+  and `61` fresh parses, `retrieval-build` is `reviewer_ready=true`,
+  `claim-extract` is `reviewer_ready=true`, `rule-claim-link` is
+  `reviewer_ready=true` with `48/48` linked rules, `233` links, and `0`
+  gaps, and `applicability-authority-universe --review-id
+  v1-cg-ecid-compliance-review` now passes there with
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`
 - next truthful slice:
-  replay-local derived-artifact regeneration on
-  `source-set-f70ea11e04ae3d53`, beginning with extraction/retrieval reuse or
-  rebuild, then `claim-extract`, then `rule-claim-link`, then rerun
-  `applicability-authority-universe`
+  broader ECID reviewer-ready repair inside
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, beginning with
+  `v1-ea-eval`, `phase-eval`, and the mapped ECID packet-local review
+  artifacts for current suite baseline, review packet, decision support, final
+  QA, and supporting outputs
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## Scoped Replay Derived-Artifact Chain Reduced Locally
+
+This implementation slice clears the scoped replay-precondition blocker on
+`source-set-f70ea11e04ae3d53` without pretending the full ECID reviewer-ready
+lane is closed.
+
+- outcome label:
+  `reduced locally`; source-truth and derived-artifact prerequisites are now
+  green, but the broader ECID reviewer-ready replay packet remains open
+- implementation truth:
+  `reuse-inventory` on the scoped gate classified `647` reusable extraction
+  rows and `61` fresh extraction rows. `extract-build` then completed
+  `708/708` extracted rows with `105496` chunks and `validation_passed=true`;
+  `extraction-accuracy-audit` passed on `655` admitted active-current rows and
+  `102769` audited chunks; `retrieval-build` is `reviewer_ready=true` with
+  `verified_extraction_admitted_source_count=655`,
+  `verified_extraction_required_source_count=655`, and
+  `verified_extraction_explicitly_non_admitted_source_count=53`;
+  `claim-extract` is `reviewer_ready=true` with `claim_count=134828`,
+  `source_record_count=606`, and zero retrieval-binding or offset mismatches;
+  `rule-claim-link` is `reviewer_ready=true` with `48/48` linked rules,
+  `233` links, and `0` gaps
+- live replay truth:
+  `applicability-authority-universe --review-id
+  v1-cg-ecid-compliance-review --source-set-id source-set-f70ea11e04ae3d53`
+  now passes with `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `rule_template_candidate_count=48`,
+  `authority_family_rule_template_candidate_count=19`, and
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`
+- next truthful slice:
+  return control to
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` for broader ECID
+  reviewer-ready repair, beginning with `v1-ea-eval`, `phase-eval`, and the
+  mapped ECID packet-local review-artifact owners
+- verification:
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources reuse-inventory --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate --previous-source-set-id source-set-4fb59e9eb43045cb`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extract-build --output-dir source_library --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate --reuse-existing --reuse-inventory-path source_library/derived/source-set-f70ea11e04ae3d53/reuse_inventory/reuse_inventory.json`,
+  `PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources claim-extract --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources rule-claim-link --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --source-set-id source-set-f70ea11e04ae3d53 --catalog-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_set_manifest.json`,
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_extract_pdf_fallbacks.py -q`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `git diff --check`
 
 ## Active Authority Current-Source Gap Closeout To Replay Boundary
 

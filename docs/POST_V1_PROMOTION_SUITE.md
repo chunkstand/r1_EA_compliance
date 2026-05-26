@@ -204,15 +204,20 @@ layer rather than the slot-driven contract layer.
   addition, the governed minerals current-source addition lane, the governed
   forest-plan support admission lane, and the governed vegetation/fire
   current-source addition lane. That upstream blocker is now exhausted on the
-  scoped gate `source-set-f70ea11e04ae3d53`: the ECID applicability replay no
-  longer fails `candidates_have_source_evidence_available` or
-  `authority_family_template_candidates_cover_config`, but it still fails on
-  `rule_template_candidates_have_source_claim_linkage`
-  (`failure_count=48`) because the scoped gate has no
-  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
-  records `rule_claim_links_path=null`. The next truthful slice inside the
-  replay-repair packet is now the scoped derived-artifact replay chain on
-  `source-set-f70ea11e04ae3d53`.
+  scoped gate `source-set-f70ea11e04ae3d53`, and the same replay-precondition
+  lane is now rebuilt end to end: `extract-build` completed `708/708`
+  extracted rows with `647` reused rows and `61` fresh parses,
+  `extraction-accuracy-audit` passed on `655` admitted active-current rows,
+  `retrieval-build`, `claim-extract`, and `rule-claim-link` are each now
+  `reviewer_ready=true`, `rule-claim-link` covers all `48` rules with `233`
+  links and `0` gaps, and the scoped
+  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  now passes with `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`, and
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
+  The next truthful slice inside the replay-repair packet now returns to
+  broader ECID packet-local reviewer-ready repair rather than source-truth or
+  derived-artifact prerequisites.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

@@ -430,17 +430,32 @@ Milestone 1 reduction on 2026-05-25:
   `source_evidence_failure_count=0`, and
   `missing_source_record_count=0`. The upstream current-source inventory is
   therefore exhausted.
-- The packet still cannot continue truthfully to reviewer-ready replay because
-  the same scoped authority-universe validation now fails only on
-  `rule_template_candidates_have_source_claim_linkage`
-  (`failure_count=48`) and records `rule_claim_links_path=null`; the scoped
-  gate has no extraction/retrieval/claim/rule-claim derived artifacts yet.
-- The next truthful slice is now back inside this replay-repair packet on the
-  scoped gate `source-set-f70ea11e04ae3d53`: reuse or rebuild the required
-  extraction/retrieval artifacts, then run `claim-extract`, then
-  `rule-claim-link`, then rerun
-  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
-  before returning to broader ECID reviewer-ready repair.
+- The scoped replay-precondition slice on `source-set-f70ea11e04ae3d53` is
+  now also reduced locally through the derived-artifact rebuild:
+  `reuse-inventory` classified `647` reusable rows and `61` fresh extraction
+  rows, `extract-build` completed `708/708` extracted rows with
+  `validation_passed=true`, `extraction-accuracy-audit` passed on `655`
+  admitted active-current rows and `102769` audited chunks, `retrieval-build`
+  is `reviewer_ready=true` with `105496` indexed chunks and
+  `verified_extraction_admitted_source_count=655`,
+  `verified_extraction_required_source_count=655`, and
+  `verified_extraction_explicitly_non_admitted_source_count=53`,
+  `claim-extract` is `reviewer_ready=true` with `claim_count=134828`,
+  `source_record_count=606`, and zero retrieval-binding or offset mismatches,
+  and `rule-claim-link` is `reviewer_ready=true` with `48/48` linked rules,
+  `233` links, and `0` gaps.
+- The same scoped applicability replay now passes on
+  `source-set-f70ea11e04ae3d53`: `applicability-authority-universe` reports
+  `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `rule_template_candidate_count=48`,
+  `authority_family_rule_template_candidate_count=19`, and
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
+- The next truthful slice now returns to broader ECID reviewer-ready repair on
+  packet-local review artifacts: rerun `v1-ea-eval`,
+  `phase-eval --review-id v1-cg-ecid-compliance-review`, and the mapped ECID
+  current-review owner commands for review packet, decision support, final QA,
+  compliance-review supporting outputs, and suite-level freshness.
 
 ### Milestone 2 - South Plateau Reviewer-Ready Replay Repair
 

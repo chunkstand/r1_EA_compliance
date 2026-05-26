@@ -116,17 +116,28 @@ Current routed state on 2026-05-25:
   current-source addition lane, the governed forest-plan support admission
   lane, and the governed vegetation/fire current-source addition lane. The
   reviewer-facing default catalog remains historical, but the upstream
-  current-source blocker is now exhausted on `source-set-f70ea11e04ae3d53`:
-  the scoped ECID applicability replay no longer fails
-  `candidates_have_source_evidence_available` or
-  `authority_family_template_candidates_cover_config`, but it still fails on
-  `rule_template_candidates_have_source_claim_linkage`
-  (`failure_count=48`) because the scoped gate has no
-  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
-  records `rule_claim_links_path=null`. The next truthful slice therefore
-  returns to `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
-  beginning with the scoped derived-artifact replay chain on
-  `source-set-f70ea11e04ae3d53`.
+  current-source blocker is now exhausted on `source-set-f70ea11e04ae3d53`,
+  and the scoped replay-precondition chain there is now rebuilt end to end:
+  `reuse-inventory` classified `647` reusable rows and `61` fresh extraction
+  rows, `extract-build` completed `708/708` extracted rows with
+  `validation_passed=true`, `extraction-accuracy-audit` passed on `655`
+  admitted active-current rows, `retrieval-build` is now
+  `reviewer_ready=true` with
+  `verified_extraction_admitted_source_count=655`,
+  `verified_extraction_required_source_count=655`, and
+  `verified_extraction_explicitly_non_admitted_source_count=53`,
+  `claim-extract` is `reviewer_ready=true` with `claim_count=134828`,
+  `rule-claim-link` is `reviewer_ready=true` with `48/48` linked rules,
+  `233` links, and `0` gaps, and
+  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  now passes on that scoped gate with `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `rule_template_candidate_count=48`,
+  `authority_family_rule_template_candidate_count=19`, and
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
+  The next truthful slice now returns to
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` for broader ECID
+  reviewer-ready repair across packet-local review artifacts.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs

@@ -124,20 +124,24 @@ Use this file as the short current route before opening the large append-only do
   current-source addition lane, the governed forest-plan support admission
   lane, and the governed vegetation/fire current-source addition lane. The
   reviewer-facing default catalog remains historical, but the upstream
-  current-source blocker is now exhausted on the scoped replay gate:
-  `source-set-f70ea11e04ae3d53` rebuilds the same `396` candidate authorities
-  with `329` forest-plan component candidates, and both
-  `candidates_have_source_evidence_available` and
-  `authority_family_template_candidates_cover_config` now pass at
-  `0` remaining source-truth misses. The same ECID applicability replay still
-  fails, but only on
-  `rule_template_candidates_have_source_claim_linkage`
-  (`failure_count=48`) because the scoped gate has no
-  extraction/retrieval/claim/rule-claim derived artifacts yet and therefore
-  records `rule_claim_links_path=null`. The next truthful slice therefore
-  returns to `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
-  beginning with the scoped `source-set-f70ea11e04ae3d53` derived-artifact
-  replay chain before reviewer-ready repair can continue.
+  current-source blocker is now exhausted on the scoped replay gate, and that
+  same `source-set-f70ea11e04ae3d53` lane now has its derived-artifact chain
+  rebuilt end to end: `extract-build` completed `708/708` extracted rows with
+  `647` reused rows and `61` fresh parses, `extraction-accuracy-audit` passed
+  on `655` admitted active-current rows, `retrieval-build` is
+  `reviewer_ready=true`, `claim-extract` is `reviewer_ready=true` with
+  `claim_count=134828`, `rule-claim-link` is `reviewer_ready=true` with
+  `48/48` linked rules, `233` links, and `0` gaps, and
+  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  now passes there with `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `rule_template_candidate_count=48`,
+  `authority_family_rule_template_candidate_count=19`, and
+  `authority_universe_sha256=33355dce05cb0141840bf5ad6463570173294e6e1a368d0e24f8910961a04554`.
+  The next truthful slice now returns to
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` for broader ECID
+  reviewer-ready repair on packet-local review artifacts rather than source
+  truth or derived-artifact prerequisites.
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

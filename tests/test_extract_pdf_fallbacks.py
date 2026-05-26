@@ -22,6 +22,47 @@ from tests.support.extract_fixtures import legacy_config
 
 
 class ExtractionPdfFallbackTests(unittest.TestCase):
+    def test_docling_wrapper_helpers_accept_injected_facade_module(self) -> None:
+        original_try_external = extract_module.extract_docling_support._try_extract_docling_external
+        original_try_isolated = extract_module.extract_docling_support._try_extract_docling_isolated
+        captured: dict[str, object] = {}
+
+        def fake_try_external(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202
+            captured["external_facade_module"] = kwargs["facade_module"]
+            return None
+
+        def fake_try_isolated(*args, **kwargs):  # noqa: ANN002, ANN003, ANN202
+            captured["isolated_facade_module"] = kwargs["facade_module"]
+            return None
+
+        extract_module.extract_docling_support._try_extract_docling_external = fake_try_external
+        extract_module.extract_docling_support._try_extract_docling_isolated = fake_try_isolated
+        sentinel = object()
+        try:
+            self.assertIsNone(
+                extract_module._try_extract_docling_external(
+                    Path("/tmp/docling.pdf"),
+                    ocr_enabled=False,
+                    timeout_seconds=1.0,
+                    python_path=Path("/tmp/docling-python"),
+                    facade_module=sentinel,
+                )
+            )
+            self.assertIsNone(
+                extract_module._try_extract_docling_isolated(
+                    Path("/tmp/docling.pdf"),
+                    ocr_enabled=False,
+                    timeout_seconds=1.0,
+                    facade_module=sentinel,
+                )
+            )
+        finally:
+            extract_module.extract_docling_support._try_extract_docling_external = original_try_external
+            extract_module.extract_docling_support._try_extract_docling_isolated = original_try_isolated
+
+        self.assertIs(captured["external_facade_module"], sentinel)
+        self.assertIs(captured["isolated_facade_module"], sentinel)
+
     def test_build_extraction_reports_pdf_failure_when_docling_is_unavailable(self) -> None:
         if importlib.util.find_spec("docling") is not None:
             self.skipTest("Docling is installed in this Python environment.")
