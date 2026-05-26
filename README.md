@@ -26,16 +26,16 @@ Current routed state on 2026-05-25:
   `status_counts={"downloaded_existing": 635, "duplicate_content": 12}`,
   and workbook SHA
   `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
-- The committed canonical workbook now carries `691` retained master rows after
-  admitting the governed forest-plan support planning/index pages on top of
-  the earlier minerals, invasive/farmland/drinking-water, water-family,
-  cultural-resource, shared tribal-overlap, wildlife, and hazardous-material
-  additions. The active current-source-gap replay now uses the scoped catalog
-  gate at
-  `source_library/runs/current-source-gap-forest-plan-support-catalog-gate/catalog_gate`
-  with `source_set_id=source-set-1cbc5bbb602b60bc`, `source_count=691`,
-  `artifact_count=679`, and
-  `source_partition_counts={"active_review_corpus": 638, "currentness_supersession_archive": 53}`.
+- The committed canonical workbook now carries `698` retained master rows after
+  admitting the governed vegetation/fire current-source additions on top of
+  the earlier forest-plan support, minerals,
+  invasive/farmland/drinking-water, water-family, cultural-resource, shared
+  tribal-overlap, wildlife, and hazardous-material additions. The active
+  current-source-gap replay now uses the scoped catalog gate at
+  `source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate`
+  with `source_set_id=source-set-e57ea1d39b859bc8`, `source_count=698`,
+  `artifact_count=686`, and
+  `source_partition_counts={"active_review_corpus": 645, "currentness_supersession_archive": 53}`.
 - `docs/CURRENT_ROUTING.md` is now the concise first stop for live workbook,
   catalog, architecture, and active packet routing.
 - The current architecture packet in
@@ -115,18 +115,17 @@ Current routed state on 2026-05-25:
   tribal-overlap additions, the governed wildlife additions, the governed
   hazardous-material addition lane, the governed
   invasive/farmland/drinking-water addition lane, the governed minerals
-  current-source addition lane, and the governed forest-plan support admission
-  lane. The reviewer-facing default catalog remains historical, but the active
-  scoped applicability replay now runs on `source-set-1cbc5bbb602b60bc` and
-  reports
-  `authority_universe_sha256=cd7fef2e31ee124d123ec188c8f9555092dc13d5ad14bd0c4fe07d8d8f46c698`,
-  `source_evidence_failure_count=7`, and
-  `missing_source_record_count=2`. The forest-plan support family no longer
+  current-source addition lane, the governed forest-plan support admission
+  lane, and the governed vegetation/fire current-source addition lane. The
+  reviewer-facing default catalog remains historical, but the active scoped
+  applicability replay now runs on `source-set-e57ea1d39b859bc8` and reports
+  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
+  `source_evidence_failure_count=6`, and
+  `missing_source_record_count=1`. The vegetation/fire family no longer
   appears in the missing-template inventory. The remaining blocker is now the
-  governed vegetation/fire family, the wilderness/designated-area family, and
-  five base-rule current-source decisions, beginning with
-  `vegetation_wildfire_forest_health_authorities` in the same Milestone `2`
-  packet.
+  governed wilderness/designated-area family and five base-rule current-source
+  decisions, beginning with `wilderness_wsr_trails_designated_areas` in the
+  same Milestone `2` packet.
 - The promotion-suite contract packet is now resolved through Milestone `4`:
   the shared manifest keeps slot-driven freshness/status truth while
   packet-local ECID semantic counts stay enforced in focused validator configs

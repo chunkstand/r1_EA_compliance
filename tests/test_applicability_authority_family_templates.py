@@ -862,6 +862,92 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
         )
         self.assertTrue(candidate["source_evidence_availability"]["available"])
 
+    def test_candidates_resolve_vegetation_fire_current_source_additions(self) -> None:
+        expected_source_record_ids = [
+            "FED-071",
+            "FED-072",
+            "FED-073",
+            "FED-074",
+            "FED-075",
+            "FED-076",
+            "FED-077",
+        ]
+        catalog_by_source_id = {
+            source_record_id: {
+                "source_record_id": source_record_id,
+                "title": source_record_id,
+                "citation_label": source_record_id,
+                "document_role": "law",
+                "authority_level": "federal",
+                "source_status": "downloaded_existing",
+                "artifact_sha256": f"sha-{source_record_id.lower()}",
+                "artifact_path": f"artifacts/raw/{source_record_id}.html",
+            }
+            for source_record_id in expected_source_record_ids
+        }
+
+        candidates = authority_family_template_candidates(
+            source_set_id="source-set-unit",
+            template_set={
+                "template_set_id": "unit-authority-families",
+                "version": "0.1.0",
+                "base_rule_pack_id": "unit-nepa-ea",
+                "base_rule_pack_version": "0.1.0",
+                "templates": [
+                    {
+                        "template_id": "vegetation-current-source-template",
+                        "authority_family_id": "vegetation_wildfire_forest_health_authorities",
+                        "rule_id": "vegetation_current_source_template_rule",
+                        "title": "Vegetation and wildfire current source template",
+                        "question": "Does the package trigger vegetation, fuels, wildfire, or forest-health review?",
+                        "requirement": "Evaluate vegetation, fuels, wildfire, forest-health, and emergency-action authorities.",
+                        "severity": "medium",
+                        "applicability_mode": "conditional",
+                        "authority_category": "law",
+                        "authority_document_role": "law",
+                        "authority_source_record_id": "R1EA-056",
+                        "source_record_ids": [
+                            "R1EA-056",
+                            "R1EA-057",
+                            "R1EA-058",
+                            "R1EA-059",
+                            "R1EA-060",
+                            "R1EA-061",
+                            "R1EA-062",
+                        ],
+                        "package_query": "vegetation fuels wildfire forest health restoration emergency action",
+                        "package_terms": [
+                            "vegetation management",
+                            "fuels treatment",
+                            "wildfire",
+                            "forest health",
+                            "restoration",
+                            "emergency action",
+                        ],
+                        "applies_if_package_terms": [
+                            "vegetation management",
+                            "wildfire",
+                        ],
+                        "does_not_apply_if_package_terms": ["no vegetation treatment"],
+                        "source_query": "vegetation and wildfire authority source",
+                        "source_filters": {
+                            "source_record_id": "R1EA-056",
+                        },
+                    }
+                ],
+            },
+            catalog_by_source_id=catalog_by_source_id,
+        )
+
+        self.assertEqual(len(candidates), 1)
+        candidate = candidates[0]
+        self.assertEqual(candidate["source_record_ids"], expected_source_record_ids)
+        self.assertEqual(
+            candidate["required_source_evidence"]["source_record_ids"],
+            expected_source_record_ids,
+        )
+        self.assertTrue(candidate["source_evidence_availability"]["available"])
+
     def test_candidates_resolve_invasive_farmland_drinking_water_current_source_additions(
         self,
     ) -> None:

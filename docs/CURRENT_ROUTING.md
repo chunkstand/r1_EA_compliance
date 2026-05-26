@@ -45,14 +45,15 @@ Use this file as the short current route before opening the large append-only do
 ## Live Facts
 
 - Active workbook/table: `usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx` /
-  `Document_Register_Master` with `691` retained master rows after the
-  governed forest-plan support admissions on top of the earlier minerals,
-  invasive/farmland/drinking-water, water-family, cultural-resource, shared
-  tribal-overlap, wildlife, and hazardous-material additions.
+  `Document_Register_Master` with `698` retained master rows after the
+  governed vegetation/fire current-source additions on top of the earlier
+  forest-plan support, minerals, invasive/farmland/drinking-water,
+  water-family, cultural-resource, shared tribal-overlap, wildlife, and
+  hazardous-material additions.
   Reviewer-facing default catalog remains historical
   `source-set-4fb59e9eb43045cb`, while the active current-source-gap replay
-  gate is `source-set-1cbc5bbb602b60bc` under
-  `source_library/runs/current-source-gap-forest-plan-support-catalog-gate/catalog_gate`
+  gate is `source-set-e57ea1d39b859bc8` under
+  `source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate`
 - Active source-truth packet status: the full canonical source-truth
   rebaseline remains historically resolved in commit `93a23b0`
   (`Resolve source-truth archive boundary rebaseline`); the queue Milestone 2
@@ -124,17 +125,17 @@ Use this file as the short current route before opening the large append-only do
   tribal-overlap additions, the governed wildlife additions, the governed
   hazardous-material addition lane, the governed
   invasive/farmland/drinking-water addition lane, the governed minerals
-  current-source addition lane, and the governed forest-plan support admission
-  lane. The reviewer-facing default catalog remains historical, but the active
-  scoped applicability replay now runs on `source-set-1cbc5bbb602b60bc` and
-  reports
-  `authority_universe_sha256=cd7fef2e31ee124d123ec188c8f9555092dc13d5ad14bd0c4fe07d8d8f46c698`,
-  `source_evidence_failure_count=7`, and
-  `missing_source_record_count=2`. The forest-plan support family no longer
+  current-source addition lane, the governed forest-plan support admission
+  lane, and the governed vegetation/fire current-source addition lane. The
+  reviewer-facing default catalog remains historical, but the active scoped
+  applicability replay now runs on `source-set-e57ea1d39b859bc8` and reports
+  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
+  `source_evidence_failure_count=6`, and
+  `missing_source_record_count=1`. The vegetation/fire family no longer
   appears in the missing-template inventory. The remaining blocker is now the
-  governed vegetation/fire family, the wilderness/designated-area family, and
-  the five base-rule current-source decisions, beginning with
-  `vegetation_wildfire_forest_health_authorities`
+  governed wilderness/designated-area family and the five base-rule
+  current-source decisions, beginning with
+  `wilderness_wsr_trails_designated_areas`
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

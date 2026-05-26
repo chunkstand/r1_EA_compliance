@@ -23,7 +23,7 @@ class SourceRegisterSchemaTests(unittest.TestCase):
 
         self.assertTrue(result["validation_passed"])
         self.assertEqual(result["sheet_count"], 13)
-        self.assertEqual(result["load_row_count"], 691)
+        self.assertEqual(result["load_row_count"], 698)
         self.assertEqual(result["queue_row_count"], 51)
         self.assertEqual(result["removed_row_count"], 3)
         self.assertEqual(result["stale_source_detector_count"], 5)
@@ -75,13 +75,13 @@ class SourceRegisterSchemaTests(unittest.TestCase):
         self.assertEqual(result["legacy_register_source_delta_count"], 160)
         self.assertEqual(result["legacy_register_gap_count"], 1)
         self.assertEqual(result["legacy_runtime_unique_source_count"], 350)
-        self.assertEqual(result["canonical_master_row_count"], 691)
+        self.assertEqual(result["canonical_master_row_count"], 698)
         self.assertEqual(result["canonical_queue_row_count"], 51)
         self.assertEqual(result["canonical_removed_row_count"], 3)
         self.assertEqual(result["canonical_stale_source_detector_count"], 5)
         self.assertEqual(result["canonical_shared_with_legacy_workbook_count"], 12)
         self.assertEqual(result["canonical_shared_with_source_delta_count"], 0)
-        self.assertEqual(result["canonical_only_source_count"], 679)
+        self.assertEqual(result["canonical_only_source_count"], 686)
         self.assertEqual(result["legacy_only_source_count"], 338)
         self.assertEqual(result["canonical_only_source_ids_sample"][0], "FED-001")
         self.assertEqual(result["legacy_only_source_ids_sample"][0], "R1EA-001")
@@ -158,6 +158,13 @@ class SourceRegisterSchemaTests(unittest.TestCase):
             "FED-068": "https://www.epa.gov/enforcement/federal-insecticide-fungicide-and-rodenticide-act-fifra-and-federal-facilities",
             "FED-069": "https://www.federalregister.gov/documents/2016/12/08/2016-29519/safeguarding-the-nation-from-the-impacts-of-invasive-species",
             "FED-070": "https://www.federalregister.gov/documents/2025/03/25/2025-05212/immediate-measures-to-increase-american-mineral-production",
+            "FED-071": "https://uscode.house.gov/view.xhtml?path=/prelim@title16/chapter84&edition=prelim",
+            "FED-072": "https://uscode.house.gov/view.xhtml?req=(title:16%20section:6591b%20edition:prelim)",
+            "FED-073": "https://uscode.house.gov/view.xhtml?req=(title:16%20section:6591d%20edition:prelim)",
+            "FED-074": "https://uscode.house.gov/view.xhtml?req=(title:16%20section:6591e%20edition:prelim)",
+            "FED-075": "https://uscode.house.gov/view.xhtml?req=(title:16%20section:6592b%20edition:prelim)",
+            "FED-076": "https://uscode.house.gov/view.xhtml?req=(title:16%20section:6592c%20edition:prelim)",
+            "FED-077": "https://www.federalregister.gov/documents/2025/03/06/2025-03695/immediate-expansion-of-american-timber-production",
             "R1PLAN-region-1-northern-region-02": "https://www.fs.usda.gov/r01/forests-grasslands",
             "R1PLAN-beaverhead-deerlodge-nf-01": "https://www.fs.usda.gov/r01/beaverhead-deerlodge/planning",
             "R1PLAN-bitterroot-nf-01": "https://www.fs.usda.gov/r01/bitterroot/planning",

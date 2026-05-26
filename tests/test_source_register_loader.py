@@ -34,7 +34,7 @@ def test_source_register_loader_dispatch_returns_workbook_source_compatibility_r
 
     sources = load_canonical_sources(CANONICAL_WORKBOOK, workbook_config)
 
-    assert len(sources) == 691
+    assert len(sources) == 698
     assert all(source.sheet == "Document_Register_Master" for source in sources)
     assert all(source.metadata["loader_contract"] == SOURCE_REGISTER_WORKBOOK_LOADER_CONTRACT for source in sources)
     assert all(source.metadata["row_state"] == "load_ready_master_row" for source in sources)
@@ -209,6 +209,48 @@ def test_source_register_loader_exposes_semantic_identity_and_scope_seams() -> N
     assert minerals_overlay_row.expected_parser == "html"
     assert minerals_overlay_row.authority_document_class_id == "authority_document"
     assert minerals_overlay_row.jurisdiction_scope_id == "scope:federal-us"
+
+    hfra_chapter_row = rows["FED-071"]
+    assert hfra_chapter_row.parser_admission_class == "structured_web_source"
+    assert hfra_chapter_row.expected_parser == "html"
+    assert hfra_chapter_row.authority_document_class_id == "authority_document"
+    assert hfra_chapter_row.jurisdiction_scope_id == "scope:federal-us"
+
+    hfra_admin_review_row = rows["FED-072"]
+    assert hfra_admin_review_row.parser_admission_class == "structured_web_source"
+    assert hfra_admin_review_row.expected_parser == "html"
+    assert hfra_admin_review_row.authority_document_class_id == "authority_document"
+    assert hfra_admin_review_row.jurisdiction_scope_id == "scope:federal-us"
+
+    wildfire_resilience_row = rows["FED-073"]
+    assert wildfire_resilience_row.parser_admission_class == "structured_web_source"
+    assert wildfire_resilience_row.expected_parser == "html"
+    assert wildfire_resilience_row.authority_document_class_id == "authority_document"
+    assert wildfire_resilience_row.jurisdiction_scope_id == "scope:federal-us"
+
+    sage_grouse_ce_row = rows["FED-074"]
+    assert sage_grouse_ce_row.parser_admission_class == "structured_web_source"
+    assert sage_grouse_ce_row.expected_parser == "html"
+    assert sage_grouse_ce_row.authority_document_class_id == "authority_document"
+    assert sage_grouse_ce_row.jurisdiction_scope_id == "scope:federal-us"
+
+    fuel_break_row = rows["FED-075"]
+    assert fuel_break_row.parser_admission_class == "structured_web_source"
+    assert fuel_break_row.expected_parser == "html"
+    assert fuel_break_row.authority_document_class_id == "authority_document"
+    assert fuel_break_row.jurisdiction_scope_id == "scope:federal-us"
+
+    emergency_actions_row = rows["FED-076"]
+    assert emergency_actions_row.parser_admission_class == "structured_web_source"
+    assert emergency_actions_row.expected_parser == "html"
+    assert emergency_actions_row.authority_document_class_id == "authority_document"
+    assert emergency_actions_row.jurisdiction_scope_id == "scope:federal-us"
+
+    timber_overlay_row = rows["FED-077"]
+    assert timber_overlay_row.parser_admission_class == "structured_web_source"
+    assert timber_overlay_row.expected_parser == "html"
+    assert timber_overlay_row.authority_document_class_id == "authority_document"
+    assert timber_overlay_row.jurisdiction_scope_id == "scope:federal-us"
 
     region_forest_index_row = rows["R1PLAN-region-1-northern-region-02"]
     assert region_forest_index_row.parser_admission_class == "structured_web_source"

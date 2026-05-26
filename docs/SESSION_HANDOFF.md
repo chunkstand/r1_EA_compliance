@@ -21,18 +21,82 @@ history below.
 - live blocker state:
   reviewer-facing default catalog remains historical
   `source-set-4fb59e9eb43045cb`; the active scoped replay gate is
-  `source-set-1cbc5bbb602b60bc` under
-  `source_library/runs/current-source-gap-forest-plan-support-catalog-gate/catalog_gate`;
+  `source-set-e57ea1d39b859bc8` under
+  `source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate`;
   `applicability-authority-universe` is still red at
-  `authority_universe_sha256=cd7fef2e31ee124d123ec188c8f9555092dc13d5ad14bd0c4fe07d8d8f46c698`,
-  `source_evidence_failure_count=7`, and
-  `missing_source_record_count=2`
+  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
+  `source_evidence_failure_count=6`, and
+  `missing_source_record_count=1`
 - next truthful slice:
-  Milestone `2` vegetation/fire current-source additions in
-  `vegetation_wildfire_forest_health_authorities`
+  Milestone `2` wilderness/designated-area current-source additions in
+  `wilderness_wsr_trails_designated_areas`
 - session reminder:
   the newer sections immediately below are current; older `fbad...` / `11` /
   `11` checkpoint notes are historical context only
+
+## Active Authority Current-Source Gap Blocker Milestone 2 Vegetation Lane Reduced Locally
+
+This implementation slice closes the governed
+`vegetation_wildfire_forest_health_authorities` current-source addition lane
+without pretending the remaining wilderness/designated-area or five base-rule
+owners are done.
+
+- outcome label:
+  `reduced locally`; the live blocker is smaller again, but Milestone `2`
+  remains open
+- implementation truth:
+  the canonical workbook now carries `698` retained master rows after
+  admitting `FED-071` through `FED-077`,
+  `config/compliance_source_record_reconciliation_v1.json` now maps
+  `R1EA-056` through `R1EA-062` to those governed current rows, and matching
+  regressions now cover the source register loader/schema/catalog/dry-run/
+  preflight surfaces plus `tests/test_applicability_authority_family_templates.py`
+- live replay truth:
+  the reviewer-facing default catalog remains historical
+  `source-set-4fb59e9eb43045cb` at `647` source rows, `635` artifacts, and
+  `594` admitted `active_review_corpus` rows. The active same-slice replay
+  gate now lives at
+  `source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate`
+  as `source-set-e57ea1d39b859bc8` with `698` source rows, `686` artifacts,
+  and `645` admitted `active_review_corpus` rows. On that scoped gate,
+  `applicability-authority-universe --review-id v1-cg-ecid-compliance-review`
+  now reports `candidate_authority_count=396`,
+  `forest_plan_component_candidate_count=329`,
+  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
+  `validation_passed=false`,
+  `source_evidence_failure_count=6`, and
+  `missing_source_record_count=1`
+- component inventory truth:
+  because the vegetation/fire additions did not change forest-plan source
+  membership, the scoped replay carries the existing Region 1 forest-plan
+  component inventory forward under
+  `source_library/derived/source-set-e57ea1d39b859bc8/forest_plan_components/component_inventory.json`
+  with the inventory ownership rebound to the active source set
+- remaining blocker truth:
+  the land-exchange template, the air/conformity lane, the water-family lane,
+  the cultural-resource/state-SHPO lane, the shared tribal-overlap lane, the
+  wildlife lane, the hazardous-material lane, the
+  invasive/farmland/drinking-water lane, the minerals lane, the
+  forest-plan support lane, and the vegetation/fire lane no longer appear in
+  the missing-template inventory. The remaining missing-template family is now
+  the governed wilderness/designated-area family, while the separate `6`
+  source-evidence failures still consist of that remaining authority-family
+  candidate plus the five base-rule current-source gaps
+- next truthful slice:
+  Milestone `2` of
+  `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
+  beginning with `wilderness_wsr_trails_designated_areas`
+  (`R1EA-045`, `R1EA-046`, `R1EA-051`, `R1EA-054`, `R1EA-055`)
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_schema.py tests/test_source_register_loader.py tests/test_dry_run.py tests/test_preflight.py tests/test_catalog.py tests/test_applicability_authority_family_templates.py`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources source-register-validate --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx`,
+  `PYTHONPATH=src uv run --extra dev ruff check src tests`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources download --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-vegetation`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources validate-run --output-dir source_library --run-id queue-m3-full-canonical-merged-download-20260525-vegetation`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources catalog-build --workbook usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx --output-dir source_library --config config/downloader.toml --run-id queue-m3-full-canonical-merged-download-20260525-vegetation --catalog-dir source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id v1-cg-ecid-compliance-review --catalog-path source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate/source_catalog.jsonl --source-set-manifest-path source_library/runs/current-source-gap-vegetation-catalog-gate/catalog_gate/source_set_manifest.json`,
+  `jq empty config/compliance_source_record_reconciliation_v1.json`,
+  `git diff --check`
 
 ## Active Authority Current-Source Gap Blocker Milestone 2 Forest-Plan Support Lane Reduced Locally
 

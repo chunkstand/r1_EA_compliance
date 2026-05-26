@@ -242,6 +242,41 @@
       "notes": "Canonical Wild and Scenic Rivers Act row via exact active-catalog URL lineage."
     },
     {
+      "legacy_source_record_id": "R1EA-056",
+      "current_source_record_ids": ["FED-071"],
+      "notes": "Canonical Healthy Forests Restoration Act chapter row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-057",
+      "current_source_record_ids": ["FED-072"],
+      "notes": "Canonical HFRA administrative-review row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-058",
+      "current_source_record_ids": ["FED-073"],
+      "notes": "Canonical wildfire-resilience projects row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-059",
+      "current_source_record_ids": ["FED-074"],
+      "notes": "Canonical sage-grouse and mule-deer habitat CE row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-060",
+      "current_source_record_ids": ["FED-075"],
+      "notes": "Canonical fuel-break categorical-exclusion row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-061",
+      "current_source_record_ids": ["FED-076"],
+      "notes": "Canonical emergency-actions row added to the source register."
+    },
+    {
+      "legacy_source_record_id": "R1EA-062",
+      "current_source_record_ids": ["FED-077"],
+      "notes": "Canonical EO 14225 timber-production policy-overlay row added to the source register."
+    },
+    {
       "legacy_source_record_id": "R1EA-063",
       "current_source_record_ids": ["FED-070"],
       "notes": "Canonical EO 14241 minerals policy-overlay row added to the source register."

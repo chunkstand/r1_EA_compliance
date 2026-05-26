@@ -405,19 +405,21 @@ Milestone 1 reduction on 2026-05-25:
   governed water-family current-source additions, the governed wildlife
   current-source additions, the governed hazardous-material current-source
   addition, the governed invasive/farmland/drinking-water current-source
-  addition, the governed minerals current-source addition lane, and the
-  governed forest-plan support admission lane. The reviewer-facing default
-  catalog remains historical, but the active scoped applicability replay now
-  runs on `source-set-1cbc5bbb602b60bc` and reports
-  `authority_universe_sha256=cd7fef2e31ee124d123ec188c8f9555092dc13d5ad14bd0c4fe07d8d8f46c698`,
-  `source_evidence_failure_count=7`, and
-  `missing_source_record_count=2`. The land-exchange template, the
+  addition, the governed minerals current-source addition lane, the governed
+  forest-plan support admission lane, and the governed vegetation/fire
+  current-source addition lane. The reviewer-facing default catalog remains
+  historical, but the active scoped applicability replay now runs on
+  `source-set-e57ea1d39b859bc8` and reports
+  `authority_universe_sha256=c1a89b1e1f9c78d07a2d72f78413f9a3bdbb8668c5b01fded7c8cc19f69febe8`,
+  `source_evidence_failure_count=6`, and
+  `missing_source_record_count=1`. The land-exchange template, the
   air/conformity lane, the water-family lane, the cultural-resource/state-SHPO
   lane, the shared tribal-overlap lane, the wildlife lane, the
   hazardous-material lane, the invasive/farmland/drinking-water lane, and the
-  minerals lane, and the forest-plan support lane no longer appear in the
-  missing-template inventory, and the next truthful slice remains Milestone
-  `2` in that same packet beginning with the vegetation/fire lane.
+  minerals lane, the forest-plan support lane, and the vegetation/fire lane no
+  longer appear in the missing-template inventory, and the next truthful slice
+  remains Milestone `2` in that same packet beginning with the
+  wilderness/designated-area lane.
 - The next truthful slice is now Milestone `2` of
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
   which still owns the remaining source-truth, forest-plan, and rule-pack
