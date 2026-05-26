@@ -219,8 +219,10 @@ family.
   Fresh rebaseline proving on 2026-05-26 also showed that the older `ba8...`
   closure assumption is stale under current live artifacts, `4fb...` remains
   source-set `phase-eval` red (`10/33`), and the tracked Lolo replacement
-  candidate remains review `phase-eval` red (`19/23`), so no truthful ready
-  closure path is currently proven. Blocker Milestone 1 has now also ruled out
+  path is now also unproven under fresher blocker evidence:
+  `v1-ea-eval` fails on a `4fb...` versus `5e65...` review-identity split and
+  fresh review `phase-eval` remains red at `12/29`, so no truthful ready
+  closure path is currently proven. Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:
   `4fb...` still fails across upstream/downstream `phase-eval` families, and
   fresh `ba8...` `applicability-validate` plus

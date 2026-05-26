@@ -162,49 +162,12 @@ history below.
   manifest floor. Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
   packet
+- latest blocker closeout commit:
+  `191fc3e` (`Close ECID blocker Milestone 2`)
 - session reminder:
-  the newer sections immediately below are current; older `fbad...` / `11` /
-  `11` checkpoint notes are historical context only
-
-## ECID Preliminary Historical Rebuild Path Exhausted Locally
-
-This implementation slice closes blocker Milestone 1 in the active ECID
-historical blocker packet.
-
-- outcome label:
-  `reduced locally`; no bounded historical-source-set rebuild path remains
-  under current artifacts, so the blocker now advances to Milestone 2
-  replacement-readiness classification rather than opening a historical
-  rebuild child packet
-- implementation truth:
-  `source-set-4fb59e9eb43045cb` still fails source-set `phase-eval` at `10/33`
-  and remains red across upstream and downstream phase families, including
-  `extraction`, `retrieval`, `claim_extraction`, `rule_claim_binding`,
-  `downstream_direct_evaluation`, `generated_rule_pack`,
-  `compliance_review`, `review_packet_index`, and
-  `evaluation_coverage`. The `ba8...` lane also remains infeasible under
-  current artifacts: fresh `applicability-validate` still fails with
-  `missing_candidate_decision=4`, `partition_gap=329`, `provenance_gap=1`,
-  and `source_set_stale=398`, and fresh
-  `applicability-generate-rule-pack` still fails closed because
-  `applicability_validation.json` is stale for current artifacts
-- live blocker truth:
-  strict expansion still fails only on the ECID preliminary historical slot
-  under `historical_source_set_split`; Milestone 1 has now ruled out a
-  historical rebuild child packet as the truthful next route, but it does not
-  reopen the manifest floor or alter the slot contract
-- next routing:
-  continue in
-  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 2 to classify tracked governed replacement readiness. Do not
-  open a historical-source-set rebuild child packet from the current evidence
-- verification:
-  `jq '{source_set_id, passed, passed_phase_count, phase_count}' source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`,
-  `jq '.phases | map(select(.passed == false) | {name, reviewer_ready, failure_reasons})' source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`,
-  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8 --validation-path /tmp/ecid_preliminary_ba8_applicability_validation_20260526.json`,
-  `jq '{source_set_id, passed, reviewer_ready, failed_checks: [.checks[] | select(.passed == false) | .details]}' /tmp/ecid_preliminary_ba8_applicability_validation_20260526.json`,
-  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`,
-  and `git diff --check`
+  the Milestone 2 section immediately below is the current checkpoint; the
+  following Milestone 1 and blocked-parent sections are preserved historical
+  context only
 
 ## ECID Preliminary Governed Replacement Still Unproven Locally
 
@@ -216,6 +179,8 @@ historical blocker packet.
   under live artifacts, so the blocker now advances to Milestone 3 exact
   child-route or feasibility-stop closeout rather than opening a
   replacement-ready child packet
+- closeout commit:
+  `191fc3e` (`Close ECID blocker Milestone 2`)
 - implementation truth:
   fresh Lolo candidate proving now fails before any ready replacement route
   can be named. `v1-ea-eval` now exits red with
@@ -252,6 +217,48 @@ historical blocker packet.
   and
   `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`
 
+## ECID Preliminary Historical Rebuild Path Exhausted Locally
+
+This implementation slice closes blocker Milestone 1 in the active ECID
+historical blocker packet.
+
+- outcome label:
+  `reduced locally`; no bounded historical-source-set rebuild path remains
+  under current artifacts, so the blocker now advances to Milestone 2
+  replacement-readiness classification rather than opening a historical
+  rebuild child packet
+- closeout commit:
+  `2149825` (`Route ECID historical blocker to Milestone 2`)
+- implementation truth:
+  `source-set-4fb59e9eb43045cb` still fails source-set `phase-eval` at `10/33`
+  and remains red across upstream and downstream phase families, including
+  `extraction`, `retrieval`, `claim_extraction`, `rule_claim_binding`,
+  `downstream_direct_evaluation`, `generated_rule_pack`,
+  `compliance_review`, `review_packet_index`, and
+  `evaluation_coverage`. The `ba8...` lane also remains infeasible under
+  current artifacts: fresh `applicability-validate` still fails with
+  `missing_candidate_decision=4`, `partition_gap=329`, `provenance_gap=1`,
+  and `source_set_stale=398`, and fresh
+  `applicability-generate-rule-pack` still fails closed because
+  `applicability_validation.json` is stale for current artifacts
+- live blocker truth:
+  strict expansion still fails only on the ECID preliminary historical slot
+  under `historical_source_set_split`; Milestone 1 has now ruled out a
+  historical rebuild child packet as the truthful next route, but it does not
+  reopen the manifest floor or alter the slot contract
+- historical next routing at that checkpoint:
+  continue in
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 2 to classify tracked governed replacement readiness. Do not
+  open a historical-source-set rebuild child packet from the current evidence
+- verification:
+  `jq '{source_set_id, passed, passed_phase_count, phase_count}' source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`,
+  `jq '.phases | map(select(.passed == false) | {name, reviewer_ready, failure_reasons})' source_library/derived/source-set-4fb59e9eb43045cb/evidence_graph/phase_eval_results.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8 --validation-path /tmp/ecid_preliminary_ba8_applicability_validation_20260526.json`,
+  `jq '{source_set_id, passed, reviewer_ready, failed_checks: [.checks[] | select(.passed == false) | .details]}' /tmp/ecid_preliminary_ba8_applicability_validation_20260526.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`,
+  and `git diff --check`
+
 ## ECID Preliminary Historical Lane Rebaseline Blocked Locally
 
 This implementation slice landed the Sequence 0 fail-closed slot gate and then
@@ -273,9 +280,10 @@ hit the plan's stop condition during fresh Sequence 1 proving.
   `source-set-ba8d0feae79501b8` now fails under current artifacts with
   `source_set_stale=398`, `partition_gap=329`,
   `missing_candidate_decision=4`, `unresolved_authority=4`, and
-  `provenance_gap=1`; and the tracked governed replacement candidate
-  `region1-example-lolo-tylers-kitchen-66344` remains review `phase-eval` red
-  (`passed=false`, `passed_phase_count=19/23`)
+  `provenance_gap=1`. At that blocked-parent checkpoint the tracked governed
+  replacement candidate had only been re-read as review `phase-eval` red
+  (`passed=false`, `passed_phase_count=19/23`); the newer blocker rerun above
+  is now the current truth
 - next routing:
   this section is now historical blocked-parent truth only. Continue in
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`

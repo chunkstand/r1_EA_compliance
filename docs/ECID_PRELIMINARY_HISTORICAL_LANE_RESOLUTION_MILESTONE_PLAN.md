@@ -33,8 +33,11 @@ Latest execution note on 2026-05-26:
     `provenance_gap=1`, so rule-pack regeneration stops before compliance review can restart.
   - The tracked governed replacement candidate
     `region1-example-lolo-tylers-kitchen-66344` is not currently ready to replace the ECID
-    historical slot. Its review `phase_eval_results.json` is `passed=false` with
-    `passed_phase_count=19/23`.
+    historical slot. At that stop-condition checkpoint its review
+    `phase_eval_results.json` had only been re-read at `passed=false` with
+    `passed_phase_count=19/23`; the successor blocker has since rerun it to a
+    `v1-ea-eval` identity mismatch plus review `phase-eval` `12/29`, as
+    recorded in the newer blocker packet.
 - Current packet truth: the plan is blocked at its own stop condition. Do not flip
   `region1-real-ea-slot-1` to `ready`, do not weaken the manifest floor, and do not swap in
   another non-ready placeholder. The live successor route is now
@@ -49,7 +52,8 @@ Latest execution note on 2026-05-26:
   Fresh Lolo proving now fails `v1-ea-eval` on a `4fb...` versus `5e65...`
   review-identity split and leaves review `phase-eval` red at `12/29`. The
   next live slice there is now Milestone 3 exact child-route or
-  feasibility-stop closeout.
+  feasibility-stop closeout through `191fc3e`
+  (`Close ECID blocker Milestone 2`).
 
 This plan now remains as the blocked historical parent record for the
 fail-closed ready-slot gate and the stop-condition evidence above. Continue

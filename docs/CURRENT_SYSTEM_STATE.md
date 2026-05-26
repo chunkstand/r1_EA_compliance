@@ -24,6 +24,8 @@ Latest implementation update on 2026-05-26:
 - packet outcome:
   `reduced locally`; blocker Milestone 2 is now complete, and no tracked
   governed replacement is currently proven under live artifacts
+- Milestone 2 closeout commit:
+  `191fc3e` (`Close ECID blocker Milestone 2`)
 - implementation truth:
   fresh Lolo candidate proving now fails before any replacement-ready route
   can be named. `v1-ea-eval --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`
@@ -66,13 +68,16 @@ Latest implementation update on 2026-05-26:
 
 ## ECID Preliminary Historical Rebuild Path Exhausted Locally
 
-Latest implementation update on 2026-05-26:
+Historical Milestone 1 checkpoint on 2026-05-26 before Milestone 2 closeout
+`191fc3e`:
 
 - routed packet:
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - packet outcome:
   `reduced locally`; blocker Milestone 1 is now complete, and no bounded
   historical-source-set rebuild path remains under current artifacts
+- Milestone 1 closeout commit:
+  `2149825` (`Route ECID historical blocker to Milestone 2`)
 - implementation truth:
   `source-set-4fb59e9eb43045cb` is not a narrow rebuild lane. Its current
   source-set `phase_eval_results.json` still reports `passed=false` with
@@ -98,10 +103,11 @@ Latest implementation update on 2026-05-26:
   `source-set-ba8d0feae79501b8` still fails fresh
   `applicability-validate` with `source_set_stale=398`, `partition_gap=329`,
   `missing_candidate_decision=4`, `unresolved_authority=4`, and
-  `provenance_gap=1`; and the tracked governed replacement candidate
-  `region1-example-lolo-tylers-kitchen-66344` remains review `phase-eval` red
-  at `19/23`
-- next routing:
+  `provenance_gap=1`. At that Milestone 1 checkpoint the tracked governed
+  replacement candidate had only been re-read as review `phase-eval` red at
+  `19/23`; the fresher Milestone 2 rerun above is now the current blocker
+  truth
+- historical next routing at that checkpoint:
   continue in
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   at Milestone 2 to classify whether any tracked governed replacement can
@@ -142,8 +148,10 @@ Latest implementation update on 2026-05-26:
   `provenance_gap=1`, so rule-pack regeneration stops before compliance
   review. The tracked governed replacement candidate
   `region1-example-lolo-tylers-kitchen-66344` is also not currently ready for
-  this slot: its review `phase_eval_results.json` is `passed=false` with
-  `passed_phase_count=19/23`
+  this slot. At that blocked-parent checkpoint its review
+  `phase_eval_results.json` was only re-read at `passed=false` with
+  `passed_phase_count=19/23`; the newer blocker rerun above is now the
+  current truth
 - next routing:
   this section is now historical blocked-parent context only. Continue in
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,

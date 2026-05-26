@@ -239,8 +239,9 @@ Completion means all of the following are true:
   Fail threshold: a child packet claims rebuild or replacement viability
   without a passing governing signal for the path it selects.
   Controlled violation: route directly to a ready replacement while the tracked
-  Lolo candidate still reports review `phase-eval` `19/23`; the blocker
-  classification review must reject it.
+  Lolo candidate still fails `v1-ea-eval` on the `4fb...` versus `5e65...`
+  identity split and fresh review `phase-eval` remains red at `12/29`; the
+  blocker classification review must reject it.
   Future-Codex misuse scenario: an agent assumes the nearest candidate is ready
   because it is already tracked; this packet forces explicit evidence instead
   of wishful routing.
@@ -384,6 +385,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack \
 
 Milestone 1 resolution on 2026-05-26:
 
+- closing commit hash:
+  `2149825` (`Route ECID historical blocker to Milestone 2`)
 - outcome label:
   `reduced locally`; no bounded historical-source-set rebuild path remains
   under current artifacts, so the blocker advances to Milestone 2 instead of
@@ -465,6 +468,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite \
 
 Milestone 2 resolution on 2026-05-26:
 
+- closing commit hash:
+  `191fc3e` (`Close ECID blocker Milestone 2`)
 - outcome label:
   `reduced locally`; no tracked governed replacement is currently proven
   under live artifacts, so the blocker advances to Milestone 3 instead of
