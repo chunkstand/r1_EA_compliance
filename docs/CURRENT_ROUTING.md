@@ -97,30 +97,32 @@ Use this file as the short current route before opening the large append-only do
   (`55 applicable / 341 non-applicable` for ECID and
   `64 applicable / 332 non-applicable` for South), and
   `applicability-generate-rule-pack` now passes with `55` ECID generated rules
-  and `64` South generated rules on `source-set-f70ea11e04ae3d53`. ECID
-  aligned forest-plan replay is now reduced locally rather than still fully
-  red: `forest_plan_context_summary.json` reports `reviewer_ready=true` with
-  `component_count=329`, `applicable_count=79`,
-  `reviewer_resolution_count=0`, and `applied_standard_count=12/12`;
-  `forest-plan-component-eval` now passes `35/35`; and
-  `forest-plan-component-eval-coverage` now covers
-  `v1-cg-ecid-compliance-review` with current slot `passed=true`,
-  `stale_identity=false`, and `unresolved_review=false`. South remains the
-  live forest-plan blocker on the same source set with `reviewer_ready=false`,
+  and `64` South generated rules on `source-set-f70ea11e04ae3d53`. ECID's
+  aligned Custer inventory and compliance lane is now also green there:
+  `forest-plan-components-build` resolves the Custer Gallatin plan through
+  `FOR-009` with `component_count=329`, `standard_count=58`,
+  `coverage_passed=true`, and `component_source_accuracy_passed=true`, while
+  ECID `compliance-review` is again `reviewer_ready=true`,
+  `validation_passed=true`, and its forest-plan component adjudication and
+  evaluation subchecks are both `reviewer_ready=true`. South remains the live
+  forest-plan blocker on the same source set with `reviewer_ready=false`,
   `component_count=329`, `reviewer_resolution_count=34`,
-  `needs_reviewer_resolution_count=1`, `gap_count=33`, and
-  `applied_standard_count=22/25`. ECID `v1-ea-eval` still remains
-  `contract_status="mismatch"`, but its forest-plan failure family is now
-  reduced to `forest_plan_failure_category_counts={"forest_plan_matrix_miss":1}`;
-  the remaining broader-EA categories are
-  `failure_category_counts={"baseline_source_record_missing":26,"citation_requirement_miss":4,"review_artifact_missing":4,"rule_section_mismatch":8,"source_record_mismatch":17}`.
+  `needs_reviewer_resolution_count=1`, `gap_count=33`,
+  `applied_standard_count=22/25`, and stale component adjudication eval
+  checks `["source_set_mismatch","queue_item_count_mismatch","resolved_item_count_mismatch"]`.
+  ECID `v1-ea-eval` still remains `contract_status="mismatch"`, but its
+  remaining drift is now broader-EA only:
+  `forest_plan_passed=true`, `broader_ea_passed=false`,
+  `failure_category_counts={"baseline_source_record_mismatch":26,"conditional_expectation_missing":18,"source_record_mismatch":17}`,
+  and `forest_plan_failure_category_counts={}`.
   South remains `contract_status="mismatch"` with
   `failure_category_counts={"conditional_false_negative":9,"forest_plan_matrix_miss":1,"review_artifact_missing":4,"rule_missing":9,"source_record_mismatch":26}`.
   ECID `phase-eval` now runs on `source-set-f70ea11e04ae3d53` with
   `review_direct_eval_status="direct_eval_identity_mismatch"` and remains red
-  on missing direct eval coverage for retrieval, claim extraction, and
-  rule-claim binding plus packet-local reviewer-facing replay debt in
-  compliance review, decision support, review packet, final QA, and aggregate
+  at `15/31` passed phases. `compliance_review` is no longer a failing phase
+  there; the remaining blocker family is missing direct eval coverage for
+  retrieval, claim extraction, and rule-claim binding plus reviewer-facing
+  replay debt in decision support, review packet, final QA, and aggregate
   evaluation coverage.
   `real-package-review-coverage-eval` remains red at
   `reviewer_ready_slot_count=0` with ECID current promotion and South Plateau
@@ -134,8 +136,9 @@ Use this file as the short current route before opening the large append-only do
   `passing_slot_count=0`. The reviewer-facing source-set alignment blocker is
   now resolved locally, and the next truthful slice returns to
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`, beginning with
-  ECID packet-local compliance review / compliance-matrix replay on aligned
-  `source-set-f70ea11e04ae3d53`, then South Plateau replay repair.
+  ECID broader-EA review-local artifact / source-record alignment on aligned
+  `source-set-f70ea11e04ae3d53`, then South Plateau forest-plan,
+  adjudication-refresh, and reviewer-facing packet repair.
 - Architecture gate: `462` code files, `0` above `800` lines, no Python or
   JS/TS cycles, no local module above the `20`-import fan-out gate, and the
   oversized-file inventory is empty

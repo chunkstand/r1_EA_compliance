@@ -1,0 +1,52 @@
+{
+  "adjudication": {
+    "adjudicated_at": "",
+    "adjudicated_by": [],
+    "method": "",
+    "notes": "",
+    "status": "pending"
+  },
+  "adjudication_id": "v1-cg-ecid-compliance-review-component-adjudication",
+  "allowed_dispositions": [
+    "applicability_false_positive",
+    "component_inventory_overreach",
+    "evidence_linking_miss",
+    "package_section_chunking_miss",
+    "pending",
+    "retrieval_miss",
+    "true_ea_omission"
+  ],
+  "component_findings_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_findings.json",
+  "created_at": "2026-05-26T04:17:24.101237Z",
+  "items": [],
+  "resolved_dispositions": [
+    "applicability_false_positive",
+    "component_inventory_overreach",
+    "evidence_linking_miss",
+    "package_section_chunking_miss",
+    "retrieval_miss",
+    "true_ea_omission"
+  ],
+  "review_id": "v1-cg-ecid-compliance-review",
+  "reviewer_resolution_queue_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_reviewer_resolution_queue.json",
+  "schema_version": "forest-plan-component-adjudication-v0",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
+  "summary": {
+    "component_findings_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_component_findings.json",
+    "component_type_counts": {},
+    "created_at": "2026-05-26T04:17:24.101050Z",
+    "instructions": "Replace disposition=pending with a resolved disposition, then fill adjudicated_at, adjudicated_by, source_type, and rationale before running forest-plan-component-adjudication-eval.",
+    "markdown_path": "config/forest_plan_component_adjudications/v1-cg-ecid-compliance-review.md",
+    "output_path": "config/forest_plan_component_adjudications/v1-cg-ecid-compliance-review.json",
+    "pending_item_count": 0,
+    "queue_item_count": 0,
+    "queue_reason_counts": {},
+    "review_dir": "source_library/reviews/v1-cg-ecid-compliance-review",
+    "review_id": "v1-cg-ecid-compliance-review",
+    "reviewer_resolution_queue_path": "source_library/reviews/v1-cg-ecid-compliance-review/forest_plan_reviewer_resolution_queue.json",
+    "schema_version": "forest-plan-component-adjudication-template-summary-v0",
+    "source_set_id": "source-set-f70ea11e04ae3d53",
+    "template_item_count": 0
+  },
+  "title": "Forest Plan Component Adjudication"
+}

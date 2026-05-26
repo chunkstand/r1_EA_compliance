@@ -262,6 +262,57 @@ class ForestPlanComponentManifestTests(unittest.TestCase):
             self.assertEqual(profile["selected_chunk_count"], 1)
             self.assertEqual(profile["built_standard_count"], 1)
 
+    def test_manifest_build_matches_secondary_source_set_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            manifest_path, readiness_path = _write_inventory_build_contract(
+                output_dir,
+                source_set_id="source-set-primary",
+                rows=[
+                    {
+                        "forest_unit_id": "custer-gallatin-nf",
+                        "source_record_id": "FOR-009",
+                        "plan_version": "2022",
+                    }
+                ],
+            )
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["source_set_references"][0] = {
+                "reference_id": "test_source_set",
+                "reference_type": "explicit_source_set_ids",
+                "source_set_ids": ["source-set-primary", "source-set-secondary"],
+                "description": "Primary and replay-compatible source sets",
+            }
+            manifest_path.write_text(
+                json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id="source-set-secondary",
+                chunks=[
+                    _chunk(
+                        source_set_id="source-set-secondary",
+                        source_record_id="FOR-009",
+                        text=_FOREST_PLAN_TEXT,
+                    )
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id="source-set-secondary",
+                chunks_path=chunks_path,
+                manifest_path=manifest_path,
+                manifest_readiness_path=readiness_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["component_count"], 3)
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertTrue(coverage["passed"])
+            self.assertTrue(_check(coverage, "all_profile_builds_have_selected_chunks")["passed"])
+
     def test_cli_parser_exposes_inventory_builder_command(self) -> None:
         parser = build_parser()
         args = parser.parse_args(

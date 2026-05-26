@@ -15,6 +15,83 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Aligned ECID Compliance Replay And Inventory Mapping Reduced Locally
+
+Latest implementation update on 2026-05-25:
+
+- routed packet:
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; aligned ECID Custer inventory and compliance replay are
+  now green on reviewer-facing `source-set-f70ea11e04ae3d53`, but ECID
+  broader-EA contract drift and South Plateau forest-plan replay remain open
+- implementation truth:
+  `src/usfs_r1_ea_sources/forest_plan_inventory_build_manifest.py` now
+  supports `explicit_source_set_ids` references, and
+  `src/usfs_r1_ea_sources/forest_plan_components_inventory_build.py` now
+  matches forest-plan inventory profile rows through that governed
+  multi-source-set surface. The Custer Gallatin profile row in
+  `config/r1_forest_plan_component_inventory_build_manifest.json` now binds to
+  both `source-set-4fb59e9eb43045cb` and
+  `source-set-f70ea11e04ae3d53` through the shared `FOR-009` mapping, with
+  focused regressions in
+  `tests/test_forest_plan_inventory_build_manifest.py` and
+  `tests/test_forest_plan_components_manifest.py`. The committed zero-item
+  ECID adjudication template now also lives at
+  `config/forest_plan_component_adjudications/v1-cg-ecid-compliance-review.json`
+  with companion worklist
+  `config/forest_plan_component_adjudications/v1-cg-ecid-compliance-review.md`
+- live replay truth:
+  `forest-plan-components-build --source-set-id source-set-f70ea11e04ae3d53
+  --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  now rebuilds the aligned Custer inventory through `FOR-009` with
+  `component_count=329`, `standard_count=58`,
+  `coverage_passed=true`, and `component_source_accuracy_passed=true`.
+  `forest-plan-component-adjudication-eval` now passes with
+  `pending_adjudication_count=0`, and `compliance-review --review-id
+  v1-cg-ecid-compliance-review` now passes with `reviewer_ready=true`,
+  `validation_passed=true`, and forest-plan component adjudication/evaluation
+  both `reviewer_ready=true`. ECID `v1-ea-eval` now remains
+  `contract_status="mismatch"` with `forest_plan_passed=true`,
+  `broader_ea_passed=false`,
+  `failure_category_counts={"baseline_source_record_mismatch":26,"conditional_expectation_missing":18,"source_record_mismatch":17}`,
+  and `forest_plan_failure_category_counts={}`. South remains the live
+  forest-plan blocker with `reviewer_ready=false`, `component_count=329`,
+  `reviewer_resolution_count=34`, `needs_reviewer_resolution_count=1`,
+  `gap_count=33`, `applied_standard_count=22/25`, and stale component
+  adjudication eval checks
+  `["source_set_mismatch","queue_item_count_mismatch","resolved_item_count_mismatch"]`.
+  `real-package-review-coverage-eval` remains red at
+  `reviewer_ready_slot_count=0`: ECID is now mismatch-only on broader-EA
+  categories, South remains mismatch on forest-plan plus broader-EA, and West
+  Reservoir remains truthful `typed_blocked`. `phase-eval --review-id
+  v1-cg-ecid-compliance-review` remains red at `15/31` passed phases with
+  `review_direct_eval_status="direct_eval_identity_mismatch"`; the remaining
+  blocker phases are retrieval, claim extraction, rule-claim binding,
+  downstream direct evaluation, decision support, review packet, final QA,
+  aggregate evaluation coverage, and the downstream graph/export families
+- remaining blocker truth:
+  ECID aligned compliance review and component replay are no longer the
+  blocker. The next live blocker is ECID broader-EA review-local artifact /
+  source-record alignment on `source-set-f70ea11e04ae3d53`, followed by South
+  Plateau forest-plan replay / adjudication refresh and the still-unresolved
+  source-delta / West / Lolo aggregate component-eval coverage slots
+- next routing:
+  resume `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  beginning with ECID broader-EA review-local artifact / source-record
+  alignment on aligned `source-set-f70ea11e04ae3d53`, then South Plateau
+  forest-plan replay / adjudication refresh on that same source set
+- verification:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_components_manifest.py -q`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-component-adjudication-template --output-dir source_library --review-id v1-cg-ecid-compliance-review --output-path config/forest_plan_component_adjudications/v1-cg-ecid-compliance-review.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review --adjudication-file config/forest_plan_component_adjudications/v1-cg-ecid-compliance-review.json`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources compliance-review --package-path "source_library/reviews/_intake/demo-ea-2026-04-30/East Crazy Inspiration Divide Land Exchange (63115)" --output-dir source_library --rule-pack source_library/reviews/v1-cg-ecid-compliance-review/applicability/generated_rule_pack.json --source-set-id source-set-f70ea11e04ae3d53 --review-id v1-cg-ecid-compliance-review --reuse-package-cache --docling-timeout-seconds 180`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library`,
+  `PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`
+
 ## Aligned ECID Forest-Plan Replay Reduced Locally
 
 Latest implementation update on 2026-05-25:

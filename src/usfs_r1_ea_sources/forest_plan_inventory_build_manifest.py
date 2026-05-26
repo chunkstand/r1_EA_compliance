@@ -20,7 +20,10 @@ DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH = (
     / "config"
     / "region1_forest_plan_readiness_nepa_3d_v1.json"
 )
-SUPPORTED_SOURCE_SET_REFERENCE_TYPES = {"explicit_source_set_id"}
+SUPPORTED_SOURCE_SET_REFERENCE_TYPES = {
+    "explicit_source_set_id",
+    "explicit_source_set_ids",
+}
 SUPPORTED_PROMOTION_ELIGIBILITY_STATUSES = {"eligible", "eligible_with_blockers"}
 SUPPORTED_ACCEPTED_BLOCKERS = {
     "component_inventory_build_required",
@@ -40,8 +43,15 @@ SOURCE_SET_ID_RE = re.compile(r"^source-set-[A-Za-z0-9]+$")
 class SourceSetReference:
     reference_id: str
     reference_type: str
-    source_set_id: str
+    source_set_ids: tuple[str, ...]
     description: str
+
+    @property
+    def source_set_id(self) -> str:
+        return self.source_set_ids[0]
+
+    def matches_source_set(self, source_set_id: str) -> bool:
+        return source_set_id in self.source_set_ids
 
 
 @dataclass(frozen=True)
@@ -219,15 +229,36 @@ def _parse_source_set_reference(raw_reference: object, index: int) -> SourceSetR
         raise ValueError(
             f"{context}.reference_type must be one of {supported_types}; got {reference_type!r}"
         )
-    source_set_id = _require_string(reference, "source_set_id", context)
-    if not SOURCE_SET_ID_RE.match(source_set_id):
-        raise ValueError(f"{context}.source_set_id must look like a source-set id.")
+    source_set_ids = _parse_source_set_ids(
+        reference=reference,
+        reference_type=reference_type,
+        context=context,
+    )
     return SourceSetReference(
         reference_id=_require_string(reference, "reference_id", context),
         reference_type=reference_type,
-        source_set_id=source_set_id,
+        source_set_ids=source_set_ids,
         description=_require_string(reference, "description", context),
     )
+
+
+def _parse_source_set_ids(
+    *,
+    reference: dict[str, object],
+    reference_type: str,
+    context: str,
+) -> tuple[str, ...]:
+    if reference_type == "explicit_source_set_id":
+        source_set_id = _require_string(reference, "source_set_id", context)
+        if not SOURCE_SET_ID_RE.match(source_set_id):
+            raise ValueError(f"{context}.source_set_id must look like a source-set id.")
+        return (source_set_id,)
+    source_set_ids = _require_string_tuple(reference, "source_set_ids", context)
+    _reject_duplicate(list(source_set_ids), "source_set_id", f"{context}.source_set_ids")
+    for source_set_id in source_set_ids:
+        if not SOURCE_SET_ID_RE.match(source_set_id):
+            raise ValueError(f"{context}.source_set_ids must contain only source-set ids.")
+    return source_set_ids
 
 
 def _parse_profile_row(raw_profile: object, index: int) -> InventoryBuildProfile:

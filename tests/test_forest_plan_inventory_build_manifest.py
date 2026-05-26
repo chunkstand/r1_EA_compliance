@@ -53,6 +53,17 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
             manifest.source_set_reference("active_full_canonical").source_set_id,
             "source-set-4fb59e9eb43045cb",
         )
+        custer_reference = manifest.source_set_reference(
+            manifest.get("custer-gallatin-nf").source_set_reference_id
+        )
+        self.assertEqual(
+            custer_reference.source_set_ids,
+            (
+                "source-set-4fb59e9eb43045cb",
+                "source-set-f70ea11e04ae3d53",
+            ),
+        )
+        self.assertTrue(custer_reference.matches_source_set("source-set-f70ea11e04ae3d53"))
         dakota = manifest.get("dakota-prairie-grasslands")
         self.assertEqual(
             dakota.primary_plan_source_record_id,
@@ -128,6 +139,33 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
                     manifest_path,
                     readiness_path=readiness_path,
                 )
+
+    def test_accepts_multi_source_set_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            manifest_path = Path(tmp) / "manifest.json"
+            readiness_path = Path(tmp) / "readiness.json"
+            payload = _manifest_payload()
+            payload["source_set_references"][0] = {
+                "reference_id": "active_full_canonical",
+                "reference_type": "explicit_source_set_ids",
+                "source_set_ids": ["source-set-abc123", "source-set-def456"],
+                "description": "Test source sets",
+            }
+            _write_json(manifest_path, payload)
+            _write_json(readiness_path, _readiness_payload())
+
+            manifest = load_region1_forest_plan_inventory_build_manifest(
+                manifest_path,
+                readiness_path=readiness_path,
+            )
+
+            reference = manifest.source_set_reference("active_full_canonical")
+            self.assertEqual(reference.source_set_id, "source-set-abc123")
+            self.assertEqual(
+                reference.source_set_ids,
+                ("source-set-abc123", "source-set-def456"),
+            )
+            self.assertTrue(reference.matches_source_set("source-set-def456"))
 
     def test_rejects_unknown_source_set_reference_id(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

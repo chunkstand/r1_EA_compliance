@@ -231,7 +231,9 @@ def _manifest_profile_rows_for_source_set(
     selected_rows = [
         row
         for row in manifest.profile_rows
-        if manifest.source_set_reference(row.source_set_reference_id).source_set_id == source_set_id
+        if manifest.source_set_reference(row.source_set_reference_id).matches_source_set(
+            source_set_id
+        )
     ]
     if forest_unit_id is not None:
         selected_rows = [
