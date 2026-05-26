@@ -2,8 +2,9 @@
 
 Date: 2026-05-25
 
-Status: Reduced locally through Milestone `2`; live route moved to
-`docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+Status: Historical reduced packet through Milestone `2`; live route moved
+through `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+and now returns to `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 
 Owner context: this is a fresh standalone blocker packet opened from
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` after Milestone `1`
@@ -29,10 +30,14 @@ binding lane is now reduced, not live:
   reuse that were already supported by the active catalog and committed
   forest-plan identity registry
 - after that repair, the ECID applicability replay no longer stops on the old
-  `21` / `19` binding baseline; it now stops on a smaller remaining
-  current-source truth blocker (`11` source-evidence failures and `17`
-  missing-source template groups) that is owned by
+  `21` / `19` binding baseline; it first moved to a smaller current-source
+  truth blocker (`11` source-evidence failures and `17`
+  missing-source template groups) that was owned by
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
+- that upstream current-source blocker is now exhausted on scoped gate
+  `source-set-f70ea11e04ae3d53`; the remaining live failure is replay-local
+  claim-linkage debt, so the active route now returns to
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 
 This packet therefore remains as the reduced closeout record for the governed
 binding layer rather than as the live blocker plan.
@@ -72,11 +77,12 @@ This packet's scoped goal is now reduced and closed by routing:
 
 - the shared authority-source binding layer is reduced through the exact
   current-row repair it honestly owned
-- the remaining applicability blocker is explicitly rerouted to
+- the remaining applicability blocker was explicitly rerouted to
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`
   instead of staying mislabeled as live binding work here
-- packet-local replay remains blocked until that new current-source truth
-  packet clears
+- after that source-truth packet cleared its owner boundary, the remaining
+  replay-local debt was routed back to
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 
 ## Non-Goals
 
@@ -333,7 +339,8 @@ Milestone 2 reduction on 2026-05-25:
   `docs/ACTIVE_AUTHORITY_CURRENT_SOURCE_GAP_BLOCKER_MILESTONE_PLAN.md`,
   which first froze the reduced `11` / `17` residue and then resolved its
   Milestone `1` owner map. The current live route after that follow-on
-  closeout is Milestone `2` governed repair in the current-source-gap packet.
+  closeout now returns to
+  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`.
 
 ### Milestone 3 - Replay Resume Handoff
 
@@ -351,5 +358,6 @@ Implementation:
 Acceptance criteria:
 
 - `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` becomes the next
-  truthful packet again only after this blocker is cleared.
+  truthful packet again only after this blocker is cleared through its binding
+  owner boundary.
 - The docs name the exact resume command chain.
