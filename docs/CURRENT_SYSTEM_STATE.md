@@ -22,32 +22,31 @@ Latest implementation update on 2026-05-26:
 - routed packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 - packet outcome:
-  `reduced locally`; replacement-feasibility Milestone 1 no longer supports
-  one coherent tracked owner, so live work now moves to the narrower
-  source-set contract blocker
+  `reduced locally`; Milestone 1 now classifies one bounded review-local owner
+  path inside the source-set contract blocker, so live work now moves to
+  Milestone 2 in the same packet
 - closeout commit:
   `013b5d1` (`Open Lolo source-set contract blocker`)
 - implementation truth:
-  fresh tracked readback now proves a three-surface contract split for
-  `region1-example-lolo-tylers-kitchen-66344`. The replay context
+  fresh tracked readback now classifies a bounded review-local owner path for
+  `region1-example-lolo-tylers-kitchen-66344` on
+  `source-set-5e65d845ce77e1a0`. The replay context
   `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
-  still declares `source_set_id="source-set-4fb59e9eb43045cb"`, and
-  `config/v1_lolo_tylers_kitchen_real_ea_eval.json` still declares the same
-  `4fb...` source set. But the live
-  `source_library/reviews/region1-example-lolo-tylers-kitchen-66344/`
-  `v1_ea_eval_results.json` reports
-  `source_set_id="source-set-5e65d845ce77e1a0"` and
-  `contract_status="mismatch"`, while review-local artifacts including
-  `review_validation.json`,
+  and `config/v1_lolo_tylers_kitchen_real_ea_eval.json` still declare
+  `source-set-4fb59e9eb43045cb`, and the live review
+  `phase_eval_results.json` still uses `4fb...` expectations. But the live
+  `v1_ea_eval_results.json`, `review_validation.json`,
   `applicability/applicability_validation.json`,
   `forest_plan_context_summary.json`,
   `authority_reviewer_resolution_report.json`,
   `compliance_matrix.json`, and
-  `forest_plan_component_eval_results.json` also report `5e65...`.
-  Meanwhile `applicability/generated_rule_pack_validation.json` and the live
-  review `phase_eval_results.json` still report `4fb...`, with
-  `passed=false` and `passed_phase_count=12/29`. `phase-eval` also shows that
-  `downstream_direct_evaluation` is still partially anchored to stale
+  `forest_plan_component_eval_results.json` now all report `5e65...`, and
+  `applicability_validation.json` on that owner reports
+  `passed=true` with `generated_rule_pack_ready=true`. The stale
+  `4fb...` `generated_rule_pack_validation.json` is therefore now classified
+  as bounded rerun debt rather than as a second review-local owner.
+  `phase-eval` still shows one separate shared-runtime debt family:
+  `downstream_direct_evaluation` remains partially anchored to stale
   compliance direct-eval coverage on `source-set-f70ea11e04ae3d53`
 - live blocker truth:
   the governed aggregates remain unchanged. Fresh coverage and promotion
@@ -59,8 +58,10 @@ Latest implementation update on 2026-05-26:
 - next routing:
   continue in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 1 to classify the tracked contract-chain owner surfaces before
-  any roster, slot, or ready-state changes are considered. Treat
+  at Milestone 2 to classify whether the remaining stale tracked `4fb...`
+  contract surfaces plus shared `f70...` downstream direct-eval coverage are
+  bounded rerun and realignment work on the chosen `5e65...` owner path or
+  still require a narrower runtime owner. Treat
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
   as the exact predecessor that reduced the generic replacement-feasibility
   lane into this narrower packet, and keep

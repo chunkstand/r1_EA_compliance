@@ -2,9 +2,10 @@
 
 Date: 2026-05-26
 
-Status: Active reduced blocker packet (`replacement-feasibility Milestone 1
-has now reduced locally to a narrower source-set contract owner split; live
-work is Milestone 1 contract-chain classification here`)
+Status: Active reduced blocker packet (`Milestone 1 is now reduced locally;
+current evidence supports a bounded review-local owner path on
+source-set-5e65d845ce77e1a0; live work is Milestone 2 contract-aligned
+review-readiness classification`)
 
 Owner context: standalone follow-on opened after
 `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
@@ -20,6 +21,36 @@ replacement candidates.
 
 Opening closeout commit:
 `013b5d1` (`Open Lolo source-set contract blocker`)
+
+## Latest Local Implementation
+
+- Milestone 1 is now reduced locally. Fresh tracked readback no longer leaves
+  the owner chain generic.
+- The tracked replay context and tracked `v1-ea-eval` contract still bind
+  `region1-example-lolo-tylers-kitchen-66344` to
+  `source-set-4fb59e9eb43045cb`, and the live review
+  `phase_eval_results.json` still uses `4fb...` expectations. But the bounded
+  review-local artifact path now converges on
+  `source-set-5e65d845ce77e1a0`: `v1_ea_eval_results.json`,
+  `review_validation.json`,
+  `applicability/applicability_validation.json`,
+  `forest_plan_context_summary.json`,
+  `authority_reviewer_resolution_report.json`,
+  `compliance_matrix.json`, and
+  `forest_plan_component_eval_results.json` all report `5e65...`.
+- `applicability/applicability_validation.json` on `5e65...` also reports
+  `passed=true` and `generated_rule_pack_ready=true`, which keeps the stale
+  `4fb...` `generated_rule_pack_validation.json` in a bounded rerun category
+  rather than as evidence of a second review-local owner.
+- The remaining `f70...` surface is now classified as a stale shared
+  downstream direct-eval dependency, not as the review-local source-set owner:
+  `downstream_direct_evaluation` still reports only
+  `compliance_review_eval` present there while the retrieval, claim, and
+  rule-claim direct eval lanes are still missing on `4fb...`.
+- Live work now advances to Milestone 2 inside this same packet: classify
+  whether the remaining red is bounded rerun and expectation realignment work
+  on the chosen `5e65...` owner path, or whether a narrower runtime owner is
+  still required.
 
 ## Purpose
 
@@ -325,6 +356,17 @@ Acceptance criteria:
   `f70...` surfaces explicitly.
 - No governed roster or slot changes land during classification.
 
+Latest local outcome:
+
+- `reduced locally`; current evidence supports `source-set-5e65d845ce77e1a0`
+  as the bounded review-local owner path because the representative
+  review-local artifact family already converges there and
+  `applicability_validation.json` reports `generated_rule_pack_ready=true`.
+- The remaining `4fb...` surfaces are now classified as stale tracked
+  contract and expectation surfaces plus one stale
+  `generated_rule_pack_validation.json`, and the remaining `f70...` surface is
+  classified as shared downstream direct-eval debt for Milestone 2.
+
 Verification:
 
 ```bash
@@ -507,9 +549,10 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- If Milestone 1 finds that the tracked contract chain still cannot be bounded
-  inside this packet, the next live work should open one still narrower child
-  packet that names the exact residual owner.
+- Milestone 1 is now reduced locally: the bounded review-local owner path is
+  `source-set-5e65d845ce77e1a0`, while stale tracked `4fb...` surfaces and
+  shared `f70...` downstream direct-eval debt remain explicit Milestone 2
+  owners inside this packet.
 - If Milestone 2 finds one coherent contract-chain owner but the remaining red
   still spans broader runtime debt, the next live work should open the exact
   narrower blocker that owns those failing phase families.

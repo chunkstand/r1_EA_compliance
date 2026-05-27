@@ -234,11 +234,14 @@ family.
   but replacement-feasibility Milestone 1 has now reduced further into the
   exact live owner:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
-  Fresh tracked Lolo readback now shows tracked config still on `4fb...`,
-  most live review-local artifacts on `5e65...`, and stale
-  `downstream_direct_evaluation` coverage still anchored to `f70...`. Do not
-  treat that narrower reroute as provisional: the exact child-route closeout
-  landed in `013b5d1` (`Open Lolo source-set contract blocker`). Do not
+  Fresh tracked Lolo readback there now supports `source-set-5e65...` as the
+  bounded review-local owner path because the representative review-local
+  artifact family already binds `5e65...` and
+  `applicability_validation.json` reports `generated_rule_pack_ready=true`.
+  The remaining live debt is now stale tracked `4fb...` contract and
+  expectation surfaces plus shared `f70...` downstream direct-eval coverage.
+  Do not treat that narrower reroute as provisional: the exact child-route
+  closeout landed in `013b5d1` (`Open Lolo source-set contract blocker`). Do not
   route back into another South replay pass, reopen the resolved replay-repair
   packet, or treat the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.

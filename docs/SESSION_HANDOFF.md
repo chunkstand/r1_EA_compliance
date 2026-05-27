@@ -165,12 +165,15 @@ history below.
   `source-set-5e65...` and fails `review_identity_matches_contract`, and the
   live review `phase-eval` remains red at `12/29` on `source-set-4fb...`
 - next truthful slice:
-  replacement-feasibility Milestone 1 is now reduced locally. Continue in
+  source-set contract blocker Milestone 1 is now reduced locally. Continue in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 1 to classify the tracked contract chain across the `4fb...`
-  replay context and eval contract, the live `5e65...` review-local artifacts,
-  and the stale `f70...` downstream direct-eval dependency before any roster
-  or slot changes. Do not reopen
+  at Milestone 2: current readback supports `source-set-5e65...` as the
+  bounded review-local owner path because the representative review-local
+  artifact family already binds `5e65...` and
+  `applicability_validation.json` reports `generated_rule_pack_ready=true`.
+  The remaining live debt is now stale tracked `4fb...` contract and
+  expectation surfaces plus shared `f70...` downstream direct-eval coverage.
+  Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
   packet, and do not treat the broader Lolo example packet as the live owner
   for the remaining blocker
@@ -182,26 +185,28 @@ history below.
 
 ## Lolo Source-Set Contract Blocker Opened Locally
 
-This implementation slice closes the predecessor replacement-feasibility
-Milestone 1 by routing the tracked Lolo blocker to a narrower contract owner.
+This implementation slice closes Milestone 1 in the active source-set
+contract blocker by classifying the bounded review-local owner path.
 
 - outcome label:
-  `reduced locally`; live work now routes into the new Lolo source-set
-  contract blocker packet rather than staying generic in the replacement
-  feasibility blocker
+  `reduced locally`; live work now stays in the same packet and advances to
+  Milestone 2 contract-aligned review-readiness classification
 - closeout commit:
   `013b5d1` (`Open Lolo source-set contract blocker`)
 - implementation truth:
-  fresh tracked readback now proves a three-surface contract split for
-  `region1-example-lolo-tylers-kitchen-66344`. The replay context and tracked
-  `v1-ea-eval` contract still point at `source-set-4fb59e9eb43045cb`, the
-  live `v1_ea_eval_results.json` now reports
-  `source-set-5e65d845ce77e1a0` with
-  `contract_status="mismatch"`, representative review-local artifacts now
-  also report `5e65...`, `generated_rule_pack_validation.json` still reports
-  `4fb...`, and the live review `phase_eval_results.json` remains red at
-  `12/29` on `4fb...`. `phase-eval` also shows stale
-  `compliance_review_eval` coverage on `source-set-f70ea11e04ae3d53`
+  fresh tracked readback now classifies `source-set-5e65d845ce77e1a0` as the
+  bounded review-local owner path. The replay context and tracked
+  `v1-ea-eval` contract still point at `source-set-4fb59e9eb43045cb`, and the
+  live review `phase_eval_results.json` still uses `4fb...` expectations. But
+  the live `v1_ea_eval_results.json`, `review_validation.json`,
+  `applicability_validation.json`, `forest_plan_context_summary.json`,
+  `authority_reviewer_resolution_report.json`, `compliance_matrix.json`, and
+  `forest_plan_component_eval_results.json` all report `5e65...`, and
+  `applicability_validation.json` reports `generated_rule_pack_ready=true`.
+  The remaining `4fb...` surfaces are now classified as stale tracked contract
+  and expectation surfaces plus one stale
+  `generated_rule_pack_validation.json`, while `phase-eval` continues to show
+  shared `f70...` downstream direct-eval staleness
 - live blocker truth:
   the governed aggregates remain stable and still do not admit Lolo as a
   ready replacement. `real-package-review-coverage-eval` still admits only
@@ -212,7 +217,9 @@ Milestone 1 by routing the tracked Lolo blocker to a narrower contract owner.
 - next routing:
   continue in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 1 for exact contract-chain classification. Treat
+  at Milestone 2 to classify whether the remaining stale tracked `4fb...`
+  surfaces plus shared `f70...` downstream direct-eval coverage are bounded
+  rerun and realignment work on the chosen `5e65...` owner path. Treat
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
   as the exact predecessor that reduced the generic feasibility lane into
   this narrower packet, and keep
