@@ -41,7 +41,10 @@ The planner:
 - The live Lolo follow-on is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
 - For Lolo National Forest example-package review work, inspect that blocker
-  first for Milestone 0 source-record identity inventory. Its predecessor,
+  first for Milestone 1 unified source-record identity contract work. Its
+  Milestone 0 inventory proved all 60 expected Lolo source-record IDs resolve
+  to at least one current `f70...` catalog record, with five ambiguous
+  multi-target mappings still blocking replay-ready identity. Its predecessor,
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   reduced locally through Milestone 1: the current-workbook `f70...` catalog
   gate is not a drop-in owner for historical `5e65...` artifacts, direct replay

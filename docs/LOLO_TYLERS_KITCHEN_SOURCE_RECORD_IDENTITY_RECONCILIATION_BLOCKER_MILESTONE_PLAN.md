@@ -2,13 +2,15 @@
 
 Date: 2026-05-27
 
-Status: Active blocker packet. This plan was opened from
+Status: Reduced locally through Milestone 0. This plan was opened from
 `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 Milestone 1 after the governed replay slice reached an exact local-replay stop. The tracked
 Lolo/Tyler's Kitchen replay and eval contract still points at historical source set
 `source-set-5e65d845ce77e1a0`; the current-workbook candidate source set
 `source-set-f70ea11e04ae3d53` cannot be promoted into that replay lane until source-record identity
-is reconciled through a governed owner surface.
+is reconciled through a governed owner surface. Milestone 0 proved complete current-catalog
+coverage exists, but five multi-target mappings still require a replay-facing identity rule before
+tracked replay/eval config can move.
 
 ## Why This Exists
 
@@ -35,6 +37,21 @@ Milestone 0 of the current-workbook source-set rebaseline proved that
 This packet makes the identity contract explicit before any tracked replay context, v1 eval config,
 applicability adjudication, forest-plan component eval, or compliance-review artifact is pointed at
 `source-set-f70ea11e04ae3d53`.
+
+## Latest Local Implementation
+
+- Milestone 0 is reduced locally. The identity coverage inventory proves all 60 Lolo v1 eval
+  expected source-record IDs resolve to at least one current-workbook `f70...` catalog record:
+  8 direct current-catalog hits, 51 compliance-reconciled hits, and 1 forest-plan-reconciled hit.
+- No missing IDs remain after reconciliation, and no mapped target points outside the current
+  catalog.
+- The unresolved gap is ambiguity, not coverage: five compliance-reconciled expected IDs have
+  multi-target current catalog mappings:
+  `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and `R1EA-150`.
+- No tracked replay context, eval contract, adjudication config, or ignored generated review
+  artifact was changed. The next live slice is Milestone 1, which must provide a governed
+  replay-facing identity contract that fails on ambiguous mappings until an explicit rule resolves
+  them.
 
 ## Goal
 
@@ -99,7 +116,7 @@ Ignored `source_library/` artifacts remain local evidence unless repository poli
 
 ### Milestone 0 - Identity Coverage Inventory
 
-Status: Active next slice.
+Status: Reduced locally. Complete-after-commit after this docs/evidence slice is committed.
 
 Implementation:
 
@@ -119,6 +136,18 @@ Acceptance:
 - Any missing or ambiguous identity is named exactly.
 - No replay config or eval contract is changed in this milestone.
 
+Milestone 0 decision:
+
+- Coverage is complete at the current-catalog level:
+  `expected_lolo_source_record_count=60`, `direct_current_catalog_hits=8`,
+  `compliance_reconciled_hits=51`, and `forest_plan_reconciled_hits=1`.
+- `missing_after_reconciliation=[]` and `mapped_targets_absent_from_current_catalog={}`.
+- The remaining identity gap is `ambiguous_mapping_count=5`, with ambiguous legacy IDs
+  `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and `R1EA-150`.
+- This milestone does not make `f70...` replay-ready. It routes the next slice to Milestone 1 for
+  an explicit resolver/gate that can either reduce multi-target mappings to a governed identity
+  decision or fail closed with the exact ambiguity report.
+
 Verification:
 
 ```bash
@@ -128,9 +157,8 @@ from pathlib import Path
 
 from usfs_r1_ea_sources.catalog_surface import catalog_source_record_ids
 
-output_dir = Path("source_library")
-catalog_path = output_dir / "runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl"
-current_ids = catalog_source_record_ids(catalog_path)
+catalog_dir = Path("source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate")
+current_ids = catalog_source_record_ids(catalog_dir) or set()
 
 contract = json.loads(Path("config/v1_lolo_tylers_kitchen_real_ea_eval.json").read_text())
 expected = set(contract.get("baseline_policy", {}).get("expected_source_record_ids", []))
@@ -138,22 +166,63 @@ for item in contract.get("conditional_source_expectations", []):
     expected.update(item.get("expected_source_record_ids", []))
 expected.update(contract.get("forest_plan", {}).get("required_source_record_ids", []))
 
+compliance = json.loads(Path("config/compliance_source_record_reconciliation_v1.json").read_text())
+compliance_map = {
+    entry["legacy_source_record_id"]: set(entry.get("current_source_record_ids", []))
+    for entry in compliance["entries"]
+}
+forest = json.loads(Path("config/r1_forest_plan_identity_reconciliation_v1.json").read_text())
+forest_map = {}
+for key in ("exact_url_matched_source_records", "governed_catalog_rebound_source_records"):
+    for entry in forest.get(key, []):
+        forest_map.setdefault(entry["legacy_source_record_id"], set()).add(
+            entry["canonical_source_record_id"]
+        )
+
+direct = expected & current_ids
+missing_direct = expected - current_ids
+compliance_covered = {
+    source_id
+    for source_id in missing_direct
+    if compliance_map.get(source_id) and compliance_map[source_id] <= current_ids
+}
+forest_covered = {
+    source_id
+    for source_id in missing_direct - compliance_covered
+    if forest_map.get(source_id) and forest_map[source_id] <= current_ids
+}
+missing = missing_direct - compliance_covered - forest_covered
+ambiguous = {}
+mapped_absent = {}
+for source_id in missing_direct:
+    targets = compliance_map.get(source_id, set()) | forest_map.get(source_id, set())
+    if len(targets) > 1:
+        ambiguous[source_id] = sorted(targets)
+    absent = sorted(targets - current_ids)
+    if absent:
+        mapped_absent[source_id] = absent
+
 print(
     {
         "expected": len(expected),
-        "direct_current_hits": len(expected & current_ids),
-        "missing_direct_current_hits": len(expected - current_ids),
+        "direct_current_hits": len(direct),
+        "compliance_reconciled_hits": len(compliance_covered),
+        "forest_plan_reconciled_hits": len(forest_covered),
+        "missing_after_reconciliation": sorted(missing),
+        "mapped_targets_absent_from_current_catalog": mapped_absent,
+        "ambiguous_mapping_count": len(ambiguous),
+        "ambiguous_mappings": dict(sorted(ambiguous.items())),
     }
 )
 PY
 ```
 
-Closeout state: `complete-after-commit` only after docs and handoff identify the exact next owner
-for Milestone 1.
+Closeout state: `complete-after-commit` after docs and handoff identify Milestone 1 as the exact
+next owner and this slice is committed.
 
 ### Milestone 1 - Unified Source-Record Identity Contract
 
-Status: Pending Milestone 0 inventory.
+Status: Active next slice.
 
 Implementation:
 
@@ -211,8 +280,9 @@ Verification:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval \
-  --contract config/v1_lolo_tylers_kitchen_real_ea_eval.json \
-  --output-dir source_library
+  --output-dir source_library \
+  --review-id region1-example-lolo-tylers-kitchen-66344 \
+  --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json
 
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \

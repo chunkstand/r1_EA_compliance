@@ -241,7 +241,9 @@ family.
   `f70...`; five compliance-covered source-record IDs still have multi-target
   current catalog mappings. The live child owner is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`;
-  its next truthful slice is Milestone 0 identity coverage inventory.
+  its Milestone 0 inventory now proves all 60 expected IDs have direct or
+  reconciled current-catalog coverage and the next truthful slice is Milestone
+  1 unified source-record identity contract work.
   No truthful ready closure path is currently proven.
   Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:
@@ -269,9 +271,9 @@ family.
   rule-claim direct evals, stale shared `f70...` compliance-review direct eval,
   `evaluation_coverage`, source-register currentness blocked by the missing
   current `5e65...` manifest, and source-record identity blocked by the split
-  compliance/forest-plan reconciliation owners. Live work now routes through
-  the source-record identity reconciliation packet before any current-workbook
-  replay or direct-eval rebaseline. Do not
+  compliance/forest-plan reconciliation owners plus five ambiguous multi-target
+  mappings. Live work now routes through source-record identity reconciliation
+  Milestone 1 before any current-workbook replay or direct-eval rebaseline. Do not
   route back into another South replay pass, reopen the resolved replay-repair
   packet, or treat the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.

@@ -79,7 +79,9 @@ Opening closeout commit:
   `f70...` replay override stops against tracked replay context. The live route
   is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 0 for identity coverage inventory.
+  Milestone 1 for a governed replay-facing identity contract after Milestone 0
+  proved full current-catalog coverage with five ambiguous multi-target
+  mappings.
   This packet should resume at Milestone 2 direct-eval rebaseline only after
   the current-workbook source-set owner, source-record identity contract, and
   `source_register_contract` are no longer the active blockers.

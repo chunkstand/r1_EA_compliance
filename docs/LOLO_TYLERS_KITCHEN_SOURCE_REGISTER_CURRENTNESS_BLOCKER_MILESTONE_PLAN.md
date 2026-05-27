@@ -54,7 +54,7 @@ global catalog manifest SHA
   `77361eec5963677104bf06dabe3f3d2934bfb75eae18990532d6054ba58152eb`,
   and no local `source_set_manifest.json` currently has that hash.
 - The current-workbook follow-on packet
-  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   is reduced locally through Milestone 1: `f70...` is a
   current-workbook catalog candidate but not a drop-in owner for `5e65...`
   because the selected/catalog source-record sets differ (`350` versus `708`
@@ -62,7 +62,8 @@ global catalog manifest SHA
   split source-record identity owner before replay config could move. The live
   route is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 0 for identity coverage inventory.
+  Milestone 1 for a governed replay-facing identity contract after Milestone 0
+  proved full coverage with five ambiguous multi-target mappings.
   This packet must not be reopened to hand-edit ignored manifests or to teach
   `phase-eval` to ignore workbook SHA drift.
 

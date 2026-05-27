@@ -325,8 +325,10 @@ Milestone 1 decision:
   replay config changes.
 - The live next packet is
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 0. It must prove the full identity coverage inventory before any
-  runtime config or replay artifact moves to the current-workbook source set.
+  Milestone 1. Milestone 0 proved full current-catalog coverage with five
+  ambiguous multi-target mappings; Milestone 1 must provide the replay-facing
+  identity contract before any runtime config or replay artifact moves to the
+  current-workbook source set.
 
 Verification:
 
@@ -459,12 +461,12 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- The current next slice is Milestone 0 in
+- The current next slice is Milestone 1 in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
 - The owner is not a manifest swap and not an ad hoc CLI override. It requires a
   governed replay-facing identity contract that can reconcile expected Lolo
-  source-record IDs to current-workbook catalog IDs before tracked replay/eval
-  config moves.
+  source-record IDs to current-workbook catalog IDs and fail closed on
+  unresolved multi-target ambiguity before tracked replay/eval config moves.
 - Direct-eval failures remain real and should return to the parent aligned-runtime
   packet only after source-register currentness and source-record identity are
   coherent.

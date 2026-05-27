@@ -41,10 +41,16 @@ Use this file as the short current route before opening the append-only docs.
   `R1PLAN-lolo-nf-02` is separately covered by forest-plan identity
   reconciliation as `FPS-298`; five compliance-covered IDs are still
   multi-target mappings that need a replay-facing identity rule.
-- Next slice is Milestone 0 in the source-record identity reconciliation
-  packet: prove the complete direct/reconciled/missing/ambiguous coverage
-  inventory before any tracked replay context, eval config, or review artifact
-  moves from `5e65...` to `f70...`.
+- Source-record identity reconciliation Milestone 0 is reduced locally: all
+  60 Lolo expected source-record IDs resolve to at least one current `f70...`
+  catalog record (`8` direct, `51` compliance-reconciled, `1` forest-plan
+  reconciled), with no missing IDs and no mapped targets absent from the
+  current catalog.
+- Next slice is Milestone 1 in the source-record identity reconciliation
+  packet: implement or choose the governed replay-facing identity contract
+  that can fail closed on, or explicitly resolve, the five multi-target
+  compliance mappings before any tracked replay context, eval config, or review
+  artifact moves from `5e65...` to `f70...`.
 - Remaining live debt:
   `retrieval-eval` on `5e65...` is both contract-stale and semantically red;
   `rule-claim-eval` on `5e65...` is contract-stale but otherwise green; shared

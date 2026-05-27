@@ -15,7 +15,7 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Lolo Source-Record Identity Reconciliation Blocker Opened Locally
+## Lolo Source-Record Identity Reconciliation Milestone 0 Reduced Locally
 
 Latest implementation update on 2026-05-27 UTC:
 
@@ -24,35 +24,44 @@ Latest implementation update on 2026-05-27 UTC:
 - predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - packet outcome:
-  `opened locally`; current-workbook source-set rebaseline Milestone 1 reduced
-  by exact stop because the remaining blocker is source-record identity, not a
-  missing replay command
+  `reduced locally`; current-workbook source-set rebaseline Milestone 1 reduced
+  by exact stop because the remaining blocker is source-record identity, and
+  source-record identity reconciliation Milestone 0 now proves complete
+  current-catalog coverage with remaining ambiguity
 - replay guard truth:
   a direct current-workbook `source-set-f70ea11e04ae3d53` applicability replay
   override against `region1-example-lolo-tylers-kitchen-66344` fails closed with
   `ReplayContextMismatchError` while the tracked replay context still declares
   `source-set-5e65d845ce77e1a0`
 - identity truth:
-  the Lolo v1 eval contract expects 60 source-record IDs; 8 are direct hits in
-  the `f70...` catalog surface, 51 absent expected IDs are covered by
+  the current-workbook candidate manifest remains
+  `source-set-f70ea11e04ae3d53` with workbook SHA
+  `1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97` and
+  `708` catalog source-record IDs. The Lolo v1 eval contract expects `60`
+  source-record IDs; `8` are direct hits in the `f70...` catalog surface, `51`
+  absent expected IDs are covered by
   `config/compliance_source_record_reconciliation_v1.json`, and
   `R1PLAN-lolo-nf-02` is covered separately by
-  `config/r1_forest_plan_identity_reconciliation_v1.json` as `FPS-298`. Five
+  `config/r1_forest_plan_identity_reconciliation_v1.json` as `FPS-298`.
+  `missing_after_reconciliation=[]` and
+  `mapped_targets_absent_from_current_catalog={}`, but five
   compliance-covered IDs remain multi-target mappings that need a replay-facing
-  identity rule
+  identity rule: `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and
+  `R1EA-150`
 - boundary truth:
   extraction-manifest hash matching is supporting evidence only. It is not the
   replay owner because historical-to-current hash comparison still has
   unmatched historical rows and one-to-many fanout
 - next routing:
-  continue at Milestone 0 of the routed packet to record the full direct,
-  compliance-reconciled, forest-plan-reconciled, missing, ambiguous, and
-  absent-target mapping inventory before any tracked replay/eval config moves
-  from `5e65...` to `f70...`
+  continue at Milestone 1 of the routed packet to implement or choose a
+  governed replay-facing identity contract that fails closed on unresolved
+  ambiguity and can resolve direct, compliance-reconciled, and
+  forest-plan-reconciled IDs before any tracked replay/eval config moves from
+  `5e65...` to `f70...`
 - verification:
-  replay-context override guard, source-record identity inventory, reconciliation
-  owner readback, strict plan lint, focused reconciliation tests, review
-  `v1-ea-eval`, review `phase-eval`, closeout doc parity sweep, and
+  source-record identity inventory, replay-context override guard,
+  reconciliation owner readback, strict plan lint, focused reconciliation tests,
+  review `v1-ea-eval`, review `phase-eval`, closeout doc parity sweep, and
   `git diff --check`; no ignored `source_library/` JSON was patched
 
 ## Lolo Current-Workbook Source-Set Rebaseline Milestone 0 Reduced Locally
@@ -156,7 +165,7 @@ Latest implementation update on 2026-05-26:
   That child has since stopped to the current-workbook source-set rebaseline
   packet, whose Milestones 0-1 are reduced locally; the live route is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 0 identity coverage inventory
+  Milestone 1 unified source-record identity contract work
 - verification:
   governed applicability and forest-plan component refresh commands,
   adjudication eval/apply, review `phase-eval`, source-register phase readback,
@@ -272,7 +281,7 @@ Latest implementation update on 2026-05-26:
   any reruns. That packet has since reduced through Milestone 1 and routed to
   source-register/current-workbook rebaseline; the live route is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 0 identity coverage inventory. Treat
+  Milestone 1 unified source-record identity contract work. Treat
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
   as the exact predecessor that resolved the tracked source-set contract
   split, keep
