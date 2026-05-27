@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 import hashlib
 import json
@@ -101,6 +102,13 @@ def aliased_source_record_ids(
 
 
 @dataclass(frozen=True)
+class SourceRecordIdentityGateResult:
+    catalog_dir: Path
+    eval_file: Path | None
+    summary: dict[str, Any]
+
+
+@dataclass(frozen=True)
 class WorkbookSource:
     source_record_id: str
     sheet: str
@@ -119,6 +127,205 @@ def planned_artifact_path(output_root: Path, source: WorkbookSource) -> Path:
     title = slugify(source.title, max_length=72)
     short_id = slugify(source.source_id or source.source_record_id, max_length=32)
     return output_root / "artifacts" / "raw" / host / f"{short_id}_{title}.raw"
+
+
+def expected_source_record_ids_from_v1_eval_contract(contract: dict[str, Any]) -> list[str]:
+    source_record_ids: list[str] = []
+    baseline_policy = contract.get("baseline_policy", {})
+    if isinstance(baseline_policy, dict):
+        source_record_ids.extend(
+            str(value)
+            for value in baseline_policy.get("expected_source_record_ids", []) or []
+        )
+    for key in ("rule_review_expectations", "conditional_source_expectations"):
+        expectations = contract.get(key, [])
+        if not isinstance(expectations, list):
+            continue
+        for expectation in expectations:
+            if not isinstance(expectation, dict):
+                continue
+            source_record_ids.extend(
+                str(value)
+                for value in expectation.get("expected_source_record_ids", []) or []
+            )
+    forest_plan = contract.get("forest_plan", {})
+    if isinstance(forest_plan, dict):
+        source_record_ids.extend(
+            str(value)
+            for value in forest_plan.get("required_source_record_ids", []) or []
+        )
+    return _deduped_strings(source_record_ids)
+
+
+def evaluate_source_record_identity_gate(
+    *,
+    expected_source_record_ids: list[str] | tuple[str, ...],
+    catalog_source_record_ids: set[str],
+    catalog_dir: Path | None = None,
+    eval_file: Path | None = None,
+    source_set_id: str | None = None,
+    source_record_reconciliation_path: Path = DEFAULT_SOURCE_RECORD_RECONCILIATION_PATH,
+    forest_plan_identity_reconciliation_path: Path = DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_PATH,
+) -> SourceRecordIdentityGateResult:
+    expected_ids = _normalized_source_record_ids(source_record_ids=expected_source_record_ids)
+    catalog_ids = {str(value).strip() for value in catalog_source_record_ids if str(value).strip()}
+    source_record_reconciliation = _load_source_record_reconciliation(
+        source_record_reconciliation_path
+    )
+    forest_plan_reconciliation = _load_forest_plan_identity_reconciliation(
+        forest_plan_identity_reconciliation_path
+    )
+    compliance_map = source_record_reconciliation["current_by_legacy"]
+    forest_plan_map = forest_plan_reconciliation["canonical_by_legacy"]
+
+    direct_hits: list[str] = []
+    compliance_hits: list[str] = []
+    forest_plan_hits: list[str] = []
+    unmapped_source_record_ids: list[str] = []
+    mapped_targets_absent: dict[str, list[str]] = {}
+    ambiguous_mappings: dict[str, list[str]] = {}
+    covered_source_record_ids: list[str] = []
+    resolved_source_record_ids_by_expected_id: dict[str, list[str]] = {}
+
+    for expected_id in expected_ids:
+        if expected_id in catalog_ids:
+            direct_hits.append(expected_id)
+            covered_source_record_ids.append(expected_id)
+            resolved_source_record_ids_by_expected_id[expected_id] = [expected_id]
+            continue
+
+        compliance_targets = list(compliance_map.get(expected_id, ()))
+        forest_plan_target = forest_plan_map.get(expected_id)
+        forest_plan_targets = [forest_plan_target] if forest_plan_target else []
+        targets = _deduped_strings([*compliance_targets, *forest_plan_targets])
+        present_targets = [target for target in targets if target in catalog_ids]
+        absent_targets = [target for target in targets if target not in catalog_ids]
+
+        if compliance_targets and any(target in catalog_ids for target in compliance_targets):
+            compliance_hits.append(expected_id)
+        if forest_plan_targets and any(target in catalog_ids for target in forest_plan_targets):
+            forest_plan_hits.append(expected_id)
+        if present_targets:
+            covered_source_record_ids.append(expected_id)
+        if not targets:
+            unmapped_source_record_ids.append(expected_id)
+        if absent_targets:
+            mapped_targets_absent[expected_id] = sorted(absent_targets)
+        if len(present_targets) > 1:
+            ambiguous_mappings[expected_id] = sorted(present_targets)
+        if len(present_targets) == 1 and not absent_targets:
+            resolved_source_record_ids_by_expected_id[expected_id] = present_targets
+
+    checks = [
+        {
+            "name": "expected_source_record_ids_present",
+            "passed": bool(expected_ids),
+            "details": {"expected_source_record_count": len(expected_ids)},
+        },
+        {
+            "name": "all_expected_source_record_ids_mapped",
+            "passed": not unmapped_source_record_ids,
+            "details": {"unmapped_source_record_ids": unmapped_source_record_ids},
+        },
+        {
+            "name": "mapped_source_record_ids_present_in_target_catalog",
+            "passed": not mapped_targets_absent,
+            "details": {"mapped_targets_absent_from_catalog": mapped_targets_absent},
+        },
+        {
+            "name": "source_record_identity_mappings_unambiguous",
+            "passed": not ambiguous_mappings,
+            "details": {"ambiguous_mappings": ambiguous_mappings},
+        },
+    ]
+    passed = all(check["passed"] for check in checks)
+    summary: dict[str, Any] = {
+        "passed": passed,
+        "source_record_identity_status": "passed" if passed else "failed",
+        "source_set_id": source_set_id,
+        "catalog_dir": str(catalog_dir) if catalog_dir is not None else None,
+        "eval_file": str(eval_file) if eval_file is not None else None,
+        "catalog_source_record_count": len(catalog_ids),
+        "expected_source_record_count": len(expected_ids),
+        "direct_current_catalog_hit_count": len(direct_hits),
+        "compliance_reconciled_source_record_count": len(compliance_hits),
+        "forest_plan_reconciled_source_record_count": len(forest_plan_hits),
+        "catalog_covered_source_record_count": len(_deduped_strings(covered_source_record_ids)),
+        "identity_resolved_source_record_count": len(resolved_source_record_ids_by_expected_id),
+        "unmapped_source_record_ids": unmapped_source_record_ids,
+        "mapped_targets_absent_from_catalog": mapped_targets_absent,
+        "ambiguous_mappings": ambiguous_mappings,
+        "resolved_source_record_ids_by_expected_id": resolved_source_record_ids_by_expected_id,
+        "checks": checks,
+    }
+    return SourceRecordIdentityGateResult(
+        catalog_dir=catalog_dir or Path(),
+        eval_file=eval_file,
+        summary=summary,
+    )
+
+
+def run_source_record_identity_gate(
+    *,
+    output_dir: Path = Path("source_library"),
+    source_set_id: str | None = None,
+    catalog_dir: Path | None = None,
+    eval_file: Path | None = None,
+    source_record_ids: list[str] | tuple[str, ...] | None = None,
+    source_record_reconciliation_path: Path = DEFAULT_SOURCE_RECORD_RECONCILIATION_PATH,
+    forest_plan_identity_reconciliation_path: Path = DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_PATH,
+) -> SourceRecordIdentityGateResult:
+    from .catalog_surface import catalog_source_record_ids
+    from .catalog_surface import catalog_source_set_id
+    from .catalog_surface import resolve_catalog_dir_for_source_set
+
+    resolved_catalog_dir = resolve_catalog_dir_for_source_set(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        catalog_dir=catalog_dir,
+    )
+    catalog_ids = catalog_source_record_ids(resolved_catalog_dir)
+    expected_ids = _normalized_source_record_ids(source_record_ids=source_record_ids)
+    if eval_file is not None:
+        contract = json.loads(Path(eval_file).read_text(encoding="utf-8"))
+        expected_ids = _deduped_strings(
+            [*expected_ids, *expected_source_record_ids_from_v1_eval_contract(contract)]
+        )
+    resolved_source_set_id = source_set_id or catalog_source_set_id(resolved_catalog_dir)
+    if catalog_ids is None:
+        checks = [
+            {
+                "name": "target_catalog_source_record_ids_available",
+                "passed": False,
+                "details": {
+                    "catalog_dir": str(resolved_catalog_dir),
+                    "required_file": str(resolved_catalog_dir / "review_sources.sqlite"),
+                },
+            }
+        ]
+        return SourceRecordIdentityGateResult(
+            catalog_dir=resolved_catalog_dir,
+            eval_file=eval_file,
+            summary={
+                "passed": False,
+                "source_record_identity_status": "failed",
+                "source_set_id": resolved_source_set_id,
+                "catalog_dir": str(resolved_catalog_dir),
+                "eval_file": str(eval_file) if eval_file is not None else None,
+                "catalog_source_record_count": 0,
+                "expected_source_record_count": len(expected_ids),
+                "checks": checks,
+            },
+        )
+    return evaluate_source_record_identity_gate(
+        expected_source_record_ids=expected_ids,
+        catalog_source_record_ids=catalog_ids,
+        catalog_dir=resolved_catalog_dir,
+        eval_file=eval_file,
+        source_set_id=resolved_source_set_id,
+        source_record_reconciliation_path=source_record_reconciliation_path,
+        forest_plan_identity_reconciliation_path=forest_plan_identity_reconciliation_path,
+    )
 
 
 def _normalized_source_record_ids(

@@ -171,6 +171,15 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --review-id <review-id>
 ```
 
+Validate replay-facing source-record identity against a target catalog:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources source-record-identity-gate \
+  --output-dir source_library \
+  --catalog-dir <catalog-dir> \
+  --eval-file <v1-ea-eval-contract.json>
+```
+
 Use the Docling-specific environment only for extraction and review paths that
 require it:
 

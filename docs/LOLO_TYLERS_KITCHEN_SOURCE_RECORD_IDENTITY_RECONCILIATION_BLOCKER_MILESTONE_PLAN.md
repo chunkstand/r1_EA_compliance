@@ -2,15 +2,16 @@
 
 Date: 2026-05-27
 
-Status: Reduced locally through Milestone 0. This plan was opened from
+Status: Reduced locally through Milestone 1 by exact ambiguity stop. This plan was opened from
 `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 Milestone 1 after the governed replay slice reached an exact local-replay stop. The tracked
 Lolo/Tyler's Kitchen replay and eval contract still points at historical source set
 `source-set-5e65d845ce77e1a0`; the current-workbook candidate source set
 `source-set-f70ea11e04ae3d53` cannot be promoted into that replay lane until source-record identity
 is reconciled through a governed owner surface. Milestone 0 proved complete current-catalog
-coverage exists, but five multi-target mappings still require a replay-facing identity rule before
-tracked replay/eval config can move.
+coverage exists. Milestone 1 implemented the replay-facing identity gate and proved it fails closed
+on the five remaining multi-target mappings; tracked replay/eval config still must not move until
+those mappings have an explicit governed resolution.
 
 ## Why This Exists
 
@@ -40,8 +41,23 @@ applicability adjudication, forest-plan component eval, or compliance-review art
 
 ## Latest Local Implementation
 
-- Milestone 0 is reduced locally. The identity coverage inventory proves all 60 Lolo v1 eval
-  expected source-record IDs resolve to at least one current-workbook `f70...` catalog record:
+- Milestone 1 is reduced locally by exact stop. The governed owner is now the generic
+  source-record identity gate in `src/usfs_r1_ea_sources/records.py`, exposed through
+  `source-record-identity-gate`.
+- The gate reads expected IDs from a v1 eval contract plus optional explicit IDs, resolves against a
+  selected catalog, and keeps compliance source-record reconciliation and forest-plan identity
+  reconciliation explicit through their tracked registry files.
+- The Lolo command against `source-set-f70ea11e04ae3d53` stops with
+  `passed=false`, `expected_source_record_count=60`, `catalog_covered_source_record_count=60`,
+  `identity_resolved_source_record_count=55`, no unmapped IDs, no mapped targets absent from the
+  catalog, and exact ambiguous mappings for `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and
+  `R1EA-150`.
+- No replay context, v1 eval contract, adjudication config, or ignored generated review artifact was
+  changed. The next live slice must resolve those five ambiguous mappings through the governed
+  identity contract before Milestone 2 can update tracked replay config.
+- Milestone 0 is preserved as predecessor evidence. The identity coverage inventory proved all 60
+  Lolo v1 eval expected source-record IDs resolve to at least one current-workbook `f70...`
+  catalog record:
   8 direct current-catalog hits, 51 compliance-reconciled hits, and 1 forest-plan-reconciled hit.
 - No missing IDs remain after reconciliation, and no mapped target points outside the current
   catalog.
@@ -49,9 +65,8 @@ applicability adjudication, forest-plan component eval, or compliance-review art
   multi-target current catalog mappings:
   `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and `R1EA-150`.
 - No tracked replay context, eval contract, adjudication config, or ignored generated review
-  artifact was changed. The next live slice is Milestone 1, which must provide a governed
-  replay-facing identity contract that fails on ambiguous mappings until an explicit rule resolves
-  them.
+  artifact was changed. The next live slice is governed ambiguity resolution so the implemented
+  replay-facing identity gate can return `passed=true` before Milestone 2 replay config work.
 
 ## Goal
 
@@ -222,7 +237,8 @@ next owner and this slice is committed.
 
 ### Milestone 1 - Unified Source-Record Identity Contract
 
-Status: Active next slice.
+Status: Reduced locally by exact ambiguity stop. Complete-after-commit after this implementation,
+test, docs, and handoff slice is committed.
 
 Implementation:
 
@@ -238,27 +254,49 @@ Implementation:
 
 Acceptance:
 
-- All 60 Lolo v1 eval expected source-record IDs resolve to records present in the
-  `source-set-f70ea11e04ae3d53` catalog surface, or the command stops with an exact missing/ambiguous
-  ID report.
-- Existing compliance and forest-plan reconciliation tests still pass.
-- No replay context, eval contract, or adjudication config is changed until this contract is green.
+- `source-record-identity-gate` is the replay-facing owner for source-record identity. It can resolve
+  direct catalog IDs, compliance source-record aliases, and forest-plan source aliases against a
+  target catalog.
+- The command fails closed on unmapped IDs, mapped targets absent from the target catalog, and
+  ambiguous mappings.
+- The Lolo run against `source-set-f70ea11e04ae3d53` stops with an exact ambiguity report:
+  `expected_source_record_count=60`, `catalog_covered_source_record_count=60`,
+  `identity_resolved_source_record_count=55`, `unmapped_source_record_ids=[]`,
+  `mapped_targets_absent_from_catalog={}`, and ambiguous mappings for `R1EA-018`, `R1EA-028`,
+  `R1EA-124`, `R1EA-137`, and `R1EA-150`.
+- Existing compliance and forest-plan reconciliation tests still pass, and no replay context, eval
+  contract, adjudication config, or ignored generated review artifact is changed while the gate is
+  red.
 
 Verification:
 
 ```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_source_record_identity.py tests/test_cli_eval.py
+PYTHONPATH=src python -m usfs_r1_ea_sources source-record-identity-gate \
+  --output-dir source_library \
+  --source-set-id source-set-f70ea11e04ae3d53 \
+  --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate \
+  --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json
 PYTHONPATH=src uv run --extra dev pytest tests/test_rule_claim_binding.py tests/test_forest_plan_identity_reconciliation.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 git diff --check
 ```
 
-Closeout state: `complete-after-commit` after implementation, tests, docs, and handoff prove the
-identity contract is the replay-facing owner.
+Milestone 1 decision:
+
+- The identity contract is now implemented and test-covered.
+- The Lolo candidate source set is still not replay-ready because five historical source-record IDs
+  map to multiple present current catalog records.
+- Milestone 2 remains blocked until those mappings have an explicit governed resolution and this
+  gate returns `passed=true`.
+
+Closeout state: `complete-after-commit` after this slice is committed.
 
 ### Milestone 2 - Governed Lolo Replay Config Update Or Exact Stop
 
-Status: Pending Milestone 1.
+Status: Blocked pending a green source-record identity gate. The next implementation slice must
+resolve the five Milestone 1 ambiguous mappings before any tracked replay/eval config moves.
 
 Implementation:
 

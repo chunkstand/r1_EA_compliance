@@ -9,6 +9,9 @@ reached an exact local-replay stop: tracked replay config rejects an ad hoc
 `f70...` override, and the remaining blocker is the split source-record identity
 contract now routed to
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
+That child packet has since implemented the generic identity gate and reduced
+to the exact five ambiguous multi-target mappings that still block replay
+config movement.
 
 Owner context: standalone child packet opened from
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`.
@@ -33,6 +36,10 @@ source-set compatible with the `5e65...` derived artifacts.
   current-workbook replay override is blocked by the tracked replay context, and
   the expected source-record IDs are split across compliance reconciliation and
   forest-plan identity reconciliation owner surfaces.
+- The child source-record identity packet is now reduced through Milestone 1:
+  `source-record-identity-gate` proves all 60 Lolo expected IDs have present
+  `f70...` catalog coverage, but it returns `passed=false` on five ambiguous
+  current-catalog mappings.
 - Exact readback found:
   - tracked replay context: `source_set_id="source-set-5e65d845ce77e1a0"` and
     `catalog_dir="source_library/catalog"`;
@@ -97,7 +104,7 @@ new current-workbook catalog/currentness surface needed for that review.
   identity. The replay CLI correctly rejects a `source-set-f70ea11e04ae3d53`
   override while tracked replay context still declares
   `source-set-5e65d845ce77e1a0`, and tracked eval/config cannot safely move to
-  `f70...` until one replay-facing identity contract can reconcile the split
+  `f70...` until one replay-facing identity contract can resolve the split
   `R1EA-*`, `R1PLAN-*`, `FPS-*`, and current-workbook IDs.
 - The `5e65...` authority-currentness report is historically green but not a
   current source-register owner: it was generated on `2026-05-11T00:40:55Z`
@@ -325,10 +332,11 @@ Milestone 1 decision:
   replay config changes.
 - The live next packet is
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 1. Milestone 0 proved full current-catalog coverage with five
-  ambiguous multi-target mappings; Milestone 1 must provide the replay-facing
-  identity contract before any runtime config or replay artifact moves to the
-  current-workbook source set.
+  before any runtime config or replay artifact moves to the current-workbook
+  source set. That child packet has now completed Milestone 1 by implementing
+  the replay-facing identity gate; the gate still fails closed on the five
+  ambiguous multi-target mappings, so replay config movement remains blocked
+  until the identity gate is green.
 
 Verification:
 
@@ -461,12 +469,13 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- The current next slice is Milestone 1 in
+- The current next slice remains in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
 - The owner is not a manifest swap and not an ad hoc CLI override. It requires a
   governed replay-facing identity contract that can reconcile expected Lolo
-  source-record IDs to current-workbook catalog IDs and fail closed on
-  unresolved multi-target ambiguity before tracked replay/eval config moves.
+  source-record IDs to current-workbook catalog IDs. That gate now exists and
+  fails closed on unresolved multi-target ambiguity, so the next work is
+  governed ambiguity resolution before tracked replay/eval config moves.
 - Direct-eval failures remain real and should return to the parent aligned-runtime
   packet only after source-register currentness and source-record identity are
   coherent.

@@ -241,9 +241,11 @@ family.
   `f70...`; five compliance-covered source-record IDs still have multi-target
   current catalog mappings. The live child owner is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`;
-  its Milestone 0 inventory now proves all 60 expected IDs have direct or
-  reconciled current-catalog coverage and the next truthful slice is Milestone
-  1 unified source-record identity contract work.
+  its Milestone 1 identity gate is implemented and proves all 60 expected IDs
+  have present current-catalog coverage, but it returns `passed=false` on the
+  exact ambiguous mappings `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and
+  `R1EA-150`. The next truthful slice is governed ambiguity resolution before
+  any tracked replay config can move to `f70...`.
   No truthful ready closure path is currently proven.
   Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:
@@ -272,10 +274,11 @@ family.
   `evaluation_coverage`, source-register currentness blocked by the missing
   current `5e65...` manifest, and source-record identity blocked by the split
   compliance/forest-plan reconciliation owners plus five ambiguous multi-target
-  mappings. Live work now routes through source-record identity reconciliation
-  Milestone 1 before any current-workbook replay or direct-eval rebaseline. Do not
-  route back into another South replay pass, reopen the resolved replay-repair
-  packet, or treat the broader Lolo example packet or the replacement-
+  mappings. The source-record identity gate now exists and still fails closed
+  on those mappings, so live work stays in governed ambiguity resolution before
+  any current-workbook replay or direct-eval rebaseline. Do not route back into
+  another South replay pass, reopen the resolved replay-repair packet, or treat
+  the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.
 
 Historical South Plateau expansion build context from the earlier green

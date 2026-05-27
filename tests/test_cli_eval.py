@@ -27,6 +27,43 @@ def test_phase_eval_parser_accepts_archived_catalog_dir() -> None:
     )
 
 
+def test_source_record_identity_gate_parser_accepts_identity_inputs() -> None:
+    args = build_parser().parse_args(
+        [
+            "source-record-identity-gate",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-f70ea11e04ae3d53",
+            "--catalog-dir",
+            "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate",
+            "--eval-file",
+            "config/v1_lolo_tylers_kitchen_real_ea_eval.json",
+            "--source-record-id",
+            "R1EA-001",
+            "--source-record-reconciliation",
+            "config/custom_source_record_reconciliation.json",
+            "--forest-plan-identity-reconciliation",
+            "config/custom_forest_plan_identity_reconciliation.json",
+        ]
+    )
+
+    assert args.command == "source-record-identity-gate"
+    assert args.output_dir == Path("source_library")
+    assert args.source_set_id == "source-set-f70ea11e04ae3d53"
+    assert args.catalog_dir == Path(
+        "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate"
+    )
+    assert args.eval_file == Path("config/v1_lolo_tylers_kitchen_real_ea_eval.json")
+    assert args.source_record_ids == ["R1EA-001"]
+    assert args.source_record_reconciliation == Path(
+        "config/custom_source_record_reconciliation.json"
+    )
+    assert args.forest_plan_identity_reconciliation == Path(
+        "config/custom_forest_plan_identity_reconciliation.json"
+    )
+
+
 def test_upstream_eval_parser_accepts_manifest_and_results_dir() -> None:
     args = build_parser().parse_args(
         [
@@ -255,6 +292,58 @@ def test_phase_eval_handler_propagates_review_id_only(monkeypatch) -> None:
     assert captured["review_id"] == "tracked-replay-review"
     assert captured["source_set_id"] is None
     assert captured["catalog_dir"] is None
+
+
+def test_source_record_identity_gate_handler_propagates_identity_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_source_record_identity_gate(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": False})
+
+    monkeypatch.setattr(
+        cli_eval,
+        "run_source_record_identity_gate",
+        fake_run_source_record_identity_gate,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "source-record-identity-gate",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-f70ea11e04ae3d53",
+            "--catalog-dir",
+            "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate",
+            "--eval-file",
+            "config/v1_lolo_tylers_kitchen_real_ea_eval.json",
+            "--source-record-id",
+            "R1EA-001",
+            "--source-record-reconciliation",
+            "config/custom_source_record_reconciliation.json",
+            "--forest-plan-identity-reconciliation",
+            "config/custom_forest_plan_identity_reconciliation.json",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 1
+    assert captured["output_dir"] == Path("source_library")
+    assert captured["source_set_id"] == "source-set-f70ea11e04ae3d53"
+    assert captured["catalog_dir"] == Path(
+        "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate"
+    )
+    assert captured["eval_file"] == Path("config/v1_lolo_tylers_kitchen_real_ea_eval.json")
+    assert captured["source_record_ids"] == ["R1EA-001"]
+    assert captured["source_record_reconciliation_path"] == Path(
+        "config/custom_source_record_reconciliation.json"
+    )
+    assert captured["forest_plan_identity_reconciliation_path"] == Path(
+        "config/custom_forest_plan_identity_reconciliation.json"
+    )
 
 
 def test_promotion_suite_handler_propagates_manifest_and_strict_mode(monkeypatch) -> None:

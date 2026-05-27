@@ -68,6 +68,12 @@ DEFAULT_GOLD_COVERAGE_MANIFEST_PATH = _module_attr(
 DEFAULT_PROMOTION_SUITE_PATH = _module_attr(
     "promotion_suite", "DEFAULT_PROMOTION_SUITE_PATH"
 )
+DEFAULT_SOURCE_RECORD_RECONCILIATION_PATH = _module_attr(
+    "records", "DEFAULT_SOURCE_RECORD_RECONCILIATION_PATH"
+)
+DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_PATH = _module_attr(
+    "records", "DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_PATH"
+)
 
 
 def run_applicability_eval(**kwargs):
@@ -116,6 +122,10 @@ def run_v1_ea_review_eval(**kwargs):
     return _module_attr("v1_ea_eval", "run_v1_ea_review_eval")(**kwargs)
 
 
+def run_source_record_identity_gate(**kwargs):
+    return _module_attr("records", "run_source_record_identity_gate")(**kwargs)
+
+
 def run_real_package_review_coverage_eval(**kwargs):
     return _module_attr(
         "real_package_review_coverage_eval",
@@ -148,6 +158,7 @@ EVAL_COMMANDS = {
     "forest-plan-profile-eval",
     "upstream-eval",
     "phase-eval",
+    "source-record-identity-gate",
     "v1-ea-eval",
     "real-package-review-coverage-eval",
     "forest-specific-example-package-eval",
@@ -307,6 +318,27 @@ COMMAND_SPECS = (
         ),
     ),
     EvalCommandSpec(
+        name="source-record-identity-gate",
+        help="Validate expected source-record IDs against a target catalog identity surface.",
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--source-set-id"),
+            _arg("--catalog-dir", type=Path),
+            _arg("--eval-file", type=Path),
+            _arg("--source-record-id", action="append", dest="source_record_ids"),
+            _arg(
+                "--source-record-reconciliation",
+                default=DEFAULT_SOURCE_RECORD_RECONCILIATION_PATH,
+                type=Path,
+            ),
+            _arg(
+                "--forest-plan-identity-reconciliation",
+                default=DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_PATH,
+                type=Path,
+            ),
+        ),
+    ),
+    EvalCommandSpec(
         name="real-package-review-coverage-eval",
         help="Run the aggregate real-package review coverage gate across tracked review slots.",
         arguments=(
@@ -456,6 +488,20 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 eval_file=args.eval_file,
                 manifest_path=args.manifest,
                 output_path=args.output_path,
+            ),
+            success_key="passed",
+        ),
+        "source-record-identity-gate": EvalCommandHandler(
+            run=lambda args: run_source_record_identity_gate(
+                output_dir=args.output_dir,
+                source_set_id=args.source_set_id,
+                catalog_dir=args.catalog_dir,
+                eval_file=args.eval_file,
+                source_record_ids=args.source_record_ids,
+                source_record_reconciliation_path=args.source_record_reconciliation,
+                forest_plan_identity_reconciliation_path=(
+                    args.forest_plan_identity_reconciliation
+                ),
             ),
             success_key="passed",
         ),

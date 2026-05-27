@@ -15,6 +15,52 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Lolo Source-Record Identity Reconciliation Milestone 1 Reduced Locally
+
+Latest implementation update on 2026-05-27 UTC:
+
+- routed packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; the replay-facing identity owner now exists as a generic
+  `source-record-identity-gate`, but the Lolo current-workbook candidate gate
+  still fails closed on explicit multi-target ambiguity
+- implementation truth:
+  `src/usfs_r1_ea_sources/records.py` now owns the reusable source-record
+  identity gate, with CLI exposure through `source-record-identity-gate`.
+  The gate reads v1 eval expected source-record IDs plus optional explicit IDs,
+  resolves them against a selected catalog, and keeps
+  `config/compliance_source_record_reconciliation_v1.json` and
+  `config/r1_forest_plan_identity_reconciliation_v1.json` as explicit owner
+  inputs
+- Lolo gate truth:
+  running the gate against
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
+  for `source-set-f70ea11e04ae3d53` and
+  `config/v1_lolo_tylers_kitchen_real_ea_eval.json` returns `passed=false`,
+  `expected_source_record_count=60`, `catalog_source_record_count=708`,
+  `catalog_covered_source_record_count=60`,
+  `identity_resolved_source_record_count=55`,
+  `unmapped_source_record_ids=[]`, and
+  `mapped_targets_absent_from_catalog={}`
+- remaining blocker truth:
+  the failed check is exactly
+  `source_record_identity_mappings_unambiguous`, with ambiguous mappings for
+  `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and `R1EA-150`
+- config boundary:
+  no replay context, v1 eval contract, applicability adjudication config,
+  forest-plan component eval config, compliance review artifact, or ignored
+  `source_library/` JSON was patched
+- next routing:
+  resolve the five multi-target mappings through the governed identity contract
+  before Milestone 2 can update tracked Lolo replay/eval config from `5e65...`
+  to `f70...`
+- verification:
+  focused source-record identity and CLI tests, the actual Lolo
+  `source-record-identity-gate` stop, existing rule-claim and forest-plan
+  reconciliation tests, architecture contract, ruff, strict plan lint, closeout
+  doc parity, and `git diff --check`
+
 ## Lolo Source-Record Identity Reconciliation Milestone 0 Reduced Locally
 
 Latest implementation update on 2026-05-27 UTC:
@@ -26,7 +72,7 @@ Latest implementation update on 2026-05-27 UTC:
 - packet outcome:
   `reduced locally`; current-workbook source-set rebaseline Milestone 1 reduced
   by exact stop because the remaining blocker is source-record identity, and
-  source-record identity reconciliation Milestone 0 now proves complete
+  source-record identity reconciliation Milestone 0 proved complete
   current-catalog coverage with remaining ambiguity
 - replay guard truth:
   a direct current-workbook `source-set-f70ea11e04ae3d53` applicability replay
@@ -165,7 +211,8 @@ Latest implementation update on 2026-05-26:
   That child has since stopped to the current-workbook source-set rebaseline
   packet, whose Milestones 0-1 are reduced locally; the live route is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 1 unified source-record identity contract work
+  governed ambiguity resolution after Milestone 1 implemented the identity gate
+  and proved five multi-target mappings still fail closed
 - verification:
   governed applicability and forest-plan component refresh commands,
   adjudication eval/apply, review `phase-eval`, source-register phase readback,
@@ -281,7 +328,8 @@ Latest implementation update on 2026-05-26:
   any reruns. That packet has since reduced through Milestone 1 and routed to
   source-register/current-workbook rebaseline; the live route is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 1 unified source-record identity contract work. Treat
+  governed ambiguity resolution after Milestone 1 implemented the identity gate
+  and proved five multi-target mappings still fail closed. Treat
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
   as the exact predecessor that resolved the tracked source-set contract
   split, keep

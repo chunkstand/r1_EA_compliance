@@ -29,12 +29,16 @@ history below.
   source-register currentness Milestones 0-2 are resolved locally by broader
   stop, current-workbook source-set rebaseline Milestone 0 is reduced locally,
   and current-workbook source-set rebaseline Milestone 1 is reduced locally by
-  exact stop. Source-record identity reconciliation Milestone 0 is now reduced
-  locally: all 60 expected source-record IDs resolve to at least one current
-  `f70...` catalog record, but five multi-target mappings remain. Continue at
-  Milestone 1 of the source-record identity reconciliation packet to implement
-  or choose the governed replay-facing identity contract before any tracked
-  replay context or eval config moves from `5e65...` to `f70...`.
+  exact stop. Source-record identity reconciliation Milestone 1 is now reduced
+  locally by exact ambiguity stop: `source-record-identity-gate` is implemented
+  as the governed replay-facing identity owner and proves all 60 expected Lolo
+  IDs have current `f70...` catalog coverage, but the gate returns
+  `passed=false` because `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and
+  `R1EA-150` still map to multiple present current records. Continue in the
+  source-record identity reconciliation packet by resolving those five
+  multi-target mappings before any tracked replay context or eval config moves
+  from `5e65...` to `f70...`; Milestone 2 is blocked until the identity gate is
+  green.
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 - older predecessor blocker packet:
@@ -210,8 +214,8 @@ history below.
   packet, and do not treat the broader Lolo example packet as the live owner
   for the remaining blocker
 - session reminder:
-  the source-record identity reconciliation Milestone 0 closeout section
-  immediately below is the current checkpoint; the following source-record
+  the source-record identity reconciliation Milestone 1 closeout section at the
+  top is the current checkpoint; the following source-record
   identity packet-opening, current-workbook source-set rebaseline Milestone 0,
   packet-opening,
   source-register currentness,
@@ -375,7 +379,7 @@ packet.
   at Milestone 0. That packet is now reduced locally through Milestone 1; the
   live route is
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 1 unified source-record identity contract work.
+  governed ambiguity resolution after Milestone 1 implemented the identity gate.
   Do not return to aligned-runtime direct-eval rebaseline until the
   current-workbook source-set owner, source-record identity contract, and
   `source_register_contract` are no longer active blockers
@@ -529,7 +533,7 @@ opening one exact aligned-runtime rebaseline child packet.
   current-workbook source-set rebaseline packet, which has now stopped to
   source-record identity reconciliation. The live route is
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 1 unified source-record identity contract work. Treat
+  governed ambiguity resolution after Milestone 1 implemented the identity gate. Treat
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
   as the exact predecessor that resolved the tracked contract split, and keep
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`

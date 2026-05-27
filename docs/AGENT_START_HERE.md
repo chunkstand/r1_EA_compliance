@@ -1,6 +1,6 @@
 # Agent Start Here
 
-Date: 2026-05-24
+Date: 2026-05-27
 
 Use this file as the first stop for agent-driven document work in this repo.
 It tells you which existing lane to use and when to refuse the request.
@@ -41,10 +41,14 @@ The planner:
 - The live Lolo follow-on is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
 - For Lolo National Forest example-package review work, inspect that blocker
-  first for Milestone 1 unified source-record identity contract work. Its
-  Milestone 0 inventory proved all 60 expected Lolo source-record IDs resolve
-  to at least one current `f70...` catalog record, with five ambiguous
-  multi-target mappings still blocking replay-ready identity. Its predecessor,
+  first. Its Milestone 1 source-record identity gate is now implemented and
+  fails closed exactly on five ambiguous multi-target mappings:
+  `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and `R1EA-150`. The next
+  truthful slice is governed ambiguity resolution inside that packet, not a
+  replay config move. Its Milestone 0 inventory proved all 60 expected Lolo
+  source-record IDs resolve to at least one current `f70...` catalog record,
+  with no missing IDs and no mapped target absent from the catalog. Its
+  predecessor,
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   reduced locally through Milestone 1: the current-workbook `f70...` catalog
   gate is not a drop-in owner for historical `5e65...` artifacts, direct replay

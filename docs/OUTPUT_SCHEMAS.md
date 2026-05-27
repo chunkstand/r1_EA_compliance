@@ -3522,6 +3522,45 @@ appear as emitted findings.
   flags, failure reasons, failure taxonomy, compact reproduction paths, and
   pass/fail status
 
+## Source-Record Identity Gate Summary
+
+The `source-record-identity-gate` command validates replay-facing source-record
+identity before tracked review/eval config is moved to a different catalog. It
+does not write a durable artifact by default; the CLI prints a JSON summary to
+stdout and returns nonzero when the gate fails.
+
+Inputs:
+
+- target catalog selected through `--catalog-dir`, or resolved from
+  `--output-dir` and optional `--source-set-id`
+- expected IDs from `--eval-file` using the v1 EA contract's baseline,
+  rule-review, conditional-source, and forest-plan source-record fields
+- optional repeated `--source-record-id` values
+- source-record reconciliation registry, defaulting to
+  `config/compliance_source_record_reconciliation_v1.json`
+- forest-plan identity reconciliation registry, defaulting to
+  `config/r1_forest_plan_identity_reconciliation_v1.json`
+
+The summary records:
+
+- `passed` and `source_record_identity_status`
+- `source_set_id`, `catalog_dir`, `eval_file`, `catalog_source_record_count`,
+  and `expected_source_record_count`
+- direct current-catalog hit count, compliance-reconciled count,
+  forest-plan-reconciled count, catalog-covered count, and exactly resolved
+  count
+- `unmapped_source_record_ids`
+- `mapped_targets_absent_from_catalog`
+- `ambiguous_mappings`
+- `resolved_source_record_ids_by_expected_id`
+- `checks` for expected-ID presence, mapping presence, mapped-target catalog
+  presence, and unambiguous mapping
+
+The gate intentionally fails on unmapped IDs, mapped targets absent from the
+target catalog, or any expected source-record ID that maps to more than one
+present current catalog ID. A failed gate is a blocker for replay config
+promotion, not permission to patch generated review artifacts by hand.
+
 ## V1 Real EA Review Eval Outputs
 
 Tracked review-slot manifest: `config/v1_real_package_review_coverage_v1.json`
