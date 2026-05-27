@@ -15,6 +15,50 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## South Otter Example Package Packet Opened Locally
+
+Latest implementation update on 2026-05-27 UTC:
+
+- active packet:
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- continuing lane owner:
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- packet outcome:
+  `opened locally`; South Otter is now the active next forest-specific example
+  project, but it has not been promoted into the governed registry or coverage
+  manifests
+- selected package truth:
+  the official project page is
+  `https://www.fs.usda.gov/r01/custergallatin/projects/58396`, the linked
+  Pinyon/Box folder is
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158227182465`, and
+  the frozen review ID is `region1-example-custer-gallatin-south-otter-58396`
+- intent truth:
+  the South Otter packet now explicitly locks the example to
+  `custer-gallatin-nf`; future registry promotion must use
+  `example_id="cgnf-south-otter-forest-specific"`,
+  `coverage_slot_id="cgnf-south-otter-forest-specific"`, and
+  `applicable_forest_unit_ids=["custer-gallatin-nf"]`. South Otter may become
+  a supplemental Custer Gallatin example, but it must not count as a new
+  distinct forest or be reused as generic Region 1 example guidance.
+- workbook and queue truth:
+  an active workbook search for `South Otter`, `projects/58396`, and `58396`
+  found no matching row; no queue-ledger row was rerouted in this opening slice
+- registry and coverage truth:
+  `config/forest_specific_example_package_registry_v1.json`,
+  `config/v1_real_package_review_coverage_v1.json`, and
+  `config/forest_plan_component_eval_coverage_v1.json` remain unchanged; South
+  Otter must stay out of those governed manifests until package intake, replay
+  context, `v1-ea-eval`, forest-plan component eval, and review `phase-eval`
+  pass
+- next routing:
+  continue at South Otter Milestone 1 to inventory and download the official
+  package authority under
+  `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`; create
+  tracked replay/eval contracts only after that local package authority exists
+- verification:
+  strict milestone-plan lint for the new packet and `git diff --check`
+
 ## Lolo Tyler's Kitchen Example Package Milestone 3 Resolved Locally
 
 Latest implementation update on 2026-05-27 UTC:

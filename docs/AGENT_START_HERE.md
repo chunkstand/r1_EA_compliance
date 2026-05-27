@@ -42,6 +42,15 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
+- The active next forest-specific example packet is
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. Use review ID
+  `region1-example-custer-gallatin-south-otter-58396` and the official Custer
+  Gallatin project page
+  `https://www.fs.usda.gov/r01/custergallatin/projects/58396` as the selected
+  package boundary. South Otter is not yet a registry example or coverage slot;
+  the review ID is forest-qualified because this example is relevant to
+  `custer-gallatin-nf`. Keep it parallel to `Document_Register_Master` until
+  package intake and review-readiness gates pass.
 - For Lolo National Forest example-package review work, inspect
   `config/forest_specific_example_package_registry_v1.json` first, then the
   Tyler's Kitchen review artifacts for

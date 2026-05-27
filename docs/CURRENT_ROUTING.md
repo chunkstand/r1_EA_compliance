@@ -7,6 +7,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- Active forest-specific example packet:
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - Historical lineage only:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
@@ -18,6 +20,25 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
+- The next forest-specific example packet is now opened locally for the
+  South Otter Landscape Restoration and Resilience Project (`58396`) on the
+  Custer Gallatin National Forest. Use
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` for the active packet.
+  The frozen review ID is
+  `region1-example-custer-gallatin-south-otter-58396`, the official project
+  page is `https://www.fs.usda.gov/r01/custergallatin/projects/58396`, and the
+  linked Pinyon/Box folder is
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158227182465`. The
+  review ID is intentionally forest-qualified because each forest-specific
+  example is relevant to its applicable forest. If promoted later, South Otter
+  must use `example_id="cgnf-south-otter-forest-specific"` and remain
+  supplemental to `custer-gallatin-nf`, not generic Region 1 guidance.
+- South Otter is only an opened packet at this checkpoint. It is not in the
+  active workbook, not in the forest-specific registry, not a real-package
+  coverage slot, and not a reviewer-ready claim. Do not update registry or
+  coverage thresholds until package intake, replay context, `v1-ea-eval`,
+  forest-plan component eval, and review `phase-eval` pass for the frozen
+  South Otter review ID.
 - The Lolo Tyler's Kitchen example-package Milestone 3 implementation is
   resolved locally. The tracked Lolo review
   `region1-example-lolo-tylers-kitchen-66344` is now the governed primary
@@ -69,6 +90,7 @@ Use this file as the short current route before opening the append-only docs.
   promotion.
 ## Deep Reads
 - Core:
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,

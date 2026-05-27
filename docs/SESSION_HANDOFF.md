@@ -14,10 +14,14 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` if the
-  next session is continuing forest-specific example expansion work
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` if the next session is
+  continuing the active forest-specific example expansion work; read
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` for the
+  umbrella rules behind that packet
 - latest resolved packet:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- active forest-specific example packet:
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - just-resolved blocker packet:
@@ -29,6 +33,24 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  South Otter is now opened locally as the next forest-specific example packet
+  under `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. The selected
+  package boundary is the official Custer Gallatin project page
+  `https://www.fs.usda.gov/r01/custergallatin/projects/58396` and linked
+  Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158227182465`.
+  The frozen review ID is
+  `region1-example-custer-gallatin-south-otter-58396`. The gap-close pass
+  locked the future registry identity to
+  `example_id="cgnf-south-otter-forest-specific"`,
+  `coverage_slot_id="cgnf-south-otter-forest-specific"`, and
+  `applicable_forest_unit_ids=["custer-gallatin-nf"]`, so South Otter remains
+  a supplemental Custer Gallatin example and must not be reused as generic
+  Region 1 forest guidance. The opening slice did not promote South Otter into
+  `config/forest_specific_example_package_registry_v1.json`, did not add a
+  real-package coverage slot, did not reroute a queue row, and did not claim
+  reviewer-ready status. A workbook search found no South Otter or `58396`
+  match, so package intake starts as a parallel project-specific example lane.
   Lolo Tyler's Kitchen example-package Milestone 3 is now resolved locally.
   `lolo-nf` routes as `real_package_examples_available` in
   `config/forest_specific_example_package_registry_v1.json`, with
@@ -211,11 +233,15 @@ history below.
   refreshed the governed local replay chain, and proved review `phase-eval`
   green at `28/28`
 - next truthful slice:
-  Lolo example-package promotion is no longer the next slice. Continue in
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` for the
-  next governed forest-specific example expansion, or open a narrower packet
-  for the remaining non-Lolo component-coverage red if the request targets that
-  aggregate. Do not reopen
+  Continue South Otter Milestone 1 in
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`: inventory/download the
+  official Pinyon/Box package into
+  `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`, then
+  create the replay context only after package authority is locally traceable.
+  Keep South Otter out of the registry and coverage manifests until the review
+  stack passes. If the request targets aggregate component coverage instead,
+  open a narrower non-South-Otter packet for the remaining non-Lolo component
+  red. Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
   packet, and do not treat the older Lolo blocker chain as the live owner
   unless a future verification command regresses the green `f70...` Lolo
