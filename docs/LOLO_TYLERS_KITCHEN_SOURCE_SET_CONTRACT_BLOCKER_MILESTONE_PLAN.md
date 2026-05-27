@@ -18,6 +18,9 @@ reopen the broader Tyler's Kitchen package-authority lane, change the ECID
 historical slot floor, admit Lolo into the governed roster, or scout new
 replacement candidates.
 
+Opening closeout commit:
+`013b5d1` (`Open Lolo source-set contract blocker`)
+
 ## Purpose
 
 Determine whether the tracked Lolo review has one truthful contract-chain

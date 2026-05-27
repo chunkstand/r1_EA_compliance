@@ -759,7 +759,8 @@ Milestone 3 live alignment update on 2026-05-26:
   now completed Milestones 1-3 by ruling out both a bounded historical
   source-set rebuild path and any currently tracked governed replacement path
   under current artifacts, and the replacement-feasibility successor has since
-  reduced further into the exact live Lolo source-set contract owner. `README.md` was
+  reduced further into the exact live Lolo source-set contract owner through
+  `013b5d1` (`Open Lolo source-set contract blocker`). `README.md` was
   checked and remains intentionally unchanged because it delegates volatile
   replay truth to the current-state docs instead of duplicating it.
 

@@ -21,7 +21,8 @@ Owner context: broader standalone follow-on from
   but that packet has now reduced further into the exact live owner:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`,
   which owns the current tracked source-set contract split for the replacement
-  candidate.
+  candidate. That narrower reroute closeout landed in `013b5d1`
+  (`Open Lolo source-set contract blocker`).
 - This packet now remains as the broader Tyler's Kitchen package-authority,
   queue-boundary, and forest-registry parent record only.
 

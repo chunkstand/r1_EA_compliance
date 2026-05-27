@@ -237,6 +237,8 @@ family.
   Fresh tracked Lolo readback now shows tracked config still on `4fb...`,
   most live review-local artifacts on `5e65...`, and stale
   `downstream_direct_evaluation` coverage still anchored to `f70...`. Do not
+  treat that narrower reroute as provisional: the exact child-route closeout
+  landed in `013b5d1` (`Open Lolo source-set contract blocker`). Do not
   route back into another South replay pass, reopen the resolved replay-repair
   packet, or treat the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.

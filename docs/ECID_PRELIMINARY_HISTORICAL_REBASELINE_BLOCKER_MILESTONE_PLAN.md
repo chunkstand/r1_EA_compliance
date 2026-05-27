@@ -44,6 +44,8 @@ replacement is ready before its own gates pass.
   `downstream_direct_evaluation` coverage still remained on `f70...`, so the
   exact live owner is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
+  That narrower reroute closeout landed in `013b5d1`
+  (`Open Lolo source-set contract blocker`).
 - This packet now remains as the older predecessor closeout that routed live
   work away from generic ECID blocker classification and into the narrower
   Lolo lineage.

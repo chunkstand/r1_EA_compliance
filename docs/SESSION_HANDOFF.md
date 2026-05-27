@@ -19,6 +19,8 @@ history below.
   source-set contract blocker for the ECID historical lane
 - active packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+- latest blocker closeout commit:
+  `013b5d1` (`Open Lolo source-set contract blocker`)
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
 - older ECID predecessor blocker packet:
@@ -187,6 +189,8 @@ Milestone 1 by routing the tracked Lolo blocker to a narrower contract owner.
   `reduced locally`; live work now routes into the new Lolo source-set
   contract blocker packet rather than staying generic in the replacement
   feasibility blocker
+- closeout commit:
+  `013b5d1` (`Open Lolo source-set contract blocker`)
 - implementation truth:
   fresh tracked readback now proves a three-surface contract split for
   `region1-example-lolo-tylers-kitchen-66344`. The replay context and tracked
@@ -222,7 +226,10 @@ Milestone 1 by routing the tracked Lolo blocker to a narrower contract owner.
   and readback of representative review-local artifact files named in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 
-## Lolo Replacement Feasibility Blocker Opened Locally
+## Historical Lolo Replacement Feasibility Blocker Checkpoint
+
+Historical predecessor checkpoint on 2026-05-26 before closeout commit
+`013b5d1`:
 
 This implementation slice closes ECID blocker Milestone 3 by naming the exact
 next owner for the remaining tracked replacement debt.

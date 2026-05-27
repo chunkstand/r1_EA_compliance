@@ -60,7 +60,9 @@ Latest execution note on 2026-05-26:
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
   preserved as the intermediate predecessor and
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  preserved as the older predecessor closeout packet.
+  preserved as the older predecessor closeout packet. That narrower reroute
+  closeout landed in `013b5d1`
+  (`Open Lolo source-set contract blocker`).
 
 This plan now remains as the blocked historical parent record for the
 fail-closed ready-slot gate and the stop-condition evidence above. Continue

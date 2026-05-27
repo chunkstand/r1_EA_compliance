@@ -25,6 +25,8 @@ Latest implementation update on 2026-05-26:
   `reduced locally`; replacement-feasibility Milestone 1 no longer supports
   one coherent tracked owner, so live work now moves to the narrower
   source-set contract blocker
+- closeout commit:
+  `013b5d1` (`Open Lolo source-set contract blocker`)
 - implementation truth:
   fresh tracked readback now proves a three-surface contract split for
   `region1-example-lolo-tylers-kitchen-66344`. The replay context
@@ -72,7 +74,10 @@ Latest implementation update on 2026-05-26:
   and readback of the representative review-local artifact files named in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 
-## Lolo Replacement Feasibility Blocker Opened Locally
+## Historical Lolo Replacement Feasibility Blocker Checkpoint
+
+Historical predecessor checkpoint on 2026-05-26 before closeout commit
+`013b5d1`:
 
 Latest implementation update on 2026-05-26:
 
