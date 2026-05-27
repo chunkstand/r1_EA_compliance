@@ -14,13 +14,17 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md` if
-  the next session is continuing implementation on the ECID historical blocker
-  lane
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+  if the next session is continuing implementation on the tracked Lolo
+  replacement-feasibility lane for the ECID historical blocker
 - active packet:
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+- exact predecessor blocker packet:
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - blocked historical parent packet:
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
+- broader Tyler's Kitchen parent packet:
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - resolved predecessor packet:
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 - replay owner-boundary child packet:
@@ -41,8 +45,10 @@ history below.
   preliminary-EA lane is now truthfully rerouted as a selected-not-ready
   strict-expansion slot on the split `ba8...` / `4fb...` lane. Future work
   there now routes through
-  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
   with
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  preserved as the exact predecessor closeout and with
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
   preserved as the blocked parent record rather than the live runtime packet
 - extraction/direct-eval owner-boundary note:
@@ -146,28 +152,63 @@ history below.
   `applicability-validate --review-id region1-expansion-ecid-preliminary-ea --source-set-id source-set-ba8d0feae79501b8`
   now fails under current artifacts with `source_set_stale=398`,
   `partition_gap=329`, `missing_candidate_decision=4`,
-  `unresolved_authority=4`, and `provenance_gap=1`. Fresh Milestone 2
-  replacement proving now tightens the tracked Lolo blocker as well:
-  `v1-ea-eval --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`
-  now fails `contract_status="mismatch"` because the eval contract still
-  expects `source-set-4fb...` while the live review artifacts report
-  `source-set-5e65...`, and fresh review `phase-eval` remains red at `12/29`
+  `unresolved_authority=4`, and `provenance_gap=1`. Fresh tracked Lolo
+  readback now narrows the remaining replacement blocker even further:
+  the replay context and tracked `v1-ea-eval` contract still expect
+  `source-set-4fb...`, the live `v1_ea_eval_results.json` now reports
+  `source-set-5e65...` and fails `review_identity_matches_contract`, and the
+  live review `phase-eval` remains red at `12/29` on `source-set-4fb...`
 - next truthful slice:
-  blocker Milestone 2 is now complete: neither a bounded
-  historical-source-set rebuild path nor any tracked governed replacement
-  path is currently proven under live artifacts. Milestone 3 in
-  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  is now the next truthful slice: name one exact child packet or one narrower
-  feasibility stop from the blocker evidence bundle without weakening the
-  manifest floor. Do not reopen
-  `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
-  packet
-- latest blocker closeout commit:
-  `191fc3e` (`Close ECID blocker Milestone 2`)
+  ECID blocker Milestone 3 is now closed locally: the exact next owner is
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`.
+  Continue there at Milestone 1 to classify the tracked contract and
+  review-identity owner surfaces before any roster or slot changes. Do not
+  reopen `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new
+  runtime packet, and do not treat the broader Lolo example packet as the
+  live owner for the remaining blocker
 - session reminder:
-  the Milestone 2 section immediately below is the current checkpoint; the
-  following Milestone 1 and blocked-parent sections are preserved historical
-  context only
+  the new Lolo replacement-feasibility section immediately below is the
+  current checkpoint; the following ECID blocker Milestone 2, Milestone 1,
+  and blocked-parent sections are preserved historical context only
+
+## Lolo Replacement Feasibility Blocker Opened Locally
+
+This implementation slice closes ECID blocker Milestone 3 by naming the exact
+next owner for the remaining tracked replacement debt.
+
+- outcome label:
+  `reduced locally`; live work now routes into the new Lolo
+  replacement-feasibility blocker packet rather than staying generic in the
+  ECID blocker
+- implementation truth:
+  fresh tracked Lolo readback now proves that the remaining blocker is a
+  review-local contract and source-set feasibility issue. The replay context
+  and tracked `v1-ea-eval` contract still point at
+  `source-set-4fb59e9eb43045cb`, but the live
+  `v1_ea_eval_results.json` reports `source-set-5e65d845ce77e1a0` and fails
+  only `review_identity_matches_contract`; meanwhile the live
+  `phase_eval_results.json` still reports `source-set-4fb59e9eb43045cb` and
+  remains red at `12/29`
+- live blocker truth:
+  the governed aggregates remain stable and still do not admit Lolo as a
+  ready replacement. `real-package-review-coverage-eval` still admits only
+  East Crazies, West Reservoir, and South Plateau, and non-strict
+  `promotion-suite` remains green for current promotion while strict
+  expansion still fails only on the ECID historical slot under
+  `historical_source_set_split`
+- next routing:
+  continue in
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 1 for contract and review-identity classification. Treat
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  and `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  as historical lineage only
+- verification:
+  `jq '{review_id: .summary.review_id, source_set_id: .summary.source_set_id, passed: .summary.passed, contract_status: .summary.contract_status, actual_overall_passed: .summary.actual_overall_passed, broader_ea_passed: .summary.broader_ea_passed, forest_plan_passed: .summary.forest_plan_passed, failed_checks: [.summary.checks[] | select(.passed == false) | {name, details}]}' source_library/reviews/region1-example-lolo-tylers-kitchen-66344/v1_ea_eval_results.json`,
+  `jq '{review_id, source_set_id, passed, passed_phase_count, phase_count, reviewer_ready, missing_direct_eval_phase_count, threshold_failed_phase_count, failed_phase_names: [.phases[] | select(.passed == false) | .name]}' source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json`,
+  `jq '{review_id, source_set_id, package_path, required_review_artifact_ids, expected_summary}' config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
+  and
+  `jq '{review_id, source_set_id, package_path, catalog_dir, source_manifest_path}' config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
 
 ## ECID Preliminary Governed Replacement Still Unproven Locally
 

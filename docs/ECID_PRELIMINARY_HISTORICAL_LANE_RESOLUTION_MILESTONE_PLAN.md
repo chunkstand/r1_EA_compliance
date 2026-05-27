@@ -3,8 +3,8 @@
 Date: 2026-05-26
 
 Status: Historical blocked parent packet after Sequence 1 rebaseline proving (`Sequence 0`
-complete locally; live route moved through
-`docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`)
+complete locally; live route now continues through the exact Lolo
+replacement-feasibility blocker child packet`)
 
 Owner context: This is a fresh standalone follow-on milestone plan. It starts only after
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` closed locally and committed. It owns
@@ -49,16 +49,20 @@ Latest execution note on 2026-05-26:
 - The successor blocker packet has since completed Milestones 1-2 by ruling
   out both a bounded historical-source-set rebuild path on `4fb...` / `ba8...`
   and any currently tracked governed replacement path under current artifacts.
-  Fresh Lolo proving now fails `v1-ea-eval` on a `4fb...` versus `5e65...`
-  review-identity split and leaves review `phase-eval` red at `12/29`. The
-  next live slice there is now Milestone 3 exact child-route or
-  feasibility-stop closeout through `191fc3e`
-  (`Close ECID blocker Milestone 2`).
+  Milestone 3 is now also closed locally: fresh tracked Lolo readback showed
+  that the replay context and tracked `v1-ea-eval` contract still point at
+  `4fb...`, the live `v1_ea_eval_results.json` now reports `5e65...`, and
+  the live review `phase-eval` remains red at `12/29` on `4fb...`. The exact
+  live child route is now
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
+  with
+  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  preserved as the predecessor closeout packet.
 
 This plan now remains as the blocked historical parent record for the
 fail-closed ready-slot gate and the stop-condition evidence above. Continue
 live work in
-`docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+`docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
 rather than resuming runtime implementation sequences here.
 
 ## Purpose

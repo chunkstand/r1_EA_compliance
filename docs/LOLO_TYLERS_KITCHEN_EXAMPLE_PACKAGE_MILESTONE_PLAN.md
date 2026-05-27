@@ -1,8 +1,27 @@
 # Lolo Tyler's Kitchen Example Package Milestone Plan
 
 Date: 2026-05-24
-Status: Active reduced packet (`Milestones 0-1 resolved; Milestone 2 packet-local review contracts and queue reroute resolved; inherited review-scoped phase-eval direct-eval blocker still prevents Milestone 3 promotion`)
-Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+Status: Historical reduced parent packet (`Milestones 0-2 remain preserved as
+package-authority and registry closeout context; live replacement-feasibility
+work now routes through
+docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`)
+Owner context: broader standalone follow-on from
+`docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+
+## Latest Historical Alignment Note
+
+- This packet no longer owns the live Tyler's Kitchen blocker route. Fresh
+  tracked readback now shows that the replay context and tracked `v1-ea-eval`
+  contract still point at `source-set-4fb59e9eb43045cb`, the live
+  `v1_ea_eval_results.json` reports
+  `source-set-5e65d845ce77e1a0` with `contract_status="mismatch"`, and the
+  live review `phase-eval` remains red at `12/29` on `4fb...`.
+- Live work therefore continues in
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
+  which owns the current review-local contract and source-set feasibility
+  blocker for the tracked replacement candidate.
+- This packet now remains as the broader Tyler's Kitchen package-authority,
+  queue-boundary, and forest-registry parent record only.
 
 ## Purpose
 
@@ -179,7 +198,8 @@ contracts that future agents can read it as the primary `lolo-nf` example.
 
 ### Weak Point 1
 
-Risk: Tyler's Kitchen is ingested as if it were shared master input.
+Weak point forecast: Tyler's Kitchen is ingested as if it were shared master
+input.
 
 - Owner surface: `config/source_register_queue_resolution_ledger_v1.json`,
   `config/forest_specific_example_package_registry_v1.json`
@@ -197,8 +217,8 @@ Risk: Tyler's Kitchen is ingested as if it were shared master input.
 
 ### Weak Point 2
 
-Risk: the package authority drops specialist/supporting record families and
-keeps only decision-core PDFs.
+Weak point forecast: the package authority drops specialist/supporting record
+families and keeps only decision-core PDFs.
 
 - Owner surface:
   `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`,
@@ -215,8 +235,8 @@ keeps only decision-core PDFs.
 
 ### Weak Point 3
 
-Risk: Lolo appears in the registry as governed even though the review stack is
-still not reviewer-ready.
+Weak point forecast: Lolo appears in the registry as governed even though the
+review stack is still not reviewer-ready.
 
 - Owner surface:
   `config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
@@ -237,7 +257,8 @@ still not reviewer-ready.
 
 ### Weak Point 4
 
-Risk: this packet silently reopens the unrelated Lolo Pinyon blocker family.
+Weak point forecast: this packet silently reopens the unrelated Lolo Pinyon
+blocker family.
 
 - Owner surface:
   `config/source_register_queue_resolution_ledger_v1.json`,
@@ -548,6 +569,10 @@ git diff --check
 
 ## Local Commit Closeout Policy
 
+- `complete-after-commit` rule: no milestone in this plan is complete until
+  verification passes, durable docs and handoff updates land, and the local
+  atomic commit exists. A verified but uncommitted slice is only
+  ready-to-close.
 - Commit Milestone 0 as a docs-and-gate rebaseline slice if it materially
   changes routing or tracked contract shape.
 - Commit each later milestone only after its verification gates pass and the
