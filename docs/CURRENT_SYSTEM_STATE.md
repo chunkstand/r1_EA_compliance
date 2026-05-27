@@ -25,8 +25,8 @@ Latest implementation update on 2026-05-26:
   `opened locally`; source-set contract blocker Milestone 3 is now resolved
   locally because the remaining tracked Lolo red no longer belongs to contract
   alignment and now narrows to one aligned-runtime rebaseline family
-- latest committed predecessor closeout:
-  `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
+- latest committed active-packet closeout:
+  `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`)
 - implementation truth:
   the tracked replay context and tracked `v1-ea-eval` contract both already
   bind `region1-example-lolo-tylers-kitchen-66344` to

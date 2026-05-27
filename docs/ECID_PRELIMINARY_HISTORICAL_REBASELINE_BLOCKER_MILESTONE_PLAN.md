@@ -5,8 +5,8 @@ Date: 2026-05-26
 Status: Resolved locally (`Milestones 0-3 resolved locally; no bounded
 historical-source-set rebuild path remains under current artifacts; no
 tracked governed replacement is currently proven; exact live work now routes
-to the Lolo source-set contract blocker through the historical
-replacement-feasibility predecessor`)
+to the Lolo aligned runtime rebaseline blocker through the historical
+source-set contract and replacement-feasibility predecessors`)
 
 Owner context: standalone blocker follow-on opened after the parent ECID
 historical-lane packet proved that none of the three currently visible closure
@@ -42,7 +42,7 @@ replacement is ready before its own gates pass.
 - That successor then reduced Milestone 1 further: tracked config remained on
   `4fb...`, most live review-local artifacts remained on `5e65...`, and stale
   `downstream_direct_evaluation` coverage still remained on `f70...`, so the
-  exact live owner is now
+  exact child owner at that checkpoint was
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
   That narrower reroute closeout landed in `013b5d1`
   (`Open Lolo source-set contract blocker`). The active child packet then
@@ -50,7 +50,8 @@ replacement is ready before its own gates pass.
   reduced Milestone 2 locally in `e2b6941`
   (`Reduce Lolo source-set blocker Milestone 2`), and resolved Milestone 3 by
   routing the residual red into
-  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  in `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`).
 - This packet now remains as the older predecessor closeout that routed live
   work away from generic ECID blocker classification and into the narrower
   Lolo lineage.
@@ -92,12 +93,14 @@ implementation continues.
 ## Current Evidence
 
 - `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and the top of
-  `docs/SESSION_HANDOFF.md` now agree that this blocker packet is the exact
+  `docs/SESSION_HANDOFF.md` now agree that this blocker packet is the older
   predecessor closeout and that
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   is the active route, with
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+  preserved as the exact intermediate predecessor and
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
-  preserved as the intermediate predecessor.
+  preserved as the older replacement-feasibility predecessor.
 - The parent packet
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
   completed its Sequence 0 guard successfully: ready expansion slots now fail

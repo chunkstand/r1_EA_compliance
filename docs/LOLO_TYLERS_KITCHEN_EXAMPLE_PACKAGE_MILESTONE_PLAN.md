@@ -4,7 +4,7 @@ Date: 2026-05-24
 Status: Historical reduced parent packet (`Milestones 0-2 remain preserved as
 package-authority and registry closeout context; live contract-blocker work
 now routes through
-docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`)
+docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`)
 Owner context: broader standalone follow-on from
 `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
@@ -18,7 +18,8 @@ Owner context: broader standalone follow-on from
   live review `phase-eval` remains red at `12/29` on `4fb...`.
 - Live work therefore first continued in
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
-  but that packet has now reduced further into the exact live owner:
+  but that packet then reduced further into the exact child owner at that
+  checkpoint:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`,
   which owns the current tracked source-set contract split for the replacement
   candidate. That narrower reroute closeout landed in `013b5d1`
@@ -27,7 +28,8 @@ Owner context: broader standalone follow-on from
   reduced Milestone 2 locally in `e2b6941`
   (`Reduce Lolo source-set blocker Milestone 2`), and resolved Milestone 3 by
   routing the residual red into
-  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  in `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`).
 - This packet now remains as the broader Tyler's Kitchen package-authority,
   queue-boundary, and forest-registry parent record only.
 

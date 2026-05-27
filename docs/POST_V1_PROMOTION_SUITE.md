@@ -232,12 +232,13 @@ family.
   ECID blocker Milestone 3 first closed locally by naming
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
   but replacement-feasibility Milestone 1 then reduced further into the exact
-  live owner:
+  then-live owner:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
   That narrower reroute closeout landed in `013b5d1`
   (`Open Lolo source-set contract blocker`), and that active child packet has
   since resolved Milestone 3 by routing the remaining red into
-  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  in `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`).
   The tracked replay context and tracked review eval contract now align to
   `5e65...`, fresh `v1-ea-eval` is now `reviewer_ready`, and the remaining
   red is no longer a generic tracked-contract split. It is now one aligned

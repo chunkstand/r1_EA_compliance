@@ -25,10 +25,14 @@ promotion, ECID historical slot semantics, or a full canonical rebuild unless a 
 milestone proves the source-register dependency cannot be resolved inside a narrower
 boundary.
 
+Opening closeout commit:
+`a7b4141` (`Open Lolo aligned runtime rebaseline blocker`)
+
 ## Latest Local Implementation
 
 - This packet is now the exact live child route after source-set contract blocker
-  Milestone 3 closeout.
+  Milestone 3 closeout in `a7b4141`
+  (`Open Lolo aligned runtime rebaseline blocker`).
 - Fresh readback proves one coherent narrower owner family:
   - `phase_eval_results.json` is now red at `15/23` on
     `source-set-5e65d845ce77e1a0`, not on the older tracked `4fb...` contract.
@@ -96,10 +100,11 @@ before implementation continues.
 ## Current Evidence
 
 - `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and the top of
-  `docs/SESSION_HANDOFF.md` now route the remaining tracked Lolo blocker through the
-  source-set contract packet, but that packet's own Milestone 3 closeout evidence now
-  proves the next truthful owner is aligned runtime rebaseline rather than more contract
-  alignment work.
+  `docs/SESSION_HANDOFF.md` now route the remaining tracked Lolo blocker through this
+  aligned-runtime rebaseline packet, with
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+  preserved as the exact predecessor that resolved the tracked source-set
+  contract split.
 - The tracked replay context
   `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
   now declares `source_set_id="source-set-5e65d845ce77e1a0"`.

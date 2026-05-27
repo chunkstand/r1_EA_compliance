@@ -19,8 +19,8 @@ history below.
   aligned-runtime rebaseline blocker for the ECID historical lane
 - active packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-- latest committed predecessor closeout:
-  `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
+- latest committed active-packet closeout:
+  `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`)
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 - older predecessor blocker packet:
@@ -200,8 +200,8 @@ opening one exact aligned-runtime rebaseline child packet.
   `resolved locally`; the source-set contract blocker no longer owns the live
   red after `5e65...` contract alignment, so live work now moves to the
   aligned-runtime rebaseline packet
-- latest committed predecessor closeout:
-  `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
+- latest committed active-packet closeout:
+  `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`)
 - implementation truth:
   the tracked replay context and tracked `v1-ea-eval` contract already align
   to `source-set-5e65d845ce77e1a0`, and fresh `v1_ea_eval_results.json`

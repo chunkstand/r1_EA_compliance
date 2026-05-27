@@ -4,8 +4,8 @@ Date: 2026-05-26
 
 Status: Historical reduced predecessor packet (`Milestone 1 is now reduced
 locally; the remaining tracked blocker no longer has one coherent owner here,
-and live work now routes through
-docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`)
+and live work now routes through the aligned runtime rebaseline blocker via
+the historical source-set contract predecessor`)
 
 Owner context: standalone follow-on opened after
 `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
@@ -43,7 +43,8 @@ Opening closeout commit:
   Milestone 2 locally in `e2b6941`
   (`Reduce Lolo source-set blocker Milestone 2`), and resolved Milestone 3 by
   routing the residual red into
-  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  in `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`).
 - This packet now remains as the exact predecessor that reduced the broader
   replacement-feasibility lane into the narrower source-set contract blocker.
 

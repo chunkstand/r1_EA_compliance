@@ -4,7 +4,7 @@ Date: 2026-05-26
 
 Status: Historical blocked parent packet after Sequence 1 rebaseline proving (`Sequence 0`
 complete locally; live route now continues through the exact Lolo
-source-set contract blocker child packet`)
+aligned-runtime rebaseline child packet`)
 
 Owner context: This is a fresh standalone follow-on milestone plan. It starts only after
 `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` closed locally and committed. It owns
@@ -67,7 +67,8 @@ Latest execution note on 2026-05-26:
   reduced Milestone 2 locally in `e2b6941`
   (`Reduce Lolo source-set blocker Milestone 2`), and resolved Milestone 3 by
   routing the residual red into
-  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  in `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`).
 
 This plan now remains as the blocked historical parent record for the
 fail-closed ready-slot gate and the stop-condition evidence above. Continue

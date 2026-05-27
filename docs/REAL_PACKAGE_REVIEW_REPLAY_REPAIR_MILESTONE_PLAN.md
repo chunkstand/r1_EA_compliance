@@ -12,10 +12,12 @@ truthfully rerouted as a selected-not-ready strict-expansion slot on its split
 historical source-set contract. Any future work there should open a fresh
 follow-on rather than reopening this packet to reassert missing downstream
 artifacts. The live routed successor is now
-`docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`,
+`docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
 with
+`docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+preserved as the exact intermediate predecessor, with
 `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
-preserved as the intermediate predecessor, with
+preserved as the older predecessor, with
 `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 preserved as the exact predecessor closeout and
 `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
@@ -765,7 +767,8 @@ Milestone 3 live alignment update on 2026-05-26:
   `5e65...`, reduced Milestone 2 locally in `e2b6941`
   (`Reduce Lolo source-set blocker Milestone 2`), and resolved Milestone 3 by
   routing the remaining red into
-  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  in `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`).
   `README.md` was checked and remains intentionally unchanged because it
   delegates volatile replay truth to the current-state docs instead of
   duplicating it.

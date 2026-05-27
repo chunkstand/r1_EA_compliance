@@ -2,9 +2,10 @@
 
 Date: 2026-05-26
 
-Status: Resolved locally (`Milestones 1-3 are now resolved locally; the tracked replay
-context and review eval contract align to source-set-5e65d845ce77e1a0, and the exact
-live work now routes to the aligned runtime rebaseline blocker`)
+Status: Historical resolved predecessor packet (`Milestones 1-3 are now resolved
+locally; the tracked replay context and review eval contract align to
+source-set-5e65d845ce77e1a0, and the exact live work now routes to the aligned runtime
+rebaseline blocker`)
 
 Owner context: standalone follow-on opened after
 `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
@@ -22,8 +23,10 @@ Opening closeout commit:
 
 ## Latest Local Implementation
 
-- Latest committed predecessor closeout:
+- Milestone 2 closeout:
   `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
+- Milestone 3 closeout:
+  `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`)
 
 - Milestone 3 is now resolved locally. The tracked replay context and tracked
   `v1-ea-eval` contract now both bind
