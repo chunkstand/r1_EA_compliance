@@ -236,10 +236,11 @@ family.
   the replay context and tracked `v1-ea-eval` contract still point at
   `4fb...`, the live `v1_ea_eval_results.json` now reports `5e65...` and
   fails `review_identity_matches_contract`, and the live review
-  `phase-eval` remains red at `12/29` on `4fb...`. Do not route back into
-  another South replay pass, reopen the resolved replay-repair packet, or
-  treat the broader Lolo example packet as the live owner for this remaining
-  blocker.
+  `phase-eval` remains red at `12/29` on `4fb...`. That exact child-route
+  closeout landed in `6a4e87d` (`Open Lolo replacement feasibility blocker`).
+  Do not route back into another South replay pass, reopen the resolved
+  replay-repair packet, or treat the broader Lolo example packet as the live
+  owner for this remaining blocker.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

@@ -25,6 +25,8 @@ Latest implementation update on 2026-05-26:
   `reduced locally`; ECID blocker Milestone 3 is now closed because the
   exact next owner has been named, and live work now moves to tracked Lolo
   replacement-feasibility classification
+- closeout commit:
+  `6a4e87d` (`Open Lolo replacement feasibility blocker`)
 - implementation truth:
   fresh tracked Lolo readback now proves a three-surface identity split that
   the broader Lolo example packet no longer owns truthfully. The replay
@@ -68,9 +70,10 @@ Latest implementation update on 2026-05-26:
   and
   `jq '{review_id, source_set_id, package_path, catalog_dir, source_manifest_path}' config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
 
-## ECID Preliminary Governed Replacement Still Unproven Locally
+## Historical ECID Preliminary Governed Replacement Still Unproven Locally
 
-Latest implementation update on 2026-05-26:
+Historical Milestone 2 checkpoint on 2026-05-26 before closeout commit
+`6a4e87d`:
 
 - routed packet:
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`

@@ -38,14 +38,19 @@ The planner:
   `config/forest_specific_example_package_registry_v1.json` and
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` before
   pulling review artifacts.
-- The first concrete active expansion slice in that lane is now
-  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
-- For Lolo National Forest example-package review work, inspect the Tyler's
-  Kitchen packet first as the active Lolo example boundary.
-- That Lolo packet already carries the `FOR-029` queue-boundary reroute plus
-  packet-local `v1-ea-eval` and forest-plan component coverage, but the Lolo
-  forest row still stays `profile_eval_guidance_only` until the inherited
-  review-scoped `phase-eval` blocker is cleared.
+- The live Lolo follow-on is now
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`.
+- For Lolo National Forest example-package review work, inspect that blocker
+  first for the current review-local contract and source-set feasibility
+  state, then read
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  only as the broader Tyler's Kitchen package-authority and registry parent
+  record.
+- The broader Tyler's Kitchen packet already carries the `FOR-029`
+  queue-boundary reroute plus packet-local `v1-ea-eval` and forest-plan
+  component coverage, but the Lolo forest row still stays
+  `profile_eval_guidance_only` until the remaining tracked replacement
+  blocker is cleared.
 - The registry maps examples to `applicable_to_forest_unit_ids`, tells you
   which shared eval contracts to read first, and lists the per-review artifact
   families to read for each governed example.

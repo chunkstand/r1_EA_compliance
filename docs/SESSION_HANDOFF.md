@@ -19,6 +19,8 @@ history below.
   replacement-feasibility lane for the ECID historical blocker
 - active packet:
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+- latest blocker closeout commit:
+  `6a4e87d` (`Open Lolo replacement feasibility blocker`)
 - exact predecessor blocker packet:
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - blocked historical parent packet:
@@ -180,6 +182,8 @@ next owner for the remaining tracked replacement debt.
   `reduced locally`; live work now routes into the new Lolo
   replacement-feasibility blocker packet rather than staying generic in the
   ECID blocker
+- closeout commit:
+  `6a4e87d` (`Open Lolo replacement feasibility blocker`)
 - implementation truth:
   fresh tracked Lolo readback now proves that the remaining blocker is a
   review-local contract and source-set feasibility issue. The replay context
@@ -210,7 +214,7 @@ next owner for the remaining tracked replacement debt.
   and
   `jq '{review_id, source_set_id, package_path, catalog_dir, source_manifest_path}' config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
 
-## ECID Preliminary Governed Replacement Still Unproven Locally
+## Historical ECID Preliminary Governed Replacement Still Unproven Locally
 
 This implementation slice closes blocker Milestone 2 in the active ECID
 historical blocker packet.

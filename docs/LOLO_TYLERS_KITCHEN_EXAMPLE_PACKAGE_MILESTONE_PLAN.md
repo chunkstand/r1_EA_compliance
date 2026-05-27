@@ -19,7 +19,8 @@ Owner context: broader standalone follow-on from
 - Live work therefore continues in
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
   which owns the current review-local contract and source-set feasibility
-  blocker for the tracked replacement candidate.
+  blocker for the tracked replacement candidate. That reroute landed in
+  `6a4e87d` (`Open Lolo replacement feasibility blocker`).
 - This packet now remains as the broader Tyler's Kitchen package-authority,
   queue-boundary, and forest-registry parent record only.
 

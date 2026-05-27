@@ -754,7 +754,8 @@ Milestone 3 live alignment update on 2026-05-26:
   now completed Milestones 1-3 by ruling out both a bounded historical
   source-set rebuild path and any currently tracked governed replacement path
   under current artifacts and then naming the exact live Lolo
-  replacement-feasibility owner. `README.md` was
+  replacement-feasibility owner through `6a4e87d`
+  (`Open Lolo replacement feasibility blocker`). `README.md` was
   checked and remains intentionally unchanged because it delegates volatile
   replay truth to the current-state docs instead of duplicating it.
 

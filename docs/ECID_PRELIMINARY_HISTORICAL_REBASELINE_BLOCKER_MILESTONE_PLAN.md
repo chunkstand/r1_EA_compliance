@@ -557,6 +557,8 @@ git diff --check
 
 Milestone 3 live closeout note on 2026-05-26:
 
+- closing commit hash:
+  `6a4e87d` (`Open Lolo replacement feasibility blocker`)
 - outcome label:
   `resolved locally`; this blocker now exits with one exact next owner rather
   than a generic feasibility stop
@@ -571,6 +573,13 @@ Milestone 3 live closeout note on 2026-05-26:
   continue in
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
   at Milestone 1. Treat this packet as historical predecessor closeout only
+- focused verification:
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
+  `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --strict docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`,
+  and `git diff --check`
 
 ## Required Implementation Artifacts
 
@@ -668,5 +677,5 @@ Milestone 3 live closeout note on 2026-05-26:
 - [x] Milestone 0 opened this blocker packet and reset current-facing routing.
 - [x] Milestone 1 recorded an exact historical-source-set feasibility result.
 - [x] Milestone 2 recorded an exact replacement-readiness result if needed.
-- [ ] Milestone 3 named one exact next owner or one narrower feasibility stop.
-- [ ] The verified tracked slice was committed atomically.
+- [x] Milestone 3 named one exact next owner or one narrower feasibility stop.
+- [x] The verified tracked slice was committed atomically.

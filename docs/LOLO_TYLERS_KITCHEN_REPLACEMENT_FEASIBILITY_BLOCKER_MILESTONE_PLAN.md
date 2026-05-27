@@ -16,6 +16,9 @@ review-local replacement-feasibility blocker for
 Lolo package-authority packet, change the ECID manifest floor, scout new
 replacement candidates, or claim a ready slot before its own gates pass.
 
+Opening closeout commit:
+`6a4e87d` (`Open Lolo replacement feasibility blocker`)
+
 ## Purpose
 
 Determine whether the tracked Lolo Tyler's Kitchen review can become the exact
