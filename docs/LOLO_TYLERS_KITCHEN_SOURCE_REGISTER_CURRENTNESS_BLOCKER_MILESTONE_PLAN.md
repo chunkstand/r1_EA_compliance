@@ -60,12 +60,13 @@ global catalog manifest SHA
   because the selected/catalog source-record sets differ (`350` versus `708`
   IDs, with `R1EA-*` versus `FED-*` identity), and Milestone 1 stopped at the
   split source-record identity owner before replay config could move. The child
-  identity packet has now implemented `source-record-identity-gate`, which
-  proves all 60 expected IDs have present `f70...` catalog coverage but fails
-  closed on five ambiguous multi-target mappings. The live
-  route is now
+  identity packet has now implemented `source-record-identity-gate`, resolved
+  the five ambiguous multi-target mappings with explicit governed identity
+  selectors, and made the current-workbook candidate identity gate green. The
+  live route is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  for governed ambiguity resolution before replay config can move.
+  Milestone 2 replay config update or exact stop before replay config can
+  move.
   This packet must not be reopened to hand-edit ignored manifests or to teach
   `phase-eval` to ignore workbook SHA drift.
 

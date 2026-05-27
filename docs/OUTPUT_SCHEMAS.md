@@ -3541,6 +3541,12 @@ Inputs:
 - forest-plan identity reconciliation registry, defaulting to
   `config/r1_forest_plan_identity_reconciliation_v1.json`
 
+In `config/compliance_source_record_reconciliation_v1.json`, `current_source_record_ids`
+remains the broad coverage alias set. When a legacy ID intentionally maps to
+multiple current rows, `identity_source_record_id` names the single replay-facing
+identity target. The identity target must also appear in `current_source_record_ids`;
+otherwise the gate fails closed while loading the registry.
+
 The summary records:
 
 - `passed` and `source_record_identity_status`
@@ -3553,6 +3559,7 @@ The summary records:
 - `mapped_targets_absent_from_catalog`
 - `ambiguous_mappings`
 - `resolved_source_record_ids_by_expected_id`
+- `selected_identity_source_record_ids_by_expected_id`
 - `checks` for expected-ID presence, mapping presence, mapped-target catalog
   presence, and unambiguous mapping
 

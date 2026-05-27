@@ -80,7 +80,8 @@ Opening closeout commit:
   is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
   after Milestone 1 implemented the governed replay-facing identity gate and
-  proved it still fails closed on five ambiguous multi-target mappings.
+  then resolved the five ambiguous multi-target mappings with explicit governed
+  identity selectors.
   This packet should resume at Milestone 2 direct-eval rebaseline only after
   the current-workbook source-set owner, source-record identity contract, and
   `source_register_contract` are no longer the active blockers.

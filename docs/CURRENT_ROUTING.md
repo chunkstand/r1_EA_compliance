@@ -41,19 +41,23 @@ Use this file as the short current route before opening the append-only docs.
   `R1PLAN-lolo-nf-02` is separately covered by forest-plan identity
   reconciliation as `FPS-298`; five compliance-covered IDs are still
   multi-target mappings that need a replay-facing identity rule.
-- Source-record identity reconciliation Milestone 1 is reduced locally by exact
-  ambiguity stop: the generic `source-record-identity-gate` now owns
-  replay-facing identity resolution across direct catalog IDs, compliance
-  source-record aliases, and forest-plan source aliases. Against the current
-  `f70...` catalog, the Lolo gate sees all `60` expected IDs covered by present
-  catalog records and no absent mapped targets, but returns `passed=false`
-  because `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and `R1EA-150`
-  still map to multiple current records.
-- Next slice remains inside the source-record identity reconciliation packet:
-  resolve those five multi-target mappings through the governed identity
-  contract and rerun `source-record-identity-gate` to green before any tracked
-  replay context, eval config, or review artifact moves from `5e65...` to
-  `f70...`. Milestone 2 replay config work is blocked until that gate passes.
+- Source-record identity reconciliation Milestone 1 is resolved locally: the
+  generic `source-record-identity-gate` now owns replay-facing identity
+  resolution across direct catalog IDs, compliance source-record aliases, and
+  forest-plan source aliases. `config/compliance_source_record_reconciliation_v1.json`
+  now uses explicit `identity_source_record_id` selectors for the five former
+  multi-target mappings: `R1EA-018 -> USDA-007`, `R1EA-028 -> USDA-008`,
+  `R1EA-124 -> FED-011`, `R1EA-137 -> FED-032`, and
+  `R1EA-150 -> USFS-035`.
+- Against the current `f70...` catalog, the Lolo gate now returns
+  `passed=true`, with all `60` expected IDs covered and exactly resolved, no
+  unmapped IDs, no absent mapped targets, and `ambiguous_mappings={}`.
+- Next slice remains inside the source-record identity reconciliation packet at
+  Milestone 2: update the tracked Lolo replay/eval config surfaces to consume
+  the current-workbook identity owner, or stop at the exact replay/eval command
+  that cannot consume it. Tracked replay context, eval config, adjudication
+  config, and ignored generated review artifacts still have not moved from
+  `5e65...` to `f70...`.
 - Remaining live debt:
   `retrieval-eval` on `5e65...` is both contract-stale and semantically red;
   `rule-claim-eval` on `5e65...` is contract-stale but otherwise green; shared

@@ -9,9 +9,10 @@ reached an exact local-replay stop: tracked replay config rejects an ad hoc
 `f70...` override, and the remaining blocker is the split source-record identity
 contract now routed to
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
-That child packet has since implemented the generic identity gate and reduced
-to the exact five ambiguous multi-target mappings that still block replay
-config movement.
+That child packet has since implemented the generic identity gate, resolved the
+five ambiguous multi-target mappings with explicit governed identity selectors,
+and made the current-workbook candidate identity gate green. Replay config
+movement now belongs to that child packet's Milestone 2.
 
 Owner context: standalone child packet opened from
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`.
@@ -36,9 +37,10 @@ source-set compatible with the `5e65...` derived artifacts.
   current-workbook replay override is blocked by the tracked replay context, and
   the expected source-record IDs are split across compliance reconciliation and
   forest-plan identity reconciliation owner surfaces.
-- The child source-record identity packet is now reduced through Milestone 1:
+- The child source-record identity packet is now resolved through Milestone 1:
   `source-record-identity-gate` proves all 60 Lolo expected IDs have present
-  `f70...` catalog coverage, but it returns `passed=false` on five ambiguous
+  `f70...` catalog coverage and now returns `passed=true` after
+  `identity_source_record_id` selectors resolved the five former ambiguous
   current-catalog mappings.
 - Exact readback found:
   - tracked replay context: `source_set_id="source-set-5e65d845ce77e1a0"` and
@@ -327,16 +329,16 @@ Milestone 1 decision:
   tracked reconciliation data: 8 expected IDs are direct current-catalog hits,
   51 absent expected IDs are mapped by the compliance source-record
   reconciliation, and `R1PLAN-lolo-nf-02` is mapped separately by the forest-plan
-  identity reconciliation to `FPS-298`. Five compliance-reconciled IDs remain
-  multi-target mappings that must be handled by the child identity gate before
-  replay config changes.
+  identity reconciliation to `FPS-298`. The child identity gate has since
+  resolved the five compliance-reconciled multi-target mappings with explicit
+  governed identity selectors.
 - The live next packet is
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
   before any runtime config or replay artifact moves to the current-workbook
   source set. That child packet has now completed Milestone 1 by implementing
-  the replay-facing identity gate; the gate still fails closed on the five
-  ambiguous multi-target mappings, so replay config movement remains blocked
-  until the identity gate is green.
+  the replay-facing identity gate and making it green on the current
+  `f70...` catalog; replay config movement now belongs to that child packet's
+  Milestone 2.
 
 Verification:
 
@@ -474,8 +476,8 @@ git diff --check
 - The owner is not a manifest swap and not an ad hoc CLI override. It requires a
   governed replay-facing identity contract that can reconcile expected Lolo
   source-record IDs to current-workbook catalog IDs. That gate now exists and
-  fails closed on unresolved multi-target ambiguity, so the next work is
-  governed ambiguity resolution before tracked replay/eval config moves.
+  passes, so the next work is Milestone 2 replay config update or exact stop
+  before tracked replay/eval config moves.
 - Direct-eval failures remain real and should return to the parent aligned-runtime
   packet only after source-register currentness and source-record identity are
   coherent.

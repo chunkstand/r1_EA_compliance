@@ -42,12 +42,15 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
 - For Lolo National Forest example-package review work, inspect that blocker
   first. Its Milestone 1 source-record identity gate is now implemented and
-  fails closed exactly on five ambiguous multi-target mappings:
-  `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and `R1EA-150`. The next
-  truthful slice is governed ambiguity resolution inside that packet, not a
-  replay config move. Its Milestone 0 inventory proved all 60 expected Lolo
-  source-record IDs resolve to at least one current `f70...` catalog record,
-  with no missing IDs and no mapped target absent from the catalog. Its
+  green on the current `f70...` catalog after explicit identity selectors
+  resolved the former multi-target mappings:
+  `R1EA-018 -> USDA-007`, `R1EA-028 -> USDA-008`,
+  `R1EA-124 -> FED-011`, `R1EA-137 -> FED-032`, and
+  `R1EA-150 -> USFS-035`. The next truthful slice is Milestone 2 replay config
+  update or exact stop inside that packet, not a direct roster or promotion
+  move. Its Milestone 0 inventory proved all 60 expected Lolo source-record IDs
+  resolve to at least one current `f70...` catalog record, with no missing IDs
+  and no mapped target absent from the catalog. Its
   predecessor,
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   reduced locally through Milestone 1: the current-workbook `f70...` catalog

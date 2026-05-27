@@ -4,6 +4,8 @@ from pathlib import Path
 import json
 import sqlite3
 
+import pytest
+
 from usfs_r1_ea_sources.records import FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION
 from usfs_r1_ea_sources.records import SOURCE_RECORD_RECONCILIATION_SCHEMA_VERSION
 from usfs_r1_ea_sources.records import evaluate_source_record_identity_gate
@@ -93,6 +95,70 @@ def test_identity_gate_fails_closed_on_unmapped_absent_and_ambiguous_ids(
         "R1EA-ABSENT": ["FED-MISSING"]
     }
     assert result.summary["unmapped_source_record_ids"] == ["R1EA-UNMAPPED"]
+
+
+def test_identity_gate_uses_explicit_identity_target_for_coverage_fanout(
+    tmp_path: Path,
+) -> None:
+    source_record_reconciliation = _write_source_record_reconciliation(
+        tmp_path,
+        [
+            {
+                "legacy_source_record_id": "R1EA-SPLIT",
+                "current_source_record_ids": ["FED-001", "FED-002"],
+                "identity_source_record_id": "FED-002",
+            }
+        ],
+    )
+    forest_plan_identity_reconciliation = _write_forest_plan_identity_reconciliation(
+        tmp_path,
+        [],
+    )
+
+    result = evaluate_source_record_identity_gate(
+        expected_source_record_ids=("R1EA-SPLIT",),
+        catalog_source_record_ids={"FED-001", "FED-002"},
+        source_record_reconciliation_path=source_record_reconciliation,
+        forest_plan_identity_reconciliation_path=forest_plan_identity_reconciliation,
+    )
+
+    assert result.summary["passed"] is True
+    assert result.summary["catalog_covered_source_record_count"] == 1
+    assert result.summary["identity_resolved_source_record_count"] == 1
+    assert result.summary["ambiguous_mappings"] == {}
+    assert result.summary["resolved_source_record_ids_by_expected_id"] == {
+        "R1EA-SPLIT": ["FED-002"]
+    }
+    assert result.summary["selected_identity_source_record_ids_by_expected_id"] == {
+        "R1EA-SPLIT": "FED-002"
+    }
+
+
+def test_identity_gate_rejects_identity_target_outside_reconciliation_targets(
+    tmp_path: Path,
+) -> None:
+    source_record_reconciliation = _write_source_record_reconciliation(
+        tmp_path,
+        [
+            {
+                "legacy_source_record_id": "R1EA-SPLIT",
+                "current_source_record_ids": ["FED-001"],
+                "identity_source_record_id": "FED-002",
+            }
+        ],
+    )
+    forest_plan_identity_reconciliation = _write_forest_plan_identity_reconciliation(
+        tmp_path,
+        [],
+    )
+
+    with pytest.raises(ValueError, match="identity_source_record_id"):
+        evaluate_source_record_identity_gate(
+            expected_source_record_ids=("R1EA-SPLIT",),
+            catalog_source_record_ids={"FED-001", "FED-002"},
+            source_record_reconciliation_path=source_record_reconciliation,
+            forest_plan_identity_reconciliation_path=forest_plan_identity_reconciliation,
+        )
 
 
 def test_expected_source_record_ids_from_v1_eval_contract_dedupes_all_owner_fields() -> None:

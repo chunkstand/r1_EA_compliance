@@ -89,7 +89,8 @@
     {
       "legacy_source_record_id": "R1EA-018",
       "current_source_record_ids": ["USDA-007", "USDA-001"],
-      "notes": "Canonical final-rule notice plus governing procedures row."
+      "identity_source_record_id": "USDA-007",
+      "notes": "Replay identity resolves to the canonical final-rule notice; the governing procedures row remains coverage support."
     },
     {
       "legacy_source_record_id": "R1EA-019",
@@ -139,7 +140,8 @@
     {
       "legacy_source_record_id": "R1EA-028",
       "current_source_record_ids": ["USDA-008", "USFS-004"],
-      "notes": "Canonical directives coverage now spans USDA and Forest Service directive portals."
+      "identity_source_record_id": "USDA-008",
+      "notes": "Replay identity resolves to the canonical Forest Service directives portal; the National Directives page remains coverage support."
     },
     {
       "legacy_source_record_id": "R1EA-029",
@@ -604,7 +606,8 @@
     {
       "legacy_source_record_id": "R1EA-124",
       "current_source_record_ids": ["FED-011", "R1-021", "LEX-USFS-012", "LEX-USFS-013"],
-      "notes": "Canonical land-exchange regulatory coverage now spans CFR plus Region 1 and FSH implementation rows."
+      "identity_source_record_id": "FED-011",
+      "notes": "Replay identity resolves to the canonical 36 CFR part 254 row; Region 1 and FSH implementation rows remain coverage support."
     },
     {
       "legacy_source_record_id": "R1EA-125",
@@ -669,7 +672,8 @@
     {
       "legacy_source_record_id": "R1EA-137",
       "current_source_record_ids": ["FED-032", "LEX-FED-003", "LEX-FED-004", "LEX-FED-006", "LEX-FED-011"],
-      "notes": "Canonical land-exchange statutory-authority coverage is now split across FLPMA and supporting statutory rows."
+      "identity_source_record_id": "FED-032",
+      "notes": "Replay identity resolves to the canonical FLPMA exchange row; supporting statutory rows remain coverage support."
     },
     {
       "legacy_source_record_id": "R1EA-138",
@@ -734,7 +738,8 @@
     {
       "legacy_source_record_id": "R1EA-150",
       "current_source_record_ids": ["USFS-035", "LEX-USFS-002", "LEX-USFS-003", "LEX-USFS-004", "LEX-USFS-006", "LEX-USFS-007"],
-      "notes": "Canonical land-exchange policy/reference coverage now spans the main program row plus FSM/FSH support rows."
+      "identity_source_record_id": "USFS-035",
+      "notes": "Replay identity resolves to the canonical landownership/exchanges directive row; FSM and FSH support rows remain coverage support."
     },
     {
       "legacy_source_record_id": "R1EA-151",

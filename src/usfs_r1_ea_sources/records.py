@@ -176,6 +176,7 @@ def evaluate_source_record_identity_gate(
         forest_plan_identity_reconciliation_path
     )
     compliance_map = source_record_reconciliation["current_by_legacy"]
+    compliance_identity_map = source_record_reconciliation["identity_by_legacy"]
     forest_plan_map = forest_plan_reconciliation["canonical_by_legacy"]
 
     direct_hits: list[str] = []
@@ -186,6 +187,7 @@ def evaluate_source_record_identity_gate(
     ambiguous_mappings: dict[str, list[str]] = {}
     covered_source_record_ids: list[str] = []
     resolved_source_record_ids_by_expected_id: dict[str, list[str]] = {}
+    selected_identity_source_record_ids_by_expected_id: dict[str, str] = {}
 
     for expected_id in expected_ids:
         if expected_id in catalog_ids:
@@ -194,15 +196,24 @@ def evaluate_source_record_identity_gate(
             resolved_source_record_ids_by_expected_id[expected_id] = [expected_id]
             continue
 
-        compliance_targets = list(compliance_map.get(expected_id, ()))
+        raw_compliance_targets = list(compliance_map.get(expected_id, ()))
+        compliance_identity_target = compliance_identity_map.get(expected_id)
+        if compliance_identity_target:
+            compliance_targets = [compliance_identity_target]
+        else:
+            compliance_targets = raw_compliance_targets
         forest_plan_target = forest_plan_map.get(expected_id)
         forest_plan_targets = [forest_plan_target] if forest_plan_target else []
         targets = _deduped_strings([*compliance_targets, *forest_plan_targets])
         present_targets = [target for target in targets if target in catalog_ids]
         absent_targets = [target for target in targets if target not in catalog_ids]
 
-        if compliance_targets and any(target in catalog_ids for target in compliance_targets):
+        if raw_compliance_targets and any(target in catalog_ids for target in compliance_targets):
             compliance_hits.append(expected_id)
+        if compliance_identity_target:
+            selected_identity_source_record_ids_by_expected_id[expected_id] = (
+                compliance_identity_target
+            )
         if forest_plan_targets and any(target in catalog_ids for target in forest_plan_targets):
             forest_plan_hits.append(expected_id)
         if present_targets:
@@ -256,6 +267,9 @@ def evaluate_source_record_identity_gate(
         "mapped_targets_absent_from_catalog": mapped_targets_absent,
         "ambiguous_mappings": ambiguous_mappings,
         "resolved_source_record_ids_by_expected_id": resolved_source_record_ids_by_expected_id,
+        "selected_identity_source_record_ids_by_expected_id": (
+            selected_identity_source_record_ids_by_expected_id
+        ),
         "checks": checks,
     }
     return SourceRecordIdentityGateResult(
@@ -376,7 +390,7 @@ def _aliased_forest_plan_source_record_ids(
 
 
 @lru_cache(maxsize=8)
-def _load_source_record_reconciliation(path: Path) -> dict[str, dict[str, tuple[str, ...]]]:
+def _load_source_record_reconciliation(path: Path) -> dict[str, Any]:
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Compliance source-record reconciliation must be a JSON object.")
@@ -389,6 +403,7 @@ def _load_source_record_reconciliation(path: Path) -> dict[str, dict[str, tuple[
     if not isinstance(entries, list):
         raise ValueError("Compliance source-record reconciliation entries must be a list.")
     current_by_legacy: dict[str, tuple[str, ...]] = {}
+    identity_by_legacy: dict[str, str] = {}
     legacy_by_current: dict[str, set[str]] = {}
     for index, entry in enumerate(entries):
         if not isinstance(entry, dict):
@@ -417,9 +432,24 @@ def _load_source_record_reconciliation(path: Path) -> dict[str, dict[str, tuple[
                     f"safe: {replacement_id!r}"
                 )
             legacy_by_current.setdefault(replacement_id, set()).add(legacy_source_record_id)
+        identity_source_record_id = str(entry.get("identity_source_record_id") or "").strip()
+        if identity_source_record_id:
+            if not SAFE_SOURCE_RECORD_ID_RE.fullmatch(identity_source_record_id):
+                raise ValueError(
+                    "Compliance source-record reconciliation identity_source_record_id must be "
+                    f"safe: {identity_source_record_id!r}"
+                )
+            if identity_source_record_id not in replacement_ids:
+                raise ValueError(
+                    "Compliance source-record reconciliation identity_source_record_id must be "
+                    "listed in current_source_record_ids for "
+                    f"{legacy_source_record_id!r}: {identity_source_record_id!r}"
+                )
+            identity_by_legacy[legacy_source_record_id] = identity_source_record_id
         current_by_legacy[legacy_source_record_id] = tuple(replacement_ids)
     return {
         "current_by_legacy": current_by_legacy,
+        "identity_by_legacy": identity_by_legacy,
         "legacy_by_current": {
             current_source_record_id: tuple(sorted(legacy_source_record_ids))
             for current_source_record_id, legacy_source_record_ids in legacy_by_current.items()

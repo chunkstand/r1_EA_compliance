@@ -241,11 +241,12 @@ family.
   `f70...`; five compliance-covered source-record IDs still have multi-target
   current catalog mappings. The live child owner is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`;
-  its Milestone 1 identity gate is implemented and proves all 60 expected IDs
-  have present current-catalog coverage, but it returns `passed=false` on the
-  exact ambiguous mappings `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and
-  `R1EA-150`. The next truthful slice is governed ambiguity resolution before
-  any tracked replay config can move to `f70...`.
+  its Milestone 1 identity gate is implemented and now returns `passed=true`
+  after explicit replay identity selectors resolved the former ambiguous
+  mappings as `R1EA-018 -> USDA-007`, `R1EA-028 -> USDA-008`,
+  `R1EA-124 -> FED-011`, `R1EA-137 -> FED-032`, and
+  `R1EA-150 -> USFS-035`. The next truthful slice is Milestone 2 replay config
+  update or exact stop before any tracked replay config can move to `f70...`.
   No truthful ready closure path is currently proven.
   Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:
@@ -272,11 +273,12 @@ family.
   aligned owner path. The live red family is now stale `5e65...` retrieval and
   rule-claim direct evals, stale shared `f70...` compliance-review direct eval,
   `evaluation_coverage`, source-register currentness blocked by the missing
-  current `5e65...` manifest, and source-record identity blocked by the split
-  compliance/forest-plan reconciliation owners plus five ambiguous multi-target
-  mappings. The source-record identity gate now exists and still fails closed
-  on those mappings, so live work stays in governed ambiguity resolution before
-  any current-workbook replay or direct-eval rebaseline. Do not route back into
+  current `5e65...` manifest, and current-workbook replay config still blocked
+  until the tracked Lolo replay/eval surfaces consume the now-green
+  source-record identity owner. The source-record identity gate now exists and
+  passes on the current `f70...` catalog, so live work stays in Milestone 2
+  replay config update or exact stop before any current-workbook replay or
+  direct-eval rebaseline. Do not route back into
   another South replay pass, reopen the resolved replay-repair packet, or treat
   the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.
