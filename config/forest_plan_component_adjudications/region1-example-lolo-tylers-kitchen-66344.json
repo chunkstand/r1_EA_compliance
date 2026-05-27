@@ -2,9 +2,9 @@
   "schema_version": "forest-plan-component-adjudication-v0",
   "adjudication_id": "region1-example-lolo-tylers-kitchen-66344-component-adjudication",
   "title": "Forest Plan Component Adjudication",
-  "created_at": "2026-05-24T18:55:35.082068Z",
+  "created_at": "2026-05-27T13:14:00Z",
   "review_id": "region1-example-lolo-tylers-kitchen-66344",
-  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
   "component_findings_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_component_findings.json",
   "reviewer_resolution_queue_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_reviewer_resolution_queue.json",
   "adjudication": {
@@ -35,9 +35,9 @@
   ],
   "summary": {
     "schema_version": "forest-plan-component-adjudication-template-summary-v0",
-    "created_at": "2026-05-24T18:55:35.081889Z",
+    "created_at": "2026-05-27T13:14:00Z",
     "review_id": "region1-example-lolo-tylers-kitchen-66344",
-    "source_set_id": "source-set-4fb59e9eb43045cb",
+    "source_set_id": "source-set-f70ea11e04ae3d53",
     "review_dir": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344",
     "component_findings_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_component_findings.json",
     "reviewer_resolution_queue_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_reviewer_resolution_queue.json",
@@ -56,9 +56,9 @@
   },
   "items": [
     {
-      "item_id": "R1PLAN-lolo-nf-02-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21-missing_package_evidence",
-      "finding_id": "R1PLAN-lolo-nf-02-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21-finding",
-      "component_id": "R1PLAN-lolo-nf-02-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21",
+      "item_id": "FPS-298-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21-missing_package_evidence",
+      "finding_id": "FPS-298-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21-finding",
+      "component_id": "FPS-298-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21",
       "disposition": "applicability_false_positive",
       "expected_current": {
         "applicability_status": "needs_reviewer_resolution",
@@ -67,11 +67,11 @@
         "queue_reason": "missing_package_evidence"
       },
       "component_source_ref": {
-        "source_record_id": "R1PLAN-lolo-nf-02"
+        "source_record_id": "FPS-298"
       },
       "plan_source_evidence_refs": [
         {
-          "source_record_id": "R1PLAN-lolo-nf-02"
+          "source_record_id": "FPS-298"
         }
       ],
       "adjudicated_at": "2026-05-24T18:58:00Z",

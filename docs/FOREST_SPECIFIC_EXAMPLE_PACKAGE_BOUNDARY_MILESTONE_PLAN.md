@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 is now reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed but inherited review-scoped phase-eval gates still block promotion`)
+Status: Active packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 is now reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; the inherited Lolo review-scoped phase-eval blocker is now cleared, but registry promotion still requires a separate Milestone 3 threshold-ratchet slice`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -24,7 +24,11 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, added the
   tracked replay context plus Lolo review/component eval contracts, and made
   the Lolo forest-plan component slot load-bearing in
-  `config/forest_plan_component_eval_coverage_v1.json`.
+  `config/forest_plan_component_eval_coverage_v1.json`. Its downstream
+  currentness/source-record blocker chain has since replayed the review on
+  `source-set-f70ea11e04ae3d53` and made review `phase-eval` green; the Lolo
+  registry row remains `profile_eval_guidance_only` until the parent packet's
+  Milestone 3 registry and aggregate threshold ratchet is implemented.
 - The remaining `8` forests now route through
   `config/region1_forest_plan_profile_eval_coverage_v1.json` as
   `profile_eval_guidance_only` until a governed real package example exists.
@@ -120,6 +124,9 @@ This packet exists to ensure:
 
 ## Weak-Point Prevention Contract
 
+Strict field coverage: weak point forecast, owner surface, prevention gate,
+fail threshold, controlled violation, future-codex misuse scenario.
+
 ### Weak Point 1
 
 Risk: the registry starts behaving like a second master list.
@@ -193,6 +200,87 @@ Current active follow-on:
   standalone Milestone 2 packet. It now owns the user-selected Lolo
   `Tyler's Kitchen Fuels Reduction and Forest Health Project (66344)` package,
   the related `FOR-029` queue-boundary reroute out of master-promotion
-  semantics, and the tracked Lolo forest-plan component slot, but it remains
-  reduced on the inherited review-scoped `phase-eval` direct-eval blocker for
-  `source-set-5e65d845ce77e1a0`.
+  semantics, and the tracked Lolo forest-plan component slot. The inherited
+  review-scoped `phase-eval` blocker is now cleared on
+  `source-set-f70ea11e04ae3d53`; the remaining work is that parent packet's
+  Milestone 3 registry promotion and aggregate threshold ratchet.
+
+## Current Evidence
+
+- The forest-specific registry remains the typed routing owner for every
+  Region 1 forest.
+- Lolo still routes as `profile_eval_guidance_only` in
+  `config/forest_specific_example_package_registry_v1.json`; that row now names
+  Tyler's Kitchen as the first example boundary and records that the inherited
+  phase-eval blocker is cleared.
+- `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is the active
+  parent packet for the next Lolo registry promotion slice.
+- The source-record/currentness blocker chain is historical for Lolo; the
+  current review replay passes on `source-set-f70ea11e04ae3d53`.
+
+## Milestone Sequence
+
+| Milestone | Scope | Outcome label |
+| --- | --- | --- |
+| `0` | Registry and queue reroute | `resolved` |
+| `1` | Aggregate per-forest coverage eval | `resolved` |
+| `2` | Lolo example package follow-on | `reduced` |
+| `3` | Lolo registry promotion and threshold ratchet | `pending` |
+
+## Acceptance Criteria
+
+- The registry keeps example-package routing separate from
+  `Document_Register_Master`.
+- Every forest row has one typed routing status and the required shared
+  contract references.
+- Lolo remains `profile_eval_guidance_only` until the parent Lolo Milestone 3
+  slice updates registry, coverage, queue, and aggregate thresholds together.
+- Negative coverage remains explicit: missing or typed-blocked examples fail or
+  route as guidance-only rather than silently becoming reviewer-ready.
+- No tests, eval thresholds, or queue gates are weakened to make a forest appear
+  covered.
+
+## Required Verification Gates
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_specific_example_package_registry.py tests/test_forest_specific_example_package_eval.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_real_package_review_coverage_eval.py tests/test_forest_plan_component_eval_coverage.py
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library --manifest config/forest_specific_example_package_registry_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library --manifest config/forest_plan_component_eval_coverage_v1.json
+git diff --check
+```
+
+## Freshness Check
+
+Before changing registry status, read `docs/CURRENT_ROUTING.md`,
+`docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`,
+`docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, and
+`config/forest_specific_example_package_registry_v1.json`. Verify the current
+Lolo `v1-ea-eval` and review `phase-eval` artifacts before promoting any row.
+
+## Stop Conditions
+
+- Stop if registry promotion would require adding example-package rows to
+  `Document_Register_Master`.
+- Stop if a governed aggregate gate fails after registry or coverage changes.
+- Stop if any forest row would become reviewer-ready without an explicit
+  package authority and eval artifact family.
+- Stop if the only way forward is to weaken eval thresholds, skip tests, or
+  hand-edit ignored generated artifacts.
+
+## Strict Weak-Point Prevention Contract
+
+| Weak point forecast | Owner surface | Prevention gate | Fail threshold | Controlled violation | Future-Codex misuse scenario |
+| --- | --- | --- | --- | --- | --- |
+| Registry behaves like a second master list | registry and source-register queue ledger | queue audit plus registry tests | project-specific example emits as shared master input | queue row stays blocked/named until a separate packet proves shared source value | a future session silently promotes example rows into the master workbook lane |
+| Forest row points at the wrong example | registry example rows | forest-specific example eval | example forest IDs and registry applicability IDs disagree | typed-blocked/profile-only rows remain guidance-only | a future session reuses a Custer example as Lolo guidance without applicability proof |
+| Missing artifacts are hidden by generic wording | real-package coverage and profile-eval contracts | aggregate eval plus negative coverage cases | missing required review artifact is counted reviewer-ready | typed-blocked and profile-only states fail closed | a future session presents profile-only fixtures as a governed real package |
+| Lolo is promoted before threshold ratchet | Lolo parent packet and registry config | Milestone 3 aggregate gate bundle | `lolo-nf` status changes without coverage/queue threshold updates | keep Lolo `profile_eval_guidance_only` until all gates pass | a future session changes only the registry label after phase-eval turns green |
+
+## Local Commit Closeout Policy
+
+`complete-after-commit` rule: a milestone is not complete until verification
+passes, durable docs and handoff updates land, and the local atomic commit
+exists. Stage only the verified slice for the current milestone. Leave ignored
+`source_library/` evidence unstaged unless repository policy changes.

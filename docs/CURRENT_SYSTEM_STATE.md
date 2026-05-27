@@ -15,6 +15,73 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Lolo Current-Workbook Replay Rebaseline Resolved Locally
+
+Latest implementation update on 2026-05-27 UTC:
+
+- active packet:
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- resolved packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+- parent route:
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- packet outcome:
+  `resolved locally`; the tracked Tyler's Kitchen Lolo replay now consumes the
+  current-workbook owner `source-set-f70ea11e04ae3d53` through
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`,
+  and the source-register/current-workbook/source-record/aligned-runtime
+  blocker chain is no longer the active route
+- implementation truth:
+  `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`,
+  `config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
+  `config/applicability_adjudications/region1-example-lolo-tylers-kitchen-66344.json`,
+  `config/forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json`,
+  and
+  `config/forest_plan_component_adjudications/region1-example-lolo-tylers-kitchen-66344.json`
+  now align to `source-set-f70ea11e04ae3d53`. The Lolo forest-plan component
+  inventory row now uses a Lolo replay-compatible source-set reference in
+  `config/r1_forest_plan_component_inventory_build_manifest.json`.
+- eval-contract truth:
+  the Lolo v1 eval expected source-record set is now `59` IDs. The legacy
+  duplicate `R1PLAN-lolo-nf-02` expectation was removed because current replay
+  owns that forest-plan source through `FPS-298`; `R1PLAN-lolo-nf-01` remains
+  in the eval contract.
+- gate truth:
+  `source-record-identity-gate` on the current `f70...` catalog passes with
+  `expected_source_record_count=59`, `catalog_covered_source_record_count=59`,
+  `identity_resolved_source_record_count=59`,
+  `unmapped_source_record_ids=[]`,
+  `mapped_targets_absent_from_catalog={}`, and `ambiguous_mappings={}`.
+- replay truth:
+  applicability validation passes with `54` applicable and `342`
+  non-applicable authorities, the generated rule pack has `54` rules,
+  compliance review is `reviewer_ready=true` with `scope_status="lolo_nf"`,
+  forest-plan component eval and component adjudication eval pass, and
+  `v1-ea-eval` reports `contract_status="reviewer_ready"`,
+  `broader_ea_passed=true`, and `forest_plan_passed=true`.
+- phase truth:
+  review `phase-eval --review-id region1-example-lolo-tylers-kitchen-66344`
+  passes with `passed_phase_count=28`, `phase_count=28`, `blockers=[]`,
+  `identity_mismatch_phase_count=0`, and
+  `review_direct_eval_status="not_required_for_ad_hoc_review"`.
+- aggregate component-coverage truth:
+  the Lolo slot in `config/forest_plan_component_eval_coverage_v1.json` is now
+  aligned to `source-set-f70ea11e04ae3d53` and passes, but the aggregate
+  `forest-plan-component-eval-coverage` command remains red for non-Lolo slots:
+  `covered_review_count=2/4`, `stale_identity_count=1`, and
+  `unresolved_review_count=2`.
+- next routing:
+  Lolo is not automatically admitted into the forest-specific example registry
+  by this blocker closeout. If continuing the lane, start from
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 3 to
+  update registry/coverage/queue thresholds and run the governed aggregate
+  gates.
+- verification:
+  final source-record identity gate, governed applicability replay chain,
+  compliance review with `--forest-unit-id lolo-nf`, forest-plan component eval,
+  forest-plan component adjudication eval, `v1-ea-eval`, review `phase-eval`,
+  strict plan lint, closeout doc parity, and `git diff --check`
+
 ## Lolo Source-Record Identity Reconciliation Milestone 1 Resolved Locally
 
 Latest implementation update on 2026-05-27 UTC:
@@ -54,13 +121,10 @@ Latest implementation update on 2026-05-27 UTC:
 - config boundary:
   no replay context, v1 eval contract, applicability adjudication config,
   forest-plan component eval config, compliance review artifact, or ignored
-  `source_library/` JSON was patched
+  `source_library/` JSON was patched in the Milestone 1 slice
 - next routing:
-  continue at Milestone 2 of the same packet to update the tracked Lolo
-  replay/eval config surfaces to consume the current-workbook identity owner,
-  or stop at the exact replay/eval command that cannot consume it. Tracked
-  config and ignored generated review artifacts still have not moved from
-  `5e65...` to `f70...`
+  this is historical predecessor evidence. The newer section above records the
+  Milestone 2-3 replay-config closeout on `source-set-f70ea11e04ae3d53`.
 - verification:
   focused source-record identity and CLI tests, the actual green Lolo
   `source-record-identity-gate`, existing rule-claim and forest-plan
@@ -214,11 +278,10 @@ Latest implementation update on 2026-05-26:
   historical route at that checkpoint was to continue in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
   at Milestone 0 to rebaseline the source-register manifest/currentness owner.
-  That child has since stopped to the current-workbook source-set rebaseline
-  packet, whose Milestones 0-1 are reduced locally; the live route is now
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 2 replay config update or exact stop after Milestone 1 implemented
-  the identity gate and resolved the five multi-target mappings
+  That child later stopped to the current-workbook source-set rebaseline
+  packet, then to the source-record identity packet. The newest section above
+  records the current closeout: Lolo now replays on `source-set-f70ea11e04ae3d53`
+  and review `phase-eval` passes `28/28`.
 - verification:
   governed applicability and forest-plan component refresh commands,
   adjudication eval/apply, review `phase-eval`, source-register phase readback,
@@ -332,10 +395,10 @@ Latest implementation update on 2026-05-26:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   at Milestone 0 to freshness-lock the stale aligned-runtime surfaces before
   any reruns. That packet has since reduced through Milestone 1 and routed to
-  source-register/current-workbook rebaseline; the live route is now
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 2 replay config update or exact stop after Milestone 1 implemented
-  the identity gate and resolved the five multi-target mappings. Treat
+  source-register/current-workbook rebaseline and then through source-record
+  identity. The newest section above records the current closeout: Lolo now
+  replays on `source-set-f70ea11e04ae3d53` and review `phase-eval` passes
+  `28/28`. Treat
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
   as the exact predecessor that resolved the tracked source-set contract
   split, keep

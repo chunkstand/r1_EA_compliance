@@ -39,24 +39,25 @@ The planner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` before
   pulling review artifacts.
 - The live Lolo follow-on is now
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
-- For Lolo National Forest example-package review work, inspect that blocker
-  first. Its Milestone 1 source-record identity gate is now implemented and
-  green on the current `f70...` catalog after explicit identity selectors
-  resolved the former multi-target mappings:
-  `R1EA-018 -> USDA-007`, `R1EA-028 -> USDA-008`,
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
+- For Lolo National Forest example-package review work, inspect that parent
+  first, then the just-resolved source-record identity blocker only as
+  predecessor evidence. The blocker moved tracked Lolo replay/eval config to
+  the current `f70...` catalog, kept explicit identity selectors for the former
+  multi-target mappings (`R1EA-018 -> USDA-007`, `R1EA-028 -> USDA-008`,
   `R1EA-124 -> FED-011`, `R1EA-137 -> FED-032`, and
-  `R1EA-150 -> USFS-035`. The next truthful slice is Milestone 2 replay config
-  update or exact stop inside that packet, not a direct roster or promotion
-  move. Its Milestone 0 inventory proved all 60 expected Lolo source-record IDs
-  resolve to at least one current `f70...` catalog record, with no missing IDs
-  and no mapped target absent from the catalog. Its
-  predecessor,
+  `R1EA-150 -> USFS-035`), and now proves `v1-ea-eval` reviewer-ready plus
+  review `phase-eval` green at `28/28`. The next truthful slice is the parent
+  example-package Milestone 3 registry promotion, aggregate threshold ratchet,
+  and queue/coverage update. Do not directly change the registry status without
+  those aggregate gates. The predecessor
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
-  reduced locally through Milestone 1: the current-workbook `f70...` catalog
-  gate is not a drop-in owner for historical `5e65...` artifacts, direct replay
-  override fails closed against the tracked replay context, and source-record
-  identity is split across compliance and forest-plan reconciliation owners.
+  is now resolved through the source-record identity child: the current-workbook
+  `f70...` catalog gate is not a drop-in owner for historical `5e65...`
+  artifacts, direct replay override originally failed closed against the
+  tracked replay context, and source-record identity was split across
+  compliance and forest-plan reconciliation owners before the governed identity
+  gate and replay refresh closed it.
   Then read
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   as the current-workbook source-set predecessor, then read

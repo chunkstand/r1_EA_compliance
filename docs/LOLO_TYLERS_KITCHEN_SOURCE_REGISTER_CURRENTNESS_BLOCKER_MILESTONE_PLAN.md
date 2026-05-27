@@ -5,7 +5,9 @@ Date: 2026-05-26
 Status: Resolved locally by broader stop (`Milestones 0-2 proved no exact current
 source-set-5e65d845ce77e1a0 manifest/currentness surface exists; the
 current-workbook source-set rebaseline follow-on has since stopped to
-docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`)
+docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
+which has now replayed Lolo onto source-set-f70ea11e04ae3d53 and cleared the
+review source-register phase)
 
 Owner context: standalone child packet opened from
 `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
@@ -55,18 +57,19 @@ global catalog manifest SHA
   and no local `source_set_manifest.json` currently has that hash.
 - The current-workbook follow-on packet
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  is reduced locally through Milestone 1: `f70...` is a
+  is now resolved locally through Milestone 3: `f70...` was first proven as a
   current-workbook catalog candidate but not a drop-in owner for `5e65...`
   because the selected/catalog source-record sets differ (`350` versus `708`
   IDs, with `R1EA-*` versus `FED-*` identity), and Milestone 1 stopped at the
   split source-record identity owner before replay config could move. The child
   identity packet has now implemented `source-record-identity-gate`, resolved
   the five ambiguous multi-target mappings with explicit governed identity
-  selectors, and made the current-workbook candidate identity gate green. The
-  live route is now
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 2 replay config update or exact stop before replay config can
-  move.
+  selectors, made the current-workbook candidate identity gate green, moved the
+  tracked Lolo replay/eval surfaces to `source-set-f70ea11e04ae3d53`, and
+  proved review `phase-eval` green at `28/28`. The live route is no longer this
+  source-register currentness packet or the source-record identity child.
+  Future Lolo work returns to the broader example-package parent for registry
+  promotion and aggregate threshold ratchet.
   This packet must not be reopened to hand-edit ignored manifests or to teach
   `phase-eval` to ignore workbook SHA drift.
 

@@ -8,7 +8,9 @@ the source-register currentness child stopped to
 docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md,
 and that follow-on has now stopped to
 docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md
-before this packet can continue to direct-eval rebaseline`)
+before replaying Lolo onto source-set-f70ea11e04ae3d53 and clearing review
+phase-eval. This packet is now historical; direct-eval rebaseline no longer
+owns the active Lolo route.)
 
 Owner context: standalone child packet opened after
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
@@ -77,14 +79,16 @@ Opening closeout commit:
   `f70...` catalog gate is not a drop-in owner for the historical `5e65...`
   review artifacts because source-record identity differs, and a direct
   `f70...` replay override stops against tracked replay context. The live route
-  is now
+  then moved to
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
   after Milestone 1 implemented the governed replay-facing identity gate and
   then resolved the five ambiguous multi-target mappings with explicit governed
   identity selectors.
-  This packet should resume at Milestone 2 direct-eval rebaseline only after
-  the current-workbook source-set owner, source-record identity contract, and
-  `source_register_contract` are no longer the active blockers.
+  That child has now moved tracked Lolo replay/eval config to
+  `source-set-f70ea11e04ae3d53` and proved final `v1-ea-eval` plus review
+  `phase-eval` green (`28/28`, no blockers, no identity mismatches). This
+  packet should not resume for separate `5e65...` direct-eval rebaseline unless
+  a future regression reopens it explicitly.
 
 ## Purpose
 

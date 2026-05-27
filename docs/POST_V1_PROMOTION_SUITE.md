@@ -219,13 +219,13 @@ family.
   Fresh rebaseline proving on 2026-05-26 also showed that the older `ba8...`
   closure assumption is stale under current live artifacts, `4fb...` remains
   source-set `phase-eval` red (`10/33`), and the tracked Lolo replacement
-  path is now also unproven under fresher blocker evidence. The tracked
-  replay context and tracked `v1-ea-eval` contract now align to `5e65...`,
-  fresh `v1-ea-eval` is `reviewer_ready`, Milestone 0 of
+  path was also unproven under fresher blocker evidence at that checkpoint.
+  The tracked replay context and tracked `v1-ea-eval` contract then aligned to
+  `5e65...`, fresh `v1-ea-eval` was `reviewer_ready`, Milestone 0 of
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   froze the remaining review `phase-eval` red at `15/23`, and Milestone 1
   refreshed the review-local applicability chain plus forest-plan component eval
-  so fresh `phase-eval` now fails closed at `18/23`. The source-register
+  so fresh `phase-eval` failed closed at `18/23`. The source-register
   currentness child has since stopped truthfully: no exact current
   `source-set-5e65d845ce77e1a0` manifest exists, the historical `5e65...`
   currentness report points at a no-longer-present manifest hash, and the
@@ -239,15 +239,20 @@ family.
   split, and its Milestone 1 exact stop proved the replay lane needs a governed
   source-record identity owner before tracked config can move from `5e65...` to
   `f70...`; five compliance-covered source-record IDs still have multi-target
-  current catalog mappings. The live child owner is now
+  current catalog mappings. The child owner then moved to
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`;
   its Milestone 1 identity gate is implemented and now returns `passed=true`
   after explicit replay identity selectors resolved the former ambiguous
   mappings as `R1EA-018 -> USDA-007`, `R1EA-028 -> USDA-008`,
   `R1EA-124 -> FED-011`, `R1EA-137 -> FED-032`, and
-  `R1EA-150 -> USFS-035`. The next truthful slice is Milestone 2 replay config
-  update or exact stop before any tracked replay config can move to `f70...`.
-  No truthful ready closure path is currently proven.
+  `R1EA-150 -> USFS-035`. That child has now resolved Milestones 2-3 by
+  moving tracked Lolo replay/eval config to `source-set-f70ea11e04ae3d53`,
+  refreshing the governed local replay chain, and proving `v1-ea-eval`
+  reviewer-ready plus review `phase-eval` green at `28/28` with no blockers.
+  The next Lolo owner is the broader example-package parent Milestone 3 for
+  registry promotion and aggregate threshold ratchet; the promotion suite
+  should not treat Lolo as admitted before that separate registry/coverage
+  update and aggregate gate run.
   Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:
   `4fb...` still fails across upstream/downstream `phase-eval` families, and
@@ -266,22 +271,12 @@ family.
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   in `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`).
   The tracked replay context and tracked review eval contract now align to
-  `5e65...`, fresh `v1-ea-eval` is now `reviewer_ready`, and the remaining
-  red is no longer a generic tracked-contract split. After the aligned-runtime
-  Milestone 1 refresh, `authority_universe`, `generated_rule_pack`,
-  `applicability_validation`, and `forest_plan_component_eval` are green on the
-  aligned owner path. The live red family is now stale `5e65...` retrieval and
-  rule-claim direct evals, stale shared `f70...` compliance-review direct eval,
-  `evaluation_coverage`, source-register currentness blocked by the missing
-  current `5e65...` manifest, and current-workbook replay config still blocked
-  until the tracked Lolo replay/eval surfaces consume the now-green
-  source-record identity owner. The source-record identity gate now exists and
-  passes on the current `f70...` catalog, so live work stays in Milestone 2
-  replay config update or exact stop before any current-workbook replay or
-  direct-eval rebaseline. Do not route back into
+  `source-set-f70ea11e04ae3d53`; fresh `v1-ea-eval` is
+  `reviewer_ready`, and the remaining red family from the `5e65...` path is
+  historical for this review. Do not route back into
   another South replay pass, reopen the resolved replay-repair packet, or treat
-  the broader Lolo example packet or the replacement-
-  feasibility predecessor as the live owner for this remaining blocker.
+  the replacement-feasibility predecessor as the live owner for this remaining
+  blocker.
 
 Historical South Plateau expansion build context from the earlier green
 expansion pass remains below:

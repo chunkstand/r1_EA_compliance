@@ -2,7 +2,8 @@
 
 Date: 2026-05-27
 
-Status: Reduced locally through Milestone 1. Milestone 0 proved
+Status: Resolved locally through Milestones 2-3 after the source-record identity
+child replayed Lolo onto the current-workbook owner. Milestone 0 proved
 `source-set-f70ea11e04ae3d53` is not a drop-in current-workbook owner for the
 historical `source-set-5e65d845ce77e1a0` review artifacts. Milestone 1 then
 reached an exact local-replay stop: tracked replay config rejects an ad hoc
@@ -11,18 +12,19 @@ contract now routed to
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
 That child packet has since implemented the generic identity gate, resolved the
 five ambiguous multi-target mappings with explicit governed identity selectors,
-and made the current-workbook candidate identity gate green. Replay config
-movement now belongs to that child packet's Milestone 2.
+made the current-workbook candidate identity gate green, moved the tracked
+Lolo replay/eval config surfaces to `source-set-f70ea11e04ae3d53`, and proved
+`v1-ea-eval` plus review `phase-eval` green. Current-workbook owner selection
+is no longer the live blocker; the remaining Lolo work returns to the broader
+example-package parent for registry promotion and aggregate threshold ratchet.
 
 Owner context: standalone child packet opened from
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`.
-The tracked Lolo review `region1-example-lolo-tylers-kitchen-66344` still has
+The tracked Lolo review `region1-example-lolo-tylers-kitchen-66344` now has
 green review-local applicability, generated rule pack, applicability validation,
-and forest-plan component eval artifacts on `source-set-5e65d845ce77e1a0`, but
-that source set no longer has a current workbook-bound manifest surface locally.
-The only current-workbook archived catalog gate found during source-register
-currentness closeout is `source-set-f70ea11e04ae3d53`, and it is not directly
-source-set compatible with the `5e65...` derived artifacts.
+forest-plan component eval, compliance review, `v1-ea-eval`, and `phase-eval`
+artifacts on `source-set-f70ea11e04ae3d53`. The older `5e65...` source set
+remains historical evidence only and is not treated as current-workbook ready.
 
 ## Latest Local Implementation
 
@@ -37,14 +39,23 @@ source-set compatible with the `5e65...` derived artifacts.
   current-workbook replay override is blocked by the tracked replay context, and
   the expected source-record IDs are split across compliance reconciliation and
   forest-plan identity reconciliation owner surfaces.
-- The child source-record identity packet is now resolved through Milestone 1:
+- The child source-record identity packet is now resolved through Milestones 2-3:
   `source-record-identity-gate` proves all 60 Lolo expected IDs have present
-  `f70...` catalog coverage and now returns `passed=true` after
+  `f70...` catalog coverage at the predecessor checkpoint and now returns
+  `passed=true` for the final 59-ID eval contract after
   `identity_source_record_id` selectors resolved the five former ambiguous
-  current-catalog mappings.
+  current-catalog mappings. The tracked Lolo replay context, v1 eval contract,
+  applicability adjudication, forest-plan component eval contract, and
+  component adjudication now all consume `source-set-f70ea11e04ae3d53`.
+- The final replay closeout on `source-set-f70ea11e04ae3d53` is green:
+  source-record identity gate `59/59`, `v1-ea-eval`
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`,
+  `forest_plan_passed=true`, and review `phase-eval` `28/28` with
+  `blockers=[]` and `identity_mismatch_phase_count=0`.
 - Exact readback found:
-  - tracked replay context: `source_set_id="source-set-5e65d845ce77e1a0"` and
-    `catalog_dir="source_library/catalog"`;
+  - tracked replay context now:
+    `source_set_id="source-set-f70ea11e04ae3d53"` and
+    `catalog_dir="source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate"`;
   - active global catalog manifest:
     `source-set-4fb59e9eb43045cb`, workbook SHA
     `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`;
@@ -73,8 +84,11 @@ source-set compatible with the `5e65...` derived artifacts.
     evidence only, not an owner contract, because it includes unmatched
     historical rows and one-to-many fanout.
 - Fresh review `phase-eval` remains fail-closed at `18/23`; the live red phases
-  remain `retrieval`, `rule_claim_binding`, `downstream_direct_evaluation`,
-  `source_register_contract`, and `evaluation_coverage`.
+  at that predecessor checkpoint were `retrieval`, `rule_claim_binding`,
+  `downstream_direct_evaluation`, `source_register_contract`, and
+  `evaluation_coverage`. Those are no longer live on the current-workbook
+  replay owner after the source-record identity child closeout; current review
+  `phase-eval` passes `28/28` on `source-set-f70ea11e04ae3d53`.
 
 ## Purpose
 
@@ -90,8 +104,9 @@ new current-workbook catalog/currentness surface needed for that review.
 
 ## Current Evidence
 
-- `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json` still
-  points to `source-set-5e65d845ce77e1a0` and `source_library/catalog`.
+- `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json` now
+  points to `source-set-f70ea11e04ae3d53` and
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`.
 - `source_library/catalog/source_set_manifest.json` still points to
   `source-set-4fb59e9eb43045cb` with older workbook SHA
   `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
@@ -108,7 +123,13 @@ new current-workbook catalog/currentness surface needed for that review.
   override while tracked replay context still declares
   `source-set-5e65d845ce77e1a0`, and tracked eval/config cannot safely move to
   `f70...` until one replay-facing identity contract can resolve the split
-  `R1EA-*`, `R1PLAN-*`, `FPS-*`, and current-workbook IDs.
+  `R1EA-*`, `R1PLAN-*`, `FPS-*`, and current-workbook IDs. That stop is now
+  historical: the child identity packet resolved it and moved tracked config to
+  `f70...`.
+- Current closeout decision: `source_register_contract`, direct-eval identity,
+  and evaluation coverage now pass for the Lolo review on the current-workbook
+  owner. This packet does not itself change forest-specific example registry or
+  promotion roster semantics.
 - The `5e65...` authority-currentness report is historically green but not a
   current source-register owner: it was generated on `2026-05-11T00:40:55Z`
   from a `source_library/catalog/source_set_manifest.json` hash
@@ -140,7 +161,9 @@ Completion means all of the following are true:
 - Do not hand-edit ignored `source_library/` manifests or result JSON.
 - Do not make `source_register_contract` optional or ignore workbook SHA drift.
 - Do not admit Lolo into `config/v1_real_package_review_coverage_v1.json` or
-  `config/promotion_suite_v1.json` while review `phase-eval` remains red.
+  `config/promotion_suite_v1.json` from this packet; registry and promotion
+  changes belong to the broader example-package Milestone 3 aggregate-gate
+  slice.
 - Do not rerun network download workflows unless a milestone first proves local
   catalog/currentness replay cannot satisfy the gate.
 - Do not repair retrieval quality or direct-eval thresholds in this packet until
@@ -223,7 +246,7 @@ Completion means all of the following are true:
 | --- | --- | --- |
 | `0` | Current-workbook owner choice rebaseline | `reduced` |
 | `1` | Governed local replay or exact local-replay stop | `reduced` |
-| `2` | Source-register phase closure and direct-eval handoff | `reduced` |
+| `2` | Source-register phase closure and direct-eval handoff | `resolved` |
 | `3` | Exact closeout route and docs alignment | `resolved` |
 
 ### Milestone 0 - Current-Workbook Owner Choice Rebaseline
@@ -358,7 +381,14 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
 
 ### Milestone 2 - Source-Register Phase Closure And Direct-Eval Handoff
 
-Outcome label: reduced
+Outcome label: resolved
+
+Closeout status: complete after this verified slice is committed. The child
+source-record identity packet moved Lolo onto `source-set-f70ea11e04ae3d53` and
+review `phase-eval` now passes `28/28`; `source_register_contract`,
+`retrieval`, `rule_claim_binding`, `downstream_direct_evaluation`, and
+`evaluation_coverage` are no longer red for this review on the current-workbook
+owner.
 
 Purpose: prove `source_register_contract` is no longer the active blocker before
 resuming parent aligned-runtime direct-eval rebaseline.
@@ -373,10 +403,12 @@ Implementation:
 
 Acceptance criteria:
 
-- `source_register_contract` passes, or the next blocker is named with a
-  generated-artifact owner and verification gate.
-- Remaining direct-eval red stays visible.
-- No docs claim Lolo is ready while `phase-eval` remains red.
+- `source_register_contract` passes on `source-set-f70ea11e04ae3d53`.
+- Direct-eval identity red is cleared for this review under the current
+  `phase-eval` contract; review-scoped direct eval remains
+  `not_required_for_ad_hoc_review`.
+- No docs claim roster promotion until the broader Lolo example-package parent
+  implements its registry/coverage threshold ratchet.
 
 Verification:
 
@@ -388,6 +420,12 @@ jq '{review_id,source_set_id,passed,passed_phase_count,phase_count,failed_phase_
 ### Milestone 3 - Exact Closeout Route And Docs Alignment
 
 Outcome label: resolved
+
+Closeout status: complete after this verified slice is committed. The next
+owner is the broader
+`docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 3
+registry promotion, threshold ratchet, and queue reroute. This current-workbook
+source-set packet is no longer active.
 
 Purpose: close this packet with one precise next owner.
 
@@ -474,13 +512,14 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- The current next slice remains in
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
-- The owner is not a manifest swap and not an ad hoc CLI override. It requires a
-  governed replay-facing identity contract that can reconcile expected Lolo
-  source-record IDs to current-workbook catalog IDs. That gate now exists and
-  passes, so the next work is Milestone 2 replay config update or exact stop
-  before tracked replay/eval config moves.
-- Direct-eval failures remain real and should return to the parent aligned-runtime
-  packet only after source-register currentness and source-record identity are
-  coherent.
+- The current-workbook owner is not a manifest swap and not an ad hoc CLI
+  override. It is the tracked Lolo replay context plus eval/adjudication config
+  on `source-set-f70ea11e04ae3d53`, backed by the source-record identity gate
+  and final `v1-ea-eval` / `phase-eval` readback.
+- The remaining work is not source-register currentness or source-record
+  identity. The next owner is the broader Lolo example-package parent if the
+  user wants to promote `lolo-nf` from `profile_eval_guidance_only` to
+  `real_package_examples_available`.
+- That future promotion must update registry and aggregate coverage configs and
+  rerun the governed aggregate gates. This packet does not change roster,
+  promotion-suite, or forest-specific example registry semantics.

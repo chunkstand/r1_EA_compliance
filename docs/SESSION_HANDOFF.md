@@ -14,10 +14,11 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  if the next session is continuing implementation on the tracked Lolo
-  source-record identity reconciliation blocker for the ECID historical lane
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  if the next session is continuing Lolo example-package promotion work
 - active packet:
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- just-resolved blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor active packet:
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
@@ -26,18 +27,26 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  source-register currentness Milestones 0-2 are resolved locally by broader
-  stop, current-workbook source-set rebaseline Milestone 0 is reduced locally,
-  and current-workbook source-set rebaseline Milestone 1 is reduced locally by
-  exact stop. Source-record identity reconciliation Milestone 1 is now resolved
-  locally: `source-record-identity-gate` is implemented as the governed
-  replay-facing identity owner, the five former multi-target mappings now have
-  explicit `identity_source_record_id` selectors, and the Lolo gate returns
-  `passed=true` against the current `f70...` catalog. Continue in the same
-  packet at Milestone 2 by moving the tracked Lolo replay/eval config surfaces
-  to consume the current-workbook identity owner, or stop at the exact command
-  that cannot consume it; no tracked replay/eval config or ignored generated
-  artifact has moved from `5e65...` to `f70...` yet.
+  source-register currentness, current-workbook source-set rebaseline,
+  aligned-runtime rebaseline, and source-record identity reconciliation are now
+  historical for the tracked Lolo review. The tracked Lolo replay context,
+  `v1-ea-eval` contract, applicability adjudication, forest-plan component eval
+  contract, and component adjudication now consume
+  `source-set-f70ea11e04ae3d53` through
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`.
+  Final closeout readback is green: `source-record-identity-gate` passes
+  `59/59` expected IDs with no ambiguity, `v1-ea-eval` is
+  `contract_status="reviewer_ready"` with `broader_ea_passed=true` and
+  `forest_plan_passed=true`, and review `phase-eval` passes `28/28` with
+  `blockers=[]` and `identity_mismatch_phase_count=0`. The Lolo slot in
+  `config/forest_plan_component_eval_coverage_v1.json` is now aligned and
+  passes, but the aggregate component-coverage command remains red on non-Lolo
+  slots (`covered_review_count=2/4`, `stale_identity_count=1`,
+  `unresolved_review_count=2`). The next Lolo slice, if
+  continuing this lane, is
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 3 for
+  registry promotion, aggregate threshold ratchet, and queue/coverage updates;
+  do not admit Lolo into the governed registry without those aggregate gates.
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 - older predecessor blocker packet:
@@ -193,29 +202,23 @@ history below.
   absent IDs are covered by compliance source-record reconciliation, and
   `R1PLAN-lolo-nf-02` is covered separately by forest-plan identity
   reconciliation as `FPS-298`; five compliance-covered IDs are still
-  multi-target mappings that need a replay-facing identity rule
+  multi-target mappings that need a replay-facing identity rule. That entire
+  Lolo blocker chain is now resolved locally by the current closeout: the
+  source-record identity child replayed Lolo onto `source-set-f70ea11e04ae3d53`,
+  refreshed the governed local replay chain, and proved review `phase-eval`
+  green at `28/28`
 - next truthful slice:
-  source-set contract blocker Milestone 3, aligned-runtime Milestones 0-1,
-  source-register currentness Milestones 0-2, and current-workbook source-set
-  rebaseline Milestones 0-1, and source-record identity reconciliation
-  Milestones 0-1 are now resolved/reduced locally. Continue in
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 2: update the tracked Lolo replay/eval config surfaces to
-  consume the current-workbook identity owner, then rerun the smallest governed
-  local replay/eval chain; if a required command cannot consume the identity
-  owner, stop and open the exact narrower blocker instead of editing generated
-  outputs or weakening gates.
-  Direct-eval debt remains real in the parent aligned-runtime packet: retrieval
-  direct eval is both
-  contract-stale and semantically red, rule-claim direct eval is
-  contract-stale but otherwise green, and shared `f70...`
-  `compliance_review_eval` is stale for this review. Do not reopen
+  the Lolo source-record identity blocker has closed the runtime gap. Continue
+  in `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` only if the
+  next request asks to promote the Lolo example: implement Milestone 3 registry
+  promotion, threshold ratchet, and queue/coverage updates with the governed
+  aggregate gates. Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
-  packet, and do not treat the broader Lolo example packet as the live owner
-  for the remaining blocker
+  packet, and do not treat the older blocker chain as the live owner unless a
+  future verification command regresses the green `f70...` Lolo readback
 - session reminder:
-  the source-record identity reconciliation Milestone 1 resolved section at the
-  top is the current checkpoint; the following source-record
+  the Lolo `f70...` replay closeout section at the top is the current
+  checkpoint; the following source-record
   identity packet-opening, current-workbook source-set rebaseline Milestone 0,
   packet-opening,
   source-register currentness,
@@ -420,14 +423,12 @@ packet.
 - next routing:
   historical route at this packet-opening checkpoint was to continue in
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 0. That packet is now reduced locally through Milestone 1; the
-  live route is
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 2 replay config update or exact stop after Milestone 1 implemented
-  the identity gate and resolved the multi-target mappings.
-  Do not return to aligned-runtime direct-eval rebaseline until the
-  current-workbook source-set owner, source-record identity contract, and
-  `source_register_contract` are no longer active blockers
+  at Milestone 0. That packet later reduced through Milestone 1 and routed to
+  source-record identity reconciliation; the newest section above records the
+  current closeout on `source-set-f70ea11e04ae3d53` with review `phase-eval`
+  green at `28/28`.
+  Do not return to aligned-runtime direct-eval rebaseline unless a future
+  verification command regresses the current f70 Lolo readback
 - verification:
   replay-context readback, active and archived manifest inventory,
   authority-currentness input-hash readback, source-record-set compatibility
@@ -575,11 +576,10 @@ opening one exact aligned-runtime rebaseline child packet.
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   at Milestone 0 to freshness-lock the stale aligned-runtime family before
   reruns. That packet has since reduced through Milestone 1 and routed to the
-  current-workbook source-set rebaseline packet, which has now stopped to
-  source-record identity reconciliation. The live route is
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 2 replay config update or exact stop after Milestone 1 implemented
-  the identity gate and resolved the multi-target mappings. Treat
+  current-workbook source-set rebaseline packet, then to source-record identity
+  reconciliation. The newest section above records the current closeout on
+  `source-set-f70ea11e04ae3d53` with review `phase-eval` green at `28/28`.
+  Treat
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
   as the exact predecessor that resolved the tracked contract split, and keep
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`

@@ -1,11 +1,11 @@
 {
   "schema_version": "applicability-adjudication-template-v0",
   "adjudication_id": "region1-example-lolo-tylers-kitchen-66344-applicability-adjudication",
-  "created_at": "2026-05-24T18:47:46Z",
+  "created_at": "2026-05-27T13:05:37Z",
   "review_id": "region1-example-lolo-tylers-kitchen-66344",
-  "source_set_id": "source-set-5e65d845ce77e1a0",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
   "decisions_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_decisions.jsonl",
-  "applicability_decisions_sha256": "5611f044ef31d0fa817435cc4cbc3206ebaee244db0db0aa75c83cbc38447dd1",
+  "applicability_decisions_sha256": "b3d74a8ad97846cf657d7edaa095a47f9d20ad6a086c654799c45e59501c64dd",
   "allowed_final_statuses": [
     "applicable",
     "not_applicable"
@@ -28,22 +28,22 @@
   ],
   "summary": {
     "schema_version": "applicability-adjudication-template-summary-v0",
-    "created_at": "2026-05-24T18:47:46Z",
+    "created_at": "2026-05-27T13:05:37Z",
     "review_id": "region1-example-lolo-tylers-kitchen-66344",
-    "source_set_id": "source-set-5e65d845ce77e1a0",
+    "source_set_id": "source-set-f70ea11e04ae3d53",
     "decision_count": 396,
     "adjudication_item_count": 4,
     "pending_item_count": 0,
     "decisions_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_decisions.jsonl",
-    "decisions_sha256": "5611f044ef31d0fa817435cc4cbc3206ebaee244db0db0aa75c83cbc38447dd1",
+    "decisions_sha256": "b3d74a8ad97846cf657d7edaa095a47f9d20ad6a086c654799c45e59501c64dd",
     "output_path": "config/applicability_adjudications/region1-example-lolo-tylers-kitchen-66344.json",
     "markdown_path": "/tmp/applicability_adjudication_worklist.md",
     "instructions": "Replayable adjudication for the four Tyler's Kitchen applicability conflicts after live source-set and package review."
   },
   "items": [
     {
-      "item_id": "applicability-adjudication-item:9f1b002c3a46711a",
-      "decision_id": "fccebe617df7a4c44bb92f88",
+      "item_id": "applicability-adjudication-item:c62a09321cdd1658",
+      "decision_id": "cf02a0ff5e81e191b6b77195",
       "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:region1_forest_plan_source_records:region1_forest_plan_source_records_authority_template",
       "authority_category": "forest_plan",
       "authority_document_role": "forest_plan",
@@ -52,7 +52,7 @@
       "expected_current": {
         "basis_type": "unresolved_evidence_conflict",
         "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:region1_forest_plan_source_records:region1_forest_plan_source_records_authority_template",
-        "decision_id": "fccebe617df7a4c44bb92f88",
+        "decision_id": "cf02a0ff5e81e191b6b77195",
         "status": "needs_adjudication"
       },
       "final_status": "applicable",
@@ -81,8 +81,8 @@
       "reviewer_notes": ""
     },
     {
-      "item_id": "applicability-adjudication-item:184ea092ee2cf23f",
-      "decision_id": "adbdf2d03a6648680bf9280a",
+      "item_id": "applicability-adjudication-item:7369fc2803dde6de",
+      "decision_id": "1d289c1929ed3b143a7bfbb4",
       "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
       "authority_category": "law",
       "authority_document_role": "law",
@@ -91,7 +91,7 @@
       "expected_current": {
         "basis_type": "unresolved_evidence_conflict",
         "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
-        "decision_id": "adbdf2d03a6648680bf9280a",
+        "decision_id": "1d289c1929ed3b143a7bfbb4",
         "status": "needs_adjudication"
       },
       "final_status": "applicable",
@@ -122,8 +122,8 @@
       "reviewer_notes": ""
     },
     {
-      "item_id": "applicability-adjudication-item:85dba664d1c01a11",
-      "decision_id": "472790020adc26558cc4dcb9",
+      "item_id": "applicability-adjudication-item:acfc081a3a904924",
+      "decision_id": "0a96c0822224cfcfaedfbfd3",
       "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
       "authority_category": "law",
       "authority_document_role": "law",
@@ -132,7 +132,7 @@
       "expected_current": {
         "basis_type": "unresolved_evidence_conflict",
         "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
-        "decision_id": "472790020adc26558cc4dcb9",
+        "decision_id": "0a96c0822224cfcfaedfbfd3",
         "status": "needs_adjudication"
       },
       "final_status": "applicable",
@@ -163,8 +163,8 @@
       "reviewer_notes": ""
     },
     {
-      "item_id": "applicability-adjudication-item:5273b33a67631db3",
-      "decision_id": "cba4301b1390cace8f7de153",
+      "item_id": "applicability-adjudication-item:22915896b58848dd",
+      "decision_id": "d3ca1a16bc8766a7e0ab1f7d",
       "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:wilderness_wsr_trails_designated_areas:wilderness_wsr_trails_designated_areas_authority_template",
       "authority_category": "regulation",
       "authority_document_role": "regulation",
@@ -173,7 +173,7 @@
       "expected_current": {
         "basis_type": "unresolved_evidence_conflict",
         "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:wilderness_wsr_trails_designated_areas:wilderness_wsr_trails_designated_areas_authority_template",
-        "decision_id": "cba4301b1390cace8f7de153",
+        "decision_id": "d3ca1a16bc8766a7e0ab1f7d",
         "status": "needs_adjudication"
       },
       "final_status": "applicable",

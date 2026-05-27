@@ -358,8 +358,7 @@
       "FPS-418",
       "FPS-419",
       "FPS-421",
-      "R1PLAN-lolo-nf-01",
-      "R1PLAN-lolo-nf-02"
+      "R1PLAN-lolo-nf-01"
     ]
   },
   "forest_unit_id": "lolo-nf",
@@ -372,6 +371,6 @@
   "rule_review_expectations": [],
   "schema_version": "v1-ea-real-review-eval-contract-v0",
   "section_expectations": [],
-  "source_set_id": "source-set-5e65d845ce77e1a0",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
   "title": "Lolo Tyler's Kitchen Real EA V1 Review Evaluation Contract"
 }

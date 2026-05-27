@@ -2,19 +2,26 @@
 
 Date: 2026-05-27
 
-Status: Resolved locally through Milestone 1 in `dd3c322`
-(`Resolve Lolo source-record identity gate`). This plan was opened from
+Status: Resolved locally through Milestones 2-3; complete after this verified
+slice is committed. This plan was opened from
 `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 Milestone 1 after the governed replay slice reached an exact local-replay stop. The tracked
-Lolo/Tyler's Kitchen replay and eval contract still points at historical source set
-`source-set-5e65d845ce77e1a0`; the current-workbook candidate source set
-`source-set-f70ea11e04ae3d53` cannot be promoted into that replay lane until source-record identity
-is reconciled through a governed owner surface. Milestone 0 proved complete current-catalog
-coverage exists. Milestone 1 implemented the replay-facing identity gate and then resolved the five
-remaining multi-target mappings through explicit `identity_source_record_id` selectors in the
-governed reconciliation registry. The identity gate now passes on the current-workbook candidate
-catalog. Tracked replay/eval config still has not moved; Milestone 2 owns the next replay-config
-update or exact stop.
+Lolo/Tyler's Kitchen replay context, eval contract, applicability adjudication,
+forest-plan component eval, and component adjudication now consume the
+current-workbook source set `source-set-f70ea11e04ae3d53` through the archived
+current catalog gate at
+`source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`.
+Milestone 0 proved complete current-catalog coverage existed. Milestone 1
+implemented the replay-facing identity gate and resolved the five remaining
+multi-target mappings through explicit `identity_source_record_id` selectors in
+the governed reconciliation registry. Milestone 2 moved the tracked replay/eval
+surfaces to the current-workbook owner, refreshed the governed local replay
+chain, removed the legacy duplicate forest-plan expected ID
+`R1PLAN-lolo-nf-02` from the Lolo v1 eval contract because the current owner is
+`FPS-298`, and proved `v1-ea-eval` plus review `phase-eval` green. Milestone 3
+returns routing to the broader Lolo example-package parent for registry
+promotion and threshold ratchet work; this source-record identity blocker is no
+longer the active route.
 
 ## Why This Exists
 
@@ -22,8 +29,10 @@ Milestone 0 of the current-workbook source-set rebaseline proved that
 `source-set-f70ea11e04ae3d53` is not a drop-in replacement for historical source set
 `source-set-5e65d845ce77e1a0`. At packet opening, Milestone 1 then found the narrower blocker:
 
-- `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json` still binds the review to
-  `source-set-5e65d845ce77e1a0`.
+- At packet opening,
+  `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json` still
+  bound the review to `source-set-5e65d845ce77e1a0`; Milestone 2 has since
+  moved it to `source-set-f70ea11e04ae3d53`.
 - The applicability CLI rejects a direct `--source-set-id source-set-f70ea11e04ae3d53` override
   against that tracked replay context with `ReplayContextMismatchError`.
 - The Lolo v1 eval contract expects 60 source-record IDs. Only 8 of those IDs are present directly
@@ -46,23 +55,43 @@ applicability adjudication, forest-plan component eval, or compliance-review art
 
 ## Latest Local Implementation
 
-- Milestone 1 is resolved locally. The governed owner is the generic source-record identity gate in
-  `src/usfs_r1_ea_sources/records.py`, exposed through `source-record-identity-gate`.
-- The gate reads expected IDs from a v1 eval contract plus optional explicit IDs, resolves against a
-  selected catalog, and keeps compliance source-record reconciliation and forest-plan identity
-  reconciliation explicit through their tracked registry files.
-- `config/compliance_source_record_reconciliation_v1.json` now preserves broad coverage aliases in
-  `current_source_record_ids` while using `identity_source_record_id` for replay-facing one-to-one
-  identity on the five previously ambiguous rows:
-  `R1EA-018 -> USDA-007`, `R1EA-028 -> USDA-008`, `R1EA-124 -> FED-011`,
+- Milestone 2 is resolved locally. The tracked replay context now declares
+  `source_set_id="source-set-f70ea11e04ae3d53"` and
+  `catalog_dir="source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate"`.
+- The tracked Lolo v1 eval contract and forest-plan component eval contract now
+  declare `source-set-f70ea11e04ae3d53`. The v1 eval contract keeps
+  `R1PLAN-lolo-nf-01` as a required Lolo forest-plan expectation and drops the
+  duplicate legacy `R1PLAN-lolo-nf-02` expectation because current replay uses
+  `FPS-298`.
+- The tracked applicability adjudication now matches the refreshed `f70...`
+  decisions SHA
+  `b3d74a8ad97846cf657d7edaa095a47f9d20ad6a086c654799c45e59501c64dd` with
+  the same four candidate-authority resolutions and no pending items.
+- The forest-plan component inventory manifest now includes a Lolo replay-compatible
+  source-set reference for `source-set-4fb59e9eb43045cb` and
+  `source-set-f70ea11e04ae3d53`, while only the `lolo-nf` row moved to that
+  reference. Beaverhead-Deerlodge, Bitterroot, and the other profile rows stay
+  on the active full-canonical reference.
+- The tracked forest-plan component adjudication now resolves the one current
+  Lolo queue item against `FPS-298` on `source-set-f70ea11e04ae3d53`.
+- Final readback is green: `source-record-identity-gate` passes with
+  `expected_source_record_count=59`, `catalog_covered_source_record_count=59`,
+  `identity_resolved_source_record_count=59`, no unmapped IDs, no absent mapped
+  targets, and no ambiguous mappings; `v1-ea-eval` reports
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true`; review `phase-eval` reports `passed=true`,
+  `passed_phase_count=28`, `phase_count=28`, `identity_mismatch_phase_count=0`,
+  and `blockers=[]`.
+- Milestone 1 remains preserved as the predecessor identity-gate implementation.
+  The governed owner is the generic source-record identity gate in
+  `src/usfs_r1_ea_sources/records.py`, exposed through
+  `source-record-identity-gate`.
+- `config/compliance_source_record_reconciliation_v1.json` preserves broad
+  coverage aliases in `current_source_record_ids` while using
+  `identity_source_record_id` for replay-facing one-to-one identity on the five
+  previously ambiguous rows: `R1EA-018 -> USDA-007`,
+  `R1EA-028 -> USDA-008`, `R1EA-124 -> FED-011`,
   `R1EA-137 -> FED-032`, and `R1EA-150 -> USFS-035`.
-- The Lolo command against `source-set-f70ea11e04ae3d53` now returns
-  `passed=true`, `expected_source_record_count=60`, `catalog_covered_source_record_count=60`,
-  `identity_resolved_source_record_count=60`, `unmapped_source_record_ids=[]`,
-  `mapped_targets_absent_from_catalog={}`, and `ambiguous_mappings={}`.
-- No replay context, v1 eval contract, adjudication config, or ignored generated review artifact was
-  changed. The next live slice is Milestone 2: update the governed Lolo replay/eval config surfaces
-  to consume the current-workbook identity owner, or stop at the exact command/surface that cannot.
 - Milestone 0 is preserved as predecessor evidence. The identity coverage inventory proved all 60
   Lolo v1 eval expected source-record IDs resolve to at least one current-workbook `f70...`
   catalog record:
@@ -74,9 +103,10 @@ applicability adjudication, forest-plan component eval, or compliance-review art
   identity selectors in the governed reconciliation registry:
   `R1EA-018 -> USDA-007`, `R1EA-028 -> USDA-008`, `R1EA-124 -> FED-011`,
   `R1EA-137 -> FED-032`, and `R1EA-150 -> USFS-035`.
-- No tracked replay context, eval contract, adjudication config, or ignored generated review
-  artifact was changed. The next live slice is Milestone 2 replay config update or exact stop now
-  that the replay-facing identity gate returns `passed=true`.
+- At the Milestone 1 checkpoint, no tracked replay context, eval contract,
+  adjudication config, or ignored generated review artifact was changed.
+  Milestone 2 has since moved the tracked config surfaces and proved the replay
+  chain green.
 
 ## Goal
 
@@ -137,7 +167,7 @@ Ignored `source_library/` artifacts remain local evidence unless repository poli
 | --- | --- | --- |
 | `0` | Identity coverage inventory | `reduced` |
 | `1` | Unified source-record identity contract | `resolved` |
-| `2` | Governed Lolo replay config update or exact stop | `reduced` |
+| `2` | Governed Lolo replay config update or exact stop | `resolved` |
 | `3` | Parent route return | `resolved` |
 
 ### Milestone 0 - Identity Coverage Inventory
@@ -304,16 +334,15 @@ Milestone 1 decision:
 - The Lolo candidate source set is identity-ready for the replay-config slice because
   `source-record-identity-gate` now returns `passed=true` against the current-workbook `f70...`
   catalog gate.
-- Milestone 2 is unblocked but not started by this slice. Tracked replay context, eval contract,
-  adjudication config, and ignored generated review artifacts still have not moved.
+- Milestone 2 was unblocked but not started by the Milestone 1 slice. It is now
+  resolved by the current replay-config closeout.
 
 Closeout state: complete in local commit `dd3c322`
 (`Resolve Lolo source-record identity gate`).
 
 ### Milestone 2 - Governed Lolo Replay Config Update Or Exact Stop
 
-Status: Ready after the green source-record identity gate committed in `dd3c322`. This slice has
-not moved tracked replay/eval config yet.
+Status: Resolved locally; complete after this verified slice is committed.
 
 Implementation:
 
@@ -326,9 +355,9 @@ Implementation:
 
 Acceptance:
 
-- Tracked config and review-local artifacts agree on one current-workbook source-set owner, or the
-  exact command/surface that cannot consume the identity contract is named as the next blocker.
-- `v1-ea-eval` and `phase-eval` are rerun after any replay.
+- Tracked config and review-local artifacts agree on the current-workbook
+  source-set owner `source-set-f70ea11e04ae3d53`.
+- `v1-ea-eval` and `phase-eval` were rerun after replay and both passed.
 - Roster/admission thresholds are unchanged.
 
 Verification:
@@ -344,12 +373,26 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --review-id region1-example-lolo-tylers-kitchen-66344
 ```
 
-Closeout state: `complete-after-commit` after replay evidence, docs, and handoff identify either a
-green current-workbook replay baseline or the exact next blocker.
+Milestone 2 decision:
+
+- The current-workbook replay baseline is green. No narrower runtime blocker was
+  needed.
+- Tracked replay/eval configs now consume `source-set-f70ea11e04ae3d53`.
+- The governed local chain refreshed applicability, component inventory,
+  compliance review, forest-plan component eval, forest-plan component
+  adjudication eval, `v1-ea-eval`, and review `phase-eval`.
+- The final Lolo v1 eval expected source-record count is `59`, not the older
+  `60`, because the legacy duplicate Lolo forest-plan source ID
+  `R1PLAN-lolo-nf-02` is removed from the eval contract and represented by the
+  current owner `FPS-298`.
+- `v1-ea-eval` is `reviewer_ready`, and review `phase-eval` is green at
+  `28/28` with no blockers.
+
+Closeout state: complete after this verified slice is committed.
 
 ### Milestone 3 - Parent Route Return
 
-Status: Pending Milestone 2.
+Status: Resolved locally; complete after this verified slice is committed.
 
 Implementation:
 
@@ -363,9 +406,13 @@ Implementation:
 Acceptance:
 
 - `docs/CURRENT_ROUTING.md`, `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
-  `docs/AGENT_START_HERE.md` name the same active packet and next milestone.
-- Parent plans no longer imply that runtime alignment, source-register currentness, or source-set
-  rebaseline is waiting on an uninspected replay command.
+  `docs/AGENT_START_HERE.md` name the same next owner.
+- Parent plans no longer imply that runtime alignment, source-register
+  currentness, source-set rebaseline, or source-record identity is waiting on an
+  uninspected replay command.
+- The broader Lolo example-package parent is the next owner for any registry
+  promotion and aggregate threshold ratchet; this blocker does not itself admit
+  Lolo into the governed forest-specific example registry.
 
 Verification:
 
@@ -377,7 +424,8 @@ python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milest
 git diff --check
 ```
 
-Closeout state: `complete-after-commit` after the parent route and this blocker agree.
+Closeout state: complete after the parent route and this blocker agree in the
+same verified commit.
 
 ## Required Documentation And Handoff Updates
 

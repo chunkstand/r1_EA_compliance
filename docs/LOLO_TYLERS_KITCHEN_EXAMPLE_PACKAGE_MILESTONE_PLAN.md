@@ -1,21 +1,23 @@
 # Lolo Tyler's Kitchen Example Package Milestone Plan
 
 Date: 2026-05-24
-Status: Historical reduced parent packet (`Milestones 0-2 remain preserved as
-package-authority and registry closeout context; live contract-blocker work
-now routes through
-docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`)
+Status: Active parent packet for the next Lolo slice (`Milestones 0-2 remain
+preserved as package-authority and registry closeout context; the downstream
+contract/currentness/source-record blocker chain is now resolved locally on
+source-set-f70ea11e04ae3d53; Milestone 3 registry promotion and aggregate
+threshold ratchet remain unimplemented`)
 Owner context: broader standalone follow-on from
 `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Latest Historical Alignment Note
 
-- This packet no longer owns the live Tyler's Kitchen blocker route. Fresh
-  tracked readback now shows that the replay context and tracked `v1-ea-eval`
-  contract still point at `source-set-4fb59e9eb43045cb`, the live
-  `v1_ea_eval_results.json` reports
-  `source-set-5e65d845ce77e1a0` with `contract_status="mismatch"`, and the
-  live review `phase-eval` remains red at `12/29` on `4fb...`.
+- This packet owns the next Lolo route again, but only for Milestone 3
+  registry promotion and aggregate threshold ratchet. The downstream blocker
+  chain that used to keep the Lolo row in `profile_eval_guidance_only` has now
+  resolved locally: the tracked replay context and `v1-ea-eval` contract point
+  at `source-set-f70ea11e04ae3d53`, `v1-ea-eval` is
+  `contract_status="reviewer_ready"`, and review `phase-eval` passes `28/28`
+  with no blockers.
 - Live work therefore first continued in
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
   but that packet then reduced further into the exact child owner at that
@@ -30,8 +32,12 @@ Owner context: broader standalone follow-on from
   routing the residual red into
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   in `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`).
-- This packet now remains as the broader Tyler's Kitchen package-authority,
-  queue-boundary, and forest-registry parent record only.
+- The aligned-runtime/currentness/current-workbook/source-record child chain is
+  now historical after the source-record identity packet moved the tracked Lolo
+  replay/eval surfaces to `f70...` and proved final green readback. This packet
+  remains the broader Tyler's Kitchen package-authority, queue-boundary, and
+  forest-registry parent record. Do not change registry status or roster
+  thresholds without implementing Milestone 3 and rerunning the aggregate gates.
 
 ## Purpose
 
@@ -58,23 +64,26 @@ Current local outcome:
 - the full root package authority and replay identity are in place;
 - the Tyler's Kitchen packet is now the example to inspect first for Lolo
   National Forest example-package work while this lane remains
-  `profile_eval_guidance_only`;
+  `profile_eval_guidance_only` pending Milestone 3 registry promotion;
 - `FOR-029` is now truthfully routed as a packet-owned `named_blocker` row
   instead of a planned canonical promotion row;
-- packet-local `v1-ea-eval`, `forest-plan-component-eval`, and
-  `forest-plan-component-eval-coverage` are green; but
-- review-scoped `phase-eval` is still inherited-red on
-  `source-set-5e65d845ce77e1a0`, so `lolo-nf` must remain
-  `profile_eval_guidance_only` and Milestone 3 promotion stays deferred.
+- packet-local `v1-ea-eval` and `forest-plan-component-eval` are green, and
+  the Lolo slot in `config/forest_plan_component_eval_coverage_v1.json` now
+  expects `source-set-f70ea11e04ae3d53`;
+- review-scoped `phase-eval` is now green on
+  `source-set-f70ea11e04ae3d53`, so the inherited phase-eval blocker no longer
+  defers Milestone 3; and
+- `lolo-nf` still remains `profile_eval_guidance_only` until Milestone 3
+  updates the registry, coverage thresholds, and queue/aggregate contracts in a
+  verified slice.
 
 ## Current Evidence
 
 - `config/forest_specific_example_package_registry_v1.json` still routes
   `lolo-nf` as `profile_eval_guidance_only`, but the forest row now carries
   `queue_boundary_source_ids=["FOR-029"]` and the guidance note that Tyler's
-  Kitchen should be reviewed first as the active Lolo example boundary while
-  the profile-eval contract remains the routing floor until the inherited
-  `phase-eval` blocker is cleared.
+  Kitchen should be reviewed first as the Lolo example boundary while the
+  registry/coverage threshold ratchet remains unimplemented.
 - `source_library/reviews/forest_specific_example_package_eval/forest_specific_example_package_eval_results.json`
   is currently green but still shallow at `review_example_count=3`,
   `reviewer_ready_example_count=2`,
@@ -86,15 +95,15 @@ Current local outcome:
   `resolution_status="blocked"` while preserving the workbook-matching queue
   identity text.
 - `config/forest_plan_component_eval_coverage_v1.json` now contains a required
-  Lolo review slot, and the aggregate replay is green at
-  `required_review_count=4`, `covered_review_count=4`, and
-  `distinct_forest_count=3`.
+  Lolo review slot aligned to `source-set-f70ea11e04ae3d53`. The aggregate
+  replay still has non-Lolo red slots, so this packet must not claim aggregate
+  component coverage green as part of the Lolo runtime closeout.
 - `source_library/reviews/region1-example-lolo-tylers-kitchen-66344/v1_ea_eval_results.json`
   is green with `contract_status="reviewer_ready"`,
-  `broader_ea_passed=true`, and `forest_plan_passed=true`, but
-  `source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json`
-  is still red with `missing_direct_eval_phase_count=1` and
-  `threshold_failed_phase_count=1`.
+  `broader_ea_passed=true`, and `forest_plan_passed=true`.
+- `source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json`
+  is green with `passed_phase_count=28`, `phase_count=28`, `blockers=[]`,
+  and `identity_mismatch_phase_count=0`.
 - The selected public package boundary is the root Box folder
   [Tyler's Kitchen Fuels Reduction and Forest Health Project (66344)](https://usfs-public.app.box.com/v/PinyonPublic/folder/267968720604),
   which resolves to `Lolo National Forest (110116)` >
@@ -343,15 +352,16 @@ Current local outcome:
 - `compliance-review`, `v1-ea-eval`, and `forest-plan-component-eval` pass for
   `region1-example-lolo-tylers-kitchen-66344`;
 - the Lolo slot is now load-bearing in
-  `config/forest_plan_component_eval_coverage_v1.json`; but
-- `phase-eval` remains inherited-red on missing extraction direct eval coverage
-  and retrieval direct-eval threshold failures for
-  `source-set-5e65d845ce77e1a0`, so the packet stops here instead of forcing
-  Milestone 3 green.
+  `config/forest_plan_component_eval_coverage_v1.json`;
+- the downstream blocker chain has since moved the review to
+  `source-set-f70ea11e04ae3d53`; and
+- `phase-eval` now passes `28/28`, so Milestone 3 is ready for a separate
+  registry/coverage/queue implementation slice instead of being blocked by
+  inherited runtime red.
 
 ### Milestone 3 - Registry Promotion, Threshold Ratchet, And Queue Reroute
 
-Outcome label: `deferred pending inherited phase-eval blocker`
+Outcome label: `ready after inherited phase-eval blocker cleared`
 
 1. Add a new required review slot to
    `config/v1_real_package_review_coverage_v1.json` for the Lolo review using
@@ -435,14 +445,14 @@ PYTHONPATH=src python -m usfs_r1_ea_sources ea-review \
   --package-path source_library/reviews/_intake/region1-example-lolo-tylers-kitchen-66344 \
   --output-dir source_library \
   --review-id region1-example-lolo-tylers-kitchen-66344 \
-  --source-set-id source-set-5e65d845ce77e1a0
+  --source-set-id source-set-f70ea11e04ae3d53
 
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve \
   --package-path source_library/reviews/_intake/region1-example-lolo-tylers-kitchen-66344 \
   --output-dir source_library \
   --review-id region1-example-lolo-tylers-kitchen-66344 \
   --forest-unit-id lolo-nf \
-  --source-set-id source-set-5e65d845ce77e1a0 \
+  --source-set-id source-set-f70ea11e04ae3d53 \
   --reuse-package-cache
 
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe \
@@ -453,34 +463,35 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe \
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-context-build \
   --output-dir source_library \
   --review-id region1-example-lolo-tylers-kitchen-66344 \
-  --source-set-id source-set-5e65d845ce77e1a0 \
+  --source-set-id source-set-f70ea11e04ae3d53 \
   --package-path source_library/reviews/_intake/region1-example-lolo-tylers-kitchen-66344
 
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-retrieve \
   --output-dir source_library \
   --review-id region1-example-lolo-tylers-kitchen-66344 \
-  --source-set-id source-set-5e65d845ce77e1a0
+  --source-set-id source-set-f70ea11e04ae3d53
 
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-determine \
   --output-dir source_library \
   --review-id region1-example-lolo-tylers-kitchen-66344 \
-  --source-set-id source-set-5e65d845ce77e1a0
+  --source-set-id source-set-f70ea11e04ae3d53
 
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate \
   --output-dir source_library \
   --review-id region1-example-lolo-tylers-kitchen-66344 \
-  --source-set-id source-set-5e65d845ce77e1a0
+  --source-set-id source-set-f70ea11e04ae3d53
 
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack \
   --output-dir source_library \
   --review-id region1-example-lolo-tylers-kitchen-66344 \
-  --source-set-id source-set-5e65d845ce77e1a0
+  --source-set-id source-set-f70ea11e04ae3d53
 
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
   --package-path source_library/reviews/_intake/region1-example-lolo-tylers-kitchen-66344 \
   --output-dir source_library \
   --review-id region1-example-lolo-tylers-kitchen-66344 \
-  --source-set-id source-set-5e65d845ce77e1a0 \
+  --source-set-id source-set-f70ea11e04ae3d53 \
+  --forest-unit-id lolo-nf \
   --rule-pack source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/generated_rule_pack.json \
   --reuse-package-cache
 
@@ -494,7 +505,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval \
   --review-id region1-example-lolo-tylers-kitchen-66344 \
   --eval-file config/forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json
 
-# Expected blocker-detection command for the current reduced packet.
+# Final review-readiness readback for the current Lolo replay.
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id region1-example-lolo-tylers-kitchen-66344
@@ -545,12 +556,12 @@ git diff --check
   `package/`, `applicability/applicability_validation.json`,
   `compliance_review.json`, `v1_ea_eval_results.json`,
   `forest_plan_component_eval_results.json`, and `phase_eval_results.json`.
-- `v1-ea-eval` reports the Lolo review as `reviewer_ready`, but
-  `phase-eval` stays recorded as the inherited blocker rather than being
-  papered over or weakened.
+- `v1-ea-eval` reports the Lolo review as `reviewer_ready`, and
+  `phase-eval` is green on `source-set-f70ea11e04ae3d53`.
 - `config/forest_plan_component_eval_coverage_v1.json` contains a tracked Lolo
-  review slot and the aggregate coverage replay passes under the ratcheted
-  thresholds.
+  review slot aligned to the current Lolo replay source set. Any aggregate
+  coverage red outside the Lolo slot remains visible instead of being papered
+  over by this packet.
 - `config/forest_specific_example_package_registry_v1.json` still routes
   `lolo-nf` as `profile_eval_guidance_only`, but now records
   `queue_boundary_source_ids=["FOR-029"]` plus the active packet guidance
@@ -595,13 +606,12 @@ git diff --check
 - The package may still require tracked applicability adjudications before it
   becomes promotion-ready; that is acceptable only if the adjudication
   contract is explicit and replayable.
-- The current blocker is not package-local any more; the next truthful routing
-  is a follow-on that repairs extraction/retrieval direct eval readiness for
-  the inherited `source-set-5e65d845ce77e1a0` review-scoped `phase-eval`
-  contract before reattempting Milestone 3 promotion.
+- The current blocker is no longer runtime readiness. The next truthful routing
+  is Milestone 3 registry promotion, coverage/queue updates, and aggregate
+  threshold ratchet on the verified `source-set-f70ea11e04ae3d53` replay.
 - Even after this packet closes, other forests remain uncovered. The likely
   next adjacent packets are Helena-Lewis and Clark `Bonanza` and
   Nez Perce-Clearwater `Twentymile`.
-- If Lolo closes only as `reduced`, the next truthful follow-on is a dedicated
-  Lolo typed-blocked or blocker packet rather than silently restoring
-  `profile_eval_guidance_only`.
+- If the Milestone 3 aggregate gates do not pass, open a dedicated Lolo
+  typed-blocked or blocker packet rather than silently restoring stale
+  `profile_eval_guidance_only` wording.

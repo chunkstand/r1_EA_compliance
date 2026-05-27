@@ -457,7 +457,7 @@
       "queue_boundary_source_ids": [
         "FOR-029"
       ],
-      "guidance_note": "For Lolo National Forest example-package review work, inspect the Tyler's Kitchen root package first as the active Lolo example boundary. `FOR-029` is no longer treated as a master-promotion candidate, but the profile-eval contract remains the routing floor until the packet clears its inherited phase-eval blocker."
+      "guidance_note": "For Lolo National Forest example-package review work, inspect the Tyler's Kitchen root package first as the active Lolo example boundary. `FOR-029` is no longer treated as a master-promotion candidate, and the inherited phase-eval blocker is now cleared on source-set-f70ea11e04ae3d53. The profile-eval contract remains the routing floor until the parent packet's registry, coverage, and aggregate threshold ratchet is implemented."
     },
     {
       "forest_unit_id": "nez-perce-clearwater-nfs",
