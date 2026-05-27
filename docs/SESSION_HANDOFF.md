@@ -14,14 +14,16 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   if the next session is continuing implementation on the tracked Lolo
-  source-set contract blocker for the ECID historical lane
+  aligned-runtime rebaseline blocker for the ECID historical lane
 - active packet:
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
-- latest committed active-packet closeout:
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- latest committed predecessor closeout:
   `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
 - exact predecessor blocker packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+- older predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
 - older ECID predecessor blocker packet:
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
@@ -165,27 +167,81 @@ history below.
   `source-set-5e65...` and fails `review_identity_matches_contract`, and the
   live review `phase-eval` remains red at `12/29` on `source-set-4fb...`
 - next truthful slice:
-  source-set contract blocker Milestone 2 is now reduced locally. Continue in
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 3: the tracked replay context and tracked review eval contract
-  now align to `source-set-5e65...`, and fresh `v1-ea-eval` is now
-  `reviewer_ready`, but fresh review `phase-eval` remains red at `15/23`.
-  The remaining live debt is now exact residual runtime and stale-artifact
-  work: retrieval and rule-claim direct-eval staleness, shared `f70...`
-  compliance direct-eval staleness, stale
-  `generated_rule_pack_validation.json`, stale source-register and
-  authority-universe snapshots, and a still-failing
-  `forest_plan_component_eval_results.json`. Do not reopen
+  source-set contract blocker Milestone 3 is now resolved locally. Continue
+  in
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 0: freshness-lock the aligned-runtime family before reruns.
+  The tracked replay context and tracked review eval contract already align to
+  `source-set-5e65...`, and `v1-ea-eval` remains `reviewer_ready`, but fresh
+  review `phase-eval` is still red because the remaining owner is now one
+  stale aligned-runtime family: `5e65...` retrieval and rule-claim direct
+  evals are stale against current seeds, shared `f70...`
+  `compliance_review_eval` is still stale for this review, review-local
+  `authority_universe_snapshot.json` and
+  `generated_rule_pack_validation.json` still advertise `4fb...`,
+  `forest_plan_component_eval` still uses a tracked `4fb...` contract, and
+  `source_register_contract` still falls back to the global `4fb...`
+  manifest/workbook SHA. Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
   packet, and do not treat the broader Lolo example packet as the live owner
   for the remaining blocker
 - session reminder:
-  the new Lolo source-set contract section immediately below is the current
-  checkpoint; the following replacement-feasibility, ECID blocker Milestone 2,
-  Milestone 1, and blocked-parent sections are preserved historical context
-  only
+  the new aligned-runtime section immediately below is the current
+  checkpoint; the following source-set contract, replacement-feasibility,
+  ECID blocker Milestone 2, Milestone 1, and blocked-parent sections are
+  preserved historical context only
 
-## Lolo Source-Set Contract Blocker Milestone 2 Reduced Locally
+## Lolo Aligned Runtime Rebaseline Blocker Opened Locally
+
+This implementation slice closes source-set contract blocker Milestone 3 by
+opening one exact aligned-runtime rebaseline child packet.
+
+- outcome label:
+  `resolved locally`; the source-set contract blocker no longer owns the live
+  red after `5e65...` contract alignment, so live work now moves to the
+  aligned-runtime rebaseline packet
+- latest committed predecessor closeout:
+  `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
+- implementation truth:
+  the tracked replay context and tracked `v1-ea-eval` contract already align
+  to `source-set-5e65d845ce77e1a0`, and fresh `v1_ea_eval_results.json`
+  remains green with `contract_status="reviewer_ready"`. Fresh
+  `phase_eval_results.json` stays red at `15/23`, but the residual red is now
+  one exact aligned-runtime family: `retrieval_eval_results.json` and
+  `rule_claim_link_eval_results.json` are stale against current seeds on
+  `5e65...`; shared `compliance_review_eval_results.json` still records
+  `f70...`; review-local `authority_universe_snapshot.json` and
+  `generated_rule_pack_validation.json` still declare `4fb...`; the tracked
+  forest-plan component eval file still declares `4fb...` even though the
+  live result already runs on `5e65...`; and `source_register_contract` still
+  falls back to the global `source_set_manifest.json` on `4fb...` with an
+  older workbook SHA
+- live blocker truth:
+  the governed aggregates remain stable and still do not admit Lolo as a
+  ready replacement. `real-package-review-coverage-eval` still admits only
+  East Crazies, West Reservoir, and South Plateau, and non-strict
+  `promotion-suite` remains green for current promotion while strict
+  expansion still fails only on the ECID historical slot under
+  `historical_source_set_split`
+- next routing:
+  continue in
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 0 to freshness-lock the stale aligned-runtime family before
+  reruns. Treat
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+  as the exact predecessor that resolved the tracked contract split, and keep
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+  plus
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  as older lineage only
+- verification:
+  `jq` readback of the tracked replay context, tracked `v1-ea-eval`
+  contract, live `phase_eval_results.json`, current global
+  `source_set_manifest.json`, current forest-plan component eval contract,
+  the stale review-local applicability companion artifacts, and the aligned
+  `5e65...` / shared `f70...` direct-eval result files
+
+## Historical Lolo Source-Set Contract Blocker Milestone 2 Checkpoint
 
 This implementation slice closes Milestone 2 in the active source-set
 contract blocker by rebaselining the tracked review on the chosen `5e65...`

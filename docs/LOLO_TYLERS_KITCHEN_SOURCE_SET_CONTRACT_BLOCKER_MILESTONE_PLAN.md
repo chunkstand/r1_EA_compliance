@@ -2,35 +2,30 @@
 
 Date: 2026-05-26
 
-Status: Active reduced blocker packet (`Milestone 2 is now reduced locally;
-the tracked replay context and review eval contract now align to
-source-set-5e65d845ce77e1a0; live work is Milestone 3 exact child-route or
-feasibility-stop closeout`)
+Status: Resolved locally (`Milestones 1-3 are now resolved locally; the tracked replay
+context and review eval contract align to source-set-5e65d845ce77e1a0, and the exact
+live work now routes to the aligned runtime rebaseline blocker`)
 
 Owner context: standalone follow-on opened after
 `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
 proved that the tracked Lolo replacement path no longer has one coherent
-review-local owner surface. This packet now owns the narrower residual debt
-for `region1-example-lolo-tylers-kitchen-66344`: the tracked replay context
-and tracked `v1-ea-eval` contract now align to
-`source-set-5e65d845ce77e1a0`, but fresh review `phase-eval` remains red on
-retrieval / rule-claim direct-eval staleness, shared downstream compliance
-direct-eval staleness on `source-set-f70ea11e04ae3d53`, stale
-`generated_rule_pack_validation.json`, stale source-register and authority
-snapshot surfaces, and a still-failing forest-plan component eval result. It
-does not reopen the broader Tyler's Kitchen package-authority lane, change
-the ECID historical slot floor, admit Lolo into the governed roster, or
-scout new replacement candidates.
+review-local owner surface. This packet is now the historical predecessor
+that resolved the tracked `4fb...` / `5e65...` source-set contract split for
+`region1-example-lolo-tylers-kitchen-66344` and proved that the remaining red
+belongs to aligned runtime rebaseline instead. It does not reopen the broader
+Tyler's Kitchen package-authority lane, change the ECID historical slot
+floor, admit Lolo into the governed roster, or scout new replacement
+candidates.
 
 Opening closeout commit:
 `013b5d1` (`Open Lolo source-set contract blocker`)
 
 ## Latest Local Implementation
 
-- Latest committed local closeout:
+- Latest committed predecessor closeout:
   `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
 
-- Milestone 2 is now reduced locally. The tracked replay context and tracked
+- Milestone 3 is now resolved locally. The tracked replay context and tracked
   `v1-ea-eval` contract now both bind
   `region1-example-lolo-tylers-kitchen-66344` to
   `source-set-5e65d845ce77e1a0`.
@@ -50,13 +45,14 @@ Opening closeout commit:
   pack already uses the generated applicability rule pack; shared
   `downstream_direct_evaluation` still sees `compliance_review_eval` only on
   `f70...`; `generated_rule_pack_validation.json` still reports `4fb...`;
-  `source_register_contract` now fails on workbook SHA drift;
-  `authority_universe_snapshot.json` still fails `source_set_matches`; and
-  `forest_plan_component_eval_results.json` still fails
-  `component_eval_failed`.
-- Live work now advances to Milestone 3 inside this packet: name the exact
-  narrower runtime owner or explicit stop condition for those residual phase
-  families.
+  `source_register_contract` still falls back to the global `4fb...`
+  manifest and older workbook SHA; `authority_universe_snapshot.json` still
+  fails `source_set_matches`; and `forest_plan_component_eval_results.json`
+  still fails only because the tracked eval contract remains on `4fb...`.
+- That evidence resolves this packet's scope. The exact next owner is now
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  which owns the stale aligned-runtime artifact and direct-eval family on the
+  chosen `5e65...` path.
 
 ## Purpose
 
@@ -82,11 +78,14 @@ packet and the current-route docs before implementation continues.
 ## Current Evidence
 
 - `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and the top of
-  `docs/SESSION_HANDOFF.md` now route the remaining tracked Lolo blocker here,
-  with
+  `docs/SESSION_HANDOFF.md` now route the remaining tracked Lolo blocker
+  through
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  with this packet preserved as the exact predecessor that resolved the
+  tracked `4fb...` / `5e65...` contract split and with
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
-  preserved as the exact predecessor that reduced the generic feasibility lane
-  into this narrower contract packet.
+  preserved as the older predecessor that reduced the generic feasibility
+  lane into this narrower contract packet.
 - The tracked replay context
   `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
   now declares `source_set_id="source-set-5e65d845ce77e1a0"`.
@@ -486,6 +485,20 @@ Acceptance criteria:
   feasibility stop condition.
 - The handoff records the exact verification bundle.
 
+Latest local outcome:
+
+- `resolved locally`; current readback proves that the remaining red no longer
+  belongs to source-set contract alignment.
+- The exact next owner is now
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  because the residual `phase-eval` family is one aligned-runtime rebaseline
+  lane: stale `5e65...` retrieval and rule-claim direct-eval contracts, stale
+  shared `f70...` compliance-review direct eval, stale review-local
+  `authority_universe_snapshot.json` and `generated_rule_pack_validation.json`,
+  a forest-plan component eval contract still pinned to `4fb...`, and a
+  `source_register_contract` phase still anchored to the global `4fb...`
+  source-set manifest and workbook SHA.
+
 Verification:
 
 ```bash
@@ -572,20 +585,13 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- Milestone 2 is now reduced locally: the tracked replay context and tracked
-  review eval contract now align to `source-set-5e65d845ce77e1a0`, and
-  `v1-ea-eval` is now `reviewer_ready`, but fresh review `phase-eval` remains
-  red at `15/23`.
-- The remaining live debt is now exact and narrower than the old tracked
-  contract split: retrieval direct-eval staleness plus failing thresholds,
-  rule-claim direct-eval staleness, shared `f70...` compliance direct-eval
-  staleness, stale `generated_rule_pack_validation.json`, stale workbook and
-  authority-universe snapshots, and a still-failing
-  `forest_plan_component_eval_results.json`.
-- The next live work is Milestone 3 in this packet: name one exact narrower
-  runtime owner or one explicit stop condition for those residual phase
-  families.
-- If the tracked Lolo review eventually becomes supportable as a governed
-  replacement path, the next live packet after this blocker should be a ready
-  replacement-path packet rather than a return to generic ECID blocker
-  classification.
+- This packet is now historical predecessor context only. The tracked source-set contract
+  split is resolved locally, but the aligned runtime family remains open.
+- The next live work is Milestone 0 in
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`:
+  freshness-lock the stale aligned-runtime artifacts and direct-eval
+  contracts before any reruns.
+- If the aligned runtime family refreshes cleanly and retrieval still remains
+  semantically red, the next owner after that child should be a narrower
+  retrieval/rule-claim quality packet rather than a return to generic Lolo
+  contract or ECID replacement classification.

@@ -235,18 +235,19 @@ family.
   live owner:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
   That narrower reroute closeout landed in `013b5d1`
-  (`Open Lolo source-set contract blocker`), and the active child packet has
-  since reduced both Milestone 1 and Milestone 2 locally: the tracked replay
-  context and tracked review eval contract now align to `5e65...`, and the
-  Milestone 2 closeout landed in `e2b6941`
-  (`Reduce Lolo source-set blocker Milestone 2`). Fresh `v1-ea-eval` is now
-  `reviewer_ready`, and the remaining red is no longer a generic
-  tracked-contract split. It is now the exact residual runtime family in
-  fresh review `phase-eval`: retrieval and rule-claim direct-eval staleness,
-  shared `f70...` compliance direct-eval staleness, stale
-  `generated_rule_pack_validation.json`, stale source-register and
-  authority-universe snapshots, and a still-failing
-  `forest_plan_component_eval_results.json`. Do not
+  (`Open Lolo source-set contract blocker`), and that active child packet has
+  since resolved Milestone 3 by routing the remaining red into
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  The tracked replay context and tracked review eval contract now align to
+  `5e65...`, fresh `v1-ea-eval` is now `reviewer_ready`, and the remaining
+  red is no longer a generic tracked-contract split. It is now one aligned
+  runtime rebaseline family in fresh review `phase-eval`: stale `5e65...`
+  retrieval and rule-claim direct evals, stale shared `f70...`
+  compliance-review direct eval, stale review-local
+  `authority_universe_snapshot.json` and `generated_rule_pack_validation.json`,
+  a forest-plan component eval contract still pinned to `4fb...`, and a
+  `source_register_contract` phase still anchored to the global `4fb...`
+  manifest / workbook SHA. Do not
   route back into another South replay pass, reopen the resolved replay-repair
   packet, or treat the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.

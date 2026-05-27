@@ -38,12 +38,12 @@ Opening closeout commit:
 - The exact next owner is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
   That narrower reroute closeout landed in `013b5d1`
-  (`Open Lolo source-set contract blocker`). That successor has since reduced
-  Milestone 1, realigned the tracked replay context and review eval contract
-  to `5e65...`, and reduced Milestone 2 locally in `e2b6941`
-  (`Reduce Lolo source-set blocker Milestone 2`). The remaining live work
-  there is now Milestone 3 exact child-route closeout over the residual
-  runtime families.
+  (`Open Lolo source-set contract blocker`). That successor then realigned the
+  tracked replay context and review eval contract to `5e65...`, reduced
+  Milestone 2 locally in `e2b6941`
+  (`Reduce Lolo source-set blocker Milestone 2`), and resolved Milestone 3 by
+  routing the residual red into
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
 - This packet now remains as the exact predecessor that reduced the broader
   replacement-feasibility lane into the narrower source-set contract blocker.
 
@@ -70,9 +70,13 @@ packet and the current-routing docs before implementation continues.
 
 - `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and the top of
   `docs/SESSION_HANDOFF.md` now route the remaining tracked replacement work
-  here, with
-  `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  preserved as the exact predecessor closeout and
+  through
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  with
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+  preserved as the exact successor that resolved the tracked source-set
+  contract split, this packet preserved as the older predecessor that reduced
+  generic feasibility into that contract packet, and
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` preserved as
   the broader package-authority and registry parent record only.
 - The tracked replay context
