@@ -15,6 +15,63 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Lolo Source Register Currentness Blocker Opened Locally
+
+Latest implementation update on 2026-05-26:
+
+- routed packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `opened locally`; aligned-runtime Milestone 1 reduced the Lolo blocker by
+  refreshing review-local applicability, generated rule pack, and
+  forest-plan component eval on `source-set-5e65d845ce77e1a0`, but
+  `source_register_contract` still needs a narrower currentness owner before
+  direct-eval rebaseline continues
+- implementation truth:
+  `applicability-authority-universe` now passes on `5e65...` with
+  `candidate_authority_count=396` and
+  `forest_plan_component_candidate_count=329`; the applicability refresh
+  covered all `396` candidates, replayed the existing four-item Lolo
+  applicability adjudication, and `applicability-validate` now passes with
+  `54` applicable, `342` non-applicable, and
+  `needs_adjudication_authority_count=0`. `applicability-generate-rule-pack`
+  now passes with `generated_rule_count=54`, and
+  `forest-plan-component-eval` now passes after the tracked eval contract
+  moved to `source-set-5e65d845ce77e1a0`
+- remaining blocker truth:
+  fresh review `phase-eval` now reports `passed_phase_count=18/23` with
+  failing phases `retrieval`, `rule_claim_binding`,
+  `downstream_direct_evaluation`, `source_register_contract`, and
+  `evaluation_coverage`. The review-local phases that were red at Milestone 0
+  (`authority_universe`, `generated_rule_pack`, and
+  `forest_plan_component_eval`) are now green
+- source-register stop:
+  `source_register_contract` still fails because `phase-eval` reads
+  `source_library/catalog/source_set_manifest.json` through the tracked
+  replay context's `catalog_dir`. That manifest still declares
+  `source-set-4fb59e9eb43045cb` and workbook SHA
+  `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`,
+  while the active workbook hashes to
+  `1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97`.
+  No exact archived `source-set-5e65d845ce77e1a0` manifest was found under
+  `source_library/runs/**/source_set_manifest.json`
+- live blocker truth:
+  governed aggregates and roster contracts remain unchanged; Lolo is not a
+  ready replacement, and current promotion / strict expansion semantics are
+  not weakened
+- next routing:
+  continue in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 0 to rebaseline the source-register manifest/currentness owner.
+  After that child resolves or stops, return to the aligned-runtime packet for
+  direct-eval rebaseline only if `source_register_contract` is no longer the
+  active blocker
+- verification:
+  governed applicability and forest-plan component refresh commands,
+  adjudication eval/apply, review `phase-eval`, source-register phase readback,
+  replay-context and manifest/currentness source inspection, and no manual
+  ignored JSON patching
+
 ## Lolo Aligned Runtime Rebaseline Milestone 0 Freshness Lock
 
 Latest implementation update on 2026-05-26:

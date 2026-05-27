@@ -2,13 +2,12 @@
 
 Date: 2026-05-26
 
-Status: Active blocker packet (`Milestone 0 freshness lock and exact aligned-runtime
-inventory is resolved locally; Milestone 1 review-local contract artifact rebaseline is
-next. The tracked replay context and review eval contract already align to
-source-set-5e65d845ce77e1a0, and the remaining review-bound red is now frozen as stale
-direct-eval contracts, stale review-local validation artifacts, a stale forest-plan
-component eval contract, and source-register workbook SHA currentness drift against the
-global 4fb manifest`)
+Status: Reduced locally through Milestone 1 (`review-local applicability companion
+artifacts and forest-plan component eval are now green on source-set-5e65d845ce77e1a0;
+the active child route is
+docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md because
+source_register_contract still fails active-workbook SHA currentness against the global
+4fb manifest before this packet can continue to direct-eval rebaseline`)
 
 Owner context: standalone child packet opened after
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
@@ -16,16 +15,16 @@ resolved exact child-route closeout. The tracked Lolo review
 `region1-example-lolo-tylers-kitchen-66344` no longer has a source-set contract split:
 the replay context and tracked `v1-ea-eval` contract now both bind to
 `source-set-5e65d845ce77e1a0`, and fresh `v1-ea-eval` is already
-`contract_status="reviewer_ready"`. The remaining review-bound blocker is now narrower:
-stale aligned-runtime artifacts and eval contracts still span the `5e65...` retrieval and
-rule-claim direct-eval lanes, shared `f70...` compliance-review direct eval, stale
-review-local applicability validation companions, a stale forest-plan component eval
-contract, and a `source_register_contract` phase that still falls back to the global
-catalog manifest on `4fb...`. This packet owns that aligned-runtime rebaseline family
-only. It does not reopen the broader Tyler's Kitchen package-authority lane, current
-promotion, ECID historical slot semantics, or a full canonical rebuild unless a later
-milestone proves the source-register dependency cannot be resolved inside a narrower
-boundary.
+`contract_status="reviewer_ready"`. At packet open, the remaining review-bound blocker
+spanned stale direct-eval lanes, stale review-local applicability validation companions,
+a stale forest-plan component eval contract, and a `source_register_contract` phase that
+still fell back to the global catalog manifest on `4fb...`. Milestone 1 reduced the
+review-local family, leaving stale direct-eval identity/quality drift plus the
+source-register currentness child route. This packet owns that aligned-runtime
+rebaseline family only. It does not reopen the broader Tyler's Kitchen package-authority
+lane, current promotion, ECID historical slot semantics, or a full canonical rebuild
+unless a later milestone proves the source-register dependency cannot be resolved inside
+a narrower boundary.
 
 Opening closeout commit:
 `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`)
@@ -38,8 +37,14 @@ Opening closeout commit:
 - Milestone 0 freshness inventory is resolved locally. No runtime reruns were executed
   during this lock; the slice only re-read tracked contracts plus live ignored artifacts
   and froze the exact stale-surface family before Milestone 1.
+- Milestone 1 review-local artifact rebaseline is reduced locally. The governed
+  applicability chain was refreshed on `source-set-5e65d845ce77e1a0`, the existing
+  four-item Lolo applicability adjudication was replayed against the refreshed decision
+  hash, `applicability-validate` and `applicability-generate-rule-pack` now pass, and
+  `forest-plan-component-eval` now passes after the tracked eval contract moved to
+  `5e65...`.
 - Fresh readback proves one coherent narrower owner family:
-  - `phase_eval_results.json` is now red at `15/23` on
+  - `phase_eval_results.json` is now red at `18/23` on
     `source-set-5e65d845ce77e1a0`, not on the older tracked `4fb...` contract.
   - `retrieval_eval_results.json` already exists on `5e65...`, but its recorded
     contract SHA is `3ea1...` while `config/retrieval_eval_seed.json` now hashes to
@@ -52,15 +57,9 @@ Opening closeout commit:
   - `compliance_review_eval_results.json` still passes only on
     `source-set-f70ea11e04ae3d53`, so `downstream_direct_evaluation` remains stale on the
     aligned Lolo owner path.
-  - `authority_universe_snapshot.json` and `generated_rule_pack_validation.json` still
-    declare `source-set-4fb59e9eb43045cb` even though the passing
-    `applicability_validation.json` already declares
-    `applicability_run_id=...:source-set-5e65d845ce77e1a0`.
-  - `forest_plan_component_eval_results.json` already records actual artifacts on
-    `5e65...`, but the tracked eval contract file
-    `config/forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json`
-    still declares `source-set-4fb59e9eb43045cb`, so the only failing check there is
-    `review_identity_matches_contract`.
+  - `authority_universe_snapshot.json`, `applicability_validation.json`,
+    `generated_rule_pack_validation.json`, and `forest_plan_component_eval_results.json`
+    now all pass on `5e65...`.
   - `source_register_contract` is the one possibly broader surface: the review replay
     context carries no review-local source manifest path or workbook path, so
     `phase-eval` currently compares the active workbook hash
@@ -68,10 +67,10 @@ Opening closeout commit:
     global `source_library/catalog/source_set_manifest.json`, which still declares
     `source-set-4fb59e9eb43045cb` and workbook SHA
     `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
-- Live work now moves to Milestone 1 in this packet: rerun the governed review-local
-  applicability companion chain and forest-plan component eval on the aligned `5e65...`
-  owner path, then classify whether `source_register_contract` can stay in-scope here or
-  must stop to a narrower manifest/currentness owner.
+- Live work now moves to the source-register currentness child packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`.
+  This packet should resume at Milestone 2 direct-eval rebaseline only after
+  `source_register_contract` passes here or stops to a broader catalog/currentness owner.
 
 ## Purpose
 
@@ -82,9 +81,7 @@ The remaining red is now one narrower family:
 
 - direct-eval artifacts on the aligned `5e65...` path are stale against current shipped
   eval contracts;
-- one downstream direct-eval lane still points at shared `f70...` coverage;
-- review-local applicability companion artifacts still advertise the older `4fb...`
-  source set; and
+- one downstream direct-eval lane still points at shared `f70...` coverage; and
 - one review-bound phase still falls back to the global source-set manifest rather than a
   review-local source-register surface.
 
@@ -131,11 +128,9 @@ before implementation continues.
   `source-set-5e65d845ce77e1a0`.
 - The live review phase result
   `source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json`
-  now reports `passed=false`, `passed_phase_count=15/23`, and failing phases
+  now reports `passed=false`, `passed_phase_count=18/23`, and failing phases
   `retrieval`, `rule_claim_binding`, `downstream_direct_evaluation`,
-  `source_register_contract`, `authority_universe`,
-  `generated_rule_pack`, `forest_plan_component_eval`, and
-  `evaluation_coverage`.
+  `source_register_contract`, and `evaluation_coverage`.
 - The stale direct-eval family is exact:
   - `source_library/derived/source-set-5e65d845ce77e1a0/retrieval/retrieval_eval_results.json`
     still records `actual_contract_sha256=3ea1...`, while the current
@@ -149,19 +144,18 @@ before implementation continues.
   - `source_library/reviews/compliance_review_eval/compliance_review_eval_results.json`
     still records `actual_source_set_id="source-set-f70ea11e04ae3d53"` even though
     `phase-eval` now expects `5e65...` for this review.
-- The stale review-local contract family is also exact:
+- The review-local contract family is now reduced:
+  - `applicability-authority-universe` now passes on `5e65...` with
+    `candidate_authority_count=396` and `forest_plan_component_candidate_count=329`.
+  - The refreshed applicability decision pass covers all `396` candidates; the existing
+    four-item Lolo applicability adjudication was replayed, leaving
+    `needs_adjudication_authority_count=0`.
   - `applicability_validation.json` now passes on `5e65...` with
     `generated_rule_pack_ready=true`.
-  - `authority_universe_snapshot.json` still declares `source_set_id="source-set-4fb59e9eb43045cb"`
-    and an authority-universe summary tied to `4fb...`.
-  - `generated_rule_pack_validation.json` still declares
-    `source_set_id="source-set-4fb59e9eb43045cb"` even though its own recorded
-    `applicability_run_id` already points at `...:source-set-5e65d845ce77e1a0`.
-  - `forest_plan_component_eval_results.json` itself records actual artifacts on `5e65...`,
-    but the tracked eval file
-    `config/forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json`
-    still declares `source_set_id="source-set-4fb59e9eb43045cb"`, so the only failing
-    check is contract identity.
+  - `generated_rule_pack_validation.json` now declares `5e65...` and passes with
+    `generated_rule_count=54`.
+  - `forest_plan_component_eval_results.json` now passes after the tracked eval contract
+    declared `source_set_id="source-set-5e65d845ce77e1a0"`.
 - `source_register_contract` is currently the only potentially broader stop:
   `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
   carries no review-local `source_manifest_path` or workbook path, and
@@ -614,13 +608,16 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- The aligned runtime family is now the exact live owner after source-set contract alignment.
+- The aligned runtime family is now the exact parent owner after source-set contract
+  alignment; its live child route is source-register currentness before direct-eval
+  rebaseline resumes here.
 - The only broader surface already visible at packet open is `source_register_contract`,
   which still falls back to the global `4fb...` catalog manifest and older workbook SHA.
-- Milestone 0 has now freshness-locked the aligned runtime family before reruns.
-- The next live work is Milestone 1 in this packet: refresh the governed review-local
-  companion artifacts and forest-plan component eval contract, then classify
-  `source_register_contract` before any broader rebuild or roster decision.
+- Milestones 0 and 1 have now reduced this packet to direct-eval identity drift plus
+  source-register currentness.
+- The next live work is the child source-register currentness packet. If that child
+  resolves, this packet resumes at Milestone 2 to refresh retrieval, rule-claim, and
+  compliance direct-eval artifacts.
 - If the aligned runtime family refreshes cleanly and retrieval quality still remains red,
   the next owner should be a narrower retrieval/rule-claim quality packet rather than a
   return to generic Lolo contract or ECID replacement classification.

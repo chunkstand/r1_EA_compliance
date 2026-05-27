@@ -14,16 +14,17 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
   if the next session is continuing implementation on the tracked Lolo
-  aligned-runtime rebaseline blocker for the ECID historical lane
+  source-register currentness blocker for the ECID historical lane
 - active packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+- immediate predecessor active packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-- previous committed active-packet closeout:
-  `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`)
 - current checkpoint:
-  Milestone 0 freshness lock is resolved locally in the aligned-runtime
-  blocker. Continue at Milestone 1 review-local contract artifact rebaseline.
+  aligned-runtime Milestone 1 is reduced locally. Continue at source-register
+  currentness blocker Milestone 0 to rebaseline the manifest/currentness owner
+  for `source_register_contract`.
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 - older predecessor blocker packet:
@@ -164,36 +165,79 @@ history below.
   now fails under current artifacts with `source_set_stale=398`,
   `partition_gap=329`, `missing_candidate_decision=4`,
   `unresolved_authority=4`, and `provenance_gap=1`. Fresh tracked Lolo
-  Milestone 0 readback now confirms the replay context and tracked
+  Milestone 1 readback now confirms the replay context and tracked
   `v1-ea-eval` contract already align to `source-set-5e65...`, live
-  `v1_ea_eval_results.json` remains `reviewer_ready`, and live review
-  `phase-eval` remains red at `15/23` on `source-set-5e65...`
+  `v1_ea_eval_results.json` remains `reviewer_ready`, review-local
+  applicability and forest-plan component phases are green, and live review
+  `phase-eval` remains red at `18/23` on `source-set-5e65...`
 - next truthful slice:
-  source-set contract blocker Milestone 3 and aligned-runtime Milestone 0 are
-  now resolved locally. Continue
-  in
-  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 1: rerun the governed review-local applicability companion
-  chain and forest-plan component eval on `source-set-5e65...`, then classify
-  `source_register_contract`. Milestone 0 froze the remaining owner family:
-  retrieval direct eval is both contract-stale and semantically red,
-  rule-claim direct eval is contract-stale but otherwise green, shared
-  `f70...` `compliance_review_eval` is stale for this review, review-local
-  `authority_universe_snapshot.json` and
-  `generated_rule_pack_validation.json` still advertise `4fb...`,
-  `forest_plan_component_eval` still uses a tracked `4fb...` contract while
-  the live result runs on `5e65...`, and `source_register_contract` still
-  fails active-workbook SHA currentness against the global `4fb...` manifest.
-  Do not reopen
+  source-set contract blocker Milestone 3 and aligned-runtime Milestones 0-1
+  are now resolved/reduced locally. Continue in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 0: rebaseline the exact manifest/currentness owner for
+  `source_register_contract`. Direct-eval debt remains real in the parent
+  aligned-runtime packet: retrieval direct eval is both contract-stale and
+  semantically red, rule-claim direct eval is contract-stale but otherwise
+  green, and shared `f70...` `compliance_review_eval` is stale for this
+  review. Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
   packet, and do not treat the broader Lolo example packet as the live owner
   for the remaining blocker
 - session reminder:
-  the new aligned-runtime Milestone 0 section immediately below is the current
-  checkpoint; the following aligned-runtime opening, source-set contract,
-  replacement-feasibility,
+  the new source-register currentness section immediately below is the current
+  checkpoint; the following aligned-runtime Milestone 0/opening, source-set
+  contract, replacement-feasibility,
   ECID blocker Milestone 2, Milestone 1, and blocked-parent sections are
   preserved historical context only
+
+## Lolo Source Register Currentness Blocker Opened Locally
+
+This implementation slice reduces aligned-runtime Milestone 1 by closing the
+review-local artifact drift and opening one exact source-register currentness
+child packet.
+
+- outcome label:
+  `reduced locally`; review-local applicability companion artifacts and
+  forest-plan component eval are now green, while `source_register_contract`
+  exits to a narrower currentness owner
+- active packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+- implementation truth:
+  `applicability-authority-universe` now passes on
+  `source-set-5e65d845ce77e1a0` with `candidate_authority_count=396` and
+  `forest_plan_component_candidate_count=329`; the refreshed applicability
+  decision pass covers all `396` candidates; the existing four-item Lolo
+  adjudication was replayed against the refreshed decisions; and
+  `applicability-validate` now passes with `54` applicable, `342`
+  non-applicable, `needs_adjudication_authority_count=0`, and
+  `generated_rule_pack_ready=true`
+- implementation truth continued:
+  `applicability-generate-rule-pack` now passes with `generated_rule_count=54`
+  on `5e65...`; `forest-plan-component-eval` now passes after
+  `config/forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json`
+  moved to `source-set-5e65d845ce77e1a0`; fresh review `phase-eval` improves
+  to `18/23`, leaving only `retrieval`, `rule_claim_binding`,
+  `downstream_direct_evaluation`, `source_register_contract`, and
+  `evaluation_coverage` red
+- source-register stop:
+  `source_register_contract` still compares the active workbook SHA
+  `1b623489...` against the global `source_library/catalog/source_set_manifest.json`
+  workbook SHA `2c511784...` on `source-set-4fb...`; no exact archived
+  `source-set-5e65...` manifest was found under `source_library/runs`
+- next routing:
+  continue in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 0. Return to the parent aligned-runtime packet at direct-eval
+  rebaseline only after the source-register currentness child passes or
+  records a broader catalog/currentness stop
+- verification:
+  `applicability-authority-universe`,
+  `applicability-context-build`, `applicability-retrieve`,
+  `applicability-determine`, `applicability-adjudication-eval`,
+  `applicability-adjudication-apply`, `applicability-validate`,
+  `applicability-generate-rule-pack`, `forest-plan-component-eval`,
+  review `phase-eval`, source-register phase readback, replay-context
+  inspection, and `find source_library/runs -path '*source_set_manifest.json'`
 
 ## Lolo Aligned Runtime Rebaseline Milestone 0 Freshness Lock
 

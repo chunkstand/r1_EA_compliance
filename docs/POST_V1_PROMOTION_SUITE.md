@@ -221,10 +221,15 @@ family.
   source-set `phase-eval` red (`10/33`), and the tracked Lolo replacement
   path is now also unproven under fresher blocker evidence. The tracked
   replay context and tracked `v1-ea-eval` contract now align to `5e65...`,
-  fresh `v1-ea-eval` is `reviewer_ready`, and Milestone 0 of
+  fresh `v1-ea-eval` is `reviewer_ready`, Milestone 0 of
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  froze the remaining review `phase-eval` red at `15/23` as an aligned-runtime
-  stale-surface family, so no truthful ready closure path is currently proven.
+  froze the remaining review `phase-eval` red at `15/23`, and Milestone 1
+  refreshed the review-local applicability chain plus forest-plan component eval
+  so fresh `phase-eval` now fails closed at `18/23`. The live child owner is
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+  because `source_register_contract` still fails active-workbook SHA currentness
+  against the global `4fb...` catalog manifest before direct-eval rebaseline can
+  continue. No truthful ready closure path is currently proven.
   Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:
   `4fb...` still fails across upstream/downstream `phase-eval` families, and
@@ -244,14 +249,13 @@ family.
   in `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`).
   The tracked replay context and tracked review eval contract now align to
   `5e65...`, fresh `v1-ea-eval` is now `reviewer_ready`, and the remaining
-  red is no longer a generic tracked-contract split. It is now one aligned
-  runtime rebaseline family in fresh review `phase-eval`: stale `5e65...`
-  retrieval and rule-claim direct evals, stale shared `f70...`
-  compliance-review direct eval, stale review-local
-  `authority_universe_snapshot.json` and `generated_rule_pack_validation.json`,
-  a forest-plan component eval contract still pinned to `4fb...`, and a
-  `source_register_contract` phase still failing active-workbook SHA
-  currentness against the global `4fb...` manifest. Do not
+  red is no longer a generic tracked-contract split. After the aligned-runtime
+  Milestone 1 refresh, `authority_universe`, `generated_rule_pack`,
+  `applicability_validation`, and `forest_plan_component_eval` are green on the
+  aligned owner path. The live red family is now stale `5e65...` retrieval and
+  rule-claim direct evals, stale shared `f70...` compliance-review direct eval,
+  `evaluation_coverage`, and `source_register_contract` failing active-workbook
+  SHA currentness against the global `4fb...` manifest. Do not
   route back into another South replay pass, reopen the resolved replay-repair
   packet, or treat the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.

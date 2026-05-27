@@ -3,9 +3,9 @@
   "adjudication_id": "region1-example-lolo-tylers-kitchen-66344-applicability-adjudication",
   "created_at": "2026-05-24T18:47:46Z",
   "review_id": "region1-example-lolo-tylers-kitchen-66344",
-  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "source_set_id": "source-set-5e65d845ce77e1a0",
   "decisions_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_decisions.jsonl",
-  "applicability_decisions_sha256": "85db4797f04a0791b3aed8754570ebf1b46390896fcb18b9de71b4d51f6823cb",
+  "applicability_decisions_sha256": "5611f044ef31d0fa817435cc4cbc3206ebaee244db0db0aa75c83cbc38447dd1",
   "allowed_final_statuses": [
     "applicable",
     "not_applicable"
@@ -30,12 +30,12 @@
     "schema_version": "applicability-adjudication-template-summary-v0",
     "created_at": "2026-05-24T18:47:46Z",
     "review_id": "region1-example-lolo-tylers-kitchen-66344",
-    "source_set_id": "source-set-4fb59e9eb43045cb",
-    "decision_count": 67,
+    "source_set_id": "source-set-5e65d845ce77e1a0",
+    "decision_count": 396,
     "adjudication_item_count": 4,
     "pending_item_count": 0,
     "decisions_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_decisions.jsonl",
-    "decisions_sha256": "85db4797f04a0791b3aed8754570ebf1b46390896fcb18b9de71b4d51f6823cb",
+    "decisions_sha256": "5611f044ef31d0fa817435cc4cbc3206ebaee244db0db0aa75c83cbc38447dd1",
     "output_path": "config/applicability_adjudications/region1-example-lolo-tylers-kitchen-66344.json",
     "markdown_path": "/tmp/applicability_adjudication_worklist.md",
     "instructions": "Replayable adjudication for the four Tyler's Kitchen applicability conflicts after live source-set and package review."
