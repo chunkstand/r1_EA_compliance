@@ -8084,7 +8084,7 @@ work.
   `57` code files above `800` lines;
   no import cycles from `architecture_probe.py`;
   red debt governance because `TD-001` points at the wrong line in `batches.py`;
-  duplicate `docs/ARCHITECTURE.md` and `docs/architecture.md`;
+  duplicate architecture-doc casing around tracked `docs/ARCHITECTURE.md`;
   and the preserved West Reservoir replay-context dependency on
   `/Users/chunkstand/Downloads/West Reservoir (67436)`
 - docs touched:
