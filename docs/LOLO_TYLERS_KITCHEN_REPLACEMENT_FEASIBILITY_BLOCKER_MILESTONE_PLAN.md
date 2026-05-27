@@ -2,22 +2,43 @@
 
 Date: 2026-05-26
 
-Status: Active reduced blocker packet (`fresh ECID blocker closeout now routes
-the remaining tracked replacement debt here; live work is Milestone 1
-contract and review-identity classification`)
+Status: Historical reduced predecessor packet (`Milestone 1 is now reduced
+locally; the remaining tracked blocker no longer has one coherent owner here,
+and live work now routes through
+docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`)
 
 Owner context: standalone follow-on opened after
 `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 completed exact child-route closeout and proved that no bounded historical
 source-set rebuild path remains for the ECID preliminary historical slot and
-no tracked governed replacement is currently proven. This packet owns only the
-review-local replacement-feasibility blocker for
-`region1-example-lolo-tylers-kitchen-66344`. It does not reopen the broader
-Lolo package-authority packet, change the ECID manifest floor, scout new
+no tracked governed replacement is currently proven. This packet is now the
+historical predecessor that narrowed the remaining review-local replacement
+debt for `region1-example-lolo-tylers-kitchen-66344` into the stricter
+source-set contract blocker. It does not reopen the broader Lolo
+package-authority packet, change the ECID manifest floor, scout new
 replacement candidates, or claim a ready slot before its own gates pass.
 
 Opening closeout commit:
 `6a4e87d` (`Open Lolo replacement feasibility blocker`)
+
+## Latest Local Implementation
+
+- Milestone 1 is now reduced locally. Fresh tracked readback proved that this
+  packet no longer owns one coherent replacement-feasibility path.
+- `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
+  and `config/v1_lolo_tylers_kitchen_real_ea_eval.json` still bind the review
+  to `source-set-4fb59e9eb43045cb`, while the live
+  `v1_ea_eval_results.json` reports
+  `source-set-5e65d845ce77e1a0` with
+  `contract_status="mismatch"`, representative review-local artifacts also
+  report `5e65...`, `applicability/generated_rule_pack_validation.json` still
+  reports `4fb...`, and review `phase_eval_results.json` remains red at
+  `12/29` on `4fb...`. `downstream_direct_evaluation` also still depends on
+  stale `compliance_review_eval` coverage on `source-set-f70ea11e04ae3d53`.
+- The exact next owner is now
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
+- This packet now remains as the exact predecessor that reduced the broader
+  replacement-feasibility lane into the narrower source-set contract blocker.
 
 ## Purpose
 

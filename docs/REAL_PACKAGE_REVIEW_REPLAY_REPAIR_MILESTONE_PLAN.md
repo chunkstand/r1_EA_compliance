@@ -12,8 +12,10 @@ truthfully rerouted as a selected-not-ready strict-expansion slot on its split
 historical source-set contract. Any future work there should open a fresh
 follow-on rather than reopening this packet to reassert missing downstream
 artifacts. The live routed successor is now
-`docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
+`docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`,
 with
+`docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+preserved as the intermediate predecessor, with
 `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 preserved as the exact predecessor closeout and
 `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
@@ -745,17 +747,19 @@ Milestone 3 live alignment update on 2026-05-26:
   `docs/SESSION_HANDOFF.md`, `docs/POST_V1_PROMOTION_SUITE.md`, and this plan
   now record the truthful reroute closeout and route any future historical-lane
   blocker work into
-  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
   instead of this packet, while
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+  now remains the intermediate predecessor,
+  while
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   now remains the exact predecessor closeout and
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`
   remains the blocked parent stop-condition record. That successor blocker has
   now completed Milestones 1-3 by ruling out both a bounded historical
   source-set rebuild path and any currently tracked governed replacement path
-  under current artifacts and then naming the exact live Lolo
-  replacement-feasibility owner through `6a4e87d`
-  (`Open Lolo replacement feasibility blocker`). `README.md` was
+  under current artifacts, and the replacement-feasibility successor has since
+  reduced further into the exact live Lolo source-set contract owner. `README.md` was
   checked and remains intentionally unchanged because it delegates volatile
   replay truth to the current-state docs instead of duplicating it.
 

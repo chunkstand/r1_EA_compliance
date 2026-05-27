@@ -2,9 +2,9 @@
 
 Date: 2026-05-24
 Status: Historical reduced parent packet (`Milestones 0-2 remain preserved as
-package-authority and registry closeout context; live replacement-feasibility
-work now routes through
-docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`)
+package-authority and registry closeout context; live contract-blocker work
+now routes through
+docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`)
 Owner context: broader standalone follow-on from
 `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
@@ -16,11 +16,12 @@ Owner context: broader standalone follow-on from
   `v1_ea_eval_results.json` reports
   `source-set-5e65d845ce77e1a0` with `contract_status="mismatch"`, and the
   live review `phase-eval` remains red at `12/29` on `4fb...`.
-- Live work therefore continues in
+- Live work therefore first continued in
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
-  which owns the current review-local contract and source-set feasibility
-  blocker for the tracked replacement candidate. That reroute landed in
-  `6a4e87d` (`Open Lolo replacement feasibility blocker`).
+  but that packet has now reduced further into the exact live owner:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`,
+  which owns the current tracked source-set contract split for the replacement
+  candidate.
 - This packet now remains as the broader Tyler's Kitchen package-authority,
   queue-boundary, and forest-registry parent record only.
 

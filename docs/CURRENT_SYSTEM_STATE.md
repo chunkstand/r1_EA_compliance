@@ -15,6 +15,63 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Lolo Source-Set Contract Blocker Opened Locally
+
+Latest implementation update on 2026-05-26:
+
+- routed packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; replacement-feasibility Milestone 1 no longer supports
+  one coherent tracked owner, so live work now moves to the narrower
+  source-set contract blocker
+- implementation truth:
+  fresh tracked readback now proves a three-surface contract split for
+  `region1-example-lolo-tylers-kitchen-66344`. The replay context
+  `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
+  still declares `source_set_id="source-set-4fb59e9eb43045cb"`, and
+  `config/v1_lolo_tylers_kitchen_real_ea_eval.json` still declares the same
+  `4fb...` source set. But the live
+  `source_library/reviews/region1-example-lolo-tylers-kitchen-66344/`
+  `v1_ea_eval_results.json` reports
+  `source_set_id="source-set-5e65d845ce77e1a0"` and
+  `contract_status="mismatch"`, while review-local artifacts including
+  `review_validation.json`,
+  `applicability/applicability_validation.json`,
+  `forest_plan_context_summary.json`,
+  `authority_reviewer_resolution_report.json`,
+  `compliance_matrix.json`, and
+  `forest_plan_component_eval_results.json` also report `5e65...`.
+  Meanwhile `applicability/generated_rule_pack_validation.json` and the live
+  review `phase_eval_results.json` still report `4fb...`, with
+  `passed=false` and `passed_phase_count=12/29`. `phase-eval` also shows that
+  `downstream_direct_evaluation` is still partially anchored to stale
+  compliance direct-eval coverage on `source-set-f70ea11e04ae3d53`
+- live blocker truth:
+  the governed aggregates remain unchanged. Fresh coverage and promotion
+  routing still admit only East Crazies, West Reservoir, and South Plateau as
+  covered reviewer-facing reviews; non-strict `promotion-suite` remains
+  `current_promotion_ready=true`, `promotion_ready=true`, and
+  `expansion_ready=false`, with the only live expansion failure still
+  `historical_source_set_split` on the ECID historical slot
+- next routing:
+  continue in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 1 to classify the tracked contract-chain owner surfaces before
+  any roster, slot, or ready-state changes are considered. Treat
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+  as the exact predecessor that reduced the generic replacement-feasibility
+  lane into this narrower packet, and keep
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  as historical package-authority context only
+- verification:
+  `jq '{review_id, source_set_id, package_path, catalog_dir, source_manifest_path}' config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`,
+  `jq '{review_id, source_set_id, package_path, required_review_artifact_ids, expected_summary}' config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
+  `jq '{review_id: .summary.review_id, source_set_id: .summary.source_set_id, passed: .summary.passed, contract_status: .summary.contract_status, failed_checks: [.summary.checks[] | select(.passed == false) | {name, details}]}' source_library/reviews/region1-example-lolo-tylers-kitchen-66344/v1_ea_eval_results.json`,
+  `jq '{review_id, source_set_id, passed, passed_phase_count, phase_count, reviewer_ready, missing_direct_eval_phase_count, threshold_failed_phase_count, failed_phase_names: [.phases[] | select(.passed == false) | .name]}' source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json`,
+  and readback of the representative review-local artifact files named in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+
 ## Lolo Replacement Feasibility Blocker Opened Locally
 
 Latest implementation update on 2026-05-26:
