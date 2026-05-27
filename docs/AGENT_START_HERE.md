@@ -41,8 +41,8 @@ The planner:
 - The live Lolo follow-on is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
 - For Lolo National Forest example-package review work, inspect that blocker
-  first for the current review-local contract and source-set feasibility
-  state, then read
+  first for the current contract-chain owner plus Milestone 2
+  review-readiness-classification state, then read
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
   only as the exact predecessor that reduced the generic replacement lane,
   then read

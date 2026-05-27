@@ -241,7 +241,10 @@ family.
   The remaining live debt is now stale tracked `4fb...` contract and
   expectation surfaces plus shared `f70...` downstream direct-eval coverage.
   Do not treat that narrower reroute as provisional: the exact child-route
-  closeout landed in `013b5d1` (`Open Lolo source-set contract blocker`). Do not
+  closeout landed in `013b5d1` (`Open Lolo source-set contract blocker`), and
+  the active child packet has since reduced Milestone 1 and advanced to
+  Milestone 2 through `20b51b6`
+  (`Advance Lolo source-set blocker to Milestone 2`). Do not
   route back into another South replay pass, reopen the resolved replay-repair
   packet, or treat the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.

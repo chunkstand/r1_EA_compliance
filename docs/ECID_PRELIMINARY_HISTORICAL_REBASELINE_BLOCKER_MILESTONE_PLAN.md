@@ -45,7 +45,9 @@ replacement is ready before its own gates pass.
   exact live owner is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
   That narrower reroute closeout landed in `013b5d1`
-  (`Open Lolo source-set contract blocker`).
+  (`Open Lolo source-set contract blocker`). The active child packet has since
+  reduced Milestone 1 and advanced to Milestone 2 through `20b51b6`
+  (`Advance Lolo source-set blocker to Milestone 2`).
 - This packet now remains as the older predecessor closeout that routed live
   work away from generic ECID blocker classification and into the narrower
   Lolo lineage.

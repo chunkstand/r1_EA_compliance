@@ -62,7 +62,9 @@ Latest execution note on 2026-05-26:
   `docs/ECID_PRELIMINARY_HISTORICAL_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   preserved as the older predecessor closeout packet. That narrower reroute
   closeout landed in `013b5d1`
-  (`Open Lolo source-set contract blocker`).
+  (`Open Lolo source-set contract blocker`). The active child packet has since
+  reduced Milestone 1 and advanced to Milestone 2 through `20b51b6`
+  (`Advance Lolo source-set blocker to Milestone 2`).
 
 This plan now remains as the blocked historical parent record for the
 fail-closed ready-slot gate and the stop-condition evidence above. Continue

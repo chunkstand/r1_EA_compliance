@@ -38,7 +38,9 @@ Opening closeout commit:
 - The exact next owner is now
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
   That narrower reroute closeout landed in `013b5d1`
-  (`Open Lolo source-set contract blocker`).
+  (`Open Lolo source-set contract blocker`). That successor has since reduced
+  Milestone 1 and advanced to Milestone 2 through `20b51b6`
+  (`Advance Lolo source-set blocker to Milestone 2`).
 - This packet now remains as the exact predecessor that reduced the broader
   replacement-feasibility lane into the narrower source-set contract blocker.
 
