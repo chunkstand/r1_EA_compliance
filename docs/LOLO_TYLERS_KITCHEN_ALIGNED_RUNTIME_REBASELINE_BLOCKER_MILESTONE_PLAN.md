@@ -3,10 +3,12 @@
 Date: 2026-05-26
 
 Status: Active blocker packet (`Milestone 0 freshness lock and exact aligned-runtime
-inventory is next; the tracked replay context and review eval contract already align to
-source-set-5e65d845ce77e1a0, but the remaining review-bound red now sits in stale
-direct-eval contracts, stale review-local validation artifacts, and a source-register
-contract still anchored to the global 4fb manifest`)
+inventory is resolved locally; Milestone 1 review-local contract artifact rebaseline is
+next. The tracked replay context and review eval contract already align to
+source-set-5e65d845ce77e1a0, and the remaining review-bound red is now frozen as stale
+direct-eval contracts, stale review-local validation artifacts, a stale forest-plan
+component eval contract, and source-register workbook SHA currentness drift against the
+global 4fb manifest`)
 
 Owner context: standalone child packet opened after
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
@@ -33,13 +35,20 @@ Opening closeout commit:
 - This packet is now the exact live child route after source-set contract blocker
   Milestone 3 closeout in `a7b4141`
   (`Open Lolo aligned runtime rebaseline blocker`).
+- Milestone 0 freshness inventory is resolved locally. No runtime reruns were executed
+  during this lock; the slice only re-read tracked contracts plus live ignored artifacts
+  and froze the exact stale-surface family before Milestone 1.
 - Fresh readback proves one coherent narrower owner family:
   - `phase_eval_results.json` is now red at `15/23` on
     `source-set-5e65d845ce77e1a0`, not on the older tracked `4fb...` contract.
-  - `retrieval_eval_results.json` and `rule_claim_link_eval_results.json` already exist on
-    `5e65...`, but both are stale against the current shipped eval seeds and therefore
-    still fail direct-eval identity checks; `retrieval-eval` is also semantically red on
-    failing cases and metric thresholds.
+  - `retrieval_eval_results.json` already exists on `5e65...`, but its recorded
+    contract SHA is `3ea1...` while `config/retrieval_eval_seed.json` now hashes to
+    `394aa7...`; the existing result is also semantically red with failed cases
+    `nepa-alternatives-environmental-effects` and `scoping-public-comment`, plus
+    false-positive, missing-source, recall, MRR, and NDCG threshold misses.
+  - `rule_claim_link_eval_results.json` already exists on `5e65...`, but its recorded
+    contract SHA is `34faf3...` while `config/rule_claim_link_eval_seed.json` now
+    hashes to `59bce8...`; its cases and metric checks otherwise pass.
   - `compliance_review_eval_results.json` still passes only on
     `source-set-f70ea11e04ae3d53`, so `downstream_direct_evaluation` remains stale on the
     aligned Lolo owner path.
@@ -53,11 +62,15 @@ Opening closeout commit:
     still declares `source-set-4fb59e9eb43045cb`, so the only failing check there is
     `review_identity_matches_contract`.
   - `source_register_contract` is the one possibly broader surface: the review replay
-    context carries no review-local source manifest path, so `phase-eval` currently falls
-    back to `source_library/catalog/source_set_manifest.json`, which still declares the
-    global `4fb...` source set and an older workbook SHA.
-- Live work now starts with Milestone 0 in this packet: freshness-lock the aligned
-  runtime family and prove whether `source_register_contract` can stay in-scope here or
+    context carries no review-local source manifest path or workbook path, so
+    `phase-eval` currently compares the active workbook hash
+    `1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97` against the
+    global `source_library/catalog/source_set_manifest.json`, which still declares
+    `source-set-4fb59e9eb43045cb` and workbook SHA
+    `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
+- Live work now moves to Milestone 1 in this packet: rerun the governed review-local
+  applicability companion chain and forest-plan component eval on the aligned `5e65...`
+  owner path, then classify whether `source_register_contract` can stay in-scope here or
   must stop to a narrower manifest/currentness owner.
 
 ## Purpose
@@ -127,7 +140,8 @@ before implementation continues.
   - `source_library/derived/source-set-5e65d845ce77e1a0/retrieval/retrieval_eval_results.json`
     still records `actual_contract_sha256=3ea1...`, while the current
     `config/retrieval_eval_seed.json` expects `394aa7...`; the existing result also still
-    fails case and metric checks.
+    fails case and metric checks (`eval_cases_pass=false`,
+    `metric_thresholds_met=false`).
   - `source_library/derived/source-set-5e65d845ce77e1a0/rule_claim_links/nepa-ea-v0/0.4.0/rule_claim_link_eval_results.json`
     still records `actual_contract_sha256=34faf3...`, while the current
     `config/rule_claim_link_eval_seed.json` expects `59bce8...`; the existing cases and
@@ -603,8 +617,10 @@ git diff --check
 - The aligned runtime family is now the exact live owner after source-set contract alignment.
 - The only broader surface already visible at packet open is `source_register_contract`,
   which still falls back to the global `4fb...` catalog manifest and older workbook SHA.
-- The next live work is Milestone 0 in this packet: freshness-lock the aligned runtime
-  family before reruns.
+- Milestone 0 has now freshness-locked the aligned runtime family before reruns.
+- The next live work is Milestone 1 in this packet: refresh the governed review-local
+  companion artifacts and forest-plan component eval contract, then classify
+  `source_register_contract` before any broader rebuild or roster decision.
 - If the aligned runtime family refreshes cleanly and retrieval quality still remains red,
   the next owner should be a narrower retrieval/rule-claim quality packet rather than a
   return to generic Lolo contract or ECID replacement classification.

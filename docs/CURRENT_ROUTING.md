@@ -16,15 +16,21 @@ Use this file as the short current route before opening the append-only docs.
 - Source-set contract blocker Milestone 3 is now resolved locally.
 - Tracked Lolo replay context and review eval contract stay aligned to the
   `5e65...` owner path, and fresh `v1-ea-eval` remains `reviewer_ready`.
-- Next slice is Milestone 0 in the aligned runtime rebaseline blocker:
-  freshness-lock the remaining runtime surfaces before reruns.
+- Milestone 0 in the aligned runtime rebaseline blocker is now resolved
+  locally: the remaining runtime surfaces have been freshness-locked before
+  reruns.
+- Next slice is Milestone 1 in that packet: rerun the governed review-local
+  applicability companion chain plus forest-plan component eval on `5e65...`,
+  then classify whether `source_register_contract` can stay in this packet.
 - Remaining live debt:
-  stale `retrieval-eval` and `rule-claim-eval` on `5e65...`, stale shared
-  `compliance-review-eval` on `f70...`, stale
+  `retrieval-eval` on `5e65...` is both contract-stale and semantically red;
+  `rule-claim-eval` on `5e65...` is contract-stale but otherwise green; shared
+  `compliance-review-eval` still passes only on `f70...`;
   `authority_universe_snapshot.json` and
-  `generated_rule_pack_validation.json`, `forest_plan_component_eval`
-  contract drift, and `source_register_contract` still anchored to the global
-  `4fb...` manifest / workbook SHA.
+  `generated_rule_pack_validation.json` still advertise `4fb...`;
+  `forest_plan_component_eval` still has a tracked `4fb...` contract while the
+  live result runs on `5e65...`; and `source_register_contract` still fails
+  active-workbook SHA currentness against the global `4fb...` manifest.
 - Aggregate truth:
   ECID current promotion and South Plateau reviewer-ready expansion remain
   green; strict expansion remains blocked only on the ECID historical slot

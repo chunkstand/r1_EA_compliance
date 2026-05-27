@@ -219,10 +219,13 @@ family.
   Fresh rebaseline proving on 2026-05-26 also showed that the older `ba8...`
   closure assumption is stale under current live artifacts, `4fb...` remains
   source-set `phase-eval` red (`10/33`), and the tracked Lolo replacement
-  path is now also unproven under fresher blocker evidence:
-  `v1-ea-eval` fails on a `4fb...` versus `5e65...` review-identity split and
-  fresh review `phase-eval` remains red at `12/29`, so no truthful ready
-  closure path is currently proven. Blocker Milestones 1-2 have now ruled out
+  path is now also unproven under fresher blocker evidence. The tracked
+  replay context and tracked `v1-ea-eval` contract now align to `5e65...`,
+  fresh `v1-ea-eval` is `reviewer_ready`, and Milestone 0 of
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  froze the remaining review `phase-eval` red at `15/23` as an aligned-runtime
+  stale-surface family, so no truthful ready closure path is currently proven.
+  Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:
   `4fb...` still fails across upstream/downstream `phase-eval` families, and
   fresh `ba8...` `applicability-validate` plus
@@ -247,8 +250,8 @@ family.
   compliance-review direct eval, stale review-local
   `authority_universe_snapshot.json` and `generated_rule_pack_validation.json`,
   a forest-plan component eval contract still pinned to `4fb...`, and a
-  `source_register_contract` phase still anchored to the global `4fb...`
-  manifest / workbook SHA. Do not
+  `source_register_contract` phase still failing active-workbook SHA
+  currentness against the global `4fb...` manifest. Do not
   route back into another South replay pass, reopen the resolved replay-repair
   packet, or treat the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.

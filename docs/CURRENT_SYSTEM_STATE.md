@@ -15,6 +15,73 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Lolo Aligned Runtime Rebaseline Milestone 0 Freshness Lock
+
+Latest implementation update on 2026-05-26:
+
+- routed packet:
+  `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `resolved locally`; Milestone 0 freshness-locked the aligned runtime family
+  before any reruns and kept the blocker out of source-set contract drift
+- previous committed active-packet closeout:
+  `a7b4141` (`Open Lolo aligned runtime rebaseline blocker`)
+- implementation truth:
+  the tracked replay context and tracked `v1-ea-eval` contract both bind
+  `region1-example-lolo-tylers-kitchen-66344` to
+  `source-set-5e65d845ce77e1a0`, and live `v1_ea_eval_results.json` remains
+  `contract_status="reviewer_ready"`, `passed=true`,
+  `broader_ea_passed=true`, and `forest_plan_passed=true`. Live
+  `phase_eval_results.json` remains red at `15/23` on the same `5e65...`
+  owner path with failing phases `retrieval`, `rule_claim_binding`,
+  `downstream_direct_evaluation`, `source_register_contract`,
+  `authority_universe`, `generated_rule_pack`,
+  `forest_plan_component_eval`, and `evaluation_coverage`
+- exact Milestone 0 inventory:
+  `retrieval_eval_results.json` is contract-stale (`3ea1...` recorded versus
+  current seed hash `394aa7...`) and semantically red on failed cases
+  `nepa-alternatives-environmental-effects` and `scoping-public-comment` plus
+  metric threshold misses; `rule_claim_link_eval_results.json` is
+  contract-stale (`34faf3...` recorded versus current seed hash `59bce8...`)
+  but its cases and metrics pass; shared
+  `compliance_review_eval_results.json` passes with current contract hash
+  `b229f5...` but still records `source-set-f70ea11e04ae3d53` instead of the
+  aligned Lolo `5e65...` owner path; `authority_universe_snapshot.json` and
+  `generated_rule_pack_validation.json` still declare
+  `source-set-4fb59e9eb43045cb`; and
+  `forest_plan_component_eval_results.json` records live `5e65...` artifacts
+  but fails because
+  `config/forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json`
+  still declares `4fb...`
+- source-register stop watch:
+  the replay context has no review-local `source_manifest_path` or
+  `workbook_path`, so `source_register_contract` still compares the active
+  workbook SHA
+  `1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97`
+  against the global catalog manifest SHA
+  `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`
+  on `source-set-4fb59e9eb43045cb`
+- live blocker truth:
+  the governed aggregates remain unchanged. This Milestone 0 readback did not
+  admit Lolo into the governed roster, did not alter ECID historical slot
+  semantics, and did not rerun or manually patch ignored `source_library/`
+  runtime outputs
+- next routing:
+  continue in the same packet at Milestone 1 to rerun the governed
+  review-local applicability companion chain and forest-plan component eval on
+  `source-set-5e65d845ce77e1a0`, then classify whether
+  `source_register_contract` can stay in-scope or must stop to a narrower
+  manifest/currentness owner
+- verification:
+  exact `jq` readback of the tracked replay context, tracked `v1-ea-eval`
+  contract, live `v1_ea_eval_results.json`, live `phase_eval_results.json`,
+  global `source_set_manifest.json`, review-local
+  `authority_universe_snapshot.json`, `generated_rule_pack_validation.json`,
+  `forest_plan_component_eval_results.json`, the tracked forest-plan component
+  eval contract, current eval seed hashes, live `5e65...` retrieval and
+  rule-claim direct-eval result files, and the shared
+  `compliance_review_eval_results.json`
+
 ## Lolo Aligned Runtime Rebaseline Blocker Opened Locally
 
 Latest implementation update on 2026-05-26:
