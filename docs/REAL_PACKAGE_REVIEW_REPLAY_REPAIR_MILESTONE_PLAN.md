@@ -761,10 +761,11 @@ Milestone 3 live alignment update on 2026-05-26:
   under current artifacts, and the replacement-feasibility successor has since
   reduced further into the exact live Lolo source-set contract owner through
   `013b5d1` (`Open Lolo source-set contract blocker`). That active child
-  packet has since reduced Milestone 1 and advanced to Milestone 2 through
-  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`). `README.md` was
-  checked and remains intentionally unchanged because it delegates volatile
-  replay truth to the current-state docs instead of duplicating it.
+  packet has since reduced Milestone 1, realigned the tracked replay context
+  and review eval contract to `5e65...`, and reduced Milestone 2 locally.
+  `README.md` was checked and remains intentionally unchanged because it
+  delegates volatile replay truth to the current-state docs instead of
+  duplicating it.
 
 ## Required Implementation Artifacts
 

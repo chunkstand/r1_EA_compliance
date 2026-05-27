@@ -231,20 +231,20 @@ family.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`.
   ECID blocker Milestone 3 first closed locally by naming
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
-  but replacement-feasibility Milestone 1 has now reduced further into the
-  exact live owner:
+  but replacement-feasibility Milestone 1 then reduced further into the exact
+  live owner:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
-  Fresh tracked Lolo readback there now supports `source-set-5e65...` as the
-  bounded review-local owner path because the representative review-local
-  artifact family already binds `5e65...` and
-  `applicability_validation.json` reports `generated_rule_pack_ready=true`.
-  The remaining live debt is now stale tracked `4fb...` contract and
-  expectation surfaces plus shared `f70...` downstream direct-eval coverage.
-  Do not treat that narrower reroute as provisional: the exact child-route
-  closeout landed in `013b5d1` (`Open Lolo source-set contract blocker`), and
-  the active child packet has since reduced Milestone 1 and advanced to
-  Milestone 2 through `20b51b6`
-  (`Advance Lolo source-set blocker to Milestone 2`). Do not
+  That narrower reroute closeout landed in `013b5d1`
+  (`Open Lolo source-set contract blocker`), and the active child packet has
+  since reduced both Milestone 1 and Milestone 2 locally: the tracked replay
+  context and tracked review eval contract now align to `5e65...`, fresh
+  `v1-ea-eval` is now `reviewer_ready`, and the remaining red is no longer a
+  generic tracked-contract split. It is now the exact residual runtime family
+  in fresh review `phase-eval`: retrieval and rule-claim direct-eval
+  staleness, shared `f70...` compliance direct-eval staleness, stale
+  `generated_rule_pack_validation.json`, stale source-register and
+  authority-universe snapshots, and a still-failing
+  `forest_plan_component_eval_results.json`. Do not
   route back into another South replay pass, reopen the resolved replay-repair
   packet, or treat the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.

@@ -15,6 +15,68 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Lolo Source-Set Contract Blocker Milestone 2 Reduced Locally
+
+Latest implementation update on 2026-05-26:
+
+- routed packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `reduced locally`; Milestone 2 now realigns the tracked replay context and
+  tracked review eval contract to the chosen `5e65...` owner path, and live
+  work now moves to Milestone 3 exact child-route or feasibility-stop
+  closeout inside the same packet
+- latest committed predecessor closeout:
+  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
+- implementation truth:
+  `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
+  and `config/v1_lolo_tylers_kitchen_real_ea_eval.json` now both declare
+  `source-set-5e65d845ce77e1a0`. Fresh
+  `v1-ea-eval --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`
+  now closes green with `passed=true`, `contract_status="reviewer_ready"`,
+  `broader_ea_passed=true`, and `forest_plan_passed=true`. Fresh review
+  `phase-eval --review-id region1-example-lolo-tylers-kitchen-66344`
+  remains red at `15/23` on the aligned owner path. The remaining failing
+  phases are `retrieval`, `rule_claim_binding`,
+  `downstream_direct_evaluation`, `source_register_contract`,
+  `authority_universe`, `generated_rule_pack`,
+  `forest_plan_component_eval`, and `evaluation_coverage`. That residual red
+  is no longer a generic tracked-contract split: retrieval now reads a
+  `5e65...` direct-eval artifact that is stale against the current retrieval
+  eval seed and still fails thresholds; rule-claim direct eval also reads a
+  `5e65...` artifact that is stale against the current rule-claim eval seed;
+  downstream compliance direct eval still only exists on `f70...`;
+  `generated_rule_pack_validation.json` still reports `4fb...`;
+  `source_register_contract` now fails on workbook SHA drift;
+  `authority_universe_snapshot.json` still fails `source_set_matches`; and
+  `forest_plan_component_eval_results.json` still fails
+  `component_eval_failed`
+- live blocker truth:
+  the governed aggregates remain unchanged. Fresh coverage and promotion
+  routing still admit only East Crazies, West Reservoir, and South Plateau as
+  covered reviewer-facing reviews; non-strict `promotion-suite` remains
+  `current_promotion_ready=true`, `promotion_ready=true`, and
+  `expansion_ready=false`, with the only live expansion failure still
+  `historical_source_set_split` on the ECID historical slot
+- next routing:
+  continue in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 3 to name one exact narrower runtime owner or one explicit
+  stop condition for the residual `phase-eval` families above. Treat
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+  as the exact predecessor that reduced the generic replacement-feasibility
+  lane into this narrower packet, and keep
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  as historical package-authority context only
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  plus readback of the residual failing phases and the aligned tracked config
+  surfaces named in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+
 ## Lolo Source-Set Contract Blocker Opened Locally
 
 Latest implementation update on 2026-05-26:

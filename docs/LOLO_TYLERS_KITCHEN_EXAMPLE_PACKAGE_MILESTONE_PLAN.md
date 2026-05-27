@@ -23,8 +23,10 @@ Owner context: broader standalone follow-on from
   which owns the current tracked source-set contract split for the replacement
   candidate. That narrower reroute closeout landed in `013b5d1`
   (`Open Lolo source-set contract blocker`). The active child packet has since
-  reduced Milestone 1 and advanced to Milestone 2 through `20b51b6`
-  (`Advance Lolo source-set blocker to Milestone 2`).
+  reduced Milestone 1, realigned the tracked replay context and review eval
+  contract to `5e65...`, and reduced Milestone 2 locally. The remaining live
+  work there is now Milestone 3 exact child-route closeout over the residual
+  runtime families.
 - This packet now remains as the broader Tyler's Kitchen package-authority,
   queue-boundary, and forest-registry parent record only.
 

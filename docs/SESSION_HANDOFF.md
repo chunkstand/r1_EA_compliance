@@ -19,7 +19,7 @@ history below.
   source-set contract blocker for the ECID historical lane
 - active packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
-- latest blocker closeout commit:
+- latest committed predecessor closeout:
   `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
@@ -165,15 +165,17 @@ history below.
   `source-set-5e65...` and fails `review_identity_matches_contract`, and the
   live review `phase-eval` remains red at `12/29` on `source-set-4fb...`
 - next truthful slice:
-  source-set contract blocker Milestone 1 is now reduced locally. Continue in
+  source-set contract blocker Milestone 2 is now reduced locally. Continue in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 2: current readback supports `source-set-5e65...` as the
-  bounded review-local owner path because the representative review-local
-  artifact family already binds `5e65...` and
-  `applicability_validation.json` reports `generated_rule_pack_ready=true`.
-  The remaining live debt is now stale tracked `4fb...` contract and
-  expectation surfaces plus shared `f70...` downstream direct-eval coverage.
-  Do not reopen
+  at Milestone 3: the tracked replay context and tracked review eval contract
+  now align to `source-set-5e65...`, and fresh `v1-ea-eval` is now
+  `reviewer_ready`, but fresh review `phase-eval` remains red at `15/23`.
+  The remaining live debt is now exact residual runtime and stale-artifact
+  work: retrieval and rule-claim direct-eval staleness, shared `f70...`
+  compliance direct-eval staleness, stale
+  `generated_rule_pack_validation.json`, stale source-register and
+  authority-universe snapshots, and a still-failing
+  `forest_plan_component_eval_results.json`. Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
   packet, and do not treat the broader Lolo example packet as the live owner
   for the remaining blocker
@@ -182,6 +184,62 @@ history below.
   checkpoint; the following replacement-feasibility, ECID blocker Milestone 2,
   Milestone 1, and blocked-parent sections are preserved historical context
   only
+
+## Lolo Source-Set Contract Blocker Milestone 2 Reduced Locally
+
+This implementation slice closes Milestone 2 in the active source-set
+contract blocker by rebaselining the tracked review on the chosen `5e65...`
+owner path and classifying the remaining red.
+
+- outcome label:
+  `reduced locally`; live work now stays in the same packet and advances to
+  Milestone 3 exact child-route or feasibility-stop closeout
+- latest committed predecessor closeout:
+  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
+- implementation truth:
+  `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
+  and `config/v1_lolo_tylers_kitchen_real_ea_eval.json` now both declare
+  `source-set-5e65d845ce77e1a0`. Fresh
+  `v1_ea_eval_results.json` is now green with
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true`. Fresh review `phase_eval_results.json` remains
+  red at `15/23` on `5e65...`, with the remaining failing phases narrowed to
+  `retrieval`, `rule_claim_binding`, `downstream_direct_evaluation`,
+  `source_register_contract`, `authority_universe`,
+  `generated_rule_pack`, `forest_plan_component_eval`, and
+  `evaluation_coverage`. The residual debt is now exact: retrieval and
+  rule-claim direct-eval artifacts on `5e65...` are stale against the current
+  eval seeds; shared downstream compliance direct eval still only exists on
+  `f70...`; `generated_rule_pack_validation.json` still reports `4fb...`;
+  `source_register_contract` now fails on workbook SHA drift;
+  `authority_universe_snapshot.json` still fails `source_set_matches`; and
+  `forest_plan_component_eval_results.json` still fails
+  `component_eval_failed`
+- live blocker truth:
+  the governed aggregates remain stable and still do not admit Lolo as a
+  ready replacement. `real-package-review-coverage-eval` still admits only
+  East Crazies, West Reservoir, and South Plateau, and non-strict
+  `promotion-suite` remains green for current promotion while strict
+  expansion still fails only on the ECID historical slot under
+  `historical_source_set_split`
+- next routing:
+  continue in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 3 to name one exact narrower runtime owner or one explicit
+  stop condition for the residual `phase-eval` families above. Treat
+  `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
+  as the exact predecessor that reduced the generic feasibility lane into
+  this narrower packet, and keep
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  as broader package-authority lineage only
+- verification:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344 --eval-file config/v1_lolo_tylers_kitchen_real_ea_eval.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-lolo-tylers-kitchen-66344`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library --manifest config/promotion_suite_v1.json`,
+  plus readback of the residual failing phases and aligned tracked config
+  surfaces named in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 
 ## Lolo Source-Set Contract Blocker Opened Locally
 

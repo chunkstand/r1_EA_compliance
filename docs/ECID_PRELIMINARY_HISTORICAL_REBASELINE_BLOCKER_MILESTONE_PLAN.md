@@ -46,8 +46,10 @@ replacement is ready before its own gates pass.
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`.
   That narrower reroute closeout landed in `013b5d1`
   (`Open Lolo source-set contract blocker`). The active child packet has since
-  reduced Milestone 1 and advanced to Milestone 2 through `20b51b6`
-  (`Advance Lolo source-set blocker to Milestone 2`).
+  reduced Milestone 1, realigned the tracked replay context and review eval
+  contract to `5e65...`, and reduced Milestone 2 locally. The remaining live
+  work there is now Milestone 3 exact child-route closeout over the residual
+  runtime families.
 - This packet now remains as the older predecessor closeout that routed live
   work away from generic ECID blocker classification and into the narrower
   Lolo lineage.

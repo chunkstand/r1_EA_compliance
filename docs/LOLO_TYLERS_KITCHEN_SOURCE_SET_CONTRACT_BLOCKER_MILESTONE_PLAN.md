@@ -2,58 +2,61 @@
 
 Date: 2026-05-26
 
-Status: Active reduced blocker packet (`Milestone 1 is now reduced locally;
-current evidence supports a bounded review-local owner path on
-source-set-5e65d845ce77e1a0; live work is Milestone 2 contract-aligned
-review-readiness classification`)
+Status: Active reduced blocker packet (`Milestone 2 is now reduced locally;
+the tracked replay context and review eval contract now align to
+source-set-5e65d845ce77e1a0; live work is Milestone 3 exact child-route or
+feasibility-stop closeout`)
 
 Owner context: standalone follow-on opened after
 `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
 proved that the tracked Lolo replacement path no longer has one coherent
-review-local owner surface. This packet owns only the tracked contract-chain
-split for `region1-example-lolo-tylers-kitchen-66344`: tracked config still
-binds `source-set-4fb59e9eb43045cb`, most live review-local outputs now bind
-`source-set-5e65d845ce77e1a0`, and review-local downstream direct-eval still
-sees stale compliance coverage on `source-set-f70ea11e04ae3d53`. It does not
-reopen the broader Tyler's Kitchen package-authority lane, change the ECID
-historical slot floor, admit Lolo into the governed roster, or scout new
-replacement candidates.
+review-local owner surface. This packet now owns the narrower residual debt
+for `region1-example-lolo-tylers-kitchen-66344`: the tracked replay context
+and tracked `v1-ea-eval` contract now align to
+`source-set-5e65d845ce77e1a0`, but fresh review `phase-eval` remains red on
+retrieval / rule-claim direct-eval staleness, shared downstream compliance
+direct-eval staleness on `source-set-f70ea11e04ae3d53`, stale
+`generated_rule_pack_validation.json`, stale source-register and authority
+snapshot surfaces, and a still-failing forest-plan component eval result. It
+does not reopen the broader Tyler's Kitchen package-authority lane, change
+the ECID historical slot floor, admit Lolo into the governed roster, or
+scout new replacement candidates.
 
 Opening closeout commit:
 `013b5d1` (`Open Lolo source-set contract blocker`)
 
 ## Latest Local Implementation
 
-- Milestone 1 closeout commit:
+- Latest committed predecessor closeout:
   `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
 
-- Milestone 1 is now reduced locally. Fresh tracked readback no longer leaves
-  the owner chain generic.
-- The tracked replay context and tracked `v1-ea-eval` contract still bind
+- Milestone 2 is now reduced locally. The tracked replay context and tracked
+  `v1-ea-eval` contract now both bind
   `region1-example-lolo-tylers-kitchen-66344` to
-  `source-set-4fb59e9eb43045cb`, and the live review
-  `phase_eval_results.json` still uses `4fb...` expectations. But the bounded
-  review-local artifact path now converges on
-  `source-set-5e65d845ce77e1a0`: `v1_ea_eval_results.json`,
-  `review_validation.json`,
-  `applicability/applicability_validation.json`,
-  `forest_plan_context_summary.json`,
-  `authority_reviewer_resolution_report.json`,
-  `compliance_matrix.json`, and
-  `forest_plan_component_eval_results.json` all report `5e65...`.
-- `applicability/applicability_validation.json` on `5e65...` also reports
-  `passed=true` and `generated_rule_pack_ready=true`, which keeps the stale
-  `4fb...` `generated_rule_pack_validation.json` in a bounded rerun category
-  rather than as evidence of a second review-local owner.
-- The remaining `f70...` surface is now classified as a stale shared
-  downstream direct-eval dependency, not as the review-local source-set owner:
-  `downstream_direct_evaluation` still reports only
-  `compliance_review_eval` present there while the retrieval, claim, and
-  rule-claim direct eval lanes are still missing on `4fb...`.
-- Live work now advances to Milestone 2 inside this same packet: classify
-  whether the remaining red is bounded rerun and expectation realignment work
-  on the chosen `5e65...` owner path, or whether a narrower runtime owner is
-  still required.
+  `source-set-5e65d845ce77e1a0`.
+- Fresh `v1-ea-eval` on that aligned owner path now closes green with
+  `passed=true`, `contract_status="reviewer_ready"`,
+  `broader_ea_passed=true`, and `forest_plan_passed=true`.
+- Fresh review `phase-eval` on the aligned owner path remains red at `15/23`.
+  The remaining failing phases are `retrieval`, `rule_claim_binding`,
+  `downstream_direct_evaluation`, `source_register_contract`,
+  `authority_universe`, `generated_rule_pack`,
+  `forest_plan_component_eval`, and `evaluation_coverage`.
+- The remaining red is not bounded review-local contract realignment work.
+  `retrieval` now reads a `5e65...` direct-eval artifact that is stale
+  against the current retrieval eval seed and still fails thresholds;
+  `rule_claim_binding` now reads a `5e65...` direct-eval artifact that is
+  stale against the current rule-claim eval seed while the review-local rule
+  pack already uses the generated applicability rule pack; shared
+  `downstream_direct_evaluation` still sees `compliance_review_eval` only on
+  `f70...`; `generated_rule_pack_validation.json` still reports `4fb...`;
+  `source_register_contract` now fails on workbook SHA drift;
+  `authority_universe_snapshot.json` still fails `source_set_matches`; and
+  `forest_plan_component_eval_results.json` still fails
+  `component_eval_failed`.
+- Live work now advances to Milestone 3 inside this packet: name the exact
+  narrower runtime owner or explicit stop condition for those residual phase
+  families.
 
 ## Purpose
 
@@ -86,29 +89,26 @@ packet and the current-route docs before implementation continues.
   into this narrower contract packet.
 - The tracked replay context
   `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
-  still declares `source_set_id="source-set-4fb59e9eb43045cb"`.
+  now declares `source_set_id="source-set-5e65d845ce77e1a0"`.
 - The tracked `v1-ea-eval` contract
-  `config/v1_lolo_tylers_kitchen_real_ea_eval.json` also still declares
-  `source_set_id="source-set-4fb59e9eb43045cb"`.
+  `config/v1_lolo_tylers_kitchen_real_ea_eval.json` now also declares
+  `source_set_id="source-set-5e65d845ce77e1a0"`.
 - The live review result
   `source_library/reviews/region1-example-lolo-tylers-kitchen-66344/v1_ea_eval_results.json`
   now reports `source_set_id="source-set-5e65d845ce77e1a0"`,
-  `contract_status="mismatch"`, and one failing check:
-  `review_identity_matches_contract`.
+  `contract_status="reviewer_ready"`, `passed=true`, and no failing checks.
 - The live review phase result
   `source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json`
-  still reports `source_set_id="source-set-4fb59e9eb43045cb"`,
-  `passed=false`, `passed_phase_count=12/29`,
-  `missing_direct_eval_phase_count=3`, and failing phases spanning
-  `retrieval`, `claim_extraction`, `rule_claim_binding`,
-  `downstream_direct_evaluation`, `source_register_contract`,
-  `authority_ontology`, `authority_relationships`, `citation_aliases`,
-  `graph_health`, `graph_accuracy`, `authority_universe`,
-  `package_fact_graph`, `applicability_validation`, `compliance_review`,
-  `forest_plan_component_eval`, `forest_plan_component_adjudication`, and
+  now reports `source_set_id="source-set-5e65d845ce77e1a0"`,
+  `passed=false`, `passed_phase_count=15/23`,
+  `missing_direct_eval_phase_count=0`,
+  `identity_mismatch_phase_count=2`, and failing phases
+  `retrieval`, `rule_claim_binding`, `downstream_direct_evaluation`,
+  `source_register_contract`, `authority_universe`,
+  `generated_rule_pack`, `forest_plan_component_eval`, and
   `evaluation_coverage`.
-- Review-local outputs are already split across owner surfaces. Fresh readback
-  shows `review_validation.json`,
+- Review-local outputs are now mostly aligned on the chosen owner path. Fresh
+  readback shows `review_validation.json`,
   `applicability/applicability_validation.json`,
   `forest_plan_context_summary.json`,
   `authority_reviewer_resolution_report.json`,
@@ -117,20 +117,24 @@ packet and the current-route docs before implementation continues.
   `source_set_id="source-set-5e65d845ce77e1a0"`, while
   `applicability/generated_rule_pack_validation.json` still reports
   `source_set_id="source-set-4fb59e9eb43045cb"`.
-- `phase-eval` now proves that some families are crossing those surfaces
-  directly. `rule_claim_binding` reads `rule_claim_links` under
-  `derived/source-set-5e65d845ce77e1a0/...` while still requiring the
-  `rule-claim-direct-eval-v1` summary under
-  `derived/source-set-4fb59e9eb43045cb/...`, and
-  `applicability_validation`, `compliance_review`, and
-  `forest_plan_component_eval` all fail only because the review-local artifact
-  exists and passes its local checks while `source_set_matches=false` against
-  the tracked `4fb...` expectation.
-- `phase-eval` also shows that the current split is not only `4fb...` versus
-  `5e65...`: `downstream_direct_evaluation` still expects all direct-eval
-  lanes on `4fb...`, sees retrieval/claim/rule-claim direct evals missing
-  there, and sees a stale `compliance_review_eval` result present on
-  `source-set-f70ea11e04ae3d53`.
+- `phase-eval` now proves that the residual debt is narrower and more exact
+  than the old `4fb...` contract split:
+  - `retrieval` reads a `5e65...` direct-eval summary whose contract SHA no
+    longer matches `config/retrieval_eval_seed.json`, and the retrieval eval
+    itself still fails case and metric thresholds.
+  - `rule_claim_binding` reads a `5e65...` direct-eval summary whose contract
+    SHA no longer matches `config/rule_claim_link_eval_seed.json`, even though
+    the direct-eval cases themselves pass and the review-local generated rule
+    pack path is aligned.
+  - `downstream_direct_evaluation` still sees `claim_eval` present on
+    `5e65...`, but `retrieval_eval` and `rule_claim_eval` are stale there and
+    `compliance_review_eval` is still present only on
+    `source-set-f70ea11e04ae3d53`.
+  - `source_register_contract` now fails on workbook SHA drift,
+    `authority_universe` still fails `source_set_matches=false`,
+    `generated_rule_pack` still fails because
+    `generated_rule_pack_validation.json` remains on `4fb...`, and
+    `forest_plan_component_eval` still reports `component_eval_failed`.
 - Governed aggregates remain unchanged and still do not admit Lolo as a ready
   replacement. Fresh non-strict `promotion-suite` remains green for current
   promotion, strict expansion remains red only on the ECID historical slot
@@ -421,6 +425,22 @@ Acceptance criteria:
 - No candidate is treated as reviewer-ready while `phase-eval` remains red.
 - The governed slot floor remains unchanged.
 
+Latest local outcome:
+
+- `reduced locally`; the tracked replay context and tracked review eval
+  contract now align to `source-set-5e65d845ce77e1a0`, and fresh
+  `v1-ea-eval` closes green with `contract_status="reviewer_ready"`.
+- The remaining red is not bounded review-local contract realignment work.
+  Fresh review `phase-eval` on the aligned owner path remains red at `15/23`
+  because the residual debt now spans exact runtime and stale-artifact owner
+  families: retrieval direct-eval staleness plus failing thresholds,
+  rule-claim direct-eval staleness, shared `f70...` compliance direct-eval
+  staleness, stale workbook and authority-universe snapshots, stale
+  `generated_rule_pack_validation.json`, and a still-failing
+  `forest_plan_component_eval_results.json`.
+- Governed aggregates remain unchanged and still do not admit Lolo as a ready
+  replacement.
+
 Verification:
 
 ```bash
@@ -552,13 +572,19 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- Milestone 1 is now reduced locally: the bounded review-local owner path is
-  `source-set-5e65d845ce77e1a0`, while stale tracked `4fb...` surfaces and
-  shared `f70...` downstream direct-eval debt remain explicit Milestone 2
-  owners inside this packet.
-- If Milestone 2 finds one coherent contract-chain owner but the remaining red
-  still spans broader runtime debt, the next live work should open the exact
-  narrower blocker that owns those failing phase families.
+- Milestone 2 is now reduced locally: the tracked replay context and tracked
+  review eval contract now align to `source-set-5e65d845ce77e1a0`, and
+  `v1-ea-eval` is now `reviewer_ready`, but fresh review `phase-eval` remains
+  red at `15/23`.
+- The remaining live debt is now exact and narrower than the old tracked
+  contract split: retrieval direct-eval staleness plus failing thresholds,
+  rule-claim direct-eval staleness, shared `f70...` compliance direct-eval
+  staleness, stale `generated_rule_pack_validation.json`, stale workbook and
+  authority-universe snapshots, and a still-failing
+  `forest_plan_component_eval_results.json`.
+- The next live work is Milestone 3 in this packet: name one exact narrower
+  runtime owner or one explicit stop condition for those residual phase
+  families.
 - If the tracked Lolo review eventually becomes supportable as a governed
   replacement path, the next live packet after this blocker should be a ready
   replacement-path packet rather than a return to generic ECID blocker
