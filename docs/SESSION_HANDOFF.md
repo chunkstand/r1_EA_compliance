@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-26
+Date: 2026-05-27
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
@@ -14,20 +14,25 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
   if the next session is continuing implementation on the tracked Lolo
-  current-workbook source-set rebaseline blocker for the ECID historical lane
+  source-record identity reconciliation blocker for the ECID historical lane
 - active packet:
-  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor active packet:
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- source-register predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
   source-register currentness Milestones 0-2 are resolved locally by broader
-  stop, and current-workbook source-set rebaseline Milestone 0 is reduced
-  locally. Continue at Milestone 1 of the current-workbook source-set
-  rebaseline packet for governed local replay or the exact local-replay stop.
+  stop, current-workbook source-set rebaseline Milestone 0 is reduced locally,
+  and current-workbook source-set rebaseline Milestone 1 is reduced locally by
+  exact stop. Continue at Milestone 0 of the source-record identity
+  reconciliation packet to prove direct/reconciled/missing/ambiguous coverage
+  before any tracked replay context or eval config moves from `5e65...` to
+  `f70...`.
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 - older predecessor blocker packet:
@@ -176,17 +181,24 @@ history below.
   currentness closeout then proved no exact current `5e65...` manifest exists,
   the historical `5e65...` currentness report points at a missing historical
   manifest hash, and the current-workbook `f70...` catalog gate is not
-  source-set compatible with the `5e65...` derived artifacts
+  source-set compatible with the `5e65...` derived artifacts. Current-workbook
+  source-set rebaseline Milestone 1 then stopped at source-record identity:
+  a direct `f70...` CLI override raises `ReplayContextMismatchError`, the Lolo
+  v1 eval contract expects 60 source-record IDs, 8 are direct `f70...` hits, 51
+  absent IDs are covered by compliance source-record reconciliation, and
+  `R1PLAN-lolo-nf-02` is covered separately by forest-plan identity
+  reconciliation as `FPS-298`; five compliance-covered IDs are still
+  multi-target mappings that need a replay-facing identity rule
 - next truthful slice:
   source-set contract blocker Milestone 3, aligned-runtime Milestones 0-1,
   source-register currentness Milestones 0-2, and current-workbook source-set
-  rebaseline Milestone 0 are now resolved/reduced locally. Continue in
-  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 1: run the smallest governed local replay path that can bind
-  Lolo to a coherent current-workbook owner, or stop at the exact
-  source-record identity, catalog, package-cache, extraction, or direct-eval
-  surface that cannot be replayed locally. Direct-eval debt remains real in
-  the parent aligned-runtime packet: retrieval direct eval is both
+  rebaseline Milestones 0-1 are now resolved/reduced locally. Continue in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 0: inventory direct current-catalog hits, compliance-reconciled
+  hits, forest-plan-reconciled hits, missing IDs, ambiguous IDs, and mappings
+  absent from the current catalog before any tracked replay/eval config moves.
+  Direct-eval debt remains real in the parent aligned-runtime packet: retrieval
+  direct eval is both
   contract-stale and semantically red, rule-claim direct eval is
   contract-stale but otherwise green, and shared `f70...`
   `compliance_review_eval` is stale for this review. Do not reopen
@@ -194,12 +206,54 @@ history below.
   packet, and do not treat the broader Lolo example packet as the live owner
   for the remaining blocker
 - session reminder:
-  the current-workbook source-set rebaseline Milestone 0 section immediately
-  below is the current checkpoint; the following packet-opening,
+  the source-record identity reconciliation blocker section immediately below
+  is the current checkpoint; the following current-workbook source-set
+  rebaseline Milestone 0 section, packet-opening,
   source-register currentness,
   aligned-runtime Milestone 0/opening, source-set contract, replacement-feasibility,
   ECID blocker Milestone 2, Milestone 1, and blocked-parent sections are
   preserved historical context only
+
+## Lolo Source-Record Identity Reconciliation Blocker Opened Locally
+
+This implementation slice closes the current-workbook source-set rebaseline
+Milestone 1 replay attempt by exact stop. It did not edit tracked runtime config
+or ignored `source_library/` artifacts.
+
+- outcome label:
+  `reduced locally`; current-workbook source-set rebaseline Milestone 1 stopped
+  at the source-record identity owner before any tracked Lolo replay context,
+  eval contract, adjudication, or generated review artifact moved to `f70...`
+- active packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+- immediate predecessor:
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- replay guard proof:
+  `applicability-authority-universe --source-set-id source-set-f70ea11e04ae3d53`
+  against the tracked Lolo review context fails closed with
+  `ReplayContextMismatchError` because the tracked replay context still declares
+  `source-set-5e65d845ce77e1a0`
+- identity proof:
+  the Lolo v1 eval contract expects 60 source-record IDs; 8 are present
+  directly in the current-workbook `f70...` catalog surface, 51 absent expected
+  IDs are mapped by `config/compliance_source_record_reconciliation_v1.json`,
+  and the remaining forest-plan ID `R1PLAN-lolo-nf-02` is mapped separately by
+  `config/r1_forest_plan_identity_reconciliation_v1.json` to `FPS-298`; five
+  compliance-covered IDs remain multi-target mappings
+- hash evidence boundary:
+  extraction-manifest hash matching is insufficient as an owner contract because
+  the historical-to-current comparison includes unmatched historical rows and
+  one-to-many fanout
+- next routing:
+  continue at Milestone 0 of the active packet. Prove the complete direct,
+  compliance-reconciled, forest-plan-reconciled, missing, ambiguous, and
+  absent-target mapping inventory before implementing any unified identity
+  resolver or changing Lolo replay/eval config
+- verification:
+  tracked replay-context override guard, source-ID coverage inventory,
+  compliance and forest-plan reconciliation readback, strict plan lint, focused
+  reconciliation tests, review `v1-ea-eval`, review `phase-eval`, closeout doc
+  parity sweep, and `git diff --check`
 
 ## Lolo Current-Workbook Source-Set Rebaseline Milestone 0 Reduced Locally
 
@@ -273,11 +327,13 @@ packet.
 - next routing:
   historical route at this packet-opening checkpoint was to continue in
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 0. That milestone is now reduced locally; the live route is the
-  same packet's Milestone 1 governed local replay or exact local-replay stop.
+  at Milestone 0. That packet is now reduced locally through Milestone 1; the
+  live route is
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  Milestone 0 identity coverage inventory.
   Do not return to aligned-runtime direct-eval rebaseline until the
-  current-workbook source-set owner is coherent and `source_register_contract`
-  is no longer the active blocker
+  current-workbook source-set owner, source-record identity contract, and
+  `source_register_contract` are no longer active blockers
 - verification:
   replay-context readback, active and archived manifest inventory,
   authority-currentness input-hash readback, source-record-set compatibility
@@ -321,11 +377,12 @@ child packet.
   historical route at that checkpoint was to continue in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
   at Milestone 0. That child has since stopped to the current-workbook
-  source-set rebaseline packet, whose Milestone 0 is now reduced locally; the
-  live route is the current-workbook packet's Milestone 1. Return to the parent
-  aligned-runtime packet at direct-eval rebaseline only after the
-  source-register/current-workbook owner passes or records a broader
-  catalog/currentness stop
+  source-set rebaseline packet, whose Milestones 0-1 are now reduced locally;
+  the live route is
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  Milestone 0. Return to the parent aligned-runtime packet at direct-eval
+  rebaseline only after the source-record identity and source-register/current-
+  workbook owners pass or record a broader catalog/currentness stop
 - verification:
   `applicability-authority-universe`,
   `applicability-context-build`, `applicability-retrieve`,
@@ -424,8 +481,10 @@ opening one exact aligned-runtime rebaseline child packet.
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   at Milestone 0 to freshness-lock the stale aligned-runtime family before
   reruns. That packet has since reduced through Milestone 1 and routed to the
-  current-workbook source-set rebaseline packet; the live route is that
-  packet's Milestone 1 governed local replay or exact local-replay stop. Treat
+  current-workbook source-set rebaseline packet, which has now stopped to
+  source-record identity reconciliation. The live route is
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  Milestone 0 identity coverage inventory. Treat
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
   as the exact predecessor that resolved the tracked contract split, and keep
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`

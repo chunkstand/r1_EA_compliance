@@ -39,12 +39,17 @@ The planner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` before
   pulling review artifacts.
 - The live Lolo follow-on is now
-  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
 - For Lolo National Forest example-package review work, inspect that blocker
-  first for Milestone 1 governed local replay or exact local-replay stop. Its
-  Milestone 0 owner-choice closeout proved the current-workbook `f70...`
-  catalog gate is not a drop-in owner for historical `5e65...` artifacts
-  because source-record identity differs. Then read
+  first for Milestone 0 source-record identity inventory. Its predecessor,
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  reduced locally through Milestone 1: the current-workbook `f70...` catalog
+  gate is not a drop-in owner for historical `5e65...` artifacts, direct replay
+  override fails closed against the tracked replay context, and source-record
+  identity is split across compliance and forest-plan reconciliation owners.
+  Then read
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  as the current-workbook source-set predecessor, then read
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
   only as the source-register currentness stop that proved no exact current
   `5e65...` manifest exists, then read

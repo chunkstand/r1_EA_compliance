@@ -2,10 +2,13 @@
 
 Date: 2026-05-27
 
-Status: Reduced locally through Milestone 0 (`owner-choice rebaseline proved
-source-set-f70ea11e04ae3d53 is not a drop-in current-workbook owner for the
-historical source-set-5e65d845ce77e1a0 review artifacts; Milestone 1 is the
-next live slice for governed local replay or an exact local-replay stop`)
+Status: Reduced locally through Milestone 1. Milestone 0 proved
+`source-set-f70ea11e04ae3d53` is not a drop-in current-workbook owner for the
+historical `source-set-5e65d845ce77e1a0` review artifacts. Milestone 1 then
+reached an exact local-replay stop: tracked replay config rejects an ad hoc
+`f70...` override, and the remaining blocker is the split source-record identity
+contract now routed to
+`docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
 
 Owner context: standalone child packet opened from
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`.
@@ -26,6 +29,10 @@ source-set compatible with the `5e65...` derived artifacts.
   manifest swap. Lolo must either replay review-local artifacts against a
   governed current-workbook owner or stop at the first artifact family whose
   source-record identity cannot be reconciled locally.
+- Milestone 1 of this packet is reduced locally by exact stop. A direct
+  current-workbook replay override is blocked by the tracked replay context, and
+  the expected source-record IDs are split across compliance reconciliation and
+  forest-plan identity reconciliation owner surfaces.
 - Exact readback found:
   - tracked replay context: `source_set_id="source-set-5e65d845ce77e1a0"` and
     `catalog_dir="source_library/catalog"`;
@@ -41,6 +48,20 @@ source-set compatible with the `5e65...` derived artifacts.
   - sampled mismatch shape is `R1EA-*` IDs missing from `f70...` and `FED-*`
     IDs extra in `f70...`, so source-record identity must be handled by a
     governed replay/crosswalk decision rather than a manifest-only path swap.
+- Milestone 1 identity evidence found:
+  - the Lolo v1 eval contract expects 60 source-record IDs;
+  - 8 expected IDs are present directly in the `f70...` catalog surface;
+  - `config/compliance_source_record_reconciliation_v1.json` maps 51 absent
+    expected IDs to current-workbook catalog IDs;
+  - `R1PLAN-lolo-nf-02` is not in the compliance reconciliation registry but is
+    separately reconciled by
+    `config/r1_forest_plan_identity_reconciliation_v1.json` to `FPS-298`;
+  - five compliance-reconciled expected IDs currently map to multiple current
+    catalog records, so coverage evidence is not yet a replay-ready one-to-one
+    identity contract;
+  - historical-to-current extraction-manifest hash matching is supporting
+    evidence only, not an owner contract, because it includes unmatched
+    historical rows and one-to-many fanout.
 - Fresh review `phase-eval` remains fail-closed at `18/23`; the live red phases
   remain `retrieval`, `rule_claim_binding`, `downstream_direct_evaluation`,
   `source_register_contract`, and `evaluation_coverage`.
@@ -71,10 +92,13 @@ new current-workbook catalog/currentness surface needed for that review.
   `5e65...`: its catalog source-record set does not match the `5e65...`
   extraction manifest selected source-record set.
 - Milestone 0 owner decision: `f70...` is a current-workbook catalog candidate,
-  not the selected Lolo owner by itself. Milestone 1 must either regenerate the
-  Lolo review-local artifact family through a governed current-workbook replay
-  chain, including source-record identity compatibility, or open a narrower
-  blocker naming the first unreplayable surface.
+  not the selected Lolo owner by itself.
+- Milestone 1 stop decision: the first unreplayable surface is source-record
+  identity. The replay CLI correctly rejects a `source-set-f70ea11e04ae3d53`
+  override while tracked replay context still declares
+  `source-set-5e65d845ce77e1a0`, and tracked eval/config cannot safely move to
+  `f70...` until one replay-facing identity contract can reconcile the split
+  `R1EA-*`, `R1PLAN-*`, `FPS-*`, and current-workbook IDs.
 - The `5e65...` authority-currentness report is historically green but not a
   current source-register owner: it was generated on `2026-05-11T00:40:55Z`
   from a `source_library/catalog/source_set_manifest.json` hash
@@ -261,6 +285,11 @@ jq '{source_set_id,catalog_dir}' \
 
 Outcome label: reduced
 
+Closeout status: complete-after-commit. This milestone reduced by exact stop to
+`docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`;
+no tracked replay context, eval contract, or ignored generated review artifact
+was changed.
+
 Purpose: regenerate the Lolo review against the chosen current-workbook owner, or
 stop at the first artifact family that cannot be locally replayed without broad
 download/corpus work.
@@ -275,10 +304,29 @@ Implementation:
 
 Acceptance criteria:
 
-- Tracked config and review-local artifacts agree on one current-workbook source
-  set, or one exact stop condition is recorded.
-- `v1-ea-eval` and review `phase-eval` are rerun after any replay.
+- One exact stop condition is recorded: source-record identity must have a
+  governed replay-facing owner before Lolo replay config can move from `5e65...`
+  to `f70...`.
+- `v1-ea-eval` and review `phase-eval` remain the required rerun gates after
+  any later replay.
 - No roster or threshold is weakened.
+
+Milestone 1 decision:
+
+- Direct CLI replay against `source-set-f70ea11e04ae3d53` stopped with
+  `ReplayContextMismatchError` because the tracked Lolo replay context declares
+  `source-set-5e65d845ce77e1a0`.
+- The current-workbook catalog can explain most legacy expected IDs only through
+  tracked reconciliation data: 8 expected IDs are direct current-catalog hits,
+  51 absent expected IDs are mapped by the compliance source-record
+  reconciliation, and `R1PLAN-lolo-nf-02` is mapped separately by the forest-plan
+  identity reconciliation to `FPS-298`. Five compliance-reconciled IDs remain
+  multi-target mappings that must be handled by the child identity gate before
+  replay config changes.
+- The live next packet is
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  Milestone 0. It must prove the full identity coverage inventory before any
+  runtime config or replay artifact moves to the current-workbook source set.
 
 Verification:
 
@@ -353,6 +401,7 @@ git diff --check
 ## Required Implementation Artifacts
 
 - this current-workbook source-set rebaseline plan
+- `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - any focused replay-context, eval-contract, source, or test changes selected by
   the milestone owner choice
 - updated current-routing and handoff docs
@@ -360,6 +409,7 @@ git diff --check
 
 ## Required Documentation And Handoff Updates
 
+- `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - `docs/CURRENT_ROUTING.md`
 - `docs/CURRENT_SYSTEM_STATE.md`
 - `docs/SESSION_HANDOFF.md`
@@ -409,10 +459,12 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- The current next slice is Milestone 1 governed local replay or exact
-  local-replay stop.
-- The likely owner is not a manifest swap; it requires either replay against an
-  existing current-workbook catalog gate with source-record identity
-  compatibility, or a new governed current-workbook source-set surface.
+- The current next slice is Milestone 0 in
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
+- The owner is not a manifest swap and not an ad hoc CLI override. It requires a
+  governed replay-facing identity contract that can reconcile expected Lolo
+  source-record IDs to current-workbook catalog IDs before tracked replay/eval
+  config moves.
 - Direct-eval failures remain real and should return to the parent aligned-runtime
-  packet only after source-register currentness is coherent.
+  packet only after source-register currentness and source-record identity are
+  coherent.

@@ -3,8 +3,9 @@
 Date: 2026-05-26
 
 Status: Resolved locally by broader stop (`Milestones 0-2 proved no exact current
-source-set-5e65d845ce77e1a0 manifest/currentness surface exists; live work now routes to
-docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`)
+source-set-5e65d845ce77e1a0 manifest/currentness surface exists; the
+current-workbook source-set rebaseline follow-on has since stopped to
+docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`)
 
 Owner context: standalone child packet opened from
 `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
@@ -52,13 +53,16 @@ global catalog manifest SHA
   `source_library/catalog/source_set_manifest.json` at SHA
   `77361eec5963677104bf06dabe3f3d2934bfb75eae18990532d6054ba58152eb`,
   and no local `source_set_manifest.json` currently has that hash.
-- The live route is now
+- The current-workbook follow-on packet
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
-  That follow-on packet is reduced locally through Milestone 0: `f70...` is a
+  is reduced locally through Milestone 1: `f70...` is a
   current-workbook catalog candidate but not a drop-in owner for `5e65...`
   because the selected/catalog source-record sets differ (`350` versus `708`
-  IDs, with `R1EA-*` versus `FED-*` identity). Continue there at Milestone 1
-  for governed local replay or exact local-replay stop.
+  IDs, with `R1EA-*` versus `FED-*` identity), and Milestone 1 stopped at the
+  split source-record identity owner before replay config could move. The live
+  route is now
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  Milestone 0 for identity coverage inventory.
   This packet must not be reopened to hand-edit ignored manifests or to teach
   `phase-eval` to ignore workbook SHA drift.
 
@@ -374,6 +378,8 @@ git diff --check
   applicability and forest-plan component artifacts are no longer the current blocker.
 - The remaining direct-eval failures are still real and should return to the parent
   aligned-runtime packet after source-register currentness is resolved.
-- Source-register currentness required broader owner rebaseline. The next active packet is
-  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+- Source-register currentness required broader owner rebaseline. That
+  current-workbook follow-on has now stopped to source-record identity, so the
+  next active packet is
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
   and the parent direct-eval work stays paused.

@@ -4,8 +4,9 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Active packet:
-  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - Historical lineage only:
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`,
@@ -31,11 +32,19 @@ Use this file as the short current route before opening the append-only docs.
   `f70...` is a current-workbook catalog candidate, not a drop-in owner for
   `5e65...`; `5e65...` selected `350` source-record IDs while `f70...`
   catalogs `708`, with an `R1EA-*` versus `FED-*` identity split.
-- Next slice is Milestone 1 in the current-workbook source-set rebaseline
-  packet: run the smallest governed local replay path that can bind Lolo to a
-  coherent current-workbook owner, or stop at the exact source-record identity,
-  catalog, package-cache, extraction, or direct-eval surface that cannot be
-  replayed locally.
+- Current-workbook source-set rebaseline Milestone 1 is reduced locally by exact
+  stop: the applicability replay CLI rejects an ad hoc `f70...` source-set
+  override while tracked Lolo replay context remains on `5e65...`, and the
+  remaining blocker is split source-record identity. The Lolo v1 eval contract
+  expects 60 source-record IDs; 8 are direct `f70...` catalog hits, 51 absent
+  IDs are covered by compliance source-record reconciliation, and
+  `R1PLAN-lolo-nf-02` is separately covered by forest-plan identity
+  reconciliation as `FPS-298`; five compliance-covered IDs are still
+  multi-target mappings that need a replay-facing identity rule.
+- Next slice is Milestone 0 in the source-record identity reconciliation
+  packet: prove the complete direct/reconciled/missing/ambiguous coverage
+  inventory before any tracked replay context, eval config, or review artifact
+  moves from `5e65...` to `f70...`.
 - Remaining live debt:
   `retrieval-eval` on `5e65...` is both contract-stale and semantically red;
   `rule-claim-eval` on `5e65...` is contract-stale but otherwise green; shared
@@ -52,6 +61,7 @@ Use this file as the short current route before opening the append-only docs.
   runtime work.
 ## Deep Reads
 - Core:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,

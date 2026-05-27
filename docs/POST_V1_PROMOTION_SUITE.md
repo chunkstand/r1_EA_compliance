@@ -230,13 +230,18 @@ family.
   `source-set-5e65d845ce77e1a0` manifest exists, the historical `5e65...`
   currentness report points at a no-longer-present manifest hash, and the
   current-workbook `f70...` catalog gate is not source-set compatible with the
-  `5e65...` derived artifacts. The live child owner is now
-  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`;
+  `5e65...` derived artifacts. The current-workbook source-set child owner
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  is now reduced locally through Milestone 1;
   its Milestone 0 owner-choice closeout ruled out a silent `f70...` manifest
   swap because the `5e65...` selected source-record set has `350` IDs while
   the `f70...` catalog has `708`, with an `R1EA-*` versus `FED-*` identity
-  split. The next truthful slice is governed local replay or exact
-  local-replay stop in that packet's Milestone 1.
+  split, and its Milestone 1 exact stop proved the replay lane needs a governed
+  source-record identity owner before tracked config can move from `5e65...` to
+  `f70...`; five compliance-covered source-record IDs still have multi-target
+  current catalog mappings. The live child owner is now
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`;
+  its next truthful slice is Milestone 0 identity coverage inventory.
   No truthful ready closure path is currently proven.
   Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:
@@ -262,9 +267,11 @@ family.
   `applicability_validation`, and `forest_plan_component_eval` are green on the
   aligned owner path. The live red family is now stale `5e65...` retrieval and
   rule-claim direct evals, stale shared `f70...` compliance-review direct eval,
-  `evaluation_coverage`, and source-register currentness blocked by the missing
-  current `5e65...` manifest. Live work now routes through the current-workbook
-  source-set rebaseline packet before any direct-eval rebaseline. Do not
+  `evaluation_coverage`, source-register currentness blocked by the missing
+  current `5e65...` manifest, and source-record identity blocked by the split
+  compliance/forest-plan reconciliation owners. Live work now routes through
+  the source-record identity reconciliation packet before any current-workbook
+  replay or direct-eval rebaseline. Do not
   route back into another South replay pass, reopen the resolved replay-repair
   packet, or treat the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.
