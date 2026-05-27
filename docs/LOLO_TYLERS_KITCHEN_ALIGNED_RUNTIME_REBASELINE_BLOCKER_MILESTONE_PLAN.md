@@ -4,10 +4,10 @@ Date: 2026-05-26
 
 Status: Reduced locally through Milestone 1 (`review-local applicability companion
 artifacts and forest-plan component eval are now green on source-set-5e65d845ce77e1a0;
-the active child route is
-docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md because
-source_register_contract still fails active-workbook SHA currentness against the global
-4fb manifest before this packet can continue to direct-eval rebaseline`)
+the source-register currentness child stopped to
+docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md
+because no exact current 5e65 manifest exists before this packet can continue to
+direct-eval rebaseline`)
 
 Owner context: standalone child packet opened after
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
@@ -69,8 +69,12 @@ Opening closeout commit:
     `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`.
 - Live work now moves to the source-register currentness child packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`.
+  That child has now stopped to the broader current-workbook source-set
+  rebaseline packet:
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
   This packet should resume at Milestone 2 direct-eval rebaseline only after
-  `source_register_contract` passes here or stops to a broader catalog/currentness owner.
+  the current-workbook source-set owner is rebuilt or selected and
+  `source_register_contract` is no longer the active blocker.
 
 ## Purpose
 
@@ -615,9 +619,9 @@ git diff --check
   which still falls back to the global `4fb...` catalog manifest and older workbook SHA.
 - Milestones 0 and 1 have now reduced this packet to direct-eval identity drift plus
   source-register currentness.
-- The next live work is the child source-register currentness packet. If that child
-  resolves, this packet resumes at Milestone 2 to refresh retrieval, rule-claim, and
-  compliance direct-eval artifacts.
+- The source-register currentness child stopped to a broader current-workbook
+  source-set rebaseline packet. If that child resolves, this packet resumes at
+  Milestone 2 to refresh retrieval, rule-claim, and compliance direct-eval artifacts.
 - If the aligned runtime family refreshes cleanly and retrieval quality still remains red,
   the next owner should be a narrower retrieval/rule-claim quality packet rather than a
   return to generic Lolo contract or ECID replacement classification.

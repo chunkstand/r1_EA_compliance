@@ -39,9 +39,12 @@ The planner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` before
   pulling review artifacts.
 - The live Lolo follow-on is now
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`.
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
 - For Lolo National Forest example-package review work, inspect that blocker
-  first for the current source-register currentness owner, then read
+  first for the current-workbook source-set rebaseline owner, then read
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+  only as the source-register currentness stop that proved no exact current
+  `5e65...` manifest exists, then read
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   only as the aligned-runtime predecessor reduced through review-local
   refresh, then read

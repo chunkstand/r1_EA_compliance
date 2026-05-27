@@ -14,17 +14,20 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   if the next session is continuing implementation on the tracked Lolo
-  source-register currentness blocker for the ECID historical lane
+  current-workbook source-set rebaseline blocker for the ECID historical lane
 - active packet:
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor active packet:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+- aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  aligned-runtime Milestone 1 is reduced locally. Continue at source-register
-  currentness blocker Milestone 0 to rebaseline the manifest/currentness owner
-  for `source_register_contract`.
+  source-register currentness Milestones 0-2 are resolved locally by broader
+  stop. Continue at current-workbook source-set rebaseline Milestone 0 to
+  choose or rebuild the governed current-workbook owner before returning to
+  aligned-runtime direct-eval rebaseline.
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 - older predecessor blocker packet:
@@ -169,26 +172,73 @@ history below.
   `v1-ea-eval` contract already align to `source-set-5e65...`, live
   `v1_ea_eval_results.json` remains `reviewer_ready`, review-local
   applicability and forest-plan component phases are green, and live review
-  `phase-eval` remains red at `18/23` on `source-set-5e65...`
+  `phase-eval` remains red at `18/23` on `source-set-5e65...`. Source-register
+  currentness closeout then proved no exact current `5e65...` manifest exists,
+  the historical `5e65...` currentness report points at a missing historical
+  manifest hash, and the current-workbook `f70...` catalog gate is not
+  source-set compatible with the `5e65...` derived artifacts
 - next truthful slice:
   source-set contract blocker Milestone 3 and aligned-runtime Milestones 0-1
-  are now resolved/reduced locally. Continue in
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 0: rebaseline the exact manifest/currentness owner for
-  `source_register_contract`. Direct-eval debt remains real in the parent
-  aligned-runtime packet: retrieval direct eval is both contract-stale and
-  semantically red, rule-claim direct eval is contract-stale but otherwise
-  green, and shared `f70...` `compliance_review_eval` is stale for this
-  review. Do not reopen
+  plus source-register currentness Milestones 0-2 are now resolved/reduced
+  locally. Continue in
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 0: choose or rebuild the governed current-workbook source-set
+  owner before returning to direct-eval rebaseline. Direct-eval debt remains
+  real in the parent aligned-runtime packet: retrieval direct eval is both
+  contract-stale and semantically red, rule-claim direct eval is
+  contract-stale but otherwise green, and shared `f70...`
+  `compliance_review_eval` is stale for this review. Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
   packet, and do not treat the broader Lolo example packet as the live owner
   for the remaining blocker
 - session reminder:
-  the new source-register currentness section immediately below is the current
-  checkpoint; the following aligned-runtime Milestone 0/opening, source-set
-  contract, replacement-feasibility,
+  the new current-workbook source-set rebaseline section immediately below is
+  the current checkpoint; the following source-register currentness,
+  aligned-runtime Milestone 0/opening, source-set contract, replacement-feasibility,
   ECID blocker Milestone 2, Milestone 1, and blocked-parent sections are
   preserved historical context only
+
+## Lolo Current-Workbook Source-Set Rebaseline Blocker Opened Locally
+
+This implementation slice resolves the source-register currentness child by
+explicit broader stop and opens the current-workbook source-set rebaseline
+packet.
+
+- outcome label:
+  `resolved locally`; no exact current `source-set-5e65d845ce77e1a0`
+  manifest/currentness owner exists locally, so the next owner is current
+  workbook source-set rebaseline rather than a manifest swap
+- active packet:
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- implementation truth:
+  tracked replay context still declares `source_set_id="source-set-5e65d845ce77e1a0"`
+  and `catalog_dir="source_library/catalog"`; active
+  `source_library/catalog/source_set_manifest.json` still declares
+  `source-set-4fb59e9eb43045cb` and workbook SHA
+  `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`
+- current-workbook candidate truth:
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_set_manifest.json`
+  declares `source-set-f70ea11e04ae3d53` and current workbook SHA
+  `1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97`, but
+  it is not compatible with `5e65...` derived artifacts: `5e65...` selected
+  source-record count is `350`, the `f70...` catalog source-record count is
+  `708`, and the sets differ
+- stale currentness truth:
+  the historical `5e65...` authority-currentness report was generated on
+  `2026-05-11T00:40:55.190598Z` from a
+  `source_library/catalog/source_set_manifest.json` SHA
+  `77361eec5963677104bf06dabe3f3d2934bfb75eae18990532d6054ba58152eb`; no
+  local `source_set_manifest.json` now matches that hash
+- next routing:
+  continue in
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 0. Do not return to aligned-runtime direct-eval rebaseline until
+  the current-workbook source-set owner is coherent and `source_register_contract`
+  is no longer the active blocker
+- verification:
+  replay-context readback, active and archived manifest inventory,
+  authority-currentness input-hash readback, source-record-set compatibility
+  comparison, review `phase-eval` readback, plan lint, and `git diff --check`
 
 ## Lolo Source Register Currentness Blocker Opened Locally
 

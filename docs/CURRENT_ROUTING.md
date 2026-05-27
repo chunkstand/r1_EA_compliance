@@ -4,8 +4,9 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Active packet:
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - Historical lineage only:
+  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`,
@@ -21,9 +22,14 @@ Use this file as the short current route before opening the append-only docs.
 - Milestone 1 of the aligned-runtime packet refreshed the governed
   review-local applicability chain and forest-plan component eval on
   `5e65...`; `phase-eval` improved to `18/23`.
-- Next slice is Milestone 0 in the source-register currentness child packet:
-  prove the exact manifest/currentness owner for `source_register_contract`
-  before returning to direct-eval rebaseline.
+- Source-register currentness Milestones 0-2 are resolved locally by stop:
+  no exact current `5e65...` manifest exists, the historical `5e65...`
+  currentness report points at a missing historical manifest hash, and the
+  current-workbook `f70...` catalog gate is not source-set compatible with the
+  `5e65...` derived artifacts.
+- Next slice is Milestone 0 in the current-workbook source-set rebaseline
+  packet: choose or rebuild the governed current-workbook owner before
+  returning to direct-eval rebaseline.
 - Remaining live debt:
   `retrieval-eval` on `5e65...` is both contract-stale and semantically red;
   `rule-claim-eval` on `5e65...` is contract-stale but otherwise green; shared
@@ -40,6 +46,7 @@ Use this file as the short current route before opening the append-only docs.
   runtime work.
 ## Deep Reads
 - Core:
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`

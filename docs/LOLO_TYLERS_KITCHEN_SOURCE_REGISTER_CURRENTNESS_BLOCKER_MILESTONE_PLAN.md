@@ -2,11 +2,9 @@
 
 Date: 2026-05-26
 
-Status: Active child blocker packet (`Milestone 0 source-register currentness owner
-rebaseline is next; this packet opened after the aligned-runtime Milestone 1 refresh
-made review-local applicability, generated rule pack, and forest-plan component eval green
-on source-set-5e65d845ce77e1a0, while phase-eval still fails
-source_register_contract against the global 4fb catalog manifest workbook SHA`)
+Status: Resolved locally by broader stop (`Milestones 0-2 proved no exact current
+source-set-5e65d845ce77e1a0 manifest/currentness surface exists; live work now routes to
+docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`)
 
 Owner context: standalone child packet opened from
 `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
@@ -37,6 +35,27 @@ global catalog manifest SHA
 - `source_register_contract` is the stop condition that owns this packet. Direct-eval
   identity drift remains real, but it stays in the parent aligned-runtime packet until
   this source-register currentness owner is resolved or explicitly stopped.
+- Milestones 0-2 are resolved locally by explicit stop. Exact readback found no
+  current `source-set-5e65d845ce77e1a0` manifest under
+  `source_library/runs/**/source_set_manifest.json`, the current active catalog
+  manifest is still `source-set-4fb59e9eb43045cb` with workbook SHA
+  `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`, and
+  the only current-workbook archived manifest found locally is
+  `source-set-f70ea11e04ae3d53` at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`.
+- That `f70...` manifest is not a valid drop-in currentness owner for the
+  `5e65...` review: `selected_source_record_ids_for_source_set("5e65...")`
+  reports `350` selected IDs, the `f70...` catalog reports `708` IDs, and the
+  sets differ. The historical `5e65...` authority-currentness report is also
+  stale for source-register ownership because it was generated on
+  `2026-05-11T00:40:55.190598Z` from
+  `source_library/catalog/source_set_manifest.json` at SHA
+  `77361eec5963677104bf06dabe3f3d2934bfb75eae18990532d6054ba58152eb`,
+  and no local `source_set_manifest.json` currently has that hash.
+- The live route is now
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  This packet must not be reopened to hand-edit ignored manifests or to teach
+  `phase-eval` to ignore workbook SHA drift.
 
 ## Purpose
 
@@ -62,8 +81,19 @@ review artifacts, authority currentness, and review-local runtime outputs now us
 - `src/usfs_r1_ea_sources/phase_eval_source_set_phases.py` fails
   `source_register_contract` when the active workbook SHA does not match
   `source_set_manifest["workbook_sha256"]`.
-- `find source_library/runs -path '*source_set_manifest.json'` currently finds no exact
+- `find source_library/runs -path '*source_set_manifest.json'` finds no exact
   archived manifest for `source-set-5e65d845ce77e1a0`.
+- The `source-set-f70ea11e04ae3d53` manifest at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_set_manifest.json`
+  matches the current active workbook SHA
+  `1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97`, but it is
+  not source-set compatible with the `5e65...` derived artifacts:
+  `5e65...` selected source-record IDs count `350`, while that archived
+  `f70...` catalog has `708` source-record IDs.
+- The `5e65...` authority-currentness report validates its own historical
+  source-set identity, but its `inputs.source_set_manifest_sha256` is
+  `77361eec5963677104bf06dabe3f3d2934bfb75eae18990532d6054ba58152eb`, which
+  no local `source_set_manifest.json` currently matches.
 - Fresh review `phase-eval --review-id region1-example-lolo-tylers-kitchen-66344`
   reports `passed_phase_count=18/23` and
   `source_register_contract.details.workbook_sha_matches_manifest=false`.
@@ -288,6 +318,7 @@ git diff --check
 - `docs/SESSION_HANDOFF.md`
 - `docs/AGENT_START_HERE.md`
 - `docs/POST_V1_PROMOTION_SUITE.md`
+- `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - this plan
 
@@ -338,5 +369,6 @@ git diff --check
   applicability and forest-plan component artifacts are no longer the current blocker.
 - The remaining direct-eval failures are still real and should return to the parent
   aligned-runtime packet after source-register currentness is resolved.
-- If source-register currentness requires a broad catalog rebuild, that rebuild becomes the
-  next active packet and the parent direct-eval work stays paused.
+- Source-register currentness required broader owner rebaseline. The next active packet is
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
+  and the parent direct-eval work stays paused.

@@ -15,6 +15,49 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Lolo Current-Workbook Source-Set Rebaseline Blocker Opened Locally
+
+Latest implementation update on 2026-05-27 UTC:
+
+- routed packet:
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- packet outcome:
+  `opened locally`; the source-register currentness child resolved by stop
+  because no exact current `source-set-5e65d845ce77e1a0` manifest/currentness
+  surface exists locally
+- implementation truth:
+  exact readback found the tracked Lolo replay context still on `5e65...` with
+  `catalog_dir="source_library/catalog"`, while the active global catalog
+  manifest is still `source-set-4fb59e9eb43045cb` with workbook SHA
+  `2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49`
+- current-workbook candidate truth:
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_set_manifest.json`
+  declares `source-set-f70ea11e04ae3d53` with the current active workbook SHA
+  `1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97`, but
+  it is not a valid drop-in currentness owner for `5e65...`: the `5e65...`
+  extraction manifest selects `350` source-record IDs, the `f70...` catalog
+  has `708`, and the sets differ
+- stale currentness truth:
+  the historical `5e65...` authority-currentness report was generated on
+  `2026-05-11T00:40:55.190598Z` from `source_library/catalog/source_set_manifest.json`
+  with SHA `77361eec5963677104bf06dabe3f3d2934bfb75eae18990532d6054ba58152eb`;
+  no local `source_set_manifest.json` currently has that hash
+- remaining blocker truth:
+  fresh review `phase-eval` remains red at `18/23` with failing phases
+  `retrieval`, `rule_claim_binding`, `downstream_direct_evaluation`,
+  `source_register_contract`, and `evaluation_coverage`; `v1-ea-eval` remains
+  `reviewer_ready` but is not sufficient to claim Lolo ready while phase eval
+  is red
+- next routing:
+  continue in
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  at Milestone 0 to choose or rebuild the governed current-workbook source-set
+  owner before returning to aligned-runtime direct-eval rebaseline
+- verification:
+  replay-context, active manifest, archived manifest, currentness-report input
+  hash, source-record-set compatibility, and review `phase-eval` readback; no
+  ignored manifest JSON was patched
+
 ## Lolo Source Register Currentness Blocker Opened Locally
 
 Latest implementation update on 2026-05-26:

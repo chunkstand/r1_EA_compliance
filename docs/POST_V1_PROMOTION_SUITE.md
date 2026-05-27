@@ -225,11 +225,14 @@ family.
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   froze the remaining review `phase-eval` red at `15/23`, and Milestone 1
   refreshed the review-local applicability chain plus forest-plan component eval
-  so fresh `phase-eval` now fails closed at `18/23`. The live child owner is
-  `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
-  because `source_register_contract` still fails active-workbook SHA currentness
-  against the global `4fb...` catalog manifest before direct-eval rebaseline can
-  continue. No truthful ready closure path is currently proven.
+  so fresh `phase-eval` now fails closed at `18/23`. The source-register
+  currentness child has since stopped truthfully: no exact current
+  `source-set-5e65d845ce77e1a0` manifest exists, the historical `5e65...`
+  currentness report points at a no-longer-present manifest hash, and the
+  current-workbook `f70...` catalog gate is not source-set compatible with the
+  `5e65...` derived artifacts. The live child owner is now
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  No truthful ready closure path is currently proven.
   Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:
   `4fb...` still fails across upstream/downstream `phase-eval` families, and
@@ -254,8 +257,9 @@ family.
   `applicability_validation`, and `forest_plan_component_eval` are green on the
   aligned owner path. The live red family is now stale `5e65...` retrieval and
   rule-claim direct evals, stale shared `f70...` compliance-review direct eval,
-  `evaluation_coverage`, and `source_register_contract` failing active-workbook
-  SHA currentness against the global `4fb...` manifest. Do not
+  `evaluation_coverage`, and source-register currentness blocked by the missing
+  current `5e65...` manifest. Live work now routes through the current-workbook
+  source-set rebaseline packet before any direct-eval rebaseline. Do not
   route back into another South replay pass, reopen the resolved replay-repair
   packet, or treat the broader Lolo example packet or the replacement-
   feasibility predecessor as the live owner for this remaining blocker.
