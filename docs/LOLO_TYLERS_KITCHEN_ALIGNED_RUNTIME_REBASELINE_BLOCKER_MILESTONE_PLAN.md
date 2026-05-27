@@ -72,6 +72,10 @@ Opening closeout commit:
   That child has now stopped to the broader current-workbook source-set
   rebaseline packet:
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  The current-workbook packet is reduced locally through Milestone 0: the
+  `f70...` catalog gate is not a drop-in owner for the historical `5e65...`
+  review artifacts because source-record identity differs. Its next slice is
+  Milestone 1 governed local replay or exact local-replay stop.
   This packet should resume at Milestone 2 direct-eval rebaseline only after
   the current-workbook source-set owner is rebuilt or selected and
   `source_register_contract` is no longer the active blocker.

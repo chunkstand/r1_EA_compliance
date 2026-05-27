@@ -2,10 +2,10 @@
 
 Date: 2026-05-27
 
-Status: Active blocker packet (`Milestone 0 owner-choice rebaseline is next; this packet
-opened after the source-register currentness child proved no exact current
-source-set-5e65d845ce77e1a0 manifest exists and stopped before direct-eval
-rebaseline`)
+Status: Reduced locally through Milestone 0 (`owner-choice rebaseline proved
+source-set-f70ea11e04ae3d53 is not a drop-in current-workbook owner for the
+historical source-set-5e65d845ce77e1a0 review artifacts; Milestone 1 is the
+next live slice for governed local replay or an exact local-replay stop`)
 
 Owner context: standalone child packet opened from
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`.
@@ -22,6 +22,10 @@ source-set compatible with the `5e65...` derived artifacts.
 - Source-register currentness Milestones 0-2 resolved by stop. They did not edit
   ignored `source_library/` manifests and did not weaken
   `source_register_contract`.
+- Milestone 0 of this packet is reduced locally. The chosen owner path is not a
+  manifest swap. Lolo must either replay review-local artifacts against a
+  governed current-workbook owner or stop at the first artifact family whose
+  source-record identity cannot be reconciled locally.
 - Exact readback found:
   - tracked replay context: `source_set_id="source-set-5e65d845ce77e1a0"` and
     `catalog_dir="source_library/catalog"`;
@@ -33,7 +37,10 @@ source-set compatible with the `5e65...` derived artifacts.
     `1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97`;
   - no exact archived `source-set-5e65d845ce77e1a0` manifest;
   - `5e65...` selected source-record IDs count `350`, while the `f70...`
-    catalog source-record IDs count `708`.
+    catalog source-record IDs count `708`;
+  - sampled mismatch shape is `R1EA-*` IDs missing from `f70...` and `FED-*`
+    IDs extra in `f70...`, so source-record identity must be handled by a
+    governed replay/crosswalk decision rather than a manifest-only path swap.
 - Fresh review `phase-eval` remains fail-closed at `18/23`; the live red phases
   remain `retrieval`, `rule_claim_binding`, `downstream_direct_evaluation`,
   `source_register_contract`, and `evaluation_coverage`.
@@ -63,6 +70,11 @@ new current-workbook catalog/currentness surface needed for that review.
 - `source-set-f70ea11e04ae3d53` cannot be used as a silent drop-in manifest for
   `5e65...`: its catalog source-record set does not match the `5e65...`
   extraction manifest selected source-record set.
+- Milestone 0 owner decision: `f70...` is a current-workbook catalog candidate,
+  not the selected Lolo owner by itself. Milestone 1 must either regenerate the
+  Lolo review-local artifact family through a governed current-workbook replay
+  chain, including source-record identity compatibility, or open a narrower
+  blocker naming the first unreplayable surface.
 - The `5e65...` authority-currentness report is historically green but not a
   current source-register owner: it was generated on `2026-05-11T00:40:55Z`
   from a `source_library/catalog/source_set_manifest.json` hash
@@ -184,6 +196,10 @@ Completion means all of the following are true:
 
 Outcome label: reduced
 
+Closeout status: complete locally after commit. The owner-choice gate selected
+the governed replay/exact-stop path and ruled out a silent `f70...` manifest
+swap.
+
 Purpose: choose the smallest valid current-workbook owner path before any
 artifact regeneration.
 
@@ -202,6 +218,21 @@ Acceptance criteria:
   plan that explains every required artifact family.
 - `source_register_contract` is not bypassed.
 - No ignored generated JSON is hand-edited.
+- Active routing names Milestone 1 as the next live slice and keeps `f70...`
+  out of drop-in manifest wording.
+
+Milestone 0 decision:
+
+- `source-set-f70ea11e04ae3d53` remains the only current-workbook archived
+  catalog gate found locally, but it is not source-record compatible with the
+  historical `5e65...` review artifacts.
+- The next live slice is Milestone 1. Start with the smallest governed local
+  replay path that can bind Lolo to a current-workbook owner and prove
+  source-record identity compatibility across applicability, forest-plan
+  component eval, compliance review, and direct eval surfaces.
+- If that replay path cannot reconcile the `R1EA-*` versus `FED-*`
+  source-record identity split without downloader/corpus recapture, stop and
+  open a narrower source-record identity or catalog-currentness blocker.
 
 Verification:
 
@@ -378,9 +409,10 @@ git diff --check
 
 ## Residual Risks And Next Milestone Routing
 
-- The current next slice is Milestone 0 owner-choice rebaseline.
+- The current next slice is Milestone 1 governed local replay or exact
+  local-replay stop.
 - The likely owner is not a manifest swap; it requires either replay against an
-  existing current-workbook catalog gate or a new governed current-workbook
-  source-set surface.
+  existing current-workbook catalog gate with source-record identity
+  compatibility, or a new governed current-workbook source-set surface.
 - Direct-eval failures remain real and should return to the parent aligned-runtime
   packet only after source-register currentness is coherent.

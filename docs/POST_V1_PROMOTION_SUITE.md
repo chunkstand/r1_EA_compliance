@@ -231,7 +231,12 @@ family.
   currentness report points at a no-longer-present manifest hash, and the
   current-workbook `f70...` catalog gate is not source-set compatible with the
   `5e65...` derived artifacts. The live child owner is now
-  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`;
+  its Milestone 0 owner-choice closeout ruled out a silent `f70...` manifest
+  swap because the `5e65...` selected source-record set has `350` IDs while
+  the `f70...` catalog has `708`, with an `R1EA-*` versus `FED-*` identity
+  split. The next truthful slice is governed local replay or exact
+  local-replay stop in that packet's Milestone 1.
   No truthful ready closure path is currently proven.
   Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:

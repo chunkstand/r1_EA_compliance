@@ -54,6 +54,11 @@ global catalog manifest SHA
   and no local `source_set_manifest.json` currently has that hash.
 - The live route is now
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
+  That follow-on packet is reduced locally through Milestone 0: `f70...` is a
+  current-workbook catalog candidate but not a drop-in owner for `5e65...`
+  because the selected/catalog source-record sets differ (`350` versus `708`
+  IDs, with `R1EA-*` versus `FED-*` identity). Continue there at Milestone 1
+  for governed local replay or exact local-replay stop.
   This packet must not be reopened to hand-edit ignored manifests or to teach
   `phase-eval` to ignore workbook SHA drift.
 

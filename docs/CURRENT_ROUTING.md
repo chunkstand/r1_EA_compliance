@@ -1,5 +1,5 @@
 # Current Routing
-Date: 2026-05-26
+Date: 2026-05-27
 Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
@@ -27,9 +27,15 @@ Use this file as the short current route before opening the append-only docs.
   currentness report points at a missing historical manifest hash, and the
   current-workbook `f70...` catalog gate is not source-set compatible with the
   `5e65...` derived artifacts.
-- Next slice is Milestone 0 in the current-workbook source-set rebaseline
-  packet: choose or rebuild the governed current-workbook owner before
-  returning to direct-eval rebaseline.
+- Current-workbook source-set rebaseline Milestone 0 is reduced locally:
+  `f70...` is a current-workbook catalog candidate, not a drop-in owner for
+  `5e65...`; `5e65...` selected `350` source-record IDs while `f70...`
+  catalogs `708`, with an `R1EA-*` versus `FED-*` identity split.
+- Next slice is Milestone 1 in the current-workbook source-set rebaseline
+  packet: run the smallest governed local replay path that can bind Lolo to a
+  coherent current-workbook owner, or stop at the exact source-record identity,
+  catalog, package-cache, extraction, or direct-eval surface that cannot be
+  replayed locally.
 - Remaining live debt:
   `retrieval-eval` on `5e65...` is both contract-stale and semantically red;
   `rule-claim-eval` on `5e65...` is contract-stale but otherwise green; shared

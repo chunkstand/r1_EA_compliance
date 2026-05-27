@@ -25,9 +25,9 @@ history below.
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
   source-register currentness Milestones 0-2 are resolved locally by broader
-  stop. Continue at current-workbook source-set rebaseline Milestone 0 to
-  choose or rebuild the governed current-workbook owner before returning to
-  aligned-runtime direct-eval rebaseline.
+  stop, and current-workbook source-set rebaseline Milestone 0 is reduced
+  locally. Continue at Milestone 1 of the current-workbook source-set
+  rebaseline packet for governed local replay or the exact local-replay stop.
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 - older predecessor blocker packet:
@@ -178,13 +178,15 @@ history below.
   manifest hash, and the current-workbook `f70...` catalog gate is not
   source-set compatible with the `5e65...` derived artifacts
 - next truthful slice:
-  source-set contract blocker Milestone 3 and aligned-runtime Milestones 0-1
-  plus source-register currentness Milestones 0-2 are now resolved/reduced
-  locally. Continue in
+  source-set contract blocker Milestone 3, aligned-runtime Milestones 0-1,
+  source-register currentness Milestones 0-2, and current-workbook source-set
+  rebaseline Milestone 0 are now resolved/reduced locally. Continue in
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 0: choose or rebuild the governed current-workbook source-set
-  owner before returning to direct-eval rebaseline. Direct-eval debt remains
-  real in the parent aligned-runtime packet: retrieval direct eval is both
+  at Milestone 1: run the smallest governed local replay path that can bind
+  Lolo to a coherent current-workbook owner, or stop at the exact
+  source-record identity, catalog, package-cache, extraction, or direct-eval
+  surface that cannot be replayed locally. Direct-eval debt remains real in
+  the parent aligned-runtime packet: retrieval direct eval is both
   contract-stale and semantically red, rule-claim direct eval is
   contract-stale but otherwise green, and shared `f70...`
   `compliance_review_eval` is stale for this review. Do not reopen
@@ -192,11 +194,50 @@ history below.
   packet, and do not treat the broader Lolo example packet as the live owner
   for the remaining blocker
 - session reminder:
-  the new current-workbook source-set rebaseline section immediately below is
-  the current checkpoint; the following source-register currentness,
+  the current-workbook source-set rebaseline Milestone 0 section immediately
+  below is the current checkpoint; the following packet-opening,
+  source-register currentness,
   aligned-runtime Milestone 0/opening, source-set contract, replacement-feasibility,
   ECID blocker Milestone 2, Milestone 1, and blocked-parent sections are
   preserved historical context only
+
+## Lolo Current-Workbook Source-Set Rebaseline Milestone 0 Reduced Locally
+
+This implementation slice closes the owner-choice gate for the current-workbook
+source-set rebaseline packet. It did not edit tracked runtime config or ignored
+`source_library/` manifests.
+
+- outcome label:
+  `reduced locally`; `source-set-f70ea11e04ae3d53` is the only
+  current-workbook archived catalog gate found locally, but it is not a valid
+  drop-in owner for the historical `source-set-5e65d845ce77e1a0` Lolo review
+  artifacts
+- active packet:
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+- owner-choice proof:
+  the `5e65...` extraction manifest selected source-record set has `350` IDs,
+  the archived current-workbook `f70...` catalog has `708` IDs, and the sets
+  differ. The mismatch shape includes `R1EA-*` IDs present in `5e65...` and
+  `FED-*` IDs present in `f70...`, so the blocker is source-record identity
+  and governed replay compatibility rather than a missing manifest path alone
+- eval readback:
+  `v1-ea-eval` still reports `contract_status="reviewer_ready"`,
+  `passed=true`, `broader_ea_passed=true`, and `forest_plan_passed=true` on
+  `source-set-5e65d845ce77e1a0`; review `phase-eval` still fails closed at
+  `18/23` with failing phases `retrieval`, `rule_claim_binding`,
+  `downstream_direct_evaluation`, `source_register_contract`, and
+  `evaluation_coverage`
+- next routing:
+  continue at Milestone 1 in the same packet. Start with a governed local
+  replay path that can bind Lolo to a coherent current-workbook owner and prove
+  source-record identity compatibility across review-local and direct-eval
+  artifact families. If the `R1EA-*` versus `FED-*` identity split cannot be
+  reconciled without downloader/corpus recapture, open a narrower source-record
+  identity or catalog-currentness blocker instead
+- verification:
+  source-record-set compatibility command, replay-context readback,
+  `v1-ea-eval`, review `phase-eval`, `tests/test_phase_eval.py`, strict plan
+  lint, and `git diff --check`
 
 ## Lolo Current-Workbook Source-Set Rebaseline Blocker Opened Locally
 
@@ -230,10 +271,12 @@ packet.
   `77361eec5963677104bf06dabe3f3d2934bfb75eae18990532d6054ba58152eb`; no
   local `source_set_manifest.json` now matches that hash
 - next routing:
-  continue in
+  historical route at this packet-opening checkpoint was to continue in
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 0. Do not return to aligned-runtime direct-eval rebaseline until
-  the current-workbook source-set owner is coherent and `source_register_contract`
+  at Milestone 0. That milestone is now reduced locally; the live route is the
+  same packet's Milestone 1 governed local replay or exact local-replay stop.
+  Do not return to aligned-runtime direct-eval rebaseline until the
+  current-workbook source-set owner is coherent and `source_register_contract`
   is no longer the active blocker
 - verification:
   replay-context readback, active and archived manifest inventory,
@@ -275,11 +318,14 @@ child packet.
   workbook SHA `2c511784...` on `source-set-4fb...`; no exact archived
   `source-set-5e65...` manifest was found under `source_library/runs`
 - next routing:
-  continue in
+  historical route at that checkpoint was to continue in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 0. Return to the parent aligned-runtime packet at direct-eval
-  rebaseline only after the source-register currentness child passes or
-  records a broader catalog/currentness stop
+  at Milestone 0. That child has since stopped to the current-workbook
+  source-set rebaseline packet, whose Milestone 0 is now reduced locally; the
+  live route is the current-workbook packet's Milestone 1. Return to the parent
+  aligned-runtime packet at direct-eval rebaseline only after the
+  source-register/current-workbook owner passes or records a broader
+  catalog/currentness stop
 - verification:
   `applicability-authority-universe`,
   `applicability-context-build`, `applicability-retrieve`,
@@ -374,10 +420,12 @@ opening one exact aligned-runtime rebaseline child packet.
   expansion still fails only on the ECID historical slot under
   `historical_source_set_split`
 - next routing:
-  continue in
+  historical route at that checkpoint was to continue in
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   at Milestone 0 to freshness-lock the stale aligned-runtime family before
-  reruns. Treat
+  reruns. That packet has since reduced through Milestone 1 and routed to the
+  current-workbook source-set rebaseline packet; the live route is that
+  packet's Milestone 1 governed local replay or exact local-replay stop. Treat
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
   as the exact predecessor that resolved the tracked contract split, and keep
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`

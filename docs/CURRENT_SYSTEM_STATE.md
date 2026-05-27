@@ -15,16 +15,17 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Lolo Current-Workbook Source-Set Rebaseline Blocker Opened Locally
+## Lolo Current-Workbook Source-Set Rebaseline Milestone 0 Reduced Locally
 
 Latest implementation update on 2026-05-27 UTC:
 
 - routed packet:
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - packet outcome:
-  `opened locally`; the source-register currentness child resolved by stop
+  `reduced locally`; the source-register currentness child resolved by stop
   because no exact current `source-set-5e65d845ce77e1a0` manifest/currentness
-  surface exists locally
+  surface exists locally, and this packet's Milestone 0 ruled out a silent
+  `source-set-f70ea11e04ae3d53` manifest swap
 - implementation truth:
   exact readback found the tracked Lolo replay context still on `5e65...` with
   `catalog_dir="source_library/catalog"`, while the active global catalog
@@ -36,7 +37,10 @@ Latest implementation update on 2026-05-27 UTC:
   `1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97`, but
   it is not a valid drop-in currentness owner for `5e65...`: the `5e65...`
   extraction manifest selects `350` source-record IDs, the `f70...` catalog
-  has `708`, and the sets differ
+  has `708`, and the sets differ. Sampled mismatch shape shows `R1EA-*`
+  source-record IDs on the `5e65...` side and `FED-*` IDs on the `f70...`
+  side, so source-record identity compatibility must be handled by governed
+  replay or an explicit narrower stop
 - stale currentness truth:
   the historical `5e65...` authority-currentness report was generated on
   `2026-05-11T00:40:55.190598Z` from `source_library/catalog/source_set_manifest.json`
@@ -51,11 +55,14 @@ Latest implementation update on 2026-05-27 UTC:
 - next routing:
   continue in
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
-  at Milestone 0 to choose or rebuild the governed current-workbook source-set
-  owner before returning to aligned-runtime direct-eval rebaseline
+  at Milestone 1 to run the smallest governed local replay path that can bind
+  Lolo to a coherent current-workbook owner, or stop at the exact
+  source-record identity, catalog, package-cache, extraction, or direct-eval
+  surface that cannot be replayed locally
 - verification:
   replay-context, active manifest, archived manifest, currentness-report input
-  hash, source-record-set compatibility, and review `phase-eval` readback; no
+  hash, source-record-set compatibility, `v1-ea-eval`, review `phase-eval`,
+  focused phase-eval tests, strict plan lint, and `git diff --check`; no
   ignored manifest JSON was patched
 
 ## Lolo Source Register Currentness Blocker Opened Locally
@@ -103,12 +110,12 @@ Latest implementation update on 2026-05-26:
   ready replacement, and current promotion / strict expansion semantics are
   not weakened
 - next routing:
-  continue in
+  historical route at that checkpoint was to continue in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
   at Milestone 0 to rebaseline the source-register manifest/currentness owner.
-  After that child resolves or stops, return to the aligned-runtime packet for
-  direct-eval rebaseline only if `source_register_contract` is no longer the
-  active blocker
+  That child has since stopped to the current-workbook source-set rebaseline
+  packet, whose Milestone 0 is reduced locally; the live route is now that
+  packet's Milestone 1 governed local replay or exact local-replay stop
 - verification:
   governed applicability and forest-plan component refresh commands,
   adjudication eval/apply, review `phase-eval`, source-register phase readback,
@@ -218,10 +225,13 @@ Latest implementation update on 2026-05-26:
   `expansion_ready=false`, with the only live expansion failure still
   `historical_source_set_split` on the ECID historical slot
 - next routing:
-  continue in
+  historical route at that checkpoint was to continue in
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
   at Milestone 0 to freshness-lock the stale aligned-runtime surfaces before
-  any reruns. Treat
+  any reruns. That packet has since reduced through Milestone 1 and routed to
+  source-register/current-workbook rebaseline; the live route is now
+  `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
+  Milestone 1. Treat
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
   as the exact predecessor that resolved the tracked source-set contract
   split, keep

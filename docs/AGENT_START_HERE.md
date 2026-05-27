@@ -41,7 +41,10 @@ The planner:
 - The live Lolo follow-on is now
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`.
 - For Lolo National Forest example-package review work, inspect that blocker
-  first for the current-workbook source-set rebaseline owner, then read
+  first for Milestone 1 governed local replay or exact local-replay stop. Its
+  Milestone 0 owner-choice closeout proved the current-workbook `f70...`
+  catalog gate is not a drop-in owner for historical `5e65...` artifacts
+  because source-record identity differs. Then read
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
   only as the source-register currentness stop that proved no exact current
   `5e65...` manifest exists, then read
