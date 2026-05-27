@@ -24,6 +24,9 @@ Opening closeout commit:
 
 ## Latest Local Implementation
 
+- Milestone 1 closeout commit:
+  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
+
 - Milestone 1 is now reduced locally. Fresh tracked readback no longer leaves
   the owner chain generic.
 - The tracked replay context and tracked `v1-ea-eval` contract still bind

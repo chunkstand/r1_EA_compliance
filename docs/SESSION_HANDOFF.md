@@ -20,7 +20,7 @@ history below.
 - active packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 - latest blocker closeout commit:
-  `013b5d1` (`Open Lolo source-set contract blocker`)
+  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
 - older ECID predecessor blocker packet:
@@ -192,7 +192,7 @@ contract blocker by classifying the bounded review-local owner path.
   `reduced locally`; live work now stays in the same packet and advances to
   Milestone 2 contract-aligned review-readiness classification
 - closeout commit:
-  `013b5d1` (`Open Lolo source-set contract blocker`)
+  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
 - implementation truth:
   fresh tracked readback now classifies `source-set-5e65d845ce77e1a0` as the
   bounded review-local owner path. The replay context and tracked

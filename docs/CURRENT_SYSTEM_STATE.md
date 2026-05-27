@@ -26,7 +26,7 @@ Latest implementation update on 2026-05-26:
   path inside the source-set contract blocker, so live work now moves to
   Milestone 2 in the same packet
 - closeout commit:
-  `013b5d1` (`Open Lolo source-set contract blocker`)
+  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
 - implementation truth:
   fresh tracked readback now classifies a bounded review-local owner path for
   `region1-example-lolo-tylers-kitchen-66344` on
