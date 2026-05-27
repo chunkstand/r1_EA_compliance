@@ -20,35 +20,37 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- South Otter Milestone 1 is resolved locally for package authority intake.
-  The full official Pinyon/Box root for the South Otter Landscape Restoration
-  and Resilience Project (`58396`) has been inventoried and downloaded under
-  ignored local evidence at
-  `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`.
-  The ignored inventory/import manifest records `58` folders, `639` files,
-  `2,926,223,134` bytes, and `0` download failures.
-- The tracked South Otter replay context now exists at
+- South Otter Milestone 2 is resolved locally for reviewer-stack replay. The
+  full official Pinyon/Box root for the South Otter Landscape Restoration and
+  Resilience Project (`58396`) remains ignored local authority evidence at
+  `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`
+  with `58` folders, `639` files, `2,926,223,134` bytes, and `0` download
+  failures. The tracked replay context stays at
   `config/replay_contexts/region1-example-custer-gallatin-south-otter-58396.json`
-  on `source-set-f70ea11e04ae3d53`. It uses the narrowed official replay
-  package
-  `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/Final EA and Decision Notice Documents`
-  because the full Box root contains references and implementation-review
-  material that made root-level forest-plan scope resolution ambiguous.
+  on `source-set-f70ea11e04ae3d53` and uses the narrowed official
+  `Final EA and Decision Notice Documents` package path.
+- Latest South Otter reviewer-stack truth: applicability validation passes
+  with `61` applicable authorities, `335` non-applicable authorities, `0`
+  unresolved authorities, and `reviewer_ready=true`; tracked applicability
+  adjudication resolves `8/8` items. Compliance review is
+  `reviewer_ready=true` and `validation_passed=true` with `61` findings
+  (`pass=42`, `uncertain=17`, `gap=2`). `v1-ea-eval` passes with
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true`. Forest-plan component eval passes `56/56` cases,
+  and component adjudication resolves all `169` current queue items
+  (`132` applicability false positives, `37` evidence-linking misses, `0`
+  real-EA omissions). Review `phase-eval` passes `28/28` with `blockers=[]`.
 - South Otter is still not in the active workbook, not in the
-  forest-specific registry, not a real-package coverage slot, and not a
-  reviewer-ready claim. Do not update registry or coverage thresholds until
-  Milestone 2 resolves the reviewer stack: `v1-ea-eval`, forest-plan component
-  eval/adjudication, and review `phase-eval` must pass for
-  `region1-example-custer-gallatin-south-otter-58396`.
-- Latest South Otter gate truth: `ea-review` on the narrowed replay package
-  passes (`24/24` extracted files, `1,165` chunks, `5/5` checklist findings,
-  `reviewer_ready=true`). `forest-plan-resolve` on the narrowed replay package
-  resolves Custer Gallatin scope with `validation_passed=true`,
-  `scope_status="custer_gallatin"`, `geographic_area_count=1`,
-  `management_area_count=33`, `overlay_count=9`, and
-  `unresolved_mention_count=0`, but exits nonzero because downstream component
-  evaluation still needs reviewer resolution (`needs_reviewer_resolution_count=5`,
-  `insufficient_evidence=8`, missing component adjudication eval).
+  forest-specific registry, not a real-package coverage slot, and not a queue
+  ledger reroute. Do not claim governed promotion until Milestone 3 adds the
+  supplemental Custer Gallatin registry row and real-package/component coverage
+  slots and reruns the aggregate gates.
+- Next active slice: South Otter Milestone 3 in
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, using
+  `example_id="cgnf-south-otter-forest-specific"`,
+  `coverage_slot_id="cgnf-south-otter-forest-specific"`, and
+  `applicable_forest_unit_ids=["custer-gallatin-nf"]`. Do not increase
+  distinct-forest thresholds for this same-forest supplemental example.
 - The Lolo Tyler's Kitchen example-package Milestone 3 implementation is
   resolved locally. The tracked Lolo review
   `region1-example-lolo-tylers-kitchen-66344` is now the governed primary

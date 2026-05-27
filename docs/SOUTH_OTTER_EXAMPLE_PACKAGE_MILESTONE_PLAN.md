@@ -3,9 +3,9 @@
 Date: 2026-05-27
 Status: Active packet (`Milestone 0 routing and package-boundary selection
 opened; Milestone 1 local package authority intake resolved locally; Milestone
-2 reviewer-stack replay is next and owns the current forest-plan component
-adjudication/eval blocker; no registry promotion, coverage ratchet, queue
-reroute, or reviewer-ready claim has been made yet`)
+2 reviewer-stack replay resolved locally; Milestone 3 registry promotion and
+threshold ratchet are next. South Otter is reviewer-ready locally but still not
+promoted into the governed registry, coverage manifests, or queue ledger.`)
 Owner context: standalone follow-on from
 `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
@@ -65,6 +65,27 @@ Current implementation truth:
   `config/replay_contexts/region1-example-custer-gallatin-south-otter-58396.json`
   and points to the current `source-set-f70ea11e04ae3d53` catalog gate plus the
   narrowed final-EA/decision package path.
+- Milestone 2 resolved the reviewer stack locally. Applicability validation now
+  passes with `61` applicable authorities, `335` non-applicable authorities,
+  `0` unresolved authorities, and `reviewer_ready=true` after `8/8` tracked
+  applicability adjudications were completed. Compliance review now reports
+  `reviewer_ready=true`, `validation_passed=true`, `61` findings, and status
+  counts `pass=42`, `uncertain=17`, `gap=2`.
+- The tracked V1 eval contract
+  `config/v1_custer_gallatin_south_otter_real_ea_eval.json` now passes with
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true`.
+- The tracked forest-plan component eval contract
+  `config/forest_plan_component_evals/region1-example-custer-gallatin-south-otter-58396.json`
+  now passes all `56` cases, including all `43` raw applicable standards and
+  the `5` standard-level reviewer-resolution items. The tracked component
+  adjudication resolves all `169` current queue items with `132`
+  `applicability_false_positive`, `37` `evidence_linking_miss`, and `0`
+  real-EA omissions.
+- Review `phase-eval` now passes `28/28` phases with `blockers=[]` for
+  `region1-example-custer-gallatin-south-otter-58396`. The review remains
+  `not_required_for_ad_hoc_review` for promotion coverage until Milestone 3
+  adds governed registry and coverage entries.
 
 ## Intent Lock
 
@@ -116,11 +137,11 @@ must not increase distinct-forest coverage metrics.
   `scope_status="custer_gallatin"`, `geographic_area_count=1`,
   `management_area_count=33`, `overlay_count=9`, and
   `unresolved_mention_count=0`.
-- South Otter is still not reviewer-ready: the same `forest-plan-resolve` run
-  returns nonzero because downstream component evaluation has
-  `needs_reviewer_resolution_count=5`, `insufficient_evidence=8` applicable
-  standards, and no component adjudication eval yet. Milestone 2 owns that
-  reviewer-stack replay and adjudication work.
+- South Otter is now locally reviewer-ready under the Milestone 2 review stack:
+  applicability, generated rule-pack, compliance review, V1 eval, component
+  eval, component adjudication eval, and review `phase-eval` are green. It is
+  still not a governed registry example or real-package coverage slot; that
+  promotion is intentionally left to Milestone 3.
 
 ## Goal
 
@@ -365,8 +386,9 @@ downloaded with hashes; replay context is tracked against the narrowed official
 `Final EA and Decision Notice Documents` package path. The original root-package
 `forest-plan-resolve` attempt proved the root was too broad for automated
 replay (`scope_status="ambiguous"`), while the narrowed replay package resolves
-Custer Gallatin scope. Component-level reviewer resolution remains Milestone 2
-work and is not a registry-promotion signal.
+Custer Gallatin scope. Component-level reviewer resolution was Milestone 2 work
+and is now resolved locally; the Milestone 1 package-intake checkpoint remains
+only package-authority evidence, not a registry-promotion signal.
 
 1. Inventory the official Pinyon/Box root folder and record the folder tree,
    file names, sizes, and hashes in ignored local evidence.
@@ -386,6 +408,14 @@ Outcome label: `resolved` if the South Otter review stack reaches
 reviewer-ready status with green `v1-ea-eval`, forest-plan component eval, and
 `phase-eval`; `reduced` if a named applicability, package, or component blocker
 remains.
+
+Local result: `resolved`. The narrowed replay package now has tracked
+applicability adjudication, V1 eval, forest-plan component eval, and
+forest-plan component adjudication contracts. `v1-ea-eval` reports
+`contract_status="reviewer_ready"`, forest-plan component eval passes `56/56`
+cases, forest-plan component adjudication resolves `169/169` queue items, and
+review `phase-eval` passes `28/28` phases with no blockers. No registry,
+coverage, or queue-ledger promotion happened in this milestone.
 
 1. Create `config/v1_custer_gallatin_south_otter_real_ea_eval.json` only after
    package outputs exist.
@@ -636,14 +666,15 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_queue_resolu
 
 ## Residual Risks And Next Routing
 
-- The current opening slice does not prove package access beyond the official
-  project page and Pinyon/Box folder link. Milestone 1 owns package inventory
-  and download proof.
+- Milestones 1 and 2 prove local package authority and reviewer-stack readiness,
+  but they do not add a governed registry row, real-package coverage slot,
+  component-coverage aggregate slot, or queue-ledger route. Milestone 3 owns
+  those promotion artifacts.
 - South Otter may add package-style depth for Custer Gallatin, but it will not
   reduce the remaining profile-guidance-only forest count unless a later packet
   chooses a forest without a governed example.
-- If South Otter becomes reviewer-ready, the next routing target is Milestone 3
-  in this packet for aggregate promotion and threshold ratchet.
+- Because South Otter is now locally reviewer-ready, the next routing target is
+  Milestone 3 in this packet for aggregate promotion and threshold ratchet.
 - If a future session needs a real package for a different forest, it must open
   a separate forest-specific example packet with that forest's own review ID,
   registry example ID, package authority, and eval contracts.

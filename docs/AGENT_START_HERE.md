@@ -47,14 +47,19 @@ The planner:
   `region1-example-custer-gallatin-south-otter-58396` and the official Custer
   Gallatin project page
   `https://www.fs.usda.gov/r01/custergallatin/projects/58396` as the selected
-  package authority. Milestone 1 has locally inventoried and downloaded the
-  full Pinyon/Box root, but the replay package path is narrowed to
+  package authority. Milestone 2 has locally proven the reviewer stack on
+  `source-set-f70ea11e04ae3d53`: applicability, compliance review, V1 eval,
+  forest-plan component eval/adjudication, and review `phase-eval` are green.
+  The full Pinyon/Box root remains local ignored package-authority evidence,
+  but the replay package path is narrowed to
   `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/Final EA and Decision Notice Documents`
   because the full root contains broad references that make scope resolution
   ambiguous. South Otter is not yet a registry example or coverage slot; the
   review ID is forest-qualified because this example is relevant to
-  `custer-gallatin-nf`. Keep it parallel to `Document_Register_Master` until
-  reviewer-stack gates pass.
+  `custer-gallatin-nf`. Keep it parallel to `Document_Register_Master`; the
+  next slice is Milestone 3 registry and coverage promotion as a supplemental
+  same-forest Custer Gallatin example, without increasing distinct-forest
+  thresholds.
 - For Lolo National Forest example-package review work, inspect
   `config/forest_specific_example_package_registry_v1.json` first, then the
   Tyler's Kitchen review artifacts for

@@ -33,7 +33,7 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  South Otter Milestone 1 is now resolved locally under
+  South Otter Milestone 2 is now resolved locally under
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. The selected package
   authority remains the official Custer Gallatin project page
   `https://www.fs.usda.gov/r01/custergallatin/projects/58396` and linked
@@ -43,24 +43,21 @@ history below.
   ignored local inventory/import under
   `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`
   records `58` folders, `639` files, `2,926,223,134` bytes, and `0` download
-  failures. The full root is retained as package-authority evidence, but replay
-  now uses the narrowed official
-  `Final EA and Decision Notice Documents` folder because the root includes
-  broad reference and implementation-review material that made root-level
-  forest-plan scope resolution ambiguous. The tracked replay context now lives
-  at
+  failures. Replay remains narrowed to the official
+  `Final EA and Decision Notice Documents` folder through
   `config/replay_contexts/region1-example-custer-gallatin-south-otter-58396.json`
-  on `source-set-f70ea11e04ae3d53`. Narrowed `ea-review` passes with `24/24`
-  extracted files, `1,165` chunks, `5/5` checklist findings, and
-  `reviewer_ready=true`; narrowed `forest-plan-resolve` resolves the Custer
-  Gallatin scope with `validation_passed=true`,
-  `scope_status="custer_gallatin"`, `geographic_area_count=1`,
-  `management_area_count=33`, `overlay_count=9`, and
-  `unresolved_mention_count=0`, but exits nonzero because component evaluation
-  still needs reviewer resolution (`needs_reviewer_resolution_count=5`,
-  `insufficient_evidence=8`, missing component adjudication eval). South Otter
-  remains outside the active workbook, registry, real-package coverage
-  manifest, and queue ledger; future registry identity remains locked to
+  on `source-set-f70ea11e04ae3d53`. Applicability validation passes with
+  `61` applicable, `335` non-applicable, and `0` unresolved authorities after
+  `8/8` tracked applicability adjudications. Compliance review is
+  `reviewer_ready=true` with `61` findings (`pass=42`, `uncertain=17`,
+  `gap=2`). The tracked V1 eval contract passes with
+  `contract_status="reviewer_ready"`, the tracked component eval passes
+  `56/56` cases, tracked component adjudication resolves all `169` current
+  queue items (`132` applicability false positives, `37` evidence-linking
+  misses, `0` real-EA omissions), and review `phase-eval` passes `28/28` with
+  `blockers=[]`. South Otter remains outside the active workbook, registry,
+  real-package coverage manifest, component-coverage aggregate manifest, and
+  queue ledger; future registry identity remains locked to
   `example_id="cgnf-south-otter-forest-specific"`,
   `coverage_slot_id="cgnf-south-otter-forest-specific"`, and
   `applicable_forest_unit_ids=["custer-gallatin-nf"]`. Lolo Tyler's Kitchen
@@ -246,30 +243,26 @@ history below.
   refreshed the governed local replay chain, and proved review `phase-eval`
   green at `28/28`
 - next truthful slice:
-  Continue South Otter Milestone 2 in
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`: use the tracked replay
-  context and narrowed `Final EA and Decision Notice Documents` package path,
-  create the South Otter `v1-ea-eval` and forest-plan component eval contracts,
-  resolve the `5` component reviewer-resolution items without weakening
-  thresholds, then run applicability, compliance, `v1-ea-eval`,
-  forest-plan component eval/adjudication, and review `phase-eval`. Keep South
-  Otter out of the registry and coverage manifests until the review stack
-  passes. If the request targets aggregate component coverage instead,
-  open a narrower non-South-Otter packet for the remaining non-Lolo component
-  red. Do not reopen
+  Continue South Otter Milestone 3 in
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`: add South Otter as a
+  supplemental Custer Gallatin example only after preserving the forest identity
+  guard, add the real-package and component-coverage slots, rerun the aggregate
+  coverage/registry gates, and keep distinct-forest thresholds unchanged for
+  this same-forest example. If the request targets aggregate component coverage
+  outside South Otter promotion, open a narrower non-South-Otter packet for the
+  remaining non-Lolo component red. Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
   packet, and do not treat the older Lolo blocker chain as the live owner
   unless a future verification command regresses the green `f70...` Lolo
   readback or the promoted registry/coverage gates.
 - session reminder:
-  the Lolo example-package Milestone 3 closeout at the top is the current
-  checkpoint; the following source-record
-  identity packet-opening, current-workbook source-set rebaseline Milestone 0,
-  packet-opening,
-  source-register currentness,
-  aligned-runtime Milestone 0/opening, source-set contract, replacement-feasibility,
-  ECID blocker Milestone 2, Milestone 1, and blocked-parent sections are
-  preserved historical context only
+  the South Otter Milestone 2 closeout at the top is the current checkpoint;
+  the Lolo example-package Milestone 3 closeout and the following
+  source-record identity packet-opening, current-workbook source-set rebaseline
+  Milestone 0, packet-opening, source-register currentness, aligned-runtime
+  Milestone 0/opening, source-set contract, replacement-feasibility, ECID
+  blocker Milestone 2, Milestone 1, and blocked-parent sections are preserved
+  historical context only
 
 ## Lolo Source-Record Identity Reconciliation Milestone 1 Resolved Locally
 

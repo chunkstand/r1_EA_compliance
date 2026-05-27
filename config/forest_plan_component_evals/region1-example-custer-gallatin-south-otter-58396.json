@@ -1,0 +1,940 @@
+{
+  "cases": [
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-ab-std-bcbca-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-AB-STD-BCBCA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-ab-std-oto-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-AB-STD-OTO-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-ab-std-rna-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-AB-STD-RNA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-bc-std-bpbca-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-BC-STD-BPBCA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-bc-std-bsa-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-BC-STD-BSA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-bc-std-cmbca-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-BC-STD-CMBCA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-bca-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-BCA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-dwa-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-DWA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-dwsr-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-DWSR-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-emin-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-EMIN-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-ewsr-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-EWSR-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-fac-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-FAC-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-fire-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-FIRE-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (62fe06d20ae0)"
+      ],
+      "package_section": "20230609AppendixCImplementationPlan.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-fp-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-FP-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-graz-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-GRAZ-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-inv-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-INV-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-nnl-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-NNL-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-prisk-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-PRISK-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-recdev-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECDEV-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-recski-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RECSKI-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-rmz-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RMZ-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-023 (209b73ba9744)",
+        "EA-PACKAGE-007 (e62ca8adaf10)"
+      ],
+      "package_section": "230518_SouthOtterAquaticsReport.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-rna-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RNA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-ros-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-ROS-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-021 (46c64bf003a5)",
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "230510_SouthOtterRecreationReport.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-rosp-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-ROSP-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-rosspm-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-ROSSPM-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-rosspnm-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-ROSSPNM-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-rt-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RT-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-rwa-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-RWA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-scenery-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-SCENERY-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-007 (e62ca8adaf10)"
+      ],
+      "package_section": "20230609AppendixAProjectDesignFeatures.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-tim-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-TIM-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-tribal-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-TRIBAL-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-fw-std-wtr-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WTR-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-mg-std-bhbca-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-MG-STD-BHBCA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-mg-std-bsssa-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-MG-STD-BSSSA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-mg-std-ccrw-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-MG-STD-CCRW-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-mg-std-cdnst-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-MG-STD-CDNST-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-mg-std-hrea-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-MG-STD-HREA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-mg-std-hwrea-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-MG-STD-HWREA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-mg-std-lhbca-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-MG-STD-LHBCA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-mg-std-scbca-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-MG-STD-SCBCA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-mg-std-wpbca-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-MG-STD-WPBCA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-mg-std-wsa-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-MG-STD-WSA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "applicable-standard-sx-std-cbbca-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-SX-STD-CBBCA-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "needs_reviewer_resolution",
+      "case_id": "needs-review-standard-fw-std-airfields-01",
+      "compliance_status": "needs_reviewer_resolution",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-AIRFIELDS-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "needs_reviewer_resolution",
+      "case_id": "needs-review-standard-fw-std-soil-01",
+      "compliance_status": "needs_reviewer_resolution",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-SOIL-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "needs_reviewer_resolution",
+      "case_id": "needs-review-standard-fw-std-wlbat-01",
+      "compliance_status": "needs_reviewer_resolution",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLBAT-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "needs_reviewer_resolution",
+      "case_id": "needs-review-standard-fw-std-wlgb-01",
+      "compliance_status": "needs_reviewer_resolution",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLGB-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "needs_reviewer_resolution",
+      "case_id": "needs-review-standard-fw-std-wlpd-01",
+      "compliance_status": "needs_reviewer_resolution",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WLPD-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "case_id": "open-desired_condition-fw-dc-aq-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-AQ-01",
+      "component_type": "desired_condition",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "case_id": "open-goal-fw-go-aq-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GO-AQ-01",
+      "component_type": "goal",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "case_id": "open-guideline-fw-gdl-soil-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-SOIL-01",
+      "component_type": "guideline",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "case_id": "open-objective-fw-obj-wtr-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-OBJ-WTR-01",
+      "component_type": "objective",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "case_id": "open-suitability-fw-suit-wlgb-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-SUIT-WLGB-01",
+      "component_type": "suitability",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "not_applicable",
+      "applicable_standard": false,
+      "case_id": "not-applicable-standard-fw-std-wl-01",
+      "compliance_status": "not_applicable",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-STD-WL-01",
+      "component_type": "standard",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (c2cca323cd4a)"
+      ],
+      "package_section": "20221206ForestPlanConsistencyChecklistSOtter.pdf",
+      "plan_source_citations": [
+        "FOR-009 (ff30e8b4530e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "not_applicable",
+      "case_id": "not-applicable-desired_condition-fw-dc-wlbat-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-DC-WLBAT-01",
+      "component_type": "desired_condition",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "not_applicable",
+      "case_id": "not-applicable-guideline-fw-gdl-wl-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-custer-gallatin-nf-02-FW-GDL-WL-01",
+      "component_type": "guideline",
+      "description": "South Otter component replay case generated from the current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [],
+      "reviewer_resolution_state": "closed"
+    }
+  ],
+  "coverage_requirements": {
+    "minimum_cases_by_applicability_status": {
+      "applicable": 48,
+      "needs_reviewer_resolution": 5,
+      "not_applicable": 3
+    },
+    "minimum_cases_by_component_type": {
+      "desired_condition": 2,
+      "goal": 1,
+      "guideline": 2,
+      "objective": 1,
+      "standard": 49,
+      "suitability": 1
+    },
+    "minimum_not_applicable_cases": 3,
+    "minimum_section_bound_cases": 36,
+    "require_all_applicable_standards": true
+  },
+  "description": "Replay-scoped South Otter component eval. Covers every raw applicable Custer Gallatin standard, the five standard-level reviewer-resolution items, representative non-standard reviewer-resolution queue cases, and hard-negative component cases; the tracked component adjudication closes the raw queue for reviewer-ready forest-plan status.",
+  "eval_id": "custer-gallatin-south-otter-forest-plan-components-v0",
+  "metric_thresholds": {
+    "applicable_standard_recall": {
+      "min": 1.0
+    },
+    "case_count": {
+      "min": 56
+    },
+    "compliance_status_match_rate": {
+      "min": 1.0
+    },
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "expected_applicable_standard_count": {
+      "min": 43
+    },
+    "false_applicable_component_rate": {
+      "max": 0.0
+    },
+    "package_evidence_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "package_section_match_rate": {
+      "min": 1.0
+    },
+    "plan_source_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  },
+  "review_id": "region1-example-custer-gallatin-south-otter-58396",
+  "schema_version": "forest-plan-component-eval-v0",
+  "source_set_id": "source-set-f70ea11e04ae3d53"
+}

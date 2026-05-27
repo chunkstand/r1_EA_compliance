@@ -15,7 +15,7 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## South Otter Example Package Milestone 1 Resolved Locally
+## South Otter Example Package Milestone 2 Resolved Locally
 
 Latest implementation update on 2026-05-27 UTC:
 
@@ -24,10 +24,78 @@ Latest implementation update on 2026-05-27 UTC:
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - packet outcome:
+  `Milestone 2 resolved locally`; South Otter is reviewer-ready under the
+  local review stack, but it has not been promoted into
+  `config/forest_specific_example_package_registry_v1.json`,
+  `config/v1_real_package_review_coverage_v1.json`,
+  `config/forest_plan_component_eval_coverage_v1.json`, or the queue ledger
+- replay identity truth:
+  the frozen review ID is
+  `region1-example-custer-gallatin-south-otter-58396`, the forest identity is
+  `custer-gallatin-nf`, the source set is `source-set-f70ea11e04ae3d53`, and
+  the tracked replay context remains
+  `config/replay_contexts/region1-example-custer-gallatin-south-otter-58396.json`
+  against the narrowed `Final EA and Decision Notice Documents` package path
+- applicability truth:
+  the governed applicability replay now passes with `61` applicable
+  authorities, `335` non-applicable authorities, `0` unresolved authorities,
+  and `reviewer_ready=true`. The tracked applicability adjudication at
+  `config/applicability_adjudications/region1-example-custer-gallatin-south-otter-58396.json`
+  resolves all `8` items (`6` human applicable and `2` human not applicable).
+- compliance truth:
+  `compliance-review` with the generated South Otter rule pack now reports
+  `reviewer_ready=true`, `validation_passed=true`, `61` findings, and status
+  counts `pass=42`, `uncertain=17`, `gap=2`. Rule-claim binding remains
+  reviewer-ready with one explicit no-claim gap for
+  `forest_service_planning_handbook_amendments_authority_template`; the V1
+  contract binds that authority through current source alias `USFS-008`.
+- eval-contract truth:
+  `config/v1_custer_gallatin_south_otter_real_ea_eval.json` now passes with
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`,
+  `forest_plan_passed=true`, and `35` conditional source expectations.
+- forest-plan component truth:
+  `config/forest_plan_component_evals/region1-example-custer-gallatin-south-otter-58396.json`
+  now passes `56/56` cases, covering all `43` raw applicable standards, the
+  `5` standard-level reviewer-resolution items, representative non-standard
+  queue cases, and hard negatives. The tracked component adjudication at
+  `config/forest_plan_component_adjudications/region1-example-custer-gallatin-south-otter-58396.json`
+  resolves `169/169` current queue items with `132`
+  `applicability_false_positive`, `37` `evidence_linking_miss`, and `0`
+  real-EA omissions.
+- phase truth:
+  review `phase-eval --review-id region1-example-custer-gallatin-south-otter-58396`
+  passes with `passed_phase_count=28`, `phase_count=28`, `blockers=[]`, and
+  `review_direct_eval_status="not_required_for_ad_hoc_review"`. Promotion
+  coverage is still false because Milestone 3 has not added governed registry
+  or coverage manifest entries.
+- next routing:
+  continue at South Otter Milestone 3 in
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`: add South Otter as a
+  supplemental Custer Gallatin example only after preserving the same-forest
+  identity guard, then rerun the real-package coverage, forest-specific
+  example-package, and component-coverage aggregate gates. Do not ratchet
+  distinct-forest thresholds for this same-forest example.
+- verification:
+  governed applicability replay and adjudication eval, generated rule-pack,
+  compliance review, V1 eval, forest-plan component eval, forest-plan component
+  adjudication eval, review `phase-eval`, focused South Otter contract test,
+  and docs closeout gates
+
+## Historical South Otter Example Package Milestone 1 Resolved Locally
+
+Historical implementation update on 2026-05-27 UTC, superseded by the
+Milestone 2 section above:
+
+- active packet:
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- continuing lane owner:
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- packet outcome:
   `Milestone 1 resolved locally`; South Otter package authority is locally
-  inventoried, downloaded, hash-recorded, and replay-context-ready, but it has
-  not been promoted into the governed registry or coverage manifests and is not
-  reviewer-ready
+  inventoried, downloaded, hash-recorded, and replay-context-ready. At the time
+  of this Milestone 1 checkpoint, it had not been promoted into the governed
+  registry or coverage manifests and was not reviewer-ready; Milestone 2 has
+  since resolved the local reviewer stack above.
 - selected package truth:
   the official project page is
   `https://www.fs.usda.gov/r01/custergallatin/projects/58396`, the linked
@@ -71,24 +139,21 @@ Latest implementation update on 2026-05-27 UTC:
   `validation_passed=true`, `scope_status="custer_gallatin"`,
   `geographic_area_count=1`, `management_area_count=33`, `overlay_count=9`,
   `supporting_plan_evidence_count=5`, and `unresolved_mention_count=0`.
-  The command still exits nonzero because downstream component evaluation is
-  not reviewer-ready (`needs_reviewer_resolution_count=5`,
-  `insufficient_evidence=8`, and missing component adjudication eval).
+  At this historical checkpoint the command still exited nonzero because
+  downstream component evaluation was not reviewer-ready
+  (`needs_reviewer_resolution_count=5`, `insufficient_evidence=8`, and missing
+  component adjudication eval); Milestone 2 has since resolved that blocker
+  through tracked component eval and component adjudication.
 - registry and coverage truth:
   `config/forest_specific_example_package_registry_v1.json`,
   `config/v1_real_package_review_coverage_v1.json`, and
   `config/forest_plan_component_eval_coverage_v1.json` remain unchanged; South
-  Otter must stay out of those governed manifests until Milestone 2 proves
-  `v1-ea-eval`, forest-plan component eval/adjudication, and review
-  `phase-eval` pass
+  Otter still stays out of those governed manifests until Milestone 3 promotion
+  updates them.
 - next routing:
-  continue at South Otter Milestone 2 in
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`: create the tracked
-  `v1-ea-eval` and forest-plan component eval contracts only against the
-  narrowed replay package, resolve the `5` component reviewer-resolution items
-  without weakening thresholds, then run the applicability/compliance/eval
-  stack. Keep South Otter out of registry and coverage manifests until that
-  stack is green.
+  this historical section originally routed to Milestone 2; the current route
+  is now Milestone 3 registry and coverage promotion after the reviewer stack
+  went green.
 - verification:
   full Box inventory/download readback, narrowed `ea-review`, narrowed
   `forest-plan-resolve` readback, focused replay-context test, strict
