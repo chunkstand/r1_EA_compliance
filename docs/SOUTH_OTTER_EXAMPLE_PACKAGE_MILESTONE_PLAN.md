@@ -1,9 +1,11 @@
 # South Otter Example Package Milestone Plan
 
 Date: 2026-05-27
-Status: Active packet opened locally (`Milestone 0 routing and package-boundary
-selection opened; no registry promotion, coverage ratchet, queue reroute, or
-reviewer-ready claim has been made yet`)
+Status: Active packet (`Milestone 0 routing and package-boundary selection
+opened; Milestone 1 local package authority intake resolved locally; Milestone
+2 reviewer-stack replay is next and owns the current forest-plan component
+adjudication/eval blocker; no registry promotion, coverage ratchet, queue
+reroute, or reviewer-ready claim has been made yet`)
 Owner context: standalone follow-on from
 `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
@@ -34,7 +36,7 @@ This packet starts from the official project page:
 - decision signed date:
   `2023-06-28`
 
-Current opening truth:
+Current implementation truth:
 
 - South Otter is not present in the active workbook by `South Otter`,
   `projects/58396`, or `58396` search at packet opening.
@@ -49,8 +51,20 @@ Current opening truth:
   the project title.
 - The future tracked eval contract must also carry the forest identity:
   `config/v1_custer_gallatin_south_otter_real_ea_eval.json`.
-- No ignored `source_library/` South Otter package authority or review outputs
-  have been created in this opening slice.
+- Milestone 1 inventoried and downloaded the official Pinyon/Box root package
+  into ignored local evidence under
+  `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`.
+  The ignored inventory and import manifest record `58` folders, `639` files,
+  `2,926,223,134` bytes, and `0` download failures.
+- The full Pinyon/Box root is retained as package-authority evidence, but it is
+  too broad for replay because reference and implementation-review material
+  mentions other Custer Gallatin districts. The replay package path is therefore
+  narrowed to the official
+  `Final EA and Decision Notice Documents` folder.
+- The tracked replay context now lives at
+  `config/replay_contexts/region1-example-custer-gallatin-south-otter-58396.json`
+  and points to the current `source-set-f70ea11e04ae3d53` catalog gate plus the
+  narrowed final-EA/decision package path.
 
 ## Intent Lock
 
@@ -90,6 +104,23 @@ must not increase distinct-forest coverage metrics.
 - The official project page identifies South Otter as a completed Custer
   Gallatin Environmental Assessment with project documents available through
   Pinyon/Box folder `158227182465`.
+- South Otter package intake is now locally traceable: the full root inventory
+  and download manifest are ignored local evidence, while the replay path is the
+  official `Final EA and Decision Notice Documents` folder containing `24`
+  PDFs.
+- `ea-review` on the narrowed replay package passes with `24/24` extracted
+  files, `1,165` package chunks, `5/5` checklist findings, and
+  `reviewer_ready=true`.
+- `forest-plan-resolve` on the narrowed replay package resolves the Custer
+  Gallatin scope with `validation_passed=true`,
+  `scope_status="custer_gallatin"`, `geographic_area_count=1`,
+  `management_area_count=33`, `overlay_count=9`, and
+  `unresolved_mention_count=0`.
+- South Otter is still not reviewer-ready: the same `forest-plan-resolve` run
+  returns nonzero because downstream component evaluation has
+  `needs_reviewer_resolution_count=5`, `insufficient_evidence=8` applicable
+  standards, and no component adjudication eval yet. Milestone 2 owns that
+  reviewer-stack replay and adjudication work.
 
 ## Goal
 
@@ -329,6 +360,14 @@ Outcome label: `resolved` if the full official package authority is locally
 inventoried, downloaded, hash-recorded, and replay-context-ready; `reduced` if
 the slice stops on a named package-access blocker.
 
+Local result: `resolved`. The full official root is locally inventoried and
+downloaded with hashes; replay context is tracked against the narrowed official
+`Final EA and Decision Notice Documents` package path. The original root-package
+`forest-plan-resolve` attempt proved the root was too broad for automated
+replay (`scope_status="ambiguous"`), while the narrowed replay package resolves
+Custer Gallatin scope. Component-level reviewer resolution remains Milestone 2
+work and is not a registry-promotion signal.
+
 1. Inventory the official Pinyon/Box root folder and record the folder tree,
    file names, sizes, and hashes in ignored local evidence.
 2. Download the full official root package into the local intake path while
@@ -440,13 +479,13 @@ Milestone 1 package intake:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources ea-review \
-  --package-path source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396 \
+  --package-path "source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/Final EA and Decision Notice Documents" \
   --output-dir source_library \
   --review-id region1-example-custer-gallatin-south-otter-58396 \
   --source-set-id source-set-f70ea11e04ae3d53
 
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve \
-  --package-path source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396 \
+  --package-path "source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/Final EA and Decision Notice Documents" \
   --output-dir source_library \
   --review-id region1-example-custer-gallatin-south-otter-58396 \
   --forest-unit-id custer-gallatin-nf \
@@ -466,7 +505,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-context-build \
   --output-dir source_library \
   --review-id region1-example-custer-gallatin-south-otter-58396 \
   --source-set-id source-set-f70ea11e04ae3d53 \
-  --package-path source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396
+  --package-path "source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/Final EA and Decision Notice Documents"
 
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-retrieve \
   --output-dir source_library \
@@ -489,7 +528,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack \
   --source-set-id source-set-f70ea11e04ae3d53
 
 PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review \
-  --package-path source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396 \
+  --package-path "source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/Final EA and Decision Notice Documents" \
   --output-dir source_library \
   --review-id region1-example-custer-gallatin-south-otter-58396 \
   --source-set-id source-set-f70ea11e04ae3d53 \

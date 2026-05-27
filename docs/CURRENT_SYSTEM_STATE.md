@@ -15,7 +15,7 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## South Otter Example Package Packet Opened Locally
+## South Otter Example Package Milestone 1 Resolved Locally
 
 Latest implementation update on 2026-05-27 UTC:
 
@@ -24,9 +24,10 @@ Latest implementation update on 2026-05-27 UTC:
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - packet outcome:
-  `opened locally`; South Otter is now the active next forest-specific example
-  project, but it has not been promoted into the governed registry or coverage
-  manifests
+  `Milestone 1 resolved locally`; South Otter package authority is locally
+  inventoried, downloaded, hash-recorded, and replay-context-ready, but it has
+  not been promoted into the governed registry or coverage manifests and is not
+  reviewer-ready
 - selected package truth:
   the official project page is
   `https://www.fs.usda.gov/r01/custergallatin/projects/58396`, the linked
@@ -44,20 +45,54 @@ Latest implementation update on 2026-05-27 UTC:
 - workbook and queue truth:
   an active workbook search for `South Otter`, `projects/58396`, and `58396`
   found no matching row; no queue-ledger row was rerouted in this opening slice
+- package authority truth:
+  the full official Pinyon/Box root is present under ignored local evidence at
+  `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`.
+  `box_inventory.json` and `box_import_manifest.json` record `58` folders,
+  `639` files, `2,926,223,134` bytes, and `0` download failures
+- replay package truth:
+  the full Box root is retained as authority evidence, but it is too broad for
+  replay because references and implementation-review material mention other
+  Custer Gallatin districts. The tracked replay context now exists at
+  `config/replay_contexts/region1-example-custer-gallatin-south-otter-58396.json`
+  and uses
+  `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/Final EA and Decision Notice Documents`
+  as the package path on `source-set-f70ea11e04ae3d53`.
+- review gate truth:
+  `ea-review` on the narrowed replay package passes with `24/24` extracted
+  files, `1,165` chunks, `5/5` checklist findings, `0` package failures, and
+  `reviewer_ready=true`. A full-root `ea-review` also proved package cache
+  viability (`517` supported files, `29,459` chunks, `0` extraction failures),
+  but the root is not the replay package path.
+- forest-plan context truth:
+  full-root `forest-plan-resolve` reduced to an ambiguous scope because the
+  root package includes broad references and implementation-review files.
+  Narrowed-package `forest-plan-resolve` resolves the South Otter context with
+  `validation_passed=true`, `scope_status="custer_gallatin"`,
+  `geographic_area_count=1`, `management_area_count=33`, `overlay_count=9`,
+  `supporting_plan_evidence_count=5`, and `unresolved_mention_count=0`.
+  The command still exits nonzero because downstream component evaluation is
+  not reviewer-ready (`needs_reviewer_resolution_count=5`,
+  `insufficient_evidence=8`, and missing component adjudication eval).
 - registry and coverage truth:
   `config/forest_specific_example_package_registry_v1.json`,
   `config/v1_real_package_review_coverage_v1.json`, and
   `config/forest_plan_component_eval_coverage_v1.json` remain unchanged; South
-  Otter must stay out of those governed manifests until package intake, replay
-  context, `v1-ea-eval`, forest-plan component eval, and review `phase-eval`
-  pass
+  Otter must stay out of those governed manifests until Milestone 2 proves
+  `v1-ea-eval`, forest-plan component eval/adjudication, and review
+  `phase-eval` pass
 - next routing:
-  continue at South Otter Milestone 1 to inventory and download the official
-  package authority under
-  `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`; create
-  tracked replay/eval contracts only after that local package authority exists
+  continue at South Otter Milestone 2 in
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`: create the tracked
+  `v1-ea-eval` and forest-plan component eval contracts only against the
+  narrowed replay package, resolve the `5` component reviewer-resolution items
+  without weakening thresholds, then run the applicability/compliance/eval
+  stack. Keep South Otter out of registry and coverage manifests until that
+  stack is green.
 - verification:
-  strict milestone-plan lint for the new packet and `git diff --check`
+  full Box inventory/download readback, narrowed `ea-review`, narrowed
+  `forest-plan-resolve` readback, focused replay-context test, strict
+  milestone-plan lint, and `git diff --check`
 
 ## Lolo Tyler's Kitchen Example Package Milestone 3 Resolved Locally
 

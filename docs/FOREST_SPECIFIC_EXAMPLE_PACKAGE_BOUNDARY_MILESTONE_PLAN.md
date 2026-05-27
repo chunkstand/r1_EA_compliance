@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; the next standalone packet is now docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md; do not reopen Lolo unless a verified Lolo gate regresses`)
+Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package-intake Milestone 1 locally and routes next to Milestone 2 reviewer-stack replay; do not reopen Lolo unless a verified Lolo gate regresses`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -34,12 +34,14 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
 - The remaining `7` forests now route through
   `config/region1_forest_plan_profile_eval_coverage_v1.json` as
   `profile_eval_guidance_only` until a governed real package example exists.
-- The next standalone follow-on is now
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. South Otter is a
-  selected Custer Gallatin package boundary with frozen review ID
-  `region1-example-custer-gallatin-south-otter-58396`, but it is not yet a
-  governed registry example, real-package coverage slot, or reviewer-ready
-  claim.
+- The next standalone follow-on remains
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. South Otter has local
+  package authority and a tracked replay context for frozen review ID
+  `region1-example-custer-gallatin-south-otter-58396`, using the narrowed
+  official `Final EA and Decision Notice Documents` package path, but it is not
+  yet a governed registry example, real-package coverage slot, or
+  reviewer-ready claim. Milestone 2 owns the component adjudication and
+  reviewer-stack replay gates.
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.
