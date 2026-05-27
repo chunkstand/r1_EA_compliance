@@ -232,6 +232,8 @@ did not move tracked Lolo replay/eval config and did not edit ignored
 - outcome label:
   `resolved locally`; the current-workbook candidate source-record identity
   gate is green
+- local closeout commit:
+  `dd3c322` (`Resolve Lolo source-record identity gate`)
 - active packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - implementation truth:

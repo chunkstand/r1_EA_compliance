@@ -65,9 +65,10 @@ source-set compatible with the `5e65...` derived artifacts.
   - `R1PLAN-lolo-nf-02` is not in the compliance reconciliation registry but is
     separately reconciled by
     `config/r1_forest_plan_identity_reconciliation_v1.json` to `FPS-298`;
-  - five compliance-reconciled expected IDs currently map to multiple current
-    catalog records, so coverage evidence is not yet a replay-ready one-to-one
-    identity contract;
+  - five compliance-reconciled expected IDs mapped to multiple current catalog
+    records at this checkpoint. The child identity gate follow-on has since
+    resolved them through explicit `identity_source_record_id` selectors in
+    `dd3c322`, so coverage evidence and replay identity are now separated;
   - historical-to-current extraction-manifest hash matching is supporting
     evidence only, not an owner contract, because it includes unmatched
     historical rows and one-to-many fanout.
@@ -294,10 +295,12 @@ jq '{source_set_id,catalog_dir}' \
 
 Outcome label: reduced
 
-Closeout status: complete-after-commit. This milestone reduced by exact stop to
+Closeout status: reduced locally by exact stop to
 `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`;
 no tracked replay context, eval contract, or ignored generated review artifact
-was changed.
+was changed. The child identity gate follow-on is now complete in `dd3c322`
+(`Resolve Lolo source-record identity gate`), and this packet should resume only
+through that child packet's Milestone 2 replay-config route.
 
 Purpose: regenerate the Lolo review against the chosen current-workbook owner, or
 stop at the first artifact family that cannot be locally replayed without broad

@@ -52,6 +52,8 @@ Use this file as the short current route before opening the append-only docs.
 - Against the current `f70...` catalog, the Lolo gate now returns
   `passed=true`, with all `60` expected IDs covered and exactly resolved, no
   unmapped IDs, no absent mapped targets, and `ambiguous_mappings={}`.
+- Local closeout commit for the identity-gate slice:
+  `dd3c322` (`Resolve Lolo source-record identity gate`).
 - Next slice remains inside the source-record identity reconciliation packet at
   Milestone 2: update the tracked Lolo replay/eval config surfaces to consume
   the current-workbook identity owner, or stop at the exact replay/eval command

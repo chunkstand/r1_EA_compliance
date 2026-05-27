@@ -26,6 +26,8 @@ Latest implementation update on 2026-05-27 UTC:
   `source-record-identity-gate`, and the Lolo current-workbook candidate gate
   now passes after explicit governed identity selectors resolved the five
   multi-target mappings
+- local closeout commit:
+  `dd3c322` (`Resolve Lolo source-record identity gate`)
 - implementation truth:
   `src/usfs_r1_ea_sources/records.py` now owns the reusable source-record
   identity gate, with CLI exposure through `source-record-identity-gate`.

@@ -2,7 +2,8 @@
 
 Date: 2026-05-27
 
-Status: Resolved locally through Milestone 1. This plan was opened from
+Status: Resolved locally through Milestone 1 in `dd3c322`
+(`Resolve Lolo source-record identity gate`). This plan was opened from
 `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 Milestone 1 after the governed replay slice reached an exact local-replay stop. The tracked
 Lolo/Tyler's Kitchen replay and eval contract still points at historical source set
@@ -19,7 +20,7 @@ update or exact stop.
 
 Milestone 0 of the current-workbook source-set rebaseline proved that
 `source-set-f70ea11e04ae3d53` is not a drop-in replacement for historical source set
-`source-set-5e65d845ce77e1a0`. Milestone 1 then found the narrower blocker:
+`source-set-5e65d845ce77e1a0`. At packet opening, Milestone 1 then found the narrower blocker:
 
 - `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json` still binds the review to
   `source-set-5e65d845ce77e1a0`.
@@ -31,8 +32,10 @@ Milestone 0 of the current-workbook source-set rebaseline proved that
   source records present in the current-workbook candidate catalog, but the forest-plan ID
   `R1PLAN-lolo-nf-02` is reconciled separately by
   `config/r1_forest_plan_identity_reconciliation_v1.json` to `FPS-298`.
-- Five compliance-reconciled expected IDs currently map to multiple current catalog records; those
-  mappings are coverage evidence, not yet a replay-ready one-to-one identity contract.
+- Five compliance-reconciled expected IDs mapped to multiple current catalog records at packet
+  opening. Milestone 1 has since resolved those mappings through explicit
+  `identity_source_record_id` selectors; those broader coverage mappings remain coverage evidence,
+  while the selector is now the replay-ready one-to-one identity contract.
 - Hash matching is not sufficient as the owner contract: the historical extraction manifest has
   221 hash matches into the current-workbook extraction manifest, 129 unmatched historical rows, and
   match fanout that includes one-to-many cases.
@@ -85,7 +88,8 @@ review-specific special cases.
 ## Non-Goals
 
 - Do not admit or promote the current-workbook source set into the Lolo/Tyler's Kitchen replay lane
-  before the identity gate is green.
+  before Milestone 2 proves tracked replay/eval config and review artifacts can consume the green
+  identity owner.
 - Do not weaken v1 eval, phase-eval, applicability, compliance-review, forest-plan, or architecture
   thresholds to produce a passing result.
 - Do not edit ignored generated artifacts by hand.
@@ -138,7 +142,8 @@ Ignored `source_library/` artifacts remain local evidence unless repository poli
 
 ### Milestone 0 - Identity Coverage Inventory
 
-Status: Reduced locally. Complete-after-commit after this docs/evidence slice is committed.
+Status: Reduced locally as predecessor evidence; the follow-on Milestone 1 closeout is committed in
+`dd3c322`.
 
 Implementation:
 
@@ -164,11 +169,10 @@ Milestone 0 decision:
   `expected_lolo_source_record_count=60`, `direct_current_catalog_hits=8`,
   `compliance_reconciled_hits=51`, and `forest_plan_reconciled_hits=1`.
 - `missing_after_reconciliation=[]` and `mapped_targets_absent_from_current_catalog={}`.
-- The remaining identity gap is `ambiguous_mapping_count=5`, with ambiguous legacy IDs
+- At this checkpoint, the remaining identity gap was `ambiguous_mapping_count=5`, with ambiguous legacy IDs
   `R1EA-018`, `R1EA-028`, `R1EA-124`, `R1EA-137`, and `R1EA-150`.
-- This milestone does not make `f70...` replay-ready. It routes the next slice to Milestone 1 for
-  an explicit resolver/gate that can either reduce multi-target mappings to a governed identity
-  decision or fail closed with the exact ambiguity report.
+- This milestone did not make `f70...` replay-ready by itself. It routed the next slice to
+  Milestone 1 for an explicit resolver/gate; that follow-on is now closed in `dd3c322`.
 
 Verification:
 
@@ -239,13 +243,13 @@ print(
 PY
 ```
 
-Closeout state: `complete-after-commit` after docs and handoff identify Milestone 1 as the exact
-next owner and this slice is committed.
+Closeout state: reduced predecessor evidence; follow-on identity closeout is committed in
+`dd3c322`.
 
 ### Milestone 1 - Unified Source-Record Identity Contract
 
-Status: Resolved locally. Complete-after-commit after this implementation, test, docs, and handoff
-slice is committed.
+Status: Resolved locally and committed in `dd3c322`
+(`Resolve Lolo source-record identity gate`).
 
 Implementation:
 
@@ -272,8 +276,8 @@ Acceptance:
   `identity_resolved_source_record_count=60`, `unmapped_source_record_ids=[]`,
   `mapped_targets_absent_from_catalog={}`, and `ambiguous_mappings={}`.
 - Existing compliance and forest-plan reconciliation tests still pass, and no replay context, eval
-  contract, adjudication config, or ignored generated review artifact is changed while the gate is
-  red.
+  contract, adjudication config, or ignored generated review artifact was changed in this milestone
+  slice.
 
 Verification:
 
@@ -303,12 +307,13 @@ Milestone 1 decision:
 - Milestone 2 is unblocked but not started by this slice. Tracked replay context, eval contract,
   adjudication config, and ignored generated review artifacts still have not moved.
 
-Closeout state: `complete-after-commit` after this slice is committed.
+Closeout state: complete in local commit `dd3c322`
+(`Resolve Lolo source-record identity gate`).
 
 ### Milestone 2 - Governed Lolo Replay Config Update Or Exact Stop
 
-Status: Ready after the green source-record identity gate. This slice has not moved tracked
-replay/eval config yet.
+Status: Ready after the green source-record identity gate committed in `dd3c322`. This slice has
+not moved tracked replay/eval config yet.
 
 Implementation:
 
