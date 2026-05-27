@@ -361,7 +361,9 @@ Current local outcome:
 
 ### Milestone 3 - Registry Promotion, Threshold Ratchet, And Queue Reroute
 
-Outcome label: `ready after inherited phase-eval blocker cleared`
+Planned outcome label: `resolved`; status is ready to implement after the
+inherited phase-eval blocker cleared in `e28b373`
+(`Rebaseline Lolo replay on current source set`).
 
 1. Add a new required review slot to
    `config/v1_real_package_review_coverage_v1.json` for the Lolo review using

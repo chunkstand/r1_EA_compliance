@@ -42,7 +42,8 @@ history below.
   `config/forest_plan_component_eval_coverage_v1.json` is now aligned and
   passes, but the aggregate component-coverage command remains red on non-Lolo
   slots (`covered_review_count=2/4`, `stale_identity_count=1`,
-  `unresolved_review_count=2`). The next Lolo slice, if
+  `unresolved_review_count=2`). The implementation closeout landed in
+  `e28b373` (`Rebaseline Lolo replay on current source set`). The next Lolo slice, if
   continuing this lane, is
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 3 for
   registry promotion, aggregate threshold ratchet, and queue/coverage updates;

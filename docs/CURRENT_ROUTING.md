@@ -16,8 +16,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- Source-record identity reconciliation Milestones 2-3 are resolved locally and
-  ready to close in the current commit. The tracked Lolo replay context,
+- Source-record identity reconciliation Milestones 2-3 are resolved locally in
+  `e28b373` (`Rebaseline Lolo replay on current source set`). The tracked Lolo replay context,
   `v1-ea-eval` contract, applicability adjudication, forest-plan component eval
   contract, and forest-plan component adjudication now consume
   `source-set-f70ea11e04ae3d53` through

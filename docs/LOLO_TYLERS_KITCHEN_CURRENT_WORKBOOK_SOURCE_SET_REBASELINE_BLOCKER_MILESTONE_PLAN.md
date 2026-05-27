@@ -383,8 +383,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
 
 Outcome label: resolved
 
-Closeout status: complete after this verified slice is committed. The child
-source-record identity packet moved Lolo onto `source-set-f70ea11e04ae3d53` and
+Closeout status: complete in `e28b373`
+(`Rebaseline Lolo replay on current source set`). The child source-record
+identity packet moved Lolo onto `source-set-f70ea11e04ae3d53` and
 review `phase-eval` now passes `28/28`; `source_register_contract`,
 `retrieval`, `rule_claim_binding`, `downstream_direct_evaluation`, and
 `evaluation_coverage` are no longer red for this review on the current-workbook
@@ -421,8 +422,8 @@ jq '{review_id,source_set_id,passed,passed_phase_count,phase_count,failed_phase_
 
 Outcome label: resolved
 
-Closeout status: complete after this verified slice is committed. The next
-owner is the broader
+Closeout status: complete in `e28b373`
+(`Rebaseline Lolo replay on current source set`). The next owner is the broader
 `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 3
 registry promotion, threshold ratchet, and queue reroute. This current-workbook
 source-set packet is no longer active.

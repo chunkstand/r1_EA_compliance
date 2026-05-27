@@ -31,6 +31,8 @@ Latest implementation update on 2026-05-27 UTC:
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`,
   and the source-register/current-workbook/source-record/aligned-runtime
   blocker chain is no longer the active route
+- local closeout commit:
+  `e28b373` (`Rebaseline Lolo replay on current source set`)
 - implementation truth:
   `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`,
   `config/v1_lolo_tylers_kitchen_real_ea_eval.json`,

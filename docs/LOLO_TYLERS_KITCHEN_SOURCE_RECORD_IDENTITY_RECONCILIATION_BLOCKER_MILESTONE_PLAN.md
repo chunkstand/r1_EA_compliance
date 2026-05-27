@@ -2,8 +2,8 @@
 
 Date: 2026-05-27
 
-Status: Resolved locally through Milestones 2-3; complete after this verified
-slice is committed. This plan was opened from
+Status: Resolved locally through Milestones 2-3 in `e28b373`
+(`Rebaseline Lolo replay on current source set`). This plan was opened from
 `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 Milestone 1 after the governed replay slice reached an exact local-replay stop. The tracked
 Lolo/Tyler's Kitchen replay context, eval contract, applicability adjudication,
@@ -33,13 +33,16 @@ Milestone 0 of the current-workbook source-set rebaseline proved that
   `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json` still
   bound the review to `source-set-5e65d845ce77e1a0`; Milestone 2 has since
   moved it to `source-set-f70ea11e04ae3d53`.
-- The applicability CLI rejects a direct `--source-set-id source-set-f70ea11e04ae3d53` override
-  against that tracked replay context with `ReplayContextMismatchError`.
-- The Lolo v1 eval contract expects 60 source-record IDs. Only 8 of those IDs are present directly
-  in the current-workbook `source-set-f70ea11e04ae3d53` catalog surface.
-- `config/compliance_source_record_reconciliation_v1.json` maps 51 of the absent expected IDs to
-  source records present in the current-workbook candidate catalog, but the forest-plan ID
-  `R1PLAN-lolo-nf-02` is reconciled separately by
+- At that checkpoint, the applicability CLI rejected a direct
+  `--source-set-id source-set-f70ea11e04ae3d53` override against the tracked
+  replay context with `ReplayContextMismatchError`.
+- At that checkpoint, the Lolo v1 eval contract expected 60 source-record IDs.
+  Only 8 of those IDs were present directly in the current-workbook
+  `source-set-f70ea11e04ae3d53` catalog surface.
+- At that checkpoint, `config/compliance_source_record_reconciliation_v1.json`
+  mapped 51 of the absent expected IDs to source records present in the
+  current-workbook candidate catalog, while the forest-plan ID
+  `R1PLAN-lolo-nf-02` was reconciled separately by
   `config/r1_forest_plan_identity_reconciliation_v1.json` to `FPS-298`.
 - Five compliance-reconciled expected IDs mapped to multiple current catalog records at packet
   opening. Milestone 1 has since resolved those mappings through explicit
@@ -342,7 +345,8 @@ Closeout state: complete in local commit `dd3c322`
 
 ### Milestone 2 - Governed Lolo Replay Config Update Or Exact Stop
 
-Status: Resolved locally; complete after this verified slice is committed.
+Status: Resolved locally in `e28b373`
+(`Rebaseline Lolo replay on current source set`).
 
 Implementation:
 
@@ -388,11 +392,13 @@ Milestone 2 decision:
 - `v1-ea-eval` is `reviewer_ready`, and review `phase-eval` is green at
   `28/28` with no blockers.
 
-Closeout state: complete after this verified slice is committed.
+Closeout state: complete in local commit `e28b373`
+(`Rebaseline Lolo replay on current source set`).
 
 ### Milestone 3 - Parent Route Return
 
-Status: Resolved locally; complete after this verified slice is committed.
+Status: Resolved locally in `e28b373`
+(`Rebaseline Lolo replay on current source set`).
 
 Implementation:
 
@@ -424,8 +430,9 @@ python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milest
 git diff --check
 ```
 
-Closeout state: complete after the parent route and this blocker agree in the
-same verified commit.
+Closeout state: complete in local commit `e28b373`
+(`Rebaseline Lolo replay on current source set`) after the parent route and
+this blocker agreed.
 
 ## Required Documentation And Handoff Updates
 
