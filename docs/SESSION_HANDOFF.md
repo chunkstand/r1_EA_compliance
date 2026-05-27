@@ -19,8 +19,8 @@ history below.
   source-set contract blocker for the ECID historical lane
 - active packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
-- latest committed predecessor closeout:
-  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
+- latest committed active-packet closeout:
+  `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_REPLACEMENT_FEASIBILITY_BLOCKER_MILESTONE_PLAN.md`
 - older ECID predecessor blocker packet:
@@ -194,8 +194,8 @@ owner path and classifying the remaining red.
 - outcome label:
   `reduced locally`; live work now stays in the same packet and advances to
   Milestone 3 exact child-route or feasibility-stop closeout
-- latest committed predecessor closeout:
-  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
+- latest committed active-packet closeout:
+  `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
 - implementation truth:
   `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
   and `config/v1_lolo_tylers_kitchen_real_ea_eval.json` now both declare
@@ -241,7 +241,10 @@ owner path and classifying the remaining red.
   surfaces named in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 
-## Lolo Source-Set Contract Blocker Opened Locally
+## Historical Lolo Source-Set Contract Blocker Milestone 1 Checkpoint
+
+Historical checkpoint on 2026-05-26 before Milestone 2 closeout commit
+`e2b6941`:
 
 This implementation slice closes Milestone 1 in the active source-set
 contract blocker by classifying the bounded review-local owner path.

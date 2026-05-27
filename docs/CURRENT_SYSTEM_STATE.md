@@ -26,8 +26,8 @@ Latest implementation update on 2026-05-26:
   tracked review eval contract to the chosen `5e65...` owner path, and live
   work now moves to Milestone 3 exact child-route or feasibility-stop
   closeout inside the same packet
-- latest committed predecessor closeout:
-  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
+- latest committed active-packet closeout:
+  `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
 - implementation truth:
   `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`
   and `config/v1_lolo_tylers_kitchen_real_ea_eval.json` now both declare
@@ -77,7 +77,10 @@ Latest implementation update on 2026-05-26:
   surfaces named in
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 
-## Lolo Source-Set Contract Blocker Opened Locally
+## Historical Lolo Source-Set Contract Blocker Milestone 1 Checkpoint
+
+Historical checkpoint on 2026-05-26 before Milestone 2 closeout commit
+`e2b6941`:
 
 Latest implementation update on 2026-05-26:
 

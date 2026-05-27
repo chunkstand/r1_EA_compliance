@@ -27,8 +27,8 @@ Opening closeout commit:
 
 ## Latest Local Implementation
 
-- Latest committed predecessor closeout:
-  `20b51b6` (`Advance Lolo source-set blocker to Milestone 2`)
+- Latest committed local closeout:
+  `e2b6941` (`Reduce Lolo source-set blocker Milestone 2`)
 
 - Milestone 2 is now reduced locally. The tracked replay context and tracked
   `v1-ea-eval` contract now both bind

@@ -237,11 +237,13 @@ family.
   That narrower reroute closeout landed in `013b5d1`
   (`Open Lolo source-set contract blocker`), and the active child packet has
   since reduced both Milestone 1 and Milestone 2 locally: the tracked replay
-  context and tracked review eval contract now align to `5e65...`, fresh
-  `v1-ea-eval` is now `reviewer_ready`, and the remaining red is no longer a
-  generic tracked-contract split. It is now the exact residual runtime family
-  in fresh review `phase-eval`: retrieval and rule-claim direct-eval
-  staleness, shared `f70...` compliance direct-eval staleness, stale
+  context and tracked review eval contract now align to `5e65...`, and the
+  Milestone 2 closeout landed in `e2b6941`
+  (`Reduce Lolo source-set blocker Milestone 2`). Fresh `v1-ea-eval` is now
+  `reviewer_ready`, and the remaining red is no longer a generic
+  tracked-contract split. It is now the exact residual runtime family in
+  fresh review `phase-eval`: retrieval and rule-claim direct-eval staleness,
+  shared `f70...` compliance direct-eval staleness, stale
   `generated_rule_pack_validation.json`, stale source-register and
   authority-universe snapshots, and a still-failing
   `forest_plan_component_eval_results.json`. Do not

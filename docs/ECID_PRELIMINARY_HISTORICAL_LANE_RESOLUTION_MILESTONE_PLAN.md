@@ -64,8 +64,9 @@ Latest execution note on 2026-05-26:
   closeout landed in `013b5d1`
   (`Open Lolo source-set contract blocker`). The active child packet has since
   reduced Milestone 1, realigned the tracked replay context and review eval
-  contract to `5e65...`, and reduced Milestone 2 locally. The remaining live
-  work there is now Milestone 3 exact child-route closeout over the residual
+  contract to `5e65...`, and reduced Milestone 2 locally in `e2b6941`
+  (`Reduce Lolo source-set blocker Milestone 2`). The remaining live work
+  there is now Milestone 3 exact child-route closeout over the residual
   runtime families.
 
 This plan now remains as the blocked historical parent record for the
