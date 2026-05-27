@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 is now reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; the inherited Lolo review-scoped phase-eval blocker is now cleared, but registry promotion still requires a separate Milestone 3 threshold-ratchet slice`)
+Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; future work should open the next forest-specific example packet instead of reopening Lolo unless a verified Lolo gate regresses`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -20,16 +20,18 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   - South Plateau as the supplemental reviewer-ready expansion example for
     `custer-gallatin-nf`
   - West Reservoir as the governed `typed_blocked` example for `flathead-nf`
+  - Tyler's Kitchen as the primary reviewer-ready example for `lolo-nf`
 - The active Lolo follow-on has now rerouted `FOR-029` to
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, added the
   tracked replay context plus Lolo review/component eval contracts, and made
   the Lolo forest-plan component slot load-bearing in
   `config/forest_plan_component_eval_coverage_v1.json`. Its downstream
   currentness/source-record blocker chain has since replayed the review on
-  `source-set-f70ea11e04ae3d53` and made review `phase-eval` green; the Lolo
-  registry row remains `profile_eval_guidance_only` until the parent packet's
-  Milestone 3 registry and aggregate threshold ratchet is implemented.
-- The remaining `8` forests now route through
+  `source-set-f70ea11e04ae3d53` and made review `phase-eval` green. The
+  parent packet's Milestone 3 registry and aggregate threshold ratchet is now
+  implemented: `lolo-nf` routes as `real_package_examples_available`, and the
+  Lolo slot is load-bearing in real-package coverage.
+- The remaining `7` forests now route through
   `config/region1_forest_plan_profile_eval_coverage_v1.json` as
   `profile_eval_guidance_only` until a governed real package example exists.
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
@@ -40,8 +42,8 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   reusing the governed real-package coverage lane plus the forest-plan profile
   lane to prove explicit typed routing for every forest.
 - Under this boundary, `source-register-queue-audit` should now read
-  `resolution_status_counts={"blocked":10,"planned":33,"resolved":8}` with
-  `blocked_current_or_project_applicable_count=10` and
+  `resolution_status_counts={"blocked":9,"planned":33,"resolved":9}` with
+  `blocked_current_or_project_applicable_count=9` and
   `unresolved_current_or_project_applicable_count=31`.
 
 ## Goal
@@ -134,8 +136,10 @@ Risk: the registry starts behaving like a second master list.
 Prevention:
 
 - keep the explicit `queue_emits_load_rows=false` parallel-surface note;
-- keep queue-example rows blocked in the queue ledger instead of silently
-  resolved; and
+- keep queue-example rows out of master-promotion outcomes in the queue ledger,
+  either as unresolved named blockers while the example is unproven or as
+  resolved `forest_specific_example_package` rows after a governed packet
+  proves the example; and
 - fail the focused tests if example routing starts pointing at master-promotion
   outcomes without a separate governed packet.
 
@@ -194,7 +198,7 @@ Broaden governed examples:
   and
 - update the registry and focused tests in the same slice.
 
-Current active follow-on:
+Current Lolo follow-on:
 
 - `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is the first
   standalone Milestone 2 packet. It now owns the user-selected Lolo
@@ -202,19 +206,19 @@ Current active follow-on:
   the related `FOR-029` queue-boundary reroute out of master-promotion
   semantics, and the tracked Lolo forest-plan component slot. The inherited
   review-scoped `phase-eval` blocker is now cleared on
-  `source-set-f70ea11e04ae3d53`; the remaining work is that parent packet's
-  Milestone 3 registry promotion and aggregate threshold ratchet.
+  `source-set-f70ea11e04ae3d53`; the parent packet's Milestone 3 registry
+  promotion and aggregate threshold ratchet is now resolved locally.
 
 ## Current Evidence
 
 - The forest-specific registry remains the typed routing owner for every
   Region 1 forest.
-- Lolo still routes as `profile_eval_guidance_only` in
-  `config/forest_specific_example_package_registry_v1.json`; that row now names
-  Tyler's Kitchen as the first example boundary and records that the inherited
-  phase-eval blocker is cleared.
-- `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is the active
-  parent packet for the next Lolo registry promotion slice.
+- Lolo now routes as `real_package_examples_available` in
+  `config/forest_specific_example_package_registry_v1.json`; that row names
+  Tyler's Kitchen as the primary example and records `FOR-029` as the
+  forest-specific example boundary.
+- `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is the resolved
+  parent packet for the Lolo registry promotion slice.
 - The source-record/currentness blocker chain is historical for Lolo; the
   current review replay passes on `source-set-f70ea11e04ae3d53`.
 
@@ -224,8 +228,8 @@ Current active follow-on:
 | --- | --- | --- |
 | `0` | Registry and queue reroute | `resolved` |
 | `1` | Aggregate per-forest coverage eval | `resolved` |
-| `2` | Lolo example package follow-on | `reduced` |
-| `3` | Lolo registry promotion and threshold ratchet | `pending` |
+| `2` | Lolo example package follow-on | `resolved` |
+| `3` | Lolo registry promotion and threshold ratchet | `resolved` |
 
 ## Acceptance Criteria
 
@@ -233,8 +237,9 @@ Current active follow-on:
   `Document_Register_Master`.
 - Every forest row has one typed routing status and the required shared
   contract references.
-- Lolo remains `profile_eval_guidance_only` until the parent Lolo Milestone 3
-  slice updates registry, coverage, queue, and aggregate thresholds together.
+- Lolo remains `real_package_examples_available` only while the parent Lolo
+  registry, coverage, queue, and aggregate thresholds continue to pass
+  together.
 - Negative coverage remains explicit: missing or typed-blocked examples fail or
   route as guidance-only rather than silently becoming reviewer-ready.
 - No tests, eval thresholds, or queue gates are weakened to make a forest appear
@@ -257,7 +262,8 @@ Before changing registry status, read `docs/CURRENT_ROUTING.md`,
 `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`,
 `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, and
 `config/forest_specific_example_package_registry_v1.json`. Verify the current
-Lolo `v1-ea-eval` and review `phase-eval` artifacts before promoting any row.
+Lolo `v1-ea-eval`, review `phase-eval`, real-package coverage, and
+forest-specific example-package artifacts before changing any promoted row.
 
 ## Stop Conditions
 
@@ -273,10 +279,10 @@ Lolo `v1-ea-eval` and review `phase-eval` artifacts before promoting any row.
 
 | Weak point forecast | Owner surface | Prevention gate | Fail threshold | Controlled violation | Future-Codex misuse scenario |
 | --- | --- | --- | --- | --- | --- |
-| Registry behaves like a second master list | registry and source-register queue ledger | queue audit plus registry tests | project-specific example emits as shared master input | queue row stays blocked/named until a separate packet proves shared source value | a future session silently promotes example rows into the master workbook lane |
+| Registry behaves like a second master list | registry and source-register queue ledger | queue audit plus registry tests | project-specific example emits as shared master input | queue row stays blocked/named until proven, or resolved as `forest_specific_example_package` after a governed packet proves the parallel example | a future session silently promotes example rows into the master workbook lane |
 | Forest row points at the wrong example | registry example rows | forest-specific example eval | example forest IDs and registry applicability IDs disagree | typed-blocked/profile-only rows remain guidance-only | a future session reuses a Custer example as Lolo guidance without applicability proof |
 | Missing artifacts are hidden by generic wording | real-package coverage and profile-eval contracts | aggregate eval plus negative coverage cases | missing required review artifact is counted reviewer-ready | typed-blocked and profile-only states fail closed | a future session presents profile-only fixtures as a governed real package |
-| Lolo is promoted before threshold ratchet | Lolo parent packet and registry config | Milestone 3 aggregate gate bundle | `lolo-nf` status changes without coverage/queue threshold updates | keep Lolo `profile_eval_guidance_only` until all gates pass | a future session changes only the registry label after phase-eval turns green |
+| Lolo is promoted before threshold ratchet | Lolo parent packet and registry config | Milestone 3 aggregate gate bundle | `lolo-nf` status changes without coverage/queue threshold updates | keep Lolo promoted only while the ratcheted gates pass | a future session changes only the registry label after phase-eval turns green |
 
 ## Local Commit Closeout Policy
 

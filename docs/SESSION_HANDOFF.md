@@ -14,40 +14,41 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` if the
+  next session is continuing forest-specific example expansion work
+- latest resolved packet:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  if the next session is continuing Lolo example-package promotion work
-- active packet:
-  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- continuing lane owner:
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - just-resolved blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-- immediate predecessor active packet:
+- immediate predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - source-register predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  source-register currentness, current-workbook source-set rebaseline,
-  aligned-runtime rebaseline, and source-record identity reconciliation are now
-  historical for the tracked Lolo review. The tracked Lolo replay context,
-  `v1-ea-eval` contract, applicability adjudication, forest-plan component eval
-  contract, and component adjudication now consume
-  `source-set-f70ea11e04ae3d53` through
-  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`.
-  Final closeout readback is green: `source-record-identity-gate` passes
-  `59/59` expected IDs with no ambiguity, `v1-ea-eval` is
-  `contract_status="reviewer_ready"` with `broader_ea_passed=true` and
-  `forest_plan_passed=true`, and review `phase-eval` passes `28/28` with
-  `blockers=[]` and `identity_mismatch_phase_count=0`. The Lolo slot in
-  `config/forest_plan_component_eval_coverage_v1.json` is now aligned and
-  passes, but the aggregate component-coverage command remains red on non-Lolo
-  slots (`covered_review_count=2/4`, `stale_identity_count=1`,
-  `unresolved_review_count=2`). The implementation closeout landed in
-  `e28b373` (`Rebaseline Lolo replay on current source set`). The next Lolo slice, if
-  continuing this lane, is
-  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 3 for
-  registry promotion, aggregate threshold ratchet, and queue/coverage updates;
-  do not admit Lolo into the governed registry without those aggregate gates.
+  Lolo Tyler's Kitchen example-package Milestone 3 is now resolved locally.
+  `lolo-nf` routes as `real_package_examples_available` in
+  `config/forest_specific_example_package_registry_v1.json`, with
+  `primary_example_id="lolo-tylers-kitchen-forest-specific"` and
+  `queue_boundary_source_ids=["FOR-029"]`. `FOR-029` is resolved in
+  `config/source_register_queue_resolution_ledger_v1.json` as
+  `planned_disposition="forest_specific_example_package"` rather than a
+  master-promotion row. The real-package coverage manifest now requires four
+  slots and includes the Lolo `forest_specific_reviewer_ready` slot.
+  `real-package-review-coverage-eval`, `forest-specific-example-package-eval`,
+  Lolo `v1-ea-eval`, Lolo review `phase-eval`, the source-register queue
+  audit, and the non-strict promotion suite are green after the ratchet.
+  Source-register currentness, current-workbook source-set rebaseline,
+  aligned-runtime rebaseline, source-record identity reconciliation, and the
+  Lolo parent Milestone 3 promotion are historical for the tracked Lolo
+  review. The Lolo slot in
+  `config/forest_plan_component_eval_coverage_v1.json` is aligned and passes,
+  but the aggregate component-coverage command remains red on non-Lolo slots
+  (`covered_review_count=2/4`, `stale_identity_count=1`,
+  `unresolved_review_count=2`).
 - exact predecessor blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_SET_CONTRACT_BLOCKER_MILESTONE_PLAN.md`
 - older predecessor blocker packet:
@@ -168,9 +169,10 @@ history below.
   `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`
   now reports `contract_status="reviewer_ready"` with no blocker categories,
   review `phase-eval` passes `27/27` with
-  `review_direct_eval_status="direct_eval_present"`, and the governed
-  `real-package-review-coverage-eval` now reports
-  `reviewer_ready_slot_count=2`, `missing_required_slot_count=0`, and
+  `review_direct_eval_status="direct_eval_present"`. After the Lolo
+  example-package ratchet, the governed `real-package-review-coverage-eval`
+  now reports `covered_slot_count=4`, `reviewer_ready_slot_count=3`,
+  `typed_blocked_slot_count=1`, `missing_required_slot_count=0`, and
   `missing_coverage_class_ids=[]`; West Reservoir remains truthful
   `typed_blocked`. Strict-expansion promotion still fails closed, but it now
   does so truthfully through the rerouted historical ECID preliminary-EA slot:
@@ -209,16 +211,17 @@ history below.
   refreshed the governed local replay chain, and proved review `phase-eval`
   green at `28/28`
 - next truthful slice:
-  the Lolo source-record identity blocker has closed the runtime gap. Continue
-  in `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` only if the
-  next request asks to promote the Lolo example: implement Milestone 3 registry
-  promotion, threshold ratchet, and queue/coverage updates with the governed
-  aggregate gates. Do not reopen
+  Lolo example-package promotion is no longer the next slice. Continue in
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` for the
+  next governed forest-specific example expansion, or open a narrower packet
+  for the remaining non-Lolo component-coverage red if the request targets that
+  aggregate. Do not reopen
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md` as a new runtime
-  packet, and do not treat the older blocker chain as the live owner unless a
-  future verification command regresses the green `f70...` Lolo readback
+  packet, and do not treat the older Lolo blocker chain as the live owner
+  unless a future verification command regresses the green `f70...` Lolo
+  readback or the promoted registry/coverage gates.
 - session reminder:
-  the Lolo `f70...` replay closeout section at the top is the current
+  the Lolo example-package Milestone 3 closeout at the top is the current
   checkpoint; the following source-record
   identity packet-opening, current-workbook source-set rebaseline Milestone 0,
   packet-opening,
@@ -238,7 +241,7 @@ did not move tracked Lolo replay/eval config and did not edit ignored
   gate is green
 - local closeout commit:
   `dd3c322` (`Resolve Lolo source-record identity gate`)
-- active packet:
+- historical packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - implementation truth:
   `src/usfs_r1_ea_sources/records.py` now treats
@@ -280,7 +283,7 @@ edit tracked runtime config or ignored `source_library/` artifacts.
   coverage existed for the Lolo v1 eval expected source-record IDs, but
   replay-ready identity was still blocked by five ambiguous multi-target
   mappings. The newer Milestone 1 section above resolves that ambiguity.
-- active packet:
+- historical packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - inventory proof:
   the current-workbook candidate manifest remains
@@ -321,7 +324,7 @@ or ignored `source_library/` artifacts.
   `reduced locally`; current-workbook source-set rebaseline Milestone 1 stopped
   at the source-record identity owner before any tracked Lolo replay context,
   eval contract, adjudication, or generated review artifact moved to `f70...`
-- active packet:
+- historical packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor:
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
@@ -363,7 +366,7 @@ source-set rebaseline packet. It did not edit tracked runtime config or ignored
   current-workbook archived catalog gate found locally, but it is not a valid
   drop-in owner for the historical `source-set-5e65d845ce77e1a0` Lolo review
   artifacts
-- active packet:
+- historical packet:
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - owner-choice proof:
   the `5e65...` extraction manifest selected source-record set has `350` IDs,
@@ -400,7 +403,7 @@ packet.
   `resolved locally`; no exact current `source-set-5e65d845ce77e1a0`
   manifest/currentness owner exists locally, so the next owner is current
   workbook source-set rebaseline rather than a manifest swap
-- active packet:
+- historical packet:
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - implementation truth:
   tracked replay context still declares `source_set_id="source-set-5e65d845ce77e1a0"`
@@ -445,7 +448,7 @@ child packet.
   `reduced locally`; review-local applicability companion artifacts and
   forest-plan component eval are now green, while `source_register_contract`
   exits to a narrower currentness owner
-- active packet:
+- historical packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_REGISTER_CURRENTNESS_BLOCKER_MILESTONE_PLAN.md`
 - implementation truth:
   `applicability-authority-universe` now passes on

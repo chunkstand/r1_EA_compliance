@@ -61,6 +61,10 @@ They are intentionally not duplicated here.
 - `config/downloader.toml`
 - `config/url_overrides.toml`
 - `config/promotion_suite_v1.json`
+- `config/gold_coverage_v1.json`
+- `config/v1_real_package_review_coverage_v1.json`
+- `config/forest_specific_example_package_registry_v1.json`
+- `config/source_register_queue_resolution_ledger_v1.json`
 - `config/forest_plan_profiles.json`
 - `config/forest_plan_component_inventory_seed.json`
 - `config/forest_plan_component_eval_coverage_v1.json`

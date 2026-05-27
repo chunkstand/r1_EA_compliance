@@ -167,16 +167,25 @@ if any JSON `expected_gate_artifact` proves a different `source_set_id` than the
 
 ## Current Local Result
 
-The current routed truth on 2026-05-26 is green for current promotion, green
-for the governed South Plateau reviewer-ready expansion slot, and red only for
-the remaining ECID preliminary-EA historical expansion review-case artifact
+The current routed truth on 2026-05-27 is green for current promotion, green
+for the governed South Plateau reviewer-ready expansion slot, green for the
+Lolo Tyler's Kitchen forest-specific reviewer-ready example slot, and red only
+for the remaining ECID preliminary-EA historical expansion review-case artifact
 family.
 
 - `source_library/reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json`
-  now reports `passed=true`, `reviewer_ready_slot_count=2`,
+  now reports `passed=true`, `covered_slot_count=4`,
+  `reviewer_ready_slot_count=3`, `typed_blocked_slot_count=1`,
+  `distinct_forest_count=3`, `distinct_package_style_count=4`,
   `missing_required_slot_count=0`, and `missing_coverage_class_ids=[]`.
-  ECID current promotion and South Plateau now both pass as
+  ECID current promotion, South Plateau, and Lolo Tyler's Kitchen now pass as
   `reviewer_ready`; West Reservoir remains truthful `typed_blocked`.
+- `source_library/reviews/forest_specific_example_package_eval/forest_specific_example_package_eval_results.json`
+  now reports `passed=true`, `review_example_count=4`,
+  `reviewer_ready_example_count=3`, `typed_blocked_example_count=1`,
+  `distinct_governed_example_forest_count=3`, and
+  `profile_guidance_only_count=7` after `lolo-nf` moved to
+  `real_package_examples_available`.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
   now reports `full_canonical_corpus_ready=true`,
   `current_promotion_ready=true`, `promotion_ready=true`,
@@ -249,10 +258,10 @@ family.
   moving tracked Lolo replay/eval config to `source-set-f70ea11e04ae3d53`,
   refreshing the governed local replay chain, and proving `v1-ea-eval`
   reviewer-ready plus review `phase-eval` green at `28/28` with no blockers.
-  The next Lolo owner is the broader example-package parent Milestone 3 for
-  registry promotion and aggregate threshold ratchet; the promotion suite
-  should not treat Lolo as admitted before that separate registry/coverage
-  update and aggregate gate run.
+  The broader example-package parent Milestone 3 has now resolved locally:
+  Lolo is admitted as the governed forest-specific example only after the
+  registry, queue, real-package coverage, gold coverage, and promotion-suite
+  threshold ratchets passed together.
   Blocker Milestones 1-2 have now ruled out
   a bounded historical-source-set rebuild path under current artifacts:
   `4fb...` still fails across upstream/downstream `phase-eval` families, and

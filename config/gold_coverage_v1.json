@@ -8,14 +8,14 @@
   "coverage_thresholds": {
     "applicability_gold_case_count_min": 12,
     "compliance_gold_case_count_min": 14,
-    "distinct_forest_count_min": 2,
-    "distinct_package_style_count_min": 3,
+    "distinct_forest_count_min": 3,
+    "distinct_package_style_count_min": 4,
     "missing_package_authority_count_max": 0,
     "missing_required_review_contract_count_max": 0,
     "required_high_priority_family_id_count": 19,
-    "required_review_contract_count": 3,
+    "required_review_contract_count": 4,
     "required_theme_count": 7,
-    "reviewer_ready_review_count_min": 2,
+    "reviewer_ready_review_count_min": 3,
     "typed_blocked_review_count_min": 1,
     "unmapped_high_priority_family_count_max": 0
   },
@@ -33,5 +33,5 @@
     "manifest_path": "v1_real_package_review_coverage_v1.json"
   },
   "schema_version": "gold-coverage-eval-v1",
-  "version": "1.0.0"
+  "version": "1.1.0"
 }

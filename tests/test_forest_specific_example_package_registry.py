@@ -22,9 +22,9 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
     assert len(set(forest_ids)) == 10
     assert registry["summary"] == {
         "forest_unit_count": 10,
-        "profile_guidance_only_count": 8,
-        "review_example_count": 3,
-        "reviewer_ready_example_count": 2,
+        "profile_guidance_only_count": 7,
+        "review_example_count": 4,
+        "reviewer_ready_example_count": 3,
         "typed_blocked_example_count": 1,
     }
 
@@ -96,7 +96,7 @@ def test_registry_queue_boundary_reroutes_east_crazy_out_of_master_promotion() -
         )
 
 
-def test_registry_keeps_lolo_profile_only_while_for_029_routes_to_active_packet() -> None:
+def test_registry_promotes_lolo_example_after_for_029_resolves_to_example_lane() -> None:
     registry = _load_json(REGISTRY_PATH)
     queue_ledger = _load_json(QUEUE_LEDGER_PATH)
 
@@ -106,13 +106,20 @@ def test_registry_keeps_lolo_profile_only_while_for_029_routes_to_active_packet(
     ledger_entries = {entry["source_id"]: entry for entry in queue_ledger["entries"]}
     for_029 = ledger_entries["FOR-029"]
 
-    assert forest_row["routing_status"] == "profile_eval_guidance_only"
-    assert forest_row["primary_example_id"] is None
+    example_row = next(
+        row
+        for row in registry["review_examples"]
+        if row["example_id"] == "lolo-tylers-kitchen-forest-specific"
+    )
+
+    assert forest_row["routing_status"] == "real_package_examples_available"
+    assert forest_row["primary_example_id"] == "lolo-tylers-kitchen-forest-specific"
     assert forest_row["queue_boundary_source_ids"] == ["FOR-029"]
     assert "inspect the Tyler's Kitchen root package first" in forest_row["guidance_note"]
-    assert "inherited phase-eval blocker" in forest_row["guidance_note"]
-    assert for_029["planned_disposition"] == "named_blocker"
-    assert for_029["resolution_status"] == "blocked"
+    assert example_row["queue_lineage_source_ids"] == ["FOR-029"]
+    assert example_row["coverage_slot_id"] == "lolo-tylers-kitchen-forest-specific"
+    assert for_029["planned_disposition"] == "forest_specific_example_package"
+    assert for_029["resolution_status"] == "resolved"
     assert for_029["blocker_packet_reference"] == (
         "docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
     )

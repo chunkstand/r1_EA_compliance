@@ -1,7 +1,7 @@
 # Full Canonical Direct-File Capture Queue Resolution Milestone Plan
 
 Date: 2026-05-23
-Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; SCC structured-export Milestone 3 slice resolved locally through e78f491 and docs-aligned through 82e2195; Flathead reading-room blocker slice reduced locally through eb09556; WILD-ESA NCDE amendment blocker slice reduced locally through 3a8dd2d; Lolo Pinyon blocker slice reduced locally through 2d7d7c2; NPC planning-record blocker slice reduced locally through 2625aa2; East Crazy example-package reroute opened locally; remaining planned roster next`)
+Status: Active packet (`Milestones 0-2 resolved locally through 85f087b; Milestone 3 blocker-family reduction resolved locally through 8b889a9; SCC structured-export Milestone 3 slice resolved locally through e78f491 and docs-aligned through 82e2195; Flathead reading-room blocker slice reduced locally through eb09556; WILD-ESA NCDE amendment blocker slice reduced locally through 3a8dd2d; Lolo Pinyon blocker slice reduced locally through 2d7d7c2; NPC planning-record blocker slice reduced locally through 2625aa2; East Crazy example-package reroute opened locally; Lolo Tyler's Kitchen `FOR-029` resolved as a forest-specific example package; remaining planned roster next`)
 Owner context: follow-on from the resolved full-canonical source-truth and compliance-gold
 rebaseline packets
 
@@ -28,15 +28,18 @@ reduced locally as an explicit blocker packet through commit `2625aa2`
 (`Open NPC planning-record blocker packet`). The East Crazy example rows
 `FOR-012` and `LEX-Q-001` are now rerouted into the parallel
 forest-specific example-package lane so they no longer present as shared
-full-canonical promotion work.
+full-canonical promotion work. `FOR-029` now resolves through the same
+parallel lane as the governed Lolo Tyler's Kitchen forest-specific example
+package rather than remaining a master-promotion candidate.
 
 - `config/source_register_queue_resolution_ledger_v1.json` now enumerates all
   `51` queue rows exactly once with `49` current/project-applicable rows, `2`
   historical/noncurrent rows (`FPS-380`, `SUP-007`), planned disposition
-  counts of `36` `promote_direct_file`, `4`
-  `promote_structured_export`, `9` `named_blocker`, and `2`
-  `historical_scope_only`, plus resolution status counts of `34` `planned`,
-  `9` `blocked`, and `8` `resolved`.
+  counts of `35` `promote_direct_file`, `4`
+  `promote_structured_export`, `9` `named_blocker`, `1`
+  `forest_specific_example_package`, and `2` `historical_scope_only`, plus
+  resolution status counts of `33` `planned`, `9` `blocked`, and `9`
+  `resolved`.
 - The low-complexity direct-file family now promotes
   `FINAL-Q-HLC-001`, `FINAL-Q-HLC-002`, `FINAL-Q-HLC-003`, and `PROG-010`
   into `Document_Register_Master`.
@@ -85,10 +88,14 @@ full-canonical promotion work.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` because
   the East Crazy project library is forest-specific review guidance, not
   shared canonical source-set input for `Document_Register_Master`.
+- The Lolo Tyler's Kitchen project example row `FOR-029` now resolves as
+  `planned_disposition="forest_specific_example_package"` through
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; it is not a
+  direct-file master-promotion row.
 - `source-register-queue-audit` now provides the machine-checked gate for the
   queue packet and passes with zero missing, unexpected, duplicated, or
   drifted rows, `blocked_current_or_project_applicable_count=9`,
-  `unresolved_current_or_project_applicable_count=32`, and the same governed
+  `unresolved_current_or_project_applicable_count=31`, and the same governed
   historical roster.
 - The strengthened extraction/runtime gate now supports governed `.xlsx`
   direct files and distinguishes verified payload-cache reuse from opaque
@@ -367,7 +374,8 @@ Implementation tasks:
   - queue reason;
   - required resolution pattern;
   - planned disposition (`promote_direct_file`, `promote_structured_export`,
-    `historical_scope_only`, `explicit_exclusion`, or `named_blocker`);
+    `historical_scope_only`, `explicit_exclusion`,
+    `forest_specific_example_package`, or `named_blocker`);
   - any target successor row or blocker packet reference.
 - Record the live `49` current/project-applicable plus `2` historical split in the ledger and
   matching docs.

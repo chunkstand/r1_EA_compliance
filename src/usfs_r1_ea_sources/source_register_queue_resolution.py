@@ -28,6 +28,7 @@ VALID_PLANNED_DISPOSITIONS = {
     "historical_scope_only",
     "explicit_exclusion",
     "named_blocker",
+    "forest_specific_example_package",
 }
 VALID_RESOLUTION_STATUSES = {"planned", "resolved", "blocked"}
 EXPECTED_HISTORICAL_SOURCE_IDS = {"FPS-380", "SUP-007"}

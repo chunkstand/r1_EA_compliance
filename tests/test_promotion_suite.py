@@ -109,11 +109,11 @@ def test_committed_promotion_suite_requires_milestone_4_applicability_gates() ->
     assert aggregate_gold_checks["gold_coverage_eval_compliance_case_count"]["min"] == 14
     assert (
         aggregate_gold_checks["gold_coverage_eval_required_review_contract_count"]["equals"]
-        == 3
+        == 4
     )
-    assert aggregate_gold_checks["gold_coverage_eval_distinct_forest_count"]["min"] == 2
-    assert aggregate_gold_checks["gold_coverage_eval_distinct_package_style_count"]["min"] == 3
-    assert aggregate_gold_checks["gold_coverage_eval_reviewer_ready_review_count"]["min"] == 2
+    assert aggregate_gold_checks["gold_coverage_eval_distinct_forest_count"]["min"] == 3
+    assert aggregate_gold_checks["gold_coverage_eval_distinct_package_style_count"]["min"] == 4
+    assert aggregate_gold_checks["gold_coverage_eval_reviewer_ready_review_count"]["min"] == 3
     assert aggregate_gold_checks["gold_coverage_eval_typed_blocked_review_count"]["min"] == 1
     assert (
         aggregate_gold_checks["gold_coverage_eval_missing_review_contract_count"]["equals"]

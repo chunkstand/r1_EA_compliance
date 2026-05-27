@@ -1,10 +1,10 @@
 {
   "schema_version": "source-register-queue-resolution-ledger-v1",
   "contract_id": "source-register-queue-resolution-ledger-v1",
-  "as_of_date": "2026-05-23",
-  "status": "forest_specific_example_package_boundary_opened",
+  "as_of_date": "2026-05-27",
+  "status": "lolo_forest_specific_example_package_promoted",
   "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
-  "workbook_sha256": "2c5117842370d31715af011d98b0d9a0a32141662821cfc1aeb9b17ad39fcf49",
+  "workbook_sha256": "1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97",
   "sheet_name": "Direct_File_Capture_Queue",
   "summary": {
     "blocked_current_or_project_applicable_count": 9,
@@ -15,9 +15,10 @@
       "SUP-007"
     ],
     "planned_disposition_counts": {
+      "forest_specific_example_package": 1,
       "historical_scope_only": 2,
       "named_blocker": 9,
-      "promote_direct_file": 36,
+      "promote_direct_file": 35,
       "promote_structured_export": 4
     },
     "queue_reason_counts": {
@@ -38,11 +39,11 @@
     "queue_row_count": 51,
     "resolution_status_counts": {
       "blocked": 9,
-      "planned": 34,
-      "resolved": 8
+      "planned": 33,
+      "resolved": 9
     },
-    "resolved_current_or_project_applicable_count": 8,
-    "unresolved_current_or_project_applicable_count": 32
+    "resolved_current_or_project_applicable_count": 9,
+    "unresolved_current_or_project_applicable_count": 31
   },
   "entries": [
     {
@@ -509,10 +510,10 @@
       "currentness_class": "current_or_project_applicable",
       "document_title": "Tyler's Kitchen Fuels Reduction and Forest Health Project",
       "excel_row": 39,
-      "planned_disposition": "named_blocker",
+      "planned_disposition": "forest_specific_example_package",
       "queue_reason": "Folder/listing/manual-export placeholder",
       "resolution_required": "Replace source page/folder/manual placeholder with direct document/file URL; then promote to Document_Register_Master if necessary.",
-      "resolution_status": "blocked",
+      "resolution_status": "resolved",
       "source_id": "FOR-029",
       "source_url": "https://www.fs.usda.gov/r01/lolo/projects/66344",
       "target_successor_source_id": null

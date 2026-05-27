@@ -3700,6 +3700,13 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
   and package-authority validation, ready-versus-blocked lane summary, package-style tags, blocker
   categories, and the underlying V1 eval summary path
 
+The current Lolo-inclusive manifest has four required slots: East Crazies
+current promotion, West Reservoir typed-blocked replay quarantine, South
+Plateau reviewer-ready expansion, and Lolo Tyler's Kitchen forest-specific
+reviewer-ready coverage. The current aggregate threshold floor is four slots,
+four coverage classes, three distinct forests, four package styles, three
+reviewer-ready slots, one typed-blocked slot, and zero package-authority gaps.
+
 ## Gold Coverage Eval Outputs
 
 Default manifest: `config/gold_coverage_v1.json`
@@ -3739,6 +3746,11 @@ The aggregate manifest has schema version `gold-coverage-eval-v1` and records:
 - nested `real_package_review_coverage` summary for the manifest-owned slot aggregate
 - `review_contracts`, each carrying `contract_status`, forest identity, package-style tags,
   package-authority validation, missing-contract detection, and the underlying V1 eval summary bits
+
+The current manifest reuses the Lolo-inclusive real-package coverage floor and
+therefore requires four tracked review contracts, at least three distinct
+forests, at least four package styles, at least three reviewer-ready tracked
+reviews, and at least one typed-blocked tracked review.
 
 ## Promotion Suite Outputs
 
@@ -4434,6 +4446,13 @@ records:
 - `forests`, each carrying the declared versus actual routing status, profile-eval presence and
   pass state, fixture-family alignment, referenced example review results, and explicit failure
   reasons
+
+The current registry routes `lolo-nf` to the Tyler's Kitchen primary example
+with `routing_status="real_package_examples_available"` and keeps `FOR-029`
+as the forest-specific example boundary. The aggregate floor is now four
+governed examples, three reviewer-ready examples, three governed example
+forests, one typed-blocked example, seven maximum profile-guidance-only
+forests, and zero failed forests.
 
 ## Evidence Retrieval Outputs
 

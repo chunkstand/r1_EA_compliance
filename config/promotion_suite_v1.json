@@ -2446,22 +2446,22 @@
         {
           "name": "gold_coverage_eval_required_review_contract_count",
           "json_path": "required_review_contract_count",
-          "equals": 3
+          "equals": 4
         },
         {
           "name": "gold_coverage_eval_distinct_forest_count",
           "json_path": "distinct_forest_count",
-          "min": 2
+          "min": 3
         },
         {
           "name": "gold_coverage_eval_distinct_package_style_count",
           "json_path": "distinct_package_style_count",
-          "min": 3
+          "min": 4
         },
         {
           "name": "gold_coverage_eval_reviewer_ready_review_count",
           "json_path": "reviewer_ready_review_count",
-          "min": 2
+          "min": 3
         },
         {
           "name": "gold_coverage_eval_typed_blocked_review_count",

@@ -15,11 +15,84 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Lolo Tyler's Kitchen Example Package Milestone 3 Resolved Locally
+
+Latest implementation update on 2026-05-27 UTC:
+
+- resolved packet:
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- continuing lane owner:
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- packet outcome:
+  `resolved locally`; Lolo National Forest now has a governed
+  forest-specific example package through
+  `region1-example-lolo-tylers-kitchen-66344`, and that package remains
+  parallel to `Document_Register_Master`
+- registry truth:
+  `config/forest_specific_example_package_registry_v1.json` now routes
+  `lolo-nf` as `real_package_examples_available`, sets
+  `primary_example_id="lolo-tylers-kitchen-forest-specific"`, and records
+  `queue_boundary_source_ids=["FOR-029"]`. The registry summary is now
+  `review_example_count=4`, `reviewer_ready_example_count=3`,
+  `typed_blocked_example_count=1`, and
+  `profile_guidance_only_count=7`.
+- real-package coverage truth:
+  `config/v1_real_package_review_coverage_v1.json` now includes the required
+  Lolo slot `lolo-tylers-kitchen-forest-specific` with coverage class
+  `forest_specific_reviewer_ready`. The coverage thresholds now require
+  `required_slot_count=4`, `required_coverage_class_count=4`,
+  `distinct_forest_count_min=3`, `distinct_package_style_count_min=4`, and
+  `reviewer_ready_slot_count_min=3`.
+- queue truth:
+  `config/source_register_queue_resolution_ledger_v1.json` now resolves
+  `FOR-029` as
+  `planned_disposition="forest_specific_example_package"` with
+  `resolution_status="resolved"` while preserving the workbook queue identity
+  text. The queue audit now reports
+  `resolution_status_counts={"blocked":9,"planned":33,"resolved":9}`,
+  `planned_disposition_counts={"forest_specific_example_package":1,"historical_scope_only":2,"named_blocker":9,"promote_direct_file":35,"promote_structured_export":4}`,
+  `blocked_current_or_project_applicable_count=9`, and
+  `resolved_current_or_project_applicable_count=9`.
+- replay truth:
+  Lolo `v1-ea-eval` remains `contract_status="reviewer_ready"` with
+  `broader_ea_passed=true` and `forest_plan_passed=true`; Lolo review
+  `phase-eval` now passes `28/28` with `blockers=[]` and
+  `review_direct_eval_status="direct_eval_present"`.
+- aggregate truth:
+  `real-package-review-coverage-eval` passes with `covered_slot_count=4`,
+  `reviewer_ready_slot_count=3`, `typed_blocked_slot_count=1`,
+  `distinct_forest_count=3`, `distinct_package_style_count=4`, no missing
+  required slots, and no missing coverage classes.
+  `forest-specific-example-package-eval` passes with
+  `review_example_count=4`, `reviewer_ready_example_count=3`,
+  `distinct_governed_example_forest_count=3`,
+  `profile_guidance_only_count=7`, and no threshold failures.
+- gold and promotion truth:
+  the gold coverage thresholds now require four tracked review contracts,
+  three distinct forests, four package styles, and three reviewer-ready
+  reviews. The quick existing-results gold coverage parity run passes those
+  ratchets, and the non-strict promotion suite remains green for current
+  promotion while strict expansion still truthfully fails only on
+  `historical_source_set_split`.
+- component-coverage boundary:
+  the Lolo slot in `config/forest_plan_component_eval_coverage_v1.json` passes
+  on `source-set-f70ea11e04ae3d53`, but the aggregate
+  `forest-plan-component-eval-coverage` command remains red for non-Lolo
+  source-delta and West Reservoir slots with `covered_review_count=2/4`,
+  `stale_identity_count=1`, and `unresolved_review_count=2`.
+- verification:
+  focused coverage, registry, queue, CLI, gold, promotion, and architecture
+  tests; Lolo `v1-ea-eval`; real-package coverage eval; forest-specific
+  example-package eval; Lolo review `phase-eval`; source-register queue audit;
+  quick existing-results gold coverage parity; non-strict promotion suite;
+  expected-red component-coverage aggregate readback; ruff; strict plan lint;
+  closeout doc parity; and `git diff --check`
+
 ## Lolo Current-Workbook Replay Rebaseline Resolved Locally
 
 Latest implementation update on 2026-05-27 UTC:
 
-- active packet:
+- parent packet:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - resolved packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`

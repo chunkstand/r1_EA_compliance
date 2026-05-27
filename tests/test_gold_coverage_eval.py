@@ -70,7 +70,7 @@ def test_gold_coverage_eval_fails_missing_theme_and_package_diversity() -> None:
         )
 
 
-def test_committed_gold_coverage_manifest_tracks_three_review_contracts() -> None:
+def test_committed_gold_coverage_manifest_tracks_four_review_contracts() -> None:
     manifest = json.loads(COMMITTED_MANIFEST.read_text(encoding="utf-8"))
 
     assert manifest["schema_version"] == GOLD_COVERAGE_EVAL_SCHEMA_VERSION
@@ -83,10 +83,10 @@ def test_committed_gold_coverage_manifest_tracks_three_review_contracts() -> Non
     assert thresholds["required_high_priority_family_id_count"] == 19
     assert thresholds["applicability_gold_case_count_min"] == 12
     assert thresholds["compliance_gold_case_count_min"] == 14
-    assert thresholds["required_review_contract_count"] == 3
-    assert thresholds["distinct_forest_count_min"] == 2
-    assert thresholds["distinct_package_style_count_min"] == 3
-    assert thresholds["reviewer_ready_review_count_min"] == 2
+    assert thresholds["required_review_contract_count"] == 4
+    assert thresholds["distinct_forest_count_min"] == 3
+    assert thresholds["distinct_package_style_count_min"] == 4
+    assert thresholds["reviewer_ready_review_count_min"] == 3
     assert thresholds["typed_blocked_review_count_min"] == 1
 
 

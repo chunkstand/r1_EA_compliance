@@ -1,16 +1,16 @@
 {
   "schema_version": "forest-specific-example-package-registry-v1",
   "contract_id": "region1-forest-specific-example-packages",
-  "version": "1.1.0",
-  "as_of_date": "2026-05-24",
-  "status": "parallel-forest-example-lane-opened",
+  "version": "1.2.0",
+  "as_of_date": "2026-05-27",
+  "status": "lolo-forest-specific-example-promoted",
   "coverage_thresholds": {
     "required_forest_unit_count": 10,
-    "review_example_count_min": 3,
-    "reviewer_ready_example_count_min": 2,
+    "review_example_count_min": 4,
+    "reviewer_ready_example_count_min": 3,
     "typed_blocked_example_count_min": 1,
-    "distinct_governed_example_forest_count_min": 2,
-    "profile_guidance_only_count_max": 8,
+    "distinct_governed_example_forest_count_min": 3,
+    "profile_guidance_only_count_max": 7,
     "failed_forest_count_max": 0
   },
   "output_schema": {
@@ -46,9 +46,9 @@
   },
   "summary": {
     "forest_unit_count": 10,
-    "profile_guidance_only_count": 8,
-    "review_example_count": 3,
-    "reviewer_ready_example_count": 2,
+    "profile_guidance_only_count": 7,
+    "review_example_count": 4,
+    "reviewer_ready_example_count": 3,
     "typed_blocked_example_count": 1
   },
   "parallel_surface": {
@@ -255,6 +255,36 @@
         "forest_plan_component_eval"
       ],
       "notes": "Typed-blocked Flathead example package. Read it as a governed blocked example, not as a reviewer-ready benchmark."
+    },
+    {
+      "example_id": "lolo-tylers-kitchen-forest-specific",
+      "review_id": "region1-example-lolo-tylers-kitchen-66344",
+      "forest_unit_id": "lolo-nf",
+      "forest_unit_label": "Lolo National Forest",
+      "package_label": "Tyler's Kitchen Fuels Reduction and Forest Health Project",
+      "coverage_class_id": "forest_specific_reviewer_ready",
+      "coverage_slot_id": "lolo-tylers-kitchen-forest-specific",
+      "expected_contract_status": "reviewer_ready",
+      "eval_file": "config/v1_lolo_tylers_kitchen_real_ea_eval.json",
+      "package_authority": {
+        "replay_context_path": "config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json"
+      },
+      "applicable_forest_unit_ids": [
+        "lolo-nf"
+      ],
+      "queue_lineage_source_ids": [
+        "FOR-029"
+      ],
+      "agent_read_artifact_family_ids": [
+        "real_package_review_coverage_slot",
+        "v1_review_eval",
+        "phase_eval",
+        "applicability_validation",
+        "compliance_review",
+        "forest_plan_component_eval",
+        "compliance_matrix_render_manifest"
+      ],
+      "notes": "Primary reviewer-ready Lolo example package. Inspect Tyler's Kitchen first for Lolo National Forest example-package guidance; keep the package parallel to Document_Register_Master."
     }
   ],
   "forest_routing": [
@@ -439,14 +469,16 @@
     {
       "forest_unit_id": "lolo-nf",
       "forest_unit_label": "Lolo National Forest",
-      "routing_status": "profile_eval_guidance_only",
+      "routing_status": "real_package_examples_available",
       "applicable_to_forest_unit_ids": [
         "lolo-nf"
       ],
-      "primary_example_id": null,
+      "primary_example_id": "lolo-tylers-kitchen-forest-specific",
       "supplemental_example_ids": [],
       "shared_contract_ids": [
-        "forest_plan_profile_eval_coverage_manifest"
+        "forest_plan_profile_eval_coverage_manifest",
+        "real_package_review_coverage_manifest",
+        "review_packet_index_output_schema"
       ],
       "required_fixture_family_ids": [
         "scope_positive",
@@ -457,7 +489,7 @@
       "queue_boundary_source_ids": [
         "FOR-029"
       ],
-      "guidance_note": "For Lolo National Forest example-package review work, inspect the Tyler's Kitchen root package first as the active Lolo example boundary. `FOR-029` is no longer treated as a master-promotion candidate, and the inherited phase-eval blocker is now cleared on source-set-f70ea11e04ae3d53. The profile-eval contract remains the routing floor until the parent packet's registry, coverage, and aggregate threshold ratchet is implemented."
+      "guidance_note": "For Lolo National Forest example-package review work, inspect the Tyler's Kitchen root package first. The governed Lolo slot is reviewer-ready on source-set-f70ea11e04ae3d53, `FOR-029` is resolved as a forest-specific example-package boundary, and the package remains parallel to Document_Register_Master."
     },
     {
       "forest_unit_id": "nez-perce-clearwater-nfs",

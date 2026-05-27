@@ -38,19 +38,23 @@ The planner:
   `config/forest_specific_example_package_registry_v1.json` and
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` before
   pulling review artifacts.
-- The live Lolo follow-on is now
-  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
-- For Lolo National Forest example-package review work, inspect that parent
-  first, then the just-resolved source-record identity blocker only as
-  predecessor evidence. The blocker moved tracked Lolo replay/eval config to
+- The Lolo follow-on is now resolved locally through
+  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
+  forest-specific example expansion starts from
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
+- For Lolo National Forest example-package review work, inspect
+  `config/forest_specific_example_package_registry_v1.json` first, then the
+  Tyler's Kitchen review artifacts for
+  `region1-example-lolo-tylers-kitchen-66344`. The registry now routes
+  `lolo-nf` as `real_package_examples_available`, with
+  `primary_example_id="lolo-tylers-kitchen-forest-specific"` and
+  `queue_boundary_source_ids=["FOR-029"]`. The source-record identity blocker
+  is predecessor evidence only: it moved tracked Lolo replay/eval config to
   the current `f70...` catalog, kept explicit identity selectors for the former
   multi-target mappings (`R1EA-018 -> USDA-007`, `R1EA-028 -> USDA-008`,
   `R1EA-124 -> FED-011`, `R1EA-137 -> FED-032`, and
   `R1EA-150 -> USFS-035`), and now proves `v1-ea-eval` reviewer-ready plus
-  review `phase-eval` green at `28/28`. The next truthful slice is the parent
-  example-package Milestone 3 registry promotion, aggregate threshold ratchet,
-  and queue/coverage update. Do not directly change the registry status without
-  those aggregate gates. The predecessor
+  review `phase-eval` green at `28/28`. The predecessor
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
   is now resolved through the source-record identity child: the current-workbook
   `f70...` catalog gate is not a drop-in owner for historical `5e65...`
@@ -74,13 +78,13 @@ The planner:
   only as the older predecessor that reduced the generic replacement lane,
   then read
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  only as the broader Tyler's Kitchen package-authority and registry parent
+  as the resolved Tyler's Kitchen package-authority and registry promotion
   record.
-- The broader Tyler's Kitchen packet already carries the `FOR-029`
-  queue-boundary reroute plus packet-local `v1-ea-eval` and forest-plan
-  component coverage, but the Lolo forest row still stays
-  `profile_eval_guidance_only` until the remaining tracked replacement
-  blocker is cleared.
+- The Tyler's Kitchen packet carries the resolved `FOR-029`
+  queue-boundary reroute plus packet-local `v1-ea-eval`, forest-plan component
+  coverage, real-package coverage slot, forest-specific registry row, and
+  aggregate threshold ratchet. Keep the package parallel to
+  `Document_Register_Master`.
 - The registry maps examples to `applicable_to_forest_unit_ids`, tells you
   which shared eval contracts to read first, and lists the per-review artifact
   families to read for each governed example.
