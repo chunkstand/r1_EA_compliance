@@ -15,6 +15,36 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## First-Class Eval Trace Contract Milestone 0 Resolved Locally
+
+Latest implementation update on 2026-05-28 UTC:
+
+- update:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 0 is
+  resolved locally. The system now has a tracked first-class eval/trace
+  contract before any inventory CLI, SQLite store, export, or phase/promotion
+  ratchet exists.
+- owner surfaces:
+  `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`,
+  `config/eval_trace_inventory_contract_v1.json`,
+  `src/usfs_r1_ea_sources/eval_trace_contract.py`, and
+  `tests/test_eval_trace_contract.py`.
+- contract truth:
+  the config declares the six canonical objects (`system_eval_runs`,
+  `system_eval_cases`, `system_eval_case_results`, `system_eval_scores`,
+  `trace_runs`, and `trace_spans`), enum families for eval/trace/span/score
+  kinds, required artifact families, required link checks, schema-version keys,
+  deterministic-first scorer policy, LLM-judge metadata requirements, export
+  preconditions, and explicit ratchet scope rules.
+- ratchet state:
+  global fail-closed eval-trace ratchets are not enabled. West Reservoir on
+  `source-set-f70ea11e04ae3d53` is only a seed candidate for the future
+  inventory CLI.
+- next implementation route:
+  implement Milestone 1, the read-only `eval-trace-inventory` CLI, against the
+  tracked contract and existing artifacts. Do not build the SQLite store,
+  exports, or phase/promotion gates before the inventory contract is green.
+
 ## West Reservoir Signer-Facing Packet Closeout Resolved Locally
 
 Latest implementation update on 2026-05-28 UTC:

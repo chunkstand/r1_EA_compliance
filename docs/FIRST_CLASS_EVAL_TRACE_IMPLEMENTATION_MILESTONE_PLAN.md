@@ -2,14 +2,15 @@
 
 Date: 2026-05-28
 
-Status: Queued plan. Not active until the user explicitly routes work to this
-packet.
+Status: Active implementation packet. Milestone 0 contract and baseline
+inventory design is resolved locally; Milestone 1 read-only inventory CLI is
+the next implementation slice.
 
 Owner context: This plan implements the direction captured in
-`docs/FIRST_CLASS_EVALS_AND_TRACES_RESEARCH_BRIEF.md` for this repository. It
-does not supersede the active West Reservoir route in `docs/CURRENT_ROUTING.md`
-or `docs/SESSION_HANDOFF.md`. If implementation begins while another packet is
-active, stop and re-confirm routing before editing code.
+`docs/FIRST_CLASS_EVALS_AND_TRACES_RESEARCH_BRIEF.md` for this repository. West
+Reservoir Milestone 4 is now resolved locally, so this packet is explicitly
+routed next. If another packet becomes active later, stop and re-confirm
+routing before editing code.
 
 ## Purpose
 
@@ -413,6 +414,11 @@ OpenInference mapping:
 
 Outcome label: resolved for the missing contract; reduced for first-class evals
 overall because no runtime inventory exists yet.
+
+Status: Resolved locally on 2026-05-28. The tracked contract config,
+validation helper, contract doc, architecture ownership, coverage-register
+entry, and focused tests are implemented. No inventory CLI, SQLite store,
+export, or gate ratchet exists yet.
 
 Implementation:
 

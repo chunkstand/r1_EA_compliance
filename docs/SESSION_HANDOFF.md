@@ -14,16 +14,22 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then read
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` for the active
-  parent Flathead reviewer-readiness packet; open
-  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  only for resolved f70 context-gate evidence; read
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` for the
-  umbrella rules behind that packet
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` for the active
+  first-class eval trace packet; open
+  `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md` and
+  `config/eval_trace_inventory_contract_v1.json` for the resolved Milestone 0
+  contract; use West Reservoir f70 reviewer-ready artifacts as the primary seed
+  candidate for Milestone 1 inventory work
 - latest resolved packet:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 0
+- active packet:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 1
+  read-only eval trace inventory CLI
+- latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - active forest-specific example packet:
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+  none; the forest-specific example lane is available as resolved predecessor
+  context unless explicitly routed
 - latest resolved West Reservoir parent slice:
   Milestone 4 signer-facing packet and phase-eval closeout in
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
@@ -44,6 +50,19 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  First-class eval trace Milestone 0 is resolved locally. The implemented
+  contract surfaces are `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`,
+  `config/eval_trace_inventory_contract_v1.json`,
+  `src/usfs_r1_ea_sources/eval_trace_contract.py`, and
+  `tests/test_eval_trace_contract.py`. The contract validates canonical
+  objects, enum families, required artifact families, required link checks,
+  deterministic-first scorer policy, LLM-judge metadata requirements, export
+  preconditions, and the no-global-ratchet policy. The next implementation
+  slice is Milestone 1: add a read-only `eval-trace-inventory` CLI and use
+  West Reservoir on `source-set-f70ea11e04ae3d53` as the primary seed case.
+  No inventory SQLite store, export, phase/promotion ratchet, or trace-to-case
+  promotion exists yet.
+  Historical West Reservoir checkpoint follows:
   West Reservoir reviewer-readiness Milestone 4 is resolved locally on
   `source-set-f70ea11e04ae3d53`. The plan file is
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`.

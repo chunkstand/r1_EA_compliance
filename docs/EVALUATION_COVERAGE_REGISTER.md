@@ -10,6 +10,12 @@ Status meanings:
 - `direct_eval_strengthening_planned`: a direct-eval command exists, but broader contract depth or metrics are explicitly routed to a follow-on milestone.
 - `direct_eval_missing`: no tracked direct-eval lane exists yet.
 
+## Meta-Eval Contract Lanes
+
+| Subsystem | Owner Surfaces | Structural Validation | Direct Eval Status | Current Command | Coverage Categories | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| `first_class_eval_trace_contract` | `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`; `config/eval_trace_inventory_contract_v1.json`; `src/usfs_r1_ea_sources/eval_trace_contract.py`; `tests/test_eval_trace_contract.py` | `validate_eval_trace_contract(...)` | `direct_eval_strengthening_planned` | none yet; Milestone 1 adds `eval-trace-inventory` | `canonical_object_model`; `enum_contract`; `artifact_family_linkability`; `required_link_checks`; `deterministic_scorer_policy`; `ratchet_scope_policy` | Milestone 0 is contract-only. It proves the canonical object model, enum families, artifact families, required link checks, scorer metadata, export preconditions, and no-global-ratchet policy before any inventory CLI, DB store, export, or phase/promotion gate ratchet exists. |
+
 ## Upstream Lanes
 
 | Subsystem | Owner Surfaces | Structural Validation | Direct Eval Status | Direct Eval Command | Coverage Categories | Notes |

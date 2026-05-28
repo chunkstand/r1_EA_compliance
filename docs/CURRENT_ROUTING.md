@@ -4,6 +4,11 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved packet:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 0
+- Active packet:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 1
+  read-only eval trace inventory CLI
+- Latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -23,7 +28,17 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- West Reservoir reviewer-readiness Milestone 4 is resolved locally on
+- First-class eval trace Milestone 0 is resolved locally. The tracked
+  contract now lives in `config/eval_trace_inventory_contract_v1.json`, the
+  contract doc is `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`, and
+  `src/usfs_r1_ea_sources/eval_trace_contract.py` validates the canonical
+  object model, enum values, artifact-family linkability, required link
+  checks, scorer metadata, export preconditions, and no-global-ratchet policy.
+  The next active implementation slice is Milestone 1 in
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`: add the
+  read-only `eval-trace-inventory` CLI. West Reservoir f70 artifacts are the
+  primary seed candidate, but no phase/promotion ratchet is active yet.
+- Resolved West Reservoir predecessor context: reviewer-readiness Milestone 4 is resolved locally on
   `source-set-f70ea11e04ae3d53`. West Reservoir-owned decision-support and
   final-QA configs/fixtures now drive the signer-facing packet artifacts;
   `review-packet-index --review-id west-reservoir-67436` passes with

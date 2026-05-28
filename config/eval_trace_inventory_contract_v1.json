@@ -1,0 +1,438 @@
+{
+  "schema_version": "first-class-eval-trace-inventory-contract-v1",
+  "contract_id": "first-class-eval-trace-inventory-contract",
+  "version": "0.1.0",
+  "status": "contract_only",
+  "canonical_objects": [
+    {
+      "name": "system_eval_runs",
+      "required_fields": [
+        "eval_name",
+        "eval_kind",
+        "target_kind",
+        "dataset_name",
+        "dataset_version",
+        "scorer_set_name",
+        "scorer_set_version",
+        "workflow_version",
+        "status",
+        "passed",
+        "summary_json"
+      ]
+    },
+    {
+      "name": "system_eval_cases",
+      "required_fields": [
+        "case_key",
+        "case_version",
+        "case_hash",
+        "source_kind",
+        "source_ref",
+        "input_json",
+        "expected_json",
+        "metadata_json"
+      ]
+    },
+    {
+      "name": "system_eval_case_results",
+      "required_fields": [
+        "eval_run_id",
+        "eval_case_id",
+        "trace_id",
+        "status",
+        "passed",
+        "score",
+        "failure_reason"
+      ]
+    },
+    {
+      "name": "system_eval_scores",
+      "required_fields": [
+        "eval_case_result_id",
+        "score_name",
+        "score_kind",
+        "score_version",
+        "score",
+        "passed",
+        "threshold",
+        "evidence_refs_json"
+      ]
+    },
+    {
+      "name": "trace_runs",
+      "required_fields": [
+        "trace_id",
+        "trace_kind",
+        "root_ref_kind",
+        "root_ref_id",
+        "status",
+        "input_hash",
+        "output_hash",
+        "artifact_refs_json",
+        "redaction_policy"
+      ]
+    },
+    {
+      "name": "trace_spans",
+      "required_fields": [
+        "span_id",
+        "trace_id",
+        "parent_span_id",
+        "span_kind",
+        "name",
+        "status",
+        "attributes_json",
+        "source_ref_kind",
+        "source_ref_id"
+      ]
+    }
+  ],
+  "enum_values": {
+    "eval_kind": [
+      "applicability",
+      "capture",
+      "catalog",
+      "claim",
+      "compliance_gold",
+      "compliance_review",
+      "decision_support",
+      "extraction_fidelity",
+      "final_qa",
+      "forest_plan_component",
+      "forest_plan_profile",
+      "gold_coverage",
+      "packet_index",
+      "phase_eval",
+      "project_sow",
+      "promotion_suite",
+      "real_package_review_coverage",
+      "retrieval",
+      "rule_claim",
+      "semantic_generation",
+      "semantic_graph",
+      "v1_ea"
+    ],
+    "trace_kind": [
+      "agent_task",
+      "applicability_graph",
+      "applicability_retrieval",
+      "capture",
+      "evaluation",
+      "graph_readiness",
+      "replay",
+      "review_package",
+      "search",
+      "semantic_generation",
+      "semantic_memory_publication",
+      "technical_report",
+      "validation",
+      "workbook_capture"
+    ],
+    "span_kind": [
+      "agent_task",
+      "approval",
+      "artifact",
+      "chunk",
+      "embed",
+      "error",
+      "evaluation",
+      "figure_extract",
+      "guardrail",
+      "ingest",
+      "llm",
+      "parse",
+      "rerank",
+      "retrieve",
+      "score",
+      "search",
+      "table_extract",
+      "tool",
+      "validate",
+      "workflow"
+    ],
+    "score_kind": [
+      "cost",
+      "deterministic_code",
+      "groundedness",
+      "human_label",
+      "latency",
+      "llm_judge",
+      "retrieval",
+      "safety_security",
+      "schema",
+      "tool_arguments",
+      "tool_selection",
+      "trace_integrity"
+    ]
+  },
+  "required_artifact_families": [
+    {
+      "family_id": "source_set_manifest",
+      "owner_layer": "catalog",
+      "artifact_paths": [
+        "source_library/catalog/source_set_manifest.json",
+        "source_library/runs/<run_id>/merged_catalog_gate/source_set_manifest.json"
+      ],
+      "source_ref_requirements": [
+        "source_set_id",
+        "source_record_id"
+      ]
+    },
+    {
+      "family_id": "source_catalog",
+      "owner_layer": "catalog",
+      "artifact_paths": [
+        "source_library/catalog/source_catalog.jsonl",
+        "source_library/runs/<run_id>/merged_catalog_gate/source_catalog.jsonl"
+      ],
+      "source_ref_requirements": [
+        "source_set_id",
+        "source_record_id",
+        "artifact_sha256"
+      ]
+    },
+    {
+      "family_id": "replay_context",
+      "owner_layer": "phase_eval",
+      "artifact_paths": [
+        "config/replay_contexts/<review_id>.json"
+      ],
+      "source_ref_requirements": [
+        "review_id",
+        "source_set_id",
+        "catalog_dir"
+      ]
+    },
+    {
+      "family_id": "phase_eval",
+      "owner_layer": "phase_eval",
+      "artifact_paths": [
+        "source_library/derived/<source_set_id>/evidence_graph/phase_eval_results.json",
+        "source_library/reviews/<review_id>/phase_eval_results.json"
+      ],
+      "source_ref_requirements": [
+        "source_set_id",
+        "review_id",
+        "direct_eval_status"
+      ]
+    },
+    {
+      "family_id": "applicability_trace",
+      "owner_layer": "applicability",
+      "artifact_paths": [
+        "source_library/reviews/<review_id>/applicability/applicability_retrieval_trace.jsonl",
+        "source_library/reviews/<review_id>/applicability/applicability_graph_trace.jsonl",
+        "source_library/reviews/<review_id>/applicability/applicability_retrieval_graph_diagnostics.json"
+      ],
+      "source_ref_requirements": [
+        "review_id",
+        "source_set_id",
+        "retrieval_trace_sha256",
+        "graph_trace_sha256"
+      ]
+    },
+    {
+      "family_id": "forest_plan_component_eval",
+      "owner_layer": "review",
+      "artifact_paths": [
+        "source_library/reviews/<review_id>/forest_plan_component_eval_results.json"
+      ],
+      "source_ref_requirements": [
+        "review_id",
+        "source_set_id",
+        "eval_contract_sha256"
+      ]
+    },
+    {
+      "family_id": "forest_plan_component_eval_coverage",
+      "owner_layer": "eval",
+      "artifact_paths": [
+        "source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json"
+      ],
+      "source_ref_requirements": [
+        "review_id",
+        "source_set_id",
+        "manifest_sha256"
+      ]
+    },
+    {
+      "family_id": "v1_ea_eval",
+      "owner_layer": "eval",
+      "artifact_paths": [
+        "source_library/reviews/<review_id>/v1_ea_eval_results.json"
+      ],
+      "source_ref_requirements": [
+        "review_id",
+        "source_set_id",
+        "eval_contract_sha256"
+      ]
+    },
+    {
+      "family_id": "real_package_review_coverage_eval",
+      "owner_layer": "eval",
+      "artifact_paths": [
+        "source_library/reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json"
+      ],
+      "source_ref_requirements": [
+        "review_id",
+        "manifest_sha256"
+      ]
+    },
+    {
+      "family_id": "decision_support",
+      "owner_layer": "decision_support",
+      "artifact_paths": [
+        "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support.json",
+        "source_library/reviews/<review_id>/decision_support/ea_consistency_decision_support_manifest.json"
+      ],
+      "source_ref_requirements": [
+        "review_id",
+        "source_set_id",
+        "input_hash"
+      ]
+    },
+    {
+      "family_id": "final_qa",
+      "owner_layer": "decision_support",
+      "artifact_paths": [
+        "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification.json",
+        "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification_validation.json"
+      ],
+      "source_ref_requirements": [
+        "review_id",
+        "source_set_id",
+        "input_hash"
+      ]
+    },
+    {
+      "family_id": "review_packet_index",
+      "owner_layer": "decision_support",
+      "artifact_paths": [
+        "source_library/reviews/<review_id>/review_packet_index/review_packet_index.json",
+        "source_library/reviews/<review_id>/review_packet_index/review_packet_index_validation.json"
+      ],
+      "source_ref_requirements": [
+        "review_id",
+        "source_set_id",
+        "artifact_sha256"
+      ]
+    },
+    {
+      "family_id": "promotion_suite",
+      "owner_layer": "eval",
+      "artifact_paths": [
+        "source_library/reviews/promotion_suite/<suite_id>/promotion_suite_results.json"
+      ],
+      "source_ref_requirements": [
+        "suite_id",
+        "source_set_id",
+        "manifest_sha256"
+      ]
+    }
+  ],
+  "required_link_checks": [
+    {
+      "check_id": "source_set_identity_match",
+      "required": true,
+      "failure_reason": "source_set_mismatch"
+    },
+    {
+      "check_id": "review_identity_match",
+      "required": true,
+      "failure_reason": "review_id_mismatch"
+    },
+    {
+      "check_id": "source_artifact_hash_present",
+      "required": true,
+      "failure_reason": "missing_source_artifact_hash"
+    },
+    {
+      "check_id": "origin_artifact_ref_present",
+      "required": true,
+      "failure_reason": "missing_origin_artifact_ref"
+    },
+    {
+      "check_id": "replay_context_catalog_match",
+      "required": true,
+      "failure_reason": "replay_context_catalog_mismatch"
+    },
+    {
+      "check_id": "applicability_trace_hash_match",
+      "required": true,
+      "failure_reason": "trace_hash_mismatch"
+    },
+    {
+      "check_id": "phase_eval_direct_eval_present",
+      "required": true,
+      "failure_reason": "direct_eval_missing"
+    },
+    {
+      "check_id": "export_local_provenance_preserved",
+      "required": true,
+      "failure_reason": "missing_source_ref"
+    },
+    {
+      "check_id": "ratchet_scope_explicit",
+      "required": true,
+      "failure_reason": "ratchet_scope_missing"
+    },
+    {
+      "check_id": "no_hosted_source_of_record",
+      "required": true,
+      "failure_reason": "hosted_source_of_record"
+    }
+  ],
+  "schema_versions": {
+    "inventory_result": "eval-trace-inventory-results-v1",
+    "inventory_report": "eval-trace-inventory-report-v1",
+    "store": "system-eval-trace-store-v1",
+    "canonical_export": "system-eval-trace-export-v1",
+    "openinference_export": "openinference-trace-export-v1",
+    "case_definition": "system-eval-case-v1"
+  },
+  "scorer_contract": {
+    "deterministic_first_score_kinds": [
+      "deterministic_code",
+      "schema",
+      "retrieval",
+      "groundedness",
+      "trace_integrity",
+      "safety_security"
+    ],
+    "llm_judge_metadata_required_fields": [
+      "judge_model",
+      "judge_prompt_hash",
+      "rubric_hash",
+      "examples_hash",
+      "temperature",
+      "output_schema"
+    ]
+  },
+  "export_contract": {
+    "canonical_json_required_before_openinference": true,
+    "local_source_of_record": true,
+    "redaction_policy_default": "local_unredacted_no_external_export",
+    "openinference_span_kind_map": {
+      "embed": "EMBEDDING",
+      "evaluation": "EVALUATOR",
+      "llm": "LLM",
+      "rerank": "RERANKER",
+      "retrieve": "RETRIEVER",
+      "score": "EVALUATOR",
+      "tool": "TOOL",
+      "workflow": "CHAIN"
+    }
+  },
+  "ratchet_scopes": {
+    "global_fail_closed": false,
+    "enabled_source_set_ids": [],
+    "enabled_review_ids": [],
+    "seed_candidates": [
+      {
+        "review_id": "west-reservoir-67436",
+        "source_set_id": "source-set-f70ea11e04ae3d53",
+        "status": "seed_after_inventory_cli"
+      }
+    ]
+  }
+}

@@ -4228,6 +4228,43 @@ The audit summary also records:
 - `knowledge_base_blocked_source_record_ids`
 - `per_source_failures`
 
+## First-Class Eval Trace Contract
+
+Tracked contract: `config/eval_trace_inventory_contract_v1.json`
+
+Milestone 0 does not write generated `source_library/` outputs. It defines the
+schema contract that future `eval-trace-inventory`, `eval-trace-store-build`,
+`eval-trace-export`, and `eval-trace-case-promote` commands must use.
+
+The tracked contract has schema version
+`first-class-eval-trace-inventory-contract-v1` and includes:
+
+- `schema_version`
+- `contract_id`
+- `version`
+- `status`
+- `canonical_objects`
+- `enum_values`
+- `required_artifact_families`
+- `required_link_checks`
+- `schema_versions`
+- `scorer_contract`
+- `export_contract`
+- `ratchet_scopes`
+
+The validation helper requires six canonical object declarations:
+
+- `system_eval_runs`
+- `system_eval_cases`
+- `system_eval_case_results`
+- `system_eval_scores`
+- `trace_runs`
+- `trace_spans`
+
+Future generated inventory, store, export, and case artifacts must preserve
+local source/review/source-set provenance and pass the link checks declared in
+the contract before they can become phase or promotion gates.
+
 ## Extraction Fidelity Eval Outputs
 
 Default manifest: `config/extraction_fidelity_eval_v1.json`

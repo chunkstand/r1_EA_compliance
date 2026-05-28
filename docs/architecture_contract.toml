@@ -395,6 +395,7 @@ modules = [
   "applicability_eval_summary",
   "applicability_eval_support",
   "draft_generation_eval",
+  "eval_trace_contract",
   "extraction_fidelity_eval",
   "forest_plan_component_retrieval_eval",
   "forest_specific_example_package_eval",
