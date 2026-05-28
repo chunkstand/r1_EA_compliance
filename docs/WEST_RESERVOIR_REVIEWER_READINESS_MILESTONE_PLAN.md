@@ -40,6 +40,38 @@ This plan is also not a package-authority plan. Package authority is already
 verified. Readiness work must preserve that proof while rebuilding missing
 review artifacts.
 
+## Bitter Lesson Alignment Lock
+
+This packet follows Sutton's Bitter Lesson by making reviewer readiness depend
+on general, repeatable evidence-processing loops rather than hand-authored
+West Reservoir exceptions. A green closeout must come from source-set coverage,
+catalog-backed retrieval, generated rule-pack validation, component eval,
+compliance review, V1 eval, phase eval, and aggregate coverage gates.
+
+Domain knowledge belongs in tracked data and artifacts:
+
+- official package-authority verification and package manifest rows;
+- replay context, forest profile, rule-pack, reconciliation, adjudication, and
+  eval manifest files under `config/`;
+- catalog/source-set records and generated review artifacts under
+  `source_library/`; and
+- current routing, current-system-state, and session handoff docs.
+
+Implementation must not add hidden runtime branches, special-case legal
+conclusions, deleted authority requirements, relaxed thresholds, or
+West-Reservoir-only shortcuts to get a reviewer-ready result. If a gate fails,
+the first repair path is to improve or truthfully reroute source evidence,
+retrieval coverage, generated artifacts, adjudication data, eval fixtures, or
+failure telemetry. Any unavoidable narrow rule must be explicit, versioned,
+test-covered, visible in outputs, and owned by a tracked config or contract.
+
+The active 4fb source-evidence blocker is therefore aligned only while it stays
+fail-closed: either prove a governed same-source-set repair from catalog
+evidence, or open a source-set migration packet that updates every West
+Reservoir contract together. Borrowing a newer catalog, editing thresholds, or
+promoting from stale green artifacts is disallowed because it replaces scalable
+evidence and eval loops with local intuition.
+
 ## Current Evidence
 
 - Current replay context:

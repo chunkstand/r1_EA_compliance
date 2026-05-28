@@ -21,6 +21,29 @@ a governed same-source-set repair, or open a separate source-set migration
 packet. Do not silently borrow a newer catalog or promote West Reservoir on a
 different source set inside the parent readiness plan.
 
+## Bitter Lesson Alignment Lock
+
+This blocker is a Bitter Lesson guardrail for the parent readiness plan. It
+keeps the repair focused on scalable evidence and eval machinery instead of a
+handcrafted West Reservoir workaround.
+
+Allowed repairs must work through durable data and repeatable gates:
+
+- catalog/source-set evidence for the selected source set;
+- source-record reconciliation data in tracked config;
+- authority-universe validation and generated snapshots;
+- replay, V1, component, registry, and coverage contract parity; and
+- current routing, current-system-state, and session handoff updates that
+  record the exact pass/fail signal.
+
+Disallowed repairs include hidden runtime branches for West Reservoir, deleting
+authority-family source requirements, lowering `failure_count` or
+`missing_source_record_count` by weakening validation, treating f70 evidence as
+4fb evidence, or letting a human judgment replace catalog-backed source
+presence. If 4fb cannot supply the required current rows through a governed
+repair, the aligned next step is a source-set migration packet with parity
+checks, not a local exception.
+
 ## Current Evidence
 
 - Parent packet:
