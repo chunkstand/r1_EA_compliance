@@ -15,6 +15,42 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## West Reservoir Milestone 0 Baseline Resolved
+
+Latest implementation update on 2026-05-28 UTC:
+
+- active packet:
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- resolved slice:
+  Milestone 0 current-contract baseline and stale-green guard
+- current target:
+  `review_id="west-reservoir-67436"` on
+  `source-set-4fb59e9eb43045cb` for `flathead-nf`
+- package-authority status:
+  `tests/test_west_reservoir_package_authority.py` passed `2/2`, preserving
+  `12` official PDFs, `12` local package rows, byte-size and SHA-256 matches,
+  and `omitted_document_count=0`
+- V1 baseline:
+  current `v1-ea-eval --review-id west-reservoir-67436` remains a truthful
+  typed-blocked baseline with `contract_status="typed_blocked"`,
+  `actual_overall_passed=false`, `broader_ea_passed=false`,
+  `forest_plan_passed=false`, and only the allowed blocker categories:
+  `review_artifact_missing=8`, `forest_plan_matrix_miss=1`,
+  `forest_plan_reviewer_not_ready=1`, and `forest_plan_scope_miss=1`
+- component baseline:
+  current `forest-plan-component-eval --review-id west-reservoir-67436`
+  remains red on `source-set-4fb59e9eb43045cb` with `0/27` cases passing and
+  `failed_case_count=27`
+- stale-artifact guard:
+  the historical green `phase_eval_results.json` on
+  `source-set-5e65d845ce77e1a0` is still historical only. A focused
+  regression test now proves a review-scoped phase-eval rerun overwrites a
+  pre-existing green result with the tracked replay-context source set.
+- next implementation slice:
+  Milestone 1 review artifact spine rebuild on `source-set-4fb59e9eb43045cb`;
+  do not promote West Reservoir to reviewer-ready until current review,
+  component, compliance, V1, phase, and aggregate gates pass.
+
 ## West Reservoir Reviewer Readiness Plan Opened
 
 Latest planning update on 2026-05-28 UTC:
@@ -37,9 +73,10 @@ Latest planning update on 2026-05-28 UTC:
   the historical green West Reservoir `phase_eval_results.json` on
   `source-set-5e65d845ce77e1a0` is not current readiness proof for this
   packet
-- next implementation slice:
-  start with Milestone 0 in the new plan: current-contract baseline,
-  package-authority verification, and false-green source-set guard
+- next implementation slice at that checkpoint:
+  Milestone 0 in the new plan: current-contract baseline,
+  package-authority verification, and false-green source-set guard. This is
+  superseded by the Milestone 0 baseline-resolved section above.
 
 ## West Reservoir Public Pinyon Authority Verified
 

@@ -1,7 +1,7 @@
 # West Reservoir Reviewer Readiness Milestone Plan
 
 Date: 2026-05-28
-Status: Active packet; Milestones 0-4 pending
+Status: Active packet; Milestone 0 resolved locally; Milestones 1-4 pending
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -344,6 +344,8 @@ At the end of every implemented milestone:
 
 ### Milestone 0 - Current Contract Baseline And False-Green Guard
 
+Status: Resolved locally on 2026-05-28.
+
 Outcome label: resolved.
 
 Freeze the current West Reservoir readiness contract before rebuilding
@@ -371,6 +373,28 @@ Exit criteria:
 - Component eval remains red on the current source set until artifacts are
   rebuilt.
 - No docs or manifests describe West Reservoir as reviewer-ready yet.
+
+Implementation note:
+
+- Package-authority verification remains green:
+  `tests/test_west_reservoir_package_authority.py` passed `2/2`.
+- Current V1 eval rerun on `source-set-4fb59e9eb43045cb` remains a truthful
+  typed-blocked baseline: `contract_status="typed_blocked"`,
+  `actual_overall_passed=false`, `broader_ea_passed=false`,
+  `forest_plan_passed=false`, and failure categories limited to
+  `review_artifact_missing=8`, `forest_plan_matrix_miss=1`,
+  `forest_plan_reviewer_not_ready=1`, and `forest_plan_scope_miss=1`.
+- Current component eval rerun on `source-set-4fb59e9eb43045cb` remains red as
+  expected with `passed=false`, `passed_case_count=0`,
+  `failed_case_count=27`, and the existing failure categories unchanged.
+- `source_library/reviews/west-reservoir-67436/phase_eval_results.json` is
+  still a historical green file for `source-set-5e65d845ce77e1a0`; it is not
+  readiness evidence for this packet.
+- `tests/test_phase_eval_review.py` now includes a stale-result guard proving
+  that a review-scoped phase-eval rerun overwrites a pre-existing green review
+  result with the tracked replay-context source set.
+- No registry, coverage manifest, V1 contract, component contract, or
+  reviewer-ready status was promoted in Milestone 0.
 
 ### Milestone 1 - Review Artifact Spine Rebuild
 
@@ -644,13 +668,13 @@ occur:
 
 ## Closeout Checklist
 
-- [ ] Milestone 0 baseline and stale-green guard resolved
+- [x] Milestone 0 baseline and stale-green guard resolved
 - [ ] Milestone 1 review artifact spine rebuilt on
       `source-set-4fb59e9eb43045cb`
 - [ ] Milestone 2 component eval passes `27/27`
 - [ ] Milestone 3 compliance and V1 readiness gates pass
 - [ ] Milestone 4 phase eval and aggregate gates rerun
-- [ ] Docs and session handoff updated with exact counts and residual blockers
-- [ ] Verification commands recorded
-- [ ] Stage only intended docs/config/tests/source changes
-- [ ] Local atomic commit created
+- [x] Docs and session handoff updated with exact counts and residual blockers for Milestone 0
+- [x] Verification commands recorded for Milestone 0
+- [x] Stage only intended docs/config/tests/source changes for Milestone 0
+- [x] Local atomic commit created for Milestone 0

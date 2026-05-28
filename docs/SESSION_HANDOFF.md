@@ -45,6 +45,20 @@ history below.
   `source-set-4fb59e9eb43045cb`. The historical green West Reservoir phase
   artifact on `source-set-5e65d845ce77e1a0` must not be used as current
   reviewer-readiness proof.
+  Milestone 0 in that packet is now resolved locally. Package authority still
+  passes `2/2`; current `v1-ea-eval --review-id west-reservoir-67436`
+  remains a truthful typed-blocked baseline with
+  `contract_status="typed_blocked"`, `actual_overall_passed=false`,
+  `broader_ea_passed=false`, `forest_plan_passed=false`, and only the allowed
+  blocker categories (`review_artifact_missing=8`,
+  `forest_plan_matrix_miss=1`, `forest_plan_reviewer_not_ready=1`, and
+  `forest_plan_scope_miss=1`). Current
+  `forest-plan-component-eval --review-id west-reservoir-67436` remains red on
+  `source-set-4fb59e9eb43045cb` with `0/27` cases passing. A focused
+  `tests/test_phase_eval_review.py` guard now proves a review-scoped phase-eval
+  rerun overwrites a pre-existing green review result with the tracked
+  replay-context source set. The next slice is Milestone 1: rebuild the review
+  artifact spine on `source-set-4fb59e9eb43045cb`.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or

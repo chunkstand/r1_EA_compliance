@@ -128,6 +128,45 @@ class PhaseEvalReviewTests(unittest.TestCase):
                     catalog_dir=output_dir / "catalog",
                 )
 
+    def test_review_phase_eval_overwrites_stale_review_result_with_tracked_source_set(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp)
+            output_dir = repo_root / "source_library"
+            review_id = "tracked-replay-review"
+            current_source_set_id = "source-set-current"
+            stale_source_set_id = "source-set-stale"
+            review_dir = output_dir / "reviews" / review_id
+            review_dir.mkdir(parents=True, exist_ok=True)
+            stale_result_path = review_dir / "phase_eval_results.json"
+            stale_result_path.write_text(
+                json.dumps(
+                    {
+                        "passed": True,
+                        "review_id": review_id,
+                        "source_set_id": stale_source_set_id,
+                    },
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            write_replay_context(
+                repo_root,
+                review_id=review_id,
+                source_set_id=current_source_set_id,
+                catalog_dir=Path("source_library/runs/current_catalog"),
+            )
+
+            phase_eval = run_phase_aligned_eval(
+                output_dir=output_dir,
+                review_id=review_id,
+            )
+
+            persisted_result = json.loads(stale_result_path.read_text(encoding="utf-8"))
+            self.assertEqual(phase_eval.summary["source_set_id"], current_source_set_id)
+            self.assertEqual(persisted_result["source_set_id"], current_source_set_id)
+            self.assertFalse(persisted_result["passed"])
+
     def test_review_phase_eval_marks_stale_draft_generation_inputs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
