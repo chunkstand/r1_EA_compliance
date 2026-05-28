@@ -121,6 +121,8 @@ class AuthorityUniverseContractsTests(unittest.TestCase):
                 authority_universe_sha256="summary-sha256",
                 review_id="review-unit",
                 source_set_id=source_set_id,
+                forest_unit_id=None,
+                review_scope=None,
                 base_rule_pack=rule_pack,
                 source_set_manifest_path=source_set_manifest_path,
                 source_catalog_path=source_catalog_path,

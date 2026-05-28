@@ -30,6 +30,7 @@ def build_authority_universe_snapshot(
     forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
     authority_family_templates_path: Path | None = DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
     forest_plan_component_inventory_path: Path | None = None,
+    forest_unit_id: str | None = None,
     claims_path: Path | None = None,
     rule_claim_links_path: Path | None = None,
 ) -> AuthorityUniverseSnapshotResult:
@@ -43,6 +44,7 @@ def build_authority_universe_snapshot(
         forest_plan_profiles_path=forest_plan_profiles_path,
         authority_family_templates_path=authority_family_templates_path,
         forest_plan_component_inventory_path=forest_plan_component_inventory_path,
+        forest_unit_id=forest_unit_id,
         claims_path=claims_path,
         rule_claim_links_path=rule_claim_links_path,
     )

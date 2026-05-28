@@ -327,6 +327,79 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                 ["custer-gallatin-nf"],
             )
 
+    def test_snapshot_scopes_region_wide_inventory_to_explicit_forest_unit(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            source_set_id = "source-set-test"
+            rule_pack_path = _write_rule_pack(root)
+            _write_catalog(
+                output_dir,
+                source_set_id,
+                [
+                    _catalog_record(source_set_id, "R1EA-BASE", "law", "law"),
+                    _catalog_record(source_set_id, "R1EA-COND", "regulation", "regulation"),
+                    _catalog_record(
+                        source_set_id,
+                        "R1PLAN-custer-gallatin-nf-02",
+                        "forest_plan",
+                        "forest_plan",
+                    ),
+                    _catalog_record(
+                        source_set_id,
+                        "R1PLAN-flathead-nf-02",
+                        "forest_plan",
+                        "forest_plan",
+                    ),
+                ],
+            )
+            _write_rule_claim_links(output_dir, source_set_id, rule_pack_path)
+            component_inventory_path = _write_region1_component_inventory(
+                output_dir,
+                source_set_id,
+            )
+
+            result = build_authority_universe_snapshot(
+                output_dir=output_dir,
+                review_id="flathead-component-unit",
+                source_set_id=source_set_id,
+                base_rule_pack_path=rule_pack_path,
+                authority_family_templates_path=None,
+                forest_plan_component_inventory_path=component_inventory_path,
+                forest_unit_id="flathead-nf",
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["rule_template_candidate_count"], 2)
+            self.assertEqual(result.summary["forest_plan_component_candidate_count"], 1)
+
+            snapshot = json.loads(result.snapshot_path.read_text(encoding="utf-8"))
+            self.assertEqual(snapshot["forest_unit_id"], "flathead-nf")
+            self.assertEqual(
+                snapshot["review_scope"]["removed_forest_plan_rule_ids"],
+                ["custer_gallatin_lmp_2022"],
+            )
+            component_candidates = [
+                candidate
+                for candidate in snapshot["candidate_authorities"]
+                if candidate["candidate_authority_type"] == "forest_plan_component"
+            ]
+            self.assertEqual(len(component_candidates), 1)
+            self.assertEqual(
+                component_candidates[0]["forest_plan"]["forest_unit_id"],
+                "flathead-nf",
+            )
+            self.assertNotIn(
+                "R1PLAN-custer-gallatin-nf-02",
+                {
+                    source_record_id
+                    for candidate in snapshot["candidate_authorities"]
+                    for source_record_id in candidate["source_record_ids"]
+                },
+            )
+
     def test_snapshot_includes_authority_family_rule_template_candidates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

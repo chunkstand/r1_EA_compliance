@@ -62,17 +62,20 @@ history below.
   `package_file_count=12`, `package_chunk_count=659`, and
   `finding_status_counts={"pass":5}`; `applicability-context-build` rebuilt the
   package applicability context and fact graph with `validation_passed=true`.
-  The Milestone 1 stop condition is now `applicability-authority-universe`:
-  it returns `passed=false` and `validation_passed=false` on
-  `source-set-4fb59e9eb43045cb`, with
-  `candidates_have_source_evidence_available.failure_count=10` and
-  `authority_family_template_candidates_cover_config.missing_source_record_count=11`.
-  The same validation still selects the default Custer Gallatin forest-plan
-  source `R1PLAN-custer-gallatin-nf-02` and `custer-gallatin-nf` component
-  candidates for the Flathead West Reservoir review, so do not run
-  applicability retrieval/determination, compliance, V1 promotion, or registry
-  promotion until the Flathead authority-universe/base-rule-pack/source-record
-  identity path is repaired.
+  The Flathead authority-universe/base-rule-pack/source-record identity repair
+  is now reduced locally. The tracked replay context declares
+  `forest_unit_id="flathead-nf"`, and the current
+  `applicability-authority-universe` snapshot records `forest_unit_id`,
+  removes `custer_gallatin_lmp_2022` from the review-scoped base rule
+  universe, selects `80` Flathead component candidates, and uses
+  `FINAL-FLAT-001` as the forest-plan source. The Milestone 1 stop condition
+  remains `applicability-authority-universe`: it returns `passed=false` and
+  `validation_passed=false` on `source-set-4fb59e9eb43045cb`, now narrowed to
+  `candidates_have_source_evidence_available.failure_count=9` and
+  `authority_family_template_candidates_cover_config.missing_source_record_count=10`.
+  Do not run applicability retrieval/determination, compliance, V1 promotion,
+  or registry promotion until the remaining 4fb source-evidence gap is
+  resolved or routed into a new blocker packet.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or

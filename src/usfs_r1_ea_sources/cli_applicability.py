@@ -65,6 +65,7 @@ def register_applicability_commands(subparsers: argparse._SubParsersAction) -> N
     authority_universe.add_argument("--catalog-path", type=Path)
     authority_universe.add_argument("--source-set-manifest-path", type=Path)
     authority_universe.add_argument("--forest-plan-component-inventory-path", type=Path)
+    authority_universe.add_argument("--forest-unit-id")
     authority_universe.add_argument("--claims-path", type=Path)
     authority_universe.add_argument("--rule-claim-links-path", type=Path)
 
@@ -187,6 +188,7 @@ def handle_applicability_command(
             authority_family_templates_path=args.authority_family_templates_path,
             forest_plan_profiles_path=args.forest_plan_profiles_path,
             forest_plan_component_inventory_path=args.forest_plan_component_inventory_path,
+            forest_unit_id=args.forest_unit_id,
             claims_path=args.claims_path,
             rule_claim_links_path=args.rule_claim_links_path,
         )
@@ -353,6 +355,12 @@ def _apply_tracked_replay_context(args: argparse.Namespace) -> None:
             f"{review_id}"
         )
     if args.command == "applicability-authority-universe":
+        _align_tracked_value_arg(
+            args,
+            "forest_unit_id",
+            replay_context.forest_unit_id,
+            review_id,
+        )
         _align_tracked_path_arg(
             args,
             "catalog_path",
@@ -383,3 +391,21 @@ def _align_tracked_path_arg(
             f"{field_name} override does not match tracked replay context for {review_id}"
         )
     setattr(args, field_name, resolved_current)
+
+
+def _align_tracked_value_arg(
+    args: argparse.Namespace,
+    field_name: str,
+    expected_value: str | None,
+    review_id: str,
+) -> None:
+    current = getattr(args, field_name, None)
+    if expected_value is None:
+        return
+    if current is None:
+        setattr(args, field_name, expected_value)
+        return
+    if str(current) != expected_value:
+        raise ReplayContextMismatchError(
+            f"{field_name} override does not match tracked replay context for {review_id}"
+        )

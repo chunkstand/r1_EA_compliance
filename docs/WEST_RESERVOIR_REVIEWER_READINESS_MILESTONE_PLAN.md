@@ -1,7 +1,7 @@
 # West Reservoir Reviewer Readiness Milestone Plan
 
 Date: 2026-05-28
-Status: Active packet; Milestone 0 resolved locally; Milestone 1 blocked at authority-universe validation; Milestones 2-4 pending
+Status: Active packet; Milestone 0 resolved locally; Milestone 1 reduced by Flathead authority-universe scoping and blocked at source-evidence validation; Milestones 2-4 pending
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -398,7 +398,8 @@ Implementation note:
 
 ### Milestone 1 - Review Artifact Spine Rebuild
 
-Status: Blocked on 2026-05-28 by current authority-universe validation.
+Status: Reduced on 2026-05-28 by Flathead authority-universe scoping; blocked
+on current 4fb source-evidence validation.
 
 Outcome label: reduced.
 
@@ -446,18 +447,26 @@ Implementation note:
   `package_chunk_count=659`, and `finding_status_counts={"pass":5}`.
 - `applicability-context-build` rebuilt the package applicability context and
   package fact graph with `validation_passed=true`.
-- `applicability-authority-universe` stopped the milestone before retrieval or
-  determination. The generated snapshot reports `passed=false` and
-  `validation_passed=false` with two failing checks:
-  `candidates_have_source_evidence_available` (`failure_count=10`) and
+- `applicability-authority-universe` now reads
+  `forest_unit_id="flathead-nf"` from the tracked replay context and records
+  it in `authority_universe_snapshot.json`.
+- The generated snapshot now review-scopes the base rule universe from `48` to
+  `47` rules by removing `custer_gallatin_lmp_2022`, selects `80` Flathead
+  component candidates, reports
+  `selected_component_forest_unit_ids=["flathead-nf"]`, and uses
+  `FINAL-FLAT-001` as the forest-plan source record.
+- The command still stops the milestone before retrieval or determination. The
+  generated snapshot reports `passed=false` and `validation_passed=false` with
+  two failing checks:
+  `candidates_have_source_evidence_available` (`failure_count=9`) and
   `authority_family_template_candidates_cover_config`
-  (`missing_source_record_count=11`).
-- The same authority-universe validation shows a Flathead-specific stop
-  condition: the default base rule-pack forest-plan source remains
-  `R1PLAN-custer-gallatin-nf-02`, and the selected component candidates are
-  `custer-gallatin-nf`, not `flathead-nf`. That violates the plan's placement
-  rule that any Custer Gallatin forest-plan source record in current West
-  Reservoir forest-plan expectations must fail the milestone.
+  (`missing_source_record_count=10`).
+- The remaining blocker is not Custer Gallatin placement drift. It is the
+  `source-set-4fb59e9eb43045cb` source-evidence gap for non-forest authority
+  families and baseline rules. If 4fb cannot supply the required current
+  source records through a governed same-source-set repair, stop and open a
+  new blocker packet instead of silently moving West Reservoir to another
+  source set.
 - No applicability decisions, generated rule-pack refresh, forest-plan
   context, compliance review, V1 promotion, registry promotion, or aggregate
   coverage promotion was run after this blocker.

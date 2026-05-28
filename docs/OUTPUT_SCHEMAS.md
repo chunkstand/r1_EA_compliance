@@ -1678,11 +1678,16 @@ EA package + source library + authority universe
 - `created_at`
 - `review_id`
 - `source_set_id`
+- optional `forest_unit_id` when the authority universe is scoped to a tracked
+  or explicit review forest
 - `source_set_manifest_sha256`
 - `catalog_sha256`
 - `base_rule_pack_id`
 - `base_rule_pack_version`
 - `base_rule_pack_sha256`
+- `review_scope` with the selected forest unit, active forest-plan source
+  record, original base rule count, scoped base rule count, and any removed
+  nonmatching forest-plan base rule IDs
 - `artifact_paths`
 - `summary`
 - `validation`
@@ -4966,13 +4971,15 @@ counts, and failure-category counts. Stale adjudication evals whose recorded que
 from the current queue fail the phase. Archived noncanonical review lanes can also declare tracked
 replay context under `config/replay_contexts/<review_id>.json`. The tracked replay-context
 authority uses required fields `review_id`, `source_set_id`, and `catalog_dir`, plus optional
-`package_path` for later replay-regeneration milestones. Child catalog artifact paths are derived
-from `catalog_dir`; if debug echoes such as `source_catalog_path`, `source_set_manifest_path`, or
-`catalog_sqlite_path` are emitted, they must exactly match the loader-derived paths. When
-`phase-eval --review-id` finds a tracked replay-context file, that context becomes the authority
-for archived `source_set_id` and `catalog_dir` defaults. Explicit `source_set_id` or `catalog_dir`
-overrides must match the tracked replay context or phase eval fails closed instead of silently
-reading the active catalog. The evidence-graph and claim-extraction
+`forest_unit_id` and `package_path` for later replay-regeneration milestones. Child catalog
+artifact paths are derived from `catalog_dir`; if debug echoes such as `source_catalog_path`,
+`source_set_manifest_path`, or `catalog_sqlite_path` are emitted, they must exactly match the
+loader-derived paths. When `phase-eval --review-id` finds a tracked replay-context file, that
+context becomes the authority for archived `source_set_id` and `catalog_dir` defaults.
+Applicability authority-universe replay also treats tracked `forest_unit_id` as the selected
+review forest and rejects explicit forest-unit overrides that disagree. Explicit `source_set_id` or
+`catalog_dir` overrides must match the tracked replay context or phase eval fails closed instead of
+silently reading the active catalog. The evidence-graph and claim-extraction
 phases report failed validation check names, retrieval index path, and retrieval binding mismatch
 counts. The rule-claim-binding phase reports rule-pack identity, link count, gap count, and rules
 without links.

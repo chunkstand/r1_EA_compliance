@@ -13,6 +13,7 @@ from tests.support.applicability_authority_universe_fixtures import (
     _default_template_catalog_records,
     _write_catalog,
     _write_component_inventory,
+    _write_region1_component_inventory,
     _write_rule_claim_links,
     _write_rule_pack,
 )
@@ -227,5 +228,109 @@ class ApplicabilityAuthorityUniverseCliTests(unittest.TestCase):
                         review_id,
                         "--source-set-id",
                         "source-set-other",
+                    ]
+                )
+
+    def test_cli_applies_tracked_replay_context_forest_unit(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            source_set_id = "source-set-tracked"
+            review_id = "tracked-flathead-review"
+            rule_pack_path = _write_rule_pack(root)
+            _write_catalog(
+                output_dir,
+                source_set_id,
+                [
+                    _catalog_record(source_set_id, "R1EA-BASE", "law", "law"),
+                    _catalog_record(source_set_id, "R1EA-COND", "regulation", "regulation"),
+                    _catalog_record(
+                        source_set_id,
+                        "R1PLAN-custer-gallatin-nf-02",
+                        "forest_plan",
+                        "forest_plan",
+                    ),
+                    _catalog_record(
+                        source_set_id,
+                        "R1PLAN-flathead-nf-02",
+                        "forest_plan",
+                        "forest_plan",
+                    ),
+                ],
+            )
+            replay_context_dir = root / "config" / "replay_contexts"
+            replay_context_dir.mkdir(parents=True, exist_ok=True)
+            (replay_context_dir / f"{review_id}.json").write_text(
+                json.dumps(
+                    {
+                        "review_id": review_id,
+                        "source_set_id": source_set_id,
+                        "forest_unit_id": "flathead-nf",
+                        "catalog_dir": "source_library/catalog",
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            _write_rule_claim_links(output_dir, source_set_id, rule_pack_path)
+            component_inventory_path = _write_region1_component_inventory(
+                output_dir,
+                source_set_id,
+            )
+
+            exit_code = main(
+                [
+                    "applicability-authority-universe",
+                    "--output-dir",
+                    str(output_dir),
+                    "--review-id",
+                    review_id,
+                    "--base-rule-pack",
+                    str(rule_pack_path),
+                    "--forest-plan-component-inventory-path",
+                    str(component_inventory_path),
+                    "--no-authority-family-templates",
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            snapshot_path = (
+                output_dir / "reviews" / review_id / "applicability" / "authority_universe_snapshot.json"
+            )
+            snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+            self.assertEqual(snapshot["forest_unit_id"], "flathead-nf")
+            self.assertEqual(snapshot["summary"]["rule_template_candidate_count"], 2)
+            self.assertEqual(snapshot["summary"]["forest_plan_component_candidate_count"], 1)
+
+    def test_cli_rejects_mismatched_tracked_replay_context_forest_unit_override(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            review_id = "tracked-review"
+            replay_context_dir = root / "config" / "replay_contexts"
+            replay_context_dir.mkdir(parents=True, exist_ok=True)
+            (replay_context_dir / f"{review_id}.json").write_text(
+                json.dumps(
+                    {
+                        "review_id": review_id,
+                        "source_set_id": "source-set-tracked",
+                        "forest_unit_id": "flathead-nf",
+                        "catalog_dir": "source_library/catalog",
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaises(ReplayContextMismatchError):
+                main(
+                    [
+                        "applicability-authority-universe",
+                        "--output-dir",
+                        str(output_dir),
+                        "--review-id",
+                        review_id,
+                        "--forest-unit-id",
+                        "custer-gallatin-nf",
                     ]
                 )

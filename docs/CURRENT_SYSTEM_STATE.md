@@ -15,7 +15,7 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## West Reservoir Milestone 1 Authority-Universe Blocker
+## West Reservoir Milestone 1 Source-Evidence Blocker
 
 Latest implementation update on 2026-05-28 UTC:
 
@@ -31,28 +31,37 @@ Latest implementation update on 2026-05-28 UTC:
   `package_chunk_count=659`, and `finding_status_counts={"pass":5}`;
   `applicability-context-build` rebuilt the package applicability context and
   fact graph with `validation_passed=true`
-- blocker:
+- reduced repair:
+  the authority-universe builder now reads `forest_unit_id="flathead-nf"` from
+  `config/replay_contexts/west-reservoir-67436.json`, records that forest unit
+  in `authority_universe_snapshot.json`, removes the nonmatching
+  `custer_gallatin_lmp_2022` base forest-plan rule from the review-scoped rule
+  universe, selects `80` Flathead forest-plan component candidates, and uses
+  `FINAL-FLAT-001` as the only forest-plan source record for West Reservoir
+- current blocker:
   `applicability-authority-universe --review-id west-reservoir-67436
   --source-set-id source-set-4fb59e9eb43045cb` returned
   `passed=false` and `validation_passed=false`
 - failing checks:
-  `candidates_have_source_evidence_available` has `failure_count=10`, and
+  `candidates_have_source_evidence_available` has `failure_count=9`, and
   `authority_family_template_candidates_cover_config` has
-  `missing_source_record_count=11`
-- Flathead placement failure:
-  the authority-universe validation still sees the default base rule-pack
-  forest-plan source as `R1PLAN-custer-gallatin-nf-02` and selected component
-  candidates as `custer-gallatin-nf`. That is not allowed for the current
-  West Reservoir Flathead reviewer-readiness packet.
+  `missing_source_record_count=10`
+- resolved placement risk:
+  the validation now reports
+  `selected_component_forest_unit_ids=["flathead-nf"]`,
+  `forest_plan_rule_source_record_ids=["FINAL-FLAT-001"]`, and
+  `removed_forest_plan_rule_ids=["custer_gallatin_lmp_2022"]`; no Custer
+  Gallatin forest-plan source record remains in the West Reservoir forest-plan
+  authority candidates
 - stop condition:
   no applicability retrieval, applicability determination, generated rule-pack
   refresh, forest-plan context, compliance review, V1 promotion, registry
   promotion, or aggregate coverage promotion was run after the blocker.
 - next implementation slice:
-  repair the Flathead authority-universe/base-rule-pack/source-record identity
-  path so West Reservoir can build current applicability candidates without
-  Custer Gallatin forest-plan source-record drift, then rerun Milestone 1 from
-  `applicability-authority-universe`.
+  resolve or route the remaining `source-set-4fb59e9eb43045cb` source-evidence
+  gap. If 4fb cannot supply the required current source records without a
+  governed same-source-set repair, stop and open a new blocker packet instead
+  of silently moving West Reservoir to another source set.
 
 ## West Reservoir Milestone 0 Baseline Resolved
 

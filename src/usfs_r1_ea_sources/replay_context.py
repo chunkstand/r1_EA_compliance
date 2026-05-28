@@ -25,6 +25,7 @@ class ReplayContext:
     source_set_id: str
     catalog_dir: Path
     resolved_catalog_dir: Path
+    forest_unit_id: str | None = None
     package_path: Path | None = None
     resolved_package_path: Path | None = None
 
@@ -68,6 +69,7 @@ def load_replay_context(config_path: Path) -> ReplayContext:
     review_id = str(payload.get("review_id") or "")
     source_set_id = str(payload.get("source_set_id") or "")
     catalog_dir = payload.get("catalog_dir")
+    forest_unit_id = str(payload.get("forest_unit_id") or "").strip() or None
     package_path = payload.get("package_path")
 
     if not review_id:
@@ -80,6 +82,11 @@ def load_replay_context(config_path: Path) -> ReplayContext:
         raise ReplayContextError(f"{config_path}: replay context requires non-empty source_set_id")
     if not catalog_dir:
         raise ReplayContextError(f"{config_path}: replay context requires non-empty catalog_dir")
+    if forest_unit_id and not SAFE_REVIEW_ID_RE.fullmatch(forest_unit_id):
+        raise ReplayContextError(
+            f"{config_path}: forest_unit_id must contain only letters, numbers, dot, "
+            "underscore, or hyphen."
+        )
 
     declared_catalog_dir = Path(str(catalog_dir))
     base_dir = _context_base_dir(config_path)
@@ -98,6 +105,7 @@ def load_replay_context(config_path: Path) -> ReplayContext:
         source_set_id=source_set_id,
         catalog_dir=declared_catalog_dir,
         resolved_catalog_dir=resolved_catalog_dir,
+        forest_unit_id=forest_unit_id,
         package_path=declared_package_path,
         resolved_package_path=resolved_package_path,
     )

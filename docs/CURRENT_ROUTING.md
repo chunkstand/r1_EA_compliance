@@ -34,13 +34,20 @@ Use this file as the short current route before opening the append-only docs.
   remains red with `0/27` cases passing on `source-set-4fb59e9eb43045cb`.
   Milestone 1 has started: `ea-review` and `applicability-context-build`
   rebuilt successfully on the verified package cache and current source set.
-  The current blocker is `applicability-authority-universe`, which still
-  selects the default Custer Gallatin forest-plan source
-  `R1PLAN-custer-gallatin-nf-02` for the Flathead West Reservoir review and
-  fails authority-family source evidence validation. The next implementation
-  slice is the Flathead authority-universe/base-rule-pack/source-record identity
-  repair; do not proceed to applicability retrieval, determination, compliance,
-  or promotion until that check is green.
+  The Flathead authority-universe/base-rule-pack/source-record identity repair
+  is now reduced locally: `applicability-authority-universe` reads
+  `forest_unit_id="flathead-nf"` from the tracked replay context, scopes out
+  the Custer Gallatin base forest-plan rule, selects `80` Flathead component
+  candidates, and uses `FINAL-FLAT-001` as the forest-plan source. The command
+  still fails closed on `source-set-4fb59e9eb43045cb` because authority source
+  evidence is missing for non-forest families and baseline rules
+  (`candidates_have_source_evidence_available.failure_count=9`,
+  `authority_family_template_candidates_cover_config.missing_source_record_count=10`).
+  The next implementation slice is the 4fb source-evidence blocker: prove a
+  governed same-source-set repair or open a new blocker packet if 4fb cannot
+  support current reviewer readiness. Do not proceed to applicability
+  retrieval, determination, compliance, or promotion until
+  `applicability-authority-universe` is green.
 - Do not reuse the historical green West Reservoir
   `phase_eval_results.json` on `source-set-5e65d845ce77e1a0` as current
   readiness proof. It is historical evidence only; the active packet requires

@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 import hashlib
+import copy
 import json
 import re
 
@@ -19,7 +20,9 @@ from .applicability_contract_support import string_groups as _string_groups
 from .applicability_contract_support import strings as _strings
 from .claim_extraction import default_claims_path
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
+from .forest_plan_profiles import ForestPlanProfile
 from .forest_plan_profiles import load_forest_plan_profiles
+from .records import aliased_source_record_ids
 from .records import sha256_file
 from .rule_claim_binding import default_rule_claim_links_path
 from .rule_packs import DEFAULT_RULE_PACK_PATH
@@ -55,6 +58,7 @@ def build_authority_universe_snapshot(
     forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
     authority_family_templates_path: Path | None = DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH,
     forest_plan_component_inventory_path: Path | None = None,
+    forest_unit_id: str | None = None,
     claims_path: Path | None = None,
     rule_claim_links_path: Path | None = None,
 ) -> AuthorityUniverseSnapshotResult:
@@ -86,12 +90,15 @@ def build_authority_universe_snapshot(
     if not base_rule_pack_path.exists():
         raise FileNotFoundError(f"Missing base rule pack: {base_rule_pack_path}")
     base_rule_pack = load_rule_pack(base_rule_pack_path)
-    rule_pack_validation = validate_rule_pack(base_rule_pack)
     base_rule_pack_sha256 = sha256_file(base_rule_pack_path)
 
     forest_plan_profiles_path = Path(forest_plan_profiles_path)
     profiles = load_forest_plan_profiles(forest_plan_profiles_path)
     profiles_sha256 = sha256_file(forest_plan_profiles_path)
+    forest_plan_profile = _review_forest_plan_profile(
+        profiles=profiles,
+        forest_unit_id=forest_unit_id,
+    )
 
     authority_family_templates_path = (
         Path(authority_family_templates_path)
@@ -102,6 +109,10 @@ def build_authority_universe_snapshot(
         _load_authority_family_templates(authority_family_templates_path)
         if authority_family_templates_path
         else None
+    )
+    authority_family_templates = _scope_authority_family_templates_for_forest_unit(
+        template_set=authority_family_templates,
+        profile=forest_plan_profile,
     )
     authority_family_templates_sha256 = (
         sha256_file(authority_family_templates_path)
@@ -134,9 +145,14 @@ def build_authority_universe_snapshot(
     )
 
     created_at = _utc_now()
+    scoped_base_rule_pack = _scope_base_rule_pack_for_forest_unit(
+        rule_pack=base_rule_pack,
+        profile=forest_plan_profile,
+    )
+    rule_pack_validation = validate_rule_pack(scoped_base_rule_pack)
     rule_candidates = rule_template_candidates(
         source_set_id=source_set_id,
-        rule_pack=base_rule_pack,
+        rule_pack=scoped_base_rule_pack,
         catalog_by_source_id=catalog_by_source_id,
         source_claim_links_by_rule=source_claim_links_by_rule,
         source_claim_gaps_by_rule=source_claim_gaps_by_rule,
@@ -146,7 +162,10 @@ def build_authority_universe_snapshot(
         template_set=authority_family_templates,
         catalog_by_source_id=catalog_by_source_id,
     )
-    forest_plan_rule_source_ids = _forest_plan_rule_source_record_ids(base_rule_pack)
+    forest_plan_rule_source_ids = _forest_plan_component_source_record_ids(
+        rule_pack=scoped_base_rule_pack,
+        profile=forest_plan_profile,
+    )
     component_candidates = forest_plan_component_candidates(
         source_set_id=source_set_id,
         profiles=profiles,
@@ -168,6 +187,9 @@ def build_authority_universe_snapshot(
             "source_set_manifest_sha256": _optional_file_sha256(source_set_manifest_path),
             "catalog_sha256": _optional_file_sha256(source_catalog_path),
             "profiles_sha256": profiles_sha256,
+            "forest_unit_id": forest_plan_profile.forest_unit_id
+            if forest_plan_profile
+            else None,
             "authority_family_templates_sha256": authority_family_templates_sha256,
             "component_inventory_sha256": component_inventory_sha256,
             "source_claims_sha256": _optional_file_sha256(claims_path),
@@ -179,22 +201,30 @@ def build_authority_universe_snapshot(
     authority_universe_id = (
         f"authority-universe:{review_id}:{source_set_id}:{authority_universe_sha256[:16]}"
     )
+    review_scope = _review_scope_summary(
+        original_rule_pack=base_rule_pack,
+        scoped_rule_pack=scoped_base_rule_pack,
+        profile=forest_plan_profile,
+    )
     validation = authority_universe_validation(
         created_at=created_at,
         source_set_id=source_set_id,
-        rule_pack=base_rule_pack,
+        rule_pack=scoped_base_rule_pack,
         rule_pack_validation=rule_pack_validation,
         candidate_authorities=candidate_authorities,
         profiles=profiles,
         component_inventory=component_inventory,
         authority_family_templates=authority_family_templates,
+        forest_plan_required_source_record_ids=forest_plan_rule_source_ids,
     )
     summary = authority_universe_summary(
         authority_universe_id=authority_universe_id,
         authority_universe_sha256=authority_universe_sha256,
         review_id=review_id,
         source_set_id=source_set_id,
-        base_rule_pack=base_rule_pack,
+        forest_unit_id=forest_plan_profile.forest_unit_id if forest_plan_profile else None,
+        review_scope=review_scope,
+        base_rule_pack=scoped_base_rule_pack,
         source_set_manifest_path=source_set_manifest_path,
         source_catalog_path=source_catalog_path,
         forest_plan_profiles_path=forest_plan_profiles_path,
@@ -214,11 +244,13 @@ def build_authority_universe_snapshot(
         "authority_universe_sha256": authority_universe_sha256,
         "review_id": review_id,
         "source_set_id": source_set_id,
+        "forest_unit_id": forest_plan_profile.forest_unit_id if forest_plan_profile else None,
         "source_set_manifest_sha256": _optional_file_sha256(source_set_manifest_path),
         "catalog_sha256": _optional_file_sha256(source_catalog_path),
         "base_rule_pack_id": base_rule_pack.get("rule_pack_id"),
         "base_rule_pack_version": base_rule_pack.get("version"),
         "base_rule_pack_sha256": base_rule_pack_sha256,
+        "review_scope": review_scope,
         "forest_plan_profiles_sha256": profiles_sha256,
         "forest_plan_profile_ids": forest_plan_profile_ids(profiles),
         "authority_family_templates_sha256": authority_family_templates_sha256,
@@ -270,6 +302,158 @@ def build_authority_universe_snapshot(
         snapshot_path=snapshot_path,
         summary=summary,
     )
+
+
+def _review_forest_plan_profile(
+    *,
+    profiles,
+    forest_unit_id: str | None,
+) -> ForestPlanProfile | None:
+    value = str(forest_unit_id or "").strip()
+    if not value:
+        return None
+    _validate_safe_segment(value, "forest_unit_id")
+    return profiles.get(value)
+
+
+def _scope_base_rule_pack_for_forest_unit(
+    *,
+    rule_pack: dict,
+    profile: ForestPlanProfile | None,
+) -> dict:
+    if profile is None:
+        return rule_pack
+    scoped = copy.deepcopy(rule_pack)
+    rules = scoped.get("rules")
+    if not isinstance(rules, list):
+        return scoped
+    scoped["rules"] = [
+        rule
+        for rule in rules
+        if not _is_nonmatching_forest_plan_rule(rule=rule, profile=profile)
+    ]
+    return scoped
+
+
+def _scope_authority_family_templates_for_forest_unit(
+    *,
+    template_set: dict | None,
+    profile: ForestPlanProfile | None,
+) -> dict | None:
+    if template_set is None or profile is None:
+        return template_set
+    scoped = copy.deepcopy(template_set)
+    templates = scoped.get("templates")
+    if not isinstance(templates, list):
+        return scoped
+    for template in templates:
+        if not isinstance(template, dict) or template.get("authority_category") != "forest_plan":
+            continue
+        source_record_id = profile.active_plan_source_record_id
+        template["authority_source_record_id"] = source_record_id
+        template["source_record_ids"] = [source_record_id]
+        template["supporting_source_record_ids"] = []
+        source_filters = (
+            template.get("source_filters")
+            if isinstance(template.get("source_filters"), dict)
+            else {}
+        )
+        source_filters = dict(source_filters)
+        source_filters["source_record_id"] = source_record_id
+        source_filters["document_role"] = "forest_plan"
+        source_filters["authority_level"] = "forest"
+        template["source_filters"] = source_filters
+        template["source_query"] = _forest_plan_template_source_query(profile)
+        dependency_contract = (
+            template.get("dependency_contract")
+            if isinstance(template.get("dependency_contract"), dict)
+            else {}
+        )
+        dependency_contract = dict(dependency_contract)
+        dependency_contract["supporting_source_record_ids"] = []
+        template["dependency_contract"] = dependency_contract
+        template["review_scope"] = {
+            "forest_unit_id": profile.forest_unit_id,
+            "active_plan_source_record_id": profile.active_plan_source_record_id,
+            "scope_reason": "review_forest_unit",
+        }
+    return scoped
+
+
+def _forest_plan_template_source_query(profile: ForestPlanProfile) -> str:
+    forest_name = profile.forest_unit_names[0] if profile.forest_unit_names else profile.forest_unit_id
+    return f"{forest_name} land management plan forest plan source records"
+
+
+def _is_nonmatching_forest_plan_rule(
+    *,
+    rule: object,
+    profile: ForestPlanProfile,
+) -> bool:
+    if not isinstance(rule, dict) or rule.get("authority_category") != "forest_plan":
+        return False
+    source_record_id = _rule_source_record_id(rule)
+    if not source_record_id:
+        return True
+    return not _source_record_matches_profile_plan(
+        source_record_id=source_record_id,
+        profile=profile,
+    )
+
+
+def _source_record_matches_profile_plan(
+    *,
+    source_record_id: str,
+    profile: ForestPlanProfile,
+) -> bool:
+    profile_aliases = set(aliased_source_record_ids([profile.active_plan_source_record_id]))
+    source_aliases = set(aliased_source_record_ids([source_record_id]))
+    return bool(profile_aliases & source_aliases)
+
+
+def _rule_source_record_id(rule: dict) -> str | None:
+    source_filters = (
+        rule.get("source_filters") if isinstance(rule.get("source_filters"), dict) else {}
+    )
+    value = rule.get("authority_source_record_id") or source_filters.get("source_record_id")
+    return str(value).strip() if str(value or "").strip() else None
+
+
+def _forest_plan_component_source_record_ids(
+    *,
+    rule_pack: dict,
+    profile: ForestPlanProfile | None,
+) -> set[str]:
+    if profile is not None:
+        return {profile.active_plan_source_record_id}
+    return _forest_plan_rule_source_record_ids(rule_pack)
+
+
+def _review_scope_summary(
+    *,
+    original_rule_pack: dict,
+    scoped_rule_pack: dict,
+    profile: ForestPlanProfile | None,
+) -> dict:
+    original_rule_ids = {
+        str(rule.get("id") or "")
+        for rule in original_rule_pack.get("rules", [])
+        if isinstance(rule, dict) and str(rule.get("id") or "").strip()
+    }
+    scoped_rule_ids = {
+        str(rule.get("id") or "")
+        for rule in scoped_rule_pack.get("rules", [])
+        if isinstance(rule, dict) and str(rule.get("id") or "").strip()
+    }
+    return {
+        "forest_unit_id": profile.forest_unit_id if profile else None,
+        "active_plan_source_record_id": (
+            profile.active_plan_source_record_id if profile else None
+        ),
+        "original_base_rule_count": len(original_rule_ids),
+        "scoped_base_rule_count": len(scoped_rule_ids),
+        "removed_forest_plan_rule_ids": sorted(original_rule_ids - scoped_rule_ids),
+    }
 
 
 def _load_authority_family_templates(path: Path) -> dict:

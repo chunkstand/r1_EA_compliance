@@ -20,6 +20,7 @@ def authority_universe_validation(
     profiles: ForestPlanProfileCollection,
     component_inventory: dict | None,
     authority_family_templates: dict | None,
+    forest_plan_required_source_record_ids: set[str] | None = None,
 ) -> dict:
     checks = [
         {
@@ -52,6 +53,7 @@ def authority_universe_validation(
             candidate_authorities=candidate_authorities,
             profiles=profiles,
             component_inventory=component_inventory,
+            forest_plan_required_source_record_ids=forest_plan_required_source_record_ids,
         ),
     ]
     return {
@@ -69,6 +71,8 @@ def authority_universe_summary(
     authority_universe_sha256: str,
     review_id: str,
     source_set_id: str,
+    forest_unit_id: str | None,
+    review_scope: dict | None,
     base_rule_pack: dict,
     source_set_manifest_path: Path,
     source_catalog_path: Path,
@@ -101,6 +105,8 @@ def authority_universe_summary(
         "authority_universe_sha256": authority_universe_sha256,
         "review_id": review_id,
         "source_set_id": source_set_id,
+        "forest_unit_id": forest_unit_id,
+        "review_scope": review_scope or {},
         "base_rule_pack_id": base_rule_pack.get("rule_pack_id"),
         "base_rule_pack_version": base_rule_pack.get("version"),
         "base_rule_count": len(base_rule_pack.get("rules", [])),
@@ -436,8 +442,9 @@ def _check_forest_plan_component_candidates(
     candidate_authorities: list[dict],
     profiles: ForestPlanProfileCollection,
     component_inventory: dict | None,
+    forest_plan_required_source_record_ids: set[str] | None = None,
 ) -> dict:
-    forest_plan_rule_source_ids = {
+    forest_plan_rule_source_ids = forest_plan_required_source_record_ids or {
         rule_source_record_id(rule)
         for rule in rule_pack.get("rules", [])
         if rule.get("authority_category") == "forest_plan"
