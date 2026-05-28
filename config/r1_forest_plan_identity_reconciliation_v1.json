@@ -1,5 +1,5 @@
 {
-  "active_source_set_id": "source-set-4fb59e9eb43045cb",
+  "active_source_set_id": "source-set-f70ea11e04ae3d53",
   "blocked_forest_unit_ids": [
     "custer-gallatin-nf",
     "beaverhead-deerlodge-nf",
@@ -1070,7 +1070,7 @@
       ]
     }
   ],
-  "governed_catalog_rebound_source_record_count": 1,
+  "governed_catalog_rebound_source_record_count": 3,
   "governed_catalog_rebound_source_records": [
     {
       "binding_basis": "existing_source_record_id",
@@ -1088,6 +1088,36 @@
         "readiness:active_plan_source_record_id",
         "readiness:primary_land_management_plan"
       ]
+    },
+    {
+      "binding_basis": "existing_source_record_id",
+      "canonical_source_record_id": "FPS-180",
+      "canonical_title": "Final Record of Decision for Flathead Land Management Plan",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "record_of_decision",
+      "document_title": "2018 Forest Plan Record of Decision",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-03",
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1783379015826",
+      "referenced_by": [
+        "manifest:record_of_decision",
+        "readiness:record_of_decision"
+      ]
+    },
+    {
+      "binding_basis": "existing_source_record_id",
+      "canonical_source_record_id": "FINAL-FLAT-003",
+      "canonical_title": "Final Environmental Impact Statement - Volume 4 / Appendices and Glossary",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "final_environmental_impact_statement_appendices",
+      "document_title": "Final EIS Volume 4 Appendices and Glossary excluding maps",
+      "forest_unit_id": "flathead-nf",
+      "legacy_source_record_id": "R1PLAN-flathead-nf-05",
+      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1783381004516",
+      "referenced_by": [
+        "manifest:final_environmental_impact_statement_appendices",
+        "readiness:final_environmental_impact_statement_appendices"
+      ]
     }
   ],
   "inventory_manifest_path": "config/r1_forest_plan_component_inventory_build_manifest.json",
@@ -1095,27 +1125,29 @@
   "readiness_path": "config/region1_forest_plan_readiness_nepa_3d_v1.json",
   "referenced_legacy_source_record_count": 99,
   "schema_version": "region1-forest-plan-identity-reconciliation-registry-v1",
-  "source_catalog_path": "source_library/catalog/source_catalog.jsonl",
+  "source_catalog_path": "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl",
   "unresolved_forest_unit_counts": {
     "beaverhead-deerlodge-nf": 1,
     "bitterroot-nf": 3,
     "custer-gallatin-nf": 1,
     "dakota-prairie-grasslands": 1,
-    "flathead-nf": 9,
+    "flathead-nf": 7,
     "helena-lewis-and-clark-nf": 1,
     "idaho-panhandle-nfs": 3,
     "kootenai-nf": 1,
     "lolo-nf": 1,
     "nez-perce-clearwater-nfs": 3
   },
-  "unresolved_source_record_count": 24,
+  "unresolved_source_record_count": 22,
   "unresolved_source_records": [
     {
       "document_role": "planning_page",
       "document_title": "Beaverhead-Deerlodge planning page",
       "forest_unit_id": "beaverhead-deerlodge-nf",
       "legacy_source_record_id": "R1PLAN-beaverhead-deerlodge-nf-01",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-beaverhead-deerlodge-nf-01"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/beaverhead-deerlodge/planning",
       "referenced_by": [
         "manifest:planning_page",
@@ -1128,7 +1160,9 @@
       "document_title": "Bitterroot planning page",
       "forest_unit_id": "bitterroot-nf",
       "legacy_source_record_id": "R1PLAN-bitterroot-nf-01",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-bitterroot-nf-01"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/bitterroot/planning",
       "referenced_by": [
         "manifest:planning_page",
@@ -1167,7 +1201,9 @@
       "document_title": "Custer Gallatin land management plan page",
       "forest_unit_id": "custer-gallatin-nf",
       "legacy_source_record_id": "R1PLAN-custer-gallatin-nf-01",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-custer-gallatin-nf-01"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/custergallatin/planning/forest-plan/custer-gallatin-land-management-plan-forest-plan-revision",
       "referenced_by": [
         "manifest:planning_page",
@@ -1180,7 +1216,9 @@
       "document_title": "Dakota Prairie Grasslands natural resources / LRMP page",
       "forest_unit_id": "dakota-prairie-grasslands",
       "legacy_source_record_id": "R1PLAN-dakota-prairie-grasslands-01",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-dakota-prairie-grasslands-01"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/dpg/natural-resources",
       "referenced_by": [
         "manifest:planning_page",
@@ -1193,26 +1231,15 @@
       "document_title": "Flathead Forest Plan page",
       "forest_unit_id": "flathead-nf",
       "legacy_source_record_id": "R1PLAN-flathead-nf-01",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-flathead-nf-01"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/flathead/planning/forest-plan",
       "referenced_by": [
         "manifest:planning_page",
         "readiness:planning_page"
       ],
       "resolution_status": "catalog_confirmed"
-    },
-    {
-      "document_role": "record_of_decision",
-      "document_title": "2018 Forest Plan Record of Decision",
-      "forest_unit_id": "flathead-nf",
-      "legacy_source_record_id": "R1PLAN-flathead-nf-03",
-      "matching_canonical_source_record_ids": [],
-      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1783379015826",
-      "referenced_by": [
-        "manifest:record_of_decision",
-        "readiness:record_of_decision"
-      ],
-      "resolution_status": "source_delta_required"
     },
     {
       "document_role": "final_environmental_impact_statement_volume_1_part_1",
@@ -1224,19 +1251,6 @@
       "referenced_by": [
         "manifest:final_environmental_impact_statement_volume_1_part_1",
         "readiness:final_environmental_impact_statement_volume_1_part_1"
-      ],
-      "resolution_status": "source_delta_required"
-    },
-    {
-      "document_role": "final_environmental_impact_statement_appendices",
-      "document_title": "Final EIS Volume 4 Appendices and Glossary excluding maps",
-      "forest_unit_id": "flathead-nf",
-      "legacy_source_record_id": "R1PLAN-flathead-nf-05",
-      "matching_canonical_source_record_ids": [],
-      "official_link": "https://usfs-public.app.box.com/s/hdlk4uckwwa9mhtzal4tvikw3ayf7qh0/file/1783381004516",
-      "referenced_by": [
-        "manifest:final_environmental_impact_statement_appendices",
-        "readiness:final_environmental_impact_statement_appendices"
       ],
       "resolution_status": "source_delta_required"
     },
@@ -1310,7 +1324,9 @@
       "document_title": "2021 Forest Plan, Final EIS and ROD page",
       "forest_unit_id": "helena-lewis-and-clark-nf",
       "legacy_source_record_id": "R1PLAN-helena-lewis-and-clark-nf-01",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-helena-lewis-and-clark-nf-01"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/helena-lewisclark/natural-resources/forest-management/2021-forest-plan-final-eis-and-record-0",
       "referenced_by": [
         "manifest:planning_page",
@@ -1323,7 +1339,9 @@
       "document_title": "Idaho Panhandle planning page",
       "forest_unit_id": "idaho-panhandle-nfs",
       "legacy_source_record_id": "R1PLAN-idaho-panhandle-nfs-01",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-idaho-panhandle-nfs-01"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/idahopanhandle/planning",
       "referenced_by": [
         "manifest:planning_page",
@@ -1362,7 +1380,9 @@
       "document_title": "Kootenai planning page",
       "forest_unit_id": "kootenai-nf",
       "legacy_source_record_id": "R1PLAN-kootenai-nf-01",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-kootenai-nf-01"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/kootenai/planning",
       "referenced_by": [
         "manifest:planning_page",
@@ -1375,7 +1395,9 @@
       "document_title": "Lolo planning page / forest plan revision page",
       "forest_unit_id": "lolo-nf",
       "legacy_source_record_id": "R1PLAN-lolo-nf-01",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-lolo-nf-01"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/lolo/planning",
       "referenced_by": [
         "manifest:planning_page",
@@ -1388,7 +1410,9 @@
       "document_title": "Nez Perce-Clearwater planning page",
       "forest_unit_id": "nez-perce-clearwater-nfs",
       "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-01",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-nez-perce-clearwater-nfs-01"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/nezperce-clearwater/planning",
       "referenced_by": [
         "manifest:planning_page",
@@ -1401,7 +1425,9 @@
       "document_title": "2025 Nez Perce-Clearwater National Forests Revised Land Management Plan",
       "forest_unit_id": "nez-perce-clearwater-nfs",
       "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-02",
-      "matching_canonical_source_record_ids": [],
+      "matching_canonical_source_record_ids": [
+        "R1PLAN-nez-perce-clearwater-nfs-02"
+      ],
       "official_link": "https://www.fs.usda.gov/r01/nezperce-clearwater/planning/2025-land-management-plan",
       "referenced_by": [
         "manifest:plan_document_set_page",
@@ -1425,7 +1451,7 @@
   ],
   "unresolved_status_counts": {
     "catalog_confirmed": 11,
-    "source_delta_required": 13
+    "source_delta_required": 11
   },
   "version": "1.0.0"
 }

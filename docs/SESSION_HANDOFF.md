@@ -25,11 +25,11 @@ history below.
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
-- active West Reservoir child blocker:
+- predecessor West Reservoir source-evidence blocker:
   `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
-- active West Reservoir source-set migration packet:
+- predecessor West Reservoir source-set migration packet:
   `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`
-- active West Reservoir f70 forest-plan identity blocker:
+- active West Reservoir f70 forest-plan identity/source-capture blocker:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -129,17 +129,23 @@ history below.
   `config/applicability_adjudications/west-reservoir-67436.json` now matches
   the f70 decision hash and resolves the three f70 authority-family conflicts
   as `human_applicable`. Parent Milestone 1 is still reduced, not
-  reviewer-ready: `forest-plan-resolve` stops before current Flathead context
-  generation with `required_custer_source_records_indexed` and
-  `retrieval_ready_for_forest_plan_resolver`. The check name is historical;
-  the active owner is
-  `config/r1_forest_plan_identity_reconciliation_v1.json`, which still
-  declares `active_source_set_id="source-set-4fb59e9eb43045cb"` and leaves
-  nine required Flathead legacy source-record IDs unresolved for the f70
-  replay. The next slice is
+  reviewer-ready. The f70 forest-plan identity blocker has been reduced:
+  `config/r1_forest_plan_identity_reconciliation_v1.json` now declares
+  `active_source_set_id="source-set-f70ea11e04ae3d53"` and governs
+  `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`,
+  `R1PLAN-flathead-nf-03 -> FPS-180`, and
+  `R1PLAN-flathead-nf-05 -> FINAL-FLAT-003`. `forest-plan-resolve` still
+  stops before current Flathead context generation with
+  `required_custer_source_records_indexed` and
+  `retrieval_ready_for_forest_plan_resolver`; the remaining blocking missing
+  source records are `R1PLAN-flathead-nf-04`,
+  `R1PLAN-flathead-nf-06`, `R1PLAN-flathead-nf-07`,
+  `R1PLAN-flathead-nf-10`, `R1PLAN-flathead-nf-12`, and
+  `R1PLAN-flathead-nf-16`. The next slice is a Flathead f70 source-capture
+  follow-on under
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
   Do not run component readiness, compliance review, V1 promotion, phase eval,
-  registry promotion, or aggregate promotion until that blocker lets
+  registry promotion, or aggregate promotion until that follow-on lets
   `forest-plan-resolve` emit current f70 Flathead context and component
   artifacts.
   Local commit anchors for the Milestone 1 reduction/blocker route are
@@ -149,8 +155,8 @@ history below.
   with Bitter Lesson`), and the source-set migration Milestone 1 closeout
   commit is `f17474b` (`Migrate West Reservoir source-set contract`).
   Do not run component readiness, compliance review, V1 promotion, phase eval,
-  registry promotion, or aggregate promotion until the f70 forest-plan identity
-  blocker is resolved.
+  registry promotion, or aggregate promotion until the Flathead f70
+  source-capture gap is closed.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or

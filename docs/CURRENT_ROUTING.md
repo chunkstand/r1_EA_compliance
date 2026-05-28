@@ -74,15 +74,22 @@ Use this file as the short current route before opening the append-only docs.
   on f70. Applicability validation reports `44` applicable authorities, `102`
   non-applicable authorities, `0` unresolved authorities, and
   `generated_rule_pack_ready=true`; the generated rule pack contains `44`
-  rules. The next implementation slice is
-  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`:
-  `forest-plan-resolve` stops before current Flathead context generation
-  because `config/r1_forest_plan_identity_reconciliation_v1.json` is still
-  anchored to `source-set-4fb59e9eb43045cb` and leaves nine required Flathead
-  legacy source-record IDs unresolved. Do not proceed to component readiness,
-  compliance, V1 promotion, phase eval, or registry promotion until the
-  identity blocker lets `forest-plan-resolve` emit current f70 Flathead
-  context and component artifacts.
+  rules. The f70 forest-plan identity blocker Milestone 1 is now reduced:
+  `config/r1_forest_plan_identity_reconciliation_v1.json` declares
+  `active_source_set_id="source-set-f70ea11e04ae3d53"`, governs
+  `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`,
+  `R1PLAN-flathead-nf-03 -> FPS-180`, and
+  `R1PLAN-flathead-nf-05 -> FINAL-FLAT-003`, and leaves seven Flathead rows
+  unresolved in tracked identity metadata. `forest-plan-resolve` still stops
+  before current Flathead context generation because the f70 retrieval index is
+  missing six blocking required source records:
+  `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-06`,
+  `R1PLAN-flathead-nf-07`, `R1PLAN-flathead-nf-10`,
+  `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16`. Do not proceed to
+  component readiness, compliance, V1 promotion, phase eval, or registry
+  promotion until a follow-on Flathead source-capture slice lets
+  `forest-plan-resolve` emit current f70 Flathead context and component
+  artifacts.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson

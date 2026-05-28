@@ -71,10 +71,23 @@ def build_region1_forest_plan_identity_reconciliation_registry(
 
         if len(catalog_matches) == 1:
             catalog_row = catalog_matches[0]
+            canonical_source_record_id = str(catalog_row.get("source_record_id") or "").strip()
+            if (
+                canonical_source_record_id == legacy_source_record_id
+                and legacy_source_record_id.startswith("R1PLAN-")
+            ):
+                unresolved_source_records.append(
+                    {
+                        **base_entry,
+                        "resolution_status": legacy_row["draft_status"] or "catalog_confirmed",
+                        "matching_canonical_source_record_ids": [canonical_source_record_id],
+                    }
+                )
+                continue
             exact_url_matched_source_records.append(
                 {
                     **base_entry,
-                    "canonical_source_record_id": catalog_row["source_record_id"],
+                    "canonical_source_record_id": canonical_source_record_id,
                     "canonical_title": catalog_row.get("title", ""),
                     "catalog_source_partition": catalog_row.get("source_partition"),
                 }

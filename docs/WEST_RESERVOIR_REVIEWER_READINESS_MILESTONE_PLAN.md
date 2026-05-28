@@ -574,20 +574,22 @@ Implementation note:
   `reviewer_ready=true`, and `generated_rule_pack_ready=true`.
 - `applicability-generate-rule-pack` passed with `generated_rule_count=44` and
   `generated_rule_pack_ready=true`.
-- `forest-plan-resolve` stopped before generating Flathead context/component
-  artifacts with `required_custer_source_records_indexed` and
-  `retrieval_ready_for_forest_plan_resolver`. The check name is historical;
-  the blocker owner is the stale
-  `config/r1_forest_plan_identity_reconciliation_v1.json` registry, which
-  still declares `active_source_set_id="source-set-4fb59e9eb43045cb"` and
-  leaves nine required Flathead legacy source-record IDs unresolved for the
-  f70 replay.
+- `forest-plan-resolve` still stops before generating Flathead
+  context/component artifacts with `required_custer_source_records_indexed`
+  and `retrieval_ready_for_forest_plan_resolver`. The check name is
+  historical. The f70 identity blocker has been reduced: the registry now
+  declares `active_source_set_id="source-set-f70ea11e04ae3d53"` and governs
+  the Flathead plan, ROD, and FEIS appendices bindings, but the f70 retrieval
+  index is still missing six blocking required source records:
+  `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-06`,
+  `R1PLAN-flathead-nf-07`, `R1PLAN-flathead-nf-10`,
+  `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16`.
 - The active child blocker is now
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
   Do not start Milestone 2 component readiness, compliance review, V1
-  promotion, phase eval, registry promotion, or aggregate promotion until that
-  blocker lets `forest-plan-resolve` generate current f70 Flathead context and
-  component artifacts.
+  promotion, phase eval, registry promotion, or aggregate promotion until a
+  follow-on Flathead source-capture slice lets `forest-plan-resolve` generate
+  current f70 Flathead context and component artifacts.
 - Local commit anchors:
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) for the
   Flathead authority-universe scoping repair and `0773ef7` (`Open West
@@ -829,8 +831,10 @@ occur:
 ## Closeout Checklist
 
 - [x] Milestone 0 baseline and stale-green guard resolved
-- [ ] Milestone 1 review artifact spine rebuilt on
+- [x] Milestone 1 review/applicability artifact spine rebuilt on
       `source-set-f70ea11e04ae3d53`
+- [x] Milestone 1 f70 identity blocker reduced to six Flathead source-capture
+      gaps
 - [x] Milestone 1 source-evidence blocker routed through
       `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 - [ ] Milestone 2 component eval passes `27/27`

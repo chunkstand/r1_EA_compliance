@@ -1,10 +1,9 @@
 # West Reservoir f70 Forest-Plan Identity Reconciliation Blocker Milestone Plan
 
 Date: 2026-05-28
-Status: Active blocker packet opened from
-`docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 1 after
-the f70 applicability spine turned green and `forest-plan-resolve` stopped on
-stale forest-plan identity reconciliation.
+Status: Milestone 1 reduced on 2026-05-28. The registry is now rebound to
+`source-set-f70ea11e04ae3d53`, but `forest-plan-resolve` still stops on a
+narrower Flathead source-capture gap.
 Owner context: Flathead forest-plan resolver identity blocker for
 `review_id="west-reservoir-67436"` on `source-set-f70ea11e04ae3d53`
 
@@ -24,15 +23,14 @@ the migrated source set. Applicability validation is now green with `44`
 applicable authorities, `102` non-applicable authorities, `0` unresolved
 authorities, and `generated_rule_pack_ready=true`.
 
-The slice cannot proceed to forest-plan context or component readiness because
-`forest-plan-resolve` fails before context generation with
+The slice still cannot proceed to forest-plan context or component readiness
+because `forest-plan-resolve` fails before context generation with
 `required_custer_source_records_indexed` and
 `retrieval_ready_for_forest_plan_resolver`. The check name is historical, but
-the failing owner is current: the resolver aliases Flathead legacy
-`R1PLAN-flathead-*` source-record expectations through
-`config/r1_forest_plan_identity_reconciliation_v1.json`, whose committed
-registry still declares `active_source_set_id="source-set-4fb59e9eb43045cb"`
-and leaves nine Flathead required readiness records unresolved.
+the failing owner has narrowed: the resolver now aliases governed Flathead
+legacy `R1PLAN-flathead-*` source-record expectations through the f70 registry,
+and the remaining blocker is the required Flathead support records absent from
+the f70 retrieval index.
 
 ## Current Evidence
 
@@ -59,29 +57,33 @@ and leaves nine Flathead required readiness records unresolved.
 - Current identity owner:
   `config/r1_forest_plan_identity_reconciliation_v1.json`
 - Current identity-owner state:
-  `active_source_set_id="source-set-4fb59e9eb43045cb"`,
-  `governed_catalog_rebound_source_record_count=1`, and
-  `unresolved_source_record_count=24`
-- Flathead identity gap:
-  only `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001` is governed in the registry;
-  the Flathead rows `R1PLAN-flathead-nf-01`, `R1PLAN-flathead-nf-03`,
-  `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-05`,
+  `active_source_set_id="source-set-f70ea11e04ae3d53"`,
+  `exact_url_matched_source_record_count=74`,
+  `governed_catalog_rebound_source_record_count=3`, and
+  `unresolved_source_record_count=22`
+- Flathead governed identity bindings:
+  `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`,
+  `R1PLAN-flathead-nf-03 -> FPS-180`, and
+  `R1PLAN-flathead-nf-05 -> FINAL-FLAT-003`.
+- Flathead residual source-capture gap:
+  `R1PLAN-flathead-nf-01` remains unresolved-but-catalog-confirmed as the
+  planning page. The six blocking required source records still absent from
+  the f70 retrieval index are `R1PLAN-flathead-nf-04`,
   `R1PLAN-flathead-nf-06`, `R1PLAN-flathead-nf-07`,
   `R1PLAN-flathead-nf-10`, `R1PLAN-flathead-nf-12`, and
-  `R1PLAN-flathead-nf-16` remain unresolved.
+  `R1PLAN-flathead-nf-16`.
 - Current f70 catalog evidence:
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl`
-  includes current Flathead rows such as `R1PLAN-flathead-nf-01` and
-  `FINAL-FLAT-001` through `FINAL-FLAT-007`, but the resolver's alias registry
-  is not yet rebound to that source-set truth.
+  includes current Flathead rows such as `R1PLAN-flathead-nf-01`,
+  `FINAL-FLAT-001`, `FINAL-FLAT-003`, and `FPS-180`, but it does not provide
+  governed f70 catalog rows for the remaining required FEIS volume 1, BA, BO,
+  administrative-change, FEIS volume 2 response, or revised BO expectations.
 
 ## Goal
 
-Make Flathead forest-plan identity reconciliation replay-ready for
-West Reservoir on `source-set-f70ea11e04ae3d53`, then return to the parent
-readiness plan so `forest-plan-resolve` can produce current Flathead
-`forest_plan_context*`, component findings, standard coverage, and reviewer
-resolution queue artifacts.
+Make Flathead forest-plan identity reconciliation honest for West Reservoir on
+`source-set-f70ea11e04ae3d53`, then stop at the source-capture boundary when
+the selected f70 catalog cannot satisfy every required Flathead support record.
 
 ## Non-Goals
 
@@ -164,9 +166,8 @@ Acceptance criteria:
 
 ### Milestone 1 - Governed f70 Flathead Identity Reconciliation
 
-Outcome label: resolved for this blocker if `forest-plan-resolve` reaches
-current Flathead context generation; reduced if a narrower Flathead source
-capture gap remains.
+Outcome label: reduced. The stale-registry blocker is gone, and the remaining
+failure is a narrower Flathead source-capture gap.
 
 Implementation tasks:
 
@@ -188,6 +189,23 @@ Acceptance criteria:
   `forest_plan_reviewer_resolution_queue.json`.
 - Any remaining blocker is named exactly and routed before parent Milestone 2.
 
+Closeout result on 2026-05-28:
+
+- `config/r1_forest_plan_identity_reconciliation_v1.json` now declares
+  `active_source_set_id="source-set-f70ea11e04ae3d53"`.
+- `config/r1_forest_plan_document_register_draft.csv` governs the Flathead ROD
+  and FEIS appendices to f70 catalog rows without deleting required readiness
+  roles.
+- `config/r1_forest_plan_component_inventory_build_manifest.json` and
+  `config/region1_forest_plan_readiness_nepa_3d_v1.json` now use
+  `FPS-180` for the Flathead ROD and `FINAL-FLAT-003` for the Flathead FEIS
+  appendices/glossary.
+- `forest-plan-resolve` still fails before context generation, but the
+  blocking missing IDs are now exactly `R1PLAN-flathead-nf-04`,
+  `R1PLAN-flathead-nf-06`, `R1PLAN-flathead-nf-07`,
+  `R1PLAN-flathead-nf-10`, `R1PLAN-flathead-nf-12`, and
+  `R1PLAN-flathead-nf-16`.
+
 ## Required Verification Gates
 
 For Milestone 0 closeout:
@@ -203,8 +221,8 @@ git diff --check
 For Milestone 1 implementation, add:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_resolver_scope.py
-PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py src/usfs_r1_ea_sources/forest_plan_resolver_validation.py tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_resolver_scope.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver_scope.py
+PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py src/usfs_r1_ea_sources/forest_plan_resolver_validation.py tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver_scope.py
 ```
 
 ## Required Documentation And Handoff Updates
@@ -239,8 +257,9 @@ Stop instead of broadening the parent milestone if:
 ## Residual Risks And Next Routing
 
 - West Reservoir remains typed blocked.
-- The parent readiness plan resumes only after this blocker allows
-  `forest-plan-resolve` to generate current Flathead context and component
-  artifacts on `source-set-f70ea11e04ae3d53`.
+- The parent readiness plan must not resume until a follow-on Flathead
+  source-capture slice supplies or governs the six missing required support
+  records and `forest-plan-resolve` can generate current f70 Flathead context
+  and component artifacts.
 - Aggregate component coverage remains red for unrelated non-West-Reservoir
   residual slots and must not be described as green.

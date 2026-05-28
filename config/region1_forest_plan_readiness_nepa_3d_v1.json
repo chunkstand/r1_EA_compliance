@@ -704,7 +704,7 @@
         {
           "readiness_status": "catalog_confirmed",
           "role": "record_of_decision",
-          "source_record_id": "R1PLAN-flathead-nf-03"
+          "source_record_id": "FPS-180"
         },
         {
           "readiness_status": "catalog_confirmed",
@@ -714,7 +714,7 @@
         {
           "readiness_status": "catalog_confirmed",
           "role": "final_environmental_impact_statement_appendices",
-          "source_record_id": "R1PLAN-flathead-nf-05"
+          "source_record_id": "FINAL-FLAT-003"
         },
         {
           "readiness_status": "catalog_confirmed",
@@ -743,12 +743,10 @@
       "identity_reconciliation": {
         "forest_unit_id": "flathead-nf",
         "status": "unresolved_blockers_present",
-        "remaining_unresolved_source_record_count": 9,
+        "remaining_unresolved_source_record_count": 7,
         "remaining_unresolved_source_record_ids": [
           "R1PLAN-flathead-nf-01",
-          "R1PLAN-flathead-nf-03",
           "R1PLAN-flathead-nf-04",
-          "R1PLAN-flathead-nf-05",
           "R1PLAN-flathead-nf-06",
           "R1PLAN-flathead-nf-07",
           "R1PLAN-flathead-nf-10",
@@ -757,7 +755,7 @@
         ],
         "remaining_unresolved_status_counts": {
           "catalog_confirmed": 1,
-          "source_delta_required": 8
+          "source_delta_required": 6
         }
       }
     },
@@ -1427,10 +1425,10 @@
   "identity_reconciliation": {
     "registry_path": "config/r1_forest_plan_identity_reconciliation_v1.json",
     "registry_schema_version": "region1-forest-plan-identity-reconciliation-registry-v1",
-    "registry_active_source_set_id": "source-set-4fb59e9eb43045cb",
+    "registry_active_source_set_id": "source-set-f70ea11e04ae3d53",
     "exact_url_rebound_source_record_count": 74,
-    "governed_catalog_rebound_source_record_count": 1,
-    "remaining_unresolved_source_record_count": 24,
+    "governed_catalog_rebound_source_record_count": 3,
+    "remaining_unresolved_source_record_count": 22,
     "remaining_unresolved_source_record_ids": [
       "R1PLAN-beaverhead-deerlodge-nf-01",
       "R1PLAN-bitterroot-nf-01",
@@ -1439,9 +1437,7 @@
       "R1PLAN-custer-gallatin-nf-01",
       "R1PLAN-dakota-prairie-grasslands-01",
       "R1PLAN-flathead-nf-01",
-      "R1PLAN-flathead-nf-03",
       "R1PLAN-flathead-nf-04",
-      "R1PLAN-flathead-nf-05",
       "R1PLAN-flathead-nf-06",
       "R1PLAN-flathead-nf-07",
       "R1PLAN-flathead-nf-10",
@@ -1459,7 +1455,7 @@
     ],
     "remaining_unresolved_status_counts": {
       "catalog_confirmed": 11,
-      "source_delta_required": 13
+      "source_delta_required": 11
     }
   }
 }

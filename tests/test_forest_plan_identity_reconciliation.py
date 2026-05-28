@@ -81,6 +81,14 @@ def test_build_identity_reconciliation_registry_with_exact_and_unresolved_rows()
                 [
                     json.dumps(
                         {
+                            "source_record_id": "R1PLAN-unit-one-01",
+                            "title": "Planning page",
+                            "source_partition": "active_review_corpus",
+                            "effective_url": "https://example.com/planning",
+                        }
+                    ),
+                    json.dumps(
+                        {
                             "source_record_id": "FOR-002",
                             "title": "Canonical plan PDF",
                             "source_partition": "active_review_corpus",
@@ -138,7 +146,7 @@ def test_build_identity_reconciliation_registry_with_exact_and_unresolved_rows()
                     "readiness:planning_page",
                 ],
                 "resolution_status": "catalog_confirmed",
-                "matching_canonical_source_record_ids": [],
+                "matching_canonical_source_record_ids": ["R1PLAN-unit-one-01"],
             }
         ]
 
@@ -247,14 +255,14 @@ def test_committed_registry_tracks_current_identity_gap() -> None:
     registry = _read_json(COMMITTED_REGISTRY)
 
     assert registry["schema_version"] == FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION
-    assert registry["active_source_set_id"] == "source-set-4fb59e9eb43045cb"
+    assert registry["active_source_set_id"] == "source-set-f70ea11e04ae3d53"
     assert registry["referenced_legacy_source_record_count"] == 99
     assert registry["exact_url_matched_source_record_count"] == 74
-    assert registry["governed_catalog_rebound_source_record_count"] == 1
-    assert registry["unresolved_source_record_count"] == 24
+    assert registry["governed_catalog_rebound_source_record_count"] == 3
+    assert registry["unresolved_source_record_count"] == 22
     assert registry["unresolved_status_counts"] == {
         "catalog_confirmed": 11,
-        "source_delta_required": 13,
+        "source_delta_required": 11,
     }
 
     mapping = {
@@ -270,6 +278,8 @@ def test_committed_registry_tracks_current_identity_gap() -> None:
     assert mapping["R1PLAN-lolo-nf-02"] == "FPS-298"
     assert mapping["R1PLAN-nez-perce-clearwater-nfs-06"] == "FPS-347"
     assert governed_mapping["R1PLAN-flathead-nf-02"] == "FINAL-FLAT-001"
+    assert governed_mapping["R1PLAN-flathead-nf-03"] == "FPS-180"
+    assert governed_mapping["R1PLAN-flathead-nf-05"] == "FINAL-FLAT-003"
 
     unresolved = {
         row["legacy_source_record_id"]: row["resolution_status"]
@@ -434,14 +444,14 @@ def test_committed_manifest_and_readiness_reduce_identity_mix_to_canonical_plus_
     assert manifest["identity_reconciliation"] == {
         "registry_path": "config/r1_forest_plan_identity_reconciliation_v1.json",
         "registry_schema_version": FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION,
-        "registry_active_source_set_id": "source-set-4fb59e9eb43045cb",
+        "registry_active_source_set_id": "source-set-f70ea11e04ae3d53",
         "exact_url_rebound_source_record_count": 74,
-        "governed_catalog_rebound_source_record_count": 1,
-        "remaining_unresolved_source_record_count": 24,
+        "governed_catalog_rebound_source_record_count": 3,
+        "remaining_unresolved_source_record_count": 22,
         "remaining_unresolved_source_record_ids": sorted(unresolved_source_record_ids),
         "remaining_unresolved_status_counts": {
             "catalog_confirmed": 11,
-            "source_delta_required": 13,
+            "source_delta_required": 11,
         },
     }
     assert readiness["identity_reconciliation"] == manifest["identity_reconciliation"]
@@ -473,12 +483,10 @@ def test_committed_manifest_and_readiness_share_same_per_profile_unresolved_bloc
     assert manifest_rows["flathead-nf"]["identity_reconciliation"] == {
         "forest_unit_id": "flathead-nf",
         "status": "unresolved_blockers_present",
-        "remaining_unresolved_source_record_count": 9,
+        "remaining_unresolved_source_record_count": 7,
         "remaining_unresolved_source_record_ids": [
-          "R1PLAN-flathead-nf-01",
-            "R1PLAN-flathead-nf-03",
+            "R1PLAN-flathead-nf-01",
             "R1PLAN-flathead-nf-04",
-            "R1PLAN-flathead-nf-05",
             "R1PLAN-flathead-nf-06",
             "R1PLAN-flathead-nf-07",
             "R1PLAN-flathead-nf-10",
@@ -487,7 +495,7 @@ def test_committed_manifest_and_readiness_share_same_per_profile_unresolved_bloc
         ],
         "remaining_unresolved_status_counts": {
             "catalog_confirmed": 1,
-            "source_delta_required": 8,
+            "source_delta_required": 6,
         },
     }
     assert manifest_rows["custer-gallatin-nf"]["identity_reconciliation"] == {

@@ -15,17 +15,16 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## West Reservoir f70 Applicability Spine Reduced To Identity Blocker
+## West Reservoir f70 Identity Reconciliation Reduced To Source-Capture Gap
 
 Latest implementation update on 2026-05-28 UTC:
 
 - update:
   parent `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
-  Milestone 1 resumed on `source-set-f70ea11e04ae3d53` after the migration
-  packet resolved source-set parity and authority-universe proof. The f70
-  review/applicability spine is now fresh through generated-rule-pack
-  validation, but forest-plan context generation is blocked by stale
-  forest-plan identity reconciliation.
+  Milestone 1 remains reduced on `source-set-f70ea11e04ae3d53`. The f70
+  review/applicability spine is fresh through generated-rule-pack validation,
+  and the stale forest-plan identity registry has been rebound to f70. The
+  remaining stop is a narrower Flathead source-capture gap.
 - active blocker:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - current review identity:
@@ -71,25 +70,33 @@ Latest implementation update on 2026-05-28 UTC:
   `applicability-generate-rule-pack` passed with
   `generated_rule_count=44`, `passed=true`, and
   `generated_rule_pack_ready=true`.
+- identity-reconciliation closeout:
+  `config/r1_forest_plan_identity_reconciliation_v1.json` now declares
+  `active_source_set_id="source-set-f70ea11e04ae3d53"`,
+  `exact_url_matched_source_record_count=74`,
+  `governed_catalog_rebound_source_record_count=3`, and
+  `unresolved_source_record_count=22`. Flathead governed bindings are
+  `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`,
+  `R1PLAN-flathead-nf-03 -> FPS-180`, and
+  `R1PLAN-flathead-nf-05 -> FINAL-FLAT-003`.
 - current blocker:
   `forest-plan-resolve --review-id west-reservoir-67436 --source-set-id
   source-set-f70ea11e04ae3d53 --forest-unit-id flathead-nf` fails before
   context generation with `required_custer_source_records_indexed` and
-  `retrieval_ready_for_forest_plan_resolver`. The check name is historical;
-  the active owner is `config/r1_forest_plan_identity_reconciliation_v1.json`,
-  which still declares `active_source_set_id="source-set-4fb59e9eb43045cb"`
-  and leaves nine required Flathead legacy source-record IDs unresolved for
-  the f70 replay.
+  `retrieval_ready_for_forest_plan_resolver`. The check name is historical.
+  The required-source readiness report now shows the six blocking missing
+  source records as `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-06`,
+  `R1PLAN-flathead-nf-07`, `R1PLAN-flathead-nf-10`,
+  `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16`.
 - stop condition:
   no forest-plan context, component readiness, compliance review, V1
   promotion, phase eval, registry promotion, or aggregate promotion should run
-  until the identity blocker lets `forest-plan-resolve` emit current f70
-  Flathead context and component artifacts.
+  until a follow-on Flathead source-capture slice lets `forest-plan-resolve`
+  emit current f70 Flathead context and component artifacts.
 - next implementation slice:
-  implement
-  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  Milestone 1. Keep West Reservoir typed blocked while repairing Flathead
-  forest-plan identity reconciliation.
+  open or implement the Flathead f70 source-capture follow-on for the six
+  missing required support records. Keep West Reservoir typed blocked while
+  that source-capture gap remains.
 
 ## West Reservoir Source-Set Migration Authority-Universe Proof Resolved
 

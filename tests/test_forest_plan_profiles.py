@@ -373,6 +373,11 @@ class ForestPlanProfileTests(unittest.TestCase):
             row["legacy_source_record_id"]: row["canonical_source_record_id"]
             for row in registry["exact_url_matched_source_records"]
         }
+        governed_matches = {
+            row["legacy_source_record_id"]: row["canonical_source_record_id"]
+            for row in registry["governed_catalog_rebound_source_records"]
+        }
+        identity_matches = {**exact_matches, **governed_matches}
 
         for row in readiness["profile_rows"]:
             if row["forest_unit_id"] == "custer-gallatin-nf":
@@ -385,12 +390,15 @@ class ForestPlanProfileTests(unittest.TestCase):
                 else:
                     expected_source_record_ids.extend(requirement["source_record_ids"])
             self.assertEqual(
-                {exact_matches.get(source_record_id, source_record_id) for source_record_id in profile.required_source_record_ids},
+                {
+                    identity_matches.get(source_record_id, source_record_id)
+                    for source_record_id in profile.required_source_record_ids
+                },
                 set(expected_source_record_ids),
                 row["forest_unit_id"],
             )
             self.assertEqual(
-                exact_matches.get(
+                identity_matches.get(
                     profile.active_plan_source_record_id,
                     profile.active_plan_source_record_id,
                 ),
