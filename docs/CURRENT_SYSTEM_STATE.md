@@ -15,7 +15,7 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## West Reservoir f70 Identity Reconciliation Reduced To Source-Capture Gap
+## West Reservoir f70 Source-Capture Reduced To Monitoring Support Context Gate
 
 Latest implementation update on 2026-05-28 UTC:
 
@@ -23,8 +23,10 @@ Latest implementation update on 2026-05-28 UTC:
   parent `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
   Milestone 1 remains reduced on `source-set-f70ea11e04ae3d53`. The f70
   review/applicability spine is fresh through generated-rule-pack validation,
-  and the stale forest-plan identity registry has been rebound to f70. The
-  remaining stop is a narrower Flathead source-capture gap.
+  the stale forest-plan identity registry has been rebound to f70, and the six
+  originally missing required Flathead support records are now indexed under
+  f70. The remaining stop is the newly exposed Flathead monitoring-program
+  context gate.
 - active blocker:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - current review identity:
@@ -79,24 +81,48 @@ Latest implementation update on 2026-05-28 UTC:
   `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`,
   `R1PLAN-flathead-nf-03 -> FPS-180`, and
   `R1PLAN-flathead-nf-05 -> FINAL-FLAT-003`.
+- source-capture overlay closeout:
+  the local generated f70 catalog gate
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
+  was overlaid with exactly `R1PLAN-flathead-nf-04`,
+  `R1PLAN-flathead-nf-06`, `R1PLAN-flathead-nf-07`,
+  `R1PLAN-flathead-nf-10`, `R1PLAN-flathead-nf-12`, and
+  `R1PLAN-flathead-nf-16` from archived merged source-delta gate
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate`.
+  The generated f70 extraction summary now reports
+  `catalog_source_count=714`, `selected_source_count=714`,
+  `extracted_count=714`, `failed_count=0`, `chunk_count=110941`, and
+  `validation_passed=true`. The generated f70 retrieval summary reports
+  `source_count=714`, `chunk_count=110941`, `reviewer_ready=true`, and
+  `validation_passed=true`.
+- repaired source-record readback:
+  direct retrieval SQLite readback returns `R1PLAN-flathead-nf-04=1122`,
+  `R1PLAN-flathead-nf-06=918`, `R1PLAN-flathead-nf-07=901`,
+  `R1PLAN-flathead-nf-10=5`, `R1PLAN-flathead-nf-12=1535`, and
+  `R1PLAN-flathead-nf-16=964` chunks.
 - current blocker:
   `forest-plan-resolve --review-id west-reservoir-67436 --source-set-id
-  source-set-f70ea11e04ae3d53 --forest-unit-id flathead-nf` fails before
-  context generation with `required_custer_source_records_indexed` and
-  `retrieval_ready_for_forest_plan_resolver`. The check name is historical.
-  The required-source readiness report now shows the six blocking missing
-  source records as `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-06`,
-  `R1PLAN-flathead-nf-07`, `R1PLAN-flathead-nf-10`,
-  `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16`.
+  source-set-f70ea11e04ae3d53 --forest-unit-id flathead-nf` now emits
+  current f70 `forest_plan_context.json`, `forest_plan_context_summary.json`,
+  `forest_plan_component_findings.json`,
+  `forest_plan_applicable_standard_coverage.json`, and
+  `forest_plan_reviewer_resolution_queue.json`. Retrieval readiness passes
+  with `blocking_missing_source_record_ids=[]`. The command exits nonzero
+  because `forest_plan_context_validation.json` fails
+  `triggered_supporting_plan_evidence_has_source_evidence` for
+  `route_id="support-monitoring-program"` and
+  `source_record_id="R1PLAN-flathead-nf-08"`.
 - stop condition:
-  no forest-plan context, component readiness, compliance review, V1
-  promotion, phase eval, registry promotion, or aggregate promotion should run
-  until a follow-on Flathead source-capture slice lets `forest-plan-resolve`
-  emit current f70 Flathead context and component artifacts.
+  no component readiness, compliance review, V1 promotion, phase eval,
+  registry promotion, or aggregate promotion should run until a follow-on
+  Flathead monitoring-program source-capture slice lets
+  `forest_plan_context_validation.json` pass on f70. The stale component
+  adjudication eval on historical `source-set-5e65d845ce77e1a0` is downstream
+  of that context gate.
 - next implementation slice:
-  open or implement the Flathead f70 source-capture follow-on for the six
-  missing required support records. Keep West Reservoir typed blocked while
-  that source-capture gap remains.
+  resolve or govern `R1PLAN-flathead-nf-08` for the triggered monitoring
+  support route. Keep West Reservoir typed blocked while that context gate
+  remains.
 
 ## West Reservoir Source-Set Migration Authority-Universe Proof Resolved
 

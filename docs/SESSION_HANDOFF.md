@@ -134,20 +134,27 @@ history below.
   `active_source_set_id="source-set-f70ea11e04ae3d53"` and governs
   `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`,
   `R1PLAN-flathead-nf-03 -> FPS-180`, and
-  `R1PLAN-flathead-nf-05 -> FINAL-FLAT-003`. `forest-plan-resolve` still
-  stops before current Flathead context generation with
-  `required_custer_source_records_indexed` and
-  `retrieval_ready_for_forest_plan_resolver`; the remaining blocking missing
-  source records are `R1PLAN-flathead-nf-04`,
-  `R1PLAN-flathead-nf-06`, `R1PLAN-flathead-nf-07`,
-  `R1PLAN-flathead-nf-10`, `R1PLAN-flathead-nf-12`, and
-  `R1PLAN-flathead-nf-16`. The next slice is a Flathead f70 source-capture
-  follow-on under
+  `R1PLAN-flathead-nf-05 -> FINAL-FLAT-003`. The follow-on f70
+  source-capture slice now supplies the six originally missing required
+  Flathead support records from the archived source-delta merged gate into the
+  selected local f70 catalog/retrieval surface. F70 extraction and retrieval
+  now pass with `714` sources, `110941` chunks, and direct indexed counts for
+  `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-06`,
+  `R1PLAN-flathead-nf-07`, `R1PLAN-flathead-nf-10`,
+  `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16`.
+  `forest-plan-resolve` now emits current f70 Flathead context and component
+  artifacts, and retrieval readiness passes with
+  `blocking_missing_source_record_ids=[]`. The active stop exposed by the
+  pre-commit closeout gate is `forest_plan_context_validation.json` failing
+  `triggered_supporting_plan_evidence_has_source_evidence` for
+  `route_id="support-monitoring-program"` and
+  `source_record_id="R1PLAN-flathead-nf-08"`. The stale component
+  adjudication eval on historical `source-set-5e65d845ce77e1a0` is downstream
+  of that context gate. The next slice remains under
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
   Do not run component readiness, compliance review, V1 promotion, phase eval,
-  registry promotion, or aggregate promotion until that follow-on lets
-  `forest-plan-resolve` emit current f70 Flathead context and component
-  artifacts.
+  registry promotion, or aggregate promotion until the monitoring-program
+  context gate passes on f70.
   Local commit anchors for the Milestone 1 reduction/blocker route are
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) and
   `0773ef7` (`Open West Reservoir source evidence blocker`); the docs-only
@@ -155,8 +162,8 @@ history below.
   with Bitter Lesson`), and the source-set migration Milestone 1 closeout
   commit is `f17474b` (`Migrate West Reservoir source-set contract`).
   Do not run component readiness, compliance review, V1 promotion, phase eval,
-  registry promotion, or aggregate promotion until the Flathead f70
-  source-capture gap is closed.
+  registry promotion, or aggregate promotion until the Flathead f70 monitoring
+  context gate is closed.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or

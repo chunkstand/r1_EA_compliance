@@ -1,9 +1,13 @@
 # West Reservoir f70 Forest-Plan Identity Reconciliation Blocker Milestone Plan
 
 Date: 2026-05-28
-Status: Milestone 1 reduced on 2026-05-28. The registry is now rebound to
-`source-set-f70ea11e04ae3d53`, but `forest-plan-resolve` still stops on a
-narrower Flathead source-capture gap.
+Status: Milestone 2 reduced on 2026-05-28. The registry is rebound to
+`source-set-f70ea11e04ae3d53`, and the six originally blocking Flathead
+required support records are now indexed in the f70 retrieval index. The
+pre-commit closeout gate exposed the next source-capture boundary:
+`forest-plan-resolve` now emits current f70 context and component artifacts,
+but context validation fails on the triggered Flathead monitoring-program
+support route `R1PLAN-flathead-nf-08`.
 Owner context: Flathead forest-plan resolver identity blocker for
 `review_id="west-reservoir-67436"` on `source-set-f70ea11e04ae3d53`
 
@@ -23,14 +27,16 @@ the migrated source set. Applicability validation is now green with `44`
 applicable authorities, `102` non-applicable authorities, `0` unresolved
 authorities, and `generated_rule_pack_ready=true`.
 
-The slice still cannot proceed to forest-plan context or component readiness
-because `forest-plan-resolve` fails before context generation with
-`required_custer_source_records_indexed` and
-`retrieval_ready_for_forest_plan_resolver`. The check name is historical, but
-the failing owner has narrowed: the resolver now aliases governed Flathead
-legacy `R1PLAN-flathead-*` source-record expectations through the f70 registry,
-and the remaining blocker is the required Flathead support records absent from
-the f70 retrieval index.
+The first f70 identity slice could not proceed to forest-plan context or
+component readiness because `forest-plan-resolve` failed before context
+generation with `required_custer_source_records_indexed` and
+`retrieval_ready_for_forest_plan_resolver`. The follow-on source-capture slice
+supplied the six missing required support records from the archived
+`source-set-8a4005c8a083af1a` merged source-delta gate into the selected f70
+catalog/retrieval surface without rerunning network capture. The historical
+readiness check name remains, but the original missing-six gate is now green.
+The next blocker is narrower: the Flathead profile triggered the monitoring
+support route, and `R1PLAN-flathead-nf-08` is not yet indexed under f70.
 
 ## Current Evidence
 
@@ -50,10 +56,15 @@ the f70 retrieval index.
 - Fresh generated rule pack:
   `generated_rule_count=44`, `passed=true`, and
   `generated_rule_pack_ready=true`
-- Blocking command:
+- Latest resolver command:
   `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path source_library/reviews/west-reservoir-67436/package --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id west-reservoir-67436 --forest-unit-id flathead-nf --reuse-package-cache`
-- Blocking error:
-  `Forest-plan resolver requires a reviewer-ready source-library retrieval index. Failed readiness checks: required_custer_source_records_indexed, retrieval_ready_for_forest_plan_resolver`
+- Latest resolver result:
+  exits nonzero after emitting current f70 `forest_plan_context.json`,
+  `forest_plan_context_summary.json`, `forest_plan_component_findings.json`,
+  `forest_plan_applicable_standard_coverage.json`, and
+  `forest_plan_reviewer_resolution_queue.json`. Retrieval readiness now passes,
+  including `required_custer_source_records_indexed` and
+  `retrieval_ready_for_forest_plan_resolver`.
 - Current identity owner:
   `config/r1_forest_plan_identity_reconciliation_v1.json`
 - Current identity-owner state:
@@ -65,25 +76,46 @@ the f70 retrieval index.
   `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`,
   `R1PLAN-flathead-nf-03 -> FPS-180`, and
   `R1PLAN-flathead-nf-05 -> FINAL-FLAT-003`.
-- Flathead residual source-capture gap:
+- Flathead residual identity/source-capture gap before Milestone 2:
   `R1PLAN-flathead-nf-01` remains unresolved-but-catalog-confirmed as the
-  planning page. The six blocking required source records still absent from
-  the f70 retrieval index are `R1PLAN-flathead-nf-04`,
+  planning page. The six blocking required source records that were absent
+  from the f70 retrieval index were `R1PLAN-flathead-nf-04`,
   `R1PLAN-flathead-nf-06`, `R1PLAN-flathead-nf-07`,
   `R1PLAN-flathead-nf-10`, `R1PLAN-flathead-nf-12`, and
   `R1PLAN-flathead-nf-16`.
+- Flathead Milestone 2 source-capture repair:
+  the archived f70 catalog gate
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
+  now has a local generated overlay for those six source records from archived
+  source-delta gate
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate`
+  (`source-set-8a4005c8a083af1a`). The f70 extraction summary now reports
+  `catalog_source_count=714`, `selected_source_count=714`,
+  `extracted_count=714`, `failed_count=0`, `chunk_count=110941`, and
+  `validation_passed=true`. The f70 retrieval summary reports
+  `source_count=714`, `chunk_count=110941`, `reviewer_ready=true`, and
+  `validation_passed=true`.
+- New closeout-discovered blocker:
+  context validation fails only on
+  `triggered_supporting_plan_evidence_has_source_evidence` for
+  `route_id="support-monitoring-program"` and
+  `source_record_id="R1PLAN-flathead-nf-08"`. The resolver summary also sees a
+  stale component adjudication eval on historical
+  `source-set-5e65d845ce77e1a0`; that belongs after the monitoring support
+  context gate is repaired.
 - Current f70 catalog evidence:
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl`
   includes current Flathead rows such as `R1PLAN-flathead-nf-01`,
-  `FINAL-FLAT-001`, `FINAL-FLAT-003`, and `FPS-180`, but it does not provide
-  governed f70 catalog rows for the remaining required FEIS volume 1, BA, BO,
-  administrative-change, FEIS volume 2 response, or revised BO expectations.
+  `FINAL-FLAT-001`, `FINAL-FLAT-003`, and `FPS-180`, plus the local generated
+  overlay rows for the six originally missing FEIS volume 1, BA, BO,
+  administrative-change, FEIS volume 2 response, and revised BO expectations.
 
 ## Goal
 
 Make Flathead forest-plan identity reconciliation honest for West Reservoir on
-`source-set-f70ea11e04ae3d53`, then stop at the source-capture boundary when
-the selected f70 catalog cannot satisfy every required Flathead support record.
+`source-set-f70ea11e04ae3d53`, then stop at the source-capture or
+component-readiness boundary when the selected f70 catalog cannot satisfy a
+triggered Flathead support route.
 
 ## Non-Goals
 
@@ -206,6 +238,61 @@ Closeout result on 2026-05-28:
   `R1PLAN-flathead-nf-10`, `R1PLAN-flathead-nf-12`, and
   `R1PLAN-flathead-nf-16`.
 
+### Milestone 2 - Flathead f70 Required Support Source-Capture Overlay
+
+Outcome label: reduced. The six originally blocking required support records
+are indexed under f70, and the resolver reaches current context/component
+generation. The remaining blocker is a newly surfaced monitoring-program
+support record, not the original required-source readiness gate.
+
+Implementation tasks:
+
+- Extend the selected archived f70 catalog gate locally with exactly
+  `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-06`,
+  `R1PLAN-flathead-nf-07`, `R1PLAN-flathead-nf-10`,
+  `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16` from the archived
+  source-delta merged gate.
+- Reuse the existing verified extracted text and payload cache from
+  `source-set-8a4005c8a083af1a`; do not rerun live network capture or broaden
+  to unrelated Flathead rows.
+- Regenerate f70 extraction and retrieval artifacts through project commands.
+- Rerun `forest-plan-resolve` and stop if the pre-commit closeout gate exposes
+  a new source-capture or component-readiness owner.
+
+Closeout result on 2026-05-28:
+
+- Local generated f70 catalog gate source count increased from `708` to `714`
+  and artifact count from `696` to `702`; ignored `source_library/` artifacts
+  remain unstaged.
+- `extract-build` passed with `extracted_count=714`,
+  `failed_count=0`, `chunk_count=110941`, and `validation_passed=true`.
+- `retrieval-build` passed with `source_count=714`, `chunk_count=110941`,
+  `reviewer_ready=true`, and `validation_passed=true`.
+- Direct SQLite readback proved the six repaired IDs are now indexed:
+  `R1PLAN-flathead-nf-04=1122`, `R1PLAN-flathead-nf-06=918`,
+  `R1PLAN-flathead-nf-07=901`, `R1PLAN-flathead-nf-10=5`,
+  `R1PLAN-flathead-nf-12=1535`, and `R1PLAN-flathead-nf-16=964` chunks.
+- `forest-plan-resolve` now passes retrieval readiness with
+  `blocking_missing_source_record_ids=[]` and emits current f70 context plus
+  component artifacts. It remains non-ready because context validation lacks
+  plan-source evidence for `R1PLAN-flathead-nf-08` on the triggered
+  monitoring-program support route.
+
+### Milestone 3 - Monitoring Support Context Gate
+
+Outcome label: pending.
+
+Goal: decide whether `R1PLAN-flathead-nf-08` should be supplied to the selected
+f70 retrieval surface or governed as a non-required triggered support route,
+then rerun `forest-plan-resolve` without changing component thresholds.
+
+Stop rule:
+
+- Do not refresh component adjudication or promote parent Milestone 2 until
+  `forest_plan_context_validation.json` passes on f70. The stale historical
+  component adjudication eval on `source-set-5e65d845ce77e1a0` is downstream
+  of this context gate.
+
 ## Required Verification Gates
 
 For Milestone 0 closeout:
@@ -223,6 +310,14 @@ For Milestone 1 implementation, add:
 ```bash
 PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver_scope.py
 PYTHONPATH=src uv run --extra dev ruff check src/usfs_r1_ea_sources/forest_plan_identity_reconciliation.py src/usfs_r1_ea_sources/forest_plan_resolver_validation.py tests/test_forest_plan_identity_reconciliation.py tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver_scope.py
+```
+
+For Milestone 2 source-capture overlay, add:
+
+```bash
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources extract-build --output-dir source_library --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate --id R1PLAN-flathead-nf-04 --id R1PLAN-flathead-nf-06 --id R1PLAN-flathead-nf-07 --id R1PLAN-flathead-nf-10 --id R1PLAN-flathead-nf-12 --id R1PLAN-flathead-nf-16 --reuse-existing --merge-selected-into-existing
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources retrieval-build --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --catalog-dir source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate
+PYTHONPATH=src .venv/bin/python -m usfs_r1_ea_sources forest-plan-resolve --package-path source_library/reviews/west-reservoir-67436/package --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id west-reservoir-67436 --forest-unit-id flathead-nf --reuse-package-cache
 ```
 
 ## Required Documentation And Handoff Updates
@@ -248,8 +343,8 @@ Stop instead of broadening the parent milestone if:
 
 ## Local Commit Closeout Policy
 
-- Stage only the verified blocker packet slice, tracked adjudication refresh,
-  docs, tests, and config changes owned by the current milestone.
+- Stage only the verified blocker packet slice, docs, tests, and config
+  changes owned by the current milestone.
 - Do not stage ignored `source_library/` artifacts.
 - Make one local atomic commit for the reduced slice before calling it closed.
 - Do not push unless explicitly requested.
@@ -257,9 +352,8 @@ Stop instead of broadening the parent milestone if:
 ## Residual Risks And Next Routing
 
 - West Reservoir remains typed blocked.
-- The parent readiness plan must not resume until a follow-on Flathead
-  source-capture slice supplies or governs the six missing required support
-  records and `forest-plan-resolve` can generate current f70 Flathead context
-  and component artifacts.
+- The parent readiness plan must not resume to component adjudication or
+  compliance until Milestone 3 supplies or governs `R1PLAN-flathead-nf-08` and
+  `forest_plan_context_validation.json` passes on f70.
 - Aggregate component coverage remains red for unrelated non-West-Reservoir
   residual slots and must not be described as green.

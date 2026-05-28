@@ -74,22 +74,27 @@ Use this file as the short current route before opening the append-only docs.
   on f70. Applicability validation reports `44` applicable authorities, `102`
   non-applicable authorities, `0` unresolved authorities, and
   `generated_rule_pack_ready=true`; the generated rule pack contains `44`
-  rules. The f70 forest-plan identity blocker Milestone 1 is now reduced:
+  rules. The f70 forest-plan identity blocker Milestone 1 is reduced:
   `config/r1_forest_plan_identity_reconciliation_v1.json` declares
   `active_source_set_id="source-set-f70ea11e04ae3d53"`, governs
   `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`,
   `R1PLAN-flathead-nf-03 -> FPS-180`, and
   `R1PLAN-flathead-nf-05 -> FINAL-FLAT-003`, and leaves seven Flathead rows
-  unresolved in tracked identity metadata. `forest-plan-resolve` still stops
-  before current Flathead context generation because the f70 retrieval index is
-  missing six blocking required source records:
+  unresolved in tracked identity metadata. Child Milestone 2 then supplied the
+  six originally missing required Flathead support records to the local f70
+  catalog/retrieval surface from the archived source-delta merged gate. F70
+  extraction and retrieval now pass with `714` sources and `110941` chunks,
+  and direct readback indexes
   `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-06`,
   `R1PLAN-flathead-nf-07`, `R1PLAN-flathead-nf-10`,
-  `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16`. Do not proceed to
-  component readiness, compliance, V1 promotion, phase eval, or registry
-  promotion until a follow-on Flathead source-capture slice lets
-  `forest-plan-resolve` emit current f70 Flathead context and component
-  artifacts.
+  `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16`.
+  `forest-plan-resolve` now emits current f70 context and component artifacts,
+  and retrieval readiness passes with `blocking_missing_source_record_ids=[]`.
+  The active child blocker is the newly exposed monitoring-program context
+  gate: `R1PLAN-flathead-nf-08` has no f70 plan-source evidence on the
+  triggered `support-monitoring-program` route. Do not proceed to component
+  readiness, compliance, V1 promotion, phase eval, or registry promotion until
+  `forest_plan_context_validation.json` passes on f70.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson

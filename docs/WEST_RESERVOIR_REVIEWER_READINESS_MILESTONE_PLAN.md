@@ -8,7 +8,9 @@ feasibility; source-set migration is resolved through
 1 contract migration moved the tracked West Reservoir contract to
 `source-set-f70ea11e04ae3d53` and Milestone 2 resolved the f70
 authority-universe proof; parent Milestone 1 f70 applicability is now green,
-but `forest-plan-resolve` is blocked by the active child packet
+and the six originally blocking Flathead required support records are now
+indexed in f70, but `forest-plan-resolve` is still blocked by the active child
+packet
 `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
@@ -149,12 +151,18 @@ is green with `component_inventory_present=true`,
   reports `contract_status="typed_blocked"`,
   `actual_overall_passed=false`, `broader_ea_passed=false`, and
   `forest_plan_passed=false`.
-- Current missing review artifacts include:
-  `compliance_review.json`, `compliance_matrix.json`,
-  `compliance_validation.json`, `authority_explanation_paths.json`,
+- Current generated forest-plan artifacts now include:
   `forest_plan_context_summary.json`, `forest_plan_context.json`,
-  `forest_plan_component_findings.json`, and
-  `forest_plan_applicable_standard_coverage.json`.
+  `forest_plan_component_findings.json`,
+  `forest_plan_applicable_standard_coverage.json`, and
+  `forest_plan_reviewer_resolution_queue.json` on
+  `source-set-f70ea11e04ae3d53`. These are not reviewer-ready proof yet:
+  context validation fails on triggered monitoring-program support for
+  `R1PLAN-flathead-nf-08`, and the component adjudication eval is still stale
+  from historical `source-set-5e65d845ce77e1a0`.
+- Current missing downstream artifacts still include:
+  `compliance_review.json`, `compliance_matrix.json`,
+  `compliance_validation.json`, and `authority_explanation_paths.json`.
 - Pre-migration component eval result:
   `source_library/reviews/west-reservoir-67436/forest_plan_component_eval_results.json`
   is aligned to `source-set-4fb59e9eb43045cb` but fails `0/27` cases.
@@ -574,22 +582,18 @@ Implementation note:
   `reviewer_ready=true`, and `generated_rule_pack_ready=true`.
 - `applicability-generate-rule-pack` passed with `generated_rule_count=44` and
   `generated_rule_pack_ready=true`.
-- `forest-plan-resolve` still stops before generating Flathead
-  context/component artifacts with `required_custer_source_records_indexed`
-  and `retrieval_ready_for_forest_plan_resolver`. The check name is
-  historical. The f70 identity blocker has been reduced: the registry now
-  declares `active_source_set_id="source-set-f70ea11e04ae3d53"` and governs
-  the Flathead plan, ROD, and FEIS appendices bindings, but the f70 retrieval
-  index is still missing six blocking required source records:
-  `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-06`,
-  `R1PLAN-flathead-nf-07`, `R1PLAN-flathead-nf-10`,
-  `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16`.
+- `forest-plan-resolve` now generates current f70 Flathead context and
+  component artifacts after the child blocker supplied the six originally
+  missing required support records. The f70 retrieval readiness checks pass
+  with `blocking_missing_source_record_ids=[]`. The active stop is now context
+  validation for the triggered monitoring-program support route:
+  `R1PLAN-flathead-nf-08` has no f70 plan-source evidence yet.
 - The active child blocker is now
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
   Do not start Milestone 2 component readiness, compliance review, V1
   promotion, phase eval, registry promotion, or aggregate promotion until a
-  follow-on Flathead source-capture slice lets `forest-plan-resolve` generate
-  current f70 Flathead context and component artifacts.
+  follow-on Flathead monitoring-program source-capture slice lets
+  `forest_plan_context_validation.json` pass on f70.
 - Local commit anchors:
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) for the
   Flathead authority-universe scoping repair and `0773ef7` (`Open West
@@ -835,6 +839,10 @@ occur:
       `source-set-f70ea11e04ae3d53`
 - [x] Milestone 1 f70 identity blocker reduced to six Flathead source-capture
       gaps
+- [x] Child Milestone 2 indexed the six originally missing Flathead required
+      support records under f70
+- [ ] Child Milestone 3 resolves the `R1PLAN-flathead-nf-08`
+      monitoring-program context gate
 - [x] Milestone 1 source-evidence blocker routed through
       `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 - [ ] Milestone 2 component eval passes `27/27`
