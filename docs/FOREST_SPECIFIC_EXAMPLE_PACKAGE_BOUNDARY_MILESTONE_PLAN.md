@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; do not reopen Lolo or South Otter unless a verified gate regresses`)
+Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo or South Otter unless a verified gate regresses`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -19,10 +19,12 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
     `custer-gallatin-nf`
   - East Crazy as a supplemental reviewer-ready example for
     `custer-gallatin-nf`
-  - South Plateau as the supplemental reviewer-ready expansion example for
-    `custer-gallatin-nf`
   - West Reservoir as the governed `typed_blocked` example for `flathead-nf`
   - Tyler's Kitchen as the primary reviewer-ready example for `lolo-nf`
+- South Plateau is no longer an active governed example. It is retained only
+  under archived manifest surfaces with
+  `usage_policy="historical_evidence_only_not_example"` due to litigation and
+  Forest Plan compliance challenge risk.
 - The active Lolo follow-on has now rerouted `FOR-029` to
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, added the
   tracked replay context plus Lolo review/component eval contracts, and made
@@ -112,10 +114,11 @@ This packet exists to ensure:
 - aggregate eval command:
   `src/usfs_r1_ea_sources/forest_specific_example_package_eval.py`,
   `src/usfs_r1_ea_sources/cli_eval.py`
-- review authorities:
+- active review authorities:
   `config/replay_contexts/v1-cg-ecid-compliance-review.json`,
-  `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json`,
   `config/replay_contexts/west-reservoir-67436.json`
+- archived review authority:
+  `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json`
 - docs:
   `docs/AGENT_START_HERE.md`,
   `docs/FULL_CANONICAL_DIRECT_FILE_CAPTURE_QUEUE_RESOLUTION_MILESTONE_PLAN.md`,
@@ -251,13 +254,14 @@ Current South Otter follow-on:
 - `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is the resolved
   standalone follow-on for South Otter promotion. South Otter is now the
   primary governed same-forest Custer Gallatin package-style example; East
-  Crazy and South Plateau remain supplemental examples, and South Otter does
-  not count as a new distinct forest.
-- Current aggregate evidence after South Otter promotion:
-  `real-package-review-coverage-eval` passes with `5` covered required slots,
-  `4` reviewer-ready slots, `1` typed-blocked slot, `3` distinct forests, and
-  `6` package-style tags. `forest-specific-example-package-eval` passes with
-  `5` governed review examples, `4` reviewer-ready examples, `3` distinct
+  Crazy remains the only supplemental active example, South Plateau is
+  archived as historical evidence only, and South Otter does not count as a
+  new distinct forest.
+- Current aggregate evidence after the South Plateau archive:
+  `real-package-review-coverage-eval` passes with `4` covered required slots,
+  `3` reviewer-ready slots, `1` typed-blocked slot, `3` distinct forests, and
+  `5` package-style tags. `forest-specific-example-package-eval` passes with
+  `4` governed review examples, `3` reviewer-ready examples, `3` distinct
   governed forests, and `7` profile-guidance-only forests.
 - `forest-plan-component-eval-coverage` still fails as an aggregate on
   pre-existing non-South Otter ECID source-delta and West Reservoir slots, but

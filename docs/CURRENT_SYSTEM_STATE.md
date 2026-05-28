@@ -15,22 +15,62 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## South Plateau Example Archived
+
+Latest implementation update on 2026-05-27 MDT:
+
+- resolved policy slice:
+  user-directed archive of South Plateau as an example because the South
+  Plateau EA is litigation-tainted for Forest Plan compliance
+- updated routing truth:
+  `config/forest_specific_example_package_registry_v1.json` now removes
+  `cgnf-south-plateau-expansion` from active `review_examples` and from the
+  Custer Gallatin `supplemental_example_ids`. The archived record remains
+  under `archived_review_examples` with
+  `usage_policy="historical_evidence_only_not_example"`.
+- active coverage truth:
+  `config/v1_real_package_review_coverage_v1.json` now removes the
+  `south-plateau-reviewer-ready` slot from active `slots`, removes
+  `expansion_reviewer_ready` from required active coverage classes, and keeps
+  the former slot under `archived_slots`.
+- promotion-suite truth:
+  `config/promotion_suite_v1.json` now removes South Plateau from active
+  `expansion_slots`, marks the South Plateau review case as archived-only, and
+  keeps the former slot under `archived_expansion_slots`.
+- Custer Gallatin example order:
+  South Otter remains the primary Custer Gallatin example and East Crazy is
+  the only supplemental active example. South Plateau must not be used as a
+  Custer Gallatin or Region 1 example unless a future user-approved
+  requalification packet restores it after the legal and Forest Plan concerns
+  are resolved.
+- evidence sources:
+  official Forest Service project archive
+  `https://www.fs.usda.gov/r01/custergallatin/projects/archive/57353` and
+  court order PDF
+  `https://westernlaw.org/wp-content/uploads/2025/12/2025.12.11-South-Plateau-Victory-Order.pdf`
+- invariant truth:
+  this archive slice does not modify workbook rows, source-register queue
+  rows, source sets, generated `source_library/` evidence, or South Otter
+  reviewer-stack artifacts.
+
 ## South Otter Primary Custer Gallatin Example Selection
 
-Latest implementation update on 2026-05-27 UTC:
+Historical implementation update on 2026-05-27 UTC, superseded by the South
+Plateau archive section above for Custer Gallatin supplemental-example routing:
 
 - resolved policy slice:
   user-directed Custer Gallatin primary-example selection update after the
   South Otter Milestone 3 closeout
 - primary-selection closeout commit:
   `c56039b` (`Promote South Otter as Custer Gallatin primary`)
-- updated routing truth:
-  `config/forest_specific_example_package_registry_v1.json` now sets
+- updated routing truth at that checkpoint:
+  `config/forest_specific_example_package_registry_v1.json` set
   `primary_example_id="cgnf-south-otter-forest-specific"` for
   `custer-gallatin-nf`. East Crazy
-  (`cgnf-east-crazy-current-promotion`) and South Plateau
-  (`cgnf-south-plateau-expansion`) remain governed supplemental examples for
-  the same forest.
+  (`cgnf-east-crazy-current-promotion`) remained a governed supplemental
+  example for the same forest. South Plateau was still listed as supplemental
+  at that checkpoint, but the archive section above now supersedes that
+  routing and removes South Plateau from active example use.
 - invariant truth:
   South Otter remains outside `Document_Register_Master`; no source-register
   queue row was rerouted. The update changes Custer Gallatin example-selection

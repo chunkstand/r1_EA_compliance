@@ -35,16 +35,19 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  South Otter is now the primary Custer Gallatin example in
-  `config/forest_specific_example_package_registry_v1.json` after a
-  user-directed primary-example selection update. The Custer Gallatin row sets
-  `primary_example_id="cgnf-south-otter-forest-specific"` and keeps
-  `cgnf-east-crazy-current-promotion` plus
-  `cgnf-south-plateau-expansion` as supplemental examples. This changes
-  example-selection priority only: South Otter remains outside
-  `Document_Register_Master`, no source-register queue row was rerouted, and
-  distinct-forest thresholds remain unchanged. The primary-selection closeout
-  commit is `c56039b` (`Promote South Otter as Custer Gallatin primary`).
+  South Plateau is archived as an example by user direction because the South
+  Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
+  `cgnf-south-plateau-expansion` or
+  `region1-expansion-south-plateau-landscape-treatment` as a Custer Gallatin or
+  Region 1 example. It is retained only under archived manifest surfaces:
+  `archived_review_examples` in
+  `config/forest_specific_example_package_registry_v1.json`, `archived_slots`
+  in `config/v1_real_package_review_coverage_v1.json`, and
+  `archived_expansion_slots` in `config/promotion_suite_v1.json`. South Otter
+  remains the primary Custer Gallatin example, and East Crazy is the only
+  supplemental active Custer Gallatin example. The prior primary-selection
+  closeout commit is `c56039b` (`Promote South Otter as Custer Gallatin
+  primary`).
   South Otter Milestone 3 is resolved locally under
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. The implementation
   closeout commit is `21eb2fa` (`Promote South Otter supplemental example`).
@@ -65,16 +68,16 @@ history below.
   `config/replay_contexts/region1-example-custer-gallatin-south-otter-58396.json`
   on `source-set-f70ea11e04ae3d53`.
   `config/forest_specific_example_package_registry_v1.json` now keeps South
-  Otter as the Custer Gallatin primary and lists East Crazy plus South Plateau
-  as supplemental examples. `config/v1_real_package_review_coverage_v1.json`
-  now has five required slots and treats South Otter as the second required
+  Otter as the Custer Gallatin primary and lists East Crazy as the only
+  supplemental active example. `config/v1_real_package_review_coverage_v1.json`
+  now has four required active slots and treats South Otter as the second required
   `forest_specific_reviewer_ready` slot alongside Lolo. The registry and
   real-package aggregate gates are green: `real-package-review-coverage-eval`
-  passes with `covered_slot_count=5`, `required_slot_count=5`,
-  `reviewer_ready_slot_count=4`, `typed_blocked_slot_count=1`,
-  `distinct_forest_count=3`, and `distinct_package_style_count=6`;
-  `forest-specific-example-package-eval` passes with `review_example_count=5`,
-  `reviewer_ready_example_count=4`,
+  passes with `covered_slot_count=4`, `required_slot_count=4`,
+  `reviewer_ready_slot_count=3`, `typed_blocked_slot_count=1`,
+  `distinct_forest_count=3`, and `distinct_package_style_count=5`;
+  `forest-specific-example-package-eval` passes with `review_example_count=4`,
+  `reviewer_ready_example_count=3`,
   `distinct_governed_example_forest_count=3`, and
   `profile_guidance_only_count=7`. South Otter is also a required passing
   component slot in `config/forest_plan_component_eval_coverage_v1.json`.
@@ -177,9 +180,12 @@ history below.
 - live blocker state:
   the full-canonical local corpus still sits at historical
   `source-set-4fb59e9eb43045cb`, but reviewer-facing replay contexts plus the
-  ECID and South `v1-ea-eval` contracts now align to
+  ECID `v1-ea-eval` contract now align to
   `source-set-f70ea11e04ae3d53` under
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`.
+  South Plateau artifacts may remain locally aligned there, but South Plateau
+  is archived as historical evidence only and is not an active example,
+  coverage slot, or expansion slot.
   Both reviewer-facing `applicability-authority-universe` reruns now pass
   there with `candidate_authority_count=396`,
   `forest_plan_component_candidate_count=329`, and
@@ -218,17 +224,12 @@ history below.
   `passed_required_current_result_count=32/32`. The truthful ECID
   packet-scoped graph signal remains
   `region1_forest_plan_blocked_profile_count=9`, not a fake full-Region-1
-  zero-blocker claim. South is now also green on the same aligned source set:
-  `v1-ea-eval --review-id region1-expansion-south-plateau-landscape-treatment`
-  now reports `contract_status="reviewer_ready"` with no blocker categories,
-  review `phase-eval` passes `27/27` with
-  `review_direct_eval_status="direct_eval_present"`. After the South Otter
-  Milestone 3 ratchet, the governed `real-package-review-coverage-eval`
-  now reports `covered_slot_count=5`, `required_slot_count=5`,
-  `reviewer_ready_slot_count=4`, `typed_blocked_slot_count=1`,
-  `missing_required_slot_count=0`, and `missing_coverage_class_ids=[]`; West
-  Reservoir remains truthful `typed_blocked`. Strict-expansion promotion still
-  fails closed, but it now
+  zero-blocker claim. After the South Plateau archive, the governed
+  `real-package-review-coverage-eval` reports `covered_slot_count=4`,
+  `required_slot_count=4`, `reviewer_ready_slot_count=3`,
+  `typed_blocked_slot_count=1`, `missing_required_slot_count=0`, and
+  `missing_coverage_class_ids=[]`; West Reservoir remains truthful
+  `typed_blocked`. Strict-expansion promotion still fails closed, but it now
   does so truthfully through the rerouted historical ECID preliminary-EA slot:
   `failure_category_counts={"historical_source_set_split":1}`,
   `open_expansion_slot_count=1`, and `open_expansion_artifact_count=0`.

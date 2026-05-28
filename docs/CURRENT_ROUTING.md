@@ -57,22 +57,25 @@ Use this file as the short current route before opening the append-only docs.
   `coverage_slot_id="cgnf-south-otter-forest-specific"`,
   `forest_unit_id="custer-gallatin-nf"`, and
   `applicable_forest_unit_ids=["custer-gallatin-nf"]`. The Custer Gallatin row
-  now sets South Otter as `primary_example_id` and lists East Crazy plus South
-  Plateau as supplemental examples. Distinct-forest thresholds remain unchanged
-  because all three governed Custer Gallatin examples belong to the same
-  forest.
-- `config/v1_real_package_review_coverage_v1.json` now has five load-bearing
-  slots, including South Otter and Lolo as two required
+  now sets South Otter as `primary_example_id` and lists East Crazy as the
+  only supplemental example. South Plateau
+  (`cgnf-south-plateau-expansion`) is archived as historical evidence only due
+  to litigation and Forest Plan compliance challenge risk, and must not be used
+  as a Custer Gallatin or Region 1 example.
+- `config/v1_real_package_review_coverage_v1.json` now has four load-bearing
+  active slots, including South Otter and Lolo as two required
   `forest_specific_reviewer_ready` slots. The governed aggregate rerun reports
-  `passed=true`, `covered_slot_count=5`, `required_slot_count=5`,
-  `reviewer_ready_slot_count=4`, `typed_blocked_slot_count=1`,
-  `distinct_forest_count=3`, `distinct_package_style_count=6`, and no missing
+  `passed=true`, `covered_slot_count=4`, `required_slot_count=4`,
+  `reviewer_ready_slot_count=3`, `typed_blocked_slot_count=1`,
+  `distinct_forest_count=3`, `distinct_package_style_count=5`, and no missing
   required slots or coverage classes.
-- `config/forest_specific_example_package_registry_v1.json` now has five
-  governed examples: East Crazy, South Plateau, and South Otter for Custer
-  Gallatin; West Reservoir for Flathead; and Tyler's Kitchen for Lolo. The
+- `config/forest_specific_example_package_registry_v1.json` now has four
+  active governed examples: East Crazy and South Otter for Custer Gallatin,
+  West Reservoir for Flathead, and Tyler's Kitchen for Lolo. South Plateau is
+  retained only under `archived_review_examples` with
+  `usage_policy="historical_evidence_only_not_example"`. The
   governed forest-specific aggregate rerun reports `passed=true`,
-  `review_example_count=5`, `reviewer_ready_example_count=4`,
+  `review_example_count=4`, `reviewer_ready_example_count=3`,
   `distinct_governed_example_forest_count=3`,
   `profile_guidance_only_count=7`, and no threshold failures.
 - `config/forest_plan_component_eval_coverage_v1.json` now requires South
@@ -114,10 +117,10 @@ Use this file as the short current route before opening the append-only docs.
   non-Lolo/non-South Otter source-delta and West Reservoir slots, so do not
   describe aggregate component coverage as green.
 - Aggregate truth:
-  ECID current promotion, South Plateau reviewer-ready expansion, Lolo
-  forest-specific example promotion, and South Otter primary-example selection
-  remain green in the non-strict promotion suite. Strict expansion remains
-  blocked only on the ECID historical slot under
+  ECID current promotion, Lolo forest-specific example promotion, and South
+  Otter primary-example selection remain green in the non-strict promotion
+  suite. South Plateau is not an active promotion-suite expansion slot.
+  Strict expansion remains blocked only on the ECID historical slot under
   `historical_source_set_split`.
 - Do not flip the ECID historical slot to `ready`, reopen the older Lolo or
   replay-repair packets as live runtime work, or treat the remaining

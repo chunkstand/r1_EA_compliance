@@ -1,13 +1,13 @@
 {
   "schema_version": "forest-specific-example-package-registry-v1",
   "contract_id": "region1-forest-specific-example-packages",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "as_of_date": "2026-05-27",
-  "status": "south-otter-supplemental-example-promoted",
+  "status": "south-plateau-example-archived",
   "coverage_thresholds": {
     "required_forest_unit_count": 10,
-    "review_example_count_min": 5,
-    "reviewer_ready_example_count_min": 4,
+    "review_example_count_min": 4,
+    "reviewer_ready_example_count_min": 3,
     "typed_blocked_example_count_min": 1,
     "distinct_governed_example_forest_count_min": 3,
     "profile_guidance_only_count_max": 7,
@@ -47,8 +47,8 @@
   "summary": {
     "forest_unit_count": 10,
     "profile_guidance_only_count": 7,
-    "review_example_count": 5,
-    "reviewer_ready_example_count": 4,
+    "review_example_count": 4,
+    "reviewer_ready_example_count": 3,
     "typed_blocked_example_count": 1
   },
   "parallel_surface": {
@@ -202,34 +202,6 @@
       "notes": "Supplemental project-specific Custer Gallatin example package. Use for forest-specific guidance after the South Otter primary example when East Crazy review artifacts are specifically relevant; do not promote its package rows into Document_Register_Master."
     },
     {
-      "example_id": "cgnf-south-plateau-expansion",
-      "review_id": "region1-expansion-south-plateau-landscape-treatment",
-      "forest_unit_id": "custer-gallatin-nf",
-      "forest_unit_label": "Custer Gallatin National Forest",
-      "package_label": "South Plateau Area Landscape Treatment Project",
-      "coverage_class_id": "expansion_reviewer_ready",
-      "coverage_slot_id": "south-plateau-reviewer-ready",
-      "expected_contract_status": "reviewer_ready",
-      "eval_file": "config/v1_south_plateau_real_ea_eval.json",
-      "package_authority": {
-        "replay_context_path": "config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json"
-      },
-      "applicable_forest_unit_ids": [
-        "custer-gallatin-nf"
-      ],
-      "queue_lineage_source_ids": [],
-      "agent_read_artifact_family_ids": [
-        "real_package_review_coverage_slot",
-        "v1_review_eval",
-        "phase_eval",
-        "applicability_validation",
-        "compliance_review",
-        "forest_plan_component_eval",
-        "compliance_matrix_render_manifest"
-      ],
-      "notes": "Supplemental reviewer-ready expansion package for Custer Gallatin. Use after South Otter when a second project style is helpful."
-    },
-    {
       "example_id": "cgnf-south-otter-forest-specific",
       "review_id": "region1-example-custer-gallatin-south-otter-58396",
       "forest_unit_id": "custer-gallatin-nf",
@@ -325,8 +297,7 @@
       ],
       "primary_example_id": "cgnf-south-otter-forest-specific",
       "supplemental_example_ids": [
-        "cgnf-east-crazy-current-promotion",
-        "cgnf-south-plateau-expansion"
+        "cgnf-east-crazy-current-promotion"
       ],
       "shared_contract_ids": [
         "forest_plan_profile_eval_coverage_manifest",
@@ -340,7 +311,10 @@
         "FOR-012",
         "LEX-Q-001"
       ],
-      "guidance_note": "Use the South Otter package first; East Crazy and South Plateau are supplemental reviewer-ready examples for the same forest. These supplemental Custer Gallatin examples do not count as new distinct forests."
+      "guidance_note": "Use the South Otter package first; East Crazy remains the supplemental reviewer-ready example for the same forest. South Plateau is archived as historical evidence only and must not be used as an example.",
+      "archived_example_ids": [
+        "cgnf-south-plateau-expansion"
+      ]
     },
     {
       "forest_unit_id": "beaverhead-deerlodge-nf",
@@ -540,6 +514,44 @@
       ],
       "queue_boundary_source_ids": [],
       "guidance_note": "No governed Nez Perce-Clearwater real package example exists yet; use the profile-eval contract until a real package is added."
+    }
+  ],
+  "archived_review_examples": [
+    {
+      "example_id": "cgnf-south-plateau-expansion",
+      "review_id": "region1-expansion-south-plateau-landscape-treatment",
+      "forest_unit_id": "custer-gallatin-nf",
+      "forest_unit_label": "Custer Gallatin National Forest",
+      "package_label": "South Plateau Area Landscape Treatment Project",
+      "coverage_class_id": "expansion_reviewer_ready",
+      "coverage_slot_id": "south-plateau-reviewer-ready",
+      "expected_contract_status": "reviewer_ready",
+      "eval_file": "config/v1_south_plateau_real_ea_eval.json",
+      "package_authority": {
+        "replay_context_path": "config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json"
+      },
+      "applicable_forest_unit_ids": [
+        "custer-gallatin-nf"
+      ],
+      "queue_lineage_source_ids": [],
+      "agent_read_artifact_family_ids": [
+        "real_package_review_coverage_slot",
+        "v1_review_eval",
+        "phase_eval",
+        "applicability_validation",
+        "compliance_review",
+        "forest_plan_component_eval",
+        "compliance_matrix_render_manifest"
+      ],
+      "notes": "Archived by user direction; retain only as historical evidence and do not use as a Custer Gallatin or Region 1 example.",
+      "archived_on": "2026-05-27",
+      "archive_reason": "litigation_forest_plan_compliance_challenge",
+      "usage_policy": "historical_evidence_only_not_example",
+      "active_example": false,
+      "archive_source_urls": [
+        "https://www.fs.usda.gov/r01/custergallatin/projects/archive/57353",
+        "https://westernlaw.org/wp-content/uploads/2025/12/2025.12.11-South-Plateau-Victory-Order.pdf"
+      ]
     }
   ]
 }

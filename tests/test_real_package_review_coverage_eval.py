@@ -77,34 +77,39 @@ def test_real_package_review_coverage_eval_rejects_missing_required_slot() -> No
             )
 
 
-def test_committed_real_package_review_coverage_manifest_tracks_south_otter_slot() -> None:
+def test_committed_real_package_review_coverage_manifest_archives_south_plateau_slot() -> None:
     manifest = json.loads(COMMITTED_MANIFEST.read_text(encoding="utf-8"))
 
     assert manifest["schema_version"] == REAL_PACKAGE_REVIEW_COVERAGE_SCHEMA_VERSION
     assert manifest["required_coverage_class_ids"] == [
         "alternate_package_typed_blocked",
         "current_promotion_reviewer_ready",
-        "expansion_reviewer_ready",
         "forest_specific_reviewer_ready",
     ]
     assert [item["review_id"] for item in manifest["slots"]] == [
         "v1-cg-ecid-compliance-review",
         "west-reservoir-67436",
-        "region1-expansion-south-plateau-landscape-treatment",
         "region1-example-custer-gallatin-south-otter-58396",
         "region1-example-lolo-tylers-kitchen-66344",
     ]
+    archived_slots = {
+        item["review_id"]: item for item in manifest["archived_slots"]
+    }
+    south_plateau = archived_slots["region1-expansion-south-plateau-landscape-treatment"]
+    assert south_plateau["slot_id"] == "south-plateau-reviewer-ready"
+    assert south_plateau["usage_policy"] == "historical_evidence_only_not_example"
+    assert south_plateau["active_example"] is False
     assert [
         item["coverage_class_id"]
         for item in manifest["slots"]
         if item["coverage_class_id"] == "forest_specific_reviewer_ready"
     ] == ["forest_specific_reviewer_ready", "forest_specific_reviewer_ready"]
     thresholds = manifest["coverage_thresholds"]
-    assert thresholds["required_slot_count"] == 5
-    assert thresholds["required_coverage_class_count"] == 4
+    assert thresholds["required_slot_count"] == 4
+    assert thresholds["required_coverage_class_count"] == 3
     assert thresholds["distinct_forest_count_min"] == 3
     assert thresholds["distinct_package_style_count_min"] == 5
-    assert thresholds["reviewer_ready_slot_count_min"] == 4
+    assert thresholds["reviewer_ready_slot_count_min"] == 3
     assert thresholds["typed_blocked_slot_count_min"] == 1
 
 

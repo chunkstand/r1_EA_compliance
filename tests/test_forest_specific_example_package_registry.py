@@ -23,8 +23,8 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
     assert registry["summary"] == {
         "forest_unit_count": 10,
         "profile_guidance_only_count": 7,
-        "review_example_count": 5,
-        "reviewer_ready_example_count": 4,
+        "review_example_count": 4,
+        "reviewer_ready_example_count": 3,
         "typed_blocked_example_count": 1,
     }
 
@@ -142,8 +142,8 @@ def test_registry_promotes_south_otter_as_custer_gallatin_primary_without_queue_
     assert forest_row["primary_example_id"] == "cgnf-south-otter-forest-specific"
     assert forest_row["supplemental_example_ids"] == [
         "cgnf-east-crazy-current-promotion",
-        "cgnf-south-plateau-expansion",
     ]
+    assert forest_row["archived_example_ids"] == ["cgnf-south-plateau-expansion"]
     assert "Use the South Otter package first" in forest_row["guidance_note"]
     assert example_row["forest_unit_id"] == "custer-gallatin-nf"
     assert example_row["applicable_forest_unit_ids"] == ["custer-gallatin-nf"]
@@ -151,6 +151,26 @@ def test_registry_promotes_south_otter_as_custer_gallatin_primary_without_queue_
     assert example_row["queue_lineage_source_ids"] == []
     assert "South Otter" not in ledger_source_ids
     assert "58396" not in ledger_source_ids
+
+
+def test_registry_archives_south_plateau_as_historical_only() -> None:
+    registry = _load_json(REGISTRY_PATH)
+
+    active_example_ids = {row["example_id"] for row in registry["review_examples"]}
+    archived_examples = {
+        row["example_id"]: row for row in registry["archived_review_examples"]
+    }
+
+    assert "cgnf-south-plateau-expansion" not in active_example_ids
+    south_plateau = archived_examples["cgnf-south-plateau-expansion"]
+    assert south_plateau["review_id"] == (
+        "region1-expansion-south-plateau-landscape-treatment"
+    )
+    assert south_plateau["usage_policy"] == "historical_evidence_only_not_example"
+    assert south_plateau["active_example"] is False
+    assert south_plateau["archive_reason"] == (
+        "litigation_forest_plan_compliance_challenge"
+    )
 
 
 def test_registry_contract_paths_exist_and_review_patterns_stay_parameterized() -> None:

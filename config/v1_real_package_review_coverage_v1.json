@@ -4,16 +4,15 @@
     "distinct_package_style_count_min": 5,
     "missing_package_authority_count_max": 0,
     "missing_required_slot_count_max": 0,
-    "required_coverage_class_count": 4,
-    "required_slot_count": 5,
-    "reviewer_ready_slot_count_min": 4,
+    "required_coverage_class_count": 3,
+    "required_slot_count": 4,
+    "reviewer_ready_slot_count_min": 3,
     "typed_blocked_slot_count_min": 1
   },
   "id": "region1-real-package-review-coverage-v1",
   "required_coverage_class_ids": [
     "alternate_package_typed_blocked",
     "current_promotion_reviewer_ready",
-    "expansion_reviewer_ready",
     "forest_specific_reviewer_ready"
   ],
   "schema_version": "real-package-review-coverage-v1",
@@ -47,20 +46,6 @@
       "slot_id": "west-reservoir-typed-blocked"
     },
     {
-      "coverage_class_id": "expansion_reviewer_ready",
-      "eval_file": "v1_south_plateau_real_ea_eval.json",
-      "expected_contract_status": "reviewer_ready",
-      "forest_unit_id": "custer-gallatin-nf",
-      "label": "South Plateau reviewer-ready expansion lane",
-      "package_authority": {
-        "replay_context_path": "replay_contexts/region1-expansion-south-plateau-landscape-treatment.json"
-      },
-      "package_label": "South Plateau Area Landscape Treatment Project",
-      "required": true,
-      "review_id": "region1-expansion-south-plateau-landscape-treatment",
-      "slot_id": "south-plateau-reviewer-ready"
-    },
-    {
       "coverage_class_id": "forest_specific_reviewer_ready",
       "eval_file": "v1_custer_gallatin_south_otter_real_ea_eval.json",
       "expected_contract_status": "reviewer_ready",
@@ -89,5 +74,32 @@
       "slot_id": "lolo-tylers-kitchen-forest-specific"
     }
   ],
-  "version": "1.1.0"
+  "version": "1.2.0",
+  "as_of_date": "2026-05-27",
+  "status": "south-plateau-example-archived",
+  "archived_slots": [
+    {
+      "coverage_class_id": "expansion_reviewer_ready",
+      "eval_file": "v1_south_plateau_real_ea_eval.json",
+      "expected_contract_status": "reviewer_ready",
+      "forest_unit_id": "custer-gallatin-nf",
+      "label": "South Plateau reviewer-ready expansion lane",
+      "package_authority": {
+        "replay_context_path": "replay_contexts/region1-expansion-south-plateau-landscape-treatment.json"
+      },
+      "package_label": "South Plateau Area Landscape Treatment Project",
+      "required": true,
+      "review_id": "region1-expansion-south-plateau-landscape-treatment",
+      "slot_id": "south-plateau-reviewer-ready",
+      "archived_on": "2026-05-27",
+      "archive_reason": "litigation_forest_plan_compliance_challenge",
+      "usage_policy": "historical_evidence_only_not_example",
+      "active_example": false,
+      "archive_source_urls": [
+        "https://www.fs.usda.gov/r01/custergallatin/projects/archive/57353",
+        "https://westernlaw.org/wp-content/uploads/2025/12/2025.12.11-South-Plateau-Victory-Order.pdf"
+      ],
+      "notes": "Archived by user direction; do not use South Plateau as an example while the EA is litigation-tainted for Forest Plan compliance."
+    }
+  ]
 }

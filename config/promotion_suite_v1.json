@@ -240,11 +240,11 @@
               "json_path": "review_id",
               "equals": "v1-cg-ecid-compliance-review"
             },
-        {
-          "name": "row_inventory_source_set",
-          "json_path": "source_set_id",
-          "equals": "source-set-f70ea11e04ae3d53"
-        }
+            {
+              "name": "row_inventory_source_set",
+              "json_path": "source_set_id",
+              "equals": "source-set-f70ea11e04ae3d53"
+            }
           ]
         },
         {
@@ -264,11 +264,11 @@
               "json_path": "review_id",
               "equals": "v1-cg-ecid-compliance-review"
             },
-        {
-          "name": "render_manifest_source_set",
-          "json_path": "source_set_id",
-          "equals": "source-set-f70ea11e04ae3d53"
-        },
+            {
+              "name": "render_manifest_source_set",
+              "json_path": "source_set_id",
+              "equals": "source-set-f70ea11e04ae3d53"
+            },
             {
               "name": "render_manifest_passed",
               "json_path": "summary.passed",
@@ -1118,7 +1118,7 @@
           "label": "South Plateau applicability validation",
           "path": "reviews/{review_id}/applicability/applicability_validation.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "adjudication_needed",
           "checks": [
             {
@@ -1153,7 +1153,7 @@
           "label": "South Plateau generated rule-pack validation",
           "path": "reviews/{review_id}/applicability/generated_rule_pack_validation.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "stale_artifact",
           "checks": [
             {
@@ -1189,7 +1189,7 @@
           "label": "South Plateau compliance validation",
           "path": "reviews/{review_id}/compliance_validation.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "forest_plan_reviewer_not_ready",
           "checks": [
             {
@@ -1204,7 +1204,7 @@
           "label": "South Plateau compliance review summary",
           "path": "reviews/{review_id}/compliance_review.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "forest_plan_reviewer_not_ready",
           "checks": [
             {
@@ -1278,7 +1278,7 @@
           "label": "South Plateau forest-plan context summary",
           "path": "reviews/{review_id}/forest_plan_context_summary.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "forest_plan_reviewer_not_ready",
           "checks": [
             {
@@ -1317,7 +1317,7 @@
           "label": "South Plateau compliance matrix JSON",
           "path": "reviews/{review_id}/compliance_matrix.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "unsupported_package_evidence",
           "checks": [
             {
@@ -1349,7 +1349,7 @@
           "path": "reviews/{review_id}/compliance_matrix.pdf",
           "format": "binary",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "stale_artifact",
           "checks": [
             {
@@ -1363,7 +1363,7 @@
           "label": "South Plateau authority-family provenance",
           "path": "reviews/{review_id}/authority_family_provenance.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "stale_artifact",
           "checks": [
             {
@@ -1388,7 +1388,7 @@
           "label": "South Plateau non-applicable authority appendix",
           "path": "reviews/{review_id}/non_applicable_authority_appendix.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "stale_artifact",
           "checks": [
             {
@@ -1413,7 +1413,7 @@
           "label": "South Plateau authority reviewer-resolution report",
           "path": "reviews/{review_id}/authority_reviewer_resolution_report.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "adjudication_needed",
           "checks": [
             {
@@ -1438,7 +1438,7 @@
           "label": "South Plateau litigation-risk summary",
           "path": "reviews/{review_id}/litigation_risk_summary.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "unsupported_package_evidence",
           "checks": [
             {
@@ -1463,7 +1463,7 @@
           "label": "South Plateau review-scoped phase eval",
           "path": "reviews/{review_id}/phase_eval_results.json",
           "required_for_current_promotion": false,
-          "required_for_expansion": true,
+          "required_for_expansion": false,
           "failure_category": "forest_plan_reviewer_not_ready",
           "checks": [
             {
@@ -1505,6 +1505,14 @@
             }
           ]
         }
+      ],
+      "archived_as_example": true,
+      "archived_on": "2026-05-27",
+      "archive_reason": "litigation_forest_plan_compliance_challenge",
+      "usage_policy": "historical_evidence_only_not_example",
+      "archive_source_urls": [
+        "https://www.fs.usda.gov/r01/custergallatin/projects/archive/57353",
+        "https://westernlaw.org/wp-content/uploads/2025/12/2025.12.11-South-Plateau-Victory-Order.pdf"
       ]
     }
   ],
@@ -2588,12 +2596,14 @@
       },
       "next_action": "Keep this historical ECID expansion slot selected but not ready until a fresh follow-on rebuilds the lane on one coherent source set or formally replaces the split historical contract.",
       "acceptance_signal": "The preliminary-EA slot may return to ready only after applicability, generated rule-pack, phase-eval, and downstream compliance/provenance artifacts all agree on one historical source set."
-    },
+    }
+  ],
+  "archived_expansion_slots": [
     {
       "id": "region1-real-ea-slot-2",
       "label": "Third real Region 1 EA package: South Plateau Area Landscape Treatment Project",
-      "status": "ready",
-      "ready": true,
+      "status": "archived_litigation",
+      "ready": false,
       "required_for_current_promotion": false,
       "review_id": "region1-expansion-south-plateau-landscape-treatment",
       "package_path": "source_library/reviews/_intake/region1-expansion-south-plateau-landscape-treatment",
@@ -2786,8 +2796,17 @@
         "forest_plan_scope_status": "custer_gallatin",
         "forest_plan_component_gate_required": true
       },
-      "next_action": "Keep this South Plateau expansion slot ready while future expansion slots are added through their own verified artifact checks.",
-      "acceptance_signal": "South Plateau passes applicability validation, tracked component adjudication, compliance review, and review-scoped phase-eval without weakening forest-plan scope or source-set gates."
+      "next_action": "Do not use South Plateau as an example; retain existing artifacts only as historical evidence while the EA remains litigation-tainted for Forest Plan compliance.",
+      "acceptance_signal": "South Plateau remains absent from active governed example and expansion manifests unless a future user-approved requalification packet restores it after legal and forest-plan concerns are resolved.",
+      "failure_category": "litigation_forest_plan_compliance_challenge",
+      "archived_on": "2026-05-27",
+      "archive_reason": "litigation_forest_plan_compliance_challenge",
+      "usage_policy": "historical_evidence_only_not_example",
+      "active_expansion_slot": false,
+      "archive_source_urls": [
+        "https://www.fs.usda.gov/r01/custergallatin/projects/archive/57353",
+        "https://westernlaw.org/wp-content/uploads/2025/12/2025.12.11-South-Plateau-Victory-Order.pdf"
+      ]
     }
   ]
 }

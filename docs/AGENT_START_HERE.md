@@ -58,8 +58,10 @@ The planner:
   because the full root contains broad references that make scope resolution
   ambiguous. South Otter remains parallel to `Document_Register_Master`; no
   source-register queue row was rerouted. The registry now uses South Otter as
-  the Custer Gallatin primary example while East Crazy and South Plateau remain
-  supplemental examples, and distinct-forest thresholds were not increased.
+  the Custer Gallatin primary example while East Crazy remains the only
+  supplemental active Custer Gallatin example. South Plateau is archived as
+  historical evidence only due to litigation and Forest Plan compliance
+  challenge risk; do not use it as an example.
   The component-coverage aggregate is still red on non-South Otter ECID
   source-delta and West Reservoir slots, but South Otter's required slot and
   review-scope `phase-eval` coverage are green.

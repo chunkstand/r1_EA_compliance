@@ -89,15 +89,17 @@ Packet-local ECID semantic counts now stay in their focused owners such as
 validator tests. The shared `promotion-suite` manifest keeps aggregate
 freshness, status, and canary truth, not duplicate packet-local count locks.
 
-The default manifest keeps two real-package expansion slots: the South Plateau Area Landscape
-Treatment Project slot is now reviewer-ready, while the ECID preliminary-EA historical review slot
-remains selected but not expansion-ready because its historical lane is split across
-`source-set-ba8d0feae79501b8` and `source-set-4fb59e9eb43045cb`. The slot now stays
-typed `selected_not_ready` under `historical_source_set_split` instead of pretending six
-downstream compliance / provenance artifacts are still live required expansion outputs on this
-packet. Open expansion slots do not block the current V1 promotion claim, but they make broader
-readiness gaps visible to future agents. Current promotion does require the applicability seed and
-gold eval
+The default manifest keeps one active selected real-package expansion slot:
+the ECID preliminary-EA historical review slot remains selected but not
+expansion-ready because its historical lane is split across
+`source-set-ba8d0feae79501b8` and `source-set-4fb59e9eb43045cb`. South Plateau
+is archived under `archived_expansion_slots` and is not an active expansion or
+example slot. The ECID slot now stays typed `selected_not_ready` under
+`historical_source_set_split` instead of pretending six downstream compliance /
+provenance artifacts are still live required expansion outputs on this packet.
+Open expansion slots do not block the current V1 promotion claim, but they make
+broader readiness gaps visible to future agents. Current promotion does require
+the applicability seed and gold eval
 artifacts that prove
 positive, negative, unresolved, replay-adjudicated, and arbitration-field coverage for the expanded
 authority-family templates. It also requires the authority-family reviewer-report artifacts for the
@@ -168,18 +170,19 @@ if any JSON `expected_gate_artifact` proves a different `source_set_id` than the
 ## Current Local Result
 
 The current routed truth on 2026-05-27 is green for current promotion, green
-for the governed South Plateau reviewer-ready expansion slot, green for the
-Lolo Tyler's Kitchen forest-specific reviewer-ready example slot, and red only
-for the remaining ECID preliminary-EA historical expansion review-case artifact
-family.
+for the Lolo Tyler's Kitchen and South Otter forest-specific reviewer-ready
+example slots, and red only for the remaining active ECID preliminary-EA
+historical expansion review-case artifact family. South Plateau is archived as
+historical evidence only and is not an active example or expansion slot.
 
 - `source_library/reviews/real_package_review_coverage_eval/real_package_review_coverage_eval_results.json`
   now reports `passed=true`, `covered_slot_count=4`,
   `reviewer_ready_slot_count=3`, `typed_blocked_slot_count=1`,
-  `distinct_forest_count=3`, `distinct_package_style_count=4`,
+  `distinct_forest_count=3`, `distinct_package_style_count=5`,
   `missing_required_slot_count=0`, and `missing_coverage_class_ids=[]`.
-  ECID current promotion, South Plateau, and Lolo Tyler's Kitchen now pass as
-  `reviewer_ready`; West Reservoir remains truthful `typed_blocked`.
+  ECID current promotion, South Otter, and Lolo Tyler's Kitchen now pass as
+  `reviewer_ready`; West Reservoir remains truthful `typed_blocked`; South
+  Plateau is archived outside active coverage.
 - `source_library/reviews/forest_specific_example_package_eval/forest_specific_example_package_eval_results.json`
   now reports `passed=true`, `review_example_count=4`,
   `reviewer_ready_example_count=3`, `typed_blocked_example_count=1`,
@@ -187,14 +190,16 @@ family.
   `profile_guidance_only_count=7` after `lolo-nf` moved to
   `real_package_examples_available`.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite/promotion_suite_results.json`
-  now reports `full_canonical_corpus_ready=true`,
+  now reports `full_canonical_corpus_ready=false`,
   `current_promotion_ready=true`, `promotion_ready=true`,
   `expansion_ready=false`, `open_expansion_slot_count=1`,
   `open_expansion_artifact_count=0`,
   `passed_required_current_result_count=32/32`,
-  `passed_required_expansion_result_count=19/20`, and
+  `passed_required_expansion_result_count=6/7`, and
   `failure_category_counts={}` with
   `expansion_failure_category_counts={"historical_source_set_split":1}`.
+  Full-canonical corpus readiness remains red on the separate component-eval
+  coverage aggregate gap; it is not caused by the South Plateau archive.
 - `source_library/reviews/promotion_suite/post-v1-region1-ea-promotion-suite-strict-expansion/promotion_suite_results.json`
   still fails closed exactly where it should:
   `current_promotion_ready=true`, `promotion_ready=false`,
@@ -203,8 +208,9 @@ family.
   `open_expansion_slot_count=1`, and `open_expansion_artifact_count=0`.
 - The resolved closeout packet remains documented in
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`; the live
-  current-promotion and governed South Plateau truths remain unchanged.
-  Reviewer-facing source-set alignment plus ECID
+  current-promotion truth remains unchanged. South Plateau's former
+  reviewer-ready evidence is now archived-only and must not be used as an
+  example. Reviewer-facing source-set alignment plus ECID
   current-promotion replay remain green on
   `source-set-f70ea11e04ae3d53`: ECID `v1-ea-eval` is back to
   `contract_status="reviewer_ready"`, review `phase-eval` passes `33/33`
@@ -212,11 +218,9 @@ family.
   `review-packet-index` validation is green, final QA reruns green, and the
   source-set graph contract now truthfully expects the packet-scoped
   `region1_forest_plan_blocked_profile_count=9`.
-- South Plateau is no longer the live expansion blocker. `v1-ea-eval
-  --review-id region1-expansion-south-plateau-landscape-treatment` now
-  reports `contract_status="reviewer_ready"` with no blocker categories, and
-  review `phase-eval` now passes `27/27` with
-  `review_direct_eval_status="direct_eval_present"`.
+- South Plateau is no longer a live expansion slot or active example. Existing
+  South Plateau artifacts may remain useful as historical evidence, but they
+  must not be used to satisfy example, expansion, or promotion coverage.
 - The remaining strict-expansion blocker is the historical ECID preliminary-EA
   review case `region1-expansion-ecid-preliminary-ea`. It now fails only
   because the slot is truthfully `selected_not_ready` under
@@ -288,7 +292,9 @@ family.
   blocker.
 
 Historical South Plateau expansion build context from the earlier green
-expansion pass remains below:
+expansion pass remains below. After the 2026-05-27 archive, these facts are
+historical evidence only and do not qualify South Plateau as an active example
+or expansion slot:
 
 - imported `26` official South Plateau PDFs from the project Box folder;
 - extracted `26/26` package files into `3,671` chunks with `.venv-docling`;
@@ -329,33 +335,23 @@ A later historical final-QA promotion pass added current-promotion checks for th
 family. That earlier pass is no longer the live aggregate count boundary; current 2026-05-26 truth
 is summarized above in `## Current Local Result`.
 
-Full-corpus promotion closeout on 2026-05-10 added active-catalog checks to
-the default manifest and remains green. The latest local non-strict run on
-2026-05-26 reports `full_canonical_corpus_ready=true`,
-`passed_required_full_canonical_result_count=10/10`,
+Historical full-corpus promotion closeout on 2026-05-10 added active-catalog
+checks to the default manifest. The latest local non-strict run after the South
+Plateau archive reports `full_canonical_corpus_ready=false`,
 `current_promotion_ready=true`, `promotion_ready=true`, and
 `expansion_ready=false`. The active catalog checks still pin
 `source_library/catalog/source_set_manifest.json`,
 `catalog_validation.json`, `authority_currentness`, and the NEPA 3D graph
 surfaces to the active catalog source set, while the reviewer-facing ECID
 packet now uses the aligned `source-set-f70ea11e04ae3d53` current-promotion
-lane. The remaining blocker is no longer ECID current promotion or split
-source-set ownership; it is the stale or missing South Plateau review-local
-artifact family under the governed reviewer-ready expansion slot.
+lane. The remaining full-canonical blocker is the separate component-eval
+coverage aggregate gap, not South Plateau.
 
-The South Plateau expansion slot remains `ready=false` and still carries the
-governed `forest_plan_reviewer_not_ready` slot status. The previous
-ambiguous-scope blocker is closed: `forest_plan_context_summary.json` records
-`scope_status="custer_gallatin"` and `validation_passed=true`. The current
-blocker family is broader than one old worklist count: the live South replay
-still reports `reviewer_ready=false`, `reviewer_resolution_count=34`,
-`needs_reviewer_resolution_count=1`, `gap_count=33`, and
-`applied_standard_count=22/25`, while the paired component adjudication eval
-is stale on `source_set_mismatch`, `queue_item_count_mismatch`, and
-`resolved_item_count_mismatch`. Strict expansion therefore remains red on the
-combined South review-local debt surfaced as `adjudication_needed`,
-`forest_plan_reviewer_not_ready`, `stale_artifact`, and
-`unsupported_package_evidence`.
+South Plateau was formerly tracked as a reviewer-ready expansion slot in this
+history. That status is superseded by the 2026-05-27 archive: the slot now
+lives only under `archived_expansion_slots`, with
+`usage_policy="historical_evidence_only_not_example"`, and must not be used as
+an example or strict-expansion satisfier.
 
 The Sequence 6 alignment pass also reconciled each ready expansion slot's `expected_gate_artifacts`
 with its matching `required_for_expansion` review-case checks. Manifest validation now rejects ready

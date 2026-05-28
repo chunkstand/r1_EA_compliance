@@ -446,9 +446,14 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     assert south_plateau_case["review_id"] == (
         "region1-expansion-south-plateau-landscape-treatment"
     )
+    assert south_plateau_case["archived_as_example"] is True
+    assert south_plateau_case["archive_reason"] == (
+        "litigation_forest_plan_compliance_challenge"
+    )
+    assert south_plateau_case["usage_policy"] == "historical_evidence_only_not_example"
     for result in south_plateau_results.values():
         assert result["required_for_current_promotion"] is False
-        assert result["required_for_expansion"] is True
+        assert result["required_for_expansion"] is False
 
     south_plateau_generated = south_plateau_results["generated_rule_pack_validation"]
     south_plateau_generated_checks = {
@@ -488,7 +493,7 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     forest_context_checks = {
         check["name"]: check for check in south_plateau_forest_context["checks"]
     }
-    assert south_plateau_forest_context["required_for_expansion"] is True
+    assert south_plateau_forest_context["required_for_expansion"] is False
     assert (
         forest_context_checks[
             "forest_plan_context_scope_status_matches_declared_profile"
@@ -566,12 +571,17 @@ def test_committed_promotion_suite_records_ecid_expansion_artifact_gates() -> No
     ]
     assert slot["last_local_signal"]["reroute_required"] is True
 
-    third_slot = slots["region1-real-ea-slot-2"]
+    assert "region1-real-ea-slot-2" not in slots
+
+    archived_slots = {slot["id"]: slot for slot in manifest["archived_expansion_slots"]}
+    third_slot = archived_slots["region1-real-ea-slot-2"]
     gate_artifacts = {artifact["id"] for artifact in third_slot["expected_gate_artifacts"]}
 
-    assert third_slot["status"] == "ready"
-    assert third_slot["ready"] is True
-    assert "failure_category" not in third_slot
+    assert third_slot["status"] == "archived_litigation"
+    assert third_slot["ready"] is False
+    assert third_slot["failure_category"] == "litigation_forest_plan_compliance_challenge"
+    assert third_slot["usage_policy"] == "historical_evidence_only_not_example"
+    assert third_slot["active_expansion_slot"] is False
     assert third_slot["review_id"] == "region1-expansion-south-plateau-landscape-treatment"
     assert third_slot["source_set_id"] == "source-set-f70ea11e04ae3d53"
     assert third_slot["forest_plan_profile"] == "custer_gallatin"
