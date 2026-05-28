@@ -1,7 +1,7 @@
 # West Reservoir Reviewer Readiness Milestone Plan
 
 Date: 2026-05-28
-Status: Active packet; Milestone 0 resolved locally; Milestone 1 reduced by Flathead authority-universe scoping and blocked at source-evidence validation; Milestones 2-4 pending
+Status: Active parent packet; Milestone 0 resolved locally; Milestone 1 reduced by Flathead authority-universe scoping and now routed through `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`; Milestones 2-4 pending
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -463,10 +463,12 @@ Implementation note:
   (`missing_source_record_count=10`).
 - The remaining blocker is not Custer Gallatin placement drift. It is the
   `source-set-4fb59e9eb43045cb` source-evidence gap for non-forest authority
-  families and baseline rules. If 4fb cannot supply the required current
-  source records through a governed same-source-set repair, stop and open a
-  new blocker packet instead of silently moving West Reservoir to another
-  source set.
+  families and baseline rules. The blocker is now routed through
+  `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md` after
+  confirming the active 4fb catalog lacks the required reconciled current
+  source records while the later f70 current-source-gap closeout catalog is a
+  different source set. Do not silently move West Reservoir to another source
+  set inside this parent packet.
 - No applicability decisions, generated rule-pack refresh, forest-plan
   context, compliance review, V1 promotion, registry promotion, or aggregate
   coverage promotion was run after this blocker.
@@ -707,6 +709,8 @@ occur:
 - [x] Milestone 0 baseline and stale-green guard resolved
 - [ ] Milestone 1 review artifact spine rebuilt on
       `source-set-4fb59e9eb43045cb`
+- [x] Milestone 1 source-evidence blocker routed through
+      `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 - [ ] Milestone 2 component eval passes `27/27`
 - [ ] Milestone 3 compliance and V1 readiness gates pass
 - [ ] Milestone 4 phase eval and aggregate gates rerun

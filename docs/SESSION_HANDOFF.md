@@ -22,6 +22,8 @@ history below.
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- active West Reservoir child blocker:
+  `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - just-resolved blocker packet:
@@ -73,9 +75,14 @@ history below.
   `validation_passed=false` on `source-set-4fb59e9eb43045cb`, now narrowed to
   `candidates_have_source_evidence_available.failure_count=9` and
   `authority_family_template_candidates_cover_config.missing_source_record_count=10`.
+  The source-evidence blocker is now opened as
+  `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md` after
+  direct catalog inspection showed the required reconciled current rows are
+  absent from the active 4fb catalog and present only in the later
+  `source-set-f70ea11e04ae3d53` current-source-gap closeout catalog.
   Do not run applicability retrieval/determination, compliance, V1 promotion,
   or registry promotion until the remaining 4fb source-evidence gap is
-  resolved or routed into a new blocker packet.
+  resolved by that child blocker or a dedicated source-set migration packet.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or

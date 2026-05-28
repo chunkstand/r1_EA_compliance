@@ -15,15 +15,18 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## West Reservoir Milestone 1 Source-Evidence Blocker
+## West Reservoir Milestone 1 Source-Evidence Blocker Routed
 
 Latest implementation update on 2026-05-28 UTC:
 
 - active packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- active child blocker:
+  `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 - current status:
   Milestone 0 is committed locally; Milestone 1 started and is blocked before
-  applicability retrieval/determination
+  applicability retrieval/determination; the remaining source-evidence gap is
+  now routed through the active child blocker
 - successful Milestone 1 rebuilds:
   `ea-review` rebuilt `review_report.json` on
   `source-set-4fb59e9eb43045cb` with `reviewer_ready=true`,
@@ -53,15 +56,23 @@ Latest implementation update on 2026-05-28 UTC:
   `removed_forest_plan_rule_ids=["custer_gallatin_lmp_2022"]`; no Custer
   Gallatin forest-plan source record remains in the West Reservoir forest-plan
   authority candidates
+- blocker evidence:
+  the failing source records already map through
+  `config/compliance_source_record_reconciliation_v1.json` to governed current
+  rows such as `FED-044`, `FED-045`, `FED-055`, `FED-071`, `FED-083`, and
+  `STP-031` through `STP-035`; direct active-catalog inspection found those
+  current rows absent from `source_library/catalog/source_catalog.jsonl` on
+  `source-set-4fb59e9eb43045cb` and present only in the later
+  `source-set-f70ea11e04ae3d53` current-source-gap closeout catalog
 - stop condition:
   no applicability retrieval, applicability determination, generated rule-pack
   refresh, forest-plan context, compliance review, V1 promotion, registry
   promotion, or aggregate coverage promotion was run after the blocker.
 - next implementation slice:
-  resolve or route the remaining `source-set-4fb59e9eb43045cb` source-evidence
-  gap. If 4fb cannot supply the required current source records without a
-  governed same-source-set repair, stop and open a new blocker packet instead
-  of silently moving West Reservoir to another source set.
+  work from
+  `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`. Prove a
+  governed same-source-set repair for 4fb or route a dedicated source-set
+  migration packet. Do not silently move West Reservoir to another source set.
 
 ## West Reservoir Milestone 0 Baseline Resolved
 
