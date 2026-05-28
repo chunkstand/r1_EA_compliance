@@ -1,0 +1,516 @@
+# West Reservoir Reviewer Readiness Milestone Plan
+
+Date: 2026-05-28
+Status: Active packet; Milestones 0-4 pending
+Owner context: Flathead forest-specific example follow-on after West Reservoir
+public Pinyon package authority verification
+
+## Purpose
+
+Make `west-reservoir-67436` a reviewer-ready Flathead National Forest example
+on the current governed replay contract without reusing stale historical green
+artifacts.
+
+The package-authority slice is already resolved: the official Flathead project
+page and linked public Pinyon/Box folder have been verified against the local
+review package manifest, with `12` official PDFs, `12` local package rows,
+byte-size and SHA-256 matches for every document, and
+`omitted_document_count=0`.
+
+This plan starts after that provenance proof. It closes only the remaining
+reviewer-readiness gap: rebuilding the current review/component/compliance
+artifact spine on `source-set-4fb59e9eb43045cb`, proving the Flathead forest
+plan component contract, and promoting the governed West Reservoir slot only
+after the current eval gates pass.
+
+## Current Evidence
+
+- Current replay context:
+  `config/replay_contexts/west-reservoir-67436.json`
+- Current review ID:
+  `west-reservoir-67436`
+- Current source-set contract:
+  `source-set-4fb59e9eb43045cb`
+- Current forest identity:
+  `flathead-nf`
+- Official project page:
+  `https://www.fs.usda.gov/r01/flathead/projects/67436`
+- Official Pinyon/Box folder:
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/299363475796`
+- Package-authority verification:
+  `config/review_package_authority_verifications/west-reservoir-67436.json`
+- Current V1 eval contract:
+  `config/v1_west_reservoir_real_ea_eval.json`
+- Current component eval contract:
+  `config/forest_plan_component_evals/west-reservoir-67436.json`
+- Current V1 eval result:
+  `source_library/reviews/west-reservoir-67436/v1_ea_eval_results.json`
+  reports `contract_status="typed_blocked"`,
+  `actual_overall_passed=false`, `broader_ea_passed=false`, and
+  `forest_plan_passed=false`.
+- Current missing review artifacts include:
+  `compliance_review.json`, `compliance_matrix.json`,
+  `compliance_validation.json`, `authority_explanation_paths.json`,
+  `forest_plan_context_summary.json`, `forest_plan_context.json`,
+  `forest_plan_component_findings.json`, and
+  `forest_plan_applicable_standard_coverage.json`.
+- Current component eval result:
+  `source_library/reviews/west-reservoir-67436/forest_plan_component_eval_results.json`
+  is aligned to `source-set-4fb59e9eb43045cb` but fails `0/27` cases.
+- Current component failure categories include missing component findings,
+  applicability/status mismatches, citation mismatches, reviewer-resolution
+  mismatches, and `20` standard coverage gaps.
+- Historical artifact warning:
+  `source_library/reviews/west-reservoir-67436/phase_eval_results.json`
+  currently reports a green historical run on
+  `source-set-5e65d845ce77e1a0`. That artifact is not current readiness proof
+  for this packet.
+
+## Goal
+
+Close the West Reservoir Flathead reviewer-readiness lane so the current
+governed review passes on `source-set-4fb59e9eb43045cb` with:
+
+- package authority still verified against the public Flathead/Pinyon source;
+- current review identity and source-set identity present in generated review
+  artifacts;
+- Flathead forest-plan scope resolved as `flathead_nf`;
+- applicability validation and generated rule-pack validation green;
+- component findings, standard coverage, and reviewer-resolution queue current;
+- `forest-plan-component-eval --review-id west-reservoir-67436` passing all
+  `27/27` current cases;
+- compliance review, compliance matrix, and validation artifacts present and
+  reviewer-ready;
+- `v1-ea-eval --review-id west-reservoir-67436` passing as
+  `contract_status="reviewer_ready"`;
+- review-bound `phase-eval --review-id west-reservoir-67436` passing on
+  `source-set-4fb59e9eb43045cb`;
+- governed registry and coverage manifests updated only after those proofs are
+  current.
+
+## Non-Goals
+
+- Do not change the official package authority or add unverified project
+  documents.
+- Do not stage ignored `source_library/` generated artifacts.
+- Do not reuse the old green `source-set-5e65d845ce77e1a0` phase-eval result
+  as current readiness proof.
+- Do not mark West Reservoir reviewer-ready in registry or coverage manifests
+  before current V1, component, compliance, and phase evals pass.
+- Do not weaken tests, lower thresholds, add skips, or relax eval manifests to
+  get green. Replacement coverage must be equivalent or stronger, and coverage
+  did not get easier.
+- Do not claim aggregate forest-plan component coverage is green while ECID
+  source-delta remains red.
+- Do not reopen unrelated Custer Gallatin, Lolo, South Otter, South Plateau,
+  or ECID packets except where aggregate commands must report their unchanged
+  residual status.
+- Do not make legal conclusions beyond deterministic citation-bearing review
+  artifacts and eval gates.
+
+## Scope
+
+- West Reservoir replay identity, package path, package manifest, and package
+  authority verification
+- Flathead forest-plan profile resolution for this review
+- West Reservoir applicability, generated rule-pack, forest-plan context,
+  forest-plan component, compliance, V1 eval, and phase-eval artifacts
+- Tracked adjudication and eval contracts needed to make the review replayable
+- Registry and aggregate coverage promotion after current readiness gates pass
+- Current routing, current-system-state, and session handoff docs
+
+## Out Of Scope
+
+- New workbook source-row capture or full-register source-set rebuilds
+- Broad downloader, extraction, catalog, graph, or review-engine refactors
+- New Flathead example selection beyond `west-reservoir-67436`
+- South Plateau requalification
+- ECID source-delta repair, except for preserving truthful aggregate failure
+  language after the West Reservoir slot is repaired
+
+## Owner Surfaces
+
+- Plan packet:
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- Current route and state:
+  `docs/CURRENT_ROUTING.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`,
+  `docs/SESSION_HANDOFF.md`
+- Replay context:
+  `config/replay_contexts/west-reservoir-67436.json`
+- Package authority:
+  `config/review_package_authority_verifications/west-reservoir-67436.json`,
+  `tests/test_west_reservoir_package_authority.py`
+- V1 eval contract:
+  `config/v1_west_reservoir_real_ea_eval.json`
+- Component eval contract:
+  `config/forest_plan_component_evals/west-reservoir-67436.json`
+- Applicability adjudication:
+  `config/applicability_adjudications/west-reservoir-67436.json`
+- Forest-plan component adjudication:
+  `config/forest_plan_component_adjudications/west-reservoir-67436.json`
+- Aggregate manifests:
+  `config/v1_real_package_review_coverage_v1.json`,
+  `config/forest_specific_example_package_registry_v1.json`,
+  `config/forest_plan_component_eval_coverage_v1.json`
+- Ignored generated review outputs:
+  `source_library/reviews/west-reservoir-67436/`
+- Focused tests:
+  `tests/test_replay_context.py`,
+  `tests/test_west_reservoir_package_authority.py`,
+  `tests/test_real_package_review_coverage_eval.py`,
+  `tests/test_forest_specific_example_package_registry.py`,
+  `tests/test_forest_plan_component_eval.py`,
+  `tests/test_forest_plan_component_eval_coverage.py`,
+  `tests/test_v1_ea_eval.py`,
+  `tests/test_compliance_review.py`,
+  `tests/test_cli_eval.py`
+
+## Placement Rules
+
+- Keep `review_id="west-reservoir-67436"` stable across replay context,
+  generated artifacts, eval contracts, registry rows, and coverage slots.
+- Keep `forest_unit_id="flathead-nf"` and forest-plan scope
+  `flathead_nf`.
+- Keep the current source-set identity
+  `source-set-4fb59e9eb43045cb` in every readiness proof for this packet.
+- Treat `source-set-5e65d845ce77e1a0` artifacts as historical only.
+- Keep package bytes and generated review outputs under ignored
+  `source_library/`; track only deterministic contracts, adjudications,
+  manifests, tests, and docs.
+- Use source-record IDs and citations from the Flathead forest-plan profile.
+  Any remaining Custer Gallatin source-record reference in a West Reservoir
+  contract is a bug to prove and repair, not a tolerated mismatch.
+- Preserve one review package; do not add substitute documents or hidden local
+  package paths.
+
+## Required Implementation Artifacts
+
+The implementation is not ready to promote until the current review directory
+contains fresh artifacts for:
+
+- `review_report.json`
+- `applicability/applicability_validation.json`
+- `applicability/generated_rule_pack.json`
+- `applicability/generated_rule_pack_validation.json`
+- `forest_plan_context.json`
+- `forest_plan_context_summary.json`
+- `forest_plan_component_findings.json`
+- `forest_plan_applicable_standard_coverage.json`
+- `forest_plan_reviewer_resolution_queue.json`
+- `forest_plan_component_adjudication_eval.json`
+- `forest_plan_component_eval_results.json`
+- `compliance_review.json`
+- `compliance_matrix.json`
+- `compliance_validation.json`
+- `authority_explanation_paths.json`
+- `v1_ea_eval_results.json`
+- `phase_eval_results.json`
+
+## Weak-Point Prevention Contract
+
+| Weak point forecast | Owner surface | Prevention gate | Fail threshold | Controlled violation | Future-Codex misuse scenario |
+| --- | --- | --- | --- | --- | --- |
+| A stale green `phase_eval_results.json` on `source-set-5e65d845ce77e1a0` could be treated as current reviewer readiness. | `source_library/reviews/west-reservoir-67436/phase_eval_results.json`, `config/replay_contexts/west-reservoir-67436.json`, `docs/CURRENT_SYSTEM_STATE.md` | Current `phase-eval --review-id west-reservoir-67436` must report `source_set_id="source-set-4fb59e9eb43045cb"` and `passed=true`. | Any readiness claim with `source_set_id!="source-set-4fb59e9eb43045cb"` fails the milestone. | Preserve or add a negative test/result check that a `5e65...` phase artifact cannot satisfy the West Reservoir current contract. | Future Codex sees a green historical phase file and flips registry status without rerunning the current review. |
+| Package-authority proof could be lost while rebuilding review artifacts. | `config/review_package_authority_verifications/west-reservoir-67436.json`, package manifest, `tests/test_west_reservoir_package_authority.py` | Package-authority test passes and manifest still has `12` verified official PDFs with `omitted_document_count=0`. | Missing, extra, or hash-mismatched package rows fail the milestone. | Corrupt one expected hash in a fixture or test copy and ensure the authority test fails. | Future Codex swaps in a local downloads folder and bypasses the official public Pinyon evidence. |
+| Flathead scope could drift into Custer Gallatin source-record identity. | `config/v1_west_reservoir_real_ea_eval.json`, `config/forest_plan_profiles.json`, generated context artifacts | `forest-plan-resolve` and `v1-ea-eval` must prove `forest_unit_id="flathead-nf"` and `scope_status="flathead_nf"` with Flathead plan source citations. | Any Custer Gallatin forest-plan source record in current West Reservoir forest-plan expectations fails the milestone. | Keep a regression assertion around the known risk that `region1_forest_plan_source_records_authority_template` must not cite `R1PLAN-custer-gallatin-nf-02` for West Reservoir. | Future Codex copies a Custer Gallatin contract row because another example was recently green. |
+| Component eval could be made green by lowering the case set or thresholds. | `config/forest_plan_component_evals/west-reservoir-67436.json`, `tests/test_forest_plan_component_eval.py` | `forest-plan-component-eval --review-id west-reservoir-67436` passes all `27/27` cases with existing or stronger thresholds. | Any case deletion, lower minimum, or relaxed threshold without stronger replacement coverage fails the milestone. | Remove one required applicable-standard case in a test fixture and ensure coverage/eval fails. | Future Codex marks readiness by editing the eval manifest instead of producing component findings. |
+| Reviewer-resolution queue could hide open component decisions. | `forest_plan_reviewer_resolution_queue.json`, component adjudication config and eval | Component adjudication eval reports `reviewer_ready=true`, `pending=0`, and V1 forest-plan reviewer-resolution limits remain `0`. | Any open queue item or reviewer-resolution item above `0` fails the milestone. | Seed one unresolved queue item and verify `forest-plan-component-adjudication-eval` fails. | Future Codex treats unresolved reviewer judgment as an automatic pass. |
+| Compliance review could pass in base-pack or diagnostic mode rather than generated-pack mode. | `compliance_review.json`, `compliance_validation.json`, generated rule pack | `compliance-review` uses the generated West Reservoir rule pack and reports `reviewer_ready=true` plus `validation_passed=true`. | Missing generated rule pack, `allow-base-rule-pack-review` reliance, or validation failure fails the milestone. | Run a validate-only generated-rule-pack check with a missing rule and ensure compliance validation blocks readiness. | Future Codex reruns compliance with broad base rules and claims the review is ready. |
+| Aggregate component coverage could still be red and described as green. | `config/forest_plan_component_eval_coverage_v1.json`, aggregate results | West Reservoir slot must pass and source-set align; aggregate text must still name any remaining ECID source-delta red status. | Any doc claiming aggregate component coverage is green while ECID remains red fails closeout. | Preserve a result fixture or doc check where ECID red keeps aggregate `passed=false` after West Reservoir improves. | Future Codex fixes West Reservoir and overstates aggregate readiness. |
+
+## Milestone Sequence
+
+### Milestone 0 - Current Contract Baseline And False-Green Guard
+
+Outcome label: resolved.
+
+Freeze the current West Reservoir readiness contract before rebuilding
+anything. Confirm the replay context, package-authority manifest, V1 contract,
+component eval contract, and generated result files all describe the same
+current target: `west-reservoir-67436` on
+`source-set-4fb59e9eb43045cb`.
+
+Required actions:
+
+- Confirm package authority remains verified:
+  `PYTHONPATH=src uv run --extra dev pytest tests/test_west_reservoir_package_authority.py`
+- Rerun current evals as baseline:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id west-reservoir-67436`
+- Rerun current component eval as baseline:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id west-reservoir-67436`
+- Record that any green `phase_eval_results.json` on
+  `source-set-5e65d845ce77e1a0` is stale and cannot satisfy this packet.
+- Add or update focused regression coverage if the current tests do not catch
+  stale source-set readiness reuse.
+
+Exit criteria:
+
+- V1 eval remains typed blocked only for allowed current blocker categories.
+- Component eval remains red on the current source set until artifacts are
+  rebuilt.
+- No docs or manifests describe West Reservoir as reviewer-ready yet.
+
+### Milestone 1 - Review Artifact Spine Rebuild
+
+Outcome label: reduced.
+
+Rebuild the current review identity and artifact spine from the verified local
+package cache and the current source set. This milestone reduces artifact
+absence and identity drift; it does not promote readiness by itself.
+
+Required actions:
+
+- Reuse the verified package cache:
+  `source_library/reviews/west-reservoir-67436/package`
+- Rerun package review with explicit identity:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources ea-review --package-path source_library/reviews/west-reservoir-67436/package --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb --review-id west-reservoir-67436 --reuse-package-cache`
+- Rebuild Flathead applicability context and validation:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-context-build --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-4fb59e9eb43045cb`
+- Validate applicability:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-4fb59e9eb43045cb`
+- Generate and validate the review-specific rule pack:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-4fb59e9eb43045cb`
+- Resolve Flathead forest-plan context:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path source_library/reviews/west-reservoir-67436/package --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb --review-id west-reservoir-67436 --forest-unit-id flathead-nf --reuse-package-cache`
+
+Exit criteria:
+
+- Generated review artifacts carry `review_id="west-reservoir-67436"` and
+  `source_set_id="source-set-4fb59e9eb43045cb"`.
+- Missing artifact count is reduced materially.
+- Flathead forest-plan context exists and resolves to `flathead_nf`.
+- Applicability validation has `0` unresolved and no hidden
+  `needs_adjudication` decisions, or the milestone stops and records the
+  precise adjudication gap.
+
+### Milestone 2 - Flathead Component Readiness
+
+Outcome label: resolved for the West Reservoir component slot; reduced for the
+aggregate component-coverage manifest if ECID remains red.
+
+Produce current component findings, standard coverage, and reviewer-resolution
+queue artifacts, then make the tracked West Reservoir component eval pass.
+
+Required actions:
+
+- Build current Flathead plan components if the review lacks current component
+  source artifacts:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb --forest-unit-id flathead-nf --manifest-path`
+- Generate the current component adjudication template:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-template --output-dir source_library --review-id west-reservoir-67436`
+- Update tracked adjudication only with evidence-backed decisions:
+  `config/forest_plan_component_adjudications/west-reservoir-67436.json`
+- Evaluate tracked adjudication:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id west-reservoir-67436 --adjudication-file config/forest_plan_component_adjudications/west-reservoir-67436.json`
+- Run current component eval:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id west-reservoir-67436`
+
+Exit criteria:
+
+- `forest_plan_component_findings.json`,
+  `forest_plan_applicable_standard_coverage.json`, and
+  `forest_plan_reviewer_resolution_queue.json` exist for the current review.
+- Component adjudication eval reports `reviewer_ready=true`.
+- Component eval passes `27/27` cases with `failed_case_count=0`.
+- West Reservoir's component-coverage slot passes and source-set aligns.
+- Any remaining aggregate component-coverage failure is limited to
+  non-West-Reservoir slots and named explicitly.
+
+### Milestone 3 - Compliance Review And V1 Readiness Promotion
+
+Outcome label: resolved.
+
+Run the generated-pack compliance review and promote the V1 contract only after
+the current West Reservoir review is actually reviewer-ready.
+
+Required actions:
+
+- Run compliance review with the generated West Reservoir rule pack:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path source_library/reviews/west-reservoir-67436/package --output-dir source_library --source-set-id source-set-4fb59e9eb43045cb --review-id west-reservoir-67436 --forest-unit-id flathead-nf --reuse-package-cache`
+- Rerun V1 eval:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id west-reservoir-67436`
+- Update `config/v1_west_reservoir_real_ea_eval.json` only after current
+  output proves `broader_ea_passed=true` and `forest_plan_passed=true`.
+- Promote West Reservoir from typed blocked to reviewer-ready in
+  `config/v1_real_package_review_coverage_v1.json` and
+  `config/forest_specific_example_package_registry_v1.json` only after the V1
+  eval passes.
+
+Exit criteria:
+
+- Compliance artifacts exist and validation passes.
+- V1 eval reports `contract_status="reviewer_ready"`,
+  `actual_overall_passed=true`, `broader_ea_passed=true`, and
+  `forest_plan_passed=true`.
+- Registry and real-package aggregate manifests remain internally consistent.
+
+### Milestone 4 - Phase Eval, Aggregate Reporting, Docs, And Commit Closeout
+
+Outcome label: resolved for West Reservoir reviewer readiness.
+
+Close the packet only after review-scoped phase eval and aggregate gates agree
+with the promoted status.
+
+Required actions:
+
+- Run current review phase eval:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id west-reservoir-67436`
+- Run real-package aggregate:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json`
+- Run forest-specific registry aggregate:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library --manifest config/forest_specific_example_package_registry_v1.json`
+- Run component aggregate:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library --manifest config/forest_plan_component_eval_coverage_v1.json`
+- Update docs and handoff with exact pass/fail counts, source-set IDs, and any
+  residual aggregate blockers.
+- Make one atomic local commit after verification passes.
+
+Exit criteria:
+
+- Phase eval passes on `source-set-4fb59e9eb43045cb`.
+- Real-package aggregate and forest-specific registry aggregate pass with West
+  Reservoir as reviewer-ready.
+- Component aggregate either passes or remains red only for explicitly named
+  non-West-Reservoir blockers. If ECID source-delta remains red, docs must say
+  aggregate component coverage is not fully green.
+- The packet is not complete until the verified docs/config/tests slice is
+  committed locally.
+
+## Verification Gates
+
+Run focused gates after each milestone and the full closeout set before the
+final commit.
+
+Required closeout commands:
+
+```bash
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md
+PYTHONPATH=src uv run --extra dev pytest tests/test_west_reservoir_package_authority.py tests/test_replay_context.py tests/test_real_package_review_coverage_eval.py tests/test_forest_specific_example_package_registry.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_component_eval.py tests/test_forest_plan_component_eval_coverage.py tests/test_v1_ea_eval.py tests/test_compliance_review.py tests/test_cli_eval.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev ruff check src tests
+git diff --check
+```
+
+Required current eval commands:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id west-reservoir-67436
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id west-reservoir-67436
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id west-reservoir-67436
+PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library --manifest config/forest_specific_example_package_registry_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library --manifest config/forest_plan_component_eval_coverage_v1.json
+```
+
+Freshness check: every readiness command must be rerun after the last artifact,
+contract, or adjudication change that can affect it. Do not cite an older
+generated report when a tracked input has changed.
+
+## Acceptance Criteria
+
+- Package-authority verification remains green with `12` official PDFs,
+  `12` package-manifest rows, zero hash mismatches, and
+  `omitted_document_count=0`.
+- Current West Reservoir review artifacts carry
+  `review_id="west-reservoir-67436"` and
+  `source_set_id="source-set-4fb59e9eb43045cb"`.
+- Flathead forest-plan scope resolves as `flathead_nf` with Flathead plan
+  source citations.
+- Applicability validation reports `0` unresolved and generated-rule-pack
+  validation passes.
+- Component eval passes `27/27` cases with `failed_case_count=0` and the
+  existing thresholds or stricter numeric minimums.
+- Compliance review reports `reviewer_ready=true` and
+  `validation_passed=true` using the generated West Reservoir rule pack.
+- V1 eval reports `contract_status="reviewer_ready"` and no failure
+  categories.
+- Phase eval passes on `source-set-4fb59e9eb43045cb`; any `5e65...` phase
+  artifact is documented as historical.
+- Aggregate docs and handoff describe exactly which gates are green and which,
+  if any, remain red.
+- No tests are weakened and no new skips, xfails, or coverage pragmas are added
+  without user approval and a debt-register entry.
+- The milestone is ready-to-close only after the verified slice is committed.
+
+## Documentation And Handoff
+
+Update these files in the same milestone slice that changes their truth:
+
+- `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- `docs/CURRENT_ROUTING.md`
+- `docs/CURRENT_SYSTEM_STATE.md`
+- `docs/SESSION_HANDOFF.md`
+- `README.md` only if stable entrypoints or public repo contract text changes
+- `docs/OUTPUT_SCHEMAS.md` only if generated artifact schemas or fields change
+- `docs/TECH_DEBT_REGISTER.md` only if a user-approved temporary exception is
+  introduced
+
+Each closeout update must name:
+
+- source-set ID;
+- review ID;
+- package-authority status;
+- V1 eval status;
+- component eval pass count;
+- phase-eval source-set ID and pass count;
+- aggregate coverage status and residual blockers;
+- commit hash after local commit.
+
+## Commit Closeout
+
+This packet follows the repository milestone policy:
+
+- stage only the verified West Reservoir reviewer-readiness slice;
+- do not stage ignored `source_library/` artifacts;
+- make one atomic commit per completed milestone or a single atomic closeout
+  commit if Milestones 0-4 are implemented as one verified slice;
+- do not push unless the user explicitly asks;
+- do not mark the plan complete until the local commit exists and the handoff
+  includes the commit hash.
+
+## Stop Conditions
+
+Stop and report the blocker instead of promoting readiness if any of these
+occur:
+
+- official package-authority verification no longer matches the local package;
+- current review outputs cannot be rebuilt on
+  `source-set-4fb59e9eb43045cb`;
+- Flathead forest-plan scope cannot be resolved without using Custer Gallatin
+  source-record identity;
+- applicability, component adjudication, or compliance review has unresolved
+  reviewer decisions;
+- component eval cannot pass all `27/27` cases without lowering thresholds;
+- V1 eval or phase eval is green only on the historical `5e65...` source set;
+- required verification commands fail and cannot be fixed inside the milestone
+  scope;
+- a required fix would become a broad architecture, downloader, source-capture,
+  or full-corpus rebuild project.
+
+## Residual Risks And Next Routing
+
+- West Reservoir readiness can resolve the Flathead governed-example gap, but
+  it may not make aggregate forest-plan component coverage green if ECID
+  source-delta remains stale or failing.
+- The historical Flathead live-package proving plan closed on
+  `source-set-5e65d845ce77e1a0`; this plan supersedes it for current
+  reviewer-readiness routing.
+- If West Reservoir closes green and ECID source-delta remains red, the next
+  route should be a separate ECID source-delta/component-coverage repair packet.
+- If West Reservoir cannot close without source-set rebuild work, open a new
+  blocker packet rather than weakening readiness gates.
+
+## Closeout Checklist
+
+- [ ] Milestone 0 baseline and stale-green guard resolved
+- [ ] Milestone 1 review artifact spine rebuilt on
+      `source-set-4fb59e9eb43045cb`
+- [ ] Milestone 2 component eval passes `27/27`
+- [ ] Milestone 3 compliance and V1 readiness gates pass
+- [ ] Milestone 4 phase eval and aggregate gates rerun
+- [ ] Docs and session handoff updated with exact counts and residual blockers
+- [ ] Verification commands recorded
+- [ ] Stage only intended docs/config/tests/source changes
+- [ ] Local atomic commit created

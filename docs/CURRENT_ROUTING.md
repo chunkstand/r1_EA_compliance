@@ -1,5 +1,5 @@
 # Current Routing
-Date: 2026-05-27
+Date: 2026-05-28
 Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
@@ -8,7 +8,7 @@ Use this file as the short current route before opening the append-only docs.
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
-  none selected after South Otter primary-example selection update
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - Historical lineage only:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
@@ -20,6 +20,18 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
+- West Reservoir reviewer-readiness planning is now the active
+  forest-specific example packet. Use
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` for the next
+  implementation slice. The plan starts after package-authority provenance was
+  verified against the official Flathead project page and public Pinyon/Box
+  folder, and it keeps West Reservoir typed blocked until current review
+  artifacts, component eval, compliance, V1 eval, and phase eval pass on
+  `source-set-4fb59e9eb43045cb`.
+- Do not reuse the historical green West Reservoir
+  `phase_eval_results.json` on `source-set-5e65d845ce77e1a0` as current
+  readiness proof. It is historical evidence only; the active packet requires
+  a current rerun on `source-set-4fb59e9eb43045cb`.
 - South Otter Milestone 3 is resolved locally, and the current registry policy
   now promotes South Otter as the primary Custer Gallatin example. South Otter
   is a governed Custer Gallatin example in
@@ -138,6 +150,7 @@ Use this file as the short current route before opening the append-only docs.
   Lolo or South Otter example promotions.
 ## Deep Reads
 - Core:
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`,
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,

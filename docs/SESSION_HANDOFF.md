@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-27
+Date: 2026-05-28
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
@@ -14,16 +14,14 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` if the next session is
-  continuing the active forest-specific example expansion work; read
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` if the next
+  session is implementing the active Flathead reviewer-readiness packet; read
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` for the
   umbrella rules behind that packet
 - latest resolved packet:
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - active forest-specific example packet:
-  none selected after South Otter primary-example selection update; use
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` before
-  opening another forest-specific example packet
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - just-resolved blocker packet:
@@ -35,6 +33,18 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  West Reservoir reviewer-readiness planning is now the active Flathead
+  forest-specific example packet. The plan file is
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`; it starts after
+  package authority was verified against the official Flathead project page
+  and public Pinyon/Box folder, with `12` official PDFs, `12` local package
+  manifest rows, byte-size and SHA-256 matches for every document, and
+  `omitted_document_count=0`. This is plan-only routing: West Reservoir
+  remains typed blocked until current review artifacts, component eval,
+  compliance review, V1 eval, and review-bound phase eval pass on
+  `source-set-4fb59e9eb43045cb`. The historical green West Reservoir phase
+  artifact on `source-set-5e65d845ce77e1a0` must not be used as current
+  reviewer-readiness proof.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or

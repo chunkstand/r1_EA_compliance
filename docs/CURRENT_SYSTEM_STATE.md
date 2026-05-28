@@ -15,6 +15,32 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## West Reservoir Reviewer Readiness Plan Opened
+
+Latest planning update on 2026-05-28 UTC:
+
+- active packet:
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- current scope:
+  make `west-reservoir-67436` reviewer-ready as the Flathead governed example
+  on `source-set-4fb59e9eb43045cb`
+- current boundary:
+  the prior West Reservoir package-authority slice is resolved, but this
+  planning update does not promote the review to reviewer-ready and does not
+  change generated `source_library/` artifacts
+- readiness blocker:
+  current `v1_ea_eval_results.json` remains `contract_status="typed_blocked"`
+  and the current component eval remains `0/27` passed until missing review,
+  component, compliance, and phase artifacts are rebuilt on
+  `source-set-4fb59e9eb43045cb`
+- stale-artifact guard:
+  the historical green West Reservoir `phase_eval_results.json` on
+  `source-set-5e65d845ce77e1a0` is not current readiness proof for this
+  packet
+- next implementation slice:
+  start with Milestone 0 in the new plan: current-contract baseline,
+  package-authority verification, and false-green source-set guard
+
 ## West Reservoir Public Pinyon Authority Verified
 
 Latest verification update on 2026-05-28 UTC:
