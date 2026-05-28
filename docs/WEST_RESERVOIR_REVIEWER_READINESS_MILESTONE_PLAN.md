@@ -8,10 +8,10 @@ feasibility; source-set migration is resolved through
 1 contract migration moved the tracked West Reservoir contract to
 `source-set-f70ea11e04ae3d53` and Milestone 2 resolved the f70
 authority-universe proof; parent Milestone 1 f70 applicability is now green,
-and the six originally blocking Flathead required support records are now
-indexed in f70, but `forest-plan-resolve` is still blocked by the active child
-packet
-`docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+the f70 forest-plan identity/source-capture child packet is resolved, and
+`forest-plan-resolve` now emits current Flathead context/component artifacts
+with `forest_plan_context_validation.json` passing on f70. The active parent
+stop is Milestone 2 component readiness.
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -153,13 +153,14 @@ is green with `component_inventory_present=true`,
   `forest_plan_passed=false`.
 - Current generated forest-plan artifacts now include:
   `forest_plan_context_summary.json`, `forest_plan_context.json`,
+  `forest_plan_context_validation.json`,
   `forest_plan_component_findings.json`,
   `forest_plan_applicable_standard_coverage.json`, and
   `forest_plan_reviewer_resolution_queue.json` on
-  `source-set-f70ea11e04ae3d53`. These are not reviewer-ready proof yet:
-  context validation fails on triggered monitoring-program support for
-  `R1PLAN-flathead-nf-08`, and the component adjudication eval is still stale
-  from historical `source-set-5e65d845ce77e1a0`.
+  `source-set-f70ea11e04ae3d53`. Context validation now passes, but these are
+  not reviewer-ready proof yet: current component evaluation is not
+  reviewer-ready, and the component adjudication eval is still stale from
+  historical `source-set-5e65d845ce77e1a0`.
 - Current missing downstream artifacts still include:
   `compliance_review.json`, `compliance_matrix.json`,
   `compliance_validation.json`, and `authority_explanation_paths.json`.
@@ -584,16 +585,16 @@ Implementation note:
   `generated_rule_pack_ready=true`.
 - `forest-plan-resolve` now generates current f70 Flathead context and
   component artifacts after the child blocker supplied the six originally
-  missing required support records. The f70 retrieval readiness checks pass
-  with `blocking_missing_source_record_ids=[]`. The active stop is now context
-  validation for the triggered monitoring-program support route:
-  `R1PLAN-flathead-nf-08` has no f70 plan-source evidence yet.
-- The active child blocker is now
-  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
-  Do not start Milestone 2 component readiness, compliance review, V1
-  promotion, phase eval, registry promotion, or aggregate promotion until a
-  follow-on Flathead monitoring-program source-capture slice lets
-  `forest_plan_context_validation.json` pass on f70.
+  missing required support records and the triggered monitoring-program support
+  record `R1PLAN-flathead-nf-08`. The f70 retrieval readiness checks pass with
+  `blocking_missing_source_record_ids=[]`, and
+  `forest_plan_context_validation.json` passes on f70.
+- The child blocker
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  is now resolved locally. The next active slice is Milestone 2 component
+  readiness in this parent packet. Do not start compliance review, V1
+  promotion, phase eval, registry promotion, or aggregate promotion until
+  current component adjudication and component eval pass on f70.
 - Local commit anchors:
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) for the
   Flathead authority-universe scoping repair and `0773ef7` (`Open West
@@ -603,8 +604,8 @@ Implementation note:
 
 ### Milestone 2 - Flathead Component Readiness
 
-Outcome label: resolved for the West Reservoir component slot; reduced for the
-aggregate component-coverage manifest if ECID remains red.
+Outcome label: pending. This is the active parent slice now that f70
+forest-plan context validation passes.
 
 Produce current component findings, standard coverage, and reviewer-resolution
 queue artifacts, then make the tracked West Reservoir component eval pass.
@@ -841,7 +842,7 @@ occur:
       gaps
 - [x] Child Milestone 2 indexed the six originally missing Flathead required
       support records under f70
-- [ ] Child Milestone 3 resolves the `R1PLAN-flathead-nf-08`
+- [x] Child Milestone 3 resolved the `R1PLAN-flathead-nf-08`
       monitoring-program context gate
 - [x] Milestone 1 source-evidence blocker routed through
       `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`

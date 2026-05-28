@@ -13,27 +13,26 @@ Use this section to begin a new thread without rereading the older append-only
 history below.
 
 - Start order:
-  read `docs/CURRENT_ROUTING.md`, then this section, then open
+  read `docs/CURRENT_ROUTING.md`, then this section, then read
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` for the active
+  parent Flathead reviewer-readiness packet; open
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  if the next session is implementing the active West Reservoir f70
-  forest-plan identity blocker; read
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` for the parent
-  Flathead reviewer-readiness packet; read
+  only for resolved f70 context-gate evidence; read
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` for the
   umbrella rules behind that packet
 - latest resolved packet:
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - predecessor West Reservoir source-evidence blocker:
   `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 - predecessor West Reservoir source-set migration packet:
   `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`
-- active West Reservoir f70 forest-plan identity/source-capture blocker:
+- resolved West Reservoir f70 forest-plan identity/source-capture blocker:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
-- just-resolved blocker packet:
+- resolved Lolo blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
@@ -142,28 +141,31 @@ history below.
   `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-06`,
   `R1PLAN-flathead-nf-07`, `R1PLAN-flathead-nf-10`,
   `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16`.
-  `forest-plan-resolve` now emits current f70 Flathead context and component
-  artifacts, and retrieval readiness passes with
-  `blocking_missing_source_record_ids=[]`. The active stop exposed by the
-  pre-commit closeout gate is `forest_plan_context_validation.json` failing
-  `triggered_supporting_plan_evidence_has_source_evidence` for
-  `route_id="support-monitoring-program"` and
-  `source_record_id="R1PLAN-flathead-nf-08"`. The stale component
-  adjudication eval on historical `source-set-5e65d845ce77e1a0` is downstream
-  of that context gate. The next slice remains under
-  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
-  Do not run component readiness, compliance review, V1 promotion, phase eval,
-  registry promotion, or aggregate promotion until the monitoring-program
-  context gate passes on f70.
+  The next source-capture slice supplied `R1PLAN-flathead-nf-08`, the
+  triggered Chapter 5 monitoring-program support record, from the same
+  archived source-delta merged gate into the local f70 generated
+  catalog/retrieval surface. F70 extraction and retrieval now pass with `715`
+  sources, `110982` chunks, and direct indexed readback of
+  `R1PLAN-flathead-nf-08=41` chunks. `forest-plan-resolve` now emits current
+  f70 Flathead context and component artifacts, retrieval readiness passes with
+  `blocking_missing_source_record_ids=[]`, and
+  `forest_plan_context_validation.json` passes. The child blocker is resolved
+  locally. The active stop is now parent Milestone 2 component readiness:
+  current component evaluation is not reviewer-ready, and the historical
+  component adjudication eval is stale against `source-set-5e65d845ce77e1a0`.
+  The next slice is
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 2. Do
+  not run compliance review, V1 promotion, phase eval, registry promotion, or
+  aggregate promotion until current component adjudication/eval passes on f70.
   Local commit anchors for the Milestone 1 reduction/blocker route are
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) and
   `0773ef7` (`Open West Reservoir source evidence blocker`); the docs-only
   Bitter Lesson alignment commit is `3a5e6b3` (`Align West Reservoir plans
   with Bitter Lesson`), and the source-set migration Milestone 1 closeout
   commit is `f17474b` (`Migrate West Reservoir source-set contract`).
-  Do not run component readiness, compliance review, V1 promotion, phase eval,
-  registry promotion, or aggregate promotion until the Flathead f70 monitoring
-  context gate is closed.
+  Do not run compliance review, V1 promotion, phase eval, registry promotion,
+  or aggregate promotion until the Flathead f70 component readiness gate is
+  closed.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or

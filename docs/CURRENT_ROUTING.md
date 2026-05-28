@@ -4,12 +4,12 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved packet:
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
-- Active West Reservoir child blocker:
+- Latest resolved West Reservoir child blocker:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - Historical lineage only:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
@@ -22,16 +22,15 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- West Reservoir reviewer-readiness planning is now the active
-  forest-specific example packet. Use
-  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
-  for the next implementation slice, with
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` as the parent
-  context. The parent plan starts after package-authority provenance was
-  verified against the official Flathead project page and public Pinyon/Box
-  folder, and it keeps West Reservoir typed blocked until current review
-  artifacts, component eval, compliance, V1 eval, and phase eval pass on
-  `source-set-f70ea11e04ae3d53`.
+- West Reservoir reviewer-readiness planning is the active forest-specific
+  example packet. Use
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 2 for
+  the next implementation slice. The f70 forest-plan identity/source-capture
+  child blocker is resolved locally and kept as the evidence packet. The
+  parent plan starts after package-authority provenance was verified against
+  the official Flathead project page and public Pinyon/Box folder, and it keeps
+  West Reservoir typed blocked until current component eval, compliance, V1
+  eval, and phase eval pass on `source-set-f70ea11e04ae3d53`.
 - Milestone 0 in the West Reservoir packet is resolved locally. Package
   authority remains green, current V1 eval remains a truthful typed-blocked
   baseline with only allowed blocker categories, and the pre-migration
@@ -80,21 +79,29 @@ Use this file as the short current route before opening the append-only docs.
   `R1PLAN-flathead-nf-02 -> FINAL-FLAT-001`,
   `R1PLAN-flathead-nf-03 -> FPS-180`, and
   `R1PLAN-flathead-nf-05 -> FINAL-FLAT-003`, and leaves seven Flathead rows
-  unresolved in tracked identity metadata. Child Milestone 2 then supplied the
-  six originally missing required Flathead support records to the local f70
+  unresolved in tracked identity metadata. Child Milestone 2 supplied the six
+  originally missing required Flathead support records to the local f70
   catalog/retrieval surface from the archived source-delta merged gate. F70
-  extraction and retrieval now pass with `714` sources and `110941` chunks,
-  and direct readback indexes
+  extraction and retrieval pass with `714` sources and `110941` chunks, and
+  direct readback indexes
   `R1PLAN-flathead-nf-04`, `R1PLAN-flathead-nf-06`,
   `R1PLAN-flathead-nf-07`, `R1PLAN-flathead-nf-10`,
   `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16`.
-  `forest-plan-resolve` now emits current f70 context and component artifacts,
-  and retrieval readiness passes with `blocking_missing_source_record_ids=[]`.
-  The active child blocker is the newly exposed monitoring-program context
-  gate: `R1PLAN-flathead-nf-08` has no f70 plan-source evidence on the
-  triggered `support-monitoring-program` route. Do not proceed to component
-  readiness, compliance, V1 promotion, phase eval, or registry promotion until
-  `forest_plan_context_validation.json` passes on f70.
+  Child Milestone 3 supplied the triggered monitoring-program support record
+  `R1PLAN-flathead-nf-08` to the same local f70 generated catalog from the
+  archived source-delta merged gate. The f70 catalog now has `715` sources,
+  `703` artifacts, and `7` supplemental Flathead overlay rows; extraction and
+  retrieval pass with `715` sources, `110982` chunks, `failed_count=0`, and
+  `reviewer_ready=true`. Direct retrieval SQLite readback indexes
+  `R1PLAN-flathead-nf-08=41` chunks. `forest-plan-resolve` now emits current
+  f70 Flathead context and component artifacts, retrieval readiness passes
+  with `blocking_missing_source_record_ids=[]`, and
+  `forest_plan_context_validation.json` passes. The active stop is now parent
+  Milestone 2 component readiness: the resolver exits nonzero because current
+  component evaluation is not reviewer-ready and the historical component
+  adjudication eval is stale against `source-set-5e65d845ce77e1a0`. Do not
+  proceed to compliance, V1 promotion, phase eval, registry promotion, or
+  aggregate promotion until current component adjudication/eval passes on f70.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson
