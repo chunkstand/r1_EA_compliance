@@ -8,6 +8,9 @@ from usfs_r1_ea_sources.forest_plan_components import (
     _component_package_determination,
     _component_package_search,
 )
+from usfs_r1_ea_sources.forest_plan_components_runtime import (
+    _requires_reviewer_resolution_without_scope_binding,
+)
 
 from tests.support.forest_plan_component_fixtures import _check
 from tests.support.forest_plan_component_fixtures import _package_chunk
@@ -526,3 +529,22 @@ class ForestPlanComponentPackageTests(unittest.TestCase):
         self.assertIsNotNone(determination)
         self.assertEqual(determination["component_key"], "MG-GO-ELGA-01")
         self.assertEqual(determination["component_applies"], "no")
+
+    def test_forestwide_standard_with_topic_terms_stays_applicable_for_adjudication(
+        self,
+    ) -> None:
+        component = {
+            "component_type": "standard",
+            "geographic_area_ids": [],
+            "management_area_ids": [],
+            "overlay_ids": [],
+            "resource_topics": ["riparian management zones"],
+            "activity_tags": ["activities proposed in riparian management zones"],
+        }
+
+        self.assertFalse(
+            _requires_reviewer_resolution_without_scope_binding(
+                component=component,
+                package_determination=None,
+            )
+        )

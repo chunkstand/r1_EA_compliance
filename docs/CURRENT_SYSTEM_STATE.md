@@ -15,20 +15,20 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## West Reservoir f70 Context Gate Resolved To Component Readiness
+## West Reservoir Component Readiness Resolved To Compliance/V1 Gate
 
 Latest implementation update on 2026-05-28 UTC:
 
 - update:
   parent `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
-  Milestone 1 remains reduced on `source-set-f70ea11e04ae3d53`. The f70
+  Milestone 2 is resolved locally on `source-set-f70ea11e04ae3d53`. The f70
   review/applicability spine is fresh through generated-rule-pack validation,
-  the stale forest-plan identity registry has been rebound to f70, the six
-  originally missing required Flathead support records are indexed under f70,
-  and the triggered Flathead monitoring-program source `R1PLAN-flathead-nf-08`
-  is now indexed under f70. `forest_plan_context_validation.json` passes on
-  the current source set. The remaining stop is parent Milestone 2 component
-  readiness.
+  the stale forest-plan identity registry has been rebound to f70, the seven
+  Flathead support/overlay records supplied by the child packet are indexed
+  under f70, `forest_plan_context_validation.json` passes, component
+  adjudication eval passes with `48/48` resolved and `pending=0`, and component
+  eval passes `27/27`. The remaining stop is parent Milestone 3 compliance
+  review and V1 readiness promotion.
 - resolved child blocker:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - current review identity:
@@ -111,20 +111,40 @@ Latest implementation update on 2026-05-28 UTC:
   `forest_plan_applicable_standard_coverage.json`, and
   `forest_plan_reviewer_resolution_queue.json`. Retrieval readiness passes
   with `blocking_missing_source_record_ids=[]`, and
-  `forest_plan_context_validation.json` passes. The command exits nonzero
-  because current component evaluation is not reviewer-ready:
-  `applicable_standard_coverage_passed=false`, `applied_standard_count=1`,
-  `applicable_standard_count=3`, and `reviewer_resolution_count=48`. The
-  historical component adjudication eval is stale against
-  `source-set-5e65d845ce77e1a0`.
+  `forest_plan_context_validation.json` passes. Generated component findings
+  now report `component_count=80`, `applicability_status_counts={"applicable":56,"not_applicable":24}`,
+  `finding_status_counts={"gap":48,"not_applicable":24,"supported":8}`,
+  `needs_reviewer_resolution_count=0`, and `reviewer_resolution_count=48`.
+- component adjudication closeout:
+  `config/forest_plan_component_adjudications/west-reservoir-67436.json` now
+  matches the current f70 queue. `forest-plan-component-adjudication-eval`
+  passes with `adjudication_item_count=48`, `resolved_adjudication_count=48`,
+  `pending_adjudication_count=0`, `system_miss_count=48`,
+  `real_ea_omission_count=0`, and disposition counts
+  `applicability_false_positive=30` and `evidence_linking_miss=18`.
+- component eval closeout:
+  `config/forest_plan_component_evals/west-reservoir-67436.json` now matches
+  current f70 generated evidence and the Flathead plan citation
+  `FINAL-FLAT-001 (92d78498664e)` while preserving all `27` cases. The current
+  `forest-plan-component-eval --review-id west-reservoir-67436` passes on
+  `source-set-f70ea11e04ae3d53` with `passed_case_count=27`,
+  `failed_case_count=0`, `expected_applicable_standard_count=14`, and empty
+  failure categories.
+- component aggregate truth:
+  `forest-plan-component-eval-coverage` still reports `passed=false`, but West
+  Reservoir now passes and source-set aligns. Aggregate counts are
+  `covered_review_count=4/5`, `stale_identity_count=1`, and
+  `unresolved_review_count=1`; the remaining failing slot is
+  `ecid-source-delta-replay` / `v1-cg-ecid-source-delta-review` with
+  `result_not_passed` and `result_source_set_id_mismatch`.
 - stop condition:
   no compliance review, V1 promotion, phase eval, registry promotion, or
-  aggregate promotion should run until current component adjudication and
-  component eval pass on f70.
+  aggregate promotion was run in this Milestone 2 slice.
 - next implementation slice:
-  run parent Milestone 2 component readiness in
+  run parent Milestone 3 compliance review and V1 readiness promotion in
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`. Keep West
-  Reservoir typed blocked while current component readiness remains red.
+  Reservoir typed blocked until compliance review, V1 eval, review-scoped phase
+  eval, and registry/coverage promotion gates pass.
 
 ## West Reservoir Source-Set Migration Authority-Universe Proof Resolved
 

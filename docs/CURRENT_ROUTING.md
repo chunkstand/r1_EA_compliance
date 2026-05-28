@@ -24,13 +24,15 @@ Use this file as the short current route before opening the append-only docs.
 ## Active Route
 - West Reservoir reviewer-readiness planning is the active forest-specific
   example packet. Use
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 2 for
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 3 for
   the next implementation slice. The f70 forest-plan identity/source-capture
-  child blocker is resolved locally and kept as the evidence packet. The
-  parent plan starts after package-authority provenance was verified against
-  the official Flathead project page and public Pinyon/Box folder, and it keeps
-  West Reservoir typed blocked until current component eval, compliance, V1
-  eval, and phase eval pass on `source-set-f70ea11e04ae3d53`.
+  child blocker is resolved locally and kept as the evidence packet, and parent
+  Milestone 2 component readiness is now resolved locally on f70. The parent
+  plan starts after package-authority provenance was verified against the
+  official Flathead project page and public Pinyon/Box folder, and it keeps West
+  Reservoir typed blocked until compliance review, V1 eval, review-scoped phase
+  eval, and registry/coverage promotion gates pass on
+  `source-set-f70ea11e04ae3d53`.
 - Milestone 0 in the West Reservoir packet is resolved locally. Package
   authority remains green, current V1 eval remains a truthful typed-blocked
   baseline with only allowed blocker categories, and the pre-migration
@@ -94,14 +96,15 @@ Use this file as the short current route before opening the append-only docs.
   retrieval pass with `715` sources, `110982` chunks, `failed_count=0`, and
   `reviewer_ready=true`. Direct retrieval SQLite readback indexes
   `R1PLAN-flathead-nf-08=41` chunks. `forest-plan-resolve` now emits current
-  f70 Flathead context and component artifacts, retrieval readiness passes
-  with `blocking_missing_source_record_ids=[]`, and
-  `forest_plan_context_validation.json` passes. The active stop is now parent
-  Milestone 2 component readiness: the resolver exits nonzero because current
-  component evaluation is not reviewer-ready and the historical component
-  adjudication eval is stale against `source-set-5e65d845ce77e1a0`. Do not
-  proceed to compliance, V1 promotion, phase eval, registry promotion, or
-  aggregate promotion until current component adjudication/eval passes on f70.
+  f70 Flathead context and component artifacts, retrieval readiness passes with
+  `blocking_missing_source_record_ids=[]`, and
+  `forest_plan_context_validation.json` passes. Parent Milestone 2 component
+  readiness is now resolved locally: component adjudication eval passes with
+  `48/48` resolved and `pending=0`, component eval passes `27/27` on
+  `source-set-f70ea11e04ae3d53`, and the West Reservoir aggregate component
+  slot now passes/source-set aligns. Do not proceed to registry promotion or
+  aggregate promotion until compliance review, V1 eval, and review-scoped phase
+  eval pass on f70.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson
@@ -182,11 +185,12 @@ Use this file as the short current route before opening the append-only docs.
 - `config/forest_plan_component_eval_coverage_v1.json` now requires South
   Otter as a fifth component-eval review slot. The South Otter slot is covered,
   source-set aligned, and passing. The aggregate
-  `forest-plan-component-eval-coverage` command still fails on non-South Otter
-  slots: ECID source-delta has `result_not_passed` plus
-  `result_source_set_id_mismatch`, and West Reservoir has `result_not_passed`.
-  Current aggregate counts are `covered_review_count=3/5`,
-  `stale_identity_count=1`, and `unresolved_review_count=2`; do not describe
+  `forest-plan-component-eval-coverage` command still fails on the ECID
+  source-delta slot only: `ecid-source-delta-replay` /
+  `v1-cg-ecid-source-delta-review` has `result_not_passed` plus
+  `result_source_set_id_mismatch`. West Reservoir now passes and source-set
+  aligns. Current aggregate counts are `covered_review_count=4/5`,
+  `stale_identity_count=1`, and `unresolved_review_count=1`; do not describe
   aggregate component coverage as green.
 - The Lolo Tyler's Kitchen example-package Milestone 3 implementation is
   resolved locally. The tracked Lolo review
@@ -215,8 +219,8 @@ Use this file as the short current route before opening the append-only docs.
 - Forest-plan component eval coverage is not a blocker for the Lolo or South
   Otter review-scope closeouts: both slots are aligned and pass on `f70...`.
   The aggregate `forest-plan-component-eval-coverage` command still fails on
-  non-Lolo/non-South Otter source-delta and West Reservoir slots, so do not
-  describe aggregate component coverage as green.
+  the non-Lolo/non-South Otter ECID source-delta slot, so do not describe
+  aggregate component coverage as green.
 - Aggregate truth:
   ECID current promotion, Lolo forest-specific example promotion, and South
   Otter primary-example selection remain green in the non-strict promotion

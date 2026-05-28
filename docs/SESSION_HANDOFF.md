@@ -150,22 +150,30 @@ history below.
   f70 Flathead context and component artifacts, retrieval readiness passes with
   `blocking_missing_source_record_ids=[]`, and
   `forest_plan_context_validation.json` passes. The child blocker is resolved
-  locally. The active stop is now parent Milestone 2 component readiness:
-  current component evaluation is not reviewer-ready, and the historical
-  component adjudication eval is stale against `source-set-5e65d845ce77e1a0`.
-  The next slice is
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 2. Do
-  not run compliance review, V1 promotion, phase eval, registry promotion, or
-  aggregate promotion until current component adjudication/eval passes on f70.
+  locally. Parent Milestone 2 component readiness is now resolved locally:
+  `config/forest_plan_component_adjudications/west-reservoir-67436.json`
+  matches the current f70 queue with `48` items, `48` resolved, and `0`
+  pending; component adjudication eval passes with `system_miss_count=48`,
+  `real_ea_omission_count=0`, `applicability_false_positive=30`, and
+  `evidence_linking_miss=18`; and
+  `forest-plan-component-eval --review-id west-reservoir-67436` passes `27/27`
+  cases on `source-set-f70ea11e04ae3d53` with `failed_case_count=0` and
+  `expected_applicable_standard_count=14`. The West Reservoir
+  component-coverage slot now passes and source-set aligns; the aggregate
+  command still fails only on the ECID source-delta slot (`result_not_passed`
+  plus `result_source_set_id_mismatch`) with `covered_review_count=4/5`,
+  `stale_identity_count=1`, and `unresolved_review_count=1`. The next slice is
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 3. Do
+  not run registry promotion or aggregate promotion until compliance review, V1
+  eval, and review-scoped phase eval pass on f70.
   Local commit anchors for the Milestone 1 reduction/blocker route are
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) and
   `0773ef7` (`Open West Reservoir source evidence blocker`); the docs-only
   Bitter Lesson alignment commit is `3a5e6b3` (`Align West Reservoir plans
   with Bitter Lesson`), and the source-set migration Milestone 1 closeout
   commit is `f17474b` (`Migrate West Reservoir source-set contract`).
-  Do not run compliance review, V1 promotion, phase eval, registry promotion,
-  or aggregate promotion until the Flathead f70 component readiness gate is
-  closed.
+  Do not run registry promotion or aggregate promotion until the Flathead f70
+  compliance review, V1 eval, and review-scoped phase eval gates are closed.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or
@@ -212,11 +220,11 @@ history below.
   `distinct_governed_example_forest_count=3`, and
   `profile_guidance_only_count=7`. South Otter is also a required passing
   component slot in `config/forest_plan_component_eval_coverage_v1.json`.
-  The aggregate component-coverage command still fails on pre-existing
-  non-South Otter slots (`covered_review_count=3/5`,
-  `stale_identity_count=1`, `unresolved_review_count=2`): ECID source-delta
-  has `result_not_passed` plus `result_source_set_id_mismatch`, and West
-  Reservoir has `result_not_passed`. South Otter review `phase-eval` now
+  The aggregate component-coverage command still fails on the pre-existing
+  ECID source-delta slot (`covered_review_count=4/5`,
+  `stale_identity_count=1`, `unresolved_review_count=1`) with
+  `result_not_passed` plus `result_source_set_id_mismatch`. West Reservoir now
+  passes and source-set aligns. South Otter review `phase-eval` now
   passes `28/28` with `blockers=[]`,
   `review_direct_eval_status="direct_eval_present"`, and review-scope
   summaries for `v1_ea_eval`, `real_package_review_coverage`, and

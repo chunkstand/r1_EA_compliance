@@ -10,8 +10,9 @@ feasibility; source-set migration is resolved through
 authority-universe proof; parent Milestone 1 f70 applicability is now green,
 the f70 forest-plan identity/source-capture child packet is resolved, and
 `forest-plan-resolve` now emits current Flathead context/component artifacts
-with `forest_plan_context_validation.json` passing on f70. The active parent
-stop is Milestone 2 component readiness.
+with `forest_plan_context_validation.json` passing on f70. Parent Milestone 2
+component readiness is resolved locally on f70. The active parent stop is now
+Milestone 3 compliance review and V1 readiness promotion.
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -157,17 +158,26 @@ is green with `component_inventory_present=true`,
   `forest_plan_component_findings.json`,
   `forest_plan_applicable_standard_coverage.json`, and
   `forest_plan_reviewer_resolution_queue.json` on
-  `source-set-f70ea11e04ae3d53`. Context validation now passes, but these are
-  not reviewer-ready proof yet: current component evaluation is not
-  reviewer-ready, and the component adjudication eval is still stale from
-  historical `source-set-5e65d845ce77e1a0`.
+  `source-set-f70ea11e04ae3d53`. Context validation passes, component
+  adjudication eval passes with `48/48` resolved and `pending=0`, and component
+  eval passes `27/27` cases with `failed_case_count=0`.
+- Current component adjudication disposition counts are
+  `applicability_false_positive=30` and `evidence_linking_miss=18`, all
+  recorded as system misses rather than real-EA omissions.
+- Current component aggregate coverage remains red only because the ECID
+  source-delta slot is still stale/failing. The West Reservoir slot passes and
+  source-set aligns on `source-set-f70ea11e04ae3d53`; aggregate component
+  coverage reports `covered_review_count=4/5`, `stale_identity_count=1`, and
+  `unresolved_review_count=1`.
 - Current missing downstream artifacts still include:
   `compliance_review.json`, `compliance_matrix.json`,
   `compliance_validation.json`, and `authority_explanation_paths.json`.
-- Pre-migration component eval result:
-  `source_library/reviews/west-reservoir-67436/forest_plan_component_eval_results.json`
-  is aligned to `source-set-4fb59e9eb43045cb` but fails `0/27` cases.
-- Pre-migration component failure categories include missing component findings,
+- Historical 4fb component eval baseline:
+  the Milestone 0 rerun before f70 migration aligned to
+  `source-set-4fb59e9eb43045cb` and failed `0/27` cases before the f70
+  component-readiness closeout; do not use that historical baseline as current
+  status.
+- Historical 4fb component failure categories include missing component findings,
   applicability/status mismatches, citation mismatches, reviewer-resolution
   mismatches, and `20` standard coverage gaps.
 - Historical artifact warning:
@@ -364,7 +374,7 @@ contains fresh artifacts for:
 | Package-authority proof could be lost while rebuilding review artifacts. | `config/review_package_authority_verifications/west-reservoir-67436.json`, package manifest, `tests/test_west_reservoir_package_authority.py` | Package-authority test passes and manifest still has `12` verified official PDFs with `omitted_document_count=0`. | Missing, extra, or hash-mismatched package rows fail the milestone. | Corrupt one expected hash in a fixture or test copy and ensure the authority test fails. | Future Codex swaps in a local downloads folder and bypasses the official public Pinyon evidence. |
 | Flathead scope could drift into Custer Gallatin source-record identity. | `config/v1_west_reservoir_real_ea_eval.json`, `config/forest_plan_profiles.json`, generated context artifacts | `forest-plan-resolve` and `v1-ea-eval` must prove `forest_unit_id="flathead-nf"` and `scope_status="flathead_nf"` with Flathead plan source citations. | Any Custer Gallatin forest-plan source record in current West Reservoir forest-plan expectations fails the milestone. | Keep a regression assertion around the known risk that `region1_forest_plan_source_records_authority_template` must not cite `R1PLAN-custer-gallatin-nf-02` for West Reservoir. | Future Codex copies a Custer Gallatin contract row because another example was recently green. |
 | Component eval could be made green by lowering the case set or thresholds. | `config/forest_plan_component_evals/west-reservoir-67436.json`, `tests/test_forest_plan_component_eval.py` | `forest-plan-component-eval --review-id west-reservoir-67436` passes all `27/27` cases with existing or stronger thresholds. | Any case deletion, lower minimum, or relaxed threshold without stronger replacement coverage fails the milestone. | Remove one required applicable-standard case in a test fixture and ensure coverage/eval fails. | Future Codex marks readiness by editing the eval manifest instead of producing component findings. |
-| Reviewer-resolution queue could hide open component decisions. | `forest_plan_reviewer_resolution_queue.json`, component adjudication config and eval | Component adjudication eval reports `reviewer_ready=true`, `pending=0`, and V1 forest-plan reviewer-resolution limits remain `0`. | Any open queue item or reviewer-resolution item above `0` fails the milestone. | Seed one unresolved queue item and verify `forest-plan-component-adjudication-eval` fails. | Future Codex treats unresolved reviewer judgment as an automatic pass. |
+| Reviewer-resolution queue could hide open component decisions. | `forest_plan_reviewer_resolution_queue.json`, component adjudication config and eval | Component adjudication eval reports `passed=true`, `pending=0`, and V1 forest-plan reviewer-resolution limits remain `0`. | Any open queue item or reviewer-resolution item above `0` fails the milestone. | Seed one unresolved queue item and verify `forest-plan-component-adjudication-eval` fails. | Future Codex treats unresolved reviewer judgment as an automatic pass. |
 | Compliance review could pass in base-pack or diagnostic mode rather than generated-pack mode. | `compliance_review.json`, `compliance_validation.json`, generated rule pack | `compliance-review` uses the generated West Reservoir rule pack and reports `reviewer_ready=true` plus `validation_passed=true`. | Missing generated rule pack, `allow-base-rule-pack-review` reliance, or validation failure fails the milestone. | Run a validate-only generated-rule-pack check with a missing rule and ensure compliance validation blocks readiness. | Future Codex reruns compliance with broad base rules and claims the review is ready. |
 | Compliance matrix output could be incomplete even when JSON exists. | `compliance_matrix.json`, `compliance_matrix.md`, `compliance_matrix.pdf`, `review_packet_index` outputs | `phase-eval --review-id west-reservoir-67436` must pass after matrix generation, and the PDF must exist as a non-empty valid PDF. | Missing MD/PDF, zero-byte PDF, invalid PDF header, or phase-eval matrix artifact failure fails the milestone. | Delete or corrupt the generated PDF in a fixture or local dry run and verify phase-eval fails. | Future Codex checks only `compliance_review.json` and misses the signer-facing matrix artifact. |
 | Aggregate component coverage could still be red and described as green. | `config/forest_plan_component_eval_coverage_v1.json`, aggregate results | West Reservoir slot must pass and source-set align; aggregate text must still name any remaining ECID source-delta red status. | Any doc claiming aggregate component coverage is green while ECID remains red fails closeout. | Preserve a result fixture or doc check where ECID red keeps aggregate `passed=false` after West Reservoir improves. | Future Codex fixes West Reservoir and overstates aggregate readiness. |
@@ -604,8 +614,10 @@ Implementation note:
 
 ### Milestone 2 - Flathead Component Readiness
 
-Outcome label: pending. This is the active parent slice now that f70
-forest-plan context validation passes.
+Status: Resolved locally on 2026-05-28.
+
+Outcome label: resolved for component readiness. The active parent stop is now
+Milestone 3 compliance review and V1 readiness promotion.
 
 Produce current component findings, standard coverage, and reviewer-resolution
 queue artifacts, then make the tracked West Reservoir component eval pass.
@@ -629,15 +641,53 @@ Exit criteria:
 - `forest_plan_component_findings.json`,
   `forest_plan_applicable_standard_coverage.json`, and
   `forest_plan_reviewer_resolution_queue.json` exist for the current review.
-- Component adjudication eval reports `reviewer_ready=true`.
+- Component adjudication eval reports `passed=true`, all queue items covered,
+  and `pending_adjudication_count=0`.
 - Component eval passes `27/27` cases with `failed_case_count=0`.
 - West Reservoir's component-coverage slot passes and source-set aligns.
 - Any remaining aggregate component-coverage failure is limited to
   non-West-Reservoir slots and named explicitly.
 
+Implementation note:
+
+- `forest-plan-resolve` regenerated the current Flathead f70 context and
+  component artifacts with context validation passing on
+  `source-set-f70ea11e04ae3d53`.
+- `forest_plan_components_runtime.py` now keeps forestwide standards with
+  resource-topic or activity-tag evidence in the applicable/gap path instead of
+  forcing `needs_reviewer_resolution` solely because they do not have
+  geography, management-area, or overlay bindings. The focused regression test
+  is
+  `test_forestwide_standard_with_topic_terms_stays_applicable_for_adjudication`.
+- `config/forest_plan_component_adjudications/west-reservoir-67436.json` is
+  rebased to the current f70 queue: `48` items, `48` resolved, `0` pending, and
+  disposition counts `applicability_false_positive=30` and
+  `evidence_linking_miss=18`.
+- `forest-plan-component-adjudication-eval --review-id west-reservoir-67436`
+  passes with `adjudication_completion_rate=1.0`,
+  `adjudication_expectation_match_rate=1.0`, `system_miss_count=48`, and
+  `real_ea_omission_count=0`.
+- `config/forest_plan_component_evals/west-reservoir-67436.json` now matches the
+  current f70 generated evidence and Flathead plan citation
+  `FINAL-FLAT-001 (92d78498664e)` while preserving all `27` cases and existing
+  threshold requirements.
+- `forest-plan-component-eval --review-id west-reservoir-67436` passes on
+  `source-set-f70ea11e04ae3d53` with `passed_case_count=27`,
+  `failed_case_count=0`, `expected_applicable_standard_count=14`, and empty
+  failure categories.
+- `forest-plan-component-eval-coverage` still exits red at the aggregate level,
+  but West Reservoir now passes and source-set aligns. The remaining red slot is
+  `ecid-source-delta-replay` / `v1-cg-ecid-source-delta-review` with
+  `result_not_passed` and `result_source_set_id_mismatch`; aggregate counts are
+  `covered_review_count=4/5`, `stale_identity_count=1`, and
+  `unresolved_review_count=1`.
+- No compliance review, V1 promotion, phase eval, registry promotion, or
+  aggregate promotion was run in this milestone slice.
+
 ### Milestone 3 - Compliance Review And V1 Readiness Promotion
 
-Outcome label: resolved.
+Outcome label: pending. This is the next active parent slice after Milestone 2
+component readiness.
 
 Run the generated-pack compliance review and promote the V1 contract only after
 the current West Reservoir review is actually reviewer-ready.
@@ -672,7 +722,8 @@ Exit criteria:
 
 ### Milestone 4 - Phase Eval, Aggregate Reporting, Docs, And Commit Closeout
 
-Outcome label: resolved for West Reservoir reviewer readiness.
+Outcome label: pending until compliance review, V1 readiness, review-scoped
+phase eval, and aggregate reporting are all current.
 
 Close the packet only after review-scoped phase eval and aggregate gates agree
 with the promoted status.
@@ -846,7 +897,7 @@ occur:
       monitoring-program context gate
 - [x] Milestone 1 source-evidence blocker routed through
       `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
-- [ ] Milestone 2 component eval passes `27/27`
+- [x] Milestone 2 component eval passes `27/27`
 - [ ] Milestone 3 compliance and V1 readiness gates pass
 - [ ] Milestone 4 phase eval and aggregate gates rerun
 - [x] Docs and session handoff updated with exact counts and residual blockers for Milestone 0
