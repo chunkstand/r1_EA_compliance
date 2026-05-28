@@ -15,6 +15,45 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## West Reservoir Milestone 1 Authority-Universe Blocker
+
+Latest implementation update on 2026-05-28 UTC:
+
+- active packet:
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- current status:
+  Milestone 0 is committed locally; Milestone 1 started and is blocked before
+  applicability retrieval/determination
+- successful Milestone 1 rebuilds:
+  `ea-review` rebuilt `review_report.json` on
+  `source-set-4fb59e9eb43045cb` with `reviewer_ready=true`,
+  `validation_passed=true`, `package_file_count=12`,
+  `package_chunk_count=659`, and `finding_status_counts={"pass":5}`;
+  `applicability-context-build` rebuilt the package applicability context and
+  fact graph with `validation_passed=true`
+- blocker:
+  `applicability-authority-universe --review-id west-reservoir-67436
+  --source-set-id source-set-4fb59e9eb43045cb` returned
+  `passed=false` and `validation_passed=false`
+- failing checks:
+  `candidates_have_source_evidence_available` has `failure_count=10`, and
+  `authority_family_template_candidates_cover_config` has
+  `missing_source_record_count=11`
+- Flathead placement failure:
+  the authority-universe validation still sees the default base rule-pack
+  forest-plan source as `R1PLAN-custer-gallatin-nf-02` and selected component
+  candidates as `custer-gallatin-nf`. That is not allowed for the current
+  West Reservoir Flathead reviewer-readiness packet.
+- stop condition:
+  no applicability retrieval, applicability determination, generated rule-pack
+  refresh, forest-plan context, compliance review, V1 promotion, registry
+  promotion, or aggregate coverage promotion was run after the blocker.
+- next implementation slice:
+  repair the Flathead authority-universe/base-rule-pack/source-record identity
+  path so West Reservoir can build current applicability candidates without
+  Custer Gallatin forest-plan source-record drift, then rerun Milestone 1 from
+  `applicability-authority-universe`.
+
 ## West Reservoir Milestone 0 Baseline Resolved
 
 Latest implementation update on 2026-05-28 UTC:
@@ -46,10 +85,10 @@ Latest implementation update on 2026-05-28 UTC:
   `source-set-5e65d845ce77e1a0` is still historical only. A focused
   regression test now proves a review-scoped phase-eval rerun overwrites a
   pre-existing green result with the tracked replay-context source set.
-- next implementation slice:
+- next implementation slice at that checkpoint:
   Milestone 1 review artifact spine rebuild on `source-set-4fb59e9eb43045cb`;
-  do not promote West Reservoir to reviewer-ready until current review,
-  component, compliance, V1, phase, and aggregate gates pass.
+  this is superseded by the Milestone 1 authority-universe blocker section
+  above.
 
 ## West Reservoir Reviewer Readiness Plan Opened
 

@@ -57,8 +57,22 @@ history below.
   `source-set-4fb59e9eb43045cb` with `0/27` cases passing. A focused
   `tests/test_phase_eval_review.py` guard now proves a review-scoped phase-eval
   rerun overwrites a pre-existing green review result with the tracked
-  replay-context source set. The next slice is Milestone 1: rebuild the review
-  artifact spine on `source-set-4fb59e9eb43045cb`.
+  replay-context source set. Milestone 1 then started: `ea-review` rebuilt the
+  review report with `reviewer_ready=true`, `validation_passed=true`,
+  `package_file_count=12`, `package_chunk_count=659`, and
+  `finding_status_counts={"pass":5}`; `applicability-context-build` rebuilt the
+  package applicability context and fact graph with `validation_passed=true`.
+  The Milestone 1 stop condition is now `applicability-authority-universe`:
+  it returns `passed=false` and `validation_passed=false` on
+  `source-set-4fb59e9eb43045cb`, with
+  `candidates_have_source_evidence_available.failure_count=10` and
+  `authority_family_template_candidates_cover_config.missing_source_record_count=11`.
+  The same validation still selects the default Custer Gallatin forest-plan
+  source `R1PLAN-custer-gallatin-nf-02` and `custer-gallatin-nf` component
+  candidates for the Flathead West Reservoir review, so do not run
+  applicability retrieval/determination, compliance, V1 promotion, or registry
+  promotion until the Flathead authority-universe/base-rule-pack/source-record
+  identity path is repaired.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or

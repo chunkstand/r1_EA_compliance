@@ -1,7 +1,7 @@
 # West Reservoir Reviewer Readiness Milestone Plan
 
 Date: 2026-05-28
-Status: Active packet; Milestone 0 resolved locally; Milestones 1-4 pending
+Status: Active packet; Milestone 0 resolved locally; Milestone 1 blocked at authority-universe validation; Milestones 2-4 pending
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -398,6 +398,8 @@ Implementation note:
 
 ### Milestone 1 - Review Artifact Spine Rebuild
 
+Status: Blocked on 2026-05-28 by current authority-universe validation.
+
 Outcome label: reduced.
 
 Rebuild the current review identity and artifact spine from the verified local
@@ -434,6 +436,31 @@ Exit criteria:
 - Applicability validation has `0` unresolved and no hidden
   `needs_adjudication` decisions, or the milestone stops and records the
   precise adjudication gap.
+
+Implementation note:
+
+- `ea-review` reran against
+  `source_library/reviews/west-reservoir-67436/package` on
+  `source-set-4fb59e9eb43045cb` and rebuilt `review_report.json` with
+  `reviewer_ready=true`, `validation_passed=true`, `package_file_count=12`,
+  `package_chunk_count=659`, and `finding_status_counts={"pass":5}`.
+- `applicability-context-build` rebuilt the package applicability context and
+  package fact graph with `validation_passed=true`.
+- `applicability-authority-universe` stopped the milestone before retrieval or
+  determination. The generated snapshot reports `passed=false` and
+  `validation_passed=false` with two failing checks:
+  `candidates_have_source_evidence_available` (`failure_count=10`) and
+  `authority_family_template_candidates_cover_config`
+  (`missing_source_record_count=11`).
+- The same authority-universe validation shows a Flathead-specific stop
+  condition: the default base rule-pack forest-plan source remains
+  `R1PLAN-custer-gallatin-nf-02`, and the selected component candidates are
+  `custer-gallatin-nf`, not `flathead-nf`. That violates the plan's placement
+  rule that any Custer Gallatin forest-plan source record in current West
+  Reservoir forest-plan expectations must fail the milestone.
+- No applicability decisions, generated rule-pack refresh, forest-plan
+  context, compliance review, V1 promotion, registry promotion, or aggregate
+  coverage promotion was run after this blocker.
 
 ### Milestone 2 - Flathead Component Readiness
 

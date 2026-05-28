@@ -32,8 +32,15 @@ Use this file as the short current route before opening the append-only docs.
   authority remains green, current V1 eval remains a truthful typed-blocked
   baseline with only allowed blocker categories, and current component eval
   remains red with `0/27` cases passing on `source-set-4fb59e9eb43045cb`.
-  The next implementation slice is Milestone 1: rebuild the current review
-  artifact spine on the verified package cache and current source set.
+  Milestone 1 has started: `ea-review` and `applicability-context-build`
+  rebuilt successfully on the verified package cache and current source set.
+  The current blocker is `applicability-authority-universe`, which still
+  selects the default Custer Gallatin forest-plan source
+  `R1PLAN-custer-gallatin-nf-02` for the Flathead West Reservoir review and
+  fails authority-family source evidence validation. The next implementation
+  slice is the Flathead authority-universe/base-rule-pack/source-record identity
+  repair; do not proceed to applicability retrieval, determination, compliance,
+  or promotion until that check is green.
 - Do not reuse the historical green West Reservoir
   `phase_eval_results.json` on `source-set-5e65d845ce77e1a0` as current
   readiness proof. It is historical evidence only; the active packet requires
