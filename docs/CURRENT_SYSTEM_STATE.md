@@ -19,6 +19,40 @@ For a fresh session start before this append-only state log, read
 
 Latest implementation update on 2026-05-28 UTC:
 
+- update:
+  migration packet Milestone 0 is now reduced locally with a tracked
+  source-set parity inventory and focused test gate. The next executable slice
+  is Milestone 1 contract migration.
+- parity gate:
+  `tests/test_west_reservoir_source_set_migration.py` verifies the four
+  tracked source-set surfaces all agree and includes a controlled
+  mixed-source-set case that reports the stale surface.
+- current source-set surfaces:
+  `config/replay_contexts/west-reservoir-67436.json`,
+  `config/v1_west_reservoir_real_ea_eval.json`,
+  `config/forest_plan_component_evals/west-reservoir-67436.json`, and the
+  West Reservoir component slot in
+  `config/forest_plan_component_eval_coverage_v1.json` all remain on
+  `source-set-4fb59e9eb43045cb`.
+- typed-blocked status preserved:
+  `config/v1_real_package_review_coverage_v1.json` still keeps West Reservoir
+  as `alternate_package_typed_blocked` with
+  `expected_contract_status="typed_blocked"`;
+  `config/forest_specific_example_package_registry_v1.json` still keeps the
+  West Reservoir example typed blocked and the Flathead route at
+  `routing_status="typed_blocked_example_available"`.
+- stop condition:
+  no tracked config was migrated in Milestone 0 and no applicability
+  retrieval, applicability determination, generated rule-pack refresh,
+  forest-plan context, compliance review, V1 promotion, phase eval, registry
+  promotion, or aggregate coverage promotion was run.
+- next implementation slice:
+  start with
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 1.
+  Migrate all tracked West Reservoir source-set contract surfaces together to
+  the selected source set, rerun the parity gate, and keep reviewer-ready
+  promotion blocked until the parent gates pass.
+
 - active parent packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - reduced child blocker:

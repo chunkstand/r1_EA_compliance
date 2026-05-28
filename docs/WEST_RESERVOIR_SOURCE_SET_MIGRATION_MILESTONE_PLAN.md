@@ -3,7 +3,8 @@
 Date: 2026-05-28
 Status: Active migration packet opened from
 `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
-Milestone 1; implementation pending
+Milestone 1; Milestone 0 reduced locally with the tracked parity gate and
+baseline inventory; Milestones 1-2 pending
 Owner context: source-set contract migration child for
 `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 
@@ -63,6 +64,29 @@ universe is green on the selected source set.
   `config/forest_plan_component_evals/west-reservoir-67436.json`, and
   the West Reservoir slot in
   `config/forest_plan_component_eval_coverage_v1.json`
+- Milestone 0 parity gate:
+  `tests/test_west_reservoir_source_set_migration.py` now proves the tracked
+  source-set contract surfaces have one identity and includes a controlled
+  mixed-source-set case.
+
+## Source-Set Parity Inventory
+
+Current tracked West Reservoir source-set surfaces before migration:
+
+| Surface | Current source-set ID |
+| --- | --- |
+| `config/replay_contexts/west-reservoir-67436.json` `source_set_id` | `source-set-4fb59e9eb43045cb` |
+| `config/v1_west_reservoir_real_ea_eval.json` `source_set_id` | `source-set-4fb59e9eb43045cb` |
+| `config/forest_plan_component_evals/west-reservoir-67436.json` `source_set_id` | `source-set-4fb59e9eb43045cb` |
+| `config/forest_plan_component_eval_coverage_v1.json` West Reservoir `expected_source_set_id` | `source-set-4fb59e9eb43045cb` |
+
+Status surfaces that must remain typed blocked during migration:
+
+| Surface | Current status |
+| --- | --- |
+| `config/v1_real_package_review_coverage_v1.json` West Reservoir slot | `coverage_class_id="alternate_package_typed_blocked"`, `expected_contract_status="typed_blocked"` |
+| `config/forest_specific_example_package_registry_v1.json` West Reservoir example | `coverage_class_id="alternate_package_typed_blocked"`, `expected_contract_status="typed_blocked"` |
+| `config/forest_specific_example_package_registry_v1.json` Flathead route | `routing_status="typed_blocked_example_available"` |
 
 ## Goal
 
@@ -177,6 +201,8 @@ authority-universe rerun uses catalog rows from that same source set.
 
 ### Milestone 0 - Migration Baseline And Parity Inventory
 
+Status: Reduced locally on 2026-05-28.
+
 Outcome label: reduced.
 
 Required actions:
@@ -194,7 +220,24 @@ Exit criteria:
 - A mixed-source-set condition has an explicit failing gate.
 - No downstream readiness commands have run.
 
+Implementation note:
+
+- Source-set parity inventory is now recorded above for replay context, V1
+  eval contract, component eval contract, and component coverage.
+- `tests/test_west_reservoir_source_set_migration.py` verifies all four
+  surfaces currently agree on `source-set-4fb59e9eb43045cb`.
+- The same test file includes a controlled violation where the component
+  coverage slot is changed to `source-set-stale` and the parity gate reports
+  that mismatch.
+- The typed-blocked real-package slot, forest-specific example, and Flathead
+  route are guarded so source-set migration cannot silently become
+  reviewer-ready promotion.
+- No tracked config was migrated in Milestone 0 and no downstream readiness
+  command was run.
+
 ### Milestone 1 - Contract Migration To The Selected Source Set
+
+Status: Pending.
 
 Outcome label: resolved for source-set contract parity; reduced for reviewer
 readiness.
@@ -217,6 +260,8 @@ Exit criteria:
 - No generated `source_library/` artifacts are staged.
 
 ### Milestone 2 - Migrated Authority-Universe Proof And Parent Resume Route
+
+Status: Pending.
 
 Outcome label: resolved for the migration packet.
 
@@ -268,6 +313,17 @@ git diff --check
 For contract migration slices, add focused tests for every touched config
 surface plus the migrated authority-universe command.
 
+For the Milestone 0 parity slice, run:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_west_reservoir_source_set_migration.py
+PYTHONPATH=src uv run --extra dev ruff check tests/test_west_reservoir_source_set_migration.py
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md
+git diff --check
+```
+
 ## Acceptance Criteria
 
 - The 4fb feasibility slice records that no governed same-source-set repair is
@@ -280,6 +336,9 @@ surface plus the migrated authority-universe command.
 - Current routing, current system state, and session handoff point here for
   the next implementation slice.
 - No generated `source_library/` artifacts are staged.
+- The parity gate fails on a controlled mixed-source-set condition and passes
+  only when replay context, V1 eval, component eval, and component coverage
+  agree on one source set.
 
 ## Stop Conditions
 
@@ -304,8 +363,10 @@ Stop instead of continuing downstream if:
 
 ## Residual Risks And Next Milestone Routing
 
-- The next slice is Milestone 0 here: add or identify the parity gate, then
-  prepare the all-or-nothing migration to the selected source set.
+- The next slice is Milestone 1 here: migrate the tracked West Reservoir
+  source-set contract surfaces together to the selected source set, then
+  preserve typed-blocked status until downstream parent gates prove
+  reviewer-ready.
 - The parent West Reservoir readiness packet remains stopped before
   applicability retrieval/determination until this packet resolves.
 - Aggregate component coverage remains red for non-South Otter/non-Lolo
@@ -313,8 +374,8 @@ Stop instead of continuing downstream if:
 
 ## Closeout Checklist
 
-- [ ] Source-set parity inventory updated.
-- [ ] Mixed-source-set gate identified or added.
+- [x] Source-set parity inventory updated.
+- [x] Mixed-source-set gate identified or added.
 - [ ] West Reservoir contracts migrated together when Milestone 1 starts.
 - [ ] Authority universe rerun on the selected source set.
 - [ ] Current docs and handoff updated with exact gate output.

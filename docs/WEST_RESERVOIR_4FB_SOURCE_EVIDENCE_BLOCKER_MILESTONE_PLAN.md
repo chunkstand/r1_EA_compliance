@@ -206,6 +206,9 @@ For the Milestone 1 feasibility closeout slice:
   4fb and comparison f70 catalog evidence; and
 - `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` was opened as
   the follow-on owner because no governed same-source-set 4fb repair exists.
+- The migration packet Milestone 0 parity gate now exists in
+  `tests/test_west_reservoir_source_set_migration.py`; the next blocker
+  follow-on is the migration packet's Milestone 1 contract migration.
 
 ## Weak-Point Prevention Contract
 
@@ -296,7 +299,9 @@ Implementation note:
 ### Milestone 2 - Source-Set Migration Packet If Required
 
 Status: Routed locally through
-`docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`.
+`docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`; migration
+Milestone 0 parity inventory is reduced locally and Milestone 1 contract
+migration is pending.
 
 Outcome label: reduced for this blocker; resolved for routing if the migration
 packet supersedes the parent contract.
@@ -385,6 +390,8 @@ Stop instead of continuing downstream if:
   `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` because the
   current source rows are proven in the later f70 current-source-gap closeout
   catalog, not in the active 4fb catalog.
+- That migration packet now has a Milestone 0 parity gate; its next slice is
+  Milestone 1 all-or-nothing West Reservoir contract migration.
 - If a reproducible 4fb repair is found, resume the parent West Reservoir
   Milestone 1 sequence only after `applicability-authority-universe` is green.
 - If migration is required, downstream applicability/compliance/component/V1

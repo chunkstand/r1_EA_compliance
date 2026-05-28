@@ -90,7 +90,19 @@ history below.
   `source-set-f70ea11e04ae3d53` current-source-gap closeout catalog. The
   follow-on owner is
   `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`; its next slice
-  is the mixed-source-set parity gate and all-or-nothing contract migration.
+  was the mixed-source-set parity gate and all-or-nothing contract migration.
+  Migration packet Milestone 0 is now reduced locally:
+  `tests/test_west_reservoir_source_set_migration.py` guards the four tracked
+  source-set surfaces (replay context, V1 eval contract, component eval
+  contract, and component coverage), includes a controlled stale-source-set
+  violation, and preserves typed-blocked status in the real-package coverage
+  and forest-specific registry surfaces. Those four tracked source-set
+  surfaces all still point to `source-set-4fb59e9eb43045cb`; no tracked config
+  migration or downstream readiness command ran in Milestone 0. The next slice
+  is `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 1:
+  migrate the tracked West Reservoir source-set contract surfaces together to
+  the selected source set, rerun the parity gate, and keep reviewer-ready
+  promotion blocked until parent gates pass.
   Local commit anchors for the Milestone 1 reduction/blocker route are
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) and
   `0773ef7` (`Open West Reservoir source evidence blocker`); the docs-only

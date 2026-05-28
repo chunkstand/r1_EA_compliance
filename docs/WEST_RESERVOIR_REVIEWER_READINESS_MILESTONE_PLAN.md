@@ -4,8 +4,9 @@ Date: 2026-05-28
 Status: Active parent packet; Milestone 0 resolved locally; Milestone 1
 reduced by Flathead authority-universe scoping and source-evidence
 feasibility; source-set migration is now routed through
-`docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`; Milestones 2-4
-pending behind that migration packet
+`docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`, where Milestone
+0 parity inventory is reduced locally and Milestone 1 contract migration is
+pending; Milestones 2-4 pending behind that migration packet
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -82,6 +83,12 @@ current rows are absent from active 4fb and present only in the later f70
 current-source-gap closeout catalog. The parent plan remains stopped until the
 dedicated source-set migration packet resolves contract parity and reruns the
 authority universe on one selected source set.
+
+Migration packet Milestone 0 added the tracked parity gate:
+`tests/test_west_reservoir_source_set_migration.py` verifies replay context,
+V1 eval, component eval, and component coverage source-set IDs agree, includes
+a controlled mixed-source-set case, and preserves typed-blocked status while
+the parent readiness gates remain red.
 
 ## Current Evidence
 
@@ -519,6 +526,9 @@ Implementation note:
   current IDs are present in the active 4fb catalog, and all `49` are present
   only in `source-set-f70ea11e04ae3d53`. The follow-on owner is now
   `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`.
+- The migration packet Milestone 0 parity inventory is reduced locally. The
+  next slice is the all-or-nothing source-set contract migration across replay
+  context, V1 eval contract, component eval contract, and component coverage.
 - No applicability decisions, generated rule-pack refresh, forest-plan
   context, compliance review, V1 promotion, registry promotion, or aggregate
   coverage promotion was run after this blocker.

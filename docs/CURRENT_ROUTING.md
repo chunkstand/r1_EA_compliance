@@ -49,10 +49,14 @@ Use this file as the short current route before opening the append-only docs.
   source-record IDs; `49` legacy IDs have governed current mappings, `0` of
   those mapped current IDs are present in the active 4fb catalog, and all `49`
   are present only in the later f70 current-source-gap closeout catalog. The
+  migration packet Milestone 0 is now reduced locally: the tracked parity
+  inventory names replay context, V1 eval contract, component eval contract,
+  and component coverage as the four source-set surfaces still pinned to 4fb,
+  and `tests/test_west_reservoir_source_set_migration.py` fails on a
+  controlled mixed-source-set case while preserving typed-blocked status. The
   next implementation slice starts in
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`: add/confirm
-  the mixed-source-set parity gate, migrate every West Reservoir source-set
-  contract together if the gate is satisfied, and rerun
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 1:
+  migrate every West Reservoir source-set contract together, then rerun
   `applicability-authority-universe` on the selected governed source set. Do
   not proceed to applicability retrieval, determination, compliance, or
   promotion until that migration packet is green.
@@ -60,7 +64,8 @@ Use this file as the short current route before opening the append-only docs.
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson
   alignment `3a5e6b3`; same-source-set feasibility now routes to
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`.
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`, where
+  Milestone 0 has added the source-set parity gate.
 - Do not reuse the historical green West Reservoir
   `phase_eval_results.json` on `source-set-5e65d845ce77e1a0` as current
   readiness proof. It is historical evidence only; the active packet requires
