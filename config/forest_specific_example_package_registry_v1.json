@@ -1,9 +1,9 @@
 {
   "schema_version": "forest-specific-example-package-registry-v1",
   "contract_id": "region1-forest-specific-example-packages",
-  "version": "1.4.0",
-  "as_of_date": "2026-05-27",
-  "status": "south-plateau-example-archived",
+  "version": "1.4.1",
+  "as_of_date": "2026-05-28",
+  "status": "west-reservoir-package-authority-verified-after-south-plateau-archive",
   "coverage_thresholds": {
     "required_forest_unit_count": 10,
     "review_example_count_min": 4,
@@ -240,7 +240,10 @@
       "expected_contract_status": "typed_blocked",
       "eval_file": "config/v1_west_reservoir_real_ea_eval.json",
       "package_authority": {
-        "replay_context_path": "config/replay_contexts/west-reservoir-67436.json"
+        "replay_context_path": "config/replay_contexts/west-reservoir-67436.json",
+        "official_project_page": "https://www.fs.usda.gov/r01/flathead/projects/67436",
+        "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/299363475796",
+        "document_verification_path": "config/review_package_authority_verifications/west-reservoir-67436.json"
       },
       "applicable_forest_unit_ids": [
         "flathead-nf"

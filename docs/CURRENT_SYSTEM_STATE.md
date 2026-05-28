@@ -15,6 +15,37 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## West Reservoir Public Pinyon Authority Verified
+
+Latest verification update on 2026-05-28 UTC:
+
+- resolved provenance slice:
+  the official Flathead National Forest project page for West Reservoir
+  (`https://www.fs.usda.gov/r01/flathead/projects/67436`) was used to locate
+  the linked Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/299363475796`
+- document-completeness truth:
+  `config/review_package_authority_verifications/west-reservoir-67436.json`
+  records the complete visible public Pinyon tree for the West Reservoir
+  project package: `12` PDFs across the root folder, `Project File Exhibits`,
+  and `Scoping`; the existing local package manifest also has `12` rows
+- byte-level verification:
+  each official Box file was streamed from its public file URL and compared to
+  `source_library/reviews/west-reservoir-67436/package/package_manifest.jsonl`;
+  every document matched the manifest byte size and SHA-256, with
+  `missing_from_local_manifest=[]`, `extra_in_local_manifest=[]`, and
+  `omitted_document_count=0`
+- updated authority surfaces:
+  `config/replay_contexts/west-reservoir-67436.json`,
+  `config/v1_real_package_review_coverage_v1.json`, and
+  `config/forest_specific_example_package_registry_v1.json` now point to the
+  official project page, Pinyon/Box folder, and verification manifest
+- invariant truth:
+  this proves package-authority completeness only. West Reservoir remains the
+  governed Flathead typed-blocked example until the missing component-review
+  generated artifacts are rebuilt and
+  `forest-plan-component-eval --review-id west-reservoir-67436` passes.
+
 ## South Plateau Example Archived
 
 Latest implementation update on 2026-05-27 MDT:

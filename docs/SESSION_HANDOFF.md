@@ -229,7 +229,17 @@ history below.
   `required_slot_count=4`, `reviewer_ready_slot_count=3`,
   `typed_blocked_slot_count=1`, `missing_required_slot_count=0`, and
   `missing_coverage_class_ids=[]`; West Reservoir remains truthful
-  `typed_blocked`. Strict-expansion promotion still fails closed, but it now
+  `typed_blocked`. West Reservoir package authority is now verified from the
+  official Flathead project page
+  `https://www.fs.usda.gov/r01/flathead/projects/67436` to the linked
+  Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/299363475796`.
+  `config/review_package_authority_verifications/west-reservoir-67436.json`
+  records `12` official PDFs, `12` matching local package-manifest rows, byte
+  and SHA-256 matches for every document, and `omitted_document_count=0`.
+  This resolves official package provenance only; it does not make West
+  Reservoir reviewer-ready or repair the component-eval failure.
+  Strict-expansion promotion still fails closed, but it now
   does so truthfully through the rerouted historical ECID preliminary-EA slot:
   `failure_category_counts={"historical_source_set_split":1}`,
   `open_expansion_slot_count=1`, and `open_expansion_artifact_count=0`.

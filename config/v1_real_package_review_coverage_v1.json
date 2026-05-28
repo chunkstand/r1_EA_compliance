@@ -38,7 +38,10 @@
       "forest_unit_id": "flathead-nf",
       "label": "West Reservoir typed-blocked replay quarantine",
       "package_authority": {
-        "replay_context_path": "replay_contexts/west-reservoir-67436.json"
+        "replay_context_path": "replay_contexts/west-reservoir-67436.json",
+        "official_project_page": "https://www.fs.usda.gov/r01/flathead/projects/67436",
+        "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/299363475796",
+        "document_verification_path": "review_package_authority_verifications/west-reservoir-67436.json"
       },
       "package_label": "West Reservoir Land Exchange",
       "required": true,
@@ -74,9 +77,9 @@
       "slot_id": "lolo-tylers-kitchen-forest-specific"
     }
   ],
-  "version": "1.2.0",
-  "as_of_date": "2026-05-27",
-  "status": "south-plateau-example-archived",
+  "version": "1.2.1",
+  "as_of_date": "2026-05-28",
+  "status": "west-reservoir-package-authority-verified-after-south-plateau-archive",
   "archived_slots": [
     {
       "coverage_class_id": "expansion_reviewer_ready",

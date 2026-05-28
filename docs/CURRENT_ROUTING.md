@@ -78,6 +78,16 @@ Use this file as the short current route before opening the append-only docs.
   `review_example_count=4`, `reviewer_ready_example_count=3`,
   `distinct_governed_example_forest_count=3`,
   `profile_guidance_only_count=7`, and no threshold failures.
+- West Reservoir's Flathead package authority is now verified against the
+  official Flathead project page
+  `https://www.fs.usda.gov/r01/flathead/projects/67436` and linked Pinyon/Box
+  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/299363475796`.
+  The tracked verification manifest
+  `config/review_package_authority_verifications/west-reservoir-67436.json`
+  records `12` official PDFs, `12` local package-manifest rows, byte-size and
+  SHA-256 matches for every document, and `omitted_document_count=0`. This
+  repairs package-authority provenance only; West Reservoir remains typed
+  blocked until its component-review artifacts and eval pass.
 - `config/forest_plan_component_eval_coverage_v1.json` now requires South
   Otter as a fifth component-eval review slot. The South Otter slot is covered,
   source-set aligned, and passing. The aggregate

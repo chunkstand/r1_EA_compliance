@@ -2,5 +2,10 @@
   "review_id": "west-reservoir-67436",
   "source_set_id": "source-set-4fb59e9eb43045cb",
   "catalog_dir": "source_library/catalog",
-  "package_path": "source_library/reviews/west-reservoir-67436/package"
+  "package_path": "source_library/reviews/west-reservoir-67436/package",
+  "package_authority": {
+    "official_project_page": "https://www.fs.usda.gov/r01/flathead/projects/67436",
+    "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/299363475796",
+    "document_verification_path": "config/review_package_authority_verifications/west-reservoir-67436.json"
+  }
 }

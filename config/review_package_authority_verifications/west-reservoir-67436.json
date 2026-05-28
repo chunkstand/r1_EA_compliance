@@ -1,0 +1,211 @@
+{
+  "schema_version": "review-package-authority-verification-v1",
+  "review_id": "west-reservoir-67436",
+  "project_id": "67436",
+  "forest_unit_id": "flathead-nf",
+  "forest_unit_label": "Flathead National Forest",
+  "package_label": "West Reservoir",
+  "verified_at": "2026-05-28T02:51:41Z",
+  "official_project_page": "https://www.fs.usda.gov/r01/flathead/projects/67436",
+  "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/299363475796",
+  "official_documents_folder_id": "299363475796",
+  "official_project_page_status": {
+    "current_status": "Completed",
+    "last_updated": "2026-03-12",
+    "expected_analysis_type": "Environmental Assessment"
+  },
+  "verification_boundary": "Official Box/Pinyon bytes were streamed from the public file links and compared to the existing local package manifest's recorded artifact_byte_size and artifact_sha256. Historical artifact_path values under /Users/chunkstand/Downloads were not used as authority.",
+  "summary": {
+    "official_folder_count": 3,
+    "official_file_count": 12,
+    "official_pdf_count": 12,
+    "local_manifest_count": 12,
+    "verified_document_count": 12,
+    "missing_from_local_manifest": [],
+    "extra_in_local_manifest": [],
+    "omitted_document_count": 0,
+    "extra_local_document_count": 0,
+    "all_documents_verified": true
+  },
+  "folders": [
+    {
+      "folder_id": "299363475796",
+      "folder_path": "West Reservoir (67436)",
+      "file_count": 4,
+      "child_folder_count": 2,
+      "byte_size": 30900601
+    },
+    {
+      "folder_id": "339436480643",
+      "folder_path": "West Reservoir (67436)/Project File Exhibits",
+      "file_count": 6,
+      "child_folder_count": 0,
+      "byte_size": 11173677
+    },
+    {
+      "folder_id": "339439052882",
+      "folder_path": "West Reservoir (67436)/Scoping",
+      "file_count": 2,
+      "child_folder_count": 0,
+      "byte_size": 3866883
+    }
+  ],
+  "documents": [
+    {
+      "source_record_id": "EA-PACKAGE-001",
+      "title": "Draft West Reservoir EA.pdf",
+      "folder_path": "West Reservoir (67436)",
+      "official_file_id": "1975736247773",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/1975736247773",
+      "content_type": "application/pdf",
+      "byte_size": 4584392,
+      "sha256": "7036dcfd2bd4ffab4030682bc4fb945f46148e437ba4b8795484923803a61213",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-002",
+      "title": "F_013_CulvertSedimentDeliveryImpactZones.pdf",
+      "folder_path": "West Reservoir (67436)/Project File Exhibits",
+      "official_file_id": "1975743275225",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/1975743275225",
+      "content_type": "application/pdf",
+      "byte_size": 3709483,
+      "sha256": "369bd327307421402a5ffad65bfb80b3183525fdaab90a7f67d9376ba3367fae",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-003",
+      "title": "O009_OldGrowthDistribution_Effects.pdf",
+      "folder_path": "West Reservoir (67436)/Project File Exhibits",
+      "official_file_id": "1975739781301",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/1975739781301",
+      "content_type": "application/pdf",
+      "byte_size": 1591632,
+      "sha256": "d775509dbe2db603f689061adbfb29bca43c48facf2c7c9bc4da840b14ef72ac",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-004",
+      "title": "Q001_CB_WildlifeRegulatoryConsistency.pdf",
+      "folder_path": "West Reservoir (67436)/Project File Exhibits",
+      "official_file_id": "1975744511894",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/1975744511894",
+      "content_type": "application/pdf",
+      "byte_size": 150250,
+      "sha256": "98bdd4d254b525e3de132df748878b7261e418868f7a1b9cda75c992d9fca66a",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-005",
+      "title": "Q003_WR_CanadaLynxCritHabExistingCondEffects.pdf",
+      "folder_path": "West Reservoir (67436)/Project File Exhibits",
+      "official_file_id": "1975740923185",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/1975740923185",
+      "content_type": "application/pdf",
+      "byte_size": 3790757,
+      "sha256": "a857fe7b72529c9db3ba0b8196f8402c8f375e7b3333c837f867e07a2ff34893",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-006",
+      "title": "Q004_WR_CanadaLynxBestAvailScience.pdf",
+      "folder_path": "West Reservoir (67436)/Project File Exhibits",
+      "official_file_id": "1975740426326",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/1975740426326",
+      "content_type": "application/pdf",
+      "byte_size": 686548,
+      "sha256": "1424ddc8d9e8f045d50384d17ab08c1b322cef9ea6f232e1934fefe999006d1d",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-007",
+      "title": "Q021_WR_RdClosureEffectiveness.pdf",
+      "folder_path": "West Reservoir (67436)/Project File Exhibits",
+      "official_file_id": "1975741547200",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/1975741547200",
+      "content_type": "application/pdf",
+      "byte_size": 1245007,
+      "sha256": "d12402b52ef85fee7c73ea59f10d4e54da981a460c23b3d513521c87dd94d5ab",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-008",
+      "title": "HowToComment_CoverLetter.pdf",
+      "folder_path": "West Reservoir (67436)/Scoping",
+      "official_file_id": "1752737217365",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/1752737217365",
+      "content_type": "application/pdf",
+      "byte_size": 272410,
+      "sha256": "b46b326e7f87aa30bc28e07efcf6686b0f2fe0391b589720ca95af56db3383c0",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-009",
+      "title": "West Reservoir_Proposed Action.pdf",
+      "folder_path": "West Reservoir (67436)/Scoping",
+      "official_file_id": "1752740167175",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/1752740167175",
+      "content_type": "application/pdf",
+      "byte_size": 3594473,
+      "sha256": "6bd16c36cc20540dcc8d036bce210ae55fd0b4bf30c79b5cbe3b348b3c5ee53f",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-010",
+      "title": "West Reservoir EA cover letter.pdf",
+      "folder_path": "West Reservoir (67436)",
+      "official_file_id": "1975725340112",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/1975725340112",
+      "content_type": "application/pdf",
+      "byte_size": 240735,
+      "sha256": "2ddba0bcfe058d7e59981a5934b06a466d86b8e2d31eb15d857f127c644b7795",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-011",
+      "title": "West Reservoir Final Environmental Assessment.pdf",
+      "folder_path": "West Reservoir (67436)",
+      "official_file_id": "2108412676379",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/2108412676379",
+      "content_type": "application/pdf",
+      "byte_size": 15142676,
+      "sha256": "8156685c9137a4e5e331305941788301a020541eb2ecc4ac60c928b48f94c7e2",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    },
+    {
+      "source_record_id": "EA-PACKAGE-012",
+      "title": "WestReservoir_DecisionNotice_FONSI.pdf",
+      "folder_path": "West Reservoir (67436)",
+      "official_file_id": "2163087361271",
+      "official_url": "https://usfs-public.app.box.com/v/PinyonPublic/file/2163087361271",
+      "content_type": "application/pdf",
+      "byte_size": 10932798,
+      "sha256": "b46d23e87710af84eebd9b99fb55cb5c7255f4d8496fdb36e75dc736af73e365",
+      "local_manifest_byte_size_match": true,
+      "local_manifest_sha256_match": true,
+      "verified": true
+    }
+  ]
+}
