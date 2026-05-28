@@ -478,6 +478,8 @@ Local result:
 - Resolved on 2026-05-27 by adding South Otter as the required
   `cgnf-south-otter-forest-specific` real-package slot, supplemental Custer
   Gallatin registry example, and required component-eval coverage slot.
+- Implementation closeout commit: `21eb2fa` (`Promote South Otter supplemental
+  example`).
 - Real-package coverage now passes with `5` covered required slots, `4`
   reviewer-ready slots, `1` typed-blocked slot, `3` distinct forests, and `6`
   package-style tags.
@@ -682,8 +684,8 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_queue_resolu
   `example_id="cgnf-south-otter-forest-specific"` and
   `applicable_forest_unit_ids=["custer-gallatin-nf"]`; no other forest row may
   reference that example.
-- Docs, handoff, and current-state surfaces state the same active packet and
-  residual risk before commit.
+- Docs, handoff, and current-state surfaces state the same resolved packet,
+  next route, and residual risk before commit.
 
 ## Stop Conditions
 
@@ -704,6 +706,7 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_queue_resolu
 - A milestone is not complete until verification passes, required docs and
   handoff updates are current, and the local atomic commit is created. Before
   commit, the slice is only ready-to-close.
+- Milestone 3 is complete under implementation closeout commit `21eb2fa`.
 - Stage only files touched for the South Otter packet.
 - Do not stage ignored `source_library/` evidence unless repository policy
   changes explicitly.

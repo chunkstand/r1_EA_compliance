@@ -43,7 +43,9 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   Gallatin registry example
   `example_id="cgnf-south-otter-forest-specific"` and coverage slot
   `coverage_slot_id="cgnf-south-otter-forest-specific"`, without changing
-  distinct-forest thresholds or rerouting the source-register queue.
+  distinct-forest thresholds or rerouting the source-register queue. The
+  implementation closeout commit is `21eb2fa` (`Promote South Otter
+  supplemental example`).
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.

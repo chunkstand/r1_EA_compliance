@@ -36,7 +36,9 @@ history below.
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
   South Otter Milestone 3 is now resolved locally under
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. The governed
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. The implementation
+  closeout commit is `21eb2fa` (`Promote South Otter supplemental example`).
+  The governed
   supplemental registry identity is
   `example_id="cgnf-south-otter-forest-specific"`,
   `review_id="region1-example-custer-gallatin-south-otter-58396"`,

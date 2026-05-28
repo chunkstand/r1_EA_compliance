@@ -32,6 +32,8 @@ Latest implementation update on 2026-05-27 UTC:
   component-eval coverage slot in
   `config/forest_plan_component_eval_coverage_v1.json`. It remains outside
   `Document_Register_Master`; no source-register queue row was rerouted.
+- implementation closeout commit:
+  `21eb2fa` (`Promote South Otter supplemental example`)
 - registry identity truth:
   South Otter uses `example_id="cgnf-south-otter-forest-specific"`,
   `review_id="region1-example-custer-gallatin-south-otter-58396"`,
@@ -141,9 +143,9 @@ Milestone 3 section above:
 ## Historical South Otter Example Package Milestone 1 Resolved Locally
 
 Historical implementation update on 2026-05-27 UTC, superseded by the
-Milestone 2 section above:
+Milestone 3 section above:
 
-- active packet:
+- historical packet:
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -161,10 +163,10 @@ Milestone 2 section above:
   the frozen review ID is `region1-example-custer-gallatin-south-otter-58396`
 - intent truth:
   the South Otter packet now explicitly locks the example to
-  `custer-gallatin-nf`; future registry promotion must use
+  `custer-gallatin-nf`; governed registry promotion uses
   `example_id="cgnf-south-otter-forest-specific"`,
   `coverage_slot_id="cgnf-south-otter-forest-specific"`, and
-  `applicable_forest_unit_ids=["custer-gallatin-nf"]`. South Otter may become
+  `applicable_forest_unit_ids=["custer-gallatin-nf"]`. South Otter is now
   a supplemental Custer Gallatin example, but it must not count as a new
   distinct forest or be reused as generic Region 1 example guidance.
 - workbook and queue truth:
@@ -202,11 +204,12 @@ Milestone 2 section above:
   component adjudication eval); Milestone 2 has since resolved that blocker
   through tracked component eval and component adjudication.
 - registry and coverage truth:
+  at this historical checkpoint,
   `config/forest_specific_example_package_registry_v1.json`,
   `config/v1_real_package_review_coverage_v1.json`, and
-  `config/forest_plan_component_eval_coverage_v1.json` remain unchanged; South
-  Otter still stays out of those governed manifests until Milestone 3 promotion
-  updates them.
+  `config/forest_plan_component_eval_coverage_v1.json` remained unchanged and
+  South Otter stayed out of those governed manifests. Milestone 3 later
+  promoted it into all three governed surfaces.
 - next routing:
   this historical section originally routed to Milestone 2; the current route
   is now the Milestone 3 closeout section above.
