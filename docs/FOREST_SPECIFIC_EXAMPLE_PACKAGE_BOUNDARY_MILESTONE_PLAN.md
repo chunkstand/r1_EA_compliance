@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package-intake Milestone 1 and reviewer-stack Milestone 2 locally and routes next to Milestone 3 registry promotion; do not reopen Lolo unless a verified Lolo gate regresses`)
+Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, and Milestone 3 supplemental same-forest registry promotion locally; do not reopen Lolo or South Otter unless a verified gate regresses`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -19,6 +19,8 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
     `custer-gallatin-nf`
   - South Plateau as the supplemental reviewer-ready expansion example for
     `custer-gallatin-nf`
+  - South Otter as the supplemental reviewer-ready forest-specific example for
+    `custer-gallatin-nf`
   - West Reservoir as the governed `typed_blocked` example for `flathead-nf`
   - Tyler's Kitchen as the primary reviewer-ready example for `lolo-nf`
 - The active Lolo follow-on has now rerouted `FOR-029` to
@@ -34,15 +36,14 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
 - The remaining `7` forests now route through
   `config/region1_forest_plan_profile_eval_coverage_v1.json` as
   `profile_eval_guidance_only` until a governed real package example exists.
-- The next standalone follow-on remains
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. South Otter has local
-  package authority, a tracked replay context for frozen review ID
-  `region1-example-custer-gallatin-south-otter-58396`, and a green local
-  reviewer stack on the narrowed official `Final EA and Decision Notice
-  Documents` package path. It is not yet a governed registry example,
-  real-package coverage slot, component-coverage aggregate slot, or queue
-  ledger reroute. Milestone 3 owns that supplemental same-forest Custer
-  Gallatin promotion and must not ratchet distinct-forest thresholds.
+- The South Otter follow-on in
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
+  Milestone 3. It promoted frozen review ID
+  `region1-example-custer-gallatin-south-otter-58396` as supplemental Custer
+  Gallatin registry example
+  `example_id="cgnf-south-otter-forest-specific"` and coverage slot
+  `coverage_slot_id="cgnf-south-otter-forest-specific"`, without changing
+  distinct-forest thresholds or rerouting the source-register queue.
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.
@@ -220,14 +221,14 @@ Current Lolo follow-on:
 
 Current South Otter follow-on:
 
-- `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is the next standalone
-  packet. It owns the selected South Otter Landscape Restoration and Resilience
-  Project (`58396`) package boundary for a supplemental Custer Gallatin example
-  lane. Milestone 2 is resolved locally: applicability, compliance review, V1
-  eval, forest-plan component eval/adjudication, and review `phase-eval` are
-  green for `region1-example-custer-gallatin-south-otter-58396`. No registry
-  row, real-package coverage slot, component-coverage aggregate slot, or queue
-  reroute exists yet.
+- `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
+  Milestone 3. It owns the selected South Otter Landscape Restoration and
+  Resilience Project (`58396`) package boundary for a supplemental Custer
+  Gallatin example lane. Applicability, compliance review, V1 eval,
+  forest-plan component eval/adjudication, and review `phase-eval` are green
+  for `region1-example-custer-gallatin-south-otter-58396`. The registry row,
+  real-package coverage slot, and component-coverage slot are now present and
+  load-bearing. No queue reroute exists.
 
 ## Current Evidence
 
@@ -241,11 +242,20 @@ Current South Otter follow-on:
   parent packet for the Lolo registry promotion slice.
 - The source-record/currentness blocker chain is historical for Lolo; the
   current review replay passes on `source-set-f70ea11e04ae3d53`.
-- `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is the active
-  standalone follow-on for Milestone 3. South Otter is now a locally
-  reviewer-ready same-forest supplemental Custer Gallatin package-style
-  expansion; it must not be counted as a new distinct forest when or if it is
-  later promoted.
+- `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is the resolved
+  standalone follow-on for South Otter promotion. South Otter is now a governed
+  same-forest supplemental Custer Gallatin package-style expansion; it does
+  not count as a new distinct forest.
+- Current aggregate evidence after South Otter promotion:
+  `real-package-review-coverage-eval` passes with `5` covered required slots,
+  `4` reviewer-ready slots, `1` typed-blocked slot, `3` distinct forests, and
+  `6` package-style tags. `forest-specific-example-package-eval` passes with
+  `5` governed review examples, `4` reviewer-ready examples, `3` distinct
+  governed forests, and `7` profile-guidance-only forests.
+- `forest-plan-component-eval-coverage` still fails as an aggregate on
+  pre-existing non-South Otter ECID source-delta and West Reservoir slots, but
+  the South Otter component slot is required, covered, source-set aligned, and
+  passing.
 
 ## Milestone Sequence
 
@@ -256,7 +266,7 @@ Current South Otter follow-on:
 | `2` | Lolo example package follow-on | `resolved` |
 | `3` | Lolo registry promotion and threshold ratchet | `resolved` |
 | `4` | South Otter package intake and reviewer-stack replay | `resolved` |
-| `5` | South Otter registry promotion and same-forest threshold guard | `active` |
+| `5` | South Otter registry promotion and same-forest threshold guard | `resolved` |
 
 ## Acceptance Criteria
 
@@ -287,10 +297,11 @@ git diff --check
 
 Before changing registry status, read `docs/CURRENT_ROUTING.md`,
 `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`,
-`docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, and
+`docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
+`docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, and
 `config/forest_specific_example_package_registry_v1.json`. Verify the current
-Lolo `v1-ea-eval`, review `phase-eval`, real-package coverage, and
-forest-specific example-package artifacts before changing any promoted row.
+Lolo and South Otter `v1-ea-eval`, review `phase-eval`, real-package coverage,
+and forest-specific example-package artifacts before changing any promoted row.
 
 ## Stop Conditions
 

@@ -22,7 +22,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 COMMITTED_MANIFEST = REPO_ROOT / "config" / "forest_plan_component_eval_coverage_v1.json"
 
 
-def test_committed_manifest_tracks_four_review_slots() -> None:
+def test_committed_manifest_tracks_south_otter_review_slot() -> None:
     manifest = json.loads(COMMITTED_MANIFEST.read_text())
 
     assert manifest["schema_version"] == "forest-plan-component-eval-coverage-v1"
@@ -34,6 +34,7 @@ def test_committed_manifest_tracks_four_review_slots() -> None:
         "v1-cg-ecid-source-delta-review",
         "west-reservoir-67436",
         "region1-example-lolo-tylers-kitchen-66344",
+        "region1-example-custer-gallatin-south-otter-58396",
     ]
     assert manifest["future_forest_expansion_policy"] == {
         "mode": "manifest_slots_only",
@@ -57,7 +58,12 @@ def test_committed_manifest_tracks_four_review_slots() -> None:
         slots["region1-example-lolo-tylers-kitchen-66344"]["eval_file"]
         == "forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json"
     )
-    assert manifest["coverage_thresholds"]["required_review_count"] == 4
+    assert (
+        slots["region1-example-custer-gallatin-south-otter-58396"]["eval_file"]
+        == "forest_plan_component_evals/region1-example-custer-gallatin-south-otter-58396.json"
+    )
+    assert slots["region1-example-custer-gallatin-south-otter-58396"]["required"] is True
+    assert manifest["coverage_thresholds"]["required_review_count"] == 5
     assert manifest["coverage_thresholds"]["distinct_forest_count_min"] == 3
     assert (
         slots["v1-cg-ecid-compliance-review"]["expected_source_set_id"]

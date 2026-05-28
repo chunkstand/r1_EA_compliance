@@ -77,7 +77,7 @@ def test_real_package_review_coverage_eval_rejects_missing_required_slot() -> No
             )
 
 
-def test_committed_real_package_review_coverage_manifest_tracks_four_slots() -> None:
+def test_committed_real_package_review_coverage_manifest_tracks_south_otter_slot() -> None:
     manifest = json.loads(COMMITTED_MANIFEST.read_text(encoding="utf-8"))
 
     assert manifest["schema_version"] == REAL_PACKAGE_REVIEW_COVERAGE_SCHEMA_VERSION
@@ -91,14 +91,20 @@ def test_committed_real_package_review_coverage_manifest_tracks_four_slots() -> 
         "v1-cg-ecid-compliance-review",
         "west-reservoir-67436",
         "region1-expansion-south-plateau-landscape-treatment",
+        "region1-example-custer-gallatin-south-otter-58396",
         "region1-example-lolo-tylers-kitchen-66344",
     ]
+    assert [
+        item["coverage_class_id"]
+        for item in manifest["slots"]
+        if item["coverage_class_id"] == "forest_specific_reviewer_ready"
+    ] == ["forest_specific_reviewer_ready", "forest_specific_reviewer_ready"]
     thresholds = manifest["coverage_thresholds"]
-    assert thresholds["required_slot_count"] == 4
+    assert thresholds["required_slot_count"] == 5
     assert thresholds["required_coverage_class_count"] == 4
     assert thresholds["distinct_forest_count_min"] == 3
-    assert thresholds["distinct_package_style_count_min"] == 4
-    assert thresholds["reviewer_ready_slot_count_min"] == 3
+    assert thresholds["distinct_package_style_count_min"] == 5
+    assert thresholds["reviewer_ready_slot_count_min"] == 4
     assert thresholds["typed_blocked_slot_count_min"] == 1
 
 

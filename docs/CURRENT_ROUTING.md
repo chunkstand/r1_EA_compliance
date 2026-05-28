@@ -4,11 +4,11 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved packet:
-  `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  none selected after South Otter Milestone 3 closeout
 - Historical lineage only:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
@@ -20,8 +20,13 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- South Otter Milestone 2 is resolved locally for reviewer-stack replay. The
-  full official Pinyon/Box root for the South Otter Landscape Restoration and
+- South Otter Milestone 3 is resolved locally for supplemental same-forest
+  promotion. South Otter is now a governed Custer Gallatin example in
+  `config/forest_specific_example_package_registry_v1.json`, a required slot in
+  `config/v1_real_package_review_coverage_v1.json`, and a required passing slot
+  in `config/forest_plan_component_eval_coverage_v1.json`. It remains parallel
+  to `Document_Register_Master`; no source-register queue row was rerouted.
+- The full official Pinyon/Box root for the South Otter Landscape Restoration and
   Resilience Project (`58396`) remains ignored local authority evidence at
   `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`
   with `58` folders, `639` files, `2,926,223,134` bytes, and `0` download
@@ -39,37 +44,50 @@ Use this file as the short current route before opening the append-only docs.
   `forest_plan_passed=true`. Forest-plan component eval passes `56/56` cases,
   and component adjudication resolves all `169` current queue items
   (`132` applicability false positives, `37` evidence-linking misses, `0`
-  real-EA omissions). Review `phase-eval` passes `28/28` with `blockers=[]`.
-- South Otter is still not in the active workbook, not in the
-  forest-specific registry, not a real-package coverage slot, and not a queue
-  ledger reroute. Do not claim governed promotion until Milestone 3 adds the
-  supplemental Custer Gallatin registry row and real-package/component coverage
-  slots and reruns the aggregate gates.
-- Next active slice: South Otter Milestone 3 in
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, using
+  real-EA omissions). Review `phase-eval` passes `28/28` with `blockers=[]`,
+  `review_direct_eval_status="direct_eval_present"`, and required review-scope
+  summaries for `v1_ea_eval`, `real_package_review_coverage`, and
+  `forest_plan_component_eval_coverage`.
+- South Otter registry identity is
   `example_id="cgnf-south-otter-forest-specific"`,
-  `coverage_slot_id="cgnf-south-otter-forest-specific"`, and
-  `applicable_forest_unit_ids=["custer-gallatin-nf"]`. Do not increase
-  distinct-forest thresholds for this same-forest supplemental example.
+  `coverage_slot_id="cgnf-south-otter-forest-specific"`,
+  `forest_unit_id="custer-gallatin-nf"`, and
+  `applicable_forest_unit_ids=["custer-gallatin-nf"]`. The Custer Gallatin row
+  keeps East Crazy as primary and now lists South Plateau plus South Otter as
+  supplemental examples. Distinct-forest thresholds remain unchanged for this
+  same-forest supplemental example.
+- `config/v1_real_package_review_coverage_v1.json` now has five load-bearing
+  slots, including South Otter and Lolo as two required
+  `forest_specific_reviewer_ready` slots. The governed aggregate rerun reports
+  `passed=true`, `covered_slot_count=5`, `required_slot_count=5`,
+  `reviewer_ready_slot_count=4`, `typed_blocked_slot_count=1`,
+  `distinct_forest_count=3`, `distinct_package_style_count=6`, and no missing
+  required slots or coverage classes.
+- `config/forest_specific_example_package_registry_v1.json` now has five
+  governed examples: East Crazy, South Plateau, and South Otter for Custer
+  Gallatin; West Reservoir for Flathead; and Tyler's Kitchen for Lolo. The
+  governed forest-specific aggregate rerun reports `passed=true`,
+  `review_example_count=5`, `reviewer_ready_example_count=4`,
+  `distinct_governed_example_forest_count=3`,
+  `profile_guidance_only_count=7`, and no threshold failures.
+- `config/forest_plan_component_eval_coverage_v1.json` now requires South
+  Otter as a fifth component-eval review slot. The South Otter slot is covered,
+  source-set aligned, and passing. The aggregate
+  `forest-plan-component-eval-coverage` command still fails on non-South Otter
+  slots: ECID source-delta has `result_not_passed` plus
+  `result_source_set_id_mismatch`, and West Reservoir has `result_not_passed`.
+  Current aggregate counts are `covered_review_count=3/5`,
+  `stale_identity_count=1`, and `unresolved_review_count=2`; do not describe
+  aggregate component coverage as green.
 - The Lolo Tyler's Kitchen example-package Milestone 3 implementation is
   resolved locally. The tracked Lolo review
   `region1-example-lolo-tylers-kitchen-66344` is now the governed primary
   `lolo-nf` forest-specific example package, while the package remains
   parallel to `Document_Register_Master`.
-- `config/v1_real_package_review_coverage_v1.json` now has four load-bearing
-  slots and includes the Lolo `forest_specific_reviewer_ready` slot. The
-  governed aggregate rerun reports `passed=true`, `covered_slot_count=4`,
-  `reviewer_ready_slot_count=3`, `typed_blocked_slot_count=1`,
-  `distinct_forest_count=3`, `distinct_package_style_count=4`, and no missing
-  required slots or coverage classes.
-- `config/forest_specific_example_package_registry_v1.json` now routes
+- `config/forest_specific_example_package_registry_v1.json` continues to route
   `lolo-nf` as `real_package_examples_available`, sets
   `primary_example_id="lolo-tylers-kitchen-forest-specific"`, and keeps
-  `queue_boundary_source_ids=["FOR-029"]`. The governed forest-specific
-  aggregate rerun reports `review_example_count=4`,
-  `reviewer_ready_example_count=3`,
-  `distinct_governed_example_forest_count=3`,
-  `profile_guidance_only_count=7`, and no threshold failures.
+  `queue_boundary_source_ids=["FOR-029"]`.
 - `config/source_register_queue_resolution_ledger_v1.json` now resolves
   `FOR-029` with
   `planned_disposition="forest_specific_example_package"` and
@@ -85,21 +103,21 @@ Use this file as the short current route before opening the append-only docs.
   source-record identity, aligned-runtime, and broader Lolo example-package
   Milestone 3 blocker family is now historical for Lolo. Do not route new work
   back there unless a future command regresses one of the verified gates.
-- Forest-plan component eval coverage is not a blocker for this Lolo replay
-  closeout: the Lolo slot is now aligned and passes on `f70...`. The aggregate
-  `forest-plan-component-eval-coverage` command still fails on non-Lolo
-  source-delta and West Reservoir slots (`covered_review_count=2/4`,
-  `stale_identity_count=1`, `unresolved_review_count=2`), so do not describe
-  aggregate component coverage as green.
+- Forest-plan component eval coverage is not a blocker for the Lolo or South
+  Otter review-scope closeouts: both slots are aligned and pass on `f70...`.
+  The aggregate `forest-plan-component-eval-coverage` command still fails on
+  non-Lolo/non-South Otter source-delta and West Reservoir slots, so do not
+  describe aggregate component coverage as green.
 - Aggregate truth:
-  ECID current promotion, South Plateau reviewer-ready expansion, and Lolo
-  forest-specific example promotion remain green in the non-strict promotion
-  suite. Strict expansion remains blocked only on the ECID historical slot
-  under `historical_source_set_split`.
+  ECID current promotion, South Plateau reviewer-ready expansion, Lolo
+  forest-specific example promotion, and South Otter supplemental promotion
+  remain green in the non-strict promotion suite. Strict expansion remains
+  blocked only on the ECID historical slot under
+  `historical_source_set_split`.
 - Do not flip the ECID historical slot to `ready`, reopen the older Lolo or
   replay-repair packets as live runtime work, or treat the remaining
-  non-Lolo component-coverage aggregate red as part of the Lolo example
-  promotion.
+  non-Lolo/non-South Otter component-coverage aggregate red as part of the
+  Lolo or South Otter example promotions.
 ## Deep Reads
 - Core:
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,

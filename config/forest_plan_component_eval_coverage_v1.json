@@ -1,7 +1,7 @@
 {
   "schema_version": "forest-plan-component-eval-coverage-v1",
   "id": "region1-forest-plan-component-eval-coverage",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "component_retrieval_eval": {
     "manifest_path": "forest_plan_component_retrieval_eval_v1.json"
   },
@@ -9,7 +9,8 @@
     "v1-cg-ecid-compliance-review",
     "v1-cg-ecid-source-delta-review",
     "west-reservoir-67436",
-    "region1-example-lolo-tylers-kitchen-66344"
+    "region1-example-lolo-tylers-kitchen-66344",
+    "region1-example-custer-gallatin-south-otter-58396"
   ],
   "future_forest_expansion_policy": {
     "mode": "manifest_slots_only",
@@ -18,7 +19,7 @@
   },
   "typed_blocked_slots": [],
   "coverage_thresholds": {
-    "required_review_count": 4,
+    "required_review_count": 5,
     "distinct_forest_count_min": 3,
     "missing_contract_count_max": 0,
     "missing_result_count_max": 0,
@@ -78,6 +79,15 @@
       "forest_unit_id": "lolo-nf",
       "expected_source_set_id": "source-set-f70ea11e04ae3d53",
       "eval_file": "forest_plan_component_evals/region1-example-lolo-tylers-kitchen-66344.json",
+      "required": true
+    },
+    {
+      "slot_id": "cgnf-south-otter-forest-specific",
+      "label": "South Otter Custer Gallatin component eval",
+      "review_id": "region1-example-custer-gallatin-south-otter-58396",
+      "forest_unit_id": "custer-gallatin-nf",
+      "expected_source_set_id": "source-set-f70ea11e04ae3d53",
+      "eval_file": "forest_plan_component_evals/region1-example-custer-gallatin-south-otter-58396.json",
       "required": true
     }
   ]

@@ -1,12 +1,12 @@
 {
   "coverage_thresholds": {
     "distinct_forest_count_min": 3,
-    "distinct_package_style_count_min": 4,
+    "distinct_package_style_count_min": 5,
     "missing_package_authority_count_max": 0,
     "missing_required_slot_count_max": 0,
     "required_coverage_class_count": 4,
-    "required_slot_count": 4,
-    "reviewer_ready_slot_count_min": 3,
+    "required_slot_count": 5,
+    "reviewer_ready_slot_count_min": 4,
     "typed_blocked_slot_count_min": 1
   },
   "id": "region1-real-package-review-coverage-v1",
@@ -59,6 +59,20 @@
       "required": true,
       "review_id": "region1-expansion-south-plateau-landscape-treatment",
       "slot_id": "south-plateau-reviewer-ready"
+    },
+    {
+      "coverage_class_id": "forest_specific_reviewer_ready",
+      "eval_file": "v1_custer_gallatin_south_otter_real_ea_eval.json",
+      "expected_contract_status": "reviewer_ready",
+      "forest_unit_id": "custer-gallatin-nf",
+      "label": "South Otter forest-specific supplemental reviewer-ready example",
+      "package_authority": {
+        "replay_context_path": "replay_contexts/region1-example-custer-gallatin-south-otter-58396.json"
+      },
+      "package_label": "South Otter Landscape Restoration and Resilience Project",
+      "required": true,
+      "review_id": "region1-example-custer-gallatin-south-otter-58396",
+      "slot_id": "cgnf-south-otter-forest-specific"
     },
     {
       "coverage_class_id": "forest_specific_reviewer_ready",

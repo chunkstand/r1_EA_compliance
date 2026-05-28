@@ -23,8 +23,8 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
     assert registry["summary"] == {
         "forest_unit_count": 10,
         "profile_guidance_only_count": 7,
-        "review_example_count": 4,
-        "reviewer_ready_example_count": 3,
+        "review_example_count": 5,
+        "reviewer_ready_example_count": 4,
         "typed_blocked_example_count": 1,
     }
 
@@ -123,6 +123,33 @@ def test_registry_promotes_lolo_example_after_for_029_resolves_to_example_lane()
     assert for_029["blocker_packet_reference"] == (
         "docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
     )
+
+
+def test_registry_promotes_south_otter_as_same_forest_supplement_without_queue_row() -> None:
+    registry = _load_json(REGISTRY_PATH)
+    queue_ledger = _load_json(QUEUE_LEDGER_PATH)
+
+    forest_row = next(
+        row for row in registry["forest_routing"] if row["forest_unit_id"] == "custer-gallatin-nf"
+    )
+    example_row = next(
+        row
+        for row in registry["review_examples"]
+        if row["example_id"] == "cgnf-south-otter-forest-specific"
+    )
+    ledger_source_ids = {entry["source_id"] for entry in queue_ledger["entries"]}
+
+    assert forest_row["primary_example_id"] == "cgnf-east-crazy-current-promotion"
+    assert forest_row["supplemental_example_ids"] == [
+        "cgnf-south-plateau-expansion",
+        "cgnf-south-otter-forest-specific",
+    ]
+    assert example_row["forest_unit_id"] == "custer-gallatin-nf"
+    assert example_row["applicable_forest_unit_ids"] == ["custer-gallatin-nf"]
+    assert example_row["coverage_slot_id"] == "cgnf-south-otter-forest-specific"
+    assert example_row["queue_lineage_source_ids"] == []
+    assert "South Otter" not in ledger_source_ids
+    assert "58396" not in ledger_source_ids
 
 
 def test_registry_contract_paths_exist_and_review_patterns_stay_parameterized() -> None:

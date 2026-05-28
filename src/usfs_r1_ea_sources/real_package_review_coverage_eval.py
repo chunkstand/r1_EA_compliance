@@ -420,11 +420,6 @@ def _validate_manifest(manifest: dict[str, Any]) -> None:
         review_ids.add(review_id)
         if required:
             required_slot_count += 1
-            if coverage_class_id in required_class_ids:
-                raise ValueError(
-                    "required real-package review slots must not share coverage_class_id: "
-                    f"{coverage_class_id}"
-                )
             required_class_ids.add(coverage_class_id)
 
     if required_class_ids != set(required_coverage_class_ids):

@@ -15,17 +15,79 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## South Otter Example Package Milestone 2 Resolved Locally
+## South Otter Example Package Milestone 3 Resolved Locally
 
 Latest implementation update on 2026-05-27 UTC:
 
-- active packet:
+- resolved packet:
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - packet outcome:
-  `Milestone 2 resolved locally`; South Otter is reviewer-ready under the
-  local review stack, but it has not been promoted into
+  `Milestone 3 resolved locally`; South Otter is now a governed supplemental
+  Custer Gallatin example in
+  `config/forest_specific_example_package_registry_v1.json`, a required
+  real-package coverage slot in
+  `config/v1_real_package_review_coverage_v1.json`, and a required passing
+  component-eval coverage slot in
+  `config/forest_plan_component_eval_coverage_v1.json`. It remains outside
+  `Document_Register_Master`; no source-register queue row was rerouted.
+- registry identity truth:
+  South Otter uses `example_id="cgnf-south-otter-forest-specific"`,
+  `review_id="region1-example-custer-gallatin-south-otter-58396"`,
+  `forest_unit_id="custer-gallatin-nf"`,
+  `coverage_slot_id="cgnf-south-otter-forest-specific"`, and
+  `applicable_forest_unit_ids=["custer-gallatin-nf"]`. The Custer Gallatin row
+  keeps East Crazy as primary and lists South Plateau plus South Otter as
+  supplemental examples, so distinct-forest thresholds are unchanged.
+- real-package coverage truth:
+  `real-package-review-coverage-eval` passes with `covered_slot_count=5`,
+  `required_slot_count=5`, `reviewer_ready_slot_count=4`,
+  `typed_blocked_slot_count=1`, `distinct_forest_count=3`,
+  `distinct_package_style_count=6`, and no threshold failures.
+- forest-specific registry truth:
+  `forest-specific-example-package-eval` passes with `review_example_count=5`,
+  `reviewer_ready_example_count=4`,
+  `distinct_governed_example_forest_count=3`,
+  `profile_guidance_only_count=7`, and no threshold failures.
+- component coverage truth:
+  the South Otter component slot is required, covered, source-set aligned, and
+  passing. The aggregate `forest-plan-component-eval-coverage` command still
+  fails on pre-existing non-South Otter slots: ECID source-delta has
+  `result_not_passed` plus `result_source_set_id_mismatch`, and West Reservoir
+  has `result_not_passed`. Current aggregate counts are
+  `covered_review_count=3/5`, `stale_identity_count=1`, and
+  `unresolved_review_count=2`.
+- phase truth:
+  review `phase-eval --review-id region1-example-custer-gallatin-south-otter-58396`
+  now passes with `passed_phase_count=28`, `phase_count=28`, `blockers=[]`,
+  and `review_direct_eval_status="direct_eval_present"`. The review-scope
+  coverage summaries for `v1_ea_eval`, `real_package_review_coverage`, and
+  `forest_plan_component_eval_coverage` are present and passing for South
+  Otter.
+- next routing:
+  no additional South Otter milestone is selected. Future forest-specific
+  example expansion should start from
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`; component
+  aggregate repair remains a separate non-South Otter lane if selected.
+- verification:
+  JSON manifest validation; focused registry, coverage, component-coverage,
+  CLI, and South Otter contract tests; focused Ruff; real-package coverage
+  eval; forest-specific example-package eval; component-coverage aggregate
+  rerun with named non-South blockers; and South Otter review `phase-eval`
+
+## South Otter Example Package Milestone 2 Resolved Locally
+
+Historical implementation update on 2026-05-27 UTC, superseded by the
+Milestone 3 section above:
+
+- historical packet:
+  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- continuing lane owner:
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- packet outcome:
+  `Milestone 2 resolved locally`; at this checkpoint South Otter was
+  reviewer-ready under the local review stack, but it had not been promoted into
   `config/forest_specific_example_package_registry_v1.json`,
   `config/v1_real_package_review_coverage_v1.json`,
   `config/forest_plan_component_eval_coverage_v1.json`, or the queue ledger
@@ -65,16 +127,11 @@ Latest implementation update on 2026-05-27 UTC:
 - phase truth:
   review `phase-eval --review-id region1-example-custer-gallatin-south-otter-58396`
   passes with `passed_phase_count=28`, `phase_count=28`, `blockers=[]`, and
-  `review_direct_eval_status="not_required_for_ad_hoc_review"`. Promotion
-  coverage is still false because Milestone 3 has not added governed registry
-  or coverage manifest entries.
+  `review_direct_eval_status="not_required_for_ad_hoc_review"` at the
+  Milestone 2 checkpoint. Milestone 3 later promoted the governed registry and
+  coverage manifest entries.
 - next routing:
-  continue at South Otter Milestone 3 in
-  `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`: add South Otter as a
-  supplemental Custer Gallatin example only after preserving the same-forest
-  identity guard, then rerun the real-package coverage, forest-specific
-  example-package, and component-coverage aggregate gates. Do not ratchet
-  distinct-forest thresholds for this same-forest example.
+  superseded by the Milestone 3 closeout section above.
 - verification:
   governed applicability replay and adjudication eval, generated rule-pack,
   compliance review, V1 eval, forest-plan component eval, forest-plan component
@@ -152,8 +209,7 @@ Milestone 2 section above:
   updates them.
 - next routing:
   this historical section originally routed to Milestone 2; the current route
-  is now Milestone 3 registry and coverage promotion after the reviewer stack
-  went green.
+  is now the Milestone 3 closeout section above.
 - verification:
   full Box inventory/download readback, narrowed `ea-review`, narrowed
   `forest-plan-resolve` readback, focused replay-context test, strict
@@ -161,7 +217,9 @@ Milestone 2 section above:
 
 ## Lolo Tyler's Kitchen Example Package Milestone 3 Resolved Locally
 
-Latest implementation update on 2026-05-27 UTC:
+Historical implementation update on 2026-05-27 UTC. It remains true for the
+Lolo slot, but aggregate example and coverage counts are superseded by the
+South Otter Milestone 3 section above:
 
 - resolved packet:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`

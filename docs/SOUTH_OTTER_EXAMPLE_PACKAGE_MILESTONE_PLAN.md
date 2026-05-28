@@ -1,17 +1,18 @@
 # South Otter Example Package Milestone Plan
 
 Date: 2026-05-27
-Status: Active packet (`Milestone 0 routing and package-boundary selection
+Status: Resolved packet (`Milestone 0 routing and package-boundary selection
 opened; Milestone 1 local package authority intake resolved locally; Milestone
 2 reviewer-stack replay resolved locally; Milestone 3 registry promotion and
-threshold ratchet are next. South Otter is reviewer-ready locally but still not
-promoted into the governed registry, coverage manifests, or queue ledger.`)
+threshold ratchet resolved locally. South Otter is reviewer-ready and promoted
+as a supplemental Custer Gallatin registry, real-package coverage, and
+component-coverage slot; it remains outside the workbook and queue ledger.`)
 Owner context: standalone follow-on from
 `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
 
-Open the next governed forest-specific example package around the user-selected
+Open and close the governed forest-specific example package around the user-selected
 South Otter Landscape Restoration and Resilience Project without contaminating
 the shared `Document_Register_Master` source register.
 
@@ -40,16 +41,16 @@ Current implementation truth:
 
 - South Otter is not present in the active workbook by `South Otter`,
   `projects/58396`, or `58396` search at packet opening.
-- South Otter is not yet a governed registry example in
+- South Otter is now a governed supplemental registry example in
   `config/forest_specific_example_package_registry_v1.json`.
-- The Custer Gallatin registry row already has reviewer-ready examples through
-  East Crazy and South Plateau, so South Otter must begin as a supplemental
-  package-style expansion, not as a new distinct-forest coverage claim.
+- The Custer Gallatin registry row keeps East Crazy as primary and now lists
+  South Plateau plus South Otter as supplemental package-style examples.
+  South Otter is not a new distinct-forest coverage claim.
 - The frozen review ID includes the forest slug:
   `region1-example-custer-gallatin-south-otter-58396`. Forest-specific example
   review IDs must stay tied to the applicable forest, not only to Region 1 or
   the project title.
-- The future tracked eval contract must also carry the forest identity:
+- The tracked eval contract also carries the forest identity:
   `config/v1_custer_gallatin_south_otter_real_ea_eval.json`.
 - Milestone 1 inventoried and downloaded the official Pinyon/Box root package
   into ignored local evidence under
@@ -83,9 +84,15 @@ Current implementation truth:
   `applicability_false_positive`, `37` `evidence_linking_miss`, and `0`
   real-EA omissions.
 - Review `phase-eval` now passes `28/28` phases with `blockers=[]` for
-  `region1-example-custer-gallatin-south-otter-58396`. The review remains
-  `not_required_for_ad_hoc_review` for promotion coverage until Milestone 3
-  adds governed registry and coverage entries.
+  `region1-example-custer-gallatin-south-otter-58396`. After Milestone 3,
+  review-scope coverage is `direct_eval_present` with required summaries for
+  `v1_ea_eval`, `real_package_review_coverage`, and
+  `forest_plan_component_eval_coverage`.
+- Milestone 3 promoted South Otter into the governed registry and coverage
+  manifests using `example_id="cgnf-south-otter-forest-specific"` and
+  `coverage_slot_id="cgnf-south-otter-forest-specific"`. It ratcheted
+  reviewer-ready and slot/example thresholds, but did not increase distinct
+  forest thresholds.
 
 ## Intent Lock
 
@@ -93,7 +100,7 @@ South Otter is a Custer Gallatin forest-specific example. It is not a generic
 Region 1 example and it is not evidence that another forest has a governed real
 package.
 
-The intended future registry identity is:
+The governed registry identity is:
 
 - `example_id="cgnf-south-otter-forest-specific"`
 - `review_id="region1-example-custer-gallatin-south-otter-58396"`
@@ -104,7 +111,7 @@ The intended future registry identity is:
 - `queue_lineage_source_ids=[]` unless a later workbook-backed South Otter row
   is found
 
-South Otter may become a supplemental Custer Gallatin example if it reaches
+South Otter is a supplemental Custer Gallatin example after reaching
 reviewer-ready status. It must not replace East Crazy as the primary Custer
 Gallatin example without a separate primary-example policy decision, and it
 must not increase distinct-forest coverage metrics.
@@ -115,11 +122,12 @@ must not increase distinct-forest coverage metrics.
   `docs/SESSION_HANDOFF.md` route future forest-specific expansion through
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` after the
   Lolo Tyler's Kitchen closeout.
-- `config/forest_specific_example_package_registry_v1.json` currently has four
-  governed examples: East Crazy and South Plateau for Custer Gallatin, West
-  Reservoir for Flathead, and Tyler's Kitchen for Lolo.
-- `config/v1_real_package_review_coverage_v1.json` currently has four
-  load-bearing slots and no South Otter slot.
+- `config/forest_specific_example_package_registry_v1.json` currently has five
+  governed examples: East Crazy, South Plateau, and South Otter for Custer
+  Gallatin; West Reservoir for Flathead; and Tyler's Kitchen for Lolo.
+- `config/v1_real_package_review_coverage_v1.json` currently has five
+  load-bearing slots, including South Otter as a required
+  `forest_specific_reviewer_ready` slot.
 - The active workbook search found no South Otter match, so there is no current
   `Direct_File_Capture_Queue` row to resolve in this opening packet.
 - The official project page identifies South Otter as a completed Custer
@@ -137,15 +145,25 @@ must not increase distinct-forest coverage metrics.
   `scope_status="custer_gallatin"`, `geographic_area_count=1`,
   `management_area_count=33`, `overlay_count=9`, and
   `unresolved_mention_count=0`.
-- South Otter is now locally reviewer-ready under the Milestone 2 review stack:
+- South Otter is now reviewer-ready under the Milestone 2 review stack:
   applicability, generated rule-pack, compliance review, V1 eval, component
-  eval, component adjudication eval, and review `phase-eval` are green. It is
-  still not a governed registry example or real-package coverage slot; that
-  promotion is intentionally left to Milestone 3.
+  eval, component adjudication eval, and review `phase-eval` are green.
+- South Otter is now governed under Milestone 3: the real-package aggregate
+  passes with `covered_slot_count=5`, `required_slot_count=5`,
+  `reviewer_ready_slot_count=4`, `typed_blocked_slot_count=1`,
+  `distinct_forest_count=3`, and `distinct_package_style_count=6`; the
+  forest-specific aggregate passes with `review_example_count=5`,
+  `reviewer_ready_example_count=4`,
+  `distinct_governed_example_forest_count=3`, and
+  `profile_guidance_only_count=7`.
+- The South Otter component-coverage slot is required, covered, source-set
+  aligned, and passing. The aggregate component coverage command still fails on
+  pre-existing non-South Otter ECID source-delta and West Reservoir slots, so
+  aggregate component coverage must not be described as green.
 
 ## Goal
 
-Create a governed South Otter example package lane that can later become a
+Create and close a governed South Otter example package lane as a
 reviewer-ready supplemental Custer Gallatin example only after package authority,
 review artifacts, eval contracts, and aggregate gates are all present and green.
 
@@ -155,7 +173,8 @@ review artifacts, eval contracts, and aggregate gates are all present and green.
   `Document_Register_Master`.
 - Do not mark South Otter as reviewer-ready in the registry before local
   package intake, replay context, `v1-ea-eval`, forest-plan component eval,
-  and `phase-eval` pass.
+  and `phase-eval` pass. This gate is now satisfied for the Milestone 3
+  promotion.
 - Do not ratchet real-package or forest-specific aggregate thresholds in
   Milestone 0.
 - Do not claim a new distinct forest. South Otter is another Custer Gallatin
@@ -170,9 +189,9 @@ review artifacts, eval contracts, and aggregate gates are all present and green.
 - South Otter package-boundary and review identity
 - packet routing and current-state docs
 - package-authority intake planning
-- future tracked contracts for replay, review eval, applicability adjudication,
+- tracked contracts for replay, review eval, applicability adjudication,
   forest-plan component eval, and aggregate coverage
-- future registry and coverage promotion only after review-readiness gates pass
+- registry and coverage promotion only after review-readiness gates pass
 
 ## Out Of Scope
 
@@ -193,17 +212,17 @@ review artifacts, eval contracts, and aggregate gates are all present and green.
   `docs/CURRENT_SYSTEM_STATE.md`,
   `docs/SESSION_HANDOFF.md`,
   `docs/AGENT_START_HERE.md`
-- future replay context:
+- replay context:
   `config/replay_contexts/region1-example-custer-gallatin-south-otter-58396.json`
-- future review eval contract:
+- review eval contract:
   `config/v1_custer_gallatin_south_otter_real_ea_eval.json`
-- future forest-plan component eval contract:
+- forest-plan component eval contract:
   `config/forest_plan_component_evals/region1-example-custer-gallatin-south-otter-58396.json`
-- future optional applicability adjudication:
+- optional applicability adjudication:
   `config/applicability_adjudications/region1-example-custer-gallatin-south-otter-58396.json`
-- future optional forest-plan component adjudication:
+- optional forest-plan component adjudication:
   `config/forest_plan_component_adjudications/region1-example-custer-gallatin-south-otter-58396.json`
-- future aggregate manifests, only after review readiness:
+- aggregate manifests:
   `config/v1_real_package_review_coverage_v1.json`,
   `config/forest_specific_example_package_registry_v1.json`,
   `config/forest_plan_component_eval_coverage_v1.json`
@@ -226,8 +245,7 @@ review artifacts, eval contracts, and aggregate gates are all present and green.
   a forest-agnostic ID for this package because the example is relevant to
   `custer-gallatin-nf`.
 - Keep South Otter registry and coverage identifiers Custer Gallatin scoped.
-  Use `cgnf-south-otter-forest-specific` for the future example and coverage
-  slot if the review reaches reviewer-ready status.
+  Use `cgnf-south-otter-forest-specific` for the example and coverage slot.
 - Treat the Pinyon/Box folder `158227182465` as the selected root package
   boundary until a package inventory proves a narrower or broader official root
   is required.
@@ -273,7 +291,7 @@ specialist, comments, analysis, or objection material.
 
 - Owner surface:
   `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`,
-  future replay context and package inventory
+  replay context and package inventory
 - Prevention gate:
   package inventory readback, `ea-review`, `forest-plan-resolve`, and
   package-manifest freshness checks
@@ -455,6 +473,23 @@ Outcome label: `resolved`
 5. Update docs, current-state, handoff, and aggregate eval outputs in the same
    verified slice.
 
+Local result:
+
+- Resolved on 2026-05-27 by adding South Otter as the required
+  `cgnf-south-otter-forest-specific` real-package slot, supplemental Custer
+  Gallatin registry example, and required component-eval coverage slot.
+- Real-package coverage now passes with `5` covered required slots, `4`
+  reviewer-ready slots, `1` typed-blocked slot, `3` distinct forests, and `6`
+  package-style tags.
+- Forest-specific example-package coverage now passes with `5` governed review
+  examples, `4` reviewer-ready examples, `3` distinct governed forests, and
+  `7` profile-guidance-only forests.
+- South Otter review `phase-eval` passes `28/28` with
+  `review_direct_eval_status="direct_eval_present"`. The component-coverage
+  aggregate still fails on pre-existing non-South Otter ECID source-delta and
+  West Reservoir slots, but the South Otter component slot is covered and
+  passing.
+
 ## Required Implementation Artifacts
 
 ### Tracked, After Gates Exist
@@ -607,6 +642,13 @@ PYTHONPATH=src uv run --extra dev ruff check src tests
 git diff --check
 ```
 
+Milestone 3 note: the component-coverage aggregate command is expected to
+remain red until the separate ECID source-delta and West Reservoir component
+slots are repaired. For South Otter promotion, the required condition is that
+the South Otter slot is present, required, source-set aligned, covered, and
+passing, and that South Otter review `phase-eval` treats
+`forest_plan_component_eval_coverage` as a present passing review-scope summary.
+
 If a future milestone touches queue routing, also run:
 
 ```bash
@@ -623,17 +665,20 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_queue_resolu
 - Milestone 0 resolves only the packet-opening scope: South Otter has a frozen
   forest-qualified review ID, official project page, Pinyon/Box folder,
   current routing, and handoff entry.
-- South Otter remains absent from governed example and coverage manifests
-  until package and eval evidence exists.
-- The registry and coverage manifests remain green and unchanged during the
-  opening slice.
+- South Otter remained absent from governed example and coverage manifests
+  until package and eval evidence existed; Milestone 3 then promoted it with
+  the required registry and coverage contracts.
+- The registry and real-package coverage manifests remain green after the
+  promotion. The component-coverage aggregate is rerun and may remain red only
+  for named pre-existing non-South Otter slots while the South Otter slot is
+  covered and passing.
 - The local package authority, once created, traces to the official Pinyon/Box
   root and preserves the official project document families.
 - `region1-example-custer-gallatin-south-otter-58396` cannot be marked
   reviewer-ready unless `v1-ea-eval` and `phase-eval` pass with no blockers.
 - If South Otter is promoted, it is supplemental to the Custer Gallatin row and
   does not increase distinct forest coverage.
-- Future South Otter registry promotion uses
+- South Otter registry promotion uses
   `example_id="cgnf-south-otter-forest-specific"` and
   `applicable_forest_unit_ids=["custer-gallatin-nf"]`; no other forest row may
   reference that example.
@@ -666,15 +711,17 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_queue_resolu
 
 ## Residual Risks And Next Routing
 
-- Milestones 1 and 2 prove local package authority and reviewer-stack readiness,
-  but they do not add a governed registry row, real-package coverage slot,
-  component-coverage aggregate slot, or queue-ledger route. Milestone 3 owns
-  those promotion artifacts.
-- South Otter may add package-style depth for Custer Gallatin, but it will not
+- Milestones 1 and 2 proved local package authority and reviewer-stack
+  readiness; Milestone 3 added the governed registry row, real-package coverage
+  slot, and component-coverage slot. No queue-ledger route was added because no
+  workbook-backed South Otter row was found.
+- South Otter adds package-style depth for Custer Gallatin, but it does not
   reduce the remaining profile-guidance-only forest count unless a later packet
   chooses a forest without a governed example.
-- Because South Otter is now locally reviewer-ready, the next routing target is
-  Milestone 3 in this packet for aggregate promotion and threshold ratchet.
+- The aggregate component-coverage command remains red on non-South Otter ECID
+  source-delta and West Reservoir slots. Treat that as a separate component
+  aggregate repair lane, not as a South Otter promotion blocker.
+- No further South Otter milestone is selected after this closeout.
 - If a future session needs a real package for a different forest, it must open
   a separate forest-specific example packet with that forest's own review ID,
   registry example ID, package authority, and eval contracts.
@@ -687,7 +734,7 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_queue_resolu
   yes
 - machine-readable truth artifacts named:
   yes
-- forest-specific intent and future registry identifiers named:
+- forest-specific intent and registry identifiers named:
   yes
 - same-forest supplemental example guard included:
   yes
