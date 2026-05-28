@@ -22,6 +22,8 @@ Latest implementation update on 2026-05-27 UTC:
 - resolved policy slice:
   user-directed Custer Gallatin primary-example selection update after the
   South Otter Milestone 3 closeout
+- primary-selection closeout commit:
+  `c56039b` (`Promote South Otter as Custer Gallatin primary`)
 - updated routing truth:
   `config/forest_specific_example_package_registry_v1.json` now sets
   `primary_example_id="cgnf-south-otter-forest-specific"` for

@@ -43,12 +43,12 @@ history below.
   `cgnf-south-plateau-expansion` as supplemental examples. This changes
   example-selection priority only: South Otter remains outside
   `Document_Register_Master`, no source-register queue row was rerouted, and
-  distinct-forest thresholds remain unchanged.
+  distinct-forest thresholds remain unchanged. The primary-selection closeout
+  commit is `c56039b` (`Promote South Otter as Custer Gallatin primary`).
   South Otter Milestone 3 is resolved locally under
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. The implementation
   closeout commit is `21eb2fa` (`Promote South Otter supplemental example`).
-  The governed
-  supplemental registry identity is
+  The governed registry identity is
   `example_id="cgnf-south-otter-forest-specific"`,
   `review_id="region1-example-custer-gallatin-south-otter-58396"`,
   `coverage_slot_id="cgnf-south-otter-forest-specific"`, and

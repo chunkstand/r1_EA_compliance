@@ -27,8 +27,9 @@ Use this file as the short current route before opening the append-only docs.
   `config/v1_real_package_review_coverage_v1.json`, and a required passing slot
   in `config/forest_plan_component_eval_coverage_v1.json`. It remains parallel
   to `Document_Register_Master`; no source-register queue row was rerouted.
-  The implementation closeout commit is `21eb2fa` (`Promote South Otter
-  supplemental example`).
+  The primary-selection closeout commit is `c56039b` (`Promote South Otter as
+  Custer Gallatin primary`); the underlying Milestone 3 promotion closeout
+  commit is `21eb2fa` (`Promote South Otter supplemental example`).
 - The full official Pinyon/Box root for the South Otter Landscape Restoration and
   Resilience Project (`58396`) remains ignored local authority evidence at
   `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/`

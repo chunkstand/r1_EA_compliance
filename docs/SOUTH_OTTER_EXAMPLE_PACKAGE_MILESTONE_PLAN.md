@@ -483,6 +483,8 @@ Local result:
   registry example, and required component-eval coverage slot. A later
   user-directed policy update promotes it from supplemental to primary for
   Custer Gallatin example selection.
+- Primary-selection closeout commit: `c56039b` (`Promote South Otter as Custer
+  Gallatin primary`).
 - Implementation closeout commit: `21eb2fa` (`Promote South Otter supplemental
   example`).
 - Real-package coverage now passes with `5` covered required slots, `4`
@@ -713,6 +715,8 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_queue_resolu
   handoff updates are current, and the local atomic commit is created. Before
   commit, the slice is only ready-to-close.
 - Milestone 3 is complete under implementation closeout commit `21eb2fa`.
+- The follow-on primary-example selection update is complete under closeout
+  commit `c56039b`.
 - Stage only files touched for the South Otter packet.
 - Do not stage ignored `source_library/` evidence unless repository policy
   changes explicitly.
