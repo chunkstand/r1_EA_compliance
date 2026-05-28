@@ -1,14 +1,14 @@
 {
   "schema_version": "forest-specific-example-package-registry-v1",
   "contract_id": "region1-forest-specific-example-packages",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "as_of_date": "2026-05-28",
-  "status": "west-reservoir-package-authority-verified-after-south-plateau-archive",
+  "status": "west-reservoir-v1-reviewer-ready",
   "coverage_thresholds": {
     "required_forest_unit_count": 10,
     "review_example_count_min": 4,
-    "reviewer_ready_example_count_min": 3,
-    "typed_blocked_example_count_min": 1,
+    "reviewer_ready_example_count_min": 4,
+    "typed_blocked_example_count_min": 0,
     "distinct_governed_example_forest_count_min": 3,
     "profile_guidance_only_count_max": 7,
     "failed_forest_count_max": 0
@@ -48,8 +48,8 @@
     "forest_unit_count": 10,
     "profile_guidance_only_count": 7,
     "review_example_count": 4,
-    "reviewer_ready_example_count": 3,
-    "typed_blocked_example_count": 1
+    "reviewer_ready_example_count": 4,
+    "typed_blocked_example_count": 0
   },
   "parallel_surface": {
     "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
@@ -230,14 +230,14 @@
       "notes": "Primary reviewer-ready South Otter example for Custer Gallatin. Use first for Custer Gallatin forest-specific example-package guidance; keep the package parallel to Document_Register_Master."
     },
     {
-      "example_id": "flathead-west-reservoir-typed-blocked",
+      "example_id": "flathead-west-reservoir-forest-specific",
       "review_id": "west-reservoir-67436",
       "forest_unit_id": "flathead-nf",
       "forest_unit_label": "Flathead National Forest",
       "package_label": "West Reservoir Land Exchange",
-      "coverage_class_id": "alternate_package_typed_blocked",
-      "coverage_slot_id": "west-reservoir-typed-blocked",
-      "expected_contract_status": "typed_blocked",
+      "coverage_class_id": "forest_specific_reviewer_ready",
+      "coverage_slot_id": "flathead-west-reservoir-forest-specific",
+      "expected_contract_status": "reviewer_ready",
       "eval_file": "config/v1_west_reservoir_real_ea_eval.json",
       "package_authority": {
         "replay_context_path": "config/replay_contexts/west-reservoir-67436.json",
@@ -254,10 +254,11 @@
         "v1_review_eval",
         "phase_eval",
         "applicability_validation",
-        "compliance_review_eval",
-        "forest_plan_component_eval"
+        "compliance_review",
+        "forest_plan_component_eval",
+        "compliance_matrix_render_manifest"
       ],
-      "notes": "Typed-blocked Flathead example package. Read it as a governed blocked example, not as a reviewer-ready benchmark."
+      "notes": "Primary reviewer-ready Flathead example package. Inspect West Reservoir first for Flathead National Forest example-package guidance; keep the package parallel to Document_Register_Master."
     },
     {
       "example_id": "lolo-tylers-kitchen-forest-specific",
@@ -387,11 +388,11 @@
     {
       "forest_unit_id": "flathead-nf",
       "forest_unit_label": "Flathead National Forest",
-      "routing_status": "typed_blocked_example_available",
+      "routing_status": "real_package_examples_available",
       "applicable_to_forest_unit_ids": [
         "flathead-nf"
       ],
-      "primary_example_id": "flathead-west-reservoir-typed-blocked",
+      "primary_example_id": "flathead-west-reservoir-forest-specific",
       "supplemental_example_ids": [],
       "shared_contract_ids": [
         "forest_plan_profile_eval_coverage_manifest",
@@ -407,7 +408,7 @@
         "selected_profile_compliance"
       ],
       "queue_boundary_source_ids": [],
-      "guidance_note": "The only governed Flathead example is West Reservoir and it remains typed-blocked; use it as a bounded cautionary example alongside the profile-eval floor."
+      "guidance_note": "Use the West Reservoir package first for Flathead National Forest example-package guidance; keep the package parallel to Document_Register_Master."
     },
     {
       "forest_unit_id": "helena-lewis-and-clark-nf",

@@ -8,8 +8,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ID = "west-reservoir-67436"
 CURRENT_SOURCE_SET_ID = "source-set-f70ea11e04ae3d53"
 CURRENT_CATALOG_DIR = "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate"
-TYPED_BLOCKED_SLOT_ID = "west-reservoir-typed-blocked"
-TYPED_BLOCKED_EXAMPLE_ID = "flathead-west-reservoir-typed-blocked"
+REVIEWER_READY_SLOT_ID = "flathead-west-reservoir-forest-specific"
+REVIEWER_READY_EXAMPLE_ID = "flathead-west-reservoir-forest-specific"
 
 
 def test_west_reservoir_source_set_contract_surfaces_have_single_identity() -> None:
@@ -39,23 +39,23 @@ def test_west_reservoir_replay_context_uses_selected_catalog_surface() -> None:
     assert replay_context["catalog_dir"] == CURRENT_CATALOG_DIR
 
 
-def test_west_reservoir_migration_baseline_preserves_typed_blocked_status() -> None:
+def test_west_reservoir_migration_promotes_reviewer_ready_status() -> None:
     real_package_slot = _west_reservoir_real_package_slot(REPO_ROOT)
     registry_example = _west_reservoir_registry_example(REPO_ROOT)
     forest_route = _flathead_registry_route(REPO_ROOT)
 
-    assert real_package_slot["slot_id"] == TYPED_BLOCKED_SLOT_ID
-    assert real_package_slot["coverage_class_id"] == "alternate_package_typed_blocked"
-    assert real_package_slot["expected_contract_status"] == "typed_blocked"
+    assert real_package_slot["slot_id"] == REVIEWER_READY_SLOT_ID
+    assert real_package_slot["coverage_class_id"] == "forest_specific_reviewer_ready"
+    assert real_package_slot["expected_contract_status"] == "reviewer_ready"
 
-    assert registry_example["example_id"] == TYPED_BLOCKED_EXAMPLE_ID
-    assert registry_example["coverage_slot_id"] == TYPED_BLOCKED_SLOT_ID
-    assert registry_example["coverage_class_id"] == "alternate_package_typed_blocked"
-    assert registry_example["expected_contract_status"] == "typed_blocked"
+    assert registry_example["example_id"] == REVIEWER_READY_EXAMPLE_ID
+    assert registry_example["coverage_slot_id"] == REVIEWER_READY_SLOT_ID
+    assert registry_example["coverage_class_id"] == "forest_specific_reviewer_ready"
+    assert registry_example["expected_contract_status"] == "reviewer_ready"
 
     assert forest_route["forest_unit_id"] == "flathead-nf"
-    assert forest_route["routing_status"] == "typed_blocked_example_available"
-    assert forest_route["primary_example_id"] == TYPED_BLOCKED_EXAMPLE_ID
+    assert forest_route["routing_status"] == "real_package_examples_available"
+    assert forest_route["primary_example_id"] == REVIEWER_READY_EXAMPLE_ID
 
 
 def _west_reservoir_source_set_contracts(repo_root: Path) -> dict[str, str]:

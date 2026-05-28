@@ -24,8 +24,8 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
         "forest_unit_count": 10,
         "profile_guidance_only_count": 7,
         "review_example_count": 4,
-        "reviewer_ready_example_count": 3,
-        "typed_blocked_example_count": 1,
+        "reviewer_ready_example_count": 4,
+        "typed_blocked_example_count": 0,
     }
 
 
@@ -123,6 +123,27 @@ def test_registry_promotes_lolo_example_after_for_029_resolves_to_example_lane()
     assert for_029["blocker_packet_reference"] == (
         "docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
     )
+
+
+def test_registry_promotes_west_reservoir_as_flathead_primary_example() -> None:
+    registry = _load_json(REGISTRY_PATH)
+
+    forest_row = next(
+        row for row in registry["forest_routing"] if row["forest_unit_id"] == "flathead-nf"
+    )
+    example_row = next(
+        row
+        for row in registry["review_examples"]
+        if row["example_id"] == "flathead-west-reservoir-forest-specific"
+    )
+
+    assert forest_row["routing_status"] == "real_package_examples_available"
+    assert forest_row["primary_example_id"] == "flathead-west-reservoir-forest-specific"
+    assert "Use the West Reservoir package first" in forest_row["guidance_note"]
+    assert example_row["review_id"] == "west-reservoir-67436"
+    assert example_row["coverage_slot_id"] == "flathead-west-reservoir-forest-specific"
+    assert example_row["coverage_class_id"] == "forest_specific_reviewer_ready"
+    assert example_row["expected_contract_status"] == "reviewer_ready"
 
 
 def test_registry_promotes_south_otter_as_custer_gallatin_primary_without_queue_row() -> None:

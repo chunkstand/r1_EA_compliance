@@ -24,6 +24,9 @@ history below.
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- latest resolved West Reservoir parent slice:
+  Milestone 3 compliance review and V1 readiness promotion in
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - predecessor West Reservoir source-evidence blocker:
   `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 - predecessor West Reservoir source-set migration packet:
@@ -41,17 +44,32 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  West Reservoir reviewer-readiness planning is now the active Flathead
+  West Reservoir reviewer-readiness planning is the active Flathead
   forest-specific example packet. The plan file is
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`; it starts after
-  package authority was verified against the official Flathead project page
-  and public Pinyon/Box folder, with `12` official PDFs, `12` local package
-  manifest rows, byte-size and SHA-256 matches for every document, and
-  `omitted_document_count=0`. This is plan-only routing: West Reservoir
-  remains typed blocked until current review artifacts, component eval,
-  compliance review, V1 eval, and review-bound phase eval pass on
-  `source-set-f70ea11e04ae3d53`. The historical green West Reservoir phase
-  artifact on `source-set-5e65d845ce77e1a0` must not be used as current
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`. Parent
+  Milestone 3 is now resolved locally on `source-set-f70ea11e04ae3d53`:
+  generated-pack `compliance-review` passed with `reviewer_ready=true`,
+  `validation_passed=true`, `finding_count=44`, and
+  `finding_status_counts={"gap":3,"pass":26,"uncertain":15}`; V1 eval passed
+  with `contract_status="reviewer_ready"`, `actual_overall_passed=true`,
+  `broader_ea_passed=true`, `forest_plan_passed=true`, and empty failure
+  categories; real-package coverage passed with
+  `covered_slot_count=4`, `reviewer_ready_slot_count=4`, and
+  `typed_blocked_slot_count=0`; and forest-specific registry eval passed with
+  `review_example_count=4`, `reviewer_ready_example_count=4`, and
+  `typed_blocked_example_count=0`. `flathead-nf` now routes to
+  `real_package_examples_available` through
+  `flathead-west-reservoir-forest-specific`. The active next slice is
+  Milestone 4 signer-facing packet/phase closeout. Current
+  `review-packet-index --review-id west-reservoir-67436` writes index outputs
+  but remains red with `failed_check_count=2` and
+  `failure_category_counts={"missing_required_artifact":2}` because West
+  Reservoir lacks `decision_support/ea_consistency_decision_support.json` and
+  `final_qa/east_crazies_final_qa_certification.json`. Do not fabricate those
+  from East Crazies contracts; generate or route West Reservoir-owned
+  decision-support/final-QA artifacts before rerunning packet index,
+  phase eval, and aggregate reporting. The historical green West Reservoir
+  phase artifact on `source-set-5e65d845ce77e1a0` must not be used as current
   reviewer-readiness proof.
   Milestone 0 in that packet is now resolved locally. Package authority still
   passes `2/2`; the Milestone 0 local closeout commit is `d5d97ad`

@@ -11,8 +11,11 @@ authority-universe proof; parent Milestone 1 f70 applicability is now green,
 the f70 forest-plan identity/source-capture child packet is resolved, and
 `forest-plan-resolve` now emits current Flathead context/component artifacts
 with `forest_plan_context_validation.json` passing on f70. Parent Milestone 2
-component readiness is resolved locally on f70. The active parent stop is now
-Milestone 3 compliance review and V1 readiness promotion.
+component readiness is resolved locally on f70. Parent Milestone 3 compliance
+and V1 readiness promotion is resolved locally. The active parent stop is now
+Milestone 4 phase eval and signer-facing packet closeout, starting with the
+missing West Reservoir decision-support and final-QA artifacts that keep
+`review-packet-index` validation red.
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -129,18 +132,18 @@ is green with `component_inventory_present=true`,
   `config/v1_west_reservoir_real_ea_eval.json`
 - Current component eval contract:
   `config/forest_plan_component_evals/west-reservoir-67436.json`
-- Current real-package coverage slot:
+- Pre-promotion real-package coverage slot:
   `slot_id="west-reservoir-typed-blocked"`,
   `coverage_class_id="alternate_package_typed_blocked"`, and
   `expected_contract_status="typed_blocked"` in
   `config/v1_real_package_review_coverage_v1.json`.
-- Current forest-specific registry example:
+- Pre-promotion forest-specific registry example:
   `example_id="flathead-west-reservoir-typed-blocked"`,
   `coverage_slot_id="west-reservoir-typed-blocked"`,
   `forest_unit_id="flathead-nf"`, and
   `expected_contract_status="typed_blocked"` in
   `config/forest_specific_example_package_registry_v1.json`.
-- Current Flathead forest-routing row:
+- Pre-promotion Flathead forest-routing row:
   `routing_status="typed_blocked_example_available"` and
   `primary_example_id="flathead-west-reservoir-typed-blocked"`.
 - Current component coverage slot:
@@ -686,8 +689,9 @@ Implementation note:
 
 ### Milestone 3 - Compliance Review And V1 Readiness Promotion
 
-Outcome label: pending. This is the next active parent slice after Milestone 2
-component readiness.
+Outcome label: resolved locally. This slice promoted West Reservoir from typed
+blocked to reviewer-ready on the current f70 review contract and left the
+signer-facing packet closeout to Milestone 4.
 
 Run the generated-pack compliance review and promote the V1 contract only after
 the current West Reservoir review is actually reviewer-ready.
@@ -711,18 +715,56 @@ Exit criteria:
 
 - Compliance artifacts exist and validation passes.
 - `compliance_matrix.json`, `compliance_matrix.md`, and
-  `compliance_matrix.pdf` exist; the PDF is non-empty and accepted by
-  phase-eval.
-- Review packet index outputs exist if phase-eval requires them for the
-  signer-facing package surface.
+  `compliance_matrix.pdf` exist; the PDF is non-empty. Phase-eval acceptance
+  is still a Milestone 4 gate.
+- Review packet index outputs exist, but validation remains red with exactly
+  two missing signer-facing downstream artifacts:
+  `decision_support/ea_consistency_decision_support.json` and
+  `final_qa/east_crazies_final_qa_certification.json`.
 - V1 eval reports `contract_status="reviewer_ready"`,
   `actual_overall_passed=true`, `broader_ea_passed=true`, and
   `forest_plan_passed=true`.
 - Registry and real-package aggregate manifests remain internally consistent.
 
+Milestone 3 closeout evidence on 2026-05-28:
+
+- `compliance-review` with
+  `source_library/reviews/west-reservoir-67436/applicability/generated_rule_pack.json`
+  passed with `reviewer_ready=true`, `validation_passed=true`,
+  `finding_count=44`, and
+  `finding_status_counts={"gap":3,"pass":26,"uncertain":15}`.
+- Compliance matrix JSON, Markdown, and PDF were written under
+  `source_library/reviews/west-reservoir-67436/`; the PDF is a non-empty
+  valid PDF.
+- `v1-ea-eval --review-id west-reservoir-67436` passed with
+  `contract_status="reviewer_ready"`, `actual_overall_passed=true`,
+  `broader_ea_passed=true`, `forest_plan_passed=true`, and empty failure
+  categories. The stale forest-plan conditional source expectation was updated
+  from the Custer Gallatin source ID to `FINAL-FLAT-001`.
+- `config/v1_real_package_review_coverage_v1.json` now tracks West Reservoir
+  as `slot_id="flathead-west-reservoir-forest-specific"`,
+  `coverage_class_id="forest_specific_reviewer_ready"`, and
+  `expected_contract_status="reviewer_ready"`.
+- `config/forest_specific_example_package_registry_v1.json` now tracks
+  `example_id="flathead-west-reservoir-forest-specific"` and routes
+  `flathead-nf` as `real_package_examples_available`.
+- `real-package-review-coverage-eval` passed with `covered_slot_count=4`,
+  `reviewer_ready_slot_count=4`, `typed_blocked_slot_count=0`,
+  `distinct_forest_count=3`, and no failure categories.
+- `forest-specific-example-package-eval` passed with
+  `review_example_count=4`, `reviewer_ready_example_count=4`,
+  `typed_blocked_example_count=0`,
+  `actual_routing_status_counts={"profile_eval_guidance_only":7,"real_package_examples_available":3}`,
+  and no failure categories.
+- `review-packet-index --review-id west-reservoir-67436` wrote the row
+  inventory, render manifest, index JSON/Markdown/PDF, and validation sidecar,
+  but failed validation with `failed_check_count=2` and
+  `failure_category_counts={"missing_required_artifact":2}` because the West
+  Reservoir decision-support and final-QA artifacts are not present yet.
+
 ### Milestone 4 - Phase Eval, Aggregate Reporting, Docs, And Commit Closeout
 
-Outcome label: pending until compliance review, V1 readiness, review-scoped
+Outcome label: pending until signer-facing packet artifacts, review-scoped
 phase eval, and aggregate reporting are all current.
 
 Close the packet only after review-scoped phase eval and aggregate gates agree
@@ -730,6 +772,12 @@ with the promoted status.
 
 Required actions:
 
+- Generate or route the missing West Reservoir decision-support and final-QA
+  artifact families required by `review-packet-index`; do not fabricate
+  placeholders from the East Crazies contracts.
+- Rerun `review-packet-index --output-dir source_library --review-id
+  west-reservoir-67436` and require validation to pass before treating the
+  signer-facing packet surface as ready.
 - Run current review phase eval:
   `PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id west-reservoir-67436`
 - Run real-package aggregate:
@@ -745,6 +793,8 @@ Required actions:
 Exit criteria:
 
 - Phase eval passes on `source-set-f70ea11e04ae3d53`.
+- Review packet index validation passes without missing decision-support or
+  final-QA artifacts.
 - Real-package aggregate and forest-specific registry aggregate pass with West
   Reservoir as reviewer-ready.
 - Component aggregate either passes or remains red only for explicitly named
@@ -898,7 +948,7 @@ occur:
 - [x] Milestone 1 source-evidence blocker routed through
       `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 - [x] Milestone 2 component eval passes `27/27`
-- [ ] Milestone 3 compliance and V1 readiness gates pass
+- [x] Milestone 3 compliance and V1 readiness gates pass
 - [ ] Milestone 4 phase eval and aggregate gates rerun
 - [x] Docs and session handoff updated with exact counts and residual blockers for Milestone 0
 - [x] Verification commands recorded for Milestone 0

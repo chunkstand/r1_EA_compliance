@@ -82,7 +82,6 @@ def test_committed_real_package_review_coverage_manifest_archives_south_plateau_
 
     assert manifest["schema_version"] == REAL_PACKAGE_REVIEW_COVERAGE_SCHEMA_VERSION
     assert manifest["required_coverage_class_ids"] == [
-        "alternate_package_typed_blocked",
         "current_promotion_reviewer_ready",
         "forest_specific_reviewer_ready",
     ]
@@ -103,14 +102,18 @@ def test_committed_real_package_review_coverage_manifest_archives_south_plateau_
         item["coverage_class_id"]
         for item in manifest["slots"]
         if item["coverage_class_id"] == "forest_specific_reviewer_ready"
-    ] == ["forest_specific_reviewer_ready", "forest_specific_reviewer_ready"]
+    ] == [
+        "forest_specific_reviewer_ready",
+        "forest_specific_reviewer_ready",
+        "forest_specific_reviewer_ready",
+    ]
     thresholds = manifest["coverage_thresholds"]
     assert thresholds["required_slot_count"] == 4
-    assert thresholds["required_coverage_class_count"] == 3
+    assert thresholds["required_coverage_class_count"] == 2
     assert thresholds["distinct_forest_count_min"] == 3
     assert thresholds["distinct_package_style_count_min"] == 5
-    assert thresholds["reviewer_ready_slot_count_min"] == 3
-    assert thresholds["typed_blocked_slot_count_min"] == 1
+    assert thresholds["reviewer_ready_slot_count_min"] == 4
+    assert thresholds["typed_blocked_slot_count_min"] == 0
 
 
 def _write_manifest(

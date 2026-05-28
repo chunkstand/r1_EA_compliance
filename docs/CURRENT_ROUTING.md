@@ -9,6 +9,9 @@ Use this file as the short current route before opening the append-only docs.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- Latest resolved West Reservoir parent slice:
+  Milestone 3 compliance review and V1 readiness promotion in
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - Latest resolved West Reservoir child blocker:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - Historical lineage only:
@@ -24,18 +27,32 @@ Use this file as the short current route before opening the append-only docs.
 ## Active Route
 - West Reservoir reviewer-readiness planning is the active forest-specific
   example packet. Use
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 3 for
-  the next implementation slice. The f70 forest-plan identity/source-capture
-  child blocker is resolved locally and kept as the evidence packet, and parent
-  Milestone 2 component readiness is now resolved locally on f70. The parent
-  plan starts after package-authority provenance was verified against the
-  official Flathead project page and public Pinyon/Box folder, and it keeps West
-  Reservoir typed blocked until compliance review, V1 eval, review-scoped phase
-  eval, and registry/coverage promotion gates pass on
-  `source-set-f70ea11e04ae3d53`.
-- Milestone 0 in the West Reservoir packet is resolved locally. Package
-  authority remains green, current V1 eval remains a truthful typed-blocked
-  baseline with only allowed blocker categories, and the pre-migration
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4 for
+  the next implementation slice. Parent Milestone 3 is resolved locally:
+  generated-pack `compliance-review` passed on
+  `source-set-f70ea11e04ae3d53` with `reviewer_ready=true`,
+  `validation_passed=true`, `finding_count=44`, and
+  `finding_status_counts={"gap":3,"pass":26,"uncertain":15}`; V1 eval passed
+  with `contract_status="reviewer_ready"`, `actual_overall_passed=true`,
+  `broader_ea_passed=true`, `forest_plan_passed=true`, and empty failure
+  categories; real-package coverage passed with
+  `reviewer_ready_slot_count=4` and `typed_blocked_slot_count=0`; and the
+  forest-specific registry passed with `flathead-nf` routed to
+  `real_package_examples_available` through
+  `flathead-west-reservoir-forest-specific`. The next stop is not another
+  V1 promotion. It is the signer-facing packet/phase closeout: current
+  `review-packet-index --review-id west-reservoir-67436` writes the index
+  outputs but fails validation with `failed_check_count=2` and
+  `failure_category_counts={"missing_required_artifact":2}` because
+  `decision_support/ea_consistency_decision_support.json` and
+  `final_qa/east_crazies_final_qa_certification.json` are absent for West
+  Reservoir. Do not fabricate those from East Crazies contracts; generate or
+  route a West Reservoir-owned artifact family first, then rerun packet index,
+  phase eval, and the aggregate gates.
+- Milestone 0 in the West Reservoir packet is resolved locally as a historical
+  baseline. Package authority remains green, the Milestone 0 V1 eval was a
+  truthful typed-blocked baseline with only allowed blocker categories, and the
+  pre-migration
   component eval baseline remains red with `0/27` cases passing on
   `source-set-4fb59e9eb43045cb`; it is not current f70 readiness proof.
   Milestone 1 has started: `ea-review` and `applicability-context-build`
@@ -102,9 +119,10 @@ Use this file as the short current route before opening the append-only docs.
   readiness is now resolved locally: component adjudication eval passes with
   `48/48` resolved and `pending=0`, component eval passes `27/27` on
   `source-set-f70ea11e04ae3d53`, and the West Reservoir aggregate component
-  slot now passes/source-set aligns. Do not proceed to registry promotion or
-  aggregate promotion until compliance review, V1 eval, and review-scoped phase
-  eval pass on f70.
+  slot now passes/source-set aligns. Parent Milestone 3 later promoted West
+  Reservoir to reviewer-ready in the V1 contract, real-package manifest, and
+  forest-specific registry; Milestone 4 remains the active closeout route for
+  packet index validation, phase eval, and aggregate reporting.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson

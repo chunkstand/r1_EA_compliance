@@ -15,6 +15,67 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## West Reservoir Compliance/V1 Readiness Promotion Resolved Locally
+
+Latest implementation update on 2026-05-28 UTC:
+
+- update:
+  parent `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+  Milestone 3 is resolved locally on `source-set-f70ea11e04ae3d53`. West
+  Reservoir is now the governed Flathead reviewer-ready example in the V1
+  contract, real-package coverage manifest, and forest-specific registry. The
+  next active stop is Milestone 4 signer-facing packet/phase closeout, not a
+  repeat V1 promotion.
+- current review identity:
+  `review_id="west-reservoir-67436"`, `forest_unit_id="flathead-nf"`, and
+  `source_set_id="source-set-f70ea11e04ae3d53"`.
+- compliance review:
+  generated-pack `compliance-review` passed with `reviewer_ready=true`,
+  `validation_passed=true`, `finding_count=44`, and
+  `finding_status_counts={"gap":3,"pass":26,"uncertain":15}` using
+  `source_library/reviews/west-reservoir-67436/applicability/generated_rule_pack.json`.
+  Compliance matrix JSON, Markdown, and PDF artifacts exist under the review
+  directory, and the PDF is non-empty with a valid PDF header.
+- V1 eval:
+  `v1-ea-eval --review-id west-reservoir-67436` passed with
+  `contract_status="reviewer_ready"`, `actual_overall_passed=true`,
+  `broader_ea_passed=true`, `forest_plan_passed=true`, and no failure
+  categories. The contract now expects the Flathead forest-plan source record
+  `FINAL-FLAT-001` for
+  `region1_forest_plan_source_records_authority_template`.
+- real-package coverage:
+  `config/v1_real_package_review_coverage_v1.json` now tracks
+  `west-reservoir-67436` as
+  `slot_id="flathead-west-reservoir-forest-specific"`,
+  `coverage_class_id="forest_specific_reviewer_ready"`, and
+  `expected_contract_status="reviewer_ready"`.
+  `real-package-review-coverage-eval` passed with `covered_slot_count=4`,
+  `reviewer_ready_slot_count=4`, `typed_blocked_slot_count=0`,
+  `distinct_forest_count=3`, and no failure categories.
+- forest-specific registry:
+  `config/forest_specific_example_package_registry_v1.json` now tracks
+  `example_id="flathead-west-reservoir-forest-specific"` and routes
+  `flathead-nf` as `real_package_examples_available`.
+  `forest-specific-example-package-eval` passed with `review_example_count=4`,
+  `reviewer_ready_example_count=4`, `typed_blocked_example_count=0`,
+  `actual_routing_status_counts={"profile_eval_guidance_only":7,"real_package_examples_available":3}`,
+  and no failure categories.
+- packet-index truth:
+  `review-packet-index --review-id west-reservoir-67436` wrote the row
+  inventory, render manifest, packet index JSON/Markdown/PDF, and validation
+  sidecar, but validation remains red with `failed_check_count=2` and
+  `failure_category_counts={"missing_required_artifact":2}`. The missing
+  artifacts are
+  `source_library/reviews/west-reservoir-67436/decision_support/ea_consistency_decision_support.json`
+  and
+  `source_library/reviews/west-reservoir-67436/final_qa/east_crazies_final_qa_certification.json`.
+- next implementation slice:
+  run Milestone 4 from
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`. First generate
+  or route West Reservoir-owned decision-support and final-QA artifacts, then
+  rerun packet-index validation, review-scoped phase eval, and aggregate
+  reporting. Do not claim full packet closeout from the green V1 result alone.
+
 ## West Reservoir Component Readiness Resolved To Compliance/V1 Gate
 
 Latest implementation update on 2026-05-28 UTC:
