@@ -4,6 +4,7 @@ from pathlib import Path
 
 from usfs_r1_ea_sources.final_qa_certification import run_final_qa_certification
 from usfs_r1_ea_sources.final_qa_certification import validate_final_qa_certification_report
+from usfs_r1_ea_sources.final_qa_certification_validation import _finding_trace_ids_present
 
 from tests.support.final_qa_certification_fixtures import _read_json
 from tests.support.final_qa_certification_fixtures import _write_json_file
@@ -99,3 +100,34 @@ def test_final_qa_validate_fails_when_validation_sidecar_output_hash_is_stale(
 
     assert validation.summary["passed"] is False
     assert validation.summary["failure_category_counts"]["stale_artifact"] == 1
+
+
+def test_final_qa_trace_validation_keeps_dual_evidence_for_pass_rows() -> None:
+    gap_row = {
+        "rule_id": "rule-gap",
+        "candidate_authority_id": "candidate:rule-gap",
+        "applicability_decision_id": "decision:rule-gap",
+        "source_claim_ids": ["claim:rule-gap"],
+        "status": "gap",
+        "source_pointers": {
+            "ea_package_evidence": {
+                "artifact_path": "source_library/reviews/review-test/package.json",
+                "chunk_id": "chunk:package",
+            },
+            "source_library_evidence": None,
+        },
+    }
+    pass_row = {
+        **gap_row,
+        "rule_id": "rule-pass",
+        "status": "pass",
+    }
+    policy_config = {
+        "authority_evidence_policy": {
+            "allow_single_evidence_statuses": ["gap", "uncertain"]
+        }
+    }
+
+    assert _finding_trace_ids_present([gap_row], policy_config) is True
+    assert _finding_trace_ids_present([gap_row], {}) is False
+    assert _finding_trace_ids_present([pass_row], policy_config) is False

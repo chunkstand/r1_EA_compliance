@@ -153,6 +153,31 @@ def test_review_packet_bootstrap_allows_only_stale_downstream_row_mirrors() -> N
     assert _review_packet_bootstrap_allowed(validation) is True
 
 
+def test_review_packet_bootstrap_allows_initial_downstream_artifact_family_gap() -> None:
+    validation = {
+        "checks": [
+            {
+                "name": "decision_support_report_exists_and_parses",
+                "passed": False,
+            },
+            {
+                "name": "final_qa_report_exists_and_parses",
+                "passed": False,
+            },
+            {
+                "name": "decision_support_authority_rows_match_applicability",
+                "passed": False,
+            },
+            {
+                "name": "final_qa_authority_rows_match_applicability",
+                "passed": False,
+            },
+        ]
+    }
+
+    assert _review_packet_bootstrap_allowed(validation) is True
+
+
 def test_review_packet_bootstrap_rejects_unrelated_packet_validation_failures() -> None:
     validation = {
         "checks": [

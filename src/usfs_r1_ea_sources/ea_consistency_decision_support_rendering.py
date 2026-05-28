@@ -573,7 +573,8 @@ def _review_snapshot_items(report: dict[str, Any]) -> list[str]:
         ),
         (
             "Forest Plan basis: "
-            f"{forest['plan_consistency_table_package_record_id']} Plan Consistency Table plus "
+            f"{forest['plan_consistency_table_package_record_id']} "
+            f"{forest.get('plan_consistency_table_label', 'Plan Consistency Table')} plus "
             f"{forest['component_finding_count']} generated component rows "
             f"({forest['supported_component_count']} supported/applicable, "
             f"{forest['not_applicable_component_count']} not applicable, "

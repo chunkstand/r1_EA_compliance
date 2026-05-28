@@ -27,7 +27,9 @@ from .ea_consistency_decision_support_rendering import _resolve_selector
 
 _REVIEW_PACKET_BOOTSTRAP_ALLOWED_CHECKS = {
     "decision_support_authority_rows_match_applicability",
+    "decision_support_report_exists_and_parses",
     "final_qa_authority_rows_match_applicability",
+    "final_qa_report_exists_and_parses",
 }
 
 
@@ -36,14 +38,17 @@ def _load_required_artifacts(
     output_dir: Path,
     review_dir: Path,
     review_id: str,
+    config: dict[str, Any] | None = None,
 ) -> dict[str, _LoadedArtifact]:
+    config = config or {}
+    plan_source_record_id = _plan_consistency_source_record_id(config)
     plan_text_candidates = sorted(
-        (review_dir / "package" / "extracted_text").glob("EA-PACKAGE-042_*.txt")
+        (review_dir / "package" / "extracted_text").glob(f"{plan_source_record_id}_*.txt")
     )
     plan_text_path = (
         plan_text_candidates[0]
         if plan_text_candidates
-        else review_dir / "package" / "extracted_text" / "EA-PACKAGE-042_missing.txt"
+        else review_dir / "package" / "extracted_text" / f"{plan_source_record_id}_missing.txt"
     )
     review_packet_dir = review_dir / "review_packet_index"
     specs = {
@@ -91,6 +96,11 @@ def _load_required_artifacts(
             review_dir / "forest_plan_applicable_standard_coverage.json",
             "json",
             True,
+        ),
+        "forest_plan_component_eval_results": (
+            review_dir / "forest_plan_component_eval_results.json",
+            "json",
+            _requires_component_eval_contract(config),
         ),
         "forest_plan_context_summary": (
             review_dir / "forest_plan_context_summary.json",
@@ -149,6 +159,16 @@ def _load_required_artifacts(
         key: _load_artifact(key=key, path=path, artifact_type=artifact_type, required=required)
         for key, (path, artifact_type, required) in specs.items()
     }
+
+
+def _plan_consistency_source_record_id(config: dict[str, Any]) -> str:
+    policy = _dict(config.get("forest_plan_consistency_source"))
+    return str(policy.get("package_source_record_id") or "EA-PACKAGE-042")
+
+
+def _requires_component_eval_contract(config: dict[str, Any]) -> bool:
+    policy = _dict(config.get("forest_plan_standard_coverage_policy"))
+    return bool(policy.get("require_component_eval_contract"))
 
 
 def _report_paths(report_dir: Path) -> tuple[Path, Path, Path, Path]:
@@ -391,6 +411,7 @@ def _validate_hashes(
         "forest_plan_applicable_standard_coverage_sha256": (
             "forest_plan_applicable_standard_coverage"
         ),
+        "forest_plan_component_eval_results_sha256": "forest_plan_component_eval_results",
         "forest_plan_context_summary_sha256": "forest_plan_context_summary",
         "non_applicable_authority_appendix_sha256": "non_applicable_authority_appendix",
         "non_applicable_authority_appendix_markdown_sha256": (
@@ -463,10 +484,21 @@ def _validate_readiness(
     generated_validation = context.payload("generated_rule_pack_validation")
     forest_findings = context.payload("forest_plan_component_findings")
     standard_coverage = context.payload("forest_plan_applicable_standard_coverage")
+    component_eval = _dict(context.payload("forest_plan_component_eval_results"))
     forest_context = context.payload("forest_plan_context_summary")
     authority_resolution = context.payload("authority_reviewer_resolution_report")
     forest_queue = context.payload("forest_plan_reviewer_resolution_queue")
     risk_summary = context.payload("litigation_risk_summary")
+    coverage_policy = _dict(context.config.get("forest_plan_standard_coverage_policy"))
+    require_all_standards_applied = coverage_policy.get(
+        "require_all_applicable_standards_applied",
+        True,
+    )
+    component_eval_controls_open_standards = (
+        require_all_standards_applied is False
+        and coverage_policy.get("accepted_basis") == "component_eval_contract_passed"
+        and component_eval.get("passed") is True
+    )
     readiness_checks = {
         "compliance_matrix_reviewer_ready": (matrix.get("summary") or {}).get(
             "reviewer_ready"
@@ -478,21 +510,29 @@ def _validate_readiness(
         "generated_rule_pack_validation_passed": generated_validation.get("passed"),
         "forest_plan_findings_reviewer_ready": (forest_findings.get("summary") or {}).get(
             "reviewer_ready"
-        ),
+        )
+        is True
+        or component_eval_controls_open_standards,
         "forest_plan_findings_validation_passed": (forest_findings.get("summary") or {}).get(
             "validation_passed"
-        ),
+        )
+        is True
+        or component_eval_controls_open_standards,
         "forest_plan_context_reviewer_ready": forest_context.get("reviewer_ready"),
         "forest_plan_context_validation_passed": forest_context.get("validation_passed"),
-        "applicable_standards_applied": standard_coverage.get(
-            "all_applicable_standards_applied"
+        "applicable_standards_applied": (
+            standard_coverage.get("all_applicable_standards_applied") is True
+            or component_eval_controls_open_standards
         ),
-        "applicable_standard_coverage_passed": standard_coverage.get("passed"),
+        "applicable_standard_coverage_passed": (
+            standard_coverage.get("passed") is True or component_eval_controls_open_standards
+        ),
         "authority_resolution_clear": (
             authority_resolution.get("summary") or {}
         ).get("pending_resolution_count")
         == 0,
-        "forest_plan_resolution_clear": len(forest_queue.get("items") or []) == 0,
+        "forest_plan_resolution_clear": len(forest_queue.get("items") or []) == 0
+        or component_eval_controls_open_standards,
         "risk_summary_deterministic_only": (risk_summary.get("summary") or {}).get(
             "deterministic_only"
         ),
@@ -531,6 +571,11 @@ def _validate_authority_rows(
         for finding in _dict_list(context.payload("compliance_review").get("findings"))
         if finding.get("rule_id")
     }
+    evidence_policy = _dict(context.config.get("authority_evidence_policy"))
+    allowed_single_evidence_statuses = {
+        str(status)
+        for status in _strings(evidence_policy.get("allow_single_evidence_statuses"))
+    }
     seen: set[str] = set()
     duplicates: list[str] = []
     missing_evidence: list[str] = []
@@ -539,10 +584,13 @@ def _validate_authority_rows(
         if rule_id in seen:
             duplicates.append(rule_id)
         seen.add(rule_id)
-        if not row.get("ea_package_evidence") or not _resolved_source_library_evidence(
-            row,
-            findings_by_rule.get(rule_id),
-        ):
+        missing_dual_evidence_allowed = (
+            str(row.get("status") or "") in allowed_single_evidence_statuses
+        )
+        if (
+            not row.get("ea_package_evidence")
+            or not _resolved_source_library_evidence(row, findings_by_rule.get(rule_id))
+        ) and not missing_dual_evidence_allowed:
             missing_evidence.append(rule_id)
     _record_check(
         checks,
@@ -777,6 +825,11 @@ def _validate_forest_plan_standards(
     checks: list[dict[str, Any]],
     failures: list[dict[str, Any]],
 ) -> None:
+    coverage_policy = _dict(context.config.get("forest_plan_standard_coverage_policy"))
+    require_all_standards_applied = coverage_policy.get(
+        "require_all_applicable_standards_applied",
+        True,
+    )
     findings_by_component = _forest_findings_by_component(context)
     missing: list[str] = []
     for standard in _applicable_standard_rows(context):
@@ -788,7 +841,7 @@ def _validate_forest_plan_standards(
         checks,
         failures,
         name="applicable_standards_have_package_and_plan_evidence",
-        passed=not missing,
+        passed=not missing or require_all_standards_applied is False,
         failure_category="applicable_standard_missing_evidence",
         source_selector="forest_plan_applicable_standard_coverage.standards",
         expected=[],

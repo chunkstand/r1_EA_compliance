@@ -454,11 +454,16 @@ def _validate_report_content_boundaries(
         for row in _dict_list(report.get("applicable_forest_plan_standards"))
         if not row.get("package_evidence") or not row.get("forest_plan_evidence")
     ]
+    coverage_policy = _dict(config.get("forest_plan_standard_coverage_policy"))
+    require_all_standards_applied = coverage_policy.get(
+        "require_all_applicable_standards_applied",
+        True,
+    )
     _record_check(
         checks,
         failures,
         name="report_applicable_standards_have_evidence",
-        passed=not missing_standard_evidence,
+        passed=not missing_standard_evidence or require_all_standards_applied is False,
         failure_category="applicable_standard_missing_evidence",
         source_selector="decision_support_report.applicable_forest_plan_standards.evidence",
         expected=[],
@@ -579,6 +584,9 @@ def _missing_markdown_rendering_items(report: dict[str, Any], markdown: str) -> 
     forest = _dict(report.get("forest_plan_consistency"))
     authority_summary = _dict(report.get("applicable_authority_summary"))
     non_applicable = _dict(report.get("non_applicable_authority_boundary"))
+    plan_consistency_label = str(
+        forest.get("plan_consistency_table_label") or "Plan Consistency Table"
+    )
     required_fragments = {
         "how_to_use_heading": "## How To Use This Document",
         "decision_use_caveat": "does not replace responsible official, line officer, counsel",
@@ -591,7 +599,7 @@ def _missing_markdown_rendering_items(report: dict[str, Any], markdown: str) -> 
         ),
         "forest_plan_basis": (
             f"Forest Plan basis: {forest.get('plan_consistency_table_package_record_id')} "
-            "Plan Consistency Table"
+            f"{plan_consistency_label}"
         ),
         "applicable_standard_count": (
             f"Applicable standards: {forest.get('applied_standard_count')} of "

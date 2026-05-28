@@ -161,6 +161,35 @@ def test_review_packet_gate_allows_final_qa_bootstrap_only_for_downstream_row_mi
     )
 
 
+def test_review_packet_gate_allows_initial_final_qa_artifact_family_gap() -> None:
+    gate = {
+        "gate_name": "review_packet_index_validation",
+        "required_pass_selector": "passed",
+        "expected_value": True,
+    }
+    validation = {
+        "checks": [
+            {
+                "name": "final_qa_report_exists_and_parses",
+                "passed": False,
+            },
+            {
+                "name": "final_qa_authority_rows_match_applicability",
+                "passed": False,
+            },
+        ]
+    }
+
+    assert (
+        _current_promotion_suite_self_reference_allowed(
+            gate=gate,
+            data=validation,
+            expected_counts={},
+        )
+        is True
+    )
+
+
 def test_review_packet_gate_rejects_unrelated_packet_validation_drift() -> None:
     gate = {
         "gate_name": "review_packet_index_validation",

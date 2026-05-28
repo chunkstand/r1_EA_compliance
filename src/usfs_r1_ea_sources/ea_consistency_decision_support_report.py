@@ -85,7 +85,10 @@ def _build_report(
             "standard_count": counts["forest_plan_standard_count"],
             "applicable_standard_count": counts["forest_plan_applicable_standard_count"],
             "applied_standard_count": counts["forest_plan_applied_standard_count"],
-            "plan_consistency_table_package_record_id": "EA-PACKAGE-042",
+            "plan_consistency_table_package_record_id": _plan_consistency_source_record_id(
+                context
+            ),
+            "plan_consistency_table_label": _plan_consistency_label(context),
             "component_rows": component_rows,
             "source_selectors": [
                 _selector(
@@ -94,7 +97,7 @@ def _build_report(
                 ),
                 _selector(
                     context.artifacts["plan_consistency_table_text"].path,
-                    "source_record_id=EA-PACKAGE-042",
+                    f"source_record_id={_plan_consistency_source_record_id(context)}",
                 ),
             ],
         },
@@ -430,6 +433,26 @@ def _residual_risks(context: _DecisionSupportContext) -> list[dict[str, Any]]:
     authority_resolution = context.payload("authority_reviewer_resolution_report")
     forest_queue = context.payload("forest_plan_reviewer_resolution_queue")
     risk_flags = _dict_list(risk_summary.get("risk_flags"))
+    forest_queue_item_count = len(forest_queue.get("items") or [])
+    coverage_policy = _dict(context.config.get("forest_plan_standard_coverage_policy"))
+    component_eval_controls_open_standards = (
+        coverage_policy.get("require_all_applicable_standards_applied") is False
+        and coverage_policy.get("accepted_basis") == "component_eval_contract_passed"
+        and _dict(context.payload("forest_plan_component_eval_results")).get("passed") is True
+    )
+    if forest_queue_item_count:
+        forest_queue_rationale = (
+            "Forest Plan reviewer-resolution rows remain visible as component-eval-"
+            "controlled system-miss records under the configured contract."
+            if component_eval_controls_open_standards
+            else "Forest Plan reviewer-resolution rows remain open."
+        )
+        forest_queue_severity = (
+            "informational" if component_eval_controls_open_standards else "reviewer_resolution_open"
+        )
+    else:
+        forest_queue_rationale = "No Forest Plan reviewer-resolution items are open."
+        forest_queue_severity = "none"
     return [
         {
             "risk_id": "risk:non-applicable-authority-boundary",
@@ -479,11 +502,11 @@ def _residual_risks(context: _DecisionSupportContext) -> list[dict[str, Any]]:
         {
             "risk_id": "risk:forest-plan-resolution-status",
             "category": "reviewer_resolution",
-            "severity": "none",
+            "severity": forest_queue_severity,
             "deterministic_basis": True,
             "legal_conclusion": False,
-            "pending_resolution_count": len(forest_queue.get("items") or []),
-            "rationale": "No Forest Plan reviewer-resolution items are open.",
+            "pending_resolution_count": forest_queue_item_count,
+            "rationale": forest_queue_rationale,
             "source_artifact_path": str(
                 context.artifacts["forest_plan_reviewer_resolution_queue"].path
             ),
@@ -556,6 +579,16 @@ def _source_dependencies(context: _DecisionSupportContext) -> list[dict[str, Any
         }
     )
     return dependencies
+
+
+def _plan_consistency_source_record_id(context: _DecisionSupportContext) -> str:
+    policy = _dict(context.config.get("forest_plan_consistency_source"))
+    return str(policy.get("package_source_record_id") or "EA-PACKAGE-042")
+
+
+def _plan_consistency_label(context: _DecisionSupportContext) -> str:
+    policy = _dict(context.config.get("forest_plan_consistency_source"))
+    return str(policy.get("label") or "Plan Consistency Table")
 
 
 def _section_dependencies(context: _DecisionSupportContext) -> dict[str, list[str]]:

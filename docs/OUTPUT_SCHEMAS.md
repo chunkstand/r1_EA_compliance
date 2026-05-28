@@ -2658,6 +2658,19 @@ allowed caveat text, residual-risk grouping, report-quality eval expectations, a
 implementation-confirmation selectors. Implementation-confirmation rows are not compliance
 findings. Each config row must have a stable confirmation ID, display label, evidence status,
 allowed status values, source selectors, and constrained wording guidance.
+Review-specific configs may also declare:
+
+- `forest_plan_consistency_source`, with `package_source_record_id` and `label`, when the proving
+  EA's Plan Consistency Table is not the default East Crazies `EA-PACKAGE-042` record;
+- `forest_plan_standard_coverage_policy`, including
+  `require_all_applicable_standards_applied=false`,
+  `accepted_basis="component_eval_contract_passed"`, and
+  `require_component_eval_contract=true`, when applicable-standard coverage is governed by a
+  passing component-eval contract instead of all applicable standards being directly applied in the
+  EA text; and
+- `authority_evidence_policy`, including `allow_single_evidence_statuses` and
+  `require_dual_evidence_for_statuses`, when gap or uncertain findings may be explicit packet risks
+  with one evidence side while pass findings still require both package and source-library evidence.
 
 `config/fixtures/decision_support/v1_ecid_decision_support_expected_summary.json` has schema version
 `ea-consistency-decision-support-expected-summary-v1`. It locks the East Crazies proving-review
@@ -2869,21 +2882,26 @@ mutation cases over the reviewed-draft generator and proves fail-closed
 handling for unsupported legal-conclusion requests, missing citations, stale
 authority traces, contradictory evidence, and reviewer-warning insertion.
 
-## East Crazies Final QA And Certification Outputs
+## Final QA And Certification Outputs
 
 Path: `source_library/reviews/<review_id>/final_qa/`
 
-The East Crazies final QA and certification artifact family is a replayable closeout packet over
-existing audited artifacts for the promoted East Crazy Inspiration Divide review. It is not a new
-compliance review, legal sufficiency determination, responsible-official approval, line-officer
-approval, counsel certification, or Region 1 expansion claim. The configured proving review is
-`v1-cg-ecid-compliance-review` over source set `source-set-ba8d0feae79501b8`.
+The final QA and certification artifact family is a replayable closeout packet over existing
+audited artifacts for a promoted review. It is not a new compliance review, legal sufficiency
+determination, responsible-official approval, line-officer approval, counsel certification, or
+Region 1 expansion claim. The original configured proving review is
+`v1-cg-ecid-compliance-review`; review-specific configs may target other governed examples such as
+`west-reservoir-67436` on `source-set-f70ea11e04ae3d53`. The file names and schema names retain
+the historical `east_crazies` / `east-crazies` prefix for compatibility, even when the report title,
+subject label, config path, expected summary path, and review identity are review-specific.
 
 Sequence 1 defines the tracked contract and fixtures, and Sequence 2 implements the deterministic
 generator/validator CLI:
 
 - `config/east_crazies_final_qa_certification_v1.json`
 - `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json`
+- `config/west_reservoir_final_qa_certification_v1.json`
+- `config/fixtures/final_qa/west_reservoir_final_qa_expected_summary.json`
 - `tests/fixtures/final_qa/minimal_final_qa_certification_report.json`
 - `src/usfs_r1_ea_sources/final_qa_certification.py`
 - `src/usfs_r1_ea_sources/cli_final_qa.py`
@@ -2991,6 +3009,12 @@ fields, prohibited certification phrases, rendering requirements, manual-draft p
 fail-closed categories. Its `required_count_fields` must cover every scalar expected-summary count,
 and its `validation_expectations` map the Sequence 1 acceptance criteria to the failure categories
 that later runtime validation must use.
+Review-specific configs may also set `report_title` and `report_subject_label` for rendered output
+while preserving the compatibility schema and filenames. `authority_evidence_policy` may permit
+single-sided evidence pointers for explicit gap or uncertain rows, but pass rows still require
+both package and source-library evidence. A review with no accepted-pending V1 risk may set the
+accepted-risk ledger counts to `0`; validation treats an empty risk list as visible only when the
+expected accepted-pending count is also `0`.
 
 `config/fixtures/final_qa/v1_ecid_final_qa_expected_summary.json` has schema version
 `east-crazies-final-qa-expected-summary-v1`. It locks current East Crazies semantic counts, source
@@ -3030,7 +3054,8 @@ Final QA validation must fail closed on:
 - input hash mismatch;
 - count drift;
 - missing required gate sections;
-- missing citations or source selectors;
+- missing citations or source selectors, including pass findings without both package and
+  source-library evidence pointers;
 - missing non-applicable boundary evidence;
 - unresolved reviewer items;
 - invalid report PDF header;

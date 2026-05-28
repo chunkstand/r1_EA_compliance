@@ -1,0 +1,215 @@
+{
+  "as_of_date": "2026-05-28",
+  "authority_group_order": [
+    "law",
+    "regulation",
+    "executive_order",
+    "agency_policy",
+    "state_shpo_requirement",
+    "case_law_review_lens",
+    "forest_plan"
+  ],
+  "config_id": "west-reservoir-ea-consistency-decision-support-v1",
+  "decision_use_caveat": "This generated document is decision support. It is not legal advice, a legal sufficiency determination, responsible-official approval, counsel certification, or a final agency decision.",
+  "authority_evidence_policy": {
+    "allow_single_evidence_statuses": [
+      "gap",
+      "uncertain"
+    ],
+    "require_dual_evidence_for_statuses": [
+      "pass"
+    ]
+  },
+  "forest_plan_consistency_source": {
+    "label": "Final Environmental Assessment forest-plan consistency evidence",
+    "package_source_record_id": "EA-PACKAGE-011"
+  },
+  "forest_plan_standard_coverage_policy": {
+    "accepted_basis": "component_eval_contract_passed",
+    "require_all_applicable_standards_applied": false,
+    "require_component_eval_contract": true
+  },
+  "implementation_confirmations": [
+    {
+      "allowed_report_wording": "Use the final EA as the source-boundary confirmation; do not treat this row as line-officer approval.",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "confirmation_id": "final_ea_record_boundary",
+      "display_order": 10,
+      "evidence_status": "evidence_linked_confirmation_required",
+      "group": "record_boundary",
+      "label": "Final EA record boundary",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/west-reservoir-67436/package/package_chunks.jsonl",
+          "required": true,
+          "selector": "source_record_id=EA-PACKAGE-011;chunk_id=chunk:10482e4cd3060a604944b81b25618caa",
+          "selector_type": "package_chunk"
+        },
+        {
+          "artifact_path": "source_library/reviews/west-reservoir-67436/compliance_matrix.json",
+          "required": true,
+          "selector": "rule_id=apa_final_agency_action",
+          "selector_type": "authority_finding"
+        }
+      ]
+    },
+    {
+      "allowed_report_wording": "Keep Forest Plan consistency tied to generated component-eval evidence and explicit package support.",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "confirmation_id": "forest_plan_consistency_evidence",
+      "display_order": 20,
+      "evidence_status": "evidence_linked_confirmation_required",
+      "group": "forest_plan",
+      "label": "Forest Plan consistency evidence",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/west-reservoir-67436/package/package_chunks.jsonl",
+          "required": true,
+          "selector": "source_record_id=EA-PACKAGE-011;chunk_id=chunk:10482e4cd3060a604944b81b25618caa",
+          "selector_type": "package_chunk"
+        },
+        {
+          "artifact_path": "source_library/reviews/west-reservoir-67436/compliance_matrix.json",
+          "required": true,
+          "selector": "rule_id=planning_rule_36cfr_21915_consistency",
+          "selector_type": "authority_finding"
+        }
+      ]
+    },
+    {
+      "allowed_report_wording": "Record road monitoring as an implementation confirmation, not a new compliance finding.",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "confirmation_id": "road_access_closure_monitoring",
+      "display_order": 30,
+      "evidence_status": "evidence_linked_confirmation_required",
+      "group": "access",
+      "label": "Road access and closure monitoring",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/west-reservoir-67436/package/package_chunks.jsonl",
+          "required": true,
+          "selector": "source_record_id=EA-PACKAGE-007;chunk_id=chunk:e8f6511f6b5531aa19cd7c3b6841cdaf",
+          "selector_type": "package_chunk"
+        },
+        {
+          "artifact_path": "source_library/reviews/west-reservoir-67436/compliance_matrix.json",
+          "required": true,
+          "selector": "rule_id=roads_access_special_use_action_authorities_authority_template",
+          "selector_type": "authority_finding"
+        }
+      ]
+    },
+    {
+      "allowed_report_wording": "Preserve species controls as evidence-linked implementation checks separate from legal sufficiency conclusions.",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "confirmation_id": "wildlife_species_controls",
+      "display_order": 40,
+      "evidence_status": "evidence_linked_confirmation_required",
+      "group": "resource_protection",
+      "label": "Wildlife and species controls",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/west-reservoir-67436/package/package_chunks.jsonl",
+          "required": true,
+          "selector": "source_record_id=EA-PACKAGE-004;chunk_id=chunk:d1f12d470a69f56273d6b3cd49845a5f",
+          "selector_type": "package_chunk"
+        },
+        {
+          "artifact_path": "source_library/reviews/west-reservoir-67436/compliance_matrix.json",
+          "required": true,
+          "selector": "rule_id=esa_section_7",
+          "selector_type": "authority_finding"
+        }
+      ]
+    },
+    {
+      "allowed_report_wording": "Use decision notice and FONSI material as review support without asserting final agency decision certification.",
+      "allowed_status_values": [
+        "requires_confirmation",
+        "confirmed_by_evidence",
+        "not_applicable"
+      ],
+      "confirmation_id": "decision_notice_and_fonsi",
+      "display_order": 50,
+      "evidence_status": "evidence_linked_confirmation_required",
+      "group": "decision_record",
+      "label": "Decision notice and FONSI evidence",
+      "source_selectors": [
+        {
+          "artifact_path": "source_library/reviews/west-reservoir-67436/package/package_chunks.jsonl",
+          "required": true,
+          "selector": "source_record_id=EA-PACKAGE-012;chunk_id=chunk:cbdebb3b29aea1777bc0745a02780ce1",
+          "selector_type": "package_chunk"
+        },
+        {
+          "artifact_path": "source_library/reviews/west-reservoir-67436/compliance_matrix.json",
+          "required": true,
+          "selector": "rule_id=usda_nepa_fonsi_7cfr_1b6",
+          "selector_type": "authority_finding"
+        }
+      ]
+    }
+  ],
+  "manual_draft_policy": {
+    "blocked_path_prefixes": [
+      "East_Crazies_",
+      "West_Reservoir_"
+    ],
+    "canonical_output_dir": "source_library/reviews/west-reservoir-67436/decision_support/",
+    "root_east_crazies_drafts_are_canonical": false
+  },
+  "report_eval_expectations": [],
+  "report_schema_version": "ea-consistency-decision-support-report-v1",
+  "residual_risk_group_order": [
+    "reviewer_resolution",
+    "non_applicable_authority_boundary",
+    "implementation_confirmation",
+    "artifact_freshness",
+    "validation"
+  ],
+  "residual_risk_rules": [
+    {
+      "legal_conclusion": false,
+      "risk_source_id": "non_applicable_authority_boundary"
+    },
+    {
+      "legal_conclusion": false,
+      "risk_source_id": "authority_resolution_status"
+    },
+    {
+      "legal_conclusion": false,
+      "risk_source_id": "forest_plan_resolution_status"
+    }
+  ],
+  "review_id": "west-reservoir-67436",
+  "schema_version": "ea-consistency-decision-support-config-v1",
+  "section_order": [
+    "executive_determination",
+    "record_and_artifact_inventory",
+    "applicable_authority_summary",
+    "authority_findings",
+    "forest_plan_consistency",
+    "applicable_forest_plan_standards",
+    "non_applicable_authority_boundary",
+    "implementation_confirmation_checklist",
+    "residual_risk_register",
+    "validation_and_replay"
+  ],
+  "source_set_id": "source-set-f70ea11e04ae3d53"
+}

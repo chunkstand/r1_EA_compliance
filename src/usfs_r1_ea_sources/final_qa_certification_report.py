@@ -66,6 +66,8 @@ def _build_report(
     report = {
         "schema_version": config["report_schema_version"],
         "report_id": f"{review_id}:final-qa-certification",
+        "report_title": str(config.get("report_title") or "East Crazies Final QA Certification"),
+        "report_subject_label": str(config.get("report_subject_label") or "East Crazy"),
         "created_at": now,
         "generator_version": GENERATOR_VERSION,
         "review_id": review_id,
@@ -333,17 +335,20 @@ def _accepted_v1_risk_ledger(
                 }
             )
     return {
-        "policy_mode": conditional.get("policy_mode", expected_ledger["policy_mode"]),
-        "accepted_pending_count": conditional.get(
-            "accepted_pending_count",
+        "policy_mode": _coalesce(
+            conditional.get("policy_mode"),
+            expected_ledger["policy_mode"],
+        ),
+        "accepted_pending_count": _coalesce(
+            conditional.get("accepted_pending_count"),
             expected_ledger["accepted_pending_count"],
         ),
-        "actual_pending_count": conditional.get(
-            "actual_pending_count",
+        "actual_pending_count": _coalesce(
+            conditional.get("actual_pending_count"),
             expected_ledger["actual_pending_count"],
         ),
-        "actual_pending_applicable_count": conditional.get(
-            "actual_pending_applicable_count",
+        "actual_pending_applicable_count": _coalesce(
+            conditional.get("actual_pending_applicable_count"),
             expected_ledger["actual_pending_applicable_count"],
         ),
         "accepted_pending_rule_ids": conditional.get(
@@ -354,6 +359,10 @@ def _accepted_v1_risk_ledger(
         "source_selector": expected_ledger["source_selector"],
         "risks": risks,
     }
+
+
+def _coalesce(value: Any, fallback: Any) -> Any:
+    return fallback if value is None else value
 
 
 def _forest_plan_standard_row(row: Mapping[str, Any]) -> dict[str, Any]:
@@ -506,12 +515,14 @@ def _render_markdown(report: Mapping[str, Any]) -> str:
     promotion = report["gate_replay_summary"]["current_promotion_suite"]
     packet = report["review_packet_index_qa"]
     accepted = report["accepted_v1_risk_ledger"]
+    report_title = str(report.get("report_title") or "East Crazies Final QA Certification")
+    subject = str(report.get("report_subject_label") or "East Crazy")
     lines = [
-        "# East Crazies Final QA Certification",
+        f"# {report_title}",
         "",
         "## How To Use This Packet",
         "",
-        "Use this packet as deterministic machine QA over the existing audited East Crazy "
+        f"Use this packet as deterministic machine QA over the existing audited {subject} "
         "review artifacts. It is not a new compliance review, legal sufficiency "
         "determination, responsible-official approval, counsel certification, or final "
         "agency decision.",
@@ -629,8 +640,9 @@ def _pdf_lines(report: Mapping[str, Any]) -> list[str]:
     phase = report["gate_replay_summary"]["phase_eval"]
     packet = report["review_packet_index_qa"]
     accepted = report["accepted_v1_risk_ledger"]
+    report_title = str(report.get("report_title") or "East Crazies Final QA Certification")
     return [
-        "East Crazies Final QA Certification",
+        report_title,
         "How To Use This Packet",
         "Machine Replay Status",
         f"Review ID: {report['review_id']}",

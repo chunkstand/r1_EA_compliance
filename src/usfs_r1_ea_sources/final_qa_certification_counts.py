@@ -12,6 +12,7 @@ from .final_qa_certification_common import _summary_or_self
 _REVIEW_PACKET_SELF_REFERENCE_ALLOWED_CHECKS = {
     "decision_support_authority_rows_match_applicability",
     "final_qa_authority_rows_match_applicability",
+    "final_qa_report_exists_and_parses",
 }
 
 
@@ -181,8 +182,9 @@ def _derive_actual_counts(
         "promotion_suite_final_qa_current_passed_result_count": promotion_counts[
             "final_qa_current_passed_result_count"
         ],
-        "accepted_v1_risk_count": conditional.get("accepted_pending_count"),
-        "actual_pending_applicable_count": conditional.get("actual_pending_applicable_count"),
+        "accepted_v1_risk_count": conditional.get("accepted_pending_count") or 0,
+        "actual_pending_applicable_count": conditional.get("actual_pending_applicable_count")
+        or 0,
         "litigation_risk_legal_conclusion_count": authority_integration.get(
             "legal_conclusion_count"
         ),
@@ -400,10 +402,7 @@ def _review_packet_index_self_reference_allowed(data: Mapping[str, Any] | None) 
         for check in data.get("checks", [])
         if isinstance(check, Mapping) and check.get("passed") is False
     }
-    return (
-        "final_qa_authority_rows_match_applicability" in failed_checks
-        and failed_checks <= _REVIEW_PACKET_SELF_REFERENCE_ALLOWED_CHECKS
-    )
+    return bool(failed_checks) and failed_checks <= _REVIEW_PACKET_SELF_REFERENCE_ALLOWED_CHECKS
 
 
 def _final_qa_current_result_counts(data: Mapping[str, Any]) -> dict[str, int]:

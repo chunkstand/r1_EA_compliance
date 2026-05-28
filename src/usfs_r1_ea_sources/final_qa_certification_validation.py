@@ -137,16 +137,25 @@ def _validate_report(
     _add_check(
         checks,
         name="finding_trace_ids_present",
-        passed=_finding_trace_ids_present(findings),
+        passed=_finding_trace_ids_present(findings, config),
         category="missing_citation_or_source_selector",
         details={"selector": "finding_qa.findings[].trace_ids"},
     )
+    accepted_pending_count = _selector_value(
+        report,
+        "accepted_v1_risk_ledger.accepted_pending_count",
+    )
+    expected_accepted_pending_count = expected["accepted_v1_risk_ledger"][
+        "accepted_pending_count"
+    ]
     _add_check(
         checks,
         name="accepted_v1_risk_visible",
-        passed=_selector_value(report, "accepted_v1_risk_ledger.accepted_pending_count")
-        == expected["accepted_v1_risk_ledger"]["accepted_pending_count"]
-        and bool(_selector_value(report, "accepted_v1_risk_ledger.risks")),
+        passed=accepted_pending_count == expected_accepted_pending_count
+        and (
+            expected_accepted_pending_count == 0
+            or bool(_selector_value(report, "accepted_v1_risk_ledger.risks"))
+        ),
         category="accepted_v1_risk_hidden",
         details={"selector": "accepted_v1_risk_ledger"},
     )
@@ -454,9 +463,18 @@ def _rows_have_source_selectors(rows: list[Any]) -> bool:
     )
 
 
-def _finding_trace_ids_present(rows: list[Any]) -> bool:
+def _finding_trace_ids_present(rows: list[Any], config: Mapping[str, Any]) -> bool:
     if not rows:
         return False
+    evidence_policy = config.get("authority_evidence_policy")
+    allowed_single_evidence_statuses = {
+        str(status)
+        for status in (
+            evidence_policy.get("allow_single_evidence_statuses", [])
+            if isinstance(evidence_policy, Mapping)
+            else []
+        )
+    }
     required_fields = {
         "rule_id",
         "candidate_authority_id",
@@ -471,8 +489,13 @@ def _finding_trace_ids_present(rows: list[Any]) -> bool:
         pointers = row.get("source_pointers")
         if not isinstance(pointers, Mapping):
             return False
+        missing_dual_evidence_allowed = (
+            str(row.get("status") or "") in allowed_single_evidence_statuses
+        )
         for pointer_key in ("ea_package_evidence", "source_library_evidence"):
             pointer = pointers.get(pointer_key)
+            if pointer is None and missing_dual_evidence_allowed:
+                continue
             if not isinstance(pointer, Mapping):
                 return False
             if not pointer.get("artifact_path") or not pointer.get("chunk_id"):

@@ -65,6 +65,7 @@ def run_ea_consistency_decision_support(
         output_dir=output_dir,
         review_dir=review_dir,
         review_id=selected_review_id,
+        config=config,
     )
     context = _DecisionSupportContext(
         output_dir=output_dir,
@@ -196,6 +197,7 @@ def validate_ea_consistency_decision_support_report(
             output_dir=output_dir,
             review_dir=review_dir,
             review_id=selected_review_id,
+            config=config,
         )
         context = _DecisionSupportContext(
             output_dir=output_dir,

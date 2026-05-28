@@ -12,10 +12,13 @@ the f70 forest-plan identity/source-capture child packet is resolved, and
 `forest-plan-resolve` now emits current Flathead context/component artifacts
 with `forest_plan_context_validation.json` passing on f70. Parent Milestone 2
 component readiness is resolved locally on f70. Parent Milestone 3 compliance
-and V1 readiness promotion is resolved locally. The active parent stop is now
-Milestone 4 phase eval and signer-facing packet closeout, starting with the
-missing West Reservoir decision-support and final-QA artifacts that keep
-`review-packet-index` validation red.
+and V1 readiness promotion is resolved locally. Parent Milestone 4
+signer-facing packet and phase-eval closeout is resolved locally: West
+Reservoir-owned decision-support and final-QA configs/fixtures now drive the
+packet artifacts, `review-packet-index` passes with `30/30` checks,
+`phase-eval` passes `31/31`, and the real-package and forest-specific
+aggregate gates pass. The only remaining red aggregate is inherited ECID
+source-delta component coverage, not the West Reservoir slot.
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -172,9 +175,22 @@ is green with `component_inventory_present=true`,
   source-set aligns on `source-set-f70ea11e04ae3d53`; aggregate component
   coverage reports `covered_review_count=4/5`, `stale_identity_count=1`, and
   `unresolved_review_count=1`.
-- Current missing downstream artifacts still include:
-  `compliance_review.json`, `compliance_matrix.json`,
-  `compliance_validation.json`, and `authority_explanation_paths.json`.
+- Current signer-facing packet artifacts include West Reservoir-owned
+  decision-support config
+  `config/west_reservoir_ea_consistency_decision_support_v1.json`, expected
+  summary
+  `config/fixtures/decision_support/west_reservoir_decision_support_expected_summary.json`,
+  final-QA config `config/west_reservoir_final_qa_certification_v1.json`, and
+  final-QA expected summary
+  `config/fixtures/final_qa/west_reservoir_final_qa_expected_summary.json`.
+- Current `review-packet-index --review-id west-reservoir-67436` passes with
+  `check_count=30`, `failed_check_count=0`,
+  `applicable_authority_count=44`, `non_applicable_authority_count=102`,
+  `forest_plan_component_row_count=56`, and `applicable_standard_count=14`.
+- Current `phase-eval --review-id west-reservoir-67436` passes on
+  `source-set-f70ea11e04ae3d53` with `phase_count=31`,
+  `passed_phase_count=31`, `reviewer_ready_phase_count=31`, and
+  `blockers=[]`.
 - Historical 4fb component eval baseline:
   the Milestone 0 rerun before f70 migration aligned to
   `source-set-4fb59e9eb43045cb` and failed `0/27` cases before the f70
@@ -184,10 +200,10 @@ is green with `component_inventory_present=true`,
   applicability/status mismatches, citation mismatches, reviewer-resolution
   mismatches, and `20` standard coverage gaps.
 - Historical artifact warning:
-  `source_library/reviews/west-reservoir-67436/phase_eval_results.json`
-  currently reports a green historical run on
-  `source-set-5e65d845ce77e1a0`. That artifact is not current readiness proof
-  for this packet.
+  the old West Reservoir green phase result on
+  `source-set-5e65d845ce77e1a0` is superseded by the current
+  `source-set-f70ea11e04ae3d53` phase eval above and must not be reused as
+  readiness proof for this packet.
 
 ## Pre-Migration Blocker Map
 
@@ -717,8 +733,8 @@ Exit criteria:
 - `compliance_matrix.json`, `compliance_matrix.md`, and
   `compliance_matrix.pdf` exist; the PDF is non-empty. Phase-eval acceptance
   is still a Milestone 4 gate.
-- Review packet index outputs exist, but validation remains red with exactly
-  two missing signer-facing downstream artifacts:
+- At Milestone 3 closeout, review packet index outputs existed and validation
+  was still red with exactly two missing signer-facing downstream artifacts:
   `decision_support/ea_consistency_decision_support.json` and
   `final_qa/east_crazies_final_qa_certification.json`.
 - V1 eval reports `contract_status="reviewer_ready"`,
@@ -764,8 +780,11 @@ Milestone 3 closeout evidence on 2026-05-28:
 
 ### Milestone 4 - Phase Eval, Aggregate Reporting, Docs, And Commit Closeout
 
-Outcome label: pending until signer-facing packet artifacts, review-scoped
-phase eval, and aggregate reporting are all current.
+Status: Resolved locally on 2026-05-28.
+
+Outcome label: resolved for the West Reservoir signer-facing packet and
+review-scoped phase-eval closeout. Aggregate component coverage remains red
+only for the inherited non-West ECID source-delta slot.
 
 Close the packet only after review-scoped phase eval and aggregate gates agree
 with the promoted status.
@@ -802,6 +821,45 @@ Exit criteria:
   aggregate component coverage is not fully green.
 - The packet is not complete until the verified docs/config/tests slice is
   committed locally.
+
+Milestone 4 closeout evidence on 2026-05-28:
+
+- `ea-consistency-document --review-id west-reservoir-67436 --config
+  config/west_reservoir_ea_consistency_decision_support_v1.json
+  --expected-summary
+  config/fixtures/decision_support/west_reservoir_decision_support_expected_summary.json
+  --validate-only` passed with `failure_count=0`,
+  `reviewer_ready=true`, `validation_status="passed"`, and
+  `review_packet_index_validation_failed_check_count=0`.
+- `final-qa-certification --review-id west-reservoir-67436 --config
+  config/west_reservoir_final_qa_certification_v1.json --expected-summary
+  config/fixtures/final_qa/west_reservoir_final_qa_expected_summary.json
+  --validate-only` passed with `check_count=200`, `failed_check_count=0`,
+  and `machine_replay_status="passed"`.
+- `review-packet-index --review-id west-reservoir-67436` passed with
+  `check_count=30`, `failed_check_count=0`, `applicable_authority_count=44`,
+  `non_applicable_authority_count=102`,
+  `forest_plan_component_row_count=56`, and `applicable_standard_count=14`.
+- `phase-eval --review-id west-reservoir-67436` passed on
+  `source-set-f70ea11e04ae3d53` with `phase_count=31`,
+  `passed_phase_count=31`, `reviewer_ready_phase_count=31`, and
+  `blockers=[]`.
+- `real-package-review-coverage-eval` passed with `covered_slot_count=4`,
+  `required_slot_count=4`, `reviewer_ready_slot_count=4`, and
+  `typed_blocked_slot_count=0`.
+- `forest-specific-example-package-eval` passed with
+  `review_example_count=4`, `reviewer_ready_example_count=4`,
+  `typed_blocked_example_count=0`, and
+  `actual_routing_status_counts={"profile_eval_guidance_only":7,"real_package_examples_available":3}`.
+- `forest-plan-component-eval-coverage` still exits red at the aggregate
+  level, but the West Reservoir slot passes and source-set aligns. The
+  remaining red slot is `ecid-source-delta-replay` /
+  `v1-cg-ecid-source-delta-review` with `result_not_passed` and
+  `result_source_set_id_mismatch`; aggregate counts are
+  `covered_review_count=4/5`, `stale_identity_count=1`, and
+  `unresolved_review_count=1`.
+- No ignored `source_library/` artifacts are part of the tracked closeout
+  slice.
 
 ## Verification Gates
 
@@ -949,7 +1007,7 @@ occur:
       `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 - [x] Milestone 2 component eval passes `27/27`
 - [x] Milestone 3 compliance and V1 readiness gates pass
-- [ ] Milestone 4 phase eval and aggregate gates rerun
+- [x] Milestone 4 signer-facing packet, phase eval, and aggregate gates rerun
 - [x] Docs and session handoff updated with exact counts and residual blockers for Milestone 0
 - [x] Verification commands recorded for Milestone 0
 - [x] Stage only intended docs/config/tests/source changes for Milestone 0
@@ -958,3 +1016,4 @@ occur:
 - [x] Milestone 1 Flathead scoping commit recorded: `267ba9d`
 - [x] Milestone 1 source-evidence blocker route commit recorded: `0773ef7`
 - [x] Docs-only Bitter Lesson alignment commit recorded: `3a5e6b3`
+- [x] Milestone 4 local closeout verification recorded in this plan

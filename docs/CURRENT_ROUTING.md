@@ -4,13 +4,11 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved packet:
-  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
-- Active forest-specific example packet:
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - Latest resolved West Reservoir parent slice:
-  Milestone 3 compliance review and V1 readiness promotion in
+  Milestone 4 signer-facing packet and phase-eval closeout in
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - Latest resolved West Reservoir child blocker:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
@@ -25,30 +23,22 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- West Reservoir reviewer-readiness planning is the active forest-specific
-  example packet. Use
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4 for
-  the next implementation slice. Parent Milestone 3 is resolved locally:
-  generated-pack `compliance-review` passed on
-  `source-set-f70ea11e04ae3d53` with `reviewer_ready=true`,
-  `validation_passed=true`, `finding_count=44`, and
-  `finding_status_counts={"gap":3,"pass":26,"uncertain":15}`; V1 eval passed
-  with `contract_status="reviewer_ready"`, `actual_overall_passed=true`,
-  `broader_ea_passed=true`, `forest_plan_passed=true`, and empty failure
-  categories; real-package coverage passed with
-  `reviewer_ready_slot_count=4` and `typed_blocked_slot_count=0`; and the
-  forest-specific registry passed with `flathead-nf` routed to
-  `real_package_examples_available` through
-  `flathead-west-reservoir-forest-specific`. The next stop is not another
-  V1 promotion. It is the signer-facing packet/phase closeout: current
-  `review-packet-index --review-id west-reservoir-67436` writes the index
-  outputs but fails validation with `failed_check_count=2` and
-  `failure_category_counts={"missing_required_artifact":2}` because
-  `decision_support/ea_consistency_decision_support.json` and
-  `final_qa/east_crazies_final_qa_certification.json` are absent for West
-  Reservoir. Do not fabricate those from East Crazies contracts; generate or
-  route a West Reservoir-owned artifact family first, then rerun packet index,
-  phase eval, and the aggregate gates.
+- West Reservoir reviewer-readiness Milestone 4 is resolved locally on
+  `source-set-f70ea11e04ae3d53`. West Reservoir-owned decision-support and
+  final-QA configs/fixtures now drive the signer-facing packet artifacts;
+  `review-packet-index --review-id west-reservoir-67436` passes with
+  `check_count=30` and `failed_check_count=0`;
+  `final-qa-certification --validate-only` passes `200/200`; and
+  `phase-eval --review-id west-reservoir-67436` passes `31/31` with
+  `blockers=[]`. The real-package aggregate and forest-specific registry
+  aggregate pass with West Reservoir as reviewer-ready. The next active route
+  is not another West packet slice; it is the inherited ECID source-delta
+  component-coverage blocker if the user wants full aggregate component
+  coverage green. Current `forest-plan-component-eval-coverage` remains red
+  only on `ecid-source-delta-replay` /
+  `v1-cg-ecid-source-delta-review` (`result_not_passed` plus
+  `result_source_set_id_mismatch`), while the West Reservoir slot passes and
+  source-set aligns.
 - Milestone 0 in the West Reservoir packet is resolved locally as a historical
   baseline. Package authority remains green, the Milestone 0 V1 eval was a
   truthful typed-blocked baseline with only allowed blocker categories, and the
@@ -121,8 +111,9 @@ Use this file as the short current route before opening the append-only docs.
   `source-set-f70ea11e04ae3d53`, and the West Reservoir aggregate component
   slot now passes/source-set aligns. Parent Milestone 3 later promoted West
   Reservoir to reviewer-ready in the V1 contract, real-package manifest, and
-  forest-specific registry; Milestone 4 remains the active closeout route for
-  packet index validation, phase eval, and aggregate reporting.
+  forest-specific registry. Milestone 4 later closed packet index validation,
+  phase eval, and aggregate reporting for West Reservoir; the remaining red
+  aggregate is the separate ECID source-delta component-coverage slot.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson

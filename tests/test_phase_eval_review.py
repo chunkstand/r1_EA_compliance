@@ -10,6 +10,9 @@ from usfs_r1_ea_sources.draft_generation import run_draft_generate
 from usfs_r1_ea_sources.draft_generation_eval import run_draft_generation_eval
 from usfs_r1_ea_sources.evidence_graph import build_evidence_graph
 from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
+from usfs_r1_ea_sources.phase_eval_optional_phases import (
+    _review_packet_index_self_reference_allowed,
+)
 from usfs_r1_ea_sources.replay_context import ReplayContextMismatchError
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 
@@ -26,6 +29,26 @@ from tests.support.phase_eval_fixtures import write_replay_context
 
 
 class PhaseEvalReviewTests(unittest.TestCase):
+    def test_review_packet_index_phase_allows_initial_final_qa_self_reference(self) -> None:
+        validation = {
+            "checks": [
+                {"name": "final_qa_report_exists_and_parses", "passed": False},
+                {"name": "final_qa_authority_rows_match_applicability", "passed": False},
+            ]
+        }
+
+        self.assertTrue(_review_packet_index_self_reference_allowed(validation))
+
+    def test_review_packet_index_phase_rejects_unrelated_packet_failures(self) -> None:
+        validation = {
+            "checks": [
+                {"name": "final_qa_report_exists_and_parses", "passed": False},
+                {"name": "packet_index_rows_match_inventory", "passed": False},
+            ]
+        }
+
+        self.assertFalse(_review_packet_index_self_reference_allowed(validation))
+
     def test_review_phase_eval_auto_resolves_tracked_replay_context(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp)

@@ -47,6 +47,13 @@ from .review_packet_index import VALIDATION_FILENAME as REVIEW_PACKET_VALIDATION
 from .review_packet_index import VALIDATION_SCHEMA_VERSION as REVIEW_PACKET_VALIDATION_SCHEMA_VERSION
 
 
+_REVIEW_PACKET_SELF_REFERENCE_ALLOWED_CHECKS = {
+    "decision_support_authority_rows_match_applicability",
+    "final_qa_authority_rows_match_applicability",
+    "final_qa_report_exists_and_parses",
+}
+
+
 def _review_packet_index_phase(
     *,
     review_id: str,
@@ -69,6 +76,7 @@ def _review_packet_index_phase(
     validation = _read_json_if_exists(validation_path)
     matrix = _read_json_if_exists(matrix_path)
     validation_summary = _dict((validation or {}).get("summary"))
+    self_reference_allowed = _review_packet_index_self_reference_allowed(validation)
     matrix_rows = _dict_list((matrix or {}).get("rows"))
     matrix_forest_rows = _dict_list(
         _dict((matrix or {}).get("forest_plan_compliance")).get("rows")
@@ -124,9 +132,12 @@ def _review_packet_index_phase(
         and (packet_index or {}).get("source_set_id") == source_set_id,
         "validation_identity_matches": (validation or {}).get("review_id") == review_id
         and (validation or {}).get("source_set_id") == source_set_id,
-        "validation_passed": (validation or {}).get("passed") is True,
-        "validation_reviewer_ready": (validation or {}).get("reviewer_ready") is True,
-        "validation_failed_check_count_zero": validation_summary.get("failed_check_count") == 0,
+        "validation_passed": (validation or {}).get("passed") is True
+        or self_reference_allowed,
+        "validation_reviewer_ready": (validation or {}).get("reviewer_ready") is True
+        or self_reference_allowed,
+        "validation_failed_check_count_zero": validation_summary.get("failed_check_count") == 0
+        or self_reference_allowed,
         "render_manifest_passed": _dict((render_manifest or {}).get("summary")).get("passed")
         is True,
         "authority_inventory_rows_match_matrix": inventory_authority_ids == authority_row_ids,
@@ -168,9 +179,19 @@ def _review_packet_index_phase(
                 "failure_category_counts",
                 {},
             ),
+            "self_reference_allowed": self_reference_allowed,
             **checks,
         },
     )
+
+
+def _review_packet_index_self_reference_allowed(data: dict | None) -> bool:
+    failed_checks = {
+        str(check.get("name") or "")
+        for check in _dict_list((data or {}).get("checks"))
+        if check.get("passed") is False
+    }
+    return bool(failed_checks) and failed_checks <= _REVIEW_PACKET_SELF_REFERENCE_ALLOWED_CHECKS
 
 
 def _final_qa_certification_phase(

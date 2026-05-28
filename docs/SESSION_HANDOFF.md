@@ -21,11 +21,11 @@ history below.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` for the
   umbrella rules behind that packet
 - latest resolved packet:
-  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - active forest-specific example packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - latest resolved West Reservoir parent slice:
-  Milestone 3 compliance review and V1 readiness promotion in
+  Milestone 4 signer-facing packet and phase-eval closeout in
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - predecessor West Reservoir source-evidence blocker:
   `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
@@ -44,33 +44,28 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  West Reservoir reviewer-readiness planning is the active Flathead
-  forest-specific example packet. The plan file is
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`. Parent
-  Milestone 3 is now resolved locally on `source-set-f70ea11e04ae3d53`:
-  generated-pack `compliance-review` passed with `reviewer_ready=true`,
-  `validation_passed=true`, `finding_count=44`, and
-  `finding_status_counts={"gap":3,"pass":26,"uncertain":15}`; V1 eval passed
-  with `contract_status="reviewer_ready"`, `actual_overall_passed=true`,
-  `broader_ea_passed=true`, `forest_plan_passed=true`, and empty failure
-  categories; real-package coverage passed with
-  `covered_slot_count=4`, `reviewer_ready_slot_count=4`, and
-  `typed_blocked_slot_count=0`; and forest-specific registry eval passed with
-  `review_example_count=4`, `reviewer_ready_example_count=4`, and
-  `typed_blocked_example_count=0`. `flathead-nf` now routes to
-  `real_package_examples_available` through
-  `flathead-west-reservoir-forest-specific`. The active next slice is
-  Milestone 4 signer-facing packet/phase closeout. Current
-  `review-packet-index --review-id west-reservoir-67436` writes index outputs
-  but remains red with `failed_check_count=2` and
-  `failure_category_counts={"missing_required_artifact":2}` because West
-  Reservoir lacks `decision_support/ea_consistency_decision_support.json` and
-  `final_qa/east_crazies_final_qa_certification.json`. Do not fabricate those
-  from East Crazies contracts; generate or route West Reservoir-owned
-  decision-support/final-QA artifacts before rerunning packet index,
-  phase eval, and aggregate reporting. The historical green West Reservoir
-  phase artifact on `source-set-5e65d845ce77e1a0` must not be used as current
-  reviewer-readiness proof.
+  West Reservoir reviewer-readiness Milestone 4 is resolved locally on
+  `source-set-f70ea11e04ae3d53`. The plan file is
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`.
+  Review-owned decision-support and final-QA config/fixture surfaces now drive
+  the signer-facing packet artifacts:
+  `config/west_reservoir_ea_consistency_decision_support_v1.json`,
+  `config/fixtures/decision_support/west_reservoir_decision_support_expected_summary.json`,
+  `config/west_reservoir_final_qa_certification_v1.json`, and
+  `config/fixtures/final_qa/west_reservoir_final_qa_expected_summary.json`.
+  Current `review-packet-index --review-id west-reservoir-67436` passes with
+  `check_count=30` and `failed_check_count=0`;
+  `final-qa-certification --validate-only` passes `200/200`; and
+  `phase-eval --review-id west-reservoir-67436` passes `31/31` with
+  `blockers=[]`. Real-package coverage and the forest-specific registry
+  aggregate both pass with West Reservoir reviewer-ready. The next route is no
+  longer a West signer-facing packet slice. If full aggregate component
+  coverage is the goal, open a separate ECID source-delta/component-coverage
+  repair packet for `ecid-source-delta-replay` /
+  `v1-cg-ecid-source-delta-review`, which remains stale and unresolved while
+  the West Reservoir slot passes/source-set aligns.
+  Historical packet chronology follows; the Milestone 4 truth above supersedes
+  older next-slice sentences below.
   Milestone 0 in that packet is now resolved locally. Package authority still
   passes `2/2`; the Milestone 0 local closeout commit is `d5d97ad`
   (`Resolve West Reservoir baseline guard`); current
