@@ -15,6 +15,82 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## West Reservoir f70 Applicability Spine Reduced To Identity Blocker
+
+Latest implementation update on 2026-05-28 UTC:
+
+- update:
+  parent `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+  Milestone 1 resumed on `source-set-f70ea11e04ae3d53` after the migration
+  packet resolved source-set parity and authority-universe proof. The f70
+  review/applicability spine is now fresh through generated-rule-pack
+  validation, but forest-plan context generation is blocked by stale
+  forest-plan identity reconciliation.
+- active blocker:
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+- current review identity:
+  `review_id="west-reservoir-67436"`, `forest_unit_id="flathead-nf"`, and
+  `source_set_id="source-set-f70ea11e04ae3d53"`
+- fresh f70 review rebuild:
+  `ea-review` passed with `reviewer_ready=true`,
+  `validation_passed=true`, `package_file_count=12`,
+  `package_chunk_count=659`, and `finding_status_counts={"pass":5}`.
+- fresh f70 applicability context:
+  `applicability-context-build` passed with `validation_passed=true`,
+  `package_file_count=12`, `package_chunk_count=659`, and
+  `fact_node_count=8116`.
+- fresh f70 authority universe:
+  `applicability-authority-universe` passed with
+  `candidate_authority_count=146`,
+  `forest_plan_component_candidate_count=80`,
+  `forest_unit_id="flathead-nf"`, and
+  `FINAL-FLAT-001` as the active plan source record.
+- fresh f70 retrieval:
+  `applicability-retrieve` passed with `candidate_authority_count=146`,
+  `retrieval_trace_row_count=1314`, and `graph_trace_row_count=3650`.
+- current applicability determination:
+  the first f70 determination found `41` applicable, `102` non-applicable,
+  and `3` `needs_adjudication` authority-family conflicts.
+- tracked applicability adjudication:
+  `config/applicability_adjudications/west-reservoir-67436.json` now matches
+  the f70 decision hash and resolves all three conflicts as
+  `human_applicable`: Clean Air Act conformity/air quality, species supporting
+  sources and overlays, and vegetation/wildfire/forest health authorities.
+- adjudication gates:
+  `applicability-adjudication-eval` passed with
+  `resolved_adjudication_count=3`, `pending_adjudication_count=0`, and no
+  failure categories; `applicability-adjudication-apply` passed with
+  `remaining_unresolved_authority_count=0`.
+- final applicability validation:
+  `applicability-validate` passed with `applicable_authority_count=44`,
+  `non_applicable_authority_count=102`,
+  `needs_adjudication_authority_count=0`,
+  `unresolved_authority_count=0`, `reviewer_ready=true`, and
+  `generated_rule_pack_ready=true`.
+- generated rule pack:
+  `applicability-generate-rule-pack` passed with
+  `generated_rule_count=44`, `passed=true`, and
+  `generated_rule_pack_ready=true`.
+- current blocker:
+  `forest-plan-resolve --review-id west-reservoir-67436 --source-set-id
+  source-set-f70ea11e04ae3d53 --forest-unit-id flathead-nf` fails before
+  context generation with `required_custer_source_records_indexed` and
+  `retrieval_ready_for_forest_plan_resolver`. The check name is historical;
+  the active owner is `config/r1_forest_plan_identity_reconciliation_v1.json`,
+  which still declares `active_source_set_id="source-set-4fb59e9eb43045cb"`
+  and leaves nine required Flathead legacy source-record IDs unresolved for
+  the f70 replay.
+- stop condition:
+  no forest-plan context, component readiness, compliance review, V1
+  promotion, phase eval, registry promotion, or aggregate promotion should run
+  until the identity blocker lets `forest-plan-resolve` emit current f70
+  Flathead context and component artifacts.
+- next implementation slice:
+  implement
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  Milestone 1. Keep West Reservoir typed blocked while repairing Flathead
+  forest-plan identity reconciliation.
+
 ## West Reservoir Source-Set Migration Authority-Universe Proof Resolved
 
 Latest implementation update on 2026-05-28 UTC:

@@ -14,10 +14,11 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` if the next
-  session is implementing the active West Reservoir source-set migration
-  packet; read `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` for
-  the parent Flathead reviewer-readiness packet; read
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  if the next session is implementing the active West Reservoir f70
+  forest-plan identity blocker; read
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` for the parent
+  Flathead reviewer-readiness packet; read
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` for the
   umbrella rules behind that packet
 - latest resolved packet:
@@ -28,6 +29,8 @@ history below.
   `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 - active West Reservoir source-set migration packet:
   `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`
+- active West Reservoir f70 forest-plan identity blocker:
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - just-resolved blocker packet:
@@ -112,24 +115,42 @@ history below.
   green and `forest_plan_component_candidates_use_profile_inventory` now has
   `component_inventory_present=true`, `component_inventory_count=80`,
   `component_candidate_count=80`, and
-  `selected_component_forest_unit_ids=["flathead-nf"]`. No downstream
-  retrieval, determination, compliance, V1 promotion, phase eval, registry
-  promotion, or aggregate coverage promotion ran. The next slice is
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 1 on
-  f70: rerun f70 artifact freshness before applicability
-  retrieval/determination because the package applicability context was last
-  rebuilt on pre-migration 4fb, and keep reviewer-ready promotion blocked
-  until parent gates pass.
+  `selected_component_forest_unit_ids=["flathead-nf"]`. The next parent slice
+  then resumed `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+  Milestone 1 on f70. `ea-review`, `applicability-context-build`,
+  `applicability-authority-universe`, `applicability-retrieve`,
+  `applicability-determine`, `applicability-adjudication-eval`,
+  `applicability-adjudication-apply`, `applicability-validate`, and
+  `applicability-generate-rule-pack` now pass on
+  `source-set-f70ea11e04ae3d53`. Current f70 applicability validation reports
+  `44` applicable authorities, `102` non-applicable authorities, `0`
+  unresolved authorities, and `generated_rule_pack_ready=true`; the generated
+  rule pack has `44` rules.
+  `config/applicability_adjudications/west-reservoir-67436.json` now matches
+  the f70 decision hash and resolves the three f70 authority-family conflicts
+  as `human_applicable`. Parent Milestone 1 is still reduced, not
+  reviewer-ready: `forest-plan-resolve` stops before current Flathead context
+  generation with `required_custer_source_records_indexed` and
+  `retrieval_ready_for_forest_plan_resolver`. The check name is historical;
+  the active owner is
+  `config/r1_forest_plan_identity_reconciliation_v1.json`, which still
+  declares `active_source_set_id="source-set-4fb59e9eb43045cb"` and leaves
+  nine required Flathead legacy source-record IDs unresolved for the f70
+  replay. The next slice is
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
+  Do not run component readiness, compliance review, V1 promotion, phase eval,
+  registry promotion, or aggregate promotion until that blocker lets
+  `forest-plan-resolve` emit current f70 Flathead context and component
+  artifacts.
   Local commit anchors for the Milestone 1 reduction/blocker route are
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) and
   `0773ef7` (`Open West Reservoir source evidence blocker`); the docs-only
   Bitter Lesson alignment commit is `3a5e6b3` (`Align West Reservoir plans
   with Bitter Lesson`), and the source-set migration Milestone 1 closeout
   commit is `f17474b` (`Migrate West Reservoir source-set contract`).
-  Do not run applicability retrieval/determination, compliance, V1 promotion,
-  phase eval, or registry promotion until the migration packet resolves and
-  `applicability-authority-universe` is green on the selected governed source
-  set.
+  Do not run component readiness, compliance review, V1 promotion, phase eval,
+  registry promotion, or aggregate promotion until the f70 forest-plan identity
+  blocker is resolved.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or

@@ -7,8 +7,9 @@ feasibility; source-set migration is resolved through
 `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`, where Milestone
 1 contract migration moved the tracked West Reservoir contract to
 `source-set-f70ea11e04ae3d53` and Milestone 2 resolved the f70
-authority-universe proof; parent readiness resumes at Milestone 1 f70 artifact
-freshness before applicability retrieval/determination
+authority-universe proof; parent Milestone 1 f70 applicability is now green,
+but `forest-plan-resolve` is blocked by the active child packet
+`docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -467,8 +468,9 @@ Implementation note:
 
 ### Milestone 1 - Review Artifact Spine Rebuild
 
-Status: Reduced on 2026-05-28 by Flathead authority-universe scoping; blocked
-on current 4fb source-evidence validation.
+Status: Reduced on 2026-05-28 by f70 applicability spine refresh; blocked on
+forest-plan identity reconciliation before Flathead context/component artifact
+generation.
 
 Outcome label: reduced.
 
@@ -552,9 +554,40 @@ Implementation note:
   the parent Milestone 1 f70 artifact freshness steps because
   `package_applicability_context.json` was last rebuilt on the pre-migration
   `source-set-4fb59e9eb43045cb`.
-- No applicability decisions, generated rule-pack refresh, forest-plan
-  context, compliance review, V1 promotion, registry promotion, or aggregate
-  coverage promotion was run after this blocker.
+- The parent f70 artifact freshness slice then reran `ea-review`,
+  `applicability-context-build`, `applicability-authority-universe`,
+  `applicability-retrieve`, and `applicability-determine` on
+  `source-set-f70ea11e04ae3d53`. The first f70 determination produced the
+  same three authority-family conflicts as the earlier review, with current
+  f70 decision IDs and evidence hashes.
+- `config/applicability_adjudications/west-reservoir-67436.json` now matches
+  the current f70 decision hash and carries the same evidence-backed human
+  applicable resolutions for the three authority-family conflicts: Clean Air
+  Act conformity/air quality, species supporting sources and overlays, and
+  vegetation/wildfire/forest health authorities.
+- `applicability-adjudication-eval` passed with `resolved_adjudication_count=3`,
+  `pending_adjudication_count=0`, and no failure categories. The adjudication
+  apply gate passed with `remaining_unresolved_authority_count=0`.
+- The final f70 applicability validation passed with
+  `applicable_authority_count=44`, `non_applicable_authority_count=102`,
+  `needs_adjudication_authority_count=0`, `unresolved_authority_count=0`,
+  `reviewer_ready=true`, and `generated_rule_pack_ready=true`.
+- `applicability-generate-rule-pack` passed with `generated_rule_count=44` and
+  `generated_rule_pack_ready=true`.
+- `forest-plan-resolve` stopped before generating Flathead context/component
+  artifacts with `required_custer_source_records_indexed` and
+  `retrieval_ready_for_forest_plan_resolver`. The check name is historical;
+  the blocker owner is the stale
+  `config/r1_forest_plan_identity_reconciliation_v1.json` registry, which
+  still declares `active_source_set_id="source-set-4fb59e9eb43045cb"` and
+  leaves nine required Flathead legacy source-record IDs unresolved for the
+  f70 replay.
+- The active child blocker is now
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`.
+  Do not start Milestone 2 component readiness, compliance review, V1
+  promotion, phase eval, registry promotion, or aggregate promotion until that
+  blocker lets `forest-plan-resolve` generate current f70 Flathead context and
+  component artifacts.
 - Local commit anchors:
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) for the
   Flathead authority-universe scoping repair and `0773ef7` (`Open West

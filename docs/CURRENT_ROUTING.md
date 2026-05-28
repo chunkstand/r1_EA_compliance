@@ -9,6 +9,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- Active West Reservoir child blocker:
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - Historical lineage only:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
@@ -22,8 +24,10 @@ Use this file as the short current route before opening the append-only docs.
 ## Active Route
 - West Reservoir reviewer-readiness planning is now the active
   forest-specific example packet. Use
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` for the next
-  implementation slice. The plan starts after package-authority provenance was
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
+  for the next implementation slice, with
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` as the parent
+  context. The parent plan starts after package-authority provenance was
   verified against the official Flathead project page and public Pinyon/Box
   folder, and it keeps West Reservoir typed blocked until current review
   artifacts, component eval, compliance, V1 eval, and phase eval pass on
@@ -61,13 +65,24 @@ Use this file as the short current route before opening the append-only docs.
   `blocked_forest_unit_ids=[]`; the selected f70 authority-universe rerun
   reports `passed=true`, `validation_passed=true`,
   `candidate_authority_count=146`, and
-  `forest_plan_component_candidate_count=80`. The next implementation slice
-  resumes `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
-  Milestone 1 on f70: rerun the f70 artifact freshness steps before
-  applicability retrieval/determination, because the existing package
-  applicability context was last rebuilt on pre-migration 4fb. Do not proceed
-  to compliance, V1 promotion, phase eval, or registry promotion until those
-  parent gates pass.
+  `forest_plan_component_candidate_count=80`. Parent Milestone 1 then reran
+  the f70 artifact freshness and applicability spine: `ea-review`,
+  `applicability-context-build`, `applicability-authority-universe`,
+  `applicability-retrieve`, `applicability-determine`,
+  `applicability-adjudication-eval`, `applicability-adjudication-apply`,
+  `applicability-validate`, and `applicability-generate-rule-pack` are green
+  on f70. Applicability validation reports `44` applicable authorities, `102`
+  non-applicable authorities, `0` unresolved authorities, and
+  `generated_rule_pack_ready=true`; the generated rule pack contains `44`
+  rules. The next implementation slice is
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`:
+  `forest-plan-resolve` stops before current Flathead context generation
+  because `config/r1_forest_plan_identity_reconciliation_v1.json` is still
+  anchored to `source-set-4fb59e9eb43045cb` and leaves nine required Flathead
+  legacy source-record IDs unresolved. Do not proceed to component readiness,
+  compliance, V1 promotion, phase eval, or registry promotion until the
+  identity blocker lets `forest-plan-resolve` emit current f70 Flathead
+  context and component artifacts.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson
@@ -195,6 +210,7 @@ Use this file as the short current route before opening the append-only docs.
   Lolo or South Otter example promotions.
 ## Deep Reads
 - Core:
+  `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
   `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`,
   `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`,
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`,

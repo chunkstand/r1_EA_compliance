@@ -9,8 +9,8 @@
     "applicable",
     "not_applicable"
   ],
-  "applicability_decisions_sha256": "ba78bda49c5e4823220634c63cd8c8dca1758676fa016e3714da92e9e962d545",
-  "created_at": "2026-05-13T04:18:34Z",
+  "applicability_decisions_sha256": "e68de6bdc6af630c924ccb7e2140feddb6471ff5799d56998f85b00656ccc7e7",
+  "created_at": "2026-05-28T10:37:57Z",
   "decisions_path": "source_library/reviews/west-reservoir-67436/applicability/applicability_decisions.jsonl",
   "items": [
     {
@@ -35,43 +35,43 @@
       ],
       "current_basis_type": "unresolved_evidence_conflict",
       "current_status": "needs_adjudication",
-      "decision_id": "aaaa0b49c1aa07bf91111b36",
+      "decision_id": "8c1348a810a7cd43644e94ee",
       "disposition": "human_applicable",
       "expected_current": {
         "basis_type": "unresolved_evidence_conflict",
         "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:clean_air_act_conformity_air_quality:clean_air_act_conformity_air_quality_authority_template",
-        "decision_id": "aaaa0b49c1aa07bf91111b36",
+        "decision_id": "8c1348a810a7cd43644e94ee",
         "status": "needs_adjudication"
       },
       "final_status": "applicable",
       "graph_path_ids": [
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:ac6b16278bad79f9",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:d35600c9064b513f",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:bd64ea8b82cef0d6",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:0934998c63d2fa8f",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:e4a191847383c442",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:60656e7b92da5e17",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:6c710790fcb65e5c",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:893ae47da99f5021",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:b00ccc2939a8e29c",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:c80e3b72f9e03808",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:5f2588473cf23ebf",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:9b2f029b13794398",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:4046c20a31c75d3c",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:510567d8fc048fcd",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:39d4bd1079b022fe",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:def18cda0e699253",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:b475a34ca4422aa8",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:4629fa236b85025d",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:43fb468b37cff9fa",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:56e3a95a4c81976b",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:b1f095d12a0aab75",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:b22b000e5462281d",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:fac9276b8ebd4868",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:1582934967dceae1",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:2950fbbbe21a9846"
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:db220f6907a84c03",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:c138bf8881330b5a",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:ece6d34235beb303",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:bec0cd69ce6035a2",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:18b41c3d8dfccf6c",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:20d0c433521d4b25",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:1677223a9d087614",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:261a762d5b82b005",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:d0be123461dd2363",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:3637fcb4b41197c6",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:45372b49ea041e8a",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:fc584d34ff2f6846",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:b8cc2d7a5d35b5db",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:079e55c7b558a5e6",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:3974b26b9f10536e",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:eb8d9a8b0ebb5013",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:e8c86ed26d7f8f56",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:7738ff6d707e2704",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:97263763285f4438",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:b5f2703e6977c4f4",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:dea935fa89595a0f",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:83db5729c72d3c89",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:c791ae8d062f7308",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:c26a1791b9400a54",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:be41677ae1b5d40b"
       ],
-      "item_id": "applicability-adjudication-item:4f7ce927dd6988c4",
+      "item_id": "applicability-adjudication-item:c4e1829410c79405",
       "missing_evidence": [],
       "negative_evidence_spans": [
         {
@@ -659,56 +659,59 @@
       ],
       "rationale": "Applicable for review: the West Reservoir package proposes prescribed burning and other vegetation actions, discusses smoke emissions and air-quality effects, and includes explicit Clean Air Act plus MT/ID airshed compliance design features. The negative no-prescribed-fire cue is context-specific and does not negate the proposed prescribed-burn lane.",
       "retrieval_trace_ids": [
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:0eb3a0a2c20f26d9",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:140db37523f07719",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:189931e25ec46b5c",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:358e136e2ef64325",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:511c632d8843f7f2",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:6e836291715b78da",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:85f4f6cebec28c6a",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:c425a4deaaea8955",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:f06ca35cf8b8c9a9"
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:10ad42033e0e147d",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:26fa3df52a9ca795",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:7d359e0187e92c02",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:8b861afac5845bac",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:8d20aac2bd47abe0",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:a06407d4bb78cac7",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:a82a50b19e46f022",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:ad2f37c920777a42",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:ddbed1683db417c9"
       ],
       "reviewer_notes": "",
       "search_coverage_certificate_ids": [
-        "9f7813bb45f299aadfea66ea"
+        "19b85ac056727c8246136d63"
       ],
       "source_library_evidence_spans": [
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-092 (17326c87dc94)",
-          "evidence_id": "ef7c420b6621746eb769040b",
+          "citation_label": "FED-023 (13d146b756bb)",
+          "evidence_id": "3b10f79b6ad44076b6edb381",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-092",
-          "text_excerpt": "Clean Air Act, 42 U.S.C. chapter 85",
+          "source_record_id": "FED-023",
+          "text_excerpt": "Clean Air Act",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-093 (3e75a0026b39)",
-          "evidence_id": "1730a8fd7cdf5a3c9c5c4eaf",
+          "citation_label": "FED-044 (3e75a0026b39)",
+          "evidence_id": "2b03f3da85c16a21a06ef0af",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-093",
-          "text_excerpt": "General Conformity, 40 CFR part 93 subpart B",
+          "source_record_id": "FED-044",
+          "text_excerpt": "General Conformity",
           "text_hash": null
         }
       ],
       "source_type": "codex_artifact_review",
       "supporting_citation_refs": [
+        "19b85ac056727c8246136d63",
         "EA-PACKAGE-001 (7036dcfd2bd4)",
         "EA-PACKAGE-011 (8156685c9137)",
+        "FED-023 (13d146b756bb)",
+        "FED-044 (3e75a0026b39)",
         "R1EA-092 (17326c87dc94)",
         "R1EA-093 (3e75a0026b39)"
       ]
@@ -843,43 +846,43 @@
       ],
       "current_basis_type": "unresolved_evidence_conflict",
       "current_status": "needs_adjudication",
-      "decision_id": "7e45fdc012630ee5e214f33f",
+      "decision_id": "6bccdabcb71b7a4472bbb2c5",
       "disposition": "human_applicable",
       "expected_current": {
         "basis_type": "unresolved_evidence_conflict",
         "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
-        "decision_id": "7e45fdc012630ee5e214f33f",
+        "decision_id": "6bccdabcb71b7a4472bbb2c5",
         "status": "needs_adjudication"
       },
       "final_status": "applicable",
       "graph_path_ids": [
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:fb469a2abdb1e83a",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:2d23d018063386d5",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:32b5f34ee6028dad",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:ea9ab14e0c3c7c5c",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:027a264abc94ae6d",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:2bea369942dd6974",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:02e667abf16a093d",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:ffbb0559d9d2820b",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:8d754c9b1aa090fd",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:e4b688ca259fd6a1",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:97f310aabfb9441a",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:4c793346ef337c94",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:0ac78261ec2dd480",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:c8603ff40c4c0c64",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:2edc8178e8b182f2",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:cc002668352b89d3",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:fb246fc4fcc2f77f",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:7e52ddbd60012bbd",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:d9ef9388245fbac4",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:1a85771733a22c5e",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:200def1fdbd3f468",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:2e055f2a262e6d33",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:d5167f510591b4d3",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:6b003be3e3b5efd1",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:df7a9931a5affdbb"
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:ebbad29188227949",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:bd47625a033ffe8f",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:e108db50f07ccd94",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:b6770dfdfee05358",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:8cfff4a8a80740b4",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:9ca1fd47a52801ef",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:91fc6645dd690e43",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:ddb9d596098065f6",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:7775bc35a25d16ec",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:7d17e36666b13c75",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:be8606cdbb2b35c7",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:6e520aba5d60e8ef",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:e18cf15edd1692ee",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:2771a7ba4702b62d",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:6643c5c8eef02c21",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:840f2f694d7bd57f",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:6f649d519761e324",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:ccd87c4cd81c46d6",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:4b3f3ffd70828790",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:1adb4294c4bedaf9",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:8ee41f587a47029f",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:7ae2bf4b6d6fa9b8",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:d9ff72c56e9b2f71",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:865274f3378c52e8",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:90b88a00778a20d6"
       ],
-      "item_id": "applicability-adjudication-item:847e54cb7f9b0df0",
+      "item_id": "applicability-adjudication-item:47e682d98d6e5737",
       "missing_evidence": [],
       "negative_evidence_spans": [
         {
@@ -95149,147 +95152,11 @@
           "text_snippet": "lynx"
         },
         {
-          "char_end": 326925,
-          "char_start": 326922,
-          "citation_label": "EA-PACKAGE-011 (8156685c9137)",
-          "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:1c43a392759fb0cf",
-          "evidence_span_ids": [
-            "evidence-span-chunk-45b23916c9eb2805e3ecd178b6a936d3-196-00e8ff6e0b3f1ea0"
-          ],
-          "evidence_strength": {
-            "confidence_class": "observed",
-            "evidence_window": "Resource specialists are tasked with making forest management decisions, developing prescriptions, and facilitating compliance with section 7 of the ESA.",
-            "evidence_window_char_end": 200,
-            "evidence_window_char_start": 46,
-            "matched_text": "ESA",
-            "reason": "observed_match",
-            "schema_version": "evidence-strength-v0",
-            "section_family": "consultation",
-            "strength_class": "observed"
-          },
-          "matched_terms": [
-            "endangered",
-            "species"
-          ],
-          "package_chunk_ids": [
-            "chunk:45b23916c9eb2805e3ecd178b6a936d3"
-          ],
-          "package_fact_node_id": "consultation-esa-esa-7c46b90b0234ca1e",
-          "page_label": "98",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:1c43a392759fb0cf",
-          "section_family": "consultation",
-          "text_hash": "a92a8800406941d3d4c095402ab64bf7b715d4b6b628a6ee55749a73a725eb9b",
-          "text_snippet": "ESA"
-        },
-        {
-          "char_end": 2382,
-          "char_start": 2360,
-          "citation_label": "EA-PACKAGE-004 (98bdd4d254b5)",
-          "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:4095b1ceaba07737",
-          "evidence_span_ids": [
-            "evidence-span-chunk-3951f60471276d029d2422dd452e0f17-822-23ade68f779be596"
-          ],
-          "evidence_strength": {
-            "confidence_class": "observed",
-            "evidence_window": "See project file exhibits Q-8 through Q-10 and Q-14 for Section 7 consultation documents.",
-            "evidence_window_char_end": 855,
-            "evidence_window_char_start": 765,
-            "matched_text": "Section 7 consultation",
-            "reason": "observed_match",
-            "schema_version": "evidence-strength-v0",
-            "section_family": "general",
-            "strength_class": "observed"
-          },
-          "matched_terms": [
-            "endangered",
-            "species"
-          ],
-          "package_chunk_ids": [
-            "chunk:3951f60471276d029d2422dd452e0f17"
-          ],
-          "package_fact_node_id": "consultation-esa-esa-ed2625173493994a",
-          "page_label": "1",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:4095b1ceaba07737",
-          "section_family": "general",
-          "text_hash": "25c926a78776c85dbc5f0dadad24b760a5b5abd357af0ce9f8255c5c74f55272",
-          "text_snippet": "Section 7 consultation"
-        },
-        {
-          "char_end": 326953,
-          "char_start": 326950,
-          "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
-          "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:7d6f23083ba6ff5b",
-          "evidence_span_ids": [
-            "evidence-span-chunk-b8f5c92070960a78fc24a7e9c9ebfb68-22-97c4c7f1e7610d28"
-          ],
-          "evidence_strength": {
-            "confidence_class": "observed",
-            "evidence_window": "with section 7 of the ESA.",
-            "evidence_window_char_end": 26,
-            "evidence_window_char_start": 0,
-            "matched_text": "ESA",
-            "reason": "observed_match",
-            "schema_version": "evidence-strength-v0",
-            "section_family": "consultation",
-            "strength_class": "observed"
-          },
-          "matched_terms": [
-            "endangered",
-            "species"
-          ],
-          "package_chunk_ids": [
-            "chunk:b8f5c92070960a78fc24a7e9c9ebfb68"
-          ],
-          "package_fact_node_id": "consultation-esa-esa-e54becfabe864f36",
-          "page_label": "106",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:7d6f23083ba6ff5b",
-          "section_family": "consultation",
-          "text_hash": "a895d35b3ec014a070b56ff05ea205cc9bec5722f50531ab2ab9b67123a0cae7",
-          "text_snippet": "ESA"
-        },
-        {
-          "char_end": 326953,
-          "char_start": 326950,
-          "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
-          "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:8214601b2d4d7146",
-          "evidence_span_ids": [
-            "evidence-span-chunk-b8f5c92070960a78fc24a7e9c9ebfb68-22-97c4c7f1e7610d28"
-          ],
-          "evidence_strength": {
-            "confidence_class": "observed",
-            "evidence_window": "with section 7 of the ESA.",
-            "evidence_window_char_end": 26,
-            "evidence_window_char_start": 0,
-            "matched_text": "ESA",
-            "reason": "observed_match",
-            "schema_version": "evidence-strength-v0",
-            "section_family": "consultation",
-            "strength_class": "observed"
-          },
-          "matched_terms": [
-            "endangered",
-            "species"
-          ],
-          "package_chunk_ids": [
-            "chunk:b8f5c92070960a78fc24a7e9c9ebfb68"
-          ],
-          "package_fact_node_id": "consultation-esa-esa-e54becfabe864f36",
-          "page_label": "106",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:8214601b2d4d7146",
-          "section_family": "consultation",
-          "text_hash": "a895d35b3ec014a070b56ff05ea205cc9bec5722f50531ab2ab9b67123a0cae7",
-          "text_snippet": "ESA"
-        },
-        {
           "char_end": 273010,
           "char_start": 272988,
           "citation_label": "EA-PACKAGE-011 (8156685c9137)",
           "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:8c6ba057bede2ccb",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:080c05fa8995a227",
           "evidence_span_ids": [
             "evidence-span-chunk-b6549e744589d463684ddaca7eef9030-177-bde1e6d40e146cd1"
           ],
@@ -95313,17 +95180,187 @@
           ],
           "package_fact_node_id": "consultation-esa-esa-0e4c208ee4bd15a0",
           "page_label": "81",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:8c6ba057bede2ccb",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:080c05fa8995a227",
           "section_family": "general",
           "text_hash": "7a3425e876d46eee857aa3799a9eb95ffb652dbdf7a777ca7b2fc2bded3f7396",
           "text_snippet": "Endangered Species Act"
+        },
+        {
+          "char_end": 326925,
+          "char_start": 326922,
+          "citation_label": "EA-PACKAGE-011 (8156685c9137)",
+          "confidence_class": "observed",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:16bd41e81c91ff15",
+          "evidence_span_ids": [
+            "evidence-span-chunk-45b23916c9eb2805e3ecd178b6a936d3-196-00e8ff6e0b3f1ea0"
+          ],
+          "evidence_strength": {
+            "confidence_class": "observed",
+            "evidence_window": "Resource specialists are tasked with making forest management decisions, developing prescriptions, and facilitating compliance with section 7 of the ESA.",
+            "evidence_window_char_end": 200,
+            "evidence_window_char_start": 46,
+            "matched_text": "ESA",
+            "reason": "observed_match",
+            "schema_version": "evidence-strength-v0",
+            "section_family": "consultation",
+            "strength_class": "observed"
+          },
+          "matched_terms": [
+            "endangered",
+            "species"
+          ],
+          "package_chunk_ids": [
+            "chunk:45b23916c9eb2805e3ecd178b6a936d3"
+          ],
+          "package_fact_node_id": "consultation-esa-esa-7c46b90b0234ca1e",
+          "page_label": "98",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:16bd41e81c91ff15",
+          "section_family": "consultation",
+          "text_hash": "a92a8800406941d3d4c095402ab64bf7b715d4b6b628a6ee55749a73a725eb9b",
+          "text_snippet": "ESA"
         },
         {
           "char_end": 326953,
           "char_start": 326950,
           "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
           "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:979156506735b003",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:52df61aaf638a34c",
+          "evidence_span_ids": [
+            "evidence-span-chunk-8c34fa3448eeb90712a380fb25373296-1395-0f8f575e681914da"
+          ],
+          "evidence_strength": {
+            "confidence_class": "observed",
+            "evidence_window": "Resource specialists are tasked with making forest management decisions, developing prescriptions, and facilitating compliance with section 7 of the ESA.",
+            "evidence_window_char_end": 1399,
+            "evidence_window_char_start": 1245,
+            "matched_text": "ESA",
+            "reason": "observed_match",
+            "schema_version": "evidence-strength-v0",
+            "section_family": "general",
+            "strength_class": "observed"
+          },
+          "matched_terms": [
+            "endangered",
+            "species"
+          ],
+          "package_chunk_ids": [
+            "chunk:8c34fa3448eeb90712a380fb25373296"
+          ],
+          "package_fact_node_id": "consultation-esa-esa-1d053707fb2b0246",
+          "page_label": "105",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:52df61aaf638a34c",
+          "section_family": "general",
+          "text_hash": "55e311ffe26b6c9cb5d82d561db443e6f5c9026db44ebe449d2ca4809b3c873c",
+          "text_snippet": "ESA"
+        },
+        {
+          "char_end": 2382,
+          "char_start": 2360,
+          "citation_label": "EA-PACKAGE-004 (98bdd4d254b5)",
+          "confidence_class": "observed",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:534b1e24437f4112",
+          "evidence_span_ids": [
+            "evidence-span-chunk-3951f60471276d029d2422dd452e0f17-822-23ade68f779be596"
+          ],
+          "evidence_strength": {
+            "confidence_class": "observed",
+            "evidence_window": "See project file exhibits Q-8 through Q-10 and Q-14 for Section 7 consultation documents.",
+            "evidence_window_char_end": 855,
+            "evidence_window_char_start": 765,
+            "matched_text": "Section 7 consultation",
+            "reason": "observed_match",
+            "schema_version": "evidence-strength-v0",
+            "section_family": "general",
+            "strength_class": "observed"
+          },
+          "matched_terms": [
+            "endangered",
+            "species"
+          ],
+          "package_chunk_ids": [
+            "chunk:3951f60471276d029d2422dd452e0f17"
+          ],
+          "package_fact_node_id": "consultation-esa-esa-ed2625173493994a",
+          "page_label": "1",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:534b1e24437f4112",
+          "section_family": "general",
+          "text_hash": "25c926a78776c85dbc5f0dadad24b760a5b5abd357af0ce9f8255c5c74f55272",
+          "text_snippet": "Section 7 consultation"
+        },
+        {
+          "char_end": 326953,
+          "char_start": 326950,
+          "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
+          "confidence_class": "observed",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:71f68584efcf8cfa",
+          "evidence_span_ids": [
+            "evidence-span-chunk-8c34fa3448eeb90712a380fb25373296-1395-0f8f575e681914da"
+          ],
+          "evidence_strength": {
+            "confidence_class": "observed",
+            "evidence_window": "Resource specialists are tasked with making forest management decisions, developing prescriptions, and facilitating compliance with section 7 of the ESA.",
+            "evidence_window_char_end": 1399,
+            "evidence_window_char_start": 1245,
+            "matched_text": "ESA",
+            "reason": "observed_match",
+            "schema_version": "evidence-strength-v0",
+            "section_family": "general",
+            "strength_class": "observed"
+          },
+          "matched_terms": [
+            "endangered",
+            "species"
+          ],
+          "package_chunk_ids": [
+            "chunk:8c34fa3448eeb90712a380fb25373296"
+          ],
+          "package_fact_node_id": "consultation-esa-esa-1d053707fb2b0246",
+          "page_label": "105",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:71f68584efcf8cfa",
+          "section_family": "general",
+          "text_hash": "55e311ffe26b6c9cb5d82d561db443e6f5c9026db44ebe449d2ca4809b3c873c",
+          "text_snippet": "ESA"
+        },
+        {
+          "char_end": 326925,
+          "char_start": 326922,
+          "citation_label": "EA-PACKAGE-011 (8156685c9137)",
+          "confidence_class": "observed",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:725842d854d747b5",
+          "evidence_span_ids": [
+            "evidence-span-chunk-45b23916c9eb2805e3ecd178b6a936d3-196-00e8ff6e0b3f1ea0"
+          ],
+          "evidence_strength": {
+            "confidence_class": "observed",
+            "evidence_window": "Resource specialists are tasked with making forest management decisions, developing prescriptions, and facilitating compliance with section 7 of the ESA.",
+            "evidence_window_char_end": 200,
+            "evidence_window_char_start": 46,
+            "matched_text": "ESA",
+            "reason": "observed_match",
+            "schema_version": "evidence-strength-v0",
+            "section_family": "consultation",
+            "strength_class": "observed"
+          },
+          "matched_terms": [
+            "endangered",
+            "species"
+          ],
+          "package_chunk_ids": [
+            "chunk:45b23916c9eb2805e3ecd178b6a936d3"
+          ],
+          "package_fact_node_id": "consultation-esa-esa-7c46b90b0234ca1e",
+          "page_label": "98",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:725842d854d747b5",
+          "section_family": "consultation",
+          "text_hash": "a92a8800406941d3d4c095402ab64bf7b715d4b6b628a6ee55749a73a725eb9b",
+          "text_snippet": "ESA"
+        },
+        {
+          "char_end": 326953,
+          "char_start": 326950,
+          "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
+          "confidence_class": "observed",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:8176571c7405c5b0",
           "evidence_span_ids": [
             "evidence-span-chunk-b8f5c92070960a78fc24a7e9c9ebfb68-22-97c4c7f1e7610d28"
           ],
@@ -95347,51 +95384,17 @@
           ],
           "package_fact_node_id": "consultation-esa-esa-e54becfabe864f36",
           "page_label": "106",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:979156506735b003",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:8176571c7405c5b0",
           "section_family": "consultation",
           "text_hash": "a895d35b3ec014a070b56ff05ea205cc9bec5722f50531ab2ab9b67123a0cae7",
           "text_snippet": "ESA"
         },
         {
-          "char_end": 326925,
-          "char_start": 326922,
-          "citation_label": "EA-PACKAGE-011 (8156685c9137)",
-          "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:a3fbf6c2f52ba2a4",
-          "evidence_span_ids": [
-            "evidence-span-chunk-45b23916c9eb2805e3ecd178b6a936d3-196-00e8ff6e0b3f1ea0"
-          ],
-          "evidence_strength": {
-            "confidence_class": "observed",
-            "evidence_window": "Resource specialists are tasked with making forest management decisions, developing prescriptions, and facilitating compliance with section 7 of the ESA.",
-            "evidence_window_char_end": 200,
-            "evidence_window_char_start": 46,
-            "matched_text": "ESA",
-            "reason": "observed_match",
-            "schema_version": "evidence-strength-v0",
-            "section_family": "consultation",
-            "strength_class": "observed"
-          },
-          "matched_terms": [
-            "endangered",
-            "species"
-          ],
-          "package_chunk_ids": [
-            "chunk:45b23916c9eb2805e3ecd178b6a936d3"
-          ],
-          "package_fact_node_id": "consultation-esa-esa-7c46b90b0234ca1e",
-          "page_label": "98",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:a3fbf6c2f52ba2a4",
-          "section_family": "consultation",
-          "text_hash": "a92a8800406941d3d4c095402ab64bf7b715d4b6b628a6ee55749a73a725eb9b",
-          "text_snippet": "ESA"
-        },
-        {
           "char_end": 273010,
           "char_start": 272988,
           "citation_label": "EA-PACKAGE-011 (8156685c9137)",
           "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:a402e5e6f11e68c8",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:8b8a6e28576415e8",
           "evidence_span_ids": [
             "evidence-span-chunk-b6549e744589d463684ddaca7eef9030-177-bde1e6d40e146cd1"
           ],
@@ -95415,17 +95418,153 @@
           ],
           "package_fact_node_id": "consultation-esa-esa-0e4c208ee4bd15a0",
           "page_label": "81",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:a402e5e6f11e68c8",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:8b8a6e28576415e8",
           "section_family": "general",
           "text_hash": "7a3425e876d46eee857aa3799a9eb95ffb652dbdf7a777ca7b2fc2bded3f7396",
           "text_snippet": "Endangered Species Act"
+        },
+        {
+          "char_end": 2382,
+          "char_start": 2360,
+          "citation_label": "EA-PACKAGE-004 (98bdd4d254b5)",
+          "confidence_class": "observed",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:9b6971b0b95c7edb",
+          "evidence_span_ids": [
+            "evidence-span-chunk-3951f60471276d029d2422dd452e0f17-822-23ade68f779be596"
+          ],
+          "evidence_strength": {
+            "confidence_class": "observed",
+            "evidence_window": "See project file exhibits Q-8 through Q-10 and Q-14 for Section 7 consultation documents.",
+            "evidence_window_char_end": 855,
+            "evidence_window_char_start": 765,
+            "matched_text": "Section 7 consultation",
+            "reason": "observed_match",
+            "schema_version": "evidence-strength-v0",
+            "section_family": "general",
+            "strength_class": "observed"
+          },
+          "matched_terms": [
+            "endangered",
+            "species"
+          ],
+          "package_chunk_ids": [
+            "chunk:3951f60471276d029d2422dd452e0f17"
+          ],
+          "package_fact_node_id": "consultation-esa-esa-ed2625173493994a",
+          "page_label": "1",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:9b6971b0b95c7edb",
+          "section_family": "general",
+          "text_hash": "25c926a78776c85dbc5f0dadad24b760a5b5abd357af0ce9f8255c5c74f55272",
+          "text_snippet": "Section 7 consultation"
+        },
+        {
+          "char_end": 326953,
+          "char_start": 326950,
+          "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
+          "confidence_class": "observed",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:9c274a141ddd6acb",
+          "evidence_span_ids": [
+            "evidence-span-chunk-b8f5c92070960a78fc24a7e9c9ebfb68-22-97c4c7f1e7610d28"
+          ],
+          "evidence_strength": {
+            "confidence_class": "observed",
+            "evidence_window": "with section 7 of the ESA.",
+            "evidence_window_char_end": 26,
+            "evidence_window_char_start": 0,
+            "matched_text": "ESA",
+            "reason": "observed_match",
+            "schema_version": "evidence-strength-v0",
+            "section_family": "consultation",
+            "strength_class": "observed"
+          },
+          "matched_terms": [
+            "endangered",
+            "species"
+          ],
+          "package_chunk_ids": [
+            "chunk:b8f5c92070960a78fc24a7e9c9ebfb68"
+          ],
+          "package_fact_node_id": "consultation-esa-esa-e54becfabe864f36",
+          "page_label": "106",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:9c274a141ddd6acb",
+          "section_family": "consultation",
+          "text_hash": "a895d35b3ec014a070b56ff05ea205cc9bec5722f50531ab2ab9b67123a0cae7",
+          "text_snippet": "ESA"
+        },
+        {
+          "char_end": 326953,
+          "char_start": 326950,
+          "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
+          "confidence_class": "observed",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:b53116adad9313fc",
+          "evidence_span_ids": [
+            "evidence-span-chunk-b8f5c92070960a78fc24a7e9c9ebfb68-22-97c4c7f1e7610d28"
+          ],
+          "evidence_strength": {
+            "confidence_class": "observed",
+            "evidence_window": "with section 7 of the ESA.",
+            "evidence_window_char_end": 26,
+            "evidence_window_char_start": 0,
+            "matched_text": "ESA",
+            "reason": "observed_match",
+            "schema_version": "evidence-strength-v0",
+            "section_family": "consultation",
+            "strength_class": "observed"
+          },
+          "matched_terms": [
+            "endangered",
+            "species"
+          ],
+          "package_chunk_ids": [
+            "chunk:b8f5c92070960a78fc24a7e9c9ebfb68"
+          ],
+          "package_fact_node_id": "consultation-esa-esa-e54becfabe864f36",
+          "page_label": "106",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:b53116adad9313fc",
+          "section_family": "consultation",
+          "text_hash": "a895d35b3ec014a070b56ff05ea205cc9bec5722f50531ab2ab9b67123a0cae7",
+          "text_snippet": "ESA"
+        },
+        {
+          "char_end": 2382,
+          "char_start": 2360,
+          "citation_label": "EA-PACKAGE-004 (98bdd4d254b5)",
+          "confidence_class": "observed",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:dcf1765397248499",
+          "evidence_span_ids": [
+            "evidence-span-chunk-3951f60471276d029d2422dd452e0f17-822-23ade68f779be596"
+          ],
+          "evidence_strength": {
+            "confidence_class": "observed",
+            "evidence_window": "See project file exhibits Q-8 through Q-10 and Q-14 for Section 7 consultation documents.",
+            "evidence_window_char_end": 855,
+            "evidence_window_char_start": 765,
+            "matched_text": "Section 7 consultation",
+            "reason": "observed_match",
+            "schema_version": "evidence-strength-v0",
+            "section_family": "general",
+            "strength_class": "observed"
+          },
+          "matched_terms": [
+            "endangered",
+            "species"
+          ],
+          "package_chunk_ids": [
+            "chunk:3951f60471276d029d2422dd452e0f17"
+          ],
+          "package_fact_node_id": "consultation-esa-esa-ed2625173493994a",
+          "page_label": "1",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:dcf1765397248499",
+          "section_family": "general",
+          "text_hash": "25c926a78776c85dbc5f0dadad24b760a5b5abd357af0ce9f8255c5c74f55272",
+          "text_snippet": "Section 7 consultation"
         },
         {
           "char_end": 273010,
           "char_start": 272988,
           "citation_label": "EA-PACKAGE-011 (8156685c9137)",
           "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:b4ad15653e7bc30d",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:e04c60cbcfa7cea7",
           "evidence_span_ids": [
             "evidence-span-chunk-b6549e744589d463684ddaca7eef9030-177-bde1e6d40e146cd1"
           ],
@@ -95449,187 +95588,17 @@
           ],
           "package_fact_node_id": "consultation-esa-esa-0e4c208ee4bd15a0",
           "page_label": "81",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:b4ad15653e7bc30d",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:e04c60cbcfa7cea7",
           "section_family": "general",
           "text_hash": "7a3425e876d46eee857aa3799a9eb95ffb652dbdf7a777ca7b2fc2bded3f7396",
           "text_snippet": "Endangered Species Act"
-        },
-        {
-          "char_end": 326953,
-          "char_start": 326950,
-          "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
-          "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:c2d029fc126edc0c",
-          "evidence_span_ids": [
-            "evidence-span-chunk-8c34fa3448eeb90712a380fb25373296-1395-0f8f575e681914da"
-          ],
-          "evidence_strength": {
-            "confidence_class": "observed",
-            "evidence_window": "Resource specialists are tasked with making forest management decisions, developing prescriptions, and facilitating compliance with section 7 of the ESA.",
-            "evidence_window_char_end": 1399,
-            "evidence_window_char_start": 1245,
-            "matched_text": "ESA",
-            "reason": "observed_match",
-            "schema_version": "evidence-strength-v0",
-            "section_family": "general",
-            "strength_class": "observed"
-          },
-          "matched_terms": [
-            "endangered",
-            "species"
-          ],
-          "package_chunk_ids": [
-            "chunk:8c34fa3448eeb90712a380fb25373296"
-          ],
-          "package_fact_node_id": "consultation-esa-esa-1d053707fb2b0246",
-          "page_label": "105",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:c2d029fc126edc0c",
-          "section_family": "general",
-          "text_hash": "55e311ffe26b6c9cb5d82d561db443e6f5c9026db44ebe449d2ca4809b3c873c",
-          "text_snippet": "ESA"
-        },
-        {
-          "char_end": 326953,
-          "char_start": 326950,
-          "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
-          "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:d182f999a10b563b",
-          "evidence_span_ids": [
-            "evidence-span-chunk-8c34fa3448eeb90712a380fb25373296-1395-0f8f575e681914da"
-          ],
-          "evidence_strength": {
-            "confidence_class": "observed",
-            "evidence_window": "Resource specialists are tasked with making forest management decisions, developing prescriptions, and facilitating compliance with section 7 of the ESA.",
-            "evidence_window_char_end": 1399,
-            "evidence_window_char_start": 1245,
-            "matched_text": "ESA",
-            "reason": "observed_match",
-            "schema_version": "evidence-strength-v0",
-            "section_family": "general",
-            "strength_class": "observed"
-          },
-          "matched_terms": [
-            "endangered",
-            "species"
-          ],
-          "package_chunk_ids": [
-            "chunk:8c34fa3448eeb90712a380fb25373296"
-          ],
-          "package_fact_node_id": "consultation-esa-esa-1d053707fb2b0246",
-          "page_label": "105",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:d182f999a10b563b",
-          "section_family": "general",
-          "text_hash": "55e311ffe26b6c9cb5d82d561db443e6f5c9026db44ebe449d2ca4809b3c873c",
-          "text_snippet": "ESA"
-        },
-        {
-          "char_end": 2382,
-          "char_start": 2360,
-          "citation_label": "EA-PACKAGE-004 (98bdd4d254b5)",
-          "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:d38db2dab1d24180",
-          "evidence_span_ids": [
-            "evidence-span-chunk-3951f60471276d029d2422dd452e0f17-822-23ade68f779be596"
-          ],
-          "evidence_strength": {
-            "confidence_class": "observed",
-            "evidence_window": "See project file exhibits Q-8 through Q-10 and Q-14 for Section 7 consultation documents.",
-            "evidence_window_char_end": 855,
-            "evidence_window_char_start": 765,
-            "matched_text": "Section 7 consultation",
-            "reason": "observed_match",
-            "schema_version": "evidence-strength-v0",
-            "section_family": "general",
-            "strength_class": "observed"
-          },
-          "matched_terms": [
-            "endangered",
-            "species"
-          ],
-          "package_chunk_ids": [
-            "chunk:3951f60471276d029d2422dd452e0f17"
-          ],
-          "package_fact_node_id": "consultation-esa-esa-ed2625173493994a",
-          "page_label": "1",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:d38db2dab1d24180",
-          "section_family": "general",
-          "text_hash": "25c926a78776c85dbc5f0dadad24b760a5b5abd357af0ce9f8255c5c74f55272",
-          "text_snippet": "Section 7 consultation"
-        },
-        {
-          "char_end": 2382,
-          "char_start": 2360,
-          "citation_label": "EA-PACKAGE-004 (98bdd4d254b5)",
-          "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:f260fbbfa90a20a3",
-          "evidence_span_ids": [
-            "evidence-span-chunk-3951f60471276d029d2422dd452e0f17-822-23ade68f779be596"
-          ],
-          "evidence_strength": {
-            "confidence_class": "observed",
-            "evidence_window": "See project file exhibits Q-8 through Q-10 and Q-14 for Section 7 consultation documents.",
-            "evidence_window_char_end": 855,
-            "evidence_window_char_start": 765,
-            "matched_text": "Section 7 consultation",
-            "reason": "observed_match",
-            "schema_version": "evidence-strength-v0",
-            "section_family": "general",
-            "strength_class": "observed"
-          },
-          "matched_terms": [
-            "endangered",
-            "species"
-          ],
-          "package_chunk_ids": [
-            "chunk:3951f60471276d029d2422dd452e0f17"
-          ],
-          "package_fact_node_id": "consultation-esa-esa-ed2625173493994a",
-          "page_label": "1",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:f260fbbfa90a20a3",
-          "section_family": "general",
-          "text_hash": "25c926a78776c85dbc5f0dadad24b760a5b5abd357af0ce9f8255c5c74f55272",
-          "text_snippet": "Section 7 consultation"
-        },
-        {
-          "char_end": 326953,
-          "char_start": 326950,
-          "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
-          "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:f9c267db620471ff",
-          "evidence_span_ids": [
-            "evidence-span-chunk-8c34fa3448eeb90712a380fb25373296-1395-0f8f575e681914da"
-          ],
-          "evidence_strength": {
-            "confidence_class": "observed",
-            "evidence_window": "Resource specialists are tasked with making forest management decisions, developing prescriptions, and facilitating compliance with section 7 of the ESA.",
-            "evidence_window_char_end": 1399,
-            "evidence_window_char_start": 1245,
-            "matched_text": "ESA",
-            "reason": "observed_match",
-            "schema_version": "evidence-strength-v0",
-            "section_family": "general",
-            "strength_class": "observed"
-          },
-          "matched_terms": [
-            "endangered",
-            "species"
-          ],
-          "package_chunk_ids": [
-            "chunk:8c34fa3448eeb90712a380fb25373296"
-          ],
-          "package_fact_node_id": "consultation-esa-esa-1d053707fb2b0246",
-          "page_label": "105",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:f9c267db620471ff",
-          "section_family": "general",
-          "text_hash": "55e311ffe26b6c9cb5d82d561db443e6f5c9026db44ebe449d2ca4809b3c873c",
-          "text_snippet": "ESA"
         },
         {
           "char_end": 326925,
           "char_start": 326922,
           "citation_label": "EA-PACKAGE-011 (8156685c9137)",
           "confidence_class": "observed",
-          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:fc79298e10bb8709",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:f8f3b0b816e962be",
           "evidence_span_ids": [
             "evidence-span-chunk-45b23916c9eb2805e3ecd178b6a936d3-196-00e8ff6e0b3f1ea0"
           ],
@@ -95653,140 +95622,155 @@
           ],
           "package_fact_node_id": "consultation-esa-esa-7c46b90b0234ca1e",
           "page_label": "98",
-          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-5e65d845:fc79298e10bb8709",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:f8f3b0b816e962be",
           "section_family": "consultation",
           "text_hash": "a92a8800406941d3d4c095402ab64bf7b715d4b6b628a6ee55749a73a725eb9b",
+          "text_snippet": "ESA"
+        },
+        {
+          "char_end": 326953,
+          "char_start": 326950,
+          "citation_label": "EA-PACKAGE-001 (7036dcfd2bd4)",
+          "confidence_class": "observed",
+          "evidence_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:f9dd2438f2505525",
+          "evidence_span_ids": [
+            "evidence-span-chunk-8c34fa3448eeb90712a380fb25373296-1395-0f8f575e681914da"
+          ],
+          "evidence_strength": {
+            "confidence_class": "observed",
+            "evidence_window": "Resource specialists are tasked with making forest management decisions, developing prescriptions, and facilitating compliance with section 7 of the ESA.",
+            "evidence_window_char_end": 1399,
+            "evidence_window_char_start": 1245,
+            "matched_text": "ESA",
+            "reason": "observed_match",
+            "schema_version": "evidence-strength-v0",
+            "section_family": "general",
+            "strength_class": "observed"
+          },
+          "matched_terms": [
+            "endangered",
+            "species"
+          ],
+          "package_chunk_ids": [
+            "chunk:8c34fa3448eeb90712a380fb25373296"
+          ],
+          "package_fact_node_id": "consultation-esa-esa-1d053707fb2b0246",
+          "page_label": "105",
+          "retrieval_result_id": "retrieval-result:retrieval-trace-applicability-retrieval-west-reservoir-67436-source-set-f70ea11e:f9dd2438f2505525",
+          "section_family": "general",
+          "text_hash": "55e311ffe26b6c9cb5d82d561db443e6f5c9026db44ebe449d2ca4809b3c873c",
           "text_snippet": "ESA"
         }
       ],
       "rationale": "Applicable for review: the package squarely addresses Canada lynx, grizzly bear, bull trout, species-specific plan components, biological assessment and biological opinion support, and related wildlife connectivity analysis. Species- or location-specific no-effect statements do not negate the broader species-supporting authority family for this live review.",
       "retrieval_trace_ids": [
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:095ccecfd0625469",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:1b32b4ac3997f04f",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:1faa345e194437f8",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:21a9c895d95a7103",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:273ea872a59e3634",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:7b36068bf8f9b00f",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:8fe0ec4f6a52a515",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:a06aad1cc9ae3544",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:e90251b0e2e8a1f7"
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:11df85bac6d79de5",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:29db136085b45795",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:485b3bf3fa597e10",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:7cd9db0667e6a4fd",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:a236b2b2c461265b",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:c99fc2f3d41f75ad",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:d02a2a6447cb0b20",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:eaf7015a2a5abe05",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:f2f80ee40900b0f3"
       ],
       "reviewer_notes": "",
       "search_coverage_certificate_ids": [
-        "967f14b76b44445752a564cf"
+        "c22c166c216e082c6c864399"
       ],
       "source_library_evidence_spans": [
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-064 (18c912e31fa3)",
-          "evidence_id": "51740b04214406a734950a84",
+          "citation_label": "FED-031 (c4d3a47e492f)",
+          "evidence_id": "d0062bb3619bd2e48cf731ba",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-064",
-          "text_excerpt": "Endangered Species Act, 16 U.S.C. chapter 35",
+          "source_record_id": "FED-031",
+          "text_excerpt": "Endangered Species Act",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-068 (e9b76942b577)",
-          "evidence_id": "133ed1a26a3c3b9d7d28414e",
+          "citation_label": "R1-003 (c7d54e390b0b)",
+          "evidence_id": "0fe2af910e1b696cb4d489bd",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-068",
-          "text_excerpt": "Northern Region animals and plants / sensitive species page",
+          "source_record_id": "R1-003",
+          "text_excerpt": "Northern Region Species of Conservation Concern",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-069 (8745204e0c5b)",
-          "evidence_id": "24b318899a1a07c3798a9a23",
+          "citation_label": "R1-004 (b5bdac815f80)",
+          "evidence_id": "06baadaf3bdfbb27bc43e5f9",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-069",
+          "source_record_id": "R1-004",
           "text_excerpt": "Northern Rockies Lynx Management Direction",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1PLAN-custer-gallatin-nf-06 (a21399884cd4)",
-          "evidence_id": "649f668dde7ac2fd0913db8a",
+          "citation_label": "FPS-074 (a21399884cd4)",
+          "evidence_id": "335d84e29e450a6f539e7ffd",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1PLAN-custer-gallatin-nf-06",
-          "text_excerpt": "Custer Gallatin LMP Biological Assessment - Threatened, Endangered, Proposed, and Candidate Species PDF",
+          "source_record_id": "FPS-074",
+          "text_excerpt": "Biological Assessment for Custer Gallatin Land Management Plan",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1PLAN-custer-gallatin-nf-07 (2b55a754f395)",
-          "evidence_id": "49ae627aa8e055d6dae64a4c",
+          "citation_label": "FPS-073 (2b55a754f395)",
+          "evidence_id": "385378ac5d957d2e8a83ec5a",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1PLAN-custer-gallatin-nf-07",
-          "text_excerpt": "Custer Gallatin LMP Biological Opinion PDF",
-          "text_hash": null
-        },
-        {
-          "char_end": null,
-          "char_start": null,
-          "citation_label": "R1PLAN-region-1-species-overlay-01 (0bfc57247cc2)",
-          "evidence_id": "141885794266b1a1ca95f2a2",
-          "evidence_origin": "authority_universe",
-          "page_label": null,
-          "retrieval_result_id": null,
-          "retrieval_trace_id": null,
-          "source_chunk_id": null,
-          "source_claim_ids": [],
-          "source_record_id": "R1PLAN-region-1-species-overlay-01",
-          "text_excerpt": "Region 1 Species of Conservation Concern page",
-          "text_hash": null
-        },
-        {
-          "char_end": null,
-          "char_start": null,
-          "citation_label": "R1PLAN-region-1-species-overlay-02 (8745204e0c5b)",
-          "evidence_id": "ace6dbc82c108646cb2a18dc",
-          "evidence_origin": "authority_universe",
-          "page_label": null,
-          "retrieval_result_id": null,
-          "retrieval_trace_id": null,
-          "source_chunk_id": null,
-          "source_claim_ids": [],
-          "source_record_id": "R1PLAN-region-1-species-overlay-02",
-          "text_excerpt": "Northern Rockies Lynx Management Direction",
+          "source_record_id": "FPS-073",
+          "text_excerpt": "Biological Opinion for Custer Gallatin Land Management Plan",
           "text_hash": null
         }
       ],
       "source_type": "codex_artifact_review",
       "supporting_citation_refs": [
+        "EA-PACKAGE-001 (7036dcfd2bd4)",
+        "EA-PACKAGE-002 (369bd3273074)",
         "EA-PACKAGE-004 (98bdd4d254b5)",
+        "EA-PACKAGE-005 (a857fe7b7252)",
         "EA-PACKAGE-006 (1424ddc8d9e8)",
+        "EA-PACKAGE-009 (6bd16c36cc20)",
         "EA-PACKAGE-011 (8156685c9137)",
+        "EA-PACKAGE-012 (b46d23e87710)",
+        "FED-031 (c4d3a47e492f)",
+        "FPS-073 (2b55a754f395)",
+        "FPS-074 (a21399884cd4)",
+        "R1-003 (c7d54e390b0b)",
+        "R1-004 (b5bdac815f80)",
+        "c22c166c216e082c6c864399",
         "R1EA-064 (18c912e31fa3)",
         "R1EA-068 (e9b76942b577)"
       ]
@@ -95827,43 +95811,43 @@
       ],
       "current_basis_type": "unresolved_evidence_conflict",
       "current_status": "needs_adjudication",
-      "decision_id": "e09e7b1e50a30a7ee667c2b9",
+      "decision_id": "55127073d04b1c684e4f0b02",
       "disposition": "human_applicable",
       "expected_current": {
         "basis_type": "unresolved_evidence_conflict",
         "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
-        "decision_id": "e09e7b1e50a30a7ee667c2b9",
+        "decision_id": "55127073d04b1c684e4f0b02",
         "status": "needs_adjudication"
       },
       "final_status": "applicable",
       "graph_path_ids": [
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:8315b1f815052324",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:56cadf18ae1cf4bd",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:126e3772e6174d50",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:7c734b4135f26816",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:111ce6f92a8bedac",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:ffa7359cbfaf2250",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:3e4961d574015c74",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:fe88d42b1d3a177a",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:9547e8c689e77329",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:4c5f3756645a17de",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:63cf843b9c7c48f1",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:f95470fb41d08f33",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:4f654e899b1330a0",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:2443c4de2d2eff21",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:45abb9005020d37f",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:f6105f82aca30785",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:0503c6e00931b7f1",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:a8ff80a0c27cdc7f",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:84ede9724049db7e",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:477910fc3aceb6ab",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:3e07f56a0cee43b1",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:1fefb3301e127ad0",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:e3c2146c5a641b2c",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:f5297795af188dec",
-        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:220e0aa31c07c602"
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:55af003dbc94ccee",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:a1c1a39f5339cdb3",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:045bc3eb78d2b581",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:934438a2bd1666ac",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:6db2d8ced75d567d",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:3a4823437bf7cf30",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:65cd805af20e97f3",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:80ca412c9da1f69b",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:f7d72a7aa228056c",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:44e66d56d6af03ec",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:8734fb1478c48071",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:7f5a2d7f34e3d12b",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:2d6c3c8c9b5a816c",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:750bf633496b35a5",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:9d28c70d1d21ade9",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:92180edb5eedea7c",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:f9ea7a8c5103cb05",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:77ada16d12bf18bd",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:82c9d928c38c6463",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:bbdea6a92955822d",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:130c7694a1575130",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:a6dd9284cee4b931",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:e0f5e85bfaaf4e3b",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:4150d759eb79855a",
+        "graph-path:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:35b659865e734d1f"
       ],
-      "item_id": "applicability-adjudication-item:ffc698d45d3abdb2",
+      "item_id": "applicability-adjudication-item:f32e6604942f7f64",
       "missing_evidence": [],
       "negative_evidence_spans": [
         {
@@ -114099,132 +114083,146 @@
       ],
       "rationale": "Applicable for review: West Reservoir proposes timber harvest, vegetation treatments, whitebark-pine restoration, prescribed fire, and related forest-health and wildfire-resilience actions. Background no-vegetation-management or no-current-restoration phrases do not negate the active vegetation, fire, and forest-health direction implicated by the proposed action.",
       "retrieval_trace_ids": [
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:31f9c7206b9a6c9b",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:44aa0c506265c2de",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:4d3749383d380c00",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:5324f20d3b2a1107",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:9eda4efb8ab0cc68",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:e9c4da5e8c0ab64e",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:f113e891da765eb8",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:f6053e00e8f80b0e",
-        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-4fb59e9eb43045cb-authori:fbfad860accdd635"
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:1edcef2427dd8323",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:244bdf810e3e3bac",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:39f81c0c8c0c1c40",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:489e2f0d72423982",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:70c3fe9830307afe",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:a44fdc1620b99c8b",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:af26bdcc374edc36",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:c9af96fbf1ea1734",
+        "retrieval-trace:applicability-retrieval-west-reservoir-67436-source-set-f70ea11e04ae3d53-authori:fb045f8a6c0bd138"
       ],
       "reviewer_notes": "",
       "search_coverage_certificate_ids": [
-        "3c419da1b99a4f6848cecf4d"
+        "1bebaa337c4c04f04691e96f"
       ],
       "source_library_evidence_spans": [
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-056 (6fba4e682e0e)",
-          "evidence_id": "be5d8f86df52c44b259aee89",
+          "citation_label": "FED-071 (78323ff808b3)",
+          "evidence_id": "8e5c67f363a547e5eadbcf2c",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-056",
-          "text_excerpt": "Healthy Forests Restoration Act and related forest management authorities, 16 U.S.C. chapter 84",
+          "source_record_id": "FED-071",
+          "text_excerpt": "Healthy Forests Restoration Act and related forest management authorities",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-057 (38c600633e82)",
-          "evidence_id": "1831461fbb655199b4200f2d",
+          "citation_label": "FED-072 (10177b720800)",
+          "evidence_id": "b9c6b9dd4c3ff4c3cd49c5df",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-057",
-          "text_excerpt": "16 U.S.C. \u00a7 6591b - Insect and disease treatment / restoration CE authority",
+          "source_record_id": "FED-072",
+          "text_excerpt": "16 U.S.C. \u00a7 6591b - Administrative review",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-058 (27577107b2e3)",
-          "evidence_id": "6c96f42046ed2da9968f376f",
+          "citation_label": "FED-073 (635c93f388c5)",
+          "evidence_id": "6c1937473f380814eeceb943",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-058",
+          "source_record_id": "FED-073",
           "text_excerpt": "16 U.S.C. \u00a7 6591d - Wildfire resilience projects",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-059 (9cfe54e376d6)",
-          "evidence_id": "b9eb4eb1adc84181a4ddaa5c",
+          "citation_label": "FED-074 (8b60c3ffd396)",
+          "evidence_id": "c4f86326c26519c1f10d2dd0",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-059",
-          "text_excerpt": "16 U.S.C. \u00a7 6591e - Sage-grouse and mule deer habitat CE",
+          "source_record_id": "FED-074",
+          "text_excerpt": "16 U.S.C. \u00a7 6591e - Categorical exclusion for greater sage-grouse and mule deer habitat",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-060 (9a7ee1c8cf1b)",
-          "evidence_id": "bae2c0395a93b6e6ddd4be47",
+          "citation_label": "FED-075 (652f1a6daa98)",
+          "evidence_id": "1c758519db511e774d4dc0c5",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-060",
-          "text_excerpt": "16 U.S.C. \u00a7 6592b - Fuel break CE",
+          "source_record_id": "FED-075",
+          "text_excerpt": "16 U.S.C. \u00a7 6592b - Establishment of fuel breaks in forests and other wildland vegetation",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-061 (852b676e1607)",
-          "evidence_id": "2f02f815bf075f286769e765",
+          "citation_label": "FED-076 (6cd63ee8d902)",
+          "evidence_id": "569c841e806e68b42b0b71a7",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-061",
+          "source_record_id": "FED-076",
           "text_excerpt": "16 U.S.C. \u00a7 6592c - Emergency actions",
           "text_hash": null
         },
         {
           "char_end": null,
           "char_start": null,
-          "citation_label": "R1EA-062 (6bb4522da5ef)",
-          "evidence_id": "9b7666467241e422463e1d22",
+          "citation_label": "FED-077 (6bb4522da5ef)",
+          "evidence_id": "918460ab02257e567e8d2415",
           "evidence_origin": "authority_universe",
           "page_label": null,
           "retrieval_result_id": null,
           "retrieval_trace_id": null,
           "source_chunk_id": null,
           "source_claim_ids": [],
-          "source_record_id": "R1EA-062",
+          "source_record_id": "FED-077",
           "text_excerpt": "Executive Order 14225 - Immediate Expansion of American Timber Production",
           "text_hash": null
         }
       ],
       "source_type": "codex_artifact_review",
       "supporting_citation_refs": [
+        "1bebaa337c4c04f04691e96f",
         "EA-PACKAGE-001 (7036dcfd2bd4)",
+        "EA-PACKAGE-002 (369bd3273074)",
         "EA-PACKAGE-004 (98bdd4d254b5)",
+        "EA-PACKAGE-005 (a857fe7b7252)",
+        "EA-PACKAGE-006 (1424ddc8d9e8)",
+        "EA-PACKAGE-009 (6bd16c36cc20)",
+        "EA-PACKAGE-010 (2ddba0bcfe05)",
         "EA-PACKAGE-011 (8156685c9137)",
+        "EA-PACKAGE-012 (b46d23e87710)",
+        "FED-071 (78323ff808b3)",
+        "FED-072 (10177b720800)",
+        "FED-073 (635c93f388c5)",
+        "FED-074 (8b60c3ffd396)",
+        "FED-075 (652f1a6daa98)",
+        "FED-076 (6cd63ee8d902)",
+        "FED-077 (6bb4522da5ef)",
         "R1EA-056 (6fba4e682e0e)",
         "R1EA-057 (38c600633e82)"
       ]
@@ -114243,19 +114241,19 @@
   ],
   "review_id": "west-reservoir-67436",
   "schema_version": "applicability-adjudication-template-v0",
-  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
   "summary": {
     "adjudication_item_count": 3,
-    "created_at": "2026-05-13T04:18:34Z",
-    "decision_count": 67,
+    "created_at": "2026-05-28T10:37:57Z",
+    "decision_count": 146,
     "decisions_path": "source_library/reviews/west-reservoir-67436/applicability/applicability_decisions.jsonl",
-    "decisions_sha256": "ba78bda49c5e4823220634c63cd8c8dca1758676fa016e3714da92e9e962d545",
-    "instructions": "Fill final_status, disposition, adjudicated_at, adjudicated_by, source_type, rationale, and supporting_citation_refs for every item before running applicability-adjudication-eval or applicability-adjudication-apply.",
+    "decisions_sha256": "e68de6bdc6af630c924ccb7e2140feddb6471ff5799d56998f85b00656ccc7e7",
+    "instructions": "Replay this tracked adjudication with applicability-adjudication-eval and applicability-adjudication-apply. Regenerate the file if applicability_decisions.jsonl changes.",
     "markdown_path": "config/applicability_adjudications/west-reservoir-67436.worklist.md",
     "output_path": "config/applicability_adjudications/west-reservoir-67436.json",
     "pending_item_count": 3,
     "review_id": "west-reservoir-67436",
     "schema_version": "applicability-adjudication-template-summary-v0",
-    "source_set_id": "source-set-4fb59e9eb43045cb"
+    "source_set_id": "source-set-f70ea11e04ae3d53"
   }
 }
