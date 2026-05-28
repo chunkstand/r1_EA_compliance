@@ -48,8 +48,10 @@ history below.
   artifact on `source-set-5e65d845ce77e1a0` must not be used as current
   reviewer-readiness proof.
   Milestone 0 in that packet is now resolved locally. Package authority still
-  passes `2/2`; current `v1-ea-eval --review-id west-reservoir-67436`
-  remains a truthful typed-blocked baseline with
+  passes `2/2`; the Milestone 0 local closeout commit is `d5d97ad`
+  (`Resolve West Reservoir baseline guard`); current
+  `v1-ea-eval --review-id west-reservoir-67436` remains a truthful
+  typed-blocked baseline with
   `contract_status="typed_blocked"`, `actual_overall_passed=false`,
   `broader_ea_passed=false`, `forest_plan_passed=false`, and only the allowed
   blocker categories (`review_artifact_missing=8`,
@@ -80,6 +82,11 @@ history below.
   direct catalog inspection showed the required reconciled current rows are
   absent from the active 4fb catalog and present only in the later
   `source-set-f70ea11e04ae3d53` current-source-gap closeout catalog.
+  Local commit anchors for the Milestone 1 reduction/blocker route are
+  `267ba9d` (`Scope West Reservoir authority universe to Flathead`) and
+  `0773ef7` (`Open West Reservoir source evidence blocker`); the docs-only
+  Bitter Lesson alignment commit is `3a5e6b3` (`Align West Reservoir plans
+  with Bitter Lesson`).
   Do not run applicability retrieval/determination, compliance, V1 promotion,
   or registry promotion until the remaining 4fb source-evidence gap is
   resolved by that child blocker or a dedicated source-set migration packet.

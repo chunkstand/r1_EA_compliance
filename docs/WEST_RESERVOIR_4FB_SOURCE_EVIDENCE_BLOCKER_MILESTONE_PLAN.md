@@ -224,6 +224,9 @@ Exit criteria:
   retrieval/determination.
 - No registry, coverage, V1, component, compliance, or phase readiness status
   is promoted.
+- Local route commit is `0773ef7` (`Open West Reservoir source evidence
+  blocker`). The later docs-only Bitter Lesson alignment commit is `3a5e6b3`
+  (`Align West Reservoir plans with Bitter Lesson`).
 
 ### Milestone 1 - Same-Source-Set Repair Feasibility
 

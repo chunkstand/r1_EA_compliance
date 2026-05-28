@@ -427,6 +427,8 @@ Implementation note:
   result with the tracked replay-context source set.
 - No registry, coverage manifest, V1 contract, component contract, or
   reviewer-ready status was promoted in Milestone 0.
+- Local closeout commit:
+  `d5d97ad` (`Resolve West Reservoir baseline guard`).
 
 ### Milestone 1 - Review Artifact Spine Rebuild
 
@@ -504,6 +506,12 @@ Implementation note:
 - No applicability decisions, generated rule-pack refresh, forest-plan
   context, compliance review, V1 promotion, registry promotion, or aggregate
   coverage promotion was run after this blocker.
+- Local commit anchors:
+  `267ba9d` (`Scope West Reservoir authority universe to Flathead`) for the
+  Flathead authority-universe scoping repair and `0773ef7` (`Open West
+  Reservoir source evidence blocker`) for the blocker route. The docs-only
+  Bitter Lesson alignment commit is `3a5e6b3` (`Align West Reservoir plans
+  with Bitter Lesson`).
 
 ### Milestone 2 - Flathead Component Readiness
 
@@ -750,3 +758,7 @@ occur:
 - [x] Verification commands recorded for Milestone 0
 - [x] Stage only intended docs/config/tests/source changes for Milestone 0
 - [x] Local atomic commit created for Milestone 0
+- [x] Milestone 0 closeout commit recorded: `d5d97ad`
+- [x] Milestone 1 Flathead scoping commit recorded: `267ba9d`
+- [x] Milestone 1 source-evidence blocker route commit recorded: `0773ef7`
+- [x] Docs-only Bitter Lesson alignment commit recorded: `3a5e6b3`

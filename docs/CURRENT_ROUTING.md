@@ -53,6 +53,10 @@ Use this file as the short current route before opening the append-only docs.
   proceed to applicability retrieval, determination, compliance, or promotion
   until `applicability-authority-universe` is green on the selected governed
   source set.
+- Local commit anchors for the active West Reservoir packet: Milestone 0
+  baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
+  source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson
+  alignment `3a5e6b3`.
 - Do not reuse the historical green West Reservoir
   `phase_eval_results.json` on `source-set-5e65d845ce77e1a0` as current
   readiness proof. It is historical evidence only; the active packet requires

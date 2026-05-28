@@ -27,6 +27,10 @@ Latest implementation update on 2026-05-28 UTC:
   Milestone 0 is committed locally; Milestone 1 started and is blocked before
   applicability retrieval/determination; the remaining source-evidence gap is
   now routed through the active child blocker
+- local commit anchors:
+  Milestone 0 baseline guard `d5d97ad`, Flathead authority-universe scoping
+  `267ba9d`, source-evidence blocker route `0773ef7`, and docs-only Bitter
+  Lesson alignment `3a5e6b3`
 - successful Milestone 1 rebuilds:
   `ea-review` rebuilt `review_report.json` on
   `source-set-4fb59e9eb43045cb` with `reviewer_ready=true`,
@@ -82,6 +86,8 @@ Latest implementation update on 2026-05-28 UTC:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - resolved slice:
   Milestone 0 current-contract baseline and stale-green guard
+- closeout commit:
+  `d5d97ad` (`Resolve West Reservoir baseline guard`)
 - current target:
   `review_id="west-reservoir-67436"` on
   `source-set-4fb59e9eb43045cb` for `flathead-nf`
