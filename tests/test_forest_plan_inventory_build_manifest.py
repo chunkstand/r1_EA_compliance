@@ -89,6 +89,15 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
             nez_perce.source_record_ids,
         )
         flathead = manifest.get("flathead-nf")
+        flathead_reference = manifest.source_set_reference(flathead.source_set_reference_id)
+        self.assertEqual(
+            flathead_reference.source_set_ids,
+            (
+                "source-set-4fb59e9eb43045cb",
+                "source-set-f70ea11e04ae3d53",
+            ),
+        )
+        self.assertTrue(flathead_reference.matches_source_set("source-set-f70ea11e04ae3d53"))
         self.assertEqual(
             flathead.primary_plan_source_record_id,
             governed_matches["R1PLAN-flathead-nf-02"],

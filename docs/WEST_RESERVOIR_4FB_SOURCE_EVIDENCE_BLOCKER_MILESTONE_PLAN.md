@@ -5,8 +5,9 @@ Status: Blocker packet reduced locally; Milestone 1 found no governed
 same-source-set 4fb repair and routed to
 `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`; that migration
 packet has moved the tracked West Reservoir source-set contract to
-`source-set-f70ea11e04ae3d53`; parent readiness remains stopped before
-applicability retrieval/determination
+`source-set-f70ea11e04ae3d53` and resolved the migrated authority-universe
+proof; parent readiness can resume at applicability retrieval/determination
+on f70
 Owner context: Child blocker for `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 1
 
 ## Purpose
@@ -156,6 +157,8 @@ artifacts and current docs:
   `config/v1_west_reservoir_real_ea_eval.json`,
   `config/forest_plan_component_evals/west-reservoir-67436.json`,
   `config/forest_plan_component_eval_coverage_v1.json`
+- Component-inventory migration support:
+  `config/r1_forest_plan_component_inventory_build_manifest.json`
 - Source-record reconciliation:
   `config/compliance_source_record_reconciliation_v1.json`
 - Active and comparison catalogs:
@@ -215,9 +218,10 @@ For the Milestone 1 feasibility closeout slice:
 - The migration packet Milestone 1 contract migration moved replay context,
   V1 eval contract, component eval contract, component coverage, and replay
   catalog surface to `source-set-f70ea11e04ae3d53`.
-- The next blocker follow-on is the migration packet's Milestone 2
-  authority-universe proof: source-evidence checks are green on f70, but the
-  f70 Flathead component inventory proof is still red for `FINAL-FLAT-001`.
+- The migration packet Milestone 2 authority-universe proof is now green on
+  f70: `passed=true`, `validation_passed=true`,
+  `candidate_authority_count=146`, and
+  `forest_plan_component_candidate_count=80`.
 
 ## Weak-Point Prevention Contract
 
@@ -396,13 +400,11 @@ Stop instead of continuing downstream if:
 ## Residual Risks And Next Routing
 
 - The follow-on is
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` because the
-  current source rows are proven in the later f70 current-source-gap closeout
-  catalog, not in the active 4fb catalog.
-- That migration packet now has a Milestone 0 parity gate; its next slice is
-  Milestone 1 all-or-nothing West Reservoir contract migration.
-- If a reproducible 4fb repair is found, resume the parent West Reservoir
-  Milestone 1 sequence only after `applicability-authority-universe` is green.
-- If migration is required, downstream applicability/compliance/component/V1
-  work must wait until all West Reservoir source-set contracts are updated and
-  stale-artifact guards are refreshed.
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` because the
+  separate migration packet has resolved source-set parity and
+  authority-universe proof on f70.
+- Resume the parent West Reservoir Milestone 1 sequence at applicability
+  retrieval/determination on `source-set-f70ea11e04ae3d53`.
+- Downstream compliance/component/V1/phase and registry promotion still wait
+  for their parent-plan gates; the source-evidence blocker does not promote
+  West Reservoir to reviewer-ready.

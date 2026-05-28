@@ -15,14 +15,15 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## West Reservoir Source-Set Migration Contract Migrated
+## West Reservoir Source-Set Migration Authority-Universe Proof Resolved
 
 Latest implementation update on 2026-05-28 UTC:
 
 - update:
-  migration packet Milestone 1 is now reduced locally. Replay context, V1 eval
-  contract, component eval contract, component coverage, and replay catalog
-  surface now use `source-set-f70ea11e04ae3d53`.
+  migration packet Milestone 2 is now resolved locally. Replay context, V1
+  eval contract, component eval contract, component coverage, replay catalog
+  surface, f70 forest-plan component inventory, and the West Reservoir
+  authority universe now agree on `source-set-f70ea11e04ae3d53`.
 - parity gate:
   `tests/test_west_reservoir_source_set_migration.py` verifies the tracked
   source-set surfaces agree on f70, verifies the selected f70 replay catalog
@@ -51,27 +52,35 @@ Latest implementation update on 2026-05-28 UTC:
   no applicability retrieval, applicability determination, generated
   rule-pack refresh, forest-plan context, compliance review, V1 promotion,
   phase eval, registry promotion, or aggregate coverage promotion was run.
+- f70 forest-plan component inventory rebuild:
+  `forest-plan-components-build --source-set-id source-set-f70ea11e04ae3d53
+  --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  passed with `component_count=410`, `standard_count=79`,
+  `profile_result_count=3`, `blocked_forest_unit_ids=[]`, and
+  `forest_unit_ids=["custer-gallatin-nf","flathead-nf","lolo-nf"]`.
 - selected f70 authority-universe rerun:
   `applicability-authority-universe --review-id west-reservoir-67436
   --source-set-id source-set-f70ea11e04ae3d53` reads the selected f70 catalog
-  and reports `candidate_authority_count=66`,
-  `forest_plan_component_candidate_count=0`, `passed=false`, and
-  `validation_passed=false`.
-- resolved source-evidence checks:
+  and reports `candidate_authority_count=146`,
+  `forest_plan_component_candidate_count=80`, `passed=true`, and
+  `validation_passed=true`.
+- resolved authority-universe checks:
   `candidates_have_source_evidence_available.failure_count=0`,
   `rule_template_candidates_have_source_claim_linkage.failure_count=0`, and
   `authority_family_template_candidates_cover_config.missing_source_record_count=0`.
-- remaining authority-universe blocker:
-  `forest_plan_component_candidates_use_profile_inventory` remains red with
-  `component_inventory_present=false`, `component_inventory_count=0`,
-  `component_candidate_count=0`, and
+- resolved component-inventory check:
+  `forest_plan_component_candidates_use_profile_inventory` is green with
+  `component_inventory_present=true`, `component_inventory_count=80`,
+  `component_candidate_count=80`,
+  `selected_component_forest_unit_ids=["flathead-nf"]`, and
   `required_profile_source_record_ids=["FINAL-FLAT-001"]`.
 - next implementation slice:
   start with
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 2.
-  Resolve the f70 Flathead component inventory proof for `FINAL-FLAT-001`,
-  rerun the authority-universe gate, and keep reviewer-ready promotion blocked
-  until the parent gates pass.
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 1 on
+  f70. Rerun the f70 artifact freshness steps before applicability
+  retrieval/determination because the existing package applicability context
+  was last rebuilt on pre-migration 4fb, and keep reviewer-ready promotion
+  blocked until the parent gates pass.
 
 - active parent packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
@@ -83,8 +92,9 @@ Latest implementation update on 2026-05-28 UTC:
   West Reservoir remains stopped before applicability retrieval/determination.
   The same-source-set 4fb feasibility slice found no governed repair from the
   active 4fb catalog, so the migration packet moved the tracked contract to
-  f70. The current blocker is no longer authority source evidence; it is the
-  missing f70 Flathead component inventory proof.
+  f70. The migrated authority universe is now green; the current next step is
+  parent-plan f70 artifact freshness before applicability
+  retrieval/determination.
 - pre-migration 4fb authority-universe signal:
   `applicability-authority-universe --review-id west-reservoir-67436
   --source-set-id source-set-4fb59e9eb43045cb` still exits red with
@@ -102,8 +112,8 @@ Latest implementation update on 2026-05-28 UTC:
   catalog (`source_count=708`).
 - migration boundary:
   the f70 catalog is now used only through the migrated tracked contract. Do
-  not borrow any different catalog or move downstream until the migrated
-  authority-universe gate is green.
+  not borrow any different catalog or promote reviewer-ready status without
+  the parent readiness gates.
 - stop condition:
   no applicability retrieval, applicability determination, generated rule-pack
   refresh, forest-plan context, compliance review, V1 promotion, phase eval,
@@ -111,9 +121,9 @@ Latest implementation update on 2026-05-28 UTC:
   feasibility finding.
 - next implementation slice:
   start with
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 2.
-  Resolve the f70 Flathead component inventory blocker and rerun
-  `applicability-authority-universe` on the selected migrated source set.
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 1.
+  Rerun f70 artifact freshness, then applicability retrieval/determination on
+  the selected migrated source set.
 
 ## West Reservoir Milestone 1 Source-Evidence Blocker Routed
 

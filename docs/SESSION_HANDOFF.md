@@ -102,24 +102,30 @@ history below.
   registry surfaces. Those tracked source-set surfaces now point to
   `source-set-f70ea11e04ae3d53`, and replay context `catalog_dir` points at
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`.
-  The selected f70 authority-universe rerun clears the prior source-evidence
-  checks (`candidates_have_source_evidence_available.failure_count=0` and
-  `authority_family_template_candidates_cover_config.missing_source_record_count=0`)
-  but remains red on
-  `forest_plan_component_candidates_use_profile_inventory` with
-  `component_inventory_present=false`, `component_candidate_count=0`, and
-  `required_profile_source_record_ids=["FINAL-FLAT-001"]`. No downstream
+  Migration packet Milestone 2 is now resolved locally. The f70 component
+  inventory batch now includes Custer Gallatin, Flathead, and Lolo and passes
+  with `component_count=410`, `standard_count=79`,
+  `profile_result_count=3`, and `blocked_forest_unit_ids=[]`. The selected
+  f70 authority-universe rerun reports `passed=true`,
+  `validation_passed=true`, `candidate_authority_count=146`, and
+  `forest_plan_component_candidate_count=80`; source-evidence checks remain
+  green and `forest_plan_component_candidates_use_profile_inventory` now has
+  `component_inventory_present=true`, `component_inventory_count=80`,
+  `component_candidate_count=80`, and
+  `selected_component_forest_unit_ids=["flathead-nf"]`. No downstream
   retrieval, determination, compliance, V1 promotion, phase eval, registry
   promotion, or aggregate coverage promotion ran. The next slice is
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 2:
-  resolve the f70 Flathead component inventory proof, rerun
-  `applicability-authority-universe`, and keep reviewer-ready promotion
-  blocked until parent gates pass.
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 1 on
+  f70: rerun f70 artifact freshness before applicability
+  retrieval/determination because the package applicability context was last
+  rebuilt on pre-migration 4fb, and keep reviewer-ready promotion blocked
+  until parent gates pass.
   Local commit anchors for the Milestone 1 reduction/blocker route are
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) and
   `0773ef7` (`Open West Reservoir source evidence blocker`); the docs-only
   Bitter Lesson alignment commit is `3a5e6b3` (`Align West Reservoir plans
-  with Bitter Lesson`).
+  with Bitter Lesson`), and the source-set migration Milestone 1 closeout
+  commit is `f17474b` (`Migrate West Reservoir source-set contract`).
   Do not run applicability retrieval/determination, compliance, V1 promotion,
   phase eval, or registry promotion until the migration packet resolves and
   `applicability-authority-universe` is green on the selected governed source

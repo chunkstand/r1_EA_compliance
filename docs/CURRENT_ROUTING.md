@@ -54,26 +54,25 @@ Use this file as the short current route before opening the append-only docs.
   contract, component eval contract, component coverage, and the replay
   catalog surface all now point to `source-set-f70ea11e04ae3d53`, while
   `tests/test_west_reservoir_source_set_migration.py` fails on a controlled
-  mixed-source-set case and preserves typed-blocked status. The selected f70
-  authority-universe rerun clears the prior source-evidence failures
-  (`candidates_have_source_evidence_available.failure_count=0`,
-  `authority_family_template_candidates_cover_config.missing_source_record_count=0`)
-  but remains red on
-  `forest_plan_component_candidates_use_profile_inventory` because the f70
-  Flathead component inventory proof has `component_inventory_present=false`,
-  `component_candidate_count=0`, and
-  `required_profile_source_record_ids=["FINAL-FLAT-001"]`. The next
-  implementation slice starts in
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 2:
-  resolve the f70 Flathead component inventory authority-universe blocker.
-  Do not proceed to applicability retrieval, determination, compliance, or
-  promotion until that migration packet is green.
+  mixed-source-set case and preserves typed-blocked status. Migration packet
+  Milestone 2 is now resolved locally: the f70 component inventory batch now
+  includes Custer Gallatin, Flathead, and Lolo and passes with
+  `component_count=410`, `standard_count=79`, and
+  `blocked_forest_unit_ids=[]`; the selected f70 authority-universe rerun
+  reports `passed=true`, `validation_passed=true`,
+  `candidate_authority_count=146`, and
+  `forest_plan_component_candidate_count=80`. The next implementation slice
+  resumes `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+  Milestone 1 on f70: rerun the f70 artifact freshness steps before
+  applicability retrieval/determination, because the existing package
+  applicability context was last rebuilt on pre-migration 4fb. Do not proceed
+  to compliance, V1 promotion, phase eval, or registry promotion until those
+  parent gates pass.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson
-  alignment `3a5e6b3`; same-source-set feasibility now routes to
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`, where
-  Milestone 0 has added the source-set parity gate.
+  alignment `3a5e6b3`; source-set migration Milestone 1 closeout is
+  `f17474b` (`Migrate West Reservoir source-set contract`).
 - Do not reuse the historical green West Reservoir
   `phase_eval_results.json` on `source-set-5e65d845ce77e1a0` as current
   readiness proof. It is historical evidence only; the active packet requires

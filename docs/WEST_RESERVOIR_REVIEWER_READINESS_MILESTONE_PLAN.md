@@ -3,12 +3,12 @@
 Date: 2026-05-28
 Status: Active parent packet; Milestone 0 resolved locally; Milestone 1
 reduced by Flathead authority-universe scoping and source-evidence
-feasibility; source-set migration is now routed through
+feasibility; source-set migration is resolved through
 `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`, where Milestone
 1 contract migration moved the tracked West Reservoir contract to
-`source-set-f70ea11e04ae3d53`; parent readiness remains stopped until
-Milestone 2 authority-universe proof resolves the f70 Flathead component
-inventory blocker
+`source-set-f70ea11e04ae3d53` and Milestone 2 resolved the f70
+authority-universe proof; parent readiness resumes at Milestone 1 f70 artifact
+freshness before applicability retrieval/determination
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -80,12 +80,13 @@ Reservoir contract together. Borrowing a newer catalog, editing thresholds, or
 promoting from stale green artifacts is disallowed because it replaces scalable
 evidence and eval loops with local intuition.
 
-The source-evidence blocker feasibility slice has now reduced the 4fb option:
-the failing snapshot requires `59` unique source-record IDs, `49` mapped
-current rows are absent from active 4fb and present only in the later f70
-current-source-gap closeout catalog. The parent plan remains stopped until the
-dedicated source-set migration packet resolves contract parity and reruns the
-authority universe on one selected source set.
+The source-evidence blocker feasibility slice reduced the 4fb option: the
+failing snapshot required `59` unique source-record IDs, `49` mapped current
+rows were absent from active 4fb and present only in the later f70
+current-source-gap closeout catalog. The dedicated source-set migration packet
+has now resolved contract parity and the authority universe on one selected
+source set, so parent work can resume on f70 without borrowing a different
+catalog.
 
 Migration packet Milestone 0 added the tracked parity gate:
 `tests/test_west_reservoir_source_set_migration.py` verifies replay context,
@@ -95,15 +96,14 @@ the parent readiness gates remain red.
 
 Migration packet Milestone 1 then moved the tracked contract to
 `source-set-f70ea11e04ae3d53` and pointed the replay context catalog surface at
-the f70 current-source-gap closeout catalog. The selected f70
-authority-universe rerun clears the prior source-evidence checks
-(`candidates_have_source_evidence_available.failure_count=0`,
-`authority_family_template_candidates_cover_config.missing_source_record_count=0`)
-but remains red on
-`forest_plan_component_candidates_use_profile_inventory` because the f70
-Flathead component inventory proof has
-`component_inventory_present=false`, `component_candidate_count=0`, and
-`required_profile_source_record_ids=["FINAL-FLAT-001"]`.
+the f70 current-source-gap closeout catalog. Migration packet Milestone 2
+added Flathead to the f70 forest-plan component inventory batch, rebuilt that
+inventory, and reran the selected f70 authority universe. The gate now reports
+`passed=true`, `validation_passed=true`, `candidate_authority_count=146`,
+`forest_plan_component_candidate_count=80`, and the component-inventory check
+is green with `component_inventory_present=true`,
+`component_inventory_count=80`, and
+`selected_component_forest_unit_ids=["flathead-nf"]`.
 
 ## Current Evidence
 
@@ -277,6 +277,8 @@ governed review passes on `source-set-f70ea11e04ae3d53` with:
   `config/v1_west_reservoir_real_ea_eval.json`
 - Component eval contract:
   `config/forest_plan_component_evals/west-reservoir-67436.json`
+- Region 1 component inventory manifest:
+  `config/r1_forest_plan_component_inventory_build_manifest.json`
 - Applicability adjudication:
   `config/applicability_adjudications/west-reservoir-67436.json`
 - Forest-plan component adjudication:
@@ -541,9 +543,15 @@ Implementation note:
   current IDs are present in the active 4fb catalog, and all `49` are present
   only in `source-set-f70ea11e04ae3d53`. The follow-on owner is now
   `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`.
-- The migration packet Milestone 0 parity inventory is reduced locally. The
-  next slice is the all-or-nothing source-set contract migration across replay
-  context, V1 eval contract, component eval contract, and component coverage.
+- The migration packet is now resolved for source-set parity and migrated
+  authority-universe proof across replay context, V1 eval contract, component
+  eval contract, component coverage, replay catalog surface, and f70 Flathead
+  component-inventory proof.
+- The migration packet Milestone 2 has since resolved the f70
+  authority-universe proof. Before downstream retrieval/determination, rerun
+  the parent Milestone 1 f70 artifact freshness steps because
+  `package_applicability_context.json` was last rebuilt on the pre-migration
+  `source-set-4fb59e9eb43045cb`.
 - No applicability decisions, generated rule-pack refresh, forest-plan
   context, compliance review, V1 promotion, registry promotion, or aggregate
   coverage promotion was run after this blocker.

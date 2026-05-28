@@ -5,7 +5,7 @@ Status: Active migration packet opened from
 `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
 Milestone 1; Milestone 1 contract migration reduced locally with the tracked
 parity gate on `source-set-f70ea11e04ae3d53`; Milestone 2 authority-universe
-proof is blocked on the f70 Flathead component inventory
+proof resolved locally on the selected f70 source set
 Owner context: source-set contract migration child for
 `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 
@@ -72,13 +72,16 @@ universe is green on the selected source set.
   whose manifest declares `source-set-f70ea11e04ae3d53`.
 - Fresh migrated authority-universe signal:
   `applicability-authority-universe --review-id west-reservoir-67436
-  --source-set-id source-set-f70ea11e04ae3d53` reads the selected f70 catalog,
-  reports `candidates_have_source_evidence_available.failure_count=0` and
-  `authority_family_template_candidates_cover_config.missing_source_record_count=0`,
-  but still exits red because
-  `forest_plan_component_candidates_use_profile_inventory` has
-  `component_inventory_present=false`, `component_candidate_count=0`, and
-  `required_profile_source_record_ids=["FINAL-FLAT-001"]`.
+  --source-set-id source-set-f70ea11e04ae3d53` reads the selected f70 catalog
+  and now reports `passed=true`, `validation_passed=true`,
+  `candidate_authority_count=146`, and
+  `forest_plan_component_candidate_count=80`.
+- Fresh f70 component-inventory signal:
+  `forest-plan-components-build --source-set-id source-set-f70ea11e04ae3d53
+  --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json`
+  passes with `component_count=410`, `standard_count=79`,
+  `profile_result_count=3`, `blocked_forest_unit_ids=[]`, and
+  `forest_unit_ids=["custer-gallatin-nf","flathead-nf","lolo-nf"]`.
 - Milestone 0 parity gate:
   `tests/test_west_reservoir_source_set_migration.py` now proves the tracked
   source-set contract surfaces have one identity and includes a controlled
@@ -164,6 +167,8 @@ authority-universe rerun uses catalog rows from that same source set.
   `config/forest_plan_component_evals/west-reservoir-67436.json`
 - Component coverage manifest:
   `config/forest_plan_component_eval_coverage_v1.json`
+- Forest-plan component inventory manifest:
+  `config/r1_forest_plan_component_inventory_build_manifest.json`
 - Real-package and forest-specific manifests that must stay typed blocked:
   `config/v1_real_package_review_coverage_v1.json`,
   `config/forest_specific_example_package_registry_v1.json`
@@ -199,6 +204,9 @@ authority-universe rerun uses catalog rows from that same source set.
 - Tracked config updates for every migrated source-set contract surface.
 - A fresh `authority_universe_snapshot.json` generated for the selected source
   set after migration.
+- A fresh f70 forest-plan component inventory generated from the tracked
+  component-inventory manifest when Milestone 2 resolves the Flathead
+  inventory proof.
 - Focused tests or eval gates proving mixed 4fb/f70 source-set IDs fail.
 - Current routing, current-system-state, and handoff docs refreshed with exact
   source-set IDs, pass/fail counts, and the next parent-plan route.
@@ -294,7 +302,7 @@ Implementation note:
 
 ### Milestone 2 - Migrated Authority-Universe Proof And Parent Resume Route
 
-Status: Blocked after the Milestone 1 closeout gate.
+Status: Resolved locally on 2026-05-28.
 
 Outcome label: resolved for the migration packet.
 
@@ -317,22 +325,33 @@ Exit criteria:
 - If green, the parent West Reservoir readiness plan resumes at
   applicability retrieval/determination on the migrated source set.
 
-Current blocker:
+Implementation note:
 
+- The f70 forest-plan component inventory manifest now includes a
+  `flathead_replay_compatible` source-set reference for
+  `source-set-4fb59e9eb43045cb` and `source-set-f70ea11e04ae3d53`, and the
+  Flathead row uses that reference.
+- The f70 manifest-batch component inventory was rebuilt with Custer Gallatin,
+  Flathead, and Lolo rows and passed with `component_count=410`,
+  `standard_count=79`, `profile_result_count=3`,
+  `blocked_forest_unit_ids=[]`, and `coverage_passed=true`.
 - The migrated authority-universe rerun uses
   `source-set-f70ea11e04ae3d53`, the f70 catalog path, and
   `forest_unit_id="flathead-nf"`.
-- Source evidence is no longer the failing check:
-  `candidates_have_source_evidence_available.failure_count=0` and
+- Source evidence remains green:
+  `candidates_have_source_evidence_available.failure_count=0`,
+  `rule_template_candidates_have_source_claim_linkage.failure_count=0`, and
   `authority_family_template_candidates_cover_config.missing_source_record_count=0`.
-- The remaining failing check is
-  `forest_plan_component_candidates_use_profile_inventory` with
-  `component_inventory_present=false`, `component_candidate_count=0`,
-  `forest_plan_component_candidate_count=0`, and
+- The previous component-inventory blocker is green:
+  `forest_plan_component_candidates_use_profile_inventory` reports
+  `component_inventory_present=true`, `component_inventory_count=80`,
+  `component_candidate_count=80`,
+  `selected_component_forest_unit_ids=["flathead-nf"]`, and
   `required_profile_source_record_ids=["FINAL-FLAT-001"]`.
-- The next slice must repair or rebuild the f70 Flathead component inventory
-  proof before applicability retrieval, determination, compliance, V1
-  promotion, phase eval, or registry promotion.
+- The migration packet is now resolved for its source-set and
+  authority-universe scope. The parent West Reservoir readiness plan resumes
+  at applicability retrieval/determination on
+  `source-set-f70ea11e04ae3d53`.
 
 ## Required Documentation And Handoff Updates
 
@@ -362,6 +381,19 @@ git diff --check
 
 For contract migration slices, add focused tests for every touched config
 surface plus the migrated authority-universe command.
+
+For the Milestone 2 migrated authority-universe proof slice, run:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-f70ea11e04ae3d53
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_plan_components_manifest.py tests/test_west_reservoir_source_set_migration.py tests/test_replay_context.py
+PYTHONPATH=src uv run --extra dev ruff check src tests
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md
+git diff --check
+```
 
 For the Milestone 1 contract migration slice, run:
 
@@ -395,8 +427,8 @@ git diff --check
 - No registry, coverage, V1, component, compliance, phase, or reviewer-ready
   status is promoted by this packet-opening slice.
 - Future migration work has an explicit mixed-source-set prevention gate.
-- Current routing, current system state, and session handoff point here for
-  the next implementation slice.
+- Current routing, current system state, and session handoff point to the
+  parent readiness plan for the next implementation slice.
 - No generated `source_library/` artifacts are staged.
 - The parity gate fails on a controlled mixed-source-set condition and passes
   only when replay context, V1 eval, component eval, and component coverage
@@ -425,12 +457,12 @@ Stop instead of continuing downstream if:
 
 ## Residual Risks And Next Milestone Routing
 
-- The next slice is Milestone 2 here: make the migrated f70
-  authority-universe proof green by resolving the Flathead component
-  inventory gap for `FINAL-FLAT-001`, then preserve typed-blocked status until
-  downstream parent gates prove reviewer-ready.
-- The parent West Reservoir readiness packet remains stopped before
-  applicability retrieval/determination until this packet resolves.
+- The migration packet is resolved for source-set parity and migrated
+  authority-universe proof. The next slice resumes the parent West Reservoir
+  readiness packet at applicability retrieval/determination on
+  `source-set-f70ea11e04ae3d53`.
+- West Reservoir remains typed blocked until the parent readiness plan's
+  downstream gates prove reviewer-ready.
 - Aggregate component coverage remains red for non-South Otter/non-Lolo
   residual slots and must not be described as green.
 
