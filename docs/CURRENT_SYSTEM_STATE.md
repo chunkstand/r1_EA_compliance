@@ -15,17 +15,43 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## South Otter Example Package Milestone 3 Resolved Locally
+## South Otter Primary Custer Gallatin Example Selection
 
 Latest implementation update on 2026-05-27 UTC:
+
+- resolved policy slice:
+  user-directed Custer Gallatin primary-example selection update after the
+  South Otter Milestone 3 closeout
+- updated routing truth:
+  `config/forest_specific_example_package_registry_v1.json` now sets
+  `primary_example_id="cgnf-south-otter-forest-specific"` for
+  `custer-gallatin-nf`. East Crazy
+  (`cgnf-east-crazy-current-promotion`) and South Plateau
+  (`cgnf-south-plateau-expansion`) remain governed supplemental examples for
+  the same forest.
+- invariant truth:
+  South Otter remains outside `Document_Register_Master`; no source-register
+  queue row was rerouted. The update changes Custer Gallatin example-selection
+  priority only. It does not change South Otter's source set, replay context,
+  required real-package coverage slot, required component-coverage slot, or
+  distinct-forest thresholds.
+- residual aggregate truth:
+  aggregate component coverage still must not be described as green until the
+  separate non-South Otter ECID source-delta and West Reservoir slots are
+  repaired.
+
+## South Otter Example Package Milestone 3 Resolved Locally
+
+Historical implementation update on 2026-05-27 UTC, superseded by the primary
+selection section above for Custer Gallatin example ordering:
 
 - resolved packet:
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - packet outcome:
-  `Milestone 3 resolved locally`; South Otter is now a governed supplemental
-  Custer Gallatin example in
+  `Milestone 3 resolved locally`; at this historical checkpoint South Otter
+  became a governed supplemental Custer Gallatin example in
   `config/forest_specific_example_package_registry_v1.json`, a required
   real-package coverage slot in
   `config/v1_real_package_review_coverage_v1.json`, and a required passing
@@ -39,9 +65,10 @@ Latest implementation update on 2026-05-27 UTC:
   `review_id="region1-example-custer-gallatin-south-otter-58396"`,
   `forest_unit_id="custer-gallatin-nf"`,
   `coverage_slot_id="cgnf-south-otter-forest-specific"`, and
-  `applicable_forest_unit_ids=["custer-gallatin-nf"]`. The Custer Gallatin row
-  keeps East Crazy as primary and lists South Plateau plus South Otter as
-  supplemental examples, so distinct-forest thresholds are unchanged.
+  `applicable_forest_unit_ids=["custer-gallatin-nf"]`. At this historical
+  checkpoint, the Custer Gallatin row kept East Crazy as primary and listed
+  South Plateau plus South Otter as supplemental examples; the primary
+  selection section above supersedes that ordering.
 - real-package coverage truth:
   `real-package-review-coverage-eval` passes with `covered_slot_count=5`,
   `required_slot_count=5`, `reviewer_ready_slot_count=4`,

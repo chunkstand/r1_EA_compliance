@@ -8,7 +8,7 @@ Use this file as the short current route before opening the append-only docs.
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
-  none selected after South Otter Milestone 3 closeout
+  none selected after South Otter primary-example selection update
 - Historical lineage only:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,
   `docs/LOLO_TYLERS_KITCHEN_CURRENT_WORKBOOK_SOURCE_SET_REBASELINE_BLOCKER_MILESTONE_PLAN.md`,
@@ -20,8 +20,9 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- South Otter Milestone 3 is resolved locally for supplemental same-forest
-  promotion. South Otter is now a governed Custer Gallatin example in
+- South Otter Milestone 3 is resolved locally, and the current registry policy
+  now promotes South Otter as the primary Custer Gallatin example. South Otter
+  is a governed Custer Gallatin example in
   `config/forest_specific_example_package_registry_v1.json`, a required slot in
   `config/v1_real_package_review_coverage_v1.json`, and a required passing slot
   in `config/forest_plan_component_eval_coverage_v1.json`. It remains parallel
@@ -55,9 +56,10 @@ Use this file as the short current route before opening the append-only docs.
   `coverage_slot_id="cgnf-south-otter-forest-specific"`,
   `forest_unit_id="custer-gallatin-nf"`, and
   `applicable_forest_unit_ids=["custer-gallatin-nf"]`. The Custer Gallatin row
-  keeps East Crazy as primary and now lists South Plateau plus South Otter as
-  supplemental examples. Distinct-forest thresholds remain unchanged for this
-  same-forest supplemental example.
+  now sets South Otter as `primary_example_id` and lists East Crazy plus South
+  Plateau as supplemental examples. Distinct-forest thresholds remain unchanged
+  because all three governed Custer Gallatin examples belong to the same
+  forest.
 - `config/v1_real_package_review_coverage_v1.json` now has five load-bearing
   slots, including South Otter and Lolo as two required
   `forest_specific_reviewer_ready` slots. The governed aggregate rerun reports
@@ -112,7 +114,7 @@ Use this file as the short current route before opening the append-only docs.
   describe aggregate component coverage as green.
 - Aggregate truth:
   ECID current promotion, South Plateau reviewer-ready expansion, Lolo
-  forest-specific example promotion, and South Otter supplemental promotion
+  forest-specific example promotion, and South Otter primary-example selection
   remain green in the non-strict promotion suite. Strict expansion remains
   blocked only on the ECID historical slot under
   `historical_source_set_split`.

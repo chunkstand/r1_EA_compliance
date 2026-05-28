@@ -199,7 +199,7 @@
         "draft_generation",
         "final_qa_certification"
       ],
-      "notes": "Project-specific Custer Gallatin example package. Use for forest-specific guidance only; do not promote its package rows into Document_Register_Master."
+      "notes": "Supplemental project-specific Custer Gallatin example package. Use for forest-specific guidance after the South Otter primary example when East Crazy review artifacts are specifically relevant; do not promote its package rows into Document_Register_Master."
     },
     {
       "example_id": "cgnf-south-plateau-expansion",
@@ -227,7 +227,7 @@
         "forest_plan_component_eval",
         "compliance_matrix_render_manifest"
       ],
-      "notes": "Supplemental reviewer-ready expansion package for Custer Gallatin. Use after East Crazy when a second project style is helpful."
+      "notes": "Supplemental reviewer-ready expansion package for Custer Gallatin. Use after South Otter when a second project style is helpful."
     },
     {
       "example_id": "cgnf-south-otter-forest-specific",
@@ -255,7 +255,7 @@
         "forest_plan_component_eval",
         "compliance_matrix_render_manifest"
       ],
-      "notes": "Supplemental reviewer-ready South Otter example for Custer Gallatin. Use after East Crazy and South Plateau when an additional completed-forest-specific project style is helpful; keep the package parallel to Document_Register_Master."
+      "notes": "Primary reviewer-ready South Otter example for Custer Gallatin. Use first for Custer Gallatin forest-specific example-package guidance; keep the package parallel to Document_Register_Master."
     },
     {
       "example_id": "flathead-west-reservoir-typed-blocked",
@@ -323,10 +323,10 @@
       "applicable_to_forest_unit_ids": [
         "custer-gallatin-nf"
       ],
-      "primary_example_id": "cgnf-east-crazy-current-promotion",
+      "primary_example_id": "cgnf-south-otter-forest-specific",
       "supplemental_example_ids": [
-        "cgnf-south-plateau-expansion",
-        "cgnf-south-otter-forest-specific"
+        "cgnf-east-crazy-current-promotion",
+        "cgnf-south-plateau-expansion"
       ],
       "shared_contract_ids": [
         "forest_plan_profile_eval_coverage_manifest",
@@ -340,7 +340,7 @@
         "FOR-012",
         "LEX-Q-001"
       ],
-      "guidance_note": "Use the East Crazy package first; South Plateau and South Otter are supplemental reviewer-ready examples for the same forest. These supplemental Custer Gallatin examples do not count as new distinct forests."
+      "guidance_note": "Use the South Otter package first; East Crazy and South Plateau are supplemental reviewer-ready examples for the same forest. These supplemental Custer Gallatin examples do not count as new distinct forests."
     },
     {
       "forest_unit_id": "beaverhead-deerlodge-nf",

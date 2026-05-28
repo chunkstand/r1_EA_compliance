@@ -47,9 +47,9 @@ The planner:
   `region1-example-custer-gallatin-south-otter-58396` and the official Custer
   Gallatin project page
   `https://www.fs.usda.gov/r01/custergallatin/projects/58396` as the selected
-  package authority. Milestone 3 promoted South Otter as a supplemental
-  same-forest Custer Gallatin registry example and required real-package plus
-  component-coverage slot after locally proving the reviewer stack on
+  package authority. Milestone 3 promoted South Otter as a same-forest Custer
+  Gallatin registry example and required real-package plus component-coverage
+  slot after locally proving the reviewer stack on
   `source-set-f70ea11e04ae3d53`: applicability, compliance review, V1 eval,
   forest-plan component eval/adjudication, and review `phase-eval` are green.
   The full Pinyon/Box root remains local ignored package-authority evidence,
@@ -57,8 +57,9 @@ The planner:
   `source_library/reviews/_intake/region1-example-custer-gallatin-south-otter-58396/Final EA and Decision Notice Documents`
   because the full root contains broad references that make scope resolution
   ambiguous. South Otter remains parallel to `Document_Register_Master`; no
-  source-register queue row was rerouted, East Crazy remains the Custer
-  Gallatin primary example, and distinct-forest thresholds were not increased.
+  source-register queue row was rerouted. The registry now uses South Otter as
+  the Custer Gallatin primary example while East Crazy and South Plateau remain
+  supplemental examples, and distinct-forest thresholds were not increased.
   The component-coverage aggregate is still red on non-South Otter ECID
   source-delta and West Reservoir slots, but South Otter's required slot and
   review-scope `phase-eval` coverage are green.

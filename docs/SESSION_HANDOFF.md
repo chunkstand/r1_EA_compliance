@@ -21,7 +21,7 @@ history below.
 - latest resolved packet:
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - active forest-specific example packet:
-  none selected after South Otter Milestone 3 closeout; use
+  none selected after South Otter primary-example selection update; use
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` before
   opening another forest-specific example packet
 - continuing lane owner:
@@ -35,7 +35,16 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  South Otter Milestone 3 is now resolved locally under
+  South Otter is now the primary Custer Gallatin example in
+  `config/forest_specific_example_package_registry_v1.json` after a
+  user-directed primary-example selection update. The Custer Gallatin row sets
+  `primary_example_id="cgnf-south-otter-forest-specific"` and keeps
+  `cgnf-east-crazy-current-promotion` plus
+  `cgnf-south-plateau-expansion` as supplemental examples. This changes
+  example-selection priority only: South Otter remains outside
+  `Document_Register_Master`, no source-register queue row was rerouted, and
+  distinct-forest thresholds remain unchanged.
+  South Otter Milestone 3 is resolved locally under
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. The implementation
   closeout commit is `21eb2fa` (`Promote South Otter supplemental example`).
   The governed
@@ -55,8 +64,8 @@ history below.
   `Final EA and Decision Notice Documents` folder through
   `config/replay_contexts/region1-example-custer-gallatin-south-otter-58396.json`
   on `source-set-f70ea11e04ae3d53`.
-  `config/forest_specific_example_package_registry_v1.json` now keeps East
-  Crazy as the Custer Gallatin primary and lists South Plateau plus South Otter
+  `config/forest_specific_example_package_registry_v1.json` now keeps South
+  Otter as the Custer Gallatin primary and lists East Crazy plus South Plateau
   as supplemental examples. `config/v1_real_package_review_coverage_v1.json`
   now has five required slots and treats South Otter as the second required
   `forest_specific_reviewer_ready` slot alongside Lolo. The registry and

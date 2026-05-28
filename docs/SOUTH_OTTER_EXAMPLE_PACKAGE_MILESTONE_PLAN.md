@@ -4,9 +4,10 @@ Date: 2026-05-27
 Status: Resolved packet (`Milestone 0 routing and package-boundary selection
 opened; Milestone 1 local package authority intake resolved locally; Milestone
 2 reviewer-stack replay resolved locally; Milestone 3 registry promotion and
-threshold ratchet resolved locally. South Otter is reviewer-ready and promoted
-as a supplemental Custer Gallatin registry, real-package coverage, and
-component-coverage slot; it remains outside the workbook and queue ledger.`)
+threshold ratchet resolved locally. A later user-directed policy update makes
+South Otter the primary Custer Gallatin example while East Crazy and South
+Plateau remain supplemental examples; South Otter remains outside the workbook
+and queue ledger.`)
 Owner context: standalone follow-on from
 `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
@@ -41,11 +42,11 @@ Current implementation truth:
 
 - South Otter is not present in the active workbook by `South Otter`,
   `projects/58396`, or `58396` search at packet opening.
-- South Otter is now a governed supplemental registry example in
+- South Otter is now the governed primary Custer Gallatin registry example in
   `config/forest_specific_example_package_registry_v1.json`.
-- The Custer Gallatin registry row keeps East Crazy as primary and now lists
-  South Plateau plus South Otter as supplemental package-style examples.
-  South Otter is not a new distinct-forest coverage claim.
+- The Custer Gallatin registry row now keeps South Otter as primary and lists
+  East Crazy plus South Plateau as supplemental package-style examples. South
+  Otter is not a new distinct-forest coverage claim.
 - The frozen review ID includes the forest slug:
   `region1-example-custer-gallatin-south-otter-58396`. Forest-specific example
   review IDs must stay tied to the applicable forest, not only to Region 1 or
@@ -111,10 +112,10 @@ The governed registry identity is:
 - `queue_lineage_source_ids=[]` unless a later workbook-backed South Otter row
   is found
 
-South Otter is a supplemental Custer Gallatin example after reaching
-reviewer-ready status. It must not replace East Crazy as the primary Custer
-Gallatin example without a separate primary-example policy decision, and it
-must not increase distinct-forest coverage metrics.
+South Otter is the primary Custer Gallatin example after the user-directed
+primary-example policy update. East Crazy and South Plateau remain governed
+supplemental Custer Gallatin examples, and the update must not increase
+distinct-forest coverage metrics.
 
 ## Current Evidence
 
@@ -148,8 +149,9 @@ must not increase distinct-forest coverage metrics.
 - South Otter is now reviewer-ready under the Milestone 2 review stack:
   applicability, generated rule-pack, compliance review, V1 eval, component
   eval, component adjudication eval, and review `phase-eval` are green.
-- South Otter is now governed under Milestone 3: the real-package aggregate
-  passes with `covered_slot_count=5`, `required_slot_count=5`,
+- South Otter is now governed under Milestone 3 and selected as the primary
+  Custer Gallatin example by the follow-on policy update: the real-package
+  aggregate passes with `covered_slot_count=5`, `required_slot_count=5`,
   `reviewer_ready_slot_count=4`, `typed_blocked_slot_count=1`,
   `distinct_forest_count=3`, and `distinct_package_style_count=6`; the
   forest-specific aggregate passes with `review_example_count=5`,
@@ -253,9 +255,10 @@ review artifacts, eval contracts, and aggregate gates are all present and green.
   `source_library/` paths.
 - Keep replay and eval contracts under `config/` only after the matching local
   package authority exists.
-- Keep the Custer Gallatin forest row primary example as East Crazy unless a
-  later packet explicitly changes primary-example policy. South Otter should be
-  added as a supplemental example if it reaches reviewer-ready status.
+- Keep the Custer Gallatin forest row primary example as South Otter under the
+  user-directed primary-example policy update. East Crazy and South Plateau
+  stay supplemental unless a later packet explicitly changes primary-example
+  policy again.
 - Preserve East Crazy and South Plateau as existing governed examples.
 - Do not update `config/source_register_queue_resolution_ledger_v1.json` unless
   a workbook-backed queue identity for South Otter is found.
@@ -476,8 +479,10 @@ Outcome label: `resolved`
 Local result:
 
 - Resolved on 2026-05-27 by adding South Otter as the required
-  `cgnf-south-otter-forest-specific` real-package slot, supplemental Custer
-  Gallatin registry example, and required component-eval coverage slot.
+  `cgnf-south-otter-forest-specific` real-package slot, Custer Gallatin
+  registry example, and required component-eval coverage slot. A later
+  user-directed policy update promotes it from supplemental to primary for
+  Custer Gallatin example selection.
 - Implementation closeout commit: `21eb2fa` (`Promote South Otter supplemental
   example`).
 - Real-package coverage now passes with `5` covered required slots, `4`
@@ -678,8 +683,9 @@ PYTHONPATH=src uv run --extra dev pytest tests/test_source_register_queue_resolu
   root and preserves the official project document families.
 - `region1-example-custer-gallatin-south-otter-58396` cannot be marked
   reviewer-ready unless `v1-ea-eval` and `phase-eval` pass with no blockers.
-- If South Otter is promoted, it is supplemental to the Custer Gallatin row and
-  does not increase distinct forest coverage.
+- South Otter is primary for the Custer Gallatin row after the follow-on
+  primary-example selection update and does not increase distinct forest
+  coverage.
 - South Otter registry promotion uses
   `example_id="cgnf-south-otter-forest-specific"` and
   `applicable_forest_unit_ids=["custer-gallatin-nf"]`; no other forest row may

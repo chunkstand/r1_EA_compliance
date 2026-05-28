@@ -125,7 +125,7 @@ def test_registry_promotes_lolo_example_after_for_029_resolves_to_example_lane()
     )
 
 
-def test_registry_promotes_south_otter_as_same_forest_supplement_without_queue_row() -> None:
+def test_registry_promotes_south_otter_as_custer_gallatin_primary_without_queue_row() -> None:
     registry = _load_json(REGISTRY_PATH)
     queue_ledger = _load_json(QUEUE_LEDGER_PATH)
 
@@ -139,11 +139,12 @@ def test_registry_promotes_south_otter_as_same_forest_supplement_without_queue_r
     )
     ledger_source_ids = {entry["source_id"] for entry in queue_ledger["entries"]}
 
-    assert forest_row["primary_example_id"] == "cgnf-east-crazy-current-promotion"
+    assert forest_row["primary_example_id"] == "cgnf-south-otter-forest-specific"
     assert forest_row["supplemental_example_ids"] == [
+        "cgnf-east-crazy-current-promotion",
         "cgnf-south-plateau-expansion",
-        "cgnf-south-otter-forest-specific",
     ]
+    assert "Use the South Otter package first" in forest_row["guidance_note"]
     assert example_row["forest_unit_id"] == "custer-gallatin-nf"
     assert example_row["applicable_forest_unit_ids"] == ["custer-gallatin-nf"]
     assert example_row["coverage_slot_id"] == "cgnf-south-otter-forest-specific"
