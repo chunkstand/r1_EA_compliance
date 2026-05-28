@@ -1,7 +1,11 @@
 # West Reservoir Reviewer Readiness Milestone Plan
 
 Date: 2026-05-28
-Status: Active parent packet; Milestone 0 resolved locally; Milestone 1 reduced by Flathead authority-universe scoping and now routed through `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`; Milestones 2-4 pending
+Status: Active parent packet; Milestone 0 resolved locally; Milestone 1
+reduced by Flathead authority-universe scoping and source-evidence
+feasibility; source-set migration is now routed through
+`docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`; Milestones 2-4
+pending behind that migration packet
 Owner context: Flathead forest-specific example follow-on after West Reservoir
 public Pinyon package authority verification
 
@@ -71,6 +75,13 @@ evidence, or open a source-set migration packet that updates every West
 Reservoir contract together. Borrowing a newer catalog, editing thresholds, or
 promoting from stale green artifacts is disallowed because it replaces scalable
 evidence and eval loops with local intuition.
+
+The source-evidence blocker feasibility slice has now reduced the 4fb option:
+the failing snapshot requires `59` unique source-record IDs, `49` mapped
+current rows are absent from active 4fb and present only in the later f70
+current-source-gap closeout catalog. The parent plan remains stopped until the
+dedicated source-set migration packet resolves contract parity and reruns the
+authority universe on one selected source set.
 
 ## Current Evidence
 
@@ -503,6 +514,11 @@ Implementation note:
   source records while the later f70 current-source-gap closeout catalog is a
   different source set. Do not silently move West Reservoir to another source
   set inside this parent packet.
+- The blocker Milestone 1 feasibility slice found no governed same-source-set
+  4fb repair: `49` required legacy IDs have current mappings, `0` mapped
+  current IDs are present in the active 4fb catalog, and all `49` are present
+  only in `source-set-f70ea11e04ae3d53`. The follow-on owner is now
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`.
 - No applicability decisions, generated rule-pack refresh, forest-plan
   context, compliance review, V1 promotion, registry promotion, or aggregate
   coverage promotion was run after this blocker.

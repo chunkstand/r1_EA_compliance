@@ -14,8 +14,10 @@ history below.
 
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then open
-  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` if the next
-  session is implementing the active Flathead reviewer-readiness packet; read
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` if the next
+  session is implementing the active West Reservoir source-set migration
+  packet; read `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` for
+  the parent Flathead reviewer-readiness packet; read
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` for the
   umbrella rules behind that packet
 - latest resolved packet:
@@ -24,6 +26,8 @@ history below.
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - active West Reservoir child blocker:
   `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
+- active West Reservoir source-set migration packet:
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - just-resolved blocker packet:
@@ -77,19 +81,25 @@ history below.
   `validation_passed=false` on `source-set-4fb59e9eb43045cb`, now narrowed to
   `candidates_have_source_evidence_available.failure_count=9` and
   `authority_family_template_candidates_cover_config.missing_source_record_count=10`.
-  The source-evidence blocker is now opened as
+  The source-evidence blocker is now reduced through
   `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md` after
-  direct catalog inspection showed the required reconciled current rows are
-  absent from the active 4fb catalog and present only in the later
-  `source-set-f70ea11e04ae3d53` current-source-gap closeout catalog.
+  fresh feasibility confirmed no governed same-source-set 4fb repair exists:
+  the failing snapshot needs `59` unique source-record IDs, `49` legacy IDs
+  have governed current mappings, `0` mapped current IDs are present in active
+  4fb, and all `49` are present only in the later
+  `source-set-f70ea11e04ae3d53` current-source-gap closeout catalog. The
+  follow-on owner is
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`; its next slice
+  is the mixed-source-set parity gate and all-or-nothing contract migration.
   Local commit anchors for the Milestone 1 reduction/blocker route are
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) and
   `0773ef7` (`Open West Reservoir source evidence blocker`); the docs-only
   Bitter Lesson alignment commit is `3a5e6b3` (`Align West Reservoir plans
   with Bitter Lesson`).
   Do not run applicability retrieval/determination, compliance, V1 promotion,
-  or registry promotion until the remaining 4fb source-evidence gap is
-  resolved by that child blocker or a dedicated source-set migration packet.
+  phase eval, or registry promotion until the migration packet resolves and
+  `applicability-authority-universe` is green on the selected governed source
+  set.
   South Plateau is archived as an example by user direction because the South
   Plateau EA is litigation-tainted for Forest Plan compliance. Do not use
   `cgnf-south-plateau-expansion` or

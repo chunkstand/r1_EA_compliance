@@ -15,6 +15,52 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## West Reservoir Source-Set Migration Packet Routed
+
+Latest implementation update on 2026-05-28 UTC:
+
+- active parent packet:
+  `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
+- reduced child blocker:
+  `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
+- active migration packet:
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`
+- current status:
+  West Reservoir remains stopped before applicability retrieval/determination.
+  The same-source-set 4fb feasibility slice found no governed repair from the
+  active 4fb catalog, so the next slice is a source-set migration parity gate
+  and all-or-nothing contract migration.
+- fresh 4fb authority-universe signal:
+  `applicability-authority-universe --review-id west-reservoir-67436
+  --source-set-id source-set-4fb59e9eb43045cb` still exits red with
+  `passed=false`, `validation_passed=false`, `candidate_authority_count=146`,
+  `forest_plan_component_candidate_count=80`,
+  `candidates_have_source_evidence_available.failure_count=9`, and
+  `authority_family_template_candidates_cover_config.missing_source_record_count=10`
+- source-evidence feasibility:
+  the failing snapshot requires `59` unique source-record IDs. `49` legacy IDs
+  have governed current mappings in
+  `config/compliance_source_record_reconciliation_v1.json`; none of those
+  mapped current IDs are present in active
+  `source-set-4fb59e9eb43045cb` (`source_count=647`), and all `49` are present
+  in the later `source-set-f70ea11e04ae3d53` current-source-gap closeout
+  catalog (`source_count=708`).
+- migration boundary:
+  the f70 catalog cannot be borrowed as 4fb proof. Future work must either
+  migrate every West Reservoir source-set contract surface together through
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` or stop on the
+  exact contract that cannot move.
+- stop condition:
+  no applicability retrieval, applicability determination, generated rule-pack
+  refresh, forest-plan context, compliance review, V1 promotion, phase eval,
+  registry promotion, or aggregate coverage promotion was run after the
+  feasibility finding.
+- next implementation slice:
+  start with
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 0.
+  Add or identify a mixed-source-set parity gate, then prepare the
+  all-or-nothing migration to the selected governed source set.
+
 ## West Reservoir Milestone 1 Source-Evidence Blocker Routed
 
 Latest implementation update on 2026-05-28 UTC:

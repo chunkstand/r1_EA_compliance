@@ -43,20 +43,24 @@ Use this file as the short current route before opening the append-only docs.
   evidence is missing for non-forest families and baseline rules
   (`candidates_have_source_evidence_available.failure_count=9`,
   `authority_family_template_candidates_cover_config.missing_source_record_count=10`).
-  The source-evidence blocker is now opened as
+  The source-evidence blocker is now reduced through
   `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`.
-  Direct catalog inspection confirms the required reconciled current source
-  rows are absent from the active 4fb catalog and present only in the later
-  f70 current-source-gap closeout catalog, which is a different source set.
-  The next implementation slice starts in that blocker packet: prove a
-  governed same-source-set repair or route a source-set migration. Do not
-  proceed to applicability retrieval, determination, compliance, or promotion
-  until `applicability-authority-universe` is green on the selected governed
-  source set.
+  Fresh 4fb feasibility confirmed the failing snapshot needs `59` unique
+  source-record IDs; `49` legacy IDs have governed current mappings, `0` of
+  those mapped current IDs are present in the active 4fb catalog, and all `49`
+  are present only in the later f70 current-source-gap closeout catalog. The
+  next implementation slice starts in
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`: add/confirm
+  the mixed-source-set parity gate, migrate every West Reservoir source-set
+  contract together if the gate is satisfied, and rerun
+  `applicability-authority-universe` on the selected governed source set. Do
+  not proceed to applicability retrieval, determination, compliance, or
+  promotion until that migration packet is green.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson
-  alignment `3a5e6b3`.
+  alignment `3a5e6b3`; same-source-set feasibility now routes to
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`.
 - Do not reuse the historical green West Reservoir
   `phase_eval_results.json` on `source-set-5e65d845ce77e1a0` as current
   readiness proof. It is historical evidence only; the active packet requires
@@ -179,6 +183,7 @@ Use this file as the short current route before opening the append-only docs.
   Lolo or South Otter example promotions.
 ## Deep Reads
 - Core:
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`,
   `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`,
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`,
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,

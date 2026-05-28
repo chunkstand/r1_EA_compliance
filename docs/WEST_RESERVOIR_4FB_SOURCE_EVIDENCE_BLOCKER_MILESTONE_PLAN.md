@@ -1,7 +1,11 @@
 # West Reservoir 4fb Source-Evidence Blocker Milestone Plan
 
 Date: 2026-05-28
-Status: Active blocker packet opened locally; parent West Reservoir readiness packet is stopped before applicability retrieval/determination
+Status: Active blocker packet; Milestone 0 opened locally; Milestone 1 reduced
+locally by same-source-set feasibility and routed to
+`docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`; parent West
+Reservoir readiness packet is stopped before applicability
+retrieval/determination
 Owner context: Child blocker for `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 1
 
 ## Purpose
@@ -80,6 +84,11 @@ checks, not a local exception.
   later current-source-gap closeout catalog
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`
   on `source-set-f70ea11e04ae3d53`.
+- Milestone 1 feasibility closeout confirmed the failing snapshot requires
+  `59` unique source-record IDs. `49` legacy IDs have governed current
+  mappings in `config/compliance_source_record_reconciliation_v1.json`; none
+  of those mapped current IDs are present in the active 4fb catalog, and all
+  `49` are present in the f70 current-source-gap closeout catalog.
 
 ## Goal
 
@@ -190,6 +199,14 @@ For a future repair slice:
 - focused tests if code or config behavior changes; and
 - current docs refreshed with the verified pass/fail counts.
 
+For the Milestone 1 feasibility closeout slice:
+
+- fresh 4fb authority-universe failure was rerun and recorded;
+- required legacy/current source-record inventory was compared against active
+  4fb and comparison f70 catalog evidence; and
+- `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` was opened as
+  the follow-on owner because no governed same-source-set 4fb repair exists.
+
 ## Weak-Point Prevention Contract
 
 | Weak point forecast | Owner surface | Prevention gate | Fail threshold | Controlled violation | Future-Codex misuse scenario |
@@ -230,6 +247,8 @@ Exit criteria:
 
 ### Milestone 1 - Same-Source-Set Repair Feasibility
 
+Status: Reduced locally on 2026-05-28; no governed 4fb repair found.
+
 Outcome label: reduced if a migration packet is required; resolved only if 4fb
 can be repaired and rerun green under the existing contract.
 
@@ -252,7 +271,32 @@ Exit criteria:
   `missing_source_record_count=0`, or a migration packet owns all follow-on
   changes.
 
+Implementation note:
+
+- Fresh 4fb authority-universe rerun still exits red with
+  `passed=false`, `validation_passed=false`, `candidate_authority_count=146`,
+  `forest_plan_component_candidate_count=80`, and the known fail-closed
+  source-evidence checks.
+- The feasibility inventory found `59` unique required IDs across the failing
+  source-evidence candidates and missing authority-family template source
+  records.
+- `49` required legacy IDs map to current source records through
+  `config/compliance_source_record_reconciliation_v1.json`.
+- The active 4fb catalog has `source_count=647` and no mapped current IDs for
+  those `49` governed rows.
+- The f70 current-source-gap closeout catalog has `source_count=708` and all
+  `49` mapped current IDs, but it is a different source set and cannot be used
+  as 4fb proof.
+- No source/config/code repair was made in this blocker because any truthful
+  repair must migrate the West Reservoir source-set contract as a separate
+  governed slice.
+- Follow-on owner:
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`.
+
 ### Milestone 2 - Source-Set Migration Packet If Required
+
+Status: Routed locally through
+`docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`.
 
 Outcome label: reduced for this blocker; resolved for routing if the migration
 packet supersedes the parent contract.
@@ -286,10 +330,11 @@ contracts change.
 
 ## Required Verification Gates
 
-For this blocker-opening slice:
+For the blocker-opening and same-source-set feasibility slices:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-4fb59e9eb43045cb
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md
 python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md
 python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md
 git diff --check
@@ -301,11 +346,14 @@ surface plus the parent plan's applicable verification commands.
 ## Acceptance Criteria
 
 - The active 4fb authority-universe run remains red for the recorded
-  source-evidence failures until a governed repair exists.
+  source-evidence failures, and the feasibility slice records that no governed
+  same-source-set repair exists from the active 4fb catalog.
 - The blocker plan names the exact stop condition and next route.
+- The migration packet owns the all-or-nothing West Reservoir source-set
+  contract change before downstream readiness resumes.
 - The parent West Reservoir readiness plan does not proceed past Milestone 1.
 - Current routing, current system state, and session handoff all point to this
-  blocker packet for the next slice.
+  blocker packet and the migration packet for the next slice.
 - No generated `source_library/` artifacts are staged.
 - No tests, thresholds, source requirements, or eval manifests are weakened.
 - The blocker-opening slice is locally committed before it is called complete.
@@ -333,9 +381,10 @@ Stop instead of continuing downstream if:
 
 ## Residual Risks And Next Routing
 
-- The likely follow-on is a West Reservoir source-set migration packet because
-  the current source rows are proven in the later f70 current-source-gap
-  closeout catalog, not in the active 4fb catalog.
+- The follow-on is
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` because the
+  current source rows are proven in the later f70 current-source-gap closeout
+  catalog, not in the active 4fb catalog.
 - If a reproducible 4fb repair is found, resume the parent West Reservoir
   Milestone 1 sequence only after `applicability-authority-universe` is green.
 - If migration is required, downstream applicability/compliance/component/V1
