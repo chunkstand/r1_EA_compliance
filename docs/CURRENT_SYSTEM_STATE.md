@@ -15,25 +15,31 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## West Reservoir Source-Set Migration Packet Routed
+## West Reservoir Source-Set Migration Contract Migrated
 
 Latest implementation update on 2026-05-28 UTC:
 
 - update:
-  migration packet Milestone 0 is now reduced locally with a tracked
-  source-set parity inventory and focused test gate. The next executable slice
-  is Milestone 1 contract migration.
+  migration packet Milestone 1 is now reduced locally. Replay context, V1 eval
+  contract, component eval contract, component coverage, and replay catalog
+  surface now use `source-set-f70ea11e04ae3d53`.
 - parity gate:
-  `tests/test_west_reservoir_source_set_migration.py` verifies the four
-  tracked source-set surfaces all agree and includes a controlled
-  mixed-source-set case that reports the stale surface.
+  `tests/test_west_reservoir_source_set_migration.py` verifies the tracked
+  source-set surfaces agree on f70, verifies the selected f70 replay catalog
+  surface, and includes a controlled mixed-source-set case that reports the
+  stale surface.
 - current source-set surfaces:
   `config/replay_contexts/west-reservoir-67436.json`,
   `config/v1_west_reservoir_real_ea_eval.json`,
   `config/forest_plan_component_evals/west-reservoir-67436.json`, and the
   West Reservoir component slot in
-  `config/forest_plan_component_eval_coverage_v1.json` all remain on
-  `source-set-4fb59e9eb43045cb`.
+  `config/forest_plan_component_eval_coverage_v1.json` all now point to
+  `source-set-f70ea11e04ae3d53`.
+- current replay catalog surface:
+  `config/replay_contexts/west-reservoir-67436.json` now points
+  `catalog_dir` at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`,
+  whose manifest declares `source-set-f70ea11e04ae3d53`.
 - typed-blocked status preserved:
   `config/v1_real_package_review_coverage_v1.json` still keeps West Reservoir
   as `alternate_package_typed_blocked` with
@@ -42,16 +48,30 @@ Latest implementation update on 2026-05-28 UTC:
   West Reservoir example typed blocked and the Flathead route at
   `routing_status="typed_blocked_example_available"`.
 - stop condition:
-  no tracked config was migrated in Milestone 0 and no applicability
-  retrieval, applicability determination, generated rule-pack refresh,
-  forest-plan context, compliance review, V1 promotion, phase eval, registry
-  promotion, or aggregate coverage promotion was run.
+  no applicability retrieval, applicability determination, generated
+  rule-pack refresh, forest-plan context, compliance review, V1 promotion,
+  phase eval, registry promotion, or aggregate coverage promotion was run.
+- selected f70 authority-universe rerun:
+  `applicability-authority-universe --review-id west-reservoir-67436
+  --source-set-id source-set-f70ea11e04ae3d53` reads the selected f70 catalog
+  and reports `candidate_authority_count=66`,
+  `forest_plan_component_candidate_count=0`, `passed=false`, and
+  `validation_passed=false`.
+- resolved source-evidence checks:
+  `candidates_have_source_evidence_available.failure_count=0`,
+  `rule_template_candidates_have_source_claim_linkage.failure_count=0`, and
+  `authority_family_template_candidates_cover_config.missing_source_record_count=0`.
+- remaining authority-universe blocker:
+  `forest_plan_component_candidates_use_profile_inventory` remains red with
+  `component_inventory_present=false`, `component_inventory_count=0`,
+  `component_candidate_count=0`, and
+  `required_profile_source_record_ids=["FINAL-FLAT-001"]`.
 - next implementation slice:
   start with
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 1.
-  Migrate all tracked West Reservoir source-set contract surfaces together to
-  the selected source set, rerun the parity gate, and keep reviewer-ready
-  promotion blocked until the parent gates pass.
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 2.
+  Resolve the f70 Flathead component inventory proof for `FINAL-FLAT-001`,
+  rerun the authority-universe gate, and keep reviewer-ready promotion blocked
+  until the parent gates pass.
 
 - active parent packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
@@ -62,9 +82,10 @@ Latest implementation update on 2026-05-28 UTC:
 - current status:
   West Reservoir remains stopped before applicability retrieval/determination.
   The same-source-set 4fb feasibility slice found no governed repair from the
-  active 4fb catalog, so the next slice is a source-set migration parity gate
-  and all-or-nothing contract migration.
-- fresh 4fb authority-universe signal:
+  active 4fb catalog, so the migration packet moved the tracked contract to
+  f70. The current blocker is no longer authority source evidence; it is the
+  missing f70 Flathead component inventory proof.
+- pre-migration 4fb authority-universe signal:
   `applicability-authority-universe --review-id west-reservoir-67436
   --source-set-id source-set-4fb59e9eb43045cb` still exits red with
   `passed=false`, `validation_passed=false`, `candidate_authority_count=146`,
@@ -80,10 +101,9 @@ Latest implementation update on 2026-05-28 UTC:
   in the later `source-set-f70ea11e04ae3d53` current-source-gap closeout
   catalog (`source_count=708`).
 - migration boundary:
-  the f70 catalog cannot be borrowed as 4fb proof. Future work must either
-  migrate every West Reservoir source-set contract surface together through
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` or stop on the
-  exact contract that cannot move.
+  the f70 catalog is now used only through the migrated tracked contract. Do
+  not borrow any different catalog or move downstream until the migrated
+  authority-universe gate is green.
 - stop condition:
   no applicability retrieval, applicability determination, generated rule-pack
   refresh, forest-plan context, compliance review, V1 promotion, phase eval,
@@ -91,9 +111,9 @@ Latest implementation update on 2026-05-28 UTC:
   feasibility finding.
 - next implementation slice:
   start with
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 0.
-  Add or identify a mixed-source-set parity gate, then prepare the
-  all-or-nothing migration to the selected governed source set.
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 2.
+  Resolve the f70 Flathead component inventory blocker and rerun
+  `applicability-authority-universe` on the selected migrated source set.
 
 ## West Reservoir Milestone 1 Source-Evidence Blocker Routed
 

@@ -68,7 +68,7 @@
       "label": "West Reservoir Flathead component eval",
       "review_id": "west-reservoir-67436",
       "forest_unit_id": "flathead-nf",
-      "expected_source_set_id": "source-set-4fb59e9eb43045cb",
+      "expected_source_set_id": "source-set-f70ea11e04ae3d53",
       "eval_file": "forest_plan_component_evals/west-reservoir-67436.json",
       "required": true
     },

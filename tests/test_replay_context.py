@@ -71,6 +71,26 @@ class ReplayContextTests(unittest.TestCase):
             ),
         )
 
+    def test_tracked_west_reservoir_replay_context_uses_migrated_f70_catalog_surface(
+        self,
+    ) -> None:
+        repo_root = Path(__file__).resolve().parents[1]
+
+        context = load_replay_context(
+            repo_root / "config" / "replay_contexts" / "west-reservoir-67436.json"
+        )
+
+        self.assertEqual(context.review_id, "west-reservoir-67436")
+        self.assertEqual(
+            context.catalog_dir,
+            Path("source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate"),
+        )
+        self.assertEqual(context.source_set_id, "source-set-f70ea11e04ae3d53")
+        self.assertEqual(
+            context.package_path,
+            Path("source_library/reviews/west-reservoir-67436/package"),
+        )
+
     def test_load_replay_context_derives_child_catalog_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp)

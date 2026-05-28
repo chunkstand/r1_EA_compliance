@@ -2,7 +2,7 @@
   "schema_version": "forest-plan-component-eval-v0",
   "eval_id": "west-reservoir-forest-plan-components-v0",
   "review_id": "west-reservoir-67436",
-  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
   "description": "Adjudicated component-level eval cases for the West Reservoir Flathead review. Covers every currently applicable standard plus representative non-standard supported and open-queue findings from the live review artifacts.",
   "coverage_requirements": {
     "require_all_applicable_standards": true,

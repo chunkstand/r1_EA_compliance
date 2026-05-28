@@ -3,8 +3,9 @@
 Date: 2026-05-28
 Status: Active migration packet opened from
 `docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md`
-Milestone 1; Milestone 0 reduced locally with the tracked parity gate and
-baseline inventory; Milestones 1-2 pending
+Milestone 1; Milestone 1 contract migration reduced locally with the tracked
+parity gate on `source-set-f70ea11e04ae3d53`; Milestone 2 authority-universe
+proof is blocked on the f70 Flathead component inventory
 Owner context: source-set contract migration child for
 `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 
@@ -35,9 +36,9 @@ universe is green on the selected source set.
   `west-reservoir-67436`
 - Current forest unit:
   `flathead-nf`
-- Current locked source set:
+- Previous locked source set:
   `source-set-4fb59e9eb43045cb`
-- Candidate migration source set:
+- Selected migrated source set:
   `source-set-f70ea11e04ae3d53`
 - Current failing command:
   `PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-4fb59e9eb43045cb`
@@ -58,12 +59,26 @@ universe is green on the selected source set.
   `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/source_catalog.jsonl`
   with manifest `source_set_id="source-set-f70ea11e04ae3d53"` and
   `source_count=708`
-- Current West Reservoir contract surfaces still pinned to 4fb:
+- Current West Reservoir contract surfaces migrated to f70:
   `config/replay_contexts/west-reservoir-67436.json`,
   `config/v1_west_reservoir_real_ea_eval.json`,
   `config/forest_plan_component_evals/west-reservoir-67436.json`, and
   the West Reservoir slot in
   `config/forest_plan_component_eval_coverage_v1.json`
+- Current replay catalog surface:
+  `config/replay_contexts/west-reservoir-67436.json` now points
+  `catalog_dir` at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`,
+  whose manifest declares `source-set-f70ea11e04ae3d53`.
+- Fresh migrated authority-universe signal:
+  `applicability-authority-universe --review-id west-reservoir-67436
+  --source-set-id source-set-f70ea11e04ae3d53` reads the selected f70 catalog,
+  reports `candidates_have_source_evidence_available.failure_count=0` and
+  `authority_family_template_candidates_cover_config.missing_source_record_count=0`,
+  but still exits red because
+  `forest_plan_component_candidates_use_profile_inventory` has
+  `component_inventory_present=false`, `component_candidate_count=0`, and
+  `required_profile_source_record_ids=["FINAL-FLAT-001"]`.
 - Milestone 0 parity gate:
   `tests/test_west_reservoir_source_set_migration.py` now proves the tracked
   source-set contract surfaces have one identity and includes a controlled
@@ -71,14 +86,15 @@ universe is green on the selected source set.
 
 ## Source-Set Parity Inventory
 
-Current tracked West Reservoir source-set surfaces before migration:
+Current tracked West Reservoir source-set surfaces after migration:
 
 | Surface | Current source-set ID |
 | --- | --- |
-| `config/replay_contexts/west-reservoir-67436.json` `source_set_id` | `source-set-4fb59e9eb43045cb` |
-| `config/v1_west_reservoir_real_ea_eval.json` `source_set_id` | `source-set-4fb59e9eb43045cb` |
-| `config/forest_plan_component_evals/west-reservoir-67436.json` `source_set_id` | `source-set-4fb59e9eb43045cb` |
-| `config/forest_plan_component_eval_coverage_v1.json` West Reservoir `expected_source_set_id` | `source-set-4fb59e9eb43045cb` |
+| `config/replay_contexts/west-reservoir-67436.json` `source_set_id` | `source-set-f70ea11e04ae3d53` |
+| `config/v1_west_reservoir_real_ea_eval.json` `source_set_id` | `source-set-f70ea11e04ae3d53` |
+| `config/forest_plan_component_evals/west-reservoir-67436.json` `source_set_id` | `source-set-f70ea11e04ae3d53` |
+| `config/forest_plan_component_eval_coverage_v1.json` West Reservoir `expected_source_set_id` | `source-set-f70ea11e04ae3d53` |
+| `config/replay_contexts/west-reservoir-67436.json` `catalog_dir` manifest | `source-set-f70ea11e04ae3d53` |
 
 Status surfaces that must remain typed blocked during migration:
 
@@ -224,8 +240,9 @@ Implementation note:
 
 - Source-set parity inventory is now recorded above for replay context, V1
   eval contract, component eval contract, and component coverage.
-- `tests/test_west_reservoir_source_set_migration.py` verifies all four
-  surfaces currently agree on `source-set-4fb59e9eb43045cb`.
+- `tests/test_west_reservoir_source_set_migration.py` verified all four
+  surfaces agreed on `source-set-4fb59e9eb43045cb` at the Milestone 0
+  checkpoint.
 - The same test file includes a controlled violation where the component
   coverage slot is changed to `source-set-stale` and the parity gate reports
   that mismatch.
@@ -237,7 +254,7 @@ Implementation note:
 
 ### Milestone 1 - Contract Migration To The Selected Source Set
 
-Status: Pending.
+Status: Reduced locally on 2026-05-28.
 
 Outcome label: resolved for source-set contract parity; reduced for reviewer
 readiness.
@@ -259,9 +276,25 @@ Exit criteria:
 - Typed-blocked status remains unchanged.
 - No generated `source_library/` artifacts are staged.
 
+Implementation note:
+
+- Replay context, V1 eval contract, component eval contract, and component
+  coverage now agree on `source-set-f70ea11e04ae3d53`.
+- The replay context catalog surface now points at the f70
+  current-source-gap closeout catalog so the CLI no longer rejects a selected
+  f70 authority-universe run as a tracked-context mismatch.
+- `tests/test_west_reservoir_source_set_migration.py` now expects f70 parity,
+  guards the selected replay catalog surface, keeps the controlled stale
+  source-set violation, and preserves typed-blocked status.
+- The real-package coverage slot, forest-specific example, and Flathead route
+  remain typed blocked; no reviewer-ready promotion occurred.
+- The closeout gate reran the selected f70 authority universe and surfaced the
+  next blocker in Milestone 2 rather than folding component-inventory repair
+  into this contract-migration slice.
+
 ### Milestone 2 - Migrated Authority-Universe Proof And Parent Resume Route
 
-Status: Pending.
+Status: Blocked after the Milestone 1 closeout gate.
 
 Outcome label: resolved for the migration packet.
 
@@ -280,9 +313,26 @@ Required actions:
 Exit criteria:
 
 - Authority universe is green on the migrated source set, or the packet stops
-  with the exact remaining source-evidence blocker.
+  with the exact remaining authority-universe blocker.
 - If green, the parent West Reservoir readiness plan resumes at
   applicability retrieval/determination on the migrated source set.
+
+Current blocker:
+
+- The migrated authority-universe rerun uses
+  `source-set-f70ea11e04ae3d53`, the f70 catalog path, and
+  `forest_unit_id="flathead-nf"`.
+- Source evidence is no longer the failing check:
+  `candidates_have_source_evidence_available.failure_count=0` and
+  `authority_family_template_candidates_cover_config.missing_source_record_count=0`.
+- The remaining failing check is
+  `forest_plan_component_candidates_use_profile_inventory` with
+  `component_inventory_present=false`, `component_candidate_count=0`,
+  `forest_plan_component_candidate_count=0`, and
+  `required_profile_source_record_ids=["FINAL-FLAT-001"]`.
+- The next slice must repair or rebuild the f70 Flathead component inventory
+  proof before applicability retrieval, determination, compliance, V1
+  promotion, phase eval, or registry promotion.
 
 ## Required Documentation And Handoff Updates
 
@@ -312,6 +362,18 @@ git diff --check
 
 For contract migration slices, add focused tests for every touched config
 surface plus the migrated authority-universe command.
+
+For the Milestone 1 contract migration slice, run:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_west_reservoir_source_set_migration.py tests/test_replay_context.py
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id west-reservoir-67436 --source-set-id source-set-f70ea11e04ae3d53
+PYTHONPATH=src uv run --extra dev ruff check tests/test_west_reservoir_source_set_migration.py tests/test_replay_context.py
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_4FB_SOURCE_EVIDENCE_BLOCKER_MILESTONE_PLAN.md
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md
+git diff --check
+```
 
 For the Milestone 0 parity slice, run:
 
@@ -363,10 +425,10 @@ Stop instead of continuing downstream if:
 
 ## Residual Risks And Next Milestone Routing
 
-- The next slice is Milestone 1 here: migrate the tracked West Reservoir
-  source-set contract surfaces together to the selected source set, then
-  preserve typed-blocked status until downstream parent gates prove
-  reviewer-ready.
+- The next slice is Milestone 2 here: make the migrated f70
+  authority-universe proof green by resolving the Flathead component
+  inventory gap for `FINAL-FLAT-001`, then preserve typed-blocked status until
+  downstream parent gates prove reviewer-ready.
 - The parent West Reservoir readiness packet remains stopped before
   applicability retrieval/determination until this packet resolves.
 - Aggregate component coverage remains red for non-South Otter/non-Lolo
@@ -376,8 +438,8 @@ Stop instead of continuing downstream if:
 
 - [x] Source-set parity inventory updated.
 - [x] Mixed-source-set gate identified or added.
-- [ ] West Reservoir contracts migrated together when Milestone 1 starts.
-- [ ] Authority universe rerun on the selected source set.
-- [ ] Current docs and handoff updated with exact gate output.
-- [ ] Generated `source_library/` artifacts left unstaged.
-- [ ] Local atomic commit created for the verified slice.
+- [x] West Reservoir contracts migrated together when Milestone 1 starts.
+- [x] Authority universe rerun on the selected source set.
+- [x] Current docs and handoff updated with exact gate output.
+- [x] Generated `source_library/` artifacts left unstaged.
+- [x] Local atomic commit created for the verified slice.

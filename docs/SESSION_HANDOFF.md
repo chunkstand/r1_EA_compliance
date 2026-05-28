@@ -48,7 +48,7 @@ history below.
   `omitted_document_count=0`. This is plan-only routing: West Reservoir
   remains typed blocked until current review artifacts, component eval,
   compliance review, V1 eval, and review-bound phase eval pass on
-  `source-set-4fb59e9eb43045cb`. The historical green West Reservoir phase
+  `source-set-f70ea11e04ae3d53`. The historical green West Reservoir phase
   artifact on `source-set-5e65d845ce77e1a0` must not be used as current
   reviewer-readiness proof.
   Milestone 0 in that packet is now resolved locally. Package authority still
@@ -61,8 +61,10 @@ history below.
   blocker categories (`review_artifact_missing=8`,
   `forest_plan_matrix_miss=1`, `forest_plan_reviewer_not_ready=1`, and
   `forest_plan_scope_miss=1`). Current
+  pre-migration
   `forest-plan-component-eval --review-id west-reservoir-67436` remains red on
-  `source-set-4fb59e9eb43045cb` with `0/27` cases passing. A focused
+  `source-set-4fb59e9eb43045cb` with `0/27` cases passing and is not current
+  f70 readiness proof. A focused
   `tests/test_phase_eval_review.py` guard now proves a review-scoped phase-eval
   rerun overwrites a pre-existing green review result with the tracked
   replay-context source set. Milestone 1 then started: `ea-review` rebuilt the
@@ -91,18 +93,28 @@ history below.
   follow-on owner is
   `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`; its next slice
   was the mixed-source-set parity gate and all-or-nothing contract migration.
-  Migration packet Milestone 0 is now reduced locally:
-  `tests/test_west_reservoir_source_set_migration.py` guards the four tracked
+  Migration packet Milestone 1 is now reduced locally:
+  `tests/test_west_reservoir_source_set_migration.py` guards the tracked
   source-set surfaces (replay context, V1 eval contract, component eval
-  contract, and component coverage), includes a controlled stale-source-set
-  violation, and preserves typed-blocked status in the real-package coverage
-  and forest-specific registry surfaces. Those four tracked source-set
-  surfaces all still point to `source-set-4fb59e9eb43045cb`; no tracked config
-  migration or downstream readiness command ran in Milestone 0. The next slice
-  is `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 1:
-  migrate the tracked West Reservoir source-set contract surfaces together to
-  the selected source set, rerun the parity gate, and keep reviewer-ready
-  promotion blocked until parent gates pass.
+  contract, and component coverage), verifies the selected f70 replay catalog
+  surface, includes a controlled stale-source-set violation, and preserves
+  typed-blocked status in the real-package coverage and forest-specific
+  registry surfaces. Those tracked source-set surfaces now point to
+  `source-set-f70ea11e04ae3d53`, and replay context `catalog_dir` points at
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate`.
+  The selected f70 authority-universe rerun clears the prior source-evidence
+  checks (`candidates_have_source_evidence_available.failure_count=0` and
+  `authority_family_template_candidates_cover_config.missing_source_record_count=0`)
+  but remains red on
+  `forest_plan_component_candidates_use_profile_inventory` with
+  `component_inventory_present=false`, `component_candidate_count=0`, and
+  `required_profile_source_record_ids=["FINAL-FLAT-001"]`. No downstream
+  retrieval, determination, compliance, V1 promotion, phase eval, registry
+  promotion, or aggregate coverage promotion ran. The next slice is
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 2:
+  resolve the f70 Flathead component inventory proof, rerun
+  `applicability-authority-universe`, and keep reviewer-ready promotion
+  blocked until parent gates pass.
   Local commit anchors for the Milestone 1 reduction/blocker route are
   `267ba9d` (`Scope West Reservoir authority universe to Flathead`) and
   `0773ef7` (`Open West Reservoir source evidence blocker`); the docs-only

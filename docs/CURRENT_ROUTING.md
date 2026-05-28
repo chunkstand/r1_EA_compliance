@@ -27,11 +27,12 @@ Use this file as the short current route before opening the append-only docs.
   verified against the official Flathead project page and public Pinyon/Box
   folder, and it keeps West Reservoir typed blocked until current review
   artifacts, component eval, compliance, V1 eval, and phase eval pass on
-  `source-set-4fb59e9eb43045cb`.
+  `source-set-f70ea11e04ae3d53`.
 - Milestone 0 in the West Reservoir packet is resolved locally. Package
   authority remains green, current V1 eval remains a truthful typed-blocked
-  baseline with only allowed blocker categories, and current component eval
-  remains red with `0/27` cases passing on `source-set-4fb59e9eb43045cb`.
+  baseline with only allowed blocker categories, and the pre-migration
+  component eval baseline remains red with `0/27` cases passing on
+  `source-set-4fb59e9eb43045cb`; it is not current f70 readiness proof.
   Milestone 1 has started: `ea-review` and `applicability-context-build`
   rebuilt successfully on the verified package cache and current source set.
   The Flathead authority-universe/base-rule-pack/source-record identity repair
@@ -49,16 +50,23 @@ Use this file as the short current route before opening the append-only docs.
   source-record IDs; `49` legacy IDs have governed current mappings, `0` of
   those mapped current IDs are present in the active 4fb catalog, and all `49`
   are present only in the later f70 current-source-gap closeout catalog. The
-  migration packet Milestone 0 is now reduced locally: the tracked parity
-  inventory names replay context, V1 eval contract, component eval contract,
-  and component coverage as the four source-set surfaces still pinned to 4fb,
-  and `tests/test_west_reservoir_source_set_migration.py` fails on a
-  controlled mixed-source-set case while preserving typed-blocked status. The
-  next implementation slice starts in
-  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 1:
-  migrate every West Reservoir source-set contract together, then rerun
-  `applicability-authority-universe` on the selected governed source set. Do
-  not proceed to applicability retrieval, determination, compliance, or
+  migration packet Milestone 1 is now reduced locally: replay context, V1 eval
+  contract, component eval contract, component coverage, and the replay
+  catalog surface all now point to `source-set-f70ea11e04ae3d53`, while
+  `tests/test_west_reservoir_source_set_migration.py` fails on a controlled
+  mixed-source-set case and preserves typed-blocked status. The selected f70
+  authority-universe rerun clears the prior source-evidence failures
+  (`candidates_have_source_evidence_available.failure_count=0`,
+  `authority_family_template_candidates_cover_config.missing_source_record_count=0`)
+  but remains red on
+  `forest_plan_component_candidates_use_profile_inventory` because the f70
+  Flathead component inventory proof has `component_inventory_present=false`,
+  `component_candidate_count=0`, and
+  `required_profile_source_record_ids=["FINAL-FLAT-001"]`. The next
+  implementation slice starts in
+  `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` Milestone 2:
+  resolve the f70 Flathead component inventory authority-universe blocker.
+  Do not proceed to applicability retrieval, determination, compliance, or
   promotion until that migration packet is green.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
@@ -69,7 +77,7 @@ Use this file as the short current route before opening the append-only docs.
 - Do not reuse the historical green West Reservoir
   `phase_eval_results.json` on `source-set-5e65d845ce77e1a0` as current
   readiness proof. It is historical evidence only; the active packet requires
-  a current rerun on `source-set-4fb59e9eb43045cb`.
+  a current rerun on `source-set-f70ea11e04ae3d53`.
 - South Otter Milestone 3 is resolved locally, and the current registry policy
   now promotes South Otter as the primary Custer Gallatin example. South Otter
   is a governed Custer Gallatin example in

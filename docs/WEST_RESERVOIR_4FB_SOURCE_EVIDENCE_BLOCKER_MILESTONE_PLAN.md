@@ -1,11 +1,12 @@
 # West Reservoir 4fb Source-Evidence Blocker Milestone Plan
 
 Date: 2026-05-28
-Status: Active blocker packet; Milestone 0 opened locally; Milestone 1 reduced
-locally by same-source-set feasibility and routed to
-`docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`; parent West
-Reservoir readiness packet is stopped before applicability
-retrieval/determination
+Status: Blocker packet reduced locally; Milestone 1 found no governed
+same-source-set 4fb repair and routed to
+`docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md`; that migration
+packet has moved the tracked West Reservoir source-set contract to
+`source-set-f70ea11e04ae3d53`; parent readiness remains stopped before
+applicability retrieval/determination
 Owner context: Child blocker for `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 1
 
 ## Purpose
@@ -54,8 +55,10 @@ checks, not a local exception.
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
 - Current review:
   `review_id="west-reservoir-67436"`
-- Current locked source set:
+- Previous locked source set:
   `source-set-4fb59e9eb43045cb`
+- Selected migrated source set:
+  `source-set-f70ea11e04ae3d53`
 - Current active catalog:
   `source_library/catalog/source_catalog.jsonl` and
   `source_library/catalog/source_set_manifest.json`
@@ -170,9 +173,10 @@ artifacts and current docs:
 ## Placement Rules
 
 - Keep `review_id="west-reservoir-67436"` stable.
-- Keep the parent readiness packet locked to
-  `source-set-4fb59e9eb43045cb` until a separate migration packet explicitly
-  changes that contract.
+- Treat the parent readiness packet's original
+  `source-set-4fb59e9eb43045cb` lock as superseded only by the explicit
+  migration packet. Current West Reservoir source-set contract surfaces now
+  route through `source-set-f70ea11e04ae3d53`.
 - Catalog evidence must come from records whose `source_set_id` matches the
   selected readiness source set.
 - Legacy-to-current source-record reconciliation is allowed only when the
@@ -207,8 +211,13 @@ For the Milestone 1 feasibility closeout slice:
 - `docs/WEST_RESERVOIR_SOURCE_SET_MIGRATION_MILESTONE_PLAN.md` was opened as
   the follow-on owner because no governed same-source-set 4fb repair exists.
 - The migration packet Milestone 0 parity gate now exists in
-  `tests/test_west_reservoir_source_set_migration.py`; the next blocker
-  follow-on is the migration packet's Milestone 1 contract migration.
+  `tests/test_west_reservoir_source_set_migration.py`.
+- The migration packet Milestone 1 contract migration moved replay context,
+  V1 eval contract, component eval contract, component coverage, and replay
+  catalog surface to `source-set-f70ea11e04ae3d53`.
+- The next blocker follow-on is the migration packet's Milestone 2
+  authority-universe proof: source-evidence checks are green on f70, but the
+  f70 Flathead component inventory proof is still red for `FINAL-FLAT-001`.
 
 ## Weak-Point Prevention Contract
 

@@ -6,7 +6,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 REVIEW_ID = "west-reservoir-67436"
-CURRENT_SOURCE_SET_ID = "source-set-4fb59e9eb43045cb"
+CURRENT_SOURCE_SET_ID = "source-set-f70ea11e04ae3d53"
+CURRENT_CATALOG_DIR = "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate"
 TYPED_BLOCKED_SLOT_ID = "west-reservoir-typed-blocked"
 TYPED_BLOCKED_EXAMPLE_ID = "flathead-west-reservoir-typed-blocked"
 
@@ -30,6 +31,12 @@ def test_west_reservoir_source_set_contract_gate_flags_mixed_source_sets() -> No
     assert _source_set_mismatches(source_sets) == {
         "component_coverage_slot.expected_source_set_id": "source-set-stale"
     }
+
+
+def test_west_reservoir_replay_context_uses_selected_catalog_surface() -> None:
+    replay_context = _load_json(REPO_ROOT / "config/replay_contexts/west-reservoir-67436.json")
+
+    assert replay_context["catalog_dir"] == CURRENT_CATALOG_DIR
 
 
 def test_west_reservoir_migration_baseline_preserves_typed_blocked_status() -> None:
