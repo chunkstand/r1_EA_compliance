@@ -1,0 +1,504 @@
+{
+  "schema_version": "forest-plan-component-eval-v0",
+  "eval_id": "hlc-bonanza-forest-plan-components-v0",
+  "review_id": "region1-example-helena-lewis-and-clark-bonanza-66532",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
+  "description": "Adjudicated component-level eval cases for the Helena-Lewis and Clark Bonanza review. Covers every currently applicable HLC standard from the review-local component inventory and locks supported and open-queue outcomes from the generated review artifacts.",
+  "cases": [
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-WTR-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-WTR-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-WTR-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Soils Analysis.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-019 (499c5d876802)",
+        "EA-PACKAGE-023 (a48efdb9bbea)",
+        "EA-PACKAGE-028 (de639ccbaeac)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-RMZ-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-RMZ-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-RMZ-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)",
+        "EA-PACKAGE-034 (d94096132850)",
+        "EA-PACKAGE-005 (34e169bcf5a7)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-FAH-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-FAH-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-FAH-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-SOIL-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-SOIL-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-SOIL-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)",
+        "EA-PACKAGE-019 (499c5d876802)",
+        "EA-PACKAGE-044 (81ecb9182b23)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-FIRE-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-FIRE-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-FIRE-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-INV-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-INV-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-INV-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-WL-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-WL-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-WL-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-NCDE-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-NCDE-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-NCDE-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-PCAZ1Z2-NCDE-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-PCAZ1Z2-NCDE-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-PCAZ1Z2-NCDE-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-PCAZ1-NCDE-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-PCAZ1-NCDE-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-PCAZ1-NCDE-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-Z1-NCDE-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-Z1-NCDE-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-Z1-NCDE-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-PCA-NCDE-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-PCA-NCDE-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-PCA-NCDE-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-RECWILD-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-RECWILD-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-RECWILD-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-WSA-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-WSA-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-WSA-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-CDNST-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-CDNST-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-CDNST-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-RT-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-RT-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-RT-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-GRAZ-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-GRAZ-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-GRAZ-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-TIM-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-TIM-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-TIM-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-EMIN-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-FW-EMIN-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-FW-EMIN-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-BB-WL-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-BB-WL-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-BB-WL-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-BB-SU-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-BB-SU-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-BB-SU-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-EH-WL-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-EH-WL-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-EH-WL-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Forest Plan Consistency Worksheet.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-009 (9b51de263604)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-EH-RT-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-EH-RT-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-EH-RT-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "complies",
+      "package_section": "Bonanza_Wildlife Biological Assessment.pdf",
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [
+        "EA-PACKAGE-024 (b4cb6838dea7)",
+        "EA-PACKAGE-002 (9cfe288af30f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-LB-WL-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-LB-WL-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-LB-WL-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-RM-WL-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-RM-WL-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-RM-WL-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-RM-BTM-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-RM-BTM-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-RM-BTM-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-RM-CMA-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-RM-CMA-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-RM-CMA-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "case_id": "R1PLAN-helena-lewis-and-clark-nf-02-SN-EMIN-STD-01",
+      "component_id": "R1PLAN-helena-lewis-and-clark-nf-02-SN-EMIN-STD-01",
+      "description": "Bonanza HLC applicable standard R1PLAN-helena-lewis-and-clark-nf-02-SN-EMIN-STD-01",
+      "component_type": "standard",
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "compliance_status": "insufficient_evidence",
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-018 (eb62fe00cbd8)"
+      ],
+      "package_evidence_citations": [],
+      "reviewer_resolution_state": "open"
+    }
+  ],
+  "coverage_requirements": {
+    "require_all_applicable_standards": true,
+    "minimum_cases_by_component_type": {
+      "standard": 28
+    },
+    "minimum_cases_by_applicability_status": {
+      "applicable": 28
+    },
+    "minimum_section_bound_cases": 28
+  },
+  "metric_thresholds": {
+    "case_count": {
+      "min": 28
+    },
+    "expected_applicable_standard_count": {
+      "min": 28
+    },
+    "applicable_standard_recall": {
+      "min": 1.0
+    },
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "compliance_status_match_rate": {
+      "min": 1.0
+    },
+    "package_section_match_rate": {
+      "min": 1.0
+    },
+    "plan_source_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "package_evidence_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  }
+}

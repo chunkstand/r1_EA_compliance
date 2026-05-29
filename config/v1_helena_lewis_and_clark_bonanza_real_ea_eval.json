@@ -1,0 +1,346 @@
+{
+  "schema_version": "v1-ea-real-review-eval-contract-v0",
+  "eval_id": "hlc-bonanza-real-ea-v1",
+  "title": "Helena-Lewis and Clark Bonanza Real EA V1 Review Evaluation Contract",
+  "review_id": "region1-example-helena-lewis-and-clark-bonanza-66532",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
+  "forest_unit_id": "helena-lewis-and-clark-nf",
+  "rule_pack_id": "generated-nepa-ea-v0-region1-example-helena-lewis-and-clark-bonanza-66532",
+  "rule_pack_version": "applicability-v0",
+  "package_style_tags": [
+    "full_root_project_package",
+    "forest_specific_hlc_bonanza"
+  ],
+  "allow_unadjudicated_conditional_expectations": true,
+  "expected_lane_states": {
+    "passed": true,
+    "broader_ea_passed": true,
+    "forest_plan_passed": true
+  },
+  "baseline_policy": {
+    "expected_source_record_ids": [
+      "R1EA-001",
+      "R1EA-002",
+      "R1EA-003",
+      "R1EA-004",
+      "R1EA-008",
+      "R1EA-009",
+      "R1EA-010",
+      "R1EA-013",
+      "R1EA-014",
+      "R1EA-015",
+      "R1EA-017",
+      "R1EA-018",
+      "R1EA-019",
+      "R1EA-020",
+      "R1EA-021",
+      "R1EA-022",
+      "R1EA-023",
+      "R1EA-024",
+      "R1EA-025",
+      "R1EA-028",
+      "R1EA-029",
+      "R1EA-031",
+      "R1EA-033",
+      "R1EA-034",
+      "R1EA-035",
+      "R1EA-067"
+    ],
+    "require_source_record_match_authority": true,
+    "require_document_role_match_authority": true
+  },
+  "conditional_source_expectations": [
+    {
+      "rule_id": "clean_air_act_conformity_air_quality_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-092"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps clean_air_act_conformity_air_quality_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "clean_water_act_wotus_permits_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-082"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps clean_water_act_wotus_permits_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "cultural_resource_protection_and_state_shpo_sources_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-072"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps cultural_resource_protection_and_state_shpo_sources_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "eagle_efh_and_special_wildlife_sources_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-097"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps eagle_efh_and_special_wildlife_sources_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "eo_11990_wetlands",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-104"
+      ],
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps eo_11990_wetlands explicitly applicable."
+    },
+    {
+      "rule_id": "eo_13186_migratory_birds",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-096"
+      ],
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps eo_13186_migratory_birds explicitly applicable."
+    },
+    {
+      "rule_id": "esa_consultation_50cfr_402",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-066"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps esa_consultation_50cfr_402 explicitly applicable."
+    },
+    {
+      "rule_id": "esa_section_7",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-065"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps esa_section_7 explicitly applicable."
+    },
+    {
+      "rule_id": "floodplain_management_eo11988_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-103"
+      ],
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps floodplain_management_eo11988_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "flpma_section_206_land_exchange",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-146"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps flpma_section_206_land_exchange explicitly applicable."
+    },
+    {
+      "rule_id": "forest_plan_component_FOR-018-FW-EMIN-OBJ-01",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "FOR-018"
+      ],
+      "expected_source_document_roles": [
+        "forest_plan"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps forest_plan_component_FOR-018-FW-EMIN-OBJ-01 explicitly applicable."
+    },
+    {
+      "rule_id": "forest_plan_component_FOR-018-FW-WSR-DC-01",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "FOR-018"
+      ],
+      "expected_source_document_roles": [
+        "forest_plan"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps forest_plan_component_FOR-018-FW-WSR-DC-01 explicitly applicable."
+    },
+    {
+      "rule_id": "hazardous_materials_site_condition_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-107"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps hazardous_materials_site_condition_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "invasive_pesticide_soils_farmland_drinking_water_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-112"
+      ],
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps invasive_pesticide_soils_farmland_drinking_water_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "land_exchange_fs_policy_and_project_references_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-150"
+      ],
+      "expected_source_document_roles": [
+        "agency_policy"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps land_exchange_fs_policy_and_project_references_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "land_exchange_statutory_authorities_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-137"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps land_exchange_statutory_authorities_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "mbta_migratory_birds",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-094"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps mbta_migratory_birds explicitly applicable."
+    },
+    {
+      "rule_id": "minerals_energy_authorities_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-041"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps minerals_energy_authorities_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "region1_forest_plan_source_records_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1PLAN-helena-lewis-and-clark-nf-02"
+      ],
+      "expected_source_document_roles": [
+        "forest_plan"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps region1_forest_plan_source_records_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "roadless_rule_36cfr_294b",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-049"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps roadless_rule_36cfr_294b explicitly applicable."
+    },
+    {
+      "rule_id": "roads_access_special_use_action_authorities_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-036"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps roads_access_special_use_action_authorities_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "species_supporting_sources_and_overlays_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-064"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps species_supporting_sources_and_overlays_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "tribal_consultation_trust_sacred_sites_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-081"
+      ],
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps tribal_consultation_trust_sacred_sites_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "vegetation_wildfire_forest_health_authorities_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-056"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps vegetation_wildfire_forest_health_authorities_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "wilderness_wsr_trails_designated_areas_authority_template",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-047"
+      ],
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps wilderness_wsr_trails_designated_areas_authority_template explicitly applicable."
+    }
+  ],
+  "rule_review_expectations": [],
+  "section_expectations": [],
+  "forest_plan": {
+    "expected_scope_status": "helena_lewis_and_clark_nf",
+    "require_reviewer_ready": true,
+    "max_reviewer_resolution_items": 0,
+    "max_standard_reviewer_resolution_items": 0,
+    "require_matrix_forest_plan_compliance": true,
+    "required_source_record_ids": [
+      "FOR-018",
+      "R1PLAN-helena-lewis-and-clark-nf-02"
+    ],
+    "expected_geographic_area_ids": [
+      "geo-castles"
+    ],
+    "min_applicable_standard_count": 28
+  }
+}

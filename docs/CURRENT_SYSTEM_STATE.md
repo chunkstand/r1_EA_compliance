@@ -15,7 +15,7 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## HLC Bonanza Forest-Plan Preflight Resolved
+## HLC Bonanza Reviewer-Stack Replay Resolved
 
 Latest implementation update on 2026-05-29 UTC:
 
@@ -48,17 +48,33 @@ Latest implementation update on 2026-05-29 UTC:
   `scope_status="helena_lewis_and_clark_nf"`, `geographic_area_count=1`,
   `project_location_signal_count=1`, `validation_passed=true`, and
   `reviewer_ready=true`.
-- blocker truth:
-  review `phase-eval` remains reduced with `19/27` phases passed. The remaining
-  blockers are missing downstream applicability artifacts
-  (`authority_universe`, `package_fact_graph`, retrieval/graph traces,
-  determination, and validation), missing generated rule-pack artifacts, and
-  missing compliance review matrix/PDF artifacts.
+- reviewer-stack truth:
+  the tracked applicability adjudication at
+  `config/applicability_adjudications/region1-example-helena-lewis-and-clark-bonanza-66532.json`
+  resolves `5/5` applicability conflicts after replay against the regenerated
+  decision hash. `applicability-validate` passes with `51` applicable
+  authorities, `273` non-applicable authorities, `0` unresolved authorities,
+  and `generated_rule_pack_ready=true`; generated rule-pack validation passes
+  with `51` rules. `compliance-review` passes on the generated Bonanza rule
+  pack with `51` findings, `finding_status_counts={"pass":35,"uncertain":16}`,
+  matrix JSON/Markdown/PDF artifacts present, `validation_passed=true`, and
+  `reviewer_ready=true`.
+- eval truth:
+  `v1-ea-eval` with
+  `config/v1_helena_lewis_and_clark_bonanza_real_ea_eval.json` passes with
+  `baseline_rule_count=26`, `conditional_expectation_count=25`,
+  `forest_plan_expectation_count=8`, and `contract_status="reviewer_ready"`.
+  `forest-plan-component-eval` with
+  `config/forest_plan_component_evals/region1-example-helena-lewis-and-clark-bonanza-66532.json`
+  passes `28/28` HLC applicable-standard cases. Review `phase-eval` passes
+  `28/28` phases with `blockers=[]` and `reviewer_ready=true`; its
+  `declared_review_contract=false` and `contract_backed_promotion_ready=false`
+  values are expected because registry/coverage promotion has not run yet.
 - routing truth:
   `helena-lewis-and-clark-nf` remains `profile_eval_guidance_only` in
-  `config/forest_specific_example_package_registry_v1.json`; Bonanza must not
-  be added to active registry, real-package coverage, or component-coverage
-  slots until reviewer-stack replay and aggregate gates pass.
+  `config/forest_specific_example_package_registry_v1.json`; the next HLC
+  milestone is registry and aggregate coverage promotion, not more reviewer
+  stack generation.
 
 ## Repo Current Source-Set Catalog Repoint
 

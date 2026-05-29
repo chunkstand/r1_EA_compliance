@@ -2266,7 +2266,8 @@ that forest-plan component evaluation is absent, stale, or not reviewer-ready.
   `source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite`
 - the source-set forest-plan component inventory at
   `source_library/derived/<source_set_id>/forest_plan_components/component_inventory.json` when the
-  package resolves to the selected forest-plan profile
+  package resolves to the selected forest-plan profile, or the review-local inventory path passed
+  with `--forest-plan-component-inventory-path`
 
 When `--reuse-package-cache` is supplied, the review directory must already contain:
 

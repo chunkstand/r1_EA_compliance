@@ -64,12 +64,17 @@ def test_compliance_review_parser_accepts_forest_plan_profile_selection() -> Non
             "beaverhead-deerlodge-nf",
             "--forest-plan-profiles-path",
             "config/forest_plan_profiles.json",
+            "--forest-plan-component-inventory-path",
+            "source_library/reviews/review/component_inventory.json",
         ]
     )
 
     assert args.command == "compliance-review"
     assert args.forest_unit_id == "beaverhead-deerlodge-nf"
     assert args.forest_plan_profiles_path == Path("config/forest_plan_profiles.json")
+    assert args.forest_plan_component_inventory_path == Path(
+        "source_library/reviews/review/component_inventory.json"
+    )
 
 
 def test_compliance_review_parser_accepts_flathead_profile_selection() -> None:
@@ -274,6 +279,8 @@ def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch
             "package",
             "--allow-base-rule-pack-review",
             "--reuse-package-cache",
+            "--forest-plan-component-inventory-path",
+            "source_library/reviews/review/component_inventory.json",
             "--docling-timeout-seconds",
             "0",
         ]
@@ -286,6 +293,9 @@ def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch
     assert captured["reuse_package_cache"] is True
     assert captured["docling_timeout_seconds"] is None
     assert captured["package_path"] == Path("package")
+    assert captured["component_inventory_path"] == Path(
+        "source_library/reviews/review/component_inventory.json"
+    )
 
 
 def test_decision_support_handler_propagates_report_options(monkeypatch) -> None:

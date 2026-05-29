@@ -49,10 +49,16 @@ Use this file as the short current route before opening the append-only docs.
   `132` applicability false positives, and `46` evidence-linking misses.
   `forest-plan-resolve` now reports `scope_status="helena_lewis_and_clark_nf"`,
   `geographic_area_count=1`, `validation_passed=true`, and
-  `reviewer_ready=true`. Review `phase-eval` remains reduced on missing
-  downstream applicability, generated rule-pack, and compliance review
-  artifacts. Do not add Bonanza to registry or real-package coverage surfaces
-  until the reviewer-stack replay gates pass.
+  `reviewer_ready=true`. Milestone 3 reviewer-stack replay is green:
+  applicability replay applies `5` tracked adjudications and validates `51`
+  applicable authorities, the generated Bonanza rule pack has `51` rules,
+  `compliance-review` passes with `51` findings and matrix JSON/Markdown/PDF
+  artifacts present, V1 eval passes with `25` conditional expectations,
+  component eval passes `28/28` HLC standards, and review `phase-eval` passes
+  `28/28` with `blockers=[]`. Bonanza is still not promoted:
+  `declared_review_contract=false` and `contract_backed_promotion_ready=false`
+  are expected until Milestone 4 adds registry and aggregate coverage entries
+  and reruns their promotion gates.
 - First-class eval trace Milestones 0-5 are resolved locally. The tracked contract
   lives in `config/eval_trace_inventory_contract_v1.json`; the contract doc is
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`; and

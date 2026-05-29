@@ -34,6 +34,7 @@ def register_compliance_commands(subparsers: argparse._SubParsersAction) -> None
     _add_compliance_review_args(review)
     review.add_argument("--review-id")
     review.add_argument("--results-dir", type=Path)
+    review.add_argument("--forest-plan-component-inventory-path", type=Path)
     review.add_argument("--reuse-package-cache", action="store_true")
     review.add_argument("--allow-base-rule-pack-review", action="store_true")
 
@@ -79,6 +80,7 @@ def handle_compliance_command(
             index_path=args.index_path,
             forest_unit_id=args.forest_unit_id,
             forest_plan_profiles_path=args.forest_plan_profiles_path,
+            component_inventory_path=args.forest_plan_component_inventory_path,
             review_id=args.review_id,
             results_dir=args.results_dir,
             source_top_k=args.source_top_k,

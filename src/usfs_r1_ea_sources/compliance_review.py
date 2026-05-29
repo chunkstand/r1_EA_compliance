@@ -77,6 +77,7 @@ def run_compliance_review(
     index_path: Path | None = None,
     forest_unit_id: str = DEFAULT_FOREST_PLAN_PROFILE_ID,
     forest_plan_profiles_path: Path = DEFAULT_FOREST_PLAN_PROFILES_PATH,
+    component_inventory_path: Path | None = None,
     review_id: str | None = None,
     results_dir: Path | None = None,
     source_top_k: int = 3,
@@ -210,6 +211,7 @@ def run_compliance_review(
         docling_ocr=docling_ocr,
         docling_timeout_seconds=docling_timeout_seconds,
         reuse_package_cache=True,
+        component_inventory_path=component_inventory_path,
     )
     rules_by_id = {str(rule["id"]): rule for rule in rule_pack["rules"]}
     findings = [

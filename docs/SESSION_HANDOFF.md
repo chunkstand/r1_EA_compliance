@@ -48,7 +48,8 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  HLC Bonanza example-package work has started. The active packet is
+  HLC Bonanza example-package work has advanced through reviewer-stack replay.
+  The active packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID
   `region1-example-helena-lewis-and-clark-bonanza-66532` and forest unit
   `helena-lewis-and-clark-nf`. The selected authorities are the Bonanza project
@@ -69,12 +70,17 @@ history below.
   `132` applicability false positives, and `46` evidence-linking misses.
   `forest-plan-resolve` now reports `scope_status="helena_lewis_and_clark_nf"`,
   `geographic_area_count=1`, `project_location_signal_count=1`,
-  `validation_passed=true`, and `reviewer_ready=true`. Review `phase-eval`
-  remains reduced with `19/27` phases passed; the remaining blockers are
-  missing applicability artifacts, generated rule-pack artifacts, and compliance
-  review matrix/PDF artifacts. Keep `helena-lewis-and-clark-nf` at
-  `profile_eval_guidance_only` until the full reviewer-stack replay and
-  aggregate promotion gates pass.
+  `validation_passed=true`, and `reviewer_ready=true`. Milestone 3 reviewer
+  stack replay is now green: the tracked applicability adjudication resolves
+  `5/5` conflicts, `applicability-validate` passes with `51` applicable
+  authorities and `0` unresolved authorities, generated rule-pack validation
+  passes with `51` rules, `compliance-review` passes with `51` findings and
+  matrix JSON/Markdown/PDF artifacts present, V1 eval passes with `25`
+  conditional expectations, component eval passes `28/28` HLC standards, and
+  review `phase-eval` passes `28/28` with `blockers=[]`. Keep
+  `helena-lewis-and-clark-nf` at `profile_eval_guidance_only` until Milestone 4
+  adds Bonanza to registry and aggregate coverage manifests and reruns those
+  promotion gates.
   Repo-root catalog currentness is corrected: `source_library/catalog/` now
   names `source-set-f70ea11e04ae3d53` as the current source-set. The tracked
   pointer is `config/current_source_set_v1.json`; the root manifest reports

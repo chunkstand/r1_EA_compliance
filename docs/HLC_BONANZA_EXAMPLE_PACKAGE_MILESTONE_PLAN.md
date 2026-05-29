@@ -1,11 +1,10 @@
 # HLC Bonanza Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Active packet (`Milestone 0` opening, `Milestone 1` package-authority intake, and
-`Milestone 2` forest-plan resolver preflight resolved locally; `Milestone 3` reviewer-stack replay
-is reduced to missing applicability, rule-pack, compliance, V1-eval, and component-eval contracts;
-do not promote Bonanza into the registry or real-package coverage manifests until the full reviewer
-stack gates pass)
+Status: Active packet (`Milestone 0` opening, `Milestone 1` package-authority intake,
+`Milestone 2` forest-plan resolver preflight, and `Milestone 3` reviewer-stack replay resolved
+locally; Bonanza remains out of registry and aggregate coverage manifests until the `Milestone 4`
+promotion slice runs and passes its aggregate gates)
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
@@ -52,7 +51,28 @@ HLC must remain `profile_eval_guidance_only` in `config/forest_specific_example_
 - HLC profile context terms now include `White Sulphur Springs Ranger District` and `Castles Geographic Area`, so Bonanza area evidence resolves without weakening forest-plan validation.
 - `forest-plan-component-adjudication-eval` passes for the tracked Bonanza adjudication with `178/178` resolved items, `0` pending items, `disposition_counts={"applicability_false_positive":132,"evidence_linking_miss":46}`, and `failure_category_counts={}`.
 - `forest-plan-resolve` on the full package now resolves `scope_status="helena_lewis_and_clark_nf"`, `geographic_area_count=1`, `project_location_signal_count=1`, `validation_passed=true`, and `reviewer_ready=true`; retrieval readiness is green with all required HLC source records indexed on `source-set-f70ea11e04ae3d53`.
-- Review `phase-eval` is still not reviewer-ready. The remaining blockers are missing downstream applicability artifacts (`authority_universe`, `package_fact_graph`, retrieval/graph traces, determinations, validation), missing generated rule-pack artifacts, and missing compliance review matrix/PDF artifacts.
+- Applicability replay now passes end to end: `applicability-determine` writes `51` applicable
+  authorities, `273` non-applicable authorities, and `0` unresolved authorities after the tracked
+  five-item adjudication is applied; `applicability-validate` reports
+  `generated_rule_pack_ready=true`; and generated rule-pack validation reports `51` rules.
+- The tracked applicability adjudication contract is
+  `config/applicability_adjudications/region1-example-helena-lewis-and-clark-bonanza-66532.json`.
+  It resolves the five authority-family conflicts with `5/5` resolved items, `0` pending items,
+  and no failure categories after replay against the regenerated decision hash.
+- `compliance-review` on the generated Bonanza rule pack passes with `51` findings,
+  `finding_status_counts={"pass":35,"uncertain":16}`, matrix JSON/Markdown/PDF artifacts present,
+  `validation_passed=true`, and `reviewer_ready=true`.
+- The V1 eval contract at `config/v1_helena_lewis_and_clark_bonanza_real_ea_eval.json` passes with
+  `baseline_rule_count=26`, `conditional_expectation_count=25`, `forest_plan_expectation_count=8`,
+  `passed=true`, and `contract_status="reviewer_ready"`.
+- The component eval contract at
+  `config/forest_plan_component_evals/region1-example-helena-lewis-and-clark-bonanza-66532.json`
+  passes `28/28` HLC applicable-standard cases with `applicable_standard_recall=1.0` and no failed
+  checks.
+- Review `phase-eval` now passes `28/28` phases with `blockers=[]`,
+  `reviewer_ready=true`, and `review_direct_eval_status="not_required_for_ad_hoc_review"`.
+  `declared_review_contract=false` and `contract_backed_promotion_ready=false` remain expected
+  until the Milestone 4 registry/coverage promotion slice.
 
 ## Goal
 
@@ -121,7 +141,8 @@ Weak point forecast: Bonanza is promoted from a URL or inventory alone.
 - Owner surface: `config/forest_specific_example_package_registry_v1.json`, `config/v1_real_package_review_coverage_v1.json`
 - Prevention gate: V1 eval, forest-plan component eval/adjudication, phase eval, real-package coverage eval, and forest-specific example-package eval
 - Fail threshold: Bonanza appears as a required active example slot before reviewer-stack gates pass
-- Controlled violation: focused registry tests keep HLC on `profile_eval_guidance_only` while the active packet is not reviewer-ready
+- Controlled violation: focused registry tests keep HLC on `profile_eval_guidance_only` until the
+  dedicated promotion milestone updates registry and coverage manifests
 - Future-Codex misuse scenario: a future session edits the registry after seeing the downloaded Box files; the tests and aggregate evals must reject promotion without the eval artifacts
 
 ### Weak Point 2
@@ -195,10 +216,10 @@ resolves from package text, component adjudication eval passes, and `forest-plan
 
 Outcome label: `resolved` if the Bonanza review reaches reviewer-ready status; `reduced` if a named applicability, component, compliance, or eval blocker remains.
 
-Local result: reduced. Component adjudication and area/geography validation are resolved, but the
-downstream reviewer stack has not been generated: `phase-eval` fails on missing applicability,
-generated rule-pack, and compliance review artifacts. Bonanza remains out of registry and coverage
-promotion surfaces.
+Local result: resolved. Applicability artifacts, the tracked applicability adjudication, generated
+rule pack, compliance review matrix/PDF artifacts, V1 eval, forest-plan component eval, and review
+`phase-eval` all pass. Bonanza remains out of registry and coverage promotion surfaces because
+promotion is Milestone 4.
 
 1. Resolve forest-plan component adjudication for the HLC component queue.
 2. Resolve any area/geography validation issue without weakening resolver checks.
@@ -238,17 +259,39 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_libra
 ```
 
 Expected current result: adjudication eval passes; `forest-plan-resolve` passes with
-`reviewer_ready=true`; `phase-eval` remains reduced until applicability, generated rule-pack, and
-compliance review artifacts exist.
+`reviewer_ready=true`; the full reviewer stack is now verified in the Milestone 3 closeout gate
+below.
+
+Reviewer-stack replay closeout:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-determine --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --source-set-id source-set-f70ea11e04ae3d53
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-eval --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --adjudication-file config/applicability_adjudications/region1-example-helena-lewis-and-clark-bonanza-66532.json
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-apply --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --source-set-id source-set-f70ea11e04ae3d53 --adjudication-file config/applicability_adjudications/region1-example-helena-lewis-and-clark-bonanza-66532.json
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --source-set-id source-set-f70ea11e04ae3d53
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --source-set-id source-set-f70ea11e04ae3d53
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path source_library/reviews/_intake/region1-example-helena-lewis-and-clark-bonanza-66532 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --forest-unit-id helena-lewis-and-clark-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json --rule-pack source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/applicability/generated_rule_pack.json --reuse-package-cache --docling-timeout-seconds 180
+PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --eval-file config/v1_helena_lewis_and_clark_bonanza_real_ea_eval.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --eval-file config/forest_plan_component_evals/region1-example-helena-lewis-and-clark-bonanza-66532.json
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --source-set-id source-set-f70ea11e04ae3d53 --validate-only
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532
+PYTHONPATH=src uv run --extra dev pytest tests/test_cli.py -k compliance_review
+PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
+PYTHONPATH=src uv run --extra dev ruff check src tests
+PYTHONPATH=src python -m compileall src
+git diff --check
+```
+
+Expected reviewer-stack result: generated rule pack and compliance review pass; V1 eval and
+component eval pass; review `phase-eval` passes `28/28` with `blockers=[]`; Bonanza remains
+unpromoted until Milestone 4.
 
 Promotion slice, later:
 
 ```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --eval-file config/v1_helena_lewis_and_clark_bonanza_real_ea_eval.json
-PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --eval-file config/forest_plan_component_evals/region1-example-helena-lewis-and-clark-bonanza-66532.json
-PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532
 PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library --manifest config/forest_specific_example_package_registry_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library --manifest config/forest_plan_component_eval_coverage_v1.json
 git diff --check
 ```
 
@@ -256,9 +299,8 @@ git diff --check
 
 - Bonanza has a forest-qualified review ID and replay context on f70.
 - Local ignored package evidence records the full official Box roster, file hashes, and zero failures.
-- HLC remains profile-guidance-only until reviewer-ready gates pass.
-- Forest-plan resolver blockers are closed without relaxed validation, and remaining reviewer-stack
-  blockers are recorded as blockers.
+- HLC remains profile-guidance-only until the dedicated promotion gates pass.
+- Forest-plan resolver and reviewer-stack blockers are closed without relaxed validation.
 - Any future promotion updates registry, coverage manifests, eval contracts, docs, handoff, and tests in the same milestone commit.
 
 ## Stop Conditions
@@ -275,7 +317,6 @@ Each completed milestone slice must be committed atomically with tracked impleme
 
 ## Residual Risks And Next Routing
 
-The immediate next milestone is downstream reviewer-stack replay: generate and validate HLC
-applicability artifacts, generated rule-pack artifacts, compliance review matrix/PDF artifacts, V1
-eval, component eval, and phase eval. Registry promotion is a later milestone, not part of this
-forest-plan preflight slice.
+The immediate next milestone is registry and coverage promotion. Milestone 4 must add Bonanza to
+the real-package review coverage manifest, HLC forest-specific registry slot, and component-eval
+coverage manifest, then rerun the aggregate gates before claiming promoted reviewer-ready status.
