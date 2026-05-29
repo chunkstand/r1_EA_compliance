@@ -87,6 +87,7 @@ def test_committed_real_package_review_coverage_manifest_archives_south_plateau_
     ]
     assert [item["review_id"] for item in manifest["slots"]] == [
         "v1-cg-ecid-compliance-review",
+        "region1-example-beaverhead-deerlodge-south-tobacco-roots-63754",
         "region1-example-bitterroot-front-57341",
         "west-reservoir-67436",
         "region1-example-custer-gallatin-south-otter-58396",
@@ -110,13 +111,14 @@ def test_committed_real_package_review_coverage_manifest_archives_south_plateau_
         "forest_specific_reviewer_ready",
         "forest_specific_reviewer_ready",
         "forest_specific_reviewer_ready",
+        "forest_specific_reviewer_ready",
     ]
     thresholds = manifest["coverage_thresholds"]
-    assert thresholds["required_slot_count"] == 6
+    assert thresholds["required_slot_count"] == 7
     assert thresholds["required_coverage_class_count"] == 2
-    assert thresholds["distinct_forest_count_min"] == 5
-    assert thresholds["distinct_package_style_count_min"] == 7
-    assert thresholds["reviewer_ready_slot_count_min"] == 6
+    assert thresholds["distinct_forest_count_min"] == 6
+    assert thresholds["distinct_package_style_count_min"] == 8
+    assert thresholds["reviewer_ready_slot_count_min"] == 7
     assert thresholds["typed_blocked_slot_count_min"] == 0
 
 

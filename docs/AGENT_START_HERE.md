@@ -42,7 +42,8 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
-- Beaverhead-Deerlodge South Tobacco Roots example-package work is active in
+- Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
+  through Milestone 4 in
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
   For Beaverhead-Deerlodge example-package work, use review ID
   `region1-example-beaverhead-deerlodge-south-tobacco-roots-63754` and forest
@@ -51,15 +52,19 @@ The planner:
   `https://www.fs.usda.gov/r01/beaverhead-deerlodge/projects/63754` and
   Pinyon/Box folder
   `https://usfs-public.app.box.com/v/PinyonPublic/folder/199281418011`. This
-  packet is resolved through Milestone 3 reviewer-stack replay: package
-  authority, base review, source-record retrieval, scope validation, component
+  package authority, base review, source-record retrieval, scope validation, component
   adjudication, applicability adjudication, generated rule-pack validation,
   compliance review, V1 eval, component eval, and review `phase-eval` are
-  green locally. `beaverhead-deerlodge-nf` remains
-  `profile_eval_guidance_only`; do not use South Tobacco Roots as a promoted
-  governed example or as a generic Region 1 example until the future Milestone
-  4 registry/coverage promotion gates pass.
-- The latest resolved forest-specific example packet is
+  green locally. It is now the governed primary Beaverhead-Deerlodge example:
+  `example_id="bdnf-south-tobacco-roots-forest-specific"` and
+  `primary_example_id="bdnf-south-tobacco-roots-forest-specific"` for
+  `forest_unit_id="beaverhead-deerlodge-nf"`. Real-package coverage and
+  forest-specific registry eval are green; the component-coverage aggregate is
+  reduced only on inherited ECID source-delta drift, while the Beaverhead slot
+  itself passes. Keep South Tobacco Roots parallel to
+  `Document_Register_Master`; it is not a generic Region 1 example and must not
+  be reused for non-Beaverhead-Deerlodge forests.
+- The latest resolved forest-specific example packet before Beaverhead is
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Bitterroot
   National Forest example-package review work, inspect
   `config/forest_specific_example_package_registry_v1.json` first, then use

@@ -37,6 +37,7 @@ def test_committed_manifest_tracks_south_otter_review_slot() -> None:
         "region1-example-custer-gallatin-south-otter-58396",
         "region1-example-helena-lewis-and-clark-bonanza-66532",
         "region1-example-bitterroot-front-57341",
+        "region1-example-beaverhead-deerlodge-south-tobacco-roots-63754",
     ]
     assert manifest["future_forest_expansion_policy"] == {
         "mode": "manifest_slots_only",
@@ -75,8 +76,16 @@ def test_committed_manifest_tracks_south_otter_review_slot() -> None:
         == "forest_plan_component_evals/region1-example-bitterroot-front-57341.json"
     )
     assert slots["region1-example-bitterroot-front-57341"]["required"] is True
-    assert manifest["coverage_thresholds"]["required_review_count"] == 7
-    assert manifest["coverage_thresholds"]["distinct_forest_count_min"] == 5
+    assert (
+        slots["region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"]["eval_file"]
+        == "forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json"
+    )
+    assert (
+        slots["region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"]["required"]
+        is True
+    )
+    assert manifest["coverage_thresholds"]["required_review_count"] == 8
+    assert manifest["coverage_thresholds"]["distinct_forest_count_min"] == 6
     assert (
         slots["v1-cg-ecid-compliance-review"]["expected_source_set_id"]
         == "source-set-f70ea11e04ae3d53"

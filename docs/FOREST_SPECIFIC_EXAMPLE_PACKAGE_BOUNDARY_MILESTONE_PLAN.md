@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is active and resolved through Milestone 3 reviewer-stack replay, with registry/coverage promotion still future; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, or Bitterroot Milestones 0-4 unless a verified gate regresses`)
+Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is reduced through Milestone 4 registry and coverage promotion, with only inherited ECID source-delta component-coverage drift still red; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, Bitterroot, or Beaverhead-Deerlodge Milestones 0-4 unless a verified gate regresses`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -71,8 +71,9 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   present, covered, source-set aligned, and passing.
 - The Beaverhead-Deerlodge South Tobacco Roots follow-on in
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  is active and resolved through Milestone 3 reviewer-stack replay. Local
-  package authority and base review are green for review
+  is resolved through Milestone 4 registry and coverage promotion, reduced only
+  by inherited ECID source-delta component-coverage drift. Local package
+  authority and base review are green for review
   `region1-example-beaverhead-deerlodge-south-tobacco-roots-63754`; the Box
   intake has `16` files, `176,594,060` bytes, and `0` failures. Scope/source
   preflight resolves to `beaverhead_deerlodge_nf` with `validation_passed=true`,
@@ -80,9 +81,13 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   adjudication resolves `3/3` trigger conflicts, generated rule-pack validation
   passes with `52` rules, compliance review and V1 eval pass, component eval
   passes `90/90` cases, and review `phase-eval` passes `28/28` with
-  `blockers=[]`. Beaverhead-Deerlodge remains `profile_eval_guidance_only`;
-  the next route is Milestone 4 registry and coverage promotion, not implicit
-  promotion in this replay slice.
+  `blockers=[]`, `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`. Beaverhead-Deerlodge now routes as
+  `real_package_examples_available` with
+  `primary_example_id="bdnf-south-tobacco-roots-forest-specific"`. The
+  Beaverhead component-coverage slot is present, covered, source-set aligned,
+  and passing; the standalone aggregate remains red only on inherited
+  `v1-cg-ecid-source-delta-review`.
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.

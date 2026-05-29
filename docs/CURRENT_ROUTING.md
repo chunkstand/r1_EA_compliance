@@ -13,11 +13,13 @@ Use this file as the short current route before opening the append-only docs.
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
-  `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  resolved locally through Milestone 3 component adjudication and reviewer-stack
-  replay; next route is Milestone 4 registry and coverage promotion if the user
-  wants Beaverhead-Deerlodge promoted from guidance-only
+  none; the Beaverhead-Deerlodge South Tobacco Roots packet is resolved locally
+  through Milestone 4 registry and coverage promotion, reduced only by inherited
+  ECID source-delta component-coverage drift
 - Latest resolved forest-specific example packet:
+  `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  Milestone 4
+- Predecessor resolved forest-specific example packet:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
   registry and coverage promotion resolved locally
 - Latest resolved HLC forest-specific example packet:
@@ -38,8 +40,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- Beaverhead-Deerlodge South Tobacco Roots example-package work is active and
-  resolved locally through Milestone 3. The packet is
+- Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
+  locally through Milestone 4 registry and coverage promotion. The packet is
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`;
   the resolved review identity is
   `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`
@@ -69,9 +71,22 @@ Use this file as the short current route before opening the append-only docs.
   conditional expectations and `contract_status="reviewer_ready"`, component
   eval passes `90/90` cases covering all `89` applicable standards, and review
   `phase-eval` passes `28/28` with `blockers=[]`.
-  `beaverhead-deerlodge-nf` remains `profile_eval_guidance_only`; do not add
-  registry, real-package coverage, or component-coverage promotion until the
-  explicit Milestone 4 promotion slice.
+  `beaverhead-deerlodge-nf` now routes as `real_package_examples_available`
+  with `primary_example_id="bdnf-south-tobacco-roots-forest-specific"`.
+  `real-package-review-coverage-eval` passes with `covered_slot_count=7`,
+  `reviewer_ready_slot_count=7`, `distinct_forest_count=6`, and
+  `distinct_package_style_count=8`.
+  `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
+  `review_example_count=7`, `reviewer_ready_example_count=7`,
+  `distinct_governed_example_forest_count=6`, and
+  `profile_guidance_only_count=4`. The Beaverhead component-coverage slot
+  passes on `source-set-f70ea11e04ae3d53`; the standalone
+  `forest-plan-component-eval-coverage` aggregate still exits red only on the
+  inherited `v1-cg-ecid-source-delta-review` slot. Review `phase-eval` now
+  reports `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. Keep South Tobacco Roots parallel to
+  `Document_Register_Master`; do not route the inherited ECID source-delta
+  blocker back into this Beaverhead packet.
 - Bitterroot Front is now the governed primary Bitterroot National Forest
   example package. The packet is
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; the resolved

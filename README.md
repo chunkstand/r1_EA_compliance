@@ -50,11 +50,11 @@ They are intentionally not duplicated here.
   `primary_example_id="bitterroot-front-forest-specific"` with
   `review_id="region1-example-bitterroot-front-57341"` in
   `config/forest_specific_example_package_registry_v1.json`.
-  Beaverhead-Deerlodge South Tobacco Roots is an active Milestone 3 replay packet
-  at `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`;
-  component adjudication, compliance review, V1 eval, component eval, and
-  review `phase-eval` are green locally, but it remains
-  `profile_eval_guidance_only` until Milestone 4 registry/coverage promotion.
+  For Beaverhead-Deerlodge National Forest, the governed primary example is
+  `primary_example_id="bdnf-south-tobacco-roots-forest-specific"` with
+  `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`;
+  its Milestone 4 promotion is reduced only by inherited ECID source-delta
+  component-coverage drift, not by the Beaverhead-owned slots.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

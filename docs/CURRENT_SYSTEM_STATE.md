@@ -15,14 +15,16 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Beaverhead-Deerlodge South Tobacco Roots Milestone 3 Resolved Locally
+## Beaverhead-Deerlodge South Tobacco Roots Milestone 4 Reduced Locally
 
 Latest implementation update on 2026-05-29 UTC:
 
 - update:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  is active and resolved locally through Milestone 3 component adjudication and
-  reviewer-stack replay. The selected package is the South Tobacco Roots
+  is resolved locally through Milestone 4 registry and coverage promotion. The
+  outcome is reduced only because the standalone component-coverage aggregate
+  still has inherited ECID source-delta drift; all Beaverhead-owned promotion
+  slots pass. The selected package is the South Tobacco Roots
   Vegetation Management Project (`63754`) for `beaverhead-deerlodge-nf`, using
   the official project page
   `https://www.fs.usda.gov/r01/beaverhead-deerlodge/projects/63754` and
@@ -68,11 +70,27 @@ Latest implementation update on 2026-05-29 UTC:
   `declared_review_contract=false`, and
   `contract_backed_promotion_ready=false`.
 - promotion boundary:
-  `beaverhead-deerlodge-nf` remains `profile_eval_guidance_only`; no registry,
-  real-package coverage, component-coverage, or queue-ledger promotion is part
-  of this checkpoint. The next route is Milestone 4 registry and coverage
-  promotion only if the user wants this Beaverhead-Deerlodge review promoted
-  from guidance-only to governed example coverage.
+  `beaverhead-deerlodge-nf` now routes as `real_package_examples_available`
+  with `primary_example_id="bdnf-south-tobacco-roots-forest-specific"` in
+  `config/forest_specific_example_package_registry_v1.json`.
+  `config/v1_real_package_review_coverage_v1.json` includes required
+  `slot_id="bdnf-south-tobacco-roots-forest-specific"` coverage for the frozen
+  review ID, and `real-package-review-coverage-eval` passes with
+  `covered_slot_count=7`, `reviewer_ready_slot_count=7`,
+  `distinct_forest_count=6`, and `distinct_package_style_count=8`.
+  `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
+  `review_example_count=7`, `reviewer_ready_example_count=7`,
+  `distinct_governed_example_forest_count=6`, and
+  `profile_guidance_only_count=4`.
+  `config/forest_plan_component_eval_coverage_v1.json` includes the required
+  Beaverhead component slot, which is covered, source-set aligned, and passing.
+  The standalone aggregate still exits red only on the inherited
+  `v1-cg-ecid-source-delta-review` slot (`result_not_passed` plus
+  `result_source_set_id_mismatch`), with `covered_review_count=7/8`,
+  `stale_identity_count=1`, and `unresolved_review_count=1`. Review
+  `phase-eval` passes `28/28` with `blockers=[]`,
+  `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`.
 
 ## Bitterroot Front Registry And Coverage Promotion Resolved
 

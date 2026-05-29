@@ -17,6 +17,9 @@ APPLICABILITY_ADJUDICATION = (
 COMPONENT_ADJUDICATION = (
     REPO_ROOT / "config" / "forest_plan_component_adjudications" / f"{REVIEW_ID}.json"
 )
+REAL_PACKAGE_COVERAGE = REPO_ROOT / "config" / "v1_real_package_review_coverage_v1.json"
+EXAMPLE_REGISTRY = REPO_ROOT / "config" / "forest_specific_example_package_registry_v1.json"
+COMPONENT_COVERAGE = REPO_ROOT / "config" / "forest_plan_component_eval_coverage_v1.json"
 
 
 def test_beaverhead_south_tobacco_v1_eval_contract_is_reviewer_ready_bound() -> None:
@@ -136,6 +139,51 @@ def test_beaverhead_south_tobacco_component_adjudication_is_complete() -> None:
     assert all(item["adjudicated_by"] == ["codex"] for item in items)
 
 
+def test_beaverhead_south_tobacco_is_promoted_in_registry_and_coverage_manifests() -> None:
+    real_package_coverage = _read_json(REAL_PACKAGE_COVERAGE)
+    registry = _read_json(EXAMPLE_REGISTRY)
+    component_coverage = _read_json(COMPONENT_COVERAGE)
+    slot_id = "bdnf-south-tobacco-roots-forest-specific"
+
+    real_package_slot = _by_id(real_package_coverage["slots"], "slot_id", slot_id)
+    assert real_package_slot["review_id"] == REVIEW_ID
+    assert real_package_slot["forest_unit_id"] == "beaverhead-deerlodge-nf"
+    assert real_package_slot["coverage_class_id"] == "forest_specific_reviewer_ready"
+    assert real_package_slot["expected_contract_status"] == "reviewer_ready"
+    assert real_package_slot["eval_file"] == (
+        "v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json"
+    )
+    assert real_package_slot["package_authority"] == {
+        "replay_context_path": (
+            f"replay_contexts/{REVIEW_ID}.json"
+        ),
+        "official_project_page": "https://www.fs.usda.gov/r01/beaverhead-deerlodge/projects/63754",
+        "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/199281418011",
+    }
+
+    example = _by_id(registry["review_examples"], "example_id", slot_id)
+    assert example["review_id"] == REVIEW_ID
+    assert example["coverage_slot_id"] == slot_id
+    assert example["forest_unit_id"] == "beaverhead-deerlodge-nf"
+    assert example["applicable_forest_unit_ids"] == ["beaverhead-deerlodge-nf"]
+    beaverhead_route = _by_id(
+        registry["forest_routing"],
+        "forest_unit_id",
+        "beaverhead-deerlodge-nf",
+    )
+    assert beaverhead_route["routing_status"] == "real_package_examples_available"
+    assert beaverhead_route["primary_example_id"] == slot_id
+
+    component_slot = _by_id(component_coverage["slots"], "slot_id", slot_id)
+    assert component_slot["review_id"] == REVIEW_ID
+    assert component_slot["forest_unit_id"] == "beaverhead-deerlodge-nf"
+    assert component_slot["expected_source_set_id"] == SOURCE_SET_ID
+    assert component_slot["eval_file"] == (
+        f"forest_plan_component_evals/{REVIEW_ID}.json"
+    )
+    assert component_slot["required"] is True
+
+
 def _read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -146,3 +194,7 @@ def _expectation(contract: dict, rule_id: str) -> dict:
         for expectation in contract["conditional_source_expectations"]
         if expectation["rule_id"] == rule_id
     )
+
+
+def _by_id(rows: list[dict], key: str, expected: str) -> dict:
+    return next(row for row in rows if row[key] == expected)
