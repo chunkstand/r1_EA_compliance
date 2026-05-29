@@ -1,6 +1,6 @@
 {
   "schema_version": "nepa-3d-viewer-manifest-v1",
-  "default_source_set_id": "source-set-4fb59e9eb43045cb",
+  "default_source_set_id": "source-set-f70ea11e04ae3d53",
   "default_review_id": null,
   "runtime": {
     "three_runtime_url": "https://unpkg.com/three@0.149.0/build/three.min.js",
@@ -9,14 +9,14 @@
   },
   "datasets": [
     {
-      "dataset_id": "source-set-4fb59e9eb43045cb",
-      "label": "Source Set: source-set-4fb59e9eb43045cb",
+      "dataset_id": "source-set-f70ea11e04ae3d53",
+      "label": "Source Set: source-set-f70ea11e04ae3d53",
       "scope": "source_set",
-      "source_set_id": "source-set-4fb59e9eb43045cb",
+      "source_set_id": "source-set-f70ea11e04ae3d53",
       "review_id": null,
-      "graph_path": "../../source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph.json",
-      "summary_path": "../../source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph_summary.json",
-      "validation_path": "../../source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph_validation.json"
+      "graph_path": "../../source_library/derived/source-set-f70ea11e04ae3d53/knowledge_graph/nepa_3d_graph.json",
+      "summary_path": "../../source_library/derived/source-set-f70ea11e04ae3d53/knowledge_graph/nepa_3d_graph_summary.json",
+      "validation_path": "../../source_library/derived/source-set-f70ea11e04ae3d53/knowledge_graph/nepa_3d_graph_validation.json"
     }
   ]
 }

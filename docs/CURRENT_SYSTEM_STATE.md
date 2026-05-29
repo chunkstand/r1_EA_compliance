@@ -15,6 +15,37 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Repo Current Source-Set Catalog Repoint
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `source-set-f70ea11e04ae3d53` is now the named current source-set for the
+  repo-root catalog surface. `source_library/catalog/source_set_manifest.json`,
+  `source_library/catalog/source_catalog.jsonl`,
+  `source_library/catalog/review_sources.sqlite`, `catalog_validation.json`,
+  and the source graph seed files were republished from
+  `source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate/`.
+- tracked contract:
+  `config/current_source_set_v1.json` records the repo-current source-set ID,
+  root catalog paths, f70 source/artifact counts, the source f70 catalog gate,
+  and the archived full-canonical 4fb catalog gate.
+- generated evidence truth:
+  the root manifest now reports `source_set_id="source-set-f70ea11e04ae3d53"`,
+  `source_count=715`, `artifact_count=703`, and
+  `supplemental_source_count=7`; root catalog validation passes; and the root
+  SQLite `sources` table contains `715` rows for f70.
+- historical preservation:
+  the prior repo-root `source-set-4fb59e9eb43045cb` catalog was preserved under
+  `source_library/runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate/`.
+  `config/promotion_suite_v1.json` now points historical/full-canonical 4fb
+  catalog checks at that archive path instead of `source_library/catalog/`.
+- routing truth:
+  4fb may still appear in historical/full-canonical contracts and older
+  append-only history, but it is no longer the repo-root current catalog
+  source-set. Future default catalog reads should treat f70 as current unless a
+  command explicitly selects an archived catalog gate.
+
 ## First-Class Eval Trace Milestone Plan Final Closeout Pass
 
 Latest closeout update on 2026-05-29 UTC:

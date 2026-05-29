@@ -293,6 +293,11 @@ Before the source library is used by an EA review engine:
 - Build `source_set_manifest.json` with workbook, config, override, and git provenance.
 - Build `catalog_validation.json`; the catalog command must fail if reviewer catalog validation fails.
 - Build `review_sources.sqlite` as the queryable reviewer-engine catalog.
+- Treat `source_library/catalog/` as the named current source-set surface for the repo. When a
+  later catalog gate becomes current, preserve the prior root catalog under a run-scoped archive,
+  republish the selected current catalog into `source_library/catalog/`, update
+  `config/current_source_set_v1.json`, and move any historical/full-canonical promotion checks to
+  the archived path instead of leaving the root manifest pinned to the old source set.
 - Preserve stable reviewer citation labels based on `source_record_id` and artifact SHA256 when
   available.
 - Classify every row with `document_role`, `authority_level`, expected parser, applicability, and

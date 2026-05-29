@@ -21,7 +21,8 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
     assert active_catalog["required_for_current_promotion"] is False
     assert active_catalog["required_for_full_canonical_corpus"] is True
     assert active_catalog["path"] == (
-        "catalog/source_set_manifest.json"
+        "runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate/"
+        "source_set_manifest.json"
     )
     active_catalog_checks = {check["name"]: check for check in active_catalog["checks"]}
     assert active_catalog_checks["full_canonical_source_set_matches"]["equals"] == (
@@ -44,7 +45,10 @@ def test_committed_promotion_suite_tracks_full_canonical_corpus_separately() -> 
     active_validation = suite_results["full_canonical_catalog_validation"]
     assert active_validation["required_for_current_promotion"] is False
     assert active_validation["required_for_full_canonical_corpus"] is True
-    assert active_validation["path"] == "catalog/catalog_validation.json"
+    assert active_validation["path"] == (
+        "runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate/"
+        "catalog_validation.json"
+    )
     active_validation_checks = {
         check["name"]: check for check in active_validation["checks"]
     }

@@ -1,0 +1,19 @@
+{
+  "schema_version": "repo-current-source-set-v1",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
+  "catalog_dir": "source_library/catalog",
+  "source_set_manifest_path": "source_library/catalog/source_set_manifest.json",
+  "source_catalog_path": "source_library/catalog/source_catalog.jsonl",
+  "catalog_validation_path": "source_library/catalog/catalog_validation.json",
+  "catalog_sqlite_path": "source_library/catalog/review_sources.sqlite",
+  "source_graph_nodes_path": "source_library/catalog/source_graph_nodes.jsonl",
+  "source_graph_edges_path": "source_library/catalog/source_graph_edges.jsonl",
+  "promoted_from_catalog_gate": "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate",
+  "historical_full_canonical_catalog_gate": "source_library/runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate",
+  "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
+  "source_count": 715,
+  "artifact_count": 703,
+  "supplemental_source_count": 7,
+  "status": "current_repo_source_set",
+  "reason": "The f70 catalog gate is the repo-root current source-set. The prior 4fb root catalog is preserved as historical full-canonical evidence only."
+}

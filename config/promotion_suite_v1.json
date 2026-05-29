@@ -1520,7 +1520,7 @@
     {
       "id": "full_canonical_catalog_manifest",
       "label": "Live full canonical catalog manifest",
-      "path": "catalog/source_set_manifest.json",
+      "path": "runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate/source_set_manifest.json",
       "required_for_current_promotion": false,
       "required_for_full_canonical_corpus": true,
       "failure_category": "stale_artifact",
@@ -1575,7 +1575,7 @@
     {
       "id": "full_canonical_catalog_validation",
       "label": "Live full canonical catalog validation",
-      "path": "catalog/catalog_validation.json",
+      "path": "runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate/catalog_validation.json",
       "required_for_current_promotion": false,
       "required_for_full_canonical_corpus": true,
       "failure_category": "stale_artifact",

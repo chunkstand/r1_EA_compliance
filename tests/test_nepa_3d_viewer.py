@@ -7,6 +7,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 VIEWER_ROOT = REPO_ROOT / "viewer" / "nepa-3d"
+CURRENT_SOURCE_SET_ID = "source-set-f70ea11e04ae3d53"
 VIEWER_LOCAL_SCRIPTS = [
     "viewer-utils.js",
     "viewer-config.js",
@@ -26,29 +27,29 @@ def test_nepa_3d_viewer_manifest_lists_graph_capable_fallback_exports() -> None:
 
     assert manifest["schema_version"] == "nepa-3d-viewer-manifest-v1"
     assert manifest["runtime"]["graph_runtime"] == "3d-force-graph"
-    assert manifest["default_source_set_id"] == "source-set-4fb59e9eb43045cb"
+    assert manifest["default_source_set_id"] == CURRENT_SOURCE_SET_ID
     assert manifest["default_review_id"] is None
 
     datasets = {dataset["dataset_id"]: dataset for dataset in manifest["datasets"]}
-    current_fallback = datasets["source-set-4fb59e9eb43045cb"]
+    current_fallback = datasets[CURRENT_SOURCE_SET_ID]
 
     assert manifest["runtime"]["three_runtime_url"].endswith("three@0.149.0/build/three.min.js")
     assert manifest["runtime"]["graph_runtime_url"].endswith(
         "3d-force-graph@1.76.0/dist/3d-force-graph.min.js"
     )
-    assert list(datasets) == ["source-set-4fb59e9eb43045cb"]
+    assert list(datasets) == [CURRENT_SOURCE_SET_ID]
     assert current_fallback["scope"] == "source_set"
-    assert current_fallback["source_set_id"] == "source-set-4fb59e9eb43045cb"
+    assert current_fallback["source_set_id"] == CURRENT_SOURCE_SET_ID
     assert current_fallback["review_id"] is None
     assert current_fallback["graph_path"].startswith("../../source_library/")
     assert current_fallback["graph_path"].endswith(
-        "source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph.json"
+        f"source_library/derived/{CURRENT_SOURCE_SET_ID}/knowledge_graph/nepa_3d_graph.json"
     )
     assert current_fallback["summary_path"].endswith(
-        "source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph_summary.json"
+        f"source_library/derived/{CURRENT_SOURCE_SET_ID}/knowledge_graph/nepa_3d_graph_summary.json"
     )
     assert current_fallback["validation_path"].endswith(
-        "source_library/derived/source-set-4fb59e9eb43045cb/knowledge_graph/nepa_3d_graph_validation.json"
+        f"source_library/derived/{CURRENT_SOURCE_SET_ID}/knowledge_graph/nepa_3d_graph_validation.json"
     )
 
 

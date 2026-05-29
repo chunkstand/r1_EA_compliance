@@ -38,6 +38,10 @@ They are intentionally not duplicated here.
   - `source_library/catalog/review_sources.sqlite`
   - `source_library/catalog/source_catalog.jsonl`
   - `source_library/catalog/source_set_manifest.json`
+- The repo-root catalog is the named current source-set surface. Its tracked
+  pointer is `config/current_source_set_v1.json`; historical catalog gates must
+  live under `source_library/runs/` and must not keep `source_library/catalog/`
+  pinned to an older source set.
 - Raw artifacts are source bytes plus provenance; extraction, retrieval,
   evidence graph, claims, rule-claim links, and review outputs are rebuildable
   derived layers
@@ -60,6 +64,7 @@ They are intentionally not duplicated here.
 - `DOWNLOADER_RULES.md`
 - `config/downloader.toml`
 - `config/url_overrides.toml`
+- `config/current_source_set_v1.json`
 - `config/promotion_suite_v1.json`
 - `config/gold_coverage_v1.json`
 - `config/v1_real_package_review_coverage_v1.json`

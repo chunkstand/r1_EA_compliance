@@ -49,6 +49,19 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  Repo-root catalog currentness is corrected: `source_library/catalog/` now
+  names `source-set-f70ea11e04ae3d53` as the current source-set. The tracked
+  pointer is `config/current_source_set_v1.json`; the root manifest reports
+  `source_count=715`, `artifact_count=703`, and
+  `supplemental_source_count=7`; root catalog validation passes; and the root
+  SQLite `sources` table has `715` f70 rows. The prior
+  `source-set-4fb59e9eb43045cb` root catalog was preserved as historical
+  full-canonical evidence under
+  `source_library/runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate/`,
+  and `config/promotion_suite_v1.json` now points its full-canonical catalog
+  checks to that archive instead of `source_library/catalog/`. Future default
+  catalog reads should treat f70 as current unless a command explicitly selects
+  an archived catalog gate.
   First-class eval trace Milestone 5 is resolved locally. The implemented
   contract and inventory surfaces are `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`,
   `config/eval_trace_inventory_contract_v1.json`,
