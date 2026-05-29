@@ -14,8 +14,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 2
-  forest-plan resolver preflight reduced locally on named source-record,
-  component-inventory, and component-adjudication blockers
+  forest-plan resolver preflight reduced locally on named source-record and
+  component-adjudication blockers after f70 component inventory closure
 - Latest resolved HLC forest-specific example packet:
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - Latest resolved West Reservoir parent slice:
@@ -70,11 +70,16 @@ Use this file as the short current route before opening the append-only docs.
   `management_area_count=4`, `overlay_count=2`, and
   `unresolved_mention_count=0`, but validation remains red because
   `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` are missing from the
-  f70 retrieval index. The review-local f70 `FOR-005` component inventory build
-  emits only `1` objective and `0` standards with `coverage_passed=false`; the
-  component queue has `1` unresolved item and no component adjudication eval
-  exists. The next slice is a Bitterroot source-record/component blocker
-  closure before any reviewer-stack replay or promotion.
+  f70 retrieval index. The tracked Region 1 component-inventory manifest now
+  has a Bitterroot f70 replay-compatible row, and the review-local manifest
+  build under
+  `source_library/reviews/region1-example-bitterroot-front-57341/component_inventory_build/`
+  passes with `23` components, `3` standards, `coverage_passed=true`, and
+  `blocked_forest_unit_ids=[]`. Resolver component evaluation now validates
+  component coverage but writes a `23`-item reviewer-resolution queue; no
+  component adjudication eval exists. The next slice is a Bitterroot
+  source-record/adjudication blocker closure before any reviewer-stack replay
+  or promotion.
 - HLC Bonanza example packet is resolved locally through registry and coverage
   promotion. The selected package is Bonanza project `66532` for
   `helena-lewis-and-clark-nf`, using the official project page

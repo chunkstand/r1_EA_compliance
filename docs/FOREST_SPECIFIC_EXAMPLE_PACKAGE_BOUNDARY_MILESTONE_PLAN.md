@@ -64,10 +64,12 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   packet as planned `forest_specific_example_package` queue-boundary work,
   local package authority and the base `ea-review` cache are green, and
   Bitterroot scope resolves to `bitterroot_nf`, but missing
-  `R1PLAN-bitterroot-nf-12`/`-13`, a non-passing review-local component
-  inventory, and absent component adjudication keep `bitterroot-nf` on
-  `profile_eval_guidance_only` until the blocker, reviewer-stack, and
-  promotion gates pass.
+  `R1PLAN-bitterroot-nf-12`/`-13` and absent component adjudication keep
+  `bitterroot-nf` on `profile_eval_guidance_only` until the source-record,
+  reviewer-stack, and promotion gates pass. The f70 review-local component
+  inventory now passes with `23` components and `3` standards from
+  `FOR-005`/`FOR-006`, but resolver component evaluation writes a `23`-item
+  reviewer-resolution queue.
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.
@@ -321,13 +323,14 @@ Current Bitterroot Front follow-on:
   `4` management areas, `2` overlays, and `0` unresolved mentions, but
   validation is red because `R1PLAN-bitterroot-nf-12` and
   `R1PLAN-bitterroot-nf-13` are missing from the f70 retrieval index. The
-  review-local f70 `FOR-005` component inventory build emits only `1`
-  objective and `0` standards with `coverage_passed=false`, and component
-  adjudication eval is absent. `FOR-007` is no longer a generic direct-file
-  promotion candidate, but there is still no Bitterroot reviewer-ready example
-  row, real-package coverage slot, component-coverage slot, V1 eval contract,
-  compliance review, passing component eval, or review `phase-eval` promotion
-  proof.
+  review-local f70 manifest-driven component inventory now emits `23`
+  components and `3` standards from `FOR-005`/`FOR-006` with
+  `coverage_passed=true`; component adjudication eval is absent and the current
+  queue has `23` reviewer-resolution items. `FOR-007` is no longer a generic
+  direct-file promotion candidate, but there is still no Bitterroot
+  reviewer-ready example row, real-package coverage slot, component-coverage
+  slot, V1 eval contract, compliance review, passing component eval, or review
+  `phase-eval` promotion proof.
 - `forest-plan-component-eval-coverage` still fails as an aggregate on the
   pre-existing ECID source-delta slot, but the Lolo, South Otter, West
   Reservoir, and HLC Bonanza component slots are required, covered, source-set

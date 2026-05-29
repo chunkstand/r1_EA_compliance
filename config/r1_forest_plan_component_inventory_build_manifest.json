@@ -18,6 +18,15 @@
       "description": "Custer Gallatin component inventory row is valid on the live full-canonical source set and the aligned reviewer-facing replay source set."
     },
     {
+      "reference_id": "bitterroot_replay_compatible",
+      "reference_type": "explicit_source_set_ids",
+      "source_set_ids": [
+        "source-set-4fb59e9eb43045cb",
+        "source-set-f70ea11e04ae3d53"
+      ],
+      "description": "Bitterroot component inventory row is valid on the live full-canonical source set and the Bitterroot Front f70 replay source set while BA/BO source-record readiness remains separately blocked."
+    },
+    {
       "reference_id": "lolo_replay_compatible",
       "reference_type": "explicit_source_set_ids",
       "source_set_ids": [
@@ -131,7 +140,7 @@
     },
     {
       "forest_unit_id": "bitterroot-nf",
-      "source_set_reference_id": "active_full_canonical",
+      "source_set_reference_id": "bitterroot_replay_compatible",
       "primary_plan_source_record_id": "FOR-005",
       "plan_version": "1987",
       "build_source_record_ids_by_role": {

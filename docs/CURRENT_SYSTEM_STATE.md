@@ -15,15 +15,15 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Bitterroot Front Forest-Plan Resolver Preflight Reduced Locally
+## Bitterroot Front Component Inventory Closed, Resolver Still Reduced
 
 Latest implementation update on 2026-05-29 UTC:
 
 - update:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is reduced through
-  Milestone 2 forest-plan resolver preflight. The resolver now writes scoped
-  Bitterroot sidecars instead of failing before blocker evidence is recorded,
-  but forest-plan readiness is not green.
+  Milestone 2 forest-plan resolver preflight. The f70 component-inventory
+  blocker is closed locally, but forest-plan readiness is not green because
+  source-record readiness and component adjudication remain blocked.
 - resolver evidence:
   `forest-plan-resolve --forest-unit-id bitterroot-nf` on
   `source-set-f70ea11e04ae3d53` and the imported package writes
@@ -38,25 +38,26 @@ Latest implementation update on 2026-05-29 UTC:
   `R1PLAN-bitterroot-nf-01` through `-06`, but
   `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` remain missing with
   indexed counts `0`.
-- component blocker:
-  the Region 1 component-build manifest still binds Bitterroot to the older
-  `active_full_canonical` source-set reference, so the f70 manifest build
-  refused to run for this packet. A review-local single-forest f70 `FOR-005`
-  build under ignored
-  `source_library/reviews/region1-example-bitterroot-front-57341/derived/`
-  produced `component_count=1`, `standard_count=0`,
-  `coverage_passed=false`, and `5` non-blocking inventory quality issues.
+- component-inventory closure:
+  the Region 1 component-build manifest now has a
+  `bitterroot_replay_compatible` source-set reference for
+  `source-set-f70ea11e04ae3d53`. The review-local f70 manifest build under
+  ignored
+  `source_library/reviews/region1-example-bitterroot-front-57341/component_inventory_build/`
+  uses `FOR-005` and `FOR-006` as component-bearing sources and passes with
+  `component_count=23`, `standard_count=3`, `coverage_passed=true`,
+  `blocked_forest_unit_ids=[]`, and `6` non-blocking inventory quality issues.
 - adjudication blocker:
-  resolver component evaluation writes a `1`-item reviewer-resolution queue for
-  the lone objective. `forest_plan_component_adjudication_eval.json` is absent,
-  so the component-adjudication gate is not reviewer-ready.
+  resolver component evaluation now validates component inventory and
+  applicable-standard coverage, but it writes a `23`-item
+  reviewer-resolution queue. `forest_plan_component_adjudication_eval.json` is
+  absent, so the component-adjudication gate is not reviewer-ready.
 - routing boundary:
   no registry, real-package coverage, or component-coverage manifest was
   changed. `bitterroot-nf` remains `profile_eval_guidance_only`. The next route
-  is a Bitterroot source-record/component blocker slice for
-  `R1PLAN-bitterroot-nf-12`, `R1PLAN-bitterroot-nf-13`, a passing component
-  inventory with standards, and any needed tracked component adjudication
-  before Milestone 3 reviewer-stack replay.
+  is a Bitterroot source-record/adjudication blocker slice for
+  `R1PLAN-bitterroot-nf-12`, `R1PLAN-bitterroot-nf-13`, and tracked component
+  adjudication before Milestone 3 reviewer-stack replay.
 
 ## Bitterroot Front Package Authority Intake Resolved Locally
 

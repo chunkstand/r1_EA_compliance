@@ -103,6 +103,26 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
             governed_matches["R1PLAN-flathead-nf-02"],
         )
         self.assertIn("R1PLAN-flathead-nf-10", flathead.source_record_ids)
+        bitterroot = manifest.get("bitterroot-nf")
+        bitterroot_reference = manifest.source_set_reference(
+            bitterroot.source_set_reference_id
+        )
+        self.assertEqual(
+            bitterroot_reference.source_set_ids,
+            (
+                "source-set-4fb59e9eb43045cb",
+                "source-set-f70ea11e04ae3d53",
+            ),
+        )
+        self.assertTrue(
+            bitterroot_reference.matches_source_set("source-set-f70ea11e04ae3d53")
+        )
+        self.assertEqual(
+            bitterroot.component_source_record_ids,
+            ("FOR-005", "FOR-006"),
+        )
+        self.assertIn("R1PLAN-bitterroot-nf-12", bitterroot.source_record_ids)
+        self.assertIn("R1PLAN-bitterroot-nf-13", bitterroot.source_record_ids)
 
     def test_rejects_missing_readiness_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
