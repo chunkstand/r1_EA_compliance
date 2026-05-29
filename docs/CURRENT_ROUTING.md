@@ -4,10 +4,10 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved packet:
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 3
-- Active packet:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 4
-  phase/promotion eval trace gate integration
+- Active packet:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 5
+  trace-to-case promotion and feedback loop
 - Latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
@@ -28,7 +28,7 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- First-class eval trace Milestone 3 is resolved locally. The tracked contract
+- First-class eval trace Milestone 4 is resolved locally. The tracked contract
   lives in `config/eval_trace_inventory_contract_v1.json`; the contract doc is
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`; and
   `src/usfs_r1_ea_sources/eval_trace_contract.py` validates the canonical
@@ -49,19 +49,25 @@ Use this file as the short current route before opening the append-only docs.
   lives in `src/usfs_r1_ea_sources/eval_trace_export.py` and writes local
   canonical JSON plus OpenInference-shaped spans from the store. The West
   Reservoir f70 seed export passed with `18` traces, `36` exported spans, `0`
-  missing tables, and `0` missing provenance fields. The next active
-  implementation slice is Milestone 4 in
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`: optional then
-  ratcheted phase/promotion gate integration. No trace-to-case promotion exists
-  yet.
+  missing tables, and `0` missing provenance fields. The `eval_trace_gate.py`
+  helper now validates default inventory/store evidence for phase and promotion
+  consumers. `phase-eval` reports top-level `eval_trace_gate` state and appends
+  `first_class_eval_trace` only for matching evidence or ratcheted scopes.
+  `promotion-suite` reports `eval_trace_gate_summary` and fails current
+  promotion when a current-promotion phase-eval artifact reports a failed
+  ratcheted eval-trace gate. The only enabled ratcheted scope is review
+  `west-reservoir-67436`; there is no global or source-set-wide ratchet. The
+  next active implementation slice is Milestone 5 in
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`: trace-to-case
+  promotion and feedback loop.
 - Resolved West Reservoir predecessor context: reviewer-readiness Milestone 4 is resolved locally on
   `source-set-f70ea11e04ae3d53`. West Reservoir-owned decision-support and
   final-QA configs/fixtures now drive the signer-facing packet artifacts;
   `review-packet-index --review-id west-reservoir-67436` passes with
   `check_count=30` and `failed_check_count=0`;
   `final-qa-certification --validate-only` passes `200/200`; and
-  `phase-eval --review-id west-reservoir-67436` passes `31/31` with
-  `blockers=[]`. The real-package aggregate and forest-specific registry
+  `phase-eval --review-id west-reservoir-67436` passes `32/32` with
+  `first_class_eval_trace` ratcheted and `blockers=[]`. The real-package aggregate and forest-specific registry
   aggregate pass with West Reservoir as reviewer-ready. The next active route
   is not another West packet slice; it is the inherited ECID source-delta
   component-coverage blocker if the user wants full aggregate component

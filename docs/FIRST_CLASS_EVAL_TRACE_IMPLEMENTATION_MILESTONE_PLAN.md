@@ -6,7 +6,8 @@ Status: Active implementation packet. Milestone 0 contract and baseline
 inventory design is resolved locally; Milestone 1 read-only inventory CLI is
 resolved locally; Milestone 2 local DB-backed eval/trace store is resolved
 locally; Milestone 3 canonical/OpenInference export is resolved locally;
-Milestone 4 phase/promotion gate integration is the next implementation slice.
+Milestone 4 phase/promotion gate integration is resolved locally; Milestone 5
+trace-to-case promotion is the next implementation slice.
 
 Owner context: This plan implements the direction captured in
 `docs/FIRST_CLASS_EVALS_AND_TRACES_RESEARCH_BRIEF.md` for this repository. West
@@ -517,8 +518,9 @@ inventory JSON. The West Reservoir f70 seed build passed with `18` rows in each
 canonical table, `0` orphan rows, `0` duplicate IDs, `0` stale artifacts, `0`
 source artifact deletions, and `0` missing required links. Canonical JSON,
 OpenInference exports, phase/promotion ratchets, and trace-to-case promotion
-remained future milestones at that checkpoint; the newer Milestone 3 section
-below now records local canonical/OpenInference export readiness.
+remained future milestones at that checkpoint; the newer Milestone 3 and
+Milestone 4 sections below now record local export readiness and phase/promotion
+gate integration.
 
 Implementation:
 
@@ -616,6 +618,23 @@ Commit closeout:
 
 Outcome label: resolved for gateability of selected scopes; reduced for any
 source sets or reviews not yet ratcheted into the contract.
+
+Status: Resolved locally on 2026-05-29. `eval_trace_gate.py` now validates the
+default inventory and SQLite store paths for a selected source-set/review scope,
+reports optional non-blocking status for unratcheted scopes, and fails closed for
+the explicitly ratcheted review `west-reservoir-67436`. `phase-eval` writes a
+top-level `eval_trace_gate` object and appends `first_class_eval_trace` only for
+matching evidence or ratcheted scopes. `promotion-suite` reads phase-eval gate
+objects and blocks current promotion when a required current-promotion
+phase-eval artifact reports a failed ratcheted eval-trace gate. No global or
+source-set-wide ratchet is enabled.
+The store builder now carries a narrow self-reference bootstrap allowance for a
+`phase_eval` artifact whose only failure is the `first_class_eval_trace`
+inventory/store cycle; unrelated phase-eval failures still block the store.
+The live West Reservoir replay passed `phase-eval --review-id
+west-reservoir-67436` at `32/32`, `final-qa-certification --validate-only` at
+`200/200`, and `promotion-suite --manifest config/promotion_suite_v1.json` with
+current promotion `32/32` and no failed current eval-trace gates.
 
 Implementation:
 

@@ -45,6 +45,8 @@ def test_committed_eval_trace_contract_tracks_required_artifacts_and_links() -> 
     for link_check in contract["required_link_checks"]:
         assert link_check["required"] is True
         assert link_check["failure_reason"]
+    assert contract["ratchet_scopes"]["enabled_review_ids"] == ["west-reservoir-67436"]
+    assert contract["ratchet_scopes"]["enabled_source_set_ids"] == []
 
 
 def test_eval_trace_contract_rejects_unsupported_enum_values() -> None:

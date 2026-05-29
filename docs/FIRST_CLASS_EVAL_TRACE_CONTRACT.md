@@ -3,9 +3,9 @@
 Date: 2026-05-28
 
 Status: Milestone 0 contract, Milestone 1 read-only inventory CLI, Milestone 2
-local SQLite store, and Milestone 3 canonical/OpenInference export are
-implemented locally. Phase/promotion ratchets and trace-to-case promotion are
-still future milestones.
+local SQLite store, Milestone 3 canonical/OpenInference export, and Milestone 4
+phase/promotion gate integration are implemented locally. Trace-to-case
+promotion is still a future milestone.
 
 Owner surfaces:
 
@@ -14,6 +14,7 @@ Owner surfaces:
 - Inventory helper: `src/usfs_r1_ea_sources/eval_trace_inventory.py`
 - Store helper: `src/usfs_r1_ea_sources/eval_trace_store.py`
 - Export helper: `src/usfs_r1_ea_sources/eval_trace_export.py`
+- Gate helper: `src/usfs_r1_ea_sources/eval_trace_gate.py`
 - Contract tests: `tests/test_eval_trace_contract.py`
 - Inventory tests: `tests/test_eval_trace_inventory.py`
 - Store tests: `tests/test_eval_trace_store.py`
@@ -157,17 +158,39 @@ truth, or redaction policy. The West Reservoir f70 seed export on 2026-05-29
 passed with `18` traces, `36` OpenInference-shaped spans, `0` missing tables,
 and `0` missing provenance fields.
 
-## Ratchet Contract
+## Gate And Ratchet Contract
 
 Milestone 0 forbids global fail-closed ratchets. The tracked config must not set
-`global_fail_closed=true` or use wildcard source-set/review scopes.
+`global_fail_closed=true` or use wildcard source-set/review scopes. Milestone 4
+keeps that rule and enables only one explicit review scope:
+`west-reservoir-67436`.
 
-The first seed candidate is West Reservoir on
-`source-set-f70ea11e04ae3d53`; Milestone 1 now inventories that seed
-successfully and Milestone 2 now builds a green local store from that inventory.
-Milestone 3 now exports that store locally. It is still not a fail-closed
-ratchet until a later milestone explicitly enables the scope in the tracked
-contract.
+`phase-eval` now reports `eval_trace_gate` on every run. It appends a
+`first_class_eval_trace` phase only when matching eval-trace evidence exists or
+when the selected review/source-set is ratcheted. Non-ratcheted scopes are
+optional and non-blocking even when local eval-trace evidence is stale; ratcheted
+scopes fail closed on missing inventory, missing store, stale inventory/store
+hashes, missing canonical eval rows, missing trace rows, or source-set/review
+identity mismatches.
+The current `phase_eval_results.json` path is treated as a command
+self-reference while `phase-eval` is running, so the gate does not deadlock on
+the artifact it is about to rewrite.
+
+`eval-trace-store-build` blocks failed origin artifacts, with one narrow
+bootstrap allowance: a `phase_eval` artifact can still seed the store when its
+only failed phase is `first_class_eval_trace` and the only reasons are
+eval-trace inventory/store stale or missing-store self-reference reasons. Any
+other failed phase-eval artifact still records `origin_artifact_failed` and
+blocks the store summary.
+
+`promotion-suite` reads the `eval_trace_gate` object from phase-eval artifacts.
+If a current-promotion phase-eval artifact reports a ratcheted eval-trace gate
+failure, current promotion fails with `eval_trace_gate_failed`.
+
+The first ratcheted seed is West Reservoir on
+`source-set-f70ea11e04ae3d53`. The seed inventory, store, and export were
+already green at Milestones 1-3; Milestone 4 makes the review ID fail-closed for
+phase/promotion gate consumers without enabling any global or wildcard ratchet.
 
 ## Stop Conditions
 

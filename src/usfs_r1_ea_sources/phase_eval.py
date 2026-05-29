@@ -10,6 +10,7 @@ from .artifact_utils import _source_set_id_from_catalog
 from .artifact_utils import _utc_now
 from .artifact_utils import _write_json
 from .catalog_surface import resolve_catalog_dir_for_source_set
+from .eval_trace_gate import build_eval_trace_gate_phase
 from .phase_eval_direct_eval import apply_source_set_phase_direct_eval_gate
 from .phase_eval_direct_eval import build_evaluation_coverage_phase
 from .phase_eval_direct_eval import resolve_phase_eval_direct_eval_coverage
@@ -602,6 +603,13 @@ def run_phase_aligned_eval(
         review_scope=direct_eval_coverage.get("review_scope"),
     )
     phases.append(evaluation_coverage_phase)
+    eval_trace_gate = build_eval_trace_gate_phase(
+        output_dir=output_dir,
+        source_set_id=source_set_id,
+        review_id=resolved_review_id,
+    )
+    if eval_trace_gate.phase is not None:
+        phases.append(eval_trace_gate.phase)
     blockers = [
         {"phase": phase["name"], "reason": reason}
         for phase in phases
@@ -632,6 +640,7 @@ def run_phase_aligned_eval(
         ),
         "blockers": blockers,
         "phases": phases,
+        "eval_trace_gate": eval_trace_gate.status,
         **evaluation_coverage_summary,
     }
     _write_json(output_path, summary)

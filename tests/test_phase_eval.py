@@ -11,6 +11,8 @@ from usfs_r1_ea_sources.evidence_graph import build_evidence_graph
 from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 
+from tests.test_eval_trace_gate import _write_default_inventory_and_store
+from tests.test_eval_trace_inventory import _write_review_fixture
 from tests.support.phase_eval_fixtures import chunk
 from tests.support.phase_eval_fixtures import direct_eval_result_payload
 from tests.support.phase_eval_fixtures import phase
@@ -34,6 +36,30 @@ FULL_CANONICAL_SOURCE_SET_ID = "source-set-4fb59e9eb43045cb"
 
 
 class PhaseEvalTests(unittest.TestCase):
+    def test_phase_eval_reports_optional_first_class_eval_trace_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            fixture = _write_review_fixture(tmp_path)
+            _write_default_inventory_and_store(tmp_path, fixture)
+
+            result = run_phase_aligned_eval(
+                output_dir=fixture["output_dir"],
+                review_id=str(fixture["review_id"]),
+            )
+
+            eval_trace_phase = phase(result.summary, "first_class_eval_trace")
+            self.assertTrue(eval_trace_phase["passed"])
+            self.assertTrue(eval_trace_phase["reviewer_ready"])
+            self.assertEqual(result.summary["eval_trace_gate"]["mode"], "optional")
+            self.assertEqual(
+                result.summary["eval_trace_gate"]["evidence_status"],
+                "optional_blocked",
+            )
+            self.assertIn(
+                "eval_trace_store_stale",
+                result.summary["eval_trace_gate"]["failure_reasons"],
+            )
+
     def test_phase_eval_reports_evidence_graph_freshness_failure(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

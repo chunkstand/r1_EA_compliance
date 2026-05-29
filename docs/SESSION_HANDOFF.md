@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-28
+Date: 2026-05-29
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
@@ -18,13 +18,13 @@ history below.
   first-class eval trace packet; open
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md` and
   `config/eval_trace_inventory_contract_v1.json` for the resolved contract;
-  use the Milestone 3 West Reservoir f70 export output shape as the seed input
-  for Milestone 4 phase/promotion gate integration
+  use the Milestone 4 West Reservoir f70 gate integration as the predecessor
+  for Milestone 5 trace-to-case promotion
 - latest resolved packet:
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 3
-- active packet:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 4
-  phase/promotion eval trace gate integration
+- active packet:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 5
+  trace-to-case promotion and feedback loop
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - active forest-specific example packet:
@@ -50,16 +50,17 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  First-class eval trace Milestone 3 is resolved locally. The implemented
+  First-class eval trace Milestone 4 is resolved locally. The implemented
   contract and inventory surfaces are `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`,
   `config/eval_trace_inventory_contract_v1.json`,
   `src/usfs_r1_ea_sources/eval_trace_contract.py`,
   `src/usfs_r1_ea_sources/eval_trace_inventory.py`,
   `src/usfs_r1_ea_sources/eval_trace_store.py`,
   `src/usfs_r1_ea_sources/eval_trace_export.py`,
+  `src/usfs_r1_ea_sources/eval_trace_gate.py`,
   `tests/test_eval_trace_contract.py`, `tests/test_eval_trace_inventory.py`,
   `tests/test_eval_trace_store.py`, and
-  `tests/test_eval_trace_export.py`.
+  `tests/test_eval_trace_export.py`, plus `tests/test_eval_trace_gate.py`.
   The contract validates canonical objects, enum families, required artifact
   families, required link checks, deterministic-first scorer policy, LLM-judge
   metadata requirements, export preconditions, and the no-global-ratchet
@@ -74,9 +75,16 @@ history below.
   links. The `eval-trace-export` CLI now writes local
   canonical JSON plus OpenInference-shaped spans from the store. The West
   Reservoir f70 seed export passed with `18` traces, `36` OpenInference-shaped
-  spans, `0` missing tables, and `0` missing provenance fields. The next
-  implementation slice is Milestone 4: optional then ratcheted phase/promotion
-  gate integration. No trace-to-case promotion exists yet.
+  spans, `0` missing tables, and `0` missing provenance fields. Milestone 4 now
+  adds optional then ratcheted phase/promotion gate integration. `phase-eval`
+  writes top-level `eval_trace_gate` state and appends `first_class_eval_trace`
+  only for matching evidence or ratcheted scopes. `promotion-suite` writes
+  `eval_trace_gate_summary` and blocks current promotion when a
+  current-promotion phase-eval artifact reports a failed ratcheted eval-trace
+  gate. The only enabled ratcheted scope is review
+  `west-reservoir-67436`; no global or source-set-wide ratchet is enabled. The
+  next implementation slice is Milestone 5: trace-to-case promotion and
+  feedback loop.
   Historical West Reservoir checkpoint follows:
   West Reservoir reviewer-readiness Milestone 4 is resolved locally on
   `source-set-f70ea11e04ae3d53`. The plan file is
@@ -90,8 +98,8 @@ history below.
   Current `review-packet-index --review-id west-reservoir-67436` passes with
   `check_count=30` and `failed_check_count=0`;
   `final-qa-certification --validate-only` passes `200/200`; and
-  `phase-eval --review-id west-reservoir-67436` passes `31/31` with
-  `blockers=[]`. Real-package coverage and the forest-specific registry
+  `phase-eval --review-id west-reservoir-67436` passes `32/32` with
+  `first_class_eval_trace` ratcheted and `blockers=[]`. Real-package coverage and the forest-specific registry
   aggregate both pass with West Reservoir reviewer-ready. The next route is no
   longer a West signer-facing packet slice. If full aggregate component
   coverage is the goal, open a separate ECID source-delta/component-coverage

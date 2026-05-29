@@ -275,13 +275,13 @@
       "source_selector": "forest_plan_qa.component_eval.case_count"
     },
     {
-      "expected": 30,
+      "expected": 31,
       "failure_category": "count_drift",
       "field": "phase_eval_phase_count",
       "source_selector": "gate_replay_summary.phase_eval.phase_count"
     },
     {
-      "expected": 30,
+      "expected": 31,
       "failure_category": "stale_artifact",
       "field": "phase_eval_passed_phase_count",
       "source_selector": "gate_replay_summary.phase_eval.passed_phase_count"

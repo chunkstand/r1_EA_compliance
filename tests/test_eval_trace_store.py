@@ -130,6 +130,87 @@ def test_store_build_flags_stale_artifact_hash_after_inventory(tmp_path: Path) -
     )
 
 
+def test_store_build_allows_phase_eval_trace_gate_bootstrap(tmp_path: Path) -> None:
+    fixture = _write_review_fixture(tmp_path)
+    phase_eval_path = fixture["review_dir"] / "phase_eval_results.json"
+    _write_json(
+        phase_eval_path,
+        {
+            "review_id": fixture["review_id"],
+            "source_set_id": fixture["source_set_id"],
+            "review_direct_eval_status": "direct_eval_present",
+            "passed": False,
+            "reviewer_ready": False,
+            "blockers": [
+                {
+                    "phase": "first_class_eval_trace",
+                    "reason": "eval_trace_store_stale",
+                }
+            ],
+            "phases": [
+                {"name": "evaluation_coverage", "passed": True, "reviewer_ready": True},
+                {
+                    "name": "first_class_eval_trace",
+                    "passed": False,
+                    "reviewer_ready": False,
+                    "failure_reasons": [
+                        "eval_trace_inventory_stale",
+                        "eval_trace_store_stale",
+                    ],
+                },
+            ],
+        },
+    )
+    inventory_path = _write_inventory_from_fixture(tmp_path, fixture)
+
+    summary = run_eval_trace_store_build(
+        inventory_path=inventory_path,
+        sqlite_path=tmp_path / "system_eval_trace.sqlite",
+        repo_root=tmp_path,
+    ).summary
+
+    assert summary["passed"] is True
+    assert summary["blocked_eval_run_count"] == 0
+
+
+def test_store_build_still_blocks_non_trace_phase_eval_failure(tmp_path: Path) -> None:
+    fixture = _write_review_fixture(tmp_path)
+    phase_eval_path = fixture["review_dir"] / "phase_eval_results.json"
+    _write_json(
+        phase_eval_path,
+        {
+            "review_id": fixture["review_id"],
+            "source_set_id": fixture["source_set_id"],
+            "review_direct_eval_status": "direct_eval_present",
+            "passed": False,
+            "reviewer_ready": False,
+            "blockers": [{"phase": "evaluation_coverage", "reason": "phase_validation_failed"}],
+            "phases": [
+                {
+                    "name": "evaluation_coverage",
+                    "passed": False,
+                    "reviewer_ready": False,
+                    "failure_reasons": ["phase_validation_failed"],
+                }
+            ],
+        },
+    )
+    inventory_path = _write_inventory_from_fixture(tmp_path, fixture)
+
+    summary = run_eval_trace_store_build(
+        inventory_path=inventory_path,
+        sqlite_path=tmp_path / "system_eval_trace.sqlite",
+        repo_root=tmp_path,
+    ).summary
+
+    assert summary["passed"] is False
+    assert any(
+        run["eval_name"] == "phase_eval"
+        and run["failure_reason"] == "origin_artifact_failed"
+        for run in summary["blocked_eval_runs"]
+    )
+
+
 def test_store_build_reports_inventory_missing_required_links(tmp_path: Path) -> None:
     fixture = _write_review_fixture(tmp_path)
     fixture["replay_context_path"].unlink()
@@ -175,3 +256,8 @@ def _store_snapshot(sqlite_path: Path) -> dict[str, list[tuple]]:
             rows = connection.execute(f"SELECT * FROM {table} ORDER BY 1").fetchall()
             snapshot[table] = rows
     return snapshot
+
+
+def _write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")

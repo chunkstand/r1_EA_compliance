@@ -134,6 +134,37 @@ def test_promotion_suite_current_contract_fails_source_set_bound_slot_family(
     assert "## Current Promotion Contract" in markdown
 
 
+def test_promotion_suite_fails_current_promotion_on_ratcheted_eval_trace_gate(
+    tmp_path: Path,
+) -> None:
+    manifest_path, output_dir = write_suite_fixture(tmp_path)
+    phase_eval_path = (
+        output_dir / "derived" / "source-set-1" / "evidence_graph" / "phase_eval_results.json"
+    )
+    phase_eval = json.loads(phase_eval_path.read_text(encoding="utf-8"))
+    phase_eval["eval_trace_gate"] = {
+        "schema_version": "eval-trace-gate-status-v1",
+        "mode": "ratcheted",
+        "ratchet_scope_enabled": True,
+        "passed": False,
+        "failure_reasons": ["eval_trace_store_missing_trace_rows"],
+    }
+    phase_eval_path.write_text(json.dumps(phase_eval, indent=2, sort_keys=True) + "\n")
+
+    result = run_promotion_suite(output_dir=output_dir, manifest_path=manifest_path)
+
+    assert result.summary["current_promotion_ready"] is False
+    assert result.summary["promotion_ready"] is False
+    assert result.summary["failure_category_counts"] == {"eval_trace_gate_failed": 1}
+    gate_summary = result.summary["eval_trace_gate_summary"]
+    assert gate_summary["reported_gate_count"] == 2
+    assert gate_summary["ratcheted_gate_count"] == 2
+    assert gate_summary["failed_current_gate_count"] == 1
+    assert gate_summary["failed_current_gates"][0]["id"] == "phase_eval_core"
+    markdown = result.markdown_path.read_text(encoding="utf-8")
+    assert "## Eval Trace Gate" in markdown
+
+
 def test_promotion_suite_current_contract_fails_when_review_slot_family_is_split_across_slots(
     tmp_path: Path,
 ) -> None:

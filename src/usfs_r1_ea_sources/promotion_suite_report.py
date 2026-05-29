@@ -103,6 +103,19 @@ def _markdown_report(summary: dict[str, object]) -> str:
                 + " |"
             )
         lines.append("")
+    eval_trace_gate_summary = summary.get("eval_trace_gate_summary") or {}
+    if eval_trace_gate_summary:
+        lines.extend(
+            [
+                "## Eval Trace Gate",
+                "",
+                f"- Reported phase-eval gates: `{eval_trace_gate_summary['reported_gate_count']}`",
+                f"- Ratcheted gates: `{eval_trace_gate_summary['ratcheted_gate_count']}`",
+                f"- Failed current gates: `{eval_trace_gate_summary['failed_current_gate_count']}`",
+                f"- Current promotion eval-trace passed: `{eval_trace_gate_summary['current_promotion_passed']}`",
+                "",
+            ]
+        )
     lines.extend(
         [
         "## Review Cases",

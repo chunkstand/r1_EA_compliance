@@ -180,6 +180,7 @@ allowed_import_layers = [
   "review",
   "decision_support",
   "phase_eval",
+  "eval",
 ]
 
 [[layers]]
@@ -397,6 +398,7 @@ modules = [
   "draft_generation_eval",
   "eval_trace_contract",
   "eval_trace_export",
+  "eval_trace_gate",
   "eval_trace_inventory",
   "eval_trace_store",
   "extraction_fidelity_eval",

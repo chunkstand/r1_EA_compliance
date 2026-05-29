@@ -426,12 +426,14 @@
   "ratchet_scopes": {
     "global_fail_closed": false,
     "enabled_source_set_ids": [],
-    "enabled_review_ids": [],
+    "enabled_review_ids": [
+      "west-reservoir-67436"
+    ],
     "seed_candidates": [
       {
         "review_id": "west-reservoir-67436",
         "source_set_id": "source-set-f70ea11e04ae3d53",
-        "status": "seed_after_inventory_cli"
+        "status": "phase_promotion_gate_ratcheted"
       }
     ]
   }

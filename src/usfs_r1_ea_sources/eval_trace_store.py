@@ -14,6 +14,11 @@ from .records import sha256_file
 
 STORE_SCHEMA_VERSION = "system-eval-trace-store-v1"
 STORE_SUMMARY_SCHEMA_VERSION = "system-eval-trace-store-summary-v1"
+_PHASE_EVAL_TRACE_BOOTSTRAP_REASONS = {
+    "eval_trace_inventory_stale",
+    "eval_trace_store_missing",
+    "eval_trace_store_stale",
+}
 
 
 @dataclass(frozen=True)
@@ -160,7 +165,10 @@ def _assess_artifact(record: dict[str, Any], *, repo_root: Path) -> dict[str, An
         failure_reason = "stale_artifact_hash"
     elif not expected_hash:
         failure_reason = "missing_source_artifact_hash"
-    elif record.get("passed") is False:
+    elif record.get("passed") is False and not _phase_eval_trace_bootstrap_allowed(
+        record,
+        path,
+    ):
         failure_reason = "origin_artifact_failed"
 
     passed = failure_reason is None
@@ -173,6 +181,48 @@ def _assess_artifact(record: dict[str, Any], *, repo_root: Path) -> dict[str, An
         "status": "passed" if passed else "blocked",
         "failure_reason": failure_reason,
     }
+
+
+def _phase_eval_trace_bootstrap_allowed(record: dict[str, Any], path: Path) -> bool:
+    if record.get("family_id") != "phase_eval" or not path.exists():
+        return False
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    if not isinstance(payload, dict):
+        return False
+
+    failed_phase_names: set[str] = set()
+    failure_reasons: set[str] = set()
+    for phase in payload.get("phases", []):
+        if not isinstance(phase, dict):
+            continue
+        phase_failed = phase.get("passed") is False or phase.get("reviewer_ready") is False
+        if not phase_failed:
+            continue
+        phase_name = _string(phase.get("name")) or ""
+        failed_phase_names.add(phase_name)
+        if phase_name == "first_class_eval_trace":
+            failure_reasons.update(_string_values(phase.get("failure_reasons")))
+
+    blocker_phase_names: set[str] = set()
+    for blocker in payload.get("blockers", []):
+        if not isinstance(blocker, dict):
+            continue
+        phase_name = _string(blocker.get("phase")) or ""
+        blocker_phase_names.add(phase_name)
+        if phase_name == "first_class_eval_trace":
+            reason = _string(blocker.get("reason"))
+            if reason:
+                failure_reasons.add(reason)
+
+    observed_failure_names = failed_phase_names | blocker_phase_names
+    if not observed_failure_names:
+        return False
+    if observed_failure_names != {"first_class_eval_trace"}:
+        return False
+    return bool(failure_reasons) and failure_reasons <= _PHASE_EVAL_TRACE_BOOTSTRAP_REASONS
 
 
 def _artifact_payload_summary(record: dict[str, Any], path: Path) -> dict[str, Any]:

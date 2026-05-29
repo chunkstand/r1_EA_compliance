@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from .eval_trace_gate import EVAL_TRACE_GATE_SCHEMA_VERSION
 from .promotion_suite_artifacts import _artifact_result
 from .promotion_suite_artifacts import _review_case_result
 from .promotion_suite_artifacts import _rule_pack_result
@@ -108,6 +110,10 @@ def run_promotion_suite(
         review_results=review_results,
         suite_results=suite_results,
     )
+    eval_trace_gate_summary = _eval_trace_gate_summary(
+        review_results=review_results,
+        suite_results=suite_results,
+    )
     current_promotion_ready = (
         current_promotion_contract["passed"]
         if current_promotion_contract is not None
@@ -116,6 +122,9 @@ def run_promotion_suite(
             and all(result["passed"] for result in required_review_results)
             and all(result["passed"] for result in required_suite_results)
         )
+    )
+    current_promotion_ready = (
+        current_promotion_ready and eval_trace_gate_summary["current_promotion_passed"]
     )
     full_canonical_corpus_ready = bool(context["full_canonical_source_set_id"]) and bool(
         required_full_canonical_results
@@ -128,14 +137,21 @@ def run_promotion_suite(
         all(slot["ready"] for slot in expansion_slots) and expansion_artifacts_ready
     )
     promotion_ready = current_promotion_ready and (expansion_ready if strict_expansion else True)
-    failure_category_counts = _failure_category_counts(
-        rule_pack_result=rule_pack_result,
-        review_results=review_results,
-        suite_results=suite_results,
-        expansion_slots=expansion_slots,
-        current_promotion_contract=current_promotion_contract,
-        strict_expansion=strict_expansion,
+    failure_category_counts = Counter(
+        _failure_category_counts(
+            rule_pack_result=rule_pack_result,
+            review_results=review_results,
+            suite_results=suite_results,
+            expansion_slots=expansion_slots,
+            current_promotion_contract=current_promotion_contract,
+            strict_expansion=strict_expansion,
+        )
     )
+    if not eval_trace_gate_summary["current_promotion_passed"]:
+        failure_category_counts.update(
+            {"eval_trace_gate_failed": eval_trace_gate_summary["failed_current_gate_count"]}
+        )
+    failure_category_counts = dict(sorted(failure_category_counts.items()))
     expansion_failure_category_counts = _expansion_failure_category_counts(
         review_results=review_results,
         suite_results=suite_results,
@@ -190,7 +206,7 @@ def run_promotion_suite(
             1 for result in required_full_canonical_results if result["passed"]
         ),
         "expansion_artifacts_ready": expansion_artifacts_ready,
-        "failure_category_counts": dict(sorted(failure_category_counts.items())),
+        "failure_category_counts": failure_category_counts,
         "reference_canary_failure_category_counts": dict(
             sorted(
                 (
@@ -211,6 +227,7 @@ def run_promotion_suite(
             if not result["passed"]
         ),
         "rule_pack_result": rule_pack_result,
+        "eval_trace_gate_summary": eval_trace_gate_summary,
         "current_promotion_contract": current_promotion_contract,
         "review_cases": review_results,
         "suite_results": suite_results,
@@ -226,3 +243,88 @@ def run_promotion_suite(
         markdown_path=markdown_path,
         summary=summary,
     )
+
+
+def _eval_trace_gate_summary(
+    *,
+    review_results: list[dict[str, Any]],
+    suite_results: list[dict[str, Any]],
+) -> dict[str, Any]:
+    artifacts = []
+    for result in suite_results:
+        artifact = _phase_eval_gate_artifact(
+            result=result,
+            scope="suite",
+            review_case_id=None,
+            review_id=None,
+        )
+        if artifact is not None:
+            artifacts.append(artifact)
+    for case in review_results:
+        for result in case["results"]:
+            artifact = _phase_eval_gate_artifact(
+                result=result,
+                scope="review",
+                review_case_id=str(case["id"]),
+                review_id=str(case["review_id"]),
+            )
+            if artifact is not None:
+                artifacts.append(artifact)
+
+    current_gates = [
+        artifact
+        for artifact in artifacts
+        if artifact["required_for_current_promotion"] and artifact["gate_reported"]
+    ]
+    failed_current_gates = [
+        artifact
+        for artifact in current_gates
+        if artifact["mode"] == "ratcheted" and not artifact["passed"]
+    ]
+    return {
+        "schema_version": "promotion-eval-trace-gate-summary-v1",
+        "eval_trace_gate_schema_version": EVAL_TRACE_GATE_SCHEMA_VERSION,
+        "phase_eval_artifact_count": len(artifacts),
+        "reported_gate_count": sum(1 for artifact in artifacts if artifact["gate_reported"]),
+        "ratcheted_gate_count": sum(
+            1 for artifact in artifacts if artifact["mode"] == "ratcheted"
+        ),
+        "failed_current_gate_count": len(failed_current_gates),
+        "current_promotion_passed": not failed_current_gates,
+        "failed_current_gates": failed_current_gates,
+        "artifacts": artifacts,
+    }
+
+
+def _phase_eval_gate_artifact(
+    *,
+    result: dict[str, Any],
+    scope: str,
+    review_case_id: str | None,
+    review_id: str | None,
+) -> dict[str, Any] | None:
+    path = Path(str(result.get("path") or ""))
+    if path.name != "phase_eval_results.json":
+        return None
+    gate: dict[str, Any] = {}
+    if result.get("exists"):
+        payload = _read_json(path)
+        raw_gate = payload.get("eval_trace_gate")
+        if isinstance(raw_gate, dict):
+            gate = raw_gate
+    return {
+        "id": str(result["id"]),
+        "scope": scope,
+        "review_case_id": review_case_id,
+        "review_id": review_id,
+        "path": str(path),
+        "exists": bool(result.get("exists")),
+        "required_for_current_promotion": bool(
+            result.get("required_for_current_promotion")
+        ),
+        "gate_reported": bool(gate),
+        "mode": str(gate.get("mode") or "not_reported"),
+        "ratchet_scope_enabled": bool(gate.get("ratchet_scope_enabled")),
+        "passed": bool(gate.get("passed")) if gate else None,
+        "failure_reasons": list(gate.get("failure_reasons") or []) if gate else [],
+    }

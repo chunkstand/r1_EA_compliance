@@ -2882,7 +2882,7 @@ mutation cases over the reviewed-draft generator and proves fail-closed
 handling for unsupported legal-conclusion requests, missing citations, stale
 authority traces, contradictory evidence, and reviewer-warning insertion.
 
-## Final QA And Certification Outputs
+## East Crazies Final QA And Certification Outputs
 
 Path: `source_library/reviews/<review_id>/final_qa/`
 
@@ -4483,8 +4483,53 @@ Required summary fields:
 
 The 2026-05-29 West Reservoir f70 seed export passed with `18` traces, `36`
 OpenInference-shaped spans, `0` missing tables, and `0` missing provenance
-fields. Milestone 3 still does not enable phase/promotion ratchets or
-trace-to-case promotion.
+fields. Milestone 4 now enables phase/promotion gate integration for explicitly
+ratcheted scopes; trace-to-case promotion remains a later milestone.
+
+## First-Class Eval Trace Gate
+
+`phase-eval` now reports a top-level `eval_trace_gate` object with schema
+version `eval-trace-gate-status-v1`. It also appends a `first_class_eval_trace`
+phase when matching eval-trace evidence exists or when the selected review or
+source set is ratcheted by `config/eval_trace_inventory_contract_v1.json`.
+
+Required gate fields:
+
+- `schema_version`
+- `contract_id`
+- `contract_version`
+- `source_set_id`
+- `review_id`
+- `mode`: `optional` or `ratcheted`
+- `ratchet_scope_enabled`
+- `ratchet_scope_reasons`
+- `phase_included`
+- `evidence_status`
+- `passed`
+- `failure_reasons`
+- `inventory`
+- `store`
+
+Optional mode is reporting-only. It does not change phase-eval readiness when
+matching local eval-trace evidence is absent or stale. Ratcheted mode is
+fail-closed: missing inventory, missing store, stale inventory/store hashes,
+missing eval rows, missing trace rows, and source-set/review mismatches make the
+`first_class_eval_trace` phase fail. The gate allows the current
+`phase_eval_results.json` self-reference to refresh during the command, so a
+phase-eval run does not fail only because it is about to rewrite the artifact
+that records the gate.
+The store builder has a matching narrow bootstrap allowance for the same
+self-reference cycle: a failed `phase_eval` origin artifact is buildable only
+when the sole failed phase is `first_class_eval_trace` and the reasons are
+eval-trace inventory/store stale or missing-store reasons. Other failed
+phase-eval artifacts still block the store with `origin_artifact_failed`.
+
+`promotion-suite` writes `eval_trace_gate_summary` in
+`promotion_suite_results.json`. The summary records phase-eval artifacts that
+reported an eval-trace gate, ratcheted gate counts, failed current-promotion
+gate counts, and `current_promotion_passed`. A failed ratcheted gate in a
+current-promotion phase-eval artifact contributes the `eval_trace_gate_failed`
+failure category.
 
 ## Extraction Fidelity Eval Outputs
 

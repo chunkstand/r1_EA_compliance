@@ -15,6 +15,62 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## First-Class Eval Trace Gate Milestone 4 Resolved Locally
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 4 is
+  resolved locally. The system now exposes first-class eval/trace evidence to
+  phase and promotion gates without enabling any global ratchet.
+- owner surfaces:
+  `src/usfs_r1_ea_sources/eval_trace_gate.py`,
+  `src/usfs_r1_ea_sources/eval_trace_store.py`,
+  `src/usfs_r1_ea_sources/phase_eval.py`,
+  `src/usfs_r1_ea_sources/promotion_suite.py`,
+  `src/usfs_r1_ea_sources/promotion_suite_report.py`,
+  `config/eval_trace_inventory_contract_v1.json`,
+  `config/west_reservoir_final_qa_certification_v1.json`,
+  `config/fixtures/final_qa/west_reservoir_final_qa_expected_summary.json`,
+  `tests/test_eval_trace_gate.py`, `tests/test_eval_trace_store.py`, `tests/test_phase_eval.py`,
+  `tests/test_promotion_suite_current_runtime.py`, `docs/OUTPUT_SCHEMAS.md`,
+  `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`, `docs/ARCHITECTURE.md`, and
+  `docs/architecture_contract.toml`.
+- gate truth:
+  `phase-eval` now writes a top-level `eval_trace_gate` object and appends a
+  `first_class_eval_trace` phase only when matching eval-trace evidence exists
+  or when the selected scope is ratcheted. Optional scopes remain non-blocking.
+  Ratcheted scopes fail closed on missing inventory, missing SQLite store,
+  stale inventory/store hashes, missing eval rows, missing trace rows, or
+  source-set/review identity mismatches.
+- bootstrap truth:
+  `eval-trace-store-build` still blocks failed origin artifacts, except for the
+  narrow phase-eval bootstrap case where the only failed phase is
+  `first_class_eval_trace` and the only failure reasons are eval-trace
+  inventory/store stale or missing-store self-reference reasons. This prevents a
+  store rebuild deadlock without accepting unrelated phase-eval failures.
+- ratchet truth:
+  the only enabled ratcheted scope is review `west-reservoir-67436`.
+  `enabled_source_set_ids` remains empty and `global_fail_closed=false`.
+- promotion truth:
+  `promotion-suite` writes `eval_trace_gate_summary` and fails current
+  promotion when a current-promotion phase-eval artifact reports a failed
+  ratcheted eval-trace gate.
+- live verification:
+  West Reservoir `eval-trace-inventory` passed with `18/18` required artifacts,
+  `0` missing links, and `0` stale artifacts; `eval-trace-store-build` passed
+  with `18` rows in each canonical table and `0` blocked eval runs;
+  `eval-trace-export` passed with `18` traces, `36` spans, `0` missing tables,
+  and `0` missing provenance fields; `final-qa-certification --validate-only`
+  passed `200/200`; `phase-eval --review-id west-reservoir-67436` passed
+  `32/32` with the ratcheted `first_class_eval_trace` phase green; and
+  `promotion-suite --manifest config/promotion_suite_v1.json` passed current
+  promotion with `32/32` required current results and `0` failed current
+  eval-trace gates.
+- next implementation route:
+  Milestone 5 trace-to-case promotion and feedback loop remains unimplemented.
+
 ## First-Class Eval Trace Export Milestone 3 Resolved Locally
 
 Latest implementation update on 2026-05-29 UTC:
@@ -44,9 +100,8 @@ Latest implementation update on 2026-05-29 UTC:
   missing provenance fields.
 - ratchet/export state:
   canonical and OpenInference-shaped local exports now exist as generated
-  artifacts. Global fail-closed eval-trace ratchets are still not enabled. The
-  next active implementation route is Milestone 4 phase/promotion gate
-  integration.
+  artifacts. The newer Milestone 4 section above now records the explicit
+  West Reservoir review ratchet and phase/promotion gate integration.
 
 ## First-Class Eval Trace Store Milestone 2 Resolved Locally
 
@@ -81,7 +136,8 @@ Latest implementation update on 2026-05-29 UTC:
 - ratchet/export state:
   global fail-closed eval-trace ratchets are still not enabled. The newer
   Milestone 3 section above now records canonical/OpenInference export
-  readiness; the next route is Milestone 4 phase/promotion gate integration.
+  readiness; the newer Milestone 4 section above records the follow-on
+  phase/promotion gate integration.
 
 ## First-Class Eval Trace Inventory Milestone 1 Resolved Locally
 
