@@ -91,6 +91,30 @@ class ReplayContextTests(unittest.TestCase):
             Path("source_library/reviews/west-reservoir-67436/package"),
         )
 
+    def test_tracked_hlc_bonanza_replay_context_uses_current_f70_catalog_surface(
+        self,
+    ) -> None:
+        repo_root = Path(__file__).resolve().parents[1]
+
+        context = load_replay_context(
+            repo_root
+            / "config"
+            / "replay_contexts"
+            / "region1-example-helena-lewis-and-clark-bonanza-66532.json"
+        )
+
+        self.assertEqual(context.review_id, "region1-example-helena-lewis-and-clark-bonanza-66532")
+        self.assertEqual(context.forest_unit_id, "helena-lewis-and-clark-nf")
+        self.assertEqual(context.catalog_dir, Path("source_library/catalog"))
+        self.assertEqual(context.source_set_id, "source-set-f70ea11e04ae3d53")
+        self.assertEqual(
+            context.package_path,
+            Path(
+                "source_library/reviews/_intake/"
+                "region1-example-helena-lewis-and-clark-bonanza-66532"
+            ),
+        )
+
     def test_load_replay_context_derives_child_catalog_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp)

@@ -50,6 +50,11 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   primary-selection closeout commit is `c56039b` (`Promote South Otter as
   Custer Gallatin primary`); the underlying Milestone 3 promotion closeout
   commit is `21eb2fa` (`Promote South Otter supplemental example`).
+- The HLC Bonanza follow-on in
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is now open. Its local
+  package authority and first package cache are present, but HLC remains
+  `profile_eval_guidance_only` until component adjudication, area evidence,
+  reviewer-stack replay, and aggregate promotion gates pass.
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.

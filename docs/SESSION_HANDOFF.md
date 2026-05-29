@@ -27,8 +27,7 @@ history below.
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - active forest-specific example packet:
-  none; the forest-specific example lane is available as resolved predecessor
-  context unless explicitly routed
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - latest resolved West Reservoir parent slice:
   Milestone 4 signer-facing packet and phase-eval closeout in
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
@@ -49,6 +48,25 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  HLC Bonanza example-package work has started. The active packet is
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID
+  `region1-example-helena-lewis-and-clark-bonanza-66532` and forest unit
+  `helena-lewis-and-clark-nf`. The selected authorities are the Bonanza project
+  page `https://www.fs.usda.gov/r01/helena-lewisclark/projects/66532` and
+  Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/272939272513`. Local
+  ignored intake evidence under
+  `source_library/reviews/_intake/region1-example-helena-lewis-and-clark-bonanza-66532/`
+  records `5` folders, `47` files, `65,761,583` bytes, and `0` download
+  failures. `ea-review` passes on the full package with `47/47` extracted
+  files, `2,227` package chunks, and `validation_passed=true`. HLC
+  single-forest component inventory builds as review-local generated evidence
+  with `258` components and `28` standards. `forest-plan-resolve` resolves
+  `scope_status="helena_lewis_and_clark_nf"` and all required HLC source
+  records are indexed on f70, but the review is not reviewer-ready because
+  component adjudication is missing and area evidence is unresolved. Keep
+  `helena-lewis-and-clark-nf` at `profile_eval_guidance_only` until the
+  reviewer-stack replay and aggregate promotion gates pass.
   Repo-root catalog currentness is corrected: `source_library/catalog/` now
   names `source-set-f70ea11e04ae3d53` as the current source-set. The tracked
   pointer is `config/current_source_set_v1.json`; the root manifest reports

@@ -15,6 +15,41 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## HLC Bonanza Example Package Opened
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  the Helena-Lewis and Clark Bonanza example packet is open at
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. The selected package is
+  Bonanza project `66532`, using official project page
+  `https://www.fs.usda.gov/r01/helena-lewisclark/projects/66532` and Pinyon/Box
+  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/272939272513`.
+- package authority:
+  ignored local evidence under
+  `source_library/reviews/_intake/region1-example-helena-lewis-and-clark-bonanza-66532/`
+  records `5` folders, `47` files, `65,761,583` bytes, and `0` download
+  failures. The tracked replay context is
+  `config/replay_contexts/region1-example-helena-lewis-and-clark-bonanza-66532.json`
+  on `source-set-f70ea11e04ae3d53`.
+- generated evidence truth:
+  `ea-review` passed on the full Bonanza package with `47/47` extracted files,
+  `2,227` package chunks, `package_failed_count=0`, and
+  `validation_passed=true`. HLC component inventory was built as review-local
+  ignored evidence with `258` components, `28` standards,
+  `coverage_passed=true`, and `component_source_accuracy_passed=true`.
+- blocker truth:
+  `forest-plan-resolve` resolves `scope_status="helena_lewis_and_clark_nf"`
+  and HLC source-record retrieval is ready on f70, but the review is not
+  reviewer-ready. The current blockers are missing component adjudication
+  (`adjudication_eval_missing`) and unresolved area evidence
+  (`geographic_area_count=0`, `management_area_count=0`, `overlay_count=0`).
+- routing truth:
+  `helena-lewis-and-clark-nf` remains `profile_eval_guidance_only` in
+  `config/forest_specific_example_package_registry_v1.json`; Bonanza must not
+  be added to active registry, real-package coverage, or component-coverage
+  slots until reviewer-stack replay and aggregate gates pass.
+
 ## Repo Current Source-Set Catalog Repoint
 
 Latest implementation update on 2026-05-29 UTC:

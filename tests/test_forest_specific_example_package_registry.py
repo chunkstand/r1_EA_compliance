@@ -174,6 +174,25 @@ def test_registry_promotes_south_otter_as_custer_gallatin_primary_without_queue_
     assert "58396" not in ledger_source_ids
 
 
+def test_registry_keeps_hlc_profile_guidance_until_bonanza_gates_pass() -> None:
+    registry = _load_json(REGISTRY_PATH)
+
+    forest_row = next(
+        row
+        for row in registry["forest_routing"]
+        if row["forest_unit_id"] == "helena-lewis-and-clark-nf"
+    )
+    active_example_ids = {row["example_id"] for row in registry["review_examples"]}
+
+    assert forest_row["routing_status"] == "profile_eval_guidance_only"
+    assert forest_row["primary_example_id"] is None
+    assert forest_row["supplemental_example_ids"] == []
+    assert "No governed Helena-Lewis and Clark real package example exists yet" in (
+        forest_row["guidance_note"]
+    )
+    assert "hlc-bonanza-forest-specific" not in active_example_ids
+
+
 def test_registry_archives_south_plateau_as_historical_only() -> None:
     registry = _load_json(REGISTRY_PATH)
 

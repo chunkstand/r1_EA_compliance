@@ -12,6 +12,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- Active HLC forest-specific example packet:
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - Latest resolved West Reservoir parent slice:
   Milestone 4 signer-facing packet and phase-eval closeout in
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
@@ -28,6 +30,23 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
+- HLC Bonanza example packet is now open as the active forest-specific example
+  slice. The selected package is Bonanza project `66532` for
+  `helena-lewis-and-clark-nf`, using the official project page
+  `https://www.fs.usda.gov/r01/helena-lewisclark/projects/66532` and Pinyon/Box
+  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/272939272513`.
+  Local ignored package authority exists under
+  `source_library/reviews/_intake/region1-example-helena-lewis-and-clark-bonanza-66532/`
+  with `5` folders, `47` files, `65,761,583` bytes, and `0` download failures.
+  `ea-review` on the full package passes with `47/47` files extracted,
+  `2,227` package chunks, `package_failed_count=0`, and
+  `validation_passed=true`. HLC single-forest component inventory builds with
+  `258` components and `28` standards. `forest-plan-resolve` resolves
+  `scope_status="helena_lewis_and_clark_nf"` and all required HLC source
+  records are indexed on `source-set-f70ea11e04ae3d53`, but the resolver is
+  not reviewer-ready yet: it fails closed on missing component adjudication and
+  unresolved area evidence. Do not add Bonanza to registry or real-package
+  coverage surfaces until the reviewer-stack replay gates pass.
 - First-class eval trace Milestones 0-5 are resolved locally. The tracked contract
   lives in `config/eval_trace_inventory_contract_v1.json`; the contract doc is
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`; and
