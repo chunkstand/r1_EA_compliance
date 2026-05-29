@@ -1,7 +1,7 @@
 # Bitterroot Front Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Active packet (`Milestone 3 reviewer-stack replay next; Milestone 2 resolver/adjudication closed locally`)
+Status: Active packet (`Milestone 3 reviewer-stack replay reduced locally; inherited source-set phase-eval direct-eval drift remains separate`)
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
@@ -141,6 +141,23 @@ into `Document_Register_Master`.
   an evidence-linking miss against package old-growth evidence. This raw red
   coverage is retained as Milestone 3 reviewer-stack/component-eval diagnostic
   evidence, not as a remaining Milestone 2 adjudication blocker.
+- Milestone 3 reviewer-stack replay is reduced locally. The Bitterroot-specific
+  gates are green: applicability adjudication resolves `6/6` conflicts
+  (`5` applicable, `1` not applicable), applicability validation reports
+  `reviewer_ready=true`, generated rule-pack validation passes with `54`
+  generated rules, `compliance-review` passes with `54` findings and matrix
+  JSON/Markdown/PDF artifacts, `v1-ea-eval` passes with `28` conditional
+  expectations, and `forest-plan-component-eval` passes `23/23` component
+  cases with `3` applicable standards.
+- Review `phase-eval --review-id region1-example-bitterroot-front-57341` was
+  run and includes the Bitterroot-specific phases as passing, including
+  `generated_rule_pack`, `compliance_review`, `forest_plan_component_eval`,
+  and `forest_plan_component_adjudication`. The top-level command still exits
+  red because the shared f70 retrieval direct-eval artifact is stale/identity
+  mismatched against the current `retrieval_eval_seed.json` contract, which
+  also keeps `evaluation_coverage` red. Treat that as an inherited source-set
+  direct-eval drift blocker, not as a Bitterroot package replay blocker and not
+  as permission to promote Bitterroot before Milestone 4.
 
 ## Goal
 
@@ -157,6 +174,10 @@ contracts, and aggregate gates are all present and green.
   review `phase-eval` pass.
 - Do not ratchet real-package, forest-specific, or component-coverage aggregate
   thresholds in Milestone 0.
+- Do not weaken tests, eval thresholds, reviewer gates, validation checks, or
+  package/component coverage to make this packet green; any replacement
+  coverage must be equivalent or stronger and must prove the coverage did not
+  get easier.
 - Do not treat a project page or Box folder listing as row-level source
   capture evidence for the shared master.
 - Do not stage ignored `source_library/` evidence unless repository policy
@@ -566,17 +587,16 @@ unless repository policy changes.
 
 ## Residual Risks And Next Routing
 
-Milestone 2 now proves Bitterroot scope resolution, f70 source-record
-readiness for `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13`, f70
-component-inventory coverage, component adjudication, and resolver validation.
-It does not prove reviewer-stack or promotion readiness. Raw
-applicable-standard coverage remains red as Milestone 3 component-eval
-diagnostic evidence even though the two standard gaps are classified in the
-adjudication replay. The next route is Milestone 3 reviewer-stack replay:
-applicability, generated rule pack, compliance review, V1 eval, component
-eval, and review `phase-eval`. Bitterroot must remain profile-guidance-only
-until Milestones 3-4 prove reviewer-stack readiness and registry/coverage
-promotion.
+Milestone 3 now proves the Bitterroot-specific applicability, generated rule
+pack, compliance-review, V1 eval, component-eval, and component-adjudication
+artifacts. It does not prove full phase-eval or promotion readiness because the
+review-level phase eval still inherits a shared f70 retrieval direct-eval
+identity mismatch and downstream evaluation-coverage red state. Raw
+applicable-standard coverage remains red as component-eval diagnostic evidence
+even though the two standard gaps are classified in adjudication replay.
+Bitterroot must remain profile-guidance-only until the separate inherited
+source-set phase-eval drift is routed or repaired and Milestone 4
+registry/coverage promotion gates pass.
 
 ## Closeout Checklist
 

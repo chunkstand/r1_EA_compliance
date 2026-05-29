@@ -15,6 +15,51 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Bitterroot Front Reviewer Stack Reduced Locally
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is reduced through
+  Milestone 3 reviewer-stack replay. The Bitterroot-specific applicability,
+  generated rule-pack, compliance-review, V1 eval, component-eval, and
+  component-adjudication gates are green. The review-level `phase-eval` command
+  still exits red on inherited shared f70 retrieval direct-eval identity drift,
+  so this is not registry or coverage promotion proof.
+- tracked contracts:
+  `config/applicability_adjudications/region1-example-bitterroot-front-57341.json`
+  resolves `6/6` deterministic applicability conflicts with `5` human
+  applicable dispositions and `1` human not-applicable disposition.
+  `config/v1_bitterroot_front_real_ea_eval.json` locks `28` conditional
+  expectations, generated rule-pack identity
+  `generated-nepa-ea-v0-region1-example-bitterroot-front-57341`, Bitterroot
+  forest-plan scope, and `3` applicable standards.
+  `config/forest_plan_component_evals/region1-example-bitterroot-front-57341.json`
+  locks all `23` current raw component findings, including `3` applicable
+  standards and the raw `20` open reviewer-resolution states adjudicated by the
+  component-adjudication artifact.
+- local eval evidence:
+  applicability validation passes with `reviewer_ready=true`, `54` applicable
+  authorities, `35` non-applicable authorities, and `0` unresolved authorities.
+  Generated rule-pack validation passes with `54` generated rules.
+  `compliance-review` passes with `54` findings, `34` pass findings, `18`
+  uncertain findings, `2` gap findings, and matrix JSON/Markdown/PDF artifacts.
+  `v1-ea-eval` passes with `contract_status="reviewer_ready"`.
+  `forest-plan-component-eval` passes `23/23` cases with no failed checks.
+- remaining phase-eval boundary:
+  `phase-eval --review-id region1-example-bitterroot-front-57341` includes the
+  Bitterroot-specific phases as passing, including `generated_rule_pack`,
+  `compliance_review`, `forest_plan_component_eval`, and
+  `forest_plan_component_adjudication`. The top-level phase eval remains red
+  because the shared source-set retrieval direct-eval artifact is
+  stale/identity-mismatched against the current `retrieval_eval_seed.json`
+  contract, which also keeps `evaluation_coverage` red. Route that as inherited
+  f70 direct-eval drift; do not treat it as a Bitterroot package replay gap.
+- routing boundary:
+  `bitterroot-nf` remains `profile_eval_guidance_only`. No registry,
+  real-package coverage, or component-coverage manifest was promoted in this
+  Milestone 3 reduced checkpoint.
+
 ## Bitterroot Front Component Adjudication Closed Locally
 
 Latest implementation update on 2026-05-29 UTC:

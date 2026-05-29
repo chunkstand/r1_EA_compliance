@@ -41,9 +41,8 @@ history below.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 3
-  reviewer-stack replay next; Milestone 2 forest-plan resolver preflight,
-  source-record closure, component inventory, and component adjudication are
-  closed locally
+  reviewer-stack replay reduced locally; Bitterroot-specific replay gates are
+  green, but inherited source-set phase-eval direct-eval drift remains separate
 - resolved Lolo blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor packet:
@@ -107,13 +106,30 @@ history below.
   as one applicability false positive and one evidence-linking miss. Do not
   add Bitterroot Front to reviewer-ready registry, real-package coverage, or
   component-coverage manifests before Milestones 3-4 pass.
+  Milestone 3 reviewer-stack replay is reduced locally: applicability
+  adjudication resolves `6/6` conflicts (`5` applicable, `1` not applicable),
+  applicability validation reports `reviewer_ready=true`, generated rule-pack
+  validation passes with `54` generated rules, `compliance-review` passes with
+  `54` findings and matrix JSON/Markdown/PDF artifacts, `v1-ea-eval` passes
+  with `28` conditional expectations, and `forest-plan-component-eval` passes
+  `23/23` component cases with `3` applicable standards. Review phase-eval for
+  `region1-example-bitterroot-front-57341` includes the
+  Bitterroot-specific phases as passing, including `generated_rule_pack`,
+  `compliance_review`, `forest_plan_component_eval`, and
+  `forest_plan_component_adjudication`, but exits red because the shared f70
+  retrieval direct-eval artifact is stale/identity-mismatched against the
+  current `retrieval_eval_seed.json` contract and keeps `evaluation_coverage`
+  red. Route that as inherited source-set direct-eval drift, not as a
+  Bitterroot package replay blocker or promotion proof.
   Milestone 1 verification passed: zero package download failures; replay
   context JSON validation; `ea-review`; focused queue/registry tests;
   source-register queue audit; forest-specific example-package eval; plan lint;
   compile/ruff; and `git diff --check`. Milestone 2 focused resolver tests
   passed; the current f70 manifest/component focused test passed; component
   adjudication eval passed; and the live resolver preflight is now resolved
-  locally. The next route is Milestone 3 reviewer-stack replay.
+  locally. Milestone 3 focused contract tests passed; the next route is either
+  the inherited f70 phase-eval direct-eval drift repair or, after that blocker
+  is separated, Milestone 4 registry and coverage promotion.
   HLC Bonanza example-package work is resolved through registry and coverage
   promotion. The resolved packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID

@@ -1,0 +1,389 @@
+{
+  "cases": [
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-02-RESOURCE-OBJECTIVES-FOLLOWING-OBJECTIVES-STATE-HOW-RESOURCES-MANAGED-UNDER-PLAN-DURING-PLAN-B54FED75-OBJ-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-02-RESOURCE-OBJECTIVES-FOLLOWING-OBJECTIVES-STATE-HOW-RESOURCES-MANAGED-UNDER-PLAN-DURING-PLAN-B54FED75-OBJ-1",
+      "component_type": "objective",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-005 (74e6e96d6a80)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-CAMPSITE-IMPACTS-MINIMAL-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINIMIZED-ENCOUNTERS-OTHER-GROUPS-5456417F-OBJ-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-CAMPSITE-IMPACTS-MINIMAL-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINIMIZED-ENCOUNTERS-OTHER-GROUPS-5456417F-OBJ-1",
+      "component_type": "objective",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-CAMPSITE-VEGETATION-IMPACTS-RECOVER-ANNUALLY-TRAILS-FREQUENTLY-USED-HUMANS-SELDOM-OCCUR-THIS-31FC27E8-OBJ-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-CAMPSITE-VEGETATION-IMPACTS-RECOVER-ANNUALLY-TRAILS-FREQUENTLY-USED-HUMANS-SELDOM-OCCUR-THIS-31FC27E8-OBJ-1",
+      "component_type": "objective",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-FISHLESS-WATERS-REPRESENT-SPECIAL-ESTILETIC-SCIENTIFIC-BIOLOGICAL-SOCIAL-VALUES-BECAUSE-THIS-TILE-EAD1A068-OBJ-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-FISHLESS-WATERS-REPRESENT-SPECIAL-ESTILETIC-SCIENTIFIC-BIOLOGICAL-SOCIAL-VALUES-BECAUSE-THIS-TILE-EAD1A068-OBJ-1",
+      "component_type": "objective",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-FW-DC-VEG-02",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-FW-DC-VEG-02",
+      "component_type": "desired_condition",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-035 (55c52ab65020)"
+      ],
+      "package_section": "BRF_EA_Draft_20230809 with Appendices_508.pdf",
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-FW-DC-VEG-03",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-FW-DC-VEG-03",
+      "component_type": "desired_condition",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-FW-DC-WLF-ELK-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-FW-DC-WLF-ELK-01",
+      "component_type": "desired_condition",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-FW-GDL-VEG-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-FW-GDL-VEG-01",
+      "component_type": "guideline",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-FW-GDL-VEG-02",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-FW-GDL-VEG-02",
+      "component_type": "guideline",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-FW-GDL-VEG-06",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-FW-GDL-VEG-06",
+      "component_type": "guideline",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-bitterroot-nf-03-FW-STD-VEG-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-bitterroot-nf-03-FW-STD-VEG-01",
+      "component_type": "standard",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-bitterroot-nf-03-FW-STD-VEG-02",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-bitterroot-nf-03-FW-STD-VEG-02",
+      "component_type": "standard",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-035 (55c52ab65020)",
+        "EA-PACKAGE-080 (b618032018af)"
+      ],
+      "package_section": "BRF_EA_Draft_20230809 with Appendices_508.pdf",
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-FWD-DC-VEG-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-FWD-DC-VEG-01",
+      "component_type": "desired_condition",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-MAINTAIN-MUCH-POSSIBLE-HIGH-DEGREE-WILDERNESS-INTEGRITY-MINIMIZE-LEVEL-HUMAN-DISTURBANCE-ECOLOGICAL-8E3C579E-GO-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-MAINTAIN-MUCH-POSSIBLE-HIGH-DEGREE-WILDERNESS-INTEGRITY-MINIMIZE-LEVEL-HUMAN-DISTURBANCE-ECOLOGICAL-8E3C579E-GO-1",
+      "component_type": "goal",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-MAINTAIN-NATIVE-VEGETATION-INCLUDING-NATURAL-COMPOSITION-STRUCTURE-FUNCTION-PROTECT-RARE-SENSITIVE-PLANTS-B53ED135-GO-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-MAINTAIN-NATIVE-VEGETATION-INCLUDING-NATURAL-COMPOSITION-STRUCTURE-FUNCTION-PROTECT-RARE-SENSITIVE-PLANTS-B53ED135-GO-1",
+      "component_type": "goal",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-112 (1c475839ef20)",
+        "EA-PACKAGE-002 (1b33aeac2159)",
+        "EA-PACKAGE-049 (62388569e301)"
+      ],
+      "package_section": "20260501_BRF_PF-VEGETATION-001_SilvicultureReport_508.pdf",
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-bitterroot-nf-03-MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-bitterroot-nf-03-MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD-1",
+      "component_type": "standard",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-OUTFITTED-USE-HELPS-ACHIEVE-PROPOSED-OBJECTIVES-STANDARDS-GUIDELINES-ASSOCIATED-WITL1-EACH-ZONE-D4CD690A-OBJ-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-OUTFITTED-USE-HELPS-ACHIEVE-PROPOSED-OBJECTIVES-STANDARDS-GUIDELINES-ASSOCIATED-WITL1-EACH-ZONE-D4CD690A-OBJ-1",
+      "component_type": "objective",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-PERMITS-INCREASED-USER-DAYS-ON-EXISTING-PERNLITS-ISSUED-UNLESS-THERE-RESOURCE-CAPACITY-427DC315-GL-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-PERMITS-INCREASED-USER-DAYS-ON-EXISTING-PERNLITS-ISSUED-UNLESS-THERE-RESOURCE-CAPACITY-427DC315-GL-1",
+      "component_type": "guideline",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-THIS-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGRITY-LOW-LEVEL-HUMAN-DISTURBANCE-I-0CC7DAB5-GO-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-THIS-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGRITY-LOW-LEVEL-HUMAN-DISTURBANCE-I-0CC7DAB5-GO-1",
+      "component_type": "goal",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-CC6103AF-GO-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-CC6103AF-GO-1",
+      "component_type": "goal",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-E968CF92-GO-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-E968CF92-GO-1",
+      "component_type": "goal",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINLMIZED-CONDITIONS-PRECIPITATE-USER-CONFLICTS-MINIMAL-GUIDELIILES-FOLLOWING-E4DC5E1A-OBJ-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINLMIZED-CONDITIONS-PRECIPITATE-USER-CONFLICTS-MINIMAL-GUIDELIILES-FOLLOWING-E4DC5E1A-OBJ-1",
+      "component_type": "objective",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-bitterroot-nf-03-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGIITY-ZONE-CHARACTERIZED-MINIMAL-LEVEL-HUMAN-DISTURBANCE-66FEF709-GO-1",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-bitterroot-nf-03-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGIITY-ZONE-CHARACTERIZED-MINIMAL-LEVEL-HUMAN-DISTURBANCE-66FEF709-GO-1",
+      "component_type": "goal",
+      "description": "Bitterroot Front component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "reviewer_resolution_state": "open"
+    }
+  ],
+  "coverage_requirements": {
+    "minimum_cases_by_applicability_status": {
+      "applicable": 23
+    },
+    "minimum_cases_by_component_type": {
+      "desired_condition": 4,
+      "goal": 6,
+      "guideline": 4,
+      "objective": 6,
+      "standard": 3
+    },
+    "minimum_section_bound_cases": 3,
+    "require_all_applicable_standards": true
+  },
+  "description": "Adjudicated component-level eval cases for the Bitterroot Front review. Covers every current raw Bitterroot component finding and locks the standard, section, citation, compliance-status, and raw queue states from generated review artifacts.",
+  "eval_id": "bitterroot-front-forest-plan-components-v0",
+  "metric_thresholds": {
+    "applicable_standard_recall": {
+      "min": 1.0
+    },
+    "case_count": {
+      "min": 23
+    },
+    "compliance_status_match_rate": {
+      "min": 1.0
+    },
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "expected_applicable_standard_count": {
+      "min": 3
+    },
+    "package_evidence_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "package_section_match_rate": {
+      "min": 1.0
+    },
+    "plan_source_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  },
+  "review_id": "region1-example-bitterroot-front-57341",
+  "schema_version": "forest-plan-component-eval-v0",
+  "source_set_id": "source-set-f70ea11e04ae3d53"
+}

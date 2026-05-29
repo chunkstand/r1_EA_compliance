@@ -14,9 +14,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 3
-  reviewer-stack replay next; Milestone 2 forest-plan resolver preflight,
-  source-record closure, component inventory, and component adjudication are
-  closed locally
+  reviewer-stack replay reduced locally; Bitterroot-specific replay gates are
+  green, but inherited source-set phase-eval direct-eval drift remains separate
 - Latest resolved HLC forest-specific example packet:
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - Latest resolved West Reservoir parent slice:
@@ -90,9 +89,23 @@ Use this file as the short current route before opening the append-only docs.
   applicable standards and `1` applied standard, but the two standard gaps are
   classified in the adjudication replay: the A-P cabin standard is an
   applicability false positive and `FW-STD-VEG-01` is an evidence-linking miss.
-  The next slice is Milestone 3 reviewer-stack replay. Do not add Bitterroot
-  Front to reviewer-ready registry, real-package coverage, or
-  component-coverage manifests before Milestones 3-4 pass.
+  Milestone 3 reviewer-stack replay is reduced locally: applicability
+  adjudication resolves `6/6` conflicts, applicability validation reports
+  `reviewer_ready=true`, generated rule-pack validation passes with `54`
+  generated rules, `compliance-review` passes with `54` findings and matrix
+  JSON/Markdown/PDF artifacts, `v1-ea-eval` passes with `28` conditional
+  expectations, and `forest-plan-component-eval` passes `23/23` component
+  cases with `3` applicable standards. Review phase-eval for
+  `region1-example-bitterroot-front-57341` includes the Bitterroot-specific
+  phases as passing, including `generated_rule_pack`, `compliance_review`,
+  `forest_plan_component_eval`, and `forest_plan_component_adjudication`, but
+  exits red because the shared f70 retrieval direct-eval artifact is
+  stale/identity-mismatched against the current `retrieval_eval_seed.json`
+  contract and keeps `evaluation_coverage` red. Treat that as inherited
+  source-set direct-eval drift, not as a Bitterroot package replay blocker and
+  not as promotion proof. Do not add Bitterroot Front to reviewer-ready
+  registry, real-package coverage, or component-coverage manifests before the
+  inherited phase-eval drift is routed or repaired and Milestone 4 passes.
 - HLC Bonanza example packet is resolved locally through registry and coverage
   promotion. The selected package is Bonanza project `66532` for
   `helena-lewis-and-clark-nf`, using the official project page
