@@ -34,6 +34,12 @@ Latest implementation update on 2026-05-29 UTC:
   threshold failures. `config/forest_specific_example_package_registry_v1.json`
   routes HLC as `real_package_examples_available` with
   `primary_example_id="hlc-bonanza-forest-specific"`.
+- system-facing HLC route:
+  `docs/AGENT_START_HERE.md` now names
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` as the latest resolved
+  forest-specific example packet and instructs HLC workflows to use Bonanza
+  first. The focused registry test now guards that entrypoint against drifting
+  away from the registry row.
 - forest-specific aggregate:
   `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
   `failed_forest_count=0`, `review_example_count=5`,

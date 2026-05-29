@@ -9,6 +9,7 @@ REGISTRY_PATH = ROOT / "config" / "forest_specific_example_package_registry_v1.j
 QUEUE_LEDGER_PATH = ROOT / "config" / "source_register_queue_resolution_ledger_v1.json"
 REAL_PACKAGE_COVERAGE_PATH = ROOT / "config" / "v1_real_package_review_coverage_v1.json"
 PROFILE_COVERAGE_PATH = ROOT / "config" / "region1_forest_plan_profile_eval_coverage_v1.json"
+AGENT_START_HERE_PATH = ROOT / "docs" / "AGENT_START_HERE.md"
 
 
 def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
@@ -205,6 +206,31 @@ def test_registry_promotes_hlc_bonanza_as_primary_example_without_queue_row() ->
     assert example_row["coverage_class_id"] == "forest_specific_reviewer_ready"
     assert example_row["expected_contract_status"] == "reviewer_ready"
     assert example_row["queue_lineage_source_ids"] == []
+
+
+def test_agent_start_here_names_hlc_bonanza_as_system_example() -> None:
+    registry = _load_json(REGISTRY_PATH)
+    agent_start = AGENT_START_HERE_PATH.read_text(encoding="utf-8")
+
+    forest_row = next(
+        row
+        for row in registry["forest_routing"]
+        if row["forest_unit_id"] == "helena-lewis-and-clark-nf"
+    )
+    example_row = next(
+        row
+        for row in registry["review_examples"]
+        if row["example_id"] == forest_row["primary_example_id"]
+    )
+
+    assert "docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md" in agent_start
+    assert "latest resolved forest-specific example packet" in agent_start
+    assert f'example_id="{example_row["example_id"]}"' in agent_start
+    assert f'review_id="{example_row["review_id"]}"' in agent_start
+    assert f'primary_example_id="{forest_row["primary_example_id"]}"' in agent_start
+    assert f'forest_unit_id="{forest_row["forest_unit_id"]}"' in agent_start
+    assert "Bonanza as the governed primary example" in agent_start
+    assert "must not be reused for non-HLC forests" in agent_start
 
 
 def test_registry_archives_south_plateau_as_historical_only() -> None:

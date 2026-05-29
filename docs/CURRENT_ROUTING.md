@@ -59,6 +59,9 @@ Use this file as the short current route before opening the append-only docs.
   `contract_backed_promotion_ready=true`. Bonanza is now
   `example_id="hlc-bonanza-forest-specific"` and the HLC primary example in
   `config/forest_specific_example_package_registry_v1.json`.
+  `docs/AGENT_START_HERE.md` also names the HLC Bonanza packet as the latest
+  resolved forest-specific example packet and tells HLC workflows to inspect
+  Bonanza first.
   `real-package-review-coverage-eval` passes with `covered_slot_count=5`,
   `reviewer_ready_slot_count=5`, `distinct_forest_count=4`, and
   `distinct_package_style_count=6`. `forest-specific-example-package-eval`

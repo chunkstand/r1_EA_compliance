@@ -43,6 +43,11 @@ HLC remained `profile_eval_guidance_only` in `config/forest_specific_example_pac
 ## Current Evidence
 
 - `config/forest_specific_example_package_registry_v1.json` now routes `helena-lewis-and-clark-nf` as `real_package_examples_available` with `primary_example_id="hlc-bonanza-forest-specific"`.
+- `docs/AGENT_START_HERE.md` now names this packet as the latest resolved
+  forest-specific example packet and tells system/agent workflows to inspect
+  Bonanza first for HLC example-package work. This is the system-facing HLC
+  route; Bonanza must not be reused as generic Region 1 guidance or for any
+  non-HLC forest.
 - `config/v1_real_package_review_coverage_v1.json` now has the required Bonanza slot `hlc-bonanza-forest-specific`; `real-package-review-coverage-eval` passes with `covered_slot_count=5`, `reviewer_ready_slot_count=5`, `distinct_forest_count=4`, `distinct_package_style_count=6`, and no threshold failures.
 - `forest-specific-example-package-eval` passes with `review_example_count=5`, `reviewer_ready_example_count=5`, `distinct_governed_example_forest_count=4`, `profile_guidance_only_count=6`, and no threshold failures.
 - `config/forest_plan_component_eval_coverage_v1.json` now includes Bonanza as a required component slot. The standalone aggregate still reports `passed=false` because the inherited `ecid-source-delta-replay` slot is stale/unresolved, but the Bonanza slot passes with `failure_reasons=[]` on `source-set-f70ea11e04ae3d53`.
@@ -326,6 +331,25 @@ git diff --check
 ## Local Commit Closeout Policy
 
 Each completed milestone slice must be committed atomically with tracked implementation, tests, docs, and handoff updates. Generated `source_library/` evidence remains ignored and should be described in closeout but not staged unless repository policy changes explicitly.
+
+## Gap-Close Verification Addendum
+
+The HLC system route is considered gap-closed only while all of the following
+surfaces agree:
+
+- `docs/AGENT_START_HERE.md` names
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` as the latest resolved
+  forest-specific example packet and tells HLC workflows to use Bonanza first.
+- `config/forest_specific_example_package_registry_v1.json` routes
+  `helena-lewis-and-clark-nf` to
+  `primary_example_id="hlc-bonanza-forest-specific"`.
+- `config/v1_real_package_review_coverage_v1.json` requires the
+  `hlc-bonanza-forest-specific` slot as reviewer-ready coverage.
+- `config/forest_plan_component_eval_coverage_v1.json` requires the Bonanza
+  component-eval slot, and the Bonanza slot passes even if the standalone
+  aggregate remains red on the inherited ECID source-delta slot.
+- Focused tests must reject stale system-facing routing if the registry and
+  agent entrypoint drift apart.
 
 ## Residual Risks And Next Routing
 

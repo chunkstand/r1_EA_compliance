@@ -81,7 +81,10 @@ history below.
   `declared_review_contract=true`, and
   `contract_backed_promotion_ready=true`. `helena-lewis-and-clark-nf` now
   routes as `real_package_examples_available` with
-  `primary_example_id="hlc-bonanza-forest-specific"`. The real-package
+  `primary_example_id="hlc-bonanza-forest-specific"`. `docs/AGENT_START_HERE.md`
+  now names the HLC Bonanza packet as the latest resolved forest-specific
+  example packet and tells HLC workflows to inspect Bonanza first; the focused
+  registry test guards that system-facing entrypoint against drift. The real-package
   aggregate passes with `covered_slot_count=5`, `reviewer_ready_slot_count=5`,
   `distinct_forest_count=4`, and `distinct_package_style_count=6`; the
   forest-specific aggregate passes with `review_example_count=5`,

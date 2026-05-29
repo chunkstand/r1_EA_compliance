@@ -1,6 +1,6 @@
 # Agent Start Here
 
-Date: 2026-05-27
+Date: 2026-05-29
 
 Use this file as the first stop for agent-driven document work in this repo.
 It tells you which existing lane to use and when to refuse the request.
@@ -43,6 +43,26 @@ The planner:
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
 - The latest resolved forest-specific example packet is
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Helena-Lewis and
+  Clark National Forest example-package review work, inspect
+  `config/forest_specific_example_package_registry_v1.json` first, then use
+  Bonanza as the governed primary example:
+  `example_id="hlc-bonanza-forest-specific"`,
+  `review_id="region1-example-helena-lewis-and-clark-bonanza-66532"`, and
+  `primary_example_id="hlc-bonanza-forest-specific"` for
+  `forest_unit_id="helena-lewis-and-clark-nf"`. Bonanza uses the official
+  project page `https://www.fs.usda.gov/r01/helena-lewisclark/projects/66532`
+  and Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/272939272513` as
+  package authority. It is reviewer-ready on
+  `source-set-f70ea11e04ae3d53`: package authority, applicability,
+  compliance review, V1 eval, forest-plan component eval/adjudication, review
+  `phase-eval`, real-package coverage, and forest-specific registry eval are
+  green. Keep Bonanza parallel to `Document_Register_Master`; it is not a
+  generic Region 1 example and must not be reused for non-HLC forests. The
+  standalone component-coverage aggregate still exits red only on the inherited
+  ECID source-delta slot; that is not an HLC Bonanza blocker.
+- For Custer Gallatin example-package review work, use
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. Use review ID
   `region1-example-custer-gallatin-south-otter-58396` and the official Custer
   Gallatin project page
@@ -62,8 +82,8 @@ The planner:
   supplemental active Custer Gallatin example. South Plateau is archived as
   historical evidence only due to litigation and Forest Plan compliance
   challenge risk; do not use it as an example.
-  The component-coverage aggregate is still red on non-South Otter ECID
-  source-delta and West Reservoir slots, but South Otter's required slot and
+  The standalone component-coverage aggregate is still red only on the
+  inherited ECID source-delta slot, but South Otter's required slot and
   review-scope `phase-eval` coverage are green.
 - For Lolo National Forest example-package review work, inspect
   `config/forest_specific_example_package_registry_v1.json` first, then the

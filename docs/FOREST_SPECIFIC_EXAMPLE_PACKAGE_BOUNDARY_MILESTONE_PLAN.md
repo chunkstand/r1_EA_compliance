@@ -122,9 +122,12 @@ This packet exists to ensure:
 - aggregate eval command:
   `src/usfs_r1_ea_sources/forest_specific_example_package_eval.py`,
   `src/usfs_r1_ea_sources/cli_eval.py`
-- active review authorities:
+- governed review authorities:
   `config/replay_contexts/v1-cg-ecid-compliance-review.json`,
-  `config/replay_contexts/west-reservoir-67436.json`
+  `config/replay_contexts/west-reservoir-67436.json`,
+  `config/replay_contexts/region1-example-lolo-tylers-kitchen-66344.json`,
+  `config/replay_contexts/region1-example-custer-gallatin-south-otter-58396.json`,
+  `config/replay_contexts/region1-example-helena-lewis-and-clark-bonanza-66532.json`
 - archived review authority:
   `config/replay_contexts/region1-expansion-south-plateau-landscape-treatment.json`
 - docs:
@@ -247,6 +250,16 @@ Current South Otter follow-on:
   real-package coverage slot, and component-coverage slot are now present and
   load-bearing. No queue reroute exists.
 
+Current HLC Bonanza follow-on:
+
+- `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
+  Milestone 4 and is the system-facing HLC example-package owner. For
+  `helena-lewis-and-clark-nf`, the registry must keep
+  `primary_example_id="hlc-bonanza-forest-specific"` and agents must inspect
+  Bonanza first for HLC example-package guidance. The package is not generic
+  Region 1 guidance, is not reusable for other forests, and remains parallel to
+  `Document_Register_Master`.
+
 ## Current Evidence
 
 - The forest-specific registry remains the typed routing owner for every
@@ -328,9 +341,11 @@ Before changing registry status, read `docs/CURRENT_ROUTING.md`,
 `docs/SESSION_HANDOFF.md`, `docs/CURRENT_SYSTEM_STATE.md`,
 `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
 `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, and
+`docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, and
 `config/forest_specific_example_package_registry_v1.json`. Verify the current
-Lolo and South Otter `v1-ea-eval`, review `phase-eval`, real-package coverage,
-and forest-specific example-package artifacts before changing any promoted row.
+Lolo, South Otter, and HLC Bonanza `v1-ea-eval`, review `phase-eval`,
+real-package coverage, and forest-specific example-package artifacts before
+changing any promoted row.
 
 ## Stop Conditions
 
@@ -348,7 +363,7 @@ and forest-specific example-package artifacts before changing any promoted row.
 | Weak point forecast | Owner surface | Prevention gate | Fail threshold | Controlled violation | Future-Codex misuse scenario |
 | --- | --- | --- | --- | --- | --- |
 | Registry behaves like a second master list | registry and source-register queue ledger | queue audit plus registry tests | project-specific example emits as shared master input | queue row stays blocked/named until proven, or resolved as `forest_specific_example_package` after a governed packet proves the parallel example | a future session silently promotes example rows into the master workbook lane |
-| Forest row points at the wrong example | registry example rows | forest-specific example eval | example forest IDs and registry applicability IDs disagree | typed-blocked/profile-only rows remain guidance-only | a future session reuses a Custer example as Lolo guidance without applicability proof |
+| Forest row points at the wrong example | registry example rows | forest-specific example eval | example forest IDs and registry applicability IDs disagree | typed-blocked/profile-only rows remain guidance-only | a future session reuses Custer, Lolo, Flathead, or HLC package guidance for another forest without applicability proof |
 | Missing artifacts are hidden by generic wording | real-package coverage and profile-eval contracts | aggregate eval plus negative coverage cases | missing required review artifact is counted reviewer-ready | typed-blocked and profile-only states fail closed | a future session presents profile-only fixtures as a governed real package |
 | Lolo is promoted before threshold ratchet | Lolo parent packet and registry config | Milestone 3 aggregate gate bundle | `lolo-nf` status changes without coverage/queue threshold updates | keep Lolo promoted only while the ratcheted gates pass | a future session changes only the registry label after phase-eval turns green |
 
