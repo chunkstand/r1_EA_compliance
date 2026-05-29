@@ -2,19 +2,19 @@
 
 Date: 2026-05-28
 
-Status: Active implementation packet. Milestone 0 contract and baseline
-inventory design is resolved locally; Milestone 1 read-only inventory CLI is
-resolved locally; Milestone 2 local DB-backed eval/trace store is resolved
-locally; Milestone 3 canonical/OpenInference export is resolved locally;
-Milestone 5 trace-to-case promotion is resolved locally. Milestones 0-5 now
-cover contract, inventory, store, export, phase/promotion gate integration, and
-local trace-to-case feedback-loop mechanics.
+Status: Resolved locally. Milestone 0 contract and baseline inventory design,
+Milestone 1 read-only inventory CLI, Milestone 2 local DB-backed eval/trace
+store, Milestone 3 canonical/OpenInference export, Milestone 4
+phase/promotion gate integration, and Milestone 5 trace-to-case promotion are
+resolved locally. Milestones 0-5 now cover contract, inventory, store, export,
+phase/promotion gate integration, and local trace-to-case feedback-loop
+mechanics.
 
 Owner context: This plan implements the direction captured in
-`docs/FIRST_CLASS_EVALS_AND_TRACES_RESEARCH_BRIEF.md` for this repository. West
-Reservoir Milestone 4 is now resolved locally, so this packet is explicitly
-routed next. If another packet becomes active later, stop and re-confirm
-routing before editing code.
+`docs/FIRST_CLASS_EVALS_AND_TRACES_RESEARCH_BRIEF.md` for this repository. The
+packet was routed after West Reservoir Milestone 4 and is now closed locally.
+Any hosted scoring, model-judge, or broader trace integration follow-up must be
+opened as a new approved milestone before editing code.
 
 ## Purpose
 
@@ -575,8 +575,9 @@ Status: Resolved locally on 2026-05-29. `eval_trace_export.py` and the
 `eval-trace-export` CLI now export canonical local JSON and OpenInference-shaped
 span trees from the local SQLite store. The West Reservoir f70 seed export
 passed with `18` traces, `36` OpenInference-shaped spans, `0` missing tables,
-and `0` missing provenance fields. Phase/promotion ratchets and trace-to-case
-promotion remain future milestones.
+and `0` missing provenance fields. At that checkpoint, phase/promotion ratchets
+and trace-to-case promotion remained future milestones; the newer Milestone 4
+and Milestone 5 sections below now record both follow-on closeouts.
 
 Implementation:
 
@@ -629,13 +630,15 @@ matching evidence or ratcheted scopes. `promotion-suite` reads phase-eval gate
 objects and blocks current promotion when a required current-promotion
 phase-eval artifact reports a failed ratcheted eval-trace gate. No global or
 source-set-wide ratchet is enabled.
-The store builder now carries a narrow self-reference bootstrap allowance for a
-`phase_eval` artifact whose only failure is the `first_class_eval_trace`
-inventory/store cycle; unrelated phase-eval failures still block the store.
-The live West Reservoir replay passed `phase-eval --review-id
-west-reservoir-67436` at `32/32`, `final-qa-certification --validate-only` at
-`200/200`, and `promotion-suite --manifest config/promotion_suite_v1.json` with
-current promotion `32/32` and no failed current eval-trace gates.
+The store builder now carries a phase-eval self-refresh allowance: a parseable
+failed `phase_eval` artifact can seed a store rebuild before `phase-eval`
+rewrites its own result file, while missing, stale-hash, malformed,
+unrecognized-schema, and failed non-`phase_eval` origin artifacts still block.
+The final closeout pass refreshed local final-QA and eval-trace generated
+evidence, then West Reservoir `phase-eval --review-id west-reservoir-67436`
+passed twice at `32/32`, `final-qa-certification --validate-only` passed
+`200/200`, and `promotion-suite --manifest config/promotion_suite_v1.json`
+passed current promotion `32/32` with no failed current eval-trace gates.
 
 Implementation:
 
@@ -742,7 +745,7 @@ Commit closeout:
 - Inventory module and CLI.
 - Store module and generated SQLite schema.
 - Export module and canonical/OpenInference JSON contracts.
-- Optional phase/promotion gate integration.
+- Phase/promotion gate integration.
 - Trace-to-case promotion command and deterministic case format.
 - Focused tests for positive and negative paths.
 
@@ -762,9 +765,9 @@ Update these files in the same milestone slice when their truth changes:
 - `docs/TECH_DEBT_REGISTER.md` if any shortcut, deferred ratchet, judge
   limitation, or accepted non-first-class surface remains
 
-Do not update `docs/CURRENT_ROUTING.md` until this packet becomes the active
-route. When activated, route it explicitly and preserve the active West
-Reservoir history as historical lineage.
+Update `docs/CURRENT_ROUTING.md` whenever this packet is active or closeout
+truth changes. Preserve West Reservoir context as historical lineage rather
+than reopening the resolved West packet.
 
 For every active implementation milestone, re-read `docs/CURRENT_ROUTING.md`,
 the top of `docs/SESSION_HANDOFF.md`, and `docs/CURRENT_SYSTEM_STATE.md` before

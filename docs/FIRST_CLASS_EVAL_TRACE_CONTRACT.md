@@ -206,12 +206,13 @@ The current `phase_eval_results.json` path is treated as a command
 self-reference while `phase-eval` is running, so the gate does not deadlock on
 the artifact it is about to rewrite.
 
-`eval-trace-store-build` blocks failed origin artifacts, with one narrow
-bootstrap allowance: a `phase_eval` artifact can still seed the store when its
-only failed phase is `first_class_eval_trace` and the only reasons are
-eval-trace inventory/store stale or missing-store self-reference reasons. Any
-other failed phase-eval artifact still records `origin_artifact_failed` and
-blocks the store summary.
+`eval-trace-store-build` blocks failed origin artifacts, with one
+self-refresh allowance: a parseable `phase_eval` artifact can still seed the
+store when it contains a failed or reviewer-not-ready phase, or a blocker, so a
+phase-eval run can rebuild the eval/trace substrate before rewriting its own
+result file. This allowance does not bypass missing, stale-hash, missing-hash,
+malformed, or unrecognized-schema checks, and any failed non-`phase_eval`
+artifact still records `origin_artifact_failed` and blocks the store summary.
 
 `promotion-suite` reads the `eval_trace_gate` object from phase-eval artifacts.
 If a current-promotion phase-eval artifact reports a ratcheted eval-trace gate

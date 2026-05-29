@@ -83,21 +83,28 @@ history below.
   only for matching evidence or ratcheted scopes. `promotion-suite` writes
   `eval_trace_gate_summary` and blocks current promotion when a
   current-promotion phase-eval artifact reports a failed ratcheted eval-trace
-  gate. The only enabled ratcheted scope is review
-  `west-reservoir-67436`; no global or source-set-wide ratchet is enabled. The
-  new `eval-trace-case-promote` CLI promotes a selected trace/span into the
-  tracked `config/eval_trace_cases/system_eval_trace_cases_v1.json` case-file
-  schema. It requires source artifact refs and hashes, owner/risk/tags, an
+  gate. The only enabled ratcheted scope is review `west-reservoir-67436`; no
+  global or source-set-wide ratchet is enabled. The final closeout pass hardened
+  the store self-reference path: a parseable failed `phase_eval` artifact can
+  seed a store rebuild before `phase-eval` rewrites its own result file, while
+  missing, stale-hash, malformed, unrecognized-schema, and failed
+  non-`phase_eval` artifacts still block. The new `eval-trace-case-promote` CLI
+  promotes a selected trace/span into the tracked
+  `config/eval_trace_cases/system_eval_trace_cases_v1.json` case-file schema.
+  It requires source artifact refs and hashes, owner/risk/tags, an
   assertion or expected-output contract, review/removal lifecycle conditions,
   deterministic scorer contracts, and human-label metadata. `llm_judge`
   remains reserved/deferred until a separate calibrated model-judge milestone.
   Milestone 5 verification: focused case/store/architecture/CLI pytest passed
-  `46/46`; `ruff check src tests`,
-  `python -m compileall src`, `git diff --check`, and
-  `python -m usfs_r1_ea_sources --help` passed; and a local
+  `46/46`; `ruff check src tests`, `python -m compileall src`,
+  `git diff --check`, and `python -m usfs_r1_ea_sources --help` passed; and a local
   `eval-trace-case-promote` smoke run against
   `source_library/evaluations/eval_trace/system_eval_trace.sqlite` passed with
-  `command_succeeded=true`.
+  `command_succeeded=true`. Final-pass live verification also refreshed local
+  final-QA/eval-trace generated artifacts, passed final QA `200/200`, rebuilt
+  the trace store with `18` rows in each canonical table, exported `18` traces
+  and `36` spans, and proved `phase-eval --review-id west-reservoir-67436`
+  stable by passing it twice at `32/32` with `blockers=[]`.
   No first-class eval trace implementation slice remains active after
   Milestone 5.
   Historical West Reservoir checkpoint follows:

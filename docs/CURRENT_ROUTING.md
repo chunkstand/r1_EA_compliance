@@ -45,7 +45,9 @@ Use this file as the short current route before opening the append-only docs.
   SQLite store from inventory JSON. The West Reservoir f70 seed store passed
   with `18` rows in each canonical table, `0` orphan rows, `0` duplicate IDs,
   `0` stale artifacts, `0` source artifact deletions, and `0` missing required
-  links. The `eval-trace-export` CLI now
+  links. The final closeout pass allows a parseable failed `phase_eval` artifact
+  to seed its own store refresh before `phase-eval` rewrites it, while failed
+  non-`phase_eval` origin artifacts still block. The `eval-trace-export` CLI now
   lives in `src/usfs_r1_ea_sources/eval_trace_export.py` and writes local
   canonical JSON plus OpenInference-shaped spans from the store. The West
   Reservoir f70 seed export passed with `18` traces, `36` exported spans, `0`

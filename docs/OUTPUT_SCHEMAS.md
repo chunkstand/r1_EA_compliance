@@ -4599,11 +4599,13 @@ missing eval rows, missing trace rows, and source-set/review mismatches make the
 `phase_eval_results.json` self-reference to refresh during the command, so a
 phase-eval run does not fail only because it is about to rewrite the artifact
 that records the gate.
-The store builder has a matching narrow bootstrap allowance for the same
-self-reference cycle: a failed `phase_eval` origin artifact is buildable only
-when the sole failed phase is `first_class_eval_trace` and the reasons are
-eval-trace inventory/store stale or missing-store reasons. Other failed
-phase-eval artifacts still block the store with `origin_artifact_failed`.
+The store builder has a matching self-refresh allowance for the same
+self-reference cycle: a parseable failed `phase_eval` origin artifact can seed
+the store when it contains a failed or reviewer-not-ready phase, or a blocker,
+so the command can rebuild the eval/trace substrate before `phase-eval` rewrites
+its own result file. Missing, stale-hash, missing-hash, malformed, and
+unrecognized-schema artifacts still block, and failed non-`phase_eval` artifacts
+still block with `origin_artifact_failed`.
 
 `promotion-suite` writes `eval_trace_gate_summary` in
 `promotion_suite_results.json`. The summary records phase-eval artifacts that

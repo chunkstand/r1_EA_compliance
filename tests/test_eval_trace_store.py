@@ -173,7 +173,9 @@ def test_store_build_allows_phase_eval_trace_gate_bootstrap(tmp_path: Path) -> N
     assert summary["blocked_eval_run_count"] == 0
 
 
-def test_store_build_still_blocks_non_trace_phase_eval_failure(tmp_path: Path) -> None:
+def test_store_build_allows_phase_eval_self_refresh_after_non_trace_failure(
+    tmp_path: Path,
+) -> None:
     fixture = _write_review_fixture(tmp_path)
     phase_eval_path = fixture["review_dir"] / "phase_eval_results.json"
     _write_json(
@@ -203,9 +205,74 @@ def test_store_build_still_blocks_non_trace_phase_eval_failure(tmp_path: Path) -
         repo_root=tmp_path,
     ).summary
 
+    assert summary["passed"] is True
+    assert summary["blocked_eval_run_count"] == 0
+
+
+def test_store_build_blocks_unrecognized_phase_eval_schema(tmp_path: Path) -> None:
+    fixture = _write_review_fixture(tmp_path)
+    phase_eval_path = fixture["review_dir"] / "phase_eval_results.json"
+    _write_json(
+        phase_eval_path,
+        {
+            "schema_version": "phase-eval-results-v99",
+            "review_id": fixture["review_id"],
+            "source_set_id": fixture["source_set_id"],
+            "passed": False,
+            "reviewer_ready": False,
+            "blockers": [{"phase": "evaluation_coverage", "reason": "phase_validation_failed"}],
+            "phases": [
+                {
+                    "name": "evaluation_coverage",
+                    "passed": False,
+                    "reviewer_ready": False,
+                    "failure_reasons": ["phase_validation_failed"],
+                }
+            ],
+        },
+    )
+    inventory_path = _write_inventory_from_fixture(tmp_path, fixture)
+
+    summary = run_eval_trace_store_build(
+        inventory_path=inventory_path,
+        sqlite_path=tmp_path / "system_eval_trace.sqlite",
+        repo_root=tmp_path,
+    ).summary
+
     assert summary["passed"] is False
     assert any(
         run["eval_name"] == "phase_eval"
+        and run["failure_reason"] == "origin_artifact_failed"
+        for run in summary["blocked_eval_runs"]
+    )
+
+
+def test_store_build_still_blocks_failed_non_phase_eval_artifact(
+    tmp_path: Path,
+) -> None:
+    fixture = _write_review_fixture(tmp_path)
+    _write_json(
+        fixture["review_dir"] / "v1_ea_eval_results.json",
+        {
+            "summary": {
+                "schema_version": "v1-ea-real-review-eval-results-v0",
+                "review_id": fixture["review_id"],
+                "source_set_id": fixture["source_set_id"],
+                "passed": False,
+            }
+        },
+    )
+    inventory_path = _write_inventory_from_fixture(tmp_path, fixture)
+
+    summary = run_eval_trace_store_build(
+        inventory_path=inventory_path,
+        sqlite_path=tmp_path / "system_eval_trace.sqlite",
+        repo_root=tmp_path,
+    ).summary
+
+    assert summary["passed"] is False
+    assert any(
+        run["eval_name"] == "v1_ea_eval"
         and run["failure_reason"] == "origin_artifact_failed"
         for run in summary["blocked_eval_runs"]
     )

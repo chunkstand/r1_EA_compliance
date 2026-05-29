@@ -15,6 +15,40 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## First-Class Eval Trace Milestone Plan Final Closeout Pass
+
+Latest closeout update on 2026-05-29 UTC:
+
+- update:
+  the final pass closed stale milestone-plan wording, updated the phase-eval
+  store self-refresh contract, and re-verified Milestones 0-5. No first-class
+  eval trace implementation slice remains active.
+- code truth:
+  `eval-trace-store-build` still blocks failed origin artifacts by default, but
+  a parseable failed `phase_eval` artifact can seed a store rebuild when it
+  contains a failed or reviewer-not-ready phase, or a blocker, so `phase-eval`
+  can rewrite its own result file after refreshing the eval/trace substrate.
+  Missing, stale-hash, missing-hash, malformed, unrecognized-schema, and failed
+  non-`phase_eval` origin artifacts still block the store.
+- generated evidence truth:
+  the local ignored West Reservoir final-QA and eval-trace artifacts were
+  refreshed during verification. `final-qa-certification` and
+  `final-qa-certification --validate-only` passed `200/200`;
+  `eval-trace-inventory` passed with `18/18` required artifacts, `0` missing
+  links, and `0` stale artifacts; `eval-trace-store-build` passed with `18`
+  rows in each canonical table and `0` blocked eval runs; and
+  `eval-trace-export` passed with `18` traces, `36` spans, and `0` missing
+  provenance fields.
+- live verification:
+  `phase-eval --review-id west-reservoir-67436` passed twice at `32/32` with
+  `blockers=[]` after the store/export refresh, proving the self-reference is
+  stable after `phase-eval` rewrites its own artifact. A local
+  `eval-trace-case-promote` smoke run against the refreshed SQLite store passed
+  with all validation checks true.
+- routing truth:
+  future hosted trace export, model-judge scoring, or broader online trace
+  integration needs a new approved milestone.
+
 ## First-Class Eval Trace Case Promotion Milestone 5 Resolved Locally
 
 Latest implementation update on 2026-05-29 UTC:
@@ -93,10 +127,12 @@ Latest implementation update on 2026-05-29 UTC:
   source-set/review identity mismatches.
 - bootstrap truth:
   `eval-trace-store-build` still blocks failed origin artifacts, except for the
-  narrow phase-eval bootstrap case where the only failed phase is
-  `first_class_eval_trace` and the only failure reasons are eval-trace
-  inventory/store stale or missing-store self-reference reasons. This prevents a
-  store rebuild deadlock without accepting unrelated phase-eval failures.
+  phase-eval self-refresh case where a parseable failed `phase_eval` artifact
+  contains a failed or reviewer-not-ready phase, or a blocker. This prevents the
+  store rebuild from deadlocking on the `phase_eval_results.json` artifact that
+  `phase-eval` is about to rewrite. Missing, stale-hash, missing-hash,
+  malformed, unrecognized-schema, and failed non-`phase_eval` origin artifacts
+  still block the store.
 - ratchet truth:
   the only enabled ratcheted scope is review `west-reservoir-67436`.
   `enabled_source_set_ids` remains empty and `global_fail_closed=false`.
@@ -115,8 +151,9 @@ Latest implementation update on 2026-05-29 UTC:
   `promotion-suite --manifest config/promotion_suite_v1.json` passed current
   promotion with `32/32` required current results and `0` failed current
   eval-trace gates.
-- next implementation route:
-  Milestone 5 trace-to-case promotion and feedback loop remains unimplemented.
+- superseded next implementation route:
+  Milestone 5 trace-to-case promotion and feedback loop is now closed by the
+  newer Milestone 5 section above.
 
 ## First-Class Eval Trace Export Milestone 3 Resolved Locally
 
