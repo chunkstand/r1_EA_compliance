@@ -23,7 +23,7 @@ Package identity:
 - project ID/title: `63754`, `South Tobacco Roots Vegetation Management Project`
 - selected folder: `Final EA and FONSI`
 - forest unit: `beaverhead-deerlodge-nf`
-- planned example/coverage slot: `bdnf-south-tobacco-roots-forest-specific`
+- example/coverage slot: `bdnf-south-tobacco-roots-forest-specific`
 
 ## Intent Hierarchy
 
@@ -97,7 +97,7 @@ parallel-to-master boundaries.
   `config/forest_plan_component_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
 - profile/resolver: `config/forest_plan_profiles.json`,
   `src/usfs_r1_ea_sources/forest_plan_resolver_location.py`
-- future promotion manifests:
+- promotion manifests:
   `config/v1_real_package_review_coverage_v1.json`,
   `config/forest_specific_example_package_registry_v1.json`,
   `config/forest_plan_component_eval_coverage_v1.json`
@@ -243,8 +243,8 @@ ECID source-delta drift; it is not Beaverhead-owned.
 ## Closeout Outcome Record
 
 - Milestone 3 outcome: `resolved` locally and committed before this compact-plan revision.
-- This revision outcome: docs-only plan compression; no registry, coverage, or generated evidence
-  state changed.
+- Pre-Milestone 4 compact-plan revision outcome: docs-only plan compression; no registry,
+  coverage, or generated evidence state changed at that historical checkpoint.
 - Milestone 4 outcome: `reduced` locally because Beaverhead registry, real-package coverage,
   component-coverage slot, and review-scope `phase-eval` promotion are green, while the standalone
   component-coverage aggregate remains red solely on inherited ECID source-delta drift.
@@ -255,4 +255,4 @@ ECID source-delta drift; it is not Beaverhead-owned.
   Beaverhead slot passing and only `ecid-source-delta-replay` red on `result_not_passed` and
   `result_source_set_id_mismatch`; Beaverhead `phase-eval` passes `28/28` with `blockers=[]`,
   `declared_review_contract=true`, and `contract_backed_promotion_ready=true`.
-- Final local commit hash: report in the closeout response after committing this slice.
+- Milestone 4 implementation commit: `924f60e`

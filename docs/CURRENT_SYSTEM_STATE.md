@@ -65,10 +65,10 @@ Latest implementation update on 2026-05-29 UTC:
   passes with `26` conditional expectations and
   `contract_status="reviewer_ready"`. Component eval at
   `config/forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
-  passes `90/90` cases and covers all `89` applicable standards. Review
-  `phase-eval` passes `28/28` with `blockers=[]`,
-  `declared_review_contract=false`, and
-  `contract_backed_promotion_ready=false`.
+  passes `90/90` cases and covers all `89` applicable standards. At the
+  pre-promotion Milestone 3 checkpoint, review `phase-eval` passed `28/28`
+  with `blockers=[]`; the post-promotion contract-backed `phase-eval` truth is
+  recorded in the promotion boundary below.
 - promotion boundary:
   `beaverhead-deerlodge-nf` now routes as `real_package_examples_available`
   with `primary_example_id="bdnf-south-tobacco-roots-forest-specific"` in
