@@ -12,6 +12,9 @@ Use this file as the short current route before opening the append-only docs.
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- Active forest-specific example packet:
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 0
+  packet boundary and `FOR-007` queue routing opened locally
 - Latest resolved HLC forest-specific example packet:
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - Latest resolved West Reservoir parent slice:
@@ -30,6 +33,28 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
+- Bitterroot Front is the active forest-specific example candidate. The new
+  packet is `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; the
+  frozen planned review identity is
+  `review_id="region1-example-bitterroot-front-57341"` for
+  `forest_unit_id="bitterroot-nf"` and planned
+  `example_id="bitterroot-front-forest-specific"`. The official project page is
+  `https://www.fs.usda.gov/r01/bitterroot/projects/57341`; the user-selected
+  Pinyon/Box root is
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226983588`.
+  Live readback on 2026-05-29 found the project `Completed`, expected analysis
+  type `Environmental Assessment`, decision signed date `2026-05-11`, and Box
+  root label `Bitterroot Front (57341)` with top-level folders `Final EA`,
+  `Decision Notice`, `Draft EA`, `Scoping`, and `Pre-Scoping`. `FOR-007` now
+  routes to this packet as planned
+  `planned_disposition="forest_specific_example_package"` while preserving
+  workbook row identity. `bitterroot-nf` remains
+  `profile_eval_guidance_only`; do not add Bitterroot Front to reviewer-ready
+  registry, real-package coverage, or component-coverage manifests until the
+  package-authority, reviewer-stack, and promotion gates in the packet pass.
+  Milestone 0 verification passed with plan lint, focused queue/registry tests
+  `20/20`, source-register queue audit `validation_passed=true`,
+  `forest-specific-example-package-eval` `passed=true`, and `git diff --check`.
 - HLC Bonanza example packet is resolved locally through registry and coverage
   promotion. The selected package is Bonanza project `66532` for
   `helena-lewis-and-clark-nf`, using the official project page

@@ -15,6 +15,44 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Bitterroot Front Example Packet Opened
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is open at
+  Milestone 0 as the next forest-specific example candidate. The planned
+  Bitterroot identity is
+  `review_id="region1-example-bitterroot-front-57341"`,
+  `example_id="bitterroot-front-forest-specific"`, and
+  `forest_unit_id="bitterroot-nf"`.
+- package authority boundary:
+  live readback of the official project page
+  `https://www.fs.usda.gov/r01/bitterroot/projects/57341` identifies
+  Bitterroot Front as `Completed`, expected analysis type `Environmental
+  Assessment`, with decision signed date `2026-05-11`. The user-selected
+  Pinyon/Box root is
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226983588`, labeled
+  `Bitterroot Front (57341)`, with top-level folders `Final EA`, `Decision
+  Notice`, `Draft EA`, `Scoping`, and `Pre-Scoping`.
+- queue and registry truth:
+  `config/source_register_queue_resolution_ledger_v1.json` now routes `FOR-007`
+  as planned `forest_specific_example_package` work owned by the Bitterroot
+  Front packet. `config/forest_specific_example_package_registry_v1.json` still
+  routes `bitterroot-nf` as `profile_eval_guidance_only`; there is no
+  Bitterroot reviewer-ready example row, real-package coverage slot,
+  component-coverage slot, or tracked replay context yet.
+- next route:
+  Milestone 1 package authority intake is next. Do not promote Bitterroot Front
+  into registry or coverage manifests until package authority, review/eval, and
+  promotion gates pass.
+- verification:
+  plan lint passed; focused queue/registry pytest passed `20/20`;
+  `source-register-queue-audit` passed with `validation_passed=true`;
+  `forest-specific-example-package-eval` passed with `covered_forest_count=10`,
+  `review_example_count=5`, `profile_guidance_only_count=6`, and
+  `failed_forest_count=0`; `git diff --check` passed.
+
 ## HLC Bonanza Registry And Coverage Promotion Resolved
 
 Latest implementation update on 2026-05-29 UTC:

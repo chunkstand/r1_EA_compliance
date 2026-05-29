@@ -39,6 +39,9 @@ history below.
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- active forest-specific example packet:
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 0 opened;
+  next slice is Milestone 1 package authority intake
 - resolved Lolo blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor packet:
@@ -48,6 +51,27 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  Bitterroot Front is the active forest-specific example candidate. The packet
+  is `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with planned
+  review ID `region1-example-bitterroot-front-57341`, planned example ID
+  `bitterroot-front-forest-specific`, and forest unit `bitterroot-nf`. The
+  official project page is
+  `https://www.fs.usda.gov/r01/bitterroot/projects/57341`; the user-selected
+  Box root is
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226983588`.
+  Live readback found project status `Completed`, expected analysis type
+  `Environmental Assessment`, decision signed date `2026-05-11`, Box root
+  label `Bitterroot Front (57341)`, and top-level folders `Final EA`,
+  `Decision Notice`, `Draft EA`, `Scoping`, and `Pre-Scoping`. `FOR-007` now
+  routes to this packet as planned `forest_specific_example_package` queue
+  work, while `bitterroot-nf` remains `profile_eval_guidance_only` with no
+  reviewer-ready registry or coverage promotion. The next implementation slice
+  is package authority intake; do not add Bitterroot Front to reviewer-ready
+  registry, real-package coverage, or component-coverage manifests before the
+  packet gates pass. Milestone 0 verification passed: plan lint; focused
+  queue/registry pytest `20/20`; `source-register-queue-audit`
+  `validation_passed=true`; `forest-specific-example-package-eval`
+  `passed=true`; and `git diff --check`.
   HLC Bonanza example-package work is resolved through registry and coverage
   promotion. The resolved packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID

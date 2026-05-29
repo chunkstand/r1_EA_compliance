@@ -1,9 +1,9 @@
 {
   "schema_version": "forest-specific-example-package-registry-v1",
   "contract_id": "region1-forest-specific-example-packages",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "as_of_date": "2026-05-29",
-  "status": "hlc-bonanza-v1-reviewer-ready",
+  "status": "bitterroot-front-packet-opened",
   "coverage_thresholds": {
     "required_forest_unit_count": 10,
     "review_example_count_min": 5,
@@ -391,8 +391,10 @@
         "custer_hard_negative",
         "non_selected_non_custer_hard_negative"
       ],
-      "queue_boundary_source_ids": [],
-      "guidance_note": "No governed Bitterroot real package example exists yet; use the tracked profile fixtures for applicability and forest-plan guidance."
+      "queue_boundary_source_ids": [
+        "FOR-007"
+      ],
+      "guidance_note": "Bitterroot Front is the active governed example candidate at docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md, but no governed Bitterroot real package example exists yet; use the tracked profile fixtures for applicability and forest-plan guidance until package authority and review gates pass."
     },
     {
       "forest_unit_id": "dakota-prairie-grasslands",

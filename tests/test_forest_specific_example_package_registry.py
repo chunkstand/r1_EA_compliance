@@ -208,6 +208,30 @@ def test_registry_promotes_hlc_bonanza_as_primary_example_without_queue_row() ->
     assert example_row["queue_lineage_source_ids"] == []
 
 
+def test_registry_opens_bitterroot_front_boundary_without_promotion() -> None:
+    registry = _load_json(REGISTRY_PATH)
+    queue_ledger = _load_json(QUEUE_LEDGER_PATH)
+
+    forest_row = next(
+        row for row in registry["forest_routing"] if row["forest_unit_id"] == "bitterroot-nf"
+    )
+    ledger_entries = {entry["source_id"]: entry for entry in queue_ledger["entries"]}
+    for_007 = ledger_entries["FOR-007"]
+
+    assert forest_row["routing_status"] == "profile_eval_guidance_only"
+    assert forest_row["primary_example_id"] is None
+    assert forest_row["supplemental_example_ids"] == []
+    assert forest_row["queue_boundary_source_ids"] == ["FOR-007"]
+    assert "Bitterroot Front is the active governed example candidate" in (
+        forest_row["guidance_note"]
+    )
+    assert for_007["planned_disposition"] == "forest_specific_example_package"
+    assert for_007["resolution_status"] == "planned"
+    assert for_007["blocker_packet_reference"] == (
+        "docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
+    )
+
+
 def test_agent_start_here_names_hlc_bonanza_as_system_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     agent_start = AGENT_START_HERE_PATH.read_text(encoding="utf-8")

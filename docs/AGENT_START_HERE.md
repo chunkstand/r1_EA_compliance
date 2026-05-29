@@ -42,6 +42,14 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
+- The active forest-specific example candidate is
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Bitterroot
+  National Forest work, keep `bitterroot-nf` on
+  `profile_eval_guidance_only` until Bitterroot Front package authority,
+  reviewer-stack gates, and registry/coverage promotion pass. `FOR-007`
+  (`Bitterroot Front Project`) is only a planned forest-specific example
+  boundary in the queue ledger; do not treat the project page or Box root as
+  `Document_Register_Master` input.
 - The latest resolved forest-specific example packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Helena-Lewis and
   Clark National Forest example-package review work, inspect
