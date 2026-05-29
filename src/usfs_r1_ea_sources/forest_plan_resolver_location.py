@@ -37,7 +37,13 @@ def _location_evidence_role(evidence: dict) -> str:
         return "background_reference"
     if _has_project_external_location_context(decision_text):
         return "background_reference"
-    if _has_incidental_forest_unit_context(forest_unit_context_text):
+    if (
+        evidence.get("category") in {"district", "forest_unit"}
+        and not _has_local_location_cue(decision_text)
+        and _has_incidental_forest_unit_context(scope_text)
+    ):
+        return "background_reference"
+    if _has_incidental_forest_unit_context(decision_text):
         return "background_reference"
     if _is_affirmative_location_context(evidence) or _is_header_project_location_context(evidence):
         return "project_location"
@@ -63,6 +69,22 @@ def _has_project_external_location_context(text: str) -> bool:
             text,
         )
     )
+
+
+def _has_local_location_cue(text: str) -> bool:
+    return bool(
+        re.search(
+            r"\b(?:project\s+area|project|proposed\s+action|action|activities|"
+            r"parcels?|lands?|it)\b.{0,180}\b(?:on|in|within|located|"
+            r"administered|cross(?:es)?)\b",
+            text,
+        )
+        or re.search(
+            r"\b(?:on|in|within)\b.{0,140}\b(?:ranger\s+district|national\s+forest)\b",
+            text,
+        )
+    )
+
 
 def _has_map_boundary_reference_context(text: str) -> bool:
     return bool(
@@ -374,11 +396,19 @@ def _has_incidental_forest_unit_context(text: str) -> bool:
         "for example, the",
         "other forests in the area",
         "neighboring national forests",
+        "neighboring national forest",
         "neither forest has planned projects",
         "northern portion",
         "southern portion",
+        "field review",
+        "burned area recovery project",
+        "post-fire salvage",
+        "prepared for",
         "not likely to use affected parcels",
         "not used",
+        "off-forest eis",
+        "unrelated project",
+        "not applicable to the site-specific project analysis",
         "not applicable to this site-specific analysis",
         "does not change the analysis of this project",
         "nepa document, not a research article",

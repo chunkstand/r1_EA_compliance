@@ -2117,9 +2117,55 @@
           ]
         }
       ],
-      "geographic_area_terms": [],
-      "management_area_terms": [],
-      "overlay_terms": [],
+      "geographic_area_terms": [
+        {
+          "entry_id": "geo-st-joe",
+          "category": "geographic_area",
+          "name": "St. Joe Geographic Area",
+          "aliases": [
+            "St Joe Geographic Area",
+            "St. Joe River drainage",
+            "St Joe River drainage"
+          ],
+          "source_record_id": "FOR-021"
+        }
+      ],
+      "management_area_terms": [
+        {
+          "entry_id": "mgmt-ma6-general-forest",
+          "category": "management_area",
+          "name": "Management Area 6",
+          "aliases": [
+            "MA6",
+            "MA6 - General Forest",
+            "Management Area 6 (MA6)",
+            "General Forest"
+          ],
+          "source_record_id": "FOR-021"
+        }
+      ],
+      "overlay_terms": [
+        {
+          "entry_id": "overlay-riparian-habitat-conservation-area",
+          "category": "overlay",
+          "name": "Riparian Habitat Conservation Area",
+          "aliases": [
+            "Riparian Habitat Conservation Areas",
+            "RHCA",
+            "RHCAs"
+          ],
+          "source_record_id": "FOR-021"
+        },
+        {
+          "entry_id": "overlay-wildland-urban-interface",
+          "category": "overlay",
+          "name": "Wildland Urban Interface",
+          "aliases": [
+            "WUI"
+          ],
+          "source_record_id": "FOR-021"
+        }
+      ],
       "plan_component_types": [
         "desired_condition",
         "goal",

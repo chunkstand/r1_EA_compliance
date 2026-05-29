@@ -72,13 +72,18 @@ Latest implementation update on 2026-05-29 UTC:
   `project_location_signal_count=1`, component evaluation
   `reviewer_ready=true`, and overall `validation_passed=false`.
 - reduced blocker:
-  the resolver remains reduced because `R1PLAN-idaho-panhandle-nfs-04` and
+  the resolver remains reduced only because `R1PLAN-idaho-panhandle-nfs-04` and
   `R1PLAN-idaho-panhandle-nfs-05` have zero indexed chunks in
-  `source-set-f70ea11e04ae3d53`, no Idaho area/overlay vocabulary resolves, and
-  component adjudication is missing for the current `52` reviewer-resolution
-  items. The next slice is the Idaho source-delta plus area/overlay and
-  component-adjudication blocker; do not proceed to reviewer-stack or
-  promotion gates first. Do not add Lacy Lemoosh package files to
+  `source-set-f70ea11e04ae3d53`. Idaho profile source IDs are reconciled to
+  active catalog IDs, the St. Joe scope term plus St. Joe Geographic Area,
+  Management Area 6, RHCA, and WUI vocabulary now resolve, and component
+  adjudication is complete at
+  `config/forest_plan_component_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
+  with `52/52` items resolved and `0` pending (`36`
+  `evidence_linking_miss`, `15` `applicability_false_positive`, `1`
+  `component_inventory_overreach`). The next slice is FEIS source-delta and
+  retrieval readiness for those active-source records; do not proceed to
+  reviewer-stack or promotion gates first. Do not add Lacy Lemoosh package files to
   `Document_Register_Master`, and do not reroute unrelated Idaho Panhandle
   queue rows such as `FOR-020` or `FOR-022` into this packet.
 

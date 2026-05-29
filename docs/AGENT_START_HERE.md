@@ -54,16 +54,19 @@ The planner:
   replay context at
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`.
   Milestone 2 forest-plan preflight resolves `idaho_panhandle_nfs` scope and
-  builds a review-local inventory with `52` components and `8` standards, but
-  remains reduced on missing FEIS source records `R1PLAN-idaho-panhandle-nfs-04`
-  and `-05`, absent area/overlay vocabulary, and missing component
-  adjudication. Preserve `St. Maries Ranger District` as the authority label
-  and `St. Joe Ranger District` as resolver scope evidence. This is not a
+  builds a review-local inventory with `52` components and `8` standards.
+  Idaho area/overlay vocabulary now resolves `1` geographic area, `1`
+  management area, and `2` overlays, and component adjudication passes for all
+  `52` current queue items. The preflight remains reduced only on missing FEIS
+  source records `R1PLAN-idaho-panhandle-nfs-04` and `-05` in
+  `source-set-f70ea11e04ae3d53`. Preserve `St. Maries Ranger District` as the
+  authority label and `St. Joe Ranger District` as resolver scope evidence.
+  This is not a
   governed primary example yet:
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` at `profile_eval_guidance_only` with
-  `primary_example_id=null` until source-delta, component adjudication,
-  reviewer-stack, and promotion gates pass. Keep Lacy Lemoosh parallel to
+  `primary_example_id=null` until source-delta, reviewer-stack, and promotion
+  gates pass. Keep Lacy Lemoosh parallel to
   `Document_Register_Master`; it is not a generic Region 1 example and must
   not be reused for non-Idaho-Panhandle forests.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved

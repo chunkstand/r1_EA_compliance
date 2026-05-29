@@ -65,8 +65,9 @@ They are intentionally not duplicated here.
   resolver scope now resolves to `idaho_panhandle_nfs` from package-local
   `St. Joe Ranger District` evidence, while `St. Maries Ranger District`
   remains the project-page/Box authority label. Promotion is
-  blocked by missing FEIS source records, area/overlay vocabulary, and
-  component adjudication. Do not promote the package until source-delta,
+  blocked by missing FEIS source records in the active source set; Idaho
+  area/overlay vocabulary and the `52`-item component adjudication are now
+  closed locally. Do not promote the package until source-delta,
   reviewer-stack, and promotion gates pass.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`

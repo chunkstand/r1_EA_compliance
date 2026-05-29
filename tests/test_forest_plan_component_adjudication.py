@@ -34,6 +34,12 @@ BITTERROOT_FRONT_ADJUDICATION = (
     / "forest_plan_component_adjudications"
     / "region1-example-bitterroot-front-57341.json"
 )
+IDAHO_PANHANDLE_LACY_ADJUDICATION = (
+    REPO_ROOT
+    / "config"
+    / "forest_plan_component_adjudications"
+    / "region1-example-idaho-panhandle-lacy-lemoosh-60853.json"
+)
 
 
 class ForestPlanComponentAdjudicationTests(unittest.TestCase):
@@ -409,6 +415,54 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
         self.assertEqual(
             Counter(item["disposition"] for item in standard_items),
             Counter({"applicability_false_positive": 1, "evidence_linking_miss": 1}),
+        )
+
+    def test_committed_idaho_panhandle_lacy_adjudication_tracks_resolved_queue(self) -> None:
+        adjudication = _read_json(IDAHO_PANHANDLE_LACY_ADJUDICATION)
+
+        self.assertEqual(adjudication["schema_version"], "forest-plan-component-adjudication-v0")
+        self.assertEqual(
+            adjudication["review_id"],
+            "region1-example-idaho-panhandle-lacy-lemoosh-60853",
+        )
+        self.assertEqual(adjudication["source_set_id"], "source-set-f70ea11e04ae3d53")
+        self.assertEqual(
+            adjudication["adjudication_id"],
+            "region1-example-idaho-panhandle-lacy-lemoosh-60853-component-adjudication",
+        )
+        self.assertEqual(adjudication["adjudication"]["status"], "completed")
+        self.assertEqual(
+            adjudication["adjudication"]["method"],
+            "lacy_lemoosh_forest_plan_consistency_worksheet_replay",
+        )
+
+        items = adjudication["items"]
+        self.assertEqual(len(items), 52)
+        self.assertEqual(
+            Counter(item["disposition"] for item in items),
+            Counter(
+                {
+                    "evidence_linking_miss": 36,
+                    "applicability_false_positive": 15,
+                    "component_inventory_overreach": 1,
+                }
+            ),
+        )
+        self.assertTrue(all(item["plan_source_evidence_refs"] for item in items))
+        self.assertTrue(all(item["rationale"] for item in items))
+        self.assertTrue(all(item["adjudicated_by"] == ["codex"] for item in items))
+
+        standard_items = [item for item in items if item["component_type"] == "standard"]
+        self.assertEqual(len(standard_items), 8)
+        self.assertEqual(
+            Counter(item["disposition"] for item in standard_items),
+            Counter(
+                {
+                    "applicability_false_positive": 5,
+                    "evidence_linking_miss": 2,
+                    "component_inventory_overreach": 1,
+                }
+            ),
         )
 
 

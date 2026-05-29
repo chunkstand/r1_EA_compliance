@@ -403,6 +403,25 @@ class ForestPlanProfileTests(unittest.TestCase):
         )
         self.assertEqual(district.name, "St. Joe Ranger District")
         self.assertIn("St Joe Ranger District", district.aliases)
+        st_joe = next(
+            entry
+            for entry in profile.geographic_area_terms
+            if entry.entry_id == "geo-st-joe"
+        )
+        self.assertEqual(st_joe.source_record_id, "FOR-021")
+        self.assertIn("St Joe River drainage", st_joe.aliases)
+        ma6 = next(
+            entry
+            for entry in profile.management_area_terms
+            if entry.entry_id == "mgmt-ma6-general-forest"
+        )
+        self.assertEqual(ma6.name, "Management Area 6")
+        self.assertIn("MA6 - General Forest", ma6.aliases)
+        self.assertIn(
+            "Riparian Habitat Conservation Area",
+            [entry.name for entry in profile.overlay_terms],
+        )
+        self.assertIn("Wildland Urban Interface", [entry.name for entry in profile.overlay_terms])
 
     def test_hlc_profile_has_bonanza_castles_context_terms(self) -> None:
         profile = load_forest_plan_profile("helena-lewis-and-clark-nf")

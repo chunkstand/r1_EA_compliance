@@ -46,8 +46,8 @@ history below.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 2 forest-plan resolver preflight reduced locally on Idaho
-  source-delta and component-adjudication blockers; no registry promotion
+  Milestone 2 forest-plan resolver preflight reduced locally only on active
+  source FEIS readiness; no registry promotion
 - resolved Beaverhead-Deerlodge packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -92,16 +92,21 @@ history below.
   `St. Joe Ranger District` as package-local resolver scope evidence.
   `forest-plan-resolve` now reports
   `scope_status="idaho_panhandle_nfs"`, `unresolved_mention_count=0`,
-  `project_location_signal_count=1`, component evaluation
-  `reviewer_ready=true`, and overall `validation_passed=false`. The named
-  blockers are missing indexed FEIS rows `R1PLAN-idaho-panhandle-nfs-04` and
-  `R1PLAN-idaho-panhandle-nfs-05`, absent Idaho area/overlay vocabulary, and
-  missing component adjudication for `52` reviewer-resolution items.
+  `project_location_signal_count=1`, `geographic_area_count=1`,
+  `management_area_count=1`, `overlay_count=2`, component evaluation
+  `reviewer_ready=true`, and overall `validation_passed=false`. Component
+  adjudication is complete at
+  `config/forest_plan_component_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
+  with `52/52` items resolved and `0` pending (`36`
+  `evidence_linking_miss`, `15` `applicability_false_positive`, `1`
+  `component_inventory_overreach`). The only remaining named blocker is missing
+  indexed FEIS rows `R1PLAN-idaho-panhandle-nfs-04` and
+  `R1PLAN-idaho-panhandle-nfs-05` in `source-set-f70ea11e04ae3d53`.
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
   `primary_example_id=null`, and `config/v1_real_package_review_coverage_v1.json`
-  has no Lacy Lemoosh slot. The next slice is the Idaho source-delta plus
-  area/overlay/adjudication blocker; keep Lacy Lemoosh parallel to
+  has no Lacy Lemoosh slot. The next slice is FEIS source-delta and retrieval
+  readiness for those active-source records; keep Lacy Lemoosh parallel to
   `Document_Register_Master` and do not route unrelated Idaho Panhandle queue
   rows such as `FOR-020` or `FOR-022` into this packet.
   Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved

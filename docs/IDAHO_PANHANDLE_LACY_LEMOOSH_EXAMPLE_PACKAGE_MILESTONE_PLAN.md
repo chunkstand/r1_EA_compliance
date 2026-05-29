@@ -1,7 +1,7 @@
 # Idaho Panhandle Lacy Lemoosh Example Package Milestone Plan
 Date: 2026-05-29
 Status: Active. Milestones 0-1 are resolved locally; Milestone 2 is reduced
-on Idaho Panhandle source-delta and component-adjudication blockers.
+only on active-source FEIS readiness.
 Plan class: implementation
 High-risk implementation: yes
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -53,9 +53,11 @@ Lemoosh `60853`.
 - Registry status remains `profile_eval_guidance_only`, `primary_example_id=null`,
   with no Lacy Lemoosh coverage slot.
 - Milestone 2 resolves scope from package-backed `St. Joe Ranger District`
-  evidence and builds `52` components, but validation is blocked by FEIS
-  records `R1PLAN-idaho-panhandle-nfs-04`/`-05`, no area/overlay terms, and
-  missing component adjudication.
+  evidence, builds `52` components and `8` standards, resolves St. Joe
+  Geographic Area, Management Area 6, RHCA, and WUI vocabulary, and completes
+  component adjudication for `52/52` reviewer-resolution items. Validation is
+  still blocked because FEIS records `R1PLAN-idaho-panhandle-nfs-04`/`-05` have
+  zero indexed chunks in `source-set-f70ea11e04ae3d53`.
 - District lock: preserve `St. Maries Ranger District` as the project-page/Box
   authority label and `St. Joe Ranger District` as package scope evidence.
 
@@ -176,10 +178,12 @@ preflight; do not promote Idaho Panhandle before Milestones 2-4 pass.
 
 ### Milestone 2 - Forest-Plan Resolver Preflight
 Outcome label: `reduced`. Scope resolves to `idaho_panhandle_nfs`; review-local
-inventory builds `52` components and `8` standards from `FOR-021`; remaining
-blockers are missing FEIS records `R1PLAN-idaho-panhandle-nfs-04`/`-05`, absent
-Idaho area/overlay vocabulary, and missing component adjudication for the `52`
-reviewer-resolution items. Registry/coverage manifests remain unchanged.
+inventory builds `52` components and `8` standards from `FOR-021`; Idaho
+profile vocabulary resolves St. Joe Geographic Area, Management Area 6, RHCA,
+and WUI context; component adjudication resolves the current `52`
+reviewer-resolution items with `0` pending. The remaining blocker is missing
+indexed FEIS records `R1PLAN-idaho-panhandle-nfs-04`/`-05` in
+`source-set-f70ea11e04ae3d53`. Registry/coverage manifests remain unchanged.
 
 ### Milestone 3 - Reviewer Stack Replay
 Outcome label: `resolved` if the review reaches reviewer-ready status;
@@ -271,10 +275,14 @@ active catalog IDs proven in `config/r1_forest_plan_identity_reconciliation_v1.j
 package-backed `St. Joe Ranger District` vocabulary was added; review-local
 inventory build passed with `52` components and `8` standards; resolver scope
 is `idaho_panhandle_nfs` with `unresolved_mention_count=0`; validation is
-reduced because `R1PLAN-idaho-panhandle-nfs-04`/`-05` have zero indexed chunks,
-no Idaho area/overlay terms resolve, and component adjudication is missing.
-Local commit: `a1574b3`. Idaho Panhandle still has no Lacy Lemoosh coverage
-slot or primary example.
+reduced because `R1PLAN-idaho-panhandle-nfs-04`/`-05` have zero indexed chunks.
+Initial local commit: `a1574b3`. Follow-on closeout resolves Idaho area/overlay
+vocabulary and component adjudication: `forest-plan-resolve` now reports
+`geographic_area_count=1`, `management_area_count=1`, and `overlay_count=2`;
+`forest-plan-component-adjudication-eval` passes with `52/52` resolved,
+`0` pending, `36` `evidence_linking_miss`, `15`
+`applicability_false_positive`, and `1` `component_inventory_overreach`. Idaho
+Panhandle still has no Lacy Lemoosh coverage slot or primary example.
 
 ## Gap-Close Verification Addendum
 Milestones 0-2 are gap-closed only while `CURRENT_ROUTING`, `SESSION_HANDOFF`,
@@ -283,5 +291,5 @@ tests, aggregate eval, resolver outputs, and replay context agree that Lacy
 Lemoosh has local package authority, green base review, reduced forest-plan
 preflight, and remains unpromoted: `idaho-panhandle-nfs` stays
 `profile_eval_guidance_only`, `primary_example_id=null`, and no Lacy coverage
-slot exists until source-delta, area/overlay, adjudication, reviewer-stack, and
+slot exists until FEIS source-delta/retrieval readiness, reviewer-stack, and
 promotion gates pass.
