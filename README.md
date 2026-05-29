@@ -185,6 +185,15 @@ PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-inventory \
   --results-path /tmp/usfs-r1-eval-trace-inventory.json
 ```
 
+Build the local first-class eval/trace SQLite store from an inventory:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-store-build \
+  --inventory-path /tmp/usfs-r1-eval-trace-inventory.json \
+  --sqlite-path /tmp/usfs-r1-system-eval-trace.sqlite \
+  --summary-path /tmp/usfs-r1-system-eval-trace-summary.json
+```
+
 Validate replay-facing source-record identity against a target catalog:
 
 ```bash

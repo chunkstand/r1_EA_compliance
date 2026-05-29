@@ -4327,6 +4327,78 @@ Milestone 1 does not create the SQLite store or export files. Therefore
 `export_readiness.reason="sqlite_store_not_built"` even when inventory rows are
 otherwise exportable.
 
+## First-Class Eval Trace Store
+
+Command:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-store-build \
+  --inventory-path source_library/evaluations/eval_trace_inventory/eval_trace_inventory_results.json \
+  --sqlite-path source_library/evaluations/eval_trace/system_eval_trace.sqlite \
+  --summary-path source_library/evaluations/eval_trace/system_eval_trace_summary.json
+```
+
+The command is generated-artifact-only. It reads an
+`eval-trace-inventory-results-v1` JSON file, verifies that the inventoried
+source artifacts still exist with the same hashes, and rebuilds the owned
+SQLite tables deterministically. It does not mutate catalog, extraction,
+review, compliance, or promotion artifacts.
+
+SQLite schema version: `system-eval-trace-store-v1`
+
+Generated SQLite path:
+`source_library/evaluations/eval_trace/system_eval_trace.sqlite`
+
+Generated summary path:
+`source_library/evaluations/eval_trace/system_eval_trace_summary.json`
+
+Canonical tables:
+
+- `system_eval_runs`
+- `system_eval_cases`
+- `system_eval_case_results`
+- `system_eval_scores`
+- `trace_runs`
+- `trace_spans`
+
+`system_eval_runs` stores the contract ID/version, eval kind, target kind,
+target ID, dataset/source-set identity, review ID, origin artifact ref,
+inventoried artifact hash, current artifact hash, catalog ref, replay-context
+ref, source-record IDs, scorer-version metadata, threshold metadata, failure
+category, and a compact JSON summary of the source inventory row and artifact
+metadata. Cases, results, and scores link back to the run and preserve source
+artifact refs plus deterministic link-integrity scores. Trace rows preserve the
+same local source-set/review identity and artifact refs for later canonical and
+OpenInference-compatible export.
+
+Summary schema version: `system-eval-trace-store-summary-v1`
+
+Required summary fields:
+
+- `passed`
+- `command_succeeded`
+- `row_counts`
+- `orphan_counts`
+- `duplicate_id_counts`
+- `blocked_eval_run_count`
+- `blocked_eval_runs`
+- `stale_artifact_count`
+- `source_artifact_deletion_count`
+- `missing_required_link_count`
+- `inventory_passed`
+- `validation_checks`
+
+`passed=false` when the input inventory failed, an inventoried artifact is
+missing or stale, required links are missing, any canonical table is empty, row
+IDs duplicate, or child rows are orphaned. Re-running the command on unchanged
+inputs drops and rebuilds only the owned store tables and produces the same row
+identities without accumulating duplicates.
+
+The 2026-05-29 West Reservoir f70 seed build passed with `18` rows in each
+canonical table, `0` orphan rows, `0` duplicate IDs, `0` stale artifacts, `0`
+source artifact deletions, and `0` missing required links. Milestone 2 still
+does not create canonical JSON or OpenInference exports.
+
 ## Extraction Fidelity Eval Outputs
 
 Default manifest: `config/extraction_fidelity_eval_v1.json`

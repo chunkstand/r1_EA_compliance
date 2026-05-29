@@ -397,6 +397,7 @@ modules = [
   "draft_generation_eval",
   "eval_trace_contract",
   "eval_trace_inventory",
+  "eval_trace_store",
   "extraction_fidelity_eval",
   "forest_plan_component_retrieval_eval",
   "forest_specific_example_package_eval",
@@ -678,6 +679,10 @@ paths = [
 [[artifacts]]
 owner_layer = "eval"
 paths = [
+  "source_library/evaluations/eval_trace_inventory/eval_trace_inventory_results.json",
+  "source_library/evaluations/eval_trace_inventory/eval_trace_inventory_report.md",
+  "source_library/evaluations/eval_trace/system_eval_trace.sqlite",
+  "source_library/evaluations/eval_trace/system_eval_trace_summary.json",
   "source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_results.json",
   "source_library/evaluations/extraction_fidelity/extraction_fidelity_eval_report.md",
   "source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json",
@@ -804,6 +809,8 @@ commands = [
   "applicability-eval",
   "applicability-gold-eval",
   "draft-generation-eval",
+  "eval-trace-inventory",
+  "eval-trace-store-build",
   "extraction-fidelity-eval",
   "forest-plan-component-eval-coverage",
   "forest-plan-component-retrieval-eval",

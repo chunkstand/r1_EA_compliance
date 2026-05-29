@@ -92,6 +92,10 @@ def run_eval_trace_inventory(**kwargs):
     return _module_attr("eval_trace_inventory", "run_eval_trace_inventory")(**kwargs)
 
 
+def run_eval_trace_store_build(**kwargs):
+    return _module_attr("eval_trace_store", "run_eval_trace_store_build")(**kwargs)
+
+
 def run_extraction_fidelity_eval(**kwargs):
     return _module_attr("extraction_fidelity_eval", "run_extraction_fidelity_eval")(**kwargs)
 
@@ -157,6 +161,7 @@ EVAL_COMMANDS = {
     "applicability-gold-eval",
     "draft-generation-eval",
     "eval-trace-inventory",
+    "eval-trace-store-build",
     "extraction-fidelity-eval",
     "forest-plan-component-eval-coverage",
     "forest-plan-component-retrieval-eval",
@@ -245,6 +250,15 @@ COMMAND_SPECS = (
             _arg("--results-path", type=Path),
             _arg("--format", choices=("json", "markdown"), default="json"),
             _arg("--fail-on-missing-required", action="store_true"),
+        ),
+    ),
+    EvalCommandSpec(
+        name="eval-trace-store-build",
+        help="Build the local SQLite first-class eval/trace store from an inventory JSON file.",
+        arguments=(
+            _arg("--inventory-path", required=True, type=Path),
+            _arg("--sqlite-path", required=True, type=Path),
+            _arg("--summary-path", type=Path),
         ),
     ),
     EvalCommandSpec(
@@ -457,6 +471,14 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 results_path=args.results_path,
                 format=args.format,
                 fail_on_missing_required=args.fail_on_missing_required,
+            ),
+            success_key="command_succeeded",
+        ),
+        "eval-trace-store-build": EvalCommandHandler(
+            run=lambda args: run_eval_trace_store_build(
+                inventory_path=args.inventory_path,
+                sqlite_path=args.sqlite_path,
+                summary_path=args.summary_path,
             ),
             success_key="command_succeeded",
         ),

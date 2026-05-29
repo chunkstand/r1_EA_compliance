@@ -96,6 +96,25 @@ def test_eval_trace_inventory_parser_accepts_inventory_scope_and_write_options()
     assert args.fail_on_missing_required is True
 
 
+def test_eval_trace_store_build_parser_accepts_store_paths() -> None:
+    args = build_parser().parse_args(
+        [
+            "eval-trace-store-build",
+            "--inventory-path",
+            "/tmp/usfs-r1-eval-trace-inventory.json",
+            "--sqlite-path",
+            "/tmp/usfs-r1-system-eval-trace.sqlite",
+            "--summary-path",
+            "/tmp/usfs-r1-system-eval-trace-summary.json",
+        ]
+    )
+
+    assert args.command == "eval-trace-store-build"
+    assert args.inventory_path == Path("/tmp/usfs-r1-eval-trace-inventory.json")
+    assert args.sqlite_path == Path("/tmp/usfs-r1-system-eval-trace.sqlite")
+    assert args.summary_path == Path("/tmp/usfs-r1-system-eval-trace-summary.json")
+
+
 def test_upstream_eval_parser_accepts_manifest_and_results_dir() -> None:
     args = build_parser().parse_args(
         [
@@ -366,6 +385,42 @@ def test_eval_trace_inventory_handler_propagates_options(monkeypatch) -> None:
         "results_path": Path("inventory.json"),
         "format": "json",
         "fail_on_missing_required": True,
+    }
+
+
+def test_eval_trace_store_build_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_eval_trace_store_build(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"command_succeeded": True})
+
+    monkeypatch.setattr(
+        cli_eval,
+        "run_eval_trace_store_build",
+        fake_run_eval_trace_store_build,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "eval-trace-store-build",
+            "--inventory-path",
+            "inventory.json",
+            "--sqlite-path",
+            "system_eval_trace.sqlite",
+            "--summary-path",
+            "summary.json",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 0
+    assert captured == {
+        "inventory_path": Path("inventory.json"),
+        "sqlite_path": Path("system_eval_trace.sqlite"),
+        "summary_path": Path("summary.json"),
     }
 
 

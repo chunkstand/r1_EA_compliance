@@ -4,8 +4,9 @@ Date: 2026-05-28
 
 Status: Active implementation packet. Milestone 0 contract and baseline
 inventory design is resolved locally; Milestone 1 read-only inventory CLI is
-resolved locally; Milestone 2 local DB-backed eval/trace store is the next
-implementation slice.
+resolved locally; Milestone 2 local DB-backed eval/trace store is resolved
+locally; Milestone 3 canonical/OpenInference export is the next implementation
+slice.
 
 Owner context: This plan implements the direction captured in
 `docs/FIRST_CLASS_EVALS_AND_TRACES_RESEARCH_BRIEF.md` for this repository. West
@@ -456,15 +457,16 @@ Commit closeout:
 
 ### Milestone 1: Read-Only Eval Trace Inventory CLI
 
-Outcome label: reduced. The repo gains a queryable inventory, but the generic
-DB-backed store remains unimplemented.
+Outcome label: reduced. At Milestone 1 closeout the repo gained a queryable
+inventory, while the generic DB-backed store remained a later slice.
 
 Status: Resolved locally. `eval_trace_inventory.py` and the
 `eval-trace-inventory` CLI now inventory source-set and review scopes without
 mutating existing artifacts. The West Reservoir f70 seed run passed with `18`
 required artifact rows present, `0` missing required artifacts, `0` source-set
 or review-ID mismatches, `0` trace-hash mismatches, and
-`export_readiness.reason="sqlite_store_not_built"`.
+`export_readiness.reason="sqlite_store_not_built"`. The newer Milestone 2
+section below now records the implemented local SQLite store.
 
 Implementation:
 
@@ -508,6 +510,14 @@ Commit closeout:
 
 Outcome label: reduced. The repo gains a DB-backed generic store, but export
 and promotion ratchets are not yet complete.
+
+Status: Resolved locally on 2026-05-29. `eval_trace_store.py` and the
+`eval-trace-store-build` CLI now rebuild the generated local SQLite store from
+inventory JSON. The West Reservoir f70 seed build passed with `18` rows in each
+canonical table, `0` orphan rows, `0` duplicate IDs, `0` stale artifacts, `0`
+source artifact deletions, and `0` missing required links. Canonical JSON,
+OpenInference exports, phase/promotion ratchets, and trace-to-case promotion
+remain future milestones.
 
 Implementation:
 

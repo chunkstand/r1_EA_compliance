@@ -2,17 +2,20 @@
 
 Date: 2026-05-28
 
-Status: Milestone 0 contract and Milestone 1 read-only inventory CLI are
-implemented locally. The local SQLite store, exports, phase/promotion ratchets,
-and trace-to-case promotion are still future milestones.
+Status: Milestone 0 contract, Milestone 1 read-only inventory CLI, and
+Milestone 2 local SQLite store are implemented locally. Canonical exports,
+OpenInference exports, phase/promotion ratchets, and trace-to-case promotion
+are still future milestones.
 
 Owner surfaces:
 
 - Contract config: `config/eval_trace_inventory_contract_v1.json`
 - Validation helper: `src/usfs_r1_ea_sources/eval_trace_contract.py`
 - Inventory helper: `src/usfs_r1_ea_sources/eval_trace_inventory.py`
+- Store helper: `src/usfs_r1_ea_sources/eval_trace_store.py`
 - Contract tests: `tests/test_eval_trace_contract.py`
 - Inventory tests: `tests/test_eval_trace_inventory.py`
+- Store tests: `tests/test_eval_trace_store.py`
 - Implementation plan:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`
 
@@ -38,7 +41,8 @@ The local generic model has six required objects:
 - `trace_spans`
 
 Milestone 0 validates that each object is declared with required fields in the
-tracked contract config. Future migrations or generated SQLite stores must
+tracked contract config. Milestone 2 now materializes those objects in the
+generated local SQLite store, `system_eval_trace.sqlite`. Future migrations must
 preserve these object names unless the contract version changes.
 
 ## Enum Families
@@ -96,6 +100,26 @@ checks through `required_link_status`, plus typed `missing_cross_links`,
 `stale_artifacts`, `source_set_mismatches`, `review_id_mismatches`, and
 `trace_hash_mismatches` fields.
 
+## Local Store Contract
+
+`eval-trace-store-build` reads an inventory JSON file and rebuilds the generated
+SQLite store under `source_library/evaluations/eval_trace/` or an explicit
+operator path. The command owns only the six canonical store tables and does
+not mutate catalog, extraction, retrieval, review, compliance, or promotion
+artifacts.
+
+Store rows preserve origin artifact refs, inventoried hashes, current hashes,
+contract ID/version, source-set ID, review ID, catalog refs, replay-context
+refs, source-record IDs when present, scorer-version metadata, thresholds, and
+typed failure categories. Store validation fails if the input inventory failed,
+an inventoried artifact was deleted or changed after inventory, a required link
+is missing, a canonical table is empty, a row ID duplicates, or a child row is
+orphaned.
+
+The West Reservoir f70 seed build on 2026-05-29 passed with `18` rows in each
+canonical table and `0` orphan rows, duplicate IDs, stale artifacts, source
+artifact deletions, or missing required links.
+
 ## Scorer Contract
 
 Deterministic checks are the default. The contract requires deterministic score
@@ -130,8 +154,9 @@ Milestone 0 forbids global fail-closed ratchets. The tracked config must not set
 
 The first seed candidate is West Reservoir on
 `source-set-f70ea11e04ae3d53`; Milestone 1 now inventories that seed
-successfully. It is still not a fail-closed ratchet until a later milestone
-explicitly enables the scope in the tracked contract.
+successfully and Milestone 2 now builds a green local store from that inventory.
+It is still not a fail-closed ratchet until a later milestone explicitly
+enables the scope in the tracked contract.
 
 ## Stop Conditions
 
