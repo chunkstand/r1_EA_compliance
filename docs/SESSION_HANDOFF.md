@@ -40,9 +40,9 @@ history below.
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
-  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 1 package
-  authority intake resolved locally; next slice is Milestone 2 forest-plan
-  resolver preflight
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 2
+  forest-plan resolver preflight reduced locally on named source-record,
+  component-inventory, and component-adjudication blockers
 - resolved Lolo blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor packet:
@@ -78,13 +78,23 @@ history below.
   `reviewer_ready=true`. `FOR-007` now routes to this packet as planned
   `forest_specific_example_package` queue work, while `bitterroot-nf` remains
   `profile_eval_guidance_only` with no reviewer-ready registry or coverage
-  promotion. The next implementation slice is Milestone 2 forest-plan resolver
-  preflight; do not add Bitterroot Front to reviewer-ready registry,
-  real-package coverage, or component-coverage manifests before the packet
-  gates pass. Milestone 1 verification passed: zero package download failures;
-  replay context JSON validation; `ea-review`; focused queue/registry tests;
+  promotion. Milestone 2 forest-plan resolver preflight is now reduced
+  locally: `forest-plan-resolve --forest-unit-id bitterroot-nf` writes
+  `scope_status="bitterroot_nf"`, `project_location_signal_count=1`,
+  `management_area_count=4`, `overlay_count=2`, and
+  `unresolved_mention_count=0`, but validation remains red because
+  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` are missing from the
+  f70 retrieval index. The review-local f70 `FOR-005` component inventory build
+  emits `component_count=1`, `standard_count=0`, and `coverage_passed=false`;
+  component evaluation has a `1`-item queue, and component adjudication eval is
+  absent. Do not add Bitterroot Front to reviewer-ready registry, real-package
+  coverage, or component-coverage manifests before the packet gates pass.
+  Milestone 1 verification passed: zero package download failures; replay
+  context JSON validation; `ea-review`; focused queue/registry tests;
   source-register queue audit; forest-specific example-package eval; plan lint;
-  compile/ruff; and `git diff --check`.
+  compile/ruff; and `git diff --check`. Milestone 2 focused resolver tests
+  passed, and the live resolver/component preflight is intentionally reduced on
+  the blockers above.
   HLC Bonanza example-package work is resolved through registry and coverage
   promotion. The resolved packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID

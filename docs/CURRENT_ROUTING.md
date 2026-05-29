@@ -13,9 +13,9 @@ Use this file as the short current route before opening the append-only docs.
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
-  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 1
-  package authority intake resolved locally; Milestone 2 forest-plan resolver
-  preflight is next
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 2
+  forest-plan resolver preflight reduced locally on named source-record,
+  component-inventory, and component-adjudication blockers
 - Latest resolved HLC forest-specific example packet:
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - Latest resolved West Reservoir parent slice:
@@ -65,7 +65,16 @@ Use this file as the short current route before opening the append-only docs.
   forest-plan resolver, reviewer-stack, and promotion gates in the packet pass.
   Milestone 1 verification passed with zero package download failures, replay
   context JSON validation, `ea-review`, and docs closeout checks. Milestone 2
-  forest-plan resolver preflight is the next slice.
+  forest-plan resolver preflight is now reduced locally: resolver sidecars
+  report `scope_status="bitterroot_nf"`, `project_location_signal_count=1`,
+  `management_area_count=4`, `overlay_count=2`, and
+  `unresolved_mention_count=0`, but validation remains red because
+  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` are missing from the
+  f70 retrieval index. The review-local f70 `FOR-005` component inventory build
+  emits only `1` objective and `0` standards with `coverage_passed=false`; the
+  component queue has `1` unresolved item and no component adjudication eval
+  exists. The next slice is a Bitterroot source-record/component blocker
+  closure before any reviewer-stack replay or promotion.
 - HLC Bonanza example packet is resolved locally through registry and coverage
   promotion. The selected package is Bonanza project `66532` for
   `helena-lewis-and-clark-nf`, using the official project page

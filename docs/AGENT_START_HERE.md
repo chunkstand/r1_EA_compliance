@@ -51,10 +51,15 @@ The planner:
   `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`,
   with replay context
   `config/replay_contexts/region1-example-bitterroot-front-57341.json`, and
-  base `ea-review` is green on `source-set-f70ea11e04ae3d53`. This is not
-  reviewer-ready promotion proof. `FOR-007` (`Bitterroot Front Project`) is
-  only a planned forest-specific example boundary in the queue ledger; do not
-  treat the project page or Box root as `Document_Register_Master` input.
+  base `ea-review` is green on `source-set-f70ea11e04ae3d53`. Milestone 2
+  forest-plan resolver preflight is reduced locally: scope resolves to
+  `bitterroot_nf`, but `R1PLAN-bitterroot-nf-12` and
+  `R1PLAN-bitterroot-nf-13` are missing from the f70 retrieval index, the
+  review-local component inventory has only `1` objective and `0` standards,
+  and component adjudication eval is absent. This is not reviewer-ready
+  promotion proof. `FOR-007` (`Bitterroot Front Project`) is only a planned
+  forest-specific example boundary in the queue ledger; do not treat the
+  project page or Box root as `Document_Register_Master` input.
 - The latest resolved forest-specific example packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Helena-Lewis and
   Clark National Forest example-package review work, inspect

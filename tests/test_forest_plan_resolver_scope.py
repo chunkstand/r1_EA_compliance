@@ -302,6 +302,87 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
                 "multiple_forest_units_mentioned",
             )
 
+    def test_profile_district_scope_ignores_admin_boundary_map_forest_mentions(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                forest_unit_names=["Selected National Forest"],
+            )
+            profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+            profiles["profiles"][0]["ambiguous_unit_terms"] = ["Selected"]
+            profiles["profiles"][0]["ranger_district_terms"] = [
+                {
+                    "entry_id": "district-selected",
+                    "category": "district",
+                    "name": "Selected Ranger District",
+                    "aliases": ["Selected RD"],
+                }
+            ]
+            profiles_path.write_text(
+                json.dumps(profiles, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        (
+                            "Lolo National Forest Flathead National Forest Selected Front "
+                            "Project Boundary National Forest Administrative Boundary Major Roads."
+                        ),
+                        (
+                            "Appendix map: Lolo National Forest Selected National Forest. "
+                            "This map is intended to depict physical features and may not be "
+                            "used to determine title, ownership, legal boundaries, legal "
+                            "jurisdiction, including jurisdiction over roads or trails."
+                        ),
+                        (
+                            "The majority of the Lolo Creek IRA is within the Lolo National "
+                            "Forest, though this small portion is within Selected National "
+                            "Forest."
+                        ),
+                        (
+                            "Selected Front Project Opportunity Areas Selected RD "
+                            "Selected National Forest."
+                        ),
+                        (
+                            "The project area is in the Bridger, Bangtail, and Crazy Mountains "
+                            "Geographic Area."
+                        ),
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        "No new permanent or temporary roads are proposed.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="profile-admin-boundary-map",
+                profiles_path=profiles_path,
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "custer_gallatin")
+            self.assertEqual(context["forest_unit"]["name"], "Selected National Forest")
+            self.assertEqual(
+                _names(context["project_location_signals"]),
+                ["Selected Ranger District"],
+            )
+            self.assertNotIn(
+                "multiple_forest_units_mentioned",
+                [item["reason"] for item in context["unresolved_mentions"]],
+            )
+            background_names = {
+                evidence["name"] for evidence in context["background_location_mentions"]
+            }
+            self.assertIn("Lolo National Forest", background_names)
+            self.assertIn("Flathead National Forest", background_names)
+
     def test_readiness_uses_profile_required_roles(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -559,6 +640,58 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
                     source_set_id=source_set_id,
                     review_id="cg-missing-source",
                 )
+
+    def test_non_default_profile_missing_required_sources_writes_blocker_sidecars(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(
+                output_dir,
+                missing_source_ids={"R1PLAN-custer-gallatin-nf-07"},
+            )
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                extra_profile_updates={
+                    "forest_unit_id": "selected-profile-nf",
+                    "forest_unit_names": ["Selected National Forest"],
+                    "ambiguous_unit_terms": ["Selected"],
+                },
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on Selected National Forest.",
+                        (
+                            "The project area is in the Bridger, Bangtail, and Crazy Mountains "
+                            "Geographic Area."
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="selected-profile-nf",
+                source_set_id=source_set_id,
+                review_id="selected-profile-missing-source",
+                profiles_path=profiles_path,
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "selected_profile_nf")
+            self.assertFalse(result.summary["reviewer_ready"])
+            self.assertFalse(result.summary["validation_passed"])
+            readiness = result.summary["retrieval_readiness"]["required_source_records"]
+            self.assertEqual(
+                readiness["blocking_missing_source_record_ids"],
+                ["R1PLAN-custer-gallatin-nf-07"],
+            )
+            self.assertEqual(
+                context["source_record_readiness"]["blocking_missing_source_record_ids"],
+                ["R1PLAN-custer-gallatin-nf-07"],
+            )
 
     def test_feis_tiering_and_designated_areas_trigger_feis_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

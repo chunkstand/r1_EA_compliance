@@ -25,6 +25,16 @@ def _location_evidence_role(evidence: dict) -> str:
     if _is_negative_location_context(evidence):
         return "negative_location"
     decision_text = _location_context_text(evidence)
+    scope_text = _scope_decision_text(evidence)
+    forest_unit_context_text = " ".join((decision_text, scope_text))
+    if evidence.get("category") == "forest_unit" and _has_map_boundary_reference_context(
+        forest_unit_context_text
+    ):
+        return "background_reference"
+    if evidence.get("category") == "forest_unit" and _has_cross_boundary_area_context(
+        forest_unit_context_text
+    ):
+        return "background_reference"
     if _has_project_external_location_context(decision_text):
         return "background_reference"
     if _has_incidental_forest_unit_context(decision_text):
@@ -45,6 +55,29 @@ def _has_project_external_location_context(text: str) -> bool:
         )
         or re.search(
             r"\bnumerous\s+detections?\b.{0,200}\b(?:on|in|within)\b",
+            text,
+        )
+    )
+
+def _has_map_boundary_reference_context(text: str) -> bool:
+    return bool(
+        re.search(
+            r"\bproject\s+boundary\b.{0,240}\bnational\s+forest\s+administrative\s+boundary\b",
+            text,
+        )
+        or re.search(
+            r"\bnational\s+forest\s+administrative\s+boundary\b.{0,240}\bproject\s+boundary\b",
+            text,
+        )
+        or "this map is intended to depict physical" in text
+        or "may not be used to determine title, ownership, legal boundaries" in text
+    )
+
+def _has_cross_boundary_area_context(text: str) -> bool:
+    return bool(
+        re.search(
+            r"\bmajority\s+of\b.{0,240}\bis\s+within\s+the\b.{0,240}\bthough\s+"
+            r"this\s+small\s+portion\s+is\s+within\b",
             text,
         )
     )

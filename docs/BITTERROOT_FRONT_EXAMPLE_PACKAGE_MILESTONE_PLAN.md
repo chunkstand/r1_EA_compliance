@@ -1,7 +1,7 @@
 # Bitterroot Front Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Active packet (`Milestone 1 local package authority intake resolved locally; Milestone 2 forest-plan resolver preflight is next`)
+Status: Active packet (`Milestone 2 forest-plan resolver preflight reduced locally on named source-record, component-inventory, and component-adjudication blockers`)
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
@@ -97,6 +97,21 @@ into `Document_Register_Master`.
 - Milestone 1 verification passed: Box inventory/download byte and hash
   manifest completed with zero failures, replay context JSON validated, and
   `ea-review` passed on `source-set-f70ea11e04ae3d53`.
+- Milestone 2 forest-plan resolver preflight reduced locally on
+  `source-set-f70ea11e04ae3d53`: the `forest-plan-resolve` run with
+  `--forest-unit-id bitterroot-nf` now writes sidecars with
+  `scope_status="bitterroot_nf"`,
+  `project_location_signal_count=1`, `management_area_count=4`,
+  `overlay_count=2`, and `unresolved_mention_count=0`. Validation remains red
+  only because `R1PLAN-bitterroot-nf-12` and
+  `R1PLAN-bitterroot-nf-13` are missing from the f70 retrieval index.
+- A review-local single-forest component inventory build from f70 `FOR-005`
+  exists under ignored
+  `source_library/reviews/region1-example-bitterroot-front-57341/derived/`.
+  It is blocker evidence, not promotion proof: `component_count=1`,
+  `standard_count=0`, `coverage_passed=false`, and the resolver writes a
+  `1`-item component reviewer-resolution queue. No component adjudication eval
+  exists yet.
 
 ## Goal
 
@@ -336,6 +351,27 @@ component inventory, component adjudication, and resolver validation pass;
    component queue items.
 4. Do not change registry or coverage manifests in this milestone.
 
+Closeout evidence:
+
+- outcome:
+  `reduced locally`
+- resolver:
+  `scope_status="bitterroot_nf"`, `project_location_signal_count=1`,
+  `management_area_count=4`, `overlay_count=2`,
+  `unresolved_mention_count=0`
+- source-record blocker:
+  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` are missing from the
+  f70 retrieval index; the other required Bitterroot profile records resolve
+  through indexed canonical aliases
+- component blocker:
+  review-local f70 `FOR-005` component inventory build emits
+  `component_count=1`, `standard_count=0`, `coverage_passed=false`
+- adjudication blocker:
+  `forest_plan_component_adjudication_eval.json` is absent and the current
+  component queue has `1` unresolved item
+- promotion boundary:
+  no registry or coverage manifest was changed
+
 ### Milestone 3 - Reviewer Stack Replay
 
 Outcome label: `resolved` if applicability, generated rule pack, compliance
@@ -479,9 +515,12 @@ unless repository policy changes.
 
 ## Residual Risks And Next Routing
 
-Milestone 1 only proves local package authority and the base `ea-review`
-package cache. The next slice is Milestone 2 forest-plan resolver preflight on
-the current f70 catalog and `bitterroot-nf` profile. Bitterroot must remain
+Milestone 2 proves Bitterroot scope resolution and writes reduced blocker
+sidecars, but it does not prove forest-plan readiness. The next route is a
+Bitterroot source-record/component blocker slice: index or otherwise govern
+`R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13`, produce a passing
+component inventory with standards, and add a tracked adjudication only after
+generated component evidence exists. Bitterroot must remain
 profile-guidance-only until Milestones 2-4 prove forest-plan readiness,
 reviewer stack readiness, and registry/coverage promotion.
 

@@ -1251,10 +1251,88 @@
         "biological_assessment",
         "biological_opinion"
       ],
-      "ranger_district_terms": [],
+      "ranger_district_terms": [
+        {
+          "entry_id": "district-stevensville",
+          "category": "district",
+          "name": "Stevensville Ranger District",
+          "aliases": [
+            "Stevensville RD",
+            "Stevensville District"
+          ]
+        }
+      ],
       "geographic_area_terms": [],
-      "management_area_terms": [],
-      "overlay_terms": [],
+      "management_area_terms": [
+        {
+          "entry_id": "mgmt-bitterroot-area-2",
+          "category": "management_area",
+          "name": "Management Area 2",
+          "aliases": [
+            "MA 2",
+            "Management Areas 2"
+          ]
+        },
+        {
+          "entry_id": "mgmt-bitterroot-area-3a",
+          "category": "management_area",
+          "name": "Management Area 3a",
+          "aliases": [
+            "MA 3a",
+            "Management Areas 3a"
+          ]
+        },
+        {
+          "entry_id": "mgmt-bitterroot-area-3c",
+          "category": "management_area",
+          "name": "Management Area 3c",
+          "aliases": [
+            "MA 3c",
+            "Management Areas 3c"
+          ]
+        },
+        {
+          "entry_id": "mgmt-bitterroot-area-5",
+          "category": "management_area",
+          "name": "Management Area 5",
+          "aliases": [
+            "MA 5",
+            "Management Areas 5"
+          ]
+        }
+      ],
+      "overlay_terms": [
+        {
+          "entry_id": "overlay-bitterroot-lolo-creek-ira",
+          "category": "overlay",
+          "name": "Lolo Creek Inventoried Roadless Area",
+          "aliases": [
+            "Lolo Creek IRA"
+          ]
+        },
+        {
+          "entry_id": "overlay-bitterroot-selway-bitterroot-ira",
+          "category": "overlay",
+          "name": "Selway-Bitterroot Inventoried Roadless Area",
+          "aliases": [
+            "Selway-Bitterroot IRA"
+          ]
+        },
+        {
+          "entry_id": "overlay-bitterroot-selway-bitterroot-wilderness",
+          "category": "overlay",
+          "name": "Selway-Bitterroot Wilderness",
+          "aliases": []
+        },
+        {
+          "entry_id": "overlay-bitterroot-research-natural-area",
+          "category": "overlay",
+          "name": "Research Natural Area",
+          "aliases": [
+            "RNA"
+          ]
+        }
+      ],
       "plan_component_types": [
         "desired_condition",
         "goal",

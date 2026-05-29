@@ -15,14 +15,56 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Bitterroot Front Forest-Plan Resolver Preflight Reduced Locally
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is reduced through
+  Milestone 2 forest-plan resolver preflight. The resolver now writes scoped
+  Bitterroot sidecars instead of failing before blocker evidence is recorded,
+  but forest-plan readiness is not green.
+- resolver evidence:
+  `forest-plan-resolve --forest-unit-id bitterroot-nf` on
+  `source-set-f70ea11e04ae3d53` and the imported package writes
+  `source_library/reviews/region1-example-bitterroot-front-57341/forest_plan_context_summary.json`
+  with `scope_status="bitterroot_nf"`, `project_location_signal_count=1`,
+  `management_area_count=4`, `overlay_count=2`,
+  `unresolved_mention_count=0`, `package_file_count=132`,
+  `package_chunk_count=5,463`, and `package_failed_count=0`.
+- source-record blocker:
+  `forest_plan_context_validation.json` fails only the required source-record
+  readiness check. The f70 retrieval index contains indexed aliases for
+  `R1PLAN-bitterroot-nf-01` through `-06`, but
+  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` remain missing with
+  indexed counts `0`.
+- component blocker:
+  the Region 1 component-build manifest still binds Bitterroot to the older
+  `active_full_canonical` source-set reference, so the f70 manifest build
+  refused to run for this packet. A review-local single-forest f70 `FOR-005`
+  build under ignored
+  `source_library/reviews/region1-example-bitterroot-front-57341/derived/`
+  produced `component_count=1`, `standard_count=0`,
+  `coverage_passed=false`, and `5` non-blocking inventory quality issues.
+- adjudication blocker:
+  resolver component evaluation writes a `1`-item reviewer-resolution queue for
+  the lone objective. `forest_plan_component_adjudication_eval.json` is absent,
+  so the component-adjudication gate is not reviewer-ready.
+- routing boundary:
+  no registry, real-package coverage, or component-coverage manifest was
+  changed. `bitterroot-nf` remains `profile_eval_guidance_only`. The next route
+  is a Bitterroot source-record/component blocker slice for
+  `R1PLAN-bitterroot-nf-12`, `R1PLAN-bitterroot-nf-13`, a passing component
+  inventory with standards, and any needed tracked component adjudication
+  before Milestone 3 reviewer-stack replay.
+
 ## Bitterroot Front Package Authority Intake Resolved Locally
 
 Latest implementation update on 2026-05-29 UTC:
 
 - update:
-  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
-  Milestone 1 package authority intake. Milestone 2 forest-plan resolver
-  preflight is next.
+  this Milestone 1 package-authority note is superseded by the Milestone 2
+  reduced forest-plan resolver checkpoint above.
 - package authority truth:
   the official Box root
   `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226983588` was
@@ -47,11 +89,11 @@ Latest implementation update on 2026-05-29 UTC:
   reviewer-ready registry row, real-package coverage slot, component-coverage
   slot, V1 eval contract, applicability adjudication, component adjudication,
   compliance review, or phase-eval promotion evidence.
-- next route:
-  Milestone 2 must run `forest-plan-resolve` on the current f70 catalog and
-  Bitterroot profile, preserving typed blockers for missing Bitterroot source
-  records or unresolved component queue items. Do not promote Bitterroot Front
-  into registry or coverage manifests until Milestones 2-4 pass.
+- superseded next route:
+  this Milestone 1 note is superseded by the Milestone 2 reduced checkpoint
+  above. Do not promote Bitterroot Front into registry or coverage manifests
+  until the named source-record, component-inventory, component-adjudication,
+  reviewer-stack, and promotion gates pass.
 
 ## Bitterroot Front Example Packet Opened
 

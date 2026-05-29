@@ -138,7 +138,10 @@ def run_forest_plan_resolver(
                 if role == "planning_page"
             ),
         )
-        if not retrieval_readiness["passed"]:
+        if (
+            not retrieval_readiness["passed"]
+            and resolver_profile.profile.forest_unit_id == DEFAULT_FOREST_PLAN_PROFILE_ID
+        ):
             failed = ", ".join(
                 check["name"] for check in retrieval_readiness["checks"] if not check["passed"]
             )
@@ -177,7 +180,12 @@ def run_forest_plan_resolver(
     component_queue_path = None
     component_inventory_coverage_path = None
     applicable_standard_coverage_path = None
-    if _is_profile_scope(context, resolver_profile):
+    should_run_component_evaluation = (
+        retrieval_readiness is None
+        or bool(retrieval_readiness.get("passed"))
+        or component_inventory_path is not None
+    )
+    if _is_profile_scope(context, resolver_profile) and should_run_component_evaluation:
         resolved_component_inventory_path = _resolve_component_inventory_path(
             component_inventory_path=component_inventory_path,
             output_dir=output_dir,
