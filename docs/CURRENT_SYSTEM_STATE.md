@@ -233,9 +233,10 @@ Latest implementation update on 2026-05-29 UTC:
   until the named source-record, component-inventory, component-adjudication,
   reviewer-stack, and promotion gates pass.
 
-## Bitterroot Front Example Packet Opened
+## Bitterroot Front Example Packet Opened, Later Superseded
 
-Latest implementation update on 2026-05-29 UTC:
+Historical implementation checkpoint on 2026-05-29 UTC, superseded by the
+registry and coverage promotion section above:
 
 - update:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is open at
@@ -283,11 +284,12 @@ Latest implementation update on 2026-05-29 UTC:
   `forest_unit_id="helena-lewis-and-clark-nf"`.
 - registry and real-package coverage:
   `config/v1_real_package_review_coverage_v1.json` now includes the Bonanza
-  slot as required reviewer-ready coverage. `real-package-review-coverage-eval`
-  passes with `covered_slot_count=5`, `required_slot_count=5`,
-  `reviewer_ready_slot_count=5`, `typed_blocked_slot_count=0`,
-  `distinct_forest_count=4`, `distinct_package_style_count=6`, and no
-  threshold failures. `config/forest_specific_example_package_registry_v1.json`
+  slot as required reviewer-ready coverage. After Bitterroot Front promotion,
+  `real-package-review-coverage-eval` passes with `covered_slot_count=6`,
+  `required_slot_count=6`, `reviewer_ready_slot_count=6`,
+  `typed_blocked_slot_count=0`, `distinct_forest_count=5`,
+  `distinct_package_style_count=7`, and no threshold failures.
+  `config/forest_specific_example_package_registry_v1.json`
   routes HLC as `real_package_examples_available` with
   `primary_example_id="hlc-bonanza-forest-specific"`.
 - system-facing HLC route:
@@ -298,18 +300,18 @@ Latest implementation update on 2026-05-29 UTC:
   away from the registry row.
 - forest-specific aggregate:
   `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
-  `failed_forest_count=0`, `review_example_count=5`,
-  `reviewer_ready_example_count=5`, `distinct_governed_example_forest_count=4`,
-  `profile_guidance_only_count=6`, and no threshold failures.
+  `failed_forest_count=0`, `review_example_count=6`,
+  `reviewer_ready_example_count=6`, `distinct_governed_example_forest_count=5`,
+  `profile_guidance_only_count=5`, and no threshold failures.
 - component coverage boundary:
   `config/forest_plan_component_eval_coverage_v1.json` now includes Bonanza as
-  a required component-eval slot. The Bonanza slot is covered, source-set
-  aligned on `source-set-f70ea11e04ae3d53`, and passing. The standalone
-  aggregate `forest-plan-component-eval-coverage` command still exits red only
-  because the inherited `ecid-source-delta-replay` /
+  a required component-eval slot. The Bonanza and Bitterroot Front slots are
+  covered, source-set aligned on `source-set-f70ea11e04ae3d53`, and passing.
+  The standalone aggregate `forest-plan-component-eval-coverage` command still
+  exits red only because the inherited `ecid-source-delta-replay` /
   `v1-cg-ecid-source-delta-review` slot has `result_not_passed` and
   `result_source_set_id_mismatch`; current aggregate counts are
-  `covered_review_count=5/6`, `stale_identity_count=1`, and
+  `covered_review_count=6/7`, `stale_identity_count=1`, and
   `unresolved_review_count=1`.
 - review-scope promotion gate:
   `phase-eval --review-id region1-example-helena-lewis-and-clark-bonanza-66532`

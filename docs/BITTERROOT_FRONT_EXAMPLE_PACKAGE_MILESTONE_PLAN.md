@@ -2,6 +2,7 @@
 
 Date: 2026-05-29
 Status: Resolved locally through Milestone 4 registry and coverage promotion
+Plan class: implementation
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
@@ -260,6 +261,22 @@ contracts, and aggregate gates are all present and green.
   `tests/test_real_package_review_coverage_eval.py`,
   `tests/test_forest_plan_component_eval_coverage.py`, and
   `tests/test_cli_eval.py`
+
+## Intent Hierarchy
+
+- Invariant: Bitterroot Front is the governed primary example only for
+  `bitterroot-nf`; it must remain outside `Document_Register_Master` unless a
+  separate source-register promotion packet proves shared-source input.
+- Optimization target: make the registry, queue ledger, routing docs, eval
+  coverage docs, tests, and handoff surfaces converge on the same
+  machine-readable Bitterroot identity.
+- Acceptable tradeoffs: generated `source_library/` evidence can remain local
+  and ignored, and the inherited ECID source-delta component-coverage aggregate
+  can remain red while Bitterroot's own slot is covered, source-set aligned,
+  and passing.
+- Explicit non-negotiables: do not weaken tests, lower eval thresholds, mark
+  unrelated ECID blockers as Bitterroot blockers, or reuse Bitterroot Front for
+  non-Bitterroot forests.
 
 ## Placement Rules
 
@@ -612,6 +629,23 @@ aggregate red state is the inherited ECID source-delta component-coverage slot
 in `forest-plan-component-eval-coverage`; the Bitterroot slot is present,
 covered, source-set aligned, and passing.
 
+## Closeout Outcome Record
+
+- Outcome label: `resolved locally`.
+- Milestone 4 implementation commit:
+  `a57d10a` (`Promote Bitterroot Front example package`).
+- Gap-close scope: README primary-example discoverability, queue-ledger status
+  wording, evaluation coverage register counts, current routing/current-state
+  aggregate counts, forest-specific boundary freshness rules, and regression
+  assertions for the Bitterroot primary route.
+- Current governed identity:
+  `review_id="region1-example-bitterroot-front-57341"`,
+  `example_id="bitterroot-front-forest-specific"`,
+  `forest_unit_id="bitterroot-nf"`, and
+  `primary_example_id="bitterroot-front-forest-specific"`.
+- Stop condition preserved: the inherited ECID source-delta component-coverage
+  slot remains separate from the Bitterroot example closeout.
+
 ## Closeout Checklist
 
 - [x] Verify live project and Box metadata.
@@ -621,4 +655,4 @@ covered, source-set aligned, and passing.
 - [x] Run focused tests, source-register queue audit, plan lint, and
   `git diff --check`.
 - [x] Update current routing, current-state, handoff, and agent-start docs.
-- [ ] Commit the verified milestone slice atomically.
+- [x] Commit the verified milestone slice atomically.

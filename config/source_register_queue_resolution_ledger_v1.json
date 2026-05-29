@@ -2,7 +2,7 @@
   "schema_version": "source-register-queue-resolution-ledger-v1",
   "contract_id": "source-register-queue-resolution-ledger-v1",
   "as_of_date": "2026-05-29",
-  "status": "bitterroot_front_example_packet_opened",
+  "status": "bitterroot_front_example_resolved",
   "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
   "workbook_sha256": "1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97",
   "sheet_name": "Direct_File_Capture_Queue",

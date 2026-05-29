@@ -101,12 +101,13 @@ Use this file as the short current route before opening the append-only docs.
   `docs/AGENT_START_HERE.md` also names the HLC Bonanza packet as the latest
   resolved forest-specific example packet and tells HLC workflows to inspect
   Bonanza first.
-  `real-package-review-coverage-eval` passes with `covered_slot_count=5`,
-  `reviewer_ready_slot_count=5`, `distinct_forest_count=4`, and
-  `distinct_package_style_count=6`. `forest-specific-example-package-eval`
-  passes with `review_example_count=5`, `reviewer_ready_example_count=5`,
-  `distinct_governed_example_forest_count=4`, and
-  `profile_guidance_only_count=6`. The Bonanza component-coverage slot is
+  After Bitterroot Front promotion, `real-package-review-coverage-eval` passes
+  with `covered_slot_count=6`, `reviewer_ready_slot_count=6`,
+  `distinct_forest_count=5`, and `distinct_package_style_count=7`.
+  `forest-specific-example-package-eval` passes with
+  `review_example_count=6`, `reviewer_ready_example_count=6`,
+  `distinct_governed_example_forest_count=5`, and
+  `profile_guidance_only_count=5`. The Bonanza component-coverage slot is
   required, source-set aligned, and passing; the standalone
   `forest-plan-component-eval-coverage` aggregate still exits red only on the
   inherited ECID source-delta slot. Do not route that aggregate blocker back
@@ -291,22 +292,24 @@ Use this file as the short current route before opening the append-only docs.
   (`cgnf-south-plateau-expansion`) is archived as historical evidence only due
   to litigation and Forest Plan compliance challenge risk, and must not be used
   as a Custer Gallatin or Region 1 example.
-- `config/v1_real_package_review_coverage_v1.json` now has five load-bearing
-  active slots, including South Otter, Lolo, and HLC Bonanza as required
-  `forest_specific_reviewer_ready` slots. The governed aggregate rerun reports
-  `passed=true`, `covered_slot_count=5`, `required_slot_count=5`,
-  `reviewer_ready_slot_count=5`, `typed_blocked_slot_count=0`,
-  `distinct_forest_count=4`, `distinct_package_style_count=6`, and no missing
-  required slots or coverage classes.
-- `config/forest_specific_example_package_registry_v1.json` now has five
-  active governed examples: East Crazy and South Otter for Custer Gallatin,
-  West Reservoir for Flathead, Tyler's Kitchen for Lolo, and Bonanza for HLC.
+- `config/v1_real_package_review_coverage_v1.json` now has six load-bearing
+  active slots, including Bitterroot Front, South Otter, Lolo, and HLC Bonanza
+  as required `forest_specific_reviewer_ready` slots. The governed aggregate
+  rerun reports `passed=true`, `covered_slot_count=6`,
+  `required_slot_count=6`, `reviewer_ready_slot_count=6`,
+  `typed_blocked_slot_count=0`, `distinct_forest_count=5`,
+  `distinct_package_style_count=7`, and no missing required slots or coverage
+  classes.
+- `config/forest_specific_example_package_registry_v1.json` now has six active
+  governed examples: East Crazy and South Otter for Custer Gallatin,
+  Bitterroot Front for Bitterroot, West Reservoir for Flathead, Tyler's Kitchen
+  for Lolo, and Bonanza for HLC.
   South Plateau is retained only under `archived_review_examples` with
   `usage_policy="historical_evidence_only_not_example"`. The
   governed forest-specific aggregate rerun reports `passed=true`,
-  `review_example_count=5`, `reviewer_ready_example_count=5`,
-  `distinct_governed_example_forest_count=4`,
-  `profile_guidance_only_count=6`, and no threshold failures.
+  `review_example_count=6`, `reviewer_ready_example_count=6`,
+  `distinct_governed_example_forest_count=5`,
+  `profile_guidance_only_count=5`, and no threshold failures.
 - West Reservoir's Flathead package authority is now verified against the
   official Flathead project page
   `https://www.fs.usda.gov/r01/flathead/projects/67436` and linked Pinyon/Box
@@ -317,15 +320,15 @@ Use this file as the short current route before opening the append-only docs.
   SHA-256 matches for every document, and `omitted_document_count=0`. This
   repairs package-authority provenance only; West Reservoir is now a
   reviewer-ready Flathead example.
-- `config/forest_plan_component_eval_coverage_v1.json` now requires HLC
-  Bonanza as a sixth component-eval review slot. The HLC Bonanza slot is
-  covered, source-set aligned, and passing. The aggregate
+- `config/forest_plan_component_eval_coverage_v1.json` now requires Bitterroot
+  Front and HLC Bonanza as forest-specific component-eval review slots. Both
+  slots are covered, source-set aligned, and passing. The aggregate
   `forest-plan-component-eval-coverage` command still fails on the ECID
   source-delta slot only: `ecid-source-delta-replay` /
   `v1-cg-ecid-source-delta-review` has `result_not_passed` plus
-  `result_source_set_id_mismatch`. West Reservoir, South Otter, Lolo, and HLC
-  Bonanza now pass and source-set align. Current aggregate counts are
-  `covered_review_count=5/6`,
+  `result_source_set_id_mismatch`. West Reservoir, South Otter, Lolo, HLC
+  Bonanza, and Bitterroot Front now pass and source-set align. Current
+  aggregate counts are `covered_review_count=6/7`,
   `stale_identity_count=1`, and `unresolved_review_count=1`; do not describe
   aggregate component coverage as green.
 - The Lolo Tyler's Kitchen example-package Milestone 3 implementation is
@@ -366,8 +369,8 @@ Use this file as the short current route before opening the append-only docs.
   `historical_source_set_split`.
 - Do not flip the ECID historical slot to `ready`, reopen the older Lolo or
   replay-repair packets as live runtime work, or treat the remaining
-  non-Lolo/non-South Otter/non-HLC component-coverage aggregate red as part of
-  the Lolo, South Otter, or HLC example promotions.
+  non-Lolo/non-South Otter/non-HLC/non-Bitterroot component-coverage aggregate
+  red as part of the Lolo, South Otter, HLC, or Bitterroot example promotions.
 ## Deep Reads
 - Core:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,

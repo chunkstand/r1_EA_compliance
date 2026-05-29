@@ -129,18 +129,20 @@ history below.
   `primary_example_id="hlc-bonanza-forest-specific"`. `docs/AGENT_START_HERE.md`
   now names the HLC Bonanza packet as the latest resolved forest-specific
   example packet and tells HLC workflows to inspect Bonanza first; the focused
-  registry test guards that system-facing entrypoint against drift. The real-package
-  aggregate passes with `covered_slot_count=5`, `reviewer_ready_slot_count=5`,
-  `distinct_forest_count=4`, and `distinct_package_style_count=6`; the
-  forest-specific aggregate passes with `review_example_count=5`,
-  `reviewer_ready_example_count=5`,
-  `distinct_governed_example_forest_count=4`, and
-  `profile_guidance_only_count=6`. Bonanza is also a required component-eval
-  coverage slot and passes on `source-set-f70ea11e04ae3d53`. The standalone
+  registry test guards that system-facing entrypoint against drift. After
+  Bitterroot Front promotion, the real-package aggregate passes with
+  `covered_slot_count=6`, `reviewer_ready_slot_count=6`,
+  `distinct_forest_count=5`, and `distinct_package_style_count=7`; the
+  forest-specific aggregate passes with `review_example_count=6`,
+  `reviewer_ready_example_count=6`,
+  `distinct_governed_example_forest_count=5`, and
+  `profile_guidance_only_count=5`. Bonanza and Bitterroot Front are required
+  component-eval coverage slots and both pass on
+  `source-set-f70ea11e04ae3d53`. The standalone
   `forest-plan-component-eval-coverage` aggregate still exits red only on the
-  inherited ECID source-delta slot (`covered_review_count=5/6`,
+  inherited ECID source-delta slot (`covered_review_count=6/7`,
   `stale_identity_count=1`, `unresolved_review_count=1`); do not route that
-  blocker back into the HLC packet.
+  blocker back into the HLC or Bitterroot packets.
   Repo-root catalog currentness is corrected: `source_library/catalog/` now
   names `source-set-f70ea11e04ae3d53` as the current source-set. The tracked
   pointer is `config/current_source_set_v1.json`; the root manifest reports

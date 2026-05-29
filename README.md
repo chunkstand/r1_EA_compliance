@@ -45,6 +45,11 @@ They are intentionally not duplicated here.
 - Raw artifacts are source bytes plus provenance; extraction, retrieval,
   evidence graph, claims, rule-claim links, and review outputs are rebuildable
   derived layers
+- Forest-specific example packages stay parallel to `Document_Register_Master`.
+  For Bitterroot National Forest, the governed primary example is
+  `primary_example_id="bitterroot-front-forest-specific"` with
+  `review_id="region1-example-bitterroot-front-57341"` in
+  `config/forest_specific_example_package_registry_v1.json`.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

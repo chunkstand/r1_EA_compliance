@@ -391,9 +391,10 @@ git diff --check
 
 The standalone `forest-plan-component-eval-coverage` command is still expected
 to fail until the separate ECID source-delta component-coverage blocker is
-repaired. For HLC, the required check is that the Bonanza slot is present,
-covered, source-set aligned, and passing, and that review `phase-eval` consumes
-that review-scope summary successfully.
+repaired. For HLC and Bitterroot, the required checks are that the Bonanza and
+Bitterroot Front slots are present, covered, source-set aligned, and passing,
+and that each review `phase-eval` consumes its review-scope summary
+successfully.
 
 ## Freshness Check
 
@@ -404,12 +405,12 @@ Before changing registry status, read `docs/CURRENT_ROUTING.md`,
 `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
 `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, and
 `config/forest_specific_example_package_registry_v1.json`. Verify the current
-Lolo, South Otter, and HLC Bonanza `v1-ea-eval`, review `phase-eval`,
-real-package coverage, and forest-specific example-package artifacts before
-changing any promoted row. For Bitterroot, verify that only Milestones 0-2
-boundary/package-authority/source-record/component-inventory routing exists
-until component adjudication, applicable-standard coverage, reviewer-stack,
-and promotion gates pass.
+Lolo, South Otter, HLC Bonanza, and Bitterroot Front `v1-ea-eval`, review
+`phase-eval`, real-package coverage, and forest-specific example-package
+artifacts before changing any promoted row. For Bitterroot, verify that
+Milestones 0-4 remain closed, `FOR-007` remains a forest-specific example
+boundary, and `primary_example_id="bitterroot-front-forest-specific"` still
+belongs only to `bitterroot-nf`.
 
 ## Stop Conditions
 

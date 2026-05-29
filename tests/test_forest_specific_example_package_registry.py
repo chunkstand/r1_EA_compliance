@@ -10,6 +10,7 @@ QUEUE_LEDGER_PATH = ROOT / "config" / "source_register_queue_resolution_ledger_v
 REAL_PACKAGE_COVERAGE_PATH = ROOT / "config" / "v1_real_package_review_coverage_v1.json"
 PROFILE_COVERAGE_PATH = ROOT / "config" / "region1_forest_plan_profile_eval_coverage_v1.json"
 AGENT_START_HERE_PATH = ROOT / "docs" / "AGENT_START_HERE.md"
+README_PATH = ROOT / "README.md"
 
 
 def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
@@ -230,6 +231,7 @@ def test_registry_promotes_bitterroot_front_as_primary_example() -> None:
     assert "Use the Bitterroot Front package first" in (
         forest_row["guidance_note"]
     )
+    assert queue_ledger["status"] == "bitterroot_front_example_resolved"
     assert example_row["review_id"] == "region1-example-bitterroot-front-57341"
     assert example_row["forest_unit_id"] == "bitterroot-nf"
     assert example_row["applicable_forest_unit_ids"] == ["bitterroot-nf"]
@@ -247,6 +249,7 @@ def test_registry_promotes_bitterroot_front_as_primary_example() -> None:
 def test_agent_start_here_names_bitterroot_front_as_latest_resolved_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     agent_start = AGENT_START_HERE_PATH.read_text(encoding="utf-8")
+    readme = README_PATH.read_text(encoding="utf-8")
 
     forest_row = next(
         row
@@ -267,6 +270,8 @@ def test_agent_start_here_names_bitterroot_front_as_latest_resolved_example() ->
     assert f'forest_unit_id="{forest_row["forest_unit_id"]}"' in agent_start
     assert "Bitterroot Front as the governed primary example" in agent_start
     assert "must not be reused for non-Bitterroot forests" in agent_start
+    assert f'primary_example_id="{forest_row["primary_example_id"]}"' in readme
+    assert f'review_id="{example_row["review_id"]}"' in readme
 
 
 def test_registry_archives_south_plateau_as_historical_only() -> None:
