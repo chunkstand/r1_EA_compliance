@@ -45,11 +45,16 @@ The planner:
 - The active forest-specific example candidate is
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Bitterroot
   National Forest work, keep `bitterroot-nf` on
-  `profile_eval_guidance_only` until Bitterroot Front package authority,
-  reviewer-stack gates, and registry/coverage promotion pass. `FOR-007`
-  (`Bitterroot Front Project`) is only a planned forest-specific example
-  boundary in the queue ledger; do not treat the project page or Box root as
-  `Document_Register_Master` input.
+  `profile_eval_guidance_only` until Bitterroot Front forest-plan resolver,
+  reviewer-stack gates, and registry/coverage promotion pass. Local package
+  authority now exists under
+  `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`,
+  with replay context
+  `config/replay_contexts/region1-example-bitterroot-front-57341.json`, and
+  base `ea-review` is green on `source-set-f70ea11e04ae3d53`. This is not
+  reviewer-ready promotion proof. `FOR-007` (`Bitterroot Front Project`) is
+  only a planned forest-specific example boundary in the queue ledger; do not
+  treat the project page or Box root as `Document_Register_Master` input.
 - The latest resolved forest-specific example packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Helena-Lewis and
   Clark National Forest example-package review work, inspect

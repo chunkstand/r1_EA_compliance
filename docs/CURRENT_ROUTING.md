@@ -13,8 +13,9 @@ Use this file as the short current route before opening the append-only docs.
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
-  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 0
-  packet boundary and `FOR-007` queue routing opened locally
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 1
+  package authority intake resolved locally; Milestone 2 forest-plan resolver
+  preflight is next
 - Latest resolved HLC forest-specific example packet:
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - Latest resolved West Reservoir parent slice:
@@ -45,16 +46,26 @@ Use this file as the short current route before opening the append-only docs.
   Live readback on 2026-05-29 found the project `Completed`, expected analysis
   type `Environmental Assessment`, decision signed date `2026-05-11`, and Box
   root label `Bitterroot Front (57341)` with top-level folders `Final EA`,
-  `Decision Notice`, `Draft EA`, `Scoping`, and `Pre-Scoping`. `FOR-007` now
-  routes to this packet as planned
+  `Decision Notice`, `Draft EA`, `Scoping`, and `Pre-Scoping`. Local ignored
+  package authority now exists under
+  `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`:
+  `box_inventory.json` records `41` folders, `132` visible files, and
+  `632,912,037` expected bytes; `box_import_manifest.json` records `132`
+  downloaded files, `632,912,037` actual bytes, and `failure_count=0`.
+  `config/replay_contexts/region1-example-bitterroot-front-57341.json` points
+  to `source-set-f70ea11e04ae3d53`, `source_library/catalog`, the local intake
+  package, and the official project/Box authority paths. `ea-review` on the
+  full package passes with `132/132` files extracted, `5,463` package chunks,
+  `package_failed_count=0`, `validation_passed=true`, and
+  `reviewer_ready=true`. `FOR-007` now routes to this packet as planned
   `planned_disposition="forest_specific_example_package"` while preserving
   workbook row identity. `bitterroot-nf` remains
   `profile_eval_guidance_only`; do not add Bitterroot Front to reviewer-ready
   registry, real-package coverage, or component-coverage manifests until the
-  package-authority, reviewer-stack, and promotion gates in the packet pass.
-  Milestone 0 verification passed with plan lint, focused queue/registry tests
-  `20/20`, source-register queue audit `validation_passed=true`,
-  `forest-specific-example-package-eval` `passed=true`, and `git diff --check`.
+  forest-plan resolver, reviewer-stack, and promotion gates in the packet pass.
+  Milestone 1 verification passed with zero package download failures, replay
+  context JSON validation, `ea-review`, and docs closeout checks. Milestone 2
+  forest-plan resolver preflight is the next slice.
 - HLC Bonanza example packet is resolved locally through registry and coverage
   promotion. The selected package is Bonanza project `66532` for
   `helena-lewis-and-clark-nf`, using the official project page

@@ -40,8 +40,9 @@ history below.
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
-  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 0 opened;
-  next slice is Milestone 1 package authority intake
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 1 package
+  authority intake resolved locally; next slice is Milestone 2 forest-plan
+  resolver preflight
 - resolved Lolo blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor packet:
@@ -62,16 +63,28 @@ history below.
   Live readback found project status `Completed`, expected analysis type
   `Environmental Assessment`, decision signed date `2026-05-11`, Box root
   label `Bitterroot Front (57341)`, and top-level folders `Final EA`,
-  `Decision Notice`, `Draft EA`, `Scoping`, and `Pre-Scoping`. `FOR-007` now
-  routes to this packet as planned `forest_specific_example_package` queue
-  work, while `bitterroot-nf` remains `profile_eval_guidance_only` with no
-  reviewer-ready registry or coverage promotion. The next implementation slice
-  is package authority intake; do not add Bitterroot Front to reviewer-ready
-  registry, real-package coverage, or component-coverage manifests before the
-  packet gates pass. Milestone 0 verification passed: plan lint; focused
-  queue/registry pytest `20/20`; `source-register-queue-audit`
-  `validation_passed=true`; `forest-specific-example-package-eval`
-  `passed=true`; and `git diff --check`.
+  `Decision Notice`, `Draft EA`, `Scoping`, and `Pre-Scoping`. Local ignored
+  package authority now exists under
+  `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`:
+  `box_inventory.json` records `41` folders, `132` visible files, and
+  `632,912,037` expected bytes; `box_import_manifest.json` records `132`
+  downloaded files, `632,912,037` actual bytes, and `failure_count=0`.
+  `config/replay_contexts/region1-example-bitterroot-front-57341.json` now
+  binds the package to `source-set-f70ea11e04ae3d53`,
+  `forest_unit_id="bitterroot-nf"`, `source_library/catalog`, and the official
+  project/Box authority paths. `ea-review` passes on the full package with
+  `132/132` files extracted, `5,463` package chunks,
+  `package_failed_count=0`, `validation_passed=true`, and
+  `reviewer_ready=true`. `FOR-007` now routes to this packet as planned
+  `forest_specific_example_package` queue work, while `bitterroot-nf` remains
+  `profile_eval_guidance_only` with no reviewer-ready registry or coverage
+  promotion. The next implementation slice is Milestone 2 forest-plan resolver
+  preflight; do not add Bitterroot Front to reviewer-ready registry,
+  real-package coverage, or component-coverage manifests before the packet
+  gates pass. Milestone 1 verification passed: zero package download failures;
+  replay context JSON validation; `ea-review`; focused queue/registry tests;
+  source-register queue audit; forest-specific example-package eval; plan lint;
+  compile/ruff; and `git diff --check`.
   HLC Bonanza example-package work is resolved through registry and coverage
   promotion. The resolved packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID

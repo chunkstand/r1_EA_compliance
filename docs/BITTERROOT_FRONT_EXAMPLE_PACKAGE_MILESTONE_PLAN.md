@@ -1,7 +1,7 @@
 # Bitterroot Front Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Active packet (`Milestone 0 packet boundary and FOR-007 queue routing resolved locally; Milestone 1 package authority intake is next`)
+Status: Active packet (`Milestone 1 local package authority intake resolved locally; Milestone 2 forest-plan resolver preflight is next`)
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
@@ -74,6 +74,19 @@ into `Document_Register_Master`.
 - `config/forest_specific_example_package_registry_v1.json` still routes
   `bitterroot-nf` as `profile_eval_guidance_only`; the registry row names
   `FOR-007` only as the open queue boundary, not as reviewer-ready proof.
+- Local ignored package authority now exists under
+  `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`.
+  `box_inventory.json` records `41` folders, `132` visible files, and
+  `632,912,037` expected bytes. `box_import_manifest.json` records `132`
+  downloaded files, `632,912,037` actual bytes, and `failure_count=0`.
+- The tracked replay context
+  `config/replay_contexts/region1-example-bitterroot-front-57341.json` points
+  to current source set `source-set-f70ea11e04ae3d53`, the repo-root current
+  catalog, the local intake package, and the official project/Box authority
+  paths.
+- `ea-review` passed on the full package with `132/132` files extracted,
+  `5,463` package chunks, `package_failed_count=0`,
+  `validation_passed=true`, and `reviewer_ready=true`.
 - Existing governed examples remain South Otter and East Crazy for Custer
   Gallatin, West Reservoir for Flathead, Tyler's Kitchen for Lolo, and Bonanza
   for Helena-Lewis and Clark.
@@ -81,6 +94,9 @@ into `Document_Register_Master`.
   (`20/20`), source-register queue audit (`validation_passed=true`),
   `forest-specific-example-package-eval` (`passed=true`), and
   `git diff --check`.
+- Milestone 1 verification passed: Box inventory/download byte and hash
+  manifest completed with zero failures, replay context JSON validated, and
+  `ea-review` passed on `source-set-f70ea11e04ae3d53`.
 
 ## Goal
 
@@ -279,9 +295,8 @@ name Bitterroot Front as the active candidate without registry promotion.
 
 ### Milestone 1 - Local Package Authority Intake
 
-Outcome label: `resolved` if the official Box root is inventoried, downloaded,
-hashed, and validated with zero missing visible files; `reduced` if the
-remaining issue is narrowed to named inaccessible or unsupported files.
+Outcome label: `resolved` locally. The official Box root is inventoried,
+downloaded, hashed, and validated with zero missing visible files.
 
 1. Inventory the official Box root and record folder tree, file names, sizes,
    Box IDs, source folder URLs, and root path lineage.
@@ -291,6 +306,23 @@ remaining issue is narrowed to named inaccessible or unsupported files.
 5. Build the first package cache through `ea-review`.
 6. Stop as `reduced` if any official documents cannot be inventoried,
    downloaded, or traced to the official root.
+
+Closeout evidence:
+
+- local ignored intake:
+  `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`
+- tracked replay context:
+  `config/replay_contexts/region1-example-bitterroot-front-57341.json`
+- package authority manifest:
+  `document_count=132`, `folder_count=41`, `failure_count=0`,
+  `actual_total_byte_size=632,912,037`
+- base review cache:
+  `package_file_count=132`, `package_extracted_count=132`,
+  `package_chunk_count=5,463`, `package_failed_count=0`,
+  `reviewer_ready=true`, `validation_passed=true`
+- next route:
+  Milestone 2 forest-plan resolver preflight; do not promote Bitterroot Front
+  to registry or coverage manifests before Milestones 2-4 pass.
 
 ### Milestone 2 - Forest-Plan Resolver Preflight
 
@@ -447,11 +479,11 @@ unless repository policy changes.
 
 ## Residual Risks And Next Routing
 
-Milestone 0 only opens the packet and routes `FOR-007` to the example lane.
-The next slice is Milestone 1 package authority intake from the official Box
-root. Bitterroot must remain profile-guidance-only until Milestones 1-4 prove
-package authority, forest-plan readiness, reviewer stack readiness, and
-registry/coverage promotion.
+Milestone 1 only proves local package authority and the base `ea-review`
+package cache. The next slice is Milestone 2 forest-plan resolver preflight on
+the current f70 catalog and `bitterroot-nf` profile. Bitterroot must remain
+profile-guidance-only until Milestones 2-4 prove forest-plan readiness,
+reviewer stack readiness, and registry/coverage promotion.
 
 ## Closeout Checklist
 

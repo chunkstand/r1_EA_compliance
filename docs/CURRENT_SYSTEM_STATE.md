@@ -15,6 +15,44 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Bitterroot Front Package Authority Intake Resolved Locally
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
+  Milestone 1 package authority intake. Milestone 2 forest-plan resolver
+  preflight is next.
+- package authority truth:
+  the official Box root
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226983588` was
+  recursively inventoried and downloaded into ignored local evidence under
+  `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`.
+  `box_inventory.json` records `41` folders, `132` visible files, and
+  `632,912,037` expected bytes. `box_import_manifest.json` records `132`
+  downloaded files, `632,912,037` actual bytes, and `failure_count=0`.
+- replay context:
+  `config/replay_contexts/region1-example-bitterroot-front-57341.json` now
+  binds review `region1-example-bitterroot-front-57341` to
+  `source-set-f70ea11e04ae3d53`, `forest_unit_id="bitterroot-nf"`,
+  `source_library/catalog`, the local intake package, and the official project
+  and Box package-authority paths.
+- base review cache:
+  `ea-review` passed on the full package with `132/132` files extracted,
+  `5,463` package chunks, `package_failed_count=0`,
+  `validation_passed=true`, and `reviewer_ready=true`.
+- routing boundary:
+  this is package-authority and base EA-review proof only. `bitterroot-nf`
+  remains `profile_eval_guidance_only`; there is still no Bitterroot
+  reviewer-ready registry row, real-package coverage slot, component-coverage
+  slot, V1 eval contract, applicability adjudication, component adjudication,
+  compliance review, or phase-eval promotion evidence.
+- next route:
+  Milestone 2 must run `forest-plan-resolve` on the current f70 catalog and
+  Bitterroot profile, preserving typed blockers for missing Bitterroot source
+  records or unresolved component queue items. Do not promote Bitterroot Front
+  into registry or coverage manifests until Milestones 2-4 pass.
+
 ## Bitterroot Front Example Packet Opened
 
 Latest implementation update on 2026-05-29 UTC:
