@@ -2,15 +2,17 @@
 
 Date: 2026-05-28
 
-Status: Milestone 0 contract implemented locally. The read-only inventory CLI,
-local SQLite store, exports, phase/promotion ratchets, and trace-to-case
-promotion are still future milestones.
+Status: Milestone 0 contract and Milestone 1 read-only inventory CLI are
+implemented locally. The local SQLite store, exports, phase/promotion ratchets,
+and trace-to-case promotion are still future milestones.
 
 Owner surfaces:
 
 - Contract config: `config/eval_trace_inventory_contract_v1.json`
 - Validation helper: `src/usfs_r1_ea_sources/eval_trace_contract.py`
+- Inventory helper: `src/usfs_r1_ea_sources/eval_trace_inventory.py`
 - Contract tests: `tests/test_eval_trace_contract.py`
+- Inventory tests: `tests/test_eval_trace_inventory.py`
 - Implementation plan:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`
 
@@ -75,7 +77,7 @@ and hashes from those declared surfaces rather than counting file presence.
 
 ## Required Link Checks
 
-The first inventory/store milestones must implement typed link checks for:
+The first inventory/store milestones implement typed link checks for:
 
 - source-set identity
 - review identity
@@ -88,8 +90,11 @@ The first inventory/store milestones must implement typed link checks for:
 - explicit ratchet scope
 - local source-of-record protection
 
-Missing checks fail contract validation because linkability is the core
-first-class requirement.
+Missing checks fail contract validation or inventory readiness because
+linkability is the core first-class requirement. Milestone 1 now reports these
+checks through `required_link_status`, plus typed `missing_cross_links`,
+`stale_artifacts`, `source_set_mismatches`, `review_id_mismatches`, and
+`trace_hash_mismatches` fields.
 
 ## Scorer Contract
 
@@ -124,8 +129,9 @@ Milestone 0 forbids global fail-closed ratchets. The tracked config must not set
 `global_fail_closed=true` or use wildcard source-set/review scopes.
 
 The first seed candidate is West Reservoir on
-`source-set-f70ea11e04ae3d53`, but that seed is not a fail-closed ratchet until
-the inventory CLI exists and a later milestone explicitly enables it.
+`source-set-f70ea11e04ae3d53`; Milestone 1 now inventories that seed
+successfully. It is still not a fail-closed ratchet until a later milestone
+explicitly enables the scope in the tracked contract.
 
 ## Stop Conditions
 

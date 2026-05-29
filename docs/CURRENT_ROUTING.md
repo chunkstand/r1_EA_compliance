@@ -1,13 +1,13 @@
 # Current Routing
-Date: 2026-05-28
+Date: 2026-05-29
 Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved packet:
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 0
-- Active packet:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 1
-  read-only eval trace inventory CLI
+- Active packet:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 2
+  local DB-backed eval trace store
 - Latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
@@ -28,16 +28,22 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- First-class eval trace Milestone 0 is resolved locally. The tracked
-  contract now lives in `config/eval_trace_inventory_contract_v1.json`, the
-  contract doc is `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`, and
+- First-class eval trace Milestone 1 is resolved locally. The tracked contract
+  lives in `config/eval_trace_inventory_contract_v1.json`; the contract doc is
+  `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`; and
   `src/usfs_r1_ea_sources/eval_trace_contract.py` validates the canonical
   object model, enum values, artifact-family linkability, required link
   checks, scorer metadata, export preconditions, and no-global-ratchet policy.
-  The next active implementation slice is Milestone 1 in
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`: add the
-  read-only `eval-trace-inventory` CLI. West Reservoir f70 artifacts are the
-  primary seed candidate, but no phase/promotion ratchet is active yet.
+  The read-only `eval-trace-inventory` CLI now lives in
+  `src/usfs_r1_ea_sources/eval_trace_inventory.py` and inventories source-set
+  and review scopes without mutating existing artifacts. The West Reservoir f70
+  seed run passed with `18` required artifact rows present, `0` missing
+  required artifacts, `0` source-set or review-ID mismatches, `0` trace-hash
+  mismatches, and `export_readiness.reason="sqlite_store_not_built"`. The next
+  active implementation slice is Milestone 2 in
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`: build the
+  local DB-backed eval/trace store. No canonical export, OpenInference export,
+  phase/promotion ratchet, or trace-to-case promotion exists yet.
 - Resolved West Reservoir predecessor context: reviewer-readiness Milestone 4 is resolved locally on
   `source-set-f70ea11e04ae3d53`. West Reservoir-owned decision-support and
   final-QA configs/fixtures now drive the signer-facing packet artifacts;

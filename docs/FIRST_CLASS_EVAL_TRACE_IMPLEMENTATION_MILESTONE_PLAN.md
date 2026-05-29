@@ -4,7 +4,8 @@ Date: 2026-05-28
 
 Status: Active implementation packet. Milestone 0 contract and baseline
 inventory design is resolved locally; Milestone 1 read-only inventory CLI is
-the next implementation slice.
+resolved locally; Milestone 2 local DB-backed eval/trace store is the next
+implementation slice.
 
 Owner context: This plan implements the direction captured in
 `docs/FIRST_CLASS_EVALS_AND_TRACES_RESEARCH_BRIEF.md` for this repository. West
@@ -457,6 +458,13 @@ Commit closeout:
 
 Outcome label: reduced. The repo gains a queryable inventory, but the generic
 DB-backed store remains unimplemented.
+
+Status: Resolved locally. `eval_trace_inventory.py` and the
+`eval-trace-inventory` CLI now inventory source-set and review scopes without
+mutating existing artifacts. The West Reservoir f70 seed run passed with `18`
+required artifact rows present, `0` missing required artifacts, `0` source-set
+or review-ID mismatches, `0` trace-hash mismatches, and
+`export_readiness.reason="sqlite_store_not_built"`.
 
 Implementation:
 

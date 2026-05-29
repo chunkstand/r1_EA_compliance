@@ -88,6 +88,10 @@ def run_draft_generation_eval(**kwargs):
     return _module_attr("draft_generation_eval", "run_draft_generation_eval")(**kwargs)
 
 
+def run_eval_trace_inventory(**kwargs):
+    return _module_attr("eval_trace_inventory", "run_eval_trace_inventory")(**kwargs)
+
+
 def run_extraction_fidelity_eval(**kwargs):
     return _module_attr("extraction_fidelity_eval", "run_extraction_fidelity_eval")(**kwargs)
 
@@ -152,6 +156,7 @@ EVAL_COMMANDS = {
     "applicability-eval",
     "applicability-gold-eval",
     "draft-generation-eval",
+    "eval-trace-inventory",
     "extraction-fidelity-eval",
     "forest-plan-component-eval-coverage",
     "forest-plan-component-retrieval-eval",
@@ -227,6 +232,19 @@ COMMAND_SPECS = (
             _arg("--eval-file", default=DEFAULT_DRAFT_GENERATION_EVAL_PATH, type=Path),
             _arg("--config", default=DEFAULT_DRAFT_GENERATION_CONFIG_PATH, type=Path),
             _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="eval-trace-inventory",
+        help="Inventory first-class eval and trace artifact links without mutating source artifacts.",
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg("--source-set-id"),
+            _arg("--review-id"),
+            _arg("--catalog-dir", type=Path),
+            _arg("--results-path", type=Path),
+            _arg("--format", choices=("json", "markdown"), default="json"),
+            _arg("--fail-on-missing-required", action="store_true"),
         ),
     ),
     EvalCommandSpec(
@@ -429,6 +447,18 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 results_dir=args.results_dir,
             ),
             success_key="passed",
+        ),
+        "eval-trace-inventory": EvalCommandHandler(
+            run=lambda args: run_eval_trace_inventory(
+                output_dir=args.output_dir,
+                source_set_id=args.source_set_id,
+                review_id=args.review_id,
+                catalog_dir=args.catalog_dir,
+                results_path=args.results_path,
+                format=args.format,
+                fail_on_missing_required=args.fail_on_missing_required,
+            ),
+            success_key="command_succeeded",
         ),
         "extraction-fidelity-eval": EvalCommandHandler(
             run=lambda args: run_extraction_fidelity_eval(

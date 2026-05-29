@@ -64,6 +64,38 @@ def test_source_record_identity_gate_parser_accepts_identity_inputs() -> None:
     )
 
 
+def test_eval_trace_inventory_parser_accepts_inventory_scope_and_write_options() -> None:
+    args = build_parser().parse_args(
+        [
+            "eval-trace-inventory",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-f70ea11e04ae3d53",
+            "--review-id",
+            "west-reservoir-67436",
+            "--catalog-dir",
+            "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate",
+            "--results-path",
+            "/tmp/eval-trace-inventory.md",
+            "--format",
+            "markdown",
+            "--fail-on-missing-required",
+        ]
+    )
+
+    assert args.command == "eval-trace-inventory"
+    assert args.output_dir == Path("source_library")
+    assert args.source_set_id == "source-set-f70ea11e04ae3d53"
+    assert args.review_id == "west-reservoir-67436"
+    assert args.catalog_dir == Path(
+        "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate"
+    )
+    assert args.results_path == Path("/tmp/eval-trace-inventory.md")
+    assert args.format == "markdown"
+    assert args.fail_on_missing_required is True
+
+
 def test_upstream_eval_parser_accepts_manifest_and_results_dir() -> None:
     args = build_parser().parse_args(
         [
@@ -292,6 +324,49 @@ def test_phase_eval_handler_propagates_review_id_only(monkeypatch) -> None:
     assert captured["review_id"] == "tracked-replay-review"
     assert captured["source_set_id"] is None
     assert captured["catalog_dir"] is None
+
+
+def test_eval_trace_inventory_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_eval_trace_inventory(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"command_succeeded": True})
+
+    monkeypatch.setattr(cli_eval, "run_eval_trace_inventory", fake_run_eval_trace_inventory)
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "eval-trace-inventory",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-f70ea11e04ae3d53",
+            "--review-id",
+            "west-reservoir-67436",
+            "--catalog-dir",
+            "catalog-gate",
+            "--results-path",
+            "inventory.json",
+            "--format",
+            "json",
+            "--fail-on-missing-required",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 0
+    assert captured == {
+        "output_dir": Path("source_library"),
+        "source_set_id": "source-set-f70ea11e04ae3d53",
+        "review_id": "west-reservoir-67436",
+        "catalog_dir": Path("catalog-gate"),
+        "results_path": Path("inventory.json"),
+        "format": "json",
+        "fail_on_missing_required": True,
+    }
 
 
 def test_source_record_identity_gate_handler_propagates_identity_options(monkeypatch) -> None:

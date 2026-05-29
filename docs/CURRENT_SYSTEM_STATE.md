@@ -15,6 +15,48 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## First-Class Eval Trace Inventory Milestone 1 Resolved Locally
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 1 is
+  resolved locally. The system now has a read-only `eval-trace-inventory` CLI
+  over the tracked first-class eval/trace contract and existing generated
+  source-set/review artifacts.
+- owner surfaces:
+  `src/usfs_r1_ea_sources/eval_trace_inventory.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`, `tests/test_eval_trace_inventory.py`,
+  `tests/test_cli_eval.py`, `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`, `docs/ARCHITECTURE.md`, and
+  `docs/architecture_contract.toml`.
+- inventory truth:
+  the CLI supports source-set and review scopes, stdout JSON, explicit
+  `--results-path` writes, `--format json|markdown`, and
+  `--fail-on-missing-required`. It reports `coverage_status`,
+  `required_link_status`, `missing_cross_links`, `stale_artifacts`,
+  `source_set_mismatches`, `review_id_mismatches`, `trace_hash_mismatches`, and
+  `export_readiness` without mutating existing catalog, review, compliance, or
+  promotion artifacts.
+- West Reservoir seed run:
+  `eval-trace-inventory --output-dir source_library --source-set-id
+  source-set-f70ea11e04ae3d53 --review-id west-reservoir-67436 --format json
+  --results-path /tmp/usfs-r1-eval-trace-inventory.json` passed with `18`
+  required artifact rows present, `0` missing required artifacts, `0` malformed
+  artifacts, `0` source-set mismatches, `0` review-ID mismatches, and `0`
+  trace-hash mismatches. The f70 catalog row count observed by inventory is
+  `715`; applicability trace rows are `1314` retrieval rows and `3650` graph
+  rows.
+- ratchet/export state:
+  global fail-closed eval-trace ratchets are still not enabled. The SQLite
+  store and canonical/OpenInference exports do not exist yet, so inventory
+  correctly reports `export_readiness.reason="sqlite_store_not_built"`.
+- next implementation route:
+  implement Milestone 2, the local DB-backed eval/trace store, from the green
+  inventory output. Do not add canonical export, OpenInference export,
+  phase/promotion gates, or trace-to-case promotion before the store contract is
+  implemented and verified.
+
 ## First-Class Eval Trace Contract Milestone 0 Resolved Locally
 
 Latest implementation update on 2026-05-28 UTC:
@@ -38,12 +80,12 @@ Latest implementation update on 2026-05-28 UTC:
   preconditions, and explicit ratchet scope rules.
 - ratchet state:
   global fail-closed eval-trace ratchets are not enabled. West Reservoir on
-  `source-set-f70ea11e04ae3d53` is only a seed candidate for the future
-  inventory CLI.
+  `source-set-f70ea11e04ae3d53` has now been inventoried by the Milestone 1
+  read-only CLI, but no store/export/ratchet is enabled yet.
 - next implementation route:
-  implement Milestone 1, the read-only `eval-trace-inventory` CLI, against the
-  tracked contract and existing artifacts. Do not build the SQLite store,
-  exports, or phase/promotion gates before the inventory contract is green.
+  superseded by the newer Milestone 1 section above; the next route is
+  Milestone 2 local DB-backed store. Do not build exports or phase/promotion
+  gates before the store contract is green.
 
 ## West Reservoir Signer-Facing Packet Closeout Resolved Locally
 

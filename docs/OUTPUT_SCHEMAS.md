@@ -4265,6 +4265,68 @@ Future generated inventory, store, export, and case artifacts must preserve
 local source/review/source-set provenance and pass the link checks declared in
 the contract before they can become phase or promotion gates.
 
+## First-Class Eval Trace Inventory
+
+Command:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-inventory \
+  --output-dir source_library \
+  --source-set-id <source-set-id> \
+  --review-id <review-id> \
+  --results-path source_library/evaluations/eval_trace_inventory/eval_trace_inventory_results.json
+```
+
+Default stdout is JSON. The command is read-only with respect to existing
+catalog, extraction, review, compliance, and promotion artifacts. It writes only
+when `--results-path` is supplied; `--format json|markdown` controls that
+explicit output file.
+
+Schema version: `eval-trace-inventory-results-v1`
+
+Required top-level fields:
+
+- `contract_id`
+- `contract_version`
+- `scope`
+- `passed`
+- `command_succeeded`
+- `coverage_status`
+- `artifact_families`
+- `required_link_status`
+- `missing_cross_links`
+- `stale_artifacts`
+- `source_set_mismatches`
+- `review_id_mismatches`
+- `trace_hash_mismatches`
+- `export_readiness`
+
+`artifact_families` records one row per inspected artifact path with
+`family_id`, `path`, `required`, `exists`, `status`, `origin_artifact_ref`,
+`artifact_sha256`, observed `source_set_id`, observed `review_id`, and
+artifact-specific summary fields when available. Review-scoped inventory covers
+the replay context, catalog surfaces, phase eval, applicability traces, forest
+plan component eval and coverage, V1 EA eval, real-package coverage, decision
+support, final QA, review packet index, and promotion suite. Source-set-only
+inventory covers the catalog surfaces and source-set phase eval.
+
+`required_link_status.checks` currently reports the Milestone 1 link contract:
+source-set identity, review identity, source artifact hashes, origin artifact
+refs, replay-context/catalog alignment, applicability trace hash matching,
+phase-eval direct-eval presence, local provenance preservation, explicit
+ratchet scope, local source-of-record protection, and stale artifact absence.
+
+`passed=false` is the truthful inventory state when any required artifact is
+missing or malformed, source-set or review identity drifts, trace hashes are
+stale, or required links are absent. The CLI exits successfully on a completed
+inventory by default so agents can inspect typed gaps; `--fail-on-missing-required`
+makes those gaps a non-zero command result.
+
+Milestone 1 does not create the SQLite store or export files. Therefore
+`export_readiness.canonical_json_ready=false` and
+`export_readiness.reason="sqlite_store_not_built"` even when inventory rows are
+otherwise exportable.
+
 ## Extraction Fidelity Eval Outputs
 
 Default manifest: `config/extraction_fidelity_eval_v1.json`

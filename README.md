@@ -175,6 +175,16 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --review-id <review-id>
 ```
 
+Inventory first-class eval/trace links without mutating source artifacts:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-inventory \
+  --output-dir source_library \
+  --source-set-id <source-set-id> \
+  --review-id <review-id> \
+  --results-path /tmp/usfs-r1-eval-trace-inventory.json
+```
+
 Validate replay-facing source-record identity against a target catalog:
 
 ```bash
