@@ -368,6 +368,42 @@ class ForestPlanProfileTests(unittest.TestCase):
             [entry.name for entry in profile.overlay_terms],
         )
 
+    def test_idaho_panhandle_profile_uses_reconciled_sources_and_lacy_scope_term(self) -> None:
+        profile = load_forest_plan_profile("idaho-panhandle-nfs")
+
+        self.assertEqual(profile.active_plan_source_record_id, "FOR-021")
+        self.assertEqual(
+            profile.source_record_id_for_role("primary_land_management_plan"),
+            "FOR-021",
+        )
+        self.assertEqual(profile.source_record_id_for_role("record_of_decision"), "FPS-223")
+        self.assertEqual(profile.source_record_id_for_role("biological_opinion_1"), "FPS-238")
+        self.assertEqual(profile.source_record_id_for_role("biological_opinion_2"), "FPS-240")
+        self.assertEqual(profile.source_record_id_for_role("administrative_change_1"), "FPS-256")
+        self.assertEqual(profile.source_record_id_for_role("administrative_change_2"), "FPS-257")
+        self.assertEqual(
+            [
+                profile.source_record_id_for_role(f"biological_opinion_chapter_{index}")
+                for index in range(1, 6)
+            ],
+            ["FPS-232", "FPS-233", "FPS-234", "FPS-235", "FPS-236"],
+        )
+        self.assertEqual(
+            profile.source_record_id_for_role("final_environmental_impact_statement"),
+            "R1PLAN-idaho-panhandle-nfs-04",
+        )
+        self.assertEqual(
+            profile.source_record_id_for_role("final_environmental_impact_statement_appendices"),
+            "R1PLAN-idaho-panhandle-nfs-05",
+        )
+        district = next(
+            entry
+            for entry in profile.ranger_district_terms
+            if entry.entry_id == "district-st-joe"
+        )
+        self.assertEqual(district.name, "St. Joe Ranger District")
+        self.assertIn("St Joe Ranger District", district.aliases)
+
     def test_hlc_profile_has_bonanza_castles_context_terms(self) -> None:
         profile = load_forest_plan_profile("helena-lewis-and-clark-nf")
 

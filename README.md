@@ -59,10 +59,13 @@ They are intentionally not duplicated here.
   packet in
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, but
   `idaho-panhandle-nfs` remains `profile_eval_guidance_only` after local
-  package-authority intake. The tracked replay context is
+  package-authority intake and reduced forest-plan preflight. The tracked
+  replay context is
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`;
-  do not promote the package until the forest-plan resolver, reviewer-stack,
-  and promotion gates pass.
+  resolver scope now resolves to `idaho_panhandle_nfs`, but promotion is
+  blocked by missing FEIS source records, area/overlay vocabulary, and
+  component adjudication. Do not promote the package until source-delta,
+  reviewer-stack, and promotion gates pass.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

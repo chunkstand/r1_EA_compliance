@@ -15,13 +15,13 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Idaho Panhandle Lacy Lemoosh Package Authority Intake Resolved Locally
+## Idaho Panhandle Lacy Lemoosh Forest-Plan Preflight Reduced Locally
 
 Latest implementation update on 2026-05-29 UTC:
 
 - update:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
-  resolved locally through Milestone 1 package-authority intake as the active
+  resolved through Milestone 1 and reduced locally at Milestone 2 as the active
   Idaho Panhandle forest-specific example packet. The planned review identity is
   `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
   `forest_unit_id="idaho-panhandle-nfs"` and planned
@@ -62,8 +62,21 @@ Latest implementation update on 2026-05-29 UTC:
   this is still not a registry/coverage promotion. `config/forest_specific_example_package_registry_v1.json`
   routes `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
   `primary_example_id=null`; `config/v1_real_package_review_coverage_v1.json`
-  has no Lacy Lemoosh slot. The next slice is Milestone 2 forest-plan resolver
-  preflight. Do not add Lacy Lemoosh package files to
+  has no Lacy Lemoosh slot. Milestone 2 reconciled Idaho profile source IDs to
+  active catalog IDs, added package-backed `St. Joe Ranger District` resolver
+  vocabulary, and built a review-local component inventory with `52`
+  components and `8` standards. `forest-plan-resolve` now reports
+  `scope_status="idaho_panhandle_nfs"`, `unresolved_mention_count=0`,
+  `project_location_signal_count=1`, component evaluation
+  `reviewer_ready=true`, and overall `validation_passed=false`.
+- reduced blocker:
+  the resolver remains reduced because `R1PLAN-idaho-panhandle-nfs-04` and
+  `R1PLAN-idaho-panhandle-nfs-05` have zero indexed chunks in
+  `source-set-f70ea11e04ae3d53`, no Idaho area/overlay vocabulary resolves, and
+  component adjudication is missing for the current `52` reviewer-resolution
+  items. The next slice is the Idaho source-delta plus area/overlay and
+  component-adjudication blocker; do not proceed to reviewer-stack or
+  promotion gates first. Do not add Lacy Lemoosh package files to
   `Document_Register_Master`, and do not reroute unrelated Idaho Panhandle
   queue rows such as `FOR-020` or `FOR-022` into this packet.
 

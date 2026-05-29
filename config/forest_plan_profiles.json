@@ -2031,7 +2031,7 @@
       "ambiguous_unit_terms": [
         "Idaho Panhandle"
       ],
-      "active_plan_source_record_id": "R1PLAN-idaho-panhandle-nfs-02",
+      "active_plan_source_record_id": "FOR-021",
       "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Idaho Panhandle National Forests promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
       "supporting_source_record_ids_by_role": {
         "planning_page": {
@@ -2039,11 +2039,11 @@
           "required_for": "currentness and document-set resolution"
         },
         "primary_land_management_plan": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-02",
+          "source_record_id": "FOR-021",
           "required_for": "plan component and area resolution"
         },
         "record_of_decision": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-03",
+          "source_record_id": "FPS-223",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "final_environmental_impact_statement": {
@@ -2055,39 +2055,39 @@
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_opinion_1": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-11",
+          "source_record_id": "FPS-238",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_opinion_2": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-12",
+          "source_record_id": "FPS-240",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "administrative_change_1": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-16",
+          "source_record_id": "FPS-256",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "administrative_change_2": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-17",
+          "source_record_id": "FPS-257",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_opinion_chapter_1": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-18",
+          "source_record_id": "FPS-232",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_opinion_chapter_2": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-19",
+          "source_record_id": "FPS-233",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_opinion_chapter_3": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-20",
+          "source_record_id": "FPS-234",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_opinion_chapter_4": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-21",
+          "source_record_id": "FPS-235",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_opinion_chapter_5": {
-          "source_record_id": "R1PLAN-idaho-panhandle-nfs-22",
+          "source_record_id": "FPS-236",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         }
       },
@@ -2107,7 +2107,16 @@
         "biological_opinion_chapter_4",
         "biological_opinion_chapter_5"
       ],
-      "ranger_district_terms": [],
+      "ranger_district_terms": [
+        {
+          "entry_id": "district-st-joe",
+          "category": "district",
+          "name": "St. Joe Ranger District",
+          "aliases": [
+            "St Joe Ranger District"
+          ]
+        }
+      ],
       "geographic_area_terms": [],
       "management_area_terms": [],
       "overlay_terms": [],

@@ -14,6 +14,7 @@ from tests.support.forest_plan_resolver_common import (
 )
 from tests.support.forest_plan_resolver_custer_fixtures import _build_custer_source_library
 from usfs_r1_ea_sources.forest_plan_resolver import run_forest_plan_resolver
+from usfs_r1_ea_sources.forest_plan_resolver_location import _location_evidence_role
 
 
 class ForestPlanResolverScopeTests(unittest.TestCase):
@@ -241,6 +242,34 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
             }
             self.assertEqual(background["Bozeman Ranger District"], "background_reference")
             self.assertTrue(context["needs_reviewer_resolution"])
+
+    def test_literature_review_other_forest_reference_is_background(self) -> None:
+        evidence = {
+            "category": "forest_unit",
+            "matched_alias": "Kootenai National Forest",
+            "name": "Kootenai National Forest",
+            "title": "LacyLemooshEALiteratureReview.pdf",
+            "evidence_span": {
+                "text": (
+                    "USDA Forest Service, 2017c. Starry Goat Draft Environmental Impact "
+                    "Statement. Three Rivers Ranger District, Kootenai National Forest, July "
+                    "2017. Not used This is a NEPA document, not a research article. Does not "
+                    "change the analysis of this project."
+                )
+            },
+            "provenance": {
+                "artifact_path": "Final EA/LacyLemooshEALiteratureReview.pdf",
+            },
+        }
+
+        self.assertEqual(_location_evidence_role(evidence), "background_reference")
+        evidence["evidence_span"]["text"] = (
+            "Considered This is a field review of the Bitterroot National Forest Burned Area "
+            "Recovery Project. BMPs are constantly being updated to reflect current science."
+        )
+        evidence["matched_alias"] = "Bitterroot National Forest"
+        evidence["name"] = "Bitterroot National Forest"
+        self.assertEqual(_location_evidence_role(evidence), "background_reference")
 
     def test_unselected_profile_district_does_not_resolve_selected_profile(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

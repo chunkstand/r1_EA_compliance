@@ -37,7 +37,7 @@ def _location_evidence_role(evidence: dict) -> str:
         return "background_reference"
     if _has_project_external_location_context(decision_text):
         return "background_reference"
-    if _has_incidental_forest_unit_context(decision_text):
+    if _has_incidental_forest_unit_context(forest_unit_context_text):
         return "background_reference"
     if _is_affirmative_location_context(evidence) or _is_header_project_location_context(evidence):
         return "project_location"
@@ -361,6 +361,8 @@ def _has_incidental_forest_unit_context(text: str) -> bool:
     incidental_phrases = (
         "references",
         "literature cited",
+        "literature review",
+        "literaturereview",
         "literature/ science considered",
         "literature/science considered",
         "science considered",
@@ -376,6 +378,12 @@ def _has_incidental_forest_unit_context(text: str) -> bool:
         "northern portion",
         "southern portion",
         "not likely to use affected parcels",
+        "not used",
+        "not applicable to this site-specific analysis",
+        "does not change the analysis of this project",
+        "nepa document, not a research article",
+        "forests are surveyed on a three-year rotation",
+        "mesocarnivore monitoring",
     )
     if any(phrase in text for phrase in incidental_phrases):
         return True

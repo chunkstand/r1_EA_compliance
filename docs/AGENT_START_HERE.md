@@ -53,11 +53,15 @@ The planner:
   downloaded files, `553,664,116` file bytes, zero failures, and a tracked
   replay context at
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`.
-  This is not a governed primary example yet:
+  Milestone 2 forest-plan preflight resolves `idaho_panhandle_nfs` scope and
+  builds a review-local inventory with `52` components and `8` standards, but
+  remains reduced on missing FEIS source records `R1PLAN-idaho-panhandle-nfs-04`
+  and `-05`, absent area/overlay vocabulary, and missing component
+  adjudication. This is not a governed primary example yet:
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` at `profile_eval_guidance_only` with
-  `primary_example_id=null` until forest-plan resolver, reviewer-stack, and
-  promotion gates pass. Keep Lacy Lemoosh parallel to
+  `primary_example_id=null` until source-delta, component adjudication,
+  reviewer-stack, and promotion gates pass. Keep Lacy Lemoosh parallel to
   `Document_Register_Master`; it is not a generic Region 1 example and must
   not be reused for non-Idaho-Panhandle forests.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved

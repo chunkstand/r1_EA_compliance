@@ -14,8 +14,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 2 forest-plan resolver preflight; Milestone 1 resolved local
-  package-authority intake and base review without registry promotion
+  Milestone 2 forest-plan resolver preflight reduced locally on Idaho
+  source-delta and component-adjudication blockers; no registry promotion
 - Latest resolved forest-specific example packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -65,11 +65,21 @@ Use this file as the short current route before opening the append-only docs.
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`.
   `ea-review` on `source-set-f70ea11e04ae3d53` passes with `186/186`
   extracted files, `7,404` package chunks, `package_failed_count=0`,
-  `reviewer_ready=true`, and `validation_passed=true`. Milestone 1 still does
-  not add a review example or coverage slot: `idaho-panhandle-nfs` remains
-  `profile_eval_guidance_only`, with `primary_example_id=null`, until
-  forest-plan resolver, reviewer-stack, and promotion gates pass. The next
-  slice is Milestone 2 forest-plan resolver preflight. Keep Lacy Lemoosh
+  `reviewer_ready=true`, and `validation_passed=true`. Milestone 2 reconciled
+  the Idaho profile to active catalog IDs proven by
+  `config/r1_forest_plan_identity_reconciliation_v1.json`, added the
+  package-backed `St. Joe Ranger District` scope term, built a review-local
+  component inventory with `52` components and `8` standards, and reran
+  `forest-plan-resolve`. The resolver now reports
+  `scope_status="idaho_panhandle_nfs"`, `unresolved_mention_count=0`,
+  `project_location_signal_count=1`, and component evaluation
+  `reviewer_ready=true`, but overall validation is reduced because
+  `R1PLAN-idaho-panhandle-nfs-04` and `R1PLAN-idaho-panhandle-nfs-05` have
+  zero indexed chunks, no Idaho area/overlay terms resolve, and component
+  adjudication is missing for the current `52` reviewer-resolution items.
+  `idaho-panhandle-nfs` remains `profile_eval_guidance_only`, with
+  `primary_example_id=null`; the next slice is the Idaho source-delta plus
+  area/overlay/adjudication blocker, not registry promotion. Keep Lacy Lemoosh
   parallel to `Document_Register_Master`; do not route unrelated Idaho
   Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
