@@ -15,6 +15,49 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Bitterroot Front Registry And Coverage Promotion Resolved
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved
+  locally through Milestone 4 registry and coverage promotion. The inherited
+  f70 retrieval direct-eval identity drift was refreshed without changing the
+  tracked eval contract: `retrieval-eval` now passes `12/12` on
+  `source-set-f70ea11e04ae3d53` with `3` hard negatives, `4` multi-source
+  cases, and the current `retrieval-direct-eval-v1` contract hash.
+- review readiness:
+  `phase-eval --review-id region1-example-bitterroot-front-57341` now passes
+  `28/28` with `blockers=[]`, `direct_eval_ready_phase_count=5`,
+  `identity_mismatch_phase_count=0`, and `reviewer_ready=true`.
+- promotion:
+  `config/v1_real_package_review_coverage_v1.json` includes
+  `slot_id="bitterroot-front-forest-specific"` as required
+  `forest_specific_reviewer_ready` coverage for
+  `review_id="region1-example-bitterroot-front-57341"`.
+  `real-package-review-coverage-eval` passes with `covered_slot_count=6`,
+  `required_slot_count=6`, `reviewer_ready_slot_count=6`,
+  `distinct_forest_count=5`, and `distinct_package_style_count=7`.
+  `config/forest_specific_example_package_registry_v1.json` now routes
+  `bitterroot-nf` as `real_package_examples_available` with
+  `primary_example_id="bitterroot-front-forest-specific"`.
+  `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
+  `review_example_count=6`, `reviewer_ready_example_count=6`,
+  `distinct_governed_example_forest_count=5`, and
+  `profile_guidance_only_count=5`.
+- component coverage:
+  `config/forest_plan_component_eval_coverage_v1.json` includes the required
+  Bitterroot Front component slot. The standalone aggregate still exits red
+  only on the inherited `v1-cg-ecid-source-delta-review` slot
+  (`result_not_passed` plus `result_source_set_id_mismatch`). The Bitterroot
+  slot is covered, source-set aligned, and passing.
+- queue boundary:
+  `FOR-007` is now `resolution_status="resolved"` with
+  `planned_disposition="forest_specific_example_package"` in
+  `config/source_register_queue_resolution_ledger_v1.json`. It remains
+  parallel to `Document_Register_Master`; no Bitterroot Front package files or
+  project-specific rows were added to the shared master.
+
 ## Bitterroot Front Reviewer Stack Reduced Locally
 
 Latest implementation update on 2026-05-29 UTC:

@@ -1,7 +1,7 @@
 # Bitterroot Front Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Active packet (`Milestone 3 reviewer-stack replay reduced locally; inherited source-set phase-eval direct-eval drift remains separate`)
+Status: Resolved locally through Milestone 4 registry and coverage promotion
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
@@ -44,13 +44,15 @@ The planned governed identity is:
 - `coverage_class_id="forest_specific_reviewer_ready"`
 - `queue_lineage_source_ids=["FOR-007"]`
 
-Bitterroot must remain `profile_eval_guidance_only` in
+Bitterroot had to remain `profile_eval_guidance_only` in
 `config/forest_specific_example_package_registry_v1.json` until Bitterroot
-Front passes package authority, replay context, forest-plan
+Front passed package authority, replay context, forest-plan
 component/adjudication, compliance, V1 eval, phase eval, and review-scope
-promotion gates. `FOR-007` may route to this packet as a planned
-forest-specific example boundary before promotion, but it must not emit rows
-into `Document_Register_Master`.
+promotion gates. After Milestone 4, `bitterroot-nf` routes as
+`real_package_examples_available` with
+`primary_example_id="bitterroot-front-forest-specific"`. `FOR-007` is resolved
+as a forest-specific example boundary, but it must not emit rows into
+`Document_Register_Master`.
 
 ## Current Evidence
 
@@ -69,11 +71,11 @@ into `Document_Register_Master`.
 - `config/source_register_queue_resolution_ledger_v1.json` now routes
   `FOR-007` (`Bitterroot Front Project`) to this packet with
   `planned_disposition="forest_specific_example_package"` and
-  `resolution_status="planned"` while preserving the workbook-matching source
+  `resolution_status="resolved"` while preserving the workbook-matching source
   row identity.
-- `config/forest_specific_example_package_registry_v1.json` still routes
-  `bitterroot-nf` as `profile_eval_guidance_only`; the registry row names
-  `FOR-007` only as the open queue boundary, not as reviewer-ready proof.
+- `config/forest_specific_example_package_registry_v1.json` now routes
+  `bitterroot-nf` as `real_package_examples_available` with
+  `primary_example_id="bitterroot-front-forest-specific"`.
 - Local ignored package authority now exists under
   `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`.
   `box_inventory.json` records `41` folders, `132` visible files, and
@@ -141,7 +143,7 @@ into `Document_Register_Master`.
   an evidence-linking miss against package old-growth evidence. This raw red
   coverage is retained as Milestone 3 reviewer-stack/component-eval diagnostic
   evidence, not as a remaining Milestone 2 adjudication blocker.
-- Milestone 3 reviewer-stack replay is reduced locally. The Bitterroot-specific
+- Milestone 3 reviewer-stack replay is resolved locally. The Bitterroot-specific
   gates are green: applicability adjudication resolves `6/6` conflicts
   (`5` applicable, `1` not applicable), applicability validation reports
   `reviewer_ready=true`, generated rule-pack validation passes with `54`
@@ -149,15 +151,30 @@ into `Document_Register_Master`.
   JSON/Markdown/PDF artifacts, `v1-ea-eval` passes with `28` conditional
   expectations, and `forest-plan-component-eval` passes `23/23` component
   cases with `3` applicable standards.
-- Review `phase-eval --review-id region1-example-bitterroot-front-57341` was
-  run and includes the Bitterroot-specific phases as passing, including
-  `generated_rule_pack`, `compliance_review`, `forest_plan_component_eval`,
-  and `forest_plan_component_adjudication`. The top-level command still exits
-  red because the shared f70 retrieval direct-eval artifact is stale/identity
-  mismatched against the current `retrieval_eval_seed.json` contract, which
-  also keeps `evaluation_coverage` red. Treat that as an inherited source-set
-  direct-eval drift blocker, not as a Bitterroot package replay blocker and not
-  as permission to promote Bitterroot before Milestone 4.
+- The inherited f70 retrieval direct-eval artifact was refreshed against the
+  current `retrieval_eval_seed.json` contract without weakening the contract.
+  `retrieval-eval` now passes `12/12` on `source-set-f70ea11e04ae3d53` with
+  `3` hard negatives, `4` multi-source cases, and
+  `eval_id="retrieval-direct-eval-v1"`.
+- Review `phase-eval --review-id region1-example-bitterroot-front-57341` now
+  passes `28/28` with `blockers=[]`, `direct_eval_ready_phase_count=5`,
+  `identity_mismatch_phase_count=0`, and `reviewer_ready=true`.
+- Milestone 4 registry and coverage promotion is resolved locally.
+  `config/v1_real_package_review_coverage_v1.json` includes required
+  `slot_id="bitterroot-front-forest-specific"` coverage and
+  `real-package-review-coverage-eval` passes with `covered_slot_count=6`,
+  `required_slot_count=6`, `reviewer_ready_slot_count=6`,
+  `distinct_forest_count=5`, and `distinct_package_style_count=7`.
+  `forest-specific-example-package-eval` passes with
+  `covered_forest_count=10`, `review_example_count=6`,
+  `reviewer_ready_example_count=6`,
+  `distinct_governed_example_forest_count=5`, and
+  `profile_guidance_only_count=5`.
+- `config/forest_plan_component_eval_coverage_v1.json` includes the required
+  Bitterroot component slot. The standalone aggregate still exits red only on
+  the inherited `v1-cg-ecid-source-delta-review` slot
+  (`result_not_passed` plus `result_source_set_id_mismatch`); the Bitterroot
+  slot itself is present, covered, source-set aligned, and passing.
 
 ## Goal
 
@@ -552,17 +569,18 @@ then route the unrelated aggregate blocker to its own packet.
 ## Acceptance Criteria
 
 - `FOR-007` is no longer a generic direct-file promotion candidate and instead
-  points to this packet as a planned forest-specific example boundary.
-- `bitterroot-nf` remains `profile_eval_guidance_only` until reviewer-stack
-  gates pass.
+  points to this packet as a resolved forest-specific example boundary.
+- `bitterroot-nf` routes as `real_package_examples_available` only after
+  reviewer-stack and promotion gates passed.
 - No Bitterroot Front package files or project-specific rows are added to
   `Document_Register_Master`.
 - Future promotion requires matching review ID, example ID, coverage slot,
   forest unit ID, source set ID, replay context, V1 eval, component eval, and
   phase-eval evidence.
 - Focused tests reject queue, registry, and agent-routing drift.
-- Docs and handoff surfaces identify this packet as the active Bitterroot
-  follow-on and HLC Bonanza as the latest resolved example packet.
+- Docs and handoff surfaces identify this packet as the latest resolved
+  forest-specific example packet and keep HLC Bonanza as resolved predecessor
+  evidence.
 
 ## Stop Conditions
 
@@ -587,24 +605,20 @@ unless repository policy changes.
 
 ## Residual Risks And Next Routing
 
-Milestone 3 now proves the Bitterroot-specific applicability, generated rule
-pack, compliance-review, V1 eval, component-eval, and component-adjudication
-artifacts. It does not prove full phase-eval or promotion readiness because the
-review-level phase eval still inherits a shared f70 retrieval direct-eval
-identity mismatch and downstream evaluation-coverage red state. Raw
-applicable-standard coverage remains red as component-eval diagnostic evidence
-even though the two standard gaps are classified in adjudication replay.
-Bitterroot must remain profile-guidance-only until the separate inherited
-source-set phase-eval drift is routed or repaired and Milestone 4
-registry/coverage promotion gates pass.
+Milestone 4 now proves Bitterroot Front as the governed primary Bitterroot
+example package. The package remains parallel to `Document_Register_Master`;
+no package rows were promoted into the shared master. The only remaining
+aggregate red state is the inherited ECID source-delta component-coverage slot
+in `forest-plan-component-eval-coverage`; the Bitterroot slot is present,
+covered, source-set aligned, and passing.
 
 ## Closeout Checklist
 
-- [ ] Verify live project and Box metadata.
-- [ ] Keep `FOR-007` packet-owned and parallel to `Document_Register_Master`.
-- [ ] Keep Bitterroot out of reviewer-ready registry/coverage promotion until
+- [x] Verify live project and Box metadata.
+- [x] Keep `FOR-007` packet-owned and parallel to `Document_Register_Master`.
+- [x] Keep Bitterroot out of reviewer-ready registry/coverage promotion until
   review gates pass.
-- [ ] Run focused tests, source-register queue audit, plan lint, and
+- [x] Run focused tests, source-register queue audit, plan lint, and
   `git diff --check`.
-- [ ] Update current routing, current-state, handoff, and agent-start docs.
+- [x] Update current routing, current-state, handoff, and agent-start docs.
 - [ ] Commit the verified milestone slice atomically.

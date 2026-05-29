@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 2 after f70 source-record, component-inventory, and component-adjudication closure without registry promotion; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, or Bitterroot Milestones 0-2 unless a verified gate regresses`)
+Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, or Bitterroot Milestones 0-4 unless a verified gate regresses`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -19,6 +19,7 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
     `custer-gallatin-nf`
   - East Crazy as a supplemental reviewer-ready example for
     `custer-gallatin-nf`
+  - Bitterroot Front as the primary reviewer-ready example for `bitterroot-nf`
   - West Reservoir as the primary reviewer-ready example for `flathead-nf`
   - Tyler's Kitchen as the primary reviewer-ready example for `lolo-nf`
   - Bonanza as the primary reviewer-ready example for `helena-lewis-and-clark-nf`
@@ -36,7 +37,7 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   parent packet's Milestone 3 registry and aggregate threshold ratchet is now
   implemented: `lolo-nf` routes as `real_package_examples_available`, and the
   Lolo slot is load-bearing in real-package coverage.
-- The remaining `6` forests now route through
+- The remaining `5` forests now route through
   `config/region1_forest_plan_profile_eval_coverage_v1.json` as
   `profile_eval_guidance_only` until a governed real package example exists.
 - The South Otter follow-on in
@@ -60,16 +61,14 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   `real_package_examples_available` with Bonanza as the primary example.
 - The Bitterroot Front follow-on in
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
-  Milestone 2 forest-plan resolver preflight. `FOR-007` now routes to that
-  packet as planned `forest_specific_example_package` queue-boundary work,
-  local package authority and the base `ea-review` cache are green, and
-  Bitterroot scope resolves to `bitterroot_nf`. The local f70 source-record
-  overlay now indexes `R1PLAN-bitterroot-nf-12`/`-13`, the f70 review-local
-  component inventory now passes with `23` components and `3` standards from
-  `FOR-005`/`FOR-006`, and tracked component adjudication passes with `20/20`
-  items resolved. Raw applicable-standard coverage remains red as Milestone 3
-  reviewer-stack/component-eval diagnostic evidence. `bitterroot-nf` stays
-  `profile_eval_guidance_only` until reviewer-stack and promotion gates pass.
+  Milestone 4 registry and coverage promotion. `FOR-007` now resolves to that
+  packet as `forest_specific_example_package` queue-boundary work, package
+  authority and the full reviewer stack are green, review `phase-eval` passes
+  `28/28`, `bitterroot-nf` routes as `real_package_examples_available`, and
+  Bitterroot Front is the primary Bitterroot example. The standalone
+  component-coverage aggregate remains red only on the inherited
+  `v1-cg-ecid-source-delta-review` slot; the Bitterroot component slot is
+  present, covered, source-set aligned, and passing.
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.
@@ -79,9 +78,9 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   lane to prove explicit typed routing for every forest.
 - Under this boundary, `source-register-queue-audit` should now read
   `planned_disposition_counts={"forest_specific_example_package":2,"promote_direct_file":34}`
-  and `resolution_status_counts={"blocked":9,"planned":33,"resolved":9}` with
+  and `resolution_status_counts={"blocked":9,"planned":32,"resolved":10}` with
   `blocked_current_or_project_applicable_count=9` and
-  `unresolved_current_or_project_applicable_count=31`.
+  `unresolved_current_or_project_applicable_count=30`.
 
 ## Goal
 
@@ -275,13 +274,12 @@ Current HLC Bonanza follow-on:
 
 Current Bitterroot Front follow-on:
 
-- `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is active after a
-  resolved Milestone 2 forest-plan resolver preflight. It owns the user-selected
-  Bitterroot Front Project (`57341`) package boundary for a governed Bitterroot
-  candidate lane. `FOR-007` is packet-owned as a planned forest-specific
-  example boundary, but Bitterroot remains profile-guidance-only until the
-  reviewer-stack, component-eval, and registry promotion gates pass. The
-  planned identity is
+- `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
+  Milestone 4 registry and coverage promotion. It owns the user-selected
+  Bitterroot Front Project (`57341`) package boundary for the governed
+  Bitterroot primary example lane. `FOR-007` is packet-owned and resolved as a
+  forest-specific example boundary while remaining parallel to
+  `Document_Register_Master`. The resolved identity is
   `review_id="region1-example-bitterroot-front-57341"` and
   `example_id="bitterroot-front-forest-specific"`.
 
@@ -303,12 +301,12 @@ Current Bitterroot Front follow-on:
   Crazy remains the only supplemental active example, South Plateau is
   archived as historical evidence only, and South Otter does not count as a
   new distinct forest.
-- Current aggregate evidence after HLC Bonanza promotion:
-  `real-package-review-coverage-eval` passes with `5` covered required slots,
-  `5` reviewer-ready slots, `0` typed-blocked slots, `4` distinct forests, and
-  `6` package-style tags. `forest-specific-example-package-eval` passes with
-  `5` governed review examples, `5` reviewer-ready examples, `4` distinct
-  governed forests, and `6` profile-guidance-only forests.
+- Current aggregate evidence after Bitterroot Front promotion:
+  `real-package-review-coverage-eval` passes with `6` covered required slots,
+  `6` reviewer-ready slots, `0` typed-blocked slots, `5` distinct forests, and
+  `7` package-style tags. `forest-specific-example-package-eval` passes with
+  `6` governed review examples, `6` reviewer-ready examples, `5` distinct
+  governed forests, and `5` profile-guidance-only forests.
 - Bitterroot Front package-authority evidence is local and ignored:
   `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`
   contains `box_inventory.json` with `41` folders, `132` visible files, and
@@ -331,15 +329,15 @@ Current Bitterroot Front follow-on:
   `12` applicability false positives, and `8` evidence-linking misses; rerun
   resolver validation is green with `needs_reviewer_resolution=false`. Raw
   applicable-standard coverage remains red with `3` applicable standards and
-  `1` applied standard as Milestone 3 diagnostic evidence. `FOR-007` is no
-  longer a generic direct-file promotion candidate, but there is still no
-  Bitterroot reviewer-ready example row, real-package coverage slot,
+  `1` applied standard as diagnostic evidence, but the tracked component eval
+  passes `23/23`. Review `phase-eval` now passes `28/28` with `blockers=[]`.
+  Bitterroot now has a reviewer-ready registry row, real-package coverage slot,
   component-coverage slot, V1 eval contract, compliance review, passing
-  component eval, or review `phase-eval` promotion proof.
+  component eval, and review `phase-eval` promotion proof.
 - `forest-plan-component-eval-coverage` still fails as an aggregate on the
-  pre-existing ECID source-delta slot, but the Lolo, South Otter, West
-  Reservoir, and HLC Bonanza component slots are required, covered, source-set
-  aligned, and passing.
+  pre-existing ECID source-delta slot, but the Bitterroot, Lolo, South Otter,
+  West Reservoir, and HLC Bonanza component slots are required, covered,
+  source-set aligned, and passing.
 
 ## Milestone Sequence
 
@@ -355,6 +353,7 @@ Current Bitterroot Front follow-on:
 | `7` | Bitterroot Front packet opening and FOR-007 queue boundary | `resolved` |
 | `8` | Bitterroot Front package authority intake and base EA review cache | `resolved` |
 | `9` | Bitterroot Front forest-plan resolver preflight with f70 source-record, component-inventory, and component-adjudication closure | `resolved` |
+| `10` | Bitterroot Front reviewer-stack replay, registry, real-package coverage, and component slot promotion | `resolved` |
 
 ## Acceptance Criteria
 
@@ -368,8 +367,9 @@ Current Bitterroot Front follow-on:
 - HLC remains `real_package_examples_available` only while Bonanza's
   package-authority, V1 eval, component-eval, review-scope promotion, and
   registry/coverage slots remain aligned.
-- Bitterroot remains `profile_eval_guidance_only` until Bitterroot Front
-  package authority, reviewer-stack gates, and registry/coverage promotion pass.
+- Bitterroot routes as `real_package_examples_available` only while Bitterroot
+  Front package authority, reviewer-stack gates, and registry/coverage
+  promotion remain aligned.
 - Negative coverage remains explicit: missing or typed-blocked examples fail or
   route as guidance-only rather than silently becoming reviewer-ready.
 - No tests, eval thresholds, or queue gates are weakened to make a forest appear

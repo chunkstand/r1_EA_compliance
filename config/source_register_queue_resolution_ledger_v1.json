@@ -39,11 +39,11 @@
     "queue_row_count": 51,
     "resolution_status_counts": {
       "blocked": 9,
-      "planned": 33,
-      "resolved": 9
+      "planned": 32,
+      "resolved": 10
     },
-    "resolved_current_or_project_applicable_count": 9,
-    "unresolved_current_or_project_applicable_count": 31
+    "resolved_current_or_project_applicable_count": 10,
+    "unresolved_current_or_project_applicable_count": 30
   },
   "entries": [
     {
@@ -149,7 +149,7 @@
       "planned_disposition": "forest_specific_example_package",
       "queue_reason": "Folder/listing/manual-export placeholder",
       "resolution_required": "Replace source page/folder/manual placeholder with direct document/file URL; then promote to Document_Register_Master if necessary.",
-      "resolution_status": "planned",
+      "resolution_status": "resolved",
       "source_id": "FOR-007",
       "source_url": "https://www.fs.usda.gov/r01/bitterroot/projects/57341",
       "target_successor_source_id": null

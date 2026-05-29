@@ -26,6 +26,8 @@ history below.
   hosted scoring work requires a new approved milestone
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
+- latest resolved forest-specific example packet:
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - latest resolved HLC forest-specific example packet:
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - latest resolved West Reservoir parent slice:
@@ -40,9 +42,8 @@ history below.
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
-  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 3
-  reviewer-stack replay reduced locally; Bitterroot-specific replay gates are
-  green, but inherited source-set phase-eval direct-eval drift remains separate
+  no active implementation slice; Bitterroot Front Milestone 4 is resolved
+  locally and any new forest-specific example expansion requires a new packet
 - resolved Lolo blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor packet:
@@ -52,84 +53,46 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  Bitterroot Front is the active forest-specific example candidate. The packet
-  is `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with planned
-  review ID `region1-example-bitterroot-front-57341`, planned example ID
+  Bitterroot Front is resolved locally through Milestone 4 as the governed
+  primary Bitterroot National Forest example. The packet is
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID
+  `region1-example-bitterroot-front-57341`, example ID
   `bitterroot-front-forest-specific`, and forest unit `bitterroot-nf`. The
   official project page is
-  `https://www.fs.usda.gov/r01/bitterroot/projects/57341`; the user-selected
-  Box root is
-  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226983588`.
-  Live readback found project status `Completed`, expected analysis type
-  `Environmental Assessment`, decision signed date `2026-05-11`, Box root
-  label `Bitterroot Front (57341)`, and top-level folders `Final EA`,
-  `Decision Notice`, `Draft EA`, `Scoping`, and `Pre-Scoping`. Local ignored
-  package authority now exists under
-  `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`:
-  `box_inventory.json` records `41` folders, `132` visible files, and
-  `632,912,037` expected bytes; `box_import_manifest.json` records `132`
-  downloaded files, `632,912,037` actual bytes, and `failure_count=0`.
-  `config/replay_contexts/region1-example-bitterroot-front-57341.json` now
-  binds the package to `source-set-f70ea11e04ae3d53`,
-  `forest_unit_id="bitterroot-nf"`, `source_library/catalog`, and the official
-  project/Box authority paths. `ea-review` passes on the full package with
-  `132/132` files extracted, `5,463` package chunks,
-  `package_failed_count=0`, `validation_passed=true`, and
-  `reviewer_ready=true`. `FOR-007` now routes to this packet as planned
-  `forest_specific_example_package` queue work, while `bitterroot-nf` remains
-  `profile_eval_guidance_only` with no reviewer-ready registry or coverage
-  promotion. Milestone 2 forest-plan resolver preflight is now resolved
-  locally after source-record, component-inventory, and component-adjudication
-  closure: `forest-plan-resolve --forest-unit-id bitterroot-nf` writes
-  `scope_status="bitterroot_nf"`,
-  `project_location_signal_count=1`, `management_area_count=4`,
-  `overlay_count=2`, and `unresolved_mention_count=0`, and context validation
-  now passes with `blocking_missing_source_record_ids=[]`. The local ignored
-  f70 catalog/retrieval overlay carries `717` source rows, `705` artifacts,
-  and `9` supplemental overlay rows; `source-record-identity-gate` passes for
-  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13`, and the retrieval
-  index has `115` and `136` chunks for those records. The Region 1
-  component-inventory manifest now includes a Bitterroot f70 replay-compatible
-  row, and the review-local manifest build under
-  `source_library/reviews/region1-example-bitterroot-front-57341/component_inventory_build/`
-  passes with `component_count=23`, `standard_count=3`,
-  `coverage_passed=true`, and `blocked_forest_unit_ids=[]`. Tracked component
-  adjudication now lives at
-  `config/forest_plan_component_adjudications/region1-example-bitterroot-front-57341.json`
-  and passes local eval with `20/20` resolved items, `0` pending items,
-  `12` applicability false positives, `8` evidence-linking misses, and
-  `0` true EA omissions. The rerun resolver reports
-  `component_adjudication.reviewer_ready=true`,
-  `needs_reviewer_resolution=false`, and `validation_passed=true`. Raw
-  applicable-standard coverage remains red with `3` applicable standards and
-  `1` applied standard; the two standard gaps are classified in adjudication
-  as one applicability false positive and one evidence-linking miss. Do not
-  add Bitterroot Front to reviewer-ready registry, real-package coverage, or
-  component-coverage manifests before Milestones 3-4 pass.
-  Milestone 3 reviewer-stack replay is reduced locally: applicability
-  adjudication resolves `6/6` conflicts (`5` applicable, `1` not applicable),
-  applicability validation reports `reviewer_ready=true`, generated rule-pack
-  validation passes with `54` generated rules, `compliance-review` passes with
-  `54` findings and matrix JSON/Markdown/PDF artifacts, `v1-ea-eval` passes
-  with `28` conditional expectations, and `forest-plan-component-eval` passes
-  `23/23` component cases with `3` applicable standards. Review phase-eval for
-  `region1-example-bitterroot-front-57341` includes the
-  Bitterroot-specific phases as passing, including `generated_rule_pack`,
-  `compliance_review`, `forest_plan_component_eval`, and
-  `forest_plan_component_adjudication`, but exits red because the shared f70
-  retrieval direct-eval artifact is stale/identity-mismatched against the
-  current `retrieval_eval_seed.json` contract and keeps `evaluation_coverage`
-  red. Route that as inherited source-set direct-eval drift, not as a
-  Bitterroot package replay blocker or promotion proof.
-  Milestone 1 verification passed: zero package download failures; replay
-  context JSON validation; `ea-review`; focused queue/registry tests;
-  source-register queue audit; forest-specific example-package eval; plan lint;
-  compile/ruff; and `git diff --check`. Milestone 2 focused resolver tests
-  passed; the current f70 manifest/component focused test passed; component
-  adjudication eval passed; and the live resolver preflight is now resolved
-  locally. Milestone 3 focused contract tests passed; the next route is either
-  the inherited f70 phase-eval direct-eval drift repair or, after that blocker
-  is separated, Milestone 4 registry and coverage promotion.
+  `https://www.fs.usda.gov/r01/bitterroot/projects/57341`; the selected Box
+  root is `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226983588`.
+  Local ignored package authority under
+  `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`
+  records `132` downloaded files, `632,912,037` bytes, and
+  `failure_count=0`. `config/replay_contexts/region1-example-bitterroot-front-57341.json`
+  binds the package to `source-set-f70ea11e04ae3d53`, `bitterroot-nf`,
+  `source_library/catalog`, and the official project/Box authority paths.
+  `ea-review`, applicability validation, generated rule-pack validation,
+  `compliance-review`, `v1-ea-eval`, forest-plan component eval,
+  component-adjudication eval, and review `phase-eval` are green. The inherited
+  f70 retrieval direct-eval artifact was refreshed against the current
+  `retrieval_eval_seed.json` contract and now passes `12/12`; review
+  `phase-eval` passes `28/28` with `blockers=[]`.
+  `config/v1_real_package_review_coverage_v1.json` now includes required
+  `slot_id="bitterroot-front-forest-specific"` coverage and
+  `real-package-review-coverage-eval` passes with `covered_slot_count=6`,
+  `reviewer_ready_slot_count=6`, `distinct_forest_count=5`, and
+  `distinct_package_style_count=7`.
+  `config/forest_specific_example_package_registry_v1.json` routes
+  `bitterroot-nf` as `real_package_examples_available` with
+  `primary_example_id="bitterroot-front-forest-specific"`, and
+  `forest-specific-example-package-eval` passes with `review_example_count=6`,
+  `reviewer_ready_example_count=6`, `distinct_governed_example_forest_count=5`,
+  and `profile_guidance_only_count=5`.
+  `config/forest_plan_component_eval_coverage_v1.json` includes the required
+  Bitterroot component slot; that slot is covered, source-set aligned, and
+  passing. The standalone component-coverage aggregate still exits red only on
+  the inherited `v1-cg-ecid-source-delta-review` slot. `FOR-007` is resolved
+  as `planned_disposition="forest_specific_example_package"` and remains
+  parallel to `Document_Register_Master`; no Bitterroot Front package files or
+  project-specific rows were added to the shared master. The next route is a
+  new packet only if the user wants more forest-specific examples or wants to
+  repair the inherited ECID source-delta component-coverage blocker.
   HLC Bonanza example-package work is resolved through registry and coverage
   promotion. The resolved packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID

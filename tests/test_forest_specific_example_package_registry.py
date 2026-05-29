@@ -23,9 +23,9 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
     assert len(set(forest_ids)) == 10
     assert registry["summary"] == {
         "forest_unit_count": 10,
-        "profile_guidance_only_count": 6,
-        "review_example_count": 5,
-        "reviewer_ready_example_count": 5,
+        "profile_guidance_only_count": 5,
+        "review_example_count": 6,
+        "reviewer_ready_example_count": 6,
         "typed_blocked_example_count": 0,
     }
 
@@ -208,7 +208,7 @@ def test_registry_promotes_hlc_bonanza_as_primary_example_without_queue_row() ->
     assert example_row["queue_lineage_source_ids"] == []
 
 
-def test_registry_opens_bitterroot_front_boundary_without_promotion() -> None:
+def test_registry_promotes_bitterroot_front_as_primary_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     queue_ledger = _load_json(QUEUE_LEDGER_PATH)
 
@@ -217,29 +217,41 @@ def test_registry_opens_bitterroot_front_boundary_without_promotion() -> None:
     )
     ledger_entries = {entry["source_id"]: entry for entry in queue_ledger["entries"]}
     for_007 = ledger_entries["FOR-007"]
+    example_row = next(
+        row
+        for row in registry["review_examples"]
+        if row["example_id"] == "bitterroot-front-forest-specific"
+    )
 
-    assert forest_row["routing_status"] == "profile_eval_guidance_only"
-    assert forest_row["primary_example_id"] is None
+    assert forest_row["routing_status"] == "real_package_examples_available"
+    assert forest_row["primary_example_id"] == "bitterroot-front-forest-specific"
     assert forest_row["supplemental_example_ids"] == []
     assert forest_row["queue_boundary_source_ids"] == ["FOR-007"]
-    assert "Bitterroot Front is the active governed example candidate" in (
+    assert "Use the Bitterroot Front package first" in (
         forest_row["guidance_note"]
     )
+    assert example_row["review_id"] == "region1-example-bitterroot-front-57341"
+    assert example_row["forest_unit_id"] == "bitterroot-nf"
+    assert example_row["applicable_forest_unit_ids"] == ["bitterroot-nf"]
+    assert example_row["coverage_slot_id"] == "bitterroot-front-forest-specific"
+    assert example_row["coverage_class_id"] == "forest_specific_reviewer_ready"
+    assert example_row["expected_contract_status"] == "reviewer_ready"
+    assert example_row["queue_lineage_source_ids"] == ["FOR-007"]
     assert for_007["planned_disposition"] == "forest_specific_example_package"
-    assert for_007["resolution_status"] == "planned"
+    assert for_007["resolution_status"] == "resolved"
     assert for_007["blocker_packet_reference"] == (
         "docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
     )
 
 
-def test_agent_start_here_names_hlc_bonanza_as_system_example() -> None:
+def test_agent_start_here_names_bitterroot_front_as_latest_resolved_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     agent_start = AGENT_START_HERE_PATH.read_text(encoding="utf-8")
 
     forest_row = next(
         row
         for row in registry["forest_routing"]
-        if row["forest_unit_id"] == "helena-lewis-and-clark-nf"
+        if row["forest_unit_id"] == "bitterroot-nf"
     )
     example_row = next(
         row
@@ -247,14 +259,14 @@ def test_agent_start_here_names_hlc_bonanza_as_system_example() -> None:
         if row["example_id"] == forest_row["primary_example_id"]
     )
 
-    assert "docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md" in agent_start
+    assert "docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md" in agent_start
     assert "latest resolved forest-specific example packet" in agent_start
     assert f'example_id="{example_row["example_id"]}"' in agent_start
     assert f'review_id="{example_row["review_id"]}"' in agent_start
     assert f'primary_example_id="{forest_row["primary_example_id"]}"' in agent_start
     assert f'forest_unit_id="{forest_row["forest_unit_id"]}"' in agent_start
-    assert "Bonanza as the governed primary example" in agent_start
-    assert "must not be reused for non-HLC forests" in agent_start
+    assert "Bitterroot Front as the governed primary example" in agent_start
+    assert "must not be reused for non-Bitterroot forests" in agent_start
 
 
 def test_registry_archives_south_plateau_as_historical_only() -> None:

@@ -1,16 +1,16 @@
 {
   "schema_version": "forest-specific-example-package-registry-v1",
   "contract_id": "region1-forest-specific-example-packages",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "as_of_date": "2026-05-29",
-  "status": "bitterroot-front-packet-opened",
+  "status": "bitterroot-front-v1-reviewer-ready",
   "coverage_thresholds": {
     "required_forest_unit_count": 10,
-    "review_example_count_min": 5,
-    "reviewer_ready_example_count_min": 5,
+    "review_example_count_min": 6,
+    "reviewer_ready_example_count_min": 6,
     "typed_blocked_example_count_min": 0,
-    "distinct_governed_example_forest_count_min": 4,
-    "profile_guidance_only_count_max": 6,
+    "distinct_governed_example_forest_count_min": 5,
+    "profile_guidance_only_count_max": 5,
     "failed_forest_count_max": 0
   },
   "output_schema": {
@@ -46,9 +46,9 @@
   },
   "summary": {
     "forest_unit_count": 10,
-    "profile_guidance_only_count": 6,
-    "review_example_count": 5,
-    "reviewer_ready_example_count": 5,
+    "profile_guidance_only_count": 5,
+    "review_example_count": 6,
+    "reviewer_ready_example_count": 6,
     "typed_blocked_example_count": 0
   },
   "parallel_surface": {
@@ -230,6 +230,38 @@
       "notes": "Primary reviewer-ready South Otter example for Custer Gallatin. Use first for Custer Gallatin forest-specific example-package guidance; keep the package parallel to Document_Register_Master."
     },
     {
+      "example_id": "bitterroot-front-forest-specific",
+      "review_id": "region1-example-bitterroot-front-57341",
+      "forest_unit_id": "bitterroot-nf",
+      "forest_unit_label": "Bitterroot National Forest",
+      "package_label": "Bitterroot Front Project",
+      "coverage_class_id": "forest_specific_reviewer_ready",
+      "coverage_slot_id": "bitterroot-front-forest-specific",
+      "expected_contract_status": "reviewer_ready",
+      "eval_file": "config/v1_bitterroot_front_real_ea_eval.json",
+      "package_authority": {
+        "replay_context_path": "config/replay_contexts/region1-example-bitterroot-front-57341.json",
+        "official_project_page": "https://www.fs.usda.gov/r01/bitterroot/projects/57341",
+        "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/158226983588"
+      },
+      "applicable_forest_unit_ids": [
+        "bitterroot-nf"
+      ],
+      "queue_lineage_source_ids": [
+        "FOR-007"
+      ],
+      "agent_read_artifact_family_ids": [
+        "real_package_review_coverage_slot",
+        "v1_review_eval",
+        "phase_eval",
+        "applicability_validation",
+        "compliance_review",
+        "forest_plan_component_eval",
+        "compliance_matrix_render_manifest"
+      ],
+      "notes": "Primary reviewer-ready Bitterroot example package. Inspect Bitterroot Front first for Bitterroot National Forest example-package guidance; keep the package parallel to Document_Register_Master."
+    },
+    {
       "example_id": "flathead-west-reservoir-forest-specific",
       "review_id": "west-reservoir-67436",
       "forest_unit_id": "flathead-nf",
@@ -376,14 +408,15 @@
     {
       "forest_unit_id": "bitterroot-nf",
       "forest_unit_label": "Bitterroot National Forest",
-      "routing_status": "profile_eval_guidance_only",
+      "routing_status": "real_package_examples_available",
       "applicable_to_forest_unit_ids": [
         "bitterroot-nf"
       ],
-      "primary_example_id": null,
+      "primary_example_id": "bitterroot-front-forest-specific",
       "supplemental_example_ids": [],
       "shared_contract_ids": [
-        "forest_plan_profile_eval_coverage_manifest"
+        "forest_plan_profile_eval_coverage_manifest",
+        "real_package_review_coverage_manifest"
       ],
       "required_fixture_family_ids": [
         "scope_positive",
@@ -394,7 +427,7 @@
       "queue_boundary_source_ids": [
         "FOR-007"
       ],
-      "guidance_note": "Bitterroot Front is the active governed example candidate at docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md, but no governed Bitterroot real package example exists yet; use the tracked profile fixtures for applicability and forest-plan guidance until package authority and review gates pass."
+      "guidance_note": "Use the Bitterroot Front package first for Bitterroot National Forest example-package guidance. The governed Bitterroot slot is reviewer-ready on source-set-f70ea11e04ae3d53, `FOR-007` is resolved as a forest-specific example-package boundary, and the package remains parallel to Document_Register_Master."
     },
     {
       "forest_unit_id": "dakota-prairie-grasslands",

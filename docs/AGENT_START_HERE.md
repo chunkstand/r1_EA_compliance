@@ -42,33 +42,27 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
-- The active forest-specific example candidate is
-  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Bitterroot
-  National Forest work, keep `bitterroot-nf` on
-  `profile_eval_guidance_only` until Bitterroot Front forest-plan resolver,
-  reviewer-stack gates, and registry/coverage promotion pass. Local package
-  authority now exists under
-  `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`,
-  with replay context
-  `config/replay_contexts/region1-example-bitterroot-front-57341.json`, and
-  base `ea-review` is green on `source-set-f70ea11e04ae3d53`. Milestone 2
-  forest-plan resolver preflight is resolved locally after source-record,
-  component-inventory, and component-adjudication closure: scope resolves to
-  `bitterroot_nf`, context validation passes, and
-  `R1PLAN-bitterroot-nf-12`/`-13` are indexed in the f70 retrieval overlay.
-  The review-local f70 manifest-driven component inventory now passes with
-  `23` components and `3` standards from `FOR-005`/`FOR-006`. Tracked
-  component adjudication
-  `config/forest_plan_component_adjudications/region1-example-bitterroot-front-57341.json`
-  passes with `20/20` items resolved, `0` pending, `12` applicability false
-  positives, and `8` evidence-linking misses; rerun resolver validation is
-  green with `needs_reviewer_resolution=false`. Raw applicable-standard
-  coverage remains red as Milestone 3 reviewer-stack/component-eval diagnostic
-  evidence. This is not reviewer-ready promotion proof.
-  `FOR-007` (`Bitterroot Front Project`) is only a planned
-  forest-specific example boundary in the queue ledger; do not treat the
-  project page or Box root as `Document_Register_Master` input.
 - The latest resolved forest-specific example packet is
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Bitterroot
+  National Forest example-package review work, inspect
+  `config/forest_specific_example_package_registry_v1.json` first, then use
+  Bitterroot Front as the governed primary example:
+  `example_id="bitterroot-front-forest-specific"`,
+  `review_id="region1-example-bitterroot-front-57341"`, and
+  `primary_example_id="bitterroot-front-forest-specific"` for
+  `forest_unit_id="bitterroot-nf"`. Bitterroot Front uses the official project
+  page `https://www.fs.usda.gov/r01/bitterroot/projects/57341` and Pinyon/Box
+  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226983588`
+  as package authority. It is reviewer-ready on
+  `source-set-f70ea11e04ae3d53`: package authority, applicability,
+  compliance review, V1 eval, forest-plan component eval/adjudication, review
+  `phase-eval`, real-package coverage, and forest-specific registry eval are
+  green. `FOR-007` is resolved as a forest-specific example-package boundary.
+  Keep Bitterroot Front parallel to `Document_Register_Master`; it is not a
+  generic Region 1 example and must not be reused for non-Bitterroot forests.
+  The standalone component-coverage aggregate still exits red only on the
+  inherited ECID source-delta slot; that is not a Bitterroot blocker.
+- The HLC Bonanza forest-specific example packet is resolved through
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Helena-Lewis and
   Clark National Forest example-package review work, inspect
   `config/forest_specific_example_package_registry_v1.json` first, then use
