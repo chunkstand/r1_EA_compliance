@@ -14,8 +14,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 1 package-authority intake; Milestone 0 resolved the packet opening
-  and froze the Idaho Panhandle candidate identity without registry promotion
+  Milestone 2 forest-plan resolver preflight; Milestone 1 resolved local
+  package-authority intake and base review without registry promotion
 - Latest resolved forest-specific example packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -55,10 +55,21 @@ Use this file as the short current route before opening the append-only docs.
   `St. Maries Ranger District`, decision signed date `2025-05-22`, and Box
   root label `Lacy Lemoosh (60853)`. The Box root currently exposes
   `Decision`, `Final EA`, `Draft EA`, and `Scoping` folders with `186` listed
-  files and `555,066,969` bytes at the top level. Milestone 0 does not add a
-  review example or coverage slot: `idaho-panhandle-nfs` remains
-  `profile_eval_guidance_only`, with `primary_example_id=null`, until package
-  authority, reviewer-stack, and promotion gates pass. Keep Lacy Lemoosh
+  files and `555,066,969` bytes at the top level. Local ignored package
+  authority now exists under
+  `source_library/reviews/_intake/region1-example-idaho-panhandle-lacy-lemoosh-60853/`:
+  `box_inventory.json` records `29` folder-page records, `186` files, and
+  `553,664,116` expected file bytes; `box_import_manifest.json` records `186`
+  downloaded files, `553,664,116` actual bytes, and `failure_count=0`. The
+  tracked replay context is
+  `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`.
+  `ea-review` on `source-set-f70ea11e04ae3d53` passes with `186/186`
+  extracted files, `7,404` package chunks, `package_failed_count=0`,
+  `reviewer_ready=true`, and `validation_passed=true`. Milestone 1 still does
+  not add a review example or coverage slot: `idaho-panhandle-nfs` remains
+  `profile_eval_guidance_only`, with `primary_example_id=null`, until
+  forest-plan resolver, reviewer-stack, and promotion gates pass. The next
+  slice is Milestone 2 forest-plan resolver preflight. Keep Lacy Lemoosh
   parallel to `Document_Register_Master`; do not route unrelated Idaho
   Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved

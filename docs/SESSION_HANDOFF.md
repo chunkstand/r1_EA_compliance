@@ -46,8 +46,8 @@ history below.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 1 package-authority intake; Milestone 0 resolved the packet opening
-  and froze the Idaho Panhandle candidate identity without registry promotion
+  Milestone 2 forest-plan resolver preflight; Milestone 1 resolved local
+  package-authority intake and base review without registry promotion
 - resolved Beaverhead-Deerlodge packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -75,14 +75,23 @@ history below.
   (`2` files, `4,698,243` bytes), `Final EA` (`135` files, `422,001,597`
   bytes), `Draft EA` (`34` files, `75,512,856` bytes), and `Scoping`
   (`15` files, `52,854,273` bytes), for `186` listed files and `555,066,969`
-  bytes at this level. This opening slice does not promote Idaho Panhandle:
+  bytes at this level. Milestone 1 package-authority intake is now resolved
+  locally. Ignored local authority at
+  `source_library/reviews/_intake/region1-example-idaho-panhandle-lacy-lemoosh-60853/`
+  records `29` folder-page records, `186` files, `553,664,116` expected and
+  actual file bytes, and `failure_count=0`. The tracked replay context is
+  `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`.
+  `ea-review` passes on `source-set-f70ea11e04ae3d53` with `186/186`
+  extracted files, `7,404` package chunks, `package_failed_count=0`,
+  `reviewer_ready=true`, and `validation_passed=true`. This package-authority
+  slice still does not promote Idaho Panhandle:
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
   `primary_example_id=null`, and `config/v1_real_package_review_coverage_v1.json`
-  has no Lacy Lemoosh slot. The next slice is package-authority intake; keep
-  Lacy Lemoosh parallel to `Document_Register_Master` and do not route
-  unrelated Idaho Panhandle queue rows such as `FOR-020` or `FOR-022` into this
-  packet.
+  has no Lacy Lemoosh slot. The next slice is Milestone 2 forest-plan resolver
+  preflight; keep Lacy Lemoosh parallel to `Document_Register_Master` and do
+  not route unrelated Idaho Panhandle queue rows such as `FOR-020` or
+  `FOR-022` into this packet.
   Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
   locally through Milestone 4 registry and coverage promotion. The packet is
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,

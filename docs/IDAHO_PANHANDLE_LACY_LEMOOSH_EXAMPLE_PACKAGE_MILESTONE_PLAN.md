@@ -1,8 +1,8 @@
 # Idaho Panhandle Lacy Lemoosh Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Active. Milestone 0 is resolved locally; Milestone 1 package-authority
-intake is the next implementation slice.
+Status: Active. Milestones 0-1 are resolved locally; Milestone 2 forest-plan
+resolver preflight is the next implementation slice.
 Plan class: implementation
 High-risk implementation: yes
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -16,17 +16,12 @@ the user-selected Lacy Lemoosh EA package without contaminating
 `Document_Register_Master` or claiming reviewer-ready status before
 deterministic review gates pass.
 
-Selected package authority:
-
-- project page: `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853`
-- project title and ID: `Lacy Lemoosh`, `60853`
-- public Pinyon/Box folder:
-  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265`
-- Box root label: `Lacy Lemoosh (60853)`
-- forest and district: `idaho-panhandle-nfs`, `St. Maries Ranger District`
-- expected analysis type/status: `Environmental Assessment`, `Completed`
-- decision signed date: `2025-05-22`
-- frozen review ID: `region1-example-idaho-panhandle-lacy-lemoosh-60853`
+Selected authority: project page
+`https://www.fs.usda.gov/r01/idahopanhandle/projects/60853`, public Pinyon/Box
+folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265`,
+forest/district `idaho-panhandle-nfs`/`St. Maries Ranger District`, completed
+EA decision signed `2025-05-22`, and frozen review ID
+`region1-example-idaho-panhandle-lacy-lemoosh-60853`.
 
 ## Intent Lock
 
@@ -46,10 +41,10 @@ The planned governed identity is:
 - `queue_lineage_source_ids=[]` unless a later workbook-backed Lacy Lemoosh
   queue row is found
 
-`idaho-panhandle-nfs` remains `profile_eval_guidance_only` until package
-authority, replay context, forest-plan component/adjudication, compliance, V1
-eval, phase eval, and promotion gates pass. Existing Idaho Panhandle queue row
-`FOR-022` is project `67684`, not Lacy Lemoosh `60853`.
+`idaho-panhandle-nfs` remains `profile_eval_guidance_only` until forest-plan
+component/adjudication, compliance, V1 eval, phase eval, and promotion gates
+pass. Existing Idaho Panhandle queue row `FOR-022` is project `67684`, not Lacy
+Lemoosh `60853`.
 
 ## Current Evidence
 
@@ -66,6 +61,16 @@ eval, phase eval, and promotion gates pass. Existing Idaho Panhandle queue row
 - The registry row is still `profile_eval_guidance_only` with
   `primary_example_id=null`; the real-package coverage manifest has no Lacy
   Lemoosh slot.
+- Local ignored package authority under
+  `source_library/reviews/_intake/region1-example-idaho-panhandle-lacy-lemoosh-60853/`
+  records `29` folder-page records, `186` visible files, `553,664,116`
+  expected and actual file bytes, and `failure_count=0`.
+- `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
+  binds the package to `source-set-f70ea11e04ae3d53`, `idaho-panhandle-nfs`,
+  `source_library/catalog`, and the official project/Box authority paths.
+- `ea-review` passes on the full package with `186/186` extracted files,
+  `7,404` package chunks, `package_failed_count=0`, `reviewer_ready=true`,
+  and `validation_passed=true`.
 - `config/forest_plan_profiles.json` has an Idaho Panhandle profile, but this
   packet has not yet proven package-specific district, area, component, or
   supporting-source readiness.
@@ -81,8 +86,8 @@ contracts, and aggregate gates are present and green.
 - Do not add Lacy Lemoosh package files or project-specific rows to
   `Document_Register_Master`.
 - Do not promote Idaho Panhandle to `real_package_examples_available` before
-  package intake, replay context, `v1-ea-eval`, forest-plan component eval,
-  and review `phase-eval` pass.
+  forest-plan resolver, `v1-ea-eval`, forest-plan component eval, and review
+  `phase-eval` pass.
 - Do not reroute unrelated Idaho Panhandle queue rows such as `FOR-020` or
   `FOR-022`.
 - Do not ratchet aggregate thresholds in Milestone 0.
@@ -102,21 +107,17 @@ contracts, and aggregate gates are present and green.
 
 - packet: `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - registry: `config/forest_specific_example_package_registry_v1.json`
-- future replay context:
+- replay context:
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-- future V1 eval:
-  `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json`
-- future component eval:
-  `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-- future adjudications:
+- future eval/adjudication contracts: `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json`,
+  `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`,
   `config/applicability_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`,
   `config/forest_plan_component_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-- future aggregate manifests:
-  `config/v1_real_package_review_coverage_v1.json`,
+- future aggregate manifests: `config/v1_real_package_review_coverage_v1.json`,
   `config/forest_plan_component_eval_coverage_v1.json`
-- ignored intake and review outputs:
-  `source_library/reviews/_intake/region1-example-idaho-panhandle-lacy-lemoosh-60853/`,
-  `source_library/reviews/region1-example-idaho-panhandle-lacy-lemoosh-60853/`
+- ignored outputs:
+  `source_library/reviews/_intake/region1-example-idaho-panhandle-lacy-lemoosh-60853/`
+  and `source_library/reviews/region1-example-idaho-panhandle-lacy-lemoosh-60853/`
 - docs and tests:
   `README.md`, `docs/AGENT_START_HERE.md`, `docs/CURRENT_ROUTING.md`,
   `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
@@ -146,8 +147,6 @@ Weak point forecast: Lacy Lemoosh is treated as shared master input.
   `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_specific_example_package_registry.py`
 - Fail threshold: any Lacy Lemoosh package row is added to the master table, or
   unrelated Idaho Panhandle queue rows are resolved as this package
-- Future-Codex misuse scenario: a future session treats the Box folder as
-  canonical workbook capture instead of a parallel example package
 
 ### Weak Point 2
 
@@ -160,8 +159,6 @@ alone.
 - Fail threshold: Idaho Panhandle leaves `profile_eval_guidance_only`, or a
   Lacy slot becomes required reviewer-ready coverage, before package authority
   and review gates pass
-- Future-Codex misuse scenario: a future session adds a registry row after
-  downloading files but before deterministic review
 
 ### Weak Point 3
 
@@ -172,8 +169,6 @@ final decision-core PDFs.
 - Prevention gate: package inventory, import manifest, hashes, and `ea-review`
 - Fail threshold: intake lacks `Decision`, `Final EA`, `Draft EA`, or
   `Scoping` unless a milestone proves a narrower official replay path
-- Future-Codex misuse scenario: a future review misses specialist/supporting
-  material because it reviewed only final PDFs
 
 ### Weak Point 4
 
@@ -185,8 +180,6 @@ package-specific area or district evidence.
   forest-plan component eval
 - Fail threshold: ambiguous scope, missing required source records, unresolved
   mentions, or pending component queue items remain
-- Future-Codex misuse scenario: a future session assumes generic "Idaho
-  Panhandle" text is enough for reviewer-ready scope
 
 ## Milestone Sequence
 
@@ -202,12 +195,19 @@ Outcome label: `resolved`
 
 ### Milestone 1 - Local Package Authority Intake
 
-Outcome label: `resolved` if the full root inventories and downloads with zero
-failures; `reduced` if any official file or folder remains blocked.
+Outcome label: `resolved` locally. The full root inventories and downloads with
+zero failures, the replay context is tracked, and base `ea-review` passes.
 
 Inventory the Box root, preserve folder structure, hash downloaded files, add
 the replay context after local authority exists, and run `ea-review` on
 `source-set-f70ea11e04ae3d53`.
+
+Closeout evidence: ignored intake and tracked replay context exist; manifest
+has `file_count=186`, `folder_count=29`, `failure_count=0`,
+`actual_total_byte_size=553,664,116`; base review has `package_extracted_count=186`,
+`package_chunk_count=7,404`, `package_failed_count=0`, `reviewer_ready=true`,
+and `validation_passed=true`. Next route: Milestone 2 forest-plan resolver
+preflight; do not promote Idaho Panhandle before Milestones 2-4 pass.
 
 ### Milestone 2 - Forest-Plan Resolver Preflight
 
@@ -268,8 +268,8 @@ coverage, architecture, ruff, compile, and `git diff --check` gates required by
   identity.
 - Idaho Panhandle remains `profile_eval_guidance_only` until promotion gates
   pass.
-- Future intake records full official Box roster, hashes, and zero failures
-  before replay context is authoritative.
+- Intake records the full official Box roster, hashes, and zero failures before
+  replay context is authoritative.
 - Forest-plan and reviewer-stack blockers close without relaxed validation.
 - Any future promotion updates registry, coverage manifests, eval contracts,
   docs, handoff, and tests in one milestone commit.
@@ -294,13 +294,25 @@ Milestone 0 closeout on 2026-05-29: plan lint passed; focused registry tests
 passed `13/13`; `forest-specific-example-package-eval` passed with
 `profile_guidance_only_count=4`, `review_example_count=7`, and
 `reviewer_ready_example_count=7`; `git diff --check` passed. Residual risk:
-Milestone 1 package-authority intake remains, with no Lacy Lemoosh coverage
-slot or primary example yet.
+at that checkpoint, Milestone 1 package-authority intake remained, with no Lacy
+Lemoosh coverage slot or primary example yet.
+
+Milestone 1 closeout on 2026-05-29: Box inventory/download completed with
+`186` files, `553,664,116` expected and actual file bytes, and
+`failure_count=0`; `ea-review` passed with `186/186` extracted files, `7,404`
+package chunks, `package_failed_count=0`, and `validation_passed=true`.
+Focused replay/registry tests passed `23/23`; `forest-specific-example-package-eval`
+passed with `profile_guidance_only_count=4`, `review_example_count=7`, and
+`reviewer_ready_example_count=7`; touched-test ruff, replay-context JSON parse,
+and `git diff --check` passed. Residual risk: Milestone 2 forest-plan resolver
+preflight remains; Idaho Panhandle has no Lacy Lemoosh coverage slot or primary
+example yet.
 
 ## Gap-Close Verification Addendum
-
-Milestone 0 is gap-closed only while `CURRENT_ROUTING`, `SESSION_HANDOFF`,
+Milestones 0-1 are gap-closed only while `CURRENT_ROUTING`, `SESSION_HANDOFF`,
 `CURRENT_SYSTEM_STATE`, `AGENT_START_HERE`, README, registry guidance, focused
-tests, and aggregate eval agree that Lacy Lemoosh is active but unpromoted:
-`idaho-panhandle-nfs` stays `profile_eval_guidance_only`,
-`primary_example_id=null`, and no Lacy coverage slot exists.
+tests, aggregate eval, and the tracked replay context agree that Lacy Lemoosh
+has local package authority and green `ea-review` evidence but remains
+unpromoted: `idaho-panhandle-nfs` stays `profile_eval_guidance_only`,
+`primary_example_id=null`, and no Lacy coverage slot exists until forest-plan
+resolver, reviewer-stack, and promotion gates pass.

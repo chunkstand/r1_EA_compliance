@@ -58,8 +58,11 @@ They are intentionally not duplicated here.
   For Idaho Panhandle National Forests, Lacy Lemoosh is the active candidate
   packet in
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, but
-  `idaho-panhandle-nfs` remains `profile_eval_guidance_only` until the
-  package-authority, reviewer-stack, and promotion gates pass.
+  `idaho-panhandle-nfs` remains `profile_eval_guidance_only` after local
+  package-authority intake. The tracked replay context is
+  `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`;
+  do not promote the package until the forest-plan resolver, reviewer-stack,
+  and promotion gates pass.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

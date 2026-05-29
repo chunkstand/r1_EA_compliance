@@ -15,14 +15,14 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Idaho Panhandle Lacy Lemoosh Packet Opened Locally
+## Idaho Panhandle Lacy Lemoosh Package Authority Intake Resolved Locally
 
 Latest implementation update on 2026-05-29 UTC:
 
 - update:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
-  resolved locally through Milestone 0 as the active Idaho Panhandle
-  forest-specific example packet. The planned review identity is
+  resolved locally through Milestone 1 package-authority intake as the active
+  Idaho Panhandle forest-specific example packet. The planned review identity is
   `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
   `forest_unit_id="idaho-panhandle-nfs"` and planned
   `example_id="ipnf-lacy-lemoosh-forest-specific"`.
@@ -40,14 +40,32 @@ Latest implementation update on 2026-05-29 UTC:
   (`2` files), `Final EA` (`135` files), `Draft EA` (`34` files), and
   `Scoping` (`15` files), totaling `186` listed files and `555,066,969` bytes
   at this level.
+- package authority:
+  local ignored package authority exists under
+  `source_library/reviews/_intake/region1-example-idaho-panhandle-lacy-lemoosh-60853/`.
+  `box_inventory.json` records `29` folder-page records, `186` visible files,
+  and `553,664,116` expected file bytes. `box_import_manifest.json` records
+  `186` downloaded files, `553,664,116` actual bytes, and `failure_count=0`.
+  The tracked replay context is
+  `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`,
+  bound to `source-set-f70ea11e04ae3d53`, `idaho-panhandle-nfs`,
+  `source_library/catalog`, the local intake package, and the official
+  project/Box authority paths. The top-level Box folder sizes sum to
+  `555,066,969` bytes, while the file-level manifest sums to `553,664,116`
+  bytes; file count and expected-vs-actual downloaded bytes are closed.
+- base review:
+  `ea-review` passes on the full package with `186/186` extracted files,
+  `7,404` package chunks, `package_failed_count=0`, `5` pass findings,
+  `reviewer_ready=true`, and `validation_passed=true`. Package parsers were
+  `176` `pypdf_text_fallback` files and `10` `apple_vision_pdf_raster` files.
 - promotion boundary:
-  this is an opening packet only. `config/forest_specific_example_package_registry_v1.json`
-  still routes `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
+  this is still not a registry/coverage promotion. `config/forest_specific_example_package_registry_v1.json`
+  routes `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
   `primary_example_id=null`; `config/v1_real_package_review_coverage_v1.json`
-  has no Lacy Lemoosh slot. The next slice is Milestone 1 package-authority
-  intake. Do not add Lacy Lemoosh package files to `Document_Register_Master`,
-  and do not reroute unrelated Idaho Panhandle queue rows such as `FOR-020` or
-  `FOR-022` into this packet.
+  has no Lacy Lemoosh slot. The next slice is Milestone 2 forest-plan resolver
+  preflight. Do not add Lacy Lemoosh package files to
+  `Document_Register_Master`, and do not reroute unrelated Idaho Panhandle
+  queue rows such as `FOR-020` or `FOR-022` into this packet.
 
 ## Beaverhead-Deerlodge South Tobacco Roots Milestone 4 Reduced Locally
 

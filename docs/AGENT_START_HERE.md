@@ -49,10 +49,14 @@ The planner:
   `idaho-panhandle-nfs`, the official project page
   `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853`, and Pinyon/Box
   folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265`
-  as the selected candidate authority. This is not a governed primary example
-  yet: `config/forest_specific_example_package_registry_v1.json` keeps
+  as the selected authority. Local package-authority intake now records `186`
+  downloaded files, `553,664,116` file bytes, zero failures, and a tracked
+  replay context at
+  `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`.
+  This is not a governed primary example yet:
+  `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` at `profile_eval_guidance_only` with
-  `primary_example_id=null` until package authority, reviewer-stack, and
+  `primary_example_id=null` until forest-plan resolver, reviewer-stack, and
   promotion gates pass. Keep Lacy Lemoosh parallel to
   `Document_Register_Master`; it is not a generic Region 1 example and must
   not be reused for non-Idaho-Panhandle forests.
