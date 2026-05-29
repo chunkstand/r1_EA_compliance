@@ -13,10 +13,10 @@ Use this file as the short current route before opening the append-only docs.
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
-  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 2
-  forest-plan resolver preflight reduced locally after f70 source-record and
-  component-inventory closure; component adjudication and applicable-standard
-  coverage remain blocked
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 3
+  reviewer-stack replay next; Milestone 2 forest-plan resolver preflight,
+  source-record closure, component inventory, and component adjudication are
+  closed locally
 - Latest resolved HLC forest-specific example packet:
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - Latest resolved West Reservoir parent slice:
@@ -66,8 +66,9 @@ Use this file as the short current route before opening the append-only docs.
   forest-plan resolver, reviewer-stack, and promotion gates in the packet pass.
   Milestone 1 verification passed with zero package download failures, replay
   context JSON validation, `ea-review`, and docs closeout checks. Milestone 2
-  forest-plan resolver preflight is now reduced locally after source-record
-  closure: resolver sidecars report `scope_status="bitterroot_nf"`,
+  forest-plan resolver preflight is now resolved locally after source-record,
+  component-inventory, and component-adjudication closure: resolver sidecars
+  report `scope_status="bitterroot_nf"`,
   `project_location_signal_count=1`, `management_area_count=4`,
   `overlay_count=2`, and `unresolved_mention_count=0`, and context validation
   now passes with `blocking_missing_source_record_ids=[]`. The local ignored
@@ -78,15 +79,20 @@ Use this file as the short current route before opening the append-only docs.
   replay-compatible row, and the review-local manifest build under
   `source_library/reviews/region1-example-bitterroot-front-57341/component_inventory_build/`
   passes with `23` components, `3` standards, `coverage_passed=true`, and
-  `blocked_forest_unit_ids=[]`. Resolver component evaluation now validates
-  source records and component coverage but remains non-reviewer-ready:
-  component findings show `23` applicable components, `3` supported findings,
-  `20` gaps, `20` reviewer-resolution items, and `0`
-  `needs_reviewer_resolution` items. Applicable-standard coverage is still red
-  with `3` applicable standards and `1` applied standard, and no component
-  adjudication eval exists. The next slice is tracked component adjudication
-  plus applicable-standard closure before any reviewer-stack replay or
-  promotion.
+  `blocked_forest_unit_ids=[]`. Tracked component adjudication now lives at
+  `config/forest_plan_component_adjudications/region1-example-bitterroot-front-57341.json`
+  and passes eval with `20/20` items resolved, `0` pending items,
+  `12` applicability false positives, `8` evidence-linking misses, and
+  `0` true EA omissions. The rerun resolver reports
+  `component_adjudication.reviewer_ready=true`,
+  `needs_reviewer_resolution=false`, and `validation_passed=true`. Raw
+  applicable-standard coverage remains a diagnostic red state with `3`
+  applicable standards and `1` applied standard, but the two standard gaps are
+  classified in the adjudication replay: the A-P cabin standard is an
+  applicability false positive and `FW-STD-VEG-01` is an evidence-linking miss.
+  The next slice is Milestone 3 reviewer-stack replay. Do not add Bitterroot
+  Front to reviewer-ready registry, real-package coverage, or
+  component-coverage manifests before Milestones 3-4 pass.
 - HLC Bonanza example packet is resolved locally through registry and coverage
   promotion. The selected package is Bonanza project `66532` for
   `helena-lewis-and-clark-nf`, using the official project page

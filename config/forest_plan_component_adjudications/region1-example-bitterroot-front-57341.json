@@ -1,0 +1,2953 @@
+{
+  "adjudication": {
+    "adjudicated_at": "2026-05-29T15:45:00Z",
+    "adjudicated_by": [
+      "codex"
+    ],
+    "method": "bitterroot_front_forest_plan_consistency_replay",
+    "notes": "Bitterroot Front component queue classified from Appendix D forest-plan consistency and package-scope evidence. Package-supported rows close as evidence_linking_miss; unsupported A-P Wilderness/outfitter/fishless-water/cabin/campsite/user-built-trail rows close as applicability_false_positive.",
+    "status": "completed"
+  },
+  "adjudication_id": "region1-example-bitterroot-front-57341-component-adjudication",
+  "allowed_dispositions": [
+    "applicability_false_positive",
+    "component_inventory_overreach",
+    "evidence_linking_miss",
+    "package_section_chunking_miss",
+    "pending",
+    "retrieval_miss",
+    "true_ea_omission"
+  ],
+  "component_findings_path": "source_library/reviews/region1-example-bitterroot-front-57341/forest_plan_component_findings.json",
+  "created_at": "2026-05-29T15:45:00Z",
+  "items": [
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "resource objectives the following objectives state how resources",
+          "resource objectives the following objectives state how resources will be managed under the forest plan during the plan period",
+          "resource objectives following objectives state",
+          "objectives following objectives state how",
+          "following objectives state how resources",
+          "objectives state how resources managed",
+          "state how resources managed under",
+          "how resources managed under plan"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [
+          "mgmt-bitterroot-area-2",
+          "mgmt-bitterroot-area-5"
+        ],
+        "overlay_ids": [],
+        "resource_topics": [
+          "resource objectives the following objectives state how resources",
+          "resource objectives the following objectives state how resources will be managed under the forest plan during the plan period",
+          "resource objectives following objectives state"
+        ]
+      },
+      "component_id": "FOR-005-RESOURCE-OBJECTIVES-FOLLOWING-OBJECTIVES-STATE-HOW-RESOURCES-MANAGED-UNDER-PLAN-DURING-PLAN-B54FED75-OBJ-1",
+      "component_source_ref": {
+        "artifact_sha256": "74e6e96d6a80bd3320a99697cc299d9394e16ced34db9a02353092cdee210d52",
+        "citation_label": "FOR-005 (74e6e96d6a80)",
+        "content_sha256": "7538ea6b4be696c2eac4c9faffc6e7973792e7551a213baeb9a139d182e4b40a",
+        "page": 9,
+        "source_chunk_ids": [
+          "chunk:5129ebf9ef63e676b8c8fd51d9f8298f"
+        ],
+        "source_record_id": "FOR-005"
+      },
+      "component_text": "Objectives (RESOURCE-OBJECTIVES-FOLLOWING-OBJECTIVES-STATE-HOW-RESOURCES-MANAGED-UNDER-PLAN-DURING-PLAN-B54FED75-OBJ) 1 Resource Objectives The following obJectives state how resources will be managed under the Forest Plan during the Plan Period. A complete understanding of the management direction can be attained by reading the Forest-wide goals and standards in this chapter, and the management area goals and standards in Chapter III. a. Recreation Inform public of seasonal recreation opportunities. Provide for the current mix of dispersed recreation by maintaining about 50 percent of the Forest in wilderness, about 20 percent in semiprimitive motorized recreation and about 30 percent in roaded areas. Provide for the development and maintenance of at least two travel routes for winter activities. Provide recreation facilities at Lake Como for the elderly and handicapped.",
+      "component_type": "objective",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "evidence_linking_miss",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-005-RESOURCE-OBJECTIVES-FOLLOWING-OBJECTIVES-STATE-HOW-RESOURCES-MANAGED-UNDER-PLAN-DURING-PLAN-B54FED75-OBJ-1-finding",
+      "item_id": "FOR-005-RESOURCE-OBJECTIVES-FOLLOWING-OBJECTIVES-STATE-HOW-RESOURCES-MANAGED-UNDER-PLAN-DURING-PLAN-B54FED75-OBJ-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [
+          "mgmt-bitterroot-area-2",
+          "mgmt-bitterroot-area-5"
+        ],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        },
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:c9f72c754ca4cd0ff25e75f794e55f0c",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "29a9b439f7e2e60e310a22e5db7497a93eeb575e276de3011cde9133383a7439",
+          "page": 41,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "ity cards in Appendix A. Corridors 1 Utility corridors will be permitted that meet timber management, forage production, and visual goals and standards. N/A No additional utility corridors authorized. Management Area 2 Recreation 1 Manage for recreation activities associated with roads and motorized equipment. The recreation opportunity spectrum setting is roaded natural (USDA, nd). Interpretive sites and trails will be compatible with winter range management goals. Off-road vehicle use will be controlled during critical periods on susceptible ranges such as high- use winter range, spring rang"
+        },
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:36184bde6136c08b89d8df32cae0f83f",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "3d415f294f16171a80eac31f1f4a49829d86e3c3e953c4bf5d5a8f5480edab6f",
+          "page": 67,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "ually for insect and disease problems. Yes, the Selected Action includes the monitoring protocols of the 1987 Forest Plan, as well as the project- specific monitoring protocol described in Appendix B. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 66 Standard Standard Description Does the Selected Action Meet the Standard? If \u201cN/A\u201d, provide an explanation 4 Apply Forest-wide insect and disease standards to help meet and maintain visual quality. Yes, the project is designed to enhance the project area\u2019s resiliency to the detrimental impacts of insects and disease. Cor"
+        }
+      ],
+      "package_evidence_terms": [
+        "resource objectives the following objectives state how resources",
+        "resource objectives the following objectives state how resources will be managed under the forest plan during the plan period",
+        "resource objectives following objectives state",
+        "objectives following objectives state how",
+        "following objectives state how resources",
+        "objectives state how resources managed",
+        "state how resources managed under",
+        "how resources managed under plan",
+        "plan",
+        "objectives",
+        "resource-objectives-following-objectives-state-how-resources-managed-under-plan-during-plan-b54fed75-obj",
+        "following",
+        "state",
+        "managed",
+        "under",
+        "during",
+        "period",
+        "complete",
+        "understanding",
+        "attained",
+        "resource-objectives-following-objectives-state-how-resources-managed-under-plan-during-plan-b54fed75-obj-1",
+        "resource",
+        "how",
+        "resources",
+        "b54fed75",
+        "obj"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-005 (74e6e96d6a80)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "74e6e96d6a80bd3320a99697cc299d9394e16ced34db9a02353092cdee210d52",
+          "authority_level": "forest",
+          "chunk_id": "chunk:5129ebf9ef63e676b8c8fd51d9f8298f",
+          "citation_label": "FOR-005 (74e6e96d6a80)",
+          "content_sha256": "7538ea6b4be696c2eac4c9faffc6e7973792e7551a213baeb9a139d182e4b40a",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Objectives (RESOURCE-OBJECTIVES-FOLLOWING-OBJECTIVES-STATE-HOW-RESOURCES-MANAGED-UNDER-PLAN-DURING-PLAN-B54FED75-OBJ) 1 Resource Objectives The following obJectives state how resources will be managed under the Forest Plan during the Plan Period. A complete understanding of the management direction can be attained by reading the Forest-wide goals and standards in this chapter, and the management area goals and standards in Chapter III. a. Recreation Inform public of seasonal recreation opportunities. Provide for the current mix of dispersed recreation by maintaining about 50 percent of the Forest in wilderness, about 20 percent in semiprimitive motorized recreation and about 30 percent in roaded areas. Provide for the development and maintenance of at least two travel routes for winter activities. Provide recreation facilities at Lake Como for the elderly and handicapped."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:5129ebf9ef63e676b8c8fd51d9f8298f"
+          ],
+          "source_record_id": "FOR-005",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-005_74e6e96d6a80bd33.txt",
+          "title": "1987 Forest Plan"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-005"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "Appendix D is the selected-action forest-plan consistency worksheet and includes management-area rows for the Bitterroot Front project; the component run did not attach that package evidence to this broad resource-objective component.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_forest_plan_consistency_replay"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "outfitted use helps achieve proposed objectives standards and guidelines associated witl1 each zone",
+          "outfitted use helps achieve proposed",
+          "use helps achieve proposed objectives",
+          "helps achieve proposed objectives standards",
+          "achieve proposed objectives standards guidelines",
+          "proposed objectives standards guidelines associated",
+          "objectives standards guidelines associated witl1"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "outfitted use helps achieve proposed objectives standards and guidelines associated witl1 each zone",
+          "outfitted use helps achieve proposed",
+          "use helps achieve proposed objectives"
+        ]
+      },
+      "component_id": "FOR-006-OUTFITTED-USE-HELPS-ACHIEVE-PROPOSED-OBJECTIVES-STANDARDS-GUIDELINES-ASSOCIATED-WITL1-EACH-ZONE-D4CD690A-OBJ-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "8ba5afb4eacab04b35ae38ca35744a49327d334bee99f5d496e0ac4918110c0f",
+        "page": 229,
+        "source_chunk_ids": [
+          "chunk:e80a0fc03e018b42e61dad94de0b7e17"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Objectives (OUTFITTED-USE-HELPS-ACHIEVE-PROPOSED-OBJECTIVES-STANDARDS-GUIDELINES-ASSOCIATED-WITL1-EACH-ZONE-D4CD690A-OBJ) 1 Outfitted use helps achieve proposed objectives, standards and guidelines associated witl1 each zone. 2. Use allocation process, and evaluation criterta for similar operations, will be consistently applied by all Ranger Distrtcts in the Anaconda-Pintler as described in the Guidelines.",
+      "component_type": "objective",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-OUTFITTED-USE-HELPS-ACHIEVE-PROPOSED-OBJECTIVES-STANDARDS-GUIDELINES-ASSOCIATED-WITL1-EACH-ZONE-D4CD690A-OBJ-1-finding",
+      "item_id": "FOR-006-OUTFITTED-USE-HELPS-ACHIEVE-PROPOSED-OBJECTIVES-STANDARDS-GUIDELINES-ASSOCIATED-WITL1-EACH-ZONE-D4CD690A-OBJ-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "outfitted use helps achieve proposed objectives standards and guidelines associated witl1 each zone",
+        "outfitted use helps achieve proposed",
+        "use helps achieve proposed objectives",
+        "helps achieve proposed objectives standards",
+        "achieve proposed objectives standards guidelines",
+        "proposed objectives standards guidelines associated",
+        "objectives standards guidelines associated witl1",
+        "plan",
+        "amendments",
+        "objectives",
+        "outfitted-use-helps-achieve-proposed-objectives-standards-guidelines-associated-witl1-each-zone-d4cd690a-obj",
+        "outfitted",
+        "helps",
+        "achieve",
+        "proposed",
+        "standards",
+        "guidelines",
+        "associated",
+        "witl1",
+        "outfitted-use-helps-achieve-proposed-objectives-standards-guidelines-associated-witl1-each-zone-d4cd690a-obj-1",
+        "use",
+        "each",
+        "zone",
+        "d4cd690a",
+        "obj"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:e80a0fc03e018b42e61dad94de0b7e17",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "8ba5afb4eacab04b35ae38ca35744a49327d334bee99f5d496e0ac4918110c0f",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Objectives (OUTFITTED-USE-HELPS-ACHIEVE-PROPOSED-OBJECTIVES-STANDARDS-GUIDELINES-ASSOCIATED-WITL1-EACH-ZONE-D4CD690A-OBJ) 1 Outfitted use helps achieve proposed objectives, standards and guidelines associated witl1 each zone. 2. Use allocation process, and evaluation criterta for similar operations, will be consistently applied by all Ranger Distrtcts in the Anaconda-Pintler as described in the Guidelines."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:e80a0fc03e018b42e61dad94de0b7e17"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "new permits or increased user days on existing pernlits",
+          "new permits or increased user days on existing pernlits will not be issued unless there is a resource capacity to absorb the use without damage to wilderness values",
+          "permits increased user days on",
+          "increased user days on existing",
+          "user days on existing pernlits",
+          "days on existing pernlits issued",
+          "on existing pernlits issued unless",
+          "existing pernlits issued unless there"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "new permits or increased user days on existing pernlits",
+          "new permits or increased user days on existing pernlits will not be issued unless there is a resource capacity to absorb the use without damage to wilderness values",
+          "permits increased user days on"
+        ]
+      },
+      "component_id": "FOR-006-PERMITS-INCREASED-USER-DAYS-ON-EXISTING-PERNLITS-ISSUED-UNLESS-THERE-RESOURCE-CAPACITY-427DC315-GL-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "8ba5afb4eacab04b35ae38ca35744a49327d334bee99f5d496e0ac4918110c0f",
+        "page": 229,
+        "source_chunk_ids": [
+          "chunk:e80a0fc03e018b42e61dad94de0b7e17"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Guidelines (PERMITS-INCREASED-USER-DAYS-ON-EXISTING-PERNLITS-ISSUED-UNLESS-THERE-RESOURCE-CAPACITY-427DC315-GL) 1 New permits, or increased user days on existing pernlits, will not be issued unless there is a resource capacity to absorb the use Without damage to wilderness values. an ability by the Forest Service to administer more pernlits. and a demonstrated public demand for additional outfitted A-P use. 2. If new permits are considered, the following five step process will be followed. a. Determination of demonstrated public need is completed and documented by the Forest Service. Determination of need e.xamines: 1) Agency Mission. 2) Opportunities. 3) Land Capability. 4) Social Capacity. 5) Demand/Supply as further defined in the Guidebook on Outfitter and Guide Administration (February 1997). b. The issuance proposal is fully evaluated and analysis/documentation has been completed. the approprtate NEPA c. The analysis and decision are documented and linked to the Forest Plan. d.",
+      "component_type": "guideline",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-PERMITS-INCREASED-USER-DAYS-ON-EXISTING-PERNLITS-ISSUED-UNLESS-THERE-RESOURCE-CAPACITY-427DC315-GL-1-finding",
+      "item_id": "FOR-006-PERMITS-INCREASED-USER-DAYS-ON-EXISTING-PERNLITS-ISSUED-UNLESS-THERE-RESOURCE-CAPACITY-427DC315-GL-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "new permits or increased user days on existing pernlits",
+        "new permits or increased user days on existing pernlits will not be issued unless there is a resource capacity to absorb the use without damage to wilderness values",
+        "permits increased user days on",
+        "increased user days on existing",
+        "user days on existing pernlits",
+        "days on existing pernlits issued",
+        "on existing pernlits issued unless",
+        "existing pernlits issued unless there",
+        "plan",
+        "amendments",
+        "guidelines",
+        "permits-increased-user-days-on-existing-pernlits-issued-unless-there-resource-capacity-427dc315-gl",
+        "permits",
+        "increased",
+        "user",
+        "days",
+        "existing",
+        "pernlits",
+        "issued",
+        "unless",
+        "permits-increased-user-days-on-existing-pernlits-issued-unless-there-resource-capacity-427dc315-gl-1",
+        "there",
+        "resource",
+        "capacity",
+        "427dc315"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:e80a0fc03e018b42e61dad94de0b7e17",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "8ba5afb4eacab04b35ae38ca35744a49327d334bee99f5d496e0ac4918110c0f",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Guidelines (PERMITS-INCREASED-USER-DAYS-ON-EXISTING-PERNLITS-ISSUED-UNLESS-THERE-RESOURCE-CAPACITY-427DC315-GL) 1 New permits, or increased user days on existing pernlits, will not be issued unless there is a resource capacity to absorb the use Without damage to wilderness values. an ability by the Forest Service to administer more pernlits. and a demonstrated public demand for additional outfitted A-P use. 2. If new permits are considered, the following five step process will be followed. a. Determination of demonstrated public need is completed and documented by the Forest Service. Determination of need e.xamines: 1) Agency Mission. 2) Opportunities. 3) Land Capability. 4) Social Capacity. 5) Demand/Supply as further defined in the Guidebook on Outfitter and Guide Administration (February 1997). b. The issuance proposal is fully evaluated and analysis/documentation has been completed. the approprtate NEPA c. The analysis and decision are documented and linked to the Forest Plan. d."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:e80a0fc03e018b42e61dad94de0b7e17"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "fishless waters represent special estiletic",
+          "fishless waters represent special",
+          "waters represent special estiletic",
+          "fishless waters represent",
+          "waters represent special",
+          "represent special estiletic"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "fishless waters represent special estiletic",
+          "fishless waters represent special",
+          "waters represent special estiletic"
+        ]
+      },
+      "component_id": "FOR-006-FISHLESS-WATERS-REPRESENT-SPECIAL-ESTILETIC-SCIENTIFIC-BIOLOGICAL-SOCIAL-VALUES-BECAUSE-THIS-TILE-EAD1A068-OBJ-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "d3b0cda77d6577c859504e8c1d8b6cb4c4dcf6b5a70068db79ba3487d5320ad6",
+        "page": 231,
+        "source_chunk_ids": [
+          "chunk:40494c996f0612690c84f2debb212ee2"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Objectives (FISHLESS-WATERS-REPRESENT-SPECIAL-ESTILETIC-SCIENTIFIC-BIOLOGICAL-SOCIAL-VALUES-BECAUSE-THIS-TILE-EAD1A068-OBJ) 1 Fishless waters represent special estiletic. scientific, biological, and social values. Because of this tile Forest Service prefers tilat tilese waters remain unstocked. See Table VI, Chapter Ill, page 89. 2. Stock only indigenous species in lakes that have been evaluated and detennined appropIiate by the Montana Fish Wildlife and Parks and the Forest Service. 3. Stocking methods will be in keeping with wilderness values. Guidelines 1 For those headwater lakes. which require periodic stocking to maintain a sport fishery. the following options will be considered: a. Allow the fish to naturally die out and maintain as a barren lake. b. In those headwater lakes where native species exist, continue to stock With native species. c. Where \"a\" or \"bIt do not apply. MFWP immediately sWitches to using native species in those waters where native populations presently e.'dst downstream of stocked headwater lakes. Where native species brood stocks are unavailable.",
+      "component_type": "objective",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-FISHLESS-WATERS-REPRESENT-SPECIAL-ESTILETIC-SCIENTIFIC-BIOLOGICAL-SOCIAL-VALUES-BECAUSE-THIS-TILE-EAD1A068-OBJ-1-finding",
+      "item_id": "FOR-006-FISHLESS-WATERS-REPRESENT-SPECIAL-ESTILETIC-SCIENTIFIC-BIOLOGICAL-SOCIAL-VALUES-BECAUSE-THIS-TILE-EAD1A068-OBJ-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "fishless waters represent special estiletic",
+        "fishless waters represent special",
+        "waters represent special estiletic",
+        "fishless waters represent",
+        "waters represent special",
+        "represent special estiletic",
+        "plan",
+        "amendments",
+        "objectives",
+        "fishless-waters-represent-special-estiletic-scientific-biological-social-values-because-this-tile-ead1a068-obj",
+        "fishless",
+        "waters",
+        "represent",
+        "special",
+        "estiletic",
+        "scientific",
+        "biological",
+        "social",
+        "fishless-waters-represent-special-estiletic-scientific-biological-social-values-because-this-tile-ead1a068-obj-1",
+        "values",
+        "because",
+        "this",
+        "tile",
+        "ead1a068",
+        "obj"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:40494c996f0612690c84f2debb212ee2",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "d3b0cda77d6577c859504e8c1d8b6cb4c4dcf6b5a70068db79ba3487d5320ad6",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Objectives (FISHLESS-WATERS-REPRESENT-SPECIAL-ESTILETIC-SCIENTIFIC-BIOLOGICAL-SOCIAL-VALUES-BECAUSE-THIS-TILE-EAD1A068-OBJ) 1 Fishless waters represent special estiletic. scientific, biological, and social values. Because of this tile Forest Service prefers tilat tilese waters remain unstocked. See Table VI, Chapter Ill, page 89. 2. Stock only indigenous species in lakes that have been evaluated and detennined appropIiate by the Montana Fish Wildlife and Parks and the Forest Service. 3. Stocking methods will be in keeping with wilderness values. Guidelines 1 For those headwater lakes. which require periodic stocking to maintain a sport fishery. the following options will be considered: a. Allow the fish to naturally die out and maintain as a barren lake. b. In those headwater lakes where native species exist, continue to stock With native species. c. Where \"a\" or \"bIt do not apply. MFWP immediately sWitches to using native species in those waters where native populations presently e.'dst downstream of stocked headwater lakes. Where native species brood stocks are unavailable."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:40494c996f0612690c84f2debb212ee2"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "maintenance and rehabilitation of the cabin",
+          "maintenance and rehabilitation of the cabin will not use mechanized tools and will be done in a fashion that meets the standards of management for a histoiic structure eligible for listing under the national register of histoiic places",
+          "maintenance rehabilitation cabin use mechanized",
+          "rehabilitation cabin use mechanized tools",
+          "cabin use mechanized tools done",
+          "use mechanized tools done fashion",
+          "mechanized tools done fashion meets",
+          "tools done fashion meets standards"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "maintenance and rehabilitation of the cabin",
+          "maintenance and rehabilitation of the cabin will not use mechanized tools and will be done in a fashion that meets the standards of management for a histoiic structure eligible for listing under the national register of histoiic places",
+          "maintenance rehabilitation cabin use mechanized"
+        ]
+      },
+      "component_id": "FOR-006-MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "b408d8035b33d02e6126328181419f285f3371953cccedf3a935982734e985f6",
+        "page": 235,
+        "source_chunk_ids": [
+          "chunk:25f41971008fe6f692d794981ec56c59"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Standards (MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD) 1 Maintenance and rehabilitation of the cabin will not use mechanized tools and will be done in a fashion that meets the standards of management for a histoIic structure eligible for listing under the National Register of HistoIic Places. Chapter II -Page 35 A-P WILDERNESS FOREST PLAN DIRECTION CHAPTER n -ISSUES AND ALTERNATIVES Establish Man~eme~t Zones Management zones are based on the Limits of Acceptable Change (lAC) concept. It sets limits, in different portions of the Wilderness. based on measurements of conditions. The intent of establishing zones is to maintain or re-establish acceptable resource and social conditions. These conditions represent the maximum limit of change from natural which will be allowed. Zones allow managers to apply a range of desired conditions which are specific and acceptable within wilderness. Zones are based on the premise that the Wilderness is not homogeneous. Some areas will have more human activity and thus show more bio-physical and social impacts than do areas with fewer people and their associated activities. Conditions. as described in narratives and as measured by indicators. vary from one zone to the ne.\"{t. Management actions appropriate to each zone are identified and procedures for monitor'Jlg and evaluating the effectiveness of management actions are established. Alternatives and zones are related. Maps IV tllrough VII show this relationship. Zone direction does not vary by alternative. Location and amount of each zone does vary by alternative.",
+      "component_type": "standard",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "insufficient_evidence",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "insufficient_evidence",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD-1-finding",
+      "item_id": "FOR-006-MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "maintenance and rehabilitation of the cabin",
+        "maintenance and rehabilitation of the cabin will not use mechanized tools and will be done in a fashion that meets the standards of management for a histoiic structure eligible for listing under the national register of histoiic places",
+        "maintenance rehabilitation cabin use mechanized",
+        "rehabilitation cabin use mechanized tools",
+        "cabin use mechanized tools done",
+        "use mechanized tools done fashion",
+        "mechanized tools done fashion meets",
+        "tools done fashion meets standards",
+        "plan",
+        "amendments",
+        "standards",
+        "maintenance-rehabilitation-cabin-use-mechanized-tools-done-fashion-meets-standards-management-histoiic-8fa5f30f-std",
+        "maintenance",
+        "rehabilitation",
+        "cabin",
+        "mechanized",
+        "tools",
+        "done",
+        "fashion",
+        "meets",
+        "maintenance-rehabilitation-cabin-use-mechanized-tools-done-fashion-meets-standards-management-histoiic-8fa5f30f-std-1",
+        "use",
+        "management",
+        "histoiic",
+        "8fa5f30f",
+        "std"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:25f41971008fe6f692d794981ec56c59",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "b408d8035b33d02e6126328181419f285f3371953cccedf3a935982734e985f6",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Standards (MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD) 1 Maintenance and rehabilitation of the cabin will not use mechanized tools and will be done in a fashion that meets the standards of management for a histoIic structure eligible for listing under the National Register of HistoIic Places. Chapter II -Page 35 A-P WILDERNESS FOREST PLAN DIRECTION CHAPTER n -ISSUES AND ALTERNATIVES Establish Man~eme~t Zones Management zones are based on the Limits of Acceptable Change (lAC) concept. It sets limits, in different portions of the Wilderness. based on measurements of conditions. The intent of establishing zones is to maintain or re-establish acceptable resource and social conditions. These conditions represent the maximum limit of change from natural which will be allowed. Zones allow managers to apply a range of desired conditions which are specific and acceptable within wilderness. Zones are based on the premise that the Wilderness is not homogeneous. Some areas will have more human activity and thus show more bio-physical and social impacts than do areas with fewer people and their associated activities. Conditions. as described in narratives and as measured by indicators. vary from one zone to the ne.\"{t. Management actions appropriate to each zone are identified and procedures for monitor'Jlg and evaluating the effectiveness of management actions are established. Alternatives and zones are related. Maps IV tllrough VII show this relationship. Zone direction does not vary by alternative. Location and amount of each zone does vary by alternative."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:25f41971008fe6f692d794981ec56c59"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "this zone has the highest degree of apparent naturalness",
+          "this zone has highest degree",
+          "zone has highest degree apparent",
+          "has highest degree apparent naturalness",
+          "this zone has highest",
+          "zone has highest degree",
+          "has highest degree apparent"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "this zone has the highest degree of apparent naturalness",
+          "this zone has highest degree",
+          "zone has highest degree apparent"
+        ]
+      },
+      "component_id": "FOR-006-THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-CC6103AF-GO-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "eb93ec7dede472518679d4003f1505418cf5a722281d25567189d118b599b618",
+        "page": 236,
+        "source_chunk_ids": [
+          "chunk:2d08fe596b30999e793afd3760dfab0f"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Goals (THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-CC6103AF-GO) 1 This zone has the highest degree of apparent naturalness. 2. Ecological processes operate naturally. with essentially no perceptible or measurable evidence of human impact or use. 3.",
+      "component_type": "goal",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-CC6103AF-GO-1-finding",
+      "item_id": "FOR-006-THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-CC6103AF-GO-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "this zone has the highest degree of apparent naturalness",
+        "this zone has highest degree",
+        "zone has highest degree apparent",
+        "has highest degree apparent naturalness",
+        "this zone has highest",
+        "zone has highest degree",
+        "has highest degree apparent",
+        "plan",
+        "amendments",
+        "goals",
+        "this-zone-has-highest-degree-apparent-naturalness-ecological-processes-operate-naturally-essentially-cc6103af-go",
+        "this",
+        "zone",
+        "highest",
+        "degree",
+        "apparent",
+        "naturalness",
+        "ecological",
+        "processes",
+        "this-zone-has-highest-degree-apparent-naturalness-ecological-processes-operate-naturally-essentially-cc6103af-go-1",
+        "has",
+        "operate",
+        "naturally",
+        "essentially",
+        "cc6103af"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:2d08fe596b30999e793afd3760dfab0f",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "eb93ec7dede472518679d4003f1505418cf5a722281d25567189d118b599b618",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Goals (THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-CC6103AF-GO) 1 This zone has the highest degree of apparent naturalness. 2. Ecological processes operate naturally. with essentially no perceptible or measurable evidence of human impact or use. 3."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:2d08fe596b30999e793afd3760dfab0f"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "this zone has the highest degree of apparent naturalness",
+          "this zone has highest degree",
+          "zone has highest degree apparent",
+          "has highest degree apparent naturalness",
+          "this zone has highest",
+          "zone has highest degree",
+          "has highest degree apparent"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "this zone has the highest degree of apparent naturalness",
+          "this zone has highest degree",
+          "zone has highest degree apparent"
+        ]
+      },
+      "component_id": "FOR-006-THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-E968CF92-GO-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "c939d56505fb54606f950eb8e6ccdc1d2efd19c23d240091e9f651b30b7c0704",
+        "page": 237,
+        "source_chunk_ids": [
+          "chunk:a664bb1cf6f64a787b56492c4559ca83"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Goals (THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-E968CF92-GO) 1 This zone has the highest degree of apparent naturalness. 2. Ecological processes operate naturally. with essentially no perceptible or measurable evidence of human impact or use. 3. The area has outstanding opportunities for solitude and a primitive and unconfined type of recreation which requires self-reliance. I 4. The area functions as a wild place. It looks and feels wild to those who visit.",
+      "component_type": "goal",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-E968CF92-GO-1-finding",
+      "item_id": "FOR-006-THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-E968CF92-GO-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "this zone has the highest degree of apparent naturalness",
+        "this zone has highest degree",
+        "zone has highest degree apparent",
+        "has highest degree apparent naturalness",
+        "this zone has highest",
+        "zone has highest degree",
+        "has highest degree apparent",
+        "plan",
+        "amendments",
+        "goals",
+        "this-zone-has-highest-degree-apparent-naturalness-ecological-processes-operate-naturally-essentially-e968cf92-go",
+        "this",
+        "zone",
+        "highest",
+        "degree",
+        "apparent",
+        "naturalness",
+        "ecological",
+        "processes",
+        "this-zone-has-highest-degree-apparent-naturalness-ecological-processes-operate-naturally-essentially-e968cf92-go-1",
+        "has",
+        "operate",
+        "naturally",
+        "essentially",
+        "e968cf92"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:a664bb1cf6f64a787b56492c4559ca83",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "c939d56505fb54606f950eb8e6ccdc1d2efd19c23d240091e9f651b30b7c0704",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Goals (THIS-ZONE-HAS-HIGHEST-DEGREE-APPARENT-NATURALNESS-ECOLOGICAL-PROCESSES-OPERATE-NATURALLY-ESSENTIALLY-E968CF92-GO) 1 This zone has the highest degree of apparent naturalness. 2. Ecological processes operate naturally. with essentially no perceptible or measurable evidence of human impact or use. 3. The area has outstanding opportunities for solitude and a primitive and unconfined type of recreation which requires self-reliance. I 4. The area functions as a wild place. It looks and feels wild to those who visit."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:a664bb1cf6f64a787b56492c4559ca83"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "campsite vegetation impacts recover annually",
+          "campsite vegetation impacts recover",
+          "vegetation impacts recover annually",
+          "campsite vegetation impacts",
+          "vegetation impacts recover",
+          "impacts recover annually"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "campsite vegetation impacts recover annually",
+          "campsite vegetation impacts recover",
+          "vegetation impacts recover annually"
+        ]
+      },
+      "component_id": "FOR-006-CAMPSITE-VEGETATION-IMPACTS-RECOVER-ANNUALLY-TRAILS-FREQUENTLY-USED-HUMANS-SELDOM-OCCUR-THIS-31FC27E8-OBJ-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "c939d56505fb54606f950eb8e6ccdc1d2efd19c23d240091e9f651b30b7c0704",
+        "page": 237,
+        "source_chunk_ids": [
+          "chunk:a664bb1cf6f64a787b56492c4559ca83"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Objectives (CAMPSITE-VEGETATION-IMPACTS-RECOVER-ANNUALLY-TRAILS-FREQUENTLY-USED-HUMANS-SELDOM-OCCUR-THIS-31FC27E8-OBJ) 1 Campsite vegetation impacts recover annually. 2. Trails frequently used by humans seldom occur in this area. I Chapter II -Page 37 I A-P Wn.DERNESS FOREST PLAN DIRECTION CHAPrER n .ISSUES AND ALTERNATIVES 3. Encounters with other groups and rangers are rare. Standards Eliminate or prevent the folloWing in this zone: 1. System Trails 2. Signing Guidelines Through education and administrative actions. which may sometimes include physical removal. the following will be discouraged or eliminated: 1. Base Camps for fire suppression or other administrative purposes 2. Constructed Helispots; allow old sites to recover I 3. Rock Campfire Rings I 4. Barren Core Area associated willi campsites . 5. Campsite density greater than 1 per roving. radial. mile 6. Structures (except Herttage Resource) . I 7. Frequent Managerial Presence 8. Repeated use of Large Group Camps, including outfitter Zone ll- composed primarily of some access routes and the high elevation lake areas found on the Phillpsburg and NW Wise River District. It is close to the crest of the range and contains more destinations than any other portion of the wilderness. The . I Chapter II -Page 38",
+      "component_type": "objective",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-CAMPSITE-VEGETATION-IMPACTS-RECOVER-ANNUALLY-TRAILS-FREQUENTLY-USED-HUMANS-SELDOM-OCCUR-THIS-31FC27E8-OBJ-1-finding",
+      "item_id": "FOR-006-CAMPSITE-VEGETATION-IMPACTS-RECOVER-ANNUALLY-TRAILS-FREQUENTLY-USED-HUMANS-SELDOM-OCCUR-THIS-31FC27E8-OBJ-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "campsite vegetation impacts recover annually",
+        "campsite vegetation impacts recover",
+        "vegetation impacts recover annually",
+        "campsite vegetation impacts",
+        "vegetation impacts recover",
+        "impacts recover annually",
+        "plan",
+        "amendments",
+        "objectives",
+        "campsite-vegetation-impacts-recover-annually-trails-frequently-used-humans-seldom-occur-this-31fc27e8-obj",
+        "campsite",
+        "vegetation",
+        "impacts",
+        "recover",
+        "annually",
+        "trails",
+        "frequently",
+        "used",
+        "campsite-vegetation-impacts-recover-annually-trails-frequently-used-humans-seldom-occur-this-31fc27e8-obj-1",
+        "humans",
+        "seldom",
+        "occur",
+        "this",
+        "31fc27e8",
+        "obj"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:a664bb1cf6f64a787b56492c4559ca83",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "c939d56505fb54606f950eb8e6ccdc1d2efd19c23d240091e9f651b30b7c0704",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Objectives (CAMPSITE-VEGETATION-IMPACTS-RECOVER-ANNUALLY-TRAILS-FREQUENTLY-USED-HUMANS-SELDOM-OCCUR-THIS-31FC27E8-OBJ) 1 Campsite vegetation impacts recover annually. 2. Trails frequently used by humans seldom occur in this area. I Chapter II -Page 37 I A-P Wn.DERNESS FOREST PLAN DIRECTION CHAPrER n .ISSUES AND ALTERNATIVES 3. Encounters with other groups and rangers are rare. Standards Eliminate or prevent the folloWing in this zone: 1. System Trails 2. Signing Guidelines Through education and administrative actions. which may sometimes include physical removal. the following will be discouraged or eliminated: 1. Base Camps for fire suppression or other administrative purposes 2. Constructed Helispots; allow old sites to recover I 3. Rock Campfire Rings I 4. Barren Core Area associated willi campsites . 5. Campsite density greater than 1 per roving. radial. mile 6. Structures (except Herttage Resource) . I 7. Frequent Managerial Presence 8. Repeated use of Large Group Camps, including outfitter Zone ll- composed primarily of some access routes and the high elevation lake areas found on the Phillpsburg and NW Wise River District. It is close to the crest of the range and contains more destinations than any other portion of the wilderness. The . I Chapter II -Page 38"
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:a664bb1cf6f64a787b56492c4559ca83"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "this zone has a high degree of wilderness integrity and a low level of human disturbance",
+          "this zone has high degree",
+          "zone has high degree wilderness",
+          "has high degree wilderness integrity",
+          "high degree wilderness integrity low",
+          "degree wilderness integrity low level",
+          "wilderness integrity low level human"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "this zone has a high degree of wilderness integrity and a low level of human disturbance",
+          "this zone has high degree",
+          "zone has high degree wilderness"
+        ]
+      },
+      "component_id": "FOR-006-THIS-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGRITY-LOW-LEVEL-HUMAN-DISTURBANCE-I-0CC7DAB5-GO-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "e47a2f31a785b69dff3305689e2bc0f960650687f9e986528423eb62bca17b4a",
+        "page": 238,
+        "source_chunk_ids": [
+          "chunk:75e95e1ee4a580169e17856d4b8d1f9e"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Goals (THIS-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGRITY-LOW-LEVEL-HUMAN-DISTURBANCE-I-0CC7DAB5-GO) 1 This zone has a high degree of wilderness integrity and a low level of human disturbance. I 2. The zone is characteriZed by a predominantly unmodified natural enVironment. 3. I Ecological processes operate naturally with limited evidence of human impact. 4. Excellent opportunities exist for solitude and the area offers a primitive and unconfined type of recreation. requiring self-reliance",
+      "component_type": "goal",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-THIS-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGRITY-LOW-LEVEL-HUMAN-DISTURBANCE-I-0CC7DAB5-GO-1-finding",
+      "item_id": "FOR-006-THIS-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGRITY-LOW-LEVEL-HUMAN-DISTURBANCE-I-0CC7DAB5-GO-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "this zone has a high degree of wilderness integrity and a low level of human disturbance",
+        "this zone has high degree",
+        "zone has high degree wilderness",
+        "has high degree wilderness integrity",
+        "high degree wilderness integrity low",
+        "degree wilderness integrity low level",
+        "wilderness integrity low level human",
+        "plan",
+        "amendments",
+        "goals",
+        "this-zone-has-high-degree-wilderness-integrity-low-level-human-disturbance-i-0cc7dab5-go",
+        "this",
+        "zone",
+        "high",
+        "degree",
+        "wilderness",
+        "integrity",
+        "level",
+        "human",
+        "this-zone-has-high-degree-wilderness-integrity-low-level-human-disturbance-i-0cc7dab5-go-1",
+        "has",
+        "low",
+        "disturbance",
+        "0cc7dab5"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:75e95e1ee4a580169e17856d4b8d1f9e",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "e47a2f31a785b69dff3305689e2bc0f960650687f9e986528423eb62bca17b4a",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Goals (THIS-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGRITY-LOW-LEVEL-HUMAN-DISTURBANCE-I-0CC7DAB5-GO) 1 This zone has a high degree of wilderness integrity and a low level of human disturbance. I 2. The zone is characteriZed by a predominantly unmodified natural enVironment. 3. I Ecological processes operate naturally with limited evidence of human impact. 4. Excellent opportunities exist for solitude and the area offers a primitive and unconfined type of recreation. requiring self-reliance"
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:75e95e1ee4a580169e17856d4b8d1f9e"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "campsite impacts",
+          "campsite impacts are minimal",
+          "campsite impacts minimal",
+          "impacts minimal"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "campsite impacts",
+          "campsite impacts are minimal",
+          "campsite impacts minimal"
+        ]
+      },
+      "component_id": "FOR-006-CAMPSITE-IMPACTS-MINIMAL-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINIMIZED-ENCOUNTERS-OTHER-GROUPS-5456417F-OBJ-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "e47a2f31a785b69dff3305689e2bc0f960650687f9e986528423eb62bca17b4a",
+        "page": 238,
+        "source_chunk_ids": [
+          "chunk:75e95e1ee4a580169e17856d4b8d1f9e"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Objectives (CAMPSITE-IMPACTS-MINIMAL-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINIMIZED-ENCOUNTERS-OTHER-GROUPS-5456417F-OBJ) 1 Campsite impacts are minimal. 2 User built trails and social trails are minimized. 3. Encounters With other groups and rangers are uncommon. Standards 1 Secondary trails are the highest standard trail in this area. I Guidelines I Through education and administrative actions, which may sometimes include physical removal, the following will be discouraged or eliminated: I 1 Signing except at trail junctions and wilderness boundaries I 2. Frequent Managerial Presence I Chapter n -Page 39",
+      "component_type": "objective",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-CAMPSITE-IMPACTS-MINIMAL-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINIMIZED-ENCOUNTERS-OTHER-GROUPS-5456417F-OBJ-1-finding",
+      "item_id": "FOR-006-CAMPSITE-IMPACTS-MINIMAL-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINIMIZED-ENCOUNTERS-OTHER-GROUPS-5456417F-OBJ-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "campsite impacts",
+        "campsite impacts are minimal",
+        "campsite impacts minimal",
+        "impacts minimal",
+        "plan",
+        "amendments",
+        "objectives",
+        "campsite-impacts-minimal-user-built-trails-social-trails-minimized-encounters-other-groups-5456417f-obj",
+        "campsite",
+        "impacts",
+        "minimal",
+        "user",
+        "built",
+        "trails",
+        "social",
+        "minimized",
+        "campsite-impacts-minimal-user-built-trails-social-trails-minimized-encounters-other-groups-5456417f-obj-1",
+        "encounters",
+        "other",
+        "groups",
+        "5456417f",
+        "obj"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:75e95e1ee4a580169e17856d4b8d1f9e",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "e47a2f31a785b69dff3305689e2bc0f960650687f9e986528423eb62bca17b4a",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Objectives (CAMPSITE-IMPACTS-MINIMAL-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINIMIZED-ENCOUNTERS-OTHER-GROUPS-5456417F-OBJ) 1 Campsite impacts are minimal. 2 User built trails and social trails are minimized. 3. Encounters With other groups and rangers are uncommon. Standards 1 Secondary trails are the highest standard trail in this area. I Guidelines I Through education and administrative actions, which may sometimes include physical removal, the following will be discouraged or eliminated: I 1 Signing except at trail junctions and wilderness boundaries I 2. Frequent Managerial Presence I Chapter n -Page 39"
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:75e95e1ee4a580169e17856d4b8d1f9e"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "the zone has a high degree of wilderness integiity",
+          "zone has high degree wilderness",
+          "has high degree wilderness integiity",
+          "zone has high degree",
+          "has high degree wilderness",
+          "high degree wilderness integiity",
+          "zone has high"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "the zone has a high degree of wilderness integiity",
+          "zone has high degree wilderness",
+          "has high degree wilderness integiity"
+        ]
+      },
+      "component_id": "FOR-006-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGIITY-ZONE-CHARACTERIZED-MINIMAL-LEVEL-HUMAN-DISTURBANCE-66FEF709-GO-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "345f57f2a257ff14b7a6791b3112df6729ad1714e8c995229f3a2ad7d921f41a",
+        "page": 239,
+        "source_chunk_ids": [
+          "chunk:fcde4288828e4565ffb5f96ff9584447"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Goals (ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGIITY-ZONE-CHARACTERIZED-MINIMAL-LEVEL-HUMAN-DISTURBANCE-66FEF709-GO) 1 The zone has a high degree of wilderness integIity. 2. The zone is characterized by a minimal level of human disturbance. 3. Ecological processes operate naturally With limited evidence of human impact. Opportunities for solitude are available. 4. 5. A primitive and unconfined characteristic of the area. requiring self-reliance, type of recreation.",
+      "component_type": "goal",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGIITY-ZONE-CHARACTERIZED-MINIMAL-LEVEL-HUMAN-DISTURBANCE-66FEF709-GO-1-finding",
+      "item_id": "FOR-006-ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGIITY-ZONE-CHARACTERIZED-MINIMAL-LEVEL-HUMAN-DISTURBANCE-66FEF709-GO-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "the zone has a high degree of wilderness integiity",
+        "zone has high degree wilderness",
+        "has high degree wilderness integiity",
+        "zone has high degree",
+        "has high degree wilderness",
+        "high degree wilderness integiity",
+        "zone has high",
+        "plan",
+        "amendments",
+        "goals",
+        "zone-has-high-degree-wilderness-integiity-zone-characterized-minimal-level-human-disturbance-66fef709-go",
+        "zone",
+        "high",
+        "degree",
+        "wilderness",
+        "integiity",
+        "characterized",
+        "minimal",
+        "level",
+        "zone-has-high-degree-wilderness-integiity-zone-characterized-minimal-level-human-disturbance-66fef709-go-1",
+        "has",
+        "human",
+        "disturbance",
+        "66fef709"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:fcde4288828e4565ffb5f96ff9584447",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "345f57f2a257ff14b7a6791b3112df6729ad1714e8c995229f3a2ad7d921f41a",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Goals (ZONE-HAS-HIGH-DEGREE-WILDERNESS-INTEGIITY-ZONE-CHARACTERIZED-MINIMAL-LEVEL-HUMAN-DISTURBANCE-66FEF709-GO) 1 The zone has a high degree of wilderness integIity. 2. The zone is characterized by a minimal level of human disturbance. 3. Ecological processes operate naturally With limited evidence of human impact. Opportunities for solitude are available. 4. 5. A primitive and unconfined characteristic of the area. requiring self-reliance, type of recreation."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:fcde4288828e4565ffb5f96ff9584447"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "user-built trails and social trails",
+          "user-built trails and social trails are minlmized",
+          "user-built trails social trails minlmized",
+          "user-built trails social trails",
+          "trails social trails minlmized",
+          "user-built trails social",
+          "trails social trails",
+          "social trails minlmized"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "user-built trails and social trails",
+          "user-built trails and social trails are minlmized",
+          "user-built trails social trails minlmized"
+        ]
+      },
+      "component_id": "FOR-006-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINLMIZED-CONDITIONS-PRECIPITATE-USER-CONFLICTS-MINIMAL-GUIDELIILES-FOLLOWING-E4DC5E1A-OBJ-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "98bf718ec506e75ec5f4be3a798f43fcb1b607c6fcca74ca5d94ff99a6f24ba4",
+        "page": 240,
+        "source_chunk_ids": [
+          "chunk:dcf345be6add167999e7849aceffb072"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Objectives (USER-BUILT-TRAILS-SOCIAL-TRAILS-MINLMIZED-CONDITIONS-PRECIPITATE-USER-CONFLICTS-MINIMAL-GUIDELIILES-FOLLOWING-E4DC5E1A-OBJ) 1 User-built trails and social trails are minlmized. 2. Conditions that precipitate user conflicts are minimal. Guideliiles The following Will be discouraged through education and may be physically modified or removed if they occur: 1. Rock Campfire Rings 2. Barren Core Area over 200 sq. ft. 3. Campsite density greater than 6 per roving. radial. mile 4. Signing. except at trail junctions and wilderness boundaries. 5, Structures. (except Herttage Resource. and trail structures for resource protection or safety. e.g: waterbars or other resource protection structures. such as hitching rails or toilets). . Zon~ IV (Transition/PortaI)-receives the most use within the Wilderness and the highest percentage day use. It has the most human disturbance of any zone within the Wilderness. Despite this disturbance it is still characteIized by a high degree of wilderness integrity and py a predominantly unmodified natural environment. However, some sites are substantially affected by human activity. Such impacts include loss of vegetation and soil along travel routes. campsites and scenic attractions. Ecological processes still operate naturally with little evidence of human impact. Activity levels are such that some wilQlife is displaced. Opportunities for solitude are available but less characteristic of this area. A primitive and unconfined type of recreation. requiring self-reliance. is characteristic of the area.",
+      "component_type": "objective",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINLMIZED-CONDITIONS-PRECIPITATE-USER-CONFLICTS-MINIMAL-GUIDELIILES-FOLLOWING-E4DC5E1A-OBJ-1-finding",
+      "item_id": "FOR-006-USER-BUILT-TRAILS-SOCIAL-TRAILS-MINLMIZED-CONDITIONS-PRECIPITATE-USER-CONFLICTS-MINIMAL-GUIDELIILES-FOLLOWING-E4DC5E1A-OBJ-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "user-built trails and social trails",
+        "user-built trails and social trails are minlmized",
+        "user-built trails social trails minlmized",
+        "user-built trails social trails",
+        "trails social trails minlmized",
+        "user-built trails social",
+        "trails social trails",
+        "social trails minlmized",
+        "plan",
+        "amendments",
+        "objectives",
+        "user-built-trails-social-trails-minlmized-conditions-precipitate-user-conflicts-minimal-guideliiles-following-e4dc5e1a-obj",
+        "user-built",
+        "trails",
+        "social",
+        "minlmized",
+        "conditions",
+        "precipitate",
+        "user",
+        "conflicts",
+        "user-built-trails-social-trails-minlmized-conditions-precipitate-user-conflicts-minimal-guideliiles-following-e4dc5e1a-obj-1",
+        "built",
+        "minimal",
+        "guideliiles",
+        "following",
+        "e4dc5e1a",
+        "obj"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:dcf345be6add167999e7849aceffb072",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "98bf718ec506e75ec5f4be3a798f43fcb1b607c6fcca74ca5d94ff99a6f24ba4",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Objectives (USER-BUILT-TRAILS-SOCIAL-TRAILS-MINLMIZED-CONDITIONS-PRECIPITATE-USER-CONFLICTS-MINIMAL-GUIDELIILES-FOLLOWING-E4DC5E1A-OBJ) 1 User-built trails and social trails are minlmized. 2. Conditions that precipitate user conflicts are minimal. Guideliiles The following Will be discouraged through education and may be physically modified or removed if they occur: 1. Rock Campfire Rings 2. Barren Core Area over 200 sq. ft. 3. Campsite density greater than 6 per roving. radial. mile 4. Signing. except at trail junctions and wilderness boundaries. 5, Structures. (except Herttage Resource. and trail structures for resource protection or safety. e.g: waterbars or other resource protection structures. such as hitching rails or toilets). . Zon~ IV (Transition/PortaI)-receives the most use within the Wilderness and the highest percentage day use. It has the most human disturbance of any zone within the Wilderness. Despite this disturbance it is still characteIized by a high degree of wilderness integrity and py a predominantly unmodified natural environment. However, some sites are substantially affected by human activity. Such impacts include loss of vegetation and soil along travel routes. campsites and scenic attractions. Ecological processes still operate naturally with little evidence of human impact. Activity levels are such that some wilQlife is displaced. Opportunities for solitude are available but less characteristic of this area. A primitive and unconfined type of recreation. requiring self-reliance. is characteristic of the area."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:dcf345be6add167999e7849aceffb072"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "maintain as much as possible a high degree of wilderness integrity",
+          "maintain much possible high degree",
+          "much possible high degree wilderness",
+          "possible high degree wilderness integrity",
+          "maintain much possible high",
+          "much possible high degree",
+          "possible high degree wilderness"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "maintain as much as possible a high degree of wilderness integrity",
+          "maintain much possible high degree",
+          "much possible high degree wilderness"
+        ]
+      },
+      "component_id": "FOR-006-MAINTAIN-MUCH-POSSIBLE-HIGH-DEGREE-WILDERNESS-INTEGRITY-MINIMIZE-LEVEL-HUMAN-DISTURBANCE-ECOLOGICAL-8E3C579E-GO-1",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "f8f9e3b2a4c829c2ead6f46315019fb61d00646fe6253cf8a14f3647dc5e4924",
+        "page": 241,
+        "source_chunk_ids": [
+          "chunk:ee10644700cf5ecc212a913e89063663"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Goals (MAINTAIN-MUCH-POSSIBLE-HIGH-DEGREE-WILDERNESS-INTEGRITY-MINIMIZE-LEVEL-HUMAN-DISTURBANCE-ECOLOGICAL-8E3C579E-GO) 1 Maintain as much as possible a high degree of wilderness integrity. 2. Minimize the level of human disturbance. 3. Ecological processes operate naturally With little evidence of human impact. 4. Opportunities for solitude are available but mostly during off season. 5. A primitive and unconfined type of recreation requiring self reliance is characteristic of the area. Objective 1 Minimize user-built and social trails. 2. Conditions that precipitate user conflicts are minimal. Guidelines The folloWing will be discouraged through education and may be physically modilled or removed if they occur: 1. Rock Campfire Rings 2. Barren Core Area over 500 sq. ft. 3. Campsite density greater than 8 per roving. radial. mile 4. Structures. (except Herttage Resource. and trail associated for resource protection, e.g. waterbars or other resource protection structures. such as hitching rails or toilets.) Re uire a self-issuin ermit Chapter II -Page 42",
+      "component_type": "goal",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "applicability_false_positive",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-MAINTAIN-MUCH-POSSIBLE-HIGH-DEGREE-WILDERNESS-INTEGRITY-MINIMIZE-LEVEL-HUMAN-DISTURBANCE-ECOLOGICAL-8E3C579E-GO-1-finding",
+      "item_id": "FOR-006-MAINTAIN-MUCH-POSSIBLE-HIGH-DEGREE-WILDERNESS-INTEGRITY-MINIMIZE-LEVEL-HUMAN-DISTURBANCE-ECOLOGICAL-8E3C579E-GO-1-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:6079b250f05406cd44a318d57556d756",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "d6e27e484aa37e38bc717fd70a47a697a5ef18e6eeb2e999352a6fa0af11f6d0",
+          "page": 1,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "United States Department of Agriculture Bitterroot Front Project Decision Notice Appendix D: Forest Plan Consistency Forest Service BRF, Stevensville and Darby-Sula Ranger Districts, May 2026 This page intentionally left blank. Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 1 Contents Appendix D: Forest Plan Consistency .......................................................................................................... 1 Forest Wide Standards ........................................................................................................................"
+        }
+      ],
+      "package_evidence_terms": [
+        "maintain as much as possible a high degree of wilderness integrity",
+        "maintain much possible high degree",
+        "much possible high degree wilderness",
+        "possible high degree wilderness integrity",
+        "maintain much possible high",
+        "much possible high degree",
+        "possible high degree wilderness",
+        "plan",
+        "amendments",
+        "goals",
+        "maintain-much-possible-high-degree-wilderness-integrity-minimize-level-human-disturbance-ecological-8e3c579e-go",
+        "maintain",
+        "much",
+        "possible",
+        "high",
+        "degree",
+        "wilderness",
+        "integrity",
+        "minimize",
+        "maintain-much-possible-high-degree-wilderness-integrity-minimize-level-human-disturbance-ecological-8e3c579e-go-1",
+        "level",
+        "human",
+        "disturbance",
+        "ecological",
+        "8e3c579e"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:ee10644700cf5ecc212a913e89063663",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "f8f9e3b2a4c829c2ead6f46315019fb61d00646fe6253cf8a14f3647dc5e4924",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Goals (MAINTAIN-MUCH-POSSIBLE-HIGH-DEGREE-WILDERNESS-INTEGRITY-MINIMIZE-LEVEL-HUMAN-DISTURBANCE-ECOLOGICAL-8E3C579E-GO) 1 Maintain as much as possible a high degree of wilderness integrity. 2. Minimize the level of human disturbance. 3. Ecological processes operate naturally With little evidence of human impact. 4. Opportunities for solitude are available but mostly during off season. 5. A primitive and unconfined type of recreation requiring self reliance is characteristic of the area. Objective 1 Minimize user-built and social trails. 2. Conditions that precipitate user conflicts are minimal. Guidelines The folloWing will be discouraged through education and may be physically modilled or removed if they occur: 1. Rock Campfire Rings 2. Barren Core Area over 500 sq. ft. 3. Campsite density greater than 8 per roving. radial. mile 4. Structures. (except Herttage Resource. and trail associated for resource protection, e.g. waterbars or other resource protection structures. such as hitching rails or toilets.) Re uire a self-issuin ermit Chapter II -Page 42"
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:ee10644700cf5ecc212a913e89063663"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Bitterroot Front package authority is the selected-action forest-plan consistency worksheet and project file; this A-P Wilderness, outfitter, fishless-water, cabin, campsite, or user-built-trail component is not supported as an applicable selected-action row, so the automatic applicability queue overstates project scope.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_package_scope_review"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "the forest supports a diversity of elk habitats that provide for ecological conditions that supplement diverse recreational opportunities including wildlife enjoyment viewing and hunting",
+          "supports diversity elk habitats provide",
+          "diversity elk habitats provide ecological",
+          "elk habitats provide ecological conditions",
+          "habitats provide ecological conditions supplement",
+          "provide ecological conditions supplement diverse",
+          "ecological conditions supplement diverse recreational"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [
+          "mgmt-bitterroot-area-2",
+          "mgmt-bitterroot-area-3c",
+          "mgmt-bitterroot-area-5"
+        ],
+        "overlay_ids": [],
+        "resource_topics": [
+          "the forest supports a diversity of elk habitats that provide for ecological conditions that supplement diverse recreational opportunities including wildlife enjoyment viewing and hunting",
+          "supports diversity elk habitats provide",
+          "diversity elk habitats provide ecological"
+        ]
+      },
+      "component_id": "FOR-006-FW-DC-WLF-ELK-01",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "c3181e191de423f3ff023aa53b02fdb679eb2e68141a1bb8b5d26668f366b8c7",
+        "page": 665,
+        "source_chunk_ids": [
+          "chunk:967fe7e0bfdb670e17b3890549a2034a"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Desired Condition (FW-DC-WLF-ELK) 01 The Forest supports a diversity of elk habitats that provide for ecological conditions that supplement diverse recreational opportunities including wildlife enjoyment, viewing, and hunting. Forest-wide Guidelines FW-GDL-WLF-ELK- 01: Motor vehi cle use designations should be designed to maintain elk residency on National Forest System lands during the archery and rifle big game hunting seasons by maintaining contiguous blocks of secure habitat in locations elk traditionally use at times when they are vulnerable to disturbance from hunting or other recreation that may cause displacement from public lands. No additional roads, trails, or areas should be designated for motor vehicle use if project-level analysis indicates a likelihood of disturbance significantly affecting elk behavior",
+      "component_type": "desired_condition",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "evidence_linking_miss",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-FW-DC-WLF-ELK-01-finding",
+      "item_id": "FOR-006-FW-DC-WLF-ELK-01-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [
+          "mgmt-bitterroot-area-2",
+          "mgmt-bitterroot-area-3c",
+          "mgmt-bitterroot-area-5"
+        ],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:ac3d90bbcba544e5a6cbd44ce29e18c3",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "5b366c322c8fd9985ff85c30a7137a5eb0bd3fda56ee279c70650c98a813c79b",
+          "page": 7,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "t. 11 Elk population status will be used as an indicator of commonly hunted ungulate species and the status of their habitat. Yes, the indicator was evaluated in the Wildlife Report (PF-WILDLIFE-001). Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 6 Standard Standard Description Does the Selected Action Meet the Standard? If \u201cN/A\u201d, provide an explanation 12 The recommendations in the Coordinating Elk and Timber management report will be considered during timber management and transportation planning. Yes, recommendations from Coordinating Elk and Timber management we"
+        }
+      ],
+      "package_evidence_terms": [
+        "the forest supports a diversity of elk habitats that provide for ecological conditions that supplement diverse recreational opportunities including wildlife enjoyment viewing and hunting",
+        "supports diversity elk habitats provide",
+        "diversity elk habitats provide ecological",
+        "elk habitats provide ecological conditions",
+        "habitats provide ecological conditions supplement",
+        "provide ecological conditions supplement diverse",
+        "ecological conditions supplement diverse recreational",
+        "plan",
+        "amendments",
+        "desired",
+        "condition",
+        "fw-dc-wlf-elk",
+        "supports",
+        "diversity",
+        "habitats",
+        "ecological",
+        "conditions",
+        "supplement",
+        "diverse",
+        "fw-dc-wlf-elk-01",
+        "wlf",
+        "elk"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:967fe7e0bfdb670e17b3890549a2034a",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "c3181e191de423f3ff023aa53b02fdb679eb2e68141a1bb8b5d26668f366b8c7",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Desired Condition (FW-DC-WLF-ELK) 01 The Forest supports a diversity of elk habitats that provide for ecological conditions that supplement diverse recreational opportunities including wildlife enjoyment, viewing, and hunting. Forest-wide Guidelines FW-GDL-WLF-ELK- 01: Motor vehi cle use designations should be designed to maintain elk residency on National Forest System lands during the archery and rifle big game hunting seasons by maintaining contiguous blocks of secure habitat in locations elk traditionally use at times when they are vulnerable to disturbance from hunting or other recreation that may cause displacement from public lands. No additional roads, trails, or areas should be designated for motor vehicle use if project-level analysis indicates a likelihood of disturbance significantly affecting elk behavior"
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:967fe7e0bfdb670e17b3890549a2034a"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "Appendix D states the elk-population indicator was evaluated in the Wildlife Report, but the component run did not link that package evidence to FW-DC-WLF-ELK-01.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_forest_plan_consistency_replay"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "the a mount of old growth increases relative to existing condition",
+          "mount old growth increases relative",
+          "old growth increases relative existing",
+          "growth increases relative existing condition",
+          "mount old growth increases",
+          "old growth increases relative",
+          "growth increases relative existing"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "the a mount of old growth increases relative to existing condition",
+          "mount old growth increases relative",
+          "old growth increases relative existing"
+        ]
+      },
+      "component_id": "FOR-006-FWD-DC-VEG-01",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "96a0bb2c81c129f3a7a61455472ae5a0a720b5a2462d68ab8efdd0c90f8da5bf",
+        "page": 669,
+        "source_chunk_ids": [
+          "chunk:6fda22b540691139b8456ecae7b97dd7"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Desired Condition (FWD-DC-VEG) 01 The a mount of old growth increases relative to existing condition. The location and condition of old growth is dynamic over time. Old growth stands are influenced by succession, natural disturbance regimes, and climate. Landscape level resiliency is provided by promoting a mosaic of younger forests to replace old growth when it is killed by stand-replacing events. The desired condition of old growth is described in Table 1.",
+      "component_type": "desired_condition",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "evidence_linking_miss",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-FWD-DC-VEG-01-finding",
+      "item_id": "FOR-006-FWD-DC-VEG-01-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-112 (1c475839ef20)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1c475839ef2055f08438939f63d1262f18a4e249dd4536ab3ade8bb931c65eba",
+          "chunk_id": "chunk:b0d8a363ab1e3ff6a302bc53e91455cf",
+          "citation_label": "EA-PACKAGE-112 (1c475839ef20)",
+          "content_sha256": "919c25625fdfb025b25931a4146908549e99c3e2e0c3e7c17f06dfa380d32c5b",
+          "page": 12,
+          "source_record_id": "EA-PACKAGE-112",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-112_1c475839ef2055f0.txt",
+          "text_excerpt": "es are dying, and the stands are at higher vulnerability to insects, disease, and fire. Greater densities and canopy cover have lower plant diversity, forage quantity, and quality (Keane et al. 2002). Desired Conditions The amount of old growth increases relative to existing conditions. The location and condition of old growth are dynamic over time. Old growth stands are influenced by succession, natural disturbance regimes, and climate. Landscape-level resiliency is provided by promoting a mosaic of younger forests to replace old growth when it is killed by stand-replacing events. The desired"
+        },
+        {
+          "artifact_sha256": "1c475839ef2055f08438939f63d1262f18a4e249dd4536ab3ade8bb931c65eba",
+          "chunk_id": "chunk:11bbeaba1bc15bf508234a7e9197f4b9",
+          "citation_label": "EA-PACKAGE-112 (1c475839ef20)",
+          "content_sha256": "cbc8e9572b99d26c3ecce10969fffb20df2957d6634e1240128949f3906239fb",
+          "page": 15,
+          "source_record_id": "EA-PACKAGE-112",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-112_1c475839ef2055f0.txt",
+          "text_excerpt": "d characteristics to define and measure old growth using the quantitative and qualitative factors found in \u201cOld-Growth Forest Types of the Northern Region\u201d by Green et al. 1992, errata corrected 2011. \u201cForest Types of the Northern Region\u201d (2011) represents the Forest Service\u2019s Northern Region\u2019s (Region 1\u2019s) best available scientific information to define old growth. Unlike the criteria in the Forest Plan, \u201cOld-Growth Forest Types of the Northern Region\u201d provides measurable criteria for designating old growth based on forest types and habitat type groups in Montana and Idaho, as described above"
+        }
+      ],
+      "package_evidence_terms": [
+        "the a mount of old growth increases relative to existing condition",
+        "mount old growth increases relative",
+        "old growth increases relative existing",
+        "growth increases relative existing condition",
+        "mount old growth increases",
+        "old growth increases relative",
+        "growth increases relative existing",
+        "plan",
+        "amendments",
+        "desired",
+        "condition",
+        "fwd-dc-veg",
+        "mount",
+        "growth",
+        "increases",
+        "relative",
+        "existing",
+        "location",
+        "dynamic",
+        "fwd-dc-veg-01",
+        "fwd",
+        "veg"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-112"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:6fda22b540691139b8456ecae7b97dd7",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "96a0bb2c81c129f3a7a61455472ae5a0a720b5a2462d68ab8efdd0c90f8da5bf",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Desired Condition (FWD-DC-VEG) 01 The a mount of old growth increases relative to existing condition. The location and condition of old growth is dynamic over time. Old growth stands are influenced by succession, natural disturbance regimes, and climate. Landscape level resiliency is provided by promoting a mosaic of younger forests to replace old growth when it is killed by stand-replacing events. The desired condition of old growth is described in Table 1."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:6fda22b540691139b8456ecae7b97dd7"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The Vegetation Effects Analysis discusses old-growth desired conditions and Region 1 old-growth measurement, but the component run did not attach that package evidence to FWD-DC-VEG-01.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_forest_plan_consistency_replay"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "to maintain habitat connectivity and minimize disturbance of old-growth associated wildlife road construction permanent or temporary or other developments",
+          "to maintain habitat connectivity and minimize disturbance of old-growth associated wildlife road construction permanent or temporary or other developments should be avoided in old growth see glossary unless access is needed to implement vegetation management activities and purposes as outlined in fw-gdl-std-01 and there are no feasible alternative road locations",
+          "maintain habitat connectivity minimize disturbance",
+          "habitat connectivity minimize disturbance old-growth",
+          "connectivity minimize disturbance old-growth associated",
+          "minimize disturbance old-growth associated wildlife",
+          "disturbance old-growth associated wildlife road",
+          "old-growth associated wildlife road construction"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [
+          "mgmt-bitterroot-area-2",
+          "mgmt-bitterroot-area-5"
+        ],
+        "overlay_ids": [],
+        "resource_topics": [
+          "to maintain habitat connectivity and minimize disturbance of old-growth associated wildlife road construction permanent or temporary or other developments",
+          "to maintain habitat connectivity and minimize disturbance of old-growth associated wildlife road construction permanent or temporary or other developments should be avoided in old growth see glossary unless access is needed to implement vegetation management activities and purposes as outlined in fw-gdl-std-01 and there are no feasible alternative road locations",
+          "maintain habitat connectivity minimize disturbance"
+        ]
+      },
+      "component_id": "FOR-006-FW-GDL-VEG-01",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "9de3f556f3c76938102be7f24e283683119a5257575cff82b7278c2a4428b987",
+        "page": 670,
+        "source_chunk_ids": [
+          "chunk:6e61914f6a1225a5bd0d7d99aac8b7bf"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Guidelines (FW-GDL-VEG) 01 To maintain habitat connectivity and minimize disturbance of old-growth associated wildlife, road construction (permanent or temporary) or other developments should be avoided in old growth (see glossary) unless access is needed to implement vegetation management activities and purposes as outlined in FW-GDL-STD-01 and there are no feasible alternative road locations. When identifying if proposed treatment areas include old growth, use a reasonable and accurate approach based on data collection or validation. Consider delineating old growth stands based on the FSH 2409.17, or other current direction. As stated in the existing Forest Plan, Forest-wide management direction applies to all management areas, including MA 3b (U.S. Department of Agriculture 1987c)(p. III-22). Forest-wide Management",
+      "component_type": "guideline",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "evidence_linking_miss",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-FW-GDL-VEG-01-finding",
+      "item_id": "FOR-006-FW-GDL-VEG-01-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [
+          "mgmt-bitterroot-area-2",
+          "mgmt-bitterroot-area-5"
+        ],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)",
+        "EA-PACKAGE-112 (1c475839ef20)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1c475839ef2055f08438939f63d1262f18a4e249dd4536ab3ade8bb931c65eba",
+          "chunk_id": "chunk:b0d8a363ab1e3ff6a302bc53e91455cf",
+          "citation_label": "EA-PACKAGE-112 (1c475839ef20)",
+          "content_sha256": "919c25625fdfb025b25931a4146908549e99c3e2e0c3e7c17f06dfa380d32c5b",
+          "page": 12,
+          "source_record_id": "EA-PACKAGE-112",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-112_1c475839ef2055f0.txt",
+          "text_excerpt": "es are dying, and the stands are at higher vulnerability to insects, disease, and fire. Greater densities and canopy cover have lower plant diversity, forage quantity, and quality (Keane et al. 2002). Desired Conditions The amount of old growth increases relative to existing conditions. The location and condition of old growth are dynamic over time. Old growth stands are influenced by succession, natural disturbance regimes, and climate. Landscape-level resiliency is provided by promoting a mosaic of younger forests to replace old growth when it is killed by stand-replacing events. The desired"
+        },
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:efe201e1d1b85970db33150397e1606f",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "8dfde7186039c9e4af7e8bc9012bb7b6d62ea96775960967a07563fe81f793a0",
+          "page": 6,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "anitation and salvage harvests may occur in stands classified as old growth if old growth characteristics are retained after logging Yes, project design features comply with this standard (e.g. SI-3). Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 5 Standard Standard Description Does the Selected Action Meet the Standard? If \u201cN/A\u201d, provide an explanation 4 Cutthroat trout populations will be used as an indicator of fisheries habitat changes. Yes, the distribution and current status of westslope cutthroat trout is discussed in detail in the Aquatics report (PF-AQUATIC"
+        }
+      ],
+      "package_evidence_terms": [
+        "to maintain habitat connectivity and minimize disturbance of old-growth associated wildlife road construction permanent or temporary or other developments",
+        "to maintain habitat connectivity and minimize disturbance of old-growth associated wildlife road construction permanent or temporary or other developments should be avoided in old growth see glossary unless access is needed to implement vegetation management activities and purposes as outlined in fw-gdl-std-01 and there are no feasible alternative road locations",
+        "maintain habitat connectivity minimize disturbance",
+        "habitat connectivity minimize disturbance old-growth",
+        "connectivity minimize disturbance old-growth associated",
+        "minimize disturbance old-growth associated wildlife",
+        "disturbance old-growth associated wildlife road",
+        "old-growth associated wildlife road construction",
+        "plan",
+        "amendments",
+        "guidelines",
+        "fw-gdl-veg",
+        "maintain",
+        "habitat",
+        "connectivity",
+        "minimize",
+        "disturbance",
+        "old-growth",
+        "associated",
+        "wildlife",
+        "fw-gdl-veg-01",
+        "gdl",
+        "veg"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002",
+        "EA-PACKAGE-112"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:6e61914f6a1225a5bd0d7d99aac8b7bf",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "9de3f556f3c76938102be7f24e283683119a5257575cff82b7278c2a4428b987",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Guidelines (FW-GDL-VEG) 01 To maintain habitat connectivity and minimize disturbance of old-growth associated wildlife, road construction (permanent or temporary) or other developments should be avoided in old growth (see glossary) unless access is needed to implement vegetation management activities and purposes as outlined in FW-GDL-STD-01 and there are no feasible alternative road locations. When identifying if proposed treatment areas include old growth, use a reasonable and accurate approach based on data collection or validation. Consider delineating old growth stands based on the FSH 2409.17, or other current direction. As stated in the existing Forest Plan, Forest-wide management direction applies to all management areas, including MA 3b (U.S. Department of Agriculture 1987c)(p. III-22). Forest-wide Management"
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:6e61914f6a1225a5bd0d7d99aac8b7bf"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The package evaluates old-growth retention and vegetation design features, but the component run did not link that evidence to the old-growth disturbance guideline.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_forest_plan_consistency_replay"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "to pr omote the retention of old growth see glossary and contribute to biodiversity vegetation management activities in old growth",
+          "to pr omote the retention of old growth see glossary and contribute to biodiversity vegetation management activities in old growth should retain all old growth characteristics to ensure structure function and process as defined in green et al",
+          "pr omote retention old growth",
+          "omote retention old growth see",
+          "retention old growth see glossary",
+          "old growth see glossary contribute",
+          "growth see glossary contribute biodiversity",
+          "see glossary contribute biodiversity vegetation"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [
+          "mgmt-bitterroot-area-2",
+          "mgmt-bitterroot-area-5"
+        ],
+        "overlay_ids": [],
+        "resource_topics": [
+          "to pr omote the retention of old growth see glossary and contribute to biodiversity vegetation management activities in old growth",
+          "to pr omote the retention of old growth see glossary and contribute to biodiversity vegetation management activities in old growth should retain all old growth characteristics to ensure structure function and process as defined in green et al",
+          "pr omote retention old growth"
+        ]
+      },
+      "component_id": "FOR-006-FW-STD-VEG-01",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "9de3f556f3c76938102be7f24e283683119a5257575cff82b7278c2a4428b987",
+        "page": 670,
+        "source_chunk_ids": [
+          "chunk:6e61914f6a1225a5bd0d7d99aac8b7bf"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Standard (FW-STD-VEG) 01 To pr omote the retention of old growth (see glossary) and contribute to biodiversity, vegetation management activities in old growth should retain all old growth characteristics to ensure structure, function and process, as defined in Green et al. (2011) (Table 2) and as updated. Vegetation management activities in old growth stands should only occur for one or both of the following purpos es: \u2022 Maintain or restore old growth habitat characteristics and ecosystem processes. \u2022 Increase resistance and resilience to disturbances or stressors that may have negative impacts on old growth characteristics or abundance (such as drought, wildfire, and bark beetles).",
+      "component_type": "standard",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "insufficient_evidence",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "evidence_linking_miss",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "insufficient_evidence",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-FW-STD-VEG-01-finding",
+      "item_id": "FOR-006-FW-STD-VEG-01-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [
+          "mgmt-bitterroot-area-2",
+          "mgmt-bitterroot-area-5"
+        ],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)",
+        "EA-PACKAGE-112 (1c475839ef20)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:efe201e1d1b85970db33150397e1606f",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "8dfde7186039c9e4af7e8bc9012bb7b6d62ea96775960967a07563fe81f793a0",
+          "page": 6,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "anitation and salvage harvests may occur in stands classified as old growth if old growth characteristics are retained after logging Yes, project design features comply with this standard (e.g. SI-3). Appendix D: Forest Plan Consistency Bitterroot Front Project DN and FONSI 5 Standard Standard Description Does the Selected Action Meet the Standard? If \u201cN/A\u201d, provide an explanation 4 Cutthroat trout populations will be used as an indicator of fisheries habitat changes. Yes, the distribution and current status of westslope cutthroat trout is discussed in detail in the Aquatics report (PF-AQUATIC"
+        },
+        {
+          "artifact_sha256": "1c475839ef2055f08438939f63d1262f18a4e249dd4536ab3ade8bb931c65eba",
+          "chunk_id": "chunk:b0d8a363ab1e3ff6a302bc53e91455cf",
+          "citation_label": "EA-PACKAGE-112 (1c475839ef20)",
+          "content_sha256": "919c25625fdfb025b25931a4146908549e99c3e2e0c3e7c17f06dfa380d32c5b",
+          "page": 12,
+          "source_record_id": "EA-PACKAGE-112",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-112_1c475839ef2055f0.txt",
+          "text_excerpt": "es are dying, and the stands are at higher vulnerability to insects, disease, and fire. Greater densities and canopy cover have lower plant diversity, forage quantity, and quality (Keane et al. 2002). Desired Conditions The amount of old growth increases relative to existing conditions. The location and condition of old growth are dynamic over time. Old growth stands are influenced by succession, natural disturbance regimes, and climate. Landscape-level resiliency is provided by promoting a mosaic of younger forests to replace old growth when it is killed by stand-replacing events. The desired"
+        }
+      ],
+      "package_evidence_terms": [
+        "to pr omote the retention of old growth see glossary and contribute to biodiversity vegetation management activities in old growth",
+        "to pr omote the retention of old growth see glossary and contribute to biodiversity vegetation management activities in old growth should retain all old growth characteristics to ensure structure function and process as defined in green et al",
+        "pr omote retention old growth",
+        "omote retention old growth see",
+        "retention old growth see glossary",
+        "old growth see glossary contribute",
+        "growth see glossary contribute biodiversity",
+        "see glossary contribute biodiversity vegetation",
+        "forest-wide",
+        "standard",
+        "fw-std-veg",
+        "omote",
+        "retention",
+        "growth",
+        "glossary",
+        "contribute",
+        "biodiversity",
+        "vegetation",
+        "retain",
+        "characteristics",
+        "fw-std-veg-01",
+        "std",
+        "veg"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002",
+        "EA-PACKAGE-112"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:6e61914f6a1225a5bd0d7d99aac8b7bf",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "9de3f556f3c76938102be7f24e283683119a5257575cff82b7278c2a4428b987",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Standard (FW-STD-VEG) 01 To pr omote the retention of old growth (see glossary) and contribute to biodiversity, vegetation management activities in old growth should retain all old growth characteristics to ensure structure, function and process, as defined in Green et al. (2011) (Table 2) and as updated. Vegetation management activities in old growth stands should only occur for one or both of the following purpos es: \u2022 Maintain or restore old growth habitat characteristics and ecosystem processes. \u2022 Increase resistance and resilience to disturbances or stressors that may have negative impacts on old growth characteristics or abundance (such as drought, wildfire, and bark beetles)."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:6e61914f6a1225a5bd0d7d99aac8b7bf"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest-wide"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "Appendix D states project design features comply with the old-growth retention standard, but the current standard coverage artifact leaves FW-STD-VEG-01 as a gap.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_forest_plan_consistency_replay"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "to maintain snags standing dead trees over the long term for wildlife habitat and ecosystem processes vegetation management projects",
+          "to maintain snags standing dead trees over the long term for wildlife habitat and ecosystem processes vegetation management projects should retain at least on average appendix a to amendment 40 dn 21 across the warm dry snag analysis group retain an average of at least 4-6 snags per acre greater than 15 dbh across the warm moist snag analysis group retain an average of at least 4-6 snags per acre greater than 15 dbh across the remaining snag analysis groups retain an average of at least 8-10 largest available snags per acre the largest snags available should always be prioritized for retention",
+          "maintain snags standing dead trees",
+          "snags standing dead trees over",
+          "standing dead trees over long",
+          "dead trees over long term",
+          "trees over long term wildlife",
+          "over long term wildlife habitat"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "to maintain snags standing dead trees over the long term for wildlife habitat and ecosystem processes vegetation management projects",
+          "to maintain snags standing dead trees over the long term for wildlife habitat and ecosystem processes vegetation management projects should retain at least on average appendix a to amendment 40 dn 21 across the warm dry snag analysis group retain an average of at least 4-6 snags per acre greater than 15 dbh across the warm moist snag analysis group retain an average of at least 4-6 snags per acre greater than 15 dbh across the remaining snag analysis groups retain an average of at least 8-10 largest available snags per acre the largest snags available should always be prioritized for retention",
+          "maintain snags standing dead trees"
+        ]
+      },
+      "component_id": "FOR-006-FW-GDL-VEG-02",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "6e724430d92fa581ac145fe8828b679097a83a5ed1e6271f0ad4a0282da505b1",
+        "page": 674,
+        "source_chunk_ids": [
+          "chunk:23e4e0487f7752bdcaed8c9be5df856b",
+          "chunk:9a575baaeebf1e4df98aa3e963a5a5aa"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Guidelines (FW-GDL-VEG) 02 To maintain snags (standing dead trees) over the long term for wildlife habitat and ecosystem processes, vegetation management projects should retain at least on average: Appendix A to Amendment 40 DN 21 \u2022 Across the Warm Dry snag analysis group, retain an average of at least 4-6 snags per acre greater than 15\u201d dbh \u2022 Across the Warm Moist snag analysis group, retain an average of at least 4-6 snags per acre greater than 15\u201d dbh \u2022 Across the remaining snag analysis groups, retain an average of at least 8-10 largest available snags per acre The largest snags available should always be prioritized for retention. Guideline applies as an average of treatment units across a project area and allows for variation in snag retention among treatment units with the intent of preserving the most desirable snags. Snags need not necessarily be present on every acre or in every treatment unit; they may be clumped as appropriate for the site, species, and existing snag distribution. If fewer than the minimum desired snags are present, live trees should be retained for future recruitment to meet the minimum desired snags within treatment units with a preference for the largest and most decadent trees available. Large, live replacement trees may also count toward compliance with",
+      "component_type": "guideline",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "evidence_linking_miss",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-FW-GDL-VEG-02-finding",
+      "item_id": "FOR-006-FW-GDL-VEG-02-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)",
+        "EA-PACKAGE-112 (1c475839ef20)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "1c475839ef2055f08438939f63d1262f18a4e249dd4536ab3ade8bb931c65eba",
+          "chunk_id": "chunk:bfd3e4a23fe9b0bdd3f9af0295a703cc",
+          "citation_label": "EA-PACKAGE-112 (1c475839ef20)",
+          "content_sha256": "7da8eb87593ea3bab0d2d1cae66fe45e7698e945af77292c4f47aa1e1b702649",
+          "page": 12,
+          "source_record_id": "EA-PACKAGE-112",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-112_1c475839ef2055f0.txt",
+          "text_excerpt": "itat, including large or very large live trees with rot or broken tops, snags, downed woody material, and a diversity of tree size classes and canopy layers. A variety of old growth types are present. Bitterroot Front Project, Vegetation Effects Analysis Bitterroot Front Project EA 13 Region 1 Habitat Type Groups1 Existing Condition (90 Percent Confidence Interval)2 Desired Condition Cold 11.70 percent (6\u201318 percent) Old growth in this potential vegetation type generally consists of whitebark pine, Engelmann spruce, and subalpine fir, with stand-level resiliency and open structures desired in "
+        },
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:8e3ddba585da5eccbe772741923f7530",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "8fc50eeacc265299b4816072e487c9b69a12325045393dfc2b4273a29c2b397d",
+          "page": 66,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "-1 Regional soil quality manual. Project design features are in place to mitigate soil impacts. Soil technical support will be provided as described in the design features of Appendix A (e.g., SO-04). 2 Site preparation methods will assure the retention of modest levels of organic matter, including woody material 8 inches or less in diameter, to provide nutrient and ectomycorrhizal levels necessary for maintaining growth rates; while still providing an adequate mineral base for seed germination and reduction of grass competition. Yes, project design features are in place to ensure adequate CWD"
+        }
+      ],
+      "package_evidence_terms": [
+        "to maintain snags standing dead trees over the long term for wildlife habitat and ecosystem processes vegetation management projects",
+        "to maintain snags standing dead trees over the long term for wildlife habitat and ecosystem processes vegetation management projects should retain at least on average appendix a to amendment 40 dn 21 across the warm dry snag analysis group retain an average of at least 4-6 snags per acre greater than 15 dbh across the warm moist snag analysis group retain an average of at least 4-6 snags per acre greater than 15 dbh across the remaining snag analysis groups retain an average of at least 8-10 largest available snags per acre the largest snags available should always be prioritized for retention",
+        "maintain snags standing dead trees",
+        "snags standing dead trees over",
+        "standing dead trees over long",
+        "dead trees over long term",
+        "trees over long term wildlife",
+        "over long term wildlife habitat",
+        "plan",
+        "amendments",
+        "guidelines",
+        "fw-gdl-veg",
+        "maintain",
+        "snags",
+        "standing",
+        "dead",
+        "trees",
+        "over",
+        "long",
+        "term",
+        "fw-gdl-veg-02",
+        "gdl",
+        "veg"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002",
+        "EA-PACKAGE-112"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:23e4e0487f7752bdcaed8c9be5df856b",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "6e724430d92fa581ac145fe8828b679097a83a5ed1e6271f0ad4a0282da505b1",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Guidelines (FW-GDL-VEG) 02 To maintain snags (standing dead trees) over the long term for wildlife habitat and ecosystem processes, vegetation management projects should retain at least on average: Appendix A to Amendment 40 DN 21 \u2022 Across the Warm Dry snag analysis group, retain an average of at least 4-6 snags per acre greater than 15\u201d dbh \u2022 Across the Warm Moist snag analysis group, retain an average of at least 4-6 snags per acre greater than 15\u201d dbh \u2022 Across the remaining snag analysis groups, retain an average of at least 8-10 largest available snags per acre The largest snags available should always be prioritized for retention. Guideline applies as an average of treatment units across a project area and allows for variation in snag retention among treatment units with the intent of preserving the most desirable snags. Snags need not necessarily be present on every acre or in every treatment unit; they may be clumped as appropriate for the site, species, and existing snag distribution. If fewer than the minimum desired snags are present, live trees should be retained for future recruitment to meet the minimum desired snags within treatment units with a preference for the largest and most decadent trees available. Large, live replacement trees may also count toward compliance with"
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:23e4e0487f7752bdcaed8c9be5df856b",
+            "chunk:9a575baaeebf1e4df98aa3e963a5a5aa"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The package contains snag/downed-wood vegetation analysis and related design features, but the component run did not link that evidence to FW-GDL-VEG-02.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_forest_plan_consistency_replay"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "downed wood occurs throughout the forest in various amounts sizes species and stages of decay",
+          "downed wood occurs throughout various",
+          "wood occurs throughout various amounts",
+          "occurs throughout various amounts sizes",
+          "throughout various amounts sizes species",
+          "various amounts sizes species stages",
+          "amounts sizes species stages decay"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "downed wood occurs throughout the forest in various amounts sizes species and stages of decay",
+          "downed wood occurs throughout various",
+          "wood occurs throughout various amounts"
+        ]
+      },
+      "component_id": "FOR-006-FW-DC-VEG-03",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "d43ee40040c56c2a098d06dc6a5955471e325e881e8a677e77797e601f530dc1",
+        "page": 676,
+        "source_chunk_ids": [
+          "chunk:d9bdb86e07e78421c91dfea2786e36e1"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Desired Conditions (FW-DC-VEG) 03 Downed wood occurs throughout the forest in various amounts, sizes, species, and stages of decay. The larger down wood (i.e., coarse woody debris) provides habitat for wildlife species and other organisms, as well as serving important functions for soil productivity.",
+      "component_type": "desired_condition",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "evidence_linking_miss",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-FW-DC-VEG-03-finding",
+      "item_id": "FOR-006-FW-DC-VEG-03-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)",
+        "EA-PACKAGE-035 (55c52ab65020)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "55c52ab650204a5935e656775784dbc1657f0540a3729f42ccc05cc98bb2046f",
+          "chunk_id": "chunk:df81916242a9ed55eecb676905df0269",
+          "citation_label": "EA-PACKAGE-035 (55c52ab65020)",
+          "content_sha256": "04c95a962550c3a446bd2a26d3947471f9bfcf8512b910f320f09a0767cea84e",
+          "page": 79,
+          "source_record_id": "EA-PACKAGE-035",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-035_55c52ab650204a59.txt",
+          "text_excerpt": "successful regeneration, and mammal habitat, birds, insects, microbes, etc. while not creating a fuel loading hazard (Harvey et al. 1988; Graham et al. 1994; Bull 2002; Atchley et al. 2021). Table 16. CWD debris requirements by fire group Fire Group CWD (Tons per Acre) Scree, rock, meadows, grasslands 0\u20135 1, 2, 4 = Warm, dry ponderosa pine; warm-dry Douglas-fir 5\u201310 5, 6 = Cool, dry Douglas-fir; moist Douglas-fir 10\u201320 7, 8, 9, 10 = Cool lodgepole; dry lower subalpine fir; moist lower subalpine fir; cold, moist upper subalpine and timberline 8\u201324 11 = Warm, moist grand fir, western redcedar, a"
+        },
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:8e3ddba585da5eccbe772741923f7530",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "8fc50eeacc265299b4816072e487c9b69a12325045393dfc2b4273a29c2b397d",
+          "page": 66,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "-1 Regional soil quality manual. Project design features are in place to mitigate soil impacts. Soil technical support will be provided as described in the design features of Appendix A (e.g., SO-04). 2 Site preparation methods will assure the retention of modest levels of organic matter, including woody material 8 inches or less in diameter, to provide nutrient and ectomycorrhizal levels necessary for maintaining growth rates; while still providing an adequate mineral base for seed germination and reduction of grass competition. Yes, project design features are in place to ensure adequate CWD"
+        }
+      ],
+      "package_evidence_terms": [
+        "downed wood occurs throughout the forest in various amounts sizes species and stages of decay",
+        "downed wood occurs throughout various",
+        "wood occurs throughout various amounts",
+        "occurs throughout various amounts sizes",
+        "throughout various amounts sizes species",
+        "various amounts sizes species stages",
+        "amounts sizes species stages decay",
+        "plan",
+        "amendments",
+        "desired",
+        "conditions",
+        "fw-dc-veg",
+        "downed",
+        "wood",
+        "occurs",
+        "throughout",
+        "various",
+        "amounts",
+        "sizes",
+        "fw-dc-veg-03",
+        "veg"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002",
+        "EA-PACKAGE-035"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:d9bdb86e07e78421c91dfea2786e36e1",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "d43ee40040c56c2a098d06dc6a5955471e325e881e8a677e77797e601f530dc1",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Desired Conditions (FW-DC-VEG) 03 Downed wood occurs throughout the forest in various amounts, sizes, species, and stages of decay. The larger down wood (i.e., coarse woody debris) provides habitat for wildlife species and other organisms, as well as serving important functions for soil productivity."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:d9bdb86e07e78421c91dfea2786e36e1"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The package includes coarse woody debris requirements and design-feature references, but the component run did not link them to FW-DC-VEG-03.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_forest_plan_consistency_replay"
+    },
+    {
+      "adjudicated_at": "2026-05-29T15:45:00Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "component_context": {
+        "activity_tags": [
+          "to support ecosystem function and habitat vegetation management activities",
+          "to support ecosystem function and habitat vegetation management activities should retain the amounts of coarse woody debris including logs that are displayed in table 4",
+          "support ecosystem function habitat vegetation",
+          "ecosystem function habitat vegetation management",
+          "function habitat vegetation management activities",
+          "habitat vegetation management activities retain",
+          "vegetation management activities retain amounts",
+          "management activities retain amounts coarse"
+        ],
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": [],
+        "resource_topics": [
+          "to support ecosystem function and habitat vegetation management activities",
+          "to support ecosystem function and habitat vegetation management activities should retain the amounts of coarse woody debris including logs that are displayed in table 4",
+          "support ecosystem function habitat vegetation"
+        ]
+      },
+      "component_id": "FOR-006-FW-GDL-VEG-06",
+      "component_source_ref": {
+        "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+        "citation_label": "FOR-006 (3db00bf23b0e)",
+        "content_sha256": "2875586401b6ce0be36ce3e4169d14ff757f9324204c2a8c55beb03bcc0a2ff8",
+        "page": 676,
+        "source_chunk_ids": [
+          "chunk:0c4df2425c34d64dab573f5f592e1b9c"
+        ],
+        "source_record_id": "FOR-006"
+      },
+      "component_text": "Guideline (FW-GDL-VEG) 06 To support ecosystem function and habitat, vegetation management activities should retain the amounts of coarse woody debris (including logs) that are displayed in Table 4. A variety of species, sizes, and decay stages should be retained, with emphasis on largest diameter coarse woody debris available. Exceptions may be allowed where there is elevated concern for fire risk or minimum quantities are not available. Glossary COARSE WOODY DEBRIS - Wood material comprised of the downed tree trunks and large branches that are greater than 3 inches diameter on the small end for at least six feet in length. Also referred to as 1000-hour fuels. DUFF- A highly decomposed transitional soil layer formed in forested soils between partially decomposed forest liter at the surface and underlying mineral soil.",
+      "component_type": "guideline",
+      "current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "disposition": "evidence_linking_miss",
+      "evidence_counts": {
+        "package_evidence_count": 0,
+        "plan_source_evidence_count": 1
+      },
+      "expected_current": {
+        "applicability_status": "applicable",
+        "compliance_status": "not_evaluated_for_compliance",
+        "finding_status": "gap",
+        "queue_reason": "missing_package_evidence"
+      },
+      "finding_id": "FOR-006-FW-GDL-VEG-06-finding",
+      "item_id": "FOR-006-FW-GDL-VEG-06-missing_package_evidence",
+      "matched_context": {
+        "geographic_area_ids": [],
+        "management_area_ids": [],
+        "overlay_ids": []
+      },
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (1b33aeac2159)",
+        "EA-PACKAGE-035 (55c52ab65020)"
+      ],
+      "package_evidence_refs": [
+        {
+          "artifact_sha256": "55c52ab650204a5935e656775784dbc1657f0540a3729f42ccc05cc98bb2046f",
+          "chunk_id": "chunk:df81916242a9ed55eecb676905df0269",
+          "citation_label": "EA-PACKAGE-035 (55c52ab65020)",
+          "content_sha256": "04c95a962550c3a446bd2a26d3947471f9bfcf8512b910f320f09a0767cea84e",
+          "page": 79,
+          "source_record_id": "EA-PACKAGE-035",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-035_55c52ab650204a59.txt",
+          "text_excerpt": "successful regeneration, and mammal habitat, birds, insects, microbes, etc. while not creating a fuel loading hazard (Harvey et al. 1988; Graham et al. 1994; Bull 2002; Atchley et al. 2021). Table 16. CWD debris requirements by fire group Fire Group CWD (Tons per Acre) Scree, rock, meadows, grasslands 0\u20135 1, 2, 4 = Warm, dry ponderosa pine; warm-dry Douglas-fir 5\u201310 5, 6 = Cool, dry Douglas-fir; moist Douglas-fir 10\u201320 7, 8, 9, 10 = Cool lodgepole; dry lower subalpine fir; moist lower subalpine fir; cold, moist upper subalpine and timberline 8\u201324 11 = Warm, moist grand fir, western redcedar, a"
+        },
+        {
+          "artifact_sha256": "1b33aeac2159bd6fa35581b310316f7995d27c5006fbc0d7d3b48c37e6374eac",
+          "chunk_id": "chunk:8e3ddba585da5eccbe772741923f7530",
+          "citation_label": "EA-PACKAGE-002 (1b33aeac2159)",
+          "content_sha256": "8fc50eeacc265299b4816072e487c9b69a12325045393dfc2b4273a29c2b397d",
+          "page": 66,
+          "source_record_id": "EA-PACKAGE-002",
+          "source_text_path": "source_library/reviews/region1-example-bitterroot-front-57341/package/extracted_text/EA-PACKAGE-002_1b33aeac2159bd6f.txt",
+          "text_excerpt": "-1 Regional soil quality manual. Project design features are in place to mitigate soil impacts. Soil technical support will be provided as described in the design features of Appendix A (e.g., SO-04). 2 Site preparation methods will assure the retention of modest levels of organic matter, including woody material 8 inches or less in diameter, to provide nutrient and ectomycorrhizal levels necessary for maintaining growth rates; while still providing an adequate mineral base for seed germination and reduction of grass competition. Yes, project design features are in place to ensure adequate CWD"
+        }
+      ],
+      "package_evidence_terms": [
+        "to support ecosystem function and habitat vegetation management activities",
+        "to support ecosystem function and habitat vegetation management activities should retain the amounts of coarse woody debris including logs that are displayed in table 4",
+        "support ecosystem function habitat vegetation",
+        "ecosystem function habitat vegetation management",
+        "function habitat vegetation management activities",
+        "habitat vegetation management activities retain",
+        "vegetation management activities retain amounts",
+        "management activities retain amounts coarse",
+        "plan",
+        "amendments",
+        "guideline",
+        "fw-gdl-veg",
+        "support",
+        "ecosystem",
+        "function",
+        "habitat",
+        "vegetation",
+        "retain",
+        "amounts",
+        "coarse",
+        "fw-gdl-veg-06",
+        "gdl",
+        "veg"
+      ],
+      "package_source_record_ids": [
+        "EA-PACKAGE-002",
+        "EA-PACKAGE-035"
+      ],
+      "plan_source_citations": [
+        "FOR-006 (3db00bf23b0e)"
+      ],
+      "plan_source_evidence_refs": [
+        {
+          "artifact_sha256": "3db00bf23b0e63f8453b30457399b69e8fd682134e236511c6a94bab3d228934",
+          "authority_level": "forest",
+          "chunk_id": "chunk:0c4df2425c34d64dab573f5f592e1b9c",
+          "citation_label": "FOR-006 (3db00bf23b0e)",
+          "content_sha256": "2875586401b6ce0be36ce3e4169d14ff757f9324204c2a8c55beb03bcc0a2ff8",
+          "document_role": "forest_plan",
+          "evidence_span": {
+            "text": "Guideline (FW-GDL-VEG) 06 To support ecosystem function and habitat, vegetation management activities should retain the amounts of coarse woody debris (including logs) that are displayed in Table 4. A variety of species, sizes, and decay stages should be retained, with emphasis on largest diameter coarse woody debris available. Exceptions may be allowed where there is elevated concern for fire risk or minimum quantities are not available. Glossary COARSE WOODY DEBRIS - Wood material comprised of the downed tree trunks and large branches that are greater than 3 inches diameter on the small end for at least six feet in length. Also referred to as 1000-hour fuels. DUFF- A highly decomposed transitional soil layer formed in forested soils between partially decomposed forest liter at the surface and underlying mineral soil."
+          },
+          "rank": 1,
+          "score": 1.0,
+          "source_chunk_ids": [
+            "chunk:0c4df2425c34d64dab573f5f592e1b9c"
+          ],
+          "source_record_id": "FOR-006",
+          "source_text_path": "/Users/chunkstand/projects/usfs-r1-EA-sources/source_library/derived/source-set-f70ea11e04ae3d53/extracted_text/FOR-006_3db00bf23b0e63f8.txt",
+          "title": "Forest Plan Amendments"
+        }
+      ],
+      "plan_source_record_ids": [
+        "FOR-006"
+      ],
+      "queue_reason": "missing_package_evidence",
+      "rationale": "The package includes coarse woody debris requirements and retention design features, but the component run did not link them to FW-GDL-VEG-06.",
+      "reviewer_notes": "Classified from the Bitterroot Front Appendix D forest-plan consistency worksheet and package-scope evidence.",
+      "severity": "medium",
+      "source_type": "bitterroot_front_forest_plan_consistency_replay"
+    }
+  ],
+  "resolved_dispositions": [
+    "applicability_false_positive",
+    "component_inventory_overreach",
+    "evidence_linking_miss",
+    "package_section_chunking_miss",
+    "retrieval_miss",
+    "true_ea_omission"
+  ],
+  "review_id": "region1-example-bitterroot-front-57341",
+  "reviewer_resolution_queue_path": "source_library/reviews/region1-example-bitterroot-front-57341/forest_plan_reviewer_resolution_queue.json",
+  "schema_version": "forest-plan-component-adjudication-v0",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
+  "summary": {
+    "adjudication_outcome_counts": {
+      "system_miss": 20
+    },
+    "component_findings_path": "source_library/reviews/region1-example-bitterroot-front-57341/forest_plan_component_findings.json",
+    "component_type_counts": {
+      "desired_condition": 3,
+      "goal": 5,
+      "guideline": 4,
+      "objective": 6,
+      "standard": 2
+    },
+    "created_at": "2026-05-29T15:45:00Z",
+    "disposition_counts": {
+      "applicability_false_positive": 12,
+      "evidence_linking_miss": 8
+    },
+    "instructions": "Tracked Bitterroot Front component adjudication replay from Appendix D forest-plan consistency and package-scope evidence.",
+    "markdown_path": "config/forest_plan_component_adjudications/region1-example-bitterroot-front-57341.md",
+    "output_path": "config/forest_plan_component_adjudications/region1-example-bitterroot-front-57341.json",
+    "pending_item_count": 0,
+    "queue_item_count": 20,
+    "queue_reason_counts": {
+      "missing_package_evidence": 20
+    },
+    "resolved_item_count": 20,
+    "review_dir": "source_library/reviews/region1-example-bitterroot-front-57341",
+    "review_id": "region1-example-bitterroot-front-57341",
+    "reviewer_resolution_queue_path": "source_library/reviews/region1-example-bitterroot-front-57341/forest_plan_reviewer_resolution_queue.json",
+    "schema_version": "forest-plan-component-adjudication-template-summary-v0",
+    "source_set_id": "source-set-f70ea11e04ae3d53",
+    "template_item_count": 20
+  },
+  "title": "Bitterroot Front Forest Plan Component Adjudication"
+}

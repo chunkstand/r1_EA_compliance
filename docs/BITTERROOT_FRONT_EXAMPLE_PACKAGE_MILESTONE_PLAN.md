@@ -1,7 +1,7 @@
 # Bitterroot Front Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Active packet (`Milestone 2 source-record blocker closed locally; component adjudication and applicable-standard coverage blockers remain`)
+Status: Active packet (`Milestone 3 reviewer-stack replay next; Milestone 2 resolver/adjudication closed locally`)
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
@@ -97,7 +97,7 @@ into `Document_Register_Master`.
 - Milestone 1 verification passed: Box inventory/download byte and hash
   manifest completed with zero failures, replay context JSON validated, and
   `ea-review` passed on `source-set-f70ea11e04ae3d53`.
-- Milestone 2 forest-plan resolver preflight remains reduced locally on
+- Milestone 2 forest-plan resolver preflight is resolved locally on
   `source-set-f70ea11e04ae3d53`: the `forest-plan-resolve` run with
   `--forest-unit-id bitterroot-nf` writes sidecars with
   `scope_status="bitterroot_nf"`,
@@ -123,19 +123,24 @@ into `Document_Register_Master`.
   uses `FOR-005` and `FOR-006` as component-bearing sources. It passes with
   `component_count=23`, `standard_count=3`, `coverage_passed=true`,
   `blocked_forest_unit_ids=[]`, and `6` non-blocking inventory quality issues.
-  This is component-inventory proof only, not source-record, component
-  adjudication, registry, coverage, or reviewer-ready promotion proof.
-- Resolver component evaluation now validates source records and component
-  inventory, but it is not reviewer-ready. The component findings summary has
-  `23` applicable components, `3` supported findings, `20` gap findings,
-  `20` reviewer-resolution items, and `0` `needs_reviewer_resolution` items.
-  Applicable-standard coverage remains red with `3` applicable standards and
-  `1` applied standard; the two failing standards are
-  `FOR-006-MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD-1`
-  and `FOR-006-FW-STD-VEG-01`. A local ignored
-  `forest_plan_component_adjudication_template.json` now exists with `20`
-  pending items, but `forest_plan_component_adjudication_eval.json` is absent,
-  so the component-adjudication gate remains blocked.
+  This is component-inventory proof only, not registry, coverage, or
+  reviewer-ready promotion proof.
+- Tracked component adjudication is now closed at
+  `config/forest_plan_component_adjudications/region1-example-bitterroot-front-57341.json`.
+  `forest-plan-component-adjudication-eval` passes with `20/20`
+  reviewer-resolution items resolved, `0` pending items,
+  `12` applicability false positives, `8` evidence-linking misses, and
+  `0` true EA omissions. A rerun `forest-plan-resolve` reports
+  `component_adjudication.reviewer_ready=true`,
+  `needs_reviewer_resolution=false`, `validation_passed=true`, and
+  `reviewer_ready=true`.
+- Raw applicable-standard coverage remains red with `3` applicable standards
+  and `1` applied standard, but the two standard gaps are classified in the
+  adjudication replay: the A-P cabin maintenance/rehabilitation standard is an
+  applicability false positive for this package and `FOR-006-FW-STD-VEG-01` is
+  an evidence-linking miss against package old-growth evidence. This raw red
+  coverage is retained as Milestone 3 reviewer-stack/component-eval diagnostic
+  evidence, not as a remaining Milestone 2 adjudication blocker.
 
 ## Goal
 
@@ -378,7 +383,7 @@ component inventory, component adjudication, and resolver validation pass;
 Closeout evidence:
 
 - outcome:
-  `reduced locally`
+  `resolved locally`
 - resolver:
   `scope_status="bitterroot_nf"`, `project_location_signal_count=1`,
   `management_area_count=4`, `overlay_count=2`,
@@ -397,11 +402,21 @@ Closeout evidence:
   uses `FOR-005` and `FOR-006`, emits `component_count=23`,
   `standard_count=3`, `coverage_passed=true`, and
   `blocked_forest_unit_ids=[]`
-- adjudication and applicable-standard blockers:
-  `forest_plan_component_adjudication_eval.json` is absent and the current
-  component queue has `20` reviewer-resolution items. Applicable-standard
-  coverage remains red with `3` applicable standards, `1` applied standard, and
-  two standard gaps.
+- adjudication and applicable-standard classification:
+  tracked adjudication
+  `config/forest_plan_component_adjudications/region1-example-bitterroot-front-57341.json`
+  passes local eval with `20/20` reviewer-resolution items resolved,
+  `0` pending items, `12` applicability false positives,
+  `8` evidence-linking misses, and `0` true EA omissions. Raw
+  applicable-standard coverage remains red with `3` applicable standards,
+  `1` applied standard, and two standard gaps, but those gaps are now
+  adjudicated as one applicability false positive and one evidence-linking
+  miss.
+- resolver validation:
+  rerun `forest-plan-resolve` reports
+  `component_adjudication.reviewer_ready=true`,
+  `needs_reviewer_resolution=false`, `validation_passed=true`, and
+  `reviewer_ready=true`
 - promotion boundary:
   no registry or coverage manifest was changed
 
@@ -489,7 +504,8 @@ Package intake and replay slices, scaled to touched surfaces:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources ea-review --output-dir source_library --review-id region1-example-bitterroot-front-57341
-PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --output-dir source_library --review-id region1-example-bitterroot-front-57341 --forest-unit-id bitterroot-nf
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id region1-example-bitterroot-front-57341 --adjudication-file config/forest_plan_component_adjudications/region1-example-bitterroot-front-57341.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path source_library/reviews/_intake/region1-example-bitterroot-front-57341 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-bitterroot-front-57341 --forest-unit-id bitterroot-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-bitterroot-front-57341/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json --reuse-package-cache --docling-timeout-seconds 180
 PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-bitterroot-front-57341 --eval-file config/v1_bitterroot_front_real_ea_eval.json
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id region1-example-bitterroot-front-57341 --eval-file config/forest_plan_component_evals/region1-example-bitterroot-front-57341.json
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-bitterroot-front-57341
@@ -551,14 +567,16 @@ unless repository policy changes.
 ## Residual Risks And Next Routing
 
 Milestone 2 now proves Bitterroot scope resolution, f70 source-record
-readiness for `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13`, and f70
-component-inventory coverage, but it does not prove forest-plan readiness. The
-next route is a tracked component adjudication and applicable-standard closure
-slice: complete and evaluate the `20`-item component adjudication worklist,
-close or explicitly classify the two standard gaps, and only then rerun the
-reviewer stack. Bitterroot must remain profile-guidance-only until Milestones
-2-4 prove forest-plan readiness, reviewer stack readiness, and
-registry/coverage promotion.
+readiness for `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13`, f70
+component-inventory coverage, component adjudication, and resolver validation.
+It does not prove reviewer-stack or promotion readiness. Raw
+applicable-standard coverage remains red as Milestone 3 component-eval
+diagnostic evidence even though the two standard gaps are classified in the
+adjudication replay. The next route is Milestone 3 reviewer-stack replay:
+applicability, generated rule pack, compliance review, V1 eval, component
+eval, and review `phase-eval`. Bitterroot must remain profile-guidance-only
+until Milestones 3-4 prove reviewer-stack readiness and registry/coverage
+promotion.
 
 ## Closeout Checklist
 

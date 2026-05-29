@@ -15,16 +15,59 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Bitterroot Front Source Records Closed, Component Adjudication Reduced
+## Bitterroot Front Component Adjudication Closed Locally
 
 Latest implementation update on 2026-05-29 UTC:
 
 - update:
-  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is reduced through
-  Milestone 2 forest-plan resolver preflight. The f70 source-record and
-  component-inventory blockers are closed locally, but forest-plan readiness is
-  not green because component adjudication and applicable-standard coverage
-  remain blocked.
+  `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
+  Milestone 2 forest-plan resolver preflight. The f70 source-record,
+  component-inventory, component-adjudication, and resolver-validation gates
+  are closed locally. Bitterroot remains `profile_eval_guidance_only` because
+  reviewer-stack replay and registry/coverage promotion are still future
+  Milestones 3-4 work.
+- tracked adjudication:
+  `config/forest_plan_component_adjudications/region1-example-bitterroot-front-57341.json`
+  records the completed Bitterroot Front component replay with `20/20`
+  reviewer-resolution items adjudicated, `0` pending items,
+  `12` applicability false positives, `8` evidence-linking misses, and
+  `0` true EA omissions. The two raw applicable-standard gaps are classified:
+  the A-P cabin maintenance/rehabilitation standard is an applicability false
+  positive for this package, and `FOR-006-FW-STD-VEG-01` is an
+  evidence-linking miss against package old-growth evidence.
+- local eval evidence:
+  `forest-plan-component-adjudication-eval --review-id region1-example-bitterroot-front-57341`
+  passes with `adjudication_completion_rate=1.0`,
+  `resolved_adjudication_count=20`, `pending_adjudication_count=0`,
+  `system_miss_count=20`, and `failure_category_counts={}`. A rerun
+  `forest-plan-resolve` with the ignored package cache and review-local f70
+  component inventory reports `component_adjudication.reviewer_ready=true`,
+  `needs_reviewer_resolution=false`, `validation_passed=true`,
+  `scope_status="bitterroot_nf"`, `package_file_count=132`, and
+  `package_chunk_count=5,463`.
+- remaining diagnostic boundary:
+  raw component evaluation still reports `23` applicable components,
+  `3` supported findings, `20` gap findings, `3` applicable standards, and
+  `1` applied standard. That red applicable-standard coverage is retained as
+  Milestone 3 reviewer-stack/component-eval replay evidence, not as an open
+  Milestone 2 adjudication blocker. No registry row, real-package coverage
+  slot, component-coverage slot, V1 eval contract, compliance review, or
+  phase-eval promotion proof exists yet for Bitterroot Front.
+- routing boundary:
+  the next route is Milestone 3 reviewer-stack replay for
+  `review_id="region1-example-bitterroot-front-57341"`. Do not promote
+  Bitterroot Front into reviewer-ready registry or coverage manifests until
+  Milestones 3 and 4 pass.
+
+## Bitterroot Front Source Records Closed, Later Superseded
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  this older Milestone 2 source-record/component-inventory checkpoint is
+  superseded by the component-adjudication closure section above. At this
+  checkpoint, the f70 source-record and component-inventory blockers were
+  closed locally, while adjudication work still remained.
 - resolver evidence:
   `forest-plan-resolve --forest-unit-id bitterroot-nf` on
   `source-set-f70ea11e04ae3d53` and the imported package writes
@@ -52,23 +95,18 @@ Latest implementation update on 2026-05-29 UTC:
   uses `FOR-005` and `FOR-006` as component-bearing sources and passes with
   `component_count=23`, `standard_count=3`, `coverage_passed=true`,
   `blocked_forest_unit_ids=[]`, and `6` non-blocking inventory quality issues.
-- adjudication blocker:
-  resolver component evaluation now validates source records and component
-  inventory, but it is not reviewer-ready. It reports `23` applicable
-  components, `3` supported findings, `20` gaps, `20` reviewer-resolution
-  items, and `0` `needs_reviewer_resolution` items. Applicable-standard
-  coverage remains red with `3` applicable standards and `1` applied standard;
-  the open standards are
-  `FOR-006-MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD-1`
-  and `FOR-006-FW-STD-VEG-01`. A local ignored
-  `forest_plan_component_adjudication_template.json` exists with `20` pending
-  items, but `forest_plan_component_adjudication_eval.json` is absent, so the
-  component-adjudication gate is not reviewer-ready.
+- adjudication state at this older checkpoint:
+  before the superseding closure above, resolver component evaluation reported
+  `23` applicable components, `3` supported findings, `20` gaps,
+  `20` reviewer-resolution items, and `0` `needs_reviewer_resolution` items.
+  Applicable-standard coverage was red with `3` applicable standards and
+  `1` applied standard; the later tracked adjudication classified the two
+  standard gaps without promoting Bitterroot.
 - routing boundary:
   no registry, real-package coverage, or component-coverage manifest was
-  changed. `bitterroot-nf` remains `profile_eval_guidance_only`. The next route
-  is tracked component adjudication and applicable-standard closure before
-  Milestone 3 reviewer-stack replay.
+  changed. `bitterroot-nf` remains `profile_eval_guidance_only`. The current
+  next route is Milestone 3 reviewer-stack replay per the superseding closure
+  above.
 
 ## Bitterroot Front Package Authority Intake Resolved Locally
 

@@ -52,15 +52,19 @@ The planner:
   with replay context
   `config/replay_contexts/region1-example-bitterroot-front-57341.json`, and
   base `ea-review` is green on `source-set-f70ea11e04ae3d53`. Milestone 2
-  forest-plan resolver preflight is reduced locally after source-record
-  closure: scope resolves to `bitterroot_nf`, context validation passes, and
+  forest-plan resolver preflight is resolved locally after source-record,
+  component-inventory, and component-adjudication closure: scope resolves to
+  `bitterroot_nf`, context validation passes, and
   `R1PLAN-bitterroot-nf-12`/`-13` are indexed in the f70 retrieval overlay.
   The review-local f70 manifest-driven component inventory now passes with
-  `23` components and `3` standards from `FOR-005`/`FOR-006`, but resolver
-  component evaluation remains non-reviewer-ready with `20` gap findings,
-  `20` reviewer-resolution items, and two applicable-standard coverage gaps.
-  Component adjudication eval is absent. This is not reviewer-ready promotion
-  proof.
+  `23` components and `3` standards from `FOR-005`/`FOR-006`. Tracked
+  component adjudication
+  `config/forest_plan_component_adjudications/region1-example-bitterroot-front-57341.json`
+  passes with `20/20` items resolved, `0` pending, `12` applicability false
+  positives, and `8` evidence-linking misses; rerun resolver validation is
+  green with `needs_reviewer_resolution=false`. Raw applicable-standard
+  coverage remains red as Milestone 3 reviewer-stack/component-eval diagnostic
+  evidence. This is not reviewer-ready promotion proof.
   `FOR-007` (`Bitterroot Front Project`) is only a planned
   forest-specific example boundary in the queue ledger; do not treat the
   project page or Box root as `Document_Register_Master` input.

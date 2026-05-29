@@ -28,6 +28,12 @@ HLC_BONANZA_ADJUDICATION = (
     / "forest_plan_component_adjudications"
     / "region1-example-helena-lewis-and-clark-bonanza-66532.json"
 )
+BITTERROOT_FRONT_ADJUDICATION = (
+    REPO_ROOT
+    / "config"
+    / "forest_plan_component_adjudications"
+    / "region1-example-bitterroot-front-57341.json"
+)
 
 
 class ForestPlanComponentAdjudicationTests(unittest.TestCase):
@@ -363,6 +369,46 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
         self.assertEqual(
             Counter(item["disposition"] for item in standard_items),
             Counter({"applicability_false_positive": 9, "evidence_linking_miss": 6}),
+        )
+
+    def test_committed_bitterroot_front_adjudication_tracks_resolved_queue(self) -> None:
+        adjudication = _read_json(BITTERROOT_FRONT_ADJUDICATION)
+
+        self.assertEqual(adjudication["schema_version"], "forest-plan-component-adjudication-v0")
+        self.assertEqual(
+            adjudication["review_id"],
+            "region1-example-bitterroot-front-57341",
+        )
+        self.assertEqual(
+            adjudication["source_set_id"],
+            "source-set-f70ea11e04ae3d53",
+        )
+        self.assertEqual(
+            adjudication["adjudication_id"],
+            "region1-example-bitterroot-front-57341-component-adjudication",
+        )
+        self.assertEqual(adjudication["adjudication"]["status"], "completed")
+        self.assertEqual(
+            adjudication["adjudication"]["method"],
+            "bitterroot_front_forest_plan_consistency_replay",
+        )
+
+        items = adjudication["items"]
+        self.assertEqual(len(items), 20)
+        self.assertEqual(
+            Counter(item["disposition"] for item in items),
+            Counter({"applicability_false_positive": 12, "evidence_linking_miss": 8}),
+        )
+        self.assertTrue(all(item["package_evidence_refs"] for item in items))
+        self.assertTrue(all(item["plan_source_evidence_refs"] for item in items))
+        self.assertTrue(all(item["rationale"] for item in items))
+        self.assertTrue(all(item["adjudicated_by"] == ["codex"] for item in items))
+
+        standard_items = [item for item in items if item["component_type"] == "standard"]
+        self.assertEqual(len(standard_items), 2)
+        self.assertEqual(
+            Counter(item["disposition"] for item in standard_items),
+            Counter({"applicability_false_positive": 1, "evidence_linking_miss": 1}),
         )
 
 
