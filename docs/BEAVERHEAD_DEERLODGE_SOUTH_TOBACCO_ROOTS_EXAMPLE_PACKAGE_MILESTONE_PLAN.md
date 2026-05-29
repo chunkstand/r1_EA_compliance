@@ -5,12 +5,14 @@ Status: Resolved locally through Milestone 3 component adjudication and reviewer
 Package authority, base `ea-review`, review-local component inventory, forest scope,
 component adjudication, applicability adjudication, generated rule pack, compliance review, V1
 eval, component eval, and review `phase-eval` are green. Registry and coverage promotion remain
-future Milestone 4 work.
+future Milestone 4 work. This 2026-05-29 revision tightens the future-promotion contract only; it
+does not promote Beaverhead-Deerlodge or change registry state.
 Plan class: implementation
 High-risk implementation: yes
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 Intent lock: `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"` is only
-for Beaverhead-Deerlodge National Forest South Tobacco Roots package work.
+for Beaverhead-Deerlodge National Forest South Tobacco Roots package work. It is not a Custer
+Gallatin, HLC, Bitterroot, Lolo, Flathead, or generic Region 1 substitute.
 
 ## Purpose
 
@@ -65,6 +67,14 @@ phase eval, and review-scope promotion gates.
 - `config/forest_specific_example_package_registry_v1.json` still routes
   `beaverhead-deerlodge-nf` as `profile_eval_guidance_only` with no primary or supplemental real
   package example.
+- `config/v1_real_package_review_coverage_v1.json`,
+  `config/forest_plan_component_eval_coverage_v1.json`, and the registry `review_examples` array
+  do not yet contain `bdnf-south-tobacco-roots-forest-specific` or this review ID. That absence is
+  intentional until Milestone 4 executes.
+- Current aggregate coverage state before Milestone 4 is: real-package coverage has `6` required
+  slots, forest-specific example coverage has `6` reviewer-ready examples across `5` governed
+  forests, and component coverage has `7` required review IDs with a known inherited ECID
+  source-delta blocker outside this packet.
 - The official Box root has been inventoried and downloaded under ignored local evidence at
   `source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/`.
 - `box_inventory.json` records root folder `199281418011`, root label
@@ -114,14 +124,18 @@ phase eval, and review-scope promotion gates.
 
 ## Goal
 
-Begin a governed South Tobacco Roots example package lane for Beaverhead-Deerlodge and stop at the
-first truthful reduced checkpoint if the deterministic reviewer stack is not ready.
+Maintain the governed South Tobacco Roots example package lane for Beaverhead-Deerlodge, keep the
+resolved Milestone 3 reviewer-stack evidence separate from promotion state, and give a future
+Milestone 4 implementer exact registry and coverage gates for promoting the package only when the
+aggregate contracts support it.
 
 ## Non-Goals
 
 - Do not add South Tobacco Roots package files or project-specific rows to `Document_Register_Master`.
 - Do not promote Beaverhead-Deerlodge in the forest-specific registry, real-package coverage, or
   component-coverage manifests until reviewer-stack gates pass.
+- Do not raise aggregate coverage counts, distinct-forest metrics, or required-review thresholds
+  without adding the matching Beaverhead-Deerlodge slots and rerunning their evals.
 - Do not overwrite shared f70 component inventory to support this package; use review-local
   generated evidence unless a later shared-inventory milestone owns that change.
 - Do not weaken forest-plan resolver validation, real-package coverage thresholds, component
@@ -152,6 +166,11 @@ first truthful reduced checkpoint if the deterministic reviewer stack is not rea
 - packet: `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - replay context:
   `config/replay_contexts/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
+- tracked reviewer-stack contracts:
+  `config/v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json`,
+  `config/forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`,
+  `config/applicability_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`,
+  `config/forest_plan_component_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
 - forest-specific umbrella: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - profile terms: `config/forest_plan_profiles.json`
 - resolver scope guard: `src/usfs_r1_ea_sources/forest_plan_resolver_location.py`
@@ -169,7 +188,11 @@ first truthful reduced checkpoint if the deterministic reviewer stack is not rea
 - tests:
   `tests/test_replay_context.py`, `tests/test_forest_plan_profiles.py`,
   `tests/test_forest_plan_resolver_profiles.py`,
-  `tests/support/compliance_component_fixtures.py`
+  `tests/support/compliance_component_fixtures.py`,
+  `tests/test_beaverhead_south_tobacco_contracts.py`,
+  `tests/test_real_package_review_coverage_eval.py`,
+  `tests/test_forest_specific_example_package_eval.py`,
+  `tests/test_forest_plan_component_eval_coverage.py`
 
 ## Placement Rules
 
@@ -189,14 +212,17 @@ first truthful reduced checkpoint if the deterministic reviewer stack is not rea
 
 ### Weak Point 1
 
-Weak point forecast: South Tobacco Roots is promoted from URL/package authority alone.
+Weak point forecast: South Tobacco Roots is promoted from URL/package authority alone or from the
+Milestone 3 `phase-eval` result without updating every aggregate contract.
 
 - Owner surface: `config/forest_specific_example_package_registry_v1.json`,
   `config/v1_real_package_review_coverage_v1.json`
 - Prevention gate: component adjudication eval, V1 eval, compliance review, component eval,
-  phase eval, real-package coverage eval, and forest-specific example-package eval
-- Fail threshold: Beaverhead-Deerlodge gets a primary example or required coverage slot before
-  reviewer-stack gates pass
+  phase eval, real-package coverage eval, forest-specific example-package eval, and component
+  coverage slot readback
+- Fail threshold: Beaverhead-Deerlodge gets a primary example, review example, required
+  real-package slot, or component-coverage slot before reviewer-stack gates pass and before
+  aggregate thresholds are coherently updated
 - Controlled violation: registry and coverage evals must fail if a future change adds the slot
   without matching reviewer-ready artifacts
 - Future-Codex misuse scenario: a future session sees `ea-review` green and promotes the package;
@@ -245,6 +271,25 @@ Weak point forecast: South Tobacco Roots package intake contaminates the shared 
   as canonical promotion input
 - Future-Codex misuse scenario: a later session treats the Box package as downloader input; this
   packet keeps project-package intake parallel to the master source register
+
+### Weak Point 5
+
+Weak point forecast: Milestone 4 promotion is declared blocked by the inherited ECID
+source-delta component-coverage slot, or declared green while the Beaverhead component slot is
+missing.
+
+- Owner surface: `config/forest_plan_component_eval_coverage_v1.json` and
+  `source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`
+- Prevention gate: component-coverage readback must distinguish the Beaverhead slot from the
+  inherited `v1-cg-ecid-source-delta-review` slot
+- Fail threshold: the Beaverhead slot is absent, stale, source-set mismatched, or not covered; the
+  known inherited ECID slot may keep the standalone aggregate red only if the Beaverhead slot itself
+  passes
+- Controlled violation: future Milestone 4 may close as `reduced` if component coverage remains
+  red solely for the inherited ECID slot, but it must stop if Beaverhead contributes any failure
+- Future-Codex misuse scenario: a future session treats an aggregate red result as a Beaverhead
+  failure without inspecting slot-level `failure_reasons`, or ignores a missing Beaverhead slot
+  because the review-scope gates were green
 
 ## Milestone Sequence
 
@@ -306,14 +351,48 @@ review remains outside registry and coverage manifests until Milestone 4 promoti
 
 ### Milestone 4 - Registry And Coverage Promotion
 
-Outcome label: `future`
+Planned outcome label: `resolved` if Beaverhead-Deerlodge promotion and all Beaverhead-owned
+aggregate slots pass; `reduced` only if the standalone component-coverage aggregate remains red
+solely on the inherited ECID source-delta slot while the Beaverhead slot is present, covered,
+source-set aligned, and passing.
 
-1. Promote only after Milestone 3 is green with `reviewer_ready=true` and `blockers=[]`.
-2. Add the Beaverhead-Deerlodge slot to real-package coverage, forest-specific registry, and
-   component-coverage manifests.
-3. Rerun aggregate evals and update current-state docs.
-4. Stop if aggregate thresholds regress or if any slot is stale, source-set mismatched, or
-   unsupported by review artifacts.
+1. Confirm Milestone 3 is still green with `reviewer_ready=true`,
+   `phase-eval` `blockers=[]`, and current Box/package inventory counts still matching
+   `16` files and `176,594,060` bytes.
+2. Add a `config/v1_real_package_review_coverage_v1.json` slot with:
+   `slot_id="bdnf-south-tobacco-roots-forest-specific"`,
+   `coverage_class_id="forest_specific_reviewer_ready"`,
+   `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`,
+   `forest_unit_id="beaverhead-deerlodge-nf"`,
+   `eval_file="v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json"`,
+   `expected_contract_status="reviewer_ready"`, `required=true`, and official project/Box
+   authority plus replay-context paths.
+3. Add a registry `review_examples[]` entry with
+   `example_id="bdnf-south-tobacco-roots-forest-specific"`, the frozen review ID,
+   `applicable_forest_unit_ids=["beaverhead-deerlodge-nf"]`, `queue_lineage_source_ids=[]`, and
+   the standard agent-read artifact families. Change only the Beaverhead-Deerlodge
+   `forest_routing[]` row to `routing_status="real_package_examples_available"` with
+   `primary_example_id="bdnf-south-tobacco-roots-forest-specific"`.
+4. Add a component-coverage slot with
+   `slot_id="bdnf-south-tobacco-roots-forest-specific"`, this review ID,
+   `forest_unit_id="beaverhead-deerlodge-nf"`,
+   `expected_source_set_id="source-set-f70ea11e04ae3d53"`, and
+   `eval_file="forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json"`.
+5. Update manifest summaries and thresholds coherently for the new governed forest:
+   real-package `required_slot_count` and `reviewer_ready_slot_count_min` should advance from `6`
+   to `7`; registry `review_example_count_min` and `reviewer_ready_example_count_min` should
+   advance from `6` to `7`; registry `distinct_governed_example_forest_count_min` should advance
+   from `5` to `6`; registry `profile_guidance_only_count_max` should fall from `5` to `4`;
+   component coverage `required_review_count` should advance from `7` to `8` and
+   `distinct_forest_count_min` from `5` to `6`, unless the implementation records a narrower
+   explicitly verified threshold rationale in the same commit.
+6. Rerun real-package coverage eval, forest-specific example-package eval, component-coverage eval,
+   and review `phase-eval`.
+7. Update `README.md`, `docs/AGENT_START_HERE.md`, `docs/CURRENT_ROUTING.md`,
+   `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and the forest-specific umbrella
+   packet to the post-promotion truth.
+8. Stop if any Beaverhead-owned slot is absent, stale, source-set mismatched, unsupported by review
+   artifacts, or if aggregate thresholds are lowered to make the promotion pass.
 
 ## Verification Gates
 
@@ -345,10 +424,19 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --o
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754
 ```
 
+Required for future Milestone 4 promotion:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library --manifest config/forest_specific_example_package_registry_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library --manifest config/forest_plan_component_eval_coverage_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754
+```
+
 Required before local commit:
 
 ```bash
-python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md
+python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --new-plan docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md --strict
 PYTHONPATH=src uv run --extra dev pytest tests/test_replay_context.py tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver_profiles.py -k 'beaverhead or south_tobacco or replay_context'
 PYTHONPATH=src uv run --extra dev pytest tests/test_beaverhead_south_tobacco_contracts.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
@@ -357,8 +445,17 @@ PYTHONPATH=src python -m compileall src
 git diff --check
 ```
 
+Additional focused tests before a Milestone 4 promotion commit:
+
+```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_real_package_review_coverage_eval.py tests/test_forest_specific_example_package_eval.py tests/test_forest_plan_component_eval_coverage.py tests/test_beaverhead_south_tobacco_contracts.py
+```
+
 Pass threshold: focused tests, lint, replay evals, `forest-plan-resolve`, `compliance-review`,
 V1 eval, component eval, and review `phase-eval` pass with `0` blockers for this review ID.
+For Milestone 4, real-package coverage and forest-specific example-package evals must pass, while
+component coverage may close as `reduced` only if the Beaverhead slot passes and the only remaining
+failure is the inherited ECID source-delta slot.
 
 ## Acceptance Criteria
 
@@ -378,6 +475,9 @@ V1 eval, component eval, and review `phase-eval` pass with `0` blockers for this
   frozen Beaverhead-Deerlodge review ID.
 - Beaverhead-Deerlodge remains `profile_eval_guidance_only`; no registry, real-package coverage,
   component-coverage, or queue ledger promotion is included until Milestone 4.
+- A future Milestone 4 promotion adds exactly one Beaverhead real-package slot, one registry review
+  example/primary route, and one component-coverage slot for
+  `bdnf-south-tobacco-roots-forest-specific`, with no cross-forest reuse.
 - Verification commands above pass with `0` failures.
 
 ## Documentation And Handoff
@@ -388,15 +488,19 @@ V1 eval, component eval, and review `phase-eval` pass with `0` blockers for this
   agents route Beaverhead-Deerlodge through this active packet without treating it as
   reviewer-ready.
 - Include the tracked replay context and focused tests in the same closeout commit.
+- If Milestone 4 is executed, update the start-here/current-state/handoff docs and forest-specific
+  umbrella packet in the same commit that changes registry and coverage manifests.
 - Do not copy generated `source_library/` bytes into tracked docs; cite counts and artifact paths
   instead.
 
 ## Commit Closeout
 
-The milestone is not complete until an atomic local commit records the verified reduced checkpoint.
-Stage only the verified Beaverhead-Deerlodge slice, including implementation, tests, replay
-context, packet, and affected docs. Do not stage unrelated files or ignored generated package
-bytes. Push only if the user explicitly asks for a push.
+The milestone is not complete until an atomic local commit records the verified Beaverhead-Deerlodge
+slice. For the resolved Milestone 3 checkpoint, stage only the implementation, tests, replay
+context, packet, and affected docs that support the reviewer-stack result. For a future Milestone 4
+promotion, stage only the registry/coverage manifests, matching tests, packet updates, and
+post-promotion docs. Do not stage unrelated files or ignored generated package bytes. Push only if
+the user explicitly asks for a push.
 
 ## Stop Conditions
 
@@ -405,8 +509,10 @@ bytes. Push only if the user explicitly asks for a push.
   focused profile/context fixes.
 - Stop if a required test or docs lint fails and cannot be fixed in this milestone without
   weakening a gate.
-- Stop if promotion would require component adjudication, V1 eval, compliance review, or phase-eval
-  work beyond this initial checkpoint.
+- Stop if promotion would require weakening component adjudication, V1 eval, compliance review, or
+  phase-eval gates.
+- Stop if a future Milestone 4 threshold update would reduce coverage strictness or hide a missing
+  Beaverhead slot behind aggregate counts.
 
 ## Residual Risks And Next Routing
 
