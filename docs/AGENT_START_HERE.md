@@ -52,13 +52,15 @@ The planner:
   with replay context
   `config/replay_contexts/region1-example-bitterroot-front-57341.json`, and
   base `ea-review` is green on `source-set-f70ea11e04ae3d53`. Milestone 2
-  forest-plan resolver preflight is reduced locally: scope resolves to
-  `bitterroot_nf`, but `R1PLAN-bitterroot-nf-12` and
-  `R1PLAN-bitterroot-nf-13` are missing from the f70 retrieval index. The
-  review-local f70 manifest-driven component inventory now passes with `23`
-  components and `3` standards from `FOR-005`/`FOR-006`, but resolver component
-  evaluation writes a `23`-item reviewer-resolution queue and component
-  adjudication eval is absent. This is not reviewer-ready promotion proof.
+  forest-plan resolver preflight is reduced locally after source-record
+  closure: scope resolves to `bitterroot_nf`, context validation passes, and
+  `R1PLAN-bitterroot-nf-12`/`-13` are indexed in the f70 retrieval overlay.
+  The review-local f70 manifest-driven component inventory now passes with
+  `23` components and `3` standards from `FOR-005`/`FOR-006`, but resolver
+  component evaluation remains non-reviewer-ready with `20` gap findings,
+  `20` reviewer-resolution items, and two applicable-standard coverage gaps.
+  Component adjudication eval is absent. This is not reviewer-ready promotion
+  proof.
   `FOR-007` (`Bitterroot Front Project`) is only a planned
   forest-specific example boundary in the queue ledger; do not treat the
   project page or Box root as `Document_Register_Master` input.

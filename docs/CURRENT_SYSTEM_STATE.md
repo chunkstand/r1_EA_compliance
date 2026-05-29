@@ -15,15 +15,16 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Bitterroot Front Component Inventory Closed, Resolver Still Reduced
+## Bitterroot Front Source Records Closed, Component Adjudication Reduced
 
 Latest implementation update on 2026-05-29 UTC:
 
 - update:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is reduced through
-  Milestone 2 forest-plan resolver preflight. The f70 component-inventory
-  blocker is closed locally, but forest-plan readiness is not green because
-  source-record readiness and component adjudication remain blocked.
+  Milestone 2 forest-plan resolver preflight. The f70 source-record and
+  component-inventory blockers are closed locally, but forest-plan readiness is
+  not green because component adjudication and applicable-standard coverage
+  remain blocked.
 - resolver evidence:
   `forest-plan-resolve --forest-unit-id bitterroot-nf` on
   `source-set-f70ea11e04ae3d53` and the imported package writes
@@ -32,12 +33,16 @@ Latest implementation update on 2026-05-29 UTC:
   `management_area_count=4`, `overlay_count=2`,
   `unresolved_mention_count=0`, `package_file_count=132`,
   `package_chunk_count=5,463`, and `package_failed_count=0`.
-- source-record blocker:
-  `forest_plan_context_validation.json` fails only the required source-record
-  readiness check. The f70 retrieval index contains indexed aliases for
-  `R1PLAN-bitterroot-nf-01` through `-06`, but
-  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` remain missing with
-  indexed counts `0`.
+- source-record closure:
+  the local ignored f70 catalog/retrieval overlay now carries `717` source
+  rows, `705` artifacts, and `9` supplemental overlay rows. The two Bitterroot
+  BA/BO records are provenanced from the archived source-delta gate, and
+  `source-record-identity-gate` passes for `R1PLAN-bitterroot-nf-12` and
+  `R1PLAN-bitterroot-nf-13`. Extraction and retrieval pass with `717` catalog
+  sources and `111,233` chunks, and
+  `forest_plan_context_validation.json` now passes with
+  `blocking_missing_source_record_ids=[]`; indexed counts are `115` for
+  `R1PLAN-bitterroot-nf-12` and `136` for `R1PLAN-bitterroot-nf-13`.
 - component-inventory closure:
   the Region 1 component-build manifest now has a
   `bitterroot_replay_compatible` source-set reference for
@@ -48,16 +53,22 @@ Latest implementation update on 2026-05-29 UTC:
   `component_count=23`, `standard_count=3`, `coverage_passed=true`,
   `blocked_forest_unit_ids=[]`, and `6` non-blocking inventory quality issues.
 - adjudication blocker:
-  resolver component evaluation now validates component inventory and
-  applicable-standard coverage, but it writes a `23`-item
-  reviewer-resolution queue. `forest_plan_component_adjudication_eval.json` is
-  absent, so the component-adjudication gate is not reviewer-ready.
+  resolver component evaluation now validates source records and component
+  inventory, but it is not reviewer-ready. It reports `23` applicable
+  components, `3` supported findings, `20` gaps, `20` reviewer-resolution
+  items, and `0` `needs_reviewer_resolution` items. Applicable-standard
+  coverage remains red with `3` applicable standards and `1` applied standard;
+  the open standards are
+  `FOR-006-MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD-1`
+  and `FOR-006-FW-STD-VEG-01`. A local ignored
+  `forest_plan_component_adjudication_template.json` exists with `20` pending
+  items, but `forest_plan_component_adjudication_eval.json` is absent, so the
+  component-adjudication gate is not reviewer-ready.
 - routing boundary:
   no registry, real-package coverage, or component-coverage manifest was
   changed. `bitterroot-nf` remains `profile_eval_guidance_only`. The next route
-  is a Bitterroot source-record/adjudication blocker slice for
-  `R1PLAN-bitterroot-nf-12`, `R1PLAN-bitterroot-nf-13`, and tracked component
-  adjudication before Milestone 3 reviewer-stack replay.
+  is tracked component adjudication and applicable-standard closure before
+  Milestone 3 reviewer-stack replay.
 
 ## Bitterroot Front Package Authority Intake Resolved Locally
 

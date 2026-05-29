@@ -1,7 +1,7 @@
 # Bitterroot Front Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Active packet (`Milestone 2 f70 component-inventory blocker closed locally; source-record and component-adjudication blockers remain`)
+Status: Active packet (`Milestone 2 source-record blocker closed locally; component adjudication and applicable-standard coverage blockers remain`)
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
@@ -102,9 +102,18 @@ into `Document_Register_Master`.
   `--forest-unit-id bitterroot-nf` writes sidecars with
   `scope_status="bitterroot_nf"`,
   `project_location_signal_count=1`, `management_area_count=4`,
-  `overlay_count=2`, and `unresolved_mention_count=0`. Validation remains red
-  because `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` are missing
-  from the f70 retrieval index.
+  `overlay_count=2`, and `unresolved_mention_count=0`. Context validation now
+  passes because the f70 source-record blocker for
+  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` is closed locally.
+- The source-record closure is local ignored evidence only. The f70 catalog
+  gate and repo-root current catalog now carry `717` source rows, `705`
+  artifacts, and `9` supplemental overlay rows. The two Bitterroot BA/BO rows
+  are provenanced from the archived source-delta gate
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate/`.
+  `source-record-identity-gate` passes for both IDs, extraction/retrieval pass
+  with `717` catalog sources and `111,233` chunks, and the retrieval index now
+  has `115` chunks for `R1PLAN-bitterroot-nf-12` and `136` chunks for
+  `R1PLAN-bitterroot-nf-13`.
 - The f70 component-inventory blocker is closed locally. The tracked Region 1
   component-inventory build manifest now has a
   `bitterroot_replay_compatible` source-set reference for
@@ -116,10 +125,17 @@ into `Document_Register_Master`.
   `blocked_forest_unit_ids=[]`, and `6` non-blocking inventory quality issues.
   This is component-inventory proof only, not source-record, component
   adjudication, registry, coverage, or reviewer-ready promotion proof.
-- Resolver component evaluation now validates component inventory and
-  applicable-standard coverage but writes a `23`-item reviewer-resolution
-  queue. `forest_plan_component_adjudication_eval.json` is absent, so the
-  component-adjudication gate remains blocked.
+- Resolver component evaluation now validates source records and component
+  inventory, but it is not reviewer-ready. The component findings summary has
+  `23` applicable components, `3` supported findings, `20` gap findings,
+  `20` reviewer-resolution items, and `0` `needs_reviewer_resolution` items.
+  Applicable-standard coverage remains red with `3` applicable standards and
+  `1` applied standard; the two failing standards are
+  `FOR-006-MAINTENANCE-REHABILITATION-CABIN-USE-MECHANIZED-TOOLS-DONE-FASHION-MEETS-STANDARDS-MANAGEMENT-HISTOIIC-8FA5F30F-STD-1`
+  and `FOR-006-FW-STD-VEG-01`. A local ignored
+  `forest_plan_component_adjudication_template.json` now exists with `20`
+  pending items, but `forest_plan_component_adjudication_eval.json` is absent,
+  so the component-adjudication gate remains blocked.
 
 ## Goal
 
@@ -367,10 +383,12 @@ Closeout evidence:
   `scope_status="bitterroot_nf"`, `project_location_signal_count=1`,
   `management_area_count=4`, `overlay_count=2`,
   `unresolved_mention_count=0`
-- source-record blocker:
-  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` are missing from the
-  f70 retrieval index; the other required Bitterroot profile records resolve
-  through indexed canonical aliases
+- source-record closure:
+  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` now resolve through
+  the local f70 catalog/retrieval overlay. `source-record-identity-gate` passes
+  for both IDs, context validation has `blocking_missing_source_record_ids=[]`,
+  and the retrieval index has `115` and `136` chunks for the two records
+  respectively.
 - component-inventory closure:
   tracked manifest reference `bitterroot_replay_compatible` permits the
   Bitterroot component-inventory row on `source-set-f70ea11e04ae3d53`; the
@@ -379,9 +397,11 @@ Closeout evidence:
   uses `FOR-005` and `FOR-006`, emits `component_count=23`,
   `standard_count=3`, `coverage_passed=true`, and
   `blocked_forest_unit_ids=[]`
-- adjudication blocker:
+- adjudication and applicable-standard blockers:
   `forest_plan_component_adjudication_eval.json` is absent and the current
-  component queue has `23` reviewer-resolution items
+  component queue has `20` reviewer-resolution items. Applicable-standard
+  coverage remains red with `3` applicable standards, `1` applied standard, and
+  two standard gaps.
 - promotion boundary:
   no registry or coverage manifest was changed
 
@@ -530,14 +550,15 @@ unless repository policy changes.
 
 ## Residual Risks And Next Routing
 
-Milestone 2 now proves Bitterroot scope resolution and f70 component-inventory
-coverage, but it does not prove forest-plan readiness. The next route is a
-Bitterroot source-record/adjudication blocker slice: index or otherwise govern
-`R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13`, then adjudicate the
-`23`-item component reviewer-resolution queue through a tracked adjudication
-surface only after generated component evidence exists. Bitterroot must remain
-profile-guidance-only until Milestones 2-4 prove forest-plan readiness,
-reviewer stack readiness, and registry/coverage promotion.
+Milestone 2 now proves Bitterroot scope resolution, f70 source-record
+readiness for `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13`, and f70
+component-inventory coverage, but it does not prove forest-plan readiness. The
+next route is a tracked component adjudication and applicable-standard closure
+slice: complete and evaluate the `20`-item component adjudication worklist,
+close or explicitly classify the two standard gaps, and only then rerun the
+reviewer stack. Bitterroot must remain profile-guidance-only until Milestones
+2-4 prove forest-plan readiness, reviewer stack readiness, and
+registry/coverage promotion.
 
 ## Closeout Checklist
 

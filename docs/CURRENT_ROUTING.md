@@ -14,8 +14,9 @@ Use this file as the short current route before opening the append-only docs.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 2
-  forest-plan resolver preflight reduced locally on named source-record and
-  component-adjudication blockers after f70 component inventory closure
+  forest-plan resolver preflight reduced locally after f70 source-record and
+  component-inventory closure; component adjudication and applicable-standard
+  coverage remain blocked
 - Latest resolved HLC forest-specific example packet:
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - Latest resolved West Reservoir parent slice:
@@ -65,21 +66,27 @@ Use this file as the short current route before opening the append-only docs.
   forest-plan resolver, reviewer-stack, and promotion gates in the packet pass.
   Milestone 1 verification passed with zero package download failures, replay
   context JSON validation, `ea-review`, and docs closeout checks. Milestone 2
-  forest-plan resolver preflight is now reduced locally: resolver sidecars
-  report `scope_status="bitterroot_nf"`, `project_location_signal_count=1`,
-  `management_area_count=4`, `overlay_count=2`, and
-  `unresolved_mention_count=0`, but validation remains red because
-  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` are missing from the
-  f70 retrieval index. The tracked Region 1 component-inventory manifest now
-  has a Bitterroot f70 replay-compatible row, and the review-local manifest
-  build under
+  forest-plan resolver preflight is now reduced locally after source-record
+  closure: resolver sidecars report `scope_status="bitterroot_nf"`,
+  `project_location_signal_count=1`, `management_area_count=4`,
+  `overlay_count=2`, and `unresolved_mention_count=0`, and context validation
+  now passes with `blocking_missing_source_record_ids=[]`. The local ignored
+  f70 catalog/retrieval overlay carries `717` source rows, `705` artifacts,
+  and `9` supplemental overlay rows; `R1PLAN-bitterroot-nf-12` and
+  `R1PLAN-bitterroot-nf-13` are indexed with `115` and `136` chunks. The
+  tracked Region 1 component-inventory manifest now has a Bitterroot f70
+  replay-compatible row, and the review-local manifest build under
   `source_library/reviews/region1-example-bitterroot-front-57341/component_inventory_build/`
   passes with `23` components, `3` standards, `coverage_passed=true`, and
   `blocked_forest_unit_ids=[]`. Resolver component evaluation now validates
-  component coverage but writes a `23`-item reviewer-resolution queue; no
-  component adjudication eval exists. The next slice is a Bitterroot
-  source-record/adjudication blocker closure before any reviewer-stack replay
-  or promotion.
+  source records and component coverage but remains non-reviewer-ready:
+  component findings show `23` applicable components, `3` supported findings,
+  `20` gaps, `20` reviewer-resolution items, and `0`
+  `needs_reviewer_resolution` items. Applicable-standard coverage is still red
+  with `3` applicable standards and `1` applied standard, and no component
+  adjudication eval exists. The next slice is tracked component adjudication
+  plus applicable-standard closure before any reviewer-stack replay or
+  promotion.
 - HLC Bonanza example packet is resolved locally through registry and coverage
   promotion. The selected package is Bonanza project `66532` for
   `helena-lewis-and-clark-nf`, using the official project page

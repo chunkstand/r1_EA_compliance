@@ -41,8 +41,9 @@ history below.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 2
-  forest-plan resolver preflight reduced locally on named source-record and
-  component-adjudication blockers after f70 component inventory closure
+  forest-plan resolver preflight reduced locally after f70 source-record and
+  component-inventory closure; component adjudication and applicable-standard
+  coverage remain blocked
 - resolved Lolo blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor packet:
@@ -78,29 +79,37 @@ history below.
   `reviewer_ready=true`. `FOR-007` now routes to this packet as planned
   `forest_specific_example_package` queue work, while `bitterroot-nf` remains
   `profile_eval_guidance_only` with no reviewer-ready registry or coverage
-  promotion. Milestone 2 forest-plan resolver preflight is now reduced
-  locally: `forest-plan-resolve --forest-unit-id bitterroot-nf` writes
-  `scope_status="bitterroot_nf"`, `project_location_signal_count=1`,
-  `management_area_count=4`, `overlay_count=2`, and
-  `unresolved_mention_count=0`, but validation remains red because
-  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13` are missing from the
-  f70 retrieval index. The Region 1 component-inventory manifest now includes
-  a Bitterroot f70 replay-compatible row, and the review-local manifest build
-  under
+  promotion. Milestone 2 forest-plan resolver preflight is now reduced locally
+  after source-record closure: `forest-plan-resolve --forest-unit-id
+  bitterroot-nf` writes `scope_status="bitterroot_nf"`,
+  `project_location_signal_count=1`, `management_area_count=4`,
+  `overlay_count=2`, and `unresolved_mention_count=0`, and context validation
+  now passes with `blocking_missing_source_record_ids=[]`. The local ignored
+  f70 catalog/retrieval overlay carries `717` source rows, `705` artifacts,
+  and `9` supplemental overlay rows; `source-record-identity-gate` passes for
+  `R1PLAN-bitterroot-nf-12` and `R1PLAN-bitterroot-nf-13`, and the retrieval
+  index has `115` and `136` chunks for those records. The Region 1
+  component-inventory manifest now includes a Bitterroot f70 replay-compatible
+  row, and the review-local manifest build under
   `source_library/reviews/region1-example-bitterroot-front-57341/component_inventory_build/`
   passes with `component_count=23`, `standard_count=3`,
   `coverage_passed=true`, and `blocked_forest_unit_ids=[]`. Resolver component
-  evaluation validates component coverage but writes a `23`-item
-  reviewer-resolution queue, and component adjudication eval is absent. Do not
-  add Bitterroot Front to reviewer-ready registry, real-package coverage, or
-  component-coverage manifests before the packet gates pass.
+  evaluation validates source records and component coverage but is still not
+  reviewer-ready: it reports `23` applicable components, `3` supported
+  findings, `20` gaps, `20` reviewer-resolution items, and `0`
+  `needs_reviewer_resolution` items. Applicable-standard coverage remains red
+  with `3` applicable standards and `1` applied standard, and component
+  adjudication eval is absent. A local ignored adjudication template now exists
+  with `20` pending items. Do not add Bitterroot Front to reviewer-ready
+  registry, real-package coverage, or component-coverage manifests before the
+  packet gates pass.
   Milestone 1 verification passed: zero package download failures; replay
   context JSON validation; `ea-review`; focused queue/registry tests;
   source-register queue audit; forest-specific example-package eval; plan lint;
   compile/ruff; and `git diff --check`. Milestone 2 focused resolver tests
   passed; the current f70 manifest/component focused test passed; and the live
-  resolver/component preflight is intentionally reduced on the source-record
-  and adjudication blockers above.
+  resolver/component preflight is intentionally reduced on the component
+  adjudication and applicable-standard blockers above.
   HLC Bonanza example-package work is resolved through registry and coverage
   promotion. The resolved packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID
