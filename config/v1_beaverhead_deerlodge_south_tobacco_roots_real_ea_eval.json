@@ -1,0 +1,370 @@
+{
+  "allow_unadjudicated_conditional_expectations": true,
+  "baseline_policy": {
+    "expected_source_record_ids": [
+      "R1EA-001",
+      "R1EA-002",
+      "R1EA-003",
+      "R1EA-004",
+      "R1EA-008",
+      "R1EA-009",
+      "R1EA-010",
+      "R1EA-013",
+      "R1EA-014",
+      "R1EA-015",
+      "R1EA-017",
+      "R1EA-018",
+      "R1EA-019",
+      "R1EA-020",
+      "R1EA-021",
+      "R1EA-022",
+      "R1EA-023",
+      "R1EA-024",
+      "R1EA-025",
+      "R1EA-028",
+      "R1EA-029",
+      "R1EA-031",
+      "R1EA-033",
+      "R1EA-034",
+      "R1EA-035",
+      "R1EA-067"
+    ],
+    "require_document_role_match_authority": true,
+    "require_source_record_match_authority": true
+  },
+  "conditional_source_expectations": [
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps clean_air_act_conformity_air_quality_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "FED-023"
+      ],
+      "rule_id": "clean_air_act_conformity_air_quality_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps clean_water_act_wotus_permits_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "FED-022"
+      ],
+      "rule_id": "clean_water_act_wotus_permits_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps cultural_resource_protection_and_state_shpo_sources_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "FED-052"
+      ],
+      "rule_id": "cultural_resource_protection_and_state_shpo_sources_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps eagle_efh_and_special_wildlife_sources_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "FED-029"
+      ],
+      "rule_id": "eagle_efh_and_special_wildlife_sources_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps eo_13186_migratory_birds explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "expected_source_record_ids": [
+        "FED-040"
+      ],
+      "rule_id": "eo_13186_migratory_birds"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps esa_consultation_50cfr_402 explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "FED-016"
+      ],
+      "rule_id": "esa_consultation_50cfr_402"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps esa_section_7 explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "FED-031"
+      ],
+      "rule_id": "esa_section_7"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps floodplain_management_eo11988_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "expected_source_record_ids": [
+        "FED-042"
+      ],
+      "rule_id": "floodplain_management_eo11988_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps flpma_section_206_land_exchange explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "FED-032"
+      ],
+      "rule_id": "flpma_section_206_land_exchange"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps forest_plan_component_FOR-002-FOLLOWING-TIMBER-HARVEST-CLASSIFICATION-STD-6 explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "forest_plan"
+      ],
+      "expected_source_record_ids": [
+        "FOR-002"
+      ],
+      "rule_id": "forest_plan_component_FOR-002-FOLLOWING-TIMBER-HARVEST-CLASSIFICATION-STD-6"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps forest_plan_component_FOR-002-THESE-PER-ACRE-REQUIREMENTS-DO-APPLY-TREATMENT-UNITS-IF-ANALYSIS-SHOWS-LEVELS-E91032D0-STD-4 explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "forest_plan"
+      ],
+      "expected_source_record_ids": [
+        "FOR-002"
+      ],
+      "rule_id": "forest_plan_component_FOR-002-THESE-PER-ACRE-REQUIREMENTS-DO-APPLY-TREATMENT-UNITS-IF-ANALYSIS-SHOWS-LEVELS-E91032D0-STD-4"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps forest_service_planning_handbook_amendments_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "rule_id": "forest_service_planning_handbook_amendments_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps hazardous_materials_site_condition_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "FED-037"
+      ],
+      "rule_id": "hazardous_materials_site_condition_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps invasive_pesticide_soils_farmland_drinking_water_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "expected_source_record_ids": [
+        "FED-069"
+      ],
+      "rule_id": "invasive_pesticide_soils_farmland_drinking_water_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps land_exchange_fs_policy_and_project_references_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "agency_policy"
+      ],
+      "expected_source_record_ids": [
+        "LEX-USFS-007"
+      ],
+      "rule_id": "land_exchange_fs_policy_and_project_references_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps land_exchange_regulatory_requirements_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "FED-011"
+      ],
+      "rule_id": "land_exchange_regulatory_requirements_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps land_exchange_statutory_authorities explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "LEX-FED-003",
+        "LEX-FED-004",
+        "LEX-FED-006"
+      ],
+      "rule_id": "land_exchange_statutory_authorities"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps land_exchange_statutory_authorities_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "LEX-FED-006"
+      ],
+      "rule_id": "land_exchange_statutory_authorities_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps minerals_energy_authorities_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "FED-009"
+      ],
+      "rule_id": "minerals_energy_authorities_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps region1_forest_plan_source_records_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "forest_plan"
+      ],
+      "expected_source_record_ids": [
+        "R1PLAN-beaverhead-deerlodge-nf-02"
+      ],
+      "rule_id": "region1_forest_plan_source_records_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps roadless_rule_36cfr_294b explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "FED-014"
+      ],
+      "rule_id": "roadless_rule_36cfr_294b"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps roads_access_special_use_action_authorities_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "FED-005"
+      ],
+      "rule_id": "roads_access_special_use_action_authorities_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps species_supporting_sources_and_overlays_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "FED-031"
+      ],
+      "rule_id": "species_supporting_sources_and_overlays_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps tribal_consultation_trust_sacred_sites_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "executive_order"
+      ],
+      "expected_source_record_ids": [
+        "FED-038"
+      ],
+      "rule_id": "tribal_consultation_trust_sacred_sites_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps vegetation_wildfire_forest_health_authorities_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "expected_source_record_ids": [
+        "FED-071"
+      ],
+      "rule_id": "vegetation_wildfire_forest_health_authorities_authority_template"
+    },
+    {
+      "classification_rationale": "Current South Tobacco Roots reviewer-stack replay keeps wilderness_wsr_trails_designated_areas_authority_template explicitly applicable for the Beaverhead-Deerlodge package.",
+      "expected_applicability": "applicable",
+      "expected_source_document_roles": [
+        "regulation"
+      ],
+      "expected_source_record_ids": [
+        "FED-013"
+      ],
+      "rule_id": "wilderness_wsr_trails_designated_areas_authority_template"
+    }
+  ],
+  "eval_id": "beaverhead-deerlodge-south-tobacco-roots-real-ea-v1",
+  "expected_lane_states": {
+    "broader_ea_passed": true,
+    "forest_plan_passed": true,
+    "passed": true
+  },
+  "forest_plan": {
+    "expected_geographic_area_ids": [
+      "geo-gravelly-landscape",
+      "geo-tobacco-root-landscape"
+    ],
+    "expected_management_area_ids": [
+      "mgmt-basin",
+      "mgmt-middle-mountain",
+      "mgmt-pintler-face"
+    ],
+    "expected_overlay_ids": [
+      "overlay-inventoried-roadless-area",
+      "overlay-recommended-wilderness"
+    ],
+    "expected_scope_status": "beaverhead_deerlodge_nf",
+    "max_reviewer_resolution_items": 0,
+    "max_standard_reviewer_resolution_items": 0,
+    "min_applicable_standard_count": 89,
+    "require_matrix_forest_plan_compliance": true,
+    "require_reviewer_ready": true,
+    "required_source_record_ids": [
+      "R1PLAN-beaverhead-deerlodge-nf-01",
+      "R1PLAN-beaverhead-deerlodge-nf-02",
+      "R1PLAN-beaverhead-deerlodge-nf-03",
+      "R1PLAN-beaverhead-deerlodge-nf-04",
+      "R1PLAN-beaverhead-deerlodge-nf-05",
+      "R1PLAN-beaverhead-deerlodge-nf-18",
+      "R1PLAN-beaverhead-deerlodge-nf-19",
+      "R1PLAN-beaverhead-deerlodge-nf-22",
+      "R1PLAN-beaverhead-deerlodge-nf-23",
+      "R1PLAN-beaverhead-deerlodge-nf-24",
+      "R1PLAN-beaverhead-deerlodge-nf-25"
+    ]
+  },
+  "forest_unit_id": "beaverhead-deerlodge-nf",
+  "package_style_tags": [
+    "full_root_project_package",
+    "forest_specific_beaverhead_deerlodge_south_tobacco_roots"
+  ],
+  "review_id": "region1-example-beaverhead-deerlodge-south-tobacco-roots-63754",
+  "rule_pack_id": "generated-nepa-ea-v0-region1-example-beaverhead-deerlodge-south-tobacco-roots-63754",
+  "rule_pack_version": "applicability-v0",
+  "schema_version": "v1-ea-real-review-eval-contract-v0",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
+  "title": "Beaverhead-Deerlodge South Tobacco Roots Real EA V1 Review Evaluation Contract"
+}

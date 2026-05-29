@@ -43,9 +43,9 @@ history below.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  is reduced locally through Milestone 2 forest-plan resolver preflight; the
-  next route is component adjudication and reviewer-stack replay before any
-  Beaverhead-Deerlodge registry or coverage promotion
+  is resolved locally through Milestone 3 component adjudication and
+  reviewer-stack replay; the next route is Milestone 4 registry and coverage
+  promotion if the user wants Beaverhead-Deerlodge promoted from guidance-only
 - resolved Lolo blocker packet:
   `docs/LOLO_TYLERS_KITCHEN_SOURCE_RECORD_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`
 - immediate predecessor packet:
@@ -56,7 +56,7 @@ history below.
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
   Beaverhead-Deerlodge South Tobacco Roots example-package work has started
-  and is reduced locally through Milestone 2. The active packet is
+  and is resolved locally through Milestone 3. The active packet is
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
   with review ID
   `region1-example-beaverhead-deerlodge-south-tobacco-roots-63754` and forest
@@ -79,14 +79,24 @@ history below.
   evidence. `forest-plan-resolve` now reports
   `scope_status="beaverhead_deerlodge_nf"`, `validation_passed=true`,
   `geographic_area_count=2`, `management_area_count=3`, `overlay_count=2`,
-  `project_location_signal_count=3`, and `unresolved_mention_count=0`. The
-  checkpoint remains reduced because component adjudication is missing:
-  raw component evaluation has `gap_count=60`,
-  `reviewer_resolution_count=60`, `applicable_standard_coverage_passed=false`,
-  and `adjudication_eval_missing`. `beaverhead-deerlodge-nf` remains
-  `profile_eval_guidance_only`; do not promote registry, real-package
-  coverage, or component coverage until component adjudication, reviewer-stack
-  replay, and review `phase-eval` pass.
+  `project_location_signal_count=3`, and `unresolved_mention_count=0`.
+  Component adjudication at
+  `config/forest_plan_component_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
+  resolves all `60/60` current queue items with `0` pending and
+  `disposition_counts={"evidence_linking_miss":60}`. Applicability
+  adjudication at
+  `config/applicability_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
+  resolves the `3` positive/negative trigger conflicts as `human_applicable`;
+  applicability validation passes with `52` applicable authorities, `104`
+  not-applicable authorities, and `0` unresolved authorities; generated
+  rule-pack validation passes with `52` rules. `compliance-review` passes with
+  `52` findings, V1 eval passes with `26` conditional expectations and
+  `contract_status="reviewer_ready"`, forest-plan component eval passes
+  `90/90` cases covering all `89` applicable standards, and review
+  `phase-eval` passes `28/28` with `blockers=[]`. `beaverhead-deerlodge-nf`
+  remains `profile_eval_guidance_only`; do not promote registry, real-package
+  coverage, or component coverage until the explicit Milestone 4 promotion
+  slice.
   Bitterroot Front is resolved locally through Milestone 4 as the governed
   primary Bitterroot National Forest example. The packet is
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID

@@ -15,16 +15,16 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Beaverhead-Deerlodge South Tobacco Roots Example Packet Reduced Locally
+## Beaverhead-Deerlodge South Tobacco Roots Milestone 3 Resolved Locally
 
 Latest implementation update on 2026-05-29 UTC:
 
 - update:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  is active and reduced locally through Milestone 2 forest-plan resolver
-  preflight. The selected package is the South Tobacco Roots Vegetation
-  Management Project (`63754`) for `beaverhead-deerlodge-nf`, using the
-  official project page
+  is active and resolved locally through Milestone 3 component adjudication and
+  reviewer-stack replay. The selected package is the South Tobacco Roots
+  Vegetation Management Project (`63754`) for `beaverhead-deerlodge-nf`, using
+  the official project page
   `https://www.fs.usda.gov/r01/beaverhead-deerlodge/projects/63754` and
   Pinyon/Box folder
   `https://usfs-public.app.box.com/v/PinyonPublic/folder/199281418011`.
@@ -47,19 +47,32 @@ Latest implementation update on 2026-05-29 UTC:
   `scope_status="beaverhead_deerlodge_nf"`, `validation_passed=true`,
   `geographic_area_count=2`, `management_area_count=3`, `overlay_count=2`,
   `project_location_signal_count=3`, and `unresolved_mention_count=0`.
-- reduced boundary:
-  the resolver checkpoint remains `reviewer_ready=false` because component
-  adjudication is not closed. Raw component evaluation reports
-  `component_count=90`, `applicable_count=90`, `applicable_standard_count=89`,
-  `supported_count=30`, `gap_count=60`, `reviewer_resolution_count=60`,
-  `applicable_standard_coverage_passed=false`,
-  `all_applicable_standards_applied=false`, and
-  `component_adjudication.eval_exists=false` / `adjudication_eval_missing`.
+- Milestone 3 reviewer stack:
+  component adjudication at
+  `config/forest_plan_component_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
+  passes with `60/60` current queue items resolved, `0` pending items, and
+  `disposition_counts={"evidence_linking_miss":60}`. Applicability
+  adjudication at
+  `config/applicability_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
+  resolves the `3` positive/negative trigger conflicts as `human_applicable`.
+  Applicability validation passes with `52` applicable authorities, `104`
+  not-applicable authorities, `0` unresolved authorities, and generated
+  rule-pack validation passes with `52` rules. `compliance-review` passes with
+  `52` findings and matrix JSON/Markdown/PDF artifacts present. V1 eval at
+  `config/v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json`
+  passes with `26` conditional expectations and
+  `contract_status="reviewer_ready"`. Component eval at
+  `config/forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
+  passes `90/90` cases and covers all `89` applicable standards. Review
+  `phase-eval` passes `28/28` with `blockers=[]`,
+  `declared_review_contract=false`, and
+  `contract_backed_promotion_ready=false`.
+- promotion boundary:
   `beaverhead-deerlodge-nf` remains `profile_eval_guidance_only`; no registry,
   real-package coverage, component-coverage, or queue-ledger promotion is part
-  of this checkpoint. The next route is component adjudication and
-  reviewer-stack replay for
-  `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`.
+  of this checkpoint. The next route is Milestone 4 registry and coverage
+  promotion only if the user wants this Beaverhead-Deerlodge review promoted
+  from guidance-only to governed example coverage.
 
 ## Bitterroot Front Registry And Coverage Promotion Resolved
 

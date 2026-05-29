@@ -51,12 +51,14 @@ The planner:
   `https://www.fs.usda.gov/r01/beaverhead-deerlodge/projects/63754` and
   Pinyon/Box folder
   `https://usfs-public.app.box.com/v/PinyonPublic/folder/199281418011`. This
-  packet is reduced through forest-plan resolver preflight only: package
-  authority, base review, source-record retrieval, and scope validation are
-  resolved, but component adjudication and reviewer-stack replay remain open.
-  `beaverhead-deerlodge-nf` remains `profile_eval_guidance_only`; do not use
-  South Tobacco Roots as reviewer-ready or as a generic Region 1 example until
-  the future promotion gates pass.
+  packet is resolved through Milestone 3 reviewer-stack replay: package
+  authority, base review, source-record retrieval, scope validation, component
+  adjudication, applicability adjudication, generated rule-pack validation,
+  compliance review, V1 eval, component eval, and review `phase-eval` are
+  green locally. `beaverhead-deerlodge-nf` remains
+  `profile_eval_guidance_only`; do not use South Tobacco Roots as a promoted
+  governed example or as a generic Region 1 example until the future Milestone
+  4 registry/coverage promotion gates pass.
 - The latest resolved forest-specific example packet is
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Bitterroot
   National Forest example-package review work, inspect

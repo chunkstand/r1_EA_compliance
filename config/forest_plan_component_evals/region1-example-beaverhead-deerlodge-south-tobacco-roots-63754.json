@@ -1,0 +1,1468 @@
+{
+  "cases": [
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-ACTIVITIES-WITHIN-KNOWN-SENSITIVE-STD-5",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-ACTIVITIES-WITHIN-KNOWN-SENSITIVE-STD-5",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-AIR-QUALITY-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-AIR-QUALITY-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-ALL-DRILL-PADS-OBLITERATED-STD-3",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-ALL-DRILL-PADS-OBLITERATED-STD-3",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-ALLOTMENT-MANAGEMENT-PLANS-IDENTIFY-STD-3",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-ALLOTMENT-MANAGEMENT-PLANS-IDENTIFY-STD-3",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-ANY-ROAD-CONSTRUCTED-OIL-STD-2",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-ANY-ROAD-CONSTRUCTED-OIL-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-APPENDIX-G-APPENDIX-G-RECORD-DECISION-NORTHERN-ROCKIES-LYNX-MANAGEMENT-DIRECTION-PRELIMINARY-B3137D68-OBJ-3",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-APPENDIX-G-APPENDIX-G-RECORD-DECISION-NORTHERN-ROCKIES-LYNX-MANAGEMENT-DIRECTION-PRELIMINARY-B3137D68-OBJ-3",
+      "component_type": "objective",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-BASE-PROPERTY-REQUIREMENT-OWNERSHIP-STD-4",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-BASE-PROPERTY-REQUIREMENT-OWNERSHIP-STD-4",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-FIRE-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-FIRE-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-STD-17",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-STD-17",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-STD-18",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-STD-18",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-STD-3",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-STD-3",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-STD-4",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-BEAVERHEAD-DEERLODGE-STD-4",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-CHEMICAL-PESTICIDES-TOXICANTS-APPLIED-STD-24",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-CHEMICAL-PESTICIDES-TOXICANTS-APPLIED-STD-24",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)",
+        "EA-PACKAGE-001 (97efb17edffc)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-COMMERCIAL-TIMBER-HARVEST-PROHIBITED-STD-11",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-COMMERCIAL-TIMBER-HARVEST-PROHIBITED-STD-11",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (ab217633006d)",
+        "EA-PACKAGE-014 (d15c336806b0)",
+        "EA-PACKAGE-006 (01d5425125f7)"
+      ],
+      "package_section": "STREconRpt_20260406.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-COMPLETE-WATERSHED-ANALYSIS-PRIOR-STD-22",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-COMPLETE-WATERSHED-ANALYSIS-PRIOR-STD-22",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-COMPLY-DIRECTION-USDA-SERVICE-STD-3",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-COMPLY-DIRECTION-USDA-SERVICE-STD-3",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-DO-REDUCE-NUMBER-LIVE-STD-4",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-DO-REDUCE-NUMBER-LIVE-STD-4",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-DOMESTIC-LIVESTOCK-GRAZING-ALLOWED-STD-2",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-DOMESTIC-LIVESTOCK-GRAZING-ALLOWED-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-004 (a41d2e75aa74)"
+      ],
+      "package_section": "STRFuelsRpt_20260511.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-ENERGY-TRANSMISSION-FACILITIES-LOCATED-STD-1",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-ENERGY-TRANSMISSION-FACILITIES-LOCATED-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-EVALUATE-RISKS-AQUATIC-NUISANCE-STD-2",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-EVALUATE-RISKS-AQUATIC-NUISANCE-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-EXTREME-SPORT-COURSES-SUCH-STD-4",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-EXTREME-SPORT-COURSES-SUCH-STD-4",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-FOLLOWING-TIMBER-HARVEST-CLASSIFICATION-STD-6",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-FOLLOWING-TIMBER-HARVEST-CLASSIFICATION-STD-6",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)",
+        "EA-PACKAGE-003 (371604c4c57c)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-FUELWOOD-CUTTING-SALVAGE-RCAS-STD-26",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-FUELWOOD-CUTTING-SALVAGE-RCAS-STD-26",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-GRAZING-PRACTICES-PREVENT-ATTAINMENT-STD-14",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-GRAZING-PRACTICES-PREVENT-ATTAINMENT-STD-14",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-GRIZZLY-BEAR-AMENDMENT-APPLIES-STD-6",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-GRIZZLY-BEAR-AMENDMENT-APPLIES-STD-6",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-GUIDANCE-DEFINED-SECTION-PERMIT-STD-7",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-GUIDANCE-DEFINED-SECTION-PERMIT-STD-7",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-HERITAGE-PROTECTION-MEASURES-ADDED-STD-3",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-HERITAGE-PROTECTION-MEASURES-ADDED-STD-3",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-HERITAGE-RESOURCES-DETERMINED-ELIGIBLE-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-HERITAGE-RESOURCES-DETERMINED-ELIGIBLE-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-IF-ONLY-SUITABLE-LOCATION-STD-10",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-IF-ONLY-SUITABLE-LOCATION-STD-10",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-IMPLEMENT-MOST-CURRENT-NATIONAL-STD-11",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-IMPLEMENT-MOST-CURRENT-NATIONAL-STD-11",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-INTERIM-STANDARDS-TABLE-APPLY-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-INTERIM-STANDARDS-TABLE-APPLY-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-LANDSCAPES-EXCEED-OPEN-MOTORIZED-STD-2",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-LANDSCAPES-EXCEED-OPEN-MOTORIZED-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (5cd435fb6bbf)"
+      ],
+      "package_section": "STRWildlifeRpt_20260511.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-LIMIT-LIVESTOCK-TRAILING-BEDDING-STD-16",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-LIMIT-LIVESTOCK-TRAILING-BEDDING-STD-16",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-LOCATE-HYDROELECTRIC-ANCILLARY-FACILITIES-STD-13",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-LOCATE-HYDROELECTRIC-ANCILLARY-FACILITIES-STD-13",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-LOCATE-LIVESTOCK-HANDLING-MANAGEMENT-STD-15",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-LOCATE-LIVESTOCK-HANDLING-MANAGEMENT-STD-15",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-MANAGE-RECOMMENDED-WILDERNESS-PRIMITIVE-STD-10",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-MANAGE-RECOMMENDED-WILDERNESS-PRIMITIVE-STD-10",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-MANAGE-SUMMER-NON-MOTORIZED-ALLOCATIONS-STD-7",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-MANAGE-SUMMER-NON-MOTORIZED-ALLOCATIONS-STD-7",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-MANAGE-WINTER-NON-MOTORIZED-ALLOCATIONS-STD-8",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-MANAGE-WINTER-NON-MOTORIZED-ALLOCATIONS-STD-8",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-MANAGEMENT-ACTIVITIES-RESTORATION-KEY-STD-6",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-MANAGEMENT-ACTIVITIES-RESTORATION-KEY-STD-6",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (97efb17edffc)",
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRAquaticsRpt_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-MECHANICAL-VEGETATION-TREATMENTS-PRESCRIBED-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-MECHANICAL-VEGETATION-TREATMENTS-PRESCRIBED-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-MECHANICAL-VEGETATION-TREATMENTS-RETAIN-STD-3",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-MECHANICAL-VEGETATION-TREATMENTS-RETAIN-STD-3",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-013 (ba7243fd3cc8)",
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRFWSConsultationforWeb_20260512.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-MEET-SMOKE-MANAGEMENT-REQUIREMENTS-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-MEET-SMOKE-MANAGEMENT-REQUIREMENTS-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-MITIGATE-THROUGH-AVOIDANCE-MINIMIZATION-STD-9",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-MITIGATE-THROUGH-AVOIDANCE-MINIMIZATION-STD-9",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (5cd435fb6bbf)",
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRWildlifeRpt_20260511.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-MONITOR-WATER-QUALITY-AQUATIC-STD-11",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-MONITOR-WATER-QUALITY-AQUATIC-STD-11",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-MOTORIZED-VEHICLES-ALLOWED-SUMMER-STD-2",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-MOTORIZED-VEHICLES-ALLOWED-SUMMER-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-011 (45f75739a8d2)",
+        "EA-PACKAGE-008 (b7823dc5a749)",
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRTranspRpt_20260506.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-NO-IMPACT-IDENTIFIED-TCPS-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-NO-IMPACT-IDENTIFIED-TCPS-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-NORTHERN-ROCKIES-LYNX-MANAGEMENT-STD-7",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-NORTHERN-ROCKIES-LYNX-MANAGEMENT-STD-7",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (5cd435fb6bbf)",
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRWildlifeRpt_20260511.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-OCTOBER-DECEMBER-HUNTING-UNITS-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-OCTOBER-DECEMBER-HUNTING-UNITS-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-ON-LANDS-SUITABLE-TIMBER-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-ON-LANDS-SUITABLE-TIMBER-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-ON-LANDS-SUITABLE-TIMBER-STD-2",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-ON-LANDS-SUITABLE-TIMBER-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-ON-LANDS-SUITABLE-TIMBER-STD-3",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-ON-LANDS-SUITABLE-TIMBER-STD-3",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-003 (371604c4c57c)"
+      ],
+      "package_section": "STRForestVegRpt_20260406.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-OUTFITTER-GUIDE-PERMITS-INCREASES-STD-5",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-OUTFITTER-GUIDE-PERMITS-INCREASES-STD-5",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-008 (b7823dc5a749)"
+      ],
+      "package_section": "STRRecRdlssRpt_20260406.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-PERMANENT-ROAD-CONSTRUCTION-ALLOWED-STD-1",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-PERMANENT-ROAD-CONSTRUCTION-ALLOWED-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-011 (45f75739a8d2)",
+        "EA-PACKAGE-014 (d15c336806b0)",
+        "EA-PACKAGE-008 (b7823dc5a749)"
+      ],
+      "package_section": "STRTranspRpt_20260506.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-PROJECTS-FOREGROUND-AREAS-SCENIC-STD-3",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-PROJECTS-FOREGROUND-AREAS-SCENIC-STD-3",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-PROJECTS-HAVE-BENEFICIAL-EFFECT-STD-8",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-PROJECTS-HAVE-BENEFICIAL-EFFECT-STD-8",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)",
+        "EA-PACKAGE-001 (97efb17edffc)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-PROJECTS-NON-MOTORIZED-SUMMER-BACKCOUNTRY-STD-2",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-PROJECTS-NON-MOTORIZED-SUMMER-BACKCOUNTRY-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-PROVIDE-HABITAT-SPECIES-REQUIRING-STD-12",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-PROVIDE-HABITAT-SPECIES-REQUIRING-STD-12",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)",
+        "EA-PACKAGE-012 (5cd435fb6bbf)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-PROVIDE-MAINTAIN-FISH-PASSAGE-STD-21",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-PROVIDE-MAINTAIN-FISH-PASSAGE-STD-21",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-RECREATION-RESORTS-RESIDENCE-TRACTS-STD-6",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-RECREATION-RESORTS-RESIDENCE-TRACTS-STD-6",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-008 (b7823dc5a749)",
+        "EA-PACKAGE-011 (45f75739a8d2)",
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRRecRdlssRpt_20260406.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-RELATED-STORAGE-FUELS-TOXICANTS-STD-25",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-RELATED-STORAGE-FUELS-TOXICANTS-STD-25",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-001 (97efb17edffc)",
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRAquaticsRpt_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-REPLACE-NATURAL-BARRIERS-LIVESTOCK-STD-4",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-REPLACE-NATURAL-BARRIERS-LIVESTOCK-STD-4",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-003 (371604c4c57c)",
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRForestVegRpt_20260406.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-REQUIRE-INSTREAM-FLOWS-HABITAT-STD-12",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-REQUIRE-INSTREAM-FLOWS-HABITAT-STD-12",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-RESEARCH-NATURAL-AREAS-SPECIAL-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-RESEARCH-NATURAL-AREAS-SPECIAL-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-RESTORATION-PROJECTS-CORRECT-EXISTING-STD-9",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-RESTORATION-PROJECTS-CORRECT-EXISTING-STD-9",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-RIPARIAN-CONSERVATION-AREA-RCA-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-RIPARIAN-CONSERVATION-AREA-RCA-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-RIPARIAN-STD-28",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-RIPARIAN-STD-28",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-ROAD-CONSTRUCTION-PERMITTED-RECOMMENDED-STD-12",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-ROAD-CONSTRUCTION-PERMITTED-RECOMMENDED-STD-12",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-008 (b7823dc5a749)",
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRRecRdlssRpt_20260406.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-ROS-STD-3",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-ROS-STD-3",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-SAND-GRAVEL-MINING-EXTRACTION-STD-20",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-SAND-GRAVEL-MINING-EXTRACTION-STD-20",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-SCENIC-INTEGRITY-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-SCENIC-INTEGRITY-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-SHEEP-ALLOTMENTS-GRAVELLY-LANDSCAPE-STD-5",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-SHEEP-ALLOTMENTS-GRAVELLY-LANDSCAPE-STD-5",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-SILVICULTURAL-EXAMINATIONS-PRESCRIPTIONS-REQUIRED-STD-2",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-SILVICULTURAL-EXAMINATIONS-PRESCRIPTIONS-REQUIRED-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-SNOW-COURSES-SNOW-PACK-STD-3",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-SNOW-COURSES-SNOW-PACK-STD-3",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-SOIL-QUALITY-STD-1",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-SOIL-QUALITY-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-SOIL-QUALITY-STD-2",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-SOIL-QUALITY-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-SOLID-SANITARY-WASTE-FACILITIES-STD-19",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-SOLID-SANITARY-WASTE-FACILITIES-STD-19",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-STREAMS-DETERMINED-ELIGIBLE-PROTECTION-STD-2",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-STREAMS-DETERMINED-ELIGIBLE-PROTECTION-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-THESE-PER-ACRE-REQUIREMENTS-DO-APPLY-TREATMENT-UNITS-IF-ANALYSIS-SHOWS-LEVELS-E91032D0-STD-4",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-THESE-PER-ACRE-REQUIREMENTS-DO-APPLY-TREATMENT-UNITS-IF-ANALYSIS-SHOWS-LEVELS-E91032D0-STD-4",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-UNPLANNED-DISCOVERIES-HERITAGE-RESOURCES-STD-2",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-UNPLANNED-DISCOVERIES-HERITAGE-RESOURCES-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-USE-FOLLOWING-TABLE-DESCRIBE-STD-1",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-USE-FOLLOWING-TABLE-DESCRIBE-STD-1",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-VEGETATION-FUEL-MANAGEMENT-PRESCRIPTIONS-STD-27",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-VEGETATION-FUEL-MANAGEMENT-PRESCRIPTIONS-STD-27",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-WATERSHEDS-PROVIDE-WATER-PUBLIC-STD-4",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-WATERSHEDS-PROVIDE-WATER-PUBLIC-STD-4",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-WHEELED-MOTORIZED-VEHICLES-DESIGNED-STD-13",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-WHEELED-MOTORIZED-VEHICLES-DESIGNED-STD-13",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-WHEN-CLOSING-ENTRANCES-ABANDONED-STD-10",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-WHEN-CLOSING-ENTRANCES-ABANDONED-STD-10",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-WHEN-TREES-CUT-ACHIEVE-STD-5",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-WHEN-TREES-CUT-ACHIEVE-STD-5",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-003 (371604c4c57c)",
+        "EA-PACKAGE-014 (d15c336806b0)"
+      ],
+      "package_section": "STRForestVegRpt_20260406.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-WHERE-ADJUSTMENTS-RECREATION-USE-STD-23",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-WHERE-ADJUSTMENTS-RECREATION-USE-STD-23",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-014 (d15c336806b0)",
+        "EA-PACKAGE-001 (97efb17edffc)"
+      ],
+      "package_section": "STRFinalEA_20260513.pdf",
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-WILDLAND-FIRE-USE-AVAILABLE-STD-2",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-WILDLAND-FIRE-USE-AVAILABLE-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-WIRELESS-TELECOMMUNICATION-FACILITIES-LOCATED-STD-2",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-WIRELESS-TELECOMMUNICATION-FACILITIES-LOCATED-STD-2",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-beaverhead-deerlodge-nf-02-WITHIN-KILOMETERS-DOCUMENTED-ACTIVE-STD-8",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-beaverhead-deerlodge-nf-02-WITHIN-KILOMETERS-DOCUMENTED-ACTIVE-STD-8",
+      "component_type": "standard",
+      "description": "South Tobacco Roots Beaverhead-Deerlodge component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FOR-002 (560906baef24)"
+      ],
+      "reviewer_resolution_state": "open"
+    }
+  ],
+  "coverage_requirements": {
+    "minimum_cases_by_applicability_status": {
+      "applicable": 90
+    },
+    "minimum_cases_by_component_type": {
+      "objective": 1,
+      "standard": 89
+    },
+    "minimum_section_bound_cases": 90,
+    "require_all_applicable_standards": true
+  },
+  "description": "Adjudicated component-level eval cases for the Beaverhead-Deerlodge South Tobacco Roots review. Covers every current applicable Beaverhead-Deerlodge standard from the review-local component inventory and locks supported plus open-queue outcomes from the generated review artifacts.",
+  "eval_id": "beaverhead-deerlodge-south-tobacco-roots-forest-plan-components-v0",
+  "metric_thresholds": {
+    "applicable_standard_recall": {
+      "min": 1.0
+    },
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "expected_applicable_standard_count": {
+      "min": 89
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  },
+  "review_id": "region1-example-beaverhead-deerlodge-south-tobacco-roots-63754",
+  "schema_version": "forest-plan-component-eval-v0",
+  "source_set_id": "source-set-f70ea11e04ae3d53"
+}

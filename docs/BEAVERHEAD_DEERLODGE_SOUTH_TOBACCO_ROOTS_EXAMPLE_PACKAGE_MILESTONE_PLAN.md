@@ -1,11 +1,13 @@
 # Beaverhead-Deerlodge South Tobacco Roots Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Reduced locally through Milestone 2 forest-plan resolver preflight. Package authority,
-base `ea-review`, review-local component inventory, forest scope, and source-record retrieval are
-resolved; component adjudication and reviewer-stack replay remain open before any registry or
-coverage promotion.
+Status: Resolved locally through Milestone 3 component adjudication and reviewer-stack replay.
+Package authority, base `ea-review`, review-local component inventory, forest scope,
+component adjudication, applicability adjudication, generated rule pack, compliance review, V1
+eval, component eval, and review `phase-eval` are green. Registry and coverage promotion remain
+future Milestone 4 work.
 Plan class: implementation
+High-risk implementation: yes
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 Intent lock: `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"` is only
 for Beaverhead-Deerlodge National Forest South Tobacco Roots package work.
@@ -85,12 +87,30 @@ phase eval, and review-scope promotion gates.
   `supporting_plan_evidence_count=6`.
 - Retrieval readiness is green for the Beaverhead-Deerlodge source records required by the
   selected plan routes on `source-set-f70ea11e04ae3d53`.
-- The same resolver run remains `reviewer_ready=false` because component adjudication is not
-  closed: raw component evaluation reports `component_count=90`, `applicable_count=90`,
-  `applicable_standard_count=89`, `supported_count=30`, `gap_count=60`,
-  `reviewer_resolution_count=60`, `applicable_standard_coverage_passed=false`,
-  `all_applicable_standards_applied=false`, and component adjudication fails on
-  `adjudication_eval_missing`.
+- Component adjudication is tracked at
+  `config/forest_plan_component_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
+  and resolves all `60/60` current reviewer-resolution items as system misses with
+  `disposition_counts={"evidence_linking_miss":60}`, `pending_adjudication_count=0`, and
+  `adjudication_expectation_match_rate=1.0`.
+- The applicability replay validates `156` candidate authorities with `52` applicable authorities,
+  `104` not-applicable authorities, `0` unresolved authorities, and a generated `52`-rule pack at
+  `source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/applicability/generated_rule_pack.json`.
+- Applicability adjudication is tracked at
+  `config/applicability_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
+  and resolves the three positive/negative trigger conflicts as `human_applicable`.
+- `compliance-review` passes with `52` findings, `32` pass findings, `18` uncertain findings,
+  `2` gap findings, matrix JSON/Markdown/PDF artifacts present, and `reviewer_ready=true`.
+- The V1 eval contract at
+  `config/v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json` passes with `26`
+  conditional expectations, `contract_status="reviewer_ready"`, `forest_plan_passed=true`, and
+  `broader_ea_passed=true`.
+- The component eval contract at
+  `config/forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
+  passes `90/90` cases, covers all `89` applicable standards, and records the reviewed
+  `60` open raw queue states plus `30` closed supported states.
+- Review `phase-eval` passes `28/28` with `blockers=[]`, `reviewer_ready=true`,
+  `declared_review_contract=false`, and `contract_backed_promotion_ready=false` because this
+  packet has not yet added Milestone 4 registry or coverage slots.
 
 ## Goal
 
@@ -200,14 +220,15 @@ Weak point forecast: external Helena-Lewis and Clark comparison text is treated 
 
 Weak point forecast: component scope is mistaken for reviewer-ready component compliance.
 
-- Owner surface: `forest_plan_context_summary.json`, future component adjudication, and future
+- Owner surface: `forest_plan_context_summary.json`, tracked component adjudication, and tracked
   component eval contract
 - Prevention gate: forest-plan resolver validation plus
   `forest-plan-component-adjudication-eval` before promotion
 - Fail threshold: `reviewer_ready=false`, `adjudication_eval_missing`, unresolved component queue
   items, or applicable-standard coverage failure remains
-- Controlled violation: Milestone 2 preserves the typed reduced result with `60` reviewer
-  resolution items instead of weakening the eval
+- Controlled violation: Milestone 2 preserved the typed reduced result with `60` reviewer
+  resolution items instead of weakening the eval; Milestone 3 closes those items through tracked
+  adjudication rather than by deleting the queue
 - Future-Codex misuse scenario: a future session reads `scope_status="beaverhead_deerlodge_nf"` and
   skips the component adjudication packet
 
@@ -256,9 +277,10 @@ and passed validation.
 
 Outcome label: `reduced`
 
-Local result: reduced. Beaverhead-Deerlodge scope, Tobacco Root landscape evidence, source-record
-retrieval, and review-local component inventory are resolved, but component adjudication is not
-closed. The next route is component adjudication and reviewer-stack replay.
+Local result: reduced at original checkpoint. Beaverhead-Deerlodge scope, Tobacco Root landscape
+evidence, source-record retrieval, and review-local component inventory were resolved while
+component adjudication remained open. This checkpoint is now superseded by the resolved Milestone 3
+replay below.
 
 1. Build a review-local Beaverhead-Deerlodge component inventory from the current f70 chunks.
 2. Add the narrow South Tobacco Root aliases needed for profile fixture and real-package matching.
@@ -269,7 +291,11 @@ closed. The next route is component adjudication and reviewer-stack replay.
 
 ### Milestone 3 - Component Adjudication And Reviewer Stack Replay
 
-Outcome label: `future`
+Outcome label: `resolved`
+
+Local result: resolved. Component adjudication, applicability adjudication, generated rule-pack
+validation, compliance review, V1 eval, component eval, and review `phase-eval` pass locally. The
+review remains outside registry and coverage manifests until Milestone 4 promotion.
 
 1. Create tracked component adjudication for the `60` reviewer-resolution items.
 2. Run `forest-plan-component-adjudication-eval` until `pending_adjudication_count=0` and no
@@ -291,7 +317,7 @@ Outcome label: `future`
 
 ## Verification Gates
 
-Executed for this reduced checkpoint:
+Executed for the Milestones 1-2 package and resolver preflight:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources ea-review --package-path source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --docling-timeout-seconds 180
@@ -299,21 +325,40 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --outpu
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --forest-unit-id beaverhead-deerlodge-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json --reuse-package-cache --docling-timeout-seconds 180
 ```
 
+Executed for the Milestone 3 reviewer-stack replay:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --adjudication-file config/forest_plan_component_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --forest-unit-id beaverhead-deerlodge-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json --reuse-package-cache --docling-timeout-seconds 180
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53 --forest-unit-id beaverhead-deerlodge-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-context-build --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53 --package-path source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-retrieve --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-determine --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53 --adjudication-file config/applicability_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-apply --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53 --adjudication-file config/applicability_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53
+PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --forest-unit-id beaverhead-deerlodge-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json --rule-pack source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/applicability/generated_rule_pack.json --reuse-package-cache --docling-timeout-seconds 180
+PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --eval-file config/v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --eval-file config/forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53 --validate-only
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754
+```
+
 Required before local commit:
 
 ```bash
 python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md
 PYTHONPATH=src uv run --extra dev pytest tests/test_replay_context.py tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver_profiles.py -k 'beaverhead or south_tobacco or replay_context'
+PYTHONPATH=src uv run --extra dev pytest tests/test_beaverhead_south_tobacco_contracts.py
 PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
 PYTHONPATH=src uv run --extra dev ruff check src tests
 PYTHONPATH=src python -m compileall src
 git diff --check
 ```
 
-Pass threshold: focused tests and lint pass with `0` failures. The real `forest-plan-resolve`
-command may exit nonzero at this checkpoint only with the documented reduced component
-adjudication blocker; it must still report `validation_passed=true` and
-`scope_status="beaverhead_deerlodge_nf"`.
+Pass threshold: focused tests, lint, replay evals, `forest-plan-resolve`, `compliance-review`,
+V1 eval, component eval, and review `phase-eval` pass with `0` blockers for this review ID.
 
 ## Acceptance Criteria
 
@@ -325,17 +370,20 @@ adjudication blocker; it must still report `validation_passed=true` and
   bytes, and `failure_count=0`.
 - Forest-plan resolver preflight reaches `scope_status="beaverhead_deerlodge_nf"` and
   `validation_passed=true`.
-- The reduced state explicitly records `reviewer_ready=false`, `gap_count=60`, and
-  `adjudication_eval_missing`.
+- Component adjudication resolves `60/60` current queue items with `0` pending items and passes
+  `forest-plan-component-adjudication-eval`.
+- Applicability adjudication resolves `3/3` positive/negative trigger conflicts with `0` pending
+  items and the generated rule pack validates with `52` rules.
+- `compliance-review`, V1 eval, forest-plan component eval, and review `phase-eval` pass for the
+  frozen Beaverhead-Deerlodge review ID.
 - Beaverhead-Deerlodge remains `profile_eval_guidance_only`; no registry, real-package coverage,
-  component-coverage, or queue ledger promotion is included in this milestone.
-- Verification commands above pass, except the documented reduced resolver command exit that is
-  expected until component adjudication is added.
+  component-coverage, or queue ledger promotion is included until Milestone 4.
+- Verification commands above pass with `0` failures.
 
 ## Documentation And Handoff
 
 - Update `docs/CURRENT_ROUTING.md`, `docs/SESSION_HANDOFF.md`, and
-  `docs/CURRENT_SYSTEM_STATE.md` with this reduced checkpoint.
+  `docs/CURRENT_SYSTEM_STATE.md` with this Milestone 3 resolved checkpoint.
 - Update `docs/AGENT_START_HERE.md`, `README.md`, and the forest-specific umbrella packet so future
   agents route Beaverhead-Deerlodge through this active packet without treating it as
   reviewer-ready.
@@ -362,10 +410,12 @@ bytes. Push only if the user explicitly asks for a push.
 
 ## Residual Risks And Next Routing
 
-- Next route: Milestone 3 component adjudication and reviewer-stack replay for
-  `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`.
-- Residual risk: the `60` component findings may include true package gaps, applicability false
-  positives, or evidence-linking misses; they require tracked adjudication before any promotion.
+- Next route: Milestone 4 registry and coverage promotion for
+  `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"` if the user wants
+  Beaverhead-Deerlodge promoted from guidance-only to governed example coverage.
+- Residual risk: the `60` raw component findings remain raw queue rows in the generated component
+  artifacts, but the tracked adjudication eval classifies all current queue rows as system
+  evidence-linking misses and V1/phase eval treat that as reviewer-ready closure.
 - Residual risk: aggregate component coverage still has inherited non-Beaverhead blockers in other
   slots; do not route those back into South Tobacco Roots unless the review-scope slot itself is
   failing after promotion.
@@ -374,8 +424,8 @@ bytes. Push only if the user explicitly asks for a push.
 
 ## Closeout Outcome Record
 
-- Closeout status: reduced through Milestone 2, verified and committed locally after the required
+- Closeout status: resolved through Milestone 3, verified and committed locally after the required
   verification gate passes.
 - Final commit hash: the atomic closeout commit that contains this packet; report the hash in the
   final closeout response.
-- Next owner: future component adjudication and reviewer-stack replay milestone.
+- Next owner: future Milestone 4 registry and coverage promotion milestone.
