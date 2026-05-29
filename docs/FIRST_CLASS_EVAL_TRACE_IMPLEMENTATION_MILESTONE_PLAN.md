@@ -6,8 +6,9 @@ Status: Active implementation packet. Milestone 0 contract and baseline
 inventory design is resolved locally; Milestone 1 read-only inventory CLI is
 resolved locally; Milestone 2 local DB-backed eval/trace store is resolved
 locally; Milestone 3 canonical/OpenInference export is resolved locally;
-Milestone 4 phase/promotion gate integration is resolved locally; Milestone 5
-trace-to-case promotion is the next implementation slice.
+Milestone 5 trace-to-case promotion is resolved locally. Milestones 0-5 now
+cover contract, inventory, store, export, phase/promotion gate integration, and
+local trace-to-case feedback-loop mechanics.
 
 Owner context: This plan implements the direction captured in
 `docs/FIRST_CLASS_EVALS_AND_TRACES_RESEARCH_BRIEF.md` for this repository. West
@@ -675,6 +676,25 @@ Commit closeout:
   handoff, and any explicitly approved generated eval-trace report artifacts.
 
 ### Milestone 5: Trace-To-Case Promotion And Feedback Loop
+
+Status: Resolved locally on 2026-05-29. The `eval-trace-case-promote` command
+now promotes selected trace/span rows from the local SQLite store into the
+tracked `config/eval_trace_cases/system_eval_trace_cases_v1.json` case-file
+schema. The command requires source artifact refs and hashes, owner/risk/tags,
+an assertion or expected-output contract, review/removal conditions, and fails
+closed on duplicate case IDs unless `--replace` is supplied. Deterministic
+scorer contracts, human-label metadata, and explicit deferred `llm_judge`
+metadata are present; uncalibrated model-judge scoring remains blocked and
+tracked in `docs/TECH_DEBT_REGISTER.md`.
+
+Verified closeout on 2026-05-29:
+
+- `pytest tests/test_eval_trace_case_promote.py tests/test_eval_trace_store.py tests/test_architecture_contract.py tests/test_cli_eval.py -q`
+  passed `46/46`.
+- `ruff check src tests`, `python -m compileall src`, `git diff --check`, and
+  `python -m usfs_r1_ea_sources --help` passed.
+- A local `eval-trace-case-promote` smoke run against
+  `source_library/evaluations/eval_trace/system_eval_trace.sqlite` passed.
 
 Outcome label: resolved for local feedback-loop mechanics; reduced for any
 future model-judge or hosted online-scoring integration.

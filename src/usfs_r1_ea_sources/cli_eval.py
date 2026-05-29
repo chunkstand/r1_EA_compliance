@@ -74,6 +74,9 @@ DEFAULT_SOURCE_RECORD_RECONCILIATION_PATH = _module_attr(
 DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_PATH = _module_attr(
     "records", "DEFAULT_FOREST_PLAN_IDENTITY_RECONCILIATION_PATH"
 )
+DEFAULT_EVAL_TRACE_CASE_FILE_PATH = _module_attr(
+    "eval_trace_case_promote", "DEFAULT_EVAL_TRACE_CASE_FILE_PATH"
+)
 
 
 def run_applicability_eval(**kwargs):
@@ -98,6 +101,12 @@ def run_eval_trace_export(**kwargs):
 
 def run_eval_trace_store_build(**kwargs):
     return _module_attr("eval_trace_store", "run_eval_trace_store_build")(**kwargs)
+
+
+def run_eval_trace_case_promote(**kwargs):
+    return _module_attr("eval_trace_case_promote", "run_eval_trace_case_promote")(
+        **kwargs
+    )
 
 
 def run_extraction_fidelity_eval(**kwargs):
@@ -164,6 +173,7 @@ EVAL_COMMANDS = {
     "applicability-eval",
     "applicability-gold-eval",
     "draft-generation-eval",
+    "eval-trace-case-promote",
     "eval-trace-export",
     "eval-trace-inventory",
     "eval-trace-store-build",
@@ -273,6 +283,36 @@ COMMAND_SPECS = (
             _arg("--inventory-path", required=True, type=Path),
             _arg("--sqlite-path", required=True, type=Path),
             _arg("--summary-path", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="eval-trace-case-promote",
+        help="Promote a stored first-class eval trace/span into a versioned eval case file.",
+        arguments=(
+            _arg("--sqlite-path", required=True, type=Path),
+            _arg("--case-file", default=DEFAULT_EVAL_TRACE_CASE_FILE_PATH, type=Path),
+            _arg("--trace-id"),
+            _arg("--span-id"),
+            _arg("--case-id"),
+            _arg("--owner", required=True),
+            _arg(
+                "--risk-level",
+                required=True,
+                choices=("low", "medium", "high", "critical"),
+            ),
+            _arg("--tag", action="append", dest="tags"),
+            _arg("--assertion", action="append", dest="assertions"),
+            _arg("--expected-output"),
+            _arg("--review-condition", required=True),
+            _arg("--removal-condition", required=True),
+            _arg("--replace", action="store_true"),
+            _arg(
+                "--human-label-status",
+                default="unlabeled",
+                choices=("unlabeled", "labeled", "reviewed", "rejected"),
+            ),
+            _arg("--human-labeler"),
+            _arg("--human-label-note"),
         ),
     ),
     EvalCommandSpec(
@@ -501,6 +541,27 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 inventory_path=args.inventory_path,
                 sqlite_path=args.sqlite_path,
                 summary_path=args.summary_path,
+            ),
+            success_key="command_succeeded",
+        ),
+        "eval-trace-case-promote": EvalCommandHandler(
+            run=lambda args: run_eval_trace_case_promote(
+                sqlite_path=args.sqlite_path,
+                case_file=args.case_file,
+                trace_id=args.trace_id,
+                span_id=args.span_id,
+                case_id=args.case_id,
+                owner=args.owner,
+                risk_level=args.risk_level,
+                tags=args.tags,
+                assertions=args.assertions,
+                expected_output=args.expected_output,
+                review_condition=args.review_condition,
+                removal_condition=args.removal_condition,
+                replace=args.replace,
+                human_label_status=args.human_label_status,
+                human_labeler=args.human_labeler,
+                human_label_note=args.human_label_note,
             ),
             success_key="command_succeeded",
         ),

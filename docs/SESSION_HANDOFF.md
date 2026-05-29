@@ -15,16 +15,15 @@ history below.
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then read
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` for the active
-  first-class eval trace packet; open
+  first-class eval trace packet history; open
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md` and
   `config/eval_trace_inventory_contract_v1.json` for the resolved contract;
-  use the Milestone 4 West Reservoir f70 gate integration as the predecessor
-  for Milestone 5 trace-to-case promotion
+  use Milestones 0-5 as the resolved first-class eval trace baseline
 - latest resolved packet:
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 4
-- active packet:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 5
-  trace-to-case promotion and feedback loop
+- active packet:
+  no active first-class eval trace implementation slice; future model-judge or
+  hosted scoring work requires a new approved milestone
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - active forest-specific example packet:
@@ -50,17 +49,20 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  First-class eval trace Milestone 4 is resolved locally. The implemented
+  First-class eval trace Milestone 5 is resolved locally. The implemented
   contract and inventory surfaces are `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`,
   `config/eval_trace_inventory_contract_v1.json`,
+  `config/eval_trace_cases/system_eval_trace_cases_v1.json`,
   `src/usfs_r1_ea_sources/eval_trace_contract.py`,
   `src/usfs_r1_ea_sources/eval_trace_inventory.py`,
   `src/usfs_r1_ea_sources/eval_trace_store.py`,
   `src/usfs_r1_ea_sources/eval_trace_export.py`,
   `src/usfs_r1_ea_sources/eval_trace_gate.py`,
+  `src/usfs_r1_ea_sources/eval_trace_case_promote.py`,
   `tests/test_eval_trace_contract.py`, `tests/test_eval_trace_inventory.py`,
   `tests/test_eval_trace_store.py`, and
-  `tests/test_eval_trace_export.py`, plus `tests/test_eval_trace_gate.py`.
+  `tests/test_eval_trace_export.py`, plus `tests/test_eval_trace_gate.py` and
+  `tests/test_eval_trace_case_promote.py`.
   The contract validates canonical objects, enum families, required artifact
   families, required link checks, deterministic-first scorer policy, LLM-judge
   metadata requirements, export preconditions, and the no-global-ratchet
@@ -83,8 +85,21 @@ history below.
   current-promotion phase-eval artifact reports a failed ratcheted eval-trace
   gate. The only enabled ratcheted scope is review
   `west-reservoir-67436`; no global or source-set-wide ratchet is enabled. The
-  next implementation slice is Milestone 5: trace-to-case promotion and
-  feedback loop.
+  new `eval-trace-case-promote` CLI promotes a selected trace/span into the
+  tracked `config/eval_trace_cases/system_eval_trace_cases_v1.json` case-file
+  schema. It requires source artifact refs and hashes, owner/risk/tags, an
+  assertion or expected-output contract, review/removal lifecycle conditions,
+  deterministic scorer contracts, and human-label metadata. `llm_judge`
+  remains reserved/deferred until a separate calibrated model-judge milestone.
+  Milestone 5 verification: focused case/store/architecture/CLI pytest passed
+  `46/46`; `ruff check src tests`,
+  `python -m compileall src`, `git diff --check`, and
+  `python -m usfs_r1_ea_sources --help` passed; and a local
+  `eval-trace-case-promote` smoke run against
+  `source_library/evaluations/eval_trace/system_eval_trace.sqlite` passed with
+  `command_succeeded=true`.
+  No first-class eval trace implementation slice remains active after
+  Milestone 5.
   Historical West Reservoir checkpoint follows:
   West Reservoir reviewer-readiness Milestone 4 is resolved locally on
   `source-set-f70ea11e04ae3d53`. The plan file is

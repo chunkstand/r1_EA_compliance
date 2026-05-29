@@ -4484,7 +4484,88 @@ Required summary fields:
 The 2026-05-29 West Reservoir f70 seed export passed with `18` traces, `36`
 OpenInference-shaped spans, `0` missing tables, and `0` missing provenance
 fields. Milestone 4 now enables phase/promotion gate integration for explicitly
-ratcheted scopes; trace-to-case promotion remains a later milestone.
+ratcheted scopes; Milestone 5 adds the trace-to-case promotion surface below.
+
+## First-Class Eval Trace Case Promotion
+
+Command:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-case-promote \
+  --sqlite-path source_library/evaluations/eval_trace/system_eval_trace.sqlite \
+  --case-file config/eval_trace_cases/system_eval_trace_cases_v1.json \
+  --trace-id <trace-id> \
+  --span-id <span-id> \
+  --owner <owner-surface> \
+  --risk-level high \
+  --tag first-class-eval-trace \
+  --assertion "trace remains linked to source artifacts" \
+  --review-condition "review when scorer schema changes" \
+  --removal-condition "remove only after a superseding case exists"
+```
+
+The command reads the local SQLite store and writes a tracked versioned case
+file. It is fail-closed: no case is written unless the selected trace/span has
+source artifact refs and hashes and the caller supplies ownership, risk, tags,
+an assertion or expected output contract, and lifecycle conditions. Duplicate
+case IDs fail unless `--replace` is supplied.
+
+Default tracked case file:
+`config/eval_trace_cases/system_eval_trace_cases_v1.json`
+
+Case-file schema version: `eval-trace-case-file-v1`
+
+Required case-file fields:
+
+- `schema_version`
+- `case_file_id`
+- `case_file_version`
+- `cases`
+
+Promoted case schema version: `eval-trace-promoted-case-v1`
+
+Required promoted case fields:
+
+- `schema_version`
+- `case_id`
+- `case_version`
+- `created_at`
+- `source_trace`
+- `assertion_contract`
+- `owner_surface`
+- `risk_level`
+- `tags`
+- `lifecycle`
+- `human_label`
+
+`source_trace` preserves the selected trace ID, span ID when supplied,
+eval-run/case/result IDs, eval and case names, score names, source artifact
+refs and hashes, source-record IDs, and citation labels when present.
+
+`assertion_contract` contains `expected_output`, `assertions`,
+`deterministic_scorers`, and `llm_judge`. Deterministic scorer entries cover
+retrieval, groundedness by cited source spans, trace integrity, latency
+placeholder, and cost placeholder. `llm_judge` is reserved and records the
+future enablement requirements rather than satisfying any current gate.
+
+Human-label metadata is present but UI-neutral. It records status, labeler,
+labels, note, and reviewed timestamp.
+
+Summary schema version: `eval-trace-case-promote-summary-v1`
+
+Required summary fields:
+
+- `passed`
+- `command_succeeded`
+- `case_file_path`
+- `case_id`
+- `trace_id`
+- `span_id`
+- `case_count`
+- `replaced_existing`
+- `wrote_case`
+- `failure_reasons`
+- `validation_checks`
 
 ## First-Class Eval Trace Gate
 

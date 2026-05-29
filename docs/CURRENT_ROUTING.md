@@ -4,10 +4,10 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved packet:
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 4
-- Active packet:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 5
-  trace-to-case promotion and feedback loop
+- Active packet:
+  no active first-class eval trace implementation slice; future model-judge or
+  hosted scoring work requires a new approved milestone
 - Latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
@@ -28,7 +28,7 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- First-class eval trace Milestone 4 is resolved locally. The tracked contract
+- First-class eval trace Milestones 0-5 are resolved locally. The tracked contract
   lives in `config/eval_trace_inventory_contract_v1.json`; the contract doc is
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`; and
   `src/usfs_r1_ea_sources/eval_trace_contract.py` validates the canonical
@@ -57,9 +57,13 @@ Use this file as the short current route before opening the append-only docs.
   promotion when a current-promotion phase-eval artifact reports a failed
   ratcheted eval-trace gate. The only enabled ratcheted scope is review
   `west-reservoir-67436`; there is no global or source-set-wide ratchet. The
-  next active implementation slice is Milestone 5 in
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`: trace-to-case
-  promotion and feedback loop.
+  `eval-trace-case-promote` CLI now promotes selected trace/span rows from the
+  local SQLite store into the tracked
+  `config/eval_trace_cases/system_eval_trace_cases_v1.json` schema, requiring
+  source artifact refs/hashes, owner/risk/tags, assertion or expected-output
+  contract, review/removal conditions, deterministic scorer contracts, and
+  human-label metadata. `llm_judge` remains reserved/deferred until a separate
+  calibrated model-judge milestone.
 - Resolved West Reservoir predecessor context: reviewer-readiness Milestone 4 is resolved locally on
   `source-set-f70ea11e04ae3d53`. West Reservoir-owned decision-support and
   final-QA configs/fixtures now drive the signer-facing packet artifacts;

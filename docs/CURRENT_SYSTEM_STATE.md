@@ -15,6 +15,53 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## First-Class Eval Trace Case Promotion Milestone 5 Resolved Locally
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 5 is
+  resolved locally. The system now has a local trace-to-case feedback-loop
+  command without enabling uncalibrated model-judge scoring.
+- owner surfaces:
+  `src/usfs_r1_ea_sources/eval_trace_case_promote.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`,
+  `config/eval_trace_cases/system_eval_trace_cases_v1.json`,
+  `tests/test_eval_trace_case_promote.py`, `tests/test_cli_eval.py`,
+  `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`, `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`, `docs/TECH_DEBT_REGISTER.md`,
+  `docs/ARCHITECTURE.md`, and `docs/architecture_contract.toml`.
+- command truth:
+  `eval-trace-case-promote` reads `system_eval_trace.sqlite`, selects a
+  trace/span by `--trace-id` and/or `--span-id`, and writes a promoted case to
+  the tracked case-file schema. It requires source artifact refs and hashes,
+  owner surface, allowed risk level, tags, assertion or expected-output
+  contract, review condition, and removal condition. Duplicate case IDs fail
+  closed unless `--replace` is supplied.
+- case truth:
+  promoted cases preserve source trace IDs, span IDs, eval run/case/result IDs,
+  source artifact refs and hashes, source-record IDs, citation labels when
+  present, deterministic scorer contracts for retrieval, groundedness by cited
+  source spans, trace integrity, latency, and cost, plus human-label metadata.
+- residual risk:
+  `llm_judge` remains intentionally reserved/deferred and is tracked in
+  `docs/TECH_DEBT_REGISTER.md`; a future model-judge milestone must add
+  calibration examples, prompt/rubric hashes, judge model/version/temperature,
+  examples hash, and precision/recall checks against human labels before it can
+  satisfy any gate.
+- verification:
+  `pytest tests/test_eval_trace_case_promote.py tests/test_eval_trace_store.py tests/test_architecture_contract.py tests/test_cli_eval.py -q`
+  passed `46/46`;
+  `ruff check src tests`, `python -m compileall src`, and `git diff --check`
+  passed; the local smoke command `eval-trace-case-promote` against
+  `source_library/evaluations/eval_trace/system_eval_trace.sqlite` wrote a
+  temporary case file with `command_succeeded=true` and all validation checks
+  true.
+- next implementation route:
+  no first-class eval trace implementation slice remains active after
+  Milestone 5. Future hosted trace export or model-judge scoring needs a new
+  approved milestone.
+
 ## First-Class Eval Trace Gate Milestone 4 Resolved Locally
 
 Latest implementation update on 2026-05-29 UTC:

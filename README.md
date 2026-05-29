@@ -204,6 +204,22 @@ PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-export \
   --openinference-json-path /tmp/usfs-r1-openinference-traces.json
 ```
 
+Promote a stored first-class eval trace/span into a tracked case fixture:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-case-promote \
+  --sqlite-path /tmp/usfs-r1-system-eval-trace.sqlite \
+  --case-file config/eval_trace_cases/system_eval_trace_cases_v1.json \
+  --trace-id <trace-id> \
+  --span-id <span-id> \
+  --owner <owner-surface> \
+  --risk-level high \
+  --tag first-class-eval-trace \
+  --assertion "trace remains linked to source artifacts" \
+  --review-condition "review when scorer schema changes" \
+  --removal-condition "remove only after a superseding case exists"
+```
+
 Validate replay-facing source-record identity against a target catalog:
 
 ```bash

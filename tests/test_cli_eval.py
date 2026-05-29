@@ -134,6 +134,57 @@ def test_eval_trace_export_parser_accepts_export_paths() -> None:
     assert args.openinference_json_path == Path("/tmp/usfs-r1-openinference-traces.json")
 
 
+def test_eval_trace_case_promote_parser_accepts_promotion_contract() -> None:
+    args = build_parser().parse_args(
+        [
+            "eval-trace-case-promote",
+            "--sqlite-path",
+            "/tmp/usfs-r1-system-eval-trace.sqlite",
+            "--case-file",
+            "config/eval_trace_cases/system_eval_trace_cases_v1.json",
+            "--trace-id",
+            "trace-123",
+            "--span-id",
+            "span-456",
+            "--case-id",
+            "west-reservoir-trace-case-001",
+            "--owner",
+            "eval_trace_case_promote",
+            "--risk-level",
+            "high",
+            "--tag",
+            "first-class-eval-trace",
+            "--tag",
+            "west-reservoir",
+            "--assertion",
+            "trace keeps source artifact refs",
+            "--expected-output",
+            "deterministic scorer contract remains replayable",
+            "--review-condition",
+            "review when scorer schema changes",
+            "--removal-condition",
+            "remove when superseded",
+            "--human-label-status",
+            "unlabeled",
+        ]
+    )
+
+    assert args.command == "eval-trace-case-promote"
+    assert args.sqlite_path == Path("/tmp/usfs-r1-system-eval-trace.sqlite")
+    assert args.case_file == Path("config/eval_trace_cases/system_eval_trace_cases_v1.json")
+    assert args.trace_id == "trace-123"
+    assert args.span_id == "span-456"
+    assert args.case_id == "west-reservoir-trace-case-001"
+    assert args.owner == "eval_trace_case_promote"
+    assert args.risk_level == "high"
+    assert args.tags == ["first-class-eval-trace", "west-reservoir"]
+    assert args.assertions == ["trace keeps source artifact refs"]
+    assert args.expected_output == "deterministic scorer contract remains replayable"
+    assert args.review_condition == "review when scorer schema changes"
+    assert args.removal_condition == "remove when superseded"
+    assert args.human_label_status == "unlabeled"
+
+
 def test_upstream_eval_parser_accepts_manifest_and_results_dir() -> None:
     args = build_parser().parse_args(
         [

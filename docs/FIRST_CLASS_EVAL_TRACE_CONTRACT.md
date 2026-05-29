@@ -3,9 +3,9 @@
 Date: 2026-05-28
 
 Status: Milestone 0 contract, Milestone 1 read-only inventory CLI, Milestone 2
-local SQLite store, Milestone 3 canonical/OpenInference export, and Milestone 4
-phase/promotion gate integration are implemented locally. Trace-to-case
-promotion is still a future milestone.
+local SQLite store, Milestone 3 canonical/OpenInference export, Milestone 4
+phase/promotion gate integration, and Milestone 5 trace-to-case promotion are
+implemented locally.
 
 Owner surfaces:
 
@@ -15,10 +15,13 @@ Owner surfaces:
 - Store helper: `src/usfs_r1_ea_sources/eval_trace_store.py`
 - Export helper: `src/usfs_r1_ea_sources/eval_trace_export.py`
 - Gate helper: `src/usfs_r1_ea_sources/eval_trace_gate.py`
+- Case promotion helper: `src/usfs_r1_ea_sources/eval_trace_case_promote.py`
+- Default case file: `config/eval_trace_cases/system_eval_trace_cases_v1.json`
 - Contract tests: `tests/test_eval_trace_contract.py`
 - Inventory tests: `tests/test_eval_trace_inventory.py`
 - Store tests: `tests/test_eval_trace_store.py`
 - Export tests: `tests/test_eval_trace_export.py`
+- Case promotion tests: `tests/test_eval_trace_case_promote.py`
 - Implementation plan:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`
 
@@ -123,6 +126,30 @@ The West Reservoir f70 seed build on 2026-05-29 passed with `18` rows in each
 canonical table and `0` orphan rows, duplicate IDs, stale artifacts, source
 artifact deletions, or missing required links.
 
+## Trace-To-Case Promotion Contract
+
+`eval-trace-case-promote` reads the local SQLite store and promotes one selected
+trace or span into a versioned eval case file. The default tracked file is
+`config/eval_trace_cases/system_eval_trace_cases_v1.json`, with schema version
+`eval-trace-case-file-v1`.
+
+Promoted cases use schema version `eval-trace-promoted-case-v1`. Each case
+must preserve the selected trace ID, optional span ID, eval run/case/result
+IDs, source artifact refs, source artifact hashes, source-record IDs and
+citation labels when present. The command refuses to write a case unless the
+selected trace has source artifact refs and hashes and the caller supplies an
+owner surface, allowed risk level, at least one tag, an assertion or expected
+output contract, and review/removal lifecycle conditions. Duplicate case IDs
+fail closed unless the operator passes `--replace`.
+
+The promoted assertion contract is deterministic-first. It records contracts for
+retrieval, groundedness by cited source spans, trace integrity, plus latency and
+cost placeholders. Human label metadata is present without requiring a UI:
+status, labeler, labels, note, and reviewed timestamp. The summary schema
+version is `eval-trace-case-promote-summary-v1` and records `passed`,
+`command_succeeded`, selected IDs, case count, replacement state, failure
+reasons, and validation checks.
+
 ## Scorer Contract
 
 Deterministic checks are the default. The contract requires deterministic score
@@ -131,7 +158,10 @@ deterministic-code checks.
 
 `llm_judge` remains a reserved score kind. Any future LLM judge score must store
 judge model, prompt hash, rubric hash, examples hash, temperature, and output
-schema before it can satisfy a gate.
+schema before it can satisfy a gate. Promoted cases explicitly record
+`llm_judge.status="reserved_deferred"` and cannot use an LLM judge to satisfy a
+gate until a later approved milestone adds calibration examples and
+precision/recall checks against human labels.
 
 ## Export Contract
 
