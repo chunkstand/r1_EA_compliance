@@ -194,6 +194,16 @@ PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-store-build \
   --summary-path /tmp/usfs-r1-system-eval-trace-summary.json
 ```
 
+Export the local eval/trace store as canonical JSON and OpenInference-shaped
+spans:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-export \
+  --sqlite-path /tmp/usfs-r1-system-eval-trace.sqlite \
+  --canonical-json-path /tmp/usfs-r1-system-eval-trace-export.json \
+  --openinference-json-path /tmp/usfs-r1-openinference-traces.json
+```
+
 Validate replay-facing source-record identity against a target catalog:
 
 ```bash

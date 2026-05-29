@@ -92,6 +92,10 @@ def run_eval_trace_inventory(**kwargs):
     return _module_attr("eval_trace_inventory", "run_eval_trace_inventory")(**kwargs)
 
 
+def run_eval_trace_export(**kwargs):
+    return _module_attr("eval_trace_export", "run_eval_trace_export")(**kwargs)
+
+
 def run_eval_trace_store_build(**kwargs):
     return _module_attr("eval_trace_store", "run_eval_trace_store_build")(**kwargs)
 
@@ -160,6 +164,7 @@ EVAL_COMMANDS = {
     "applicability-eval",
     "applicability-gold-eval",
     "draft-generation-eval",
+    "eval-trace-export",
     "eval-trace-inventory",
     "eval-trace-store-build",
     "extraction-fidelity-eval",
@@ -250,6 +255,15 @@ COMMAND_SPECS = (
             _arg("--results-path", type=Path),
             _arg("--format", choices=("json", "markdown"), default="json"),
             _arg("--fail-on-missing-required", action="store_true"),
+        ),
+    ),
+    EvalCommandSpec(
+        name="eval-trace-export",
+        help="Export local eval/trace store rows as canonical JSON and OpenInference-shaped spans.",
+        arguments=(
+            _arg("--sqlite-path", required=True, type=Path),
+            _arg("--canonical-json-path", required=True, type=Path),
+            _arg("--openinference-json-path", required=True, type=Path),
         ),
     ),
     EvalCommandSpec(
@@ -471,6 +485,14 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 results_path=args.results_path,
                 format=args.format,
                 fail_on_missing_required=args.fail_on_missing_required,
+            ),
+            success_key="command_succeeded",
+        ),
+        "eval-trace-export": EvalCommandHandler(
+            run=lambda args: run_eval_trace_export(
+                sqlite_path=args.sqlite_path,
+                canonical_json_path=args.canonical_json_path,
+                openinference_json_path=args.openinference_json_path,
             ),
             success_key="command_succeeded",
         ),

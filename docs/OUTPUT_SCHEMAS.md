@@ -4396,8 +4396,95 @@ identities without accumulating duplicates.
 
 The 2026-05-29 West Reservoir f70 seed build passed with `18` rows in each
 canonical table, `0` orphan rows, `0` duplicate IDs, `0` stale artifacts, `0`
-source artifact deletions, and `0` missing required links. Milestone 2 still
-does not create canonical JSON or OpenInference exports.
+source artifact deletions, and `0` missing required links. At Milestone 2
+closeout, canonical JSON and OpenInference exports remained a later slice; the
+section below now documents those Milestone 3 generated artifacts.
+
+## First-Class Eval Trace Export
+
+Command:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-export \
+  --sqlite-path source_library/evaluations/eval_trace/system_eval_trace.sqlite \
+  --canonical-json-path source_library/evaluations/eval_trace/system_eval_trace_export.json \
+  --openinference-json-path source_library/evaluations/eval_trace/openinference_traces.json
+```
+
+The command is generated-artifact-only. It reads the local
+`system_eval_trace.sqlite` store and writes both local canonical JSON and an
+OpenInference-shaped trace JSON file. It does not mutate catalog, extraction,
+review, compliance, or promotion artifacts. Export is fail-closed: if the store
+is missing required tables or any source-backed OpenInference span would lose
+source-set ID, review ID, source ref, artifact path, artifact hash, contract
+ID/version, or redaction-policy provenance, the command returns
+`command_succeeded=false` and does not write the export files.
+
+Canonical export schema version: `system-eval-trace-export-v1`
+
+Canonical generated path:
+`source_library/evaluations/eval_trace/system_eval_trace_export.json`
+
+Required canonical fields:
+
+- `schema_version`
+- `store_schema_version`
+- `source`
+- `export_policy`
+- `row_counts`
+- `system_eval_runs`
+- `system_eval_cases`
+- `system_eval_case_results`
+- `system_eval_scores`
+- `trace_runs`
+- `trace_spans`
+
+`export_policy` records `local_source_of_record=true`,
+`canonical_json_required_before_openinference=true`,
+`redaction_policy="local_unredacted_no_external_export"`, and
+`external_export_approved=false`. The canonical export is the local source of
+record for any later hosted or inspection-oriented export.
+
+OpenInference export schema version: `openinference-traces-export-v1`
+
+OpenInference generated path:
+`source_library/evaluations/eval_trace/openinference_traces.json`
+
+Required OpenInference fields:
+
+- `schema_version`
+- `source`
+- `export_policy`
+- `trace_count`
+- `span_count`
+- `traces`
+
+Each trace has a root span plus child spans derived from `trace_spans`.
+OpenInference span attributes preserve local provenance under `usfs.*`
+attributes, including source-set ID, review ID, origin artifact ref, result
+path, artifact hashes, eval run ID, eval kind, contract ID/version, source
+record IDs when available, citation labels when available, local-source-of-record
+truth, and the redaction policy. Span-kind mapping currently emits `CHAIN`,
+`RETRIEVER`, `EVALUATOR`, `RERANKER`, `EMBEDDING`, `TOOL`, `LLM`, `AGENT`, or
+`GUARDRAIL` from local trace/span kinds.
+
+Summary schema version: `system-eval-trace-export-summary-v1`
+
+Required summary fields:
+
+- `passed`
+- `command_succeeded`
+- `row_counts`
+- `trace_count`
+- `openinference_span_count`
+- `missing_table_count`
+- `missing_provenance_count`
+- `validation_checks`
+
+The 2026-05-29 West Reservoir f70 seed export passed with `18` traces, `36`
+OpenInference-shaped spans, `0` missing tables, and `0` missing provenance
+fields. Milestone 3 still does not enable phase/promotion ratchets or
+trace-to-case promotion.
 
 ## Extraction Fidelity Eval Outputs
 

@@ -115,6 +115,25 @@ def test_eval_trace_store_build_parser_accepts_store_paths() -> None:
     assert args.summary_path == Path("/tmp/usfs-r1-system-eval-trace-summary.json")
 
 
+def test_eval_trace_export_parser_accepts_export_paths() -> None:
+    args = build_parser().parse_args(
+        [
+            "eval-trace-export",
+            "--sqlite-path",
+            "/tmp/usfs-r1-system-eval-trace.sqlite",
+            "--canonical-json-path",
+            "/tmp/usfs-r1-system-eval-trace-export.json",
+            "--openinference-json-path",
+            "/tmp/usfs-r1-openinference-traces.json",
+        ]
+    )
+
+    assert args.command == "eval-trace-export"
+    assert args.sqlite_path == Path("/tmp/usfs-r1-system-eval-trace.sqlite")
+    assert args.canonical_json_path == Path("/tmp/usfs-r1-system-eval-trace-export.json")
+    assert args.openinference_json_path == Path("/tmp/usfs-r1-openinference-traces.json")
+
+
 def test_upstream_eval_parser_accepts_manifest_and_results_dir() -> None:
     args = build_parser().parse_args(
         [
@@ -421,6 +440,42 @@ def test_eval_trace_store_build_handler_propagates_options(monkeypatch) -> None:
         "inventory_path": Path("inventory.json"),
         "sqlite_path": Path("system_eval_trace.sqlite"),
         "summary_path": Path("summary.json"),
+    }
+
+
+def test_eval_trace_export_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_eval_trace_export(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"command_succeeded": True})
+
+    monkeypatch.setattr(
+        cli_eval,
+        "run_eval_trace_export",
+        fake_run_eval_trace_export,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "eval-trace-export",
+            "--sqlite-path",
+            "system_eval_trace.sqlite",
+            "--canonical-json-path",
+            "system_eval_trace_export.json",
+            "--openinference-json-path",
+            "openinference_traces.json",
+        ]
+    )
+
+    result = cli_eval.handle_eval_command(args, parser)
+
+    assert result == 0
+    assert captured == {
+        "sqlite_path": Path("system_eval_trace.sqlite"),
+        "canonical_json_path": Path("system_eval_trace_export.json"),
+        "openinference_json_path": Path("openinference_traces.json"),
     }
 
 

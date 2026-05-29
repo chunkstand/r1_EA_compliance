@@ -18,13 +18,13 @@ history below.
   first-class eval trace packet; open
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md` and
   `config/eval_trace_inventory_contract_v1.json` for the resolved contract;
-  use the Milestone 2 West Reservoir f70 store output shape as the seed input
-  for Milestone 3 export work
+  use the Milestone 3 West Reservoir f70 export output shape as the seed input
+  for Milestone 4 phase/promotion gate integration
 - latest resolved packet:
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 2
-- active packet:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 3
-  canonical/OpenInference eval trace export
+- active packet:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 4
+  phase/promotion eval trace gate integration
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - active forest-specific example packet:
@@ -50,14 +50,16 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  First-class eval trace Milestone 2 is resolved locally. The implemented
+  First-class eval trace Milestone 3 is resolved locally. The implemented
   contract and inventory surfaces are `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`,
   `config/eval_trace_inventory_contract_v1.json`,
   `src/usfs_r1_ea_sources/eval_trace_contract.py`,
   `src/usfs_r1_ea_sources/eval_trace_inventory.py`,
   `src/usfs_r1_ea_sources/eval_trace_store.py`,
-  `tests/test_eval_trace_contract.py`, and
-  `tests/test_eval_trace_inventory.py`, and `tests/test_eval_trace_store.py`.
+  `src/usfs_r1_ea_sources/eval_trace_export.py`,
+  `tests/test_eval_trace_contract.py`, `tests/test_eval_trace_inventory.py`,
+  `tests/test_eval_trace_store.py`, and
+  `tests/test_eval_trace_export.py`.
   The contract validates canonical objects, enum families, required artifact
   families, required link checks, deterministic-first scorer policy, LLM-judge
   metadata requirements, export preconditions, and the no-global-ratchet
@@ -69,9 +71,12 @@ history below.
   mismatches, and `0` trace-hash mismatches; the seed store build passed with
   `18` rows in each canonical table, `0` orphan rows, `0` duplicate IDs, `0`
   stale artifacts, `0` source artifact deletions, and `0` missing required
-  links. The next implementation slice is Milestone 3: canonical JSON and
-  OpenInference-compatible export. No phase/promotion ratchet or trace-to-case
-  promotion exists yet.
+  links. The `eval-trace-export` CLI now writes local
+  canonical JSON plus OpenInference-shaped spans from the store. The West
+  Reservoir f70 seed export passed with `18` traces, `36` OpenInference-shaped
+  spans, `0` missing tables, and `0` missing provenance fields. The next
+  implementation slice is Milestone 4: optional then ratcheted phase/promotion
+  gate integration. No trace-to-case promotion exists yet.
   Historical West Reservoir checkpoint follows:
   West Reservoir reviewer-readiness Milestone 4 is resolved locally on
   `source-set-f70ea11e04ae3d53`. The plan file is

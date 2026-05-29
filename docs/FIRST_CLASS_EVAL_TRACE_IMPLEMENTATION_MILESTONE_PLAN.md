@@ -5,8 +5,8 @@ Date: 2026-05-28
 Status: Active implementation packet. Milestone 0 contract and baseline
 inventory design is resolved locally; Milestone 1 read-only inventory CLI is
 resolved locally; Milestone 2 local DB-backed eval/trace store is resolved
-locally; Milestone 3 canonical/OpenInference export is the next implementation
-slice.
+locally; Milestone 3 canonical/OpenInference export is resolved locally;
+Milestone 4 phase/promotion gate integration is the next implementation slice.
 
 Owner context: This plan implements the direction captured in
 `docs/FIRST_CLASS_EVALS_AND_TRACES_RESEARCH_BRIEF.md` for this repository. West
@@ -508,8 +508,8 @@ Commit closeout:
 
 ### Milestone 2: Local DB-Backed Eval Trace Store
 
-Outcome label: reduced. The repo gains a DB-backed generic store, but export
-and promotion ratchets are not yet complete.
+Outcome label: reduced. At Milestone 2 closeout the repo gained a DB-backed
+generic store, while export and promotion ratchets remained later slices.
 
 Status: Resolved locally on 2026-05-29. `eval_trace_store.py` and the
 `eval-trace-store-build` CLI now rebuild the generated local SQLite store from
@@ -517,7 +517,8 @@ inventory JSON. The West Reservoir f70 seed build passed with `18` rows in each
 canonical table, `0` orphan rows, `0` duplicate IDs, `0` stale artifacts, `0`
 source artifact deletions, and `0` missing required links. Canonical JSON,
 OpenInference exports, phase/promotion ratchets, and trace-to-case promotion
-remain future milestones.
+remained future milestones at that checkpoint; the newer Milestone 3 section
+below now records local canonical/OpenInference export readiness.
 
 Implementation:
 
@@ -566,6 +567,13 @@ Commit closeout:
 
 Outcome label: reduced. Export exists, but production-style online scoring and
 hosted integrations remain out of scope.
+
+Status: Resolved locally on 2026-05-29. `eval_trace_export.py` and the
+`eval-trace-export` CLI now export canonical local JSON and OpenInference-shaped
+span trees from the local SQLite store. The West Reservoir f70 seed export
+passed with `18` traces, `36` OpenInference-shaped spans, `0` missing tables,
+and `0` missing provenance fields. Phase/promotion ratchets and trace-to-case
+promotion remain future milestones.
 
 Implementation:
 

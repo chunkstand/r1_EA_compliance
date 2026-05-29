@@ -15,6 +15,39 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## First-Class Eval Trace Export Milestone 3 Resolved Locally
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 3 is
+  resolved locally. The system now exports the local eval/trace store as both
+  canonical JSON and OpenInference-shaped span trees.
+- owner surfaces:
+  `src/usfs_r1_ea_sources/eval_trace_export.py`,
+  `src/usfs_r1_ea_sources/cli_eval.py`, `tests/test_eval_trace_export.py`,
+  `tests/test_cli_eval.py`, `docs/OUTPUT_SCHEMAS.md`,
+  `docs/EVALUATION_COVERAGE_REGISTER.md`, `docs/ARCHITECTURE.md`, and
+  `docs/architecture_contract.toml`.
+- export truth:
+  `eval-trace-export` reads `system_eval_trace.sqlite` and writes
+  `system_eval_trace_export.json` plus `openinference_traces.json`. The command
+  preserves local source-set ID, review ID, source refs, artifact refs and
+  hashes, contract ID/version, source-record IDs when present, citation labels
+  when present, local-source-of-record truth, and the local unredacted
+  no-external-export redaction policy.
+- West Reservoir seed export:
+  `eval-trace-export --sqlite-path /tmp/usfs-r1-system-eval-trace.sqlite
+  --canonical-json-path /tmp/usfs-r1-system-eval-trace-export.json
+  --openinference-json-path /tmp/usfs-r1-openinference-traces.json` passed with
+  `18` traces, `36` OpenInference-shaped spans, `0` missing tables, and `0`
+  missing provenance fields.
+- ratchet/export state:
+  canonical and OpenInference-shaped local exports now exist as generated
+  artifacts. Global fail-closed eval-trace ratchets are still not enabled. The
+  next active implementation route is Milestone 4 phase/promotion gate
+  integration.
+
 ## First-Class Eval Trace Store Milestone 2 Resolved Locally
 
 Latest implementation update on 2026-05-29 UTC:
@@ -46,9 +79,9 @@ Latest implementation update on 2026-05-29 UTC:
   canonical table, `0` orphan rows, `0` duplicate IDs, `0` stale artifacts, `0`
   source artifact deletions, and `0` missing required links.
 - ratchet/export state:
-  global fail-closed eval-trace ratchets are still not enabled. Canonical JSON
-  and OpenInference-compatible exports do not exist yet, so Milestone 3 is the
-  next active implementation route.
+  global fail-closed eval-trace ratchets are still not enabled. The newer
+  Milestone 3 section above now records canonical/OpenInference export
+  readiness; the next route is Milestone 4 phase/promotion gate integration.
 
 ## First-Class Eval Trace Inventory Milestone 1 Resolved Locally
 

@@ -2,10 +2,10 @@
 
 Date: 2026-05-28
 
-Status: Milestone 0 contract, Milestone 1 read-only inventory CLI, and
-Milestone 2 local SQLite store are implemented locally. Canonical exports,
-OpenInference exports, phase/promotion ratchets, and trace-to-case promotion
-are still future milestones.
+Status: Milestone 0 contract, Milestone 1 read-only inventory CLI, Milestone 2
+local SQLite store, and Milestone 3 canonical/OpenInference export are
+implemented locally. Phase/promotion ratchets and trace-to-case promotion are
+still future milestones.
 
 Owner surfaces:
 
@@ -13,9 +13,11 @@ Owner surfaces:
 - Validation helper: `src/usfs_r1_ea_sources/eval_trace_contract.py`
 - Inventory helper: `src/usfs_r1_ea_sources/eval_trace_inventory.py`
 - Store helper: `src/usfs_r1_ea_sources/eval_trace_store.py`
+- Export helper: `src/usfs_r1_ea_sources/eval_trace_export.py`
 - Contract tests: `tests/test_eval_trace_contract.py`
 - Inventory tests: `tests/test_eval_trace_inventory.py`
 - Store tests: `tests/test_eval_trace_store.py`
+- Export tests: `tests/test_eval_trace_export.py`
 - Implementation plan:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`
 
@@ -134,8 +136,9 @@ schema before it can satisfy a gate.
 
 Canonical JSON export must exist before any OpenInference-shaped export can
 pass. OpenInference compatibility is an interop target, not the durable source
-of record. The default redaction policy is local, unredacted, and not approved
-for external export.
+of record. Milestone 3 implements both exports from the local SQLite store. The
+default redaction policy is local, unredacted, and not approved for external
+export.
 
 Required local provenance, when available, includes:
 
@@ -147,6 +150,13 @@ Required local provenance, when available, includes:
 - trace hash
 - scorer/contract hash
 
+`eval-trace-export` fails closed if required store tables are missing or if a
+source-backed OpenInference span would lose source-set ID, review ID, source
+ref, artifact path, artifact hashes, contract ID/version, local-source-of-record
+truth, or redaction policy. The West Reservoir f70 seed export on 2026-05-29
+passed with `18` traces, `36` OpenInference-shaped spans, `0` missing tables,
+and `0` missing provenance fields.
+
 ## Ratchet Contract
 
 Milestone 0 forbids global fail-closed ratchets. The tracked config must not set
@@ -155,8 +165,9 @@ Milestone 0 forbids global fail-closed ratchets. The tracked config must not set
 The first seed candidate is West Reservoir on
 `source-set-f70ea11e04ae3d53`; Milestone 1 now inventories that seed
 successfully and Milestone 2 now builds a green local store from that inventory.
-It is still not a fail-closed ratchet until a later milestone explicitly
-enables the scope in the tracked contract.
+Milestone 3 now exports that store locally. It is still not a fail-closed
+ratchet until a later milestone explicitly enables the scope in the tracked
+contract.
 
 ## Stop Conditions
 

@@ -4,10 +4,10 @@ Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved packet:
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 2
-- Active packet:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 3
-  canonical/OpenInference eval trace export
+- Active packet:
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 4
+  phase/promotion eval trace gate integration
 - Latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
@@ -28,7 +28,7 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- First-class eval trace Milestone 2 is resolved locally. The tracked contract
+- First-class eval trace Milestone 3 is resolved locally. The tracked contract
   lives in `config/eval_trace_inventory_contract_v1.json`; the contract doc is
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`; and
   `src/usfs_r1_ea_sources/eval_trace_contract.py` validates the canonical
@@ -45,10 +45,15 @@ Use this file as the short current route before opening the append-only docs.
   SQLite store from inventory JSON. The West Reservoir f70 seed store passed
   with `18` rows in each canonical table, `0` orphan rows, `0` duplicate IDs,
   `0` stale artifacts, `0` source artifact deletions, and `0` missing required
-  links. The next active implementation slice is Milestone 3 in
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`: canonical
-  JSON and OpenInference-compatible export. No phase/promotion ratchet or
-  trace-to-case promotion exists yet.
+  links. The `eval-trace-export` CLI now
+  lives in `src/usfs_r1_ea_sources/eval_trace_export.py` and writes local
+  canonical JSON plus OpenInference-shaped spans from the store. The West
+  Reservoir f70 seed export passed with `18` traces, `36` exported spans, `0`
+  missing tables, and `0` missing provenance fields. The next active
+  implementation slice is Milestone 4 in
+  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`: optional then
+  ratcheted phase/promotion gate integration. No trace-to-case promotion exists
+  yet.
 - Resolved West Reservoir predecessor context: reviewer-readiness Milestone 4 is resolved locally on
   `source-set-f70ea11e04ae3d53`. West Reservoir-owned decision-support and
   final-QA configs/fixtures now drive the signer-facing packet artifacts;
