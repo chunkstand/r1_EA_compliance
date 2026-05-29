@@ -55,6 +55,11 @@ They are intentionally not duplicated here.
   `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`;
   its Milestone 4 promotion is reduced only by inherited ECID source-delta
   component-coverage drift, not by the Beaverhead-owned slots.
+  For Idaho Panhandle National Forests, Lacy Lemoosh is the active candidate
+  packet in
+  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, but
+  `idaho-panhandle-nfs` remains `profile_eval_guidance_only` until the
+  package-authority, reviewer-stack, and promotion gates pass.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

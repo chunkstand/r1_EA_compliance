@@ -42,6 +42,20 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
+- The active forest-specific example packet is
+  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
+  For Idaho Panhandle National Forests work, use review ID
+  `region1-example-idaho-panhandle-lacy-lemoosh-60853`, forest unit
+  `idaho-panhandle-nfs`, the official project page
+  `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853`, and Pinyon/Box
+  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265`
+  as the selected candidate authority. This is not a governed primary example
+  yet: `config/forest_specific_example_package_registry_v1.json` keeps
+  `idaho-panhandle-nfs` at `profile_eval_guidance_only` with
+  `primary_example_id=null` until package authority, reviewer-stack, and
+  promotion gates pass. Keep Lacy Lemoosh parallel to
+  `Document_Register_Master`; it is not a generic Region 1 example and must
+  not be reused for non-Idaho-Panhandle forests.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
   through Milestone 4 in
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.

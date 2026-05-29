@@ -24,9 +24,9 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
     assert len(set(forest_ids)) == 10
     assert registry["summary"] == {
         "forest_unit_count": 10,
-        "profile_guidance_only_count": 5,
-        "review_example_count": 6,
-        "reviewer_ready_example_count": 6,
+        "profile_guidance_only_count": 4,
+        "review_example_count": 7,
+        "reviewer_ready_example_count": 7,
         "typed_blocked_example_count": 0,
     }
 
@@ -244,6 +244,35 @@ def test_registry_promotes_bitterroot_front_as_primary_example() -> None:
     assert for_007["blocker_packet_reference"] == (
         "docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
     )
+
+
+def test_registry_routes_idaho_panhandle_lacy_lemoosh_as_active_candidate_without_promotion() -> None:
+    registry = _load_json(REGISTRY_PATH)
+    coverage_manifest = _load_json(REAL_PACKAGE_COVERAGE_PATH)
+
+    forest_row = next(
+        row
+        for row in registry["forest_routing"]
+        if row["forest_unit_id"] == "idaho-panhandle-nfs"
+    )
+    active_example_ids = {row["example_id"] for row in registry["review_examples"]}
+    coverage_slot_ids = {slot["slot_id"] for slot in coverage_manifest["slots"]}
+
+    assert forest_row["routing_status"] == "profile_eval_guidance_only"
+    assert forest_row["primary_example_id"] is None
+    assert forest_row["supplemental_example_ids"] == []
+    assert forest_row["queue_boundary_source_ids"] == []
+    assert "Lacy Lemoosh is the selected active Idaho Panhandle" in (
+        forest_row["guidance_note"]
+    )
+    assert "profile-eval floor" in forest_row["guidance_note"]
+    assert "ipnf-lacy-lemoosh-forest-specific" not in active_example_ids
+    assert "ipnf-lacy-lemoosh-forest-specific" not in coverage_slot_ids
+    assert (
+        ROOT
+        / "docs"
+        / "IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
+    ).exists()
 
 
 def test_agent_start_here_names_bitterroot_front_as_latest_resolved_example() -> None:

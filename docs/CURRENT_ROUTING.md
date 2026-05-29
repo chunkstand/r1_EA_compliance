@@ -13,9 +13,9 @@ Use this file as the short current route before opening the append-only docs.
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
-  none; the Beaverhead-Deerlodge South Tobacco Roots packet is resolved locally
-  through Milestone 4 registry and coverage promotion, reduced only by inherited
-  ECID source-delta component-coverage drift
+  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  Milestone 1 package-authority intake; Milestone 0 resolved the packet opening
+  and froze the Idaho Panhandle candidate identity without registry promotion
 - Latest resolved forest-specific example packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -40,6 +40,27 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
+- Idaho Panhandle Lacy Lemoosh is the active forest-specific example packet.
+  The packet is
+  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`;
+  the planned review identity is
+  `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
+  `forest_unit_id="idaho-panhandle-nfs"` and planned
+  `example_id="ipnf-lacy-lemoosh-forest-specific"`. The official project page
+  is `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853`; the selected
+  Pinyon/Box root is
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265`.
+  Live readback on 2026-05-29 identifies project `60853` as `Completed`, with
+  expected analysis type `Environmental Assessment`, lead management unit
+  `St. Maries Ranger District`, decision signed date `2025-05-22`, and Box
+  root label `Lacy Lemoosh (60853)`. The Box root currently exposes
+  `Decision`, `Final EA`, `Draft EA`, and `Scoping` folders with `186` listed
+  files and `555,066,969` bytes at the top level. Milestone 0 does not add a
+  review example or coverage slot: `idaho-panhandle-nfs` remains
+  `profile_eval_guidance_only`, with `primary_example_id=null`, until package
+  authority, reviewer-stack, and promotion gates pass. Keep Lacy Lemoosh
+  parallel to `Document_Register_Master`; do not route unrelated Idaho
+  Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
   locally through Milestone 4 registry and coverage promotion. The packet is
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`;

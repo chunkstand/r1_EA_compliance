@@ -15,6 +15,40 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Idaho Panhandle Lacy Lemoosh Packet Opened Locally
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
+  resolved locally through Milestone 0 as the active Idaho Panhandle
+  forest-specific example packet. The planned review identity is
+  `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
+  `forest_unit_id="idaho-panhandle-nfs"` and planned
+  `example_id="ipnf-lacy-lemoosh-forest-specific"`.
+- package boundary:
+  live Forest Service project-page readback identifies Lacy Lemoosh project
+  `60853` as `Completed`, expected analysis type `Environmental Assessment`,
+  lead management unit `St. Maries Ranger District`, decision signed date
+  `2025-05-22`, and forest `Idaho Panhandle National Forest`. The selected
+  authorities are the official project page
+  `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853` and Pinyon/Box
+  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265`.
+  Live Box readback identifies root folder `Lacy Lemoosh (60853)` under
+  `Idaho Panhandle National Forest (110104)` >
+  `St Maries Ranger District (11010404)`, with top-level folders `Decision`
+  (`2` files), `Final EA` (`135` files), `Draft EA` (`34` files), and
+  `Scoping` (`15` files), totaling `186` listed files and `555,066,969` bytes
+  at this level.
+- promotion boundary:
+  this is an opening packet only. `config/forest_specific_example_package_registry_v1.json`
+  still routes `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
+  `primary_example_id=null`; `config/v1_real_package_review_coverage_v1.json`
+  has no Lacy Lemoosh slot. The next slice is Milestone 1 package-authority
+  intake. Do not add Lacy Lemoosh package files to `Document_Register_Master`,
+  and do not reroute unrelated Idaho Panhandle queue rows such as `FOR-020` or
+  `FOR-022` into this packet.
+
 ## Beaverhead-Deerlodge South Tobacco Roots Milestone 4 Reduced Locally
 
 Latest implementation update on 2026-05-29 UTC:
