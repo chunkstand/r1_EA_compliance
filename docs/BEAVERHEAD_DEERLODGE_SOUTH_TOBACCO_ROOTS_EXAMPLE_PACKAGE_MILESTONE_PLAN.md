@@ -1,295 +1,111 @@
 # Beaverhead-Deerlodge South Tobacco Roots Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Resolved locally through Milestone 3 component adjudication and reviewer-stack replay.
-Package authority, base `ea-review`, review-local component inventory, forest scope,
-component adjudication, applicability adjudication, generated rule pack, compliance review, V1
-eval, component eval, and review `phase-eval` are green. Registry and coverage promotion remain
-future Milestone 4 work. This 2026-05-29 revision tightens the future-promotion contract only; it
-does not promote Beaverhead-Deerlodge or change registry state.
+Status: Resolved locally through Milestone 3; Milestone 4 promotion is future work.
 Plan class: implementation
 High-risk implementation: yes
-Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+Owner context: follow-on to `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 Intent lock: `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"` is only
-for Beaverhead-Deerlodge National Forest South Tobacco Roots package work. It is not a Custer
-Gallatin, HLC, Bitterroot, Lolo, Flathead, or generic Region 1 substitute.
+for Beaverhead-Deerlodge National Forest South Tobacco Roots package work. It is not a generic
+Region 1 example and not reusable for Custer Gallatin, HLC, Bitterroot, Lolo, or Flathead.
 
 ## Purpose
 
-Open the governed Beaverhead-Deerlodge National Forest example-package lane around the
-user-selected South Tobacco Roots Vegetation Management Project package without contaminating
-`Document_Register_Master` or claiming reviewer-ready status before deterministic gates pass.
+Keep the South Tobacco Roots Vegetation Management Project as a governed Beaverhead-Deerlodge
+forest-specific example lane while preventing premature registry or coverage promotion.
 
-Selected package authority:
+Package identity:
 
 - project page: `https://www.fs.usda.gov/r01/beaverhead-deerlodge/projects/63754`
-- project title: `South Tobacco Roots Vegetation Management Project`
-- project ID: `63754`
-- public Pinyon/Box folder: `https://usfs-public.app.box.com/v/PinyonPublic/folder/199281418011`
-- Box root folder label: `South Tobacco Roots Vegetation Management Project (63754)`
-- forest: `beaverhead-deerlodge-nf`
-- ranger district: `Madison Ranger District`
-- expected analysis type: `Environmental Assessment`
-- selected package folder: `Final EA and FONSI`
-- frozen review ID: `region1-example-beaverhead-deerlodge-south-tobacco-roots-63754`
+- Pinyon/Box folder: `https://usfs-public.app.box.com/v/PinyonPublic/folder/199281418011`
+- project ID/title: `63754`, `South Tobacco Roots Vegetation Management Project`
+- selected folder: `Final EA and FONSI`
+- forest unit: `beaverhead-deerlodge-nf`
+- planned example/coverage slot: `bdnf-south-tobacco-roots-forest-specific`
 
 ## Intent Hierarchy
 
-- Invariant: South Tobacco Roots remains a forest-specific Beaverhead-Deerlodge example package,
-  not a generic Region 1 example and not a master-register source-capture input.
-- Optimization target: prove replayable local package authority and resolver readiness first, then
-  move to component adjudication and reviewer-stack gates only if evidence remains deterministic.
-- Acceptable tradeoffs: a reduced checkpoint is better than premature registry promotion when
-  component findings or eval artifacts are incomplete.
-- Explicit non-negotiables: do not weaken tests, evals, component gates, or registry thresholds to
-  get a green result; do not stage ignored `source_library/` bytes.
-
-## Intent Lock
-
-The planned governed identity is:
-
-- `example_id="bdnf-south-tobacco-roots-forest-specific"`
-- `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`
-- `forest_unit_id="beaverhead-deerlodge-nf"`
-- `applicable_forest_unit_ids=["beaverhead-deerlodge-nf"]`
-- `coverage_slot_id="bdnf-south-tobacco-roots-forest-specific"`
-- `coverage_class_id="forest_specific_reviewer_ready"`
-- `queue_lineage_source_ids=[]` unless a later workbook-backed South Tobacco Roots queue row is
-  found
-
-Beaverhead-Deerlodge remains `profile_eval_guidance_only` in
-`config/forest_specific_example_package_registry_v1.json` until South Tobacco Roots passes
-package authority, replay context, forest-plan component adjudication, compliance, V1 eval,
-phase eval, and review-scope promotion gates.
+- Invariant: South Tobacco Roots stays parallel to `Document_Register_Master`; it is package
+  replay evidence, not master-register source capture.
+- Optimization target: keep Milestone 3 reviewer-ready evidence replayable while leaving registry
+  state truthful.
+- Acceptable tradeoff: close Milestone 4 as `reduced` if only the inherited ECID component-coverage
+  slot remains red and the Beaverhead slot passes.
+- Non-negotiables: do not weaken tests, evals, adjudication gates, registry thresholds, or
+  component-coverage requirements to make promotion pass.
 
 ## Current Evidence
 
-- `config/forest_specific_example_package_registry_v1.json` still routes
-  `beaverhead-deerlodge-nf` as `profile_eval_guidance_only` with no primary or supplemental real
-  package example.
-- `config/v1_real_package_review_coverage_v1.json`,
-  `config/forest_plan_component_eval_coverage_v1.json`, and the registry `review_examples` array
-  do not yet contain `bdnf-south-tobacco-roots-forest-specific` or this review ID. That absence is
-  intentional until Milestone 4 executes.
-- Current aggregate coverage state before Milestone 4 is: real-package coverage has `6` required
-  slots, forest-specific example coverage has `6` reviewer-ready examples across `5` governed
-  forests, and component coverage has `7` required review IDs with a known inherited ECID
-  source-delta blocker outside this packet.
-- The official Box root has been inventoried and downloaded under ignored local evidence at
-  `source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/`.
-- `box_inventory.json` records root folder `199281418011`, root label
-  `South Tobacco Roots Vegetation Management Project (63754)`, folder `Final EA and FONSI`,
-  `16` visible files, and `176,594,060` expected bytes.
-- `box_import_manifest.json` records `16` downloaded files, `176,594,060` actual bytes, and
-  `failure_count=0`.
-- `ea-review` on the full package passed with `16/16` extracted files, `1,382` package chunks,
-  `package_failed_count=0`, `finding_status_counts={"pass":5}`, `validation_passed=true`, and
-  `reviewer_ready=true`.
-- Beaverhead-Deerlodge single-forest component inventory was built as review-local generated
-  evidence with `90` components, `89` standards, `coverage_passed=true`, and
-  `component_source_accuracy_passed=true`.
-- Beaverhead-Deerlodge profile terms now include South Tobacco Root aliases for the
-  `Tobacco Root Landscape`, and the resolver ignores the Helena-Lewis and Clark comparison phrase
-  in this package as external background evidence rather than project-location scope.
-- `forest-plan-resolve` now reports `scope_status="beaverhead_deerlodge_nf"`,
+- Registry state: `beaverhead-deerlodge-nf` remains `profile_eval_guidance_only` in
+  `config/forest_specific_example_package_registry_v1.json`.
+- No promotion slot exists yet in `config/v1_real_package_review_coverage_v1.json`,
+  `config/forest_plan_component_eval_coverage_v1.json`, or registry `review_examples[]`.
+- Local ignored intake under
+  `source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/`
+  has `16` files, `176,594,060` bytes, and `failure_count=0`.
+- `ea-review` passes with `16/16` extracted files, `1,382` package chunks, and
+  `validation_passed=true`.
+- Review-local Beaverhead component inventory has `90` components and `89` standards.
+- `forest-plan-resolve` reports `scope_status="beaverhead_deerlodge_nf"`,
   `validation_passed=true`, `geographic_area_count=2`, `management_area_count=3`,
-  `overlay_count=2`, `project_location_signal_count=3`, `unresolved_mention_count=0`, and
-  `supporting_plan_evidence_count=6`.
-- Retrieval readiness is green for the Beaverhead-Deerlodge source records required by the
-  selected plan routes on `source-set-f70ea11e04ae3d53`.
-- Component adjudication is tracked at
-  `config/forest_plan_component_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
-  and resolves all `60/60` current reviewer-resolution items as system misses with
-  `disposition_counts={"evidence_linking_miss":60}`, `pending_adjudication_count=0`, and
-  `adjudication_expectation_match_rate=1.0`.
-- The applicability replay validates `156` candidate authorities with `52` applicable authorities,
-  `104` not-applicable authorities, `0` unresolved authorities, and a generated `52`-rule pack at
-  `source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/applicability/generated_rule_pack.json`.
-- Applicability adjudication is tracked at
-  `config/applicability_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
-  and resolves the three positive/negative trigger conflicts as `human_applicable`.
-- `compliance-review` passes with `52` findings, `32` pass findings, `18` uncertain findings,
-  `2` gap findings, matrix JSON/Markdown/PDF artifacts present, and `reviewer_ready=true`.
-- The V1 eval contract at
-  `config/v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json` passes with `26`
-  conditional expectations, `contract_status="reviewer_ready"`, `forest_plan_passed=true`, and
-  `broader_ea_passed=true`.
-- The component eval contract at
-  `config/forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
-  passes `90/90` cases, covers all `89` applicable standards, and records the reviewed
-  `60` open raw queue states plus `30` closed supported states.
-- Review `phase-eval` passes `28/28` with `blockers=[]`, `reviewer_ready=true`,
-  `declared_review_contract=false`, and `contract_backed_promotion_ready=false` because this
-  packet has not yet added Milestone 4 registry or coverage slots.
+  `overlay_count=2`, and `unresolved_mention_count=0`.
+- Component adjudication resolves `60/60` reviewer-resolution items as
+  `evidence_linking_miss` with `0` pending items.
+- Applicability adjudication resolves `3/3` trigger conflicts; validation reports `52`
+  applicable authorities, `104` not-applicable authorities, and `0` unresolved authorities.
+- Generated rule-pack validation passes with `52` rules; `compliance-review`, V1 eval, component
+  eval, and review `phase-eval` pass. `phase-eval` reports `28/28`, `blockers=[]`,
+  `declared_review_contract=false`, and `contract_backed_promotion_ready=false`.
 
 ## Goal
 
-Maintain the governed South Tobacco Roots example package lane for Beaverhead-Deerlodge, keep the
-resolved Milestone 3 reviewer-stack evidence separate from promotion state, and give a future
-Milestone 4 implementer exact registry and coverage gates for promoting the package only when the
-aggregate contracts support it.
+Maintain the resolved Milestone 3 replay checkpoint and provide a compact, executable Milestone 4
+promotion contract without changing promotion state in this packet.
 
 ## Non-Goals
 
-- Do not add South Tobacco Roots package files or project-specific rows to `Document_Register_Master`.
-- Do not promote Beaverhead-Deerlodge in the forest-specific registry, real-package coverage, or
-  component-coverage manifests until reviewer-stack gates pass.
-- Do not raise aggregate coverage counts, distinct-forest metrics, or required-review thresholds
-  without adding the matching Beaverhead-Deerlodge slots and rerunning their evals.
-- Do not overwrite shared f70 component inventory to support this package; use review-local
-  generated evidence unless a later shared-inventory milestone owns that change.
-- Do not weaken forest-plan resolver validation, real-package coverage thresholds, component
-  adjudication evals, or profile eval tests to get green.
-- Do not stage ignored `source_library/` package bytes or generated review outputs unless repo
-  policy changes explicitly.
+- Do not add South Tobacco Roots rows or files to `Document_Register_Master`.
+- Do not promote Beaverhead-Deerlodge in registry, real-package coverage, component coverage, or
+  queue ledger before Milestone 4.
+- Do not overwrite shared f70 component inventory; keep package-specific component evidence
+  review-local unless a separate milestone owns a shared update.
+- Do not stage ignored `source_library/` package bytes or generated review outputs.
 
 ## Scope
 
-- Beaverhead-Deerlodge South Tobacco Roots package boundary and review identity
-- local ignored package-authority intake and generated review evidence
-- tracked replay context for the selected package
-- Beaverhead-Deerlodge profile aliases and resolver external-comparison guard needed to make the
-  official package preflight deterministic
-- docs and handoff routing to this active packet
-- focused tests preserving the no-promotion boundary
+- In scope: packet identity, replay context, tracked eval/adjudication contracts, Beaverhead
+  profile/resolver guards, docs routing, and future promotion gates.
+- Out of scope: unrelated Beaverhead projects, workbook source-register promotion, global
+  component-inventory promotion, and non-Beaverhead aggregate blockers.
 
-## Out Of Scope
-
-- unrelated Beaverhead-Deerlodge projects
-- unrelated profile-only forests
-- workbook source-register promotion
-- global component-inventory promotion
-- registry threshold ratchets before South Tobacco Roots is reviewer-ready
-
-## Owner Surfaces
+## Owner Surfaces And Placement
 
 - packet: `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - replay context:
   `config/replay_contexts/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
-- tracked reviewer-stack contracts:
+- contracts:
   `config/v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json`,
   `config/forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`,
   `config/applicability_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`,
   `config/forest_plan_component_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`
-- forest-specific umbrella: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
-- profile terms: `config/forest_plan_profiles.json`
-- resolver scope guard: `src/usfs_r1_ea_sources/forest_plan_resolver_location.py`
-- generated local intake:
-  `source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/`
-- generated local review outputs:
-  `source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/`
-- future promotion manifests, when allowed:
-  `config/forest_specific_example_package_registry_v1.json`,
+- profile/resolver: `config/forest_plan_profiles.json`,
+  `src/usfs_r1_ea_sources/forest_plan_resolver_location.py`
+- future promotion manifests:
   `config/v1_real_package_review_coverage_v1.json`,
+  `config/forest_specific_example_package_registry_v1.json`,
   `config/forest_plan_component_eval_coverage_v1.json`
-- docs:
-  `README.md`, `docs/AGENT_START_HERE.md`, `docs/CURRENT_ROUTING.md`,
-  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`
-- tests:
-  `tests/test_replay_context.py`, `tests/test_forest_plan_profiles.py`,
-  `tests/test_forest_plan_resolver_profiles.py`,
-  `tests/support/compliance_component_fixtures.py`,
-  `tests/test_beaverhead_south_tobacco_contracts.py`,
-  `tests/test_real_package_review_coverage_eval.py`,
-  `tests/test_forest_specific_example_package_eval.py`,
-  `tests/test_forest_plan_component_eval_coverage.py`
+- docs: `README.md`, `docs/AGENT_START_HERE.md`, `docs/CURRENT_ROUTING.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, umbrella packet
 
-## Placement Rules
+## Weak-Point Prevention
 
-- Freeze the review slug as
-  `region1-example-beaverhead-deerlodge-south-tobacco-roots-63754`.
-- Keep Beaverhead-Deerlodge identifiers forest-qualified; do not use a generic
-  `region1-example-south-tobacco-roots` review ID.
-- Use `source-set-f70ea11e04ae3d53` and the repo-root current catalog for the tracked replay
-  context.
-- Keep the full Box root as package-authority evidence unless a later milestone proves a narrower
-  replay package is required.
-- Keep generated package bytes and review outputs under ignored `source_library/` paths.
-- Keep Beaverhead-Deerlodge registry status as `profile_eval_guidance_only` until reviewer-ready
-  promotion gates pass.
-
-## Weak-Point Prevention Contract
-
-### Weak Point 1
-
-Weak point forecast: South Tobacco Roots is promoted from URL/package authority alone or from the
-Milestone 3 `phase-eval` result without updating every aggregate contract.
-
-- Owner surface: `config/forest_specific_example_package_registry_v1.json`,
-  `config/v1_real_package_review_coverage_v1.json`
-- Prevention gate: component adjudication eval, V1 eval, compliance review, component eval,
-  phase eval, real-package coverage eval, forest-specific example-package eval, and component
-  coverage slot readback
-- Fail threshold: Beaverhead-Deerlodge gets a primary example, review example, required
-  real-package slot, or component-coverage slot before reviewer-stack gates pass and before
-  aggregate thresholds are coherently updated
-- Controlled violation: registry and coverage evals must fail if a future change adds the slot
-  without matching reviewer-ready artifacts
-- Future-Codex misuse scenario: a future session sees `ea-review` green and promotes the package;
-  this packet records that Milestone 2 is reduced while component adjudication remains missing
-
-### Weak Point 2
-
-Weak point forecast: external Helena-Lewis and Clark comparison text is treated as project scope.
-
-- Owner surface: `src/usfs_r1_ea_sources/forest_plan_resolver_location.py` and
-  `tests/test_forest_plan_resolver_profiles.py`
-- Prevention gate: focused resolver profile regression for South Tobacco Roots comparison context
-- Fail threshold: resolver reports `multiple_forest_units_mentioned` or resolves HLC as project
-  location for this Beaverhead-Deerlodge package
-- Controlled violation: the regression fixture includes an HLC comparison sentence and must still
-  pass with `scope_status="beaverhead_deerlodge_nf"`
-- Future-Codex misuse scenario: a future rule treats every forest name as project-location
-  evidence and makes Beaverhead packages ambiguous again
-
-### Weak Point 3
-
-Weak point forecast: component scope is mistaken for reviewer-ready component compliance.
-
-- Owner surface: `forest_plan_context_summary.json`, tracked component adjudication, and tracked
-  component eval contract
-- Prevention gate: forest-plan resolver validation plus
-  `forest-plan-component-adjudication-eval` before promotion
-- Fail threshold: `reviewer_ready=false`, `adjudication_eval_missing`, unresolved component queue
-  items, or applicable-standard coverage failure remains
-- Controlled violation: Milestone 2 preserved the typed reduced result with `60` reviewer
-  resolution items instead of weakening the eval; Milestone 3 closes those items through tracked
-  adjudication rather than by deleting the queue
-- Future-Codex misuse scenario: a future session reads `scope_status="beaverhead_deerlodge_nf"` and
-  skips the component adjudication packet
-
-### Weak Point 4
-
-Weak point forecast: South Tobacco Roots package intake contaminates the shared master register.
-
-- Owner surface: active workbook, `Document_Register_Master`, source-register queue ledger, and
-  downloader/catalog docs
-- Prevention gate: workbook/queue search and queue audit before any source-register change
-- Fail threshold: package documents are added as master-promotion rows without a governed
-  workbook/source-register packet
-- Controlled violation: queue tests must fail if a non-workbook South Tobacco Roots URL is treated
-  as canonical promotion input
-- Future-Codex misuse scenario: a later session treats the Box package as downloader input; this
-  packet keeps project-package intake parallel to the master source register
-
-### Weak Point 5
-
-Weak point forecast: Milestone 4 promotion is declared blocked by the inherited ECID
-source-delta component-coverage slot, or declared green while the Beaverhead component slot is
-missing.
-
-- Owner surface: `config/forest_plan_component_eval_coverage_v1.json` and
-  `source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`
-- Prevention gate: component-coverage readback must distinguish the Beaverhead slot from the
-  inherited `v1-cg-ecid-source-delta-review` slot
-- Fail threshold: the Beaverhead slot is absent, stale, source-set mismatched, or not covered; the
-  known inherited ECID slot may keep the standalone aggregate red only if the Beaverhead slot itself
-  passes
-- Controlled violation: future Milestone 4 may close as `reduced` if component coverage remains
-  red solely for the inherited ECID slot, but it must stop if Beaverhead contributes any failure
-- Future-Codex misuse scenario: a future session treats an aggregate red result as a Beaverhead
-  failure without inspecting slot-level `failure_reasons`, or ignores a missing Beaverhead slot
-  because the review-scope gates were green
+| Weak point | Owner surface | Prevention gate | Fail threshold |
+| --- | --- | --- | --- |
+| URL-only promotion | Registry and real-package coverage manifests | V1 eval, component eval/adjudication, compliance review, phase eval, aggregate evals | Any Beaverhead primary example or required slot appears before matching reviewer-ready artifacts |
+| Cross-forest scope | Resolver profile code and fixtures | Resolver regression for HLC comparison/background text | Resolver leaves `beaverhead_deerlodge_nf` or treats comparison text as project scope |
+| Component scope mistaken for compliance closure | Component adjudication and component eval contracts | Component adjudication eval plus component eval | Pending adjudication, applicable-standard miss, or reviewer-ready false state remains |
+| Shared master contamination | Workbook, queue ledger, downloader/catalog docs | Workbook/queue audit before source-register edits | Package docs become master-promotion rows without a governed workbook packet |
+| Aggregate false green/red | Component-coverage manifest and result artifact | Slot-level component-coverage readback | Beaverhead slot missing/stale/mismatched, or ECID inherited failure is reported as Beaverhead-owned |
 
 ## Milestone Sequence
 
@@ -297,134 +113,71 @@ missing.
 
 Outcome label: `resolved`
 
-1. Read current routing, handoff, forest-specific umbrella, registry, and real-package coverage
-   manifests.
-2. Freeze the South Tobacco Roots review identity and selected official project/documents URLs.
-3. Verify Beaverhead-Deerlodge still has no active real-package slot.
-4. Stop as `blocked` if another tracked packet already owns this same review ID.
+Freeze review ID, forest ID, official project/Box URLs, and no-promotion status. Stop if another
+tracked packet owns the same review ID.
 
 ### Milestone 1 - Local Package Authority Intake
 
 Outcome label: `resolved`
 
-Local result: resolved. The Box root was inventoried and downloaded with hashes. The package has
-`16` files, `176,594,060` bytes, and `0` download failures. `ea-review` extracted `16/16` files
-and passed validation.
-
-1. Inventory the official Box root folder and record folder tree, file names, sizes, source folder
-   URLs, and Box IDs.
-2. Download visible package documents while preserving folder structure.
-3. Hash every local file and record expected vs actual byte counts.
-4. Build the first package cache through `ea-review`.
-5. Stop as `reduced` if any official documents cannot be inventoried or downloaded completely.
+Inventory/download the official Box package, preserve hashes and byte counts, and run `ea-review`.
+Local result: `16` files, `176,594,060` bytes, zero download failures, and package review green.
 
 ### Milestone 2 - Forest-Plan Resolver Preflight
 
 Outcome label: `reduced`
 
-Local result: reduced at original checkpoint. Beaverhead-Deerlodge scope, Tobacco Root landscape
-evidence, source-record retrieval, and review-local component inventory were resolved while
-component adjudication remained open. This checkpoint is now superseded by the resolved Milestone 3
-replay below.
-
-1. Build a review-local Beaverhead-Deerlodge component inventory from the current f70 chunks.
-2. Add the narrow South Tobacco Root aliases needed for profile fixture and real-package matching.
-3. Add a resolver regression for HLC comparison/background text.
-4. Run `forest-plan-resolve` with `--forest-unit-id beaverhead-deerlodge-nf` and the review-local
-   component inventory.
-5. Preserve `reduced` if component adjudication or applicable-standard coverage remains open.
+Build review-local Beaverhead component inventory, add narrow South Tobacco Root profile aliases,
+guard HLC comparison text, and run `forest-plan-resolve`. This checkpoint was reduced because
+component adjudication still remained, then superseded by Milestone 3.
 
 ### Milestone 3 - Component Adjudication And Reviewer Stack Replay
 
 Outcome label: `resolved`
 
-Local result: resolved. Component adjudication, applicability adjudication, generated rule-pack
-validation, compliance review, V1 eval, component eval, and review `phase-eval` pass locally. The
-review remains outside registry and coverage manifests until Milestone 4 promotion.
-
-1. Create tracked component adjudication for the `60` reviewer-resolution items.
-2. Run `forest-plan-component-adjudication-eval` until `pending_adjudication_count=0` and no
-   failure categories remain.
-3. Replay applicability, generated rule pack, compliance review, V1 eval, component eval, and
-   review `phase-eval`.
-4. Stop as `reduced` if any reviewer-stack command fails with a typed blocker.
+Track component and applicability adjudications, rerun forest-plan resolution, generated rule-pack
+validation, compliance review, V1 eval, component eval, and review `phase-eval`. Local result:
+all review-scope gates pass; registry and coverage remain unpromoted.
 
 ### Milestone 4 - Registry And Coverage Promotion
 
-Planned outcome label: `resolved` if Beaverhead-Deerlodge promotion and all Beaverhead-owned
-aggregate slots pass; `reduced` only if the standalone component-coverage aggregate remains red
-solely on the inherited ECID source-delta slot while the Beaverhead slot is present, covered,
-source-set aligned, and passing.
+Planned outcome label: `resolved` if Beaverhead promotion and all Beaverhead-owned aggregate slots
+pass; `reduced` only if the standalone component-coverage aggregate remains red solely on the
+inherited ECID source-delta slot.
 
-1. Confirm Milestone 3 is still green with `reviewer_ready=true`,
-   `phase-eval` `blockers=[]`, and current Box/package inventory counts still matching
-   `16` files and `176,594,060` bytes.
-2. Add a `config/v1_real_package_review_coverage_v1.json` slot with:
-   `slot_id="bdnf-south-tobacco-roots-forest-specific"`,
-   `coverage_class_id="forest_specific_reviewer_ready"`,
-   `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`,
-   `forest_unit_id="beaverhead-deerlodge-nf"`,
-   `eval_file="v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json"`,
-   `expected_contract_status="reviewer_ready"`, `required=true`, and official project/Box
-   authority plus replay-context paths.
-3. Add a registry `review_examples[]` entry with
-   `example_id="bdnf-south-tobacco-roots-forest-specific"`, the frozen review ID,
-   `applicable_forest_unit_ids=["beaverhead-deerlodge-nf"]`, `queue_lineage_source_ids=[]`, and
-   the standard agent-read artifact families. Change only the Beaverhead-Deerlodge
-   `forest_routing[]` row to `routing_status="real_package_examples_available"` with
-   `primary_example_id="bdnf-south-tobacco-roots-forest-specific"`.
-4. Add a component-coverage slot with
-   `slot_id="bdnf-south-tobacco-roots-forest-specific"`, this review ID,
-   `forest_unit_id="beaverhead-deerlodge-nf"`,
-   `expected_source_set_id="source-set-f70ea11e04ae3d53"`, and
-   `eval_file="forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json"`.
-5. Update manifest summaries and thresholds coherently for the new governed forest:
-   real-package `required_slot_count` and `reviewer_ready_slot_count_min` should advance from `6`
-   to `7`; registry `review_example_count_min` and `reviewer_ready_example_count_min` should
-   advance from `6` to `7`; registry `distinct_governed_example_forest_count_min` should advance
-   from `5` to `6`; registry `profile_guidance_only_count_max` should fall from `5` to `4`;
-   component coverage `required_review_count` should advance from `7` to `8` and
-   `distinct_forest_count_min` from `5` to `6`, unless the implementation records a narrower
-   explicitly verified threshold rationale in the same commit.
-6. Rerun real-package coverage eval, forest-specific example-package eval, component-coverage eval,
-   and review `phase-eval`.
-7. Update `README.md`, `docs/AGENT_START_HERE.md`, `docs/CURRENT_ROUTING.md`,
-   `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and the forest-specific umbrella
-   packet to the post-promotion truth.
-8. Stop if any Beaverhead-owned slot is absent, stale, source-set mismatched, unsupported by review
-   artifacts, or if aggregate thresholds are lowered to make the promotion pass.
+Preconditions:
+
+- Milestone 3 still passes with `reviewer_ready=true` and `phase-eval` `blockers=[]`.
+- Local package inventory still matches `16` files and `176,594,060` bytes.
+
+Required mutations:
+
+- Add real-package slot `bdnf-south-tobacco-roots-forest-specific` for the frozen review ID,
+  `forest_specific_reviewer_ready`, expected `reviewer_ready`, official authority URLs, replay
+  context, and `v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json`.
+- Add registry `review_examples[]` entry and set only the Beaverhead routing row to
+  `real_package_examples_available` with primary example
+  `bdnf-south-tobacco-roots-forest-specific`.
+- Add component-coverage slot for the frozen review ID with
+  `expected_source_set_id="source-set-f70ea11e04ae3d53"` and eval file
+  `forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json`.
+- Update thresholds coherently: real-package required/reviewer-ready slots `6 -> 7`; registry
+  review/reviewer-ready examples `6 -> 7`; governed example forests `5 -> 6`; guidance-only max
+  `5 -> 4`; component required reviews `7 -> 8`; component distinct forests `5 -> 6`, unless the
+  implementation records an explicitly verified narrower rationale.
 
 ## Verification Gates
 
-Executed for the Milestones 1-2 package and resolver preflight:
-
-```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources ea-review --package-path source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --docling-timeout-seconds 180
-PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/component_inventory_build --source-set-id source-set-f70ea11e04ae3d53 --source-record-id FOR-002 --forest-unit-id beaverhead-deerlodge-nf --plan-version 2009 --chunks-path source_library/derived/source-set-f70ea11e04ae3d53/chunks/chunks.jsonl
-PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --forest-unit-id beaverhead-deerlodge-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json --reuse-package-cache --docling-timeout-seconds 180
-```
-
-Executed for the Milestone 3 reviewer-stack replay:
+Milestone 3 replay gates:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --adjudication-file config/forest_plan_component_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json
-PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --forest-unit-id beaverhead-deerlodge-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json --reuse-package-cache --docling-timeout-seconds 180
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-authority-universe --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53 --forest-unit-id beaverhead-deerlodge-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-context-build --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53 --package-path source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-retrieve --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-determine --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53 --adjudication-file config/applicability_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-adjudication-apply --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53 --adjudication-file config/applicability_adjudications/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-validate --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53
-PYTHONPATH=src python -m usfs_r1_ea_sources compliance-review --package-path source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --forest-unit-id beaverhead-deerlodge-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json --rule-pack source_library/reviews/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/applicability/generated_rule_pack.json --reuse-package-cache --docling-timeout-seconds 180
 PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --eval-file config/v1_beaverhead_deerlodge_south_tobacco_roots_real_ea_eval.json
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --eval-file config/forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json
-PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754 --source-set-id source-set-f70ea11e04ae3d53 --validate-only
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754
 ```
 
-Required for future Milestone 4 promotion:
+Milestone 4 promotion gates:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json
@@ -433,105 +186,56 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage 
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-beaverhead-deerlodge-south-tobacco-roots-63754
 ```
 
-Required before local commit:
+Plan/commit gates:
 
 ```bash
 python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --new-plan docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md --strict
-PYTHONPATH=src uv run --extra dev pytest tests/test_replay_context.py tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver_profiles.py -k 'beaverhead or south_tobacco or replay_context'
-PYTHONPATH=src uv run --extra dev pytest tests/test_beaverhead_south_tobacco_contracts.py
-PYTHONPATH=src uv run --extra dev pytest tests/test_architecture_contract.py
-PYTHONPATH=src uv run --extra dev ruff check src tests
-PYTHONPATH=src python -m compileall src
+PYTHONPATH=src uv run --extra dev pytest tests/test_beaverhead_south_tobacco_contracts.py tests/test_real_package_review_coverage_eval.py tests/test_forest_specific_example_package_eval.py tests/test_forest_plan_component_eval_coverage.py
 git diff --check
 ```
 
-Additional focused tests before a Milestone 4 promotion commit:
-
-```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_real_package_review_coverage_eval.py tests/test_forest_specific_example_package_eval.py tests/test_forest_plan_component_eval_coverage.py tests/test_beaverhead_south_tobacco_contracts.py
-```
-
-Pass threshold: focused tests, lint, replay evals, `forest-plan-resolve`, `compliance-review`,
-V1 eval, component eval, and review `phase-eval` pass with `0` blockers for this review ID.
-For Milestone 4, real-package coverage and forest-specific example-package evals must pass, while
-component coverage may close as `reduced` only if the Beaverhead slot passes and the only remaining
-failure is the inherited ECID source-delta slot.
-
 ## Acceptance Criteria
 
-- The tracked replay context loads with review ID
-  `region1-example-beaverhead-deerlodge-south-tobacco-roots-63754`,
-  `forest_unit_id="beaverhead-deerlodge-nf"`, `source-set-f70ea11e04ae3d53`, and
-  `source_library/catalog`.
-- Package authority evidence has `16` files, `176,594,060` expected bytes, `176,594,060` actual
-  bytes, and `failure_count=0`.
-- Forest-plan resolver preflight reaches `scope_status="beaverhead_deerlodge_nf"` and
-  `validation_passed=true`.
-- Component adjudication resolves `60/60` current queue items with `0` pending items and passes
-  `forest-plan-component-adjudication-eval`.
-- Applicability adjudication resolves `3/3` positive/negative trigger conflicts with `0` pending
-  items and the generated rule pack validates with `52` rules.
-- `compliance-review`, V1 eval, forest-plan component eval, and review `phase-eval` pass for the
-  frozen Beaverhead-Deerlodge review ID.
-- Beaverhead-Deerlodge remains `profile_eval_guidance_only`; no registry, real-package coverage,
-  component-coverage, or queue ledger promotion is included until Milestone 4.
-- A future Milestone 4 promotion adds exactly one Beaverhead real-package slot, one registry review
-  example/primary route, and one component-coverage slot for
-  `bdnf-south-tobacco-roots-forest-specific`, with no cross-forest reuse.
-- Verification commands above pass with `0` failures.
+- Replay context binds the frozen review ID to `beaverhead-deerlodge-nf`,
+  `source-set-f70ea11e04ae3d53`, and `source_library/catalog`.
+- Package authority remains `16` files, `176,594,060` expected and actual bytes, and zero failures.
+- Resolver, component adjudication, applicability adjudication, generated rule pack, compliance
+  review, V1 eval, component eval, and review `phase-eval` pass for the frozen review ID.
+- Beaverhead remains `profile_eval_guidance_only` until Milestone 4.
+- Future Milestone 4 adds exactly one Beaverhead real-package slot, registry primary example, and
+  component-coverage slot with no cross-forest reuse.
 
 ## Documentation And Handoff
 
-- Update `docs/CURRENT_ROUTING.md`, `docs/SESSION_HANDOFF.md`, and
-  `docs/CURRENT_SYSTEM_STATE.md` with this Milestone 3 resolved checkpoint.
-- Update `docs/AGENT_START_HERE.md`, `README.md`, and the forest-specific umbrella packet so future
-  agents route Beaverhead-Deerlodge through this active packet without treating it as
-  reviewer-ready.
-- Include the tracked replay context and focused tests in the same closeout commit.
-- If Milestone 4 is executed, update the start-here/current-state/handoff docs and forest-specific
-  umbrella packet in the same commit that changes registry and coverage manifests.
-- Do not copy generated `source_library/` bytes into tracked docs; cite counts and artifact paths
-  instead.
+- Milestone 3 closeout docs must keep Beaverhead unpromoted:
+  `README.md`, `docs/AGENT_START_HERE.md`, `docs/CURRENT_ROUTING.md`,
+  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and umbrella packet.
+- Milestone 4 must update the same docs in the same commit as registry/coverage manifest changes.
+- Cite generated `source_library/` counts and paths only; do not stage generated bytes.
 
 ## Commit Closeout
 
-The milestone is not complete until an atomic local commit records the verified Beaverhead-Deerlodge
-slice. For the resolved Milestone 3 checkpoint, stage only the implementation, tests, replay
-context, packet, and affected docs that support the reviewer-stack result. For a future Milestone 4
-promotion, stage only the registry/coverage manifests, matching tests, packet updates, and
-post-promotion docs. Do not stage unrelated files or ignored generated package bytes. Push only if
-the user explicitly asks for a push.
+Complete-after-commit. Each milestone slice must be verified, docs-aligned, and committed locally
+before it is complete. Stage only the scoped Beaverhead files and push only on explicit request.
 
 ## Stop Conditions
 
-- Stop if package authority cannot be downloaded or byte counts do not match.
-- Stop if forest-plan scope resolves outside `beaverhead-deerlodge-nf` or remains ambiguous after
-  focused profile/context fixes.
-- Stop if a required test or docs lint fails and cannot be fixed in this milestone without
-  weakening a gate.
-- Stop if promotion would require weakening component adjudication, V1 eval, compliance review, or
-  phase-eval gates.
-- Stop if a future Milestone 4 threshold update would reduce coverage strictness or hide a missing
-  Beaverhead slot behind aggregate counts.
+- Package authority counts drift or package download/hash evidence fails.
+- Scope resolves outside `beaverhead-deerlodge-nf` or becomes ambiguous.
+- Any required gate fails and fixing it would weaken tests, evals, thresholds, or adjudication.
+- Promotion needs broader source-register, shared-inventory, or non-Beaverhead aggregate work.
+- Milestone 4 threshold math hides a missing or failing Beaverhead slot.
 
 ## Residual Risks And Next Routing
 
-- Next route: Milestone 4 registry and coverage promotion for
-  `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"` if the user wants
-  Beaverhead-Deerlodge promoted from guidance-only to governed example coverage.
-- Residual risk: the `60` raw component findings remain raw queue rows in the generated component
-  artifacts, but the tracked adjudication eval classifies all current queue rows as system
-  evidence-linking misses and V1/phase eval treat that as reviewer-ready closure.
-- Residual risk: aggregate component coverage still has inherited non-Beaverhead blockers in other
-  slots; do not route those back into South Tobacco Roots unless the review-scope slot itself is
-  failing after promotion.
-- Residual risk: live project-package contents may change upstream; refresh local Box inventory
-  before any future reviewer-ready promotion if the package authority timestamp becomes stale.
+Next route is Milestone 4 registry and coverage promotion if the user wants Beaverhead-Deerlodge
+promoted from guidance-only. The known non-Beaverhead component-coverage blocker remains inherited
+ECID source-delta drift unless the Beaverhead slot itself fails after promotion.
 
 ## Closeout Outcome Record
 
-- Closeout status: resolved through Milestone 3, verified and committed locally after the required
-  verification gate passes.
-- Final commit hash: the atomic closeout commit that contains this packet; report the hash in the
-  final closeout response.
-- Next owner: future Milestone 4 registry and coverage promotion milestone.
+- Milestone 3 outcome: `resolved` locally and committed before this compact-plan revision.
+- This revision outcome: docs-only plan compression; no registry, coverage, or generated evidence
+  state changed.
+- Future Milestone 4 outcome must record pass/fail commands, failed or skipped gates, residual
+  risks, and the local commit hash in its closeout response.
