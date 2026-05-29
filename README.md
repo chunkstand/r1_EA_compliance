@@ -62,7 +62,9 @@ They are intentionally not duplicated here.
   package-authority intake and reduced forest-plan preflight. The tracked
   replay context is
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`;
-  resolver scope now resolves to `idaho_panhandle_nfs`, but promotion is
+  resolver scope now resolves to `idaho_panhandle_nfs` from package-local
+  `St. Joe Ranger District` evidence, while `St. Maries Ranger District`
+  remains the project-page/Box authority label. Promotion is
   blocked by missing FEIS source records, area/overlay vocabulary, and
   component adjudication. Do not promote the package until source-delta,
   reviewer-stack, and promotion gates pass.

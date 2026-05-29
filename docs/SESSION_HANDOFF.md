@@ -87,7 +87,10 @@ history below.
   slice still does not promote Idaho Panhandle. Milestone 2 reconciled profile
   source IDs to active catalog IDs, added the package-backed `St. Joe Ranger
   District` scope term, and built a review-local component inventory with `52`
-  components and `8` standards. `forest-plan-resolve` now reports
+  components and `8` standards in local commit `a1574b3`. Treat
+  `St. Maries Ranger District` as the project-page/Box authority label and
+  `St. Joe Ranger District` as package-local resolver scope evidence.
+  `forest-plan-resolve` now reports
   `scope_status="idaho_panhandle_nfs"`, `unresolved_mention_count=0`,
   `project_location_signal_count=1`, component evaluation
   `reviewer_ready=true`, and overall `validation_passed=false`. The named

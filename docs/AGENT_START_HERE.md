@@ -57,7 +57,9 @@ The planner:
   builds a review-local inventory with `52` components and `8` standards, but
   remains reduced on missing FEIS source records `R1PLAN-idaho-panhandle-nfs-04`
   and `-05`, absent area/overlay vocabulary, and missing component
-  adjudication. This is not a governed primary example yet:
+  adjudication. Preserve `St. Maries Ranger District` as the authority label
+  and `St. Joe Ranger District` as resolver scope evidence. This is not a
+  governed primary example yet:
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` at `profile_eval_guidance_only` with
   `primary_example_id=null` until source-delta, component adjudication,

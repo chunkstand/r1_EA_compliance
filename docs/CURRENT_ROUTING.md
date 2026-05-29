@@ -70,7 +70,9 @@ Use this file as the short current route before opening the append-only docs.
   `config/r1_forest_plan_identity_reconciliation_v1.json`, added the
   package-backed `St. Joe Ranger District` scope term, built a review-local
   component inventory with `52` components and `8` standards, and reran
-  `forest-plan-resolve`. The resolver now reports
+  `forest-plan-resolve` in local commit `a1574b3`. Treat `St. Maries Ranger
+  District` as the project-page/Box authority label and `St. Joe Ranger
+  District` as package-local resolver scope evidence. The resolver now reports
   `scope_status="idaho_panhandle_nfs"`, `unresolved_mention_count=0`,
   `project_location_signal_count=1`, and component evaluation
   `reviewer_ready=true`, but overall validation is reduced because

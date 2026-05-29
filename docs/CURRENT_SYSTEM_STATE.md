@@ -65,7 +65,9 @@ Latest implementation update on 2026-05-29 UTC:
   has no Lacy Lemoosh slot. Milestone 2 reconciled Idaho profile source IDs to
   active catalog IDs, added package-backed `St. Joe Ranger District` resolver
   vocabulary, and built a review-local component inventory with `52`
-  components and `8` standards. `forest-plan-resolve` now reports
+  components and `8` standards in local commit `a1574b3`. `St. Maries Ranger
+  District` remains only the project-page/Box authority label; `St. Joe Ranger
+  District` is the package-local resolver scope evidence. `forest-plan-resolve` now reports
   `scope_status="idaho_panhandle_nfs"`, `unresolved_mention_count=0`,
   `project_location_signal_count=1`, component evaluation
   `reviewer_ready=true`, and overall `validation_passed=false`.
