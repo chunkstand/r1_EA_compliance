@@ -98,6 +98,50 @@ class TrackingForestPlanProfileResolverTests(unittest.TestCase):
                     self.assertFalse(result.summary["reviewer_ready"])
                     self.assertFalse(result.summary["validation_passed"])
 
+    def test_hlc_profile_resolves_bonanza_castles_area_evidence(self) -> None:
+        forest_unit_id = "helena-lewis-and-clark-nf"
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id, component_inventory_path = build_tracking_profile_source_library(
+                output_dir,
+                forest_unit_id=forest_unit_id,
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Helena-Lewis and Clark National Forest.",
+                        "It is on the White Sulphur Springs Ranger District.",
+                        "The project area is in the Castles Geographic Area.",
+                        (
+                            "The environmental assessment references aquatic habitat "
+                            "connectivity and riparian resources."
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id=forest_unit_id,
+                source_set_id=source_set_id,
+                review_id="hlc-bonanza-castles-area-positive",
+                component_inventory_path=component_inventory_path,
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "helena_lewis_and_clark_nf")
+            self.assertEqual(
+                [entry["name"] for entry in context["project_location_signals"]],
+                ["White Sulphur Springs Ranger District"],
+            )
+            self.assertEqual(
+                [entry["name"] for entry in context["geographic_areas"]],
+                ["Castles Geographic Area"],
+            )
+            self.assertTrue(result.summary["validation_passed"])
+
     def test_tracking_profiles_reject_custer_gallatin_scope_as_hard_negative(self) -> None:
         for forest_unit_id in TRACKING_PROFILE_IDS:
             with self.subTest(forest_unit_id=forest_unit_id):

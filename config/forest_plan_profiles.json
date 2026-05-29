@@ -1901,8 +1901,27 @@
         "biological_assessment",
         "biological_opinion"
       ],
-      "ranger_district_terms": [],
-      "geographic_area_terms": [],
+      "ranger_district_terms": [
+        {
+          "entry_id": "district-white-sulphur-springs",
+          "category": "district",
+          "name": "White Sulphur Springs Ranger District",
+          "aliases": [
+            "White Sulphur Springs RD"
+          ]
+        }
+      ],
+      "geographic_area_terms": [
+        {
+          "entry_id": "geo-castles",
+          "category": "geographic_area",
+          "name": "Castles Geographic Area",
+          "aliases": [
+            "Castles GA",
+            "Castle Mountains"
+          ]
+        }
+      ],
       "management_area_terms": [],
       "overlay_terms": [],
       "plan_component_types": [

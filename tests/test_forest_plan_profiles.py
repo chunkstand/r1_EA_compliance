@@ -354,6 +354,32 @@ class ForestPlanProfileTests(unittest.TestCase):
             [entry.name for entry in profile.overlay_terms],
         )
 
+    def test_hlc_profile_has_bonanza_castles_context_terms(self) -> None:
+        profile = load_forest_plan_profile("helena-lewis-and-clark-nf")
+
+        self.assertEqual(
+            profile.active_plan_source_record_id,
+            "R1PLAN-helena-lewis-and-clark-nf-02",
+        )
+        self.assertIn(
+            "White Sulphur Springs Ranger District",
+            [entry.name for entry in profile.ranger_district_terms],
+        )
+        self.assertIn(
+            "Castles Geographic Area",
+            [entry.name for entry in profile.geographic_area_terms],
+        )
+        castles = next(
+            entry
+            for entry in profile.geographic_area_terms
+            if entry.entry_id == "geo-castles"
+        )
+        self.assertEqual(
+            castles.source_record_id,
+            "R1PLAN-helena-lewis-and-clark-nf-02",
+        )
+        self.assertIn("Castle Mountains", castles.aliases)
+
     def test_profiles_cover_all_tracked_region1_readiness_units(self) -> None:
         profiles = load_forest_plan_profiles()
         readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))

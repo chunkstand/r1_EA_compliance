@@ -41,12 +41,18 @@ Use this file as the short current route before opening the append-only docs.
   `ea-review` on the full package passes with `47/47` files extracted,
   `2,227` package chunks, `package_failed_count=0`, and
   `validation_passed=true`. HLC single-forest component inventory builds with
-  `258` components and `28` standards. `forest-plan-resolve` resolves
-  `scope_status="helena_lewis_and_clark_nf"` and all required HLC source
-  records are indexed on `source-set-f70ea11e04ae3d53`, but the resolver is
-  not reviewer-ready yet: it fails closed on missing component adjudication and
-  unresolved area evidence. Do not add Bonanza to registry or real-package
-  coverage surfaces until the reviewer-stack replay gates pass.
+  `258` components and `28` standards. HLC profile context terms now include
+  `White Sulphur Springs Ranger District` and `Castles Geographic Area`.
+  Component adjudication is tracked at
+  `config/forest_plan_component_adjudications/region1-example-helena-lewis-and-clark-bonanza-66532.json`
+  and passes with `178/178` resolved items, `0` pending items,
+  `132` applicability false positives, and `46` evidence-linking misses.
+  `forest-plan-resolve` now reports `scope_status="helena_lewis_and_clark_nf"`,
+  `geographic_area_count=1`, `validation_passed=true`, and
+  `reviewer_ready=true`. Review `phase-eval` remains reduced on missing
+  downstream applicability, generated rule-pack, and compliance review
+  artifacts. Do not add Bonanza to registry or real-package coverage surfaces
+  until the reviewer-stack replay gates pass.
 - First-class eval trace Milestones 0-5 are resolved locally. The tracked contract
   lives in `config/eval_trace_inventory_contract_v1.json`; the contract doc is
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`; and

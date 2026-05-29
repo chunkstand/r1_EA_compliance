@@ -61,12 +61,20 @@ history below.
   failures. `ea-review` passes on the full package with `47/47` extracted
   files, `2,227` package chunks, and `validation_passed=true`. HLC
   single-forest component inventory builds as review-local generated evidence
-  with `258` components and `28` standards. `forest-plan-resolve` resolves
-  `scope_status="helena_lewis_and_clark_nf"` and all required HLC source
-  records are indexed on f70, but the review is not reviewer-ready because
-  component adjudication is missing and area evidence is unresolved. Keep
-  `helena-lewis-and-clark-nf` at `profile_eval_guidance_only` until the
-  reviewer-stack replay and aggregate promotion gates pass.
+  with `258` components and `28` standards. HLC profile context terms now
+  include `White Sulphur Springs Ranger District` and `Castles Geographic Area`.
+  The tracked component adjudication at
+  `config/forest_plan_component_adjudications/region1-example-helena-lewis-and-clark-bonanza-66532.json`
+  passes with `178/178` resolved queue items, `0` pending items,
+  `132` applicability false positives, and `46` evidence-linking misses.
+  `forest-plan-resolve` now reports `scope_status="helena_lewis_and_clark_nf"`,
+  `geographic_area_count=1`, `project_location_signal_count=1`,
+  `validation_passed=true`, and `reviewer_ready=true`. Review `phase-eval`
+  remains reduced with `19/27` phases passed; the remaining blockers are
+  missing applicability artifacts, generated rule-pack artifacts, and compliance
+  review matrix/PDF artifacts. Keep `helena-lewis-and-clark-nf` at
+  `profile_eval_guidance_only` until the full reviewer-stack replay and
+  aggregate promotion gates pass.
   Repo-root catalog currentness is corrected: `source_library/catalog/` now
   names `source-set-f70ea11e04ae3d53` as the current source-set. The tracked
   pointer is `config/current_source_set_v1.json`; the root manifest reports

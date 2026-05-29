@@ -120,7 +120,16 @@ def build_tracking_profile_source_library(
         source_record_id = profile.source_record_id_for_role(role)
         title = f"{profile.forest_unit_names[0]} {role.replace('_', ' ')}"
         if source_record_id == profile.active_plan_source_record_id:
-            text = f"{profile.forest_unit_names[0]} land management plan. {_TRACKING_COMPONENT_TEXT}"
+            context_terms = _profile_context_source_text(profile)
+            text = " ".join(
+                part
+                for part in (
+                    f"{profile.forest_unit_names[0]} land management plan.",
+                    _TRACKING_COMPONENT_TEXT,
+                    context_terms,
+                )
+                if part
+            )
             document_role = "forest_plan"
         else:
             text = f"{profile.forest_unit_names[0]} {role.replace('_', ' ')} supporting source."
@@ -198,6 +207,19 @@ def _write_tracking_component_inventory(
         ],
     }
     inventory_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _profile_context_source_text(profile: ForestPlanProfile) -> str:
+    terms = [
+        entry.name
+        for entries in (
+            profile.geographic_area_terms,
+            profile.management_area_terms,
+            profile.overlay_terms,
+        )
+        for entry in entries
+    ]
+    return " ".join(terms)
 
 
 def tracking_fixture_records() -> list[dict]:

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 from pathlib import Path
 import json
 import tempfile
@@ -20,6 +21,12 @@ COMMITTED_ADJUDICATION = (
     / "config"
     / "forest_plan_component_adjudications"
     / "region1-expansion-south-plateau-landscape-treatment.json"
+)
+HLC_BONANZA_ADJUDICATION = (
+    REPO_ROOT
+    / "config"
+    / "forest_plan_component_adjudications"
+    / "region1-example-helena-lewis-and-clark-bonanza-66532.json"
 )
 
 
@@ -319,6 +326,44 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
         self.assertEqual(len(items), 34)
         self.assertTrue(all(item["disposition"] == "applicability_false_positive" for item in items))
         self.assertTrue(all(item["source_type"] == "package_scope_review" for item in items))
+
+    def test_committed_hlc_bonanza_adjudication_tracks_resolved_queue(self) -> None:
+        adjudication = _read_json(HLC_BONANZA_ADJUDICATION)
+
+        self.assertEqual(adjudication["schema_version"], "forest-plan-component-adjudication-v0")
+        self.assertEqual(
+            adjudication["review_id"],
+            "region1-example-helena-lewis-and-clark-bonanza-66532",
+        )
+        self.assertEqual(
+            adjudication["source_set_id"],
+            "source-set-f70ea11e04ae3d53",
+        )
+        self.assertEqual(
+            adjudication["adjudication_id"],
+            "region1-example-helena-lewis-and-clark-bonanza-66532-component-adjudication",
+        )
+        self.assertEqual(adjudication["adjudication"]["status"], "completed")
+        self.assertEqual(
+            adjudication["adjudication"]["method"],
+            "forest_plan_consistency_worksheet_replay",
+        )
+
+        items = adjudication["items"]
+        self.assertEqual(len(items), 178)
+        self.assertEqual(
+            Counter(item["disposition"] for item in items),
+            Counter({"applicability_false_positive": 132, "evidence_linking_miss": 46}),
+        )
+        self.assertTrue(all(item["package_evidence_refs"] for item in items))
+        self.assertTrue(all(item["plan_source_evidence_refs"] for item in items))
+
+        standard_items = [item for item in items if item["component_type"] == "standard"]
+        self.assertEqual(len(standard_items), 15)
+        self.assertEqual(
+            Counter(item["disposition"] for item in standard_items),
+            Counter({"applicability_false_positive": 9, "evidence_linking_miss": 6}),
+        )
 
 
 def _write_review_artifacts(root: Path) -> Path:

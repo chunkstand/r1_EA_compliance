@@ -15,7 +15,7 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## HLC Bonanza Example Package Opened
+## HLC Bonanza Forest-Plan Preflight Resolved
 
 Latest implementation update on 2026-05-29 UTC:
 
@@ -38,12 +38,22 @@ Latest implementation update on 2026-05-29 UTC:
   `validation_passed=true`. HLC component inventory was built as review-local
   ignored evidence with `258` components, `28` standards,
   `coverage_passed=true`, and `component_source_accuracy_passed=true`.
+- forest-plan preflight truth:
+  HLC profile context terms now include `White Sulphur Springs Ranger District`
+  and `Castles Geographic Area`. The tracked component adjudication at
+  `config/forest_plan_component_adjudications/region1-example-helena-lewis-and-clark-bonanza-66532.json`
+  passes with `178/178` resolved queue items, `0` pending items,
+  `132` applicability false positives, `46` evidence-linking misses, and no
+  failure categories. `forest-plan-resolve` now reports
+  `scope_status="helena_lewis_and_clark_nf"`, `geographic_area_count=1`,
+  `project_location_signal_count=1`, `validation_passed=true`, and
+  `reviewer_ready=true`.
 - blocker truth:
-  `forest-plan-resolve` resolves `scope_status="helena_lewis_and_clark_nf"`
-  and HLC source-record retrieval is ready on f70, but the review is not
-  reviewer-ready. The current blockers are missing component adjudication
-  (`adjudication_eval_missing`) and unresolved area evidence
-  (`geographic_area_count=0`, `management_area_count=0`, `overlay_count=0`).
+  review `phase-eval` remains reduced with `19/27` phases passed. The remaining
+  blockers are missing downstream applicability artifacts
+  (`authority_universe`, `package_fact_graph`, retrieval/graph traces,
+  determination, and validation), missing generated rule-pack artifacts, and
+  missing compliance review matrix/PDF artifacts.
 - routing truth:
   `helena-lewis-and-clark-nf` remains `profile_eval_guidance_only` in
   `config/forest_specific_example_package_registry_v1.json`; Bonanza must not

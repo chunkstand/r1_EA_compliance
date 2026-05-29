@@ -1,7 +1,11 @@
 # HLC Bonanza Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Active packet (`Milestone 0` opening and `Milestone 1` package-authority intake resolved locally; `Milestone 2` forest-plan resolver preflight reduced to HLC component adjudication plus resolved-area evidence; do not promote Bonanza into the registry or real-package coverage manifests until the reviewer stack gates pass)
+Status: Active packet (`Milestone 0` opening, `Milestone 1` package-authority intake, and
+`Milestone 2` forest-plan resolver preflight resolved locally; `Milestone 3` reviewer-stack replay
+is reduced to missing applicability, rule-pack, compliance, V1-eval, and component-eval contracts;
+do not promote Bonanza into the registry or real-package coverage manifests until the full reviewer
+stack gates pass)
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
@@ -45,8 +49,10 @@ HLC must remain `profile_eval_guidance_only` in `config/forest_specific_example_
 - `box_import_manifest.json` records `47` downloaded files, `65,761,583` actual bytes, and `failure_count=0`.
 - `ea-review` on the full Bonanza package passed with `47/47` extracted files, `2,227` package chunks, `package_failed_count=0`, `finding_status_counts={"pass":5}`, `validation_passed=true`, and `reviewer_ready=true`.
 - HLC single-forest component inventory was built under the review output tree with `258` components, `28` standards, `coverage_passed=true`, and `component_source_accuracy_passed=true`.
-- `forest-plan-resolve` on the full package resolves `scope_status="helena_lewis_and_clark_nf"` and retrieval readiness is green with all required HLC source records indexed on `source-set-f70ea11e04ae3d53`.
-- `forest-plan-resolve` is not reviewer-ready yet. It fails closed on missing component adjudication (`adjudication_eval_missing`) and a resolved-area validation check with `geographic_area_count=0`, `management_area_count=0`, and `overlay_count=0`.
+- HLC profile context terms now include `White Sulphur Springs Ranger District` and `Castles Geographic Area`, so Bonanza area evidence resolves without weakening forest-plan validation.
+- `forest-plan-component-adjudication-eval` passes for the tracked Bonanza adjudication with `178/178` resolved items, `0` pending items, `disposition_counts={"applicability_false_positive":132,"evidence_linking_miss":46}`, and `failure_category_counts={}`.
+- `forest-plan-resolve` on the full package now resolves `scope_status="helena_lewis_and_clark_nf"`, `geographic_area_count=1`, `project_location_signal_count=1`, `validation_passed=true`, and `reviewer_ready=true`; retrieval readiness is green with all required HLC source records indexed on `source-set-f70ea11e04ae3d53`.
+- Review `phase-eval` is still not reviewer-ready. The remaining blockers are missing downstream applicability artifacts (`authority_universe`, `package_fact_graph`, retrieval/graph traces, determinations, validation), missing generated rule-pack artifacts, and missing compliance review matrix/PDF artifacts.
 
 ## Goal
 
@@ -93,7 +99,9 @@ Create a governed Bonanza example package lane for HLC, then promote it as the H
 - docs:
   `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`
 - tests:
-  `tests/test_replay_context.py` and `tests/test_forest_specific_example_package_registry.py`
+  `tests/test_replay_context.py`, `tests/test_forest_specific_example_package_registry.py`,
+  `tests/test_forest_plan_profiles.py`, `tests/test_forest_plan_tracking_profile_eval_fixtures.py`,
+  and `tests/test_forest_plan_component_adjudication.py`
 
 ## Placement Rules
 
@@ -172,9 +180,11 @@ Local result: resolved. The Box root was inventoried and downloaded with hashes.
 
 ### Milestone 2 - Forest-Plan Resolver Preflight
 
-Outcome label: `reduced`
+Outcome label: `resolved`
 
-Local result: reduced. HLC scope resolves and source-record retrieval is ready, but reviewer-ready forest-plan evidence is blocked on component adjudication plus resolved-area evidence.
+Local result: resolved. HLC scope resolves, source-record retrieval is ready, Castles area evidence
+resolves from package text, component adjudication eval passes, and `forest-plan-resolve` reports
+`reviewer_ready=true` for the forest-plan resolver preflight.
 
 1. Build a review-local HLC component inventory from `FOR-018`.
 2. Run `forest-plan-resolve` with `--forest-unit-id helena-lewis-and-clark-nf` and the review-local component inventory.
@@ -184,6 +194,11 @@ Local result: reduced. HLC scope resolves and source-record retrieval is ready, 
 ### Milestone 3 - Reviewer Stack Replay
 
 Outcome label: `resolved` if the Bonanza review reaches reviewer-ready status; `reduced` if a named applicability, component, compliance, or eval blocker remains.
+
+Local result: reduced. Component adjudication and area/geography validation are resolved, but the
+downstream reviewer stack has not been generated: `phase-eval` fails on missing applicability,
+generated rule-pack, and compliance review artifacts. Bonanza remains out of registry and coverage
+promotion surfaces.
 
 1. Resolve forest-plan component adjudication for the HLC component queue.
 2. Resolve any area/geography validation issue without weakening resolver checks.
@@ -214,6 +229,18 @@ git diff --check
 
 Expected opening result: `ea-review` passes; component inventory build passes; `forest-plan-resolve` may fail closed until component adjudication and area evidence are resolved.
 
+Current forest-plan preflight closeout:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --adjudication-file config/forest_plan_component_adjudications/region1-example-helena-lewis-and-clark-bonanza-66532.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path source_library/reviews/_intake/region1-example-helena-lewis-and-clark-bonanza-66532 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-helena-lewis-and-clark-bonanza-66532 --forest-unit-id helena-lewis-and-clark-nf --forest-plan-component-inventory-path source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json --reuse-package-cache --docling-timeout-seconds 180
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-helena-lewis-and-clark-bonanza-66532
+```
+
+Expected current result: adjudication eval passes; `forest-plan-resolve` passes with
+`reviewer_ready=true`; `phase-eval` remains reduced until applicability, generated rule-pack, and
+compliance review artifacts exist.
+
 Promotion slice, later:
 
 ```bash
@@ -230,7 +257,8 @@ git diff --check
 - Bonanza has a forest-qualified review ID and replay context on f70.
 - Local ignored package evidence records the full official Box roster, file hashes, and zero failures.
 - HLC remains profile-guidance-only until reviewer-ready gates pass.
-- Forest-plan resolver blockers are recorded as blockers, not hidden by relaxed validation.
+- Forest-plan resolver blockers are closed without relaxed validation, and remaining reviewer-stack
+  blockers are recorded as blockers.
 - Any future promotion updates registry, coverage manifests, eval contracts, docs, handoff, and tests in the same milestone commit.
 
 ## Stop Conditions
@@ -247,4 +275,7 @@ Each completed milestone slice must be committed atomically with tracked impleme
 
 ## Residual Risks And Next Routing
 
-The immediate next milestone is the reviewer-stack replay blocker: resolve HLC component adjudication and the resolver area-evidence failure, then run applicability, compliance, V1 eval, component eval, and phase eval. Registry promotion is a later milestone, not part of the opening slice.
+The immediate next milestone is downstream reviewer-stack replay: generate and validate HLC
+applicability artifacts, generated rule-pack artifacts, compliance review matrix/PDF artifacts, V1
+eval, component eval, and phase eval. Registry promotion is a later milestone, not part of this
+forest-plan preflight slice.
