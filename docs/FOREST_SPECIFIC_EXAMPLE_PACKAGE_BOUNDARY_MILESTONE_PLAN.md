@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo or South Otter unless a verified gate regresses`)
+Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, or HLC unless a verified gate regresses`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -19,8 +19,9 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
     `custer-gallatin-nf`
   - East Crazy as a supplemental reviewer-ready example for
     `custer-gallatin-nf`
-  - West Reservoir as the governed `typed_blocked` example for `flathead-nf`
+  - West Reservoir as the primary reviewer-ready example for `flathead-nf`
   - Tyler's Kitchen as the primary reviewer-ready example for `lolo-nf`
+  - Bonanza as the primary reviewer-ready example for `helena-lewis-and-clark-nf`
 - South Plateau is no longer an active governed example. It is retained only
   under archived manifest surfaces with
   `usage_policy="historical_evidence_only_not_example"` due to litigation and
@@ -35,7 +36,7 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   parent packet's Milestone 3 registry and aggregate threshold ratchet is now
   implemented: `lolo-nf` routes as `real_package_examples_available`, and the
   Lolo slot is load-bearing in real-package coverage.
-- The remaining `7` forests now route through
+- The remaining `6` forests now route through
   `config/region1_forest_plan_profile_eval_coverage_v1.json` as
   `profile_eval_guidance_only` until a governed real package example exists.
 - The South Otter follow-on in
@@ -52,11 +53,11 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   commit is `21eb2fa` (`Promote South Otter supplemental example`).
 - The HLC Bonanza follow-on in
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
-  reviewer-stack replay. Local package authority, package cache, HLC component
+  Milestone 4. Local package authority, package cache, HLC component
   adjudication, area evidence, applicability replay, generated rule pack,
-  compliance review, V1 eval, component eval, and review `phase-eval` now pass,
-  but HLC remains `profile_eval_guidance_only` until Milestone 4 adds registry
-  and aggregate coverage entries and reruns their promotion gates.
+  compliance review, V1 eval, component eval, review `phase-eval`, real-package
+  coverage, and forest-specific registry eval now pass. HLC routes as
+  `real_package_examples_available` with Bonanza as the primary example.
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.
@@ -264,16 +265,16 @@ Current South Otter follow-on:
   Crazy remains the only supplemental active example, South Plateau is
   archived as historical evidence only, and South Otter does not count as a
   new distinct forest.
-- Current aggregate evidence after the South Plateau archive:
-  `real-package-review-coverage-eval` passes with `4` covered required slots,
-  `3` reviewer-ready slots, `1` typed-blocked slot, `3` distinct forests, and
-  `5` package-style tags. `forest-specific-example-package-eval` passes with
-  `4` governed review examples, `3` reviewer-ready examples, `3` distinct
-  governed forests, and `7` profile-guidance-only forests.
-- `forest-plan-component-eval-coverage` still fails as an aggregate on
-  pre-existing non-South Otter ECID source-delta and West Reservoir slots, but
-  the South Otter component slot is required, covered, source-set aligned, and
-  passing.
+- Current aggregate evidence after HLC Bonanza promotion:
+  `real-package-review-coverage-eval` passes with `5` covered required slots,
+  `5` reviewer-ready slots, `0` typed-blocked slots, `4` distinct forests, and
+  `6` package-style tags. `forest-specific-example-package-eval` passes with
+  `5` governed review examples, `5` reviewer-ready examples, `4` distinct
+  governed forests, and `6` profile-guidance-only forests.
+- `forest-plan-component-eval-coverage` still fails as an aggregate on the
+  pre-existing ECID source-delta slot, but the Lolo, South Otter, West
+  Reservoir, and HLC Bonanza component slots are required, covered, source-set
+  aligned, and passing.
 
 ## Milestone Sequence
 
@@ -285,6 +286,7 @@ Current South Otter follow-on:
 | `3` | Lolo registry promotion and threshold ratchet | `resolved` |
 | `4` | South Otter package intake and reviewer-stack replay | `resolved` |
 | `5` | South Otter registry promotion and same-forest threshold guard | `resolved` |
+| `6` | HLC Bonanza package intake through registry and coverage promotion | `resolved` |
 
 ## Acceptance Criteria
 
@@ -295,6 +297,9 @@ Current South Otter follow-on:
 - Lolo remains `real_package_examples_available` only while the parent Lolo
   registry, coverage, queue, and aggregate thresholds continue to pass
   together.
+- HLC remains `real_package_examples_available` only while Bonanza's
+  package-authority, V1 eval, component-eval, review-scope promotion, and
+  registry/coverage slots remain aligned.
 - Negative coverage remains explicit: missing or typed-blocked examples fail or
   route as guidance-only rather than silently becoming reviewer-ready.
 - No tests, eval thresholds, or queue gates are weakened to make a forest appear
@@ -311,6 +316,12 @@ PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage 
 git diff --check
 ```
 
+The standalone `forest-plan-component-eval-coverage` command is still expected
+to fail until the separate ECID source-delta component-coverage blocker is
+repaired. For HLC, the required check is that the Bonanza slot is present,
+covered, source-set aligned, and passing, and that review `phase-eval` consumes
+that review-scope summary successfully.
+
 ## Freshness Check
 
 Before changing registry status, read `docs/CURRENT_ROUTING.md`,
@@ -325,7 +336,8 @@ and forest-specific example-package artifacts before changing any promoted row.
 
 - Stop if registry promotion would require adding example-package rows to
   `Document_Register_Master`.
-- Stop if a governed aggregate gate fails after registry or coverage changes.
+- Stop if a promoted forest's own registry, coverage, or review-scope gate
+  fails after registry or coverage changes.
 - Stop if any forest row would become reviewer-ready without an explicit
   package authority and eval artifact family.
 - Stop if the only way forward is to weaken eval thresholds, skip tests, or

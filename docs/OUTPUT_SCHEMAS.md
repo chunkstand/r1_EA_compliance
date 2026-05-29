@@ -3619,9 +3619,9 @@ fixtures or rerun `compliance-review`. The gate expects these review artifacts:
 When `--review-id` is supplied without `--eval-file`, the command resolves the per-review contract
 from `config/v1_real_package_review_coverage_v1.json`. That tracked manifest currently governs East
 Crazies current promotion, West Reservoir as the Flathead forest-specific reviewer-ready example,
-South Otter, and Lolo Tyler's Kitchen. South Plateau is archived in the manifest and is not an
-active resolver target. If no tracked review slot matches, the command fails closed unless an
-explicit `--eval-file` is provided.
+South Otter, Lolo Tyler's Kitchen, and HLC Bonanza. South Plateau is archived in the manifest and
+is not an active resolver target. If no tracked review slot matches, the command fails closed unless
+an explicit `--eval-file` is provided.
 
 The contract has schema version `v1-ea-real-review-eval-contract-v0` and records:
 
@@ -3733,14 +3733,14 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
   and package-authority validation, ready-versus-blocked lane summary, package-style tags, blocker
   categories, and the underlying V1 eval summary path
 
-The current manifest has four required slots: East Crazies current promotion,
+The current manifest has five required slots: East Crazies current promotion,
 West Reservoir Flathead forest-specific reviewer-ready coverage, South Otter
-forest-specific reviewer-ready coverage, and Lolo Tyler's Kitchen
-forest-specific reviewer-ready coverage. South Plateau is archived as
-historical evidence only. The current aggregate threshold floor is four slots,
-two active coverage classes, three distinct forests, five package styles, four
-reviewer-ready slots, zero typed-blocked slots, and zero package-authority
-gaps.
+forest-specific reviewer-ready coverage, Lolo Tyler's Kitchen
+forest-specific reviewer-ready coverage, and HLC Bonanza forest-specific
+reviewer-ready coverage. South Plateau is archived as historical evidence
+only. The current aggregate threshold floor is five slots, two active coverage
+classes, four distinct forests, six package styles, five reviewer-ready slots,
+zero typed-blocked slots, and zero package-authority gaps.
 
 ## Gold Coverage Eval Outputs
 
@@ -4870,12 +4870,12 @@ records:
 
 The current registry routes `flathead-nf` to West Reservoir,
 `custer-gallatin-nf` to South Otter with East Crazies as a supplemental
-example, and `lolo-nf` to Tyler's Kitchen, all with
-`routing_status="real_package_examples_available"`. `FOR-029` remains the Lolo
-forest-specific example boundary. The aggregate floor is now four governed
-examples, four reviewer-ready examples, three governed example forests, zero
-typed-blocked examples, seven maximum profile-guidance-only forests, and zero
-failed forests.
+example, `lolo-nf` to Tyler's Kitchen, and `helena-lewis-and-clark-nf` to
+Bonanza, all with `routing_status="real_package_examples_available"`.
+`FOR-029` remains the Lolo forest-specific example boundary. The aggregate
+floor is now five governed examples, five reviewer-ready examples, four
+governed example forests, zero typed-blocked examples, six maximum
+profile-guidance-only forests, and zero failed forests.
 
 ## Evidence Retrieval Outputs
 

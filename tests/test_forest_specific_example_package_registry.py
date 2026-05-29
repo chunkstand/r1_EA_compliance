@@ -22,9 +22,9 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
     assert len(set(forest_ids)) == 10
     assert registry["summary"] == {
         "forest_unit_count": 10,
-        "profile_guidance_only_count": 7,
-        "review_example_count": 4,
-        "reviewer_ready_example_count": 4,
+        "profile_guidance_only_count": 6,
+        "review_example_count": 5,
+        "reviewer_ready_example_count": 5,
         "typed_blocked_example_count": 0,
     }
 
@@ -174,7 +174,7 @@ def test_registry_promotes_south_otter_as_custer_gallatin_primary_without_queue_
     assert "58396" not in ledger_source_ids
 
 
-def test_registry_keeps_hlc_profile_guidance_until_bonanza_gates_pass() -> None:
+def test_registry_promotes_hlc_bonanza_as_primary_example_without_queue_row() -> None:
     registry = _load_json(REGISTRY_PATH)
 
     forest_row = next(
@@ -182,15 +182,29 @@ def test_registry_keeps_hlc_profile_guidance_until_bonanza_gates_pass() -> None:
         for row in registry["forest_routing"]
         if row["forest_unit_id"] == "helena-lewis-and-clark-nf"
     )
-    active_example_ids = {row["example_id"] for row in registry["review_examples"]}
+    example_row = next(
+        row
+        for row in registry["review_examples"]
+        if row["example_id"] == "hlc-bonanza-forest-specific"
+    )
 
-    assert forest_row["routing_status"] == "profile_eval_guidance_only"
-    assert forest_row["primary_example_id"] is None
+    assert forest_row["routing_status"] == "real_package_examples_available"
+    assert forest_row["primary_example_id"] == "hlc-bonanza-forest-specific"
     assert forest_row["supplemental_example_ids"] == []
-    assert "No governed Helena-Lewis and Clark real package example exists yet" in (
+    assert "Use the Bonanza package first" in (
         forest_row["guidance_note"]
     )
-    assert "hlc-bonanza-forest-specific" not in active_example_ids
+    assert example_row["review_id"] == (
+        "region1-example-helena-lewis-and-clark-bonanza-66532"
+    )
+    assert example_row["forest_unit_id"] == "helena-lewis-and-clark-nf"
+    assert example_row["applicable_forest_unit_ids"] == [
+        "helena-lewis-and-clark-nf"
+    ]
+    assert example_row["coverage_slot_id"] == "hlc-bonanza-forest-specific"
+    assert example_row["coverage_class_id"] == "forest_specific_reviewer_ready"
+    assert example_row["expected_contract_status"] == "reviewer_ready"
+    assert example_row["queue_lineage_source_ids"] == []
 
 
 def test_registry_archives_south_plateau_as_historical_only() -> None:

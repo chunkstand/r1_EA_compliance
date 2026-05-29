@@ -1,10 +1,10 @@
 # HLC Bonanza Example Package Milestone Plan
 
 Date: 2026-05-29
-Status: Active packet (`Milestone 0` opening, `Milestone 1` package-authority intake,
-`Milestone 2` forest-plan resolver preflight, and `Milestone 3` reviewer-stack replay resolved
-locally; Bonanza remains out of registry and aggregate coverage manifests until the `Milestone 4`
-promotion slice runs and passes its aggregate gates)
+Status: Resolved locally through `Milestone 4` registry and coverage promotion. HLC Bonanza is now
+the governed Helena-Lewis and Clark primary example; the standalone component-coverage aggregate
+still fails only on the inherited ECID source-delta slot, while the Bonanza component slot and
+review-scope promotion gate pass.
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 
 ## Purpose
@@ -38,11 +38,14 @@ The planned governed identity is:
 - `coverage_class_id="forest_specific_reviewer_ready"`
 - `queue_lineage_source_ids=[]` unless a later workbook-backed Bonanza queue row is found
 
-HLC must remain `profile_eval_guidance_only` in `config/forest_specific_example_package_registry_v1.json` until Bonanza passes package authority, replay context, forest-plan component/adjudication, compliance, V1 eval, phase eval, and aggregate coverage gates.
+HLC remained `profile_eval_guidance_only` in `config/forest_specific_example_package_registry_v1.json` until Bonanza passed package authority, replay context, forest-plan component/adjudication, compliance, V1 eval, phase eval, and the HLC review-scope promotion gates.
 
 ## Current Evidence
 
-- `config/forest_specific_example_package_registry_v1.json` currently routes `helena-lewis-and-clark-nf` as `profile_eval_guidance_only` with no `primary_example_id`.
+- `config/forest_specific_example_package_registry_v1.json` now routes `helena-lewis-and-clark-nf` as `real_package_examples_available` with `primary_example_id="hlc-bonanza-forest-specific"`.
+- `config/v1_real_package_review_coverage_v1.json` now has the required Bonanza slot `hlc-bonanza-forest-specific`; `real-package-review-coverage-eval` passes with `covered_slot_count=5`, `reviewer_ready_slot_count=5`, `distinct_forest_count=4`, `distinct_package_style_count=6`, and no threshold failures.
+- `forest-specific-example-package-eval` passes with `review_example_count=5`, `reviewer_ready_example_count=5`, `distinct_governed_example_forest_count=4`, `profile_guidance_only_count=6`, and no threshold failures.
+- `config/forest_plan_component_eval_coverage_v1.json` now includes Bonanza as a required component slot. The standalone aggregate still reports `passed=false` because the inherited `ecid-source-delta-replay` slot is stale/unresolved, but the Bonanza slot passes with `failure_reasons=[]` on `source-set-f70ea11e04ae3d53`.
 - The official Box root has been inventoried and downloaded under ignored local evidence at `source_library/reviews/_intake/region1-example-helena-lewis-and-clark-bonanza-66532/`.
 - `box_inventory.json` records `5` folders, `47` files, and `65,761,583` expected bytes.
 - `box_import_manifest.json` records `47` downloaded files, `65,761,583` actual bytes, and `failure_count=0`.
@@ -70,9 +73,8 @@ HLC must remain `profile_eval_guidance_only` in `config/forest_specific_example_
   passes `28/28` HLC applicable-standard cases with `applicable_standard_recall=1.0` and no failed
   checks.
 - Review `phase-eval` now passes `28/28` phases with `blockers=[]`,
-  `reviewer_ready=true`, and `review_direct_eval_status="not_required_for_ad_hoc_review"`.
-  `declared_review_contract=false` and `contract_backed_promotion_ready=false` remain expected
-  until the Milestone 4 registry/coverage promotion slice.
+  `reviewer_ready=true`, `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`.
 
 ## Goal
 
@@ -130,7 +132,7 @@ Create a governed Bonanza example package lane for HLC, then promote it as the H
 - Use `source-set-f70ea11e04ae3d53` and the repo-root current catalog for new Bonanza replay context.
 - Keep the full Box root as package-authority evidence unless a later milestone proves a narrower replay package is required.
 - Keep generated package bytes and review outputs under ignored `source_library/` paths.
-- Keep HLC registry status as `profile_eval_guidance_only` until the reviewer-ready promotion milestone passes.
+- Keep HLC registry status as `profile_eval_guidance_only` until the reviewer-ready promotion milestone passes; after Milestone 4, keep Bonanza as the HLC primary example unless a future gate regresses.
 
 ## Weak-Point Prevention Contract
 
@@ -141,8 +143,9 @@ Weak point forecast: Bonanza is promoted from a URL or inventory alone.
 - Owner surface: `config/forest_specific_example_package_registry_v1.json`, `config/v1_real_package_review_coverage_v1.json`
 - Prevention gate: V1 eval, forest-plan component eval/adjudication, phase eval, real-package coverage eval, and forest-specific example-package eval
 - Fail threshold: Bonanza appears as a required active example slot before reviewer-stack gates pass
-- Controlled violation: focused registry tests keep HLC on `profile_eval_guidance_only` until the
-  dedicated promotion milestone updates registry and coverage manifests
+- Controlled violation: focused registry tests require the HLC Bonanza primary example, coverage
+  slot, and component slot to align after the dedicated promotion milestone updates registry and
+  coverage manifests
 - Future-Codex misuse scenario: a future session edits the registry after seeing the downloaded Box files; the tests and aggregate evals must reject promotion without the eval artifacts
 
 ### Weak Point 2
@@ -218,8 +221,8 @@ Outcome label: `resolved` if the Bonanza review reaches reviewer-ready status; `
 
 Local result: resolved. Applicability artifacts, the tracked applicability adjudication, generated
 rule pack, compliance review matrix/PDF artifacts, V1 eval, forest-plan component eval, and review
-`phase-eval` all pass. Bonanza remains out of registry and coverage promotion surfaces because
-promotion is Milestone 4.
+`phase-eval` all pass. At this Milestone 3 checkpoint, Bonanza was still outside registry and
+coverage promotion surfaces because promotion belonged to Milestone 4.
 
 1. Resolve forest-plan component adjudication for the HLC component queue.
 2. Resolve any area/geography validation issue without weakening resolver checks.
@@ -228,7 +231,16 @@ promotion is Milestone 4.
 
 ### Milestone 4 - Registry And Coverage Promotion
 
-Outcome label: `resolved` only after reviewer-stack replay is green.
+Outcome label: `resolved` for HLC promotion; standalone aggregate component coverage remains
+`reduced` by the pre-existing ECID source-delta blocker, not by Bonanza.
+
+Local result: resolved for Bonanza. The real-package and forest-specific aggregate gates are green;
+the Bonanza component-coverage slot is required, covered, source-set aligned, and passing; review
+`phase-eval` now reports `declared_review_contract=true` and
+`contract_backed_promotion_ready=true`. The standalone
+`forest-plan-component-eval-coverage` command still exits red because the inherited
+`v1-cg-ecid-source-delta-review` slot has `result_not_passed` and
+`result_source_set_id_mismatch`.
 
 1. Add Bonanza to `config/v1_real_package_review_coverage_v1.json`.
 2. Add Bonanza as the HLC primary example in `config/forest_specific_example_package_registry_v1.json`.
@@ -286,7 +298,7 @@ Expected reviewer-stack result: generated rule pack and compliance review pass; 
 component eval pass; review `phase-eval` passes `28/28` with `blockers=[]`; Bonanza remains
 unpromoted until Milestone 4.
 
-Promotion slice, later:
+Promotion slice closeout:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json
@@ -299,7 +311,7 @@ git diff --check
 
 - Bonanza has a forest-qualified review ID and replay context on f70.
 - Local ignored package evidence records the full official Box roster, file hashes, and zero failures.
-- HLC remains profile-guidance-only until the dedicated promotion gates pass.
+- HLC remains profile-guidance-only until the dedicated promotion gates pass, then routes to Bonanza as the governed primary example.
 - Forest-plan resolver and reviewer-stack blockers are closed without relaxed validation.
 - Any future promotion updates registry, coverage manifests, eval contracts, docs, handoff, and tests in the same milestone commit.
 
@@ -309,7 +321,7 @@ git diff --check
 - The package resolves to a forest other than HLC.
 - Component inventory requires overwriting shared f70 evidence outside this packet.
 - Reviewer-ready status requires weakening validation, eval thresholds, or adjudication gates.
-- Bonanza appears in active registry/coverage slots before review `phase-eval` and aggregate gates pass.
+- Bonanza appears in active registry/coverage slots before review `phase-eval` and the Bonanza-specific review-scope aggregate gates pass.
 
 ## Local Commit Closeout Policy
 
@@ -317,6 +329,6 @@ Each completed milestone slice must be committed atomically with tracked impleme
 
 ## Residual Risks And Next Routing
 
-The immediate next milestone is registry and coverage promotion. Milestone 4 must add Bonanza to
-the real-package review coverage manifest, HLC forest-specific registry slot, and component-eval
-coverage manifest, then rerun the aggregate gates before claiming promoted reviewer-ready status.
+HLC Bonanza has no remaining open milestone in this packet. If the next goal is full standalone
+component-coverage green, open a separate ECID source-delta/component-coverage repair packet; do
+not route that inherited aggregate blocker back into the HLC Bonanza example-package lane.

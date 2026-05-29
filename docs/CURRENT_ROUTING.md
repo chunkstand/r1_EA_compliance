@@ -12,8 +12,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
-- Active HLC forest-specific example packet:
-  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- Latest resolved HLC forest-specific example packet:
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - Latest resolved West Reservoir parent slice:
   Milestone 4 signer-facing packet and phase-eval closeout in
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
@@ -30,8 +30,8 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- HLC Bonanza example packet is now open as the active forest-specific example
-  slice. The selected package is Bonanza project `66532` for
+- HLC Bonanza example packet is resolved locally through registry and coverage
+  promotion. The selected package is Bonanza project `66532` for
   `helena-lewis-and-clark-nf`, using the official project page
   `https://www.fs.usda.gov/r01/helena-lewisclark/projects/66532` and Pinyon/Box
   folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/272939272513`.
@@ -54,11 +54,21 @@ Use this file as the short current route before opening the append-only docs.
   applicable authorities, the generated Bonanza rule pack has `51` rules,
   `compliance-review` passes with `51` findings and matrix JSON/Markdown/PDF
   artifacts present, V1 eval passes with `25` conditional expectations,
-  component eval passes `28/28` HLC standards, and review `phase-eval` passes
-  `28/28` with `blockers=[]`. Bonanza is still not promoted:
-  `declared_review_contract=false` and `contract_backed_promotion_ready=false`
-  are expected until Milestone 4 adds registry and aggregate coverage entries
-  and reruns their promotion gates.
+  component eval passes `28/28` HLC standards, and review `phase-eval` now
+  passes `28/28` with `blockers=[]`, `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`. Bonanza is now
+  `example_id="hlc-bonanza-forest-specific"` and the HLC primary example in
+  `config/forest_specific_example_package_registry_v1.json`.
+  `real-package-review-coverage-eval` passes with `covered_slot_count=5`,
+  `reviewer_ready_slot_count=5`, `distinct_forest_count=4`, and
+  `distinct_package_style_count=6`. `forest-specific-example-package-eval`
+  passes with `review_example_count=5`, `reviewer_ready_example_count=5`,
+  `distinct_governed_example_forest_count=4`, and
+  `profile_guidance_only_count=6`. The Bonanza component-coverage slot is
+  required, source-set aligned, and passing; the standalone
+  `forest-plan-component-eval-coverage` aggregate still exits red only on the
+  inherited ECID source-delta slot. Do not route that aggregate blocker back
+  into the HLC packet.
 - First-class eval trace Milestones 0-5 are resolved locally. The tracked contract
   lives in `config/eval_trace_inventory_contract_v1.json`; the contract doc is
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`; and
@@ -239,22 +249,22 @@ Use this file as the short current route before opening the append-only docs.
   (`cgnf-south-plateau-expansion`) is archived as historical evidence only due
   to litigation and Forest Plan compliance challenge risk, and must not be used
   as a Custer Gallatin or Region 1 example.
-- `config/v1_real_package_review_coverage_v1.json` now has four load-bearing
-  active slots, including South Otter and Lolo as two required
+- `config/v1_real_package_review_coverage_v1.json` now has five load-bearing
+  active slots, including South Otter, Lolo, and HLC Bonanza as required
   `forest_specific_reviewer_ready` slots. The governed aggregate rerun reports
-  `passed=true`, `covered_slot_count=4`, `required_slot_count=4`,
-  `reviewer_ready_slot_count=3`, `typed_blocked_slot_count=1`,
-  `distinct_forest_count=3`, `distinct_package_style_count=5`, and no missing
+  `passed=true`, `covered_slot_count=5`, `required_slot_count=5`,
+  `reviewer_ready_slot_count=5`, `typed_blocked_slot_count=0`,
+  `distinct_forest_count=4`, `distinct_package_style_count=6`, and no missing
   required slots or coverage classes.
-- `config/forest_specific_example_package_registry_v1.json` now has four
+- `config/forest_specific_example_package_registry_v1.json` now has five
   active governed examples: East Crazy and South Otter for Custer Gallatin,
-  West Reservoir for Flathead, and Tyler's Kitchen for Lolo. South Plateau is
-  retained only under `archived_review_examples` with
+  West Reservoir for Flathead, Tyler's Kitchen for Lolo, and Bonanza for HLC.
+  South Plateau is retained only under `archived_review_examples` with
   `usage_policy="historical_evidence_only_not_example"`. The
   governed forest-specific aggregate rerun reports `passed=true`,
-  `review_example_count=4`, `reviewer_ready_example_count=3`,
-  `distinct_governed_example_forest_count=3`,
-  `profile_guidance_only_count=7`, and no threshold failures.
+  `review_example_count=5`, `reviewer_ready_example_count=5`,
+  `distinct_governed_example_forest_count=4`,
+  `profile_guidance_only_count=6`, and no threshold failures.
 - West Reservoir's Flathead package authority is now verified against the
   official Flathead project page
   `https://www.fs.usda.gov/r01/flathead/projects/67436` and linked Pinyon/Box
@@ -263,16 +273,17 @@ Use this file as the short current route before opening the append-only docs.
   `config/review_package_authority_verifications/west-reservoir-67436.json`
   records `12` official PDFs, `12` local package-manifest rows, byte-size and
   SHA-256 matches for every document, and `omitted_document_count=0`. This
-  repairs package-authority provenance only; West Reservoir remains typed
-  blocked until its component-review artifacts and eval pass.
-- `config/forest_plan_component_eval_coverage_v1.json` now requires South
-  Otter as a fifth component-eval review slot. The South Otter slot is covered,
-  source-set aligned, and passing. The aggregate
+  repairs package-authority provenance only; West Reservoir is now a
+  reviewer-ready Flathead example.
+- `config/forest_plan_component_eval_coverage_v1.json` now requires HLC
+  Bonanza as a sixth component-eval review slot. The HLC Bonanza slot is
+  covered, source-set aligned, and passing. The aggregate
   `forest-plan-component-eval-coverage` command still fails on the ECID
   source-delta slot only: `ecid-source-delta-replay` /
   `v1-cg-ecid-source-delta-review` has `result_not_passed` plus
-  `result_source_set_id_mismatch`. West Reservoir now passes and source-set
-  aligns. Current aggregate counts are `covered_review_count=4/5`,
+  `result_source_set_id_mismatch`. West Reservoir, South Otter, Lolo, and HLC
+  Bonanza now pass and source-set align. Current aggregate counts are
+  `covered_review_count=5/6`,
   `stale_identity_count=1`, and `unresolved_review_count=1`; do not describe
   aggregate component coverage as green.
 - The Lolo Tyler's Kitchen example-package Milestone 3 implementation is
@@ -299,8 +310,9 @@ Use this file as the short current route before opening the append-only docs.
   source-record identity, aligned-runtime, and broader Lolo example-package
   Milestone 3 blocker family is now historical for Lolo. Do not route new work
   back there unless a future command regresses one of the verified gates.
-- Forest-plan component eval coverage is not a blocker for the Lolo or South
-  Otter review-scope closeouts: both slots are aligned and pass on `f70...`.
+- Forest-plan component eval coverage is not a blocker for the Lolo, South
+  Otter, or HLC Bonanza review-scope closeouts: all three slots are aligned and
+  pass on `f70...`.
   The aggregate `forest-plan-component-eval-coverage` command still fails on
   the non-Lolo/non-South Otter ECID source-delta slot, so do not describe
   aggregate component coverage as green.
@@ -312,8 +324,8 @@ Use this file as the short current route before opening the append-only docs.
   `historical_source_set_split`.
 - Do not flip the ECID historical slot to `ready`, reopen the older Lolo or
   replay-repair packets as live runtime work, or treat the remaining
-  non-Lolo/non-South Otter component-coverage aggregate red as part of the
-  Lolo or South Otter example promotions.
+  non-Lolo/non-South Otter/non-HLC component-coverage aggregate red as part of
+  the Lolo, South Otter, or HLC example promotions.
 ## Deep Reads
 - Core:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,

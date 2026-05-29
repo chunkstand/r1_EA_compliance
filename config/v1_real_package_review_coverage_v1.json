@@ -1,12 +1,12 @@
 {
   "coverage_thresholds": {
-    "distinct_forest_count_min": 3,
-    "distinct_package_style_count_min": 5,
+    "distinct_forest_count_min": 4,
+    "distinct_package_style_count_min": 6,
     "missing_package_authority_count_max": 0,
     "missing_required_slot_count_max": 0,
     "required_coverage_class_count": 2,
-    "required_slot_count": 4,
-    "reviewer_ready_slot_count_min": 4,
+    "required_slot_count": 5,
+    "reviewer_ready_slot_count_min": 5,
     "typed_blocked_slot_count_min": 0
   },
   "id": "region1-real-package-review-coverage-v1",
@@ -74,11 +74,27 @@
       "required": true,
       "review_id": "region1-example-lolo-tylers-kitchen-66344",
       "slot_id": "lolo-tylers-kitchen-forest-specific"
+    },
+    {
+      "coverage_class_id": "forest_specific_reviewer_ready",
+      "eval_file": "v1_helena_lewis_and_clark_bonanza_real_ea_eval.json",
+      "expected_contract_status": "reviewer_ready",
+      "forest_unit_id": "helena-lewis-and-clark-nf",
+      "label": "Bonanza Helena-Lewis and Clark forest-specific reviewer-ready example",
+      "package_authority": {
+        "replay_context_path": "replay_contexts/region1-example-helena-lewis-and-clark-bonanza-66532.json",
+        "official_project_page": "https://www.fs.usda.gov/r01/helena-lewisclark/projects/66532",
+        "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/272939272513"
+      },
+      "package_label": "Bonanza Project",
+      "required": true,
+      "review_id": "region1-example-helena-lewis-and-clark-bonanza-66532",
+      "slot_id": "hlc-bonanza-forest-specific"
     }
   ],
-  "version": "1.3.0",
-  "as_of_date": "2026-05-28",
-  "status": "west-reservoir-v1-reviewer-ready",
+  "version": "1.4.0",
+  "as_of_date": "2026-05-29",
+  "status": "hlc-bonanza-v1-reviewer-ready",
   "archived_slots": [
     {
       "coverage_class_id": "expansion_reviewer_ready",

@@ -26,8 +26,8 @@ history below.
   hosted scoring work requires a new approved milestone
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
-- active forest-specific example packet:
-  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+- latest resolved HLC forest-specific example packet:
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - latest resolved West Reservoir parent slice:
   Milestone 4 signer-facing packet and phase-eval closeout in
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md`
@@ -48,8 +48,8 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  HLC Bonanza example-package work has advanced through reviewer-stack replay.
-  The active packet is
+  HLC Bonanza example-package work is resolved through registry and coverage
+  promotion. The resolved packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID
   `region1-example-helena-lewis-and-clark-bonanza-66532` and forest unit
   `helena-lewis-and-clark-nf`. The selected authorities are the Bonanza project
@@ -77,10 +77,22 @@ history below.
   passes with `51` rules, `compliance-review` passes with `51` findings and
   matrix JSON/Markdown/PDF artifacts present, V1 eval passes with `25`
   conditional expectations, component eval passes `28/28` HLC standards, and
-  review `phase-eval` passes `28/28` with `blockers=[]`. Keep
-  `helena-lewis-and-clark-nf` at `profile_eval_guidance_only` until Milestone 4
-  adds Bonanza to registry and aggregate coverage manifests and reruns those
-  promotion gates.
+  review `phase-eval` passes `28/28` with `blockers=[]`,
+  `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`. `helena-lewis-and-clark-nf` now
+  routes as `real_package_examples_available` with
+  `primary_example_id="hlc-bonanza-forest-specific"`. The real-package
+  aggregate passes with `covered_slot_count=5`, `reviewer_ready_slot_count=5`,
+  `distinct_forest_count=4`, and `distinct_package_style_count=6`; the
+  forest-specific aggregate passes with `review_example_count=5`,
+  `reviewer_ready_example_count=5`,
+  `distinct_governed_example_forest_count=4`, and
+  `profile_guidance_only_count=6`. Bonanza is also a required component-eval
+  coverage slot and passes on `source-set-f70ea11e04ae3d53`. The standalone
+  `forest-plan-component-eval-coverage` aggregate still exits red only on the
+  inherited ECID source-delta slot (`covered_review_count=5/6`,
+  `stale_identity_count=1`, `unresolved_review_count=1`); do not route that
+  blocker back into the HLC packet.
   Repo-root catalog currentness is corrected: `source_library/catalog/` now
   names `source-set-f70ea11e04ae3d53` as the current source-set. The tracked
   pointer is `config/current_source_set_v1.json`; the root manifest reports

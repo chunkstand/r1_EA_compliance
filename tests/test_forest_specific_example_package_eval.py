@@ -97,11 +97,11 @@ def test_committed_registry_declares_output_contract_and_thresholds() -> None:
     assert registry["schema_version"] == FOREST_SPECIFIC_EXAMPLE_PACKAGE_REGISTRY_SCHEMA_VERSION
     assert registry["coverage_thresholds"] == {
         "required_forest_unit_count": 10,
-        "review_example_count_min": 4,
-        "reviewer_ready_example_count_min": 4,
+        "review_example_count_min": 5,
+        "reviewer_ready_example_count_min": 5,
         "typed_blocked_example_count_min": 0,
-        "distinct_governed_example_forest_count_min": 3,
-        "profile_guidance_only_count_max": 7,
+        "distinct_governed_example_forest_count_min": 4,
+        "profile_guidance_only_count_max": 6,
         "failed_forest_count_max": 0,
     }
     assert registry["output_schema"]["required_summary_fields"] == [

@@ -15,6 +15,48 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## HLC Bonanza Registry And Coverage Promotion Resolved
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
+  Milestone 4. Bonanza is now the governed primary Helena-Lewis and Clark
+  example package with `example_id="hlc-bonanza-forest-specific"`,
+  `review_id="region1-example-helena-lewis-and-clark-bonanza-66532"`, and
+  `forest_unit_id="helena-lewis-and-clark-nf"`.
+- registry and real-package coverage:
+  `config/v1_real_package_review_coverage_v1.json` now includes the Bonanza
+  slot as required reviewer-ready coverage. `real-package-review-coverage-eval`
+  passes with `covered_slot_count=5`, `required_slot_count=5`,
+  `reviewer_ready_slot_count=5`, `typed_blocked_slot_count=0`,
+  `distinct_forest_count=4`, `distinct_package_style_count=6`, and no
+  threshold failures. `config/forest_specific_example_package_registry_v1.json`
+  routes HLC as `real_package_examples_available` with
+  `primary_example_id="hlc-bonanza-forest-specific"`.
+- forest-specific aggregate:
+  `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
+  `failed_forest_count=0`, `review_example_count=5`,
+  `reviewer_ready_example_count=5`, `distinct_governed_example_forest_count=4`,
+  `profile_guidance_only_count=6`, and no threshold failures.
+- component coverage boundary:
+  `config/forest_plan_component_eval_coverage_v1.json` now includes Bonanza as
+  a required component-eval slot. The Bonanza slot is covered, source-set
+  aligned on `source-set-f70ea11e04ae3d53`, and passing. The standalone
+  aggregate `forest-plan-component-eval-coverage` command still exits red only
+  because the inherited `ecid-source-delta-replay` /
+  `v1-cg-ecid-source-delta-review` slot has `result_not_passed` and
+  `result_source_set_id_mismatch`; current aggregate counts are
+  `covered_review_count=5/6`, `stale_identity_count=1`, and
+  `unresolved_review_count=1`.
+- review-scope promotion gate:
+  `phase-eval --review-id region1-example-helena-lewis-and-clark-bonanza-66532`
+  passes `28/28` phases with `blockers=[]`, `declared_review_contract=true`,
+  `contract_backed_promotion_ready=true`, and `reviewer_ready=true`. The
+  inherited ECID component-coverage aggregate red is not an HLC blocker; open a
+  separate ECID source-delta/component-coverage repair packet if full standalone
+  aggregate component coverage is the next goal.
+
 ## HLC Bonanza Reviewer-Stack Replay Resolved
 
 Latest implementation update on 2026-05-29 UTC:
@@ -66,15 +108,14 @@ Latest implementation update on 2026-05-29 UTC:
   `forest_plan_expectation_count=8`, and `contract_status="reviewer_ready"`.
   `forest-plan-component-eval` with
   `config/forest_plan_component_evals/region1-example-helena-lewis-and-clark-bonanza-66532.json`
-  passes `28/28` HLC applicable-standard cases. Review `phase-eval` passes
-  `28/28` phases with `blockers=[]` and `reviewer_ready=true`; its
-  `declared_review_contract=false` and `contract_backed_promotion_ready=false`
-  values are expected because registry/coverage promotion has not run yet.
-- routing truth:
-  `helena-lewis-and-clark-nf` remains `profile_eval_guidance_only` in
-  `config/forest_specific_example_package_registry_v1.json`; the next HLC
-  milestone is registry and aggregate coverage promotion, not more reviewer
-  stack generation.
+  passes `28/28` HLC applicable-standard cases. At this pre-promotion
+  checkpoint, review `phase-eval` passed `28/28` phases with `blockers=[]` and
+  `reviewer_ready=true`, while the review-contract booleans were still false
+  because registry/coverage promotion had not run yet.
+- superseded routing truth:
+  this reviewer-stack section records the pre-Milestone 4 state. The newer
+  section above now promotes `helena-lewis-and-clark-nf` to
+  `real_package_examples_available` with Bonanza as the primary example.
 
 ## Repo Current Source-Set Catalog Repoint
 
