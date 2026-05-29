@@ -12,6 +12,11 @@ Use this file as the short current route before opening the append-only docs.
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
+- Active forest-specific example packet:
+  `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  reduced locally through Milestone 2 forest-plan resolver preflight; next route
+  is component adjudication and reviewer-stack replay before any registry or
+  coverage promotion
 - Latest resolved forest-specific example packet:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
   registry and coverage promotion resolved locally
@@ -33,6 +38,35 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
+- Beaverhead-Deerlodge South Tobacco Roots example-package work is active and
+  reduced locally through Milestone 2. The packet is
+  `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`;
+  the resolved review identity is
+  `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`
+  for `forest_unit_id="beaverhead-deerlodge-nf"` and planned
+  `example_id="bdnf-south-tobacco-roots-forest-specific"`. The official
+  project page is
+  `https://www.fs.usda.gov/r01/beaverhead-deerlodge/projects/63754`; the
+  selected Pinyon/Box root is
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/199281418011`.
+  Local ignored package authority under
+  `source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/`
+  records `16` downloaded files, `176,594,060` bytes, and `failure_count=0`.
+  `ea-review` on the package passes with `16/16` extracted files, `1,382`
+  package chunks, `package_failed_count=0`, and `validation_passed=true`.
+  A review-local Beaverhead-Deerlodge component inventory builds with `90`
+  components and `89` standards, and `forest-plan-resolve` now reports
+  `scope_status="beaverhead_deerlodge_nf"`, `validation_passed=true`,
+  `geographic_area_count=2`, `management_area_count=3`, `overlay_count=2`,
+  `project_location_signal_count=3`, and `unresolved_mention_count=0`.
+  The checkpoint remains reduced because raw component evaluation reports
+  `gap_count=60`, `reviewer_resolution_count=60`,
+  `applicable_standard_coverage_passed=false`, and
+  `component_adjudication.eval_exists=false` /
+  `adjudication_eval_missing`. `beaverhead-deerlodge-nf` remains
+  `profile_eval_guidance_only`; do not add registry, real-package coverage, or
+  component-coverage promotion until component adjudication, reviewer-stack
+  replay, and review `phase-eval` pass.
 - Bitterroot Front is now the governed primary Bitterroot National Forest
   example package. The packet is
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; the resolved

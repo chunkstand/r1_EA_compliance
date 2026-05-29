@@ -102,6 +102,20 @@ class ForestPlanProfileTests(unittest.TestCase):
             "Big Hole Landscape",
             [entry.name for entry in profile.geographic_area_terms],
         )
+        tobacco_root = next(
+            entry
+            for entry in profile.geographic_area_terms
+            if entry.entry_id == "geo-tobacco-root-landscape"
+        )
+        self.assertEqual(
+            tobacco_root.aliases,
+            (
+                "Tobacco Roots",
+                "Tobacco Root Mountains",
+                "South Tobacco Root",
+                "South Tobacco Roots",
+            ),
+        )
         self.assertIn(
             "West Big Hole Management Area",
             [entry.name for entry in profile.management_area_terms],

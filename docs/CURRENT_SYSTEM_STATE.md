@@ -15,6 +15,52 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Beaverhead-Deerlodge South Tobacco Roots Example Packet Reduced Locally
+
+Latest implementation update on 2026-05-29 UTC:
+
+- update:
+  `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  is active and reduced locally through Milestone 2 forest-plan resolver
+  preflight. The selected package is the South Tobacco Roots Vegetation
+  Management Project (`63754`) for `beaverhead-deerlodge-nf`, using the
+  official project page
+  `https://www.fs.usda.gov/r01/beaverhead-deerlodge/projects/63754` and
+  Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/199281418011`.
+- package authority:
+  local ignored package evidence exists under
+  `source_library/reviews/_intake/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754/`.
+  `box_inventory.json` records the Box root
+  `South Tobacco Roots Vegetation Management Project (63754)`, folder
+  `Final EA and FONSI`, `16` visible files, and `176,594,060` expected bytes.
+  `box_import_manifest.json` records `16` downloaded files, `176,594,060`
+  actual bytes, and `failure_count=0`.
+- base review and resolver:
+  `ea-review` passes on the full package with `16/16` extracted files,
+  `1,382` package chunks, `package_failed_count=0`, and
+  `validation_passed=true`. A review-local Beaverhead-Deerlodge component
+  inventory builds with `90` components and `89` standards. South Tobacco Root
+  aliases are now represented in the Beaverhead-Deerlodge profile, and the
+  resolver ignores the Helena-Lewis and Clark comparison phrase in this package
+  as external background evidence. `forest-plan-resolve` now reports
+  `scope_status="beaverhead_deerlodge_nf"`, `validation_passed=true`,
+  `geographic_area_count=2`, `management_area_count=3`, `overlay_count=2`,
+  `project_location_signal_count=3`, and `unresolved_mention_count=0`.
+- reduced boundary:
+  the resolver checkpoint remains `reviewer_ready=false` because component
+  adjudication is not closed. Raw component evaluation reports
+  `component_count=90`, `applicable_count=90`, `applicable_standard_count=89`,
+  `supported_count=30`, `gap_count=60`, `reviewer_resolution_count=60`,
+  `applicable_standard_coverage_passed=false`,
+  `all_applicable_standards_applied=false`, and
+  `component_adjudication.eval_exists=false` / `adjudication_eval_missing`.
+  `beaverhead-deerlodge-nf` remains `profile_eval_guidance_only`; no registry,
+  real-package coverage, component-coverage, or queue-ledger promotion is part
+  of this checkpoint. The next route is component adjudication and
+  reviewer-stack replay for
+  `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`.
+
 ## Bitterroot Front Registry And Coverage Promotion Resolved
 
 Latest implementation update on 2026-05-29 UTC:

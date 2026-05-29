@@ -918,7 +918,12 @@
           "entry_id": "geo-tobacco-root-landscape",
           "category": "geographic_area",
           "name": "Tobacco Root Landscape",
-          "aliases": []
+          "aliases": [
+            "Tobacco Roots",
+            "Tobacco Root Mountains",
+            "South Tobacco Root",
+            "South Tobacco Roots"
+          ]
         }
       ],
       "management_area_terms": [

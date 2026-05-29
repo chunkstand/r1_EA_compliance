@@ -50,6 +50,10 @@ They are intentionally not duplicated here.
   `primary_example_id="bitterroot-front-forest-specific"` with
   `review_id="region1-example-bitterroot-front-57341"` in
   `config/forest_specific_example_package_registry_v1.json`.
+  Beaverhead-Deerlodge South Tobacco Roots is an active reduced example packet
+  at `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`;
+  it remains `profile_eval_guidance_only` until component adjudication and
+  reviewer-stack promotion gates pass.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

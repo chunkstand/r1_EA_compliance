@@ -24,9 +24,9 @@ _CUSTER_PLAN_COMPONENT_TEXT = (
 )
 
 _BEAVERHEAD_PLAN_COMPONENT_TEXT = (
-    "The 2009 Beaverhead-Deerlodge Forest Plan includes the Big Hole Landscape and the West Big "
-    "Hole Management Area. Inventoried Roadless Area and recommended wilderness direction apply "
-    "where mapped. "
+    "The 2009 Beaverhead-Deerlodge Forest Plan includes the Big Hole Landscape, Tobacco Root "
+    "Landscape, and the West Big Hole Management Area. Inventoried Roadless Area and "
+    "recommended wilderness direction apply where mapped. "
     "West Big Hole Management Area Standards Standard 1: New permanent or temporary roads "
     "shall not be allowed."
 )

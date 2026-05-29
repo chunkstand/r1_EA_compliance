@@ -161,6 +161,59 @@ class ForestPlanResolverProfileTests(unittest.TestCase):
                 {entry["route_id"] for entry in context["supporting_plan_evidence"]},
             )
 
+    def test_beaverhead_south_tobacco_scope_ignores_external_forest_comparison(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_beaverhead_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        (
+                            "The South Tobacco Roots project area is on the Madison Ranger "
+                            "District of the Beaverhead-Deerlodge National Forest."
+                        ),
+                        (
+                            "The project area is in the South Tobacco Roots portion of the "
+                            "Tobacco Root Landscape."
+                        ),
+                        (
+                            "The Helena-Lewis and Clark National Forest has implemented "
+                            "cut-pile-burn treatments that are discussed as comparison evidence "
+                            "in the project record."
+                        ),
+                        "No new permanent or temporary roads are proposed.",
+                        (
+                            "| BD-STD-WBH-01 | New permanent or temporary roads shall not be "
+                            "allowed. | Yes | EA section 2.2 says no new permanent or temporary "
+                            "roads are proposed. |"
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                forest_unit_id="beaverhead-deerlodge-nf",
+                source_set_id=source_set_id,
+                review_id="beaverhead-south-tobacco-external-comparison",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "beaverhead_deerlodge_nf")
+            self.assertEqual(
+                _names(context["project_location_signals"]),
+                ["Madison Ranger District"],
+            )
+            self.assertEqual(_names(context["geographic_areas"]), ["Tobacco Root Landscape"])
+            self.assertNotIn(
+                "multiple_forest_units_mentioned",
+                [item["reason"] for item in context["unresolved_mentions"]],
+            )
+
     def test_beaverhead_custer_package_does_not_match_selected_profile(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

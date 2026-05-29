@@ -57,6 +57,11 @@ def _has_project_external_location_context(text: str) -> bool:
             r"\bnumerous\s+detections?\b.{0,200}\b(?:on|in|within)\b",
             text,
         )
+        or re.search(
+            r"\bnational\s+forest\s+has\s+implemented\b.{0,220}\b"
+            r"(?:adjacent|comparison|project\s+record|evidence)\b",
+            text,
+        )
     )
 
 def _has_map_boundary_reference_context(text: str) -> bool:
@@ -265,6 +270,8 @@ def _is_header_project_location_context(evidence: dict) -> bool:
     )
     if has_header_marker and has_admin_unit and has_document_context:
         return True
+    if evidence.get("category") == "forest_unit":
+        return False
     return bool(
         re.search(
             r"\b(?:project|analysis|environmental\s+assessment)\b.{0,240}"

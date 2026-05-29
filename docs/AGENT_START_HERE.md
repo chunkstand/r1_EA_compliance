@@ -42,6 +42,21 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
+- Beaverhead-Deerlodge South Tobacco Roots example-package work is active in
+  `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
+  For Beaverhead-Deerlodge example-package work, use review ID
+  `region1-example-beaverhead-deerlodge-south-tobacco-roots-63754` and forest
+  unit `beaverhead-deerlodge-nf`. The selected authorities are the official
+  project page
+  `https://www.fs.usda.gov/r01/beaverhead-deerlodge/projects/63754` and
+  Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/199281418011`. This
+  packet is reduced through forest-plan resolver preflight only: package
+  authority, base review, source-record retrieval, and scope validation are
+  resolved, but component adjudication and reviewer-stack replay remain open.
+  `beaverhead-deerlodge-nf` remains `profile_eval_guidance_only`; do not use
+  South Tobacco Roots as reviewer-ready or as a generic Region 1 example until
+  the future promotion gates pass.
 - The latest resolved forest-specific example packet is
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Bitterroot
   National Forest example-package review work, inspect
