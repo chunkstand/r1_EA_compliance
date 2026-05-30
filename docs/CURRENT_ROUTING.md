@@ -15,7 +15,8 @@ Use this file as the short current route before opening the append-only docs.
 - Active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 2 FEIS source-readiness closed locally; component
-  evaluation/adjudication refresh pending; no registry promotion
+  evaluation/adjudication refresh pending; source-readiness closeout commit is
+  `ba3718b`; no registry promotion
 - Latest resolved forest-specific example packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -72,7 +73,8 @@ Use this file as the short current route before opening the append-only docs.
   component inventory with `52` components and `8` standards, and reran
   `forest-plan-resolve` in local commit `a1574b3`. Treat `St. Maries Ranger
   District` as the project-page/Box authority label and `St. Joe Ranger
-  District` as package-local resolver scope evidence. The local f70
+  District` as package-local resolver scope evidence. Commit `ba3718b` closed
+  the FEIS source-readiness slice: the local f70
   catalog/retrieval surface now overlays `R1PLAN-idaho-panhandle-nfs-04` and
   `R1PLAN-idaho-panhandle-nfs-05` from the archived source-delta gate; f70
   extraction/retrieval pass with `719` sources, `707` artifacts, `11`

@@ -59,8 +59,8 @@ They are intentionally not duplicated here.
   packet in
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, but
   `idaho-panhandle-nfs` remains `profile_eval_guidance_only` after local
-  package-authority intake and FEIS source-readiness closeout. The tracked
-  replay context is
+  package-authority intake and FEIS source-readiness closeout in commit
+  `ba3718b`. The tracked replay context is
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`;
   resolver scope now resolves to `idaho_panhandle_nfs` from package-local
   `St. Joe Ranger District` evidence, while `St. Maries Ranger District`

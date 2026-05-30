@@ -22,8 +22,8 @@ Latest implementation update on 2026-05-29 UTC:
 - update:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
   resolved through Milestone 1; Milestone 2 FEIS source-readiness is closed
-  locally, with component evaluation/adjudication refresh remaining as the active
-  blocker. The planned review identity is
+  locally in commit `ba3718b`, with component evaluation/adjudication refresh
+  remaining as the active blocker. The planned review identity is
   `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
   `forest_unit_id="idaho-panhandle-nfs"` and planned
   `example_id="ipnf-lacy-lemoosh-forest-specific"`.
@@ -68,7 +68,8 @@ Latest implementation update on 2026-05-29 UTC:
   vocabulary, and built a review-local component inventory with `52`
   components and `8` standards in local commit `a1574b3`. `St. Maries Ranger
   District` remains only the project-page/Box authority label; `St. Joe Ranger
-  District` is the package-local resolver scope evidence. The f70
+  District` is the package-local resolver scope evidence. Source-readiness
+  closeout commit `ba3718b` proves the f70
   catalog/retrieval surface now overlays `R1PLAN-idaho-panhandle-nfs-04` and
   `R1PLAN-idaho-panhandle-nfs-05` from the archived source-delta gate. The
   tracked current-source contract now reports `source_count=719`,

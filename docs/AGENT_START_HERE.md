@@ -55,13 +55,14 @@ The planner:
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`.
   Milestone 2 forest-plan preflight resolves `idaho_panhandle_nfs` scope, builds
   a review-local inventory with `52` components and `8` standards, and now
-  passes FEIS retrieval readiness after the local f70 source-delta overlay:
-  `R1PLAN-idaho-panhandle-nfs-04` indexes `1,606` chunks and
-  `R1PLAN-idaho-panhandle-nfs-05` indexes `991` chunks. Idaho area/overlay
-  vocabulary resolves `1` geographic area, `1` management area, and `2`
-  overlays. The current reduced blocker is component evaluation/adjudication
-  refresh: resolver output now has `16` supported findings, `36` gaps, and the
-  previous `52`-item adjudication is stale against the current `36`-item queue.
+  passes FEIS retrieval readiness after the local f70 source-delta overlay
+  closed in commit `ba3718b`: `R1PLAN-idaho-panhandle-nfs-04` indexes `1,606`
+  chunks and `R1PLAN-idaho-panhandle-nfs-05` indexes `991` chunks. Idaho
+  area/overlay vocabulary resolves `1` geographic area, `1` management area,
+  and `2` overlays. The current reduced blocker is component
+  evaluation/adjudication refresh: resolver output now has `16` supported
+  findings, `36` gaps, and the previous `52`-item adjudication is stale against
+  the current `36`-item queue.
   Preserve `St. Maries Ranger District` as the authority label and `St. Joe
   Ranger District` as resolver scope evidence.
   This is not a

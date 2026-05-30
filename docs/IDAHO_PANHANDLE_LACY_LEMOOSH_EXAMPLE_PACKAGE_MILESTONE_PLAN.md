@@ -1,8 +1,8 @@
 # Idaho Panhandle Lacy Lemoosh Example Package Milestone Plan
 Date: 2026-05-29
 Status: Active. Milestones 0-1 are resolved locally; Milestone 2 FEIS
-source-readiness is closed locally and reduced only on current component
-evaluation/adjudication refresh.
+source-readiness is closed locally in commit `ba3718b` and reduced only on
+current component evaluation/adjudication refresh.
 Plan class: implementation
 High-risk implementation: yes
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -276,22 +276,25 @@ Milestone 1 closeout on 2026-05-29: Box inventory/download completed with
 failures, and `validation_passed=true`; focused replay/registry tests,
 aggregate eval, ruff, JSON parse, and `git diff --check` passed.
 
-Milestone 2 closeout on 2026-05-29: profile source IDs were reconciled to
-active catalog IDs proven in `config/r1_forest_plan_identity_reconciliation_v1.json`;
-package-backed `St. Joe Ranger District` vocabulary was added; review-local
-inventory build passed with `52` components and `8` standards; resolver scope
-is `idaho_panhandle_nfs` with `unresolved_mention_count=0`; validation is
-reduced because `R1PLAN-idaho-panhandle-nfs-04`/`-05` have zero indexed chunks.
-Initial local commit: `a1574b3`. Follow-on closeout resolves Idaho area/overlay
-vocabulary and component adjudication: `forest-plan-resolve` now reports
+Milestone 2 initial closeout on 2026-05-29: profile source IDs were reconciled
+to active catalog IDs proven in
+`config/r1_forest_plan_identity_reconciliation_v1.json`; package-backed
+`St. Joe Ranger District` vocabulary was added; review-local inventory build
+passed with `52` components and `8` standards; resolver scope is
+`idaho_panhandle_nfs` with `unresolved_mention_count=0`; validation was reduced
+at that checkpoint because `R1PLAN-idaho-panhandle-nfs-04`/`-05` had zero
+indexed chunks. Initial local commit: `a1574b3`. Follow-on closeout resolves
+Idaho area/overlay vocabulary and component adjudication:
+`forest-plan-resolve` now reports
 `geographic_area_count=1`, `management_area_count=1`, and `overlay_count=2`;
 `forest-plan-component-adjudication-eval` passes with `52/52` resolved,
 `0` pending, `36` `evidence_linking_miss`, `15`
 `applicability_false_positive`, and `1` `component_inventory_overreach`. Idaho
 Panhandle still has no Lacy Lemoosh coverage slot or primary example.
 
-Milestone 2 FEIS source-readiness closeout on 2026-05-29: the local f70
-catalog/retrieval surface overlays `R1PLAN-idaho-panhandle-nfs-04` and
+Milestone 2 FEIS source-readiness closeout on 2026-05-29, committed as
+`ba3718b`: the local f70 catalog/retrieval surface overlays
+`R1PLAN-idaho-panhandle-nfs-04` and
 `R1PLAN-idaho-panhandle-nfs-05` from archived source-delta gate
 `source-set-8a4005c8a083af1a`. The tracked current-source contract now records
 `719` sources, `707` artifacts, and `11` supplemental overlay rows; extraction

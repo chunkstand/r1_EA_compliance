@@ -1,7 +1,7 @@
 {
   "schema_version": "forest-specific-example-package-registry-v1",
   "contract_id": "region1-forest-specific-example-packages",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "as_of_date": "2026-05-29",
   "status": "idaho-panhandle-lacy-lemoosh-active-candidate",
   "coverage_thresholds": {
