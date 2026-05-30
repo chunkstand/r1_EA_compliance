@@ -95,10 +95,18 @@ Use this file as the short current route before opening the append-only docs.
   `validation_passed=true`; component evaluation still records `16` supported
   findings, `36` gaps, `8` applicable standards, `3` applied standards, and
   `5` insufficient-evidence standards, all closed as component-adjudication
-  system misses for this preflight slice. `idaho-panhandle-nfs` remains
-  `profile_eval_guidance_only`, with `primary_example_id=null`; the next slice
-  is reviewer-stack replay, not registry promotion. Keep Lacy Lemoosh parallel
-  to `Document_Register_Master`;
+  system misses for this preflight slice. Milestone 3 reviewer-stack replay now
+  passes: applicability adjudication resolves `9/9` conflicts, applicability
+  validation reports `56` applicable authorities, `62` non-applicable
+  authorities, `0` unresolved authorities, and generated rule-pack readiness;
+  compliance review passes with `56` findings and reviewer-ready matrix/PDF
+  artifacts; V1 eval passes with `30/30` conditional expectations and reviewer
+  status `reviewer_ready`; component eval passes `52/52` cases; review
+  `phase-eval` passes with `28/28` phases reviewer-ready. `idaho-panhandle-nfs`
+  remains `profile_eval_guidance_only`, with `primary_example_id=null`; the
+  next slice is Milestone 4 registry and aggregate coverage promotion, not
+  another reviewer-stack replay. Keep Lacy Lemoosh parallel to
+  `Document_Register_Master`;
   do not route unrelated Idaho Panhandle queue rows such as `FOR-020` or
   `FOR-022` into this packet.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved

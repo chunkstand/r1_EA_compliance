@@ -1,0 +1,837 @@
+{
+  "cases": [
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-AI-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-AI-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-AQ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-AQ-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-AQH-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-AQH-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-AQS-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-AQS-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-AR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-AR-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-CCI-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-CCI-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-CR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-CR-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-008 (5ac37fdc8123)",
+        "EA-PACKAGE-042 (651c52ad7116)",
+        "EA-PACKAGE-082 (eb82251ece5f)"
+      ],
+      "package_section": "DraftEA_LacyLemoosh_20240829.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-FIRE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-FIRE-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-021 (10fb66098ff6)",
+        "EA-PACKAGE-067 (a50aa0f7536d)"
+      ],
+      "package_section": "20240829PreliminaryReportFireFuelsLacyLemoosh.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-GRZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-GRZ-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-040 (fa7036fbbc72)",
+        "EA-PACKAGE-045 (6b4273204dc7)"
+      ],
+      "package_section": "20250521LacyLemooshUpdatedForestPlanConsistencyWorksheet.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-LND-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-LND-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-045 (6b4273204dc7)",
+        "EA-PACKAGE-040 (fa7036fbbc72)",
+        "EA-PACKAGE-011 (d4a9a28b62f3)"
+      ],
+      "package_section": "LacyLemooshForestPlanConsistencyWorksheet.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-RIP-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-RIP-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-SES-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-SES-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-008 (5ac37fdc8123)",
+        "EA-PACKAGE-020 (8e5c3b31d706)",
+        "EA-PACKAGE-042 (651c52ad7116)"
+      ],
+      "package_section": "DraftEA_LacyLemoosh_20240829.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-SFP-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-SFP-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-040 (fa7036fbbc72)",
+        "EA-PACKAGE-045 (6b4273204dc7)"
+      ],
+      "package_section": "20250521LacyLemooshUpdatedForestPlanConsistencyWorksheet.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-SOIL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-SOIL-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-TBR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-TBR-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-VEG-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-VEG-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-169 (76b6cf20642c)"
+      ],
+      "package_section": "Report20250129SVegetationJermanJ.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-WL-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-WTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-DC-WTR-01",
+      "component_type": "desired_condition",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-AI-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-AI-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-AQ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-AQ-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-AQS-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-AQS-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-AR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-AR-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-CR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-CR-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-IRA-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-IRA-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-LND-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-LND-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-SOIL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-SOIL-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-TBR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-TBR-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-040 (fa7036fbbc72)",
+        "EA-PACKAGE-045 (6b4273204dc7)"
+      ],
+      "package_section": "20250521LacyLemooshUpdatedForestPlanConsistencyWorksheet.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-VEG-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-VEG-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-040 (fa7036fbbc72)",
+        "EA-PACKAGE-045 (6b4273204dc7)",
+        "EA-PACKAGE-169 (76b6cf20642c)"
+      ],
+      "package_section": "20250521LacyLemooshUpdatedForestPlanConsistencyWorksheet.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-WL-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-040 (fa7036fbbc72)",
+        "EA-PACKAGE-045 (6b4273204dc7)"
+      ],
+      "package_section": "20250521LacyLemooshUpdatedForestPlanConsistencyWorksheet.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-WTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-GDL-WTR-01",
+      "component_type": "guideline",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-AI-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-AI-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-AQH-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-AQH-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-AQS-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-AQS-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-AR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-AR-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-040 (fa7036fbbc72)",
+        "EA-PACKAGE-016 (05e225d4ac5b)",
+        "EA-PACKAGE-036 (05e225d4ac5b)"
+      ],
+      "package_section": "20250521LacyLemooshUpdatedForestPlanConsistencyWorksheet.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-CR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-CR-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-FIRE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-FIRE-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-021 (10fb66098ff6)",
+        "EA-PACKAGE-067 (a50aa0f7536d)",
+        "EA-PACKAGE-068 (fac2ec9731ae)"
+      ],
+      "package_section": "20240829PreliminaryReportFireFuelsLacyLemoosh.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-GRZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-GRZ-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-MIN-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-MIN-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-SES-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-SES-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-SOIL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-SOIL-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-TBR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-TBR-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-VEG-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-VEG-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-WL-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-040 (fa7036fbbc72)",
+        "EA-PACKAGE-045 (6b4273204dc7)"
+      ],
+      "package_section": "20250521LacyLemooshUpdatedForestPlanConsistencyWorksheet.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-WTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-OBJ-WTR-01",
+      "component_type": "objective",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-AR-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-AR-01",
+      "component_type": "standard",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-040 (fa7036fbbc72)"
+      ],
+      "package_section": "20250521LacyLemooshUpdatedForestPlanConsistencyWorksheet.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-IRA-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-IRA-01",
+      "component_type": "standard",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-MIN-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-MIN-01",
+      "component_type": "standard",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-TBR-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-TBR-01",
+      "component_type": "standard",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-027 (b600424a5b4a)"
+      ],
+      "package_section": "20240829PreliminaryReportVegetationLacyLemoosh.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-VEG-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-VEG-01",
+      "component_type": "standard",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-WL-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-WL-01",
+      "component_type": "standard",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-040 (fa7036fbbc72)",
+        "EA-PACKAGE-045 (6b4273204dc7)"
+      ],
+      "package_section": "20250521LacyLemooshUpdatedForestPlanConsistencyWorksheet.pdf",
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-WTR-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-FW-STD-WTR-01",
+      "component_type": "standard",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-idaho-panhandle-nfs-02-max-2009",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-idaho-panhandle-nfs-02-max-2009",
+      "component_type": "standard",
+      "description": "Lacy Lemoosh component replay case generated from current raw forest-plan component findings; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FOR-021 (c60b7f4c2562)"
+      ],
+      "reviewer_resolution_state": "open"
+    }
+  ],
+  "coverage_requirements": {
+    "minimum_cases_by_applicability_status": {
+      "applicable": 52
+    },
+    "minimum_cases_by_component_type": {
+      "desired_condition": 18,
+      "guideline": 12,
+      "objective": 14,
+      "standard": 8
+    },
+    "require_all_applicable_standards": true
+  },
+  "description": "Idaho Panhandle Lacy Lemoosh current raw component surface; the separate component adjudication contract closes reviewer-resolution system misses.",
+  "eval_id": "region1-example-idaho-panhandle-lacy-lemoosh-60853-component-eval",
+  "forest_unit_id": "idaho-panhandle-nfs",
+  "metric_thresholds": {
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "expected_applicable_standard_count": {
+      "min": 8
+    },
+    "package_evidence_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "plan_source_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  },
+  "review_id": "region1-example-idaho-panhandle-lacy-lemoosh-60853",
+  "schema_version": "forest-plan-component-eval-v0",
+  "source_set_id": "source-set-f70ea11e04ae3d53"
+}

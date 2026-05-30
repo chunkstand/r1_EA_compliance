@@ -64,13 +64,21 @@ The planner:
   system-miss items, `0` pending items, and no expectation mismatches;
   `forest-plan-resolve` now reports `reviewer_ready=true` and
   `validation_passed=true`.
+  Reviewer-stack replay now passes locally: applicability adjudication resolves
+  `9/9` conflicts, generated rule-pack validation reports `56` generated
+  rules, compliance review is reviewer-ready, V1 eval contract
+  `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json` passes, component
+  eval contract
+  `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
+  passes `52/52` cases, and review `phase-eval` passes `28/28` phases.
   Preserve `St. Maries Ranger District` as the authority label and `St. Joe
   Ranger District` as resolver scope evidence.
   This is not a
   governed primary example yet:
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` at `profile_eval_guidance_only` with
-  `primary_example_id=null` until reviewer-stack and promotion gates pass. Keep
+  `primary_example_id=null` until Milestone 4 registry and aggregate coverage
+  gates pass. Keep
   Lacy Lemoosh parallel to
   `Document_Register_Master`; it is not a generic Region 1 example and must
   not be reused for non-Idaho-Panhandle forests.

@@ -1,9 +1,10 @@
 # Idaho Panhandle Lacy Lemoosh Example Package Milestone Plan
 Date: 2026-05-29
-Status: Active. Milestones 0-2 are resolved locally; Milestone 2 FEIS
-source-readiness is closed locally in commit `ba3718b`, and the current
-component adjudication refresh is closed against the live `36`-item queue.
-Milestone 3 reviewer-stack replay is next.
+Status: Active. Milestones 0-3 are resolved locally; Milestone 2 FEIS
+source-readiness is closed locally in commit `ba3718b`, the current component
+adjudication refresh is closed against the live `36`-item queue, and Milestone
+3 reviewer-stack replay now passes. Milestone 4 registry and aggregate coverage
+promotion is next.
 Plan class: implementation
 High-risk implementation: yes
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -61,6 +62,12 @@ Lemoosh `60853`.
   surface. Current resolver output has `16` supported findings and `36` gaps;
   the refreshed `36`-item component adjudication passes with all items resolved
   as system misses, `0` pending items, and no expectation mismatches.
+- Milestone 3 resolves the reviewer stack locally: applicability adjudication
+  closes `9/9` conflicts, generated rule-pack validation emits `56` rules,
+  compliance review passes with reviewer-ready matrix/PDF artifacts, V1 eval
+  passes with `30/30` conditional expectations and contract status
+  `reviewer_ready`, component eval passes `52/52` cases, and review
+  `phase-eval` passes `28/28` phases.
 - District lock: preserve `St. Maries Ranger District` as the project-page/Box
   authority label and `St. Joe Ranger District` as package scope evidence.
 
@@ -195,9 +202,9 @@ the refreshed `36`-item adjudication closes the queue as system misses with
 remain unpromoted.
 
 ### Milestone 3 - Reviewer Stack Replay
-Outcome label: `resolved` if the review reaches reviewer-ready status;
-`reduced` if a named applicability, component, compliance, or eval blocker
-remains.
+Outcome label: `resolved` locally. Applicability, generated rule-pack,
+compliance review, V1 eval, forest-plan component eval, and review
+`phase-eval` pass; registry and aggregate coverage promotion remain Milestone 4.
 Run applicability, generated rule-pack, compliance review, V1 eval,
 forest-plan component eval, and review `phase-eval`. Add tracked
 eval/adjudication contracts only when generated evidence exists and passes.
@@ -323,14 +330,37 @@ failed checks, and disposition counts `25` `evidence_linking_miss`, `10`
 `applicability_false_positive`, and `1` `component_inventory_overreach`.
 `forest-plan-resolve` now reports component adjudication `reviewer_ready=true`,
 overall `reviewer_ready=true`, `needs_reviewer_resolution=false`, and
-`validation_passed=true`. Registry/coverage promotion remains blocked until
-Milestone 3 reviewer-stack replay and Milestone 4 promotion gates pass.
+`validation_passed=true`.
+
+Milestone 3 reviewer-stack replay closeout on 2026-05-30: the tracked
+applicability adjudication at
+`config/applicability_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
+resolves `9/9` conflicts with disposition counts `7` `human_applicable` and
+`2` `human_not_applicable`. `applicability-adjudication-eval`,
+`applicability-adjudication-apply`, `applicability-validate`, and
+`applicability-generate-rule-pack` pass; validation reports `56` applicable
+authorities, `62` non-applicable authorities, `0` unresolved authorities, and
+`generated_rule_pack_ready=true`. `compliance-review` passes with `56`
+findings, reviewer-ready compliance review artifacts, and finding status counts
+`36` pass, `18` uncertain, and `2` gap. V1 eval contract
+`config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json` passes with
+`26/26` baseline checks, `30/30` conditional expectations, `10/10`
+forest-plan expectations, and contract status `reviewer_ready`. Forest-plan
+component eval contract
+`config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
+passes `52/52` cases, including all `8` applicable standards. Review
+`phase-eval` passes with `28/28` phases reviewer-ready. Residual risk is
+intentional and scoped to Milestone 4: Lacy Lemoosh is not yet declared in
+real-package or component aggregate coverage manifests, so
+`contract_backed_promotion_ready=false`, `idaho-panhandle-nfs` remains
+`profile_eval_guidance_only`, and `primary_example_id` remains `null`.
 
 ## Gap-Close Verification Addendum
-Milestones 0-2 are gap-closed only while `CURRENT_ROUTING`, `SESSION_HANDOFF`,
+Milestones 0-3 are gap-closed only while `CURRENT_ROUTING`, `SESSION_HANDOFF`,
 `CURRENT_SYSTEM_STATE`, `AGENT_START_HERE`, README, registry guidance, focused
 tests, aggregate eval, resolver outputs, and replay context agree that Lacy
 Lemoosh has local package authority, green base review, resolved forest-plan
-preflight, and remains unpromoted: `idaho-panhandle-nfs` stays
-`profile_eval_guidance_only`, `primary_example_id=null`, and no Lacy coverage
-slot exists until reviewer-stack and promotion gates pass.
+preflight, green reviewer-stack replay, and remains unpromoted:
+`idaho-panhandle-nfs` stays `profile_eval_guidance_only`,
+`primary_example_id=null`, and no Lacy coverage slot exists until Milestone 4
+promotion gates pass.

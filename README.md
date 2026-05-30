@@ -59,8 +59,8 @@ They are intentionally not duplicated here.
   packet in
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, but
   `idaho-panhandle-nfs` remains `profile_eval_guidance_only` after local
-  package-authority intake and FEIS source-readiness closeout in commit
-  `ba3718b`. The tracked replay context is
+  package-authority intake, FEIS source-readiness closeout in commit
+  `ba3718b`, and local reviewer-stack replay. The tracked replay context is
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`;
   resolver scope now resolves to `idaho_panhandle_nfs` from package-local
   `St. Joe Ranger District` evidence, while `St. Maries Ranger District`
@@ -69,9 +69,13 @@ They are intentionally not duplicated here.
   `R1PLAN-idaho-panhandle-nfs-05` with `991` chunks. The current `36`-item
   component adjudication is refreshed with `36/36` resolved system-miss items,
   `0` pending items, and no expectation mismatches; `forest-plan-resolve` now
-  reports `reviewer_ready=true`. The next blocker is reviewer-stack replay,
-  not registry promotion. Do not promote the package until reviewer-stack and
-  promotion gates pass.
+  reports `reviewer_ready=true`. Reviewer-stack replay now passes with
+  `56` generated applicable rules, `0` unresolved authorities, a V1 eval
+  contract at `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json`, a
+  `52`-case component eval at
+  `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`,
+  and review `phase-eval` `28/28` phases reviewer-ready. The next blocker is
+  registry and aggregate coverage promotion, not another replay run.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

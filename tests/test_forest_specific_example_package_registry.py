@@ -269,6 +269,8 @@ def test_registry_routes_idaho_panhandle_lacy_lemoosh_as_active_candidate_withou
         forest_row["guidance_note"]
     )
     assert "36/36 resolved system-miss items" in forest_row["guidance_note"]
+    assert "Reviewer-stack replay now passes" in forest_row["guidance_note"]
+    assert "56 generated applicable rules" in forest_row["guidance_note"]
     assert "profile-eval floor" in forest_row["guidance_note"]
     assert "ipnf-lacy-lemoosh-forest-specific" not in active_example_ids
     assert "ipnf-lacy-lemoosh-forest-specific" not in coverage_slot_ids

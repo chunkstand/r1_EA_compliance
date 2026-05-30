@@ -46,9 +46,9 @@ history below.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 2 FEIS source-readiness and current component adjudication refresh
-  are closed locally; source-readiness closeout commit is `ba3718b`; next
-  slice is reviewer-stack replay; no registry promotion
+  Milestone 3 reviewer-stack replay is closed locally; source-readiness
+  closeout commit is `ba3718b`; next slice is Milestone 4 registry and
+  aggregate coverage promotion; no registry promotion has been committed yet
 - resolved Beaverhead-Deerlodge packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -114,13 +114,24 @@ history below.
   evaluation still records `16` supported findings, `36` gap findings, `8`
   applicable standards, `3` applied standards, and `5`
   insufficient-evidence standards, all closed as component-adjudication system
-  misses for this preflight slice.
+  misses for this preflight slice. Milestone 3 reviewer-stack replay now
+  passes locally: applicability adjudication resolves `9/9` conflicts,
+  applicability validation reports `56` applicable authorities, `62`
+  non-applicable authorities, and `0` unresolved authorities, generated
+  rule-pack validation emits `56` rules, compliance review passes with `56`
+  findings and reviewer-ready matrix/PDF artifacts, V1 eval contract
+  `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json` passes with
+  contract status `reviewer_ready`, component eval contract
+  `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
+  passes `52/52` cases, and review `phase-eval` passes with `28/28` phases
+  reviewer-ready.
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
   `primary_example_id=null`, and `config/v1_real_package_review_coverage_v1.json`
-  has no Lacy Lemoosh slot. The next slice is reviewer-stack replay; keep Lacy
-  Lemoosh parallel to `Document_Register_Master` and do not route unrelated
-  Idaho Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet.
+  has no Lacy Lemoosh slot. The next slice is Milestone 4 registry and
+  aggregate coverage promotion; keep Lacy Lemoosh parallel to
+  `Document_Register_Master` and do not route unrelated Idaho Panhandle queue
+  rows such as `FOR-020` or `FOR-022` into this packet.
   Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
   locally through Milestone 4 registry and coverage promotion. The packet is
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,

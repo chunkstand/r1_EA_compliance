@@ -15,16 +15,18 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Idaho Panhandle Lacy Lemoosh Component Adjudication Refreshed Locally
+## Idaho Panhandle Lacy Lemoosh Reviewer Stack Replayed Locally
 
 Latest implementation update on 2026-05-30 UTC:
 
 - update:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
-  resolved through Milestone 2 forest-plan preflight. Milestone 2 FEIS
-  source-readiness is closed locally in commit `ba3718b`, and the current
-  component adjudication refresh is closed against the live `36`-item queue.
-  Reviewer-stack replay is the next active slice. The planned review identity is
+  resolved locally through Milestone 3 reviewer-stack replay. Milestone 2 FEIS
+  source-readiness is closed locally in commit `ba3718b`, the current component
+  adjudication refresh is closed against the live `36`-item queue, and Milestone
+  3 now has green applicability, generated rule-pack, compliance, V1 eval,
+  component eval, and review `phase-eval` evidence. Milestone 4 registry and
+  aggregate coverage promotion is the next active slice. The planned review identity is
   `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
   `forest_unit_id="idaho-panhandle-nfs"` and planned
   `example_id="ipnf-lacy-lemoosh-forest-specific"`.
@@ -96,10 +98,31 @@ Latest implementation update on 2026-05-30 UTC:
   `component_inventory_overreach`, and no failed checks. `forest-plan-resolve`
   now reports component adjudication `reviewer_ready=true`, overall
   `reviewer_ready=true`, and `validation_passed=true` with
-  `needs_reviewer_resolution=false`. The next slice is reviewer-stack replay
-  before registry or coverage promotion. Do not add Lacy Lemoosh package files
-  to `Document_Register_Master`, and do not reroute unrelated Idaho Panhandle
-  queue rows such as `FOR-020` or `FOR-022` into this packet.
+  `needs_reviewer_resolution=false`.
+- reviewer-stack replay:
+  tracked applicability adjudication at
+  `config/applicability_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
+  resolves all `9` applicability conflicts (`7` `human_applicable`, `2`
+  `human_not_applicable`) with `0` pending items. `applicability-validate`
+  passes with `56` applicable authorities, `62` non-applicable authorities,
+  `0` unresolved authorities, and `generated_rule_pack_ready=true`.
+  `applicability-generate-rule-pack` passes with `56` generated rules and
+  rule-pack SHA256
+  `5229c84ea764f56d020a1a3b9acc5afc3be17662f31b6c2591a547fe98ef7527`.
+  `compliance-review` passes with `56` findings, status counts `36` pass,
+  `18` uncertain, and `2` gap, and reviewer-ready compliance matrix/PDF
+  artifacts. V1 eval contract
+  `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json` passes with
+  `30/30` conditional expectations, `26/26` baseline source-document checks,
+  and contract status `reviewer_ready`. Component eval contract
+  `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
+  passes `52/52` cases with `8` applicable standards. Review `phase-eval`
+  passes with `28/28` phases reviewer-ready. Promotion remains blocked only by
+  intentional Milestone 4 manifest/registry work: the phase summary has
+  `contract_backed_promotion_ready=false` because the Lacy review is still not
+  declared in the aggregate coverage manifests. Do not add Lacy Lemoosh package
+  files to `Document_Register_Master`, and do not reroute unrelated Idaho
+  Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet.
 
 ## Beaverhead-Deerlodge South Tobacco Roots Milestone 4 Reduced Locally
 
