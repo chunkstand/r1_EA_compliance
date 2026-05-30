@@ -1,6 +1,6 @@
 # Agent Start Here
 
-Date: 2026-05-29
+Date: 2026-05-30
 
 Use this file as the first stop for agent-driven document work in this repo.
 It tells you which existing lane to use and when to refuse the request.
@@ -59,18 +59,19 @@ The planner:
   closed in commit `ba3718b`: `R1PLAN-idaho-panhandle-nfs-04` indexes `1,606`
   chunks and `R1PLAN-idaho-panhandle-nfs-05` indexes `991` chunks. Idaho
   area/overlay vocabulary resolves `1` geographic area, `1` management area,
-  and `2` overlays. The current reduced blocker is component
-  evaluation/adjudication refresh: resolver output now has `16` supported
-  findings, `36` gaps, and the previous `52`-item adjudication is stale against
-  the current `36`-item queue.
+  and `2` overlays. The current `36`-item component adjudication is refreshed:
+  `forest-plan-component-adjudication-eval` passes with `36/36` resolved
+  system-miss items, `0` pending items, and no expectation mismatches;
+  `forest-plan-resolve` now reports `reviewer_ready=true` and
+  `validation_passed=true`.
   Preserve `St. Maries Ranger District` as the authority label and `St. Joe
   Ranger District` as resolver scope evidence.
   This is not a
   governed primary example yet:
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` at `profile_eval_guidance_only` with
-  `primary_example_id=null` until component refresh, reviewer-stack, and
-  promotion gates pass. Keep Lacy Lemoosh parallel to
+  `primary_example_id=null` until reviewer-stack and promotion gates pass. Keep
+  Lacy Lemoosh parallel to
   `Document_Register_Master`; it is not a generic Region 1 example and must
   not be reused for non-Idaho-Panhandle forests.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved

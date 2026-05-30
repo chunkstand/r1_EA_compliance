@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-29
+Date: 2026-05-30
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
@@ -46,9 +46,9 @@ history below.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 2 FEIS source-readiness closed locally; component
-  evaluation/adjudication refresh pending; source-readiness closeout commit is
-  `ba3718b`; no registry promotion
+  Milestone 2 FEIS source-readiness and current component adjudication refresh
+  are closed locally; source-readiness closeout commit is `ba3718b`; next
+  slice is reviewer-stack replay; no registry promotion
 - resolved Beaverhead-Deerlodge packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -103,19 +103,24 @@ history below.
   `project_location_signal_count=1`, `geographic_area_count=1`,
   `management_area_count=1`, `overlay_count=2`, retrieval readiness passed with
   `blocking_missing_source_record_ids=[]`, and overall `validation_passed=true`.
-  The package is still not reviewer-ready: component evaluation now reports
-  `16` supported findings, `36` gap findings, `8` applicable standards, `3`
-  applied standards, and `5` insufficient-evidence standards. The existing
-  component adjudication remains a stale `52/52` resolved file against the
-  current `36`-item queue, producing `queue_item_count_mismatch` and
-  `resolved_item_count_mismatch`.
+  The current component adjudication is refreshed against the live `36`-item
+  queue: `forest-plan-component-adjudication-eval` passes with `36/36`
+  resolved system-miss items, `0` pending items, no expectation mismatches,
+  `real_ea_omission_count=0`, and disposition counts `25`
+  `evidence_linking_miss`, `10` `applicability_false_positive`, and `1`
+  `component_inventory_overreach`. `forest-plan-resolve` now reports component
+  adjudication `reviewer_ready=true`, overall `reviewer_ready=true`,
+  `needs_reviewer_resolution=false`, and `validation_passed=true`. Component
+  evaluation still records `16` supported findings, `36` gap findings, `8`
+  applicable standards, `3` applied standards, and `5`
+  insufficient-evidence standards, all closed as component-adjudication system
+  misses for this preflight slice.
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
   `primary_example_id=null`, and `config/v1_real_package_review_coverage_v1.json`
-  has no Lacy Lemoosh slot. The next slice is component
-  evaluation/adjudication refresh, then reviewer-stack replay; keep Lacy Lemoosh
-  parallel to `Document_Register_Master` and do not route unrelated Idaho
-  Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet.
+  has no Lacy Lemoosh slot. The next slice is reviewer-stack replay; keep Lacy
+  Lemoosh parallel to `Document_Register_Master` and do not route unrelated
+  Idaho Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet.
   Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
   locally through Milestone 4 registry and coverage promotion. The packet is
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,

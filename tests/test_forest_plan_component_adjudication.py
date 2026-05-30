@@ -437,13 +437,13 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
         )
 
         items = adjudication["items"]
-        self.assertEqual(len(items), 52)
+        self.assertEqual(len(items), 36)
         self.assertEqual(
             Counter(item["disposition"] for item in items),
             Counter(
                 {
-                    "evidence_linking_miss": 36,
-                    "applicability_false_positive": 15,
+                    "evidence_linking_miss": 25,
+                    "applicability_false_positive": 10,
                     "component_inventory_overreach": 1,
                 }
             ),
@@ -453,13 +453,13 @@ class ForestPlanComponentAdjudicationTests(unittest.TestCase):
         self.assertTrue(all(item["adjudicated_by"] == ["codex"] for item in items))
 
         standard_items = [item for item in items if item["component_type"] == "standard"]
-        self.assertEqual(len(standard_items), 8)
+        self.assertEqual(len(standard_items), 5)
         self.assertEqual(
             Counter(item["disposition"] for item in standard_items),
             Counter(
                 {
-                    "applicability_false_positive": 5,
-                    "evidence_linking_miss": 2,
+                    "applicability_false_positive": 3,
+                    "evidence_linking_miss": 1,
                     "component_inventory_overreach": 1,
                 }
             ),

@@ -15,15 +15,16 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Idaho Panhandle Lacy Lemoosh FEIS Source-Readiness Closed Locally
+## Idaho Panhandle Lacy Lemoosh Component Adjudication Refreshed Locally
 
-Latest implementation update on 2026-05-29 UTC:
+Latest implementation update on 2026-05-30 UTC:
 
 - update:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
-  resolved through Milestone 1; Milestone 2 FEIS source-readiness is closed
-  locally in commit `ba3718b`, with component evaluation/adjudication refresh
-  remaining as the active blocker. The planned review identity is
+  resolved through Milestone 2 forest-plan preflight. Milestone 2 FEIS
+  source-readiness is closed locally in commit `ba3718b`, and the current
+  component adjudication refresh is closed against the live `36`-item queue.
+  Reviewer-stack replay is the next active slice. The planned review identity is
   `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
   `forest_unit_id="idaho-panhandle-nfs"` and planned
   `example_id="ipnf-lacy-lemoosh-forest-specific"`.
@@ -82,19 +83,23 @@ Latest implementation update on 2026-05-29 UTC:
   `management_area_count=1`, `overlay_count=2`, retrieval readiness passed with
   `blocking_missing_source_record_ids=[]`, and overall
   `validation_passed=true`.
-- remaining blocker:
-  the package is still not reviewer-ready. Component evaluation now reports
-  `16` supported findings, `36` gap findings, `8` applicable standards, `3`
-  applied standards, and `5` insufficient-evidence standards. The existing
-  component adjudication at
+- component adjudication refresh:
+  component evaluation still reports `16` supported findings, `36` gap
+  findings, `8` applicable standards, `3` applied standards, and `5`
+  insufficient-evidence standards. The component adjudication at
   `config/forest_plan_component_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-  still has the old `52/52` resolved items, but the current resolver queue is
-  `36` items; `forest-plan-resolve` flags `queue_item_count_mismatch` and
-  `resolved_item_count_mismatch` for that stale adjudication surface. The next
-  slice is component evaluation/adjudication refresh before reviewer-stack or
-  promotion gates. Do not add Lacy Lemoosh package files to
-  `Document_Register_Master`, and do not reroute unrelated Idaho Panhandle queue
-  rows such as `FOR-020` or `FOR-022` into this packet.
+  is now refreshed to the current `36`-item queue. `forest-plan-component-adjudication-eval`
+  passes with `36/36` resolved system-miss items, `0` pending items,
+  `adjudication_completion_rate=1.0`, `adjudication_expectation_match_rate=1.0`,
+  `real_ea_omission_count=0`, disposition counts `25`
+  `evidence_linking_miss`, `10` `applicability_false_positive`, and `1`
+  `component_inventory_overreach`, and no failed checks. `forest-plan-resolve`
+  now reports component adjudication `reviewer_ready=true`, overall
+  `reviewer_ready=true`, and `validation_passed=true` with
+  `needs_reviewer_resolution=false`. The next slice is reviewer-stack replay
+  before registry or coverage promotion. Do not add Lacy Lemoosh package files
+  to `Document_Register_Master`, and do not reroute unrelated Idaho Panhandle
+  queue rows such as `FOR-020` or `FOR-022` into this packet.
 
 ## Beaverhead-Deerlodge South Tobacco Roots Milestone 4 Reduced Locally
 

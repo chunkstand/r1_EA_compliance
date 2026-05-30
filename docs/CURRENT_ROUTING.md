@@ -1,5 +1,5 @@
 # Current Routing
-Date: 2026-05-29
+Date: 2026-05-30
 Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
@@ -14,9 +14,9 @@ Use this file as the short current route before opening the append-only docs.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 2 FEIS source-readiness closed locally; component
-  evaluation/adjudication refresh pending; source-readiness closeout commit is
-  `ba3718b`; no registry promotion
+  Milestone 2 FEIS source-readiness and current component adjudication refresh
+  are closed locally; source-readiness closeout commit is `ba3718b`; next
+  slice is reviewer-stack replay; no registry promotion
 - Latest resolved forest-specific example packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -85,15 +85,20 @@ Use this file as the short current route before opening the append-only docs.
   `project_location_signal_count=1`, `geographic_area_count=1`,
   `management_area_count=1`, `overlay_count=2`, retrieval readiness passed
   with `blocking_missing_source_record_ids=[]`, and overall
-  `validation_passed=true`. It is still not reviewer-ready: component
-  evaluation now reports `16` supported findings, `36` gaps, `8` applicable
-  standards, `3` applied standards, and `5` insufficient-evidence standards;
-  the tracked `52`-item component adjudication is stale against the current
-  `36`-item queue (`queue_item_count_mismatch`,
-  `resolved_item_count_mismatch`). `idaho-panhandle-nfs` remains
+  `validation_passed=true`. The current component adjudication is refreshed
+  against the `36`-item queue: `forest-plan-component-adjudication-eval` passes
+  with `36/36` resolved system-miss items, `0` pending items, disposition
+  counts `25` `evidence_linking_miss`, `10`
+  `applicability_false_positive`, and `1`
+  `component_inventory_overreach`, and no expectation mismatches.
+  `forest-plan-resolve` now reports `reviewer_ready=true` and
+  `validation_passed=true`; component evaluation still records `16` supported
+  findings, `36` gaps, `8` applicable standards, `3` applied standards, and
+  `5` insufficient-evidence standards, all closed as component-adjudication
+  system misses for this preflight slice. `idaho-panhandle-nfs` remains
   `profile_eval_guidance_only`, with `primary_example_id=null`; the next slice
-  is component evaluation/adjudication refresh, then reviewer-stack replay, not
-  registry promotion. Keep Lacy Lemoosh parallel to `Document_Register_Master`;
+  is reviewer-stack replay, not registry promotion. Keep Lacy Lemoosh parallel
+  to `Document_Register_Master`;
   do not route unrelated Idaho Panhandle queue rows such as `FOR-020` or
   `FOR-022` into this packet.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
