@@ -64,9 +64,9 @@ The planner:
   system-miss items, `0` pending items, and no expectation mismatches;
   `forest-plan-resolve` now reports `reviewer_ready=true` and
   `validation_passed=true`.
-  Reviewer-stack replay now passes locally: applicability adjudication resolves
-  `9/9` conflicts, generated rule-pack validation reports `56` generated
-  rules, compliance review is reviewer-ready, V1 eval contract
+  Reviewer-stack replay now passes locally in commit `3cea9fe`: applicability
+  adjudication resolves `9/9` conflicts, generated rule-pack validation reports
+  `56` generated rules, compliance review is reviewer-ready, V1 eval contract
   `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json` passes, component
   eval contract
   `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`

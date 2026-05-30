@@ -21,11 +21,12 @@ Latest implementation update on 2026-05-30 UTC:
 
 - update:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
-  resolved locally through Milestone 3 reviewer-stack replay. Milestone 2 FEIS
-  source-readiness is closed locally in commit `ba3718b`, the current component
-  adjudication refresh is closed against the live `36`-item queue, and Milestone
-  3 now has green applicability, generated rule-pack, compliance, V1 eval,
-  component eval, and review `phase-eval` evidence. Milestone 4 registry and
+  resolved locally through Milestone 3 reviewer-stack replay, closed in commit
+  `3cea9fe`. Milestone 2 FEIS source-readiness is closed locally in commit
+  `ba3718b`, the current component adjudication refresh is closed against the
+  live `36`-item queue, and Milestone 3 now has green applicability, generated
+  rule-pack, compliance, V1 eval, component eval, and review `phase-eval`
+  evidence. Milestone 4 registry and
   aggregate coverage promotion is the next active slice. The planned review identity is
   `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
   `forest_unit_id="idaho-panhandle-nfs"` and planned
@@ -122,7 +123,8 @@ Latest implementation update on 2026-05-30 UTC:
   `contract_backed_promotion_ready=false` because the Lacy review is still not
   declared in the aggregate coverage manifests. Do not add Lacy Lemoosh package
   files to `Document_Register_Master`, and do not reroute unrelated Idaho
-  Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet.
+  Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet. Local
+  Milestone 3 closeout commit: `3cea9fe`.
 
 ## Beaverhead-Deerlodge South Tobacco Roots Milestone 4 Reduced Locally
 

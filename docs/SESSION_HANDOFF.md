@@ -46,9 +46,10 @@ history below.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 3 reviewer-stack replay is closed locally; source-readiness
-  closeout commit is `ba3718b`; next slice is Milestone 4 registry and
-  aggregate coverage promotion; no registry promotion has been committed yet
+  Milestone 3 reviewer-stack replay is closed locally in commit `3cea9fe`;
+  source-readiness closeout commit is `ba3718b`; next slice is Milestone 4
+  registry and aggregate coverage promotion; no registry promotion has been
+  committed yet
 - resolved Beaverhead-Deerlodge packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -115,9 +116,10 @@ history below.
   applicable standards, `3` applied standards, and `5`
   insufficient-evidence standards, all closed as component-adjudication system
   misses for this preflight slice. Milestone 3 reviewer-stack replay now
-  passes locally: applicability adjudication resolves `9/9` conflicts,
-  applicability validation reports `56` applicable authorities, `62`
-  non-applicable authorities, and `0` unresolved authorities, generated
+  passes locally in commit `3cea9fe`: applicability adjudication resolves
+  `9/9` conflicts, applicability validation reports `56` applicable
+  authorities, `62` non-applicable authorities, and `0` unresolved authorities,
+  generated
   rule-pack validation emits `56` rules, compliance review passes with `56`
   findings and reviewer-ready matrix/PDF artifacts, V1 eval contract
   `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json` passes with

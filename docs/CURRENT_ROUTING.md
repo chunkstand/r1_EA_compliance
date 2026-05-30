@@ -14,9 +14,11 @@ Use this file as the short current route before opening the append-only docs.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 2 FEIS source-readiness and current component adjudication refresh
-  are closed locally; source-readiness closeout commit is `ba3718b`; next
-  slice is reviewer-stack replay; no registry promotion
+  Milestone 2 FEIS source-readiness, current component adjudication refresh,
+  and Milestone 3 reviewer-stack replay are closed locally; source-readiness
+  closeout commit is `ba3718b`; reviewer-stack replay closeout commit is
+  `3cea9fe`; next slice is Milestone 4 registry and aggregate coverage
+  promotion; no registry promotion
 - Latest resolved forest-specific example packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -95,10 +97,11 @@ Use this file as the short current route before opening the append-only docs.
   `validation_passed=true`; component evaluation still records `16` supported
   findings, `36` gaps, `8` applicable standards, `3` applied standards, and
   `5` insufficient-evidence standards, all closed as component-adjudication
-  system misses for this preflight slice. Milestone 3 reviewer-stack replay now
-  passes: applicability adjudication resolves `9/9` conflicts, applicability
-  validation reports `56` applicable authorities, `62` non-applicable
-  authorities, `0` unresolved authorities, and generated rule-pack readiness;
+  system misses for this preflight slice. Milestone 3 reviewer-stack replay
+  closed in commit `3cea9fe` and now passes: applicability adjudication
+  resolves `9/9` conflicts, applicability validation reports `56` applicable
+  authorities, `62` non-applicable authorities, `0` unresolved authorities, and
+  generated rule-pack readiness;
   compliance review passes with `56` findings and reviewer-ready matrix/PDF
   artifacts; V1 eval passes with `30/30` conditional expectations and reviewer
   status `reviewer_ready`; component eval passes `52/52` cases; review

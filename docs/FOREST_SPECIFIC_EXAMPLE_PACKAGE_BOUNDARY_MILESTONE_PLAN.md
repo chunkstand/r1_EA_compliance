@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is reduced through Milestone 4 registry and coverage promotion, with only inherited ECID source-delta component-coverage drift still red; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, Bitterroot, or Beaverhead-Deerlodge Milestones 0-4 unless a verified gate regresses`)
+Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is reduced through Milestone 4 registry and coverage promotion, with only inherited ECID source-delta component-coverage drift still red; docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 3 reviewer-stack replay in commit `3cea9fe` and remains unpromoted until Milestone 4 registry and aggregate coverage promotion; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, Bitterroot, Beaverhead-Deerlodge, or Idaho Panhandle Lacy Milestones 0-3 unless a verified gate regresses`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -19,6 +19,8 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
     `custer-gallatin-nf`
   - East Crazy as a supplemental reviewer-ready example for
     `custer-gallatin-nf`
+  - South Tobacco Roots as the primary reviewer-ready example for
+    `beaverhead-deerlodge-nf`
   - Bitterroot Front as the primary reviewer-ready example for `bitterroot-nf`
   - West Reservoir as the primary reviewer-ready example for `flathead-nf`
   - Tyler's Kitchen as the primary reviewer-ready example for `lolo-nf`
@@ -37,7 +39,7 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   parent packet's Milestone 3 registry and aggregate threshold ratchet is now
   implemented: `lolo-nf` routes as `real_package_examples_available`, and the
   Lolo slot is load-bearing in real-package coverage.
-- The remaining `5` forests now route through
+- The remaining `4` forests now route through
   `config/region1_forest_plan_profile_eval_coverage_v1.json` as
   `profile_eval_guidance_only` until a governed real package example exists.
 - The South Otter follow-on in
@@ -88,6 +90,21 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   Beaverhead component-coverage slot is present, covered, source-set aligned,
   and passing; the standalone aggregate remains red only on inherited
   `v1-cg-ecid-source-delta-review`.
+- The Idaho Panhandle Lacy Lemoosh follow-on in
+  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
+  resolved through Milestone 3 reviewer-stack replay in commit `3cea9fe` and
+  remains unpromoted until Milestone 4 registry and aggregate coverage
+  promotion. Local package authority and base review are green for review
+  `region1-example-idaho-panhandle-lacy-lemoosh-60853`; the Box intake has
+  `186` files, `553,664,116` bytes, and `0` failures. Scope/source preflight
+  resolves to `idaho_panhandle_nfs` with `validation_passed=true`, component
+  adjudication resolves `36/36` current queue items, applicability adjudication
+  resolves `9/9` conflicts, generated rule-pack validation passes with `56`
+  rules, compliance review and V1 eval pass, component eval passes `52/52`
+  cases, and review `phase-eval` passes `28/28` with reviewer-ready status.
+  `idaho-panhandle-nfs` still routes as `profile_eval_guidance_only` with
+  `primary_example_id=null`; no Lacy real-package or component aggregate
+  coverage slot exists yet.
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.
@@ -302,6 +319,25 @@ Current Bitterroot Front follow-on:
   `review_id="region1-example-bitterroot-front-57341"` and
   `example_id="bitterroot-front-forest-specific"`.
 
+Current Beaverhead-Deerlodge follow-on:
+
+- `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  is resolved through Milestone 4 registry and coverage promotion, reduced only
+  by the inherited ECID source-delta component-coverage aggregate drift. It owns
+  `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`
+  and `example_id="bdnf-south-tobacco-roots-forest-specific"` for
+  `beaverhead-deerlodge-nf`.
+
+Current Idaho Panhandle Lacy Lemoosh follow-on:
+
+- `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
+  resolved through Milestone 3 reviewer-stack replay in commit `3cea9fe`.
+  It owns the Lacy Lemoosh candidate identity
+  `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` and planned
+  `example_id="ipnf-lacy-lemoosh-forest-specific"` for
+  `idaho-panhandle-nfs`, but remains unpromoted until Milestone 4 registry and
+  aggregate coverage gates pass.
+
 ## Current Evidence
 
 - The forest-specific registry remains the typed routing owner for every
@@ -320,12 +356,13 @@ Current Bitterroot Front follow-on:
   Crazy remains the only supplemental active example, South Plateau is
   archived as historical evidence only, and South Otter does not count as a
   new distinct forest.
-- Current aggregate evidence after Bitterroot Front promotion:
-  `real-package-review-coverage-eval` passes with `6` covered required slots,
-  `6` reviewer-ready slots, `0` typed-blocked slots, `5` distinct forests, and
-  `7` package-style tags. `forest-specific-example-package-eval` passes with
-  `6` governed review examples, `6` reviewer-ready examples, `5` distinct
-  governed forests, and `5` profile-guidance-only forests.
+- Current aggregate evidence after Beaverhead-Deerlodge promotion and Lacy
+  Lemoosh Milestone 3 closeout: `real-package-review-coverage-eval` passes with
+  `7` covered required slots, `7` reviewer-ready slots, `0` typed-blocked
+  slots, `6` distinct forests, and `8` package-style tags.
+  `forest-specific-example-package-eval` passes with `7` governed review
+  examples, `7` reviewer-ready examples, `6` distinct governed forests, and
+  `4` profile-guidance-only forests.
 - Bitterroot Front package-authority evidence is local and ignored:
   `source_library/reviews/_intake/region1-example-bitterroot-front-57341/`
   contains `box_inventory.json` with `41` folders, `132` visible files, and
@@ -354,9 +391,9 @@ Current Bitterroot Front follow-on:
   component-coverage slot, V1 eval contract, compliance review, passing
   component eval, and review `phase-eval` promotion proof.
 - `forest-plan-component-eval-coverage` still fails as an aggregate on the
-  pre-existing ECID source-delta slot, but the Bitterroot, Lolo, South Otter,
-  West Reservoir, and HLC Bonanza component slots are required, covered,
-  source-set aligned, and passing.
+  pre-existing ECID source-delta slot, but the Beaverhead, Bitterroot, Lolo,
+  South Otter, West Reservoir, and HLC Bonanza component slots are required,
+  covered, source-set aligned, and passing.
 
 ## Milestone Sequence
 
@@ -373,6 +410,8 @@ Current Bitterroot Front follow-on:
 | `8` | Bitterroot Front package authority intake and base EA review cache | `resolved` |
 | `9` | Bitterroot Front forest-plan resolver preflight with f70 source-record, component-inventory, and component-adjudication closure | `resolved` |
 | `10` | Bitterroot Front reviewer-stack replay, registry, real-package coverage, and component slot promotion | `resolved` |
+| `11` | Beaverhead-Deerlodge South Tobacco Roots package authority, reviewer-stack replay, registry, real-package coverage, and component slot promotion | `reduced through Milestone 4; inherited ECID component-coverage drift remains` |
+| `12` | Idaho Panhandle Lacy Lemoosh package authority, forest-plan preflight, component adjudication refresh, and reviewer-stack replay | `resolved through Milestone 3; unpromoted until Milestone 4` |
 
 ## Acceptance Criteria
 
@@ -389,6 +428,11 @@ Current Bitterroot Front follow-on:
 - Bitterroot routes as `real_package_examples_available` only while Bitterroot
   Front package authority, reviewer-stack gates, and registry/coverage
   promotion remain aligned.
+- Beaverhead-Deerlodge routes as `real_package_examples_available` only while
+  South Tobacco Roots package authority, reviewer-stack gates, and
+  registry/coverage promotion remain aligned.
+- Idaho Panhandle remains `profile_eval_guidance_only` until Lacy Lemoosh
+  Milestone 4 registry and aggregate coverage promotion passes.
 - Negative coverage remains explicit: missing or typed-blocked examples fail or
   route as guidance-only rather than silently becoming reviewer-ready.
 - No tests, eval thresholds, or queue gates are weakened to make a forest appear
@@ -410,10 +454,12 @@ git diff --check
 
 The standalone `forest-plan-component-eval-coverage` command is still expected
 to fail until the separate ECID source-delta component-coverage blocker is
-repaired. For HLC and Bitterroot, the required checks are that the Bonanza and
-Bitterroot Front slots are present, covered, source-set aligned, and passing,
-and that each review `phase-eval` consumes its review-scope summary
-successfully.
+repaired. For HLC, Bitterroot, and Beaverhead, the required checks are that the
+Bonanza, Bitterroot Front, and South Tobacco Roots slots are present, covered,
+source-set aligned, and passing, and that each review `phase-eval` consumes its
+review-scope summary successfully. For Idaho Panhandle, the required check is
+that Lacy Lemoosh remains `profile_eval_guidance_only` until Milestone 4
+explicitly adds registry and aggregate coverage slots.
 
 ## Freshness Check
 
@@ -422,14 +468,19 @@ Before changing registry status, read `docs/CURRENT_ROUTING.md`,
 `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
 `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, and
 `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
-`docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, and
+`docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
+`docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
+`docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, and
 `config/forest_specific_example_package_registry_v1.json`. Verify the current
-Lolo, South Otter, HLC Bonanza, and Bitterroot Front `v1-ea-eval`, review
-`phase-eval`, real-package coverage, and forest-specific example-package
-artifacts before changing any promoted row. For Bitterroot, verify that
-Milestones 0-4 remain closed, `FOR-007` remains a forest-specific example
-boundary, and `primary_example_id="bitterroot-front-forest-specific"` still
-belongs only to `bitterroot-nf`.
+Lolo, South Otter, HLC Bonanza, Bitterroot Front, Beaverhead-Deerlodge South
+Tobacco Roots, and Idaho Panhandle Lacy Lemoosh `v1-ea-eval`, review
+`phase-eval`, real-package coverage, forest-specific example-package artifacts,
+and candidate-vs-promoted status before changing any promoted row. For
+Bitterroot, verify that Milestones 0-4 remain closed, `FOR-007` remains a
+forest-specific example boundary, and
+`primary_example_id="bitterroot-front-forest-specific"` still belongs only to
+`bitterroot-nf`. For Idaho Panhandle, verify that Milestones 0-3 remain closed
+and `primary_example_id=null` until Milestone 4 passes.
 
 ## Stop Conditions
 

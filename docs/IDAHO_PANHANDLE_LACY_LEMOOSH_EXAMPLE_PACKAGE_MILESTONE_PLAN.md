@@ -3,8 +3,8 @@ Date: 2026-05-29
 Status: Active. Milestones 0-3 are resolved locally; Milestone 2 FEIS
 source-readiness is closed locally in commit `ba3718b`, the current component
 adjudication refresh is closed against the live `36`-item queue, and Milestone
-3 reviewer-stack replay now passes. Milestone 4 registry and aggregate coverage
-promotion is next.
+3 reviewer-stack replay now passes in commit `3cea9fe`. Milestone 4 registry
+and aggregate coverage promotion is next.
 Plan class: implementation
 High-risk implementation: yes
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -12,9 +12,8 @@ Commit policy: each completed milestone closes only after verification,
 affected docs/handoff updates, and a local atomic commit.
 
 ## Purpose
-Open the governed Idaho Panhandle National Forests Lacy Lemoosh lane without
-contaminating `Document_Register_Master` or claiming reviewer-ready status
-before deterministic review gates pass.
+Open the governed Idaho Panhandle Lacy Lemoosh lane without contaminating
+`Document_Register_Master` or claiming readiness before deterministic gates pass.
 
 Authority: project page
 `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853`, public Pinyon/Box
@@ -55,26 +54,18 @@ Lemoosh `60853`.
   `package_failed_count=0`, `reviewer_ready=true`, and `validation_passed=true`.
 - Registry status remains `profile_eval_guidance_only`, `primary_example_id=null`,
   with no Lacy Lemoosh coverage slot.
-- Milestone 2 resolves scope from package-backed `St. Joe Ranger District`
-  evidence, builds `52` components and `8` standards, resolves St. Joe
-  Geographic Area, Management Area 6, RHCA, and WUI vocabulary, and now indexes
-  FEIS records `R1PLAN-idaho-panhandle-nfs-04`/`-05` in the local f70 retrieval
-  surface. Current resolver output has `16` supported findings and `36` gaps;
-  the refreshed `36`-item component adjudication passes with all items resolved
-  as system misses, `0` pending items, and no expectation mismatches.
-- Milestone 3 resolves the reviewer stack locally: applicability adjudication
-  closes `9/9` conflicts, generated rule-pack validation emits `56` rules,
-  compliance review passes with reviewer-ready matrix/PDF artifacts, V1 eval
-  passes with `30/30` conditional expectations and contract status
-  `reviewer_ready`, component eval passes `52/52` cases, and review
-  `phase-eval` passes `28/28` phases.
+- Milestone 2 resolves `St. Joe Ranger District` scope, builds `52` components
+  and `8` standards, indexes FEIS records `R1PLAN-idaho-panhandle-nfs-04`/`-05`,
+  and closes the current `36`-item component queue with no pending items.
+- Milestone 3 resolves the reviewer stack: applicability closes `9/9`, rule
+  generation emits `56` rules, compliance/V1/component evals pass, and review
+  `phase-eval` passes `28/28`.
 - District lock: preserve `St. Maries Ranger District` as the project-page/Box
   authority label and `St. Joe Ranger District` as package scope evidence.
 
 ## Goal
-Create and close a governed Lacy Lemoosh example package lane as the Idaho
-Panhandle primary example only after package authority, review artifacts, eval
-contracts, and aggregate gates are present and green.
+Close Lacy Lemoosh as the Idaho Panhandle primary example only after package
+authority, review artifacts, eval contracts, and aggregate gates are green.
 
 ## Non-Goals
 - Do not add Lacy Lemoosh package files or project-specific rows to
@@ -97,23 +88,18 @@ contracts, and aggregate gates are present and green.
 - registry and coverage promotion only after review-readiness gates pass
 
 ## Owner Surfaces
-- packet: `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-- registry: `config/forest_specific_example_package_registry_v1.json`
-- replay context:
-  `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-- future contracts: `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json`,
-  `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`,
-  `config/applicability_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`,
-  `config/forest_plan_component_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-- aggregate manifests: `config/v1_real_package_review_coverage_v1.json`,
-  `config/forest_plan_component_eval_coverage_v1.json`
-- ignored outputs:
-  `source_library/reviews/_intake/region1-example-idaho-panhandle-lacy-lemoosh-60853/`
-  and `source_library/reviews/region1-example-idaho-panhandle-lacy-lemoosh-60853/`
-- docs and tests:
-  `README.md`, `docs/AGENT_START_HERE.md`, `docs/CURRENT_ROUTING.md`,
-  `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`,
-  `tests/test_forest_specific_example_package_registry.py`
+- Packet/docs: this plan, `README.md`, `docs/AGENT_START_HERE.md`,
+  `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+  `docs/SESSION_HANDOFF.md`.
+- Registry/coverage: `config/forest_specific_example_package_registry_v1.json`,
+  `config/v1_real_package_review_coverage_v1.json`, and
+  `config/forest_plan_component_eval_coverage_v1.json`.
+- Replay/eval contracts: replay context, V1 eval, component eval, applicability
+  adjudication, and component adjudication for
+  `region1-example-idaho-panhandle-lacy-lemoosh-60853`.
+- Ignored evidence: local intake and review outputs under `source_library/`.
+- Tests: `tests/test_forest_specific_example_package_registry.py` and
+  `tests/test_idaho_panhandle_lacy_contracts.py`.
 
 ## Intent Hierarchy
 - Invariant: Lacy Lemoosh is only for `idaho-panhandle-nfs` and remains outside
@@ -128,40 +114,18 @@ contracts, and aggregate gates are present and green.
   forest.
 
 ## Weak-Point Contract
-### Weak Point 1
-Forecast: Lacy Lemoosh is treated as shared master input.
-- Owner surface: workbook, `Document_Register_Master`, queue ledger
-- Prevention gate:
-  `PYTHONPATH=src uv run --extra dev pytest tests/test_forest_specific_example_package_registry.py`
-- Fail threshold: any Lacy Lemoosh package row is added to the master table, or
-  unrelated Idaho Panhandle queue rows are resolved as this package
-
-### Weak Point 2
-Forecast: Idaho Panhandle is promoted from URL or folder inventory
-alone.
-- Owner surface: registry, real-package coverage, component coverage
-- Prevention gate: review `phase-eval`, V1 eval, component eval,
-  `real-package-review-coverage-eval`, and `forest-specific-example-package-eval`
-- Fail threshold: Idaho Panhandle leaves `profile_eval_guidance_only`, or a
-  Lacy slot becomes required reviewer-ready coverage, before package authority
-  and review gates pass
-
-### Weak Point 3
-Forecast: intake drops `Draft EA` or `Scoping` and reviews only
-final decision-core PDFs.
-- Owner surface: ignored intake path and replay context
-- Prevention gate: package inventory, import manifest, hashes, and `ea-review`
-- Fail threshold: intake lacks `Decision`, `Final EA`, `Draft EA`, or
-  `Scoping` unless a milestone proves a narrower official replay path
-
-### Weak Point 4
-Forecast: scope resolves by broad lexical match without
-package-specific evidence.
-- Owner surface: forest-plan profile, context summary, component contracts
-- Prevention gate: `forest-plan-resolve`, component adjudication eval, and
-  forest-plan component eval
-- Fail threshold: ambiguous scope, missing required source records, unresolved
-  mentions, or pending component queue items remain
+- Shared-master contamination: workbook, `Document_Register_Master`, and queue
+  ledger stay untouched; registry tests fail if Lacy rows enter the master table
+  or unrelated Idaho Panhandle rows become Lacy lineage.
+- Premature promotion: registry and aggregate coverage stay guidance-only until
+  review `phase-eval`, V1 eval, component eval, real-package coverage, and
+  forest-specific registry eval pass.
+- Incomplete intake: package inventory, import manifest, hashes, and `ea-review`
+  must retain `Decision`, `Final EA`, `Draft EA`, and `Scoping` unless a later
+  milestone proves a narrower official replay path.
+- Weak scope resolution: `forest-plan-resolve`, component adjudication eval, and
+  component eval must close ambiguous scope, missing required source records,
+  unresolved mentions, and pending component queue items.
 
 ## Milestone Sequence
 ### Milestone 0 - Open Packet And Freeze Boundary
@@ -217,39 +181,23 @@ component-eval coverage only after reviewer-stack gates pass, then rerun the
 aggregate gates and update docs/handoff before committing.
 
 ## Required Verification Gates
-Milestone 0:
+Use the milestone-appropriate subset of these gates:
 
 ```bash
 python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --new-plan docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md --strict
-PYTHONPATH=src uv run --extra dev pytest tests/test_forest_specific_example_package_registry.py
-PYTHONPATH=src python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library --manifest config/forest_specific_example_package_registry_v1.json
-git diff --check
-```
-
-Milestone 1:
-
-```bash
+PYTHONPATH=src uv run --extra dev pytest tests/test_idaho_panhandle_lacy_contracts.py tests/test_forest_specific_example_package_registry.py
 PYTHONPATH=src python -m usfs_r1_ea_sources ea-review --package-path source_library/reviews/_intake/region1-example-idaho-panhandle-lacy-lemoosh-60853 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-idaho-panhandle-lacy-lemoosh-60853 --docling-timeout-seconds 180
-PYTHONPATH=src uv run --extra dev pytest tests/test_replay_context.py tests/test_forest_specific_example_package_registry.py
-git diff --check
-```
-
-Milestone 2:
-
-```bash
-PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-components-build --output-dir source_library/reviews/region1-example-idaho-panhandle-lacy-lemoosh-60853/component_inventory_build --source-set-id source-set-f70ea11e04ae3d53 --source-record-id FOR-021 --forest-unit-id idaho-panhandle-nfs --plan-version 2015 --chunks-path source_library/derived/source-set-f70ea11e04ae3d53/chunks/chunks.jsonl
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-resolve --package-path source_library/reviews/_intake/region1-example-idaho-panhandle-lacy-lemoosh-60853 --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --review-id region1-example-idaho-panhandle-lacy-lemoosh-60853 --forest-unit-id idaho-panhandle-nfs --forest-plan-component-inventory-path source_library/reviews/region1-example-idaho-panhandle-lacy-lemoosh-60853/component_inventory_build/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json --reuse-package-cache --docling-timeout-seconds 180
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-adjudication-eval --output-dir source_library --review-id region1-example-idaho-panhandle-lacy-lemoosh-60853 --adjudication-file config/forest_plan_component_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json
-PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_profiles.py tests/test_forest_plan_resolver_scope.py tests/test_forest_specific_example_package_registry.py tests/test_architecture_contract.py
-PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-profile-eval --output-dir source_library --manifest config/region1_forest_plan_profile_eval_coverage_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-idaho-panhandle-lacy-lemoosh-60853
+PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library --manifest config/forest_specific_example_package_registry_v1.json
-PYTHONPATH=src uv run --extra dev ruff check src tests
-PYTHONPATH=src python -m compileall src
 git diff --check
 ```
 
-Milestones 3-4 add matching compliance, V1, component, `phase-eval`,
-coverage, architecture, ruff, compile, and `git diff --check` gates.
+Milestones 3-4 add matching applicability, generated rule-pack, compliance,
+V1, component, coverage, architecture, ruff, and compile gates when those
+surfaces change.
 
 ## Acceptance Criteria
 - Lacy Lemoosh has a forest-qualified packet, review ID, and planned example
@@ -276,91 +224,20 @@ coverage, architecture, ruff, compile, and `git diff --check` gates.
 Record each closed milestone with commands run, pass/fail status, skipped
 gates, residual risks, docs/handoff updates, and local commit hash.
 
-Milestone 0 closeout on 2026-05-29: plan lint passed; registry tests passed
-`13/13`; `forest-specific-example-package-eval` and `git diff --check` passed.
-Residual risk: package-authority intake remained, with no Lacy slot or primary
-example yet.
-
-Milestone 1 closeout on 2026-05-29: Box inventory/download completed with
-`186` files, `553,664,116` expected/actual bytes, and `failure_count=0`;
-`ea-review` passed with `186/186` extracted files, `7,404` chunks, no package
-failures, and `validation_passed=true`; focused replay/registry tests,
-aggregate eval, ruff, JSON parse, and `git diff --check` passed.
-
-Milestone 2 initial closeout on 2026-05-29: profile source IDs were reconciled
-to active catalog IDs proven in
-`config/r1_forest_plan_identity_reconciliation_v1.json`; package-backed
-`St. Joe Ranger District` vocabulary was added; review-local inventory build
-passed with `52` components and `8` standards; resolver scope is
-`idaho_panhandle_nfs` with `unresolved_mention_count=0`; validation was reduced
-at that checkpoint because `R1PLAN-idaho-panhandle-nfs-04`/`-05` had zero
-indexed chunks. Initial local commit: `a1574b3`. Follow-on pre-FEIS-readiness
-closeout resolved Idaho area/overlay vocabulary and the then-current component
-adjudication:
-`forest-plan-resolve` now reports
-`geographic_area_count=1`, `management_area_count=1`, and `overlay_count=2`;
-`forest-plan-component-adjudication-eval` passes with `52/52` resolved,
-`0` pending, `36` `evidence_linking_miss`, `15`
-`applicability_false_positive`, and `1` `component_inventory_overreach`. Idaho
-Panhandle still had no Lacy Lemoosh coverage slot or primary example. This
-`52`-item adjudication was superseded by the FEIS source-readiness closeout and
-the current `36`-item refresh recorded below.
-
-Milestone 2 FEIS source-readiness closeout on 2026-05-29, committed as
-`ba3718b`: the local f70 catalog/retrieval surface overlays
-`R1PLAN-idaho-panhandle-nfs-04` and
-`R1PLAN-idaho-panhandle-nfs-05` from archived source-delta gate
-`source-set-8a4005c8a083af1a`. The tracked current-source contract now records
-`719` sources, `707` artifacts, and `11` supplemental overlay rows; extraction
-and retrieval pass with `113,830` chunks; direct retrieval readback indexes
-`R1PLAN-idaho-panhandle-nfs-04=1,606` and
-`R1PLAN-idaho-panhandle-nfs-05=991`. `forest-plan-resolve` now passes retrieval
-readiness and overall validation with `blocking_missing_source_record_ids=[]`.
-The reduced blocker moved to component evaluation/adjudication refresh:
-component findings are `16` supported and `36` gaps, with `8` applicable
-standards, `3` applied standards, and the old `52`-item adjudication stale
-against the current `36`-item queue.
-
-Milestone 2 component adjudication refresh closeout on 2026-05-30: the tracked
-component adjudication now matches the current `36`-item queue.
-`forest-plan-component-adjudication-eval` passes with `36/36` resolved
-system-miss items, `0` pending items, `adjudication_completion_rate=1.0`,
-`adjudication_expectation_match_rate=1.0`, `real_ea_omission_count=0`, no
-failed checks, and disposition counts `25` `evidence_linking_miss`, `10`
-`applicability_false_positive`, and `1` `component_inventory_overreach`.
-`forest-plan-resolve` now reports component adjudication `reviewer_ready=true`,
-overall `reviewer_ready=true`, `needs_reviewer_resolution=false`, and
-`validation_passed=true`.
-
-Milestone 3 reviewer-stack replay closeout on 2026-05-30: the tracked
-applicability adjudication at
-`config/applicability_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-resolves `9/9` conflicts with disposition counts `7` `human_applicable` and
-`2` `human_not_applicable`. `applicability-adjudication-eval`,
-`applicability-adjudication-apply`, `applicability-validate`, and
-`applicability-generate-rule-pack` pass; validation reports `56` applicable
-authorities, `62` non-applicable authorities, `0` unresolved authorities, and
-`generated_rule_pack_ready=true`. `compliance-review` passes with `56`
-findings, reviewer-ready compliance review artifacts, and finding status counts
-`36` pass, `18` uncertain, and `2` gap. V1 eval contract
-`config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json` passes with
-`26/26` baseline checks, `30/30` conditional expectations, `10/10`
-forest-plan expectations, and contract status `reviewer_ready`. Forest-plan
-component eval contract
-`config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-passes `52/52` cases, including all `8` applicable standards. Review
-`phase-eval` passes with `28/28` phases reviewer-ready. Residual risk is
-intentional and scoped to Milestone 4: Lacy Lemoosh is not yet declared in
-real-package or component aggregate coverage manifests, so
-`contract_backed_promotion_ready=false`, `idaho-panhandle-nfs` remains
-`profile_eval_guidance_only`, and `primary_example_id` remains `null`.
+| Milestone | Closeout evidence |
+| --- | --- |
+| `0` | 2026-05-29: plan lint, registry tests `13/13`, forest-specific aggregate eval, and `git diff --check` passed; no Lacy slot or primary example yet. |
+| `1` | 2026-05-29: Box intake recorded `186` files, `553,664,116` bytes, and `failure_count=0`; `ea-review` passed with `186/186` extracted files, `7,404` chunks, and `validation_passed=true`. |
+| `2` initial | 2026-05-29 commit `a1574b3`: source IDs, `St. Joe Ranger District` scope vocabulary, and `52`-component inventory landed; validation was reduced because FEIS records had zero indexed chunks. |
+| `2` FEIS | 2026-05-29 commit `ba3718b`: local f70 overlays for `R1PLAN-idaho-panhandle-nfs-04`/`-05` passed extraction/retrieval with `719` sources, `707` artifacts, `11` overlays, `113,830` chunks, and no missing source records. |
+| `2` adjudication | 2026-05-30: current `36`-item component queue passes with `36/36` resolved, `0` pending, `real_ea_omission_count=0`, and `forest-plan-resolve` `reviewer_ready=true`. |
+| `3` | 2026-05-30 commit `3cea9fe`: applicability resolves `9/9`; rule pack has `56` rules; compliance, V1 eval, component eval `52/52`, and review `phase-eval` `28/28` pass. Residual risk is only Milestone 4 promotion: `contract_backed_promotion_ready=false`, `profile_eval_guidance_only`, and `primary_example_id=null`. |
 
 ## Gap-Close Verification Addendum
-Milestones 0-3 are gap-closed only while `CURRENT_ROUTING`, `SESSION_HANDOFF`,
-`CURRENT_SYSTEM_STATE`, `AGENT_START_HERE`, README, registry guidance, focused
-tests, aggregate eval, resolver outputs, and replay context agree that Lacy
-Lemoosh has local package authority, green base review, resolved forest-plan
-preflight, green reviewer-stack replay, and remains unpromoted:
+Milestones 0-3 are gap-closed only while routing docs, handoff, README,
+registry guidance, focused tests, aggregate eval, resolver outputs, and replay
+context agree that Lacy has local authority, green base review, resolved
+forest-plan preflight, green reviewer-stack replay, and remains unpromoted:
 `idaho-panhandle-nfs` stays `profile_eval_guidance_only`,
 `primary_example_id=null`, and no Lacy coverage slot exists until Milestone 4
 promotion gates pass.
