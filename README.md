@@ -59,15 +59,16 @@ They are intentionally not duplicated here.
   packet in
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, but
   `idaho-panhandle-nfs` remains `profile_eval_guidance_only` after local
-  package-authority intake and reduced forest-plan preflight. The tracked
+  package-authority intake and FEIS source-readiness closeout. The tracked
   replay context is
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`;
   resolver scope now resolves to `idaho_panhandle_nfs` from package-local
   `St. Joe Ranger District` evidence, while `St. Maries Ranger District`
-  remains the project-page/Box authority label. Promotion is
-  blocked by missing FEIS source records in the active source set; Idaho
-  area/overlay vocabulary and the `52`-item component adjudication are now
-  closed locally. Do not promote the package until source-delta,
+  remains the project-page/Box authority label. Local f70 retrieval now indexes
+  `R1PLAN-idaho-panhandle-nfs-04` with `1,606` chunks and
+  `R1PLAN-idaho-panhandle-nfs-05` with `991` chunks. The next blocker is
+  component evaluation/adjudication refresh against the current `36`-item queue,
+  not registry promotion. Do not promote the package until component refresh,
   reviewer-stack, and promotion gates pass.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`

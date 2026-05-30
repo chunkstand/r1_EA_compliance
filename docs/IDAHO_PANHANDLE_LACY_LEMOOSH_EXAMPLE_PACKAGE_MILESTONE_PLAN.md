@@ -1,7 +1,8 @@
 # Idaho Panhandle Lacy Lemoosh Example Package Milestone Plan
 Date: 2026-05-29
-Status: Active. Milestones 0-1 are resolved locally; Milestone 2 is reduced
-only on active-source FEIS readiness.
+Status: Active. Milestones 0-1 are resolved locally; Milestone 2 FEIS
+source-readiness is closed locally and reduced only on current component
+evaluation/adjudication refresh.
 Plan class: implementation
 High-risk implementation: yes
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -54,10 +55,10 @@ Lemoosh `60853`.
   with no Lacy Lemoosh coverage slot.
 - Milestone 2 resolves scope from package-backed `St. Joe Ranger District`
   evidence, builds `52` components and `8` standards, resolves St. Joe
-  Geographic Area, Management Area 6, RHCA, and WUI vocabulary, and completes
-  component adjudication for `52/52` reviewer-resolution items. Validation is
-  still blocked because FEIS records `R1PLAN-idaho-panhandle-nfs-04`/`-05` have
-  zero indexed chunks in `source-set-f70ea11e04ae3d53`.
+  Geographic Area, Management Area 6, RHCA, and WUI vocabulary, and now indexes
+  FEIS records `R1PLAN-idaho-panhandle-nfs-04`/`-05` in the local f70 retrieval
+  surface. Current resolver output has `16` supported findings, `36` gaps, and a
+  stale `52`-item component adjudication against the current `36`-item queue.
 - District lock: preserve `St. Maries Ranger District` as the project-page/Box
   authority label and `St. Joe Ranger District` as package scope evidence.
 
@@ -180,10 +181,15 @@ preflight; do not promote Idaho Panhandle before Milestones 2-4 pass.
 Outcome label: `reduced`. Scope resolves to `idaho_panhandle_nfs`; review-local
 inventory builds `52` components and `8` standards from `FOR-021`; Idaho
 profile vocabulary resolves St. Joe Geographic Area, Management Area 6, RHCA,
-and WUI context; component adjudication resolves the current `52`
-reviewer-resolution items with `0` pending. The remaining blocker is missing
-indexed FEIS records `R1PLAN-idaho-panhandle-nfs-04`/`-05` in
-`source-set-f70ea11e04ae3d53`. Registry/coverage manifests remain unchanged.
+and WUI context; FEIS source-readiness is now closed in the local f70
+catalog/retrieval surface. Retrieval indexes `R1PLAN-idaho-panhandle-nfs-04`
+with `1,606` chunks and `R1PLAN-idaho-panhandle-nfs-05` with `991` chunks, and
+`forest-plan-resolve` reports `blocking_missing_source_record_ids=[]` plus
+`validation_passed=true`. The remaining blocker is component
+evaluation/adjudication refresh: current findings are `16` supported and `36`
+gaps, with `8` applicable standards, `3` applied standards, and the old
+`52`-item adjudication stale against the current `36`-item queue.
+Registry/coverage manifests remain unchanged.
 
 ### Milestone 3 - Reviewer Stack Replay
 Outcome label: `resolved` if the review reaches reviewer-ready status;
@@ -284,6 +290,20 @@ vocabulary and component adjudication: `forest-plan-resolve` now reports
 `applicability_false_positive`, and `1` `component_inventory_overreach`. Idaho
 Panhandle still has no Lacy Lemoosh coverage slot or primary example.
 
+Milestone 2 FEIS source-readiness closeout on 2026-05-29: the local f70
+catalog/retrieval surface overlays `R1PLAN-idaho-panhandle-nfs-04` and
+`R1PLAN-idaho-panhandle-nfs-05` from archived source-delta gate
+`source-set-8a4005c8a083af1a`. The tracked current-source contract now records
+`719` sources, `707` artifacts, and `11` supplemental overlay rows; extraction
+and retrieval pass with `113,830` chunks; direct retrieval readback indexes
+`R1PLAN-idaho-panhandle-nfs-04=1,606` and
+`R1PLAN-idaho-panhandle-nfs-05=991`. `forest-plan-resolve` now passes retrieval
+readiness and overall validation with `blocking_missing_source_record_ids=[]`.
+The reduced blocker moved to component evaluation/adjudication refresh:
+component findings are `16` supported and `36` gaps, with `8` applicable
+standards, `3` applied standards, and the old `52`-item adjudication stale
+against the current `36`-item queue.
+
 ## Gap-Close Verification Addendum
 Milestones 0-2 are gap-closed only while `CURRENT_ROUTING`, `SESSION_HANDOFF`,
 `CURRENT_SYSTEM_STATE`, `AGENT_START_HERE`, README, registry guidance, focused
@@ -291,5 +311,5 @@ tests, aggregate eval, resolver outputs, and replay context agree that Lacy
 Lemoosh has local package authority, green base review, reduced forest-plan
 preflight, and remains unpromoted: `idaho-panhandle-nfs` stays
 `profile_eval_guidance_only`, `primary_example_id=null`, and no Lacy coverage
-slot exists until FEIS source-delta/retrieval readiness, reviewer-stack, and
+slot exists until component evaluation/adjudication refresh, reviewer-stack, and
 promotion gates pass.

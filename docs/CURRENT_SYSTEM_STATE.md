@@ -15,14 +15,15 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Idaho Panhandle Lacy Lemoosh Forest-Plan Preflight Reduced Locally
+## Idaho Panhandle Lacy Lemoosh FEIS Source-Readiness Closed Locally
 
 Latest implementation update on 2026-05-29 UTC:
 
 - update:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
-  resolved through Milestone 1 and reduced locally at Milestone 2 as the active
-  Idaho Panhandle forest-specific example packet. The planned review identity is
+  resolved through Milestone 1; Milestone 2 FEIS source-readiness is closed
+  locally, with component evaluation/adjudication refresh remaining as the active
+  blocker. The planned review identity is
   `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
   `forest_unit_id="idaho-panhandle-nfs"` and planned
   `example_id="ipnf-lacy-lemoosh-forest-specific"`.
@@ -67,25 +68,32 @@ Latest implementation update on 2026-05-29 UTC:
   vocabulary, and built a review-local component inventory with `52`
   components and `8` standards in local commit `a1574b3`. `St. Maries Ranger
   District` remains only the project-page/Box authority label; `St. Joe Ranger
-  District` is the package-local resolver scope evidence. `forest-plan-resolve` now reports
+  District` is the package-local resolver scope evidence. The f70
+  catalog/retrieval surface now overlays `R1PLAN-idaho-panhandle-nfs-04` and
+  `R1PLAN-idaho-panhandle-nfs-05` from the archived source-delta gate. The
+  tracked current-source contract now reports `source_count=719`,
+  `artifact_count=707`, and `supplemental_source_count=11`; extraction and
+  retrieval pass with `113,830` chunks. Direct retrieval readback indexes
+  `R1PLAN-idaho-panhandle-nfs-04=1,606` chunks and
+  `R1PLAN-idaho-panhandle-nfs-05=991` chunks. `forest-plan-resolve` now reports
   `scope_status="idaho_panhandle_nfs"`, `unresolved_mention_count=0`,
-  `project_location_signal_count=1`, component evaluation
-  `reviewer_ready=true`, and overall `validation_passed=false`.
-- reduced blocker:
-  the resolver remains reduced only because `R1PLAN-idaho-panhandle-nfs-04` and
-  `R1PLAN-idaho-panhandle-nfs-05` have zero indexed chunks in
-  `source-set-f70ea11e04ae3d53`. Idaho profile source IDs are reconciled to
-  active catalog IDs, the St. Joe scope term plus St. Joe Geographic Area,
-  Management Area 6, RHCA, and WUI vocabulary now resolve, and component
-  adjudication is complete at
+  `project_location_signal_count=1`, `geographic_area_count=1`,
+  `management_area_count=1`, `overlay_count=2`, retrieval readiness passed with
+  `blocking_missing_source_record_ids=[]`, and overall
+  `validation_passed=true`.
+- remaining blocker:
+  the package is still not reviewer-ready. Component evaluation now reports
+  `16` supported findings, `36` gap findings, `8` applicable standards, `3`
+  applied standards, and `5` insufficient-evidence standards. The existing
+  component adjudication at
   `config/forest_plan_component_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-  with `52/52` items resolved and `0` pending (`36`
-  `evidence_linking_miss`, `15` `applicability_false_positive`, `1`
-  `component_inventory_overreach`). The next slice is FEIS source-delta and
-  retrieval readiness for those active-source records; do not proceed to
-  reviewer-stack or promotion gates first. Do not add Lacy Lemoosh package files to
-  `Document_Register_Master`, and do not reroute unrelated Idaho Panhandle
-  queue rows such as `FOR-020` or `FOR-022` into this packet.
+  still has the old `52/52` resolved items, but the current resolver queue is
+  `36` items; `forest-plan-resolve` flags `queue_item_count_mismatch` and
+  `resolved_item_count_mismatch` for that stale adjudication surface. The next
+  slice is component evaluation/adjudication refresh before reviewer-stack or
+  promotion gates. Do not add Lacy Lemoosh package files to
+  `Document_Register_Master`, and do not reroute unrelated Idaho Panhandle queue
+  rows such as `FOR-020` or `FOR-022` into this packet.
 
 ## Beaverhead-Deerlodge South Tobacco Roots Milestone 4 Reduced Locally
 
@@ -547,9 +555,9 @@ Latest implementation update on 2026-05-29 UTC:
   and the archived full-canonical 4fb catalog gate.
 - generated evidence truth:
   the root manifest now reports `source_set_id="source-set-f70ea11e04ae3d53"`,
-  `source_count=715`, `artifact_count=703`, and
-  `supplemental_source_count=7`; root catalog validation passes; and the root
-  SQLite `sources` table contains `715` rows for f70.
+  `source_count=719`, `artifact_count=707`, and
+  `supplemental_source_count=11`; root catalog validation passes; and the root
+  SQLite `sources` table contains `719` rows for f70.
 - historical preservation:
   the prior repo-root `source-set-4fb59e9eb43045cb` catalog was preserved under
   `source_library/runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate/`.
@@ -1033,10 +1041,10 @@ Latest implementation update on 2026-05-28 UTC:
   `R1PLAN-flathead-nf-12`, and `R1PLAN-flathead-nf-16` from archived merged
   source-delta gate
   `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate`.
-  The generated f70 extraction summary now reports
+  The generated f70 extraction summary at that checkpoint reported
   `catalog_source_count=715`, `selected_source_count=715`,
   `extracted_count=715`, `failed_count=0`, `chunk_count=110982`, and
-  `validation_passed=true`. The generated f70 retrieval summary reports
+  `validation_passed=true`. The generated f70 retrieval summary reported
   `source_count=715`, `chunk_count=110982`, `reviewer_ready=true`, and
   `validation_passed=true`.
 - repaired source-record readback:

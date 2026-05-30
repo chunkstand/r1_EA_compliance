@@ -11,9 +11,9 @@
   "promoted_from_catalog_gate": "source_library/runs/current-source-gap-closeout-catalog-gate/catalog_gate",
   "historical_full_canonical_catalog_gate": "source_library/runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate",
   "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
-  "source_count": 715,
-  "artifact_count": 703,
-  "supplemental_source_count": 7,
+  "source_count": 719,
+  "artifact_count": 707,
+  "supplemental_source_count": 11,
   "status": "current_repo_source_set",
-  "reason": "The f70 catalog gate is the repo-root current source-set. The prior 4fb root catalog is preserved as historical full-canonical evidence only."
+  "reason": "The f70 catalog gate is the repo-root current source-set. It includes selected Flathead, Bitterroot, and Idaho Panhandle source-delta overlay rows needed for local reviewer-readiness preflight. The prior 4fb root catalog is preserved as historical full-canonical evidence only."
 }

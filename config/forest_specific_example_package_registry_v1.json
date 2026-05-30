@@ -547,7 +547,7 @@
         "non_selected_non_custer_hard_negative"
       ],
       "queue_boundary_source_ids": [],
-      "guidance_note": "Lacy Lemoosh is the selected active Idaho Panhandle example-package candidate in docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md. Package-authority intake has local zero-failure evidence plus a tracked replay context, Idaho area/overlay vocabulary resolves, and component adjudication is complete for the current queue. Forest-plan resolver preflight remains reduced only on missing FEIS source records in the active source set. Keep primary_example_id null and stay on the profile-eval floor until source-delta, reviewer-stack, and promotion gates pass."
+      "guidance_note": "Lacy Lemoosh is the selected active Idaho Panhandle example-package candidate in docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md. Package-authority intake has local zero-failure evidence plus a tracked replay context, and Idaho FEIS source-delta rows are indexed in the local f70 catalog/retrieval surface. Forest-plan resolver retrieval readiness now passes, but component evaluation/adjudication must be refreshed against the current 36-item queue before reviewer-stack or promotion work. Keep primary_example_id null and stay on the profile-eval floor until component refresh, reviewer-stack, and promotion gates pass."
     },
     {
       "forest_unit_id": "kootenai-nf",

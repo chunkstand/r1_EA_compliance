@@ -46,8 +46,8 @@ history below.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 2 forest-plan resolver preflight reduced locally only on active
-  source FEIS readiness; no registry promotion
+  Milestone 2 FEIS source-readiness closed locally; component
+  evaluation/adjudication refresh pending; no registry promotion
 - resolved Beaverhead-Deerlodge packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -90,25 +90,30 @@ history below.
   components and `8` standards in local commit `a1574b3`. Treat
   `St. Maries Ranger District` as the project-page/Box authority label and
   `St. Joe Ranger District` as package-local resolver scope evidence.
-  `forest-plan-resolve` now reports
+  The local f70 catalog/retrieval surface now overlays
+  `R1PLAN-idaho-panhandle-nfs-04` and `R1PLAN-idaho-panhandle-nfs-05` from the
+  archived source-delta gate; the tracked current-source contract is `719`
+  sources, `707` artifacts, and `11` supplemental overlay rows. Extraction and
+  retrieval pass with `113,830` chunks, and direct retrieval readback indexes
+  `R1PLAN-idaho-panhandle-nfs-04=1,606` chunks and
+  `R1PLAN-idaho-panhandle-nfs-05=991` chunks. `forest-plan-resolve` now reports
   `scope_status="idaho_panhandle_nfs"`, `unresolved_mention_count=0`,
   `project_location_signal_count=1`, `geographic_area_count=1`,
-  `management_area_count=1`, `overlay_count=2`, component evaluation
-  `reviewer_ready=true`, and overall `validation_passed=false`. Component
-  adjudication is complete at
-  `config/forest_plan_component_adjudications/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-  with `52/52` items resolved and `0` pending (`36`
-  `evidence_linking_miss`, `15` `applicability_false_positive`, `1`
-  `component_inventory_overreach`). The only remaining named blocker is missing
-  indexed FEIS rows `R1PLAN-idaho-panhandle-nfs-04` and
-  `R1PLAN-idaho-panhandle-nfs-05` in `source-set-f70ea11e04ae3d53`.
+  `management_area_count=1`, `overlay_count=2`, retrieval readiness passed with
+  `blocking_missing_source_record_ids=[]`, and overall `validation_passed=true`.
+  The package is still not reviewer-ready: component evaluation now reports
+  `16` supported findings, `36` gap findings, `8` applicable standards, `3`
+  applied standards, and `5` insufficient-evidence standards. The existing
+  component adjudication remains a stale `52/52` resolved file against the
+  current `36`-item queue, producing `queue_item_count_mismatch` and
+  `resolved_item_count_mismatch`.
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
   `primary_example_id=null`, and `config/v1_real_package_review_coverage_v1.json`
-  has no Lacy Lemoosh slot. The next slice is FEIS source-delta and retrieval
-  readiness for those active-source records; keep Lacy Lemoosh parallel to
-  `Document_Register_Master` and do not route unrelated Idaho Panhandle queue
-  rows such as `FOR-020` or `FOR-022` into this packet.
+  has no Lacy Lemoosh slot. The next slice is component
+  evaluation/adjudication refresh, then reviewer-stack replay; keep Lacy Lemoosh
+  parallel to `Document_Register_Master` and do not route unrelated Idaho
+  Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet.
   Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
   locally through Milestone 4 registry and coverage promotion. The packet is
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
@@ -260,9 +265,9 @@ history below.
   Repo-root catalog currentness is corrected: `source_library/catalog/` now
   names `source-set-f70ea11e04ae3d53` as the current source-set. The tracked
   pointer is `config/current_source_set_v1.json`; the root manifest reports
-  `source_count=715`, `artifact_count=703`, and
-  `supplemental_source_count=7`; root catalog validation passes; and the root
-  SQLite `sources` table has `715` f70 rows. The prior
+  `source_count=719`, `artifact_count=707`, and
+  `supplemental_source_count=11`; root catalog validation passes; and the root
+  SQLite `sources` table has `719` f70 rows. The prior
   `source-set-4fb59e9eb43045cb` root catalog was preserved as historical
   full-canonical evidence under
   `source_library/runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate/`,

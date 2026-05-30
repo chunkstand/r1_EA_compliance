@@ -24,6 +24,9 @@ def test_current_source_set_contract_names_f70_as_repo_current() -> None:
     assert contract["historical_full_canonical_catalog_gate"] == (
         "source_library/runs/full-canonical-4fb-catalog-archive-20260529/catalog_gate"
     )
+    assert contract["source_count"] == 719
+    assert contract["artifact_count"] == 707
+    assert contract["supplemental_source_count"] == 11
     assert contract["status"] == "current_repo_source_set"
 
 

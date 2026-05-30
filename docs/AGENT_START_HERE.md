@@ -53,20 +53,23 @@ The planner:
   downloaded files, `553,664,116` file bytes, zero failures, and a tracked
   replay context at
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`.
-  Milestone 2 forest-plan preflight resolves `idaho_panhandle_nfs` scope and
-  builds a review-local inventory with `52` components and `8` standards.
-  Idaho area/overlay vocabulary now resolves `1` geographic area, `1`
-  management area, and `2` overlays, and component adjudication passes for all
-  `52` current queue items. The preflight remains reduced only on missing FEIS
-  source records `R1PLAN-idaho-panhandle-nfs-04` and `-05` in
-  `source-set-f70ea11e04ae3d53`. Preserve `St. Maries Ranger District` as the
-  authority label and `St. Joe Ranger District` as resolver scope evidence.
+  Milestone 2 forest-plan preflight resolves `idaho_panhandle_nfs` scope, builds
+  a review-local inventory with `52` components and `8` standards, and now
+  passes FEIS retrieval readiness after the local f70 source-delta overlay:
+  `R1PLAN-idaho-panhandle-nfs-04` indexes `1,606` chunks and
+  `R1PLAN-idaho-panhandle-nfs-05` indexes `991` chunks. Idaho area/overlay
+  vocabulary resolves `1` geographic area, `1` management area, and `2`
+  overlays. The current reduced blocker is component evaluation/adjudication
+  refresh: resolver output now has `16` supported findings, `36` gaps, and the
+  previous `52`-item adjudication is stale against the current `36`-item queue.
+  Preserve `St. Maries Ranger District` as the authority label and `St. Joe
+  Ranger District` as resolver scope evidence.
   This is not a
   governed primary example yet:
   `config/forest_specific_example_package_registry_v1.json` keeps
   `idaho-panhandle-nfs` at `profile_eval_guidance_only` with
-  `primary_example_id=null` until source-delta, reviewer-stack, and promotion
-  gates pass. Keep Lacy Lemoosh parallel to
+  `primary_example_id=null` until component refresh, reviewer-stack, and
+  promotion gates pass. Keep Lacy Lemoosh parallel to
   `Document_Register_Master`; it is not a generic Region 1 example and must
   not be reused for non-Idaho-Panhandle forests.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
