@@ -24,6 +24,10 @@ history below.
 - active packet:
   no active first-class eval trace implementation slice; future model-judge or
   hosted scoring work requires a new approved milestone
+- recent research addendum:
+  `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md` covers context
+  graphs for agent logs, evals, traces, state checkpoints, and human review;
+  it is not an active route change
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - latest resolved forest-specific example packet:
