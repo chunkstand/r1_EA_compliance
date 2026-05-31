@@ -38,12 +38,13 @@ history below.
   none. The f70 forest-plan graph profile state is green; any future graph-KB
   expansion should be opened as a new bounded packet.
 - latest resolved architecture slice:
-  architecture control-plane gap closeout. The current probe reports `497`
-  code files, `18` code files above `800`, no Python or JS/TS import cycles,
-  and no source module above the `20`-import fan-out gate.
-  `config/architecture_large_file_inventory_v1.json` owns the exact `10`
+  extraction-fidelity eval source-owner reduction after the architecture
+  control-plane gap closeout. The current probe reports `498` code files, `17` code files above `800`,
+  no Python or JS/TS import cycles, and no source
+  module above the `20`-import fan-out gate.
+  `config/architecture_large_file_inventory_v1.json` owns the exact `9`
   source-owner and `8` test-owner backlog; `README.md` and
-  `docs/CURRENT_ROUTING.md` are compact route surfaces again.
+  `docs/CURRENT_ROUTING.md` remain compact route surfaces.
 - active architecture implementation slice:
   none. Future oversized-owner reduction should open a new bounded packet
   against `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`.
@@ -96,11 +97,20 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  extraction-fidelity eval owner reduction: the first source-owner oversized
+  reduction slice is closed locally. `extraction_fidelity_eval.py` remains the
+  public facade and output-schema assembler at `716` lines, while
+  `extraction_fidelity_eval_runtime.py` owns temporary extraction runs,
+  per-case execution, metric checks, and runtime helpers at `442` lines. The
+  live probe reports `498` code files, `17` code files above `800`, no Python or JS/TS cycles,
+  and no local module above the `20`-import fan-out gate.
+  The live inventory now records `9` source owners and `8` test owners.
+
   architecture control-plane closeout: the architecture quality gate now
   matches the live 2026-05-31 probe and fails closed on inventory drift.
-  `config/architecture_large_file_inventory_v1.json` records `18` code files
-  above `800` as `10` source owners and `8` test owners. The probe command
-  reports `497` code files, no Python or JS/TS cycles, and no local module
+  `config/architecture_large_file_inventory_v1.json` records `17` code files
+  above `800` as `9` source owners and `8` test owners. The probe command
+  reports `498` code files, no Python or JS/TS cycles, and no local module
   above the `20`-import fan-out gate. `README.md` and
   `docs/CURRENT_ROUTING.md` are compact route surfaces again; volatile live
   counts stay in `docs/CURRENT_SYSTEM_STATE.md` and this handoff.

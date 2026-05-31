@@ -6,7 +6,7 @@ Use this short route before opening append-only docs.
 ## New Session Start
 - Read this file first, then `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved source-set graph-KB slice: f70 Region 1 graph-KB rebind and regeneration; exact counts live in `docs/CURRENT_SYSTEM_STATE.md`.
-- Latest resolved architecture slice: architecture control-plane gap closeout; inventory and route-doc caps are current.
+- Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
 - Active implementation slice: none. Open a new bounded packet before graph-KB expansion, model-judge work, hosted scoring, or oversized-owner reduction.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.

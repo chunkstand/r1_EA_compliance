@@ -404,6 +404,7 @@ modules = [
   "eval_trace_inventory",
   "eval_trace_store",
   "extraction_fidelity_eval",
+  "extraction_fidelity_eval_runtime",
   "forest_plan_component_retrieval_eval",
   "forest_specific_example_package_eval",
   "forest_plan_profile_eval",

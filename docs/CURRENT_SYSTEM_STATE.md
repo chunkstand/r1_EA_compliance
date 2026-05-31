@@ -15,6 +15,27 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Extraction Fidelity Eval Owner Reduction Resolved Locally
+
+Latest implementation update on 2026-05-31 UTC:
+
+- update:
+  the first source-owner oversized reduction slice is closed locally.
+  `src/usfs_r1_ea_sources/extraction_fidelity_eval.py` now remains the public
+  extraction-fidelity eval facade and output-schema assembler, while
+  `src/usfs_r1_ea_sources/extraction_fidelity_eval_runtime.py` owns temporary
+  extraction runs, per-case execution, metric checks, and runtime helpers.
+- architecture effect:
+  `extraction_fidelity_eval.py` is now `716` lines and the new runtime owner is
+  `442` lines. The architecture probe reports `498` code files, `17` code files above `800`,
+  no Python or JS/TS import cycles, and no source module
+  above the `20`-import fan-out gate. The live inventory now records `9`
+  source owners and `8` test owners.
+- boundary:
+  this is a behavior-preserving owner split. It does not change extraction
+  fidelity eval output fields, fixture semantics, generated artifact paths, or
+  source-corpus state.
+
 ## Architecture Control-Plane Gap Closeout Resolved Locally
 
 Latest implementation update on 2026-05-31 UTC:
@@ -22,12 +43,12 @@ Latest implementation update on 2026-05-31 UTC:
 - update:
   the architecture quality gate is rebaselined to the live probe instead of
   stale routing docs. `config/architecture_large_file_inventory_v1.json` now
-  records `18` code files above `800`, grouped as `10` source owners and `8`
+  records `17` code files above `800`, grouped as `9` source owners and `8`
   test owners, with exact path and line-count assertions in
   `tests/test_architecture_quality.py`.
 - probe result:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `497` code files, `18` code files above `800`, no Python or JS/TS
+  reports `498` code files, `17` code files above `800`, no Python or JS/TS
   import cycles, and no source module above the `20`-import fan-out gate.
 - route-doc control:
   `README.md` and `docs/CURRENT_ROUTING.md` are compact, non-volatile route

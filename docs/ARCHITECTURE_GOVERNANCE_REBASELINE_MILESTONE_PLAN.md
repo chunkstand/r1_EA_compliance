@@ -29,10 +29,10 @@ under-`800` closeout is being used as live truth after the repo moved on.
 
 - Fresh architecture probe:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `497` code files, `18` code files above `800` lines, no Python or JS/TS import cycles,
+  reports `498` code files, `17` code files above `800` lines, no Python or JS/TS import cycles,
   and no source module above the `20`-import fan-out gate.
-- `config/architecture_large_file_inventory_v1.json` records the exact `18`-file live backlog as
-  `10` source-owner families and `8` test-owner families.
+- `config/architecture_large_file_inventory_v1.json` records the exact `17`-file live backlog as
+  `9` source-owner families and `8` test-owner families.
 - `README.md` and `docs/CURRENT_ROUTING.md` are compact route surfaces again; live architecture
   counts are owned by `docs/CURRENT_SYSTEM_STATE.md` and `docs/SESSION_HANDOFF.md`.
 
@@ -392,8 +392,11 @@ inventory.
 
 Expected next routed architecture follow-on after this packet:
 
+- first source-owner reduction closed on 2026-05-31:
+  `src/usfs_r1_ea_sources/extraction_fidelity_eval.py` was split into
+  `src/usfs_r1_ea_sources/extraction_fidelity_eval_runtime.py`; the facade is
+  now below the `800`-line gate and the live oversized backlog is `17` files.
 - source-owner backlog first:
-  `src/usfs_r1_ea_sources/extraction_fidelity_eval.py`,
   `src/usfs_r1_ea_sources/claim_extraction_eval.py`,
   `src/usfs_r1_ea_sources/source_register_proving.py`,
   `src/usfs_r1_ea_sources/eval_trace_store.py`,

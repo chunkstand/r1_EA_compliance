@@ -27,23 +27,9 @@
       ]
     },
     {
-      "name": "source-extraction-fidelity-eval-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 2,
-      "required_tests": [
-        "tests/test_extraction_fidelity_eval.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/extraction_fidelity_eval.py",
-          "line_count": 1144
-        }
-      ]
-    },
-    {
       "name": "test-forest-plan-resolver-scope-owner",
       "owner_kind": "test",
-      "follow_on_priority": 3,
+      "follow_on_priority": 2,
       "required_tests": [
         "tests/test_forest_plan_resolver_scope.py"
       ],
@@ -57,7 +43,7 @@
     {
       "name": "source-claim-extraction-eval-owner",
       "owner_kind": "source",
-      "follow_on_priority": 4,
+      "follow_on_priority": 3,
       "required_tests": [
         "tests/test_claim_extraction_eval.py"
       ],
@@ -71,7 +57,7 @@
     {
       "name": "test-cli-eval-owner",
       "owner_kind": "test",
-      "follow_on_priority": 5,
+      "follow_on_priority": 4,
       "required_tests": [
         "tests/test_cli_eval.py"
       ],
@@ -85,7 +71,7 @@
     {
       "name": "source-source-register-proving-owner",
       "owner_kind": "source",
-      "follow_on_priority": 6,
+      "follow_on_priority": 5,
       "required_tests": [
         "tests/test_source_register_proving.py"
       ],
@@ -99,7 +85,7 @@
     {
       "name": "source-eval-trace-store-owner",
       "owner_kind": "source",
-      "follow_on_priority": 7,
+      "follow_on_priority": 6,
       "required_tests": [
         "tests/test_eval_trace_store.py"
       ],
@@ -113,7 +99,7 @@
     {
       "name": "test-promotion-suite-full-canonical-owner",
       "owner_kind": "test",
-      "follow_on_priority": 8,
+      "follow_on_priority": 7,
       "required_tests": [
         "tests/test_promotion_suite_full_canonical.py"
       ],
@@ -127,7 +113,7 @@
     {
       "name": "source-ea-consistency-decision-support-inputs-owner",
       "owner_kind": "source",
-      "follow_on_priority": 9,
+      "follow_on_priority": 8,
       "required_tests": [
         "tests/test_ea_consistency_decision_support.py"
       ],
@@ -141,7 +127,7 @@
     {
       "name": "test-forest-plan-profiles-owner",
       "owner_kind": "test",
-      "follow_on_priority": 10,
+      "follow_on_priority": 9,
       "required_tests": [
         "tests/test_forest_plan_profiles.py"
       ],
@@ -155,7 +141,7 @@
     {
       "name": "source-extract-runtime-owner",
       "owner_kind": "source",
-      "follow_on_priority": 11,
+      "follow_on_priority": 10,
       "required_tests": [
         "tests/test_extract.py"
       ],
@@ -169,7 +155,7 @@
     {
       "name": "source-rule-claim-binding-eval-owner",
       "owner_kind": "source",
-      "follow_on_priority": 12,
+      "follow_on_priority": 11,
       "required_tests": [
         "tests/test_rule_claim_binding_eval.py"
       ],
@@ -183,7 +169,7 @@
     {
       "name": "test-extraction-accuracy-owner",
       "owner_kind": "test",
-      "follow_on_priority": 13,
+      "follow_on_priority": 12,
       "required_tests": [
         "tests/test_extraction_accuracy.py"
       ],
@@ -197,7 +183,7 @@
     {
       "name": "test-phase-eval-direct-eval-contracts-owner",
       "owner_kind": "test",
-      "follow_on_priority": 14,
+      "follow_on_priority": 13,
       "required_tests": [
         "tests/test_phase_eval_direct_eval_contracts.py"
       ],
@@ -211,7 +197,7 @@
     {
       "name": "source-phase-eval-direct-eval-source-set-owner",
       "owner_kind": "source",
-      "follow_on_priority": 15,
+      "follow_on_priority": 14,
       "required_tests": [
         "tests/test_phase_eval.py",
         "tests/test_phase_eval_direct_eval_contracts.py"
@@ -226,7 +212,7 @@
     {
       "name": "test-catalog-owner",
       "owner_kind": "test",
-      "follow_on_priority": 16,
+      "follow_on_priority": 15,
       "required_tests": [
         "tests/test_catalog.py"
       ],
@@ -240,7 +226,7 @@
     {
       "name": "source-applicability-candidate-assembly-owner",
       "owner_kind": "source",
-      "follow_on_priority": 17,
+      "follow_on_priority": 16,
       "required_tests": [
         "tests/test_applicability_candidate_assembly.py"
       ],
@@ -254,7 +240,7 @@
     {
       "name": "source-eval-trace-inventory-owner",
       "owner_kind": "source",
-      "follow_on_priority": 18,
+      "follow_on_priority": 17,
       "required_tests": [
         "tests/test_eval_trace_inventory.py"
       ],
