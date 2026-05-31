@@ -225,6 +225,8 @@ example.
 ## Closeout Outcome Record
 
 - Outcome label: `reduced locally`.
+- Reduced packet closeout commit: `7ac8e08` (`Open Dakota Prairie Medora
+  example packet`).
 - Closeout scope: package authority, base review, f70 component inventory,
   source readiness, unpromoted registry guidance, routing docs, and focused
   contract tests.

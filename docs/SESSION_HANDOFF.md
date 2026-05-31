@@ -168,12 +168,13 @@ history below.
   `v1-cg-ecid-source-delta-review` component-side adjudication/eval contracts
   now align again to archived merged source set
   `source-set-8a4005c8a083af1a`, and its refreshed component eval passes
-  `36/36` cases. There is no active unresolved forest-specific child packet
-  now; continue from the umbrella lane if the next slice is a new
-  forest-specific example. If the inherited ECID replay is reopened, the next
-  truthful route is replay source-set contract reconciliation in `phase-eval`;
-  rerun now fails closed on `4fb` replay/applicability expectations versus
-  `8a40` component/compliance artifacts.
+  `36/36` cases. At the time of the Dead Laundry closeout there was no active
+  unresolved forest-specific child packet; that historical statement is now
+  superseded by the active Dakota Prairie Medora packet above. If the inherited
+  ECID replay is reopened, the next truthful route is replay source-set
+  contract reconciliation in `phase-eval`; rerun now fails closed on `4fb`
+  replay/applicability expectations versus `8a40` component/compliance
+  artifacts.
   Idaho Panhandle Lacy Lemoosh is the predecessor resolved forest-specific example
   packet.
   The packet is

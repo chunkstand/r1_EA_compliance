@@ -26,7 +26,8 @@ Latest implementation update on 2026-05-31 UTC:
   working identity is
   `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`,
   `forest_unit_id="dakota-prairie-grasslands"`, and
-  `source_set_id="source-set-f70ea11e04ae3d53"`.
+  `source_set_id="source-set-f70ea11e04ae3d53"`. Reduced packet closeout
+  commit: `7ac8e08`.
 - package authority:
   live Forest Service project-page readback identifies project `66886` as
   `Completed`, expected analysis type `Environmental Assessment`, lead

@@ -53,9 +53,9 @@ Use this file as the short current route before opening the append-only docs.
   the working review identity is
   `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`
   for `forest_unit_id="dakota-prairie-grasslands"` on
-  `source-set-f70ea11e04ae3d53`. The selected authorities are the official
-  project page `https://www.fs.usda.gov/r01/dpg/projects/66886` and supplied
-  Pinyon/Box root
+  `source-set-f70ea11e04ae3d53`. Reduced packet closeout commit: `7ac8e08`.
+  The selected authorities are the official project page
+  `https://www.fs.usda.gov/r01/dpg/projects/66886` and supplied Pinyon/Box root
   `https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208`.
   Live readback on 2026-05-31 identifies project `66886` as `Completed`, with
   expected analysis type `Environmental Assessment`, lead management unit
