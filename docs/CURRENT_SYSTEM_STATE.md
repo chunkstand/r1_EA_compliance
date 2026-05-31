@@ -15,6 +15,52 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Dakota Prairie Medora Example Packet Opened Locally
+
+Latest implementation update on 2026-05-31 UTC:
+
+- update:
+  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  opens the Dakota Prairie Grasslands Medora Vegetation Management Project
+  (`66886`) as an active, unpromoted forest-specific example candidate. The
+  working identity is
+  `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`,
+  `forest_unit_id="dakota-prairie-grasslands"`, and
+  `source_set_id="source-set-f70ea11e04ae3d53"`.
+- package authority:
+  live Forest Service project-page readback identifies project `66886` as
+  `Completed`, expected analysis type `Environmental Assessment`, lead
+  management unit `Medora Ranger District`, decision signed date `12/04/2025`,
+  and forest `Dakota Prairie Grasslands`. The selected authorities are the
+  official project page `https://www.fs.usda.gov/r01/dpg/projects/66886` and
+  the supplied Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208`.
+  Local ignored intake under
+  `source_library/reviews/_intake/region1-example-dakota-prairie-medora-vegetation-management-66886/`
+  records `7` downloaded files, `40,860,421` actual bytes, and
+  `failure_count=0`. The tracked replay context is
+  `config/replay_contexts/region1-example-dakota-prairie-medora-vegetation-management-66886.json`.
+- base review and preflight:
+  `ea-review` passes on `source-set-f70ea11e04ae3d53` with `7/7` extracted
+  files, `417` package chunks, `package_failed_count=0`, `5` pass findings,
+  and `reviewer_ready=true`. The Dakota component inventory manifest now allows
+  the Dakota row on both the active full-canonical source set
+  `source-set-4fb59e9eb43045cb` and the Medora f70 replay source set. The
+  review-local f70 component inventory builds with `394` components and `161`
+  standards; component inventory coverage and source accuracy pass.
+  `forest-plan-resolve` resolves `scope_status="dakota_prairie_grasslands"`
+  with no blocking missing Dakota source records. Component findings validate,
+  but the packet remains reduced because all `394` component findings still
+  require adjudication.
+- promotion boundary:
+  `config/forest_specific_example_package_registry_v1.json` keeps
+  `dakota-prairie-grasslands` at `profile_eval_guidance_only` with
+  `primary_example_id=null`. The generated component adjudication template has
+  `394` pending items: `384` `missing_package_evidence` and `10`
+  `needs_reviewer_resolution`. Do not add real-package coverage, V1 eval,
+  component-eval, or registry promotion artifacts until adjudication and the
+  downstream reviewer-stack gates pass.
+
 ## Nez Perce-Clearwater Dead Laundry Promotion Resolved Locally
 
 Latest implementation update on 2026-05-31 UTC:

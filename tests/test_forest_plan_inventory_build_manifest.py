@@ -65,6 +65,15 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
         )
         self.assertTrue(custer_reference.matches_source_set("source-set-f70ea11e04ae3d53"))
         dakota = manifest.get("dakota-prairie-grasslands")
+        dakota_reference = manifest.source_set_reference(dakota.source_set_reference_id)
+        self.assertEqual(
+            dakota_reference.source_set_ids,
+            (
+                "source-set-4fb59e9eb43045cb",
+                "source-set-f70ea11e04ae3d53",
+            ),
+        )
+        self.assertTrue(dakota_reference.matches_source_set("source-set-f70ea11e04ae3d53"))
         self.assertEqual(
             dakota.primary_plan_source_record_id,
             exact_matches["R1PLAN-dakota-prairie-grasslands-03"],

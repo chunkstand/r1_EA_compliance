@@ -1,6 +1,6 @@
 # Agent Start Here
 
-Date: 2026-05-30
+Date: 2026-05-31
 
 Use this file as the first stop for agent-driven document work in this repo.
 It tells you which existing lane to use and when to refuse the request.
@@ -42,10 +42,20 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
-- There is no active unresolved forest-specific example packet right now.
-  Continue the lane from
-  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` unless a
-  new child packet is explicitly opened.
+- The active unresolved forest-specific example packet is
+  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
+  Use review ID
+  `region1-example-dakota-prairie-medora-vegetation-management-66886`,
+  forest unit `dakota-prairie-grasslands`, source set
+  `source-set-f70ea11e04ae3d53`, official project page
+  `https://www.fs.usda.gov/r01/dpg/projects/66886`, and the supplied Box
+  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208`.
+  Package intake, base `ea-review`, and f70 Dakota component preflight are
+  closed locally, but the packet is not a governed primary example:
+  `394` component adjudication items remain pending (`384`
+  `missing_package_evidence`, `10` `needs_reviewer_resolution`). Keep Dakota
+  Prairie on the profile-eval floor until those adjudications and downstream
+  reviewer-stack promotion gates pass.
 - The latest resolved forest-specific example packet is
   `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
   For Nez Perce-Clearwater example-package work, inspect

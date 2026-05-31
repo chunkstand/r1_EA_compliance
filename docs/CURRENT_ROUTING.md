@@ -1,5 +1,5 @@
 # Current Routing
-Date: 2026-05-30
+Date: 2026-05-31
 Use this file as the short current route before opening the append-only docs.
 ## New Session Start
 - Read this file first, then the top of `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
@@ -13,9 +13,10 @@ Use this file as the short current route before opening the append-only docs.
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
-  none; Dead Laundry is resolved locally through Milestone 4, and the next
-  forest-specific child slice should start from the umbrella lane only if a new
-  packet is explicitly opened
+  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  reduced through package authority and f70 forest-plan preflight; do not
+  promote Dakota Prairie until component adjudication and downstream
+  reviewer-stack gates pass
 - Latest resolved forest-specific example packet:
   `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -46,6 +47,37 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
+- Dakota Prairie Grasslands Medora Vegetation Management is the active
+  unresolved forest-specific example packet. The packet is
+  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`;
+  the working review identity is
+  `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`
+  for `forest_unit_id="dakota-prairie-grasslands"` on
+  `source-set-f70ea11e04ae3d53`. The selected authorities are the official
+  project page `https://www.fs.usda.gov/r01/dpg/projects/66886` and supplied
+  Pinyon/Box root
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208`.
+  Live readback on 2026-05-31 identifies project `66886` as `Completed`, with
+  expected analysis type `Environmental Assessment`, lead management unit
+  `Medora Ranger District`, decision signed date `12/04/2025`, and project
+  name `Medora Vegetation Management Project`. Local ignored package authority
+  under
+  `source_library/reviews/_intake/region1-example-dakota-prairie-medora-vegetation-management-66886/`
+  records `7` downloaded files, `40,860,421` bytes, and `failure_count=0`.
+  The tracked replay context is
+  `config/replay_contexts/region1-example-dakota-prairie-medora-vegetation-management-66886.json`.
+  Base `ea-review` passes with `7/7` extracted files, `417` package chunks,
+  `package_failed_count=0`, and `reviewer_ready=true`. A review-local Dakota
+  component inventory builds on f70 with `394` components and `161` standards;
+  component inventory coverage and source accuracy pass. `forest-plan-resolve`
+  resolves `scope_status="dakota_prairie_grasslands"` with no blocking missing
+  Dakota source records, and component findings validate, but the current
+  reviewer-resolution queue has `394` items: `384` `missing_package_evidence`
+  and `10` `needs_reviewer_resolution`. The registry row intentionally remains
+  `profile_eval_guidance_only` with `primary_example_id=null`; do not add a
+  real-package coverage slot or governed primary example until component
+  adjudication, applicability, compliance review, V1 eval, component eval,
+  review `phase-eval`, aggregate coverage, and registry eval all pass.
 - Nez Perce-Clearwater Dead Laundry is resolved locally through Milestone 4 and
   is now the governed primary example for `nez-perce-clearwater-nfs`.
   The packet is

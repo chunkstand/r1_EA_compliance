@@ -46,6 +46,13 @@ They are intentionally not duplicated here.
   evidence graph, claims, rule-claim links, and review outputs are rebuildable
   derived layers
 - Forest-specific example packages stay parallel to `Document_Register_Master`.
+  Dakota Prairie Grasslands now has an active but unpromoted Medora Vegetation
+  Management candidate packet at
+  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  with replay context
+  `config/replay_contexts/region1-example-dakota-prairie-medora-vegetation-management-66886.json`.
+  It remains `profile_eval_guidance_only` until component adjudication and
+  downstream reviewer-stack gates pass.
   For Bitterroot National Forest, the governed primary example is
   `primary_example_id="bitterroot-front-forest-specific"` with
   `review_id="region1-example-bitterroot-front-57341"` in

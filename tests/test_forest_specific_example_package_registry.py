@@ -11,6 +11,15 @@ REAL_PACKAGE_COVERAGE_PATH = ROOT / "config" / "v1_real_package_review_coverage_
 PROFILE_COVERAGE_PATH = ROOT / "config" / "region1_forest_plan_profile_eval_coverage_v1.json"
 AGENT_START_HERE_PATH = ROOT / "docs" / "AGENT_START_HERE.md"
 README_PATH = ROOT / "README.md"
+DAKOTA_MEDORA_PLAN_PATH = (
+    ROOT / "docs" / "DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
+)
+DAKOTA_MEDORA_REPLAY_CONTEXT_PATH = (
+    ROOT
+    / "config"
+    / "replay_contexts"
+    / "region1-example-dakota-prairie-medora-vegetation-management-66886.json"
+)
 
 
 def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
@@ -307,6 +316,56 @@ def test_nez_perce_dead_laundry_is_promoted_as_governed_primary_example() -> Non
         / "docs"
         / "NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
     ).exists()
+
+
+def test_dakota_prairie_medora_packet_stays_unpromoted_until_reviewer_stack_passes() -> None:
+    registry = _load_json(REGISTRY_PATH)
+    coverage_manifest = _load_json(REAL_PACKAGE_COVERAGE_PATH)
+    replay_context = _load_json(DAKOTA_MEDORA_REPLAY_CONTEXT_PATH)
+
+    forest_row = next(
+        row
+        for row in registry["forest_routing"]
+        if row["forest_unit_id"] == "dakota-prairie-grasslands"
+    )
+    active_example_ids = {row["example_id"] for row in registry["review_examples"]}
+    coverage_slot_ids = {slot["slot_id"] for slot in coverage_manifest["slots"]}
+
+    assert forest_row["routing_status"] == "profile_eval_guidance_only"
+    assert forest_row["primary_example_id"] is None
+    assert forest_row["supplemental_example_ids"] == []
+    assert forest_row["queue_boundary_source_ids"] == []
+    assert "Medora Vegetation Management project 66886" in forest_row["guidance_note"]
+    assert "Stay on the profile-eval floor" in forest_row["guidance_note"]
+    assert "dakota-prairie-medora-vegetation-management-66886" not in active_example_ids
+    assert "dpg-medora-vegetation-management-forest-specific" not in coverage_slot_ids
+    assert DAKOTA_MEDORA_PLAN_PATH.exists()
+    assert replay_context == {
+        "review_id": "region1-example-dakota-prairie-medora-vegetation-management-66886",
+        "source_set_id": "source-set-f70ea11e04ae3d53",
+        "forest_unit_id": "dakota-prairie-grasslands",
+        "catalog_dir": "source_library/catalog",
+        "package_path": (
+            "source_library/reviews/_intake/"
+            "region1-example-dakota-prairie-medora-vegetation-management-66886"
+        ),
+        "package_authority": {
+            "official_project_page": "https://www.fs.usda.gov/r01/dpg/projects/66886",
+            "official_documents_page": (
+                "https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208"
+            ),
+            "box_inventory_path": (
+                "source_library/reviews/_intake/"
+                "region1-example-dakota-prairie-medora-vegetation-management-66886/"
+                "box_inventory.json"
+            ),
+            "box_import_manifest_path": (
+                "source_library/reviews/_intake/"
+                "region1-example-dakota-prairie-medora-vegetation-management-66886/"
+                "box_import_manifest.json"
+            ),
+        },
+    }
 
 
 def test_agent_start_here_names_dead_laundry_as_latest_resolved_example() -> None:

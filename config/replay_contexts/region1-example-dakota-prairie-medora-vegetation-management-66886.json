@@ -1,0 +1,13 @@
+{
+  "review_id": "region1-example-dakota-prairie-medora-vegetation-management-66886",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
+  "forest_unit_id": "dakota-prairie-grasslands",
+  "catalog_dir": "source_library/catalog",
+  "package_path": "source_library/reviews/_intake/region1-example-dakota-prairie-medora-vegetation-management-66886",
+  "package_authority": {
+    "official_project_page": "https://www.fs.usda.gov/r01/dpg/projects/66886",
+    "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208",
+    "box_inventory_path": "source_library/reviews/_intake/region1-example-dakota-prairie-medora-vegetation-management-66886/box_inventory.json",
+    "box_import_manifest_path": "source_library/reviews/_intake/region1-example-dakota-prairie-medora-vegetation-management-66886/box_import_manifest.json"
+  }
+}
