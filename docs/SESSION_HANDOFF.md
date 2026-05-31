@@ -36,6 +36,16 @@ history below.
 - active source-set graph-KB slice:
   none. The f70 forest-plan graph profile state is green; any future graph-KB
   expansion should be opened as a new bounded packet.
+- latest resolved architecture slice:
+  architecture control-plane gap closeout. The current probe reports `497`
+  code files, `18` code files above `800`, no Python or JS/TS import cycles,
+  and no source module above the `20`-import fan-out gate.
+  `config/architecture_large_file_inventory_v1.json` owns the exact `10`
+  source-owner and `8` test-owner backlog; `README.md` and
+  `docs/CURRENT_ROUTING.md` are compact route surfaces again.
+- active architecture implementation slice:
+  none. Future oversized-owner reduction should open a new bounded packet
+  against `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`.
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - latest resolved forest-specific example packet:
@@ -85,6 +95,15 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  architecture control-plane closeout: the architecture quality gate now
+  matches the live 2026-05-31 probe and fails closed on inventory drift.
+  `config/architecture_large_file_inventory_v1.json` records `18` code files
+  above `800` as `10` source owners and `8` test owners. The probe command
+  reports `497` code files, no Python or JS/TS cycles, and no local module
+  above the `20`-import fan-out gate. `README.md` and
+  `docs/CURRENT_ROUTING.md` are compact route surfaces again; volatile live
+  counts stay in `docs/CURRENT_SYSTEM_STATE.md` and this handoff.
+
   f70 source-set graph-KB closeout: the active Region 1 forest-plan graph-KB
   binding has been moved from `source-set-4fb59e9eb43045cb` to
   `source-set-f70ea11e04ae3d53`. The f70 component inventory builds the full

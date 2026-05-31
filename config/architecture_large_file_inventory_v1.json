@@ -1,6 +1,6 @@
 {
   "version": "architecture-large-file-inventory-v1",
-  "as_of": "2026-05-26",
+  "as_of": "2026-05-31",
   "reviewable_line_threshold": 800,
   "probe_command": "python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20",
   "plan_path": "docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md",
@@ -13,66 +13,9 @@
   },
   "families": [
     {
-      "name": "source-extraction-fidelity-eval-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 1,
-      "required_tests": [
-        "tests/test_extraction_fidelity_eval.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/extraction_fidelity_eval.py",
-          "line_count": 1144
-        }
-      ]
-    },
-    {
-      "name": "source-extract-runtime-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 2,
-      "required_tests": [
-        "tests/test_extract.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/extract_runtime.py",
-          "line_count": 852
-        }
-      ]
-    },
-    {
-      "name": "source-phase-eval-direct-eval-source-set-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 3,
-      "required_tests": [
-        "tests/test_phase_eval.py",
-        "tests/test_phase_eval_direct_eval_contracts.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py",
-          "line_count": 839
-        }
-      ]
-    },
-    {
-      "name": "source-applicability-candidate-assembly-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 4,
-      "required_tests": [
-        "tests/test_applicability_candidate_assembly.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/applicability_candidate_assembly.py",
-          "line_count": 814
-        }
-      ]
-    },
-    {
       "name": "test-applicability-authority-family-templates-owner",
       "owner_kind": "test",
-      "follow_on_priority": 5,
+      "follow_on_priority": 1,
       "required_tests": [
         "tests/test_applicability_authority_family_templates.py"
       ],
@@ -84,23 +27,163 @@
       ]
     },
     {
+      "name": "source-extraction-fidelity-eval-owner",
+      "owner_kind": "source",
+      "follow_on_priority": 2,
+      "required_tests": [
+        "tests/test_extraction_fidelity_eval.py"
+      ],
+      "files": [
+        {
+          "path": "src/usfs_r1_ea_sources/extraction_fidelity_eval.py",
+          "line_count": 1144
+        }
+      ]
+    },
+    {
+      "name": "test-forest-plan-resolver-scope-owner",
+      "owner_kind": "test",
+      "follow_on_priority": 3,
+      "required_tests": [
+        "tests/test_forest_plan_resolver_scope.py"
+      ],
+      "files": [
+        {
+          "path": "tests/test_forest_plan_resolver_scope.py",
+          "line_count": 1035
+        }
+      ]
+    },
+    {
+      "name": "source-claim-extraction-eval-owner",
+      "owner_kind": "source",
+      "follow_on_priority": 4,
+      "required_tests": [
+        "tests/test_claim_extraction_eval.py"
+      ],
+      "files": [
+        {
+          "path": "src/usfs_r1_ea_sources/claim_extraction_eval.py",
+          "line_count": 959
+        }
+      ]
+    },
+    {
+      "name": "test-cli-eval-owner",
+      "owner_kind": "test",
+      "follow_on_priority": 5,
+      "required_tests": [
+        "tests/test_cli_eval.py"
+      ],
+      "files": [
+        {
+          "path": "tests/test_cli_eval.py",
+          "line_count": 933
+        }
+      ]
+    },
+    {
+      "name": "source-source-register-proving-owner",
+      "owner_kind": "source",
+      "follow_on_priority": 6,
+      "required_tests": [
+        "tests/test_source_register_proving.py"
+      ],
+      "files": [
+        {
+          "path": "src/usfs_r1_ea_sources/source_register_proving.py",
+          "line_count": 930
+        }
+      ]
+    },
+    {
+      "name": "source-eval-trace-store-owner",
+      "owner_kind": "source",
+      "follow_on_priority": 7,
+      "required_tests": [
+        "tests/test_eval_trace_store.py"
+      ],
+      "files": [
+        {
+          "path": "src/usfs_r1_ea_sources/eval_trace_store.py",
+          "line_count": 928
+        }
+      ]
+    },
+    {
       "name": "test-promotion-suite-full-canonical-owner",
       "owner_kind": "test",
-      "follow_on_priority": 6,
+      "follow_on_priority": 8,
       "required_tests": [
         "tests/test_promotion_suite_full_canonical.py"
       ],
       "files": [
         {
           "path": "tests/test_promotion_suite_full_canonical.py",
-          "line_count": 913
+          "line_count": 917
+        }
+      ]
+    },
+    {
+      "name": "source-ea-consistency-decision-support-inputs-owner",
+      "owner_kind": "source",
+      "follow_on_priority": 9,
+      "required_tests": [
+        "tests/test_ea_consistency_decision_support.py"
+      ],
+      "files": [
+        {
+          "path": "src/usfs_r1_ea_sources/ea_consistency_decision_support_inputs.py",
+          "line_count": 897
+        }
+      ]
+    },
+    {
+      "name": "test-forest-plan-profiles-owner",
+      "owner_kind": "test",
+      "follow_on_priority": 10,
+      "required_tests": [
+        "tests/test_forest_plan_profiles.py"
+      ],
+      "files": [
+        {
+          "path": "tests/test_forest_plan_profiles.py",
+          "line_count": 860
+        }
+      ]
+    },
+    {
+      "name": "source-extract-runtime-owner",
+      "owner_kind": "source",
+      "follow_on_priority": 11,
+      "required_tests": [
+        "tests/test_extract.py"
+      ],
+      "files": [
+        {
+          "path": "src/usfs_r1_ea_sources/extract_runtime.py",
+          "line_count": 852
+        }
+      ]
+    },
+    {
+      "name": "source-rule-claim-binding-eval-owner",
+      "owner_kind": "source",
+      "follow_on_priority": 12,
+      "required_tests": [
+        "tests/test_rule_claim_binding_eval.py"
+      ],
+      "files": [
+        {
+          "path": "src/usfs_r1_ea_sources/rule_claim_binding_eval.py",
+          "line_count": 852
         }
       ]
     },
     {
       "name": "test-extraction-accuracy-owner",
       "owner_kind": "test",
-      "follow_on_priority": 7,
+      "follow_on_priority": 13,
       "required_tests": [
         "tests/test_extraction_accuracy.py"
       ],
@@ -112,23 +195,38 @@
       ]
     },
     {
-      "name": "test-forest-plan-resolver-scope-owner",
+      "name": "test-phase-eval-direct-eval-contracts-owner",
       "owner_kind": "test",
-      "follow_on_priority": 8,
+      "follow_on_priority": 14,
       "required_tests": [
-        "tests/test_forest_plan_resolver_scope.py"
+        "tests/test_phase_eval_direct_eval_contracts.py"
       ],
       "files": [
         {
-          "path": "tests/test_forest_plan_resolver_scope.py",
-          "line_count": 829
+          "path": "tests/test_phase_eval_direct_eval_contracts.py",
+          "line_count": 847
+        }
+      ]
+    },
+    {
+      "name": "source-phase-eval-direct-eval-source-set-owner",
+      "owner_kind": "source",
+      "follow_on_priority": 15,
+      "required_tests": [
+        "tests/test_phase_eval.py",
+        "tests/test_phase_eval_direct_eval_contracts.py"
+      ],
+      "files": [
+        {
+          "path": "src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py",
+          "line_count": 842
         }
       ]
     },
     {
       "name": "test-catalog-owner",
       "owner_kind": "test",
-      "follow_on_priority": 9,
+      "follow_on_priority": 16,
       "required_tests": [
         "tests/test_catalog.py"
       ],
@@ -136,6 +234,34 @@
         {
           "path": "tests/test_catalog.py",
           "line_count": 820
+        }
+      ]
+    },
+    {
+      "name": "source-applicability-candidate-assembly-owner",
+      "owner_kind": "source",
+      "follow_on_priority": 17,
+      "required_tests": [
+        "tests/test_applicability_candidate_assembly.py"
+      ],
+      "files": [
+        {
+          "path": "src/usfs_r1_ea_sources/applicability_candidate_assembly.py",
+          "line_count": 814
+        }
+      ]
+    },
+    {
+      "name": "source-eval-trace-inventory-owner",
+      "owner_kind": "source",
+      "follow_on_priority": 18,
+      "required_tests": [
+        "tests/test_eval_trace_inventory.py"
+      ],
+      "files": [
+        {
+          "path": "src/usfs_r1_ea_sources/eval_trace_inventory.py",
+          "line_count": 806
         }
       ]
     }

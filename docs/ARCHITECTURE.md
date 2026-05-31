@@ -9,15 +9,17 @@ source library and deterministic reviewer engine. The workbook is the source con
 turns workbook rows into captured artifacts, derived evidence, validated authority applicability,
 compliance findings, reports, and eval gates.
 
-Live architecture gate on 2026-05-26: the control-plane rebaseline in
+Live architecture gate on 2026-05-31: the control-plane rebaseline in
 `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` is now resolved
-locally. The fresh architecture probe reports `472` code files, `9` code files
+locally. The fresh architecture probe reports `497` code files, `18` code files
 above `800` lines, no Python or JS/TS import cycles, and no source module
 above the `20`-import fan-out gate. The 2026-05-21 under-`800` packet remains
-historical closeout truth; the reopened live oversized backlog is now tracked
+historical closeout truth; the live oversized-owner backlog is now tracked
 explicitly in `config/architecture_large_file_inventory_v1.json` and routed
 from `docs/CURRENT_SYSTEM_STATE.md` plus `docs/SESSION_HANDOFF.md` instead of
-being implied away by stale zero-oversized readbacks.
+being implied away by stale readbacks. `README.md` and
+`docs/CURRENT_ROUTING.md` are intentionally compact route surfaces; volatile
+counts stay in the current-state and handoff owners.
 
 The architecture is intentionally artifact-first. Each layer reads explicit inputs, writes durable
 outputs under `source_library/`, and exposes validation artifacts that later layers must respect.

@@ -15,6 +15,29 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Architecture Control-Plane Gap Closeout Resolved Locally
+
+Latest implementation update on 2026-05-31 UTC:
+
+- update:
+  the architecture quality gate is rebaselined to the live probe instead of
+  stale routing docs. `config/architecture_large_file_inventory_v1.json` now
+  records `18` code files above `800`, grouped as `10` source owners and `8`
+  test owners, with exact path and line-count assertions in
+  `tests/test_architecture_quality.py`.
+- probe result:
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
+  reports `497` code files, `18` code files above `800`, no Python or JS/TS
+  import cycles, and no source module above the `20`-import fan-out gate.
+- route-doc control:
+  `README.md` and `docs/CURRENT_ROUTING.md` are compact, non-volatile route
+  surfaces again; live counts and residual boundaries are owned here and in
+  `docs/SESSION_HANDOFF.md`.
+- boundary:
+  this closes the architecture control-plane gap. It does not split the
+  oversized source and test owners below `800`; that remains future work owned
+  by `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`.
+
 ## f70 Source-Set Graph Knowledge-Base Rebind Resolved Locally
 
 Latest implementation update on 2026-05-31 UTC:

@@ -2,9 +2,9 @@
 
 Date: 2026-05-26
 
-Status: resolved locally 2026-05-26; architecture governance now matches live repo truth again,
-`docs/CURRENT_ROUTING.md` is back under its short-route cap, and the remaining `9` oversized files
-are explicitly inventoried as follow-on debt
+Status: resolved locally 2026-05-26 and refreshed locally 2026-05-31; architecture governance
+matches live repo truth again, `docs/CURRENT_ROUTING.md` is back under its short-route cap, and
+the current `18` oversized files are explicitly inventoried as follow-on debt
 
 Owner context: This is a narrow child packet opened after a read-only architecture audit found
 that the repo's live architecture-governance surfaces no longer match current code size, current
@@ -24,6 +24,17 @@ rebaselined, future sessions cannot trust architecture status claims, and the hi
 under-`800` closeout is being used as live truth after the repo moved on.
 
 ## Current Evidence
+
+### Live architecture evidence on 2026-05-31
+
+- Fresh architecture probe:
+  `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
+  reports `497` code files, `18` code files above `800` lines, no Python or JS/TS import cycles,
+  and no source module above the `20`-import fan-out gate.
+- `config/architecture_large_file_inventory_v1.json` records the exact `18`-file live backlog as
+  `10` source-owner families and `8` test-owner families.
+- `README.md` and `docs/CURRENT_ROUTING.md` are compact route surfaces again; live architecture
+  counts are owned by `docs/CURRENT_SYSTEM_STATE.md` and `docs/SESSION_HANDOFF.md`.
 
 ### Live architecture evidence on 2026-05-26
 
@@ -74,7 +85,7 @@ Rebaseline the architecture control plane so current repo truth comes from:
 
 ## Non-Goals
 
-- Do not reduce the current `9` oversized files below `800` in this packet.
+- Do not reduce the current oversized files below `800` in this packet.
 - Do not reopen the active reviewer-facing replay-repair packet or absorb its runtime work.
 - Do not falsify historical 2026-05-21 architecture closeout facts just to make current docs look
   simple.
@@ -95,11 +106,11 @@ In scope:
 - `README.md`, `docs/ARCHITECTURE.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
   `docs/SESSION_HANDOFF.md` architecture status claims;
 - historical/current distinction for the under-`800` closeout;
-- truthful routing of the remaining `9` oversized-file backlog after governance closes.
+- truthful routing of the remaining oversized-file backlog after governance closes.
 
 Out of scope:
 
-- owner-family source splits for the `9` oversized files themselves;
+- owner-family source splits for the oversized files themselves;
 - replay-contract, forest-plan, applicability, compliance, or promotion-suite semantic changes;
 - new architecture model tooling beyond what is required to keep current truth machine-checked.
 
@@ -267,7 +278,7 @@ Work:
   - distinguish the historical 2026-05-21 zero-oversized closeout from the reopened 2026-05-26
     live oversized-file backlog
   - report the fresh architecture probe date and current oversized-file count truthfully
-  - route the remaining `9` oversized files as live follow-on architecture debt instead of
+  - route the remaining oversized files as live follow-on architecture debt instead of
     pretending the repo is still at zero
 - Keep the historical milestone plans historical. If they need a note, add a historical/follow-on
   pointer rather than rewriting milestone outcomes.
@@ -383,14 +394,23 @@ Expected next routed architecture follow-on after this packet:
 
 - source-owner backlog first:
   `src/usfs_r1_ea_sources/extraction_fidelity_eval.py`,
+  `src/usfs_r1_ea_sources/claim_extraction_eval.py`,
+  `src/usfs_r1_ea_sources/source_register_proving.py`,
+  `src/usfs_r1_ea_sources/eval_trace_store.py`,
+  `src/usfs_r1_ea_sources/ea_consistency_decision_support_inputs.py`,
   `src/usfs_r1_ea_sources/extract_runtime.py`,
+  `src/usfs_r1_ea_sources/rule_claim_binding_eval.py`,
   `src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py`, and
-  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`
+  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py`,
+  `src/usfs_r1_ea_sources/eval_trace_inventory.py`
 - then the test-owner backlog:
   `tests/test_applicability_authority_family_templates.py`,
+  `tests/test_forest_plan_resolver_scope.py`,
+  `tests/test_cli_eval.py`,
   `tests/test_promotion_suite_full_canonical.py`,
+  `tests/test_forest_plan_profiles.py`,
   `tests/test_extraction_accuracy.py`,
-  `tests/test_forest_plan_resolver_scope.py`, and
+  `tests/test_phase_eval_direct_eval_contracts.py`, and
   `tests/test_catalog.py`
 
 That follow-on should be written as a separate owner-reduction packet after this governance packet
