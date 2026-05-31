@@ -1,23 +1,22 @@
 # Dakota Prairie Medora Vegetation Management Example Package Milestone Plan
 
 Date: 2026-05-31
-Status: Active promotion-progress packet; package authority, f70 forest-plan
-preflight, component adjudication, applicability, compliance review, and
-review `phase-eval` are closed locally, but registry promotion is blocked by
-missing tracked V1/component eval contracts and aggregate coverage promotion.
+Status: Resolved locally through Milestone 4 contract-backed registry and
+aggregate coverage promotion.
 Plan class: implementation
 High-risk implementation: yes
 Owner context: child packet under
 `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 Intent lock: advance only the Dakota Prairie Medora Vegetation Management
-candidate; keep it parallel to `Document_Register_Master` and unpromoted until
-reviewer-stack gates pass.
+candidate; keep it parallel to `Document_Register_Master` and promote only the
+tracked reviewer-ready Medora package.
 
 ## Purpose And Current Evidence
 
 Advance the Dakota Prairie Grasslands Medora Vegetation Management Project
-example candidate toward promotion without claiming governed primary-example
-status before contract-backed promotion gates exist.
+example candidate to governed primary-example status only after tracked V1
+eval, component eval, review `phase-eval`, aggregate coverage, registry eval,
+docs, and focused tests pass.
 
 Identity:
 
@@ -61,45 +60,54 @@ Current evidence:
   generated `47`-rule pack.
 - `compliance-review` is reviewer-ready and validation-passed with `47`
   findings: `28` pass, `18` uncertain, and `1` gap.
-- Review `phase-eval` passes and is reviewer-ready for `27/27` phases with
-  `blockers=[]`, but `declared_review_contract=false` and
-  `contract_backed_promotion_ready=false`.
-- The Dakota registry row remains `profile_eval_guidance_only` with
-  `primary_example_id=null`.
+- Tracked V1 eval contract
+  `config/v1_dakota_prairie_medora_real_ea_eval.json` passes with
+  `contract_status="reviewer_ready"`, and tracked component eval contract
+  `config/forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
+  passes `394/394` cases with `161` applicable standards.
+- Real-package coverage passes with `covered_slot_count=10`,
+  `reviewer_ready_slot_count=10`, `distinct_forest_count=9`, and
+  `distinct_package_style_count=16`; component coverage passes
+  `covered_review_count=11/11`; registry eval passes with
+  `review_example_count=10`, `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`.
+- Review `phase-eval` passes and is reviewer-ready for `28/28` phases with
+  `blockers=[]`, `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`.
+- The Dakota registry row now routes as `real_package_examples_available` with
+  `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
 
 ## Intent Hierarchy
 
 - Invariant: Medora remains Dakota Prairie-only package evidence and stays
   parallel to `Document_Register_Master`.
-- Optimization target: preserve package authority, f70 source readiness, and
-  component-inventory evidence for a future reviewer-stack promotion.
-- Acceptable tradeoff: close this slice as `reduced` while promotion surfaces
-  stay unpromoted.
+- Optimization target: preserve package authority, f70 source readiness,
+  component-inventory evidence, and contract-backed promotion evidence.
+- Acceptable tradeoff: no workbook promotion; the package remains a parallel
+  forest-specific example.
 - Non-negotiables: do not weaken tests, evals, registry thresholds, component
   adjudication requirements, or downstream reviewer gates to make promotion
   pass.
 
 ## Goal, Non-Goals, And Scope
 
-Goal: preserve the verified local reviewer-stack evidence needed for governed
-Dakota promotion while preventing accidental registry or coverage promotion
-before V1 eval, component eval, and aggregate promotion contracts pass.
+Goal: promote Dakota Prairie Grasslands to a governed primary real-package
+example after contract-backed reviewer-stack and aggregate gates pass.
 
 Non-goals:
 
-- Do not promote Dakota Prairie Grasslands to
-  `real_package_examples_available`.
-- Do not create V1 eval, component-eval, or real-package coverage slots before
-  the corresponding tracked contract artifacts are authored and pass.
 - Do not stage ignored `source_library/` package or derived artifacts.
+- Do not change workbook `Document_Register_Master` or promote Medora as a
+  workbook source row.
 
 Scope:
 
-- In scope: Dakota profile context terms, component and applicability
-  adjudication configs, reviewer-stack reruns, registry guidance,
-  routing/current-state docs, focused tests, and this plan.
-- Out of scope: V1 eval contract, component-eval contract, real-package
-  coverage, registry promotion, and workbook source-register changes.
+- In scope: Dakota V1 eval and component eval contracts, real-package coverage,
+  component coverage, registry promotion, aggregate gates, routing/current-state
+  docs, focused tests, and this plan.
+- Out of scope: ignored `source_library/` package artifacts and workbook
+  source-register changes.
 
 ## Owner Surfaces And Placement
 
@@ -107,14 +115,22 @@ Scope:
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
 - replay context:
   `config/replay_contexts/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
-- registry and component manifest:
+- registry, coverage, and component manifests:
   `config/forest_specific_example_package_registry_v1.json`,
+  `config/v1_real_package_review_coverage_v1.json`,
+  `config/forest_plan_component_eval_coverage_v1.json`,
   `config/r1_forest_plan_component_inventory_build_manifest.json`
+- eval contracts:
+  `config/v1_dakota_prairie_medora_real_ea_eval.json`,
+  `config/forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
 - docs:
   `README.md`, `docs/AGENT_START_HERE.md`, `docs/CURRENT_ROUTING.md`,
   `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - tests:
+  `tests/test_dakota_prairie_medora_contracts.py`,
+  `tests/test_real_package_review_coverage_eval.py`,
+  `tests/test_forest_plan_component_eval_coverage.py`,
   `tests/test_forest_plan_inventory_build_manifest.py`,
   `tests/test_forest_specific_example_package_registry.py`
 
@@ -125,7 +141,7 @@ Scope:
 | Component adjudication hides real EA omissions | Component adjudication config | `forest-plan-component-adjudication-eval` and rerun `forest-plan-resolve` | Any pending item, unsupported rationale, or unresolved expectation remains |
 | Applicability conflict remains unresolved | Applicability adjudication config | `applicability-adjudication-eval`, `applicability-validate`, and generated rule-pack validation | Any unresolved authority remains or generated rule pack is not ready |
 | Dakota component inventory drifts across source sets | Inventory manifest and focused test | `tests/test_forest_plan_inventory_build_manifest.py` | Dakota f70 support is dropped or active full-canonical support is lost |
-| Registry promotion outruns tracked contracts | Registry, coverage, V1 eval, component eval, and focused tests | `phase-eval`, `tests/test_forest_specific_example_package_registry.py`, and aggregate evals | Dakota leaves `profile_eval_guidance_only` before `declared_review_contract=true` and aggregate coverage gates pass |
+| Registry promotion outruns tracked contracts | Registry, coverage, V1 eval, component eval, and focused tests | `v1-ea-eval`, `forest-plan-component-eval`, `phase-eval`, aggregate evals, and focused tests | Dakota promotes without `declared_review_contract=true`, `contract_backed_promotion_ready=true`, and green aggregate coverage |
 
 ## Milestone Sequence
 
@@ -169,32 +185,47 @@ Outcome label: `reduced`
   authorities, and generated rule-pack validation produces `47` rules.
 - Compliance review is reviewer-ready with `47` findings.
 - Review `phase-eval` passes and is reviewer-ready for `27/27` phases.
-- Stop before registry promotion because `declared_review_contract=false` and
-  `contract_backed_promotion_ready=false`.
+- At Milestone 3 closeout, registry promotion stopped because tracked review
+  contracts and aggregate coverage gates were not yet present.
 
 ### Milestone 4 - Contract-Backed Registry Promotion
 
 Outcome label: `resolved`
 
-Not started. Preconditions:
+Completed locally:
 
-- Author and pass a tracked Dakota V1 eval contract.
-- Author and pass a tracked Dakota forest-plan component eval contract.
-- Rerun review `phase-eval` to `declared_review_contract=true` and
+- Tracked Dakota V1 eval contract
+  `config/v1_dakota_prairie_medora_real_ea_eval.json` passes with
+  `contract_status="reviewer_ready"` and `21/21` conditional source
+  expectations.
+- Tracked Dakota forest-plan component eval contract
+  `config/forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
+  passes `394/394` cases, including `161` applicable standards and the
+  adjudicated `384` open reviewer-resolution items.
+- Dakota is load-bearing in real-package coverage and component coverage:
+  real-package coverage passes `10/10` reviewer-ready slots, component
+  coverage passes `11/11` required reviews, and registry eval passes `10`
+  reviewer-ready examples across `9` governed forests.
+- Review `phase-eval` reruns green at `28/28` phases with
+  `declared_review_contract=true` and
   `contract_backed_promotion_ready=true`.
-- Add real-package coverage and forest-plan component coverage slots only after
-  the tracked review contracts pass.
-- Promote the Dakota registry row only when real-package coverage,
-  forest-specific registry eval, component-coverage eval, and docs all pass.
+- `config/forest_specific_example_package_registry_v1.json` promotes
+  `dakota-prairie-grasslands` to `real_package_examples_available` with
+  `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
 
 ## Verification Gates
 
-Run before committing this reduced packet:
+Run before committing this resolved packet:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_inventory_build_manifest.py tests/test_forest_specific_example_package_registry.py
-PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_profiles.py
+PYTHONPATH=src python -m usfs_r1_ea_sources v1-ea-eval --output-dir source_library --review-id region1-example-dakota-prairie-medora-vegetation-management-66886 --eval-file config/v1_dakota_prairie_medora_real_ea_eval.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval --output-dir source_library --review-id region1-example-dakota-prairie-medora-vegetation-management-66886 --eval-file config/forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json
+PYTHONPATH=src python -m usfs_r1_ea_sources real-package-review-coverage-eval --output-dir source_library --manifest config/v1_real_package_review_coverage_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources forest-plan-component-eval-coverage --output-dir source_library --manifest config/forest_plan_component_eval_coverage_v1.json
 PYTHONPATH=src python -m usfs_r1_ea_sources forest-specific-example-package-eval --output-dir source_library --manifest config/forest_specific_example_package_registry_v1.json
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-dakota-prairie-medora-vegetation-management-66886
+PYTHONPATH=src uv run --extra dev pytest tests/test_dakota_prairie_medora_contracts.py tests/test_forest_plan_component_eval_coverage.py tests/test_forest_specific_example_package_registry.py tests/test_real_package_review_coverage_eval.py tests/test_forest_specific_example_package_eval.py
+PYTHONPATH=src uv run --extra dev pytest tests/test_forest_plan_profiles.py
 python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --new-plan docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md
 git diff --check
 ```
@@ -216,9 +247,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources applicability-generate-rule-pack --o
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval --output-dir source_library --review-id region1-example-dakota-prairie-medora-vegetation-management-66886
 ```
 
-Expected current reduced result: `phase-eval` passes `27/27` phases and
-reports `reviewer_ready=true`, while promotion remains blocked by
-`declared_review_contract=false` and `contract_backed_promotion_ready=false`.
+Expected current resolved result: `phase-eval` passes `28/28` phases and
+reports `reviewer_ready=true`, `declared_review_contract=true`, and
+`contract_backed_promotion_ready=true`.
 
 ## Acceptance Criteria
 
@@ -233,60 +264,58 @@ reports `reviewer_ready=true`, while promotion remains blocked by
   items and `0` real EA omissions.
 - Applicability adjudication resolves the single conflict, generated rule-pack
   validation produces `47` rules, compliance review is reviewer-ready, and
-  review `phase-eval` passes `27/27` phases.
-- Dakota registry guidance names the active Medora packet while preserving
-  `routing_status="profile_eval_guidance_only"` and
-  `primary_example_id=null`.
-- Focused tests and `forest-specific-example-package-eval` pass with
-  `review_example_count=9`, `reviewer_ready_example_count=9`, and
-  `profile_guidance_only_count=2`.
-- Routing, current-state, handoff, and umbrella docs identify Medora as active
-  and reduced, with the missing tracked V1/component eval and coverage
-  promotion blockers explicit.
+  review `phase-eval` passes `28/28` phases with contract-backed promotion
+  readiness.
+- Dakota V1 eval and component eval contracts are tracked and pass.
+- Dakota registry guidance names Medora as the governed primary example with
+  `routing_status="real_package_examples_available"` and
+  `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
+- Focused tests and aggregate evals pass with `review_example_count=10`,
+  `reviewer_ready_example_count=10`, `profile_guidance_only_count=1`,
+  `covered_slot_count=10`, and `covered_review_count=11/11`.
+- Routing, current-state, handoff, and umbrella docs identify Medora as
+  resolved and promoted while preserving the parallel-to-workbook boundary.
 
 ## Documentation And Handoff
 
 Update `README.md`, `docs/AGENT_START_HERE.md`, `docs/CURRENT_ROUTING.md`,
 `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`, and
 `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` before
-commit. These docs must say Dakota is active but unpromoted and preserve the
-contract-backed promotion blockers.
+commit. These docs must say Dakota is resolved and promoted, and must preserve
+the parallel-to-`Document_Register_Master` boundary.
 
 ## Stop Conditions
 
 - Stop if `forest-plan-resolve` reports scope other than
   `dakota_prairie_grasslands`.
 - Stop if any required Dakota source records are missing from f70 retrieval.
-- Stop if a change would promote Dakota before V1 eval, component eval,
-  coverage, and registry gates pass.
+- Stop if a change would promote Dakota while V1 eval, component eval,
+  coverage, registry eval, or `phase-eval` is red.
 - Stop if future adjudication finds true EA omissions that require typed-blocked
   status instead of reviewer-ready promotion.
 
 ## Commit Closeout
 
-Commit only the tracked promotion-progress packet slice: profile context,
-component/applicability adjudication configs, focused tests, this plan, and
-routing/current-state docs. Do not stage ignored `source_library/` package or
-review artifacts.
+Commit only the tracked promotion slice: V1/component eval contracts,
+coverage/registry manifests, focused tests, this plan, and routing/current-state
+docs. Do not stage ignored `source_library/` package or review artifacts.
 
 ## Residual Risks And Next Routing
 
-The next executable slice is Milestone 4 contract-backed registry promotion.
-Until that closes, Dakota Prairie remains one of the two
-`profile_eval_guidance_only` forest rows and this package is not a governed
-example.
+No active Dakota child slice remains after Milestone 4. Kootenai National
+Forest is now the only `profile_eval_guidance_only` forest row without a
+governed real package example.
 
 ## Closeout Outcome Record
 
-- Outcome label: `reduced locally`.
+- Outcome label: `resolved locally`.
 - Reduced packet closeout commit: `7ac8e08` (`Open Dakota Prairie Medora
   example packet`).
 - Closeout scope: package authority, base review, f70 component inventory,
-  source readiness, unpromoted registry guidance, routing docs, and focused
+  source readiness, governed registry guidance, routing docs, and focused
   contract tests.
-- Promotion-progress scope: Dakota profile context, component adjudication,
-  applicability adjudication, generated rule pack, compliance review, and
-  review `phase-eval` are green locally.
-- Residual blocker: tracked V1 eval, tracked component eval, real-package
-  coverage, component coverage, and registry promotion remain before governed
-  primary-example promotion.
+- Promotion scope: Dakota V1 eval, component eval, real-package coverage,
+  component coverage, registry promotion, focused tests, docs, and review
+  `phase-eval` are green locally.
+- Residual blocker: none in the Dakota-owned packet. Remaining forest-specific
+  expansion work is Kootenai example selection, if the lane continues.

@@ -33,9 +33,9 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
     assert len(set(forest_ids)) == 10
     assert registry["summary"] == {
         "forest_unit_count": 10,
-        "profile_guidance_only_count": 2,
-        "review_example_count": 9,
-        "reviewer_ready_example_count": 9,
+        "profile_guidance_only_count": 1,
+        "review_example_count": 10,
+        "reviewer_ready_example_count": 10,
         "typed_blocked_example_count": 0,
     }
 
@@ -318,7 +318,7 @@ def test_nez_perce_dead_laundry_is_promoted_as_governed_primary_example() -> Non
     ).exists()
 
 
-def test_dakota_prairie_medora_packet_stays_unpromoted_until_contract_gates_pass() -> None:
+def test_dakota_prairie_medora_is_promoted_as_governed_primary_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     coverage_manifest = _load_json(REAL_PACKAGE_COVERAGE_PATH)
     replay_context = _load_json(DAKOTA_MEDORA_REPLAY_CONTEXT_PATH)
@@ -330,17 +330,31 @@ def test_dakota_prairie_medora_packet_stays_unpromoted_until_contract_gates_pass
     )
     active_example_ids = {row["example_id"] for row in registry["review_examples"]}
     coverage_slot_ids = {slot["slot_id"] for slot in coverage_manifest["slots"]}
+    example_row = next(
+        row
+        for row in registry["review_examples"]
+        if row["example_id"] == "dpg-medora-vegetation-management-forest-specific"
+    )
 
-    assert forest_row["routing_status"] == "profile_eval_guidance_only"
-    assert forest_row["primary_example_id"] is None
+    assert forest_row["routing_status"] == "real_package_examples_available"
+    assert forest_row["primary_example_id"] == (
+        "dpg-medora-vegetation-management-forest-specific"
+    )
     assert forest_row["supplemental_example_ids"] == []
     assert forest_row["queue_boundary_source_ids"] == []
-    assert "Medora Vegetation Management project 66886" in forest_row["guidance_note"]
-    assert "Local component adjudication, applicability" in forest_row["guidance_note"]
-    assert "Stay on the profile-eval floor" in forest_row["guidance_note"]
-    assert "tracked V1/component eval contracts" in forest_row["guidance_note"]
-    assert "dakota-prairie-medora-vegetation-management-66886" not in active_example_ids
-    assert "dpg-medora-vegetation-management-forest-specific" not in coverage_slot_ids
+    assert "Use the Medora Vegetation Management package first" in (
+        forest_row["guidance_note"]
+    )
+    assert "reviewer-ready on source-set-f70ea11e04ae3d53" in forest_row["guidance_note"]
+    assert "dpg-medora-vegetation-management-forest-specific" in active_example_ids
+    assert "dpg-medora-vegetation-management-forest-specific" in coverage_slot_ids
+    assert example_row["review_id"] == (
+        "region1-example-dakota-prairie-medora-vegetation-management-66886"
+    )
+    assert example_row["coverage_slot_id"] == (
+        "dpg-medora-vegetation-management-forest-specific"
+    )
+    assert example_row["queue_lineage_source_ids"] == []
     assert DAKOTA_MEDORA_PLAN_PATH.exists()
     assert replay_context == {
         "review_id": "region1-example-dakota-prairie-medora-vegetation-management-66886",
@@ -370,7 +384,7 @@ def test_dakota_prairie_medora_packet_stays_unpromoted_until_contract_gates_pass
     }
 
 
-def test_agent_start_here_names_dead_laundry_as_latest_resolved_example() -> None:
+def test_agent_start_here_names_dakota_as_latest_resolved_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     agent_start = AGENT_START_HERE_PATH.read_text(encoding="utf-8")
     readme = README_PATH.read_text(encoding="utf-8")
@@ -378,7 +392,7 @@ def test_agent_start_here_names_dead_laundry_as_latest_resolved_example() -> Non
     forest_row = next(
         row
         for row in registry["forest_routing"]
-        if row["forest_unit_id"] == "nez-perce-clearwater-nfs"
+        if row["forest_unit_id"] == "dakota-prairie-grasslands"
     )
     example_row = next(
         row
@@ -386,14 +400,17 @@ def test_agent_start_here_names_dead_laundry_as_latest_resolved_example() -> Non
         if row["example_id"] == forest_row["primary_example_id"]
     )
 
-    assert "docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md" in agent_start
+    assert (
+        "docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
+        in agent_start
+    )
     assert "latest resolved forest-specific example packet" in agent_start
     assert f'example_id="{example_row["example_id"]}"' in agent_start
     assert f'review_id="{example_row["review_id"]}"' in agent_start
     assert f'primary_example_id="{forest_row["primary_example_id"]}"' in agent_start
     assert f'forest_unit_id="{forest_row["forest_unit_id"]}"' in agent_start
-    assert "Dead Laundry as the governed primary example" in agent_start
-    assert "must not be reused for non-NPC forests" in agent_start
+    assert "Medora Vegetation Management as the governed primary example" in agent_start
+    assert "must not be reused for non-Dakota forests" in agent_start
     assert f'primary_example_id="{forest_row["primary_example_id"]}"' in readme
     assert f'review_id="{example_row["review_id"]}"' in readme
 

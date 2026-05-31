@@ -1,7 +1,7 @@
 {
   "schema_version": "forest-plan-component-eval-coverage-v1",
   "id": "region1-forest-plan-component-eval-coverage",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "component_retrieval_eval": {
     "manifest_path": "forest_plan_component_retrieval_eval_v1.json"
   },
@@ -15,7 +15,8 @@
     "region1-example-bitterroot-front-57341",
     "region1-example-beaverhead-deerlodge-south-tobacco-roots-63754",
     "region1-example-idaho-panhandle-lacy-lemoosh-60853",
-    "region1-example-nez-perce-clearwater-dead-laundry-57827"
+    "region1-example-nez-perce-clearwater-dead-laundry-57827",
+    "region1-example-dakota-prairie-medora-vegetation-management-66886"
   ],
   "future_forest_expansion_policy": {
     "mode": "manifest_slots_only",
@@ -24,8 +25,8 @@
   },
   "typed_blocked_slots": [],
   "coverage_thresholds": {
-    "required_review_count": 10,
-    "distinct_forest_count_min": 8,
+    "required_review_count": 11,
+    "distinct_forest_count_min": 9,
     "missing_contract_count_max": 0,
     "missing_result_count_max": 0,
     "stale_identity_count_max": 0,
@@ -138,6 +139,15 @@
       "forest_unit_id": "nez-perce-clearwater-nfs",
       "expected_source_set_id": "source-set-f70ea11e04ae3d53",
       "eval_file": "forest_plan_component_evals/region1-example-nez-perce-clearwater-dead-laundry-57827.json",
+      "required": true
+    },
+    {
+      "slot_id": "dpg-medora-vegetation-management-forest-specific",
+      "label": "Medora Vegetation Management Dakota Prairie component eval",
+      "review_id": "region1-example-dakota-prairie-medora-vegetation-management-66886",
+      "forest_unit_id": "dakota-prairie-grasslands",
+      "expected_source_set_id": "source-set-f70ea11e04ae3d53",
+      "eval_file": "forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json",
       "required": true
     }
   ]

@@ -46,15 +46,19 @@ They are intentionally not duplicated here.
   evidence graph, claims, rule-claim links, and review outputs are rebuildable
   derived layers
 - Forest-specific example packages stay parallel to `Document_Register_Master`.
-  Dakota Prairie Grasslands now has an active but unpromoted Medora Vegetation
-  Management candidate packet at
+  For Dakota Prairie Grasslands, the governed primary example is
+  `primary_example_id="dpg-medora-vegetation-management-forest-specific"` with
+  `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`
+  in `config/forest_specific_example_package_registry_v1.json`. The Medora
+  Vegetation Management packet is resolved locally through Milestone 4 at
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   with replay context
   `config/replay_contexts/region1-example-dakota-prairie-medora-vegetation-management-66886.json`.
-  Its local reviewer stack now passes through component adjudication,
-  applicability, compliance review, and review `phase-eval`, but it remains
-  `profile_eval_guidance_only` until tracked V1/component eval contracts and
-  aggregate coverage promotion gates pass.
+  Its local reviewer stack passes through component adjudication,
+  applicability, compliance review, V1 eval, component eval, aggregate
+  coverage, registry eval, and review `phase-eval`; `phase-eval` is green at
+  `28/28` phases with `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`.
   For Bitterroot National Forest, the governed primary example is
   `primary_example_id="bitterroot-front-forest-specific"` with
   `review_id="region1-example-bitterroot-front-57341"` in
@@ -97,15 +101,17 @@ They are intentionally not duplicated here.
   `declared_review_contract=true` and
   `contract_backed_promotion_ready=true`. `FOR-034` is now resolved as the
   governed Dead Laundry forest-specific example-package boundary.
-  `real-package-review-coverage-eval` now passes with `covered_slot_count=9`,
-  `reviewer_ready_slot_count=9`, `distinct_forest_count=8`, and
-  `distinct_package_style_count=14`. `forest-specific-example-package-eval`
-  passes with `review_example_count=9`, `reviewer_ready_example_count=9`,
-  `distinct_governed_example_forest_count=8`, and
-  `profile_guidance_only_count=2`. The Dead Laundry component-coverage slot is
-  covered, source-set aligned, and passing; the standalone
-  component-coverage aggregate remains reduced only by inherited ECID
-  source-delta drift.
+  Current aggregate gates include Dakota: `real-package-review-coverage-eval`
+  passes with `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
+  `distinct_forest_count=9`, and `distinct_package_style_count=16`;
+  `forest-specific-example-package-eval` passes with `review_example_count=10`,
+  `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`; `forest-plan-component-eval-coverage`
+  passes with `covered_review_count=11/11`, `stale_identity_count=0`, and
+  `unresolved_review_count=0`. Kootenai National Forest is now the only
+  remaining profile-guidance-only forest without a governed real package
+  example.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

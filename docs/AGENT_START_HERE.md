@@ -42,26 +42,37 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
-- The active unresolved forest-specific example packet is
+- The latest resolved forest-specific example packet is
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
-  Use review ID
-  `region1-example-dakota-prairie-medora-vegetation-management-66886`,
-  forest unit `dakota-prairie-grasslands`, source set
-  `source-set-f70ea11e04ae3d53`, official project page
+  For Dakota Prairie Grasslands example-package work, inspect
+  `config/forest_specific_example_package_registry_v1.json` first, then use
+  Medora Vegetation Management as the governed primary example:
+  `example_id="dpg-medora-vegetation-management-forest-specific"`,
+  `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`,
+  and
+  `primary_example_id="dpg-medora-vegetation-management-forest-specific"` for
+  `forest_unit_id="dakota-prairie-grasslands"`. The selected authorities are
+  the official project page
   `https://www.fs.usda.gov/r01/dpg/projects/66886`, and the supplied Box
   folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208`.
   Package intake, base `ea-review`, f70 Dakota component preflight, component
   adjudication, applicability, compliance review, and review `phase-eval` are
-  closed locally, but the packet is not a governed primary example. The current
-  reviewer-stack state is: component adjudication resolves `384/384` current
-  queue items with `0` pending, applicability validation has `47` applicable
-  authorities and `0` unresolved authorities, generated rule-pack validation
-  has `47` rules, compliance review is reviewer-ready with `47` findings, and
-  review `phase-eval` passes `27/27` phases. Keep Dakota Prairie on the
-  profile-eval floor because `declared_review_contract=false` and
-  `contract_backed_promotion_ready=false`; tracked V1 eval, component eval,
-  coverage, and registry promotion gates still need to be added and passed.
-- The latest resolved forest-specific example packet is
+  closed locally. The current reviewer-stack state is: component adjudication
+  resolves `384/384` current queue items with `0` pending, applicability
+  validation has `47` applicable authorities and `0` unresolved authorities,
+  generated rule-pack validation has `47` rules, compliance review is
+  reviewer-ready with `47` findings, V1 eval contract
+  `config/v1_dakota_prairie_medora_real_ea_eval.json` passes, component eval
+  contract
+  `config/forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
+  passes `394/394` cases, and review `phase-eval` passes `28/28` phases with
+  `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. Real-package coverage and registry
+  aggregate evals are green at `10` reviewer-ready examples and `9` governed
+  forests; component coverage is green at `11/11` reviews. Keep Medora
+  parallel to `Document_Register_Master`; use Medora Vegetation Management as
+  the governed primary example for Dakota Prairie Grasslands work. It must not be reused for non-Dakota forests.
+- The predecessor resolved forest-specific example packet is
   `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
   For Nez Perce-Clearwater example-package work, inspect
   `config/forest_specific_example_package_registry_v1.json` first, then use

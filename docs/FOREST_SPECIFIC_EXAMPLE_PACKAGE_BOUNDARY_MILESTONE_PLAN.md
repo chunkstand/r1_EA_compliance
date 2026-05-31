@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is reduced through Milestone 4 registry and coverage promotion, with only inherited ECID source-delta component-coverage drift still red; docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and aggregate coverage promotion; docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and aggregate coverage promotion, with only the inherited standalone ECID source-delta component-coverage drift still red outside the Dead Laundry slot; docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is reduced through package authority, f70 forest-plan preflight, component adjudication, applicability, compliance review, and review phase-eval while missing tracked V1/component eval and aggregate coverage contracts block promotion; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, Bitterroot, Beaverhead-Deerlodge, Idaho Panhandle Lacy, or Nez Perce-Clearwater Dead Laundry Milestones 0-4 unless a verified gate regresses`)
+Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is reduced through Milestone 4 registry and coverage promotion, with only inherited ECID source-delta component-coverage drift still red; docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and aggregate coverage promotion; docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and aggregate coverage promotion; docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and aggregate coverage promotion; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, Bitterroot, Beaverhead-Deerlodge, Idaho Panhandle Lacy, Nez Perce-Clearwater Dead Laundry, or Dakota Prairie Medora Milestones 0-4 unless a verified gate regresses`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -29,6 +29,8 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   - Bonanza as the primary reviewer-ready example for `helena-lewis-and-clark-nf`
   - Dead Laundry as the primary reviewer-ready example for
     `nez-perce-clearwater-nfs`
+  - Medora Vegetation Management as the primary reviewer-ready example for
+    `dakota-prairie-grasslands`
 - South Plateau is no longer an active governed example. It is retained only
   under archived manifest surfaces with
   `usage_policy="historical_evidence_only_not_example"` due to litigation and
@@ -43,14 +45,13 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   parent packet's Milestone 3 registry and aggregate threshold ratchet is now
   implemented: `lolo-nf` routes as `real_package_examples_available`, and the
   Lolo slot is load-bearing in real-package coverage.
-- The remaining `2` forests now route through
+- The remaining `1` forest now routes through
   `config/region1_forest_plan_profile_eval_coverage_v1.json` as
   `profile_eval_guidance_only` until a governed real package example exists.
 - The Dakota Prairie Medora follow-on in
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  is opened and reduced through package authority, f70 forest-plan preflight,
-  component adjudication, applicability, compliance review, and review
-  `phase-eval`. Local ignored intake for review
+  is resolved through Milestone 4 registry and aggregate coverage promotion.
+  Local ignored intake for review
   `region1-example-dakota-prairie-medora-vegetation-management-66886` has
   `7` downloaded files, `40,860,421` bytes, and `0` failures. Base
   `ea-review` passes with `7/7` extracted files and `417` package chunks. A
@@ -63,11 +64,18 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   queue as system misses with `0` pending and `0` real EA omissions. Tracked
   applicability adjudication resolves the single conflict; generated rule-pack
   validation produces `47` rules, compliance review is reviewer-ready with `47`
-  findings, and review `phase-eval` passes `27/27` phases. The row remains
-  `profile_eval_guidance_only` because `declared_review_contract=false` and
-  `contract_backed_promotion_ready=false`; tracked V1 eval, component eval,
-  real-package coverage, component coverage, and registry promotion still need
-  to pass before Dakota becomes a governed primary example.
+  findings, tracked V1 eval passes, tracked component eval passes `394/394`
+  cases, and review `phase-eval` passes `28/28` phases with
+  `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. Dakota Prairie Grasslands now routes
+  as `real_package_examples_available` with
+  `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
+  Aggregate coverage now passes with `covered_slot_count=10`,
+  `reviewer_ready_slot_count=10`, `review_example_count=10`,
+  `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`; component coverage passes
+  `covered_review_count=11/11`.
 - The South Otter follow-on in
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
   Milestone 3, and a follow-on user-directed policy update now makes South
@@ -130,12 +138,12 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   `declared_review_contract=true` and `contract_backed_promotion_ready=true`.
   Idaho Panhandle now routes as `real_package_examples_available` with
   `primary_example_id="ipnf-lacy-lemoosh-forest-specific"`.
-  `real-package-review-coverage-eval` now passes with `covered_slot_count=9`,
-  `reviewer_ready_slot_count=9`, `distinct_forest_count=8`, and
-  `distinct_package_style_count=14`; `forest-specific-example-package-eval`
-  now passes with `review_example_count=9`, `reviewer_ready_example_count=9`,
-  `distinct_governed_example_forest_count=8`, and
-  `profile_guidance_only_count=2`. The Idaho component-coverage slot is
+  `real-package-review-coverage-eval` now passes with `covered_slot_count=10`,
+  `reviewer_ready_slot_count=10`, `distinct_forest_count=9`, and
+  `distinct_package_style_count=16`; `forest-specific-example-package-eval`
+  now passes with `review_example_count=10`, `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`. The Idaho component-coverage slot is
   present, covered, source-set aligned, and passing; the standalone aggregate
   remains red only on inherited `v1-cg-ecid-source-delta-review`.
 - The Nez Perce-Clearwater Dead Laundry follow-on in
@@ -156,11 +164,11 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   `real_package_examples_available` with
   `primary_example_id="npc-dead-laundry-forest-specific"`, `FOR-034` is
   resolved as forest-specific example-package boundary work, and aggregate
-  coverage now passes with `covered_slot_count=9`,
-  `reviewer_ready_slot_count=9`, `review_example_count=9`,
-  `reviewer_ready_example_count=9`,
-  `distinct_governed_example_forest_count=8`, and
-  `profile_guidance_only_count=2`. The Dead Laundry component-coverage slot is
+  coverage now passes with `covered_slot_count=10`,
+  `reviewer_ready_slot_count=10`, `review_example_count=10`,
+  `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`. The Dead Laundry component-coverage slot is
   present, covered, source-set aligned, and passing; the standalone aggregate
   now passes locally after the inherited `v1-cg-ecid-source-delta-review`
   contracts were refreshed to archived merged source set

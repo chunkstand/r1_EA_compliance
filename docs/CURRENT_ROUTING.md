@@ -12,13 +12,10 @@ Use this file as the short current route before opening the append-only docs.
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
-- Active forest-specific example packet:
-  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  reduced through package authority, f70 forest-plan preflight, component
-  adjudication, applicability, compliance review, and review `phase-eval`; do
-  not promote Dakota Prairie until tracked V1/component eval and aggregate
-  coverage promotion gates pass
 - Latest resolved forest-specific example packet:
+  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  Milestone 4
+- Predecessor resolved forest-specific example packet:
   `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
 - Predecessor resolved forest-specific example packet:
@@ -48,13 +45,16 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- Dakota Prairie Grasslands Medora Vegetation Management is the active
-  unresolved forest-specific example packet. The packet is
+- Dakota Prairie Grasslands Medora Vegetation Management is resolved locally
+  through Milestone 4 and is now the governed primary example for
+  `dakota-prairie-grasslands`. The packet is
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`;
   the working review identity is
   `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`
   for `forest_unit_id="dakota-prairie-grasslands"` on
-  `source-set-f70ea11e04ae3d53`. Reduced packet closeout commit: `7ac8e08`.
+  `source-set-f70ea11e04ae3d53`. Reduced packet closeout commit: `7ac8e08`;
+  this Milestone 4 slice adds the promotion surfaces. The governed example ID is
+  `example_id="dpg-medora-vegetation-management-forest-specific"`.
   The selected authorities are the official project page
   `https://www.fs.usda.gov/r01/dpg/projects/66886` and supplied Pinyon/Box root
   `https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208`.
@@ -83,14 +83,29 @@ Use this file as the short current route before opening the append-only docs.
   applicability validation reports `460` candidate authorities, `47`
   applicable, `413` not applicable, `0` unresolved, and a generated `47`-rule
   pack. Compliance review is reviewer-ready with `47` findings (`28` pass,
-  `18` uncertain, `1` gap), and review `phase-eval` passes `27/27` phases with
-  `reviewer_ready=true` and `blockers=[]`. The registry row intentionally
-  remains `profile_eval_guidance_only` with `primary_example_id=null` because
-  `declared_review_contract=false` and
-  `contract_backed_promotion_ready=false`; do not add a real-package coverage
-  slot or governed primary example until tracked V1 eval, tracked component
-  eval, review `phase-eval`, aggregate coverage, and registry eval all pass.
-- Nez Perce-Clearwater Dead Laundry is resolved locally through Milestone 4 and
+  `18` uncertain, `1` gap). The tracked Dakota V1 eval contract
+  `config/v1_dakota_prairie_medora_real_ea_eval.json` passes with
+  `contract_status="reviewer_ready"`, and the tracked component eval contract
+  `config/forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
+  passes `394/394` cases with `161` applicable standards. Aggregate promotion
+  gates are green locally: `real-package-review-coverage-eval` passes with
+  `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
+  `distinct_forest_count=9`, and `distinct_package_style_count=16`;
+  `forest-specific-example-package-eval` passes with `review_example_count=10`,
+  `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`; `forest-plan-component-eval-coverage`
+  passes with `covered_review_count=11/11`, `stale_identity_count=0`, and
+  `unresolved_review_count=0`. Review `phase-eval` passes `28/28` phases with
+  `reviewer_ready=true`, `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`. `config/forest_specific_example_package_registry_v1.json`
+  now routes `dakota-prairie-grasslands` as
+  `real_package_examples_available` with
+  `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
+  Kootenai National Forest is now the only remaining
+  `profile_eval_guidance_only` forest without a governed real package example.
+- Nez Perce-Clearwater Dead Laundry is the predecessor resolved
+  forest-specific example packet. It is resolved locally through Milestone 4 and
   is now the governed primary example for `nez-perce-clearwater-nfs`.
   The packet is
   `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`;
@@ -137,15 +152,15 @@ Use this file as the short current route before opening the append-only docs.
   `primary_example_id="npc-dead-laundry-forest-specific"`, and `FOR-034` is
   resolved as a `forest_specific_example_package` queue boundary. Aggregate
   promotion gates are green locally: `real-package-review-coverage-eval`
-  passes with `covered_slot_count=9`, `reviewer_ready_slot_count=9`,
-  `distinct_forest_count=8`, and `distinct_package_style_count=14`;
-  `forest-specific-example-package-eval` passes with `review_example_count=9`,
-  `reviewer_ready_example_count=9`,
-  `distinct_governed_example_forest_count=8`, and
-  `profile_guidance_only_count=2`. The Dead Laundry component-coverage slot is
+  passes with `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
+  `distinct_forest_count=9`, and `distinct_package_style_count=16`;
+  `forest-specific-example-package-eval` passes with `review_example_count=10`,
+  `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`. The Dead Laundry component-coverage slot is
   covered, source-set aligned, and passing, and the standalone
   `forest-plan-component-eval-coverage` aggregate is now green locally with
-  `covered_review_count=10/10`, `stale_identity_count=0`, and
+  `covered_review_count=11/11`, `stale_identity_count=0`, and
   `unresolved_review_count=0` after refreshing the inherited
   `v1-cg-ecid-source-delta-review` replay contracts to archived merged source
   set `source-set-8a4005c8a083af1a` and rerunning its `36/36`-case component
@@ -222,13 +237,13 @@ Use this file as the short current route before opening the append-only docs.
   and aggregate coverage promotion now passes locally: `idaho-panhandle-nfs`
   routes as `real_package_examples_available` with
   `primary_example_id="ipnf-lacy-lemoosh-forest-specific"`;
-  `real-package-review-coverage-eval` passes with `covered_slot_count=9`,
-  `reviewer_ready_slot_count=9`, `distinct_forest_count=8`, and
-  `distinct_package_style_count=14`; `forest-specific-example-package-eval`
-  passes with `covered_forest_count=10`, `review_example_count=9`,
-  `reviewer_ready_example_count=9`,
-  `distinct_governed_example_forest_count=8`, and
-  `profile_guidance_only_count=2`. The Idaho component-coverage slot is
+  `real-package-review-coverage-eval` passes with `covered_slot_count=10`,
+  `reviewer_ready_slot_count=10`, `distinct_forest_count=9`, and
+  `distinct_package_style_count=16`; `forest-specific-example-package-eval`
+  passes with `covered_forest_count=10`, `review_example_count=10`,
+  `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`. The Idaho component-coverage slot is
   covered, source-set aligned, and passing; the standalone
   `forest-plan-component-eval-coverage` aggregate still exits red only on the
   inherited `v1-cg-ecid-source-delta-review` slot, with
@@ -273,13 +288,13 @@ Use this file as the short current route before opening the append-only docs.
   `phase-eval` passes `28/28` with `blockers=[]`.
   `beaverhead-deerlodge-nf` now routes as `real_package_examples_available`
   with `primary_example_id="bdnf-south-tobacco-roots-forest-specific"`.
-  `real-package-review-coverage-eval` passes with `covered_slot_count=9`,
-  `reviewer_ready_slot_count=9`, `distinct_forest_count=8`, and
-  `distinct_package_style_count=14`.
+  `real-package-review-coverage-eval` passes with `covered_slot_count=10`,
+  `reviewer_ready_slot_count=10`, `distinct_forest_count=9`, and
+  `distinct_package_style_count=16`.
   `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
-  `review_example_count=9`, `reviewer_ready_example_count=9`,
-  `distinct_governed_example_forest_count=8`, and
-  `profile_guidance_only_count=2`. The Beaverhead component-coverage slot
+  `review_example_count=10`, `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`. The Beaverhead component-coverage slot
   passes on `source-set-f70ea11e04ae3d53`; the standalone
   `forest-plan-component-eval-coverage` aggregate still exits red only on the
   inherited `v1-cg-ecid-source-delta-review` slot, with

@@ -15,20 +15,20 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Dakota Prairie Medora Reviewer Stack Green Locally, Promotion Still Blocked
+## Dakota Prairie Medora Promotion Resolved Locally
 
 Latest implementation update on 2026-05-31 UTC:
 
 - update:
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  opens the Dakota Prairie Grasslands Medora Vegetation Management Project
-  (`66886`) as an active, unpromoted forest-specific example candidate and now
-  records local reviewer-stack replay through compliance and review
-  `phase-eval`. The working identity is
+  is resolved locally through Milestone 4 registry and aggregate coverage
+  promotion. Dakota Prairie Grasslands now has governed primary example
+  `example_id="dpg-medora-vegetation-management-forest-specific"` for the
+  Medora Vegetation Management Project (`66886`). The working identity is
   `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`,
   `forest_unit_id="dakota-prairie-grasslands"`, and
   `source_set_id="source-set-f70ea11e04ae3d53"`. Reduced packet closeout
-  commit: `7ac8e08`.
+  commit: `7ac8e08`; this Milestone 4 slice adds the promotion surfaces.
 - package authority:
   live Forest Service project-page readback identifies project `66886` as
   `Completed`, expected analysis type `Environmental Assessment`, lead
@@ -68,15 +68,29 @@ Latest implementation update on 2026-05-31 UTC:
   pack. `compliance-review` is reviewer-ready and validation-passed with `47`
   findings: `28` pass, `18` uncertain, and `1` gap. Review `phase-eval` passes
   and is reviewer-ready for `27/27` phases with `blockers=[]`.
-- promotion boundary:
-  `config/forest_specific_example_package_registry_v1.json` keeps
-  `dakota-prairie-grasslands` at `profile_eval_guidance_only` with
-  `primary_example_id=null`. Review `phase-eval` still reports
-  `declared_review_contract=false` and
-  `contract_backed_promotion_ready=false`, so Dakota is reviewer-stack green
-  locally but not promotion-ready. Do not add real-package coverage,
-  component-coverage, or registry promotion artifacts until tracked V1 eval,
-  tracked component eval, aggregate coverage, and registry gates pass.
+- contracts and promotion:
+  tracked V1 eval contract
+  `config/v1_dakota_prairie_medora_real_ea_eval.json` passes with
+  `contract_status="reviewer_ready"`, and tracked component eval contract
+  `config/forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
+  passes `394/394` cases with `161` applicable standards. `config/v1_real_package_review_coverage_v1.json`
+  now includes required slot
+  `slot_id="dpg-medora-vegetation-management-forest-specific"`, and
+  `config/forest_specific_example_package_registry_v1.json` routes
+  `dakota-prairie-grasslands` as `real_package_examples_available` with
+  `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
+  `real-package-review-coverage-eval` passes with `covered_slot_count=10`,
+  `reviewer_ready_slot_count=10`, `distinct_forest_count=9`, and
+  `distinct_package_style_count=16`. `forest-specific-example-package-eval`
+  passes with `review_example_count=10`, `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`. `forest-plan-component-eval-coverage`
+  passes with `covered_review_count=11/11`, `stale_identity_count=0`, and
+  `unresolved_review_count=0`. Review `phase-eval` now passes `28/28` phases
+  with `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. Kootenai National Forest is the only
+  remaining `profile_eval_guidance_only` forest without a governed real package
+  example.
 
 ## Nez Perce-Clearwater Dead Laundry Promotion Resolved Locally
 
@@ -154,15 +168,15 @@ Latest implementation update on 2026-05-31 UTC:
   `nez-perce-clearwater-nfs` as `real_package_examples_available`, and
   `config/v1_real_package_review_coverage_v1.json` adds required slot
   `slot_id="npc-dead-laundry-forest-specific"`. `real-package-review-coverage-eval`
-  passes with `covered_slot_count=9`, `reviewer_ready_slot_count=9`,
-  `distinct_forest_count=8`, and `distinct_package_style_count=14`.
-  `forest-specific-example-package-eval` passes with `review_example_count=9`,
-  `reviewer_ready_example_count=9`,
-  `distinct_governed_example_forest_count=8`, and
-  `profile_guidance_only_count=2`. The Dead Laundry component-coverage slot is
+  passes with `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
+  `distinct_forest_count=9`, and `distinct_package_style_count=16`.
+  `forest-specific-example-package-eval` passes with `review_example_count=10`,
+  `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`. The Dead Laundry component-coverage slot is
   covered, source-set aligned, and passing, and the standalone
   `forest-plan-component-eval-coverage` aggregate is now green locally with
-  `covered_review_count=10/10`, `stale_identity_count=0`, and
+  `covered_review_count=11/11`, `stale_identity_count=0`, and
   `unresolved_review_count=0`. The inherited
   `v1-cg-ecid-source-delta-review` component-side adjudication/eval contracts
   now align to archived merged source set `source-set-8a4005c8a083af1a`, and
@@ -226,12 +240,12 @@ Latest implementation update on 2026-05-30 UTC:
   `config/v1_real_package_review_coverage_v1.json` includes required
   `slot_id="ipnf-lacy-lemoosh-forest-specific"` coverage for the frozen review
   ID, and `real-package-review-coverage-eval` passes with
-  `covered_slot_count=9`, `reviewer_ready_slot_count=9`,
-  `distinct_forest_count=8`, and `distinct_package_style_count=14`.
+  `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
+  `distinct_forest_count=9`, and `distinct_package_style_count=16`.
   `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
-  `review_example_count=9`, `reviewer_ready_example_count=9`,
-  `distinct_governed_example_forest_count=8`, and
-  `profile_guidance_only_count=2`. Milestone 2 reconciled Idaho profile source
+  `review_example_count=10`, `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`. Milestone 2 reconciled Idaho profile source
   IDs to active catalog IDs, added package-backed `St. Joe Ranger District`
   resolver vocabulary, and built a review-local component inventory with `52`
   components and `8` standards in local commit `a1574b3`. `St. Maries Ranger
@@ -355,12 +369,12 @@ Latest implementation update on 2026-05-29 UTC:
   `config/v1_real_package_review_coverage_v1.json` includes required
   `slot_id="bdnf-south-tobacco-roots-forest-specific"` coverage for the frozen
   review ID, and `real-package-review-coverage-eval` passes with
-  `covered_slot_count=9`, `reviewer_ready_slot_count=9`,
-  `distinct_forest_count=8`, and `distinct_package_style_count=14`.
+  `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
+  `distinct_forest_count=9`, and `distinct_package_style_count=16`.
   `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
-  `review_example_count=9`, `reviewer_ready_example_count=9`,
-  `distinct_governed_example_forest_count=8`, and
-  `profile_guidance_only_count=2`.
+  `review_example_count=10`, `reviewer_ready_example_count=10`,
+  `distinct_governed_example_forest_count=9`, and
+  `profile_guidance_only_count=1`.
   `config/forest_plan_component_eval_coverage_v1.json` includes the required
   Beaverhead component slot, which is covered, source-set aligned, and passing.
   The standalone aggregate still exits red only on the inherited
