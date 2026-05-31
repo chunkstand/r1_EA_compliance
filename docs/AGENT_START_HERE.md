@@ -42,19 +42,23 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
-- The active forest-specific example packet is
+- The latest resolved forest-specific example packet is
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
-  For Idaho Panhandle National Forests work, use review ID
-  `region1-example-idaho-panhandle-lacy-lemoosh-60853`, forest unit
-  `idaho-panhandle-nfs`, the official project page
-  `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853`, and Pinyon/Box
-  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265`
-  as the selected authority. Local package-authority intake now records `186`
-  downloaded files, `553,664,116` file bytes, zero failures, and a tracked
-  replay context at
+  For Idaho Panhandle National Forests work, inspect
+  `config/forest_specific_example_package_registry_v1.json` first, then use
+  Lacy Lemoosh as the governed primary example:
+  `example_id="ipnf-lacy-lemoosh-forest-specific"`,
+  `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"`, and
+  `primary_example_id="ipnf-lacy-lemoosh-forest-specific"` for
+  `forest_unit_id="idaho-panhandle-nfs"`. The selected authorities are the
+  official project page
+  `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853` and Pinyon/Box
+  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265`.
+  Local package-authority intake records `186` downloaded files,
+  `553,664,116` file bytes, zero failures, and a tracked replay context at
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`.
-  Milestone 2 forest-plan preflight resolves `idaho_panhandle_nfs` scope, builds
-  a review-local inventory with `52` components and `8` standards, and now
+  Milestone 2 forest-plan preflight resolves `idaho_panhandle_nfs` scope,
+  builds a review-local inventory with `52` components and `8` standards, and
   passes FEIS retrieval readiness after the local f70 source-delta overlay
   closed in commit `ba3718b`: `R1PLAN-idaho-panhandle-nfs-04` indexes `1,606`
   chunks and `R1PLAN-idaho-panhandle-nfs-05` indexes `991` chunks. Idaho
@@ -62,26 +66,24 @@ The planner:
   and `2` overlays. The current `36`-item component adjudication is refreshed:
   `forest-plan-component-adjudication-eval` passes with `36/36` resolved
   system-miss items, `0` pending items, and no expectation mismatches;
-  `forest-plan-resolve` now reports `reviewer_ready=true` and
-  `validation_passed=true`.
-  Reviewer-stack replay now passes locally in commit `3cea9fe`: applicability
-  adjudication resolves `9/9` conflicts, generated rule-pack validation reports
-  `56` generated rules, compliance review is reviewer-ready, V1 eval contract
+  `forest-plan-resolve` reports `reviewer_ready=true` and
+  `validation_passed=true`. Reviewer-stack replay passes locally in commit
+  `3cea9fe`: applicability adjudication resolves `9/9` conflicts, generated
+  rule-pack validation reports `56` generated rules, compliance review is
+  reviewer-ready, V1 eval contract
   `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json` passes, component
   eval contract
   `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
-  passes `52/52` cases, and review `phase-eval` passes `28/28` phases.
-  Preserve `St. Maries Ranger District` as the authority label and `St. Joe
-  Ranger District` as resolver scope evidence.
-  This is not a
-  governed primary example yet:
-  `config/forest_specific_example_package_registry_v1.json` keeps
-  `idaho-panhandle-nfs` at `profile_eval_guidance_only` with
-  `primary_example_id=null` until Milestone 4 registry and aggregate coverage
-  gates pass. Keep
-  Lacy Lemoosh parallel to
-  `Document_Register_Master`; it is not a generic Region 1 example and must
-  not be reused for non-Idaho-Panhandle forests.
+  passes `52/52` cases, and review `phase-eval` passes `28/28` phases with
+  `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. Real-package coverage and
+  forest-specific registry eval are green; the standalone component-coverage
+  aggregate is reduced only on the inherited ECID source-delta slot while the
+  Idaho slot itself passes. Preserve `St. Maries Ranger District` as the
+  authority label and `St. Joe Ranger District` as resolver scope evidence.
+  Keep Lacy Lemoosh parallel to `Document_Register_Master`; use Lacy Lemoosh
+  as the governed primary example for Idaho Panhandle National Forests work,
+  and it must not be reused for non-Idaho-Panhandle forests.
 - Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
   through Milestone 4 in
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
@@ -104,7 +106,7 @@ The planner:
   itself passes. Keep South Tobacco Roots parallel to
   `Document_Register_Master`; it is not a generic Region 1 example and must not
   be reused for non-Beaverhead-Deerlodge forests.
-- The latest resolved forest-specific example packet before Beaverhead is
+- The predecessor resolved forest-specific example packet before Beaverhead is
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`. For Bitterroot
   National Forest example-package review work, inspect
   `config/forest_specific_example_package_registry_v1.json` first, then use

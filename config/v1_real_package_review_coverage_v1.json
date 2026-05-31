@@ -1,12 +1,12 @@
 {
   "coverage_thresholds": {
-    "distinct_forest_count_min": 6,
-    "distinct_package_style_count_min": 8,
+    "distinct_forest_count_min": 7,
+    "distinct_package_style_count_min": 11,
     "missing_package_authority_count_max": 0,
     "missing_required_slot_count_max": 0,
     "required_coverage_class_count": 2,
-    "required_slot_count": 7,
-    "reviewer_ready_slot_count_min": 7,
+    "required_slot_count": 8,
+    "reviewer_ready_slot_count_min": 8,
     "typed_blocked_slot_count_min": 0
   },
   "id": "region1-real-package-review-coverage-v1",
@@ -122,11 +122,27 @@
       "required": true,
       "review_id": "region1-example-helena-lewis-and-clark-bonanza-66532",
       "slot_id": "hlc-bonanza-forest-specific"
+    },
+    {
+      "coverage_class_id": "forest_specific_reviewer_ready",
+      "eval_file": "v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json",
+      "expected_contract_status": "reviewer_ready",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "label": "Lacy Lemoosh Idaho Panhandle forest-specific reviewer-ready example",
+      "package_authority": {
+        "replay_context_path": "replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json",
+        "official_project_page": "https://www.fs.usda.gov/r01/idahopanhandle/projects/60853",
+        "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265"
+      },
+      "package_label": "Lacy Lemoosh",
+      "required": true,
+      "review_id": "region1-example-idaho-panhandle-lacy-lemoosh-60853",
+      "slot_id": "ipnf-lacy-lemoosh-forest-specific"
     }
   ],
-  "version": "1.6.0",
+  "version": "1.6.1",
   "as_of_date": "2026-05-29",
-  "status": "beaverhead-deerlodge-south-tobacco-roots-v1-reviewer-ready",
+  "status": "idaho-panhandle-lacy-lemoosh-v1-reviewer-ready",
   "archived_slots": [
     {
       "coverage_class_id": "expansion_reviewer_ready",

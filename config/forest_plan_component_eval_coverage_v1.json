@@ -13,7 +13,8 @@
     "region1-example-custer-gallatin-south-otter-58396",
     "region1-example-helena-lewis-and-clark-bonanza-66532",
     "region1-example-bitterroot-front-57341",
-    "region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"
+    "region1-example-beaverhead-deerlodge-south-tobacco-roots-63754",
+    "region1-example-idaho-panhandle-lacy-lemoosh-60853"
   ],
   "future_forest_expansion_policy": {
     "mode": "manifest_slots_only",
@@ -22,8 +23,8 @@
   },
   "typed_blocked_slots": [],
   "coverage_thresholds": {
-    "required_review_count": 8,
-    "distinct_forest_count_min": 6,
+    "required_review_count": 9,
+    "distinct_forest_count_min": 7,
     "missing_contract_count_max": 0,
     "missing_result_count_max": 0,
     "stale_identity_count_max": 0,
@@ -118,6 +119,15 @@
       "forest_unit_id": "beaverhead-deerlodge-nf",
       "expected_source_set_id": "source-set-f70ea11e04ae3d53",
       "eval_file": "forest_plan_component_evals/region1-example-beaverhead-deerlodge-south-tobacco-roots-63754.json",
+      "required": true
+    },
+    {
+      "slot_id": "ipnf-lacy-lemoosh-forest-specific",
+      "label": "Lacy Lemoosh Idaho Panhandle component eval",
+      "review_id": "region1-example-idaho-panhandle-lacy-lemoosh-60853",
+      "forest_unit_id": "idaho-panhandle-nfs",
+      "expected_source_set_id": "source-set-f70ea11e04ae3d53",
+      "eval_file": "forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json",
       "required": true
     }
   ]

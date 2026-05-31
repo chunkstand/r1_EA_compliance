@@ -55,28 +55,35 @@ They are intentionally not duplicated here.
   `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`;
   its Milestone 4 promotion is reduced only by inherited ECID source-delta
   component-coverage drift, not by the Beaverhead-owned slots.
-  For Idaho Panhandle National Forests, Lacy Lemoosh is the active candidate
-  packet in
-  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, but
-  `idaho-panhandle-nfs` remains `profile_eval_guidance_only` after local
-  package-authority intake, FEIS source-readiness closeout in commit
-  `ba3718b`, and local reviewer-stack replay in commit `3cea9fe`. The tracked
-  replay context is
+  For Idaho Panhandle National Forests, the governed primary example is
+  `primary_example_id="ipnf-lacy-lemoosh-forest-specific"` with
+  `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` in
+  `config/forest_specific_example_package_registry_v1.json`. The tracked replay
+  context is
   `config/replay_contexts/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`;
-  resolver scope now resolves to `idaho_panhandle_nfs` from package-local
+  resolver scope resolves to `idaho_panhandle_nfs` from package-local
   `St. Joe Ranger District` evidence, while `St. Maries Ranger District`
-  remains the project-page/Box authority label. Local f70 retrieval now indexes
+  remains the project-page/Box authority label. Local f70 retrieval indexes
   `R1PLAN-idaho-panhandle-nfs-04` with `1,606` chunks and
   `R1PLAN-idaho-panhandle-nfs-05` with `991` chunks. The current `36`-item
   component adjudication is refreshed with `36/36` resolved system-miss items,
-  `0` pending items, and no expectation mismatches; `forest-plan-resolve` now
-  reports `reviewer_ready=true`. Reviewer-stack replay now passes with
-  `56` generated applicable rules, `0` unresolved authorities, a V1 eval
-  contract at `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json`, a
-  `52`-case component eval at
+  `0` pending items, and no expectation mismatches; `forest-plan-resolve`
+  reports `reviewer_ready=true`. Reviewer-stack replay passes with `56`
+  generated applicable rules, `0` unresolved authorities, a V1 eval contract at
+  `config/v1_idaho_panhandle_lacy_lemoosh_real_ea_eval.json`, a `52`-case
+  component eval at
   `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`,
-  and review `phase-eval` `28/28` phases reviewer-ready. The next blocker is
-  registry and aggregate coverage promotion, not another replay run.
+  and review `phase-eval` `28/28` phases reviewer-ready with
+  `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. `real-package-review-coverage-eval`
+  now passes with `covered_slot_count=8`, `reviewer_ready_slot_count=8`,
+  `distinct_forest_count=7`, and `distinct_package_style_count=11`.
+  `forest-specific-example-package-eval` passes with `review_example_count=8`,
+  `reviewer_ready_example_count=8`,
+  `distinct_governed_example_forest_count=7`, and
+  `profile_guidance_only_count=3`. The Idaho component-coverage slot is
+  covered, source-set aligned, and passing; the standalone component-coverage
+  aggregate remains reduced only by inherited ECID source-delta drift.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

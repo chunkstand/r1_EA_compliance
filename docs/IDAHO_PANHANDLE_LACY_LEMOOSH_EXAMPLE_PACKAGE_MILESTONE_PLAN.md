@@ -1,10 +1,10 @@
 # Idaho Panhandle Lacy Lemoosh Example Package Milestone Plan
 Date: 2026-05-29
-Status: Active. Milestones 0-3 are resolved locally; Milestone 2 FEIS
+Status: Resolved locally through Milestone 4. Milestone 2 FEIS
 source-readiness is closed locally in commit `ba3718b`, the current component
-adjudication refresh is closed against the live `36`-item queue, and Milestone
-3 reviewer-stack replay now passes in commit `3cea9fe`. Milestone 4 registry
-and aggregate coverage promotion is next.
+adjudication refresh is closed against the live `36`-item queue, Milestone 3
+reviewer-stack replay passes in commit `3cea9fe`, and Milestone 4 registry and
+aggregate coverage promotion now passes locally.
 Plan class: implementation
 High-risk implementation: yes
 Owner context: standalone follow-on from `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -12,21 +12,20 @@ Commit policy: each completed milestone closes only after verification,
 affected docs/handoff updates, and a local atomic commit.
 
 ## Purpose
-Open the governed Idaho Panhandle Lacy Lemoosh lane without contaminating
-`Document_Register_Master` or claiming readiness before deterministic gates pass.
+Promote the Idaho Panhandle Lacy Lemoosh lane without contaminating
+`Document_Register_Master`.
 
 Authority: project page
-`https://www.fs.usda.gov/r01/idahopanhandle/projects/60853`, public Pinyon/Box
+`https://www.fs.usda.gov/r01/idahopanhandle/projects/60853`, Pinyon/Box
 folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265`,
-project-page lead unit `St. Maries Ranger District`, completed EA decision
-signed `2025-05-22`, package scope term `St. Joe Ranger District`, and frozen
+lead unit `St. Maries Ranger District`, decision signed `2025-05-22`, scope
+term `St. Joe Ranger District`, and review ID
+`region1-example-idaho-panhandle-lacy-lemoosh-60853`.
 review ID `region1-example-idaho-panhandle-lacy-lemoosh-60853`.
 
 ## Intent Lock
-Lacy Lemoosh is an Idaho Panhandle National Forests example candidate. It is
-not a generic Region 1 example, not a substitute for Kootenai or Nez
-Perce-Clearwater work, and not evidence that any other forest has a governed
-real-package example.
+Lacy Lemoosh is an Idaho Panhandle National Forests example candidate only. It
+is not a generic Region 1 example or a substitute for other forests.
 
 Governed identity:
 - `example_id="ipnf-lacy-lemoosh-forest-specific"`
@@ -38,34 +37,42 @@ Governed identity:
 - `queue_lineage_source_ids=[]` unless a later workbook-backed Lacy Lemoosh
   queue row is found
 
-`idaho-panhandle-nfs` remains `profile_eval_guidance_only` until compliance,
-V1 eval, review `phase-eval`, aggregate coverage, and promotion gates pass.
+`idaho-panhandle-nfs` now routes as `real_package_examples_available` with
+`primary_example_id="ipnf-lacy-lemoosh-forest-specific"` because compliance,
+V1 eval, review `phase-eval`, aggregate coverage, and promotion gates pass
+locally.
 Existing Idaho Panhandle queue row `FOR-022` is project `67684`, not Lacy
 Lemoosh `60853`.
 
 ## Evidence
 - Live Forest Service and Box readback on 2026-05-29 identify `60853`
-  as completed EA work under Idaho Panhandle National Forests, decision
+  as completed EA work, decision
   date `2025-05-22`, `186` listed Box files, and `555,066,969` top-level bytes.
-- Local ignored authority records `29` folder pages, `186` files,
+- Ignored authority records `29` folder pages, `186` files,
   `553,664,116` expected/actual bytes, and `failure_count=0`; the tracked
   replay context binds this package to `source-set-f70ea11e04ae3d53`.
 - `ea-review` passes with `186/186` extracted files, `7,404` chunks,
-  `package_failed_count=0`, `reviewer_ready=true`, and `validation_passed=true`.
-- Registry status remains `profile_eval_guidance_only`, `primary_example_id=null`,
-  with no Lacy Lemoosh coverage slot.
-- Milestone 2 resolves `St. Joe Ranger District` scope, builds `52` components
-  and `8` standards, indexes FEIS records `R1PLAN-idaho-panhandle-nfs-04`/`-05`,
-  and closes the current `36`-item component queue with no pending items.
+  `package_failed_count=0`, and `validation_passed=true`.
+- Registry promotion now passes: `idaho-panhandle-nfs` routes as
+  `real_package_examples_available` with
+  `primary_example_id="ipnf-lacy-lemoosh-forest-specific"`. Real-package
+  coverage passes `8/8`; forest-specific registry eval passes `8`
+  reviewer-ready examples with `3` guidance-only forests. The Idaho
+  component-coverage slot is covered and passing; only the inherited ECID
+  source-delta aggregate defect remains outside this packet.
+- Milestone 2 resolves `St. Joe Ranger District` scope, builds
+  components and `8` standards, indexes FEIS records
+  `R1PLAN-idaho-panhandle-nfs-04`/`-05`, and closes the `36`-item component
+  queue with no pending items.
 - Milestone 3 resolves the reviewer stack: applicability closes `9/9`, rule
-  generation emits `56` rules, compliance/V1/component evals pass, and review
-  `phase-eval` passes `28/28`.
-- District lock: preserve `St. Maries Ranger District` as the project-page/Box
-  authority label and `St. Joe Ranger District` as package scope evidence.
+  generation emits `56` rules, and compliance/V1/component evals plus
+  `phase-eval` pass.
+- District lock: keep `St. Maries Ranger District` as the label and
+  `St. Joe Ranger District` as package scope evidence.
 
 ## Goal
-Close Lacy Lemoosh as the Idaho Panhandle primary example only after package
-authority, review artifacts, eval contracts, and aggregate gates are green.
+Close Lacy Lemoosh as the Idaho Panhandle primary example after package and
+aggregate gates are green.
 
 ## Non-Goals
 - Do not add Lacy Lemoosh package files or project-specific rows to
@@ -108,7 +115,7 @@ authority, review artifacts, eval contracts, and aggregate gates are green.
 - Optimization target: keep packet, registry guidance, current routing, tests,
   and handoff aligned on the same forest-qualified identity before intake.
 - Acceptable tradeoffs: generated `source_library/` evidence can remain local
-  and ignored; Idaho Panhandle can remain profile-guidance-only while open.
+  and ignored.
 - Non-negotiables: do not weaken tests, lower eval thresholds, mark unrelated
   Idaho Panhandle queue rows as Lacy lineage, or reuse the package for another
   forest.
@@ -202,8 +209,8 @@ surfaces change.
 ## Acceptance Criteria
 - Lacy Lemoosh has a forest-qualified packet, review ID, and planned example
   identity.
-- Idaho Panhandle remains `profile_eval_guidance_only` until promotion gates
-  pass.
+- Idaho Panhandle promotes atomically only when registry, coverage manifests,
+  and review-scope gates pass together.
 - Intake records the full official Box roster, hashes, and zero failures before
   replay context is authoritative.
 - Forest-plan and reviewer-stack blockers close without relaxed validation.
@@ -232,12 +239,15 @@ gates, residual risks, docs/handoff updates, and local commit hash.
 | `2` FEIS | 2026-05-29 commit `ba3718b`: local f70 overlays for `R1PLAN-idaho-panhandle-nfs-04`/`-05` passed extraction/retrieval with `719` sources, `707` artifacts, `11` overlays, `113,830` chunks, and no missing source records. |
 | `2` adjudication | 2026-05-30: current `36`-item component queue passes with `36/36` resolved, `0` pending, `real_ea_omission_count=0`, and `forest-plan-resolve` `reviewer_ready=true`. |
 | `3` | 2026-05-30 commit `3cea9fe`: applicability resolves `9/9`; rule pack has `56` rules; compliance, V1 eval, component eval `52/52`, and review `phase-eval` `28/28` pass. Residual risk is only Milestone 4 promotion: `contract_backed_promotion_ready=false`, `profile_eval_guidance_only`, and `primary_example_id=null`. |
+| `4` | 2026-05-30: `idaho-panhandle-nfs` routes as `real_package_examples_available` with `primary_example_id="ipnf-lacy-lemoosh-forest-specific"`; real-package coverage passes `8/8`; forest-specific registry eval passes `8` reviewer-ready examples with `3` guidance-only forests; review `phase-eval` now reports `declared_review_contract=true` and `contract_backed_promotion_ready=true`. The standalone component aggregate remains reduced only by inherited `v1-cg-ecid-source-delta-review` drift (`covered_review_count=8/9`, `stale_identity_count=1`, `unresolved_review_count=1`). |
 
 ## Gap-Close Verification Addendum
-Milestones 0-3 are gap-closed only while routing docs, handoff, README,
+Milestones 0-4 are gap-closed only while routing docs, handoff, README,
 registry guidance, focused tests, aggregate eval, resolver outputs, and replay
 context agree that Lacy has local authority, green base review, resolved
-forest-plan preflight, green reviewer-stack replay, and remains unpromoted:
-`idaho-panhandle-nfs` stays `profile_eval_guidance_only`,
-`primary_example_id=null`, and no Lacy coverage slot exists until Milestone 4
-promotion gates pass.
+forest-plan preflight, green reviewer-stack replay, and current promotion
+surfaces: `idaho-panhandle-nfs` routes as `real_package_examples_available`,
+`primary_example_id="ipnf-lacy-lemoosh-forest-specific"`, the real-package and
+component coverage slots exist and pass for the Idaho review, and the only
+remaining aggregate defect is the inherited `v1-cg-ecid-source-delta-review`
+slot outside this packet.

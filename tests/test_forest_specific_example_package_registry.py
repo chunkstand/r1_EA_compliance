@@ -24,9 +24,9 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
     assert len(set(forest_ids)) == 10
     assert registry["summary"] == {
         "forest_unit_count": 10,
-        "profile_guidance_only_count": 4,
-        "review_example_count": 7,
-        "reviewer_ready_example_count": 7,
+        "profile_guidance_only_count": 3,
+        "review_example_count": 8,
+        "reviewer_ready_example_count": 8,
         "typed_blocked_example_count": 0,
     }
 
@@ -246,7 +246,7 @@ def test_registry_promotes_bitterroot_front_as_primary_example() -> None:
     )
 
 
-def test_registry_routes_idaho_panhandle_lacy_lemoosh_as_active_candidate_without_promotion() -> None:
+def test_registry_promotes_idaho_panhandle_lacy_lemoosh_as_primary_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     coverage_manifest = _load_json(REAL_PACKAGE_COVERAGE_PATH)
 
@@ -258,22 +258,15 @@ def test_registry_routes_idaho_panhandle_lacy_lemoosh_as_active_candidate_withou
     active_example_ids = {row["example_id"] for row in registry["review_examples"]}
     coverage_slot_ids = {slot["slot_id"] for slot in coverage_manifest["slots"]}
 
-    assert forest_row["routing_status"] == "profile_eval_guidance_only"
-    assert forest_row["primary_example_id"] is None
+    assert forest_row["routing_status"] == "real_package_examples_available"
+    assert forest_row["primary_example_id"] == "ipnf-lacy-lemoosh-forest-specific"
     assert forest_row["supplemental_example_ids"] == []
+    assert "real_package_review_coverage_manifest" in forest_row["shared_contract_ids"]
     assert forest_row["queue_boundary_source_ids"] == []
-    assert "Lacy Lemoosh is the selected active Idaho Panhandle" in (
-        forest_row["guidance_note"]
-    )
-    assert "36-item component adjudication is refreshed" in (
-        forest_row["guidance_note"]
-    )
-    assert "36/36 resolved system-miss items" in forest_row["guidance_note"]
-    assert "Reviewer-stack replay now passes" in forest_row["guidance_note"]
-    assert "56 generated applicable rules" in forest_row["guidance_note"]
-    assert "profile-eval floor" in forest_row["guidance_note"]
-    assert "ipnf-lacy-lemoosh-forest-specific" not in active_example_ids
-    assert "ipnf-lacy-lemoosh-forest-specific" not in coverage_slot_ids
+    assert "Use the Lacy Lemoosh package first" in forest_row["guidance_note"]
+    assert "reviewer-ready on source-set-f70ea11e04ae3d53" in forest_row["guidance_note"]
+    assert "ipnf-lacy-lemoosh-forest-specific" in active_example_ids
+    assert "ipnf-lacy-lemoosh-forest-specific" in coverage_slot_ids
     assert (
         ROOT
         / "docs"
@@ -281,7 +274,7 @@ def test_registry_routes_idaho_panhandle_lacy_lemoosh_as_active_candidate_withou
     ).exists()
 
 
-def test_agent_start_here_names_bitterroot_front_as_latest_resolved_example() -> None:
+def test_agent_start_here_names_idaho_panhandle_as_latest_resolved_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     agent_start = AGENT_START_HERE_PATH.read_text(encoding="utf-8")
     readme = README_PATH.read_text(encoding="utf-8")
@@ -289,7 +282,7 @@ def test_agent_start_here_names_bitterroot_front_as_latest_resolved_example() ->
     forest_row = next(
         row
         for row in registry["forest_routing"]
-        if row["forest_unit_id"] == "bitterroot-nf"
+        if row["forest_unit_id"] == "idaho-panhandle-nfs"
     )
     example_row = next(
         row
@@ -297,14 +290,14 @@ def test_agent_start_here_names_bitterroot_front_as_latest_resolved_example() ->
         if row["example_id"] == forest_row["primary_example_id"]
     )
 
-    assert "docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md" in agent_start
+    assert "docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md" in agent_start
     assert "latest resolved forest-specific example packet" in agent_start
     assert f'example_id="{example_row["example_id"]}"' in agent_start
     assert f'review_id="{example_row["review_id"]}"' in agent_start
     assert f'primary_example_id="{forest_row["primary_example_id"]}"' in agent_start
     assert f'forest_unit_id="{forest_row["forest_unit_id"]}"' in agent_start
-    assert "Bitterroot Front as the governed primary example" in agent_start
-    assert "must not be reused for non-Bitterroot forests" in agent_start
+    assert "Lacy Lemoosh as the governed primary example" in agent_start
+    assert "must not be reused for non-Idaho-Panhandle forests" in agent_start
     assert f'primary_example_id="{forest_row["primary_example_id"]}"' in readme
     assert f'review_id="{example_row["review_id"]}"' in readme
 

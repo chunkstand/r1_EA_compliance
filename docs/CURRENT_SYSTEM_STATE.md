@@ -15,21 +15,20 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Idaho Panhandle Lacy Lemoosh Reviewer Stack Replayed Locally
+## Idaho Panhandle Lacy Lemoosh Registry And Coverage Promotion Resolved Locally
 
 Latest implementation update on 2026-05-30 UTC:
 
 - update:
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
-  resolved locally through Milestone 3 reviewer-stack replay, closed in commit
-  `3cea9fe`. Milestone 2 FEIS source-readiness is closed locally in commit
+  resolved locally through Milestone 4 registry and aggregate coverage
+  promotion. Milestone 2 FEIS source-readiness is closed locally in commit
   `ba3718b`, the current component adjudication refresh is closed against the
-  live `36`-item queue, and Milestone 3 now has green applicability, generated
-  rule-pack, compliance, V1 eval, component eval, and review `phase-eval`
-  evidence. Milestone 4 registry and
-  aggregate coverage promotion is the next active slice. The planned review identity is
+  live `36`-item queue, Milestone 3 reviewer-stack replay is closed locally in
+  commit `3cea9fe`, and Milestone 4 now has green registry and aggregate
+  coverage evidence. The review identity is
   `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
-  `forest_unit_id="idaho-panhandle-nfs"` and planned
+  `forest_unit_id="idaho-panhandle-nfs"` and
   `example_id="ipnf-lacy-lemoosh-forest-specific"`.
 - package boundary:
   live Forest Service project-page readback identifies Lacy Lemoosh project
@@ -64,23 +63,31 @@ Latest implementation update on 2026-05-30 UTC:
   `reviewer_ready=true`, and `validation_passed=true`. Package parsers were
   `176` `pypdf_text_fallback` files and `10` `apple_vision_pdf_raster` files.
 - promotion boundary:
-  this is still not a registry/coverage promotion. `config/forest_specific_example_package_registry_v1.json`
-  routes `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
-  `primary_example_id=null`; `config/v1_real_package_review_coverage_v1.json`
-  has no Lacy Lemoosh slot. Milestone 2 reconciled Idaho profile source IDs to
-  active catalog IDs, added package-backed `St. Joe Ranger District` resolver
-  vocabulary, and built a review-local component inventory with `52`
+  `config/forest_specific_example_package_registry_v1.json` now routes
+  `idaho-panhandle-nfs` as `real_package_examples_available` with
+  `primary_example_id="ipnf-lacy-lemoosh-forest-specific"`.
+  `config/v1_real_package_review_coverage_v1.json` includes required
+  `slot_id="ipnf-lacy-lemoosh-forest-specific"` coverage for the frozen review
+  ID, and `real-package-review-coverage-eval` passes with
+  `covered_slot_count=8`, `reviewer_ready_slot_count=8`,
+  `distinct_forest_count=7`, and `distinct_package_style_count=11`.
+  `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
+  `review_example_count=8`, `reviewer_ready_example_count=8`,
+  `distinct_governed_example_forest_count=7`, and
+  `profile_guidance_only_count=3`. Milestone 2 reconciled Idaho profile source
+  IDs to active catalog IDs, added package-backed `St. Joe Ranger District`
+  resolver vocabulary, and built a review-local component inventory with `52`
   components and `8` standards in local commit `a1574b3`. `St. Maries Ranger
   District` remains only the project-page/Box authority label; `St. Joe Ranger
   District` is the package-local resolver scope evidence. Source-readiness
-  closeout commit `ba3718b` proves the f70
-  catalog/retrieval surface now overlays `R1PLAN-idaho-panhandle-nfs-04` and
+  closeout commit `ba3718b` proves the f70 catalog/retrieval surface now
+  overlays `R1PLAN-idaho-panhandle-nfs-04` and
   `R1PLAN-idaho-panhandle-nfs-05` from the archived source-delta gate. The
   tracked current-source contract now reports `source_count=719`,
   `artifact_count=707`, and `supplemental_source_count=11`; extraction and
   retrieval pass with `113,830` chunks. Direct retrieval readback indexes
   `R1PLAN-idaho-panhandle-nfs-04=1,606` chunks and
-  `R1PLAN-idaho-panhandle-nfs-05=991` chunks. `forest-plan-resolve` now reports
+  `R1PLAN-idaho-panhandle-nfs-05=991` chunks. `forest-plan-resolve` reports
   `scope_status="idaho_panhandle_nfs"`, `unresolved_mention_count=0`,
   `project_location_signal_count=1`, `geographic_area_count=1`,
   `management_area_count=1`, `overlay_count=2`, retrieval readiness passed with
@@ -118,13 +125,17 @@ Latest implementation update on 2026-05-30 UTC:
   and contract status `reviewer_ready`. Component eval contract
   `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
   passes `52/52` cases with `8` applicable standards. Review `phase-eval`
-  passes with `28/28` phases reviewer-ready. Promotion remains blocked only by
-  intentional Milestone 4 manifest/registry work: the phase summary has
-  `contract_backed_promotion_ready=false` because the Lacy review is still not
-  declared in the aggregate coverage manifests. Do not add Lacy Lemoosh package
-  files to `Document_Register_Master`, and do not reroute unrelated Idaho
-  Panhandle queue rows such as `FOR-020` or `FOR-022` into this packet. Local
-  Milestone 3 closeout commit: `3cea9fe`.
+  passes with `28/28` phases reviewer-ready. Review `phase-eval` now reports
+  `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. The Idaho component-coverage slot is
+  covered, source-set aligned, and passing; the standalone
+  `forest-plan-component-eval-coverage` aggregate still exits red only on the
+  inherited `v1-cg-ecid-source-delta-review` slot, with
+  `covered_review_count=8/9`, `stale_identity_count=1`, and
+  `unresolved_review_count=1`. Do not add Lacy Lemoosh package files to
+  `Document_Register_Master`, and do not reroute unrelated Idaho Panhandle
+  queue rows such as `FOR-020` or `FOR-022` into this packet. Local Milestone
+  3 closeout commit: `3cea9fe`.
 
 ## Beaverhead-Deerlodge South Tobacco Roots Milestone 4 Reduced Locally
 
@@ -187,17 +198,17 @@ Latest implementation update on 2026-05-29 UTC:
   `config/v1_real_package_review_coverage_v1.json` includes required
   `slot_id="bdnf-south-tobacco-roots-forest-specific"` coverage for the frozen
   review ID, and `real-package-review-coverage-eval` passes with
-  `covered_slot_count=7`, `reviewer_ready_slot_count=7`,
-  `distinct_forest_count=6`, and `distinct_package_style_count=8`.
+  `covered_slot_count=8`, `reviewer_ready_slot_count=8`,
+  `distinct_forest_count=7`, and `distinct_package_style_count=11`.
   `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
-  `review_example_count=7`, `reviewer_ready_example_count=7`,
-  `distinct_governed_example_forest_count=6`, and
-  `profile_guidance_only_count=4`.
+  `review_example_count=8`, `reviewer_ready_example_count=8`,
+  `distinct_governed_example_forest_count=7`, and
+  `profile_guidance_only_count=3`.
   `config/forest_plan_component_eval_coverage_v1.json` includes the required
   Beaverhead component slot, which is covered, source-set aligned, and passing.
   The standalone aggregate still exits red only on the inherited
   `v1-cg-ecid-source-delta-review` slot (`result_not_passed` plus
-  `result_source_set_id_mismatch`), with `covered_review_count=7/8`,
+  `result_source_set_id_mismatch`), with `covered_review_count=8/9`,
   `stale_identity_count=1`, and `unresolved_review_count=1`. Review
   `phase-eval` passes `28/28` with `blockers=[]`,
   `declared_review_contract=true`, and

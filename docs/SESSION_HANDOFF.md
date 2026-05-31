@@ -27,9 +27,12 @@ history below.
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - latest resolved forest-specific example packet:
-  `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
 - predecessor resolved forest-specific example packet:
+  `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  Milestone 4
+- earlier resolved forest-specific example packet:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
 - latest resolved HLC forest-specific example packet:
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
@@ -45,11 +48,9 @@ history below.
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
-  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 3 reviewer-stack replay is closed locally in commit `3cea9fe`;
-  source-readiness closeout commit is `ba3718b`; next slice is Milestone 4
-  registry and aggregate coverage promotion; no registry promotion has been
-  committed yet
+  no active forest-specific example packet; Idaho Panhandle Lacy Lemoosh
+  Milestone 4 registry and aggregate coverage promotion is resolved locally,
+  and future forest-specific example expansion requires a new approved packet
 - resolved Beaverhead-Deerlodge packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -62,13 +63,14 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  Idaho Panhandle Lacy Lemoosh is the active forest-specific example packet.
+  Idaho Panhandle Lacy Lemoosh is the latest resolved forest-specific example
+  packet.
   The packet is
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with
-  planned review ID `region1-example-idaho-panhandle-lacy-lemoosh-60853` and
-  forest unit `idaho-panhandle-nfs`. The selected authorities are the official
-  project page `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853` and
-  Pinyon/Box folder
+  review ID `region1-example-idaho-panhandle-lacy-lemoosh-60853`, example ID
+  `ipnf-lacy-lemoosh-forest-specific`, and forest unit
+  `idaho-panhandle-nfs`. The selected authorities are the official project page
+  `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853` and Pinyon/Box folder
   `https://usfs-public.app.box.com/v/PinyonPublic/folder/158229569265`. Live
   readback on 2026-05-29 identifies project `60853` as `Completed`, expected
   analysis type `Environmental Assessment`, lead management unit
@@ -127,11 +129,24 @@ history below.
   `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`
   passes `52/52` cases, and review `phase-eval` passes with `28/28` phases
   reviewer-ready.
-  `config/forest_specific_example_package_registry_v1.json` keeps
-  `idaho-panhandle-nfs` as `profile_eval_guidance_only` with
-  `primary_example_id=null`, and `config/v1_real_package_review_coverage_v1.json`
-  has no Lacy Lemoosh slot. The next slice is Milestone 4 registry and
-  aggregate coverage promotion; keep Lacy Lemoosh parallel to
+  Milestone 4 registry and aggregate coverage promotion now passes locally.
+  `config/forest_specific_example_package_registry_v1.json` routes
+  `idaho-panhandle-nfs` as `real_package_examples_available` with
+  `primary_example_id="ipnf-lacy-lemoosh-forest-specific"`.
+  `real-package-review-coverage-eval` passes with `covered_slot_count=8`,
+  `reviewer_ready_slot_count=8`, `distinct_forest_count=7`, and
+  `distinct_package_style_count=11`. `forest-specific-example-package-eval`
+  passes with `covered_forest_count=10`, `review_example_count=8`,
+  `reviewer_ready_example_count=8`,
+  `distinct_governed_example_forest_count=7`, and
+  `profile_guidance_only_count=3`. The Idaho component-coverage slot is
+  covered, source-set aligned, and passing; the standalone
+  `forest-plan-component-eval-coverage` aggregate still exits red only on the
+  inherited `v1-cg-ecid-source-delta-review` slot
+  (`covered_review_count=8/9`, `stale_identity_count=1`,
+  `unresolved_review_count=1`). Review `phase-eval` now passes `28/28` with
+  `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. Keep Lacy Lemoosh parallel to
   `Document_Register_Master` and do not route unrelated Idaho Panhandle queue
   rows such as `FOR-020` or `FOR-022` into this packet.
   Beaverhead-Deerlodge South Tobacco Roots example-package work is resolved
@@ -176,17 +191,17 @@ history below.
   `beaverhead-deerlodge-nf` now routes as
   `real_package_examples_available` with
   `primary_example_id="bdnf-south-tobacco-roots-forest-specific"`.
-  `real-package-review-coverage-eval` passes with `covered_slot_count=7`,
-  `reviewer_ready_slot_count=7`, `distinct_forest_count=6`, and
-  `distinct_package_style_count=8`. `forest-specific-example-package-eval`
-  passes with `covered_forest_count=10`, `review_example_count=7`,
-  `reviewer_ready_example_count=7`,
-  `distinct_governed_example_forest_count=6`, and
-  `profile_guidance_only_count=4`. The Beaverhead component-coverage slot is
+  `real-package-review-coverage-eval` passes with `covered_slot_count=8`,
+  `reviewer_ready_slot_count=8`, `distinct_forest_count=7`, and
+  `distinct_package_style_count=11`. `forest-specific-example-package-eval`
+  passes with `covered_forest_count=10`, `review_example_count=8`,
+  `reviewer_ready_example_count=8`,
+  `distinct_governed_example_forest_count=7`, and
+  `profile_guidance_only_count=3`. The Beaverhead component-coverage slot is
   covered, source-set aligned, and passing, but the standalone
   `forest-plan-component-eval-coverage` aggregate still exits red only on the
   inherited `v1-cg-ecid-source-delta-review` slot
-  (`covered_review_count=7/8`, `stale_identity_count=1`,
+  (`covered_review_count=8/9`, `stale_identity_count=1`,
   `unresolved_review_count=1`). Review `phase-eval` now reports
   `declared_review_contract=true` and
   `contract_backed_promotion_ready=true`. Keep South Tobacco Roots parallel to

@@ -13,16 +13,16 @@ Use this file as the short current route before opening the append-only docs.
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
-  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 2 FEIS source-readiness, current component adjudication refresh,
-  and Milestone 3 reviewer-stack replay are closed locally; source-readiness
-  closeout commit is `ba3718b`; reviewer-stack replay closeout commit is
-  `3cea9fe`; next slice is Milestone 4 registry and aggregate coverage
-  promotion; no registry promotion
+  no active forest-specific example packet; Idaho Panhandle Lacy Lemoosh
+  Milestone 4 registry and aggregate coverage promotion is resolved locally,
+  and future forest-specific example expansion requires a new approved packet
 - Latest resolved forest-specific example packet:
-  `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
 - Predecessor resolved forest-specific example packet:
+  `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  Milestone 4
+- Earlier resolved forest-specific example packet:
   `docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` Milestone 4
   registry and coverage promotion resolved locally
 - Latest resolved HLC forest-specific example packet:
@@ -43,12 +43,13 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
-- Idaho Panhandle Lacy Lemoosh is the active forest-specific example packet.
+- Idaho Panhandle Lacy Lemoosh is the latest resolved forest-specific example
+  packet.
   The packet is
-  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`;
-  the planned review identity is
+  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; the
+  resolved review identity is
   `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` for
-  `forest_unit_id="idaho-panhandle-nfs"` and planned
+  `forest_unit_id="idaho-panhandle-nfs"` and
   `example_id="ipnf-lacy-lemoosh-forest-specific"`. The official project page
   is `https://www.fs.usda.gov/r01/idahopanhandle/projects/60853`; the selected
   Pinyon/Box root is
@@ -105,10 +106,25 @@ Use this file as the short current route before opening the append-only docs.
   compliance review passes with `56` findings and reviewer-ready matrix/PDF
   artifacts; V1 eval passes with `30/30` conditional expectations and reviewer
   status `reviewer_ready`; component eval passes `52/52` cases; review
-  `phase-eval` passes with `28/28` phases reviewer-ready. `idaho-panhandle-nfs`
-  remains `profile_eval_guidance_only`, with `primary_example_id=null`; the
-  next slice is Milestone 4 registry and aggregate coverage promotion, not
-  another reviewer-stack replay. Keep Lacy Lemoosh parallel to
+  `phase-eval` passes with `28/28` phases reviewer-ready. Milestone 4 registry
+  and aggregate coverage promotion now passes locally: `idaho-panhandle-nfs`
+  routes as `real_package_examples_available` with
+  `primary_example_id="ipnf-lacy-lemoosh-forest-specific"`;
+  `real-package-review-coverage-eval` passes with `covered_slot_count=8`,
+  `reviewer_ready_slot_count=8`, `distinct_forest_count=7`, and
+  `distinct_package_style_count=11`; `forest-specific-example-package-eval`
+  passes with `covered_forest_count=10`, `review_example_count=8`,
+  `reviewer_ready_example_count=8`,
+  `distinct_governed_example_forest_count=7`, and
+  `profile_guidance_only_count=3`. The Idaho component-coverage slot is
+  covered, source-set aligned, and passing; the standalone
+  `forest-plan-component-eval-coverage` aggregate still exits red only on the
+  inherited `v1-cg-ecid-source-delta-review` slot, with
+  `covered_review_count=8/9`, `stale_identity_count=1`, and
+  `unresolved_review_count=1`. Review `phase-eval` now reports
+  `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. No active forest-specific example
+  packet remains after this closeout. Keep Lacy Lemoosh parallel to
   `Document_Register_Master`;
   do not route unrelated Idaho Panhandle queue rows such as `FOR-020` or
   `FOR-022` into this packet.
@@ -145,13 +161,13 @@ Use this file as the short current route before opening the append-only docs.
   `phase-eval` passes `28/28` with `blockers=[]`.
   `beaverhead-deerlodge-nf` now routes as `real_package_examples_available`
   with `primary_example_id="bdnf-south-tobacco-roots-forest-specific"`.
-  `real-package-review-coverage-eval` passes with `covered_slot_count=7`,
-  `reviewer_ready_slot_count=7`, `distinct_forest_count=6`, and
-  `distinct_package_style_count=8`.
+  `real-package-review-coverage-eval` passes with `covered_slot_count=8`,
+  `reviewer_ready_slot_count=8`, `distinct_forest_count=7`, and
+  `distinct_package_style_count=11`.
   `forest-specific-example-package-eval` passes with `covered_forest_count=10`,
-  `review_example_count=7`, `reviewer_ready_example_count=7`,
-  `distinct_governed_example_forest_count=6`, and
-  `profile_guidance_only_count=4`. The Beaverhead component-coverage slot
+  `review_example_count=8`, `reviewer_ready_example_count=8`,
+  `distinct_governed_example_forest_count=7`, and
+  `profile_guidance_only_count=3`. The Beaverhead component-coverage slot
   passes on `source-set-f70ea11e04ae3d53`; the standalone
   `forest-plan-component-eval-coverage` aggregate still exits red only on the
   inherited `v1-cg-ecid-source-delta-review` slot. Review `phase-eval` now

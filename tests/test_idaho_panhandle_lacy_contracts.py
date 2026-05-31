@@ -14,6 +14,8 @@ COMPONENT_EVAL = REPO_ROOT / "config" / "forest_plan_component_evals" / f"{REVIE
 APPLICABILITY_ADJUDICATION = (
     REPO_ROOT / "config" / "applicability_adjudications" / f"{REVIEW_ID}.json"
 )
+REAL_PACKAGE_COVERAGE = REPO_ROOT / "config" / "v1_real_package_review_coverage_v1.json"
+COMPONENT_COVERAGE = REPO_ROOT / "config" / "forest_plan_component_eval_coverage_v1.json"
 
 
 def test_lacy_v1_eval_contract_is_reviewer_ready_bound() -> None:
@@ -123,6 +125,31 @@ def test_lacy_applicability_adjudication_is_complete() -> None:
         "minerals_energy_authorities_authority_template",
     }
     assert all(item["supporting_citation_refs"] for item in items)
+
+
+def test_lacy_promotion_slots_are_load_bearing() -> None:
+    real_package_coverage = _read_json(REAL_PACKAGE_COVERAGE)
+    component_coverage = _read_json(COMPONENT_COVERAGE)
+
+    real_slot = next(
+        slot
+        for slot in real_package_coverage["slots"]
+        if slot["review_id"] == REVIEW_ID
+    )
+    component_slot = next(
+        slot
+        for slot in component_coverage["slots"]
+        if slot["review_id"] == REVIEW_ID
+    )
+
+    assert real_slot["slot_id"] == "ipnf-lacy-lemoosh-forest-specific"
+    assert real_slot["forest_unit_id"] == "idaho-panhandle-nfs"
+    assert real_slot["expected_contract_status"] == "reviewer_ready"
+    assert real_slot["required"] is True
+    assert component_slot["slot_id"] == "ipnf-lacy-lemoosh-forest-specific"
+    assert component_slot["forest_unit_id"] == "idaho-panhandle-nfs"
+    assert component_slot["expected_source_set_id"] == SOURCE_SET_ID
+    assert component_slot["required"] is True
 
 
 def _read_json(path: Path) -> dict:
