@@ -53,7 +53,8 @@ Use this file as the short current route before opening the append-only docs.
   `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`
   for `forest_unit_id="dakota-prairie-grasslands"` on
   `source-set-f70ea11e04ae3d53`. Reduced packet closeout commit: `7ac8e08`;
-  this Milestone 4 slice adds the promotion surfaces. The governed example ID is
+  Milestone 4 promotion closeout commit: `bef9258` (`Promote Dakota Prairie
+  Medora example`). The governed example ID is
   `example_id="dpg-medora-vegetation-management-forest-specific"`.
   The selected authorities are the official project page
   `https://www.fs.usda.gov/r01/dpg/projects/66886` and supplied Pinyon/Box root

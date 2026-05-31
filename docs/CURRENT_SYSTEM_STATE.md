@@ -28,7 +28,8 @@ Latest implementation update on 2026-05-31 UTC:
   `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`,
   `forest_unit_id="dakota-prairie-grasslands"`, and
   `source_set_id="source-set-f70ea11e04ae3d53"`. Reduced packet closeout
-  commit: `7ac8e08`; this Milestone 4 slice adds the promotion surfaces.
+  commit: `7ac8e08`; Milestone 4 promotion closeout commit: `bef9258`
+  (`Promote Dakota Prairie Medora example`).
 - package authority:
   live Forest Service project-page readback identifies project `66886` as
   `Completed`, expected analysis type `Environmental Assessment`, lead
@@ -66,8 +67,9 @@ Latest implementation update on 2026-05-31 UTC:
   applicability validation reports `460` candidate authorities, `47`
   applicable, `413` not applicable, `0` unresolved, and a generated `47`-rule
   pack. `compliance-review` is reviewer-ready and validation-passed with `47`
-  findings: `28` pass, `18` uncertain, and `1` gap. Review `phase-eval` passes
-  and is reviewer-ready for `27/27` phases with `blockers=[]`.
+  findings: `28` pass, `18` uncertain, and `1` gap. The pre-promotion review
+  `phase-eval` was reviewer-ready for `27/27` phases with `blockers=[]`; the
+  current contract-backed promotion `phase-eval` is recorded below.
 - contracts and promotion:
   tracked V1 eval contract
   `config/v1_dakota_prairie_medora_real_ea_eval.json` passes with

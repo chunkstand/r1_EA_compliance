@@ -70,6 +70,8 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   `contract_backed_promotion_ready=true`. Dakota Prairie Grasslands now routes
   as `real_package_examples_available` with
   `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
+  Milestone 4 promotion closeout commit is `bef9258` (`Promote Dakota Prairie
+  Medora example`).
   Aggregate coverage now passes with `covered_slot_count=10`,
   `reviewer_ready_slot_count=10`, `review_example_count=10`,
   `reviewer_ready_example_count=10`,

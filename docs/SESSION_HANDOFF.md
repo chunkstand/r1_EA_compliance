@@ -77,9 +77,10 @@ history below.
   with review ID
   `region1-example-dakota-prairie-medora-vegetation-management-66886`,
   forest unit `dakota-prairie-grasslands`, and source set
-  `source-set-f70ea11e04ae3d53`. The selected authorities are the official
-  project page `https://www.fs.usda.gov/r01/dpg/projects/66886` and supplied
-  Box folder
+  `source-set-f70ea11e04ae3d53`. Milestone 4 promotion closeout commit is
+  `bef9258` (`Promote Dakota Prairie Medora example`). The selected
+  authorities are the official project page
+  `https://www.fs.usda.gov/r01/dpg/projects/66886` and supplied Box folder
   `https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208`.
   Live readback on 2026-05-31 identifies the project as `Completed`, expected
   analysis type `Environmental Assessment`, lead management unit

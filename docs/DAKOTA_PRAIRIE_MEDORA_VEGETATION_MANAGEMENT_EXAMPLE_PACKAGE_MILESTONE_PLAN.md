@@ -311,6 +311,8 @@ governed real package example.
 - Outcome label: `resolved locally`.
 - Reduced packet closeout commit: `7ac8e08` (`Open Dakota Prairie Medora
   example packet`).
+- Milestone 4 promotion closeout commit: `bef9258` (`Promote Dakota Prairie
+  Medora example`).
 - Closeout scope: package authority, base review, f70 component inventory,
   source readiness, governed registry guidance, routing docs, and focused
   contract tests.
