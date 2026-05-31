@@ -2,7 +2,7 @@
   "schema_version": "forest-plan-component-eval-v0",
   "eval_id": "east-crazies-forest-plan-components-source-delta-replay-v0",
   "review_id": "v1-cg-ecid-source-delta-review",
-  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "source_set_id": "source-set-8a4005c8a083af1a",
   "description": "Replay-scoped adjudicated component-level eval cases for the East Crazy Inspiration Divide merged-corpus review. Covers the current replay applicable standards plus representative non-standard positives, negatives, and queue-bound cases.",
   "coverage_requirements": {
     "require_all_applicable_standards": true,
@@ -133,7 +133,8 @@
         "R1PLAN-custer-gallatin-nf-02 (ff30e8b4530e)"
       ],
       "package_evidence_citations": [
-        "EA-PACKAGE-042 (bebc890bc3da)"
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "EA-PACKAGE-012 (533c439d7ce5)"
       ],
       "reviewer_resolution_state": "closed"
     },
@@ -202,7 +203,8 @@
       ],
       "package_evidence_citations": [
         "EA-PACKAGE-042 (bebc890bc3da)",
-        "EA-PACKAGE-003 (548d0c6d5f68)"
+        "EA-PACKAGE-003 (548d0c6d5f68)",
+        "EA-PACKAGE-033 (2259556c2475)"
       ],
       "reviewer_resolution_state": "closed"
     },

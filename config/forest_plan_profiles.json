@@ -2366,8 +2366,8 @@
         "Nez Perce-Clearwater",
         "Nez Perce Clearwater"
       ],
-      "active_plan_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06",
-      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Nez Perce-Clearwater National Forests promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion.",
+      "active_plan_source_record_id": "FPS-347",
+      "profile_data_source": "Tracked Region 1 readiness/source-requirement contract for Nez Perce-Clearwater National Forests promoted from config/region1_forest_plan_readiness_nepa_3d_v1.json during multi-forest resolver expansion, then enriched with Dead Laundry package-backed scope terms on 2026-05-30.",
       "supporting_source_record_ids_by_role": {
         "planning_page": {
           "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-01",
@@ -2378,43 +2378,43 @@
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "record_of_decision": {
-          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-03",
+          "source_record_id": "FOR-032",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "notice_of_plan_approval": {
-          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-04",
+          "source_record_id": "FPS-344",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "administrative_changes": {
-          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-05",
+          "source_record_id": "FOR-033",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "primary_land_management_plan": {
-          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-06",
+          "source_record_id": "FPS-347",
           "required_for": "plan component and area resolution"
         },
         "biological_assessment": {
-          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-10",
+          "source_record_id": "FPS-365",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_assessment_supplement": {
-          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-11",
+          "source_record_id": "FPS-366",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_opinion_1": {
-          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-12",
+          "source_record_id": "FOR-031",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "biological_opinion_2": {
-          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-13",
+          "source_record_id": "FPS-368",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "final_environmental_impact_statement": {
-          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-15",
+          "source_record_id": "FPS-372",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         },
         "final_environmental_impact_statement_appendices": {
-          "source_record_id": "R1PLAN-nez-perce-clearwater-nfs-16",
+          "source_record_id": "FPS-373",
           "required_for": "supporting forest-plan review evidence and source-record readiness"
         }
       },
@@ -2432,10 +2432,84 @@
         "final_environmental_impact_statement",
         "final_environmental_impact_statement_appendices"
       ],
-      "ranger_district_terms": [],
-      "geographic_area_terms": [],
-      "management_area_terms": [],
-      "overlay_terms": [],
+      "ranger_district_terms": [
+        {
+          "entry_id": "district-north-fork",
+          "category": "district",
+          "name": "North Fork Ranger District",
+          "aliases": [
+            "North Fork District"
+          ]
+        }
+      ],
+      "geographic_area_terms": [
+        {
+          "entry_id": "geo-deception-saddle",
+          "category": "geographic_area",
+          "name": "Deception Saddle",
+          "aliases": [],
+          "source_record_id": "FPS-373"
+        },
+        {
+          "entry_id": "geo-independence-creek",
+          "category": "geographic_area",
+          "name": "Independence Creek",
+          "aliases": [],
+          "source_record_id": "FPS-373"
+        }
+      ],
+      "management_area_terms": [
+        {
+          "entry_id": "mgmt-a3",
+          "category": "management_area",
+          "name": "Management Area A3",
+          "aliases": [],
+          "source_record_id": "FPS-372"
+        },
+        {
+          "entry_id": "mgmt-e1",
+          "category": "management_area",
+          "name": "Management Area E1",
+          "aliases": [],
+          "source_record_id": "FPS-373"
+        },
+        {
+          "entry_id": "mgmt-c4",
+          "category": "management_area",
+          "name": "Management Area C4",
+          "aliases": [],
+          "source_record_id": "FPS-373"
+        }
+      ],
+      "overlay_terms": [
+        {
+          "entry_id": "overlay-idaho-roadless-area",
+          "category": "overlay",
+          "name": "Idaho Roadless Area",
+          "aliases": [
+            "Idaho Roadless Areas"
+          ],
+          "source_record_id": "FPS-347"
+        },
+        {
+          "entry_id": "overlay-wildland-urban-interface",
+          "category": "overlay",
+          "name": "Wildland Urban Interface",
+          "aliases": [
+            "WUI"
+          ],
+          "source_record_id": "FPS-347"
+        },
+        {
+          "entry_id": "overlay-riparian-habitat-conservation-area",
+          "category": "overlay",
+          "name": "Riparian Habitat Conservation Area",
+          "aliases": [
+            "RHCA"
+          ],
+          "source_record_id": "FPS-347"
+        }
+      ],
       "plan_component_types": [
         "desired_condition",
         "goal",

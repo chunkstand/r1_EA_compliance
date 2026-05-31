@@ -27,9 +27,12 @@ history below.
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - latest resolved forest-specific example packet:
-  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
 - predecessor resolved forest-specific example packet:
+  `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  Milestone 4
+- earlier resolved forest-specific example packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
 - earlier resolved forest-specific example packet:
@@ -48,9 +51,9 @@ history below.
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
-  `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  `Milestone 0` resolved locally; `Milestone 1` full-tree inventory and
-  package-authority boundary selection are next
+  none; Dead Laundry is resolved locally through Milestone 4, and the next
+  forest-specific child slice should start from the umbrella lane only if a new
+  packet is explicitly opened
 - resolved Beaverhead-Deerlodge packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -63,13 +66,13 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
-  Nez Perce-Clearwater Dead Laundry is the active forest-specific example
-  packet.
-  The packet is
+  Nez Perce-Clearwater Dead Laundry is resolved locally through Milestone 4 and
+  is now the governed primary example for `nez-perce-clearwater-nfs`.
+  The packet remains
   `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
-  with frozen review ID
-  `region1-example-nez-perce-clearwater-dead-laundry-57827`, planned
-  example ID `npc-dead-laundry-forest-specific`, and forest unit
+  with review ID
+  `region1-example-nez-perce-clearwater-dead-laundry-57827`, example ID
+  `npc-dead-laundry-forest-specific`, and forest unit
   `nez-perce-clearwater-nfs`. The selected authorities are the official
   project page
   `https://www.fs.usda.gov/r01/nezperce-clearwater/projects/57827` and
@@ -82,15 +85,64 @@ history below.
   `Analysis` (`455` visible files; `1,802,724,968` bytes),
   `Decision` (`2,186` visible files; `6,997,388,791` bytes), and
   `Scoping` (`13` visible files; `76,930,655` bytes), totaling `2,654`
-  visible files and `8,877,044,414` top-level bytes. `FOR-034` now routes to
-  this packet as planned `forest_specific_example_package` work instead of
-  generic direct-file promotion, while
-  `config/forest_specific_example_package_registry_v1.json` still keeps
-  `nez-perce-clearwater-nfs` `profile_eval_guidance_only` with
-  `primary_example_id=null`. The next route is Milestone 1 full-tree
-  inventory and governed package-authority boundary selection before replay
-  context, local intake, or registry promotion claims are added.
-  Idaho Panhandle Lacy Lemoosh is the latest resolved forest-specific example
+  visible files and `8,877,044,414` top-level bytes. The governed replay
+  boundary is now durable under
+  `source_library/reviews/_intake/region1-example-nez-perce-clearwater-dead-laundry-57827/`:
+  `box_inventory.json` records `82` files across `13` folders and
+  `234,693,626` expected bytes with explicit exclusion of
+  `Analysis/EA references` and `Decision/2023 Objection Materials Submitted`;
+  `box_import_manifest.json` records `82` downloaded files and `failure_count=0`;
+  the tracked replay context now lives at
+  `config/replay_contexts/region1-example-nez-perce-clearwater-dead-laundry-57827.json`;
+  and base `ea-review` passes on `source-set-f70ea11e04ae3d53` with
+  `82/82` extracted files, `2,991` package chunks, and
+  `reviewer_ready=true`. `forest-plan-resolve` now reports
+  `scope_status="nez_perce_clearwater_nfs"`, `validation_passed=true`,
+  `overlay_count=2`, `unresolved_mention_count=0`, and
+  `needs_reviewer_resolution=false`. The tracked applicability adjudication at
+  `config/applicability_adjudications/region1-example-nez-perce-clearwater-dead-laundry-57827.json`
+  resolves the remaining `2/2` authority-family conflicts as
+  `human_applicable`; applicability validation now passes with `53` applicable
+  authorities, `147` not-applicable authorities, `0` unresolved authorities,
+  and generated rule-pack readiness with `53` rules. The governed component
+  adjudication now lives at
+  `config/forest_plan_component_adjudications/region1-example-nez-perce-clearwater-dead-laundry-57827.json`
+  with companion markdown at
+  `config/forest_plan_component_adjudications/region1-example-nez-perce-clearwater-dead-laundry-57827.md`;
+  it resolves `121/121` current queue items. `compliance-review` writes the
+  matrix/PDF artifacts with `53` findings (`33` `pass`, `19` `uncertain`,
+  `1` `gap`) and is reviewer-ready. V1 eval contract
+  `config/v1_nez_perce_clearwater_dead_laundry_real_ea_eval.json` passes,
+  component eval contract
+  `config/forest_plan_component_evals/region1-example-nez-perce-clearwater-dead-laundry-57827.json`
+  passes `134/134` cases, and review `phase-eval` passes `28/28` phases with
+  `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. `config/forest_specific_example_package_registry_v1.json`
+  now routes `nez-perce-clearwater-nfs` as
+  `real_package_examples_available` with
+  `primary_example_id="npc-dead-laundry-forest-specific"`, and `FOR-034` is
+  resolved as a forest-specific example-package boundary. Aggregate promotion
+  gates are green locally: `real-package-review-coverage-eval` passes with
+  `covered_slot_count=9`, `reviewer_ready_slot_count=9`,
+  `distinct_forest_count=8`, and `distinct_package_style_count=14`;
+  `forest-specific-example-package-eval` passes with `review_example_count=9`,
+  `reviewer_ready_example_count=9`,
+  `distinct_governed_example_forest_count=8`, and
+  `profile_guidance_only_count=2`. The Dead Laundry component-coverage slot is
+  covered, source-set aligned, and passing, and the standalone
+  `forest-plan-component-eval-coverage` aggregate is now green locally with
+  `covered_review_count=10/10`, `stale_identity_count=0`, and
+  `unresolved_review_count=0`. The inherited
+  `v1-cg-ecid-source-delta-review` component-side adjudication/eval contracts
+  now align again to archived merged source set
+  `source-set-8a4005c8a083af1a`, and its refreshed component eval passes
+  `36/36` cases. There is no active unresolved forest-specific child packet
+  now; continue from the umbrella lane if the next slice is a new
+  forest-specific example. If the inherited ECID replay is reopened, the next
+  truthful route is replay source-set contract reconciliation in `phase-eval`;
+  rerun now fails closed on `4fb` replay/applicability expectations versus
+  `8a40` component/compliance artifacts.
+  Idaho Panhandle Lacy Lemoosh is the predecessor resolved forest-specific example
   packet.
   The packet is
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with
@@ -160,17 +212,17 @@ history below.
   `config/forest_specific_example_package_registry_v1.json` routes
   `idaho-panhandle-nfs` as `real_package_examples_available` with
   `primary_example_id="ipnf-lacy-lemoosh-forest-specific"`.
-  `real-package-review-coverage-eval` passes with `covered_slot_count=8`,
-  `reviewer_ready_slot_count=8`, `distinct_forest_count=7`, and
-  `distinct_package_style_count=11`. `forest-specific-example-package-eval`
-  passes with `covered_forest_count=10`, `review_example_count=8`,
-  `reviewer_ready_example_count=8`,
-  `distinct_governed_example_forest_count=7`, and
-  `profile_guidance_only_count=3`. The Idaho component-coverage slot is
+  `real-package-review-coverage-eval` passes with `covered_slot_count=9`,
+  `reviewer_ready_slot_count=9`, `distinct_forest_count=8`, and
+  `distinct_package_style_count=14`. `forest-specific-example-package-eval`
+  passes with `covered_forest_count=10`, `review_example_count=9`,
+  `reviewer_ready_example_count=9`,
+  `distinct_governed_example_forest_count=8`, and
+  `profile_guidance_only_count=2`. The Idaho component-coverage slot is
   covered, source-set aligned, and passing; the standalone
   `forest-plan-component-eval-coverage` aggregate still exits red only on the
   inherited `v1-cg-ecid-source-delta-review` slot
-  (`covered_review_count=8/9`, `stale_identity_count=1`,
+  (`covered_review_count=9/10`, `stale_identity_count=1`,
   `unresolved_review_count=1`). Review `phase-eval` now passes `28/28` with
   `declared_review_contract=true` and
   `contract_backed_promotion_ready=true`. Keep Lacy Lemoosh parallel to
@@ -218,17 +270,17 @@ history below.
   `beaverhead-deerlodge-nf` now routes as
   `real_package_examples_available` with
   `primary_example_id="bdnf-south-tobacco-roots-forest-specific"`.
-  `real-package-review-coverage-eval` passes with `covered_slot_count=8`,
-  `reviewer_ready_slot_count=8`, `distinct_forest_count=7`, and
-  `distinct_package_style_count=11`. `forest-specific-example-package-eval`
-  passes with `covered_forest_count=10`, `review_example_count=8`,
-  `reviewer_ready_example_count=8`,
-  `distinct_governed_example_forest_count=7`, and
-  `profile_guidance_only_count=3`. The Beaverhead component-coverage slot is
+  `real-package-review-coverage-eval` passes with `covered_slot_count=9`,
+  `reviewer_ready_slot_count=9`, `distinct_forest_count=8`, and
+  `distinct_package_style_count=14`. `forest-specific-example-package-eval`
+  passes with `covered_forest_count=10`, `review_example_count=9`,
+  `reviewer_ready_example_count=9`,
+  `distinct_governed_example_forest_count=8`, and
+  `profile_guidance_only_count=2`. The Beaverhead component-coverage slot is
   covered, source-set aligned, and passing, but the standalone
   `forest-plan-component-eval-coverage` aggregate still exits red only on the
   inherited `v1-cg-ecid-source-delta-review` slot
-  (`covered_review_count=8/9`, `stale_identity_count=1`,
+  (`covered_review_count=9/10`, `stale_identity_count=1`,
   `unresolved_review_count=1`). Review `phase-eval` now reports
   `declared_review_contract=true` and
   `contract_backed_promotion_ready=true`. Keep South Tobacco Roots parallel to

@@ -449,6 +449,72 @@ class ForestPlanProfileTests(unittest.TestCase):
         )
         self.assertIn("Castle Mountains", castles.aliases)
 
+    def test_nez_perce_clearwater_profile_uses_reconciled_sources_and_dead_laundry_terms(
+        self,
+    ) -> None:
+        profile = load_forest_plan_profile("nez-perce-clearwater-nfs")
+
+        self.assertEqual(profile.active_plan_source_record_id, "FPS-347")
+        self.assertEqual(
+            profile.source_record_id_for_role("primary_land_management_plan"),
+            "FPS-347",
+        )
+        self.assertEqual(profile.source_record_id_for_role("record_of_decision"), "FOR-032")
+        self.assertEqual(
+            profile.source_record_id_for_role("notice_of_plan_approval"),
+            "FPS-344",
+        )
+        self.assertEqual(
+            profile.source_record_id_for_role("administrative_changes"),
+            "FOR-033",
+        )
+        self.assertEqual(profile.source_record_id_for_role("biological_assessment"), "FPS-365")
+        self.assertEqual(
+            profile.source_record_id_for_role("biological_assessment_supplement"),
+            "FPS-366",
+        )
+        self.assertEqual(profile.source_record_id_for_role("biological_opinion_1"), "FOR-031")
+        self.assertEqual(profile.source_record_id_for_role("biological_opinion_2"), "FPS-368")
+        self.assertEqual(
+            profile.source_record_id_for_role("final_environmental_impact_statement"),
+            "FPS-372",
+        )
+        self.assertEqual(
+            profile.source_record_id_for_role("final_environmental_impact_statement_appendices"),
+            "FPS-373",
+        )
+        self.assertIn(
+            "North Fork Ranger District",
+            [entry.name for entry in profile.ranger_district_terms],
+        )
+        self.assertIn(
+            "Deception Saddle",
+            [entry.name for entry in profile.geographic_area_terms],
+        )
+        self.assertIn(
+            "Management Area E1",
+            [entry.name for entry in profile.management_area_terms],
+        )
+        self.assertIn(
+            "Idaho Roadless Area",
+            [entry.name for entry in profile.overlay_terms],
+        )
+        self.assertIn(
+            "Riparian Habitat Conservation Area",
+            [entry.name for entry in profile.overlay_terms],
+        )
+        self.assertEqual(
+            {
+                entry.entry_id: entry.source_record_id
+                for entry in profile.overlay_terms
+            },
+            {
+                "overlay-idaho-roadless-area": "FPS-347",
+                "overlay-wildland-urban-interface": "FPS-347",
+                "overlay-riparian-habitat-conservation-area": "FPS-347",
+            },
+        )
+
     def test_profiles_cover_all_tracked_region1_readiness_units(self) -> None:
         profiles = load_forest_plan_profiles()
         readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))

@@ -95,6 +95,34 @@ def test_compliance_review_parser_accepts_flathead_profile_selection() -> None:
     assert args.forest_plan_profiles_path == Path("config/forest_plan_profiles.json")
 
 
+def test_box_folder_intake_parser_accepts_selection_prefixes() -> None:
+    args = build_parser().parse_args(
+        [
+            "box-folder-intake",
+            "--root-folder-url",
+            "https://usfs-public.app.box.com/v/PinyonPublic/folder/158227433225",
+            "--review-id",
+            "region1-example-nez-perce-clearwater-dead-laundry-57827",
+            "--download",
+            "--include-relative-path-prefix",
+            "Analysis/Final EA 2023",
+            "--include-relative-path-prefix",
+            "Decision/2024 Final Decision and EA",
+        ]
+    )
+
+    assert args.command == "box-folder-intake"
+    assert args.root_folder_url == (
+        "https://usfs-public.app.box.com/v/PinyonPublic/folder/158227433225"
+    )
+    assert args.review_id == "region1-example-nez-perce-clearwater-dead-laundry-57827"
+    assert args.download is True
+    assert args.include_relative_path_prefixes == [
+        "Analysis/Final EA 2023",
+        "Decision/2024 Final Decision and EA",
+    ]
+
+
 def test_capture_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     args = build_parser().parse_args(
         [

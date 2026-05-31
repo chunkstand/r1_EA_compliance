@@ -159,6 +159,50 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
             self.assertIn("Bitterroot National Forest", background_names)
             self.assertTrue(result.summary["reviewer_ready"])
 
+    def test_profile_scope_ignores_cross_forest_comparison_references(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is on the Bozeman Ranger District.",
+                        "The project area is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        (
+                            "A cited report identifies habitat conditions throughout the "
+                            "Bitterroot National Forest and Lolo National Forest and parts of "
+                            "the Beaverhead-Deerlodge National Forest. Those comparisons provide "
+                            "a foundation for cumulative effects analysis both within the project "
+                            "area and considering regional connectivity."
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="profile-cross-forest-comparison-reference",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "custer_gallatin")
+            self.assertEqual(context["forest_unit"]["name"], "Custer Gallatin National Forest")
+            self.assertNotIn(
+                "multiple_forest_units_mentioned",
+                [item["reason"] for item in context["unresolved_mentions"]],
+            )
+            background_names = {
+                evidence["name"] for evidence in context["background_location_mentions"]
+            }
+            self.assertIn("Bitterroot National Forest", background_names)
+            self.assertIn("Lolo National Forest", background_names)
+            self.assertIn("Beaverhead-Deerlodge National Forest", background_names)
+            self.assertTrue(result.summary["reviewer_ready"])
+
     def test_profile_scope_uses_header_location_and_excludes_reference_district(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

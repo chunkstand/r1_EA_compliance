@@ -169,6 +169,33 @@ class ReplayContextTests(unittest.TestCase):
             ),
         )
 
+    def test_tracked_nez_perce_dead_laundry_replay_context_uses_current_f70_catalog_surface(
+        self,
+    ) -> None:
+        repo_root = Path(__file__).resolve().parents[1]
+
+        context = load_replay_context(
+            repo_root
+            / "config"
+            / "replay_contexts"
+            / "region1-example-nez-perce-clearwater-dead-laundry-57827.json"
+        )
+
+        self.assertEqual(
+            context.review_id,
+            "region1-example-nez-perce-clearwater-dead-laundry-57827",
+        )
+        self.assertEqual(context.forest_unit_id, "nez-perce-clearwater-nfs")
+        self.assertEqual(context.catalog_dir, Path("source_library/catalog"))
+        self.assertEqual(context.source_set_id, "source-set-f70ea11e04ae3d53")
+        self.assertEqual(
+            context.package_path,
+            Path(
+                "source_library/reviews/_intake/"
+                "region1-example-nez-perce-clearwater-dead-laundry-57827"
+            ),
+        )
+
     def test_load_replay_context_derives_child_catalog_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp)

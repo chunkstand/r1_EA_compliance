@@ -1,0 +1,113 @@
+{
+  "adjudication_id": "region1-example-nez-perce-clearwater-dead-laundry-57827-applicability-adjudication",
+  "allowed_dispositions": [
+    "human_applicable",
+    "human_not_applicable",
+    "pending"
+  ],
+  "allowed_final_statuses": [
+    "applicable",
+    "not_applicable"
+  ],
+  "applicability_decisions_sha256": "4e6ae83b64ec346077e9355b200377717eefcee7338ad44c8da9b251de82f065",
+  "created_at": "2026-05-31T03:54:43Z",
+  "decisions_path": "source_library/reviews/region1-example-nez-perce-clearwater-dead-laundry-57827/applicability/applicability_decisions.jsonl",
+  "items": [
+    {
+      "adjudicated_at": "2026-05-31T04:03:27Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "current_status": "needs_adjudication",
+      "decision_id": "c63693adce7caf8dc69213d7",
+      "disposition": "human_applicable",
+      "expected_current": {
+        "basis_type": "unresolved_evidence_conflict",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
+        "decision_id": "c63693adce7caf8dc69213d7",
+        "status": "needs_adjudication"
+      },
+      "final_status": "applicable",
+      "item_id": "applicability-adjudication-item:359cd395ee44e5fc",
+      "rationale": "Applicable for review: the Dead Laundry package includes the biological assessment, wildlife, botany, and fisheries analyses plus draft and final EA sections addressing threatened, endangered, proposed, sensitive, and habitat effects. Negative no-effect, no-habitat, or no-action phrases are species-specific determinations or alternative context within that review lane, not a reason to scope out the species-supporting authority family.",
+      "reviewer_notes": "",
+      "source_type": "dead_laundry_reviewer_stack_replay",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-001 (e36922d8408a)",
+        "EA-PACKAGE-002 (298d00819b88)",
+        "EA-PACKAGE-008 (3ee2f0000e86)",
+        "EA-PACKAGE-009 (e9941e6fa7a4)",
+        "EA-PACKAGE-015 (c44b1e87b6c4)",
+        "EA-PACKAGE-016 (ba8fa801ecc1)",
+        "EA-PACKAGE-028 (2bcce932970e)",
+        "EA-PACKAGE-030 (d01382abc7a4)"
+      ]
+    },
+    {
+      "adjudicated_at": "2026-05-31T04:03:27Z",
+      "adjudicated_by": [
+        "codex"
+      ],
+      "authority_category": "law",
+      "authority_document_role": "law",
+      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
+      "current_basis_type": "unresolved_evidence_conflict",
+      "current_status": "needs_adjudication",
+      "decision_id": "3d2434dd2a5fdb3c0f0ab785",
+      "disposition": "human_applicable",
+      "expected_current": {
+        "basis_type": "unresolved_evidence_conflict",
+        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
+        "decision_id": "3d2434dd2a5fdb3c0f0ab785",
+        "status": "needs_adjudication"
+      },
+      "final_status": "applicable",
+      "item_id": "applicability-adjudication-item:830669bb63b13bb2",
+      "rationale": "Applicable for review: Dead Laundry is a vegetation management and fuels project. The draft and final EA, vegetation report, forest health evaluations, and fuels reports describe proposed vegetation treatments, hazardous fuels reduction, prescribed fire, timber harvest, wildland-urban-interface protection, insect and disease concerns, and forest-health resilience. No-action or constrained-treatment phrases describe particular alternatives or limits and do not negate this authority family.",
+      "reviewer_notes": "",
+      "source_type": "dead_laundry_reviewer_stack_replay",
+      "supporting_citation_refs": [
+        "EA-PACKAGE-001 (e36922d8408a)",
+        "EA-PACKAGE-002 (298d00819b88)",
+        "EA-PACKAGE-005 (a2979f4d0ab8)",
+        "EA-PACKAGE-006 (531d07ffadf9)",
+        "EA-PACKAGE-007 (a6b976e60e4e)",
+        "EA-PACKAGE-023 (a3eebd486cad)",
+        "EA-PACKAGE-024 (3c3adab88df9)",
+        "EA-PACKAGE-037 (7a2b728ddc5a)"
+      ]
+    }
+  ],
+  "required_adjudication_fields": [
+    "adjudicated_at",
+    "adjudicated_by",
+    "source_type",
+    "rationale",
+    "supporting_citation_refs"
+  ],
+  "resolved_dispositions": [
+    "human_applicable",
+    "human_not_applicable"
+  ],
+  "review_id": "region1-example-nez-perce-clearwater-dead-laundry-57827",
+  "schema_version": "applicability-adjudication-template-v0",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
+  "summary": {
+    "adjudication_item_count": 2,
+    "created_at": "2026-05-31T04:03:27Z",
+    "decision_count": 200,
+    "decisions_path": "source_library/reviews/region1-example-nez-perce-clearwater-dead-laundry-57827/applicability/applicability_decisions.jsonl",
+    "decisions_sha256": "4e6ae83b64ec346077e9355b200377717eefcee7338ad44c8da9b251de82f065",
+    "instructions": "Replay this tracked adjudication with applicability-adjudication-eval and applicability-adjudication-apply. Regenerate the file if applicability_decisions.jsonl changes.",
+    "markdown_path": "config/applicability_adjudications/region1-example-nez-perce-clearwater-dead-laundry-57827.worklist.md",
+    "output_path": "config/applicability_adjudications/region1-example-nez-perce-clearwater-dead-laundry-57827.json",
+    "pending_item_count": 0,
+    "review_id": "region1-example-nez-perce-clearwater-dead-laundry-57827",
+    "schema_version": "applicability-adjudication-template-summary-v0",
+    "source_set_id": "source-set-f70ea11e04ae3d53"
+  }
+}

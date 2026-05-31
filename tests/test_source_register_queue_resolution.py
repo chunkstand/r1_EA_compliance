@@ -37,8 +37,8 @@ def test_queue_disposition_audit_matches_current_queue_baseline() -> None:
         "PROG-013",
         "WILD-ESA-Q001",
     ]
-    assert result["resolved_current_or_project_applicable_count"] == 10
-    assert result["unresolved_current_or_project_applicable_count"] == 30
+    assert result["resolved_current_or_project_applicable_count"] == 11
+    assert result["unresolved_current_or_project_applicable_count"] == 29
     assert result["planned_disposition_counts"] == {
         "forest_specific_example_package": 3,
         "historical_scope_only": 2,
@@ -48,8 +48,8 @@ def test_queue_disposition_audit_matches_current_queue_baseline() -> None:
     }
     assert result["resolution_status_counts"] == {
         "blocked": 9,
-        "planned": 32,
-        "resolved": 10,
+        "planned": 31,
+        "resolved": 11,
     }
 
 

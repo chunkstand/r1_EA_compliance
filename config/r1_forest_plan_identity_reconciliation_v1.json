@@ -13,7 +13,7 @@
     "nez-perce-clearwater-nfs"
   ],
   "contract_id": "region1-forest-plan-identity-reconciliation",
-  "exact_url_matched_source_record_count": 74,
+  "exact_url_matched_source_record_count": 75,
   "exact_url_matched_source_records": [
     {
       "canonical_source_record_id": "FOR-002",
@@ -956,6 +956,20 @@
       ]
     },
     {
+      "canonical_source_record_id": "FPS-344",
+      "canonical_title": "Notice of Plan Approval",
+      "catalog_source_partition": "active_review_corpus",
+      "document_role": "notice_of_plan_approval",
+      "document_title": "Notice of Plan Approval Federal Register",
+      "forest_unit_id": "nez-perce-clearwater-nfs",
+      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-04",
+      "official_link": "https://federalregister.gov/d/2024-30342",
+      "referenced_by": [
+        "manifest:notice_of_plan_approval",
+        "readiness:notice_of_plan_approval"
+      ]
+    },
+    {
       "canonical_source_record_id": "FOR-033",
       "canonical_title": "Administrative Change to Land Management Plan",
       "catalog_source_partition": "active_review_corpus",
@@ -1138,7 +1152,7 @@
     "lolo-nf": 1,
     "nez-perce-clearwater-nfs": 3
   },
-  "unresolved_source_record_count": 22,
+  "unresolved_source_record_count": 21,
   "unresolved_source_records": [
     {
       "document_role": "planning_page",
@@ -1434,24 +1448,11 @@
         "readiness:plan_document_set_page"
       ],
       "resolution_status": "catalog_confirmed"
-    },
-    {
-      "document_role": "notice_of_plan_approval",
-      "document_title": "Notice of Plan Approval Federal Register",
-      "forest_unit_id": "nez-perce-clearwater-nfs",
-      "legacy_source_record_id": "R1PLAN-nez-perce-clearwater-nfs-04",
-      "matching_canonical_source_record_ids": [],
-      "official_link": "https://federalregister.gov/d/2024-30342",
-      "referenced_by": [
-        "manifest:notice_of_plan_approval",
-        "readiness:notice_of_plan_approval"
-      ],
-      "resolution_status": "source_delta_required"
     }
   ],
   "unresolved_status_counts": {
     "catalog_confirmed": 11,
-    "source_delta_required": 11
+    "source_delta_required": 10
   },
   "version": "1.0.0"
 }

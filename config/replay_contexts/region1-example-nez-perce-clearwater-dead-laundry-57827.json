@@ -1,0 +1,13 @@
+{
+  "review_id": "region1-example-nez-perce-clearwater-dead-laundry-57827",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
+  "forest_unit_id": "nez-perce-clearwater-nfs",
+  "catalog_dir": "source_library/catalog",
+  "package_path": "source_library/reviews/_intake/region1-example-nez-perce-clearwater-dead-laundry-57827",
+  "package_authority": {
+    "official_project_page": "https://www.fs.usda.gov/r01/nezperce-clearwater/projects/57827",
+    "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/158227433225",
+    "box_inventory_path": "source_library/reviews/_intake/region1-example-nez-perce-clearwater-dead-laundry-57827/box_inventory.json",
+    "box_import_manifest_path": "source_library/reviews/_intake/region1-example-nez-perce-clearwater-dead-laundry-57827/box_import_manifest.json"
+  }
+}

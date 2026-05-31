@@ -260,7 +260,7 @@ def _term_pattern(term: str) -> str:
 def _is_affirmative_location_context(evidence: dict) -> bool:
     if _is_negative_location_context(evidence):
         return False
-    text = " ".join([_location_decision_window(evidence), _scope_decision_text(evidence)])
+    text = _location_context_text(evidence)
     return bool(
         re.search(
             r"\b(?:project\s+area|project|action|trail\s+work|parcels?|lands?|it)\b.{0,160}"

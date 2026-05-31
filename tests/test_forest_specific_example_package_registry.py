@@ -24,9 +24,9 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
     assert len(set(forest_ids)) == 10
     assert registry["summary"] == {
         "forest_unit_count": 10,
-        "profile_guidance_only_count": 3,
-        "review_example_count": 8,
-        "reviewer_ready_example_count": 8,
+        "profile_guidance_only_count": 2,
+        "review_example_count": 9,
+        "reviewer_ready_example_count": 9,
         "typed_blocked_example_count": 0,
     }
 
@@ -273,7 +273,7 @@ def test_registry_promotes_idaho_panhandle_lacy_lemoosh_as_primary_example() -> 
     ).exists()
 
 
-def test_nez_perce_dead_laundry_packet_opens_without_registry_promotion() -> None:
+def test_nez_perce_dead_laundry_is_promoted_as_governed_primary_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     queue_ledger = _load_json(QUEUE_LEDGER_PATH)
     ledger_entries = {entry["source_id"]: entry for entry in queue_ledger["entries"]}
@@ -284,12 +284,21 @@ def test_nez_perce_dead_laundry_packet_opens_without_registry_promotion() -> Non
         if row["forest_unit_id"] == "nez-perce-clearwater-nfs"
     )
     for_034 = ledger_entries["FOR-034"]
+    example_row = next(
+        row
+        for row in registry["review_examples"]
+        if row["example_id"] == "npc-dead-laundry-forest-specific"
+    )
 
-    assert forest_row["routing_status"] == "profile_eval_guidance_only"
-    assert forest_row["primary_example_id"] is None
-    assert forest_row["queue_boundary_source_ids"] == []
+    assert forest_row["routing_status"] == "real_package_examples_available"
+    assert forest_row["primary_example_id"] == "npc-dead-laundry-forest-specific"
+    assert forest_row["queue_boundary_source_ids"] == ["FOR-034"]
+    assert "inspect the Dead Laundry package first" in forest_row["guidance_note"]
+    assert "source-set-f70ea11e04ae3d53" in forest_row["guidance_note"]
+    assert example_row["coverage_slot_id"] == "npc-dead-laundry-forest-specific"
+    assert example_row["queue_lineage_source_ids"] == ["FOR-034"]
     assert for_034["planned_disposition"] == "forest_specific_example_package"
-    assert for_034["resolution_status"] == "planned"
+    assert for_034["resolution_status"] == "resolved"
     assert for_034["blocker_packet_reference"] == (
         "docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
     )
@@ -300,7 +309,7 @@ def test_nez_perce_dead_laundry_packet_opens_without_registry_promotion() -> Non
     ).exists()
 
 
-def test_agent_start_here_names_idaho_panhandle_as_latest_resolved_example() -> None:
+def test_agent_start_here_names_dead_laundry_as_latest_resolved_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     agent_start = AGENT_START_HERE_PATH.read_text(encoding="utf-8")
     readme = README_PATH.read_text(encoding="utf-8")
@@ -308,7 +317,7 @@ def test_agent_start_here_names_idaho_panhandle_as_latest_resolved_example() -> 
     forest_row = next(
         row
         for row in registry["forest_routing"]
-        if row["forest_unit_id"] == "idaho-panhandle-nfs"
+        if row["forest_unit_id"] == "nez-perce-clearwater-nfs"
     )
     example_row = next(
         row
@@ -316,14 +325,14 @@ def test_agent_start_here_names_idaho_panhandle_as_latest_resolved_example() -> 
         if row["example_id"] == forest_row["primary_example_id"]
     )
 
-    assert "docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md" in agent_start
+    assert "docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md" in agent_start
     assert "latest resolved forest-specific example packet" in agent_start
     assert f'example_id="{example_row["example_id"]}"' in agent_start
     assert f'review_id="{example_row["review_id"]}"' in agent_start
     assert f'primary_example_id="{forest_row["primary_example_id"]}"' in agent_start
     assert f'forest_unit_id="{forest_row["forest_unit_id"]}"' in agent_start
-    assert "Lacy Lemoosh as the governed primary example" in agent_start
-    assert "must not be reused for non-Idaho-Panhandle forests" in agent_start
+    assert "Dead Laundry as the governed primary example" in agent_start
+    assert "must not be reused for non-NPC forests" in agent_start
     assert f'primary_example_id="{forest_row["primary_example_id"]}"' in readme
     assert f'review_id="{example_row["review_id"]}"' in readme
 

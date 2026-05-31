@@ -1,8 +1,8 @@
 {
   "schema_version": "source-register-queue-resolution-ledger-v1",
   "contract_id": "source-register-queue-resolution-ledger-v1",
-  "as_of_date": "2026-05-30",
-  "status": "nez_perce_clearwater_dead_laundry_packet_opened",
+  "as_of_date": "2026-05-31",
+  "status": "nez_perce_clearwater_dead_laundry_promoted",
   "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
   "workbook_sha256": "1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97",
   "sheet_name": "Direct_File_Capture_Queue",
@@ -39,11 +39,11 @@
     "queue_row_count": 51,
     "resolution_status_counts": {
       "blocked": 9,
-      "planned": 32,
-      "resolved": 10
+      "planned": 31,
+      "resolved": 11
     },
-    "resolved_current_or_project_applicable_count": 10,
-    "unresolved_current_or_project_applicable_count": 30
+    "resolved_current_or_project_applicable_count": 11,
+    "unresolved_current_or_project_applicable_count": 29
   },
   "entries": [
     {
@@ -539,7 +539,7 @@
       "planned_disposition": "forest_specific_example_package",
       "queue_reason": "Folder/listing/manual-export placeholder",
       "resolution_required": "Replace source page/folder/manual placeholder with direct document/file URL; then promote to Document_Register_Master if necessary.",
-      "resolution_status": "planned",
+      "resolution_status": "resolved",
       "source_id": "FOR-034",
       "source_url": "https://www.fs.usda.gov/r01/nezperce-clearwater/projects/57827",
       "target_successor_source_id": null

@@ -1,0 +1,1967 @@
+{
+  "cases": [
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-AIR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-AIR-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-ARINF-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-ARINF-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-ARREC-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-ARREC-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-CARB-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-CARB-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-CR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-CR-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-CWN-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-CWN-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-DWSR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-DWSR-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-ED-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-ED-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-EM-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-EM-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-ES-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-ES-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-FIRE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-FIRE-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-FOR-03",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-FOR-03",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-FOR-06",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-FOR-06",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-FOR-09",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-FOR-09",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-GRZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-GRZ-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-GS-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-GS-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-INF-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-INF-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-INV-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-INV-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-LND-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-LND-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-MWTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-MWTR-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-REC-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-REC-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-036 (c9f2410dfb10)",
+        "EA-PACKAGE-022 (9d3112aff2c0)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-RMZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-RMZ-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-SCENERY-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-SCENERY-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-SFP-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-SFP-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-SOIL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-SOIL-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-TBR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-TBR-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-TE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-TE-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-TT-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-TT-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-WL-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-WLMU-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-WLMU-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-WTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-DC-WTR-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-AREM-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-AREM-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-ARGRZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-ARGRZ-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-ARINF-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-ARINF-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-ARLND-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-ARLND-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-ARREC-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-ARREC-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-CR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-CR-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-ES-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-ES-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-FIRE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-FIRE-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-GRZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-GRZ-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-INF-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-INF-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-INV-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-INV-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-REC-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-REC-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-RMZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-RMZ-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-SCENERY-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-SCENERY-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-SOIL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-SOIL-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-TBR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-TBR-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-TE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-TE-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-TT-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-TT-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-WL-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-WLMU-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-WLMU-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-WTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GDL-WTR-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-AIR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-AIR-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-CR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-CR-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-CWN-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-CWN-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-ED-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-ED-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-FIRE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-FIRE-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-INV-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-INV-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-REC-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-REC-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-TE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-TE-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-TT-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-TT-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-WL-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-WLMU-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-WLMU-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-WTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-GL-WTR-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-ARREC-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-ARREC-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-CR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-CR-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-CWN-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-CWN-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-FIRE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-FIRE-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-GRZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-GRZ-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-GS-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-GS-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-INF-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-INF-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-INV-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-INV-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-REC-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-REC-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-RMZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-RMZ-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-SOIL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-SOIL-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-TBR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-TBR-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-TE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-TE-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-TT-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-TT-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-WL-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-WTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-OBJ-WTR-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-AREM-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-AREM-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-ARGRZ-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-ARGRZ-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-066 (77ffc4ef3d10)",
+        "EA-PACKAGE-001 (e36922d8408a)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-ARINF-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-ARINF-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-ARLND-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-ARLND-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-CWN-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-CWN-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-EM-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-EM-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-FIRE-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-FIRE-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-MWTR-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-MWTR-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-REC-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-REC-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-RMZ-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-RMZ-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-008 (3ee2f0000e86)",
+        "EA-PACKAGE-061 (770cfd8358bd)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-SOIL-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-SOIL-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-061 (770cfd8358bd)",
+        "EA-PACKAGE-001 (e36922d8408a)",
+        "EA-PACKAGE-037 (7a2b728ddc5a)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-TBR-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-TBR-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-TT-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-TT-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-WL-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-WL-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-002 (298d00819b88)",
+        "EA-PACKAGE-008 (3ee2f0000e86)",
+        "EA-PACKAGE-030 (d01382abc7a4)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-WLMU-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-WLMU-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-WTR-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-STD-WTR-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-SUIT-INF-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-SUIT-INF-01",
+      "component_type": "suitability",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (f83df06f6c30)",
+        "EA-PACKAGE-057 (7f1f22908d03)",
+        "EA-PACKAGE-067 (9cf4f6d61fb3)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-SUIT-INF-07",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-SUIT-INF-07",
+      "component_type": "suitability",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-SUIT-REC-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-SUIT-REC-01",
+      "component_type": "suitability",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (f83df06f6c30)",
+        "EA-PACKAGE-057 (7f1f22908d03)",
+        "EA-PACKAGE-067 (9cf4f6d61fb3)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-SUIT-ROS-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-SUIT-ROS-01",
+      "component_type": "suitability",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-SUIT-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-FW-SUIT-WL-01",
+      "component_type": "suitability",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-DC-GH-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-DC-GH-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-DC-NHL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-DC-NHL-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-DC-PK-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-DC-PK-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-DC-SA-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-DC-SA-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-DC-SR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-DC-SR-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-GDL-GH-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-GDL-GH-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-GDL-NHL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-GDL-NHL-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-GDL-PK-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-GDL-PK-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-GL-NHL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-GL-NHL-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-GL-PK-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-GL-PK-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-OBJ-GH-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-OBJ-GH-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-OBJ-NHL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-OBJ-NHL-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-OBJ-PK-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-OBJ-PK-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-OBJ-SR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-OBJ-SR-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-STD-NHL-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-STD-NHL-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-005 (a2979f4d0ab8)",
+        "EA-PACKAGE-029 (a2979f4d0ab8)",
+        "EA-PACKAGE-030 (d01382abc7a4)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-SUIT-NHL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-GA-SUIT-NHL-01",
+      "component_type": "suitability",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (f83df06f6c30)",
+        "EA-PACKAGE-057 (7f1f22908d03)",
+        "EA-PACKAGE-067 (9cf4f6d61fb3)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-DC-WILD-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-DC-WILD-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-GL-DWSR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-GL-DWSR-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-GL-WILD-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-GL-WILD-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-STD-WILD-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-STD-WILD-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-SUIT-DWSR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-SUIT-DWSR-01",
+      "component_type": "suitability",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-061 (770cfd8358bd)",
+        "EA-PACKAGE-005 (a2979f4d0ab8)",
+        "EA-PACKAGE-029 (a2979f4d0ab8)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-SUIT-WILD-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA1-SUIT-WILD-01",
+      "component_type": "suitability",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (f83df06f6c30)",
+        "EA-PACKAGE-057 (7f1f22908d03)",
+        "EA-PACKAGE-067 (9cf4f6d61fb3)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-DC-IRA-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-DC-IRA-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-DC-RNA-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-DC-RNA-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-DC-RWILD-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-DC-RWILD-01",
+      "component_type": "desired_condition",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-GDL-RWILD-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-GDL-RWILD-01",
+      "component_type": "guideline",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-GL-IRA-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-GL-IRA-01",
+      "component_type": "goal",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-OBJ-RWILD-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-OBJ-RWILD-01",
+      "component_type": "objective",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-STD-IRA-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-STD-IRA-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-STD-RNA-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-STD-RNA-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-STD-RWILD-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-STD-RWILD-01",
+      "component_type": "standard",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-SUIT-RNA-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-SUIT-RNA-01",
+      "component_type": "suitability",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (f83df06f6c30)",
+        "EA-PACKAGE-057 (7f1f22908d03)",
+        "EA-PACKAGE-067 (9cf4f6d61fb3)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-SUIT-RWILD-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-nez-perce-clearwater-nfs-06-MA2-SUIT-RWILD-01",
+      "component_type": "suitability",
+      "description": "Dead Laundry component replay case generated from the current raw forest-plan component findings surface; package-scope adjudication is evaluated separately.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-042 (f83df06f6c30)",
+        "EA-PACKAGE-057 (7f1f22908d03)",
+        "EA-PACKAGE-067 (9cf4f6d61fb3)"
+      ],
+      "plan_source_citations": [
+        "FPS-347 (045d683ad19f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    }
+  ],
+  "coverage_requirements": {
+    "minimum_cases_by_applicability_status": {
+      "applicable": 134
+    },
+    "minimum_cases_by_component_type": {
+      "desired_condition": 40,
+      "goal": 17,
+      "guideline": 25,
+      "objective": 21,
+      "standard": 21,
+      "suitability": 10
+    },
+    "require_all_applicable_standards": true
+  },
+  "eval_id": "region1-example-nez-perce-clearwater-dead-laundry-57827-component-eval",
+  "metric_thresholds": {
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "expected_applicable_standard_count": {
+      "min": 21
+    },
+    "package_evidence_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "plan_source_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  },
+  "review_id": "region1-example-nez-perce-clearwater-dead-laundry-57827",
+  "schema_version": "forest-plan-component-eval-v0",
+  "source_set_id": "source-set-f70ea11e04ae3d53"
+}

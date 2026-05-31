@@ -257,12 +257,12 @@ def test_committed_registry_tracks_current_identity_gap() -> None:
     assert registry["schema_version"] == FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION
     assert registry["active_source_set_id"] == "source-set-f70ea11e04ae3d53"
     assert registry["referenced_legacy_source_record_count"] == 99
-    assert registry["exact_url_matched_source_record_count"] == 74
+    assert registry["exact_url_matched_source_record_count"] == 75
     assert registry["governed_catalog_rebound_source_record_count"] == 3
-    assert registry["unresolved_source_record_count"] == 22
+    assert registry["unresolved_source_record_count"] == 21
     assert registry["unresolved_status_counts"] == {
         "catalog_confirmed": 11,
-        "source_delta_required": 11,
+        "source_delta_required": 10,
     }
 
     mapping = {
@@ -276,6 +276,7 @@ def test_committed_registry_tracks_current_identity_gap() -> None:
     assert mapping["R1PLAN-beaverhead-deerlodge-nf-02"] == "FOR-002"
     assert mapping["R1PLAN-custer-gallatin-nf-02"] == "FOR-009"
     assert mapping["R1PLAN-lolo-nf-02"] == "FPS-298"
+    assert mapping["R1PLAN-nez-perce-clearwater-nfs-04"] == "FPS-344"
     assert mapping["R1PLAN-nez-perce-clearwater-nfs-06"] == "FPS-347"
     assert governed_mapping["R1PLAN-flathead-nf-02"] == "FINAL-FLAT-001"
     assert governed_mapping["R1PLAN-flathead-nf-03"] == "FPS-180"
@@ -287,7 +288,7 @@ def test_committed_registry_tracks_current_identity_gap() -> None:
     }
     assert "R1PLAN-flathead-nf-02" not in unresolved
     assert unresolved["R1PLAN-custer-gallatin-nf-01"] == "catalog_confirmed"
-    assert unresolved["R1PLAN-nez-perce-clearwater-nfs-04"] == "source_delta_required"
+    assert "R1PLAN-nez-perce-clearwater-nfs-04" not in unresolved
 
 
 def test_committed_registry_still_covers_every_live_manifest_and_readiness_source_record_id() -> None:
@@ -445,13 +446,13 @@ def test_committed_manifest_and_readiness_reduce_identity_mix_to_canonical_plus_
         "registry_path": "config/r1_forest_plan_identity_reconciliation_v1.json",
         "registry_schema_version": FOREST_PLAN_IDENTITY_RECONCILIATION_SCHEMA_VERSION,
         "registry_active_source_set_id": "source-set-f70ea11e04ae3d53",
-        "exact_url_rebound_source_record_count": 74,
+        "exact_url_rebound_source_record_count": 75,
         "governed_catalog_rebound_source_record_count": 3,
-        "remaining_unresolved_source_record_count": 22,
+        "remaining_unresolved_source_record_count": 21,
         "remaining_unresolved_source_record_ids": sorted(unresolved_source_record_ids),
         "remaining_unresolved_status_counts": {
             "catalog_confirmed": 11,
-            "source_delta_required": 11,
+            "source_delta_required": 10,
         },
     }
     assert readiness["identity_reconciliation"] == manifest["identity_reconciliation"]
@@ -504,6 +505,16 @@ def test_committed_manifest_and_readiness_share_same_per_profile_unresolved_bloc
         "remaining_unresolved_source_record_count": 1,
         "remaining_unresolved_source_record_ids": ["R1PLAN-custer-gallatin-nf-01"],
         "remaining_unresolved_status_counts": {"catalog_confirmed": 1},
+    }
+    assert manifest_rows["nez-perce-clearwater-nfs"]["identity_reconciliation"] == {
+        "forest_unit_id": "nez-perce-clearwater-nfs",
+        "status": "unresolved_blockers_present",
+        "remaining_unresolved_source_record_count": 2,
+        "remaining_unresolved_source_record_ids": [
+            "R1PLAN-nez-perce-clearwater-nfs-01",
+            "R1PLAN-nez-perce-clearwater-nfs-02",
+        ],
+        "remaining_unresolved_status_counts": {"catalog_confirmed": 2},
     }
 
 

@@ -3,8 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 import argparse
 
+from .box_folder_intake import run_box_folder_intake
 from .cli_common import normalized_timeout
 from .cli_common import print_summary
+from .config import DEFAULT_CONFIG_PATH
 from .ea_review import DEFAULT_CHECKLIST_PATH
 from .ea_review import run_ea_review
 from .forest_plan_component_adjudication import (
@@ -25,6 +27,7 @@ from .forest_plan_resolver import run_forest_plan_resolver
 
 
 REVIEW_COMMANDS = {
+    "box-folder-intake",
     "ea-review",
     "forest-plan-components-build",
     "forest-plan-component-adjudication-template",
@@ -35,6 +38,26 @@ REVIEW_COMMANDS = {
 
 
 def register_review_commands(subparsers: argparse._SubParsersAction) -> None:
+    box_folder_intake = subparsers.add_parser(
+        "box-folder-intake",
+        help="Inventory and optionally download a public Box/Pinyon folder tree into review intake authority artifacts.",
+    )
+    box_folder_intake.add_argument("--root-folder-url", required=True)
+    box_folder_intake.add_argument("--review-id", required=True)
+    box_folder_intake.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    box_folder_intake.add_argument("--intake-dir", type=Path)
+    box_folder_intake.add_argument("--download", action="store_true")
+    box_folder_intake.add_argument(
+        "--include-relative-path-prefix",
+        action="append",
+        dest="include_relative_path_prefixes",
+        help=(
+            "Limit downloads to files whose relative_path matches or starts with the given "
+            "folder/file prefix. Inventory still covers the full root."
+        ),
+    )
+    box_folder_intake.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
+
     ea_review = subparsers.add_parser(
         "ea-review",
         help="Run a deterministic, evidence-backed EA package checklist review.",
@@ -127,6 +150,20 @@ def register_review_commands(subparsers: argparse._SubParsersAction) -> None:
 
 
 def handle_review_command(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int | None:
+    if args.command == "box-folder-intake":
+        result = run_box_folder_intake(
+            review_id=args.review_id,
+            root_folder_url=args.root_folder_url,
+            output_dir=args.output_dir,
+            intake_dir=args.intake_dir,
+            download=args.download,
+            include_relative_path_prefixes=args.include_relative_path_prefixes,
+            config_path=args.config,
+        )
+        print_summary(result.summary)
+        failure_count = int(result.summary.get("failure_count") or 0)
+        return 0 if failure_count == 0 else 1
+
     if args.command == "ea-review":
         result = run_ea_review(
             package_path=args.package_path,

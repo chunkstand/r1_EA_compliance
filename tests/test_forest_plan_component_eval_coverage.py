@@ -20,9 +20,12 @@ from usfs_r1_ea_sources.forest_plan_component_eval_coverage import (
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 COMMITTED_MANIFEST = REPO_ROOT / "config" / "forest_plan_component_eval_coverage_v1.json"
+COMMITTED_ECID_SOURCE_DELTA_CONTRACT = (
+    REPO_ROOT / "config" / "forest_plan_component_evals" / "v1-cg-ecid-source-delta-review.json"
+)
 
 
-def test_committed_manifest_tracks_south_otter_review_slot() -> None:
+def test_committed_manifest_tracks_dead_laundry_review_slot() -> None:
     manifest = json.loads(COMMITTED_MANIFEST.read_text())
 
     assert manifest["schema_version"] == "forest-plan-component-eval-coverage-v1"
@@ -39,6 +42,7 @@ def test_committed_manifest_tracks_south_otter_review_slot() -> None:
         "region1-example-bitterroot-front-57341",
         "region1-example-beaverhead-deerlodge-south-tobacco-roots-63754",
         "region1-example-idaho-panhandle-lacy-lemoosh-60853",
+        "region1-example-nez-perce-clearwater-dead-laundry-57827",
     ]
     assert manifest["future_forest_expansion_policy"] == {
         "mode": "manifest_slots_only",
@@ -53,6 +57,10 @@ def test_committed_manifest_tracks_south_otter_review_slot() -> None:
     assert (
         slots["v1-cg-ecid-source-delta-review"]["eval_file"]
         == "forest_plan_component_evals/v1-cg-ecid-source-delta-review.json"
+    )
+    assert (
+        slots["v1-cg-ecid-source-delta-review"]["expected_source_set_id"]
+        == "source-set-8a4005c8a083af1a"
     )
     assert (
         slots["west-reservoir-67436"]["eval_file"]
@@ -90,12 +98,47 @@ def test_committed_manifest_tracks_south_otter_review_slot() -> None:
         == "forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json"
     )
     assert slots["region1-example-idaho-panhandle-lacy-lemoosh-60853"]["required"] is True
-    assert manifest["coverage_thresholds"]["required_review_count"] == 9
-    assert manifest["coverage_thresholds"]["distinct_forest_count_min"] == 7
+    assert (
+        slots["region1-example-nez-perce-clearwater-dead-laundry-57827"]["eval_file"]
+        == "forest_plan_component_evals/region1-example-nez-perce-clearwater-dead-laundry-57827.json"
+    )
+    assert (
+        slots["region1-example-nez-perce-clearwater-dead-laundry-57827"][
+            "expected_source_set_id"
+        ]
+        == "source-set-f70ea11e04ae3d53"
+    )
+    assert (
+        slots["region1-example-nez-perce-clearwater-dead-laundry-57827"]["required"]
+        is True
+    )
+    assert manifest["coverage_thresholds"]["required_review_count"] == 10
+    assert manifest["coverage_thresholds"]["distinct_forest_count_min"] == 8
     assert (
         slots["v1-cg-ecid-compliance-review"]["expected_source_set_id"]
         == "source-set-f70ea11e04ae3d53"
     )
+
+
+def test_committed_ecid_source_delta_contract_tracks_archived_merged_replay_truth() -> None:
+    contract = json.loads(COMMITTED_ECID_SOURCE_DELTA_CONTRACT.read_text())
+
+    assert contract["review_id"] == "v1-cg-ecid-source-delta-review"
+    assert contract["source_set_id"] == "source-set-8a4005c8a083af1a"
+    cases = {case["case_id"]: case for case in contract["cases"]}
+    assert cases["fw-std-wlgb-01-applicable-ea-section-3-4"][
+        "package_evidence_citations"
+    ] == [
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "EA-PACKAGE-012 (533c439d7ce5)",
+    ]
+    assert cases["fw-std-rwa-01-applicable-plan-consistency"][
+        "package_evidence_citations"
+    ] == [
+        "EA-PACKAGE-042 (bebc890bc3da)",
+        "EA-PACKAGE-003 (548d0c6d5f68)",
+        "EA-PACKAGE-033 (2259556c2475)",
+    ]
 
 
 def test_resolve_component_eval_file_reads_tracked_manifest_slot() -> None:

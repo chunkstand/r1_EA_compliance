@@ -75,15 +75,28 @@ They are intentionally not duplicated here.
   `config/forest_plan_component_evals/region1-example-idaho-panhandle-lacy-lemoosh-60853.json`,
   and review `phase-eval` `28/28` phases reviewer-ready with
   `declared_review_contract=true` and
-  `contract_backed_promotion_ready=true`. `real-package-review-coverage-eval`
-  now passes with `covered_slot_count=8`, `reviewer_ready_slot_count=8`,
-  `distinct_forest_count=7`, and `distinct_package_style_count=11`.
-  `forest-specific-example-package-eval` passes with `review_example_count=8`,
-  `reviewer_ready_example_count=8`,
-  `distinct_governed_example_forest_count=7`, and
-  `profile_guidance_only_count=3`. The Idaho component-coverage slot is
-  covered, source-set aligned, and passing; the standalone component-coverage
-  aggregate remains reduced only by inherited ECID source-delta drift.
+  `contract_backed_promotion_ready=true`.
+  For Nez Perce-Clearwater National Forests, the governed primary example is
+  `primary_example_id="npc-dead-laundry-forest-specific"` with
+  `review_id="region1-example-nez-perce-clearwater-dead-laundry-57827"` in
+  `config/forest_specific_example_package_registry_v1.json`. The tracked V1
+  eval contract is
+  `config/v1_nez_perce_clearwater_dead_laundry_real_ea_eval.json`, the tracked
+  `134`-case component eval contract is
+  `config/forest_plan_component_evals/region1-example-nez-perce-clearwater-dead-laundry-57827.json`,
+  and review `phase-eval` now passes `28/28` phases with
+  `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. `FOR-034` is now resolved as the
+  governed Dead Laundry forest-specific example-package boundary.
+  `real-package-review-coverage-eval` now passes with `covered_slot_count=9`,
+  `reviewer_ready_slot_count=9`, `distinct_forest_count=8`, and
+  `distinct_package_style_count=14`. `forest-specific-example-package-eval`
+  passes with `review_example_count=9`, `reviewer_ready_example_count=9`,
+  `distinct_governed_example_forest_count=8`, and
+  `profile_guidance_only_count=2`. The Dead Laundry component-coverage slot is
+  covered, source-set aligned, and passing; the standalone
+  component-coverage aggregate remains reduced only by inherited ECID
+  source-delta drift.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

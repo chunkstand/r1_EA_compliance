@@ -42,25 +42,47 @@ The planner:
   `docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; future
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
-- The active unresolved forest-specific example packet is
+- There is no active unresolved forest-specific example packet right now.
+  Continue the lane from
+  `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md` unless a
+  new child packet is explicitly opened.
+- The latest resolved forest-specific example packet is
   `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
-  For Nez Perce-Clearwater example-package work, inspect that packet first. It
-  freezes
-  `review_id="region1-example-nez-perce-clearwater-dead-laundry-57827"`
-  around official project page
+  For Nez Perce-Clearwater example-package work, inspect
+  `config/forest_specific_example_package_registry_v1.json` first, then use
+  Dead Laundry as the governed primary example:
+  `example_id="npc-dead-laundry-forest-specific"`,
+  `review_id="region1-example-nez-perce-clearwater-dead-laundry-57827"`, and
+  `primary_example_id="npc-dead-laundry-forest-specific"` for
+  `forest_unit_id="nez-perce-clearwater-nfs"`. The selected authorities are
+  the official project page
   `https://www.fs.usda.gov/r01/nezperce-clearwater/projects/57827` and
   Pinyon/Box folder
-  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158227433225`,
-  reroutes `FOR-034` to the example lane as a planned packet-owned boundary,
-  and keeps `nez-perce-clearwater-nfs` `profile_eval_guidance_only` until
-  package authority, replay, forest-plan, compliance, V1, review
-  `phase-eval`, and promotion gates pass. The live Box root is objection-heavy
-  (`2,654` visible files; `8,877,044,414` top-level bytes across `Analysis`,
-  `Decision`, and `Scoping`), so Milestone 1 is inventory and governed
-  boundary selection, not promotion. Keep Dead Laundry parallel to
-  `Document_Register_Master`; do not reuse it for non-NPC forests and do not
-  collapse `FOR-034` back into generic direct-file promotion work.
-- The latest resolved forest-specific example packet is
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158227433225`. The
+  live Box root remains objection-heavy (`2,654` visible files;
+  `8,877,044,414` top-level bytes across `Analysis`, `Decision`, and
+  `Scoping`), but the governed replay boundary is now narrowed and durable:
+  `82` files across `13` folders with explicit exclusion of
+  `Analysis/EA references` and `Decision/2023 Objection Materials Submitted`.
+  `82/82` downloads succeeded, base `ea-review` passes, applicability
+  validation passes with `53` applicable authorities and `0` unresolved,
+  generated rule-pack validation passes with `53` rules, component
+  adjudication resolves `121/121` current queue items, compliance review is
+  reviewer-ready, V1 eval contract
+  `config/v1_nez_perce_clearwater_dead_laundry_real_ea_eval.json` passes,
+  component eval contract
+  `config/forest_plan_component_evals/region1-example-nez-perce-clearwater-dead-laundry-57827.json`
+  passes `134/134` cases, and review `phase-eval` passes `28/28` phases with
+  `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`. `FOR-034` is resolved as the
+  governed Dead Laundry forest-specific example-package boundary, the real
+  package and registry aggregate evals are green, the Dead Laundry
+  component-coverage slot is covered and passing, and the standalone
+  component-coverage aggregate is green locally after the inherited ECID
+  source-delta replay contract refresh. Keep Dead Laundry parallel to
+  `Document_Register_Master`; use Dead Laundry as the governed primary example
+  for Nez Perce-Clearwater National Forests work, and it must not be reused for non-NPC forests.
+- The predecessor resolved forest-specific example packet is
   `docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
   For Idaho Panhandle National Forests work, inspect
   `config/forest_specific_example_package_registry_v1.json` first, then use
