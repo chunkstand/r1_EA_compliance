@@ -231,7 +231,6 @@ def test_registry_promotes_bitterroot_front_as_primary_example() -> None:
     assert "Use the Bitterroot Front package first" in (
         forest_row["guidance_note"]
     )
-    assert queue_ledger["status"] == "bitterroot_front_example_resolved"
     assert example_row["review_id"] == "region1-example-bitterroot-front-57341"
     assert example_row["forest_unit_id"] == "bitterroot-nf"
     assert example_row["applicable_forest_unit_ids"] == ["bitterroot-nf"]
@@ -271,6 +270,33 @@ def test_registry_promotes_idaho_panhandle_lacy_lemoosh_as_primary_example() -> 
         ROOT
         / "docs"
         / "IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
+    ).exists()
+
+
+def test_nez_perce_dead_laundry_packet_opens_without_registry_promotion() -> None:
+    registry = _load_json(REGISTRY_PATH)
+    queue_ledger = _load_json(QUEUE_LEDGER_PATH)
+    ledger_entries = {entry["source_id"]: entry for entry in queue_ledger["entries"]}
+
+    forest_row = next(
+        row
+        for row in registry["forest_routing"]
+        if row["forest_unit_id"] == "nez-perce-clearwater-nfs"
+    )
+    for_034 = ledger_entries["FOR-034"]
+
+    assert forest_row["routing_status"] == "profile_eval_guidance_only"
+    assert forest_row["primary_example_id"] is None
+    assert forest_row["queue_boundary_source_ids"] == []
+    assert for_034["planned_disposition"] == "forest_specific_example_package"
+    assert for_034["resolution_status"] == "planned"
+    assert for_034["blocker_packet_reference"] == (
+        "docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
+    )
+    assert (
+        ROOT
+        / "docs"
+        / "NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
     ).exists()
 
 

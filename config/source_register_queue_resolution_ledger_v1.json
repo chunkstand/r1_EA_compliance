@@ -1,8 +1,8 @@
 {
   "schema_version": "source-register-queue-resolution-ledger-v1",
   "contract_id": "source-register-queue-resolution-ledger-v1",
-  "as_of_date": "2026-05-29",
-  "status": "bitterroot_front_example_resolved",
+  "as_of_date": "2026-05-30",
+  "status": "nez_perce_clearwater_dead_laundry_packet_opened",
   "workbook_path": "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx",
   "workbook_sha256": "1b62348930fa9c3595bea24b6ab4cfa4c7b0a3d2c29c1f1cfefebcf9d270cf97",
   "sheet_name": "Direct_File_Capture_Queue",
@@ -15,10 +15,10 @@
       "SUP-007"
     ],
     "planned_disposition_counts": {
-      "forest_specific_example_package": 2,
+      "forest_specific_example_package": 3,
       "historical_scope_only": 2,
       "named_blocker": 9,
-      "promote_direct_file": 34,
+      "promote_direct_file": 33,
       "promote_structured_export": 4
     },
     "queue_reason_counts": {
@@ -532,11 +532,11 @@
       "target_successor_source_id": null
     },
     {
-      "blocker_packet_reference": null,
+      "blocker_packet_reference": "docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md",
       "currentness_class": "current_or_project_applicable",
       "document_title": "Dead Laundry Project",
       "excel_row": 41,
-      "planned_disposition": "promote_direct_file",
+      "planned_disposition": "forest_specific_example_package",
       "queue_reason": "Folder/listing/manual-export placeholder",
       "resolution_required": "Replace source page/folder/manual placeholder with direct document/file URL; then promote to Document_Register_Master if necessary.",
       "resolution_status": "planned",

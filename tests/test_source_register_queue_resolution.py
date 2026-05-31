@@ -40,10 +40,10 @@ def test_queue_disposition_audit_matches_current_queue_baseline() -> None:
     assert result["resolved_current_or_project_applicable_count"] == 10
     assert result["unresolved_current_or_project_applicable_count"] == 30
     assert result["planned_disposition_counts"] == {
-        "forest_specific_example_package": 2,
+        "forest_specific_example_package": 3,
         "historical_scope_only": 2,
         "named_blocker": 9,
-        "promote_direct_file": 34,
+        "promote_direct_file": 33,
         "promote_structured_export": 4,
     }
     assert result["resolution_status_counts"] == {

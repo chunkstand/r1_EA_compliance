@@ -48,9 +48,9 @@ history below.
 - continuing lane owner:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - active forest-specific example packet:
-  no active forest-specific example packet; Idaho Panhandle Lacy Lemoosh
-  Milestone 4 registry and aggregate coverage promotion is resolved locally,
-  and future forest-specific example expansion requires a new approved packet
+  `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  `Milestone 0` resolved locally; `Milestone 1` full-tree inventory and
+  package-authority boundary selection are next
 - resolved Beaverhead-Deerlodge packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -63,6 +63,33 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  Nez Perce-Clearwater Dead Laundry is the active forest-specific example
+  packet.
+  The packet is
+  `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
+  with frozen review ID
+  `region1-example-nez-perce-clearwater-dead-laundry-57827`, planned
+  example ID `npc-dead-laundry-forest-specific`, and forest unit
+  `nez-perce-clearwater-nfs`. The selected authorities are the official
+  project page
+  `https://www.fs.usda.gov/r01/nezperce-clearwater/projects/57827` and
+  Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158227433225`. Live
+  readback on 2026-05-30 identifies project `57827` as `Completed`, expected
+  analysis type `Environmental Assessment`, lead management unit
+  `North Fork Ranger District`, decision signed date `2024-12-23`, and Box
+  root label `Dead Laundry (57827)`. The Box root currently exposes
+  `Analysis` (`455` visible files; `1,802,724,968` bytes),
+  `Decision` (`2,186` visible files; `6,997,388,791` bytes), and
+  `Scoping` (`13` visible files; `76,930,655` bytes), totaling `2,654`
+  visible files and `8,877,044,414` top-level bytes. `FOR-034` now routes to
+  this packet as planned `forest_specific_example_package` work instead of
+  generic direct-file promotion, while
+  `config/forest_specific_example_package_registry_v1.json` still keeps
+  `nez-perce-clearwater-nfs` `profile_eval_guidance_only` with
+  `primary_example_id=null`. The next route is Milestone 1 full-tree
+  inventory and governed package-authority boundary selection before replay
+  context, local intake, or registry promotion claims are added.
   Idaho Panhandle Lacy Lemoosh is the latest resolved forest-specific example
   packet.
   The packet is

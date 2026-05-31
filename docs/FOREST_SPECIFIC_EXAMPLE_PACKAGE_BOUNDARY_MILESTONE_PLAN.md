@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is reduced through Milestone 4 registry and coverage promotion, with only inherited ECID source-delta component-coverage drift still red; docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and aggregate coverage promotion; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, Bitterroot, Beaverhead-Deerlodge, or Idaho Panhandle Lacy Milestones 0-4 unless a verified gate regresses`)
+Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is reduced through Milestone 4 registry and coverage promotion, with only inherited ECID source-delta component-coverage drift still red; docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and aggregate coverage promotion; docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has opened locally through Milestone 0 for the active NPC Dead Laundry follow-on; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, Bitterroot, Beaverhead-Deerlodge, or Idaho Panhandle Lacy Milestones 0-4 unless a verified gate regresses`)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -114,6 +114,21 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   `profile_guidance_only_count=3`. The Idaho component-coverage slot is
   present, covered, source-set aligned, and passing; the standalone aggregate
   remains red only on inherited `v1-cg-ecid-source-delta-review`.
+- The Nez Perce-Clearwater Dead Laundry follow-on in
+  `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  is now opened locally through Milestone 0. `FOR-034` now routes to that
+  packet as planned `forest_specific_example_package` work instead of generic
+  direct-file promotion, while `nez-perce-clearwater-nfs` remains
+  `profile_eval_guidance_only` until reviewer-ready gates pass. Live project
+  and Box readback identify Dead Laundry project `57827` as `Completed`, with
+  expected analysis type `Environmental Assessment`, lead unit
+  `North Fork Ranger District`, decision signed date `2024-12-23`, and Box
+  root label `Dead Laundry (57827)`. The top-level package currently exposes
+  `Analysis` (`455` visible files), `Decision` (`2,186` visible files), and
+  `Scoping` (`13` visible files) for `2,654` visible files and
+  `8,877,044,414` top-level bytes. Milestone 1 is next: inventory the full
+  root and choose a governed package-authority boundary before replay context,
+  local intake, or promotion claims are added.
 - `FOR-012` and `LEX-Q-001` now route to this packet as explicit
   `blocked` `named_blocker` queue rows because the East Crazy package is
   project-specific review guidance, not shared full-canonical master input.
@@ -122,7 +137,7 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   reusing the governed real-package coverage lane plus the forest-plan profile
   lane to prove explicit typed routing for every forest.
 - Under this boundary, `source-register-queue-audit` should now read
-  `planned_disposition_counts={"forest_specific_example_package":2,"promote_direct_file":34}`
+  `planned_disposition_counts={"forest_specific_example_package":3,"promote_direct_file":33}`
   and `resolution_status_counts={"blocked":9,"planned":32,"resolved":10}` with
   `blocked_current_or_project_applicable_count=9` and
   `unresolved_current_or_project_applicable_count=30`.

@@ -15,6 +15,46 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Nez Perce-Clearwater Dead Laundry Example Packet Opened Locally
+
+Latest implementation update on 2026-05-30 UTC:
+
+- update:
+  `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  is now the active forest-specific example packet. Milestone 0 packet opening
+  is resolved locally: the Dead Laundry review identity is frozen, `FOR-034`
+  now routes to this packet as planned
+  `forest_specific_example_package` work, and
+  `nez-perce-clearwater-nfs` remains `profile_eval_guidance_only` until
+  package-authority, replay, forest-plan, reviewer-stack, and promotion gates
+  pass.
+- package boundary:
+  live Forest Service project-page readback identifies Dead Laundry project
+  `57827` as `Completed`, with expected analysis type
+  `Environmental Assessment`, lead management unit
+  `North Fork Ranger District`, and decision signed date `2024-12-23`. The
+  selected authorities are the official project page
+  `https://www.fs.usda.gov/r01/nezperce-clearwater/projects/57827` and
+  Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158227433225`.
+- live Box readback:
+  the root folder is `Dead Laundry (57827)` under
+  `Nez Perce Clearwater National Forest (110117)` >
+  `North Fork Ranger District (11011753)`. The top-level package currently
+  exposes `Analysis` (`455` visible files; `1,802,724,968` bytes),
+  `Decision` (`2,186` visible files; `6,997,388,791` bytes), and
+  `Scoping` (`13` visible files; `76,930,655` bytes), totaling `2,654`
+  visible files and `8,877,044,414` top-level bytes.
+- boundary risk:
+  the `Decision` subtree mixes `2024 Final Decision and EA` (`10` files) with
+  a very large `2023 Objection Materials Submitted` family (`2,158` files)
+  plus 2021 and 2023 objection-process folders. The `Analysis` subtree also
+  mixes specialist reports, references, final EA, and draft EA materials.
+  Milestone 1 is therefore the next truthful slice: inventory the full root,
+  preserve file/folder evidence, and decide whether the governed replay
+  boundary is the full root or a narrowed package before replay context or
+  `ea-review` is added.
+
 ## Idaho Panhandle Lacy Lemoosh Registry And Coverage Promotion Resolved Locally
 
 Latest implementation update on 2026-05-30 UTC:
