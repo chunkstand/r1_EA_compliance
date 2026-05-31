@@ -3,9 +3,9 @@
   "adjudication_id": "v1-cg-ecid-source-delta-review-applicability-adjudication",
   "created_at": "2026-05-11T03:43:44Z",
   "review_id": "v1-cg-ecid-source-delta-review",
-  "source_set_id": "source-set-4fb59e9eb43045cb",
+  "source_set_id": "source-set-8a4005c8a083af1a",
   "decisions_path": "source_library/reviews/v1-cg-ecid-source-delta-review/applicability/applicability_decisions.jsonl",
-  "applicability_decisions_sha256": "b715130ac712ce89cbdc42e2b2d7e638b516056b8125bb3dd1fc97fb73c5cc10",
+  "applicability_decisions_sha256": "a844890433f082caaeadf5a4648898e8d70075f4cdd6b6bac1715ea90073e000",
   "allowed_final_statuses": [
     "applicable",
     "not_applicable"
@@ -30,12 +30,12 @@
     "schema_version": "applicability-adjudication-template-summary-v0",
     "created_at": "2026-05-11T03:43:44Z",
     "review_id": "v1-cg-ecid-source-delta-review",
-    "source_set_id": "source-set-4fb59e9eb43045cb",
+    "source_set_id": "source-set-8a4005c8a083af1a",
     "decision_count": 396,
     "adjudication_item_count": 7,
     "pending_item_count": 0,
     "decisions_path": "source_library/reviews/v1-cg-ecid-source-delta-review/applicability/applicability_decisions.jsonl",
-    "decisions_sha256": "b715130ac712ce89cbdc42e2b2d7e638b516056b8125bb3dd1fc97fb73c5cc10",
+    "decisions_sha256": "a844890433f082caaeadf5a4648898e8d70075f4cdd6b6bac1715ea90073e000",
     "output_path": "config/applicability_adjudications/v1-cg-ecid-source-delta-review.json",
     "markdown_path": "config/applicability_adjudications/v1-cg-ecid-source-delta-review.worklist.md",
     "instructions": "Replay this tracked adjudication with applicability-adjudication-eval and applicability-adjudication-apply. Regenerate the file if applicability_decisions.jsonl changes."

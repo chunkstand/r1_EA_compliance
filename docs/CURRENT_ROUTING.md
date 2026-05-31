@@ -51,6 +51,19 @@ Use this file as the short current route before opening the append-only docs.
   `real-package-review-coverage-eval` / `forest-specific-example-package-eval`
   block non-matching forest reuse even when a review contract is otherwise
   green.
+- ECID source-delta residual status as of 2026-05-31: ECID remains important as
+  a historical Custer Gallatin source-delta replay and component-eval coverage
+  slot, but it is not the active forest-specific example route. The replay
+  context now points at archived merged source set
+  `source-set-8a4005c8a083af1a` and its merged catalog. The old `4fb` versus
+  `8a40` identity split is resolved for `phase-eval`; base rule-claim direct
+  eval now passes `24/24`, compliance-review direct eval passes `5/5` on
+  `8a40`, and `phase-eval --review-id v1-cg-ecid-source-delta-review` passes
+  `22/22` with `reviewer_ready=true` and `blockers=[]`. It remains
+  `contract_backed_promotion_ready=false` only because this historical
+  source-delta lane has no declared review contract. Do not reopen ECID current
+  promotion or route this replay into the governed forest-specific example
+  packets.
 - Dakota Prairie Grasslands Medora Vegetation Management is resolved locally
   through Milestone 4 and is now the governed primary example for
   `dakota-prairie-grasslands`. The packet is
@@ -174,9 +187,9 @@ Use this file as the short current route before opening the append-only docs.
   eval. There is no active unresolved NPC child packet; continue the umbrella
   lane if selecting the next forest-specific slice. If the inherited ECID
   replay is pursued further, the next truthful route is no longer component
-  coverage; it is replay source-set contract reconciliation in `phase-eval`,
-  where rerun now fails closed on `4fb` replay/applicability expectations
-  versus `8a40` component/compliance artifacts.
+  coverage, source-set contract reconciliation, rule-claim direct-eval quality,
+  or stale compliance-review direct eval; those are resolved locally. The lane
+  is reviewer-ready historical replay evidence, not a current promotion route.
 - Idaho Panhandle Lacy Lemoosh is the predecessor resolved forest-specific example
   packet.
   The packet is
@@ -251,11 +264,10 @@ Use this file as the short current route before opening the append-only docs.
   `reviewer_ready_example_count=10`,
   `distinct_governed_example_forest_count=9`, and
   `profile_guidance_only_count=1`. The Idaho component-coverage slot is
-  covered, source-set aligned, and passing; the standalone
-  `forest-plan-component-eval-coverage` aggregate still exits red only on the
-  inherited `v1-cg-ecid-source-delta-review` slot, with
-  `covered_review_count=9/10`, `stale_identity_count=1`, and
-  `unresolved_review_count=1`. Review `phase-eval` now reports
+  covered, source-set aligned, and passing; later ECID repairs also made the
+  standalone `forest-plan-component-eval-coverage` aggregate green locally with
+  `covered_review_count=11/11`, `stale_identity_count=0`, and
+  `unresolved_review_count=0`. Review `phase-eval` now reports
   `declared_review_contract=true` and
   `contract_backed_promotion_ready=true`. No active forest-specific example
   packet remains after this closeout. Keep Lacy Lemoosh parallel to
@@ -302,11 +314,9 @@ Use this file as the short current route before opening the append-only docs.
   `review_example_count=10`, `reviewer_ready_example_count=10`,
   `distinct_governed_example_forest_count=9`, and
   `profile_guidance_only_count=1`. The Beaverhead component-coverage slot
-  passes on `source-set-f70ea11e04ae3d53`; the standalone
-  `forest-plan-component-eval-coverage` aggregate still exits red only on the
-  inherited `v1-cg-ecid-source-delta-review` slot, with
-  `covered_review_count=9/10`, `stale_identity_count=1`, and
-  `unresolved_review_count=1`. Review `phase-eval` now
+  passes on `source-set-f70ea11e04ae3d53`; later packets resolved the inherited
+  ECID component-coverage aggregate and the remaining `8a40`
+  rule-claim/compliance direct-eval residuals. Review `phase-eval` now
   reports `declared_review_contract=true` and
   `contract_backed_promotion_ready=true`. Keep South Tobacco Roots parallel to
   `Document_Register_Master`; do not route the inherited ECID source-delta
@@ -342,9 +352,9 @@ Use this file as the short current route before opening the append-only docs.
   `profile_guidance_only_count=5`.
   `config/forest_plan_component_eval_coverage_v1.json` includes the required
   Bitterroot component slot, which is covered, source-set aligned, and passing.
-  The standalone component-coverage aggregate still exits red only on the
-  inherited `v1-cg-ecid-source-delta-review` slot; do not route that blocker
-  back into Bitterroot Front. `FOR-007` is now resolved as
+  Later packets reduced the inherited ECID component-coverage aggregate; do not
+  route the remaining ECID rule-claim/compliance direct-eval residual back into
+  Bitterroot Front. `FOR-007` is now resolved as
   `planned_disposition="forest_specific_example_package"` and remains parallel
   to `Document_Register_Master`.
 - HLC Bonanza example packet is resolved locally through registry and coverage
@@ -386,10 +396,9 @@ Use this file as the short current route before opening the append-only docs.
   `review_example_count=6`, `reviewer_ready_example_count=6`,
   `distinct_governed_example_forest_count=5`, and
   `profile_guidance_only_count=5`. The Bonanza component-coverage slot is
-  required, source-set aligned, and passing; the standalone
-  `forest-plan-component-eval-coverage` aggregate still exits red only on the
-  inherited ECID source-delta slot. Do not route that aggregate blocker back
-  into the HLC packet.
+  required, source-set aligned, and passing. Later packets reduced the
+  inherited ECID component-coverage aggregate; do not route the remaining ECID
+  rule-claim/compliance direct-eval residual back into the HLC packet.
 - First-class eval trace Milestones 0-5 are resolved locally. The tracked contract
   lives in `config/eval_trace_inventory_contract_v1.json`; the contract doc is
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`; and
@@ -516,8 +525,9 @@ Use this file as the short current route before opening the append-only docs.
   slot now passes/source-set aligns. Parent Milestone 3 later promoted West
   Reservoir to reviewer-ready in the V1 contract, real-package manifest, and
   forest-specific registry. Milestone 4 later closed packet index validation,
-  phase eval, and aggregate reporting for West Reservoir; the remaining red
-  aggregate is the separate ECID source-delta component-coverage slot.
+  phase eval, and aggregate reporting for West Reservoir; the remaining ECID
+  residual is separate rule-claim/compliance direct-eval work on the historical
+  source-delta lane.
 - Local commit anchors for the active West Reservoir packet: Milestone 0
   baseline guard `d5d97ad`, Flathead authority-universe scoping `267ba9d`,
   source-evidence blocker route `0773ef7`, and docs-only Bitter Lesson
@@ -599,15 +609,10 @@ Use this file as the short current route before opening the append-only docs.
   reviewer-ready Flathead example.
 - `config/forest_plan_component_eval_coverage_v1.json` now requires Bitterroot
   Front and HLC Bonanza as forest-specific component-eval review slots. Both
-  slots are covered, source-set aligned, and passing. The aggregate
-  `forest-plan-component-eval-coverage` command still fails on the ECID
-  source-delta slot only: `ecid-source-delta-replay` /
-  `v1-cg-ecid-source-delta-review` has `result_not_passed` plus
-  `result_source_set_id_mismatch`. West Reservoir, South Otter, Lolo, HLC
-  Bonanza, and Bitterroot Front now pass and source-set align. Current
-  aggregate counts are `covered_review_count=6/7`,
-  `stale_identity_count=1`, and `unresolved_review_count=1`; do not describe
-  aggregate component coverage as green.
+  slots are covered, source-set aligned, and passing. Later packets resolved
+  the inherited ECID source-delta component-coverage slot and the remaining
+  `8a40` rule-claim/compliance direct-eval residuals; ECID is now
+  reviewer-ready historical replay evidence, not a current promotion route.
 - The Lolo Tyler's Kitchen example-package Milestone 3 implementation is
   resolved locally. The tracked Lolo review
   `region1-example-lolo-tylers-kitchen-66344` is now the governed primary
@@ -635,19 +640,22 @@ Use this file as the short current route before opening the append-only docs.
 - Forest-plan component eval coverage is not a blocker for the Lolo, South
   Otter, or HLC Bonanza review-scope closeouts: all three slots are aligned and
   pass on `f70...`.
-  The aggregate `forest-plan-component-eval-coverage` command still fails on
-  the non-Lolo/non-South Otter ECID source-delta slot, so do not describe
-  aggregate component coverage as green.
+  The aggregate `forest-plan-component-eval-coverage` command is now green
+  after later source-delta repairs; no ECID residual remains for the Lolo,
+  South Otter, HLC, or Bitterroot component-coverage closeouts.
 - Aggregate truth:
-  ECID current promotion, Lolo forest-specific example promotion, and South
-  Otter primary-example selection remain green in the non-strict promotion
-  suite. South Plateau is not an active promotion-suite expansion slot.
-  Strict expansion remains blocked only on the ECID historical slot under
-  `historical_source_set_split`.
-- Do not flip the ECID historical slot to `ready`, reopen the older Lolo or
-  replay-repair packets as live runtime work, or treat the remaining
-  non-Lolo/non-South Otter/non-HLC/non-Bitterroot component-coverage aggregate
-  red as part of the Lolo, South Otter, HLC, or Bitterroot example promotions.
+  Lolo forest-specific example promotion and South Otter primary-example
+  selection remain green in the non-strict promotion suite. South Plateau is
+  not an active promotion-suite expansion slot. The old strict-expansion
+  `historical_source_set_split` label is no longer the live `phase-eval`
+  blocker after the replay-context repair, and the later `8a40`
+  rule-claim/compliance direct-eval residuals are resolved locally. ECID is
+  reviewer-ready historical replay evidence and remains outside current
+  contract-backed promotion because it has no declared review contract.
+- Do not route the ECID historical slot into current promotion, reopen the
+  older Lolo or replay-repair packets as live runtime work, or treat ECID as
+  residual work for the Lolo, South Otter, HLC, Bitterroot, Beaverhead, Idaho,
+  Nez Perce-Clearwater, or Dakota example promotions.
 ## Deep Reads
 - Core:
   `docs/WEST_RESERVOIR_F70_FOREST_PLAN_IDENTITY_RECONCILIATION_BLOCKER_MILESTONE_PLAN.md`,

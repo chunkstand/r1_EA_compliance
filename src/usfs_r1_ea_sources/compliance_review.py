@@ -167,13 +167,23 @@ def run_compliance_review(
         applicability_gate=applicability_gate,
     )
     from .rule_claim_binding import build_rule_claim_links
+    from .rule_claim_binding import default_rule_claim_links_dir
     from .rule_claim_binding import links_by_rule
 
-    rule_claim_result = build_rule_claim_links(
+    rule_claim_result = _reusable_rule_claim_result(
         output_dir=output_dir,
-        source_set_id=source_set_id,
+        source_set_id=str(source_set_id or ""),
+        rule_pack=rule_pack,
         rule_pack_path=rule_pack_path,
+        minimum_top_k=source_top_k,
+        default_rule_claim_links_dir=default_rule_claim_links_dir,
     )
+    if rule_claim_result is None:
+        rule_claim_result = build_rule_claim_links(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            rule_pack_path=rule_pack_path,
+        )
     rule_claim_links = _read_jsonl(rule_claim_result.links_path)
     rule_claim_links_by_rule = links_by_rule(rule_claim_links, limit=source_top_k)
     authority_family_index = _authority_family_index(DEFAULT_AUTHORITY_FAMILY_INVENTORY_PATH)
@@ -403,6 +413,82 @@ def _prepare_outputs(
         finding_edges_path,
     ):
         path.unlink(missing_ok=True)
+
+
+def _reusable_rule_claim_result(
+    *,
+    output_dir: Path,
+    source_set_id: str,
+    rule_pack: dict,
+    rule_pack_path: Path,
+    minimum_top_k: int,
+    default_rule_claim_links_dir,
+):
+    if not source_set_id:
+        return None
+    try:
+        links_dir = default_rule_claim_links_dir(
+            output_dir,
+            source_set_id=source_set_id,
+            rule_pack=rule_pack,
+            rule_pack_path=rule_pack_path,
+        )
+    except (FileNotFoundError, ValueError):
+        return None
+    summary_path = links_dir / "summary.json"
+    validation_path = links_dir / "rule_claim_link_validation.json"
+    links_path = links_dir / "rule_claim_links.jsonl"
+    gaps_path = links_dir / "rule_claim_link_gaps.jsonl"
+    sqlite_path = links_dir / "rule_claim_links.sqlite"
+    if not all(
+        path.exists()
+        for path in (
+            summary_path,
+            validation_path,
+            links_path,
+            gaps_path,
+            sqlite_path,
+        )
+    ):
+        return None
+    summary = _read_json(summary_path)
+    validation = _read_json(validation_path)
+    if not (
+        summary.get("schema_version") == "rule-claim-links-v0"
+        and summary.get("source_set_id") == source_set_id
+        and summary.get("rule_pack_id") == rule_pack.get("rule_pack_id")
+        and summary.get("rule_pack_version") == rule_pack.get("version")
+        and _same_path(summary.get("rule_pack_path"), rule_pack_path)
+        and int(summary.get("top_k") or 0) >= minimum_top_k
+        and bool(summary.get("validation_passed"))
+        and bool(summary.get("reviewer_ready"))
+        and validation.get("schema_version") == "rule-claim-link-validation-v0"
+        and validation.get("source_set_id") == source_set_id
+        and bool(validation.get("passed"))
+    ):
+        return None
+
+    from .rule_claim_binding import RuleClaimLinkResult
+
+    return RuleClaimLinkResult(
+        source_set_id=source_set_id,
+        links_dir=links_dir,
+        links_path=links_path,
+        gaps_path=gaps_path,
+        sqlite_path=sqlite_path,
+        validation_path=validation_path,
+        summary_path=summary_path,
+        summary=summary,
+    )
+
+
+def _same_path(left: object, right: Path) -> bool:
+    if not left:
+        return False
+    try:
+        return Path(str(left)).resolve() == Path(right).resolve()
+    except OSError:
+        return False
 
 
 def _default_review_id(package_path: Path, rule_pack: dict) -> str:

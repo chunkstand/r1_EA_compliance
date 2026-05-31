@@ -70,8 +70,10 @@ They are intentionally not duplicated here.
   For Beaverhead-Deerlodge National Forest, the governed primary example is
   `primary_example_id="bdnf-south-tobacco-roots-forest-specific"` with
   `review_id="region1-example-beaverhead-deerlodge-south-tobacco-roots-63754"`;
-  its Milestone 4 promotion is reduced only by inherited ECID source-delta
-  component-coverage drift, not by the Beaverhead-owned slots.
+  its Milestone 4 promotion remains Beaverhead-owned green. The inherited ECID
+  source-delta replay is now reviewer-ready on archived source set `8a40`, but
+  it is still historical replay evidence rather than Beaverhead-owned
+  promotion scope.
   For Idaho Panhandle National Forests, the governed primary example is
   `primary_example_id="ipnf-lacy-lemoosh-forest-specific"` with
   `review_id="region1-example-idaho-panhandle-lacy-lemoosh-60853"` in

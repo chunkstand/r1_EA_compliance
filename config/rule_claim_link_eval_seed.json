@@ -105,7 +105,7 @@
     },
     {
       "id": "region1-forest-plan-source-records-rule-claim-link",
-      "rule_id": "region1_forest_plan_source_records_authority_template",
+      "rule_id": "custer_gallatin_lmp_2022",
       "expected_source_record_ids": ["R1PLAN-custer-gallatin-nf-02"],
       "expected_terms": ["custer", "gallatin", "land", "management", "plan"],
       "min_links": 1
@@ -120,23 +120,23 @@
     },
     {
       "id": "species-supporting-sources-rule-claim-link",
-      "rule_id": "species_supporting_sources_and_overlays_authority_template",
-      "expected_source_record_ids": ["R1EA-064"],
-      "expected_terms": ["listed", "species", "biological", "assessment"],
+      "rule_id": "fsm_2670_species_policy",
+      "expected_source_record_ids": ["R1EA-031"],
+      "expected_terms": ["threatened", "endangered", "sensitive", "species"],
       "min_links": 1
     },
     {
       "id": "cultural-resource-sources-rule-claim-link",
-      "rule_id": "cultural_resource_protection_and_state_shpo_sources_authority_template",
-      "expected_source_record_ids": ["R1EA-072"],
-      "expected_terms": ["historic", "property", "preservation"],
+      "rule_id": "nhpa_36cfr_800",
+      "expected_source_record_ids": ["R1EA-071"],
+      "expected_terms": ["historic", "properties", "consultation"],
       "min_links": 1
     },
     {
       "id": "tribal-consultation-sources-rule-claim-link",
-      "rule_id": "tribal_consultation_trust_sacred_sites_authority_template",
-      "expected_source_record_ids": ["R1EA-081"],
-      "expected_terms": ["tribal", "consultation", "government-to-government"],
+      "rule_id": "nhpa_36cfr_800",
+      "expected_source_record_ids": ["R1EA-071"],
+      "expected_terms": ["indian", "tribe", "consultation"],
       "min_links": 1
     },
     {

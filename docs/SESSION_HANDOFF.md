@@ -132,6 +132,25 @@ history below.
   Kootenai National Forest is now the only remaining
   `profile_eval_guidance_only` forest without a governed real package example.
 
+  ECID source-delta residual checkpoint:
+  `v1-cg-ecid-source-delta-review` is historical Custer Gallatin source-delta
+  replay evidence, not the active forest-specific example route. The tracked
+  replay context now points at archived merged source set
+  `source-set-8a4005c8a083af1a` and catalog dir
+  `source_library/runs/r1-forest-plan-source-delta-capture-20260510-refresh-batches/merged_catalog_gate`.
+  The old `4fb` versus `8a40` phase-eval identity split is reduced.
+  Refreshed local artifacts now have retrieval direct eval `12/12`, claim
+  direct eval `10/10`, base rule-claim direct eval `24/24`, compliance-review
+  direct eval `5/5`, source-set aligned authority-universe/applicability/
+  generated-rule-pack artifacts, and component eval `36/36` on `8a40`.
+  Current `phase-eval --review-id v1-cg-ecid-source-delta-review` passes
+  `22/22` phases with `reviewer_ready=true`, `blockers=[]`,
+  `identity_mismatch_phase_count=0`, `missing_direct_eval_phase_count=0`,
+  `schema_invalid_phase_count=0`, and `threshold_failed_phase_count=0`.
+  `contract_backed_promotion_ready=false` is expected because this historical
+  replay has no declared review contract. Do not describe ECID as current
+  promotion work or route it into governed forest-specific examples.
+
   Previous checkpoint:
   Nez Perce-Clearwater Dead Laundry is resolved locally through Milestone 4 and
   is now the governed primary example for `nez-perce-clearwater-nfs`.
@@ -206,10 +225,9 @@ history below.
   `36/36` cases. At the time of the Dead Laundry closeout there was no active
   unresolved forest-specific child packet; that historical statement is now
   superseded by the active Dakota Prairie Medora packet above. If the inherited
-  ECID replay is reopened, the next truthful route is replay source-set
-  contract reconciliation in `phase-eval`; rerun now fails closed on `4fb`
-  replay/applicability expectations versus `8a40` component/compliance
-  artifacts.
+  ECID replay is reopened, the next truthful route is no longer component
+  coverage, source-set contract reconciliation, rule-claim direct eval, or
+  stale compliance-review direct eval; those are resolved locally.
   Idaho Panhandle Lacy Lemoosh is the predecessor resolved forest-specific example
   packet.
   The packet is
@@ -288,10 +306,10 @@ history below.
   `distinct_governed_example_forest_count=9`, and
   `profile_guidance_only_count=1`. The Idaho component-coverage slot is
   covered, source-set aligned, and passing; the standalone
-  `forest-plan-component-eval-coverage` aggregate still exits red only on the
-  inherited `v1-cg-ecid-source-delta-review` slot
-  (`covered_review_count=9/10`, `stale_identity_count=1`,
-  `unresolved_review_count=1`). Review `phase-eval` now passes `28/28` with
+  `forest-plan-component-eval-coverage` aggregate is now green after the
+  inherited `v1-cg-ecid-source-delta-review` slot was refreshed
+  (`covered_review_count=11/11`, `stale_identity_count=0`,
+  `unresolved_review_count=0`). Review `phase-eval` now passes `28/28` with
   `declared_review_contract=true` and
   `contract_backed_promotion_ready=true`. Keep Lacy Lemoosh parallel to
   `Document_Register_Master` and do not route unrelated Idaho Panhandle queue
@@ -345,11 +363,11 @@ history below.
   `reviewer_ready_example_count=10`,
   `distinct_governed_example_forest_count=9`, and
   `profile_guidance_only_count=1`. The Beaverhead component-coverage slot is
-  covered, source-set aligned, and passing, but the standalone
-  `forest-plan-component-eval-coverage` aggregate still exits red only on the
-  inherited `v1-cg-ecid-source-delta-review` slot
-  (`covered_review_count=9/10`, `stale_identity_count=1`,
-  `unresolved_review_count=1`). Review `phase-eval` now reports
+  covered, source-set aligned, and passing, and the standalone
+  `forest-plan-component-eval-coverage` aggregate is now green after the
+  inherited `v1-cg-ecid-source-delta-review` slot was refreshed
+  (`covered_review_count=11/11`, `stale_identity_count=0`,
+  `unresolved_review_count=0`). Review `phase-eval` now reports
   `declared_review_contract=true` and
   `contract_backed_promotion_ready=true`. Keep South Tobacco Roots parallel to
   `Document_Register_Master`; do not route the inherited ECID source-delta
@@ -387,13 +405,15 @@ history below.
   and `profile_guidance_only_count=5`.
   `config/forest_plan_component_eval_coverage_v1.json` includes the required
   Bitterroot component slot; that slot is covered, source-set aligned, and
-  passing. The standalone component-coverage aggregate still exits red only on
-  the inherited `v1-cg-ecid-source-delta-review` slot. `FOR-007` is resolved
-  as `planned_disposition="forest_specific_example_package"` and remains
+  passing. Later packets resolved the inherited ECID component-coverage
+  aggregate and the remaining `8a40` rule-claim/compliance direct-eval
+  residuals named in the fresh-session checkpoint above. `FOR-007` is
+  resolved as
+  `planned_disposition="forest_specific_example_package"` and remains
   parallel to `Document_Register_Master`; no Bitterroot Front package files or
   project-specific rows were added to the shared master. The next route is a
-  new packet only if the user wants more forest-specific examples or wants to
-  repair the inherited ECID source-delta component-coverage blocker.
+  new packet only if the user wants more forest-specific examples; the
+  inherited ECID source-delta component-coverage blocker is now closed locally.
   HLC Bonanza example-package work is resolved through registry and coverage
   promotion. The resolved packet is
   `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with review ID
@@ -440,10 +460,10 @@ history below.
   `profile_guidance_only_count=5`. Bonanza and Bitterroot Front are required
   component-eval coverage slots and both pass on
   `source-set-f70ea11e04ae3d53`. The standalone
-  `forest-plan-component-eval-coverage` aggregate still exits red only on the
-  inherited ECID source-delta slot (`covered_review_count=6/7`,
-  `stale_identity_count=1`, `unresolved_review_count=1`); do not route that
-  blocker back into the HLC or Bitterroot packets.
+  `forest-plan-component-eval-coverage` aggregate is now green after the
+  inherited ECID source-delta slot was refreshed (`covered_review_count=11/11`,
+  `stale_identity_count=0`, `unresolved_review_count=0`); do not route that
+  historical replay lane back into the HLC or Bitterroot packets.
   Repo-root catalog currentness is corrected: `source_library/catalog/` now
   names `source-set-f70ea11e04ae3d53` as the current source-set. The tracked
   pointer is `config/current_source_set_v1.json`; the root manifest reports
@@ -644,10 +664,10 @@ history below.
   `forest-plan-component-eval --review-id west-reservoir-67436` passes `27/27`
   cases on `source-set-f70ea11e04ae3d53` with `failed_case_count=0` and
   `expected_applicable_standard_count=14`. The West Reservoir
-  component-coverage slot now passes and source-set aligns; the aggregate
-  command still fails only on the ECID source-delta slot (`result_not_passed`
-  plus `result_source_set_id_mismatch`) with `covered_review_count=4/5`,
-  `stale_identity_count=1`, and `unresolved_review_count=1`. The next slice is
+  component-coverage slot now passes and source-set aligns; later packets made
+  the aggregate command green after refreshing the ECID source-delta slot
+  (`covered_review_count=11/11`, `stale_identity_count=0`,
+  `unresolved_review_count=0`). The next slice is
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 3. Do
   not run registry promotion or aggregate promotion until compliance review, V1
   eval, and review-scoped phase eval pass on f70.
@@ -705,10 +725,9 @@ history below.
   `distinct_governed_example_forest_count=3`, and
   `profile_guidance_only_count=7`. South Otter is also a required passing
   component slot in `config/forest_plan_component_eval_coverage_v1.json`.
-  The aggregate component-coverage command still fails on the pre-existing
-  ECID source-delta slot (`covered_review_count=4/5`,
-  `stale_identity_count=1`, `unresolved_review_count=1`) with
-  `result_not_passed` plus `result_source_set_id_mismatch`. West Reservoir now
+  The aggregate component-coverage command is now green after later ECID
+  source-delta repairs (`covered_review_count=11/11`,
+  `stale_identity_count=0`, `unresolved_review_count=0`). West Reservoir now
   passes and source-set aligns. South Otter review `phase-eval` now
   passes `28/28` with `blockers=[]`,
   `review_direct_eval_status="direct_eval_present"`, and review-scope

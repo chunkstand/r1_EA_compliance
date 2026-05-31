@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
 from usfs_r1_ea_sources.records import sha256_file
@@ -67,6 +68,42 @@ class ComplianceReviewTests(unittest.TestCase):
             gate = _check(validation, "applicability_generated_rule_pack_gate")
             self.assertFalse(gate["passed"])
             self.assertEqual(gate["details"]["mode"], "base_rule_pack_diagnostic")
+
+    def test_compliance_review_reuses_ready_rule_claim_links(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            package_path = _write_package(Path(tmp), "Purpose and Need")
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+
+            first = run_compliance_review(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                review_id="base-diagnostic",
+                allow_base_rule_pack_review=True,
+            )
+
+            with patch(
+                "usfs_r1_ea_sources.rule_claim_binding.build_rule_claim_links",
+                side_effect=AssertionError("rule-claim links should be reused"),
+            ):
+                second = run_compliance_review(
+                    package_path=package_path,
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    rule_pack_path=rule_pack_path,
+                    review_id="base-diagnostic",
+                    allow_base_rule_pack_review=True,
+                )
+
+            self.assertEqual(second.rule_claim_links_path, first.rule_claim_links_path)
+            self.assertEqual(
+                second.summary["rule_claim_summary_path"],
+                first.summary["rule_claim_summary_path"],
+            )
 
     def test_generated_rule_pack_diagnostic_mode_allows_non_reviewer_ready_eval(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
