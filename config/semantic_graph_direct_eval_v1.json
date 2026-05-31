@@ -1,0 +1,157 @@
+{
+  "schema_version": "semantic-graph-direct-eval-v1",
+  "contract_id": "semantic-graph-direct-eval-v1",
+  "version": "1.0.0",
+  "as_of_date": "2026-05-31",
+  "required_source_set_ids": [
+    "source-set-f70ea11e04ae3d53"
+  ],
+  "minimum_case_count": 12,
+  "minimum_hard_negative_case_count": 7,
+  "required_coverage_categories": [
+    "ontology_typing",
+    "relationship_correctness",
+    "relationship_provenance",
+    "alias_identity_resolution",
+    "currentness_metadata_carriage",
+    "semantic_lens_integrity",
+    "justification_path_accuracy",
+    "controlled_negative"
+  ],
+  "positive_reports": [
+    {
+      "report_id": "authority_ontology",
+      "report_path": "authority_ontology_validation_report.json",
+      "schema_version": "authority-ontology-validation-report-v1",
+      "coverage_categories": [
+        "ontology_typing"
+      ]
+    },
+    {
+      "report_id": "authority_relationships",
+      "report_path": "authority_relationship_eval_report.json",
+      "schema_version": "authority-relationship-eval-report-v1",
+      "coverage_categories": [
+        "relationship_correctness",
+        "relationship_provenance"
+      ]
+    },
+    {
+      "report_id": "citation_aliases",
+      "report_path": "citation_alias_eval_report.json",
+      "schema_version": "citation-alias-eval-report-v1",
+      "coverage_categories": [
+        "alias_identity_resolution"
+      ]
+    },
+    {
+      "report_id": "graph_health",
+      "report_path": "graph_health_eval_report.json",
+      "schema_version": "graph-health-eval-report-v1",
+      "coverage_categories": [
+        "semantic_lens_integrity",
+        "justification_path_accuracy"
+      ]
+    },
+    {
+      "report_id": "graph_accuracy",
+      "report_path": "graph_accuracy_eval_report.json",
+      "schema_version": "graph-accuracy-eval-report-v1",
+      "coverage_categories": [
+        "ontology_typing",
+        "relationship_correctness",
+        "currentness_metadata_carriage",
+        "justification_path_accuracy"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "case_id": "ontology_required_node_type_removed",
+      "evaluator": "authority_ontology",
+      "mutation": "remove_required_node_type",
+      "node_type": "authority_section",
+      "coverage_categories": [
+        "ontology_typing",
+        "controlled_negative"
+      ],
+      "expected_failed_check_names": [
+        "knowledge_graph_exports_required_ontology_node_types"
+      ]
+    },
+    {
+      "case_id": "relationship_unknown_type",
+      "evaluator": "authority_relationships",
+      "mutation": "set_unknown_relationship_type",
+      "coverage_categories": [
+        "relationship_correctness",
+        "controlled_negative"
+      ],
+      "expected_failed_check_names": [
+        "relationships_use_allowed_endpoint_classes"
+      ]
+    },
+    {
+      "case_id": "relationship_missing_supporting_source",
+      "evaluator": "authority_relationships",
+      "mutation": "remove_relationship_supporting_sources",
+      "coverage_categories": [
+        "relationship_provenance",
+        "controlled_negative"
+      ],
+      "expected_failed_check_names": [
+        "required_relationship_provenance_present"
+      ]
+    },
+    {
+      "case_id": "alias_identity_collision",
+      "evaluator": "citation_aliases",
+      "mutation": "add_alias_identity_collision",
+      "coverage_categories": [
+        "alias_identity_resolution",
+        "controlled_negative"
+      ],
+      "expected_failed_check_names": [
+        "identity_collision_count_zero"
+      ]
+    },
+    {
+      "case_id": "semantic_lens_removed",
+      "evaluator": "graph_health",
+      "mutation": "remove_semantic_lens",
+      "lens_id": "semantic_relationships",
+      "coverage_categories": [
+        "semantic_lens_integrity",
+        "controlled_negative"
+      ],
+      "expected_failed_check_names": [
+        "required_lenses_present"
+      ]
+    },
+    {
+      "case_id": "justification_edge_removed",
+      "evaluator": "graph_accuracy",
+      "mutation": "remove_authority_path_justification_edges",
+      "coverage_categories": [
+        "justification_path_accuracy",
+        "controlled_negative"
+      ],
+      "expected_failed_check_names": [
+        "authority_paths_have_justification_paths"
+      ]
+    },
+    {
+      "case_id": "currentness_metadata_removed",
+      "evaluator": "graph_accuracy",
+      "mutation": "remove_currentness_metadata",
+      "node_type": "authority_document",
+      "coverage_categories": [
+        "currentness_metadata_carriage",
+        "controlled_negative"
+      ],
+      "expected_failed_check_names": [
+        "semantic_nodes_carry_currentness_metadata"
+      ]
+    }
+  ]
+}

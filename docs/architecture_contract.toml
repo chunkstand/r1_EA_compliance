@@ -213,6 +213,7 @@ modules = [
   "nepa_knowledge_graph_export_review_validation",
   "nepa_knowledge_graph_export_rule_templates",
   "nepa_knowledge_graph_export_runtime",
+  "semantic_graph_eval",
   "nepa_knowledge_graph_export_source_register",
   "nepa_knowledge_graph_export_source_set_validation",
 ]
@@ -578,6 +579,7 @@ paths = [
   "source_library/derived/<source_set_id>/knowledge_graph/citation_alias_eval_report.json",
   "source_library/derived/<source_set_id>/knowledge_graph/graph_accuracy_eval_report.json",
   "source_library/derived/<source_set_id>/knowledge_graph/graph_health_eval_report.json",
+  "source_library/derived/<source_set_id>/knowledge_graph/semantic_graph_eval_results.json",
   "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph.json",
   "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_nodes.jsonl",
   "source_library/derived/<source_set_id>/knowledge_graph/nepa_3d_graph_edges.jsonl",
@@ -739,6 +741,7 @@ commands = [
   "citation-alias-eval",
   "graph-health-eval",
   "graph-accuracy-eval",
+  "semantic-graph-eval",
   "incremental-graph-refresh-eval",
   "extract-build",
   "reuse-inventory",

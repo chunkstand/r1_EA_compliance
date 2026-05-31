@@ -40,6 +40,7 @@ class DerivedCommandDefaults:
     region1_forest_plan_readiness_path: Path
     rule_claim_eval_path: Path
     rule_pack_path: Path
+    semantic_graph_eval_path: Path
     source_register_proving_slice_manifest_path: Path
     source_partition_contract_path: Path
 
@@ -246,6 +247,16 @@ def build_derived_command_specs(
                 _arg("--source-set-id"),
                 _arg("--report-path", type=Path),
                 _arg("--eval-path", default=defaults.graph_accuracy_eval_path, type=Path),
+                _arg("--output-path", type=Path),
+            ),
+        ),
+        DerivedCommandSpec(
+            name="semantic-graph-eval",
+            help="Run aggregate direct eval for the canonical semantic knowledge graph.",
+            arguments=(
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg("--eval-path", default=defaults.semantic_graph_eval_path, type=Path),
                 _arg("--output-path", type=Path),
             ),
         ),

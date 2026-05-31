@@ -1269,6 +1269,7 @@ Source-set export paths:
 - `source_library/derived/<source_set_id>/knowledge_graph/citation_alias_eval_report.json`
 - `source_library/derived/<source_set_id>/knowledge_graph/graph_health_eval_report.json`
 - `source_library/derived/<source_set_id>/knowledge_graph/graph_accuracy_eval_report.json`
+- `source_library/derived/<source_set_id>/knowledge_graph/semantic_graph_eval_results.json`
 
 Review-specific export paths:
 
@@ -1396,6 +1397,11 @@ The source-set semantic graph lane also emits five sibling report artifacts:
   checks
 - `graph_accuracy_eval_report.json` with required node classes, lenses, relationship types,
   path-pattern, justification, and currentness-carriage checks
+- `semantic_graph_eval_results.json` with the aggregate direct-eval result for the canonical
+  semantic graph lane. The aggregate reruns the five sibling reports, requires the configured
+  coverage categories, and records controlled negative cases for ontology typing, relationship
+  correctness/provenance, alias identity collisions, lens loss, justification-path loss, and
+  currentness metadata loss.
 
 Node example:
 

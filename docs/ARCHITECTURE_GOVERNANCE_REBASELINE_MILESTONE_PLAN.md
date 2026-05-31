@@ -29,7 +29,7 @@ under-`800` closeout is being used as live truth after the repo moved on.
 
 - Fresh architecture probe:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `498` code files, `17` code files above `800` lines, no Python or JS/TS import cycles,
+  reports `499` code files, `17` code files above `800` lines, no Python or JS/TS import cycles,
   and no source module above the `20`-import fan-out gate.
 - `config/architecture_large_file_inventory_v1.json` records the exact `17`-file live backlog as
   `9` source-owner families and `8` test-owner families.

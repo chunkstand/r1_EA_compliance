@@ -51,6 +51,21 @@ def test_committed_phase_eval_direct_eval_contract_tracks_required_phases() -> N
     assert source_set_phases["nepa_3d_source_set_graph"]["required_source_set_ids"] == [
         FULL_CANONICAL_SOURCE_SET_ID
     ]
+    assert source_set_phases["canonical_semantic_graph"]["lane_id"] == (
+        "canonical_semantic_graph"
+    )
+    assert source_set_phases["canonical_semantic_graph"]["producer"] == (
+        "semantic_graph_direct_evaluation"
+    )
+    assert source_set_phases["canonical_semantic_graph"]["contract_path"] == (
+        "semantic_graph_direct_eval_v1.json"
+    )
+    assert source_set_phases["canonical_semantic_graph"]["results_filename"] == (
+        "semantic_graph_eval_results.json"
+    )
+    assert source_set_phases["canonical_semantic_graph"]["required_source_set_ids"] == [
+        FULL_CANONICAL_SOURCE_SET_ID
+    ]
     assert source_set_phases["forest_plan_component_retrieval"]["lane_id"] == (
         "forest_plan_component_retrieval_eval"
     )
@@ -86,6 +101,7 @@ def test_phase_eval_direct_eval_marks_missing_required_summary() -> None:
     retrieval = summary["source_set_phase_statuses"]["retrieval"]
     graph = summary["source_set_phase_statuses"]["nepa_3d_source_set_graph"]
     component_retrieval = summary["source_set_phase_statuses"]["forest_plan_component_retrieval"]
+    semantic_graph = summary["source_set_phase_statuses"]["canonical_semantic_graph"]
 
     assert extraction["status"] == "direct_eval_missing"
     assert extraction["failure_reasons"] == ["missing_required_direct_eval"]
@@ -93,6 +109,8 @@ def test_phase_eval_direct_eval_marks_missing_required_summary() -> None:
     assert retrieval["failure_reasons"] == ["missing_required_direct_eval"]
     assert graph["status"] == "direct_eval_missing"
     assert graph["failure_reasons"] == ["missing_required_direct_eval"]
+    assert semantic_graph["status"] == "direct_eval_missing"
+    assert semantic_graph["failure_reasons"] == ["missing_required_direct_eval"]
     assert component_retrieval["status"] == "direct_eval_missing"
     assert component_retrieval["failure_reasons"] == ["missing_required_direct_eval"]
 
@@ -167,7 +185,72 @@ def test_phase_eval_direct_eval_skips_full_canonical_only_source_set_gates() -> 
         )
 
     assert "nepa_3d_source_set_graph" not in summary["source_set_phase_statuses"]
+    assert "canonical_semantic_graph" not in summary["source_set_phase_statuses"]
     assert "forest_plan_component_retrieval" not in summary["source_set_phase_statuses"]
+
+
+def test_phase_eval_direct_eval_accepts_semantic_graph_eval() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        result_path = (
+            output_dir
+            / "derived"
+            / FULL_CANONICAL_SOURCE_SET_ID
+            / "knowledge_graph"
+            / "semantic_graph_eval_results.json"
+        )
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        result_path.write_text(
+            json.dumps(
+                _semantic_graph_eval_payload(source_set_id=FULL_CANONICAL_SOURCE_SET_ID),
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+        )
+
+    semantic_graph = summary["source_set_phase_statuses"]["canonical_semantic_graph"]
+    assert semantic_graph["status"] == "direct_eval_present"
+    assert semantic_graph["case_count"] == 12
+    assert semantic_graph["hard_negative_case_count"] == 7
+
+
+def test_phase_eval_direct_eval_rejects_semantic_graph_eval_threshold_failures() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        result_path = (
+            output_dir
+            / "derived"
+            / FULL_CANONICAL_SOURCE_SET_ID
+            / "knowledge_graph"
+            / "semantic_graph_eval_results.json"
+        )
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        result_path.write_text(
+            json.dumps(
+                _semantic_graph_eval_payload(
+                    source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+                    passed=False,
+                    failed_negative_case_ids=["justification_edge_removed"],
+                ),
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+        )
+
+    semantic_graph = summary["source_set_phase_statuses"]["canonical_semantic_graph"]
+    assert semantic_graph["status"] == "direct_eval_failed"
+    assert semantic_graph["failure_reasons"] == ["direct_eval_threshold_failed"]
+    assert semantic_graph["threshold_failures"]
 
 
 def test_phase_eval_direct_eval_rejects_identity_mismatch() -> None:
@@ -764,6 +847,68 @@ def _forest_plan_component_retrieval_eval_payload(
                 "passed": True,
             },
         ],
+    }
+
+
+def _semantic_graph_eval_payload(
+    *,
+    source_set_id: str,
+    passed: bool = True,
+    failed_positive_case_ids: list[str] | None = None,
+    failed_negative_case_ids: list[str] | None = None,
+) -> dict:
+    failed_positive_case_ids = failed_positive_case_ids or []
+    failed_negative_case_ids = failed_negative_case_ids or []
+    return {
+        "schema_version": "semantic-graph-eval-results-v1",
+        "eval_id": "semantic-graph-direct-eval-v1",
+        "contract_id": "semantic-graph-direct-eval-v1",
+        "contract_version": "1.0.0",
+        "source_set_id": source_set_id,
+        "passed": passed,
+        "case_count": 12,
+        "positive_case_count": 5,
+        "hard_negative_case_count": 7,
+        "coverage_categories": [
+            "ontology_typing",
+            "relationship_correctness",
+            "relationship_provenance",
+            "alias_identity_resolution",
+            "currentness_metadata_carriage",
+            "semantic_lens_integrity",
+            "justification_path_accuracy",
+            "controlled_negative",
+        ],
+        "contract": {
+            "sha256": hashlib.sha256(
+                (REPO_ROOT / "config" / "semantic_graph_direct_eval_v1.json").read_bytes()
+            ).hexdigest()
+        },
+        "threshold_failures": (
+            [
+                {
+                    "metric": "controlled_negative_cases",
+                    "failed_case_ids": failed_negative_case_ids,
+                }
+            ]
+            if failed_negative_case_ids
+            else []
+        ),
+        "contract_checks": [
+            {
+                "name": "semantic_graph_eval_thresholds_met",
+                "passed": passed,
+            }
+        ],
+        "summary": {
+            "passed": passed,
+            "source_set_id": source_set_id,
+            "case_count": 12,
+            "positive_case_count": 5,
+            "hard_negative_case_count": 7,
+            "failed_positive_case_ids": failed_positive_case_ids,
+            "failed_negative_case_ids": failed_negative_case_ids,
+        },
     }
 
 

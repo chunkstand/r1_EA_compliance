@@ -91,6 +91,10 @@ DEFAULT_RULE_CLAIM_EVAL_PATH = _module_attr(
     "DEFAULT_RULE_CLAIM_EVAL_PATH",
 )
 DEFAULT_RULE_PACK_PATH = _module_attr("rule_packs", "DEFAULT_RULE_PACK_PATH")
+DEFAULT_SEMANTIC_GRAPH_EVAL_PATH = _module_attr(
+    "semantic_graph_eval",
+    "DEFAULT_SEMANTIC_GRAPH_EVAL_PATH",
+)
 DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH = _module_attr(
     "source_register_proving",
     "DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH",
@@ -217,6 +221,10 @@ def run_rule_claim_link_eval(**kwargs):
     return _module_attr("rule_claim_binding", "run_rule_claim_link_eval")(**kwargs)
 
 
+def run_semantic_graph_eval(**kwargs):
+    return _module_attr("semantic_graph_eval", "run_semantic_graph_eval")(**kwargs)
+
+
 def build_source_register_proving_slice(**kwargs):
     return _module_attr(
         "source_register_proving",
@@ -243,6 +251,7 @@ DERIVED_COMMANDS = {
     "citation-alias-eval",
     "graph-health-eval",
     "graph-accuracy-eval",
+    "semantic-graph-eval",
     "incremental-graph-refresh-eval",
     "retrieval-build",
     "retrieval-query",
@@ -279,6 +288,7 @@ COMMAND_SPECS = build_derived_command_specs(
         region1_forest_plan_readiness_path=DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH,
         rule_claim_eval_path=DEFAULT_RULE_CLAIM_EVAL_PATH,
         rule_pack_path=DEFAULT_RULE_PACK_PATH,
+        semantic_graph_eval_path=DEFAULT_SEMANTIC_GRAPH_EVAL_PATH,
         source_register_proving_slice_manifest_path=(
             DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH
         ),
@@ -463,6 +473,15 @@ def _run_graph_accuracy_eval(args: argparse.Namespace):
     )
 
 
+def _run_semantic_graph_eval(args: argparse.Namespace):
+    return run_semantic_graph_eval(
+        output_dir=args.output_dir,
+        source_set_id=args.source_set_id,
+        eval_path=args.eval_path,
+        output_path=args.output_path,
+    )
+
+
 def _run_incremental_graph_refresh_eval(args: argparse.Namespace):
     return run_incremental_graph_refresh_eval(
         output_dir=args.output_dir,
@@ -618,6 +637,7 @@ COMMAND_HANDLERS = {
     "citation-alias-eval": _result_handler(_run_citation_alias_eval, "passed"),
     "graph-health-eval": _result_handler(_run_graph_health_eval, "passed"),
     "graph-accuracy-eval": _result_handler(_run_graph_accuracy_eval, "passed"),
+    "semantic-graph-eval": _result_handler(_run_semantic_graph_eval, "passed"),
     "incremental-graph-refresh-eval": _result_handler(
         _run_incremental_graph_refresh_eval,
         "passed",

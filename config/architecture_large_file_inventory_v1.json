@@ -190,7 +190,7 @@
       "files": [
         {
           "path": "tests/test_phase_eval_direct_eval_contracts.py",
-          "line_count": 847
+          "line_count": 992
         }
       ]
     },
@@ -205,7 +205,7 @@
       "files": [
         {
           "path": "src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py",
-          "line_count": 842
+          "line_count": 1044
         }
       ]
     },

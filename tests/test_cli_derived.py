@@ -141,6 +141,17 @@ def test_semantic_eval_parsers_accept_phase_1_5_paths() -> None:
             "config/graph_accuracy_eval_v1.json",
         ]
     )
+    semantic_graph_args = build_parser().parse_args(
+        [
+            "semantic-graph-eval",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-f70ea11e04ae3d53",
+            "--eval-path",
+            "config/semantic_graph_direct_eval_v1.json",
+        ]
+    )
 
     assert ontology_args.command == "authority-ontology-validate"
     assert ontology_args.ontology_path == Path("config/authority_document_ontology_v1.json")
@@ -150,6 +161,9 @@ def test_semantic_eval_parsers_accept_phase_1_5_paths() -> None:
     assert alias_args.command == "citation-alias-eval"
     assert graph_health_args.contract_path == Path("config/graph_health_contract_v1.json")
     assert graph_accuracy_args.eval_path == Path("config/graph_accuracy_eval_v1.json")
+    assert semantic_graph_args.command == "semantic-graph-eval"
+    assert semantic_graph_args.source_set_id == "source-set-f70ea11e04ae3d53"
+    assert semantic_graph_args.eval_path == Path("config/semantic_graph_direct_eval_v1.json")
 
 
 def test_extraction_accuracy_audit_parser_accepts_contract_path() -> None:

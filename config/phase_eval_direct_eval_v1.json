@@ -48,6 +48,18 @@
       "results_path": "evaluations/forest_plan_profile/forest_plan_profile_eval_results.json"
     },
     {
+      "contract_path": "semantic_graph_direct_eval_v1.json",
+      "coverage_class": "direct_eval_required",
+      "expected_contract_id": "semantic-graph-direct-eval-v1",
+      "lane_id": "canonical_semantic_graph",
+      "phase_name": "canonical_semantic_graph",
+      "producer": "semantic_graph_direct_evaluation",
+      "required_source_set_ids": [
+        "source-set-f70ea11e04ae3d53"
+      ],
+      "results_filename": "semantic_graph_eval_results.json"
+    },
+    {
       "coverage_class": "direct_eval_required",
       "expected_contract_id": "region1-forest-plan-component-retrieval-eval",
       "lane_id": "forest_plan_component_retrieval_eval",
@@ -72,5 +84,5 @@
     }
   ],
   "upstream_results_path": "evaluations/upstream/upstream_evaluation_results.json",
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

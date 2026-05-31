@@ -29,6 +29,7 @@ FOREST_PLAN_COMPONENT_EVAL_COVERAGE_RESULTS_SCHEMA_VERSION = (
 FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_RESULTS_SCHEMA_VERSION = (
     "forest-plan-component-retrieval-eval-results-v1"
 )
+SEMANTIC_GRAPH_EVAL_RESULTS_SCHEMA_VERSION = "semantic-graph-eval-results-v1"
 EXTRACTION_FIDELITY_EVAL_RESULTS_SCHEMA_VERSION = (
     "extraction-fidelity-eval-results-v0"
 )
@@ -43,6 +44,7 @@ SOURCE_SET_PHASE_PRODUCERS = {
     "forest_plan_component_retrieval_evaluation",
     "forest_plan_profile_evaluation",
     "phase_eval",
+    "semantic_graph_direct_evaluation",
     "upstream_evaluation",
 }
 

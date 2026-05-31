@@ -145,12 +145,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources catalog-build \
   --batch-run-id <batch-run-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
   --output-dir source_library
-PYTHONPATH=src python -m usfs_r1_ea_sources document-plan \
-  --request /tmp/document_request.json \
-  --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources document-plan --request /tmp/document_request.json --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id <review-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources semantic-graph-eval --output-dir source_library --source-set-id <source-set-id>
 ```
 
 First-class eval/trace workflow:

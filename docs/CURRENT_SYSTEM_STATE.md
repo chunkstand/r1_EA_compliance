@@ -15,6 +15,36 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Semantic Graph Direct-Eval Strengthening Resolved Locally
+
+Latest implementation update on 2026-05-31 UTC:
+
+- update:
+  `canonical_semantic_graph` now has a first-class aggregate direct-eval owner.
+  `semantic-graph-eval` writes
+  `source_library/derived/source-set-f70ea11e04ae3d53/knowledge_graph/semantic_graph_eval_results.json`
+  and is backed by `config/semantic_graph_direct_eval_v1.json`.
+- eval coverage:
+  the f70 replay passes `12` semantic graph cases with `5` positive report
+  cases, `7` controlled negative cases, and `8` coverage categories:
+  ontology typing, relationship correctness, relationship provenance, alias
+  identity resolution, currentness metadata carriage, semantic lens integrity,
+  justification-path accuracy, and controlled negatives. The controlled
+  negatives cover required ontology node loss, unknown relationship type,
+  missing relationship provenance, alias identity collision, semantic-lens
+  loss, justification-edge loss, and currentness metadata loss.
+- phase-eval integration:
+  `config/phase_eval_direct_eval_v1.json` now requires
+  `canonical_semantic_graph` for the active f70 source set. Source-set
+  `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now passes `21/21`
+  phases with `critical_phase_count=8`, `direct_eval_ready_phase_count=8`,
+  `missing_direct_eval_phase_count=0`, `threshold_failed_phase_count=0`, and
+  `reviewer_ready=true`.
+- boundary:
+  this closes the semantic graph direct-eval strengthening gap. It does not add
+  the separate operational KB query/API surface; that remains future graph-KB
+  product work.
+
 ## Extraction Fidelity Eval Owner Reduction Resolved Locally
 
 Latest implementation update on 2026-05-31 UTC:
@@ -27,7 +57,7 @@ Latest implementation update on 2026-05-31 UTC:
   extraction runs, per-case execution, metric checks, and runtime helpers.
 - architecture effect:
   `extraction_fidelity_eval.py` is now `716` lines and the new runtime owner is
-  `442` lines. The architecture probe reports `498` code files, `17` code files above `800`,
+  `442` lines. The architecture probe reports `499` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source module
   above the `20`-import fan-out gate. The live inventory now records `9`
   source owners and `8` test owners.
@@ -48,10 +78,12 @@ Latest implementation update on 2026-05-31 UTC:
   stale routing docs. `config/architecture_large_file_inventory_v1.json` now
   records `17` code files above `800`, grouped as `9` source owners and `8`
   test owners, with exact path and line-count assertions in
-  `tests/test_architecture_quality.py`.
+  `tests/test_architecture_quality.py`. The later semantic graph direct-eval
+  slice added one under-800 source module; the current probe therefore reports
+  `499` code files while the oversized-owner count remains `17`.
 - probe result:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `498` code files, `17` code files above `800`, no Python or JS/TS
+  reports `499` code files, `17` code files above `800`, no Python or JS/TS
   import cycles, and no source module above the `20`-import fan-out gate.
 - route-doc control:
   `README.md` and `docs/CURRENT_ROUTING.md` are compact, non-volatile route
@@ -100,10 +132,11 @@ Latest implementation update on 2026-05-31 UTC:
   `6/6` with `component_retrieval_precision=1.0`,
   `component_retrieval_recall=1.0`, `applicable_standard_component_recall=1.0`,
   `wrong_forest_component_rate=0.0`, and `hard_negative_zero_match_rate=1.0`.
+  `semantic-graph-eval` passes `12/12` cases with `7` controlled negatives.
   Source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes
-  `20/20` phases with `reviewer_ready=true`,
+  `21/21` phases with `reviewer_ready=true`,
   `identity_mismatch_phase_count=0`, `missing_direct_eval_phase_count=0`, and
-  all seven critical source-set phases direct-eval backed.
+  all eight critical source-set phases direct-eval backed.
 - boundary:
   this closes the f70 forest-plan graph readiness and downstream graph-artifact
   freshness slice. It does not convert broader source-currentness metadata into

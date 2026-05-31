@@ -16,6 +16,7 @@ from usfs_r1_ea_sources.graph_health_eval import run_graph_health_eval
 from usfs_r1_ea_sources.nepa_knowledge_graph_export import build_nepa_knowledge_graph_export
 from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
+from usfs_r1_ea_sources.semantic_graph_eval import run_semantic_graph_eval
 from usfs_r1_ea_sources.source_register_proving import resolve_authority_currentness_inputs
 
 from tests.test_source_register_proving import build_test_proving_slice
@@ -68,6 +69,16 @@ def _knowledge_graph_path(output_dir: Path, source_set_id: str) -> Path:
         / "knowledge_graph"
         / "nepa_3d_graph.json"
     )
+
+
+def _semantic_graph_eval_contract_for_source_set(tmp_dir: Path, source_set_id: str) -> Path:
+    contract = json.loads(
+        Path("config/semantic_graph_direct_eval_v1.json").read_text(encoding="utf-8")
+    )
+    contract["required_source_set_ids"] = [source_set_id]
+    path = tmp_dir / "semantic_graph_direct_eval_v1.json"
+    _write_json(path, contract)
+    return path
 
 
 def _checks_by_name(output_path: Path) -> dict[str, dict]:
@@ -228,6 +239,64 @@ def test_canonical_graph_eval_commands_pass_on_exported_knowledge_graph() -> Non
         assert phase(phase_eval.summary, "citation_aliases")["passed"] is True
         assert phase(phase_eval.summary, "graph_health")["passed"] is True
         assert phase(phase_eval.summary, "graph_accuracy")["passed"] is True
+
+
+def test_semantic_graph_direct_eval_aggregate_passes_with_controlled_negatives() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        output_dir = Path(tmp_dir) / "source_library"
+        source_set_id, _, _ = _build_canonical_knowledge_graph(output_dir)
+        eval_path = _semantic_graph_eval_contract_for_source_set(Path(tmp_dir), source_set_id)
+
+        result = run_semantic_graph_eval(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            eval_path=eval_path,
+        )
+        payload = json.loads(result.output_path.read_text(encoding="utf-8"))
+
+        assert result.summary["passed"] is True
+        assert result.summary["case_count"] == 12
+        assert result.summary["hard_negative_case_count"] == 7
+        assert {
+            "ontology_typing",
+            "relationship_correctness",
+            "relationship_provenance",
+            "alias_identity_resolution",
+            "currentness_metadata_carriage",
+            "semantic_lens_integrity",
+            "justification_path_accuracy",
+            "controlled_negative",
+        }.issubset(payload["coverage_categories"])
+        assert all(case["passed"] for case in payload["negative_results"])
+
+
+def test_semantic_graph_direct_eval_fails_when_positive_graph_report_fails() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        output_dir = Path(tmp_dir) / "source_library"
+        source_set_id, _, _ = _build_canonical_knowledge_graph(output_dir)
+        eval_path = _semantic_graph_eval_contract_for_source_set(Path(tmp_dir), source_set_id)
+        graph_path = _knowledge_graph_path(output_dir, source_set_id)
+        graph = json.loads(graph_path.read_text(encoding="utf-8"))
+        graph["nodes"] = [
+            node
+            for node in graph["nodes"]
+            if str(node.get("node_type") or "") != "authority_section"
+        ]
+        graph_path.write_text(json.dumps(graph, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+        result = run_semantic_graph_eval(
+            output_dir=output_dir,
+            source_set_id=source_set_id,
+            eval_path=eval_path,
+        )
+        payload = json.loads(result.output_path.read_text(encoding="utf-8"))
+
+        assert result.summary["passed"] is False
+        assert "authority_ontology" in result.summary["failed_positive_case_ids"]
+        assert any(
+            failure["metric"] == "positive_reports_pass"
+            for failure in payload["threshold_failures"]
+        )
 
 
 def test_canonical_graph_eval_commands_target_requested_source_set_from_archived_catalog_surface() -> None:

@@ -30,16 +30,18 @@ history below.
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
 - latest resolved source-set graph-KB slice:
-  f70 Region 1 graph-KB rebind and regeneration. Tracked contracts now bind
-  the forest-plan component inventory, readiness matrix, forest-plan profile
-  eval, component-retrieval eval, and source-set phase-eval graph phases to
-  `source-set-f70ea11e04ae3d53`.
+  f70 canonical semantic graph direct-eval strengthening after Region 1
+  graph-KB rebind and regeneration. Tracked contracts now bind the forest-plan
+  component inventory, readiness matrix, forest-plan profile eval,
+  component-retrieval eval, canonical semantic graph direct eval, and
+  source-set phase-eval graph phases to `source-set-f70ea11e04ae3d53`.
 - active source-set graph-KB slice:
-  none. The f70 forest-plan graph profile state is green; any future graph-KB
-  expansion should be opened as a new bounded packet.
+  none. The f70 forest-plan graph profile state and canonical semantic graph
+  direct eval are green; any future graph-KB expansion, including the
+  operational query/API surface, should be opened as a new bounded packet.
 - latest resolved architecture slice:
   extraction-fidelity eval source-owner reduction after the architecture
-  control-plane gap closeout. The current probe reports `498` code files, `17` code files above `800`,
+  control-plane gap closeout. The current probe reports `499` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
   `config/architecture_large_file_inventory_v1.json` owns the exact `9`
@@ -97,12 +99,25 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  semantic graph direct-eval strengthening: `semantic-graph-eval` is now the
+  aggregate direct-eval owner for `canonical_semantic_graph`, backed by
+  `config/semantic_graph_direct_eval_v1.json` and
+  `src/usfs_r1_ea_sources/semantic_graph_eval.py`. The f70 replay passes
+  `12` cases with `5` positive report cases, `7` controlled negative cases,
+  and `8` coverage categories. Source-set
+  `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now requires
+  `canonical_semantic_graph` and passes `21/21` phases with
+  `critical_phase_count=8`, `direct_eval_ready_phase_count=8`,
+  `missing_direct_eval_phase_count=0`, and `reviewer_ready=true`. This closes
+  the semantic graph direct-eval strengthening gap; the operational KB query/API
+  surface remains future graph-KB product work.
+
   extraction-fidelity eval owner reduction: the first source-owner oversized
   reduction slice is closed locally. `extraction_fidelity_eval.py` remains the
   public facade and output-schema assembler at `716` lines, while
   `extraction_fidelity_eval_runtime.py` owns temporary extraction runs,
   per-case execution, metric checks, and runtime helpers at `442` lines. The
-  live probe reports `498` code files, `17` code files above `800`, no Python or JS/TS cycles,
+  live probe reports `499` code files, `17` code files above `800`, no Python or JS/TS cycles,
   and no local module above the `20`-import fan-out gate.
   The live inventory now records `9` source owners and `8` test owners.
   Local closeout commit: `dca87e8` (`Split extraction fidelity eval runtime`).
@@ -111,7 +126,7 @@ history below.
   matches the live 2026-05-31 probe and fails closed on inventory drift.
   `config/architecture_large_file_inventory_v1.json` records `17` code files
   above `800` as `9` source owners and `8` test owners. The probe command
-  reports `498` code files, no Python or JS/TS cycles, and no local module
+  reports `499` code files, no Python or JS/TS cycles, and no local module
   above the `20`-import fan-out gate. `README.md` and
   `docs/CURRENT_ROUTING.md` are compact route surfaces again; volatile live
   counts stay in `docs/CURRENT_SYSTEM_STATE.md` and this handoff.
@@ -128,9 +143,10 @@ history below.
   `10/10` graph-ready forest profiles, `0` blocked profiles, and
   `233` rule-claim links. `forest-plan-profile-eval` passes with
   `covered_profile_count=10`, `forest-plan-component-retrieval-eval` passes
-  `6/6`, `claim-eval` passes `10/10`, `rule-claim-eval` passes `24/24`, and
+  `6/6`, `claim-eval` passes `10/10`, `rule-claim-eval` passes `24/24`,
+  `semantic-graph-eval` passes `12/12`, and
   source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes
-  `20/20` phases with all seven critical source-set phases direct-eval backed.
+  `21/21` phases with all eight critical source-set phases direct-eval backed.
   This closes the f70 forest-plan graph readiness slice; broader
   source-currentness readiness blocker metadata remains represented separately
   in the knowledge graph.
