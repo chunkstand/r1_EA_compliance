@@ -27,7 +27,7 @@ def test_profile_eval_writes_outputs_and_passes_on_live_covered_roster() -> None
         assert result.summary["fixture_contract_defined_profile_count"] == 0
         assert result.summary["not_started_profile_count"] == 0
         assert result.summary["profile_failure_count"] == 0
-        assert result.summary["active_source_set_ids"] == ["source-set-4fb59e9eb43045cb"]
+        assert result.summary["active_source_set_ids"] == ["source-set-f70ea11e04ae3d53"]
         assert _threshold_failure_names(result.summary) == set()
         assert result.summary["profiles_below_floor_ids"] == []
 

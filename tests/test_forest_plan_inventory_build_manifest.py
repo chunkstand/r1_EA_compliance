@@ -51,7 +51,7 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
         )
         self.assertEqual(
             manifest.source_set_reference("active_full_canonical").source_set_id,
-            "source-set-4fb59e9eb43045cb",
+            "source-set-f70ea11e04ae3d53",
         )
         custer_reference = manifest.source_set_reference(
             manifest.get("custer-gallatin-nf").source_set_reference_id

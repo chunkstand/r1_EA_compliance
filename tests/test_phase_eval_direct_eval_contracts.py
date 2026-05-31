@@ -9,7 +9,7 @@ from usfs_r1_ea_sources.phase_eval_direct_eval import load_phase_eval_direct_eva
 from usfs_r1_ea_sources.phase_eval_direct_eval import resolve_phase_eval_direct_eval_coverage
 
 
-FULL_CANONICAL_SOURCE_SET_ID = "source-set-4fb59e9eb43045cb"
+FULL_CANONICAL_SOURCE_SET_ID = "source-set-f70ea11e04ae3d53"
 CURRENT_PROMOTION_SOURCE_SET_ID = "source-set-f70ea11e04ae3d53"
 NON_FULL_CANONICAL_SOURCE_SET_ID = "source-set-non-full-canonical"
 REPO_ROOT = Path(__file__).resolve().parents[1]

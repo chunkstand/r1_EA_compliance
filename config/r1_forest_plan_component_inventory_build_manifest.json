@@ -5,8 +5,8 @@
     {
       "reference_id": "active_full_canonical",
       "reference_type": "explicit_source_set_id",
-      "source_set_id": "source-set-4fb59e9eb43045cb",
-      "description": "Live successor full-canonical source set that owns the Milestone 2 Region 1 multi-forest component inventory promotion boundary."
+      "source_set_id": "source-set-f70ea11e04ae3d53",
+      "description": "Current repo source set that owns the Region 1 multi-forest component inventory promotion boundary."
     },
     {
       "reference_id": "custer_gallatin_replay_compatible",

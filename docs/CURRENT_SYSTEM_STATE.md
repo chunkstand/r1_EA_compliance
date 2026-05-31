@@ -15,6 +15,56 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## f70 Source-Set Graph Knowledge-Base Rebind Resolved Locally
+
+Latest implementation update on 2026-05-31 UTC:
+
+- update:
+  the active Region 1 forest-plan graph-KB binding has been moved from
+  `source-set-4fb59e9eb43045cb` to current source set
+  `source-set-f70ea11e04ae3d53` across the tracked forest-plan component
+  inventory build manifest, Region 1 forest-plan readiness matrix,
+  forest-plan profile eval contract, component-retrieval eval contract, and
+  source-set phase-eval direct-eval contract.
+- regenerated f70 graph artifacts:
+  `forest-plan-components-build --source-set-id source-set-f70ea11e04ae3d53`
+  now builds the full manifest batch with `profile_result_count=10`,
+  `blocked_forest_unit_ids=[]`, `component_count=1416`, and
+  `standard_count=397`. The f70 evidence graph was rebuilt over the current
+  retrieval index with `chunk_count=113830`, `retrieval_index_chunk_count=113830`,
+  `node_count=284471`, `edge_count=855200`, and `validation_passed=true`.
+  The f70 claim layer was rebuilt over the same chunk spine with
+  `claim_count=143255`, `node_count=382465`, `edge_count=943552`, and
+  `validation_passed=true`.
+- rule and knowledge graph state:
+  refreshed f70 `rule-claim-link` reports `link_count=233`, `rule_count=48`,
+  `gap_count=0`, and `validation_passed=true`; refreshed f70 `claim-eval`
+  passes `10/10`, and refreshed f70 `rule-claim-eval` passes `24/24`. The
+  f70 `nepa-knowledge-graph-export` was rerun with the explicit f70
+  rule-claim links path and reports `validation_passed=true`, `node_count=4572`,
+  `edge_count=9113`, `forest_plan_component_count=1416`,
+  `forest_plan_profile_count=10`, `rule_claim_link_count=233`,
+  `region1_forest_plan_graph_ready_profile_count=10`, and
+  `region1_forest_plan_blocked_profile_count=0`.
+- eval closeout:
+  `forest-plan-profile-eval` now reports f70 as the only active source set,
+  `covered_profile_count=10`, `not_started_profile_count=0`, and
+  `profile_failure_count=0`. `forest-plan-component-retrieval-eval` passes
+  `6/6` with `component_retrieval_precision=1.0`,
+  `component_retrieval_recall=1.0`, `applicable_standard_component_recall=1.0`,
+  `wrong_forest_component_rate=0.0`, and `hard_negative_zero_match_rate=1.0`.
+  Source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes
+  `20/20` phases with `reviewer_ready=true`,
+  `identity_mismatch_phase_count=0`, `missing_direct_eval_phase_count=0`, and
+  all seven critical source-set phases direct-eval backed.
+- boundary:
+  this closes the f70 forest-plan graph readiness and downstream graph-artifact
+  freshness slice. It does not convert broader source-currentness metadata into
+  a Region 1 completeness claim; the knowledge graph still exposes
+  source-level readiness blocker counts such as `missing_source` and
+  `superseded_source` separately from the now-green forest-plan profile graph
+  counts.
+
 ## Forest-Specific Runtime Scope Constraint
 
 Latest implementation update on 2026-05-31 UTC:

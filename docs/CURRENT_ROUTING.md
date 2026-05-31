@@ -12,6 +12,11 @@ Use this file as the short current route before opening the append-only docs.
   `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md` covers context
   graphs for agent logs, evals, traces, state checkpoints, and human review;
   it is not an active route change
+- Latest resolved source-set graph-KB slice:
+  f70 Region 1 graph-KB rebind and regeneration on
+  `source-set-f70ea11e04ae3d53`
+- Active source-set graph-KB slice:
+  none; future graph-KB expansion needs a new bounded packet
 - Latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - Continuing forest-specific example lane:
@@ -52,6 +57,20 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
+- f70 source-set graph-KB closeout is resolved locally. The tracked
+  forest-plan component inventory, readiness matrix, forest-plan profile eval,
+  component-retrieval eval, and source-set phase-eval direct-eval contracts now
+  bind to `source-set-f70ea11e04ae3d53`. The regenerated f70 component
+  inventory has `10` profile results, `0` blocked forests, `1416` components,
+  and `397` standards. The f70 evidence graph and claim layer are refreshed on
+  the current `113830` chunk retrieval spine; claims report `143255` extracted
+  claims. The f70 NEPA 3D knowledge graph validates with `10/10`
+  graph-ready forest profiles, `0` blocked profiles, `1416` forest-plan
+  components, and `233` rule-claim links. Source-set
+  `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes `20/20`
+  phases with all seven critical source-set phases direct-eval backed. This is
+  forest-plan graph readiness, not a broader Region 1 source-currentness
+  completeness claim.
 - Critical forest-specific example constraint: these packages are fail-closed
   unless runtime forest-plan resolution identifies the same forest as
   applicable. `v1-ea-eval` emits `summary.runtime_forest_scope`, and

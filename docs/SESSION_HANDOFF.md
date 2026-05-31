@@ -28,6 +28,14 @@ history below.
   `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md` covers context
   graphs for agent logs, evals, traces, state checkpoints, and human review;
   it is not an active route change
+- latest resolved source-set graph-KB slice:
+  f70 Region 1 graph-KB rebind and regeneration. Tracked contracts now bind
+  the forest-plan component inventory, readiness matrix, forest-plan profile
+  eval, component-retrieval eval, and source-set phase-eval graph phases to
+  `source-set-f70ea11e04ae3d53`.
+- active source-set graph-KB slice:
+  none. The f70 forest-plan graph profile state is green; any future graph-KB
+  expansion should be opened as a new bounded packet.
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - latest resolved forest-specific example packet:
@@ -77,6 +85,25 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  f70 source-set graph-KB closeout: the active Region 1 forest-plan graph-KB
+  binding has been moved from `source-set-4fb59e9eb43045cb` to
+  `source-set-f70ea11e04ae3d53`. The f70 component inventory builds the full
+  Region 1 manifest batch with `10` profile results, `0` blocked forests,
+  `1416` components, and `397` standards. The f70 evidence graph and claim
+  layer are refreshed on the current `113830` chunk retrieval spine; claims
+  report `143255` extracted claims. The f70 rule-claim link layer has
+  `233` links over `48` rules with `0` gaps. The f70 NEPA 3D knowledge graph
+  validates with `4572` nodes, `9113` edges, `1416` forest-plan components,
+  `10/10` graph-ready forest profiles, `0` blocked profiles, and
+  `233` rule-claim links. `forest-plan-profile-eval` passes with
+  `covered_profile_count=10`, `forest-plan-component-retrieval-eval` passes
+  `6/6`, `claim-eval` passes `10/10`, `rule-claim-eval` passes `24/24`, and
+  source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes
+  `20/20` phases with all seven critical source-set phases direct-eval backed.
+  This closes the f70 forest-plan graph readiness slice; broader
+  source-currentness readiness blocker metadata remains represented separately
+  in the knowledge graph.
+
   Critical forest-specific example constraint: a governed package is now
   blocked unless runtime forest-plan resolution identifies the same forest as
   applicable. `v1-ea-eval` emits `summary.runtime_forest_scope`, and the
