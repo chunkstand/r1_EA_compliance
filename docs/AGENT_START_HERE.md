@@ -67,10 +67,11 @@ The planner:
   passes `53/53` cases, real-package coverage is green at `11`
   reviewer-ready slots, component coverage is green at `12/12` reviews, and
   registry aggregate eval is green at `11` reviewer-ready examples across `10`
-  governed forests with `profile_guidance_only_count=0`. Review `phase-eval`
-  confirms `declared_review_contract=true` and
-  `contract_backed_promotion_ready=true` for the Kootenai review scope but
-  still exits red on inherited shared `rule_claim_binding` direct-eval debt.
+  governed forests with `profile_guidance_only_count=0`. After refreshing the
+  f70 rule-claim and compliance direct eval artifacts, review `phase-eval`
+  passes `28/28` phases with `reviewer_ready=true`, `blockers=[]`,
+  `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`.
   Keep Trojan Defense parallel to `Document_Register_Master`; use it only as
   the governed primary example for Kootenai National Forest work. It must not be reused for non-Kootenai forests.
 - The predecessor resolved forest-specific example packet is

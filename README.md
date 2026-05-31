@@ -60,12 +60,11 @@ They are intentionally not duplicated here.
   `config/replay_contexts/region1-example-kootenai-trojan-defense-64354.json`.
   Its package-local reviewer stack passes through component adjudication,
   applicability, compliance review, V1 eval, component eval, real-package
-  coverage, component coverage, and registry eval. Review `phase-eval`
-  confirms `declared_review_contract=true` and
-  `contract_backed_promotion_ready=true` for the Kootenai review scope, but
-  remains red on inherited shared `rule_claim_binding` direct-eval debt
-  (`rule_claim_link_scores_are_supported`), which is not Kootenai package
-  scope.
+  coverage, component coverage, and registry eval. After refreshing the f70
+  rule-claim and compliance direct eval artifacts, review `phase-eval` now
+  passes `28/28` phases with `reviewer_ready=true`, `blockers=[]`,
+  `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`.
   For Dakota Prairie Grasslands, the governed primary example is
   `primary_example_id="dpg-medora-vegetation-management-forest-specific"` with
   `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`

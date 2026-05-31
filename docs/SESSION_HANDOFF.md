@@ -116,10 +116,10 @@ history below.
   `distinct_governed_example_forest_count=10`, and
   `profile_guidance_only_count=0`; `forest-plan-component-eval-coverage`
   passes with `covered_review_count=12/12`, `stale_identity_count=0`, and
-  `unresolved_review_count=0`. Review `phase-eval` confirms the Kootenai
-  review scope is declared and contract-backed, but still exits red on
-  inherited shared `rule_claim_binding` direct-eval debt
-  (`rule_claim_link_scores_are_supported`). `config/forest_specific_example_package_registry_v1.json`
+  `unresolved_review_count=0`. After refreshing f70 rule-claim and compliance
+  direct eval artifacts, review `phase-eval` passes `28/28` phases with
+  `reviewer_ready=true`, `blockers=[]`, `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`. `config/forest_specific_example_package_registry_v1.json`
   now routes `kootenai-nf` as `real_package_examples_available` with
   `primary_example_id="knf-trojan-defense-forest-specific"`.
 

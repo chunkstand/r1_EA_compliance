@@ -70,9 +70,11 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   `review_example_count=11`, `reviewer_ready_example_count=11`,
   `distinct_governed_example_forest_count=10`, and
   `profile_guidance_only_count=0`; component coverage passes
-  `covered_review_count=12/12`. Review `phase-eval` confirms Kootenai
-  contract-backed promotion readiness but remains red on inherited shared
-  `rule_claim_binding` direct-eval debt outside this package.
+  `covered_review_count=12/12`. After refreshing f70 rule-claim and
+  compliance direct eval artifacts, review `phase-eval` passes `28/28` phases
+  with `reviewer_ready=true`, `blockers=[]`,
+  `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`.
 - The Dakota Prairie Medora follow-on in
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   is resolved through Milestone 4 registry and aggregate coverage promotion.

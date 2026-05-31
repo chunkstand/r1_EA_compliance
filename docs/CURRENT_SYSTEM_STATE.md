@@ -94,13 +94,20 @@ Latest implementation update on 2026-05-31 UTC:
   `profile_guidance_only_count=0`. `forest-plan-component-eval-coverage`
   passes with `covered_review_count=12/12`, `stale_identity_count=0`, and
   `unresolved_review_count=0`.
-- residual:
-  review `phase-eval` confirms the Kootenai review scope is declared and
-  contract-backed (`declared_review_contract=true`,
-  `contract_backed_promotion_ready=true`) but still exits red because the
-  inherited shared `rule_claim_binding` direct eval is stale/unsupported
-  (`rule_claim_link_scores_are_supported`). Treat that as a separate
-  downstream rule-claim quality packet, not as Kootenai package-local work.
+- direct-eval gap closure:
+  refreshed the f70 base `rule-claim-link` artifacts and f70
+  `rule-claim-eval` direct eval. `rule-claim-link` reports
+  `claim_count=134828`, `link_count=233`, `linked_rule_count=48`,
+  `gap_count=0`, `validation_passed=true`, and `reviewer_ready=true`.
+  `rule-claim-eval` passes `24/24` cases, including `4` hard-negative cases
+  and `4` multi-source cases, with `recall_at_k=1.0`, `mrr=1.0`,
+  `ndcg_at_k=1.0`, `false_positive_rate=0.0`, and contract sha
+  `5f8755aa64e2f2da87c5369789033a2f2045e48300cab272d2e465724cbac89e`.
+  Refreshed f70 `compliance-review-eval` passes `5/5` cases with
+  `source_set_id="source-set-f70ea11e04ae3d53"` and all direct eval metrics
+  at `1.0`. Review `phase-eval` now passes `28/28` phases with
+  `reviewer_ready=true`, `blockers=[]`, `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`.
 
 ## Dakota Prairie Medora Promotion Resolved Locally
 

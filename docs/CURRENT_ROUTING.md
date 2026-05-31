@@ -104,12 +104,14 @@ Use this file as the short current route before opening the append-only docs.
   `distinct_governed_example_forest_count=10`, and
   `profile_guidance_only_count=0`; `forest-plan-component-eval-coverage`
   passes with `covered_review_count=12/12`, `stale_identity_count=0`, and
-  `unresolved_review_count=0`. Review `phase-eval` confirms the Kootenai
-  review scope has `declared_review_contract=true` and
-  `contract_backed_promotion_ready=true`, but the whole phase aggregate remains
-  red on inherited shared `rule_claim_binding` direct-eval debt
-  (`rule_claim_link_scores_are_supported`). Route that residual to a separate
-  downstream rule-claim quality packet, not back into Kootenai promotion.
+  `unresolved_review_count=0`. After refreshing the f70 base rule-claim
+  links/eval and f70 compliance-review direct eval, review
+  `phase-eval --review-id region1-example-kootenai-trojan-defense-64354`
+  passes `28/28` phases with `reviewer_ready=true`, `blockers=[]`,
+  `identity_mismatch_phase_count=0`, `missing_direct_eval_phase_count=0`,
+  `declared_review_contract=true`, and
+  `contract_backed_promotion_ready=true`. The prior shared direct-eval red is
+  closed locally and should not be routed as Kootenai residual work.
 - Dakota Prairie Grasslands Medora Vegetation Management is resolved locally
   through Milestone 4 and is now the governed primary example for
   `dakota-prairie-grasslands`. The packet is
