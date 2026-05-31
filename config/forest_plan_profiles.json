@@ -1428,10 +1428,162 @@
         "administrative_change",
         "record_of_decision"
       ],
-      "ranger_district_terms": [],
-      "geographic_area_terms": [],
-      "management_area_terms": [],
-      "overlay_terms": [],
+      "ranger_district_terms": [
+        {
+          "entry_id": "district-medora",
+          "category": "district",
+          "name": "Medora Ranger District",
+          "aliases": [
+            "Medora District"
+          ]
+        }
+      ],
+      "geographic_area_terms": [
+        {
+          "entry_id": "geo-badlands",
+          "category": "geographic_area",
+          "name": "Badlands Geographic Area",
+          "aliases": [
+            "Badlands",
+            "Badlands GA"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-06"
+        },
+        {
+          "entry_id": "geo-rolling-prairie",
+          "category": "geographic_area",
+          "name": "Rolling Prairie Geographic Area",
+          "aliases": [
+            "Rolling Prairie",
+            "Rolling Prairie GA"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-06"
+        }
+      ],
+      "management_area_terms": [
+        {
+          "entry_id": "mgmt-dpg-1-2a-suitable-wilderness",
+          "category": "management_area",
+          "name": "Management Area 1.2a",
+          "aliases": [
+            "MA 1.2a",
+            "1.2a",
+            "Suitable for Wilderness"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07"
+        },
+        {
+          "entry_id": "mgmt-dpg-1-31-nonmotorized-backcountry",
+          "category": "management_area",
+          "name": "Management Area 1.31",
+          "aliases": [
+            "MA 1.31",
+            "1.31",
+            "Nonmotorized Backcountry Recreation",
+            "Non-Motorized Area",
+            "Non-Motorized Areas"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07"
+        },
+        {
+          "entry_id": "mgmt-dpg-2-1-special-interest",
+          "category": "management_area",
+          "name": "Management Area 2.1",
+          "aliases": [
+            "MA 2.1",
+            "2.1",
+            "Special Interest Areas"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07"
+        },
+        {
+          "entry_id": "mgmt-dpg-2-2-research-natural",
+          "category": "management_area",
+          "name": "Management Area 2.2",
+          "aliases": [
+            "MA 2.2",
+            "2.2",
+            "Research Natural Areas"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07"
+        },
+        {
+          "entry_id": "mgmt-dpg-3-51-bighorn-sheep",
+          "category": "management_area",
+          "name": "Management Area 3.51",
+          "aliases": [
+            "MA 3.51",
+            "3.51",
+            "3.51a",
+            "3.51b",
+            "Bighorn Sheep Habitat"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07"
+        },
+        {
+          "entry_id": "mgmt-dpg-3-65-diverse-natural-appearing",
+          "category": "management_area",
+          "name": "Management Area 3.65",
+          "aliases": [
+            "MA 3.65",
+            "3.65",
+            "Rangelands with Diverse Natural-Appearing Landscapes",
+            "Rangelands with Diverse Natural Appearing Landscapes",
+            "Rangeland with Diverse Natural Appearing Landscapes"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07"
+        },
+        {
+          "entry_id": "mgmt-dpg-4-22-river-travel-corridors",
+          "category": "management_area",
+          "name": "Management Area 4.22",
+          "aliases": [
+            "MA 4.22",
+            "4.22",
+            "River and Travel Corridors",
+            "Scenic Areas, Vistas, or Travel Corridors",
+            "Scenic Areas, Vistas or Travel Corridors"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07"
+        },
+        {
+          "entry_id": "mgmt-dpg-4-32-dispersed-recreation-high-use",
+          "category": "management_area",
+          "name": "Management Area 4.32",
+          "aliases": [
+            "MA 4.32",
+            "4.32",
+            "Dispersed Recreation: High Use",
+            "Dispersed Recreation High Use"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07"
+        },
+        {
+          "entry_id": "mgmt-dpg-6-1-broad-resource-emphasis",
+          "category": "management_area",
+          "name": "Management Area 6.1",
+          "aliases": [
+            "MA 6.1",
+            "6.1",
+            "Rangeland with Broad Resource Emphasis"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07"
+        }
+      ],
+      "overlay_terms": [
+        {
+          "entry_id": "overlay-dpg-inventoried-roadless-area",
+          "category": "overlay",
+          "name": "Inventoried Roadless Area",
+          "aliases": [
+            "Inventoried Roadless Areas",
+            "Inventoried Roadless",
+            "IRA",
+            "IRAs"
+          ],
+          "source_record_id": "R1PLAN-dakota-prairie-grasslands-07"
+        }
+      ],
       "plan_component_types": [
         "desired_condition",
         "goal",

@@ -368,6 +368,48 @@ class ForestPlanProfileTests(unittest.TestCase):
             [entry.name for entry in profile.overlay_terms],
         )
 
+    def test_dakota_prairie_profile_has_medora_context_terms(self) -> None:
+        profile = load_forest_plan_profile("dakota-prairie-grasslands")
+
+        self.assertEqual(
+            profile.active_plan_source_record_id,
+            "R1PLAN-dakota-prairie-grasslands-03",
+        )
+        self.assertIn(
+            "Medora Ranger District",
+            [entry.name for entry in profile.ranger_district_terms],
+        )
+        self.assertEqual(
+            [entry.name for entry in profile.geographic_area_terms],
+            ["Badlands Geographic Area", "Rolling Prairie Geographic Area"],
+        )
+        self.assertEqual(
+            {
+                entry.source_record_id
+                for entry in profile.geographic_area_terms
+            },
+            {"R1PLAN-dakota-prairie-grasslands-06"},
+        )
+        management_area_names = {entry.name for entry in profile.management_area_terms}
+        self.assertTrue(
+            {
+                "Management Area 1.2a",
+                "Management Area 3.51",
+                "Management Area 3.65",
+                "Management Area 6.1",
+            }.issubset(management_area_names)
+        )
+        bighorn = next(
+            entry
+            for entry in profile.management_area_terms
+            if entry.entry_id == "mgmt-dpg-3-51-bighorn-sheep"
+        )
+        self.assertIn("3.51b", bighorn.aliases)
+        self.assertIn(
+            "Inventoried Roadless Area",
+            [entry.name for entry in profile.overlay_terms],
+        )
+
     def test_idaho_panhandle_profile_uses_reconciled_sources_and_lacy_scope_term(self) -> None:
         profile = load_forest_plan_profile("idaho-panhandle-nfs")
 

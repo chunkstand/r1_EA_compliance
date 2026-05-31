@@ -51,8 +51,10 @@ They are intentionally not duplicated here.
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   with replay context
   `config/replay_contexts/region1-example-dakota-prairie-medora-vegetation-management-66886.json`.
-  It remains `profile_eval_guidance_only` until component adjudication and
-  downstream reviewer-stack gates pass.
+  Its local reviewer stack now passes through component adjudication,
+  applicability, compliance review, and review `phase-eval`, but it remains
+  `profile_eval_guidance_only` until tracked V1/component eval contracts and
+  aggregate coverage promotion gates pass.
   For Bitterroot National Forest, the governed primary example is
   `primary_example_id="bitterroot-front-forest-specific"` with
   `review_id="region1-example-bitterroot-front-57341"` in

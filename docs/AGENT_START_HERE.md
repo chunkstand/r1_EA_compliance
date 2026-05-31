@@ -50,12 +50,17 @@ The planner:
   `source-set-f70ea11e04ae3d53`, official project page
   `https://www.fs.usda.gov/r01/dpg/projects/66886`, and the supplied Box
   folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208`.
-  Package intake, base `ea-review`, and f70 Dakota component preflight are
-  closed locally, but the packet is not a governed primary example:
-  `394` component adjudication items remain pending (`384`
-  `missing_package_evidence`, `10` `needs_reviewer_resolution`). Keep Dakota
-  Prairie on the profile-eval floor until those adjudications and downstream
-  reviewer-stack promotion gates pass.
+  Package intake, base `ea-review`, f70 Dakota component preflight, component
+  adjudication, applicability, compliance review, and review `phase-eval` are
+  closed locally, but the packet is not a governed primary example. The current
+  reviewer-stack state is: component adjudication resolves `384/384` current
+  queue items with `0` pending, applicability validation has `47` applicable
+  authorities and `0` unresolved authorities, generated rule-pack validation
+  has `47` rules, compliance review is reviewer-ready with `47` findings, and
+  review `phase-eval` passes `27/27` phases. Keep Dakota Prairie on the
+  profile-eval floor because `declared_review_contract=false` and
+  `contract_backed_promotion_ready=false`; tracked V1 eval, component eval,
+  coverage, and registry promotion gates still need to be added and passed.
 - The latest resolved forest-specific example packet is
   `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
   For Nez Perce-Clearwater example-package work, inspect

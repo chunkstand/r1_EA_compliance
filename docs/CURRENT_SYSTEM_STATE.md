@@ -15,15 +15,16 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Dakota Prairie Medora Example Packet Opened Locally
+## Dakota Prairie Medora Reviewer Stack Green Locally, Promotion Still Blocked
 
 Latest implementation update on 2026-05-31 UTC:
 
 - update:
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   opens the Dakota Prairie Grasslands Medora Vegetation Management Project
-  (`66886`) as an active, unpromoted forest-specific example candidate. The
-  working identity is
+  (`66886`) as an active, unpromoted forest-specific example candidate and now
+  records local reviewer-stack replay through compliance and review
+  `phase-eval`. The working identity is
   `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`,
   `forest_unit_id="dakota-prairie-grasslands"`, and
   `source_set_id="source-set-f70ea11e04ae3d53"`. Reduced packet closeout
@@ -48,19 +49,34 @@ Latest implementation update on 2026-05-31 UTC:
   the Dakota row on both the active full-canonical source set
   `source-set-4fb59e9eb43045cb` and the Medora f70 replay source set. The
   review-local f70 component inventory builds with `394` components and `161`
-  standards; component inventory coverage and source accuracy pass.
-  `forest-plan-resolve` resolves `scope_status="dakota_prairie_grasslands"`
-  with no blocking missing Dakota source records. Component findings validate,
-  but the packet remains reduced because all `394` component findings still
-  require adjudication.
+  standards; component inventory coverage and source accuracy pass. The
+  refreshed Dakota profile resolves `scope_status="dakota_prairie_grasslands"`
+  with `project_location_signal_count=1`, `geographic_area_count=2`,
+  `management_area_count=9`, `overlay_count=0`, and no blocking missing Dakota
+  source records. Component findings now report `394` applicable components:
+  `10` supported and `384` gap findings.
+- adjudication and reviewer stack:
+  tracked component adjudication at
+  `config/forest_plan_component_adjudications/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
+  resolves the current `384/384` queue as `evidence_linking_miss` system
+  misses with `0` pending items and `0` real EA omissions. Tracked
+  applicability adjudication at
+  `config/applicability_adjudications/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
+  resolves the single species-supporting conflict as `human_applicable`;
+  applicability validation reports `460` candidate authorities, `47`
+  applicable, `413` not applicable, `0` unresolved, and a generated `47`-rule
+  pack. `compliance-review` is reviewer-ready and validation-passed with `47`
+  findings: `28` pass, `18` uncertain, and `1` gap. Review `phase-eval` passes
+  and is reviewer-ready for `27/27` phases with `blockers=[]`.
 - promotion boundary:
   `config/forest_specific_example_package_registry_v1.json` keeps
   `dakota-prairie-grasslands` at `profile_eval_guidance_only` with
-  `primary_example_id=null`. The generated component adjudication template has
-  `394` pending items: `384` `missing_package_evidence` and `10`
-  `needs_reviewer_resolution`. Do not add real-package coverage, V1 eval,
-  component-eval, or registry promotion artifacts until adjudication and the
-  downstream reviewer-stack gates pass.
+  `primary_example_id=null`. Review `phase-eval` still reports
+  `declared_review_contract=false` and
+  `contract_backed_promotion_ready=false`, so Dakota is reviewer-stack green
+  locally but not promotion-ready. Do not add real-package coverage,
+  component-coverage, or registry promotion artifacts until tracked V1 eval,
+  tracked component eval, aggregate coverage, and registry gates pass.
 
 ## Nez Perce-Clearwater Dead Laundry Promotion Resolved Locally
 

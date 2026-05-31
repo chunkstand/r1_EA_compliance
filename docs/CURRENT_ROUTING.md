@@ -14,9 +14,10 @@ Use this file as the short current route before opening the append-only docs.
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Active forest-specific example packet:
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  reduced through package authority and f70 forest-plan preflight; do not
-  promote Dakota Prairie until component adjudication and downstream
-  reviewer-stack gates pass
+  reduced through package authority, f70 forest-plan preflight, component
+  adjudication, applicability, compliance review, and review `phase-eval`; do
+  not promote Dakota Prairie until tracked V1/component eval and aggregate
+  coverage promotion gates pass
 - Latest resolved forest-specific example packet:
   `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -69,15 +70,26 @@ Use this file as the short current route before opening the append-only docs.
   Base `ea-review` passes with `7/7` extracted files, `417` package chunks,
   `package_failed_count=0`, and `reviewer_ready=true`. A review-local Dakota
   component inventory builds on f70 with `394` components and `161` standards;
-  component inventory coverage and source accuracy pass. `forest-plan-resolve`
-  resolves `scope_status="dakota_prairie_grasslands"` with no blocking missing
-  Dakota source records, and component findings validate, but the current
-  reviewer-resolution queue has `394` items: `384` `missing_package_evidence`
-  and `10` `needs_reviewer_resolution`. The registry row intentionally remains
-  `profile_eval_guidance_only` with `primary_example_id=null`; do not add a
-  real-package coverage slot or governed primary example until component
-  adjudication, applicability, compliance review, V1 eval, component eval,
-  review `phase-eval`, aggregate coverage, and registry eval all pass.
+  component inventory coverage and source accuracy pass. The refreshed Dakota
+  profile lets `forest-plan-resolve` resolve
+  `scope_status="dakota_prairie_grasslands"` with
+  `project_location_signal_count=1`, `geographic_area_count=2`,
+  `management_area_count=9`, `overlay_count=0`, and no blocking missing Dakota
+  source records. Component findings now report `394` applicable components:
+  `10` supported and `384` gaps. Tracked component adjudication resolves the
+  current `384/384` queue as `evidence_linking_miss` system misses with `0`
+  pending and `0` real EA omissions. Tracked applicability adjudication
+  resolves the single species-supporting conflict as `human_applicable`;
+  applicability validation reports `460` candidate authorities, `47`
+  applicable, `413` not applicable, `0` unresolved, and a generated `47`-rule
+  pack. Compliance review is reviewer-ready with `47` findings (`28` pass,
+  `18` uncertain, `1` gap), and review `phase-eval` passes `27/27` phases with
+  `reviewer_ready=true` and `blockers=[]`. The registry row intentionally
+  remains `profile_eval_guidance_only` with `primary_example_id=null` because
+  `declared_review_contract=false` and
+  `contract_backed_promotion_ready=false`; do not add a real-package coverage
+  slot or governed primary example until tracked V1 eval, tracked component
+  eval, review `phase-eval`, aggregate coverage, and registry eval all pass.
 - Nez Perce-Clearwater Dead Laundry is resolved locally through Milestone 4 and
   is now the governed primary example for `nez-perce-clearwater-nfs`.
   The packet is

@@ -318,7 +318,7 @@ def test_nez_perce_dead_laundry_is_promoted_as_governed_primary_example() -> Non
     ).exists()
 
 
-def test_dakota_prairie_medora_packet_stays_unpromoted_until_reviewer_stack_passes() -> None:
+def test_dakota_prairie_medora_packet_stays_unpromoted_until_contract_gates_pass() -> None:
     registry = _load_json(REGISTRY_PATH)
     coverage_manifest = _load_json(REAL_PACKAGE_COVERAGE_PATH)
     replay_context = _load_json(DAKOTA_MEDORA_REPLAY_CONTEXT_PATH)
@@ -336,7 +336,9 @@ def test_dakota_prairie_medora_packet_stays_unpromoted_until_reviewer_stack_pass
     assert forest_row["supplemental_example_ids"] == []
     assert forest_row["queue_boundary_source_ids"] == []
     assert "Medora Vegetation Management project 66886" in forest_row["guidance_note"]
+    assert "Local component adjudication, applicability" in forest_row["guidance_note"]
     assert "Stay on the profile-eval floor" in forest_row["guidance_note"]
+    assert "tracked V1/component eval contracts" in forest_row["guidance_note"]
     assert "dakota-prairie-medora-vegetation-management-66886" not in active_example_ids
     assert "dpg-medora-vegetation-management-forest-specific" not in coverage_slot_ids
     assert DAKOTA_MEDORA_PLAN_PATH.exists()
