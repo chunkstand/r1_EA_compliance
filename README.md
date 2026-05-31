@@ -46,6 +46,10 @@ They are intentionally not duplicated here.
   evidence graph, claims, rule-claim links, and review outputs are rebuildable
   derived layers
 - Forest-specific example packages stay parallel to `Document_Register_Master`.
+  Critical runtime constraint: a forest-specific example is blocked unless
+  runtime forest-plan resolution identifies that same forest as applicable;
+  registry applicability alone is not enough, and examples must not be reused
+  as generic Region 1 or non-matching-forest guidance.
   For Dakota Prairie Grasslands, the governed primary example is
   `primary_example_id="dpg-medora-vegetation-management-forest-specific"` with
   `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`

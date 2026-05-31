@@ -66,12 +66,25 @@ def test_registry_review_examples_align_with_real_package_coverage_manifest() ->
     }
     forest_ids = {row["forest_unit_id"] for row in registry["forest_routing"]}
 
+    assert coverage_manifest["forest_specific_runtime_scope_policy"]["mode"] == "fail_closed"
+    assert registry["critical_runtime_constraints"]["forest_specific_runtime_scope_gate"][
+        "mode"
+    ] == "fail_closed"
+
     for example in registry["review_examples"]:
         slot = coverage_slots[example["coverage_slot_id"]]
+        eval_contract = _load_json(ROOT / example["eval_file"])
+        expected_scope_status = _expected_scope_status(example["forest_unit_id"])
         assert example["review_id"] == slot["review_id"]
         assert example["forest_unit_id"] == slot["forest_unit_id"]
+        assert slot["coverage_class_id"] in {
+            "current_promotion_reviewer_ready",
+            "forest_specific_reviewer_ready",
+        }
         assert example["expected_contract_status"] == slot["expected_contract_status"]
         assert example["eval_file"] == f"config/{slot['eval_file']}"
+        assert eval_contract["forest_unit_id"] == example["forest_unit_id"]
+        assert eval_contract["forest_plan"]["expected_scope_status"] == expected_scope_status
         assert example["package_authority"]["replay_context_path"] == (
             f"config/{slot['package_authority']['replay_context_path']}"
         )
@@ -450,3 +463,9 @@ def test_registry_contract_paths_exist_and_review_patterns_stay_parameterized() 
 
 def _load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _expected_scope_status(forest_unit_id: str) -> str:
+    if forest_unit_id == "custer-gallatin-nf":
+        return "custer_gallatin"
+    return forest_unit_id.replace("-", "_")

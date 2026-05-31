@@ -15,6 +15,24 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Forest-Specific Runtime Scope Constraint
+
+Latest implementation update on 2026-05-31 UTC:
+
+- update:
+  forest-specific example packages now fail closed unless runtime forest-plan
+  resolution identifies the same forest as applicable. `v1-ea-eval` emits
+  `summary.runtime_forest_scope` from the actual `forest_plan_context`
+  `scope_status`, and `real-package-review-coverage-eval` blocks every
+  `current_promotion_reviewer_ready` and `forest_specific_reviewer_ready` slot
+  when that runtime scope is missing or does not match the slot
+  `forest_unit_id`.
+- aggregate behavior:
+  `forest-specific-example-package-eval` now propagates the runtime scope gate
+  into each referenced example result, so a registry row cannot make a
+  forest-specific package usable for another forest without matching runtime
+  forest-plan scope evidence.
+
 ## Dakota Prairie Medora Promotion Resolved Locally
 
 Latest implementation update on 2026-05-31 UTC:

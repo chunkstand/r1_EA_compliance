@@ -203,6 +203,12 @@ This packet exists to ensure:
 4. queue rows that only exist to surface a project example become explicit
    owned blockers instead of false canonical-promotion candidates.
 
+Critical runtime constraint: every forest-specific example is fail-closed
+unless the runtime forest-plan scope emitted by `v1-ea-eval` identifies the
+same forest as applicable. Manifest applicability and registry routing are
+necessary but not sufficient; a package must be blocked for any non-matching
+forest even when its review contract is otherwise green.
+
 ## Non-Goals
 
 - Do not add example-package rows to `Document_Register_Master`.

@@ -3731,16 +3731,20 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
 - `missing_required_slot_count`, `missing_package_authority_count`, and `threshold_failures`
 - `slots`, each carrying the resolved review ID, expected and actual contract status, package-label
   and package-authority validation, ready-versus-blocked lane summary, package-style tags, blocker
-  categories, and the underlying V1 eval summary path
+  categories, the underlying V1 eval summary path, and
+  `runtime_forest_scope_gate`. Required `current_promotion_reviewer_ready` and
+  `forest_specific_reviewer_ready` slots fail closed unless that runtime gate
+  proves the V1 eval's forest-plan `scope_status` identifies the same
+  `forest_unit_id` declared by the slot.
 
-The current manifest has five required slots: East Crazies current promotion,
-West Reservoir Flathead forest-specific reviewer-ready coverage, South Otter
-forest-specific reviewer-ready coverage, Lolo Tyler's Kitchen
-forest-specific reviewer-ready coverage, and HLC Bonanza forest-specific
-reviewer-ready coverage. South Plateau is archived as historical evidence
-only. The current aggregate threshold floor is five slots, two active coverage
-classes, four distinct forests, six package styles, five reviewer-ready slots,
-zero typed-blocked slots, and zero package-authority gaps.
+The current manifest has ten required slots: East Crazies current promotion
+plus nine `forest_specific_reviewer_ready` examples across Beaverhead-Deerlodge,
+Bitterroot, Flathead, Custer Gallatin, Lolo, Helena-Lewis-and-Clark, Idaho
+Panhandle, Nez Perce-Clearwater, and Dakota Prairie. South Plateau is archived
+as historical evidence only. The current aggregate threshold floor is ten
+slots, two active coverage classes, nine distinct forests, sixteen package
+styles, ten reviewer-ready slots, zero typed-blocked slots, and zero
+package-authority gaps.
 
 ## Gold Coverage Eval Outputs
 
@@ -4849,7 +4853,10 @@ records:
 - `coverage_thresholds` for required forest count, minimum governed example counts, distinct
   governed-forest diversity, maximum profile-only routing count, and maximum failed-forest count
 - `review_examples`, each naming the governed review ID, expected contract status, coverage slot,
-  applicable forest IDs, and tracked review artifact families an agent should read
+  applicable forest IDs, and tracked review artifact families an agent should read. A
+  critical fail-closed runtime constraint requires each forest-specific example's real-package
+  coverage slot to carry a passing `runtime_forest_scope_gate`; registry applicability alone cannot
+  make an example usable for another forest.
 - `forest_routing`, each naming exactly one Region 1 forest unit, its declared routing status,
   applicable forest IDs, required fixture-family IDs, and the governed example IDs to consult when
   they exist
@@ -4866,16 +4873,15 @@ records:
   schema identity, profile-roster alignment, and output-schema completeness
 - `forests`, each carrying the declared versus actual routing status, profile-eval presence and
   pass state, fixture-family alignment, referenced example review results, and explicit failure
-  reasons
+  reasons. Referenced example results include the propagated `runtime_forest_scope_gate`; a missing
+  or non-matching gate emits `runtime_forest_scope_not_applicable`.
 
-The current registry routes `flathead-nf` to West Reservoir,
-`custer-gallatin-nf` to South Otter with East Crazies as a supplemental
-example, `lolo-nf` to Tyler's Kitchen, and `helena-lewis-and-clark-nf` to
-Bonanza, all with `routing_status="real_package_examples_available"`.
-`FOR-029` remains the Lolo forest-specific example boundary. The aggregate
-floor is now five governed examples, five reviewer-ready examples, four
-governed example forests, zero typed-blocked examples, six maximum
-profile-guidance-only forests, and zero failed forests.
+The current registry routes nine forests to governed reviewer-ready examples,
+including Dakota Prairie Grasslands to Medora Vegetation Management. Kootenai
+National Forest remains the only `profile_eval_guidance_only` forest. The
+aggregate floor is ten governed examples, ten reviewer-ready examples, nine
+governed example forests, zero typed-blocked examples, one maximum
+profile-guidance-only forest, and zero failed forests.
 
 ## Evidence Retrieval Outputs
 

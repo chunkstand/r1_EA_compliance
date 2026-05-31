@@ -1,7 +1,7 @@
 {
   "schema_version": "forest-specific-example-package-registry-v1",
   "contract_id": "region1-forest-specific-example-packages",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "as_of_date": "2026-05-31",
   "status": "dakota-prairie-medora-v1-reviewer-ready",
   "coverage_thresholds": {
@@ -57,6 +57,17 @@
     "queue_sheet_name": "Direct_File_Capture_Queue",
     "queue_emits_load_rows": false,
     "note": "Forest-specific example packages stay parallel to the shared master document list and do not emit load rows into Document_Register_Master without a separate governed promotion decision."
+  },
+  "critical_runtime_constraints": {
+    "forest_specific_runtime_scope_gate": {
+      "mode": "fail_closed",
+      "applies_to_coverage_class_ids": [
+        "current_promotion_reviewer_ready",
+        "forest_specific_reviewer_ready"
+      ],
+      "required_runtime_signal": "v1_ea_eval.summary.runtime_forest_scope",
+      "rule": "A forest-specific example is blocked unless runtime forest-plan resolution identifies the same forest_unit_id and expected_scope_status declared by that example."
+    }
   },
   "shared_contract_catalog": [
     {

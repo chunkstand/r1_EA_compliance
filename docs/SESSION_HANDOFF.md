@@ -70,6 +70,12 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  Critical forest-specific example constraint: a governed package is now
+  blocked unless runtime forest-plan resolution identifies the same forest as
+  applicable. `v1-ea-eval` emits `summary.runtime_forest_scope`, and the
+  real-package plus forest-specific aggregate gates fail closed on missing or
+  non-matching runtime scope. Registry applicability remains necessary but is
+  no longer sufficient by itself.
   Dakota Prairie Grasslands Medora Vegetation Management Project (`66886`) is
   resolved locally through Milestone 4 and is now the governed primary example
   for `dakota-prairie-grasslands`. The packet is

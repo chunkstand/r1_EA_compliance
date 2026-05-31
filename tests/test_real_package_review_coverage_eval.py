@@ -58,6 +58,34 @@ def test_real_package_review_coverage_eval_fails_missing_authority() -> None:
         assert result.summary["failure_category_counts"]["missing_package_authority"] >= 1
 
 
+def test_real_package_review_coverage_eval_blocks_forest_specific_without_runtime_scope() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        output_dir = root / "source_library"
+        manifest_path = _write_manifest(root)
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        east_results_path = Path(manifest["slots"][0]["results_path"])
+        east_summary = json.loads(east_results_path.read_text(encoding="utf-8"))
+        east_summary.pop("runtime_forest_scope")
+        east_results_path.write_text(json.dumps(east_summary, sort_keys=True), encoding="utf-8")
+
+        result = run_real_package_review_coverage_eval(
+            output_dir=output_dir,
+            manifest_path=manifest_path,
+        )
+
+        assert result.summary["passed"] is False
+        slot = next(
+            slot
+            for slot in result.summary["slots"]
+            if slot["slot_id"] == "east-crazies-current-promotion"
+        )
+        assert slot["runtime_forest_scope_gate"]["required"] is True
+        assert slot["runtime_forest_scope_gate"]["passed"] is False
+        assert "runtime_forest_scope_missing" in slot["failure_reasons"]
+        assert result.summary["failure_category_counts"]["runtime_forest_scope_missing"] == 1
+
+
 def test_real_package_review_coverage_eval_rejects_missing_required_slot() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -85,6 +113,19 @@ def test_committed_real_package_review_coverage_manifest_archives_south_plateau_
         "current_promotion_reviewer_ready",
         "forest_specific_reviewer_ready",
     ]
+    assert manifest["forest_specific_runtime_scope_policy"] == {
+        "mode": "fail_closed",
+        "applies_to_coverage_class_ids": [
+            "current_promotion_reviewer_ready",
+            "forest_specific_reviewer_ready",
+        ],
+        "required_runtime_signal": "v1_ea_eval.summary.runtime_forest_scope",
+        "rule": (
+            "Required current-promotion and forest-specific reviewer-ready slots "
+            "must fail unless the V1 eval runtime forest-plan scope identifies the "
+            "slot forest_unit_id as applicable."
+        ),
+    }
     assert [item["review_id"] for item in manifest["slots"]] == [
         "v1-cg-ecid-compliance-review",
         "region1-example-beaverhead-deerlodge-south-tobacco-roots-63754",
@@ -180,6 +221,11 @@ def _write_manifest(
             "contract_status": "reviewer_ready",
             "forest_unit_id": "custer-gallatin-nf",
             "package_style_tags": ["clean_baseline"],
+            "runtime_forest_scope": _runtime_scope(
+                "custer-gallatin-nf",
+                "custer_gallatin",
+                "custer_gallatin",
+            ),
             "actual_overall_passed": True,
             "broader_ea_passed": True,
             "forest_plan_passed": True,
@@ -302,3 +348,24 @@ def _write_manifest(
 def _write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, sort_keys=True), encoding="utf-8")
+
+
+def _runtime_scope(
+    forest_unit_id: str,
+    expected_scope_status: str,
+    actual_scope_status: str,
+) -> dict:
+    return {
+        "required": True,
+        "passed": actual_scope_status == expected_scope_status,
+        "expected_forest_unit_id": forest_unit_id,
+        "expected_scope_status": expected_scope_status,
+        "actual_scope_status": actual_scope_status,
+        "scope_status_expectation_present": True,
+        "scope_status_expectation_passed": actual_scope_status == expected_scope_status,
+        "failure_reasons": (
+            []
+            if actual_scope_status == expected_scope_status
+            else ["runtime_scope_status_mismatch"]
+        ),
+    }

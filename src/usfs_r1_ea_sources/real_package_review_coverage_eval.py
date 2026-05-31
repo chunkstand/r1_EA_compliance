@@ -14,6 +14,10 @@ DEFAULT_REAL_PACKAGE_REVIEW_COVERAGE_MANIFEST_PATH = Path(
     "config/v1_real_package_review_coverage_v1.json"
 )
 EXPECTED_CONTRACT_STATUSES = {"reviewer_ready", "typed_blocked"}
+RUNTIME_FOREST_SCOPE_REQUIRED_COVERAGE_CLASS_IDS = {
+    "current_promotion_reviewer_ready",
+    "forest_specific_reviewer_ready",
+}
 
 
 @dataclass(frozen=True)
@@ -180,9 +184,16 @@ def _slot_result(
     actual_review_id = str(summary.get("review_id") or "").strip()
     actual_contract_status = str(summary.get("contract_status") or "mismatch").strip()
     expected_contract_status = str(slot["expected_contract_status"]).strip()
+    coverage_class_id = str(slot["coverage_class_id"])
     missing_contract = actual_review_id != review_id
     contract_status_match = actual_contract_status == expected_contract_status
     forest_unit_id = str(summary.get("forest_unit_id") or slot.get("forest_unit_id") or "").strip()
+    expected_forest_unit_id = str(slot.get("forest_unit_id") or "").strip()
+    runtime_forest_scope_gate = _runtime_forest_scope_gate(
+        coverage_class_id=coverage_class_id,
+        expected_forest_unit_id=expected_forest_unit_id,
+        summary=summary,
+    )
     package_style_tags = _string_list(
         summary.get("package_style_tags") or slot.get("package_style_tags")
     )
@@ -199,26 +210,36 @@ def _slot_result(
     unexpected_blocker_categories = _string_list(
         contract_expectations.get("unexpected_blocker_categories")
     )
+    failure_reasons: list[str] = []
+    if not bool(summary.get("passed")):
+        failure_reasons.append("review_eval_failed")
+    if missing_contract:
+        failure_reasons.append("missing_required_review_contract")
+    if not contract_status_match:
+        failure_reasons.append("slot_contract_status_mismatch")
+    if not package_authority["passed"]:
+        failure_reasons.append("missing_package_authority")
+    failure_reasons.extend(runtime_forest_scope_gate["failure_reasons"])
     return {
         "slot_id": str(slot["slot_id"]),
         "label": str(slot["label"]),
         "review_id": review_id,
         "actual_review_id": actual_review_id,
         "package_label": str(slot["package_label"]),
-        "coverage_class_id": str(slot["coverage_class_id"]),
+        "coverage_class_id": coverage_class_id,
         "required": bool(slot["required"]),
         "expected_contract_status": expected_contract_status,
         "contract_status": actual_contract_status,
         "actual_contract_status": actual_contract_status,
         "contract_status_match": contract_status_match,
-        "passed": bool(summary.get("passed"))
-        and not missing_contract
-        and contract_status_match
-        and package_authority["passed"],
+        "passed": not failure_reasons,
+        "failure_reasons": sorted(set(failure_reasons)),
         "actual_overall_passed": bool(summary.get("actual_overall_passed", summary.get("passed"))),
         "broader_ea_passed": bool(summary.get("broader_ea_passed")),
         "forest_plan_passed": bool(summary.get("forest_plan_passed")),
         "forest_unit_id": forest_unit_id,
+        "expected_forest_unit_id": expected_forest_unit_id,
+        "runtime_forest_scope_gate": runtime_forest_scope_gate,
         "package_style_tags": package_style_tags,
         "failure_category_counts": summary.get("failure_category_counts", {}),
         "forest_plan_failure_category_counts": summary.get(
@@ -336,12 +357,8 @@ def _failure_category_counts(
         counts[category] = counts.get(category, 0) + 1
 
     for slot in slot_results:
-        if slot["missing_contract"]:
-            bump("missing_required_review_contract")
-        if not slot["package_authority"]["passed"]:
-            bump("missing_package_authority")
-        if not slot["contract_status_match"]:
-            bump("slot_contract_status_mismatch")
+        for reason in slot.get("failure_reasons", []):
+            bump(str(reason))
         if slot["expected_contract_status"] == "typed_blocked" and slot["unexpected_blocker_categories"]:
             bump("typed_blocked_blocker_mismatch")
     for failure in threshold_failures:
@@ -365,6 +382,78 @@ def _failure_category_counts(
     for _ in missing_coverage_class_ids:
         bump("missing_required_coverage_class")
     return counts
+
+
+def _runtime_forest_scope_gate(
+    *,
+    coverage_class_id: str,
+    expected_forest_unit_id: str,
+    summary: dict[str, Any],
+) -> dict[str, Any]:
+    required = coverage_class_id in RUNTIME_FOREST_SCOPE_REQUIRED_COVERAGE_CLASS_IDS
+    runtime_scope = summary.get("runtime_forest_scope")
+    contract_forest_unit_id = str(summary.get("forest_unit_id") or "").strip()
+    failure_reasons: list[str] = []
+
+    if not required:
+        return {
+            "required": False,
+            "passed": True,
+            "expected_forest_unit_id": expected_forest_unit_id or None,
+            "contract_forest_unit_id": contract_forest_unit_id or None,
+            "runtime_expected_forest_unit_id": None,
+            "expected_scope_status": None,
+            "actual_scope_status": None,
+            "scope_status_expectation_present": False,
+            "scope_status_expectation_passed": False,
+            "failure_reasons": [],
+        }
+
+    if not expected_forest_unit_id:
+        failure_reasons.append("expected_forest_unit_missing")
+    if contract_forest_unit_id != expected_forest_unit_id:
+        failure_reasons.append("contract_forest_unit_mismatch")
+    if not isinstance(runtime_scope, dict):
+        runtime_scope = {}
+        failure_reasons.append("runtime_forest_scope_missing")
+
+    runtime_expected_forest_unit_id = str(
+        runtime_scope.get("expected_forest_unit_id") or ""
+    ).strip()
+    expected_scope_status = str(runtime_scope.get("expected_scope_status") or "").strip()
+    actual_scope_status = str(runtime_scope.get("actual_scope_status") or "").strip()
+    scope_status_expectation_present = bool(
+        runtime_scope.get("scope_status_expectation_present")
+    )
+    scope_status_expectation_passed = bool(
+        runtime_scope.get("scope_status_expectation_passed")
+    )
+
+    if runtime_expected_forest_unit_id != expected_forest_unit_id:
+        failure_reasons.append("runtime_expected_forest_unit_mismatch")
+    if not expected_scope_status:
+        failure_reasons.append("runtime_expected_scope_status_missing")
+    if not actual_scope_status:
+        failure_reasons.append("runtime_scope_status_missing")
+    if not scope_status_expectation_present:
+        failure_reasons.append("runtime_scope_status_missing")
+    if not bool(runtime_scope.get("passed")):
+        failure_reasons.append("runtime_forest_scope_mismatch")
+    if not scope_status_expectation_passed:
+        failure_reasons.append("runtime_scope_status_expectation_failed")
+
+    return {
+        "required": True,
+        "passed": not failure_reasons,
+        "expected_forest_unit_id": expected_forest_unit_id or None,
+        "contract_forest_unit_id": contract_forest_unit_id or None,
+        "runtime_expected_forest_unit_id": runtime_expected_forest_unit_id or None,
+        "expected_scope_status": expected_scope_status or None,
+        "actual_scope_status": actual_scope_status or None,
+        "scope_status_expectation_present": scope_status_expectation_present,
+        "scope_status_expectation_passed": scope_status_expectation_passed,
+        "failure_reasons": sorted(set(failure_reasons)),
+    }
 
 
 def _slot_by_review_id(manifest: dict[str, Any], review_id: str) -> dict[str, Any]:

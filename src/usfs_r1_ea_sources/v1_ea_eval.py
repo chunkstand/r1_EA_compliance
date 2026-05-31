@@ -137,6 +137,10 @@ def run_v1_ea_review_eval(
         expectations=contract.get("forest_plan", {}),
         artifacts=artifacts,
     )
+    runtime_forest_scope = _runtime_forest_scope(
+        contract=contract,
+        forest_plan_results=forest_plan_results,
+    )
     checks = _checks(
         contract=contract,
         review_dir=resolved_review_dir,
@@ -243,6 +247,7 @@ def run_v1_ea_review_eval(
         "contract_status": contract_status,
         "broader_ea_passed": eval_lanes["broader_ea"]["passed"],
         "forest_plan_passed": eval_lanes["forest_plan"]["passed"],
+        "runtime_forest_scope": runtime_forest_scope,
         "forest_plan_component_adjudication_required": eval_lanes["forest_plan"][
             "component_adjudication_required"
         ],
@@ -299,3 +304,66 @@ def run_v1_ea_review_eval(
         output_path=resolved_output_path,
         summary=summary,
     )
+
+
+def _runtime_forest_scope(
+    *,
+    contract: dict[str, Any],
+    forest_plan_results: list[dict[str, Any]],
+) -> dict[str, Any]:
+    forest_plan_expectations = contract.get("forest_plan")
+    if not isinstance(forest_plan_expectations, dict):
+        forest_plan_expectations = {}
+
+    expected_forest_unit_id = _string_or_none(contract.get("forest_unit_id"))
+    expected_scope_status = _string_or_none(
+        forest_plan_expectations.get("expected_scope_status")
+    )
+    scope_result = next(
+        (
+            result
+            for result in forest_plan_results
+            if isinstance(result, dict)
+            and result.get("expectation_id") == "scope_status"
+        ),
+        None,
+    )
+    actual_scope_status = (
+        _string_or_none(scope_result.get("actual"))
+        if isinstance(scope_result, dict)
+        else None
+    )
+    scope_status_expectation_passed = (
+        bool(scope_result.get("passed")) if isinstance(scope_result, dict) else False
+    )
+    required = bool(expected_forest_unit_id or expected_scope_status)
+    failure_reasons: list[str] = []
+    if required:
+        if not expected_forest_unit_id:
+            failure_reasons.append("expected_forest_unit_missing")
+        if not expected_scope_status:
+            failure_reasons.append("expected_scope_status_missing")
+        if scope_result is None:
+            failure_reasons.append("runtime_scope_status_missing")
+        elif not actual_scope_status:
+            failure_reasons.append("runtime_scope_status_missing")
+        elif expected_scope_status and actual_scope_status != expected_scope_status:
+            failure_reasons.append("runtime_scope_status_mismatch")
+        if scope_result is not None and not scope_status_expectation_passed:
+            failure_reasons.append("runtime_scope_status_expectation_failed")
+
+    return {
+        "required": required,
+        "passed": not failure_reasons,
+        "expected_forest_unit_id": expected_forest_unit_id,
+        "expected_scope_status": expected_scope_status,
+        "actual_scope_status": actual_scope_status,
+        "scope_status_expectation_present": scope_result is not None,
+        "scope_status_expectation_passed": scope_status_expectation_passed,
+        "failure_reasons": sorted(set(failure_reasons)),
+    }
+
+
+def _string_or_none(value: Any) -> str | None:
+    text = str(value or "").strip()
+    return text or None

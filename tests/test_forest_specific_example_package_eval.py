@@ -91,10 +91,54 @@ def test_forest_specific_example_package_eval_rejects_primary_example_contract_s
         assert "primary_example_contract_status_mismatch" in cgnf["failure_reasons"]
 
 
+def test_forest_specific_example_package_eval_blocks_wrong_runtime_forest_scope() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        output_dir = root / "source_library"
+        manifest_path = _write_manifest(
+            root,
+            east_runtime_scope_status="flathead_nf",
+        )
+
+        result = run_forest_specific_example_package_eval(
+            output_dir=output_dir,
+            manifest_path=manifest_path,
+        )
+
+        assert result.summary["passed"] is False
+        assert result.summary["failed_forest_count"] == 1
+        assert result.summary["failure_category_counts"][
+            "runtime_forest_scope_not_applicable"
+        ] == 1
+        cgnf = next(
+            forest
+            for forest in result.summary["forests"]
+            if forest["forest_unit_id"] == "custer-gallatin-nf"
+        )
+        assert cgnf["passed"] is False
+        assert "primary_example_failed" in cgnf["failure_reasons"]
+        primary = cgnf["example_results"][0]
+        assert primary["runtime_forest_scope_gate"]["passed"] is False
+        assert "runtime_forest_scope_not_applicable" in primary["failure_reasons"]
+
+
 def test_committed_registry_declares_output_contract_and_thresholds() -> None:
     registry = json.loads(COMMITTED_REGISTRY.read_text(encoding="utf-8"))
 
     assert registry["schema_version"] == FOREST_SPECIFIC_EXAMPLE_PACKAGE_REGISTRY_SCHEMA_VERSION
+    assert registry["critical_runtime_constraints"]["forest_specific_runtime_scope_gate"] == {
+        "mode": "fail_closed",
+        "applies_to_coverage_class_ids": [
+            "current_promotion_reviewer_ready",
+            "forest_specific_reviewer_ready",
+        ],
+        "required_runtime_signal": "v1_ea_eval.summary.runtime_forest_scope",
+        "rule": (
+            "A forest-specific example is blocked unless runtime forest-plan "
+            "resolution identifies the same forest_unit_id and expected_scope_status "
+            "declared by that example."
+        ),
+    }
     assert registry["coverage_thresholds"] == {
         "required_forest_unit_count": 10,
         "review_example_count_min": 10,
@@ -139,6 +183,7 @@ def _write_manifest(
     root: Path,
     *,
     east_actual_contract_status: str = "reviewer_ready",
+    east_runtime_scope_status: str = "custer_gallatin",
 ) -> Path:
     output_dir = root / "source_library"
     review_results_path = (
@@ -165,6 +210,11 @@ def _write_manifest(
                     "passed": east_actual_contract_status == "reviewer_ready",
                     "summary_path": "reviews/east.json",
                     "package_authority": {"passed": True},
+                    "runtime_forest_scope_gate": _runtime_scope_gate(
+                        "custer-gallatin-nf",
+                        "custer_gallatin",
+                        east_runtime_scope_status,
+                    ),
                 },
                 {
                     "slot_id": "west-reservoir-typed-blocked",
@@ -173,6 +223,11 @@ def _write_manifest(
                     "passed": True,
                     "summary_path": "reviews/west.json",
                     "package_authority": {"passed": True},
+                    "runtime_forest_scope_gate": _runtime_scope_gate(
+                        "flathead-nf",
+                        "flathead_nf",
+                        "flathead_nf",
+                    ),
                 },
                 {
                     "slot_id": "south-plateau-reviewer-ready",
@@ -181,6 +236,11 @@ def _write_manifest(
                     "passed": True,
                     "summary_path": "reviews/south.json",
                     "package_authority": {"passed": True},
+                    "runtime_forest_scope_gate": _runtime_scope_gate(
+                        "custer-gallatin-nf",
+                        "custer_gallatin",
+                        "custer_gallatin",
+                    ),
                 },
             ],
         },
@@ -367,3 +427,26 @@ def _write_manifest(
 def _write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _runtime_scope_gate(
+    forest_unit_id: str,
+    expected_scope_status: str,
+    actual_scope_status: str,
+) -> dict:
+    return {
+        "required": True,
+        "passed": actual_scope_status == expected_scope_status,
+        "expected_forest_unit_id": forest_unit_id,
+        "contract_forest_unit_id": forest_unit_id,
+        "runtime_expected_forest_unit_id": forest_unit_id,
+        "expected_scope_status": expected_scope_status,
+        "actual_scope_status": actual_scope_status,
+        "scope_status_expectation_present": True,
+        "scope_status_expectation_passed": actual_scope_status == expected_scope_status,
+        "failure_reasons": (
+            []
+            if actual_scope_status == expected_scope_status
+            else ["runtime_forest_scope_mismatch"]
+        ),
+    }

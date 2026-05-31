@@ -281,6 +281,10 @@ The planner:
 - The registry maps examples to `applicable_to_forest_unit_ids`, tells you
   which shared eval contracts to read first, and lists the per-review artifact
   families to read for each governed example.
+- Treat forest-specific example reuse as fail-closed: a governed example is
+  blocked unless `v1-ea-eval` runtime forest-plan scope identifies that same
+  forest as applicable. Do not use a forest-specific package as guidance for
+  another forest only because the registry or package label looks similar.
 - The aggregate gate for that lane is
   `forest-specific-example-package-eval`, which writes
   `source_library/reviews/forest_specific_example_package_eval/forest_specific_example_package_eval_results.json`

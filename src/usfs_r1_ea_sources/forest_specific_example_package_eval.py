@@ -538,6 +538,7 @@ def _example_result(
 
     slot_id = str(example_row.get("coverage_slot_id") or "").strip()
     slot_row = slot_rows_by_id.get(slot_id)
+    runtime_forest_scope_gate: dict[str, Any] = {}
     if slot_row is None:
         failure_reasons.append("coverage_slot_missing")
         actual_contract_status = None
@@ -549,10 +550,17 @@ def _example_result(
         slot_passed = bool(slot_row.get("passed"))
         summary_path = _string_or_none(slot_row.get("summary_path"))
         package_authority_passed = bool((slot_row.get("package_authority") or {}).get("passed"))
+        runtime_forest_scope_gate = (
+            slot_row.get("runtime_forest_scope_gate")
+            if isinstance(slot_row.get("runtime_forest_scope_gate"), dict)
+            else {}
+        )
         if not slot_passed:
             failure_reasons.append("coverage_slot_failed")
         if actual_contract_status != _string_or_none(example_row.get("expected_contract_status")):
             failure_reasons.append("coverage_slot_contract_status_mismatch")
+        if not bool(runtime_forest_scope_gate.get("passed")):
+            failure_reasons.append("runtime_forest_scope_not_applicable")
 
     return {
         "example_id": example_id,
@@ -564,6 +572,7 @@ def _example_result(
         "failure_reasons": sorted(set(failure_reasons)),
         "summary_path": summary_path,
         "package_authority_passed": package_authority_passed,
+        "runtime_forest_scope_gate": runtime_forest_scope_gate,
     }
 
 

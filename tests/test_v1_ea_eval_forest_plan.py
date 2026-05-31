@@ -47,6 +47,7 @@ class V1EAReviewEvalForestPlanTests(unittest.TestCase):
 
             eval_file = _write_eval_contract(root, review_id="v1-unit")
             contract = _read_json(eval_file)
+            contract["forest_unit_id"] = "custer-gallatin-nf"
             contract["forest_plan"]["expected_component_ids"] = [
                 "R1PLAN-custer-gallatin-nf-02-BC-DC-CMBCA-01",
                 "R1PLAN-custer-gallatin-nf-02-BC-STD-CMBCA-01",
@@ -66,6 +67,19 @@ class V1EAReviewEvalForestPlanTests(unittest.TestCase):
             self.assertTrue(result.summary["passed"])
             self.assertTrue(result.summary["forest_plan_passed"])
             self.assertEqual(result.summary["forest_plan_failure_category_counts"], {})
+            self.assertEqual(
+                result.summary["runtime_forest_scope"],
+                {
+                    "required": True,
+                    "passed": True,
+                    "expected_forest_unit_id": "custer-gallatin-nf",
+                    "expected_scope_status": "custer_gallatin",
+                    "actual_scope_status": "custer_gallatin",
+                    "scope_status_expectation_present": True,
+                    "scope_status_expectation_passed": True,
+                    "failure_reasons": [],
+                },
+            )
 
     def test_v1_eval_tracks_standard_resolution_queue_separately(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -45,6 +45,12 @@ Use this file as the short current route before opening the append-only docs.
   `docs/ECID_PRELIMINARY_HISTORICAL_LANE_RESOLUTION_MILESTONE_PLAN.md`,
   `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`
 ## Active Route
+- Critical forest-specific example constraint: these packages are fail-closed
+  unless runtime forest-plan resolution identifies the same forest as
+  applicable. `v1-ea-eval` emits `summary.runtime_forest_scope`, and
+  `real-package-review-coverage-eval` / `forest-specific-example-package-eval`
+  block non-matching forest reuse even when a review contract is otherwise
+  green.
 - Dakota Prairie Grasslands Medora Vegetation Management is resolved locally
   through Milestone 4 and is now the governed primary example for
   `dakota-prairie-grasslands`. The packet is
