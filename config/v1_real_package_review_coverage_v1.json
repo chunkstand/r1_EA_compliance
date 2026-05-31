@@ -1,12 +1,12 @@
 {
   "coverage_thresholds": {
-    "distinct_forest_count_min": 9,
+    "distinct_forest_count_min": 10,
     "distinct_package_style_count_min": 16,
     "missing_package_authority_count_max": 0,
     "missing_required_slot_count_max": 0,
     "required_coverage_class_count": 2,
-    "required_slot_count": 10,
-    "reviewer_ready_slot_count_min": 10,
+    "required_slot_count": 11,
+    "reviewer_ready_slot_count_min": 11,
     "typed_blocked_slot_count_min": 0
   },
   "id": "region1-real-package-review-coverage-v1",
@@ -179,11 +179,27 @@
         "official_project_page": "https://www.fs.usda.gov/r01/dpg/projects/66886",
         "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208"
       }
+    },
+    {
+      "slot_id": "knf-trojan-defense-forest-specific",
+      "review_id": "region1-example-kootenai-trojan-defense-64354",
+      "forest_unit_id": "kootenai-nf",
+      "label": "Trojan Defense Kootenai forest-specific reviewer-ready example",
+      "package_label": "Trojan Defense Hazardous Fuels Reduction Project",
+      "coverage_class_id": "forest_specific_reviewer_ready",
+      "expected_contract_status": "reviewer_ready",
+      "required": true,
+      "eval_file": "v1_kootenai_trojan_defense_real_ea_eval.json",
+      "package_authority": {
+        "replay_context_path": "replay_contexts/region1-example-kootenai-trojan-defense-64354.json",
+        "official_project_page": "https://www.fs.usda.gov/r01/kootenai/projects/64354",
+        "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/214150735755"
+      }
     }
   ],
-  "version": "1.9.0",
+  "version": "1.10.0",
   "as_of_date": "2026-05-31",
-  "status": "dakota-prairie-medora-v1-reviewer-ready",
+  "status": "kootenai-trojan-defense-v1-reviewer-ready",
   "archived_slots": [
     {
       "coverage_class_id": "expansion_reviewer_ready",

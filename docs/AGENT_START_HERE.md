@@ -43,35 +43,40 @@ The planner:
   forest-specific example expansion starts from
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
 - The latest resolved forest-specific example packet is
-  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
-  For Dakota Prairie Grasslands example-package work, inspect
+  `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
+  For Kootenai National Forest example-package work, inspect
   `config/forest_specific_example_package_registry_v1.json` first, then use
-  Medora Vegetation Management as the governed primary example:
-  `example_id="dpg-medora-vegetation-management-forest-specific"`,
-  `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`,
-  and
-  `primary_example_id="dpg-medora-vegetation-management-forest-specific"` for
-  `forest_unit_id="dakota-prairie-grasslands"`. The selected authorities are
-  the official project page
-  `https://www.fs.usda.gov/r01/dpg/projects/66886`, and the supplied Box
-  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208`.
-  Package intake, base `ea-review`, f70 Dakota component preflight, component
-  adjudication, applicability, compliance review, and review `phase-eval` are
-  closed locally. The current reviewer-stack state is: component adjudication
-  resolves `384/384` current queue items with `0` pending, applicability
-  validation has `47` applicable authorities and `0` unresolved authorities,
-  generated rule-pack validation has `47` rules, compliance review is
-  reviewer-ready with `47` findings, V1 eval contract
-  `config/v1_dakota_prairie_medora_real_ea_eval.json` passes, component eval
+  Trojan Defense as the governed primary example:
+  `example_id="knf-trojan-defense-forest-specific"`,
+  `review_id="region1-example-kootenai-trojan-defense-64354"`, and
+  `primary_example_id="knf-trojan-defense-forest-specific"` for
+  `forest_unit_id="kootenai-nf"`. The selected authorities are the official
+  project page `https://www.fs.usda.gov/r01/kootenai/projects/64354` and the
+  supplied Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/214150735755`.
+  Package intake downloaded `74/74` files with `152,732,803` bytes and `0`
+  failures; base `ea-review` passes with `74/74` extracted files and `3,750`
+  package chunks. Component adjudication resolves `34/34` current queue items
+  with `0` pending, applicability validation has `47` applicable authorities,
+  `72` not applicable authorities, and `0` unresolved authorities, generated
+  rule-pack validation has `47` rules, and compliance review is reviewer-ready
+  with `47` findings. V1 eval contract
+  `config/v1_kootenai_trojan_defense_real_ea_eval.json` passes, component eval
   contract
-  `config/forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
-  passes `394/394` cases, and review `phase-eval` passes `28/28` phases with
-  `declared_review_contract=true` and
-  `contract_backed_promotion_ready=true`. Real-package coverage and registry
-  aggregate evals are green at `10` reviewer-ready examples and `9` governed
-  forests; component coverage is green at `11/11` reviews. Keep Medora
-  parallel to `Document_Register_Master`; use Medora Vegetation Management as
-  the governed primary example for Dakota Prairie Grasslands work. It must not be reused for non-Dakota forests.
+  `config/forest_plan_component_evals/region1-example-kootenai-trojan-defense-64354.json`
+  passes `53/53` cases, real-package coverage is green at `11`
+  reviewer-ready slots, component coverage is green at `12/12` reviews, and
+  registry aggregate eval is green at `11` reviewer-ready examples across `10`
+  governed forests with `profile_guidance_only_count=0`. Review `phase-eval`
+  confirms `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true` for the Kootenai review scope but
+  still exits red on inherited shared `rule_claim_binding` direct-eval debt.
+  Keep Trojan Defense parallel to `Document_Register_Master`; use it only as
+  the governed primary example for Kootenai National Forest work. It must not be reused for non-Kootenai forests.
+- The predecessor resolved forest-specific example packet is
+  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
+  Dakota Prairie Grasslands uses Medora Vegetation Management as its governed
+  primary example and remains resolved locally through Milestone 4.
 - The predecessor resolved forest-specific example packet is
   `docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
   For Nez Perce-Clearwater example-package work, inspect

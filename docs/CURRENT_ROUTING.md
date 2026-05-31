@@ -13,6 +13,9 @@ Use this file as the short current route before opening the append-only docs.
 - Continuing forest-specific example lane:
   `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
 - Latest resolved forest-specific example packet:
+  `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  Kootenai promotion
+- Predecessor resolved forest-specific example packet:
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
 - Predecessor resolved forest-specific example packet:
@@ -64,6 +67,49 @@ Use this file as the short current route before opening the append-only docs.
   source-delta lane has no declared review contract. Do not reopen ECID current
   promotion or route this replay into the governed forest-specific example
   packets.
+- Kootenai Trojan Defense is resolved locally and is now the governed primary
+  example for `kootenai-nf`. The packet is
+  `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`; the
+  working review identity is
+  `review_id="region1-example-kootenai-trojan-defense-64354"` for
+  `forest_unit_id="kootenai-nf"` on `source-set-f70ea11e04ae3d53`. The
+  governed example ID is
+  `example_id="knf-trojan-defense-forest-specific"`. The selected authorities
+  are the official project page
+  `https://www.fs.usda.gov/r01/kootenai/projects/64354` and supplied Pinyon/Box
+  root `https://usfs-public.app.box.com/v/PinyonPublic/folder/214150735755`.
+  Local ignored package authority under
+  `source_library/reviews/_intake/region1-example-kootenai-trojan-defense-64354/`
+  records `74` downloaded files, `152,732,803` bytes, and
+  `failure_count=0`. Base `ea-review` passes with `74/74` extracted files,
+  `3,750` package chunks, and `reviewer_ready=true`. A review-local Kootenai
+  component inventory builds on f70 with `53` components and `8` standards;
+  `forest-plan-resolve` resolves `scope_status="kootenai_nf"` with
+  `geographic_area_count=1`, `management_area_count=3`, and `overlay_count=2`.
+  Component adjudication resolves the current `34/34` queue as system misses
+  with `0` pending and `0` real EA omissions. Applicability adjudication
+  resolves `6/6` conflicts; applicability validation reports `47` applicable,
+  `72` not applicable, `0` unresolved, and a generated `47`-rule pack.
+  Compliance review is reviewer-ready with `47` findings (`28` pass, `18`
+  uncertain, `1` gap). The tracked Kootenai V1 eval contract
+  `config/v1_kootenai_trojan_defense_real_ea_eval.json` passes with
+  `contract_status="reviewer_ready"`, and the tracked component eval contract
+  `config/forest_plan_component_evals/region1-example-kootenai-trojan-defense-64354.json`
+  passes `53/53` cases with `8` applicable standards. Aggregate promotion
+  gates are green locally: `real-package-review-coverage-eval` passes with
+  `covered_slot_count=11`, `reviewer_ready_slot_count=11`,
+  `distinct_forest_count=10`, and `distinct_package_style_count=18`;
+  `forest-specific-example-package-eval` passes with `review_example_count=11`,
+  `reviewer_ready_example_count=11`,
+  `distinct_governed_example_forest_count=10`, and
+  `profile_guidance_only_count=0`; `forest-plan-component-eval-coverage`
+  passes with `covered_review_count=12/12`, `stale_identity_count=0`, and
+  `unresolved_review_count=0`. Review `phase-eval` confirms the Kootenai
+  review scope has `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true`, but the whole phase aggregate remains
+  red on inherited shared `rule_claim_binding` direct-eval debt
+  (`rule_claim_link_scores_are_supported`). Route that residual to a separate
+  downstream rule-claim quality packet, not back into Kootenai promotion.
 - Dakota Prairie Grasslands Medora Vegetation Management is resolved locally
   through Milestone 4 and is now the governed primary example for
   `dakota-prairie-grasslands`. The packet is
@@ -108,22 +154,13 @@ Use this file as the short current route before opening the append-only docs.
   `contract_status="reviewer_ready"`, and the tracked component eval contract
   `config/forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
   passes `394/394` cases with `161` applicable standards. Aggregate promotion
-  gates are green locally: `real-package-review-coverage-eval` passes with
-  `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
-  `distinct_forest_count=9`, and `distinct_package_style_count=16`;
-  `forest-specific-example-package-eval` passes with `review_example_count=10`,
-  `reviewer_ready_example_count=10`,
-  `distinct_governed_example_forest_count=9`, and
-  `profile_guidance_only_count=1`; `forest-plan-component-eval-coverage`
-  passes with `covered_review_count=11/11`, `stale_identity_count=0`, and
-  `unresolved_review_count=0`. Review `phase-eval` passes `28/28` phases with
-  `reviewer_ready=true`, `declared_review_contract=true`, and
+  gates were green locally at Dakota closeout; the current aggregate gates are
+  now carried by the Kootenai packet above. Review `phase-eval` passes `28/28`
+  phases with `reviewer_ready=true`, `declared_review_contract=true`, and
   `contract_backed_promotion_ready=true`. `config/forest_specific_example_package_registry_v1.json`
-  now routes `dakota-prairie-grasslands` as
+  routes `dakota-prairie-grasslands` as
   `real_package_examples_available` with
   `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
-  Kootenai National Forest is now the only remaining
-  `profile_eval_guidance_only` forest without a governed real package example.
 - Nez Perce-Clearwater Dead Laundry is the predecessor resolved
   forest-specific example packet. It is resolved locally through Milestone 4 and
   is now the governed primary example for `nez-perce-clearwater-nfs`.

@@ -465,6 +465,36 @@ class ForestPlanProfileTests(unittest.TestCase):
         )
         self.assertIn("Wildland Urban Interface", [entry.name for entry in profile.overlay_terms])
 
+    def test_kootenai_profile_uses_trojan_defense_context_terms(self) -> None:
+        profile = load_forest_plan_profile("kootenai-nf")
+
+        self.assertEqual(profile.active_plan_source_record_id, "R1PLAN-kootenai-nf-02")
+        self.assertEqual(
+            profile.source_record_id_for_role("primary_land_management_plan"),
+            "R1PLAN-kootenai-nf-02",
+        )
+        self.assertIn(
+            "Three Rivers Ranger District",
+            [entry.name for entry in profile.ranger_district_terms],
+        )
+        self.assertEqual(
+            [entry.name for entry in profile.geographic_area_terms],
+            ["Bull Geographic Area"],
+        )
+        self.assertEqual(
+            {entry.entry_id for entry in profile.management_area_terms},
+            {
+                "mgmt-ma2-eligible-wild-scenic-rivers",
+                "mgmt-ma3-special-areas",
+                "mgmt-ma6-general-forest",
+            },
+        )
+        self.assertIn(
+            "Riparian Habitat Conservation Area",
+            [entry.name for entry in profile.overlay_terms],
+        )
+        self.assertIn("Wildland Urban Interface", [entry.name for entry in profile.overlay_terms])
+
     def test_hlc_profile_has_bonanza_castles_context_terms(self) -> None:
         profile = load_forest_plan_profile("helena-lewis-and-clark-nf")
 

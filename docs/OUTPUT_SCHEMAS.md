@@ -3737,14 +3737,14 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
   proves the V1 eval's forest-plan `scope_status` identifies the same
   `forest_unit_id` declared by the slot.
 
-The current manifest has ten required slots: East Crazies current promotion
-plus nine `forest_specific_reviewer_ready` examples across Beaverhead-Deerlodge,
+The current manifest has eleven required slots: East Crazies current promotion
+plus ten `forest_specific_reviewer_ready` examples across Beaverhead-Deerlodge,
 Bitterroot, Flathead, Custer Gallatin, Lolo, Helena-Lewis-and-Clark, Idaho
-Panhandle, Nez Perce-Clearwater, and Dakota Prairie. South Plateau is archived
-as historical evidence only. The current aggregate threshold floor is ten
-slots, two active coverage classes, nine distinct forests, sixteen package
-styles, ten reviewer-ready slots, zero typed-blocked slots, and zero
-package-authority gaps.
+Panhandle, Nez Perce-Clearwater, Dakota Prairie, and Kootenai. South Plateau is
+archived as historical evidence only. The current aggregate threshold floor is
+eleven slots, two active coverage classes, ten distinct forests, eighteen
+package styles, eleven reviewer-ready slots, zero typed-blocked slots, and
+zero package-authority gaps.
 
 ## Gold Coverage Eval Outputs
 
@@ -4876,12 +4876,11 @@ records:
   reasons. Referenced example results include the propagated `runtime_forest_scope_gate`; a missing
   or non-matching gate emits `runtime_forest_scope_not_applicable`.
 
-The current registry routes nine forests to governed reviewer-ready examples,
-including Dakota Prairie Grasslands to Medora Vegetation Management. Kootenai
-National Forest remains the only `profile_eval_guidance_only` forest. The
-aggregate floor is ten governed examples, ten reviewer-ready examples, nine
-governed example forests, zero typed-blocked examples, one maximum
-profile-guidance-only forest, and zero failed forests.
+The current registry routes all ten Region 1 forests to governed
+reviewer-ready examples, including Kootenai National Forest to Trojan Defense.
+The aggregate floor is eleven governed examples, eleven reviewer-ready
+examples, ten governed example forests, zero typed-blocked examples, zero
+profile-guidance-only forests, and zero failed forests.
 
 ## Evidence Retrieval Outputs
 

@@ -33,6 +33,75 @@ Latest implementation update on 2026-05-31 UTC:
   forest-specific package usable for another forest without matching runtime
   forest-plan scope evidence.
 
+## Kootenai Trojan Defense Promotion Resolved Locally
+
+Latest implementation update on 2026-05-31 UTC:
+
+- update:
+  `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is
+  resolved locally through governed primary-example promotion. Kootenai
+  National Forest now has governed primary example
+  `example_id="knf-trojan-defense-forest-specific"` for the Trojan Defense
+  Hazardous Fuels Reduction Project (`64354`). The working identity is
+  `review_id="region1-example-kootenai-trojan-defense-64354"`,
+  `forest_unit_id="kootenai-nf"`, and
+  `source_set_id="source-set-f70ea11e04ae3d53"`.
+- package authority:
+  selected authorities are the official project page
+  `https://www.fs.usda.gov/r01/kootenai/projects/64354` and the supplied Box
+  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/214150735755`.
+  Local ignored intake under
+  `source_library/reviews/_intake/region1-example-kootenai-trojan-defense-64354/`
+  records `74` downloaded files, `152,732,803` actual bytes, and
+  `failure_count=0`. The tracked replay context is
+  `config/replay_contexts/region1-example-kootenai-trojan-defense-64354.json`.
+- base review and preflight:
+  `ea-review` passes on `source-set-f70ea11e04ae3d53` with `74/74` extracted
+  files, `3,750` package chunks, `package_failed_count=0`, `5` pass findings,
+  and `reviewer_ready=true`. The Kootenai component inventory manifest now
+  allows the Kootenai row on the f70 replay source set. The review-local f70
+  component inventory builds with `53` components and `8` standards; component
+  inventory coverage and source accuracy pass. The Kootenai profile resolves
+  `scope_status="kootenai_nf"` with `geographic_area_count=1`,
+  `management_area_count=3`, `overlay_count=2`, and no blocking missing
+  Kootenai source records.
+- adjudication and reviewer stack:
+  tracked component adjudication at
+  `config/forest_plan_component_adjudications/region1-example-kootenai-trojan-defense-64354.json`
+  resolves the current `34/34` queue as system misses with `0` pending items
+  and `0` real EA omissions. Tracked applicability adjudication at
+  `config/applicability_adjudications/region1-example-kootenai-trojan-defense-64354.json`
+  resolves `6/6` conflicts as applicable; applicability validation reports
+  `47` applicable, `72` not applicable, `0` unresolved, and a generated
+  `47`-rule pack. `compliance-review` is reviewer-ready and
+  validation-passed with `47` findings: `28` pass, `18` uncertain, and `1`
+  gap.
+- contracts and promotion:
+  tracked V1 eval contract
+  `config/v1_kootenai_trojan_defense_real_ea_eval.json` passes with
+  `contract_status="reviewer_ready"`, and tracked component eval contract
+  `config/forest_plan_component_evals/region1-example-kootenai-trojan-defense-64354.json`
+  passes `53/53` cases with `8` applicable standards. `config/v1_real_package_review_coverage_v1.json`
+  now includes required slot `slot_id="knf-trojan-defense-forest-specific"`,
+  and `config/forest_specific_example_package_registry_v1.json` routes
+  `kootenai-nf` as `real_package_examples_available` with
+  `primary_example_id="knf-trojan-defense-forest-specific"`.
+  `real-package-review-coverage-eval` passes with `covered_slot_count=11`,
+  `reviewer_ready_slot_count=11`, `distinct_forest_count=10`, and
+  `distinct_package_style_count=18`. `forest-specific-example-package-eval`
+  passes with `review_example_count=11`, `reviewer_ready_example_count=11`,
+  `distinct_governed_example_forest_count=10`, and
+  `profile_guidance_only_count=0`. `forest-plan-component-eval-coverage`
+  passes with `covered_review_count=12/12`, `stale_identity_count=0`, and
+  `unresolved_review_count=0`.
+- residual:
+  review `phase-eval` confirms the Kootenai review scope is declared and
+  contract-backed (`declared_review_contract=true`,
+  `contract_backed_promotion_ready=true`) but still exits red because the
+  inherited shared `rule_claim_binding` direct eval is stale/unsupported
+  (`rule_claim_link_scores_are_supported`). Treat that as a separate
+  downstream rule-claim quality packet, not as Kootenai package-local work.
+
 ## Dakota Prairie Medora Promotion Resolved Locally
 
 Latest implementation update on 2026-05-31 UTC:
@@ -99,18 +168,12 @@ Latest implementation update on 2026-05-31 UTC:
   `config/forest_specific_example_package_registry_v1.json` routes
   `dakota-prairie-grasslands` as `real_package_examples_available` with
   `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
-  `real-package-review-coverage-eval` passes with `covered_slot_count=10`,
+  Dakota closeout aggregate gates were green locally at `covered_slot_count=10`,
   `reviewer_ready_slot_count=10`, `distinct_forest_count=9`, and
-  `distinct_package_style_count=16`. `forest-specific-example-package-eval`
-  passes with `review_example_count=10`, `reviewer_ready_example_count=10`,
-  `distinct_governed_example_forest_count=9`, and
-  `profile_guidance_only_count=1`. `forest-plan-component-eval-coverage`
-  passes with `covered_review_count=11/11`, `stale_identity_count=0`, and
-  `unresolved_review_count=0`. Review `phase-eval` now passes `28/28` phases
+  `profile_guidance_only_count=1`; the current aggregate gates are now carried
+  by the Kootenai section above. Review `phase-eval` now passes `28/28` phases
   with `declared_review_contract=true` and
-  `contract_backed_promotion_ready=true`. Kootenai National Forest is the only
-  remaining `profile_eval_guidance_only` forest without a governed real package
-  example.
+  `contract_backed_promotion_ready=true`.
 
 ## ECID Source-Delta Historical Replay Resolved Locally
 

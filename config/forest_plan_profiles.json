@@ -2398,10 +2398,86 @@
         "biological_opinion_chapter_3",
         "biological_opinion_chapter_4"
       ],
-      "ranger_district_terms": [],
-      "geographic_area_terms": [],
-      "management_area_terms": [],
-      "overlay_terms": [],
+      "ranger_district_terms": [
+        {
+          "entry_id": "district-three-rivers",
+          "category": "district",
+          "name": "Three Rivers Ranger District",
+          "aliases": [
+            "Three Rivers RD",
+            "3 Rivers"
+          ]
+        }
+      ],
+      "geographic_area_terms": [
+        {
+          "entry_id": "geo-bull",
+          "category": "geographic_area",
+          "name": "Bull Geographic Area",
+          "aliases": [
+            "Bull GA"
+          ]
+        }
+      ],
+      "management_area_terms": [
+        {
+          "entry_id": "mgmt-ma2-eligible-wild-scenic-rivers",
+          "category": "management_area",
+          "name": "MA2",
+          "aliases": [
+            "MA 2",
+            "Management Area 2",
+            "Eligible Wild and Scenic Rivers",
+            "Kootenai River (recreation)",
+            "Callahan Creek (recreation)"
+          ]
+        },
+        {
+          "entry_id": "mgmt-ma3-special-areas",
+          "category": "management_area",
+          "name": "MA3",
+          "aliases": [
+            "MA 3",
+            "Management Area 3",
+            "Special Areas",
+            "Callahan Historic Mining & Logging District"
+          ]
+        },
+        {
+          "entry_id": "mgmt-ma6-general-forest",
+          "category": "management_area",
+          "name": "MA6",
+          "aliases": [
+            "MA 6",
+            "Management Area 6",
+            "MA6 - General Forest",
+            "MA6- General Forest",
+            "General Forest"
+          ]
+        }
+      ],
+      "overlay_terms": [
+        {
+          "entry_id": "overlay-riparian-habitat-conservation-area",
+          "category": "overlay",
+          "name": "Riparian Habitat Conservation Area",
+          "aliases": [
+            "Riparian Habitat Conservation Areas",
+            "RHCA",
+            "RHCAs"
+          ]
+        },
+        {
+          "entry_id": "overlay-wildland-urban-interface",
+          "category": "overlay",
+          "name": "Wildland Urban Interface",
+          "aliases": [
+            "Wildland Urban Interface",
+            "WUI",
+            "Lincoln County wildland urban interface"
+          ]
+        }
+      ],
       "plan_component_types": [
         "desired_condition",
         "goal",

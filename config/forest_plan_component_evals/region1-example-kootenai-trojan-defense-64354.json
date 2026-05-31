@@ -1,0 +1,839 @@
+{
+  "cases": [
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-VEG-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-VEG-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-VEG-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-VEG-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-STD-VEG-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-STD-VEG-01",
+      "component_type": "standard",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-VEG-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-VEG-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)",
+        "EA-PACKAGE-009 (6264beb630d1)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-FIRE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-FIRE-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-022 (3c6b0d9d395d)",
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-FIRE-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-FIRE-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-WTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-WTR-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-WTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-WTR-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-STD-WTR-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-STD-WTR-01",
+      "component_type": "standard",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-WTR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-WTR-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-SOIL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-SOIL-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-SOIL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-SOIL-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-SOIL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-SOIL-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-013 (dfc3fb578c36)",
+        "EA-PACKAGE-002 (aabbd231429a)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-RIP-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-RIP-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-RIP-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-RIP-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-STD-RIP-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-STD-RIP-01",
+      "component_type": "standard",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "package_section": "TrojanDefenseForestPlanConsistency.pdf",
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-RIP-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-RIP-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-AQH-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-AQH-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-AQH-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-AQH-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-AQS-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-AQS-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-AQS-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-AQS-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-AQS-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-AQS-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-WL-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-WL-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)",
+        "EA-PACKAGE-026 (4a3a7c149faa)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-STD-WL-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-STD-WL-01",
+      "component_type": "standard",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)",
+        "EA-PACKAGE-030 (76ac6fb7c99f)"
+      ],
+      "package_section": "TrojanDefenseForestPlanConsistency.pdf",
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-WL-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-WL-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)",
+        "EA-PACKAGE-030 (76ac6fb7c99f)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-AQ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-AQ-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-AQ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-AQ-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-AR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-AR-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-AR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-AR-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-STD-IRA-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-STD-IRA-01",
+      "component_type": "standard",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-IRA-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-IRA-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-LND-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-LND-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)",
+        "EA-PACKAGE-020 (b2061ec55ea3)",
+        "EA-PACKAGE-013 (dfc3fb578c36)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-CR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-CR-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-024 (b791137bc5d6)",
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-CR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-CR-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-CR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-CR-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-AI-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-AI-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-AI-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-AI-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-AI-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-AI-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-TBR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-TBR-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-TBR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-TBR-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-STD-TBR-01",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-STD-TBR-01",
+      "component_type": "standard",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-GDL-TBR-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-GDL-TBR-01",
+      "component_type": "guideline",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-MIN-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-MIN-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-MIN-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-MIN-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-STD-MIN-01",
+      "compliance_status": "complies",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-STD-MIN-01",
+      "component_type": "standard",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "package_section": "TrojanDefenseForestPlanConsistency.pdf",
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-GRZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-GRZ-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-GRZ-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-GRZ-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-SFP-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-SFP-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-SES-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-SES-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-020 (b2061ec55ea3)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-OBJ-SES-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-OBJ-SES-01",
+      "component_type": "objective",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [
+        "EA-PACKAGE-012 (3786c5b7e3f4)"
+      ],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "closed"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": false,
+      "case_id": "R1PLAN-kootenai-nf-02-FW-DC-CCI-01",
+      "compliance_status": "not_evaluated_for_compliance",
+      "component_id": "R1PLAN-kootenai-nf-02-FW-DC-CCI-01",
+      "component_type": "desired_condition",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    },
+    {
+      "applicability_status": "applicable",
+      "applicable_standard": true,
+      "case_id": "R1PLAN-kootenai-nf-02-max-2009",
+      "compliance_status": "insufficient_evidence",
+      "component_id": "R1PLAN-kootenai-nf-02-max-2009",
+      "component_type": "standard",
+      "description": "Trojan Defense component replay case generated from the current raw forest-plan component findings surface; component adjudication is evaluated separately for reviewer-ready closure.",
+      "package_evidence_citations": [],
+      "package_section": null,
+      "plan_source_citations": [
+        "FPS-267 (37f54e2beb0f)"
+      ],
+      "reviewer_resolution_state": "open"
+    }
+  ],
+  "coverage_requirements": {
+    "minimum_cases_by_applicability_status": {
+      "applicable": 53
+    },
+    "minimum_cases_by_component_type": {
+      "desired_condition": 18,
+      "guideline": 12,
+      "objective": 15,
+      "standard": 8
+    },
+    "require_all_applicable_standards": true
+  },
+  "description": "Kootenai Trojan Defense raw forest-plan component replay contract. Adjudicated reviewer-ready closure is tested by the component adjudication eval.",
+  "eval_id": "region1-example-kootenai-trojan-defense-64354-component-eval",
+  "forest_unit_id": "kootenai-nf",
+  "metric_thresholds": {
+    "component_applicability_precision": {
+      "min": 1.0
+    },
+    "component_applicability_recall": {
+      "min": 1.0
+    },
+    "expected_applicable_standard_count": {
+      "min": 8
+    },
+    "package_evidence_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "plan_source_citation_correctness_rate": {
+      "min": 1.0
+    },
+    "reviewer_resolution_state_match_rate": {
+      "min": 1.0
+    }
+  },
+  "review_id": "region1-example-kootenai-trojan-defense-64354",
+  "schema_version": "forest-plan-component-eval-v0",
+  "source_set_id": "source-set-f70ea11e04ae3d53"
+}

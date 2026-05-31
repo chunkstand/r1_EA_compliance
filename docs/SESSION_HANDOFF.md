@@ -27,6 +27,9 @@ history below.
 - latest resolved West Reservoir packet:
   `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4
 - latest resolved forest-specific example packet:
+  `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  Kootenai promotion
+- predecessor resolved forest-specific example packet:
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
 - predecessor resolved forest-specific example packet:
@@ -56,8 +59,8 @@ history below.
 - active forest-specific example packet:
   no active unresolved forest-specific example packet remains in this child
   lane; the latest resolved packet is
-  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
-  Milestone 4
+  `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
+  Kootenai promotion
 - resolved Beaverhead-Deerlodge packet:
   `docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   Milestone 4
@@ -76,61 +79,49 @@ history below.
   real-package plus forest-specific aggregate gates fail closed on missing or
   non-matching runtime scope. Registry applicability remains necessary but is
   no longer sufficient by itself.
-  Dakota Prairie Grasslands Medora Vegetation Management Project (`66886`) is
-  resolved locally through Milestone 4 and is now the governed primary example
-  for `dakota-prairie-grasslands`. The packet is
-  `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`,
-  with review ID
-  `region1-example-dakota-prairie-medora-vegetation-management-66886`,
-  forest unit `dakota-prairie-grasslands`, and source set
-  `source-set-f70ea11e04ae3d53`. Milestone 4 promotion closeout commit is
-  `bef9258` (`Promote Dakota Prairie Medora example`). The selected
+  Kootenai National Forest Trojan Defense Project (`64354`) is resolved
+  locally and is now the governed primary example for `kootenai-nf`. The
+  packet is
+  `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`, with
+  review ID `region1-example-kootenai-trojan-defense-64354`, forest unit
+  `kootenai-nf`, and source set `source-set-f70ea11e04ae3d53`. The selected
   authorities are the official project page
-  `https://www.fs.usda.gov/r01/dpg/projects/66886` and supplied Box folder
-  `https://usfs-public.app.box.com/v/PinyonPublic/folder/284408882208`.
-  Live readback on 2026-05-31 identifies the project as `Completed`, expected
-  analysis type `Environmental Assessment`, lead management unit
-  `Medora Ranger District`, and decision signed date `12/04/2025`. Local
-  ignored intake under
-  `source_library/reviews/_intake/region1-example-dakota-prairie-medora-vegetation-management-66886/`
-  records `7` downloaded files, `40,860,421` bytes, and `failure_count=0`; the
-  tracked replay context is
-  `config/replay_contexts/region1-example-dakota-prairie-medora-vegetation-management-66886.json`.
-  Base `ea-review` passes with `7/7` extracted files, `417` package chunks,
-  and `reviewer_ready=true`. The f70 Dakota component inventory builds with
-  `394` components and `161` standards. The refreshed Dakota profile lets
-  `forest-plan-resolve` resolve `scope_status="dakota_prairie_grasslands"`
-  with `project_location_signal_count=1`, `geographic_area_count=2`,
-  `management_area_count=9`, `overlay_count=0`, and no blocking missing Dakota
-  source records. Component findings now report `394` applicable components:
-  `10` supported and `384` gaps. Tracked component adjudication resolves the
-  current `384/384` queue as `evidence_linking_miss` system misses with `0`
-  pending and `0` real EA omissions. Tracked applicability adjudication
-  resolves the single species-supporting conflict as `human_applicable`;
-  applicability validation reports `460` candidate authorities, `47`
-  applicable, `413` not applicable, `0` unresolved, and generated rule-pack
-  validation produces `47` rules. Compliance review is reviewer-ready with
-  `47` findings (`28` pass, `18` uncertain, `1` gap). The tracked Dakota V1
-  eval contract `config/v1_dakota_prairie_medora_real_ea_eval.json` passes
-  with `contract_status="reviewer_ready"`, and the tracked component eval
-  contract
-  `config/forest_plan_component_evals/region1-example-dakota-prairie-medora-vegetation-management-66886.json`
-  passes `394/394` cases with `161` applicable standards. `real-package-review-coverage-eval`
-  passes with `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
-  `distinct_forest_count=9`, and `distinct_package_style_count=16`;
-  `forest-specific-example-package-eval` passes with `review_example_count=10`,
-  `reviewer_ready_example_count=10`,
-  `distinct_governed_example_forest_count=9`, and
-  `profile_guidance_only_count=1`; `forest-plan-component-eval-coverage`
-  passes with `covered_review_count=11/11`, `stale_identity_count=0`, and
-  `unresolved_review_count=0`. Review `phase-eval` passes `28/28` phases with
-  `reviewer_ready=true`, `declared_review_contract=true`, and
-  `contract_backed_promotion_ready=true`. `config/forest_specific_example_package_registry_v1.json`
-  now routes `dakota-prairie-grasslands` as
-  `real_package_examples_available` with
-  `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
-  Kootenai National Forest is now the only remaining
-  `profile_eval_guidance_only` forest without a governed real package example.
+  `https://www.fs.usda.gov/r01/kootenai/projects/64354` and supplied Box
+  folder `https://usfs-public.app.box.com/v/PinyonPublic/folder/214150735755`.
+  Local ignored intake under
+  `source_library/reviews/_intake/region1-example-kootenai-trojan-defense-64354/`
+  records `74` downloaded files, `152,732,803` bytes, and `failure_count=0`;
+  the tracked replay context is
+  `config/replay_contexts/region1-example-kootenai-trojan-defense-64354.json`.
+  Base `ea-review` passes with `74/74` extracted files, `3,750` package
+  chunks, and `reviewer_ready=true`. The f70 Kootenai component inventory
+  builds with `53` components and `8` standards. The Kootenai profile lets
+  `forest-plan-resolve` resolve `scope_status="kootenai_nf"` with
+  `geographic_area_count=1`, `management_area_count=3`, `overlay_count=2`, and
+  no blocking missing Kootenai source records. Tracked component adjudication
+  resolves the current `34/34` queue as system misses with `0` pending and `0`
+  real EA omissions. Tracked applicability adjudication resolves `6/6`
+  conflicts as applicable; applicability validation reports `47` applicable,
+  `72` not applicable, `0` unresolved, and generated rule-pack validation
+  produces `47` rules. Compliance review is reviewer-ready with `47` findings
+  (`28` pass, `18` uncertain, `1` gap). The tracked Kootenai V1 eval contract
+  `config/v1_kootenai_trojan_defense_real_ea_eval.json` passes with
+  `contract_status="reviewer_ready"`, and the tracked component eval contract
+  `config/forest_plan_component_evals/region1-example-kootenai-trojan-defense-64354.json`
+  passes `53/53` cases with `8` applicable standards. `real-package-review-coverage-eval`
+  passes with `covered_slot_count=11`, `reviewer_ready_slot_count=11`,
+  `distinct_forest_count=10`, and `distinct_package_style_count=18`;
+  `forest-specific-example-package-eval` passes with `review_example_count=11`,
+  `reviewer_ready_example_count=11`,
+  `distinct_governed_example_forest_count=10`, and
+  `profile_guidance_only_count=0`; `forest-plan-component-eval-coverage`
+  passes with `covered_review_count=12/12`, `stale_identity_count=0`, and
+  `unresolved_review_count=0`. Review `phase-eval` confirms the Kootenai
+  review scope is declared and contract-backed, but still exits red on
+  inherited shared `rule_claim_binding` direct-eval debt
+  (`rule_claim_link_scores_are_supported`). `config/forest_specific_example_package_registry_v1.json`
+  now routes `kootenai-nf` as `real_package_examples_available` with
+  `primary_example_id="knf-trojan-defense-forest-specific"`.
 
   ECID source-delta residual checkpoint:
   `v1-cg-ecid-source-delta-review` is historical Custer Gallatin source-delta

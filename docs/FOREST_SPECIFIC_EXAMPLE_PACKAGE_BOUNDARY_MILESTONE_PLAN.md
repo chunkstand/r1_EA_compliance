@@ -1,7 +1,7 @@
 # Forest Specific Example Package Boundary Milestone Plan
 
 Date: 2026-05-24
-Status: Active umbrella packet (`Milestone 0 registry and queue reroute opened locally; Milestone 1 aggregate per-forest coverage eval added locally; Milestone 2 reduced through docs/LOLO_TYLERS_KITCHEN_EXAMPLE_PACKAGE_MILESTONE_PLAN.md after the Lolo queue reroute and component coverage landed; Milestone 3 Lolo registry promotion and threshold ratchet are resolved locally; docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md has resolved package intake, reviewer-stack replay, Milestone 3 same-forest registry promotion, and the follow-on South Otter primary-example selection update locally; docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BITTERROOT_FRONT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and coverage promotion; docs/BEAVERHEAD_DEERLODGE_SOUTH_TOBACCO_ROOTS_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is reduced through Milestone 4 registry and coverage promotion, with only inherited ECID source-delta component-coverage drift still red; docs/IDAHO_PANHANDLE_LACY_LEMOOSH_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and aggregate coverage promotion; docs/NEZ_PERCE_CLEARWATER_DEAD_LAUNDRY_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and aggregate coverage promotion; docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md is resolved through Milestone 4 registry and aggregate coverage promotion; South Plateau is archived as historical evidence only and must not be used as an example; do not reopen Lolo, South Otter, HLC, Bitterroot, Beaverhead-Deerlodge, Idaho Panhandle Lacy, Nez Perce-Clearwater Dead Laundry, or Dakota Prairie Medora Milestones 0-4 unless a verified gate regresses`)
+Status: Active umbrella packet (`docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved locally as the Kootenai governed primary example; all 10 Region 1 forest units now route to governed real package examples, with 11 reviewer-ready examples total. Earlier Lolo, South Otter, HLC, Bitterroot, Beaverhead-Deerlodge, Idaho Panhandle Lacy, Nez Perce-Clearwater Dead Laundry, and Dakota Prairie Medora packets remain resolved. South Plateau is archived as historical evidence only and must not be used as an example. Do not reopen resolved Milestones 0-4 or the Kootenai promotion unless a verified gate regresses.)
 Owner context: follow-on from the direct-file queue packet and the real-package review coverage lane
 
 ## Latest Local Implementation
@@ -31,6 +31,7 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
     `nez-perce-clearwater-nfs`
   - Medora Vegetation Management as the primary reviewer-ready example for
     `dakota-prairie-grasslands`
+  - Trojan Defense as the primary reviewer-ready example for `kootenai-nf`
 - South Plateau is no longer an active governed example. It is retained only
   under archived manifest surfaces with
   `usage_policy="historical_evidence_only_not_example"` due to litigation and
@@ -45,9 +46,33 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   parent packet's Milestone 3 registry and aggregate threshold ratchet is now
   implemented: `lolo-nf` routes as `real_package_examples_available`, and the
   Lolo slot is load-bearing in real-package coverage.
-- The remaining `1` forest now routes through
-  `config/region1_forest_plan_profile_eval_coverage_v1.json` as
-  `profile_eval_guidance_only` until a governed real package example exists.
+- No Region 1 forest remains on `profile_eval_guidance_only` after the
+  Kootenai Trojan Defense promotion; profile eval remains a supporting
+  cross-forest readiness surface, not the primary example route.
+- The Kootenai Trojan Defense follow-on in
+  `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved
+  through governed primary-example promotion. Local ignored intake for review
+  `region1-example-kootenai-trojan-defense-64354` has `74` downloaded files,
+  `152,732,803` bytes, and `0` failures. Base `ea-review` passes with `74/74`
+  extracted files and `3,750` package chunks. A review-local Kootenai component
+  inventory builds on f70 with `53` components and `8` standards, and
+  `forest-plan-resolve` resolves `scope_status="kootenai_nf"` with
+  `geographic_area_count=1`, `management_area_count=3`, and
+  `overlay_count=2`. Tracked component adjudication resolves the current
+  `34/34` queue as system misses with `0` pending and `0` real EA omissions.
+  Tracked applicability adjudication resolves `6/6` conflicts; generated
+  rule-pack validation produces `47` rules, compliance review is reviewer-ready
+  with `47` findings, tracked V1 eval passes, and tracked component eval passes
+  `53/53` cases. Kootenai now routes as
+  `real_package_examples_available` with
+  `primary_example_id="knf-trojan-defense-forest-specific"`. Aggregate coverage
+  now passes with `covered_slot_count=11`, `reviewer_ready_slot_count=11`,
+  `review_example_count=11`, `reviewer_ready_example_count=11`,
+  `distinct_governed_example_forest_count=10`, and
+  `profile_guidance_only_count=0`; component coverage passes
+  `covered_review_count=12/12`. Review `phase-eval` confirms Kootenai
+  contract-backed promotion readiness but remains red on inherited shared
+  `rule_claim_binding` direct-eval debt outside this package.
 - The Dakota Prairie Medora follow-on in
   `docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`
   is resolved through Milestone 4 registry and aggregate coverage promotion.
@@ -72,12 +97,8 @@ Owner context: follow-on from the direct-file queue packet and the real-package 
   `primary_example_id="dpg-medora-vegetation-management-forest-specific"`.
   Milestone 4 promotion closeout commit is `bef9258` (`Promote Dakota Prairie
   Medora example`).
-  Aggregate coverage now passes with `covered_slot_count=10`,
-  `reviewer_ready_slot_count=10`, `review_example_count=10`,
-  `reviewer_ready_example_count=10`,
-  `distinct_governed_example_forest_count=9`, and
-  `profile_guidance_only_count=1`; component coverage passes
-  `covered_review_count=11/11`.
+  Aggregate coverage passed at Dakota closeout; the current aggregate counts
+  are now carried by the Kootenai packet above.
 - The South Otter follow-on in
   `docs/SOUTH_OTTER_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` is resolved through
   Milestone 3, and a follow-on user-directed policy update now makes South

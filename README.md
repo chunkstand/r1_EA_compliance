@@ -50,6 +50,22 @@ They are intentionally not duplicated here.
   runtime forest-plan resolution identifies that same forest as applicable;
   registry applicability alone is not enough, and examples must not be reused
   as generic Region 1 or non-matching-forest guidance.
+  For Kootenai National Forest, the governed primary example is
+  `primary_example_id="knf-trojan-defense-forest-specific"` with
+  `review_id="region1-example-kootenai-trojan-defense-64354"` in
+  `config/forest_specific_example_package_registry_v1.json`. The Trojan
+  Defense packet is resolved locally through
+  `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md` with
+  replay context
+  `config/replay_contexts/region1-example-kootenai-trojan-defense-64354.json`.
+  Its package-local reviewer stack passes through component adjudication,
+  applicability, compliance review, V1 eval, component eval, real-package
+  coverage, component coverage, and registry eval. Review `phase-eval`
+  confirms `declared_review_contract=true` and
+  `contract_backed_promotion_ready=true` for the Kootenai review scope, but
+  remains red on inherited shared `rule_claim_binding` direct-eval debt
+  (`rule_claim_link_scores_are_supported`), which is not Kootenai package
+  scope.
   For Dakota Prairie Grasslands, the governed primary example is
   `primary_example_id="dpg-medora-vegetation-management-forest-specific"` with
   `review_id="region1-example-dakota-prairie-medora-vegetation-management-66886"`
@@ -107,17 +123,15 @@ They are intentionally not duplicated here.
   `declared_review_contract=true` and
   `contract_backed_promotion_ready=true`. `FOR-034` is now resolved as the
   governed Dead Laundry forest-specific example-package boundary.
-  Current aggregate gates include Dakota: `real-package-review-coverage-eval`
-  passes with `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
-  `distinct_forest_count=9`, and `distinct_package_style_count=16`;
-  `forest-specific-example-package-eval` passes with `review_example_count=10`,
-  `reviewer_ready_example_count=10`,
-  `distinct_governed_example_forest_count=9`, and
-  `profile_guidance_only_count=1`; `forest-plan-component-eval-coverage`
-  passes with `covered_review_count=11/11`, `stale_identity_count=0`, and
-  `unresolved_review_count=0`. Kootenai National Forest is now the only
-  remaining profile-guidance-only forest without a governed real package
-  example.
+  Current aggregate gates include Kootenai: `real-package-review-coverage-eval`
+  passes with `covered_slot_count=11`, `reviewer_ready_slot_count=11`,
+  `distinct_forest_count=10`, and `distinct_package_style_count=18`;
+  `forest-specific-example-package-eval` passes with `review_example_count=11`,
+  `reviewer_ready_example_count=11`,
+  `distinct_governed_example_forest_count=10`, and
+  `profile_guidance_only_count=0`; `forest-plan-component-eval-coverage`
+  passes with `covered_review_count=12/12`, `stale_identity_count=0`, and
+  `unresolved_review_count=0`.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

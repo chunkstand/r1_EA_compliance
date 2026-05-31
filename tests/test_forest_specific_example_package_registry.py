@@ -20,6 +20,15 @@ DAKOTA_MEDORA_REPLAY_CONTEXT_PATH = (
     / "replay_contexts"
     / "region1-example-dakota-prairie-medora-vegetation-management-66886.json"
 )
+KOOTENAI_TROJAN_PLAN_PATH = (
+    ROOT / "docs" / "KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
+)
+KOOTENAI_TROJAN_REPLAY_CONTEXT_PATH = (
+    ROOT
+    / "config"
+    / "replay_contexts"
+    / "region1-example-kootenai-trojan-defense-64354.json"
+)
 
 
 def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
@@ -33,9 +42,9 @@ def test_registry_covers_each_region1_forest_once_and_matches_summary() -> None:
     assert len(set(forest_ids)) == 10
     assert registry["summary"] == {
         "forest_unit_count": 10,
-        "profile_guidance_only_count": 1,
-        "review_example_count": 10,
-        "reviewer_ready_example_count": 10,
+        "profile_guidance_only_count": 0,
+        "review_example_count": 11,
+        "reviewer_ready_example_count": 11,
         "typed_blocked_example_count": 0,
     }
 
@@ -397,7 +406,63 @@ def test_dakota_prairie_medora_is_promoted_as_governed_primary_example() -> None
     }
 
 
-def test_agent_start_here_names_dakota_as_latest_resolved_example() -> None:
+def test_kootenai_trojan_defense_is_promoted_as_governed_primary_example() -> None:
+    registry = _load_json(REGISTRY_PATH)
+    coverage_manifest = _load_json(REAL_PACKAGE_COVERAGE_PATH)
+    replay_context = _load_json(KOOTENAI_TROJAN_REPLAY_CONTEXT_PATH)
+
+    forest_row = next(
+        row
+        for row in registry["forest_routing"]
+        if row["forest_unit_id"] == "kootenai-nf"
+    )
+    active_example_ids = {row["example_id"] for row in registry["review_examples"]}
+    coverage_slot_ids = {slot["slot_id"] for slot in coverage_manifest["slots"]}
+    example_row = next(
+        row
+        for row in registry["review_examples"]
+        if row["example_id"] == "knf-trojan-defense-forest-specific"
+    )
+
+    assert forest_row["routing_status"] == "real_package_examples_available"
+    assert forest_row["primary_example_id"] == "knf-trojan-defense-forest-specific"
+    assert forest_row["supplemental_example_ids"] == []
+    assert forest_row["queue_boundary_source_ids"] == []
+    assert "Use the Trojan Defense package first" in forest_row["guidance_note"]
+    assert "reviewer-ready on source-set-f70ea11e04ae3d53" in forest_row["guidance_note"]
+    assert "knf-trojan-defense-forest-specific" in active_example_ids
+    assert "knf-trojan-defense-forest-specific" in coverage_slot_ids
+    assert example_row["review_id"] == "region1-example-kootenai-trojan-defense-64354"
+    assert example_row["coverage_slot_id"] == "knf-trojan-defense-forest-specific"
+    assert example_row["queue_lineage_source_ids"] == []
+    assert KOOTENAI_TROJAN_PLAN_PATH.exists()
+    assert replay_context == {
+        "review_id": "region1-example-kootenai-trojan-defense-64354",
+        "source_set_id": "source-set-f70ea11e04ae3d53",
+        "forest_unit_id": "kootenai-nf",
+        "catalog_dir": "source_library/catalog",
+        "package_path": (
+            "source_library/reviews/_intake/"
+            "region1-example-kootenai-trojan-defense-64354"
+        ),
+        "package_authority": {
+            "official_project_page": "https://www.fs.usda.gov/r01/kootenai/projects/64354",
+            "official_documents_page": (
+                "https://usfs-public.app.box.com/v/PinyonPublic/folder/214150735755"
+            ),
+            "box_inventory_path": (
+                "source_library/reviews/_intake/"
+                "region1-example-kootenai-trojan-defense-64354/box_inventory.json"
+            ),
+            "box_import_manifest_path": (
+                "source_library/reviews/_intake/"
+                "region1-example-kootenai-trojan-defense-64354/box_import_manifest.json"
+            ),
+        },
+    }
+
+
+def test_agent_start_here_names_kootenai_as_latest_resolved_example() -> None:
     registry = _load_json(REGISTRY_PATH)
     agent_start = AGENT_START_HERE_PATH.read_text(encoding="utf-8")
     readme = README_PATH.read_text(encoding="utf-8")
@@ -405,7 +470,7 @@ def test_agent_start_here_names_dakota_as_latest_resolved_example() -> None:
     forest_row = next(
         row
         for row in registry["forest_routing"]
-        if row["forest_unit_id"] == "dakota-prairie-grasslands"
+        if row["forest_unit_id"] == "kootenai-nf"
     )
     example_row = next(
         row
@@ -414,7 +479,7 @@ def test_agent_start_here_names_dakota_as_latest_resolved_example() -> None:
     )
 
     assert (
-        "docs/DAKOTA_PRAIRIE_MEDORA_VEGETATION_MANAGEMENT_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
+        "docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md"
         in agent_start
     )
     assert "latest resolved forest-specific example packet" in agent_start
@@ -422,8 +487,8 @@ def test_agent_start_here_names_dakota_as_latest_resolved_example() -> None:
     assert f'review_id="{example_row["review_id"]}"' in agent_start
     assert f'primary_example_id="{forest_row["primary_example_id"]}"' in agent_start
     assert f'forest_unit_id="{forest_row["forest_unit_id"]}"' in agent_start
-    assert "Medora Vegetation Management as the governed primary example" in agent_start
-    assert "must not be reused for non-Dakota forests" in agent_start
+    assert "Trojan Defense as the governed primary example" in agent_start
+    assert "must not be reused for non-Kootenai forests" in agent_start
     assert f'primary_example_id="{forest_row["primary_example_id"]}"' in readme
     assert f'review_id="{example_row["review_id"]}"' in readme
 

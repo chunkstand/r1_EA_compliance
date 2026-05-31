@@ -1,16 +1,16 @@
 {
   "schema_version": "forest-specific-example-package-registry-v1",
   "contract_id": "region1-forest-specific-example-packages",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "as_of_date": "2026-05-31",
-  "status": "dakota-prairie-medora-v1-reviewer-ready",
+  "status": "kootenai-trojan-defense-governed-primary-example",
   "coverage_thresholds": {
     "required_forest_unit_count": 10,
-    "review_example_count_min": 10,
-    "reviewer_ready_example_count_min": 10,
+    "review_example_count_min": 11,
+    "reviewer_ready_example_count_min": 11,
     "typed_blocked_example_count_min": 0,
-    "distinct_governed_example_forest_count_min": 9,
-    "profile_guidance_only_count_max": 1,
+    "distinct_governed_example_forest_count_min": 10,
+    "profile_guidance_only_count_max": 0,
     "failed_forest_count_max": 0
   },
   "output_schema": {
@@ -46,9 +46,9 @@
   },
   "summary": {
     "forest_unit_count": 10,
-    "profile_guidance_only_count": 1,
-    "review_example_count": 10,
-    "reviewer_ready_example_count": 10,
+    "profile_guidance_only_count": 0,
+    "review_example_count": 11,
+    "reviewer_ready_example_count": 11,
     "typed_blocked_example_count": 0
   },
   "parallel_surface": {
@@ -484,6 +484,36 @@
         "compliance_matrix_render_manifest"
       ],
       "notes": "Primary reviewer-ready Medora Vegetation Management example package for Dakota Prairie Grasslands. Inspect Medora first for Dakota Prairie forest-specific example-package guidance; keep the package parallel to Document_Register_Master."
+    },
+    {
+      "example_id": "knf-trojan-defense-forest-specific",
+      "review_id": "region1-example-kootenai-trojan-defense-64354",
+      "forest_unit_id": "kootenai-nf",
+      "forest_unit_label": "Kootenai National Forest",
+      "package_label": "Trojan Defense Hazardous Fuels Reduction Project",
+      "coverage_class_id": "forest_specific_reviewer_ready",
+      "coverage_slot_id": "knf-trojan-defense-forest-specific",
+      "expected_contract_status": "reviewer_ready",
+      "eval_file": "config/v1_kootenai_trojan_defense_real_ea_eval.json",
+      "package_authority": {
+        "replay_context_path": "config/replay_contexts/region1-example-kootenai-trojan-defense-64354.json",
+        "official_project_page": "https://www.fs.usda.gov/r01/kootenai/projects/64354",
+        "official_documents_page": "https://usfs-public.app.box.com/v/PinyonPublic/folder/214150735755"
+      },
+      "applicable_forest_unit_ids": [
+        "kootenai-nf"
+      ],
+      "queue_lineage_source_ids": [],
+      "agent_read_artifact_family_ids": [
+        "real_package_review_coverage_slot",
+        "v1_review_eval",
+        "phase_eval",
+        "applicability_validation",
+        "compliance_review",
+        "forest_plan_component_eval",
+        "compliance_matrix_render_manifest"
+      ],
+      "notes": "Primary reviewer-ready Trojan Defense example package for Kootenai National Forest. Inspect Trojan Defense first for Kootenai forest-specific example-package guidance; keep the package parallel to Document_Register_Master."
     }
   ],
   "forest_routing": [
@@ -658,14 +688,16 @@
     {
       "forest_unit_id": "kootenai-nf",
       "forest_unit_label": "Kootenai National Forest",
-      "routing_status": "profile_eval_guidance_only",
+      "routing_status": "real_package_examples_available",
       "applicable_to_forest_unit_ids": [
         "kootenai-nf"
       ],
-      "primary_example_id": null,
+      "primary_example_id": "knf-trojan-defense-forest-specific",
       "supplemental_example_ids": [],
       "shared_contract_ids": [
-        "forest_plan_profile_eval_coverage_manifest"
+        "forest_plan_profile_eval_coverage_manifest",
+        "real_package_review_coverage_manifest",
+        "review_packet_index_output_schema"
       ],
       "required_fixture_family_ids": [
         "scope_positive",
@@ -674,7 +706,7 @@
         "non_selected_non_custer_hard_negative"
       ],
       "queue_boundary_source_ids": [],
-      "guidance_note": "No governed Kootenai real package example exists yet; use the profile-eval fixtures as the only approved guidance surface."
+      "guidance_note": "Use the Trojan Defense package first for Kootenai forest-specific example-package guidance; it is reviewer-ready on source-set-f70ea11e04ae3d53 and remains parallel to Document_Register_Master."
     },
     {
       "forest_unit_id": "lolo-nf",

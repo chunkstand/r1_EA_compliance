@@ -132,6 +132,17 @@ class Region1ForestPlanInventoryBuildManifestTests(unittest.TestCase):
         )
         self.assertIn("R1PLAN-bitterroot-nf-12", bitterroot.source_record_ids)
         self.assertIn("R1PLAN-bitterroot-nf-13", bitterroot.source_record_ids)
+        kootenai = manifest.get("kootenai-nf")
+        kootenai_reference = manifest.source_set_reference(kootenai.source_set_reference_id)
+        self.assertEqual(
+            kootenai_reference.source_set_ids,
+            (
+                "source-set-4fb59e9eb43045cb",
+                "source-set-f70ea11e04ae3d53",
+            ),
+        )
+        self.assertTrue(kootenai_reference.matches_source_set("source-set-f70ea11e04ae3d53"))
+        self.assertEqual(kootenai.primary_plan_source_record_id, "FPS-267")
 
     def test_rejects_missing_readiness_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

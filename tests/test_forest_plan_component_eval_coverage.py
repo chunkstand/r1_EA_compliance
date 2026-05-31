@@ -25,7 +25,7 @@ COMMITTED_ECID_SOURCE_DELTA_CONTRACT = (
 )
 
 
-def test_committed_manifest_tracks_dakota_medora_review_slot() -> None:
+def test_committed_manifest_tracks_kootenai_trojan_defense_review_slot() -> None:
     manifest = json.loads(COMMITTED_MANIFEST.read_text())
 
     assert manifest["schema_version"] == "forest-plan-component-eval-coverage-v1"
@@ -44,6 +44,7 @@ def test_committed_manifest_tracks_dakota_medora_review_slot() -> None:
         "region1-example-idaho-panhandle-lacy-lemoosh-60853",
         "region1-example-nez-perce-clearwater-dead-laundry-57827",
         "region1-example-dakota-prairie-medora-vegetation-management-66886",
+        "region1-example-kootenai-trojan-defense-64354",
     ]
     assert manifest["future_forest_expansion_policy"] == {
         "mode": "manifest_slots_only",
@@ -131,8 +132,17 @@ def test_committed_manifest_tracks_dakota_medora_review_slot() -> None:
         ]
         is True
     )
-    assert manifest["coverage_thresholds"]["required_review_count"] == 11
-    assert manifest["coverage_thresholds"]["distinct_forest_count_min"] == 9
+    assert (
+        slots["region1-example-kootenai-trojan-defense-64354"]["eval_file"]
+        == "forest_plan_component_evals/region1-example-kootenai-trojan-defense-64354.json"
+    )
+    assert (
+        slots["region1-example-kootenai-trojan-defense-64354"]["expected_source_set_id"]
+        == "source-set-f70ea11e04ae3d53"
+    )
+    assert slots["region1-example-kootenai-trojan-defense-64354"]["required"] is True
+    assert manifest["coverage_thresholds"]["required_review_count"] == 12
+    assert manifest["coverage_thresholds"]["distinct_forest_count_min"] == 10
     assert (
         slots["v1-cg-ecid-compliance-review"]["expected_source_set_id"]
         == "source-set-f70ea11e04ae3d53"
