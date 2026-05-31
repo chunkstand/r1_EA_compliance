@@ -88,6 +88,145 @@ queryable model that adds non-tree edges the span hierarchy cannot express:
 dataset lineage, eval lineage, human approval, artifact version, state snapshot,
 replay/fork, async causal links, failure class, and cross-run comparison.
 
+## 2026 Neo4j And Adjacent Signals
+
+As of 2026-05-31, Neo4j is using "context graph" as a broad production-AI
+infrastructure term. The clearest Neo4j signal is the NODES AI 2026 Graph Memory
+& Agents track:
+
+- "Exploring Context Graphs: From Data to Decisions" frames context graphs as
+  the missing layer between data and decisions: systems capture the why behind
+  actions, learn from experience, and evolve with interactions.
+- "Tracing Agent Decisions with Graph Evals and Neo4j" narrows that idea toward
+  this repo's target. It describes graph evals where every agent step, action,
+  state, tool call, reasoning hop, and failure point is stored as a graph so
+  teams can query reasoning paths, loops, blind spots, and policy failures.
+- "Agent Interaction Graphs" is even closer to the eval/debugging shape:
+  executions become an interaction graph in Neo4j, evals are attached, and graph
+  queries identify critical issues, recurring failure points, and bottlenecks.
+- "The AI Agent Memory Landscape" positions memory as the difference between
+  stateless demos and production agents, with cognitive memory types and
+  implementation patterns across LangGraph, CrewAI, and Pydantic AI.
+
+Neo4j's product surface is also moving in this direction. The Google Cloud agent
+release describes a persistent knowledge layer with MCP, GraphRAG agents, an
+agent memory API, reasoning memory including agent traces and tool calls, and
+decision traces/context graphs. The Neo4j Agent Memory Service goes further: it
+offers short-term conversations, long-term entity memory, reasoning traces, and
+observations in a graph-native layer backed by Neo4j Aura and vector search. The
+MCP reference exposes memory search over messages, entities, preferences, and
+traces, with an extended profile that includes reasoning traces, graph export,
+and Cypher queries.
+
+The practical interpretation for this repo: Neo4j's current language validates
+the graph shape, but it is broader than the slice we should implement. Neo4j is
+using context graphs for agent memory and GraphRAG as well as trace/eval
+analysis. This repo should keep those concerns separate:
+
+- source evidence graphs remain about domain evidence and reviewer findings;
+- context graphs remain about execution evidence, evals, traces, logs, state,
+  human review, and failure lineage;
+- any Neo4j export should be optional and derived, not the local source of
+  record.
+
+Adjacent current signals reinforce that boundary:
+
+- LangChain announced SmithDB as a purpose-built data layer for agent
+  observability. Its stated query workloads are trace-tree loads, filtering,
+  full-text search, JSON filtering, tree-aware queries, thread reconstruction,
+  and aggregations over cost, latency, token usage, and evaluator scores. That
+  is a strong signal that trace/eval storage has become its own infrastructure
+  problem, not just application logging.
+- OpenTelemetry GenAI semantic conventions now explicitly cover GenAI events,
+  metrics, model spans, and agent spans, with a stability opt-in path because
+  the conventions remain under development. A May 2026 OpenTelemetry post shows
+  local GenAI telemetry over LLM calls, tool invocations, tokens, structured
+  logs, and privacy-sensitive content capture.
+- AgentTelemetry argues that OpenTelemetry GenAI is necessary but incomplete
+  for agent observability: planning, reasoning, safety monitoring,
+  inter-agent delegation, and memory management need explicit span-level
+  representation. Its benchmark frames this as a fault-detection problem, not
+  only a trace-format problem.
+- Zep/Graphiti are strong references for temporal agent memory and context
+  graphs. They model episodes, entities, entity edges, valid-time/provenance,
+  and temporal retrieval. This is relevant to state checkpoints and memory
+  lineage, but it should not pull this repo's trace/eval context graph into a
+  general-purpose user-memory product.
+
+## Expert And Project Map
+
+These are the people and groups most worth tracking for this specific field.
+This is not an endorsement list; it is a map of current public work.
+
+Neo4j and graph-memory practitioners:
+
+- Emil Eifrem, Neo4j co-founder and CEO; public Neo4j context-graph speaker.
+- Philip Rathle, Neo4j CTO; context-graph and graph-platform speaker.
+- William Lyon, Neo4j Senior Product Manager; AI innovation, agent memory, MCP,
+  and GraphRAG with Neo4j.
+- Vincent Koc, NODES AI speaker on agent interaction graphs and graph-based
+  multi-agent evaluation.
+- Ashok Vishwakarma, NODES AI speaker on graph evals for tracing agent
+  decisions in Neo4j.
+- Lasse Andresen, IndyKite founder; context/control layer for governed agents.
+- Animesh Koratana, PlayerZero founder; AI production engineering and incident
+  reasoning context.
+
+Trace-to-graph and causal-debugging research:
+
+- Zekun Wu, Seonglae Cho, Cristian Enrique Munoz Villalobos, Theo King, Umar
+  Mohammed, Emre Kazim, Maria Perez-Ortiz, Sahan Bulathwela, and Adriano
+  Koshiyama, the AgentGraph team.
+- Zhaohui Geoffrey Wang, author of AgentTrace causal graph tracing for root
+  cause analysis in deployed multi-agent systems.
+- Adam AlSayyad, Kelvin Yuxiang Huang, and Richik Pal, authors of the
+  AgentTrace structured logging framework across operational, cognitive, and
+  contextual surfaces.
+- The anonymous AgentTelemetry authors, for a current fault-taxonomy benchmark
+  around agent-specific span kinds. Names are not public in the reviewed copy,
+  so treat the paper as a signal, not a contact map.
+
+Observability, eval, and trace-storage infrastructure:
+
+- James Newton-King at Microsoft/OpenTelemetry, author of the May 2026 GenAI
+  observability post and a visible contributor to GenAI telemetry education.
+- Ankush Gola and the LangChain/LangSmith team, for SmithDB and
+  agent-observability storage/query workloads.
+- The Arize Phoenix/OpenInference maintainers, for OpenTelemetry-compatible
+  AI span semantics, Phoenix tracing/evaluation workflows, and OpenInference
+  conventions.
+- Braintrust's observability/evals team, for the production loop that connects
+  traces, online scoring, datasets, eval cases, and release enforcement.
+
+Temporal agent-memory graph work:
+
+- Preston Rasmussen, Pavlo Paliychuk, Travis Beauvais, Jack Ryan, and Daniel
+  Chalef, authors of the Zep temporal knowledge graph architecture paper.
+- Chang Yang, Chuang Zhou, Yilin Xiao, Su Dong, Luyao Zhuang, Yujing Zhang, Zhu
+  Wang, Zijin Hong, Zheng Yuan, Zhishang Xiang, Shengyuan Chen, Huachi Zhou,
+  Qinggang Zhang, Ninghao Liu, Jinsong Su, Xinrun Wang, Yi Chang, and Xiao
+  Huang, authors of the 2026 graph-based agent-memory survey.
+
+## Current Design Implications
+
+The current field is separating into four overlapping layers:
+
+1. Instrumentation standards: OpenTelemetry GenAI, OpenInference, and proposed
+   agent-specific span taxonomies.
+2. Trace/eval stores: SmithDB, Braintrust, Phoenix, LangSmith, Langfuse, and
+   other platforms optimized for large nested traces plus scores.
+3. Graph analysis layers: Neo4j interaction graphs, AgentGraph, AgentTrace
+   causal graphs, and graph evals that add typed non-tree edges over the trace
+   tree.
+4. Agent memory/context products: Neo4j Agent Memory, Zep/Graphiti, and MCP
+   memory servers that persist conversations, episodes, entities, observations,
+   tool calls, and reasoning traces.
+
+For this repo, the next approved implementation should sit in layer 3 while
+remaining export-compatible with layers 1 and 2. Layer 4 should be treated as a
+future memory product boundary, not a reason to put conversational memory,
+domain knowledge, and source facts into the eval/trace graph.
+
 ## Candidate Context Graph Shape
 
 Minimal nodes:
@@ -244,3 +383,32 @@ schema only:
   <https://arxiv.org/abs/2603.14688>
 - AgentTrace structured logging:
   <https://arxiv.org/abs/2602.10133>
+- Neo4j NODES AI context graphs:
+  <https://neo4j.com/nodes-ai/agenda/keynote-tbd/>
+- Neo4j NODES AI graph evals:
+  <https://neo4j.com/nodes-ai/agenda/tracing-agent-decisions-with-graph-evals-and-neo4j/>
+- Neo4j NODES AI agent interaction graphs:
+  <https://neo4j.com/nodes-ai/agenda/agent-interaction-graphs-evaluating-multi-agent-systems-with-graph-based-reasoning/>
+- Neo4j NODES AI agent memory landscape:
+  <https://neo4j.com/nodes-ai/agenda/the-ai-agent-memory-landscape/>
+- Neo4j Google Cloud agent knowledge layer:
+  <https://neo4j.com/blog/news/knowledge-layer-agentic-systems-google-cloud/>
+- Neo4j Agent Memory Service:
+  <https://memory.neo4jlabs.com/>
+- Neo4j Agent Memory MCP tools:
+  <https://neo4j.com/labs/agent-memory/reference/mcp-tools/>
+- LangChain SmithDB:
+  <https://www.langchain.com/blog/introducing-smithdb>
+- OpenTelemetry GenAI semantic conventions:
+  <https://opentelemetry.io/docs/specs/semconv/gen-ai/>
+- OpenTelemetry GenAI observability post:
+  <https://opentelemetry.io/blog/2026/genai-observability/>
+- AgentTelemetry benchmark:
+  <https://openreview.net/pdf?id=owdmAYFk6k>
+- Zep Context Graph and Graphiti docs:
+  <https://help.getzep.com/overview> and
+  <https://help.getzep.com/v2/understanding-the-graph>
+- Zep temporal knowledge graph architecture:
+  <https://arxiv.org/abs/2501.13956>
+- Graph-based agent memory survey:
+  <https://arxiv.org/abs/2602.05665>

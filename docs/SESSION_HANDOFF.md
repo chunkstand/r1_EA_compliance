@@ -27,7 +27,8 @@ history below.
 - recent research addendum:
   `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md` covers context
   graphs for agent logs, evals, traces, state checkpoints, and human review;
-  it is not an active route change
+  it now includes a 2026 Neo4j/adjacent expert map and remains non-active
+  research, not a route change
 - latest resolved source-set graph-KB slice:
   f70 Region 1 graph-KB rebind and regeneration. Tracked contracts now bind
   the forest-plan component inventory, readiness matrix, forest-plan profile

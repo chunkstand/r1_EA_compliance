@@ -23,4 +23,5 @@ Use this short route before opening append-only docs.
 - Current state and handoff: `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`.
 - Reviewer replay history: `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`.
 - Architecture: `docs/ARCHITECTURE.md`, `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`.
+- Context graph research: `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md`.
 - Agent entrypoint: `docs/AGENT_START_HERE.md`.
