@@ -31,6 +31,9 @@ Latest implementation update on 2026-05-31 UTC:
   no Python or JS/TS import cycles, and no source module
   above the `20`-import fan-out gate. The live inventory now records `9`
   source owners and `8` test owners.
+- closeout evidence:
+  local commit `dca87e8` (`Split extraction fidelity eval runtime`) records
+  the verified implementation slice.
 - boundary:
   this is a behavior-preserving owner split. It does not change extraction
   fidelity eval output fields, fixture semantics, generated artifact paths, or

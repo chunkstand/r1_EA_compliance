@@ -396,6 +396,7 @@ Expected next routed architecture follow-on after this packet:
   `src/usfs_r1_ea_sources/extraction_fidelity_eval.py` was split into
   `src/usfs_r1_ea_sources/extraction_fidelity_eval_runtime.py`; the facade is
   now below the `800`-line gate and the live oversized backlog is `17` files.
+  Local closeout commit: `dca87e8` (`Split extraction fidelity eval runtime`).
 - source-owner backlog first:
   `src/usfs_r1_ea_sources/claim_extraction_eval.py`,
   `src/usfs_r1_ea_sources/source_register_proving.py`,

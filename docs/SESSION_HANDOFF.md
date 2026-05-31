@@ -105,6 +105,7 @@ history below.
   live probe reports `498` code files, `17` code files above `800`, no Python or JS/TS cycles,
   and no local module above the `20`-import fan-out gate.
   The live inventory now records `9` source owners and `8` test owners.
+  Local closeout commit: `dca87e8` (`Split extraction fidelity eval runtime`).
 
   architecture control-plane closeout: the architecture quality gate now
   matches the live 2026-05-31 probe and fails closed on inventory drift.
