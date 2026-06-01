@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "test-promotion-suite-full-canonical-owner",
-      "owner_kind": "test",
-      "follow_on_priority": 7,
-      "required_tests": [
-        "tests/test_promotion_suite_full_canonical.py"
-      ],
-      "files": [
-        {
-          "path": "tests/test_promotion_suite_full_canonical.py",
-          "line_count": 917
-        }
-      ]
-    },
-    {
       "name": "source-ea-consistency-decision-support-inputs-owner",
       "owner_kind": "source",
       "follow_on_priority": 8,

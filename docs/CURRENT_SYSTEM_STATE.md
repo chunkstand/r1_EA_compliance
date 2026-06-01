@@ -15,6 +15,26 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Promotion-Suite Full-Canonical Runtime Test Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next test-owner oversized reduction slice is closed locally.
+  `tests/test_promotion_suite_full_canonical.py` keeps committed manifest
+  full-canonical corpus contract assertions at `534` lines. The new
+  `tests/test_promotion_suite_full_canonical_runtime.py` owns runtime
+  full-canonical readiness and artifact path behavior at `395` lines.
+- architecture effect:
+  the architecture probe reports `540` code files, `10` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `6` source owners and `4` test
+  owners.
+- boundary:
+  this is a behavior-preserving test-owner split. It does not change promotion
+  suite runtime behavior, manifest schema, generated artifact paths, or local
+  corpus state.
+
 ## Eval Trace Store SQLite Source Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
