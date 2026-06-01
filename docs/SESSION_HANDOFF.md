@@ -42,6 +42,24 @@ history below.
   `observability_eval_context_graph`. The slice is generated-artifact-only and
   does not add promotion ratchets, hosted exports, Neo4j as a source of record,
   or source knowledge-graph facts.
+- latest resolved extraction/chunking/retrieval accuracy slice:
+  `chunk-quality-audit` is now a read-only generated diagnostic over the
+  existing f70 chunk spine. It writes
+  `derived/<source_set_id>/diagnostics/chunk_quality_audit.json`, is owned by
+  `src/usfs_r1_ea_sources/chunk_quality_audit.py`, and reports parser,
+  heading, table, structural-marker, boundary-split, source-offset, and
+  parent-context risk without replacing `chunks/chunks.jsonl` or rebuilding
+  retrieval, graph, claim, rule, compliance, or review artifacts. The live
+  smoke over `source-set-f70ea11e04ae3d53` passed required checks for
+  `113,830` chunks across `719` sources and reported `719` risk-bearing
+  sources: `413` fallback-parser-dominated, `56` OCR/scanned, `4` low-density
+  PDFs, `550` heading-context-missing, `253` table-row-unstructured, `538`
+  structural-marker-present, `711` numbered-requirement/sentence-split risk,
+  and `719` parent-context-missing because the sidecar chunk layer is not yet
+  present.
+- active extraction/chunking/retrieval accuracy slice:
+  none. The next bounded packet should build sidecar parent/atomic chunk
+  layers and eval coverage, not replace the baseline chunk spine.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
@@ -56,7 +74,7 @@ history below.
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
   extraction-fidelity eval source-owner reduction after the architecture
-  control-plane gap closeout. The current probe reports `511` code files, `17` code files above `800`,
+  control-plane gap closeout. The current probe reports `516` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
   `config/architecture_large_file_inventory_v1.json` owns the exact `9`
@@ -175,7 +193,7 @@ history below.
   public facade and output-schema assembler at `716` lines, while
   `extraction_fidelity_eval_runtime.py` owns temporary extraction runs,
   per-case execution, metric checks, and runtime helpers at `442` lines. The
-  live probe reports `511` code files, `17` code files above `800`, no Python or JS/TS cycles,
+  live probe reports `516` code files, `17` code files above `800`, no Python or JS/TS cycles,
   and no local module above the `20`-import fan-out gate.
   The live inventory now records `9` source owners and `8` test owners.
   Local closeout commit: `dca87e8` (`Split extraction fidelity eval runtime`).
@@ -184,7 +202,7 @@ history below.
   matches the live 2026-06-01 probe and fails closed on inventory drift.
   `config/architecture_large_file_inventory_v1.json` records `17` code files
   above `800` as `9` source owners and `8` test owners. The probe command
-  reports `511` code files, no Python or JS/TS cycles, and no local module
+  reports `516` code files, no Python or JS/TS cycles, and no local module
   above the `20`-import fan-out gate. `README.md` and
   `docs/CURRENT_ROUTING.md` are compact route surfaces again; volatile live
   counts stay in `docs/CURRENT_SYSTEM_STATE.md` and this handoff.

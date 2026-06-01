@@ -4040,6 +4040,7 @@ The `extract-build` command writes:
 - `diagnostics/extraction_manifest.jsonl`
 - `diagnostics/extraction_validation.json`
 - `diagnostics/extraction_accuracy_audit.json` when `extraction-accuracy-audit` is run
+- `diagnostics/chunk_quality_audit.json` when `chunk-quality-audit` is run
 - `diagnostics/summary.json`
 
 The command replaces the derived directory for the selected `source_set_id` on each non-reuse run
@@ -4298,6 +4299,27 @@ The audit summary also records:
 - `knowledge_base_admitted_source_record_ids`
 - `knowledge_base_blocked_source_record_ids`
 - `per_source_failures`
+
+`chunk-quality-audit` writes `diagnostics/chunk_quality_audit.json` with schema version
+`chunk-quality-audit-v1`. It is a read-only diagnostic over existing chunk outputs and does not
+replace `chunks/chunks.jsonl`, rebuild retrieval, or mutate graph/claim/review artifacts. The
+report includes:
+
+- `source_set_id`, chunk input path, output path, aggregate `chunk_count`, `source_count`,
+  `parser_counts`, `risk_source_count`, and `risk_bucket_counts`
+- optional `sidecar` readback for an existing `chunks_v2/summary.json`, including sidecar presence,
+  validation status, atomic chunk count, structural chunk count, and parent context window count
+- deterministic checks for chunk JSONL presence, chunk loading, required chunk provenance fields,
+  valid source offsets, and source identity presence
+- per-source metrics: source record ID, title, citation label, document role, support document role,
+  authority level, artifact hash/path, chunk count, page count, text character count,
+  chars-per-page, chunks-per-page, parser counts, dominant parser, heading missing rate,
+  structural marker count, table marker count, boundary split risk count, and `risk_buckets`
+- risk buckets such as `fallback_parser_dominated`, `ocr_or_scanned_source`, `low_density_pdf`,
+  `heading_context_missing`, `table_row_unstructured`, `structural_marker_present`,
+  `numbered_requirement_or_sentence_split`, and `parent_context_missing`
+- `passed`, which is true when required chunk/provenance/offset/source-identity checks pass; risk
+  buckets are diagnostic signals rather than automatic failures
 
 ## First-Class Eval Trace Contract
 

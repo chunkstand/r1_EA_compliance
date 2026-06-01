@@ -10,7 +10,7 @@ Use this short route before opening append-only docs.
   `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
 - Latest resolved observability/eval graph slice: context-graph build/eval commands, trace-event materialization, explicit event-log capture, canonical CLI command-event capture, and f70 source-set phase-eval ratchet. Details: `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
-- Active implementation slice: none. Open a new bounded packet before hosted query service/API expansion, model-judge work, hosted scoring, promotion ratchets, or oversized-owner reduction.
+- Active implementation slice: none; latest retrieval-accuracy slice is read-only `chunk-quality-audit`. Open a new bounded packet before sidecar chunk layers, hosted query service/API expansion, model-judge work, hosted scoring, promotion ratchets, or oversized-owner reduction.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
@@ -36,4 +36,5 @@ Use this short route before opening append-only docs.
 - Architecture: `docs/ARCHITECTURE.md`, `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`.
 - Context graph research: `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md`.
 - Context graph implementation: `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
+- Extraction/chunking/retrieval accuracy: `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_IMPROVEMENT_BRIEF.md`.
 - Agent entrypoint: `docs/AGENT_START_HERE.md`.

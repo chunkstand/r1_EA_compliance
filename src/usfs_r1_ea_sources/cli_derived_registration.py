@@ -139,6 +139,16 @@ def build_derived_command_specs(
             ),
         ),
         DerivedCommandSpec(
+            name="chunk-quality-audit",
+            help="Report chunk boundary, parser, layout, and parent-context risk by source.",
+            arguments=(
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg("--chunks-path", type=Path),
+                _arg("--output-path", type=Path),
+            ),
+        ),
+        DerivedCommandSpec(
             name="source-register-proving-slice",
             help="Run the Phase 1.5 mixed proving slice over the canonical source register.",
             arguments=(

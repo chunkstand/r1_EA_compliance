@@ -212,6 +212,28 @@ def test_extraction_accuracy_audit_parser_accepts_contract_path() -> None:
     assert args.contract_path == Path("config/verified_extraction_admission_contract.json")
 
 
+def test_chunk_quality_audit_parser_accepts_optional_paths() -> None:
+    args = build_parser().parse_args(
+        [
+            "chunk-quality-audit",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-path",
+            "/tmp/chunks.jsonl",
+            "--output-path",
+            "/tmp/chunk-quality-audit.json",
+        ]
+    )
+
+    assert args.command == "chunk-quality-audit"
+    assert args.output_dir == Path("source_library")
+    assert args.source_set_id == "source-set-test"
+    assert args.chunks_path == Path("/tmp/chunks.jsonl")
+    assert args.output_path == Path("/tmp/chunk-quality-audit.json")
+
+
 def test_retrieval_build_parser_accepts_archived_catalog_dir() -> None:
     args = build_parser().parse_args(
         [

@@ -2,9 +2,28 @@
 
 Date: 2026-06-01
 
-Status: Research-backed implementation brief. This does not change the active
-route in `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, or
-`docs/SESSION_HANDOFF.md`.
+Status: First bounded packet implemented locally. The read-only
+`chunk-quality-audit` gate is now routed in `docs/CURRENT_ROUTING.md`,
+`docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`; sidecar chunk
+layers and retrieval scoring changes remain future packets.
+
+## Implementation Status
+
+- closed:
+  `chunk-quality-audit` writes
+  `source_library/derived/<source_set_id>/diagnostics/chunk_quality_audit.json`
+  from the existing `chunks/chunks.jsonl` spine and reports parser, heading,
+  table, structural-marker, boundary-split, offset, source-identity, and
+  parent-context risk without mutating downstream artifacts.
+- live smoke:
+  the active source set produced `113,830` audited chunks across `719` sources,
+  passed required provenance/offset/source-identity checks, and reported the
+  expected `parent_context_missing` risk for every source because the sidecar
+  `chunks_v2` layer is not yet present.
+- still open:
+  sidecar atomic/structural chunks, parent context windows, FTS/BM25 retrieval
+  scoring, deterministic contextual index text, and expanded atomic/structure
+  retrieval evals.
 
 ## Grounded Repo Snapshot
 

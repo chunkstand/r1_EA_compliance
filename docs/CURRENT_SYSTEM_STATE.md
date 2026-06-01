@@ -15,6 +15,40 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Extraction Chunk Quality Audit Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  `chunk-quality-audit` is now the first audit-first implementation slice from
+  the extraction/chunking/retrieval accuracy brief. It reads the existing
+  source-set `chunks/chunks.jsonl` output, writes a generated diagnostic at
+  `source_library/derived/<source_set_id>/diagnostics/chunk_quality_audit.json`,
+  and leaves baseline chunks, retrieval, graph, claim, rule, compliance, and
+  review artifacts unchanged.
+- contract:
+  `docs/OUTPUT_SCHEMAS.md` documents schema version
+  `chunk-quality-audit-v1`, required checks, optional sidecar
+  `chunks_v2/summary.json` readback, per-source metrics, and risk buckets.
+  `docs/architecture_contract.toml` owns the new extraction-layer module,
+  generated artifact path, and CLI command registration.
+- live smoke:
+  running the command against
+  `source-set-f70ea11e04ae3d53` with output redirected to `/tmp` passed required
+  chunk/provenance/offset/source-identity checks over `113,830` chunks and
+  `719` sources. It reported `719` risk-bearing sources with bucket counts:
+  `413` `fallback_parser_dominated`, `56` `ocr_or_scanned_source`, `4`
+  `low_density_pdf`, `550` `heading_context_missing`, `253`
+  `table_row_unstructured`, `538` `structural_marker_present`, `711`
+  `numbered_requirement_or_sentence_split`, and `719`
+  `parent_context_missing`. The sidecar chunk layer was absent, so
+  `sidecar.present=false` and `sidecar.validation_passed=false`.
+- boundary:
+  this closes only the read-only audit gate. The next accuracy packet should
+  add sidecar atomic/structural chunks and parent context windows with eval
+  coverage before changing retrieval scoring or replacing the baseline chunk
+  spine.
+
 ## First-Class Observability/Eval Context Graph Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
@@ -197,12 +231,12 @@ Latest implementation update on 2026-06-01 UTC:
   stale routing docs. `config/architecture_large_file_inventory_v1.json` now
   records `17` code files above `800`, grouped as `9` source owners and `8`
   test owners, with exact path and line-count assertions in
-  `tests/test_architecture_quality.py`. Later graph-KB slices added under-800
-  source and test modules; the current probe therefore reports `511` code
-  files while the oversized-owner count remains `17`.
+  `tests/test_architecture_quality.py`. Later graph-KB and chunk-audit slices
+  added under-800 source and test modules; the current probe therefore reports
+  `516` code files while the oversized-owner count remains `17`.
 - probe result:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `511` code files, `17` code files above `800`, no Python or JS/TS
+  reports `516` code files, `17` code files above `800`, no Python or JS/TS
   import cycles, and no source module above the `20`-import fan-out gate.
 - route-doc control:
   `README.md` and `docs/CURRENT_ROUTING.md` are compact, non-volatile route
