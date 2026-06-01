@@ -137,11 +137,11 @@ history below.
   hosted service/API, auth, UI query workflow, or broader graph-KB product work
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
-  promotion-suite full-canonical runtime test-owner split after the eval trace
-  store SQLite split. The current probe reports `540` code files, `10` code files above `800`,
+  decision-support input validation source-owner split after the promotion-suite
+  full-canonical runtime test split. The current probe reports `541` code files, `9` code files above `800`,
   no Python or JS/TS import cycles, and no source module above the `20`-import
   fan-out gate.
-  `config/architecture_large_file_inventory_v1.json` owns the exact `6`
+  `config/architecture_large_file_inventory_v1.json` owns the exact `5`
   source-owner and `4` test-owner backlog; `README.md` and
   `docs/CURRENT_ROUTING.md` remain compact route surfaces.
 - active architecture implementation slice:

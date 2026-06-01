@@ -353,6 +353,7 @@ modules = [
   "draft_generation_sections",
   "draft_generation_traceability",
   "ea_consistency_decision_support",
+  "ea_consistency_decision_support_input_validation",
   "ea_consistency_decision_support_inputs",
   "ea_consistency_decision_support_models",
   "ea_consistency_decision_support_rendering",

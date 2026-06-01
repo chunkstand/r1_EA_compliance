@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "source-ea-consistency-decision-support-inputs-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 8,
-      "required_tests": [
-        "tests/test_ea_consistency_decision_support.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/ea_consistency_decision_support_inputs.py",
-          "line_count": 897
-        }
-      ]
-    },
-    {
       "name": "test-forest-plan-profiles-owner",
       "owner_kind": "test",
       "follow_on_priority": 9,

@@ -15,6 +15,26 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Decision-Support Input Validation Source Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next source-owner oversized reduction slice is closed locally.
+  `src/usfs_r1_ea_sources/ea_consistency_decision_support_inputs.py` remains
+  the required-artifact loading and validation facade at `390` lines. The new
+  `src/usfs_r1_ea_sources/ea_consistency_decision_support_input_validation.py`
+  owns input validation helper checks at `530` lines.
+- architecture effect:
+  the architecture probe reports `541` code files, `9` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `5` source owners and `4` test
+  owners.
+- boundary:
+  this is a facade-preserving source split. It does not change decision-support
+  input validation behavior, report schema, generated artifact paths, or local
+  corpus state.
+
 ## Promotion-Suite Full-Canonical Runtime Test Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

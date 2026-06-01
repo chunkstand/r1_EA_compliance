@@ -4,7 +4,7 @@ Date: 2026-05-26
 
 Status: resolved locally 2026-05-26 and refreshed locally 2026-06-01; architecture governance
 matches live repo truth again, `docs/CURRENT_ROUTING.md` is back under its short-route cap, and
-the current `10` oversized files are explicitly inventoried as follow-on debt
+the current `9` oversized files are explicitly inventoried as follow-on debt
 
 Owner context: This is a narrow child packet opened after a read-only architecture audit found
 that the repo's live architecture-governance surfaces no longer match current code size, current
@@ -29,10 +29,14 @@ under-`800` closeout is being used as live truth after the repo moved on.
 
 - Fresh architecture probe:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `540` code files, `10` code files above `800` lines, no Python or JS/TS import cycles,
+  reports `541` code files, `9` code files above `800` lines, no Python or JS/TS import cycles,
   and no source module above the `20`-import fan-out gate.
-- `config/architecture_large_file_inventory_v1.json` records the exact `10`-file live backlog as
-  `6` source-owner families and `4` test-owner families.
+- `config/architecture_large_file_inventory_v1.json` records the exact `9`-file live backlog as
+  `5` source-owner families and `4` test-owner families.
+- `src/usfs_r1_ea_sources/ea_consistency_decision_support_inputs.py` is resolved as an oversized
+  source owner: the input loading/validation facade is `390` lines, and validation helper checks
+  now live in `src/usfs_r1_ea_sources/ea_consistency_decision_support_input_validation.py` at
+  `530` lines.
 - `tests/test_promotion_suite_full_canonical.py` is resolved as an oversized test owner:
   committed manifest full-canonical assertions remain in the original file at `534` lines, and
   runtime full-canonical readiness/path cases now live in
