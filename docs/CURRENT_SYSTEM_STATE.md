@@ -15,6 +15,25 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## CLI Eval Parser Test Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next test-owner oversized reduction slice is closed locally.
+  `tests/test_cli_eval.py` keeps eval command handler propagation tests at
+  `585` lines. `tests/test_cli_eval_parsers.py` now owns eval command parser
+  coverage at `355` lines.
+- architecture effect:
+  the architecture probe reports `537` code files, `13` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `8` source owners and `5` test
+  owners.
+- boundary:
+  this is a behavior-preserving test-owner split. It does not change CLI
+  command registration, argument parsing, handler behavior, or local corpus
+  state.
+
 ## Claim Extraction Eval Support Source Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

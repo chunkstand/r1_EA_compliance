@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "test-cli-eval-owner",
-      "owner_kind": "test",
-      "follow_on_priority": 4,
-      "required_tests": [
-        "tests/test_cli_eval.py"
-      ],
-      "files": [
-        {
-          "path": "tests/test_cli_eval.py",
-          "line_count": 933
-        }
-      ]
-    },
-    {
       "name": "source-source-register-proving-owner",
       "owner_kind": "source",
       "follow_on_priority": 5,
