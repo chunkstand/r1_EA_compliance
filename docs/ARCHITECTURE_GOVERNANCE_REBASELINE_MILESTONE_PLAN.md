@@ -4,7 +4,7 @@ Date: 2026-05-26
 
 Status: resolved locally 2026-05-26 and refreshed locally 2026-06-01; architecture governance
 matches live repo truth again, `docs/CURRENT_ROUTING.md` is back under its short-route cap, and
-the current `7` oversized files are explicitly inventoried as follow-on debt
+the current `6` oversized files are explicitly inventoried as follow-on debt
 
 Owner context: This is a narrow child packet opened after a read-only architecture audit found
 that the repo's live architecture-governance surfaces no longer match current code size, current
@@ -29,10 +29,13 @@ under-`800` closeout is being used as live truth after the repo moved on.
 
 - Fresh architecture probe:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `543` code files, `7` code files above `800` lines, no Python or JS/TS import cycles,
+  reports `544` code files, `6` code files above `800` lines, no Python or JS/TS import cycles,
   and no source module above the `20`-import fan-out gate.
-- `config/architecture_large_file_inventory_v1.json` records the exact `7`-file live backlog as
-  `4` source-owner families and `3` test-owner families.
+- `config/architecture_large_file_inventory_v1.json` records the exact `6`-file live backlog as
+  `3` source-owner families and `3` test-owner families.
+- `src/usfs_r1_ea_sources/rule_claim_binding_eval.py` is resolved as an oversized source owner:
+  the rule-claim link eval facade is `337` lines, and contract/filter/source/term/provenance
+  helpers now live in `src/usfs_r1_ea_sources/rule_claim_binding_eval_support.py` at `546` lines.
 - `src/usfs_r1_ea_sources/extract_runtime.py` is resolved as an oversized source owner:
   the extraction build facade is `565` lines, and payload record/chunk assembly plus reuse helpers
   now live in `src/usfs_r1_ea_sources/extract_runtime_reuse.py` at `301` lines.

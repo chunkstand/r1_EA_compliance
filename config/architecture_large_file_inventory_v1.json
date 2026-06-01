@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "source-rule-claim-binding-eval-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 11,
-      "required_tests": [
-        "tests/test_rule_claim_binding_eval.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/rule_claim_binding_eval.py",
-          "line_count": 855
-        }
-      ]
-    },
-    {
       "name": "test-extraction-accuracy-owner",
       "owner_kind": "test",
       "follow_on_priority": 12,

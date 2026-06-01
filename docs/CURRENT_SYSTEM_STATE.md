@@ -15,6 +15,27 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Rule-Claim Binding Eval Support Source Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next source-owner oversized reduction slice is closed locally.
+  `src/usfs_r1_ea_sources/rule_claim_binding_eval.py` remains the rule-claim
+  link eval orchestration facade at `337` lines. The new
+  `src/usfs_r1_ea_sources/rule_claim_binding_eval_support.py` owns contract
+  loading, eval filters, term/source matching, provenance checks, and coverage
+  helper logic at `546` lines.
+- architecture effect:
+  the architecture probe reports `544` code files, `6` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `3` source owners and `3` test
+  owners.
+- boundary:
+  this is a facade-preserving source split. It does not change rule-claim link
+  eval outputs, metric behavior, generated artifact paths, or local corpus
+  state.
+
 ## Extraction Runtime Reuse Source Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

@@ -7,7 +7,7 @@ Use this short route before opening append-only docs.
 - Read this file first, then `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved source-set graph-KB slice: phase-gated operational graph query surface after f70 canonical semantic graph direct-eval strengthening; exact counts live in `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved extraction/chunking/retrieval accuracy slice: sidecar reviewer package adoption after sidecar phase-eval adoption; exact paths, smoke counts, and sidecar promotion boundaries live in `docs/CURRENT_SYSTEM_STATE.md`.
-- Latest resolved architecture slice: extraction runtime reuse source split after forest-plan profile context test split; inventory and route-doc caps are current.
+- Latest resolved architecture slice: rule-claim binding eval support source split after extraction runtime reuse split; inventory and route-doc caps are current.
 - Latest resolved observability/eval graph slice: context-graph build/eval commands, trace-event materialization, explicit event-log capture, canonical CLI command-event capture, and f70 source-set phase-eval ratchet. Details: `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
 - Active implementation slice: none. Open a new bounded packet before hosted query service/API expansion, model-judge work, hosted scoring, knowledge-graph sidecar adoption, or oversized-owner reduction.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
