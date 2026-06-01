@@ -68,11 +68,28 @@ history below.
   `/tmp/usfs-r1-chunks-v2-next-slice` and passed validation over `113,830`
   baseline chunks, producing `296,442` atomic chunks, `116,004` structural
   chunks, and `19,117` parent context windows with full atomic parent-window
-  coverage. The sidecar is generated evidence only until a future
-  sidecar-aware retrieval/eval packet proves promotion readiness.
+  coverage. The sidecar retrieval/eval packet is now closed below; the sidecar
+  remains generated evidence until a future downstream promotion packet adopts
+  it for graph, claim, review, or compliance consumers.
+- latest resolved sidecar retrieval/eval slice:
+  `chunk-sidecar-retrieval-eval` now builds an opt-in retrieval sidecar from
+  `chunks_v2/atomic_chunks.jsonl`, writes a noncanonical
+  `retrieval_sidecar/evidence_index.sqlite`, runs the tracked
+  `config/chunk_sidecar_retrieval_eval_v1.json` contract, and compares it
+  against the baseline retrieval index. Retrieval eval cases can now require
+  exact `expected_chunk_ids`, `expected_structure_types`,
+  `expected_citation_labels`, and `require_parent_window`. The live f70 smoke
+  wrote sidecar outputs to `/tmp/usfs-r1-retrieval-sidecar-next-slice` and
+  `/tmp/usfs-r1-retrieval-sidecar-eval-next-slice`, indexed `296,442` atomic
+  chunks across `719` sources, passed `4/4` sidecar eval cases, and showed the
+  expected baseline gap: baseline `pass_rate=0.25` with zero atomic chunk,
+  structure, and parent-window coverage, while sidecar `pass_rate=1.0`,
+  `atomic_chunk_recall_at_k=1.0`, `structure_hit_rate=1.0`, and
+  `parent_window_coverage_rate=1.0`.
 - active extraction/chunking/retrieval accuracy slice:
-  none. The next bounded packet should add sidecar-aware retrieval scoring and
-  eval coverage, not replace the baseline chunk spine.
+  none. The next bounded packet should decide whether and how to promote
+  sidecar retrieval into graph, claim, reviewer, or compliance consumers; do
+  not replace the baseline chunk spine without a separate promotion gate.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
@@ -87,7 +104,7 @@ history below.
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
   extraction-fidelity eval source-owner reduction after the architecture
-  control-plane gap closeout. The current probe reports `518` code files, `17` code files above `800`,
+  control-plane gap closeout. The current probe reports `520` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
   `config/architecture_large_file_inventory_v1.json` owns the exact `9`

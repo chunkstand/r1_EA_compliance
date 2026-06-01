@@ -5145,6 +5145,9 @@ profile-guidance-only forests, and zero failed forests.
 
 Path: `source_library/derived/<source_set_id>/retrieval/`
 
+Sidecar path when `chunk-sidecar-retrieval-eval` is run:
+`source_library/derived/<source_set_id>/retrieval_sidecar/`
+
 The `retrieval-build` command writes:
 
 - `evidence_index.sqlite`
@@ -5183,13 +5186,18 @@ diagnostic index can be built with `--allow-partial-extraction`, but that summar
 - validation status
 - `reviewer_ready`, which is true only when the index validates and extraction coverage is complete
 
+When `build_retrieval_index` is called with a noncanonical sidecar index directory, it writes the
+same manifest, validation report, summary, and SQLite schema under that requested directory without
+replacing `retrieval/`.
+
 `evidence_index.sqlite` contains:
 
 - `metadata`: index schema, source-set ID, source chunk path, catalog path, creation timestamp
 - `chunks`: chunk text, reviewer metadata, review topics, citation labels, artifact provenance,
-  parser provenance, offsets, and content hashes
-- `chunks_fts`: optional SQLite FTS5 table for lexical retrieval support when the local SQLite
-  build provides FTS5
+  parser provenance, offsets, optional sidecar chunk-layer fields, deterministic contextual index
+  text/hash fields, and content hashes
+- `chunks_fts`: optional SQLite FTS5 table over raw text, contextual index text, title, heading,
+  and citation label when the local SQLite build provides FTS5
 
 `retrieval-query` prints JSON with:
 
@@ -5209,14 +5217,20 @@ Each result includes:
 - `support_document_role`
 - `authority_level`
 - `citation_label`
+- `chunk_layer`
+- `parent_chunk_id`
+- `parent_window_id`
+- `structure_type`
+- `component_type`
 - `review_topics`
 - `evidence_span`
 - `provenance`
 
 The `evidence_span` includes the returned text and both chunk-local and extracted-text character
 offsets. `provenance` includes source-set ID, artifact SHA256/path, original/effective/final URLs,
-parser name/version, extraction timestamp, source text path, page/section/heading when available,
-and chunk content hash.
+parser name/version, extraction timestamp, source text path, page/page-range/section/heading when
+available, sidecar chunk-layer fields when present, contextual index hash when present, and chunk
+content hash.
 
 The default eval file `config/retrieval_eval_seed.json` is a `retrieval-eval-v1` contract with:
 
@@ -5229,21 +5243,50 @@ The default eval file `config/retrieval_eval_seed.json` is a `retrieval-eval-v1`
 Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrapped as a
 `legacy-retrieval-eval-list-v0` contract at runtime.
 
+Cases may also declare sidecar-aware expectations:
+
+- `expected_chunk_ids`
+- `expected_structure_types`
+- `expected_citation_labels`
+- `require_parent_window`
+
 `retrieval-eval` writes `retrieval_eval_results.json` by default beside the index. It records:
 
 - eval identity and paths, including `eval_id`, eval file path, output path, and top-k
-- query count, passed count, failed count, hard-negative case count, and multi-source case count
+- query count, passed count, failed count, hard-negative case count, multi-source case count,
+  atomic chunk case count, structural case count, and parent-window case count
 - contract snapshot with schema version, case count, coverage requirements, metric thresholds, and
   contract SHA256
 - gate checks for case pass/fail, coverage requirements, and metric thresholds
 - metrics including pass rate, source hit rate, expected-term hit rate, citation coverage rate,
   unsupported-answer rate, zero-result rate, hard-negative pass rate, `false_positive_rate`,
-  `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`
+  `missing_required_source_rate`, `recall_at_k`, `atomic_chunk_recall_at_k`,
+  `structure_hit_rate`, `parent_window_coverage_rate`, `citation_correctness_rate`, `mrr`, and
+  `ndcg_at_k`
 - per-case query, filters, expectations, failure reasons, missing expected source IDs, missing
-  expected terms, top source IDs, and top evidence results
+  expected chunk IDs, missing structure types, missing citation labels, missing expected terms,
+  top source IDs, and top evidence results
 
 Cases may declare `expect_no_hits: true` for deterministic negative checks. Those cases pass only
 when retrieval returns zero hits and do not require provenance-bearing results.
+
+`chunk-sidecar-retrieval-eval` writes
+`retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json` by default. The tracked initial
+contract is `config/chunk_sidecar_retrieval_eval_v1.json`. The sidecar result has schema version
+`chunk-sidecar-retrieval-eval-results-v1` and records:
+
+- source-set ID, eval file path/hash, top-k, sidecar chunk path, sidecar retrieval index path,
+  baseline retrieval index path, and sidecar/baseline eval result paths
+- `sidecar` summary with sidecar chunk count, source count, validation status, eval status,
+  metrics, and atomic/structural/parent-window case counts
+- optional `baseline` summary with baseline eval status, failed count, metrics, and sidecar-aware
+  case counts
+- metric comparisons for pass rate, source recall, atomic chunk recall, structure hit rate,
+  parent-window coverage, citation correctness, MRR, and nDCG
+- checks for sidecar chunk validation, sidecar retrieval index validation, sidecar eval pass/fail,
+  atomic/structural/parent case coverage, baseline eval completion, and sidecar metrics not being
+  worse than baseline
+- `passed`, which is true only when all checks pass
 
 ## Source Claim Graph Outputs
 

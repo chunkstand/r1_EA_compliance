@@ -10,7 +10,7 @@ Use this short route before opening append-only docs.
   `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
 - Latest resolved observability/eval graph slice: context-graph build/eval commands, trace-event materialization, explicit event-log capture, canonical CLI command-event capture, and f70 source-set phase-eval ratchet. Details: `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
-- Active implementation slice: none; latest retrieval-accuracy slices are `chunk-quality-audit` and sidecar `chunk-layer-build`. Open a new bounded packet before retrieval scoring/eval expansion, hosted query service/API expansion, model-judge work, hosted scoring, promotion ratchets, or oversized-owner reduction.
+- Active implementation slice: none; latest retrieval-accuracy slices are `chunk-quality-audit`, sidecar `chunk-layer-build`, and `chunk-sidecar-retrieval-eval`. Open a new bounded packet before making `chunks_v2` canonical for graph/claim/review/compliance consumers, hosted query service/API expansion, model-judge work, hosted scoring, promotion ratchets, or oversized-owner reduction.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.

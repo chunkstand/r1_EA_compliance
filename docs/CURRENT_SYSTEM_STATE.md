@@ -15,6 +15,44 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Retrieval Eval Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  `chunk-sidecar-retrieval-eval` is now the first sidecar-aware retrieval/eval
+  implementation slice. It reuses or builds `chunks_v2/atomic_chunks.jsonl`,
+  builds an opt-in retrieval index under `retrieval_sidecar/`, runs retrieval
+  evals with atomic chunk, structure, citation, and parent-window expectations,
+  and compares sidecar metrics against the baseline retrieval index.
+- contract:
+  `config/chunk_sidecar_retrieval_eval_v1.json` is the tracked initial eval
+  contract. `docs/OUTPUT_SCHEMAS.md` documents
+  `chunk-sidecar-retrieval-eval-results-v1`, the new retrieval eval fields
+  `expected_chunk_ids`, `expected_structure_types`,
+  `expected_citation_labels`, and `require_parent_window`, and the new metrics
+  `atomic_chunk_recall_at_k`, `structure_hit_rate`,
+  `parent_window_coverage_rate`, and `citation_correctness_rate`.
+  `docs/architecture_contract.toml` owns the new retrieval-layer module,
+  sidecar retrieval artifact paths, and command registration.
+- live smoke:
+  running the command against `source-set-f70ea11e04ae3d53` with
+  `--chunks-v2-dir /tmp/usfs-r1-chunks-v2-next-slice`,
+  `--sidecar-index-dir /tmp/usfs-r1-retrieval-sidecar-next-slice`, and
+  `--results-dir /tmp/usfs-r1-retrieval-sidecar-eval-next-slice` passed. The
+  sidecar index covered `296,442` atomic chunks across `719` sources and the
+  sidecar eval passed `4/4` cases with `pass_rate=1.0`,
+  `atomic_chunk_recall_at_k=1.0`, `structure_hit_rate=1.0`,
+  `parent_window_coverage_rate=1.0`, and `citation_correctness_rate=1.0`.
+  The baseline comparison completed and intentionally showed the gap this
+  slice measures: baseline `pass_rate=0.25`,
+  `atomic_chunk_recall_at_k=0.0`, `structure_hit_rate=0.0`, and
+  `parent_window_coverage_rate=0.0`.
+- boundary:
+  this closes only sidecar retrieval indexing and eval coverage. Promotion of
+  `chunks_v2` or `retrieval_sidecar` into graph, claim, reviewer, compliance,
+  or phase-eval gates remains future bounded work.
+
 ## Sidecar Chunk Layer Build Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
@@ -43,10 +81,9 @@ Latest implementation update on 2026-06-01 UTC:
   desired conditions, `7,326` legal sections, `7,009` forest-plan standards,
   `6,855` forest-plan guidelines, and `6,762` objectives.
 - boundary:
-  this closes only the generated sidecar layer. The next accuracy packet should
-  add sidecar-aware retrieval scoring and eval coverage before any promotion
-  path makes `chunks_v2` the active reviewer, graph, claim, or compliance
-  chunk spine.
+  this closes only the generated sidecar layer. The sidecar-aware retrieval
+  eval coverage is now closed separately above; downstream consumer promotion
+  remains future work.
 
 ## Extraction Chunk Quality Audit Resolved Locally
 

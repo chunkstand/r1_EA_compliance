@@ -90,6 +90,10 @@ DEFAULT_RULE_CLAIM_EVAL_PATH = _module_attr(
     "rule_claim_binding",
     "DEFAULT_RULE_CLAIM_EVAL_PATH",
 )
+DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH = _module_attr(
+    "sidecar_retrieval_eval",
+    "DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH",
+)
 DEFAULT_RULE_PACK_PATH = _module_attr("rule_packs", "DEFAULT_RULE_PACK_PATH")
 DEFAULT_SEMANTIC_GRAPH_EVAL_PATH = _module_attr(
     "semantic_graph_eval",
@@ -214,6 +218,13 @@ def run_retrieval_eval(**kwargs):
     return _module_attr("retrieval", "run_retrieval_eval")(**kwargs)
 
 
+def run_chunk_sidecar_retrieval_eval(**kwargs):
+    return _module_attr(
+        "sidecar_retrieval_eval",
+        "run_chunk_sidecar_retrieval_eval",
+    )(**kwargs)
+
+
 def build_reuse_inventory(**kwargs):
     return _module_attr("reuse_inventory", "build_reuse_inventory")(**kwargs)
 
@@ -266,6 +277,7 @@ DERIVED_COMMANDS = {
     "extraction-accuracy-audit",
     "chunk-quality-audit",
     "chunk-layer-build",
+    "chunk-sidecar-retrieval-eval",
     "source-register-proving-slice",
     "authority-currentness",
     "authority-ontology-validate",
@@ -311,6 +323,7 @@ COMMAND_SPECS = build_derived_command_specs(
         forest_plan_profiles_path=DEFAULT_FOREST_PLAN_PROFILES_PATH,
         region1_forest_plan_readiness_path=DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH,
         rule_claim_eval_path=DEFAULT_RULE_CLAIM_EVAL_PATH,
+        chunk_sidecar_retrieval_eval_path=DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH,
         rule_pack_path=DEFAULT_RULE_PACK_PATH,
         semantic_graph_eval_path=DEFAULT_SEMANTIC_GRAPH_EVAL_PATH,
         knowledge_graph_query_eval_path=DEFAULT_KNOWLEDGE_GRAPH_QUERY_EVAL_PATH,
@@ -576,6 +589,20 @@ def _run_retrieval_eval(args: argparse.Namespace):
     )
 
 
+def _run_chunk_sidecar_retrieval_eval(args: argparse.Namespace):
+    return run_chunk_sidecar_retrieval_eval(
+        output_dir=args.output_dir,
+        source_set_id=args.source_set_id,
+        eval_file=args.eval_file,
+        chunks_v2_dir=args.chunks_v2_dir,
+        sidecar_index_dir=args.sidecar_index_dir,
+        baseline_index_path=args.baseline_index_path,
+        results_dir=args.results_dir,
+        top_k=args.top_k,
+        rebuild_sidecar=args.rebuild_sidecar,
+    )
+
+
 def _run_evidence_graph_build(args: argparse.Namespace):
     return build_evidence_graph(
         output_dir=args.output_dir,
@@ -724,6 +751,10 @@ COMMAND_HANDLERS = {
     "retrieval-build": _result_handler(_run_retrieval_build, "validation_passed"),
     "retrieval-query": _summary_handler(_run_retrieval_query, "hit_count"),
     "retrieval-eval": _result_handler(_run_retrieval_eval, "passed"),
+    "chunk-sidecar-retrieval-eval": _result_handler(
+        _run_chunk_sidecar_retrieval_eval,
+        "passed",
+    ),
     "evidence-graph-build": _result_handler(
         _run_evidence_graph_build,
         "validation_passed",

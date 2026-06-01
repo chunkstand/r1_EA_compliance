@@ -66,6 +66,14 @@ def run_retrieval_eval(
             str(value) for value in case.get("expected_source_record_ids", [])
         )
         expected_terms = [str(value) for value in case.get("expected_terms", [])]
+        expected_chunk_ids = _dedupe(str(value) for value in case.get("expected_chunk_ids", []))
+        expected_structure_types = _dedupe(
+            str(value) for value in case.get("expected_structure_types", [])
+        )
+        expected_citation_labels = _dedupe(
+            str(value) for value in case.get("expected_citation_labels", [])
+        )
+        require_parent_window = bool(case.get("require_parent_window"))
         forbidden_sources = _dedupe(
             str(value) for value in case.get("forbidden_source_record_ids", [])
         )
@@ -81,6 +89,37 @@ def run_retrieval_eval(
         source_hit = zero_hits if expect_no_hits else (not expected_sources or not missing_expected_sources)
         term_hit = zero_hits if expect_no_hits else (
             not expected_terms or _expected_terms_found(expected_terms, hits)
+        )
+        matched_expected_chunk_ids = _matched_expected_chunk_ids(expected_chunk_ids, hits)
+        missing_expected_chunk_ids = [
+            chunk_id for chunk_id in expected_chunk_ids if chunk_id not in matched_expected_chunk_ids
+        ]
+        chunk_hit = zero_hits if expect_no_hits else (
+            not expected_chunk_ids or not missing_expected_chunk_ids
+        )
+        matched_structure_types = _matched_structure_types(expected_structure_types, hits)
+        missing_structure_types = [
+            structure_type
+            for structure_type in expected_structure_types
+            if structure_type not in matched_structure_types
+        ]
+        structure_hit = zero_hits if expect_no_hits else (
+            not expected_structure_types or not missing_structure_types
+        )
+        parent_window_hit = zero_hits if expect_no_hits else (
+            not require_parent_window or any(hit.get("parent_window_id") for hit in hits)
+        )
+        matched_expected_citation_labels = _matched_expected_citation_labels(
+            expected_citation_labels,
+            hits,
+        )
+        missing_expected_citation_labels = [
+            citation_label
+            for citation_label in expected_citation_labels
+            if citation_label not in matched_expected_citation_labels
+        ]
+        citation_correctness = zero_hits if expect_no_hits else (
+            not expected_citation_labels or not missing_expected_citation_labels
         )
         missing_expected_terms = [] if expect_no_hits else _missing_expected_terms(expected_terms, hits)
         unexpected_sources = [
@@ -115,6 +154,10 @@ def run_retrieval_eval(
             min_hits_met
             and source_hit
             and term_hit
+            and chunk_hit
+            and structure_hit
+            and parent_window_hit
+            and citation_correctness
             and provenance_supported
             and not top_rank_false_positive
             and not unexpected_sources
@@ -128,6 +171,14 @@ def run_retrieval_eval(
             top_rank_false_positive=top_rank_false_positive,
             unexpected_sources=unexpected_sources,
         )
+        if not chunk_hit:
+            failure_reasons.append("expected_chunk_not_retrieved")
+        if not structure_hit:
+            failure_reasons.append("expected_structure_type_not_retrieved")
+        if not parent_window_hit:
+            failure_reasons.append("parent_window_missing")
+        if not citation_correctness:
+            failure_reasons.append("expected_citation_not_retrieved")
         case_results.append(
             {
                 "id": case["id"],
@@ -136,18 +187,32 @@ def run_retrieval_eval(
                 "hard_negative": bool(case.get("hard_negative") or expect_no_hits),
                 "multi_source": bool(case.get("multi_source") or len(expected_sources) > 1),
                 "expected_source_record_ids": expected_sources,
+                "expected_chunk_ids": expected_chunk_ids,
+                "expected_structure_types": expected_structure_types,
+                "expected_citation_labels": expected_citation_labels,
                 "expected_terms": expected_terms,
+                "require_parent_window": require_parent_window,
                 "forbidden_source_record_ids": forbidden_sources,
                 "expect_no_hits": expect_no_hits,
                 "top_k": int(case.get("top_k") or top_k),
                 "min_hits": min_hits,
                 "hit_count": len(hits),
                 "matched_expected_source_record_ids": matched_expected_sources,
+                "matched_expected_chunk_ids": matched_expected_chunk_ids,
+                "matched_structure_types": matched_structure_types,
+                "matched_expected_citation_labels": matched_expected_citation_labels,
                 "missing_expected_source_record_ids": missing_expected_sources,
+                "missing_expected_chunk_ids": missing_expected_chunk_ids,
+                "missing_structure_types": missing_structure_types,
+                "missing_expected_citation_labels": missing_expected_citation_labels,
                 "missing_expected_terms": missing_expected_terms,
                 "unexpected_source_record_ids": unexpected_sources,
                 "source_hit": source_hit,
                 "term_hit": term_hit,
+                "chunk_hit": chunk_hit,
+                "structure_hit": structure_hit,
+                "parent_window_hit": parent_window_hit,
+                "citation_correctness": citation_correctness,
                 "required_source_recall": required_source_recall,
                 "min_hits_met": min_hits_met,
                 "provenance_supported": provenance_supported,
@@ -180,10 +245,16 @@ def run_retrieval_eval(
         for case in case_results
         if not case["expect_no_hits"] and case["expected_source_record_ids"]
     ]
+    chunk_cases = [case for case in case_results if case["expected_chunk_ids"]]
+    structure_cases = [case for case in case_results if case["expected_structure_types"]]
+    parent_window_cases = [case for case in case_results if case["require_parent_window"]]
+    citation_cases = [case for case in case_results if case["expected_citation_labels"]]
     total_required_sources = sum(len(case["expected_source_record_ids"]) for case in ranking_cases)
     matched_required_sources = sum(
         len(case["matched_expected_source_record_ids"]) for case in ranking_cases
     )
+    total_required_chunks = sum(len(case["expected_chunk_ids"]) for case in chunk_cases)
+    matched_required_chunks = sum(len(case["matched_expected_chunk_ids"]) for case in chunk_cases)
     metrics = {
         "case_count": query_count,
         "pass_rate": _rate(passed_count, query_count),
@@ -205,6 +276,19 @@ def run_retrieval_eval(
             total_required_sources,
         ),
         "recall_at_k": _rate(matched_required_sources, total_required_sources),
+        "atomic_chunk_recall_at_k": _rate(matched_required_chunks, total_required_chunks),
+        "structure_hit_rate": _rate(
+            sum(1 for case in structure_cases if case["structure_hit"]),
+            len(structure_cases),
+        ),
+        "parent_window_coverage_rate": _rate(
+            sum(1 for case in parent_window_cases if case["parent_window_hit"]),
+            len(parent_window_cases),
+        ),
+        "citation_correctness_rate": _rate(
+            sum(1 for case in citation_cases if case["citation_correctness"]),
+            len(citation_cases),
+        ),
         "mrr": average(
             reciprocal_rank(
                 _retrieval_relevance(
@@ -252,6 +336,9 @@ def run_retrieval_eval(
         "failed_count": failed_count,
         "hard_negative_case_count": len(hard_negative_cases),
         "multi_source_case_count": len(multi_source_cases),
+        "atomic_chunk_case_count": len(chunk_cases),
+        "structural_case_count": len(structure_cases),
+        "parent_window_case_count": len(parent_window_cases),
         "checks": checks,
         "metrics": metrics,
         "contract": contract_snapshot(
@@ -318,11 +405,15 @@ def _validated_eval_cases(payload: object, *, legacy_format: bool) -> list[dict]
                 raise ValueError(f"Retrieval eval case {index} is missing {field!r}.")
         case_ids.append(str(case["id"]))
         _validate_optional_string_list(case, "expected_source_record_ids", index)
+        _validate_optional_string_list(case, "expected_chunk_ids", index)
+        _validate_optional_string_list(case, "expected_structure_types", index)
+        _validate_optional_string_list(case, "expected_citation_labels", index)
         _validate_optional_string_list(case, "expected_terms", index)
         _validate_optional_string_list(case, "forbidden_source_record_ids", index)
         _validate_optional_bool(case, "expect_no_hits", index)
         _validate_optional_bool(case, "hard_negative", index)
         _validate_optional_bool(case, "multi_source", index)
+        _validate_optional_bool(case, "require_parent_window", index)
         _validate_positive_eval_int(case, "min_hits", index)
         _validate_positive_eval_int(case, "top_k", index)
     duplicates = sorted(case_id for case_id in set(case_ids) if case_ids.count(case_id) > 1)
@@ -377,6 +468,32 @@ def _matched_expected_source_record_ids(expected_sources: list[str], hits: list[
             for hit in hits
         )
     ]
+
+
+def _matched_expected_chunk_ids(expected_chunk_ids: list[str], hits: list[dict]) -> list[str]:
+    hit_chunk_ids = {str(hit.get("chunk_id") or "") for hit in hits}
+    return [chunk_id for chunk_id in expected_chunk_ids if chunk_id in hit_chunk_ids]
+
+
+def _matched_structure_types(expected_structure_types: list[str], hits: list[dict]) -> list[str]:
+    hit_structure_types = {str(hit.get("structure_type") or "") for hit in hits}
+    return [
+        structure_type
+        for structure_type in expected_structure_types
+        if structure_type in hit_structure_types
+    ]
+
+
+def _matched_expected_citation_labels(
+    expected_citation_labels: list[str],
+    hits: list[dict],
+) -> list[str]:
+    matched = []
+    for expected in expected_citation_labels:
+        expected_lower = expected.lower()
+        if any(expected_lower in str(hit.get("citation_label") or "").lower() for hit in hits):
+            matched.append(expected)
+    return matched
 
 
 def _dedupe(values: object) -> list[str]:

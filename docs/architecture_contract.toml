@@ -79,6 +79,7 @@ modules = [
   "retrieval_query",
   "retrieval_runtime",
   "retrieval_validation",
+  "sidecar_retrieval_eval",
 ]
 allowed_import_layers = ["foundation", "extraction", "retrieval"]
 
@@ -549,6 +550,11 @@ owner_layer = "retrieval"
 paths = [
   "source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite",
   "source_library/derived/<source_set_id>/retrieval/retrieval_validation.json",
+  "source_library/derived/<source_set_id>/retrieval_sidecar/evidence_index.sqlite",
+  "source_library/derived/<source_set_id>/retrieval_sidecar/retrieval_manifest.json",
+  "source_library/derived/<source_set_id>/retrieval_sidecar/retrieval_validation.json",
+  "source_library/derived/<source_set_id>/retrieval_sidecar/summary.json",
+  "source_library/derived/<source_set_id>/retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json",
 ]
 
 [[artifacts]]
@@ -774,6 +780,7 @@ commands = [
   "extraction-accuracy-audit",
   "chunk-quality-audit",
   "chunk-layer-build",
+  "chunk-sidecar-retrieval-eval",
   "retrieval-build",
   "retrieval-query",
   "retrieval-eval",

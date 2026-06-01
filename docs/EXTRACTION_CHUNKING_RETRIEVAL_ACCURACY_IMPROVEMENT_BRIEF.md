@@ -2,11 +2,11 @@
 
 Date: 2026-06-01
 
-Status: First two bounded packets implemented locally. The read-only
-`chunk-quality-audit` gate and generated sidecar `chunk-layer-build` command
-are now routed in `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`,
-and `docs/SESSION_HANDOFF.md`; sidecar-aware retrieval scoring and eval
-coverage remain future packets.
+Status: First three bounded packets implemented locally. The read-only
+`chunk-quality-audit` gate, generated sidecar `chunk-layer-build` command, and
+sidecar-aware `chunk-sidecar-retrieval-eval` command are now routed in
+`docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
+`docs/SESSION_HANDOFF.md`; downstream consumer promotion remains future work.
 
 ## Implementation Status
 
@@ -24,14 +24,27 @@ coverage remain future packets.
   `296,442` atomic chunks, `116,004` structural chunks, and `19,117` parent
   windows from `113,830` baseline chunks, with full atomic parent-window
   coverage.
+- closed:
+  `chunk-sidecar-retrieval-eval` builds an opt-in sidecar retrieval SQLite
+  index over `chunks_v2/atomic_chunks.jsonl`, runs eval cases that require
+  exact atomic chunk IDs, structure types, citation labels, and parent-window
+  links, and compares sidecar metrics against the baseline retrieval index.
+  The live f70 smoke indexed `296,442` atomic chunks across `719` sources and
+  passed `4/4` tracked eval cases with sidecar `pass_rate=1.0`,
+  `atomic_chunk_recall_at_k=1.0`, `structure_hit_rate=1.0`, and
+  `parent_window_coverage_rate=1.0`; the baseline comparison completed and
+  exposed the intended gap with baseline `pass_rate=0.25` and zero
+  atomic/structure/parent-window coverage.
 - live smoke:
   the active source set produced `113,830` audited chunks across `719` sources,
   passed required provenance/offset/source-identity checks, and reported the
   expected `parent_context_missing` risk for every source when the default
   `chunks_v2` sidecar summary was absent.
 - still open:
-  sidecar-aware FTS/BM25 retrieval scoring, deterministic contextual index
-  text integration in retrieval, and expanded atomic/structure retrieval evals.
+  downstream promotion gates for graph, claim, reviewer, compliance, and
+  phase-eval consumers; broader sidecar eval coverage across parser-risk
+  strata; and optional FTS/BM25 first-stage scoring or reranker experiments
+  after deterministic sidecar gains remain measurable.
 
 ## Grounded Repo Snapshot
 
@@ -55,13 +68,14 @@ The implementation surface explains the main accuracy boundary:
   hints only when parser blocks supply `heading`, `section`, or `page`.
 - default extraction/review chunk settings are `1800` max characters and `200`
   overlap characters.
-- `retrieval_runtime.py` creates SQLite rows and an FTS5 table, but
-  `retrieval_query.py` currently loads candidate rows and applies deterministic
-  Python lexical scoring instead of using SQLite FTS/BM25 as the first-stage
-  retrieval scorer.
-- current retrieval evals prove source/rank/provenance behavior, but do not yet
-  prove atomic chunk recall, parent-window recall, table-row recall,
-  section-boundary integrity, or parser/layout fidelity for the graph-KB.
+- `retrieval_runtime.py` creates SQLite rows and an FTS5 table. It now also
+  supports opt-in noncanonical sidecar index directories and persists
+  `chunk_layer`, `parent_chunk_id`, `parent_window_id`, `structure_type`,
+  `component_type`, and deterministic contextual index text/hash fields.
+- retrieval evals now prove source/rank/provenance behavior and can prove
+  atomic chunk recall, structure recall, citation correctness, and
+  parent-window coverage. Broader parser/layout fidelity coverage remains a
+  follow-on eval expansion.
 
 ## Expert Perspective
 
@@ -158,6 +172,9 @@ chunks should carry the actual reviewer-facing evidence identity.
 
 Upgrade retrieval in steps:
 
+- closed first sidecar step: index `chunks_v2/atomic_chunks.jsonl` into a
+  noncanonical retrieval sidecar and compare exact atomic/structure/parent
+  eval metrics against baseline retrieval;
 - use SQLite FTS5/BM25 as a real first-stage lexical retriever instead of only
   as a persisted side table;
 - index both raw text and `contextual_index_text_v1`;
@@ -176,6 +193,10 @@ availability gates.
 
 Extend direct evals beyond current source-level retrieval:
 
+- closed first eval step: `chunk-sidecar-retrieval-eval` adds exact
+  `expected_chunk_ids`, `expected_structure_types`, `expected_citation_labels`,
+  `require_parent_window`, and thresholded metrics for atomic chunk recall,
+  structure hit rate, parent-window coverage, and citation correctness;
 - atomic chunk recall: the expected source is not enough; the expected legal
   unit or table row must be retrieved;
 - parent-window recall: the retrieved atomic span must link to enough context
@@ -209,25 +230,29 @@ Extend direct evals beyond current source-level retrieval:
   structure; the repo should exploit that where available and explicitly flag
   fallback-parser risks where not.
 
-## Suggested First Bounded Packet
+## Suggested Next Bounded Packet
 
-Status: closed by `chunk-quality-audit`; the follow-on sidecar layer is also
-closed by `chunk-layer-build`.
+Status: closed by `chunk-quality-audit`; the follow-on sidecar layer is closed
+by `chunk-layer-build`, and the first sidecar retrieval/eval packet is closed
+by `chunk-sidecar-retrieval-eval`.
 
-Open a new implementation packet for `chunk-quality-audit` before changing the
-production chunk spine.
+Open a new implementation packet before changing any downstream consumer to use
+`chunks_v2` or `retrieval_sidecar`.
 
 Goal:
-build a read-only chunk/parser/layout risk report for the active source set.
+promote sidecar retrieval to one narrow downstream consumer behind a fail-closed
+comparison gate, or expand the tracked sidecar eval cases across parser-risk
+strata before promotion.
 
 Non-goals:
 no full corpus regeneration, no network download, no graph rebuild, no
-embedding provider dependency, no replacement of `chunks.jsonl`.
+embedding provider dependency, no unguarded replacement of `chunks.jsonl`.
 
 Owner surfaces:
 
-- `src/usfs_r1_ea_sources/extract_chunking.py`
-- a new small audit owner such as `src/usfs_r1_ea_sources/chunk_quality_audit.py`
+- `src/usfs_r1_ea_sources/sidecar_retrieval_eval.py`
+- `src/usfs_r1_ea_sources/retrieval_eval_runtime.py`
+- the selected downstream consumer if promotion is chosen
 - CLI registration
 - `docs/OUTPUT_SCHEMAS.md`
 - focused tests under `tests/`
@@ -235,18 +260,19 @@ Owner surfaces:
 Required verification:
 
 ```bash
-PYTHONPATH=src uv run --extra dev pytest tests/test_chunk_quality_audit.py tests/test_architecture_contract.py
-PYTHONPATH=src python -m usfs_r1_ea_sources chunk-quality-audit --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53
+PYTHONPATH=src uv run --extra dev pytest tests/test_sidecar_retrieval_eval.py tests/test_retrieval_eval.py tests/test_architecture_contract.py
+PYTHONPATH=src python -m usfs_r1_ea_sources chunk-sidecar-retrieval-eval --output-dir source_library --source-set-id source-set-f70ea11e04ae3d53 --chunks-v2-dir /tmp/usfs-r1-chunks-v2-next-slice --sidecar-index-dir /tmp/usfs-r1-retrieval-sidecar-next-slice --results-dir /tmp/usfs-r1-retrieval-sidecar-eval-next-slice --top-k 10
 git diff --check
 ```
 
 Stop conditions:
 
-- the audit cannot distinguish source-level green state from chunk/structure
-  weakness;
-- adding the audit requires changing generated graph, claim, rule, or
-  compliance artifacts;
-- the active source set changes before closeout without rerunning the audit.
+- the promotion candidate cannot distinguish source-level green state from
+  exact chunk/structure/parent-window weakness;
+- downstream promotion would replace baseline retrieval without a side-by-side
+  comparison artifact;
+- the active source set changes before closeout without rerunning the sidecar
+  eval comparison.
 
 ## Sources
 

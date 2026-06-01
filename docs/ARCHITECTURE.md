@@ -11,7 +11,7 @@ compliance findings, reports, and eval gates.
 
 Live architecture gate on 2026-06-01: the control-plane rebaseline in
 `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` is now resolved
-locally. The fresh architecture probe reports `511` code files, `17` code files
+locally. The fresh architecture probe reports `520` code files, `17` code files
 above `800` lines, no Python or JS/TS import cycles, and no source module
 above the `20`-import fan-out gate. The 2026-05-21 under-`800` packet remains
 historical closeout truth; the live oversized-owner backlog is now tracked

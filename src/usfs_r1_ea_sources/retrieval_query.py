@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from contextlib import closing
+import json
 from pathlib import Path
 import sqlite3
 
@@ -191,6 +192,11 @@ def _result_from_row(
         "support_document_role": _row_value(row, "support_document_role"),
         "authority_level": row["authority_level"],
         "citation_label": row["citation_label"],
+        "chunk_layer": _row_value(row, "chunk_layer", "baseline_text_chunk_v1"),
+        "parent_chunk_id": _row_value(row, "parent_chunk_id"),
+        "parent_window_id": _row_value(row, "parent_window_id"),
+        "structure_type": _row_value(row, "structure_type", "text_span"),
+        "component_type": _row_value(row, "component_type"),
         "review_topics": topics,
         "evidence_span": span,
         "provenance": {
@@ -207,8 +213,15 @@ def _result_from_row(
             "char_start": row["char_start"],
             "char_end": row["char_end"],
             "page": row["page"],
+            "page_range": _json_or_none(_row_value(row, "page_range_json")),
             "section": row["section"],
             "heading": row["heading"],
+            "chunk_layer": _row_value(row, "chunk_layer", "baseline_text_chunk_v1"),
+            "parent_chunk_id": _row_value(row, "parent_chunk_id"),
+            "parent_window_id": _row_value(row, "parent_window_id"),
+            "structure_type": _row_value(row, "structure_type", "text_span"),
+            "component_type": _row_value(row, "component_type"),
+            "contextual_index_sha256": _row_value(row, "contextual_index_sha256"),
             "content_sha256": row["content_sha256"],
         },
     }
@@ -219,6 +232,15 @@ def _row_value(row: sqlite3.Row, key: str, default: object | None = None) -> obj
         return row[key]
     except (IndexError, KeyError):
         return default
+
+
+def _json_or_none(value: object | None) -> object | None:
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        return json.loads(value)
+    except json.JSONDecodeError:
+        return None
 
 
 def _evidence_span(text: str, terms: list[str], source_chunk_start: int) -> dict:
@@ -316,6 +338,7 @@ def _score_row(
     document_role = str(row["document_role"] or "").replace("_", " ")
     support_document_role = str(_row_value(row, "support_document_role") or "").replace("_", " ")
     authority_level = str(row["authority_level"] or "").replace("_", " ")
+    contextual_text = str(_row_value(row, "contextual_index_text") or "")
     topic_text = " ".join(topics)
     metadata_text = " ".join(
         [
@@ -330,6 +353,11 @@ def _score_row(
     )
     score = 0.8 * _term_hit_fraction(terms, text=metadata_text, term_weights=term_weights)
     score += 0.55 * _term_hit_fraction(terms, text=text, term_weights=term_weights)
+    score += 0.35 * _term_hit_fraction(
+        terms,
+        text=contextual_text,
+        term_weights=term_weights,
+    )
     score += 0.55 * _term_hit_fraction(terms, text=title, term_weights=term_weights)
     score += 0.2 * _term_hit_fraction(terms, text=heading, term_weights=term_weights)
     score += 0.2 * _term_hit_fraction(terms, text=topic_text, term_weights=term_weights)
@@ -339,9 +367,11 @@ def _score_row(
         term_weights=term_weights,
     )
     score += 0.65 * _term_cluster_score(terms, text=text)
+    score += 0.25 * _term_cluster_score(terms, text=contextual_text)
     score += 0.35 * _term_cluster_score(terms, text=title)
     score += 0.2 * _term_cluster_score(terms, text=heading)
     score += 0.45 * _phrase_hit_fraction(phrases, text=text)
+    score += 0.25 * _phrase_hit_fraction(phrases, text=contextual_text)
     score += 0.35 * _phrase_hit_fraction(phrases, text=title)
     score += 0.2 * _phrase_hit_fraction(phrases, text=heading)
     score += 0.15 * _phrase_hit_fraction(phrases, text=metadata_text)
@@ -350,6 +380,8 @@ def _score_row(
     lower_metadata = metadata_text.lower()
     if query.strip() and query.strip().lower() in text.lower():
         score += 0.4
+    if query.strip() and query.strip().lower() in contextual_text.lower():
+        score += 0.25
     if lower_query and lower_query in lower_title:
         score += 0.5
     if lower_query and lower_query in lower_metadata:

@@ -39,6 +39,7 @@ class DerivedCommandDefaults:
     forest_plan_profiles_path: Path
     region1_forest_plan_readiness_path: Path
     rule_claim_eval_path: Path
+    chunk_sidecar_retrieval_eval_path: Path
     rule_pack_path: Path
     semantic_graph_eval_path: Path
     knowledge_graph_query_eval_path: Path
@@ -338,6 +339,25 @@ def build_derived_command_specs(
                 _arg("--eval-file", default=Path("config/retrieval_eval_seed.json"), type=Path),
                 _arg("--top-k", type=int, default=5),
                 _arg("--results-dir", type=Path),
+            ),
+        ),
+        DerivedCommandSpec(
+            name="chunk-sidecar-retrieval-eval",
+            help="Compare opt-in atomic chunk retrieval sidecar evals against baseline retrieval.",
+            arguments=(
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg(
+                    "--eval-file",
+                    default=defaults.chunk_sidecar_retrieval_eval_path,
+                    type=Path,
+                ),
+                _arg("--chunks-v2-dir", type=Path),
+                _arg("--sidecar-index-dir", type=Path),
+                _arg("--baseline-index-path", type=Path),
+                _arg("--results-dir", type=Path),
+                _arg("--top-k", type=int, default=5),
+                _arg("--rebuild-sidecar", action="store_true"),
             ),
         ),
         DerivedCommandSpec(

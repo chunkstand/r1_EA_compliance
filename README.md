@@ -183,13 +183,13 @@ PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-case-promote \
 ```
 
 Focused review and extraction helpers:
-
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources source-record-identity-gate \
   --output-dir source_library \
   --catalog-dir <catalog-dir> \
   --eval-file <v1-ea-eval-contract.json>
 PYTHONPATH=src python -m usfs_r1_ea_sources chunk-layer-build --output-dir source_library
+PYTHONPATH=src python -m usfs_r1_ea_sources chunk-sidecar-retrieval-eval --output-dir source_library
 PYTHONPATH=src .venv-docling/bin/python -m usfs_r1_ea_sources extraction-accuracy-audit --output-dir source_library
 ```
 

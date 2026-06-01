@@ -262,6 +262,42 @@ def test_chunk_layer_build_parser_accepts_sidecar_paths_and_limits() -> None:
     assert args.parent_window_max_tokens == 1200
 
 
+def test_chunk_sidecar_retrieval_eval_parser_accepts_sidecar_paths() -> None:
+    args = build_parser().parse_args(
+        [
+            "chunk-sidecar-retrieval-eval",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--eval-file",
+            "config/custom-sidecar-eval.json",
+            "--chunks-v2-dir",
+            "/tmp/chunks-v2",
+            "--sidecar-index-dir",
+            "/tmp/retrieval-sidecar",
+            "--baseline-index-path",
+            "/tmp/baseline/evidence_index.sqlite",
+            "--results-dir",
+            "/tmp/retrieval-sidecar-eval",
+            "--top-k",
+            "10",
+            "--rebuild-sidecar",
+        ]
+    )
+
+    assert args.command == "chunk-sidecar-retrieval-eval"
+    assert args.output_dir == Path("source_library")
+    assert args.source_set_id == "source-set-test"
+    assert args.eval_file == Path("config/custom-sidecar-eval.json")
+    assert args.chunks_v2_dir == Path("/tmp/chunks-v2")
+    assert args.sidecar_index_dir == Path("/tmp/retrieval-sidecar")
+    assert args.baseline_index_path == Path("/tmp/baseline/evidence_index.sqlite")
+    assert args.results_dir == Path("/tmp/retrieval-sidecar-eval")
+    assert args.top_k == 10
+    assert args.rebuild_sidecar is True
+
+
 def test_retrieval_build_parser_accepts_archived_catalog_dir() -> None:
     args = build_parser().parse_args(
         [

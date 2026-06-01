@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 import json
 from pathlib import Path
 import re
+import sqlite3
 
 from .source_set_support import source_derived_dir
 
@@ -89,6 +90,20 @@ def default_index_path(output_dir: Path, source_set_id: str | None = None) -> Pa
     return derived_source_dir / "retrieval" / DEFAULT_INDEX_FILENAME
 
 
+def _ensure_noncanonical_sidecar_dir(
+    *,
+    requested_dir: Path,
+    canonical_dir: Path,
+    label: str,
+) -> None:
+    requested = Path(requested_dir).resolve()
+    canonical = Path(canonical_dir).resolve()
+    if requested == canonical or canonical in requested.parents:
+        raise ValueError(
+            f"{label} must not point at or inside canonical output directory: {canonical_dir}"
+        )
+
+
 def _source_set_id_from_catalog(output_dir: Path) -> str:
     manifest_path = output_dir / "catalog" / "source_set_manifest.json"
     if not manifest_path.exists():
@@ -101,9 +116,43 @@ def _source_set_id_from_catalog(output_dir: Path) -> str:
 
 
 def _source_set_id_from_index_path(index_path: Path) -> str:
+    metadata_source_set_id = _source_set_id_from_index_metadata(index_path)
+    if metadata_source_set_id:
+        return metadata_source_set_id
+    if index_path.parent.parent.name.startswith("source-set-"):
+        return index_path.parent.parent.name
     if index_path.parent.name != "retrieval":
         raise ValueError(f"Retrieval index path must live under a retrieval directory: {index_path}")
     return index_path.parent.parent.name
+
+
+def _source_set_id_from_index_metadata(index_path: Path) -> str | None:
+    if not index_path.exists():
+        return None
+    try:
+        with sqlite3.connect(index_path) as connection:
+            row = _metadata_row(connection, "source_set_id")
+    except sqlite3.Error:
+        return None
+    if row is None:
+        return None
+    try:
+        value = json.loads(row[0])
+    except (TypeError, json.JSONDecodeError):
+        value = row[0]
+    return str(value) if value else None
+
+
+def _metadata_row(connection: sqlite3.Connection, key: str) -> sqlite3.Row | tuple | None:
+    for column in ("value_json", "value"):
+        try:
+            return connection.execute(
+                f"SELECT {column} FROM metadata WHERE key = ?",
+                (key,),
+            ).fetchone()
+        except sqlite3.Error:
+            continue
+    return None
 
 
 def _int_from_summary(extraction_summary: dict | None, key: str) -> int:
