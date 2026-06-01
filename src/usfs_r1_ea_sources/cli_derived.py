@@ -95,6 +95,10 @@ DEFAULT_SEMANTIC_GRAPH_EVAL_PATH = _module_attr(
     "semantic_graph_eval",
     "DEFAULT_SEMANTIC_GRAPH_EVAL_PATH",
 )
+DEFAULT_KNOWLEDGE_GRAPH_QUERY_EVAL_PATH = _module_attr(
+    "knowledge_graph_query_eval",
+    "DEFAULT_QUERY_EVAL_PATH",
+)
 DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH = _module_attr(
     "source_register_proving",
     "DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH",
@@ -225,6 +229,14 @@ def run_semantic_graph_eval(**kwargs):
     return _module_attr("semantic_graph_eval", "run_semantic_graph_eval")(**kwargs)
 
 
+def run_knowledge_graph_query(**kwargs):
+    return _module_attr("knowledge_graph_query", "run_knowledge_graph_query")(**kwargs)
+
+
+def run_knowledge_graph_query_eval(**kwargs):
+    return _module_attr("knowledge_graph_query_eval", "run_knowledge_graph_query_eval")(**kwargs)
+
+
 def build_source_register_proving_slice(**kwargs):
     return _module_attr(
         "source_register_proving",
@@ -258,6 +270,8 @@ DERIVED_COMMANDS = {
     "retrieval-eval",
     "evidence-graph-build",
     "nepa-knowledge-graph-export",
+    "knowledge-graph-query",
+    "knowledge-graph-query-eval",
     "claim-extract",
     "claim-eval",
     "rule-claim-link",
@@ -289,6 +303,7 @@ COMMAND_SPECS = build_derived_command_specs(
         rule_claim_eval_path=DEFAULT_RULE_CLAIM_EVAL_PATH,
         rule_pack_path=DEFAULT_RULE_PACK_PATH,
         semantic_graph_eval_path=DEFAULT_SEMANTIC_GRAPH_EVAL_PATH,
+        knowledge_graph_query_eval_path=DEFAULT_KNOWLEDGE_GRAPH_QUERY_EVAL_PATH,
         source_register_proving_slice_manifest_path=(
             DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH
         ),
@@ -564,6 +579,38 @@ def _run_nepa_knowledge_graph_export(args: argparse.Namespace):
     )
 
 
+def _run_knowledge_graph_query(args: argparse.Namespace):
+    return run_knowledge_graph_query(
+        output_dir=args.output_dir,
+        source_set_id=args.source_set_id,
+        review_id=args.review_id,
+        query=args.query,
+        query_type=args.query_type,
+        graph_path=args.graph_path,
+        output_path=args.output_path,
+        limit=args.limit,
+        node_type=args.node_type,
+        edge_type=args.edge_type,
+        source_record_id=args.source_record_id,
+        forest_unit_id=args.forest_unit_id,
+        citation=args.citation,
+        readiness_status=args.readiness_status,
+        require_hit=args.require_hit,
+        fail_on_freshness_warning=args.fail_on_freshness_warning,
+    )
+
+
+def _run_knowledge_graph_query_eval(args: argparse.Namespace):
+    return run_knowledge_graph_query_eval(
+        output_dir=args.output_dir,
+        source_set_id=args.source_set_id,
+        review_id=args.review_id,
+        eval_path=args.eval_path,
+        graph_path=args.graph_path,
+        output_path=args.output_path,
+    )
+
+
 def _run_claim_extract(args: argparse.Namespace):
     return build_claim_extraction(
         output_dir=args.output_dir,
@@ -652,6 +699,11 @@ COMMAND_HANDLERS = {
     "nepa-knowledge-graph-export": _result_handler(
         _run_nepa_knowledge_graph_export,
         "validation_passed",
+    ),
+    "knowledge-graph-query": _result_handler(_run_knowledge_graph_query, "passed"),
+    "knowledge-graph-query-eval": _result_handler(
+        _run_knowledge_graph_query_eval,
+        "passed",
     ),
     "claim-extract": _result_handler(_run_claim_extract, "validation_passed"),
     "claim-eval": _result_handler(_run_claim_eval, "passed"),

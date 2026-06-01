@@ -1,0 +1,115 @@
+{
+  "schema_version": "knowledge-graph-query-eval-v1",
+  "contract_id": "knowledge-graph-query-eval-v1",
+  "version": "1.0.0",
+  "source_set_id": "source-set-f70ea11e04ae3d53",
+  "default_limit": 12,
+  "min_case_count": 8,
+  "min_hard_negative_case_count": 2,
+  "required_query_types": [
+    "citation",
+    "edge_type",
+    "forest_unit",
+    "node_id",
+    "node_type",
+    "readiness_blocker",
+    "source_record"
+  ],
+  "cases": [
+    {
+      "case_id": "source-record-fed-001-by-node-id",
+      "query_type": "node_id",
+      "query": "source_record:FED-001",
+      "expected_min_results": 1,
+      "expected_max_results": 1,
+      "expected_node_ids": [
+        "source_record:FED-001"
+      ],
+      "expected_node_types": [
+        "source_record"
+      ],
+      "expected_citation_labels": [
+        "FED-001 (fa80554f5cbe)"
+      ]
+    },
+    {
+      "case_id": "source-record-fed-001-by-source-id",
+      "query_type": "source_record",
+      "query": "FED-001",
+      "expected_min_results": 1,
+      "expected_node_ids": [
+        "source_record:FED-001"
+      ],
+      "expected_citation_labels": [
+        "FED-001 (fa80554f5cbe)"
+      ]
+    },
+    {
+      "case_id": "source-record-fed-001-by-citation",
+      "query_type": "citation",
+      "query": "FED-001",
+      "expected_min_results": 1,
+      "expected_node_ids": [
+        "source_record:FED-001"
+      ],
+      "expected_node_types": [
+        "source_record"
+      ]
+    },
+    {
+      "case_id": "forest-units-by-node-type",
+      "query_type": "node_type",
+      "query": "forest_unit",
+      "expected_min_results": 10,
+      "expected_node_types": [
+        "forest_unit"
+      ]
+    },
+    {
+      "case_id": "custer-gallatin-forest-unit",
+      "query_type": "forest_unit",
+      "query": "custer-gallatin-nf",
+      "expected_min_results": 1,
+      "expected_node_ids": [
+        "forest_unit:custer-gallatin-nf"
+      ],
+      "expected_node_types": [
+        "forest_unit"
+      ]
+    },
+    {
+      "case_id": "forest-component-edges",
+      "query_type": "edge_type",
+      "query": "HAS_FOREST_COMPONENT",
+      "expected_min_results": 1,
+      "expected_edge_types": [
+        "HAS_FOREST_COMPONENT"
+      ]
+    },
+    {
+      "case_id": "missing-source-readiness-blockers",
+      "query_type": "readiness_blocker",
+      "query": "missing_source",
+      "expected_min_results": 1,
+      "expected_node_types": [
+        "readiness_blocker"
+      ]
+    },
+    {
+      "case_id": "unknown-source-record-zero-result",
+      "query_type": "source_record",
+      "query": "FED-DOES-NOT-EXIST",
+      "hard_negative": true,
+      "expected_min_results": 0,
+      "expected_max_results": 0
+    },
+    {
+      "case_id": "unknown-citation-zero-result",
+      "query_type": "citation",
+      "query": "NOT-A-REAL-CITATION",
+      "hard_negative": true,
+      "expected_min_results": 0,
+      "expected_max_results": 0
+    }
+  ]
+}

@@ -150,6 +150,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
   --output-dir source_library \
   --review-id <review-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources semantic-graph-eval --output-dir source_library --source-set-id <source-set-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources knowledge-graph-query FED-001 --output-dir source_library --source-set-id <source-set-id> --query-type source_record
 ```
 
 First-class eval/trace workflow:

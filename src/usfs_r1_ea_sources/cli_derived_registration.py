@@ -41,6 +41,7 @@ class DerivedCommandDefaults:
     rule_claim_eval_path: Path
     rule_pack_path: Path
     semantic_graph_eval_path: Path
+    knowledge_graph_query_eval_path: Path
     source_register_proving_slice_manifest_path: Path
     source_partition_contract_path: Path
 
@@ -370,6 +371,57 @@ def build_derived_command_specs(
                 _arg("--claims-path", type=Path),
                 _arg("--rule-claim-links-path", type=Path),
                 _arg("--forest-plan-components-path", type=Path),
+            ),
+        ),
+        DerivedCommandSpec(
+            name="knowledge-graph-query",
+            help="Query the NEPA knowledge graph export with provenance and freshness warnings.",
+            arguments=(
+                _arg("query", nargs="?"),
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg("--review-id"),
+                _arg(
+                    "--query-type",
+                    default="keyword",
+                    choices=(
+                        "keyword",
+                        "node_id",
+                        "node_type",
+                        "edge_type",
+                        "source_record",
+                        "citation",
+                        "forest_unit",
+                        "readiness_blocker",
+                    ),
+                ),
+                _arg("--graph-path", type=Path),
+                _arg("--output-path", type=Path),
+                _arg("--limit", type=int, default=10),
+                _arg("--node-type"),
+                _arg("--edge-type"),
+                _arg("--source-record-id"),
+                _arg("--forest-unit-id"),
+                _arg("--citation"),
+                _arg("--readiness-status"),
+                _arg("--require-hit", action="store_true"),
+                _arg("--fail-on-freshness-warning", action="store_true"),
+            ),
+        ),
+        DerivedCommandSpec(
+            name="knowledge-graph-query-eval",
+            help="Run deterministic query-level evals against the NEPA knowledge graph surface.",
+            arguments=(
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg("--review-id"),
+                _arg(
+                    "--eval-path",
+                    default=defaults.knowledge_graph_query_eval_path,
+                    type=Path,
+                ),
+                _arg("--graph-path", type=Path),
+                _arg("--output-path", type=Path),
             ),
         ),
         DerivedCommandSpec(

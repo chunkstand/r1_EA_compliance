@@ -5,18 +5,18 @@ Use this short route before opening append-only docs.
 
 ## New Session Start
 - Read this file first, then `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
-- Latest resolved source-set graph-KB slice: f70 canonical semantic graph direct-eval
-  strengthening after Region 1 graph-KB rebind and regeneration; exact counts live in
+- Latest resolved source-set graph-KB slice: operational graph query surface after f70
+  canonical semantic graph direct-eval strengthening; exact counts live in
   `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
-- Active implementation slice: none. Open a new bounded packet before graph-KB expansion, model-judge work, hosted scoring, or oversized-owner reduction.
+- Active implementation slice: none. Open a new bounded packet before hosted query service/API expansion, model-judge work, hosted scoring, or oversized-owner reduction.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
 
 ## Active Route
-- Graph-KB status: f70 forest-plan graph readiness and canonical semantic graph direct eval are
-  green locally; use the current-state doc for counts and residual source-currentness boundaries.
+- Graph-KB status: f70 forest-plan graph readiness, canonical semantic graph direct eval, and
+  the local operational query/eval surface are green; use the current-state doc for counts and residual boundaries.
 - Runtime constraint: forest-specific examples fail closed unless runtime forest-plan resolution matches the governed forest.
 - ECID is historical replay evidence, not a current promotion route; keep it out of governed forest-specific example routing.
 - Architecture route: `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` and `config/architecture_large_file_inventory_v1.json` own the oversized-owner backlog.

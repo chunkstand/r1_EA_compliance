@@ -1503,6 +1503,61 @@ Validation example:
 }
 ```
 
+## Knowledge Graph Query Surface
+
+Contract path: `config/knowledge_graph_query_eval_v1.json`
+
+Source-set query paths:
+
+- `source_library/derived/<source_set_id>/knowledge_graph/query_results/<query_id>.json`
+- `source_library/derived/<source_set_id>/knowledge_graph/knowledge_graph_query_eval_results.json`
+
+Review-specific query paths:
+
+- `source_library/reviews/<review_id>/knowledge_graph/query_results/<query_id>.json`
+- `source_library/reviews/<review_id>/knowledge_graph/knowledge_graph_query_eval_results.json`
+
+`knowledge-graph-query` is the stable local query/API contract over a validated
+`nepa_3d_graph.json` export. It is read-only over graph artifacts and does not
+scan raw artifact filenames. Supported query types are `keyword`, `node_id`,
+`node_type`, `edge_type`, `source_record`, `citation`, `forest_unit`, and
+`readiness_blocker`. Query results use schema version
+`knowledge-graph-query-results-v1` and include:
+
+- `query_id`, `source_set_id`, optional `review_id`, graph path, graph SHA256,
+  graph schema version, graph validation state, request, and pass/fail reasons
+- `freshness_warnings` for graph schema/validation failures, missing graph
+  inputs, and graph-input hash mismatches
+- ranked node or edge results with match reasons, display status,
+  review-readiness status, readiness semantic class, readiness blockers,
+  provenance, currentness metadata, metadata, citation refs, and compact
+  neighborhood context for node results
+
+`knowledge-graph-query-eval` uses schema version
+`knowledge-graph-query-eval-results-v1`. It executes the configured query
+cases, records positive and hard-negative outcomes, enforces required query
+type coverage, and writes case-level expected/actual node IDs, node types, edge
+types, citation labels, freshness-warning counts, and contract checks. The
+current f70 contract covers `9` cases, `2` hard negatives, and `7` query types.
+
+Example query:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources knowledge-graph-query FED-001 \
+  --output-dir source_library \
+  --source-set-id source-set-f70ea11e04ae3d53 \
+  --query-type source_record \
+  --require-hit
+```
+
+Example eval:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources knowledge-graph-query-eval \
+  --output-dir source_library \
+  --source-set-id source-set-f70ea11e04ae3d53
+```
+
 ## NEPA 3D Static Viewer
 
 NEPA 3D Milestone 6 adds a checked-in static viewer under `viewer/nepa-3d/`. The viewer is a

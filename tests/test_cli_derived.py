@@ -152,6 +152,30 @@ def test_semantic_eval_parsers_accept_phase_1_5_paths() -> None:
             "config/semantic_graph_direct_eval_v1.json",
         ]
     )
+    graph_query_args = build_parser().parse_args(
+        [
+            "knowledge-graph-query",
+            "FED-001",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-f70ea11e04ae3d53",
+            "--query-type",
+            "source_record",
+            "--require-hit",
+        ]
+    )
+    graph_query_eval_args = build_parser().parse_args(
+        [
+            "knowledge-graph-query-eval",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-f70ea11e04ae3d53",
+            "--eval-path",
+            "config/knowledge_graph_query_eval_v1.json",
+        ]
+    )
 
     assert ontology_args.command == "authority-ontology-validate"
     assert ontology_args.ontology_path == Path("config/authority_document_ontology_v1.json")
@@ -164,6 +188,12 @@ def test_semantic_eval_parsers_accept_phase_1_5_paths() -> None:
     assert semantic_graph_args.command == "semantic-graph-eval"
     assert semantic_graph_args.source_set_id == "source-set-f70ea11e04ae3d53"
     assert semantic_graph_args.eval_path == Path("config/semantic_graph_direct_eval_v1.json")
+    assert graph_query_args.command == "knowledge-graph-query"
+    assert graph_query_args.query == "FED-001"
+    assert graph_query_args.query_type == "source_record"
+    assert graph_query_args.require_hit is True
+    assert graph_query_eval_args.command == "knowledge-graph-query-eval"
+    assert graph_query_eval_args.eval_path == Path("config/knowledge_graph_query_eval_v1.json")
 
 
 def test_extraction_accuracy_audit_parser_accepts_contract_path() -> None:
@@ -390,3 +420,52 @@ def test_incremental_graph_refresh_eval_handler_propagates_options(monkeypatch) 
     assert captured["source_set_id"] == "source-set-1"
     assert captured["eval_path"] == Path("config/custom_incremental_graph_refresh_eval.json")
     assert captured["output_path"] == Path("incremental-output/results.json")
+
+
+def test_knowledge_graph_query_handler_propagates_contract_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_knowledge_graph_query(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_derived,
+        "run_knowledge_graph_query",
+        fake_run_knowledge_graph_query,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "knowledge-graph-query",
+            "FED-001",
+            "--output-dir",
+            "library",
+            "--source-set-id",
+            "source-set-1",
+            "--query-type",
+            "source_record",
+            "--graph-path",
+            "graph.json",
+            "--output-path",
+            "query-output.json",
+            "--limit",
+            "3",
+            "--require-hit",
+            "--fail-on-freshness-warning",
+        ]
+    )
+
+    result = cli_derived.handle_derived_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["source_set_id"] == "source-set-1"
+    assert captured["query"] == "FED-001"
+    assert captured["query_type"] == "source_record"
+    assert captured["graph_path"] == Path("graph.json")
+    assert captured["output_path"] == Path("query-output.json")
+    assert captured["limit"] == 3
+    assert captured["require_hit"] is True
+    assert captured["fail_on_freshness_warning"] is True

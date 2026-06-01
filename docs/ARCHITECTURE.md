@@ -11,7 +11,7 @@ compliance findings, reports, and eval gates.
 
 Live architecture gate on 2026-05-31: the control-plane rebaseline in
 `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` is now resolved
-locally. The fresh architecture probe reports `499` code files, `17` code files
+locally. The fresh architecture probe reports `502` code files, `17` code files
 above `800` lines, no Python or JS/TS import cycles, and no source module
 above the `20`-import fan-out gate. The 2026-05-21 under-`800` packet remains
 historical closeout truth; the live oversized-owner backlog is now tracked
@@ -57,7 +57,7 @@ instructions for agents or privileged tools.
 | Review support | Build cross-source-set reuse and readiness planning artifacts that may inspect forest-plan review requirements without writing review outputs. | `reuse_inventory.py`, `forest_plan_source_delta_readiness.py` |
 | Evidence and claims | Build graph and source-claim layers used by later rule and review gates. | `evidence_graph.py`, `evidence_graph_validation.py`, `claim_extraction.py`, `claim_extraction_eval.py`, `claim_extraction_graph.py`, `claim_extraction_runtime.py`, `claim_extraction_validation.py`, `rule_claim_binding.py`, `rule_claim_binding_eval.py`, `rule_claim_binding_runtime.py`, `rule_claim_binding_validation.py` |
 | Phase eval orchestration | Assemble source-set and review-scoped readiness summaries over graph, replay-context, direct-eval, first-class eval-trace, and audited downstream artifacts. | `phase_eval.py`, `phase_eval_source_set_phases.py`, `phase_eval_review_phases.py`, `phase_eval_support.py`, `phase_eval_optional_phases.py`, `phase_eval_direct_eval.py`, `phase_eval_direct_eval_source_set.py`, `phase_eval_direct_eval_review.py`, `phase_eval_direct_eval_support.py`, `replay_context.py` |
-| NEPA 3D knowledge graph | Define and assemble source-set graph exports for visualization over audited artifacts. | `nepa_3d_graph_contract.py`, `nepa_knowledge_graph_export.py` |
+| NEPA 3D knowledge graph | Define and assemble source-set graph exports plus local query/eval surfaces over audited artifacts. | `nepa_3d_graph_contract.py`, `nepa_knowledge_graph_export.py`, `knowledge_graph_query.py`, `knowledge_graph_query_eval.py` |
 | Applicability | Build package facts and package context, assemble authority candidate contracts, validate and summarize authority-universe snapshots, retrieve/trace authority evidence, decide applicability, validate and adjudicate decisions, and generate applicability rule packs. | `package_fact_graph.py`, `package_fact_graph_runtime.py`, `package_fact_graph_terms.py`, `applicability.py`, `applicability_adjudication.py`, `applicability_adjudication_apply.py`, `applicability_authority_family_templates.py`, `applicability_authority_universe_builder.py`, `applicability_authority_universe_contracts.py`, `applicability_candidate_assembly.py`, `applicability_contract_support.py`, `applicability_decision_arbitration.py`, `applicability_decision_coverage.py`, `applicability_decision_evidence.py`, `applicability_decision_forest_plan.py`, `applicability_decision_outputs.py`, `applicability_decisions.py`, `applicability_retrieval.py`, `applicability_retrieval_graph.py`, `applicability_retrieval_runtime.py`, `applicability_rule_pack.py`, `applicability_rule_pack_runtime.py`, `applicability_rule_pack_support.py`, `applicability_rule_pack_validation.py`, `applicability_validation.py`, `applicability_validation_artifacts.py`, `applicability_validation_checks.py`, `applicability_validation_freshness.py`, `applicability_validation_support.py` |
 | Review | Run EA checklist review and forest-plan context/component review, including shared package-cache, package-search, and retrieval-readiness support for local review artifacts. | `ea_review.py`, `forest_plan_*.py`, `review_package_support.py` |
 | Compliance | Produce citation-bearing compliance findings, authority-integration artifacts, matrices, finding graphs, coverage, review evals, and gold evals. | `compliance_review.py`, `compliance_review_eval.py`, `compliance_inputs.py`, `compliance_findings.py`, `compliance_authority_integration.py`, `compliance_finding_graph.py`, `compliance_validation.py`, `compliance_outputs.py`, `compliance_coverage.py`, `compliance_gold_eval.py` |
@@ -112,6 +112,13 @@ The NEPA 3D graph contract and source-set exporter are owned separately from the
 graph. They define and build the source-set visualization schema over audited artifacts; export
 commands must read catalog, derived, applicability, and compliance surfaces rather than raw
 filenames.
+
+The local operational query surface is owned by the same knowledge-graph layer.
+`knowledge-graph-query` reads the validated graph export and emits stable JSON
+answers with citations, provenance, currentness metadata, readiness blockers,
+freshness warnings, and compact neighborhood context. `knowledge-graph-query-eval`
+is the deterministic query-level eval owner for that surface. This is a local
+artifact/API contract, not a hosted service boundary.
 
 ### Evidence, Claims, And Rule Packs
 

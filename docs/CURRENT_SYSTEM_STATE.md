@@ -15,6 +15,45 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Operational Graph-KB Query Surface Resolved Locally
+
+Latest implementation update on 2026-05-31 UTC:
+
+- update:
+  the first operational graph-KB query surface is closed locally. New commands
+  `knowledge-graph-query` and `knowledge-graph-query-eval` provide a stable
+  local CLI/Python contract over the exported NEPA 3D knowledge graph without
+  scanning raw artifact filenames or starting a hosted service.
+- query contract:
+  `knowledge-graph-query` reads
+  `source_library/derived/source-set-f70ea11e04ae3d53/knowledge_graph/nepa_3d_graph.json`
+  and writes provenance-bearing query results under
+  `source_library/derived/<source_set_id>/knowledge_graph/query_results/`.
+  Results carry graph SHA, graph validation status, request metadata,
+  source-record citations, provenance, currentness metadata, readiness
+  blockers, compact neighborhood edges, and freshness warnings for stale graph
+  inputs. A live source-record query for `FED-001` passes with `2` results and
+  `0` freshness warnings.
+- query eval:
+  `config/knowledge_graph_query_eval_v1.json` and
+  `knowledge-graph-query-eval` now provide query-level direct eval coverage.
+  The f70 replay passes `9` cases with `2` hard negatives, `7` covered query
+  types (`citation`, `edge_type`, `forest_unit`, `node_id`, `node_type`,
+  `readiness_blocker`, and `source_record`), no failed cases, and
+  `freshness_warning_case_count=0`.
+- architecture effect:
+  the new query implementation is split across
+  `src/usfs_r1_ea_sources/knowledge_graph_query.py` (`693` lines) and
+  `src/usfs_r1_ea_sources/knowledge_graph_query_eval.py` (`356` lines), both
+  owned by the existing `knowledge_graph` architecture layer. The fresh
+  architecture probe reports `502` code files, `17` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate.
+- boundary:
+  this closes the local operational query/API-contract slice for the graph-KB.
+  A hosted HTTP service, authentication, or UI query workflow remains future
+  product work and should be opened as a new bounded packet if needed.
+
 ## Semantic Graph Direct-Eval Strengthening Resolved Locally
 
 Latest implementation update on 2026-05-31 UTC:
@@ -57,7 +96,7 @@ Latest implementation update on 2026-05-31 UTC:
   extraction runs, per-case execution, metric checks, and runtime helpers.
 - architecture effect:
   `extraction_fidelity_eval.py` is now `716` lines and the new runtime owner is
-  `442` lines. The architecture probe reports `499` code files, `17` code files above `800`,
+  `442` lines. The architecture probe reports `502` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source module
   above the `20`-import fan-out gate. The live inventory now records `9`
   source owners and `8` test owners.
@@ -78,12 +117,12 @@ Latest implementation update on 2026-05-31 UTC:
   stale routing docs. `config/architecture_large_file_inventory_v1.json` now
   records `17` code files above `800`, grouped as `9` source owners and `8`
   test owners, with exact path and line-count assertions in
-  `tests/test_architecture_quality.py`. The later semantic graph direct-eval
-  slice added one under-800 source module; the current probe therefore reports
-  `499` code files while the oversized-owner count remains `17`.
+  `tests/test_architecture_quality.py`. Later graph-KB slices added under-800
+  source and test modules; the current probe therefore reports `502` code
+  files while the oversized-owner count remains `17`.
 - probe result:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `499` code files, `17` code files above `800`, no Python or JS/TS
+  reports `502` code files, `17` code files above `800`, no Python or JS/TS
   import cycles, and no source module above the `20`-import fan-out gate.
 - route-doc control:
   `README.md` and `docs/CURRENT_ROUTING.md` are compact, non-volatile route

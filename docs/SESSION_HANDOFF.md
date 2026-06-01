@@ -30,18 +30,20 @@ history below.
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
 - latest resolved source-set graph-KB slice:
-  f70 canonical semantic graph direct-eval strengthening after Region 1
-  graph-KB rebind and regeneration. Tracked contracts now bind the forest-plan
-  component inventory, readiness matrix, forest-plan profile eval,
-  component-retrieval eval, canonical semantic graph direct eval, and
-  source-set phase-eval graph phases to `source-set-f70ea11e04ae3d53`.
+  operational graph-KB query surface after f70 canonical semantic graph
+  direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
+  `knowledge-graph-query` and `knowledge-graph-query-eval` now provide a
+  stable local CLI/Python query contract, citation/provenance answer surfaces,
+  freshness warnings, and query-level eval coverage for
+  `source-set-f70ea11e04ae3d53`.
 - active source-set graph-KB slice:
-  none. The f70 forest-plan graph profile state and canonical semantic graph
-  direct eval are green; any future graph-KB expansion, including the
-  operational query/API surface, should be opened as a new bounded packet.
+  none. The f70 forest-plan graph profile state, canonical semantic graph
+  direct eval, and local operational graph query surface are green; any future
+  hosted service/API, auth, UI query workflow, or broader graph-KB product work
+  should be opened as a new bounded packet.
 - latest resolved architecture slice:
   extraction-fidelity eval source-owner reduction after the architecture
-  control-plane gap closeout. The current probe reports `499` code files, `17` code files above `800`,
+  control-plane gap closeout. The current probe reports `502` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
   `config/architecture_large_file_inventory_v1.json` owns the exact `9`
@@ -99,6 +101,18 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  operational graph-KB query surface: the first local query/API-contract slice
+  is closed locally. `src/usfs_r1_ea_sources/knowledge_graph_query.py` and
+  `src/usfs_r1_ea_sources/knowledge_graph_query_eval.py` are owned by the
+  existing `knowledge_graph` architecture layer, with CLI commands
+  `knowledge-graph-query` and `knowledge-graph-query-eval`. Query results
+  include graph SHA, graph validation state, citations, provenance,
+  currentness metadata, readiness blockers, compact neighborhood edges, and
+  freshness warnings for stale graph inputs. Live f70 query eval passes `9`
+  cases with `2` hard negatives, `7` query types, no failed cases, and
+  `freshness_warning_case_count=0`. A hosted HTTP service/auth/UI query
+  workflow remains future product work.
+
   semantic graph direct-eval strengthening: `semantic-graph-eval` is now the
   aggregate direct-eval owner for `canonical_semantic_graph`, backed by
   `config/semantic_graph_direct_eval_v1.json` and
@@ -117,7 +131,7 @@ history below.
   public facade and output-schema assembler at `716` lines, while
   `extraction_fidelity_eval_runtime.py` owns temporary extraction runs,
   per-case execution, metric checks, and runtime helpers at `442` lines. The
-  live probe reports `499` code files, `17` code files above `800`, no Python or JS/TS cycles,
+  live probe reports `502` code files, `17` code files above `800`, no Python or JS/TS cycles,
   and no local module above the `20`-import fan-out gate.
   The live inventory now records `9` source owners and `8` test owners.
   Local closeout commit: `dca87e8` (`Split extraction fidelity eval runtime`).
@@ -126,7 +140,7 @@ history below.
   matches the live 2026-05-31 probe and fails closed on inventory drift.
   `config/architecture_large_file_inventory_v1.json` records `17` code files
   above `800` as `9` source owners and `8` test owners. The probe command
-  reports `499` code files, no Python or JS/TS cycles, and no local module
+  reports `502` code files, no Python or JS/TS cycles, and no local module
   above the `20`-import fan-out gate. `README.md` and
   `docs/CURRENT_ROUTING.md` are compact route surfaces again; volatile live
   counts stay in `docs/CURRENT_SYSTEM_STATE.md` and this handoff.
