@@ -31,6 +31,10 @@ Latest implementation update on 2026-06-01 UTC:
   requires `--apply`, and replacing existing canonical graph/claim directories
   requires `--replace-canonical`. Promotion requires a passed, non-partial
   consumer eval plus reviewer-ready sidecar retrieval, graph, and claims.
+  Gap-close hardening now writes a failed promotion result when the consumer
+  eval is missing or unreadable, when required sidecar path declarations are
+  absent, when sidecar input paths have the wrong file/directory kind, or when
+  sidecar inputs point at canonical consumer directories.
 - architecture closeout:
   `src/usfs_r1_ea_sources/sidecar_consumer_promotion.py` owns adoption
   preflight, apply, backup, and result summaries inside the sidecar eval layer.
@@ -45,7 +49,12 @@ Latest implementation update on 2026-06-01 UTC:
   `--apply --replace-canonical`; the promotion result passed, applied backups,
   rebuilt canonical graph and claims from `chunks_v2/atomic_chunks.jsonl` and
   `retrieval_sidecar/summary.json`, and reported reviewer-ready canonical
-  graph and claim summaries.
+  graph and claim summaries. Gap-close smoke under
+  `/tmp/usfs-r1-sidecar-promote-missing.s7ih_cd5` verified that a missing
+  consumer-eval artifact exits nonzero while writing a failed promotion result
+  with `consumer_eval_results_present`,
+  `consumer_eval_results_readable`, and `sidecar_required_paths_declared`
+  checks failed.
 - boundary:
   no ignored production `source_library/` outputs were mutated. Rule-link,
   compliance, phase-eval, reviewer package, and knowledge-graph sidecar

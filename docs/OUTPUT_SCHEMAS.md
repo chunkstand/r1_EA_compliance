@@ -5168,16 +5168,19 @@ by default. The result schema version is `chunk-sidecar-consumer-promotion-resul
 
 - the sidecar consumer eval result path, sidecar chunk/retrieval/graph/claim input paths, canonical
   graph and claim directories, and optional backup directory
-- fail-closed checks for eval schema/source-set/pass status, non-partial eval mode, sidecar
-  retrieval/graph/claim reviewer readiness, sidecar path existence, and canonical replacement
-  consent
+- fail-closed checks for eval presence/readability/schema/source-set/pass status, non-partial eval
+  mode, sidecar retrieval/graph/claim reviewer readiness, required sidecar path declarations, sidecar
+  path existence and file/directory kind, noncanonical sidecar input locations, and canonical
+  replacement consent
 - `promotion_ready`, `applied`, and `passed` status fields
 
 By default the command is a dry-run readiness gate and does not mutate canonical outputs. Canonical
 graph/claim adoption requires `--apply`; replacing existing canonical graph/claim directories also
 requires `--replace-canonical`. The command rebuilds canonical graph and claim outputs from the
-passed sidecar chunks and sidecar retrieval summary. It does not promote rule-claim links,
-compliance review, phase-eval, reviewer packages, or knowledge-graph artifacts.
+passed sidecar chunks and sidecar retrieval summary. If the sidecar consumer-eval artifact is
+missing, unreadable, or missing required sidecar input declarations, the command writes a failed
+promotion result instead of inferring paths from the working directory. It does not promote
+rule-claim links, compliance review, phase-eval, reviewer packages, or knowledge-graph artifacts.
 
 ## Source Claim Graph Outputs
 

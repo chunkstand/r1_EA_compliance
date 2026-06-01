@@ -81,6 +81,11 @@ rule-link, compliance, phase-eval, reviewer package, or knowledge-graph outputs 
 - Weak point: stale or wrong source-set evidence. Owner surface: sidecar promotion result checks.
   Prevention gate: promotion checks eval schema, source-set identity, sidecar summary presence, and
   path existence. Fail threshold: mismatched eval source-set promotes canonical outputs.
+- Weak point: missing or malformed eval/path evidence crashes before emitting a governed result.
+  Owner surface: sidecar promotion preflight. Prevention gate: promotion treats unreadable eval JSON,
+  missing required sidecar path declarations, path kind mismatches, and canonical sidecar inputs as
+  failed checks in the promotion result. Fail threshold: absent eval or missing path fields raise
+  before writing `chunk_sidecar_consumer_promotion_results.json`.
 - Weak point: scope creep. Owner surface: command implementation and current docs. Prevention gate:
   command only rebuilds canonical graph/claim outputs from sidecar chunks/retrieval. Fail threshold:
   rule-link, compliance, phase-eval, review, or knowledge-graph outputs are written by this packet.
@@ -114,6 +119,8 @@ Milestone 1: Graph/claim canonical adoption command
 - Dry-run mode reports promotion readiness without changing canonical graph/claim outputs.
 - Apply mode requires a passed non-partial sidecar consumer eval, sidecar reviewer readiness, and
   explicit replacement consent when canonical graph/claim directories already exist.
+- Missing/unreadable consumer eval artifacts, missing required sidecar path declarations, and
+  sidecar file/directory kind mismatches produce failed promotion result checks before apply.
 - Applied promotion rebuilds canonical graph and claim outputs from sidecar chunks and sidecar
   retrieval paths, and records canonical summaries in the result.
 - Docs and handoff state that rule-link, compliance, phase-eval, reviewer package, and knowledge
@@ -158,6 +165,18 @@ Status: resolved locally.
 - Commit identifier: the Git commit containing this closeout record.
 - Residual risk: rule-link, compliance, phase-eval, reviewer package, and knowledge-graph adoption
   remain future work.
+
+Gap-close addendum on 2026-06-01 UTC:
+
+- Promotion preflight now writes a failed result artifact when the consumer-eval result is missing or
+  unreadable instead of raising before closeout evidence exists.
+- Promotion checks now require all sidecar input path declarations, verify expected file/directory
+  kinds, and record noncanonical sidecar-input boundary failures in the result artifact.
+- Added regression coverage for missing consumer eval artifacts, missing sidecar path declarations,
+  and sidecar file/directory kind mismatches.
+- Gap-close verification passed with focused sidecar/graph/CLI/architecture tests at `65 passed`,
+  Ruff, compileall, strict plan lint, architecture probe, whitespace check, closeout parity sweep, and
+  a missing-consumer-eval CLI smoke that exited nonzero after writing the failed promotion result.
 
 ## Residual Risks And Next Routing
 

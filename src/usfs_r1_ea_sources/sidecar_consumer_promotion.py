@@ -20,6 +20,24 @@ CHUNK_SIDECAR_CONSUMER_PROMOTION_SCHEMA_VERSION = (
 )
 CHUNK_SIDECAR_CONSUMER_EVAL_SCHEMA_VERSION = "chunk-sidecar-consumer-eval-results-v1"
 CANONICAL_CONSUMER_DIRS = ("chunks", "retrieval", "evidence_graph", "claims")
+SIDECAR_PATH_FIELDS = {
+    "atomic_chunks": "atomic_chunks_path",
+    "retrieval_summary": "sidecar_index_summary_path",
+    "retrieval_validation": "sidecar_index_dir",
+    "graph_dir": "sidecar_graph_dir",
+    "graph_summary": "sidecar_graph_summary_path",
+    "claims_dir": "sidecar_claims_dir",
+    "claims_summary": "sidecar_claims_summary_path",
+}
+SIDECAR_PATH_KINDS = {
+    "atomic_chunks": "file",
+    "retrieval_summary": "file",
+    "retrieval_validation": "file",
+    "graph_dir": "dir",
+    "graph_summary": "file",
+    "claims_dir": "dir",
+    "claims_summary": "file",
+}
 
 
 @dataclass(frozen=True)
@@ -27,6 +45,13 @@ class ChunkSidecarConsumerPromotionResult:
     source_set_id: str
     output_path: Path
     summary: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class JsonObjectReadResult:
+    payload: dict[str, Any] | None
+    present: bool
+    error: str | None = None
 
 
 def run_chunk_sidecar_consumer_promotion(
@@ -64,18 +89,24 @@ def run_chunk_sidecar_consumer_promotion(
     results_dir.mkdir(parents=True, exist_ok=True)
     output_path = results_dir / "chunk_sidecar_consumer_promotion_results.json"
 
-    consumer_eval = _read_json(consumer_eval_results_path)
+    consumer_eval_read = _read_json_object_if_present(consumer_eval_results_path)
+    consumer_eval = consumer_eval_read.payload or {}
     sidecar_paths = _sidecar_paths(consumer_eval)
-    _ensure_sidecar_input_dirs(derived_dir=derived_dir, sidecar_paths=sidecar_paths)
+    sidecar_boundary_errors = _sidecar_input_boundary_errors(
+        derived_dir=derived_dir,
+        sidecar_paths=sidecar_paths,
+    )
     canonical_graph_dir = derived_dir / "evidence_graph"
     canonical_claims_dir = derived_dir / "claims"
-    sidecar_graph_summary = _read_optional_json(sidecar_paths["graph_summary"])
-    sidecar_claim_summary = _read_optional_json(sidecar_paths["claims_summary"])
+    sidecar_graph_summary = _read_json_object_if_present(sidecar_paths["graph_summary"])
+    sidecar_claim_summary = _read_json_object_if_present(sidecar_paths["claims_summary"])
     checks = _preflight_checks(
         source_set_id=source_set_id,
         consumer_eval=consumer_eval,
+        consumer_eval_read=consumer_eval_read,
         consumer_eval_results_path=consumer_eval_results_path,
         sidecar_paths=sidecar_paths,
+        sidecar_boundary_errors=sidecar_boundary_errors,
         sidecar_graph_summary=sidecar_graph_summary,
         sidecar_claim_summary=sidecar_claim_summary,
         canonical_graph_dir=canonical_graph_dir,
@@ -92,7 +123,7 @@ def run_chunk_sidecar_consumer_promotion(
             output_dir=output_dir,
             source_set_id=source_set_id,
             derived_dir=derived_dir,
-            sidecar_paths=sidecar_paths,
+            sidecar_paths=_require_sidecar_paths(sidecar_paths),
             canonical_graph_dir=canonical_graph_dir,
             canonical_claims_dir=canonical_claims_dir,
             results_dir=results_dir,
@@ -117,13 +148,13 @@ def run_chunk_sidecar_consumer_promotion(
         "canonical_graph_dir": str(canonical_graph_dir),
         "canonical_claims_dir": str(canonical_claims_dir),
         "sidecar": {
-            "atomic_chunks_path": str(sidecar_paths["atomic_chunks"]),
-            "retrieval_summary_path": str(sidecar_paths["retrieval_summary"]),
-            "retrieval_validation_path": str(sidecar_paths["retrieval_validation"]),
-            "graph_dir": str(sidecar_paths["graph_dir"]),
-            "graph_summary_path": str(sidecar_paths["graph_summary"]),
-            "claims_dir": str(sidecar_paths["claims_dir"]),
-            "claims_summary_path": str(sidecar_paths["claims_summary"]),
+            "atomic_chunks_path": _path_string(sidecar_paths["atomic_chunks"]),
+            "retrieval_summary_path": _path_string(sidecar_paths["retrieval_summary"]),
+            "retrieval_validation_path": _path_string(sidecar_paths["retrieval_validation"]),
+            "graph_dir": _path_string(sidecar_paths["graph_dir"]),
+            "graph_summary_path": _path_string(sidecar_paths["graph_summary"]),
+            "claims_dir": _path_string(sidecar_paths["claims_dir"]),
+            "claims_summary_path": _path_string(sidecar_paths["claims_summary"]),
         },
         "canonical": canonical,
         "backup_dir": backup_dir,
@@ -138,52 +169,109 @@ def run_chunk_sidecar_consumer_promotion(
     )
 
 
-def _sidecar_paths(consumer_eval: dict[str, Any]) -> dict[str, Path]:
-    sidecar_index_dir = Path(str(consumer_eval.get("sidecar_index_dir") or ""))
+def _sidecar_paths(consumer_eval: dict[str, Any]) -> dict[str, Path | None]:
+    sidecar_index_dir = _optional_path(consumer_eval.get("sidecar_index_dir"))
     return {
-        "atomic_chunks": Path(str(consumer_eval.get("atomic_chunks_path") or "")),
-        "retrieval_summary": Path(str(consumer_eval.get("sidecar_index_summary_path") or "")),
-        "retrieval_validation": sidecar_index_dir / "retrieval_validation.json",
-        "graph_dir": Path(str(consumer_eval.get("sidecar_graph_dir") or "")),
-        "graph_summary": Path(str(consumer_eval.get("sidecar_graph_summary_path") or "")),
-        "claims_dir": Path(str(consumer_eval.get("sidecar_claims_dir") or "")),
-        "claims_summary": Path(str(consumer_eval.get("sidecar_claims_summary_path") or "")),
+        "atomic_chunks": _optional_path(consumer_eval.get("atomic_chunks_path")),
+        "retrieval_summary": _optional_path(consumer_eval.get("sidecar_index_summary_path")),
+        "retrieval_validation": (
+            sidecar_index_dir / "retrieval_validation.json" if sidecar_index_dir else None
+        ),
+        "graph_dir": _optional_path(consumer_eval.get("sidecar_graph_dir")),
+        "graph_summary": _optional_path(consumer_eval.get("sidecar_graph_summary_path")),
+        "claims_dir": _optional_path(consumer_eval.get("sidecar_claims_dir")),
+        "claims_summary": _optional_path(consumer_eval.get("sidecar_claims_summary_path")),
     }
 
 
-def _ensure_sidecar_input_dirs(
+def _optional_path(value: object | None) -> Path | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    return Path(text)
+
+
+def _path_string(path: Path | None) -> str | None:
+    return str(path) if path is not None else None
+
+
+def _require_sidecar_paths(sidecar_paths: dict[str, Path | None]) -> dict[str, Path]:
+    missing = [label for label, path in sidecar_paths.items() if path is None]
+    if missing:
+        raise ValueError(f"Missing sidecar input paths for promotion: {', '.join(sorted(missing))}")
+    return {label: path for label, path in sidecar_paths.items() if path is not None}
+
+
+def _sidecar_input_boundary_errors(
     *,
     derived_dir: Path,
-    sidecar_paths: dict[str, Path],
-) -> None:
+    sidecar_paths: dict[str, Path | None],
+) -> dict[str, str]:
+    errors = {}
     for label, requested_dir in (
-        ("chunks_v2_dir", sidecar_paths["atomic_chunks"].parent),
-        ("sidecar_index_dir", sidecar_paths["retrieval_summary"].parent),
+        ("chunks_v2_dir", _parent_dir(sidecar_paths["atomic_chunks"])),
+        ("sidecar_index_dir", _parent_dir(sidecar_paths["retrieval_summary"])),
         ("sidecar_graph_dir", sidecar_paths["graph_dir"]),
         ("sidecar_claims_dir", sidecar_paths["claims_dir"]),
     ):
+        if requested_dir is None:
+            continue
         for canonical_name in CANONICAL_CONSUMER_DIRS:
-            _ensure_noncanonical_sidecar_dir(
-                requested_dir=requested_dir,
-                canonical_dir=derived_dir / canonical_name,
-                label=label,
-            )
+            try:
+                _ensure_noncanonical_sidecar_dir(
+                    requested_dir=requested_dir,
+                    canonical_dir=derived_dir / canonical_name,
+                    label=label,
+                )
+            except ValueError as exc:
+                errors[label] = str(exc)
+    return errors
 
 
-def _read_optional_json(path: Path) -> dict[str, Any] | None:
+def _parent_dir(path: Path | None) -> Path | None:
+    return path.parent if path is not None else None
+
+
+def _read_json_object_if_present(path: Path | None) -> JsonObjectReadResult:
+    if path is None:
+        return JsonObjectReadResult(payload=None, present=False)
     if not path.exists():
-        return None
-    return _read_json(path)
+        return JsonObjectReadResult(payload=None, present=False)
+    if not path.is_file():
+        return JsonObjectReadResult(
+            payload=None,
+            present=True,
+            error=f"JSON path is not a file: {path}",
+        )
+    try:
+        payload = _read_json(path)
+    except (OSError, ValueError) as exc:
+        return JsonObjectReadResult(
+            payload=None,
+            present=True,
+            error=f"{type(exc).__name__}: {exc}",
+        )
+    if not isinstance(payload, dict):
+        return JsonObjectReadResult(
+            payload=None,
+            present=True,
+            error=f"JSON payload is not an object: {path}",
+        )
+    return JsonObjectReadResult(payload=payload, present=True)
 
 
 def _preflight_checks(
     *,
     source_set_id: str,
     consumer_eval: dict[str, Any],
+    consumer_eval_read: JsonObjectReadResult,
     consumer_eval_results_path: Path,
-    sidecar_paths: dict[str, Path],
-    sidecar_graph_summary: dict[str, Any] | None,
-    sidecar_claim_summary: dict[str, Any] | None,
+    sidecar_paths: dict[str, Path | None],
+    sidecar_boundary_errors: dict[str, str],
+    sidecar_graph_summary: JsonObjectReadResult,
+    sidecar_claim_summary: JsonObjectReadResult,
     canonical_graph_dir: Path,
     canonical_claims_dir: Path,
     apply: bool,
@@ -196,8 +284,18 @@ def _preflight_checks(
     return [
         {
             "name": "consumer_eval_results_present",
-            "passed": consumer_eval_results_path.exists(),
+            "passed": consumer_eval_read.present,
             "details": {"path": str(consumer_eval_results_path)},
+        },
+        {
+            "name": "consumer_eval_results_readable",
+            "passed": consumer_eval_read.present
+            and consumer_eval_read.payload is not None
+            and consumer_eval_read.error is None,
+            "details": {
+                "path": str(consumer_eval_results_path),
+                "error": consumer_eval_read.error,
+            },
         },
         {
             "name": "consumer_eval_schema_supported",
@@ -255,21 +353,40 @@ def _preflight_checks(
         },
         _sidecar_summary_check(
             name="sidecar_graph_summary_valid",
-            summary=sidecar_graph_summary,
+            read_result=sidecar_graph_summary,
             expected_source_set_id=source_set_id,
         ),
         _sidecar_summary_check(
             name="sidecar_claim_summary_valid",
-            summary=sidecar_claim_summary,
+            read_result=sidecar_claim_summary,
             expected_source_set_id=source_set_id,
         ),
         {
-            "name": "sidecar_input_paths_exist",
-            "passed": all(path.exists() for path in sidecar_paths.values()),
+            "name": "sidecar_required_paths_declared",
+            "passed": all(path is not None for path in sidecar_paths.values()),
             "details": {
-                label: {"path": str(path), "exists": path.exists()}
+                label: {
+                    "source_field": SIDECAR_PATH_FIELDS[label],
+                    "path": _path_string(path),
+                    "declared": path is not None,
+                }
                 for label, path in sidecar_paths.items()
             },
+        },
+        {
+            "name": "sidecar_input_paths_exist",
+            "passed": all(path is not None and path.exists() for path in sidecar_paths.values()),
+            "details": _sidecar_path_details(sidecar_paths),
+        },
+        {
+            "name": "sidecar_input_path_kinds_valid",
+            "passed": all(_path_kind_valid(label, path) for label, path in sidecar_paths.items()),
+            "details": _sidecar_path_details(sidecar_paths),
+        },
+        {
+            "name": "sidecar_inputs_are_noncanonical",
+            "passed": not sidecar_boundary_errors,
+            "details": {"errors": sidecar_boundary_errors},
         },
         {
             "name": "canonical_targets_are_replaceable",
@@ -292,24 +409,51 @@ def _preflight_checks(
 def _sidecar_summary_check(
     *,
     name: str,
-    summary: dict[str, Any] | None,
+    read_result: JsonObjectReadResult,
     expected_source_set_id: str,
 ) -> dict[str, Any]:
+    summary = read_result.payload
     return {
         "name": name,
         "passed": bool(
             summary
+            and read_result.error is None
             and summary.get("source_set_id") == expected_source_set_id
             and summary.get("validation_passed")
             and summary.get("reviewer_ready")
         ),
         "details": {
-            "present": summary is not None,
+            "present": read_result.present,
+            "error": read_result.error,
             "source_set_id": (summary or {}).get("source_set_id"),
             "validation_passed": (summary or {}).get("validation_passed"),
             "reviewer_ready": (summary or {}).get("reviewer_ready"),
         },
     }
+
+
+def _sidecar_path_details(sidecar_paths: dict[str, Path | None]) -> dict[str, dict[str, Any]]:
+    return {
+        label: {
+            "source_field": SIDECAR_PATH_FIELDS[label],
+            "path": _path_string(path),
+            "expected_kind": SIDECAR_PATH_KINDS[label],
+            "exists": path.exists() if path is not None else False,
+            "is_file": path.is_file() if path is not None else False,
+            "is_dir": path.is_dir() if path is not None else False,
+            "kind_valid": _path_kind_valid(label, path),
+        }
+        for label, path in sidecar_paths.items()
+    }
+
+
+def _path_kind_valid(label: str, path: Path | None) -> bool:
+    if path is None or not path.exists():
+        return False
+    expected_kind = SIDECAR_PATH_KINDS[label]
+    if expected_kind == "file":
+        return path.is_file()
+    return path.is_dir()
 
 
 def _canonical_targets_replaceable(

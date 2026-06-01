@@ -37,7 +37,12 @@ history below.
   `evidence_graph/` and `claims/` outputs from sidecar chunks and sidecar
   retrieval metadata. Dry-run is default; canonical mutation requires
   `--apply`, and replacing existing canonical graph/claim directories requires
-  `--replace-canonical`.
+  `--replace-canonical`. Gap-close hardening now records failed promotion
+  results for missing or unreadable consumer-eval artifacts, missing sidecar
+  path declarations, sidecar file/directory kind mismatches, and sidecar inputs
+  that point at canonical consumer directories. Gap-close smoke verified the
+  missing-eval CLI path exits nonzero while writing the failed promotion result
+  artifact with the expected failed checks.
 - predecessor extraction/chunking/retrieval accuracy slice:
   `docs/SIDECAR_GRAPH_CLAIM_PROMOTION_EVAL_MILESTONE_PLAN.md` is resolved
   locally on branch `codex/extraction-chunking-retrieval-accuracy`. It adds
@@ -167,7 +172,12 @@ history below.
   graph/claim adoption step: dry-run reports readiness without mutation, apply
   mode requires `--apply --replace-canonical` when existing canonical graph and
   claim dirs are present, and promotion requires a passed non-partial sidecar
-  consumer eval plus reviewer-ready sidecar retrieval, graph, and claims. A
+  consumer eval plus reviewer-ready sidecar retrieval, graph, and claims. The
+  promotion preflight now writes failed result artifacts for missing or unreadable
+  eval results, missing sidecar path declarations, file/directory kind
+  mismatches, and canonical sidecar input paths before any apply can run. A
+  gap-close smoke under `/tmp/usfs-r1-sidecar-promote-missing.s7ih_cd5`
+  verified missing eval fails with a written result artifact and no apply. A
   fixture-backed temp smoke under
   `/tmp/usfs-r1-sidecar-consumer-promote.rQ06OT/` ran the CLI apply path and
   produced a passing promotion result with reviewer-ready canonical graph and

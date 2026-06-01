@@ -9,8 +9,8 @@ Use this short route before opening append-only docs.
   canonical semantic graph direct-eval strengthening; exact counts live in
   `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved extraction/chunking/retrieval accuracy slice: sidecar graph/claim canonical
-  adoption after promotion-readiness eval; exact paths and live-smoke counts live in
-  `docs/CURRENT_SYSTEM_STATE.md`.
+  adoption after promotion-readiness eval, with fail-closed promotion preflight hardening; exact
+  paths and live-smoke counts live in `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
 - Active implementation slice: none. Open a new bounded packet before hosted query service/API
   expansion, model-judge work, hosted scoring, rule-link/compliance/phase-eval sidecar adoption,
@@ -27,7 +27,8 @@ Use this short route before opening append-only docs.
 - Architecture route: `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` and `config/architecture_large_file_inventory_v1.json` own the oversized-owner backlog.
 - Extraction/chunking route: sidecar chunk, retrieval eval, downstream graph/claim preview,
   graph/claim promotion-readiness eval, and graph/claim canonical adoption packets are closed
-  locally; rule-link, compliance, phase-eval, reviewer package, and knowledge-graph sidecar
+  locally; promotion now fails closed on missing/unreadable eval artifacts and invalid sidecar input
+  declarations. Rule-link, compliance, phase-eval, reviewer package, and knowledge-graph sidecar
   adoption require new bounded packets.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 

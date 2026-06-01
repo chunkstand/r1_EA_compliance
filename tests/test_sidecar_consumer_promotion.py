@@ -132,6 +132,26 @@ class ChunkSidecarConsumerPromotionTests(unittest.TestCase):
             self.assertFalse(_check(result.summary, "canonical_targets_are_replaceable")["passed"])
             self.assertFalse(result.summary["applied"])
 
+    def test_promotion_writes_failed_result_for_missing_consumer_eval(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            missing_eval_path = output_dir / "missing-consumer-eval.json"
+
+            result = run_chunk_sidecar_consumer_promotion(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                consumer_eval_results_path=missing_eval_path,
+            )
+
+            self.assertTrue(result.output_path.exists())
+            self.assertFalse(result.summary["passed"])
+            self.assertFalse(result.summary["promotion_ready"])
+            self.assertFalse(_check(result.summary, "consumer_eval_results_present")["passed"])
+            self.assertFalse(_check(result.summary, "consumer_eval_results_readable")["passed"])
+            self.assertFalse(_check(result.summary, "sidecar_required_paths_declared")["passed"])
+            self.assertIsNone(result.summary["sidecar"]["atomic_chunks_path"])
+
     def test_promotion_fails_closed_on_partial_consumer_eval(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -161,6 +181,105 @@ class ChunkSidecarConsumerPromotionTests(unittest.TestCase):
 
             self.assertFalse(result.summary["passed"])
             self.assertFalse(_check(result.summary, "consumer_eval_non_partial")["passed"])
+
+    def test_promotion_fails_closed_on_missing_sidecar_path_declaration(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            baseline_graph, baseline_claims = _prepare_baseline_consumers(
+                output_dir,
+                source_set_id,
+            )
+            consumer_eval = run_chunk_sidecar_consumer_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                baseline_graph_summary_path=baseline_graph.summary_path,
+                baseline_claim_summary_path=baseline_claims.summary_path,
+            )
+            payload = json.loads(consumer_eval.output_path.read_text(encoding="utf-8"))
+            payload.pop("sidecar_graph_dir")
+            consumer_eval.output_path.write_text(
+                json.dumps(payload, sort_keys=True),
+                encoding="utf-8",
+            )
+
+            result = run_chunk_sidecar_consumer_promotion(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                consumer_eval_results_path=consumer_eval.output_path,
+            )
+
+            path_check = _check(result.summary, "sidecar_required_paths_declared")
+            self.assertFalse(result.summary["passed"])
+            self.assertFalse(path_check["passed"])
+            self.assertFalse(path_check["details"]["graph_dir"]["declared"])
+            self.assertFalse(_check(result.summary, "sidecar_input_paths_exist")["passed"])
+
+    def test_promotion_fails_closed_on_sidecar_path_kind_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            baseline_graph, baseline_claims = _prepare_baseline_consumers(
+                output_dir,
+                source_set_id,
+            )
+            consumer_eval = run_chunk_sidecar_consumer_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                baseline_graph_summary_path=baseline_graph.summary_path,
+                baseline_claim_summary_path=baseline_claims.summary_path,
+            )
+            payload = json.loads(consumer_eval.output_path.read_text(encoding="utf-8"))
+            payload["sidecar_graph_dir"] = payload["sidecar_graph_summary_path"]
+            consumer_eval.output_path.write_text(
+                json.dumps(payload, sort_keys=True),
+                encoding="utf-8",
+            )
+
+            result = run_chunk_sidecar_consumer_promotion(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                consumer_eval_results_path=consumer_eval.output_path,
+            )
+
+            kind_check = _check(result.summary, "sidecar_input_path_kinds_valid")
+            self.assertFalse(result.summary["passed"])
+            self.assertFalse(kind_check["passed"])
+            self.assertFalse(kind_check["details"]["graph_dir"]["kind_valid"])
+
+    def test_promotion_fails_closed_on_canonical_sidecar_input(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            baseline_graph, baseline_claims = _prepare_baseline_consumers(
+                output_dir,
+                source_set_id,
+            )
+            consumer_eval = run_chunk_sidecar_consumer_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                baseline_graph_summary_path=baseline_graph.summary_path,
+                baseline_claim_summary_path=baseline_claims.summary_path,
+            )
+            payload = json.loads(consumer_eval.output_path.read_text(encoding="utf-8"))
+            payload["sidecar_graph_dir"] = str(
+                output_dir / "derived" / source_set_id / "evidence_graph"
+            )
+            consumer_eval.output_path.write_text(
+                json.dumps(payload, sort_keys=True),
+                encoding="utf-8",
+            )
+
+            result = run_chunk_sidecar_consumer_promotion(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                consumer_eval_results_path=consumer_eval.output_path,
+            )
+
+            noncanonical_check = _check(result.summary, "sidecar_inputs_are_noncanonical")
+            self.assertFalse(result.summary["passed"])
+            self.assertFalse(noncanonical_check["passed"])
+            self.assertIn("sidecar_graph_dir", noncanonical_check["details"]["errors"])
 
 
 def _prepare_baseline_consumers(output_dir: Path, source_set_id: str):
