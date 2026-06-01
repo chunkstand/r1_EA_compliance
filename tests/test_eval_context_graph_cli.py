@@ -19,6 +19,9 @@ def test_eval_context_graph_build_parser_accepts_graph_paths() -> None:
             "/tmp/usfs-r1-operator-events.jsonl",
             "--event-log-path",
             "/tmp/usfs-r1-runtime-events.json",
+            "--observability-event-log-path",
+            "/tmp/usfs-r1-command-events.jsonl",
+            "--no-observability-event-log",
             "--contract-path",
             "config/context_graph_contract_v1.json",
         ]
@@ -32,6 +35,10 @@ def test_eval_context_graph_build_parser_accepts_graph_paths() -> None:
         Path("/tmp/usfs-r1-operator-events.jsonl"),
         Path("/tmp/usfs-r1-runtime-events.json"),
     ]
+    assert args.observability_event_log_path == Path(
+        "/tmp/usfs-r1-command-events.jsonl"
+    )
+    assert args.include_observability_event_log is False
     assert args.contract_path == Path("config/context_graph_contract_v1.json")
 
 

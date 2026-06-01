@@ -21,16 +21,18 @@ Latest implementation update on 2026-06-01 UTC:
 
 - update:
   the generated observability/eval context graph now includes conditional
-  trace-event materialization and explicit local event-log capture.
+  trace-event materialization, explicit local event-log capture, and canonical
+  CLI command-event capture.
   `eval-context-graph-build` reads the local `system_eval_trace.sqlite` store,
-  plus optional repeated `--event-log-path` JSON/JSONL files, and writes a
-  deterministic graph JSON artifact. `eval-context-graph-eval` runs
-  deterministic graph evals over that artifact.
+  optional repeated `--event-log-path` JSON/JSONL files, and the canonical
+  command-event log when present, then writes a deterministic graph JSON
+  artifact. `eval-context-graph-eval` runs deterministic graph evals over that
+  artifact.
 - contract:
   `config/context_graph_contract_v1.json` owns required node kinds, edge kinds,
   conditional event node/edge kinds, graph policy, reserved future
-  observability nodes, explicit `event_source` support, and prohibited
-  source-KG node kinds.
+  observability nodes, explicit `event_source` support, command-event join
+  checks, and prohibited source-KG node kinds.
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` owns the route and
   stop conditions.
 - graph boundary:
@@ -47,9 +49,11 @@ Latest implementation update on 2026-06-01 UTC:
   trace-to-result-to-score paths, artifact provenance, source-KG exclusion, and
   local source-of-record policy. They also verify event nodes have incoming
   `EMITTED` edges from spans or explicit event-source nodes and event-like
-  source rows materialize without parse errors. They do not yet ratchet phase
-  or promotion gates, infer root causes, export to Neo4j, or capture raw
-  prompt/source body content.
+  source rows materialize without parse errors. The new command-event graph
+  eval verifies captured command events keep command, phase, invocation,
+  payload-hash, and incoming `EMITTED` provenance. These evals do not yet
+  ratchet phase or promotion gates, infer root causes, export to Neo4j, or
+  capture raw prompt/source body content.
 - live smoke:
   building from the current local
   `source_library/evaluations/eval_trace/system_eval_trace.sqlite` store to
@@ -68,6 +72,12 @@ Latest implementation update on 2026-06-01 UTC:
   nodes, `5,200` edges, `1` explicit `event_source` node, `2` `log_event`
   nodes, `4,966` total event nodes, `3` event sources, and `4,966` `EMITTED`
   edges; graph eval over that artifact also passed.
+  A third smoke with
+  `USFS_R1_OBSERVABILITY_EVENT_LOG=/tmp/usfs-r1-canonical-command-events.jsonl`
+  captured command lifecycle rows, auto-ingested that canonical command log,
+  and passed graph eval with `5,096` nodes, `5,201` edges, `1`
+  `event_source` node, `3` `log_event` command nodes, `4,967` total event
+  nodes, and `command_event_nodes_joined=true`.
 
 ## Operational Graph-KB Query Surface Resolved Locally
 

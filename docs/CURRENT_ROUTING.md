@@ -9,7 +9,7 @@ Use this short route before opening append-only docs.
   canonical semantic graph direct-eval strengthening; exact counts live in
   `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
-- Latest resolved observability/eval graph slice: context-graph build/eval commands, trace-event materialization, and explicit event-log capture. Details: `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
+- Latest resolved observability/eval graph slice: context-graph build/eval commands, trace-event materialization, explicit event-log capture, and canonical CLI command-event capture. Details: `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
 - Active implementation slice: none. Open a new bounded packet before hosted query service/API expansion, model-judge work, hosted scoring, context-graph phase ratchets, or oversized-owner reduction.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
@@ -24,8 +24,9 @@ Use this short route before opening append-only docs.
 - Observability/eval graph route:
   `eval-context-graph-build` and `eval-context-graph-eval` are local,
   generated-artifact-only commands over `system_eval_trace.sqlite`; trace/log
-  JSONL rows and explicit `--event-log-path` inputs become conditional event
-  nodes with `EMITTED` edges from spans or event-source nodes. The route does
+  JSONL rows, explicit `--event-log-path` inputs, and the canonical CLI
+  command-event log become conditional event nodes with `EMITTED` edges from
+  spans or event-source nodes. The route does
   not replace source evidence graphs or add phase/promotion ratchets yet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 

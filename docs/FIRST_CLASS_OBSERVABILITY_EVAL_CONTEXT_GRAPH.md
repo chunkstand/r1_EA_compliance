@@ -3,8 +3,9 @@
 Date: 2026-06-01
 
 Status: Milestone 0 contract, first generated graph builder and graph-eval
-commands, Milestone 1 trace-event materialization, and Milestone 2 explicit
-event-log capture are implemented locally.
+commands, Milestone 1 trace-event materialization, Milestone 2 explicit
+event-log capture, and Milestone 3 canonical CLI command-event capture are
+implemented locally.
 
 Owner surfaces:
 
@@ -13,9 +14,11 @@ Owner surfaces:
 - Contract helper: `src/usfs_r1_ea_sources/eval_context_graph_contract.py`
 - Event extraction helper: `src/usfs_r1_ea_sources/eval_context_graph_events.py`
 - Validation helper: `src/usfs_r1_ea_sources/eval_context_graph_validation.py`
+- Command event capture helper: `src/usfs_r1_ea_sources/observability_events.py`
 - CLI commands: `eval-context-graph-build`, `eval-context-graph-eval`
 - Contract and behavior tests: `tests/test_eval_context_graph.py`
-- CLI parser tests: `tests/test_cli_eval.py`
+- Command capture tests: `tests/test_observability_events.py`
+- CLI parser tests: `tests/test_eval_context_graph_cli.py`
 
 ## Purpose
 
@@ -75,6 +78,13 @@ The first edge set includes:
 events materialize when the store points at event-like JSON/JSONL artifacts
 such as trace or log files. Explicit log events materialize when
 `eval-context-graph-build` receives one or more `--event-log-path` inputs.
+The top-level CLI appends redacted command lifecycle events to
+`source_library/evaluations/observability_events/command_events.jsonl` by
+default. `eval-context-graph-build` includes that canonical command-event log
+when it exists, unless `--no-observability-event-log` is passed.
+`USFS_R1_OBSERVABILITY_EVENT_LOG` can point command capture and graph builds at
+another local JSONL path, and `USFS_R1_OBSERVABILITY_EVENTS_DISABLED` disables
+command capture.
 Current event extraction records event ID, event name, timestamp, payload hash,
 payload keys, source-set/review IDs, trace IDs, candidate IDs, query type,
 selected status, and compact counts for diagnostics/results. It does not copy
@@ -98,6 +108,8 @@ invariants directly. The first graph eval checks:
 - event nodes have incoming `EMITTED` edges from spans or explicit event
   sources;
 - event-like source artifact rows are materialized without parse errors;
+- canonical command-event nodes keep command, phase, invocation ID, payload
+  hash, and incoming `EMITTED` edges;
 - source knowledge-graph node kinds are absent;
 - the graph remains local source-of-record and not approved for external export.
 
@@ -134,6 +146,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources eval-context-graph-build \
 Each explicit path is represented by an `event_source` node. Rows from JSONL
 or JSON `events` arrays become `log_event` or `span_event` nodes and must be
 connected by `EMITTED` edges to pass graph eval.
+
+The canonical command-event log is included automatically when present. Disable
+that automatic inclusion for isolated tests with `--no-observability-event-log`.
 
 ## Stop Conditions
 

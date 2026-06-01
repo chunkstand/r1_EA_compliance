@@ -4579,7 +4579,19 @@ PYTHONPATH=src python -m usfs_r1_ea_sources eval-context-graph-eval \
 files, then writes a generated graph JSON artifact. It does not mutate catalog,
 extraction, retrieval, review, compliance, or promotion artifacts.
 Use repeated `--event-log-path <json-or-jsonl>` arguments to attach standalone
-local event logs to the same graph.
+local event logs to the same graph. The builder also includes the canonical
+command-event log when it exists unless `--no-observability-event-log` is
+passed.
+
+Generated command-event log path:
+`source_library/evaluations/observability_events/command_events.jsonl`
+
+Command-event rows use schema version `usfs-r1-observability-event-v1`. They
+record command start/finish events with `event_id`, `event_name`,
+`event_timestamp`, `severity`, `command`, `command_event_phase`,
+`command_invocation_id`, `argv_sha256`, `argument_keys`, selected safe context
+IDs/paths, and finish-only `exit_code`/`duration_ms`. They do not store raw
+argv, prompt bodies, source text, or log bodies.
 
 Graph schema version: `eval-context-graph-v1`
 
@@ -4611,11 +4623,12 @@ stored failure reasons exist. Reserved future node kinds include
 `dataset_example`, and `human_label`.
 
 `event_sources` records one source summary per event-like JSON/JSONL artifact
-read through a trace span or explicit `--event-log-path`. Each summary has
-schema version `eval-context-graph-event-source-v1` and records `artifact_ref`,
-`path`, `row_count`, `materialized_event_count`, `parse_error_count`, and
-`event_kinds`. Explicit event/log files also create an `event_source` node with
-the redaction policy `payload_hash_and_keys_only`.
+read through a trace span, explicit `--event-log-path`, or the canonical
+command-event log. Each summary has schema version
+`eval-context-graph-event-source-v1` and records `artifact_ref`, `path`,
+`row_count`, `materialized_event_count`, `parse_error_count`, `event_kinds`,
+and `source_kind`. Explicit and canonical event/log files also create an
+`event_source` node with the redaction policy `payload_hash_and_keys_only`.
 
 Each edge has `id`, `kind`, `from_node_id`, `to_node_id`, and `properties`.
 The first materialized edge kinds are `CONTAINS`, `DERIVED_FROM`,
@@ -4637,6 +4650,7 @@ Required build summary fields:
 - `node_counts`
 - `edge_counts`
 - `event_log_path_count`
+- `observability_event_log_path`
 - `event_source_count`
 - `event_node_count`
 - `node_count`
@@ -4648,8 +4662,8 @@ Required build summary fields:
 node or edge kinds are absent, an edge points to a missing node, trace/result/
 score paths are missing, artifact provenance is absent, source knowledge-graph
 node kinds appear, event nodes are not connected by incoming `EMITTED` edges,
-event source rows are not materialized cleanly, or the local source-of-record
-policy is weakened.
+event source rows are not materialized cleanly, canonical command events are
+not graph-joined, or the local source-of-record policy is weakened.
 
 Graph eval summary schema version: `eval-context-graph-eval-summary-v1`
 
@@ -4673,8 +4687,9 @@ checks ensure required node and edge kinds are present, all edges resolve,
 every eval result has a trace-to-result edge and result-to-score edge, artifact
 nodes keep refs or hashes, event nodes are emitted by spans or explicit event
 sources, event-like source artifact rows are materialized without parse errors,
-source knowledge-graph nodes remain excluded, and the graph policy remains
-local-only.
+canonical command events are graph-joined with command, phase, invocation, and
+payload-hash provenance, source knowledge-graph nodes remain excluded, and the
+graph policy remains local-only.
 
 ## First-Class Eval Trace Case Promotion
 

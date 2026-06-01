@@ -62,6 +62,7 @@ def graph_checks(
     path_failures = _trace_result_score_path_failures(nodes, edges)
     artifact_failures = _artifact_provenance_failures(nodes)
     event_failures = _event_emission_failures(nodes, edges)
+    command_event_failures = _command_event_join_failures(graph, nodes, edges)
     graph_policy = _dict(graph.get("graph_policy"))
     return [
         {
@@ -107,6 +108,12 @@ def graph_checks(
             "name": "event_source_rows_materialized",
             "passed": _event_source_rows_materialized(graph),
             "event_sources": graph.get("event_sources", []),
+        },
+        {
+            "name": "command_event_nodes_joined",
+            "passed": not command_event_failures,
+            "failure_count": len(command_event_failures),
+            "failures": command_event_failures[:20],
         },
         {
             "name": "source_knowledge_graph_nodes_excluded",
@@ -247,6 +254,62 @@ def _event_source_rows_materialized(graph: dict[str, Any]) -> bool:
         and int(source.get("parse_error_count") or 0) == 0
         for source in event_sources
     )
+
+
+def _command_event_join_failures(
+    graph: dict[str, Any],
+    nodes: list[dict[str, Any]],
+    edges: list[dict[str, Any]],
+) -> list[dict[str, str]]:
+    emitted_event_ids = {
+        str(edge.get("to_node_id"))
+        for edge in edges
+        if edge.get("kind") == "EMITTED"
+    }
+    command_event_nodes = [
+        node
+        for node in nodes
+        if node.get("kind") in {"log_event", "span_event"}
+        and _dict(node.get("properties")).get("command_event_phase")
+    ]
+    failures: list[dict[str, str]] = []
+    for node in command_event_nodes:
+        properties = _dict(node.get("properties"))
+        node_id = str(node.get("id"))
+        for required_property in (
+            "command",
+            "command_event_phase",
+            "command_invocation_id",
+            "payload_sha256",
+        ):
+            if not properties.get(required_property):
+                failures.append(
+                    {
+                        "node_id": node_id,
+                        "reason": f"missing_{required_property}",
+                    }
+                )
+        if node_id not in emitted_event_ids:
+            failures.append(
+                {
+                    "node_id": node_id,
+                    "reason": "missing_incoming_emitted_edge",
+                }
+            )
+
+    canonical_sources = [
+        source
+        for source in _list_of_dicts(graph.get("event_sources"))
+        if source.get("source_kind") == "canonical_command_event_log"
+    ]
+    if canonical_sources and not command_event_nodes:
+        failures.append(
+            {
+                "node_id": "",
+                "reason": "canonical_command_event_log_without_command_events",
+            }
+        )
+    return failures
 
 
 def _dict(value: object) -> dict[str, Any]:

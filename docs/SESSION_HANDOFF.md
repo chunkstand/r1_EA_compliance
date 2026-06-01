@@ -34,9 +34,12 @@ history below.
   repo now has a tracked context-graph contract, `eval-context-graph-build`,
   `eval-context-graph-eval`, conditional trace-event materialization over the
   local eval-trace SQLite store, and explicit local event-log capture via
-  repeated `--event-log-path` inputs. The slice is generated-artifact-only and
-  does not add phase/promotion ratchets, hosted exports, Neo4j as a source of
-  record, or source knowledge-graph facts.
+  repeated `--event-log-path` inputs. It also now captures canonical CLI
+  command lifecycle events to
+  `source_library/evaluations/observability_events/command_events.jsonl` and
+  auto-ingests that log into the context graph when present. The slice is
+  generated-artifact-only and does not add phase/promotion ratchets, hosted
+  exports, Neo4j as a source of record, or source knowledge-graph facts.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
@@ -111,8 +114,9 @@ history below.
 - current checkpoint:
   first-class observability/eval context graph: the first generated graph layer
   over `system_eval_trace.sqlite` now materializes conditional trace events
-  and explicit local event-log inputs.
+  explicit local event-log inputs, and canonical CLI command-event logs.
   The owner surfaces are `config/context_graph_contract_v1.json`,
+  `src/usfs_r1_ea_sources/observability_events.py`,
   `src/usfs_r1_ea_sources/eval_context_graph.py`,
   `src/usfs_r1_ea_sources/eval_context_graph_contract.py`,
   `src/usfs_r1_ea_sources/eval_context_graph_events.py`,
@@ -124,13 +128,16 @@ history below.
   use/production, derivation, and targets. The eval command verifies required
   node/edge coverage, edge resolution, trace-result-score paths, artifact
   provenance, event-emission integrity, event-source row materialization,
-  source-KG exclusion, and local source-of-record policy. Current live smoke
-  materialized `4,964` span events from two West Reservoir applicability trace
-  JSONL artifacts. A second smoke with one explicit event log materialized `1`
-  `event_source` node and `2` `log_event` nodes, for `5,095` nodes, `5,200`
-  edges, and `4,966` total emitted event nodes. Reserved future nodes include
-  state checkpoints, tool invocations, model invocations, prompt versions,
-  dataset examples, and human labels.
+  command-event graph joins, source-KG exclusion, and local source-of-record
+  policy. Current live smoke materialized `4,964` span events from two West
+  Reservoir applicability trace JSONL artifacts. A second smoke with one
+  explicit event log materialized `1` `event_source` node and `2` `log_event`
+  nodes, for `5,095` nodes, `5,200` edges, and `4,966` total emitted event
+  nodes. A third smoke with a canonical CLI command-event log materialized `3`
+  command `log_event` nodes and passed `command_event_nodes_joined`, for
+  `5,096` nodes and `5,201` edges. Reserved future nodes include state
+  checkpoints, tool invocations, model invocations, prompt versions, dataset
+  examples, and human labels.
 
   operational graph-KB query surface: the first local query/API-contract slice
   is closed locally. `src/usfs_r1_ea_sources/knowledge_graph_query.py` and

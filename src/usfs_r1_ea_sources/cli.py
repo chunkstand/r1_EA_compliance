@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Callable
+import sys
 
 from .cli_applicability import handle_applicability_command
 from .cli_applicability import register_applicability_commands
@@ -25,6 +26,8 @@ from .cli_review import handle_review_command
 from .cli_review import register_review_commands
 from .cli_review_packet import handle_review_packet_command
 from .cli_review_packet import register_review_packet_commands
+from .observability_events import finish_command_observation
+from .observability_events import start_command_observation
 
 
 CommandHandler = Callable[[argparse.Namespace, argparse.ArgumentParser], int | None]
@@ -68,14 +71,29 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    command_argv = list(sys.argv[1:] if argv is None else argv)
+    observation = start_command_observation(args=args, argv=command_argv)
 
-    for handler in COMMAND_HANDLERS:
-        result = handler(args, parser)
-        if result is not None:
-            return result
+    try:
+        for handler in COMMAND_HANDLERS:
+            result = handler(args, parser)
+            if result is not None:
+                finish_command_observation(observation, exit_code=result)
+                return result
 
-    parser.error(f"Unknown command: {args.command}")
-    return 2
+        parser.error(f"Unknown command: {args.command}")
+        return 2
+    except SystemExit as exc:
+        code = exc.code if isinstance(exc.code, int) else 1
+        finish_command_observation(observation, exit_code=code, error_type="SystemExit")
+        raise
+    except Exception as exc:
+        finish_command_observation(
+            observation,
+            exit_code=1,
+            error_type=type(exc).__name__,
+        )
+        raise
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-context-graph-contract-v1",
   "contract_id": "first-class-generated-observability-eval-context-graph",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "status": "active",
   "purpose": "Generated local graph over eval runs, traces, spans, artifacts, scores, and deterministic graph evals. This is not a source knowledge graph.",
   "source_store": {
@@ -80,6 +80,7 @@
     "edges_resolve_to_nodes",
     "event_nodes_have_emitted_edges",
     "event_source_rows_materialized",
+    "command_event_nodes_joined",
     "trace_result_score_paths_present",
     "artifact_provenance_present",
     "source_knowledge_graph_nodes_excluded",

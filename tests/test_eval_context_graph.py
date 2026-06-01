@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from argparse import Namespace
 from copy import deepcopy
 from pathlib import Path
 import json
@@ -23,6 +24,8 @@ from usfs_r1_ea_sources.eval_context_graph import (
 )
 from usfs_r1_ea_sources.eval_context_graph import run_eval_context_graph_build
 from usfs_r1_ea_sources.eval_context_graph import run_eval_context_graph_eval
+from usfs_r1_ea_sources.observability_events import finish_command_observation
+from usfs_r1_ea_sources.observability_events import start_command_observation
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -130,6 +133,9 @@ def test_context_graph_eval_passes_on_generated_graph(tmp_path: Path) -> None:
     ]["passed"]
     assert _checks_by_name(summary["validation_checks"])[
         "event_source_rows_materialized"
+    ]["passed"]
+    assert _checks_by_name(summary["validation_checks"])[
+        "command_event_nodes_joined"
     ]["passed"]
     assert json.loads(summary_path.read_text(encoding="utf-8")) == summary
 
@@ -256,6 +262,72 @@ def test_context_graph_build_materializes_explicit_event_log_paths(
     )
 
 
+def test_context_graph_build_includes_canonical_command_event_log(
+    tmp_path: Path,
+) -> None:
+    sqlite_path = _write_store(tmp_path)
+    observation = start_command_observation(
+        args=_namespace(
+            command="eval-context-graph-build",
+            sqlite_path=sqlite_path,
+            graph_json_path=tmp_path / "eval_context_graph.json",
+        ),
+        argv=[
+            "eval-context-graph-build",
+            "--sqlite-path",
+            str(sqlite_path),
+            "--graph-json-path",
+            "eval_context_graph.json",
+        ],
+        repo_root=tmp_path,
+    )
+    finish_command_observation(observation, exit_code=0)
+    graph_path = tmp_path / "eval_context_graph.json"
+
+    summary = run_eval_context_graph_build(
+        sqlite_path=sqlite_path,
+        graph_json_path=graph_path,
+        contract_path=CONTRACT_PATH,
+        repo_root=tmp_path,
+    ).summary
+
+    assert summary["passed"] is True
+    assert summary["observability_event_log_path"] == (
+        "source_library/evaluations/observability_events/command_events.jsonl"
+    )
+    assert summary["node_counts"]["event_source"] == 1
+    assert summary["node_counts"]["log_event"] == 2
+    assert summary["event_source_count"] == 3
+    assert summary["event_node_count"] == 4
+
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    checks = _checks_by_name(
+        run_eval_context_graph_eval(
+            graph_json_path=graph_path,
+            contract_path=CONTRACT_PATH,
+            repo_root=tmp_path,
+        ).summary["validation_checks"]
+    )
+    assert checks["command_event_nodes_joined"]["passed"]
+    canonical_sources = [
+        source
+        for source in graph["event_sources"]
+        if source["source_kind"] == "canonical_command_event_log"
+    ]
+    assert len(canonical_sources) == 1
+    command_events = [
+        node
+        for node in graph["nodes"]
+        if node["kind"] == "log_event"
+        and node["properties"].get("command") == "eval-context-graph-build"
+    ]
+    assert {node["properties"]["command_event_phase"] for node in command_events} == {
+        "started",
+        "finished",
+    }
+    assert all(node["properties"]["payload_sha256"] for node in command_events)
+
+
 def test_context_graph_build_reports_missing_store_without_writing_graph(
     tmp_path: Path,
 ) -> None:
@@ -284,6 +356,10 @@ def _write_context_graph(tmp_path: Path) -> Path:
     )
     assert result.summary["passed"] is True
     return graph_path
+
+
+def _namespace(**kwargs) -> Namespace:
+    return Namespace(**kwargs)
 
 
 def _checks_by_name(checks: list[dict]) -> dict[str, dict]:

@@ -275,6 +275,13 @@ COMMAND_SPECS = (
             _arg("--graph-json-path", required=True, type=Path),
             _arg("--summary-path", type=Path),
             _arg("--event-log-path", action="append", default=[], type=Path),
+            _arg("--observability-event-log-path", type=Path),
+            _arg(
+                "--no-observability-event-log",
+                action="store_false",
+                dest="include_observability_event_log",
+                default=True,
+            ),
             _arg(
                 "--contract-path",
                 default=Path("config/context_graph_contract_v1.json"),
@@ -563,6 +570,8 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 graph_json_path=args.graph_json_path,
                 summary_path=args.summary_path,
                 event_log_paths=args.event_log_path,
+                include_observability_event_log=args.include_observability_event_log,
+                observability_event_log_path=args.observability_event_log_path,
                 contract_path=args.contract_path,
             ),
             success_key="command_succeeded",

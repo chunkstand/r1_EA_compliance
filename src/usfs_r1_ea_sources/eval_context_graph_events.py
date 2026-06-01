@@ -88,6 +88,13 @@ def _event_from_row(
             "graph_path_id": row.get("graph_path_id"),
             "review_id": row.get("review_id"),
             "source_set_id": row.get("source_set_id"),
+            "command": row.get("command"),
+            "command_event_phase": row.get("command_event_phase"),
+            "command_invocation_id": row.get("command_invocation_id"),
+            "exit_code": row.get("exit_code"),
+            "duration_ms": row.get("duration_ms"),
+            "argv_sha256": row.get("argv_sha256"),
+            "argument_keys": _list_of_strings(row.get("argument_keys")),
             "candidate_authority_id": row.get("candidate_authority_id"),
             "query_type": row.get("query_type"),
             "selected_status": row.get("selected_status"),
@@ -175,6 +182,10 @@ def _first_string(row: dict[str, Any], fields: tuple[str, ...]) -> str | None:
 
 def _list_of_dicts(value: object) -> list[dict[str, Any]]:
     return [item for item in value if isinstance(item, dict)] if isinstance(value, list) else []
+
+
+def _list_of_strings(value: object) -> list[str]:
+    return [item for item in value if isinstance(item, str)] if isinstance(value, list) else []
 
 
 def _stable_hash(value: object) -> str:

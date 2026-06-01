@@ -17,6 +17,7 @@ from .eval_context_graph_validation import graph_file_checks
 from .eval_context_graph_validation import store_checks
 from .eval_trace_inventory import REPO_ROOT
 from .eval_trace_store import STORE_SCHEMA_VERSION
+from .observability_events import resolve_observability_event_log_path
 from .records import sha256_file
 
 
@@ -43,12 +44,20 @@ class EvalContextGraphEvalResult:
     summary: dict[str, Any]
 
 
+@dataclass(frozen=True)
+class EventLogSource:
+    path: Path
+    source_kind: str
+
+
 def run_eval_context_graph_build(
     *,
     sqlite_path: Path,
     graph_json_path: Path,
     summary_path: Path | None = None,
     event_log_paths: list[Path] | None = None,
+    include_observability_event_log: bool = True,
+    observability_event_log_path: Path | None = None,
     contract_path: Path = DEFAULT_CONTEXT_GRAPH_CONTRACT_PATH,
     repo_root: Path = REPO_ROOT,
 ) -> EvalContextGraphBuildResult:
@@ -59,13 +68,19 @@ def run_eval_context_graph_build(
     resolved_event_log_paths = [
         _resolve_path(path, repo_root) for path in event_log_paths or []
     ]
+    event_log_sources = _event_log_sources(
+        event_log_paths=resolved_event_log_paths,
+        include_observability_event_log=include_observability_event_log,
+        observability_event_log_path=observability_event_log_path,
+        repo_root=repo_root,
+    )
 
     contract = load_eval_context_graph_contract(contract_path, repo_root=repo_root)
     store = _read_store(sqlite_path)
     graph = _build_graph(
         store,
         sqlite_path=sqlite_path,
-        event_log_paths=resolved_event_log_paths,
+        event_log_sources=event_log_sources,
         contract=contract,
         repo_root=repo_root,
     )
@@ -94,7 +109,11 @@ def run_eval_context_graph_build(
         "row_counts": graph["source"]["row_counts"],
         "node_counts": graph["node_counts"],
         "edge_counts": graph["edge_counts"],
-        "event_log_path_count": len(resolved_event_log_paths),
+        "event_log_path_count": len(event_log_sources),
+        "observability_event_log_path": _observability_event_log_summary_path(
+            event_log_sources,
+            repo_root=repo_root,
+        ),
         "event_source_count": len(graph.get("event_sources", [])),
         "event_node_count": _event_node_count(graph),
         "node_count": len(graph["nodes"]),
@@ -146,6 +165,49 @@ def run_eval_context_graph_eval(
     return EvalContextGraphEvalResult(summary=summary)
 
 
+def _event_log_sources(
+    *,
+    event_log_paths: list[Path],
+    include_observability_event_log: bool,
+    observability_event_log_path: Path | None,
+    repo_root: Path,
+) -> list[EventLogSource]:
+    sources: list[EventLogSource] = []
+    seen: set[Path] = set()
+
+    def add_source(path: Path, source_kind: str) -> None:
+        resolved = path.resolve() if path.exists() else path
+        if resolved in seen:
+            return
+        seen.add(resolved)
+        sources.append(EventLogSource(path=path, source_kind=source_kind))
+
+    for path in event_log_paths:
+        add_source(path, "explicit_event_log_path")
+
+    if include_observability_event_log:
+        default_event_log_path = resolve_observability_event_log_path(
+            repo_root=repo_root,
+            explicit_path=observability_event_log_path,
+            honor_disabled=False,
+        )
+        if default_event_log_path is not None and default_event_log_path.exists():
+            add_source(default_event_log_path, "canonical_command_event_log")
+
+    return sources
+
+
+def _observability_event_log_summary_path(
+    event_log_sources: list[EventLogSource],
+    *,
+    repo_root: Path,
+) -> str | None:
+    for source in event_log_sources:
+        if source.source_kind == "canonical_command_event_log":
+            return _display_path(source.path, repo_root)
+    return None
+
+
 def _read_store(sqlite_path: Path) -> dict[str, Any]:
     if not sqlite_path.exists():
         return {
@@ -192,7 +254,7 @@ def _build_graph(
     store: dict[str, Any],
     *,
     sqlite_path: Path,
-    event_log_paths: list[Path],
+    event_log_sources: list[EventLogSource],
     contract: dict[str, Any],
     repo_root: Path,
 ) -> dict[str, Any]:
@@ -480,16 +542,17 @@ def _build_graph(
             source_relation="span_failure",
         )
 
-    for event_log_path in event_log_paths:
+    for event_log_source in event_log_sources:
         event_source_node = _add_event_source_node(
-            path=event_log_path,
+            path=event_log_source.path,
+            source_kind=event_log_source.source_kind,
             add_node=add_node,
             repo_root=repo_root,
         )
         _add_event_nodes(
-            artifact_ref=_display_path(event_log_path, repo_root),
+            artifact_ref=_display_path(event_log_source.path, repo_root),
             emitter_node=event_source_node,
-            source_kind="explicit_event_log_path",
+            source_kind=event_log_source.source_kind,
             source_relation="event_source_emitted_event",
             require_event_marker=False,
             add_node=add_node,
@@ -509,7 +572,7 @@ def _build_graph(
             "sqlite_path": _display_path(sqlite_path, repo_root),
             "sqlite_sha256": sha256_file(sqlite_path) if sqlite_path.exists() else None,
             "event_log_paths": [
-                _display_path(path, repo_root) for path in event_log_paths
+                _display_path(source.path, repo_root) for source in event_log_sources
             ],
             "row_counts": {table: len(rows) for table, rows in tables.items()},
             "missing_tables": store["missing_tables"],
@@ -617,6 +680,7 @@ def _add_event_nodes(
 def _add_event_source_node(
     *,
     path: Path,
+    source_kind: str,
     add_node: Any,
     repo_root: Path,
 ) -> str:
@@ -627,7 +691,7 @@ def _add_event_source_node(
         properties={
             "artifact_ref": artifact_ref,
             "path": artifact_ref,
-            "source_kind": "explicit_event_log_path",
+            "source_kind": source_kind,
             "redaction_policy": "payload_hash_and_keys_only",
         },
         source_hash=sha256_file(path) if path.exists() else None,

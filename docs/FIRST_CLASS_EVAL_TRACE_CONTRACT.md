@@ -218,12 +218,19 @@ standalone local JSON/JSONL event logs. Each explicit file gets an
 linked by `EMITTED` edges. Explicit event logs use the same payload-hash and
 payload-key redaction policy as trace-derived event rows.
 
+The fourth context-graph slice adds canonical CLI command-event capture. The
+top-level CLI appends redacted start/finish rows to
+`source_library/evaluations/observability_events/command_events.jsonl` by
+default, and the graph builder includes that event log when it exists. Command
+events carry command name, phase, invocation ID, safe context IDs/paths, argv
+hashes, and exit/duration fields without storing raw argv or prompt/body text.
+
 `eval-context-graph-eval` runs deterministic graph evals over that artifact:
 required node/edge kinds, edge resolution, trace-to-result-to-score paths,
 artifact provenance, event-emission integrity, event-source row materialization,
-source-KG exclusion, and local export policy. This makes graph-derived evals
-the next layer over the normalized store without changing phase or promotion
-ratchets.
+command-event graph joins, source-KG exclusion, and local export policy. This
+makes graph-derived evals the next layer over the normalized store without
+changing phase or promotion ratchets.
 
 The contract and behavior are owned by
 `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` and
