@@ -2,10 +2,11 @@
 
 Date: 2026-06-01
 
-Status: First bounded packet implemented locally. The read-only
-`chunk-quality-audit` gate is now routed in `docs/CURRENT_ROUTING.md`,
-`docs/CURRENT_SYSTEM_STATE.md`, and `docs/SESSION_HANDOFF.md`; sidecar chunk
-layers and retrieval scoring changes remain future packets.
+Status: First two bounded packets implemented locally. The read-only
+`chunk-quality-audit` gate and generated sidecar `chunk-layer-build` command
+are now routed in `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`,
+and `docs/SESSION_HANDOFF.md`; sidecar-aware retrieval scoring and eval
+coverage remain future packets.
 
 ## Implementation Status
 
@@ -15,15 +16,22 @@ layers and retrieval scoring changes remain future packets.
   from the existing `chunks/chunks.jsonl` spine and reports parser, heading,
   table, structural-marker, boundary-split, offset, source-identity, and
   parent-context risk without mutating downstream artifacts.
+- closed:
+  `chunk-layer-build` writes `chunks_v2/atomic_chunks.jsonl`,
+  `chunks_v2/structural_chunks.jsonl`,
+  `chunks_v2/parent_context_windows.jsonl`, and `chunks_v2/summary.json`
+  without replacing the baseline chunk spine. The live f70 smoke produced
+  `296,442` atomic chunks, `116,004` structural chunks, and `19,117` parent
+  windows from `113,830` baseline chunks, with full atomic parent-window
+  coverage.
 - live smoke:
   the active source set produced `113,830` audited chunks across `719` sources,
   passed required provenance/offset/source-identity checks, and reported the
-  expected `parent_context_missing` risk for every source because the sidecar
-  `chunks_v2` layer is not yet present.
+  expected `parent_context_missing` risk for every source when the default
+  `chunks_v2` sidecar summary was absent.
 - still open:
-  sidecar atomic/structural chunks, parent context windows, FTS/BM25 retrieval
-  scoring, deterministic contextual index text, and expanded atomic/structure
-  retrieval evals.
+  sidecar-aware FTS/BM25 retrieval scoring, deterministic contextual index
+  text integration in retrieval, and expanded atomic/structure retrieval evals.
 
 ## Grounded Repo Snapshot
 
@@ -202,6 +210,9 @@ Extend direct evals beyond current source-level retrieval:
   fallback-parser risks where not.
 
 ## Suggested First Bounded Packet
+
+Status: closed by `chunk-quality-audit`; the follow-on sidecar layer is also
+closed by `chunk-layer-build`.
 
 Open a new implementation packet for `chunk-quality-audit` before changing the
 production chunk spine.

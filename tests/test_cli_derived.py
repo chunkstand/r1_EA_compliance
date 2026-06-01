@@ -234,6 +234,34 @@ def test_chunk_quality_audit_parser_accepts_optional_paths() -> None:
     assert args.output_path == Path("/tmp/chunk-quality-audit.json")
 
 
+def test_chunk_layer_build_parser_accepts_sidecar_paths_and_limits() -> None:
+    args = build_parser().parse_args(
+        [
+            "chunk-layer-build",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-path",
+            "/tmp/chunks.jsonl",
+            "--chunks-v2-dir",
+            "/tmp/chunks-v2",
+            "--atomic-max-tokens",
+            "256",
+            "--parent-window-max-tokens",
+            "1200",
+        ]
+    )
+
+    assert args.command == "chunk-layer-build"
+    assert args.output_dir == Path("source_library")
+    assert args.source_set_id == "source-set-test"
+    assert args.chunks_path == Path("/tmp/chunks.jsonl")
+    assert args.chunks_v2_dir == Path("/tmp/chunks-v2")
+    assert args.atomic_max_tokens == 256
+    assert args.parent_window_max_tokens == 1200
+
+
 def test_retrieval_build_parser_accepts_archived_catalog_dir() -> None:
     args = build_parser().parse_args(
         [

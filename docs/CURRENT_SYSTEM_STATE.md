@@ -15,6 +15,39 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Chunk Layer Build Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  `chunk-layer-build` is now the first sidecar chunk-layer implementation slice.
+  It reads the existing source-set `chunks/chunks.jsonl` output and writes
+  `chunks_v2/atomic_chunks.jsonl`, `chunks_v2/structural_chunks.jsonl`,
+  `chunks_v2/parent_context_windows.jsonl`, and `chunks_v2/summary.json`
+  without replacing the baseline chunk spine or rebuilding retrieval, graph,
+  claim, rule, compliance, or review artifacts.
+- contract:
+  `docs/OUTPUT_SCHEMAS.md` documents schema version `chunk-layers-v1`, stable
+  atomic/structural/window identities, required provenance fields,
+  deterministic contextual index text hashes, validation checks, and sidecar
+  parent-window coverage. `docs/architecture_contract.toml` owns the new
+  extraction-layer module, generated sidecar artifact paths, and
+  `chunk-layer-build` command registration.
+- live smoke:
+  running the command against `source-set-f70ea11e04ae3d53` with
+  `--chunks-v2-dir /tmp/usfs-r1-chunks-v2-next-slice` passed validation over
+  `113,830` baseline chunks and produced `296,442` atomic chunks, `116,004`
+  structural chunks, and `19,117` parent context windows. Every atomic chunk
+  had a parent window. Structure counts were `180,438` text spans, `61,908`
+  numbered requirements, `10,347` table rows, `7,976` definitions, `7,821`
+  desired conditions, `7,326` legal sections, `7,009` forest-plan standards,
+  `6,855` forest-plan guidelines, and `6,762` objectives.
+- boundary:
+  this closes only the generated sidecar layer. The next accuracy packet should
+  add sidecar-aware retrieval scoring and eval coverage before any promotion
+  path makes `chunks_v2` the active reviewer, graph, claim, or compliance
+  chunk spine.
+
 ## Extraction Chunk Quality Audit Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
@@ -48,10 +81,10 @@ Latest implementation update on 2026-06-01 UTC:
   `parent_context_missing`. The sidecar chunk layer was absent, so
   `sidecar.present=false` and `sidecar.validation_passed=false`.
 - boundary:
-  this closes only the read-only audit gate. The next accuracy packet should
-  add sidecar atomic/structural chunks and parent context windows with eval
-  coverage before changing retrieval scoring or replacing the baseline chunk
-  spine.
+  this closes only the read-only audit gate. The sidecar atomic/structural
+  chunk and parent-window build is now closed separately above; retrieval
+  scoring, sidecar eval coverage, and any replacement of the baseline chunk
+  spine remain future work.
 
 ## First-Class Observability/Eval Context Graph Resolved Locally
 
@@ -237,10 +270,10 @@ Latest implementation update on 2026-06-01 UTC:
   test owners, with exact path and line-count assertions in
   `tests/test_architecture_quality.py`. Later graph-KB and chunk-audit slices
   added under-800 source and test modules; the current probe therefore reports
-  `516` code files while the oversized-owner count remains `17`.
+  `518` code files while the oversized-owner count remains `17`.
 - probe result:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `516` code files, `17` code files above `800`, no Python or JS/TS
+  reports `518` code files, `17` code files above `800`, no Python or JS/TS
   import cycles, and no source module above the `20`-import fan-out gate.
 - route-doc control:
   `README.md` and `docs/CURRENT_ROUTING.md` are compact, non-volatile route

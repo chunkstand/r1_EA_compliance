@@ -165,6 +165,10 @@ def run_chunk_quality_audit(**kwargs):
     return _module_attr("chunk_quality_audit", "run_chunk_quality_audit")(**kwargs)
 
 
+def build_chunk_layers(**kwargs):
+    return _module_attr("chunk_layers", "build_chunk_layers")(**kwargs)
+
+
 def build_forest_plan_source_delta_readiness_report(**kwargs):
     return _module_attr(
         "forest_plan_source_delta_readiness",
@@ -261,6 +265,7 @@ DERIVED_COMMANDS = {
     "forest-plan-source-delta-readiness",
     "extraction-accuracy-audit",
     "chunk-quality-audit",
+    "chunk-layer-build",
     "source-register-proving-slice",
     "authority-currentness",
     "authority-ontology-validate",
@@ -417,6 +422,17 @@ def _run_chunk_quality_audit(args: argparse.Namespace):
         source_set_id=args.source_set_id,
         chunks_path=args.chunks_path,
         output_path=args.output_path,
+    )
+
+
+def _run_chunk_layer_build(args: argparse.Namespace):
+    return build_chunk_layers(
+        output_dir=args.output_dir,
+        source_set_id=args.source_set_id,
+        chunks_path=args.chunks_path,
+        chunks_v2_dir=args.chunks_v2_dir,
+        atomic_max_tokens=args.atomic_max_tokens,
+        parent_window_max_tokens=args.parent_window_max_tokens,
     )
 
 
@@ -683,6 +699,7 @@ COMMAND_HANDLERS = {
     ),
     "extraction-accuracy-audit": _result_handler(_run_extraction_accuracy_audit, "passed"),
     "chunk-quality-audit": _result_handler(_run_chunk_quality_audit, "passed"),
+    "chunk-layer-build": _result_handler(_run_chunk_layer_build, "validation_passed"),
     "source-register-proving-slice": _result_handler(
         _run_source_register_proving_slice,
         "validation_passed",

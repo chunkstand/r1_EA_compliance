@@ -59,9 +59,20 @@ history below.
   present. Closeout hardening keeps source text size lookup cached once per
   `source_text_path` so the audit does not reread shared extracted text per
   chunk.
+- latest resolved sidecar chunk-layer slice:
+  `chunk-layer-build` now writes `chunks_v2/atomic_chunks.jsonl`,
+  `chunks_v2/structural_chunks.jsonl`,
+  `chunks_v2/parent_context_windows.jsonl`, and `chunks_v2/summary.json`
+  without replacing `chunks/chunks.jsonl` or rebuilding retrieval, graph,
+  claim, rule, compliance, or review artifacts. The live f70 smoke wrote to
+  `/tmp/usfs-r1-chunks-v2-next-slice` and passed validation over `113,830`
+  baseline chunks, producing `296,442` atomic chunks, `116,004` structural
+  chunks, and `19,117` parent context windows with full atomic parent-window
+  coverage. The sidecar is generated evidence only until a future
+  sidecar-aware retrieval/eval packet proves promotion readiness.
 - active extraction/chunking/retrieval accuracy slice:
-  none. The next bounded packet should build sidecar parent/atomic chunk
-  layers and eval coverage, not replace the baseline chunk spine.
+  none. The next bounded packet should add sidecar-aware retrieval scoring and
+  eval coverage, not replace the baseline chunk spine.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
@@ -76,7 +87,7 @@ history below.
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
   extraction-fidelity eval source-owner reduction after the architecture
-  control-plane gap closeout. The current probe reports `516` code files, `17` code files above `800`,
+  control-plane gap closeout. The current probe reports `518` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
   `config/architecture_large_file_inventory_v1.json` owns the exact `9`
@@ -195,7 +206,7 @@ history below.
   public facade and output-schema assembler at `716` lines, while
   `extraction_fidelity_eval_runtime.py` owns temporary extraction runs,
   per-case execution, metric checks, and runtime helpers at `442` lines. The
-  live probe reports `516` code files, `17` code files above `800`, no Python or JS/TS cycles,
+  live probe reports `518` code files, `17` code files above `800`, no Python or JS/TS cycles,
   and no local module above the `20`-import fan-out gate.
   The live inventory now records `9` source owners and `8` test owners.
   Local closeout commit: `dca87e8` (`Split extraction fidelity eval runtime`).
@@ -204,7 +215,7 @@ history below.
   matches the live 2026-06-01 probe and fails closed on inventory drift.
   `config/architecture_large_file_inventory_v1.json` records `17` code files
   above `800` as `9` source owners and `8` test owners. The probe command
-  reports `516` code files, no Python or JS/TS cycles, and no local module
+  reports `518` code files, no Python or JS/TS cycles, and no local module
   above the `20`-import fan-out gate. `README.md` and
   `docs/CURRENT_ROUTING.md` are compact route surfaces again; volatile live
   counts stay in `docs/CURRENT_SYSTEM_STATE.md` and this handoff.

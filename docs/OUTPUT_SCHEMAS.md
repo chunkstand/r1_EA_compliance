@@ -4041,6 +4041,10 @@ The `extract-build` command writes:
 - `diagnostics/extraction_validation.json`
 - `diagnostics/extraction_accuracy_audit.json` when `extraction-accuracy-audit` is run
 - `diagnostics/chunk_quality_audit.json` when `chunk-quality-audit` is run
+- `chunks_v2/atomic_chunks.jsonl` when `chunk-layer-build` is run
+- `chunks_v2/structural_chunks.jsonl` when `chunk-layer-build` is run
+- `chunks_v2/parent_context_windows.jsonl` when `chunk-layer-build` is run
+- `chunks_v2/summary.json` when `chunk-layer-build` is run
 - `diagnostics/summary.json`
 
 The command replaces the derived directory for the selected `source_set_id` on each non-reuse run
@@ -4320,6 +4324,27 @@ report includes:
   `numbered_requirement_or_sentence_split`, and `parent_context_missing`
 - `passed`, which is true when required chunk/provenance/offset/source-identity checks pass; risk
   buckets are diagnostic signals rather than automatic failures
+
+`chunk-layer-build` writes sidecar chunk layers under `chunks_v2/` without mutating the baseline
+chunk spine. `atomic_chunks.jsonl` contains retrieval-ready atomic records with:
+
+- stable `chunk_id`, `chunk_layer="atomic_text_chunk_v2"`, `parent_chunk_id`, and
+  `parent_window_id`
+- source-set, source-record, artifact hash/path, citation label, URL, parser, page, section,
+  heading, and source-text provenance copied from the baseline chunk
+- exact source offsets, `token_count`, `structure_type`, optional `component_type`, `content_sha256`,
+  deterministic `contextual_index_text`, and `contextual_index_sha256`
+
+`structural_chunks.jsonl` contains extracted structure-bearing sidecar records for numbered,
+legal-section, table-row, definition, forest-plan standard/guideline, desired-condition, and
+objective markers. These records preserve the atomic chunk ID and the same citation, source-offset,
+content-hash, and contextual-index fields as atomic chunks.
+
+`parent_context_windows.jsonl` contains parent windows with `window_id`, source identity, citation
+label, source offsets, token estimate, child chunk IDs, page range, parser context, and content
+hash. `summary.json` has schema version `chunk-layers-v1` and records source chunk path, sidecar
+paths, atomic/structural/window counts, structure-type counts, parent-window coverage, validation
+checks, and `validation_passed`.
 
 ## First-Class Eval Trace Contract
 
