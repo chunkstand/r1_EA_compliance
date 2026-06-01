@@ -137,12 +137,12 @@ history below.
   hosted service/API, auth, UI query workflow, or broader graph-KB product work
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
-  extraction-fidelity eval source-owner reduction after the architecture
-  control-plane gap closeout. The current probe reports `513` code files, `17` code files above `800`,
-  no Python or JS/TS import cycles, and no source
-  module above the `20`-import fan-out gate.
+  applicability authority-family template test-owner split after the
+  extraction-fidelity eval source-owner reduction. The current probe reports
+  `534` code files, `16` code files above `800`, no Python or JS/TS import
+  cycles, and no source module above the `20`-import fan-out gate.
   `config/architecture_large_file_inventory_v1.json` owns the exact `9`
-  source-owner and `8` test-owner backlog; `README.md` and
+  source-owner and `7` test-owner backlog; `README.md` and
   `docs/CURRENT_ROUTING.md` remain compact route surfaces.
 - active architecture implementation slice:
   none. Future oversized-owner reduction should open a new bounded packet

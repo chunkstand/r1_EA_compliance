@@ -15,6 +15,26 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Applicability Authority-Family Template Test Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the first test-owner oversized reduction slice is closed locally.
+  `tests/test_applicability_authority_family_templates.py` keeps the base
+  authority-family candidate, alias, and exclusion contract tests at `699`
+  lines. `tests/test_applicability_authority_family_template_current_sources.py`
+  now owns the current-source addition cases at `720` lines.
+- architecture effect:
+  the architecture probe reports `534` code files, `16` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `9` source owners and `7` test
+  owners.
+- boundary:
+  this is a behavior-preserving test-owner split. It does not change
+  authority-family template candidate behavior, generated artifacts, or local
+  corpus state.
+
 ## Retrieval Worktree Merge Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

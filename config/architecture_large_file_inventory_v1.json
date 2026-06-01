@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "test-applicability-authority-family-templates-owner",
-      "owner_kind": "test",
-      "follow_on_priority": 1,
-      "required_tests": [
-        "tests/test_applicability_authority_family_templates.py"
-      ],
-      "files": [
-        {
-          "path": "tests/test_applicability_authority_family_templates.py",
-          "line_count": 1407
-        }
-      ]
-    },
-    {
       "name": "test-forest-plan-resolver-scope-owner",
       "owner_kind": "test",
       "follow_on_priority": 2,
