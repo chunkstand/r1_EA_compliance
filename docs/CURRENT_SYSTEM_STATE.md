@@ -15,6 +15,45 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Compliance Review Adoption Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the seventh extraction/chunking/retrieval accuracy packet is closed locally
+  on isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `compliance-review`, `compliance-review-eval`, and `compliance-gold-eval`
+  now accept `--rule-claim-links-path`, so validated sidecar
+  `rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_links.jsonl`
+  artifacts can feed compliance findings without rebuilding canonical
+  `rule_claim_links/`.
+- contract effect:
+  explicit rule-link paths must include sibling `summary.json`,
+  `rule_claim_link_validation.json`, `rule_claim_link_gaps.jsonl`, and
+  `rule_claim_links.sqlite` artifacts. Compliance review checks source-set
+  identity when supplied, rule-pack ID/version/path, reviewer-ready status,
+  validation status, and top-k compatibility, then revalidates the current
+  links before use. Compliance summaries and validation details record the
+  actual link directory, canonical link directory, and whether the consumed
+  directory is canonical.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/compliance_review.py` owns explicit rule-link
+  loading, validation, and canonical fallback behavior. The compliance eval
+  wrappers pass the path through to the core review, and
+  `src/usfs_r1_ea_sources/compliance_validation.py` owns reviewer-visible
+  sidecar/canonical path reporting.
+- smoke:
+  fixture-backed CLI smoke under
+  `/tmp/usfs-r1-sidecar-compliance.04bi1me1/` ran
+  `compliance-review --rule-claim-links-path` against sidecar rule links,
+  produced reviewer-ready compliance output, reported
+  `rule_claim_links_are_canonical=false`, and did not create canonical
+  rule-claim outputs.
+- boundary:
+  no ignored production `source_library/` outputs were mutated. Phase-eval,
+  reviewer package, and knowledge-graph sidecar adoption remain future bounded
+  packets.
+
 ## Sidecar Rule Claim Link Readiness Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

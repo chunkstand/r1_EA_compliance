@@ -40,6 +40,8 @@ def test_compliance_review_parser_preserves_authority_gate_options() -> None:
             "compliance-review",
             "--package-path",
             "package",
+            "--rule-claim-links-path",
+            "source_library/derived/source-set-1/rule_claim_links_sidecar/unit/0.1.0/rule_claim_links.jsonl",
             "--allow-base-rule-pack-review",
             "--reuse-package-cache",
             "--docling-timeout-seconds",
@@ -51,6 +53,9 @@ def test_compliance_review_parser_preserves_authority_gate_options() -> None:
     assert args.allow_base_rule_pack_review is True
     assert args.reuse_package_cache is True
     assert args.docling_timeout_seconds == 0.0
+    assert args.rule_claim_links_path == Path(
+        "source_library/derived/source-set-1/rule_claim_links_sidecar/unit/0.1.0/rule_claim_links.jsonl"
+    )
     assert args.rule_pack == Path("config/compliance_rule_pack_nepa_ea_v0.json")
 
 
@@ -463,6 +468,8 @@ def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch
             "--reuse-package-cache",
             "--forest-plan-component-inventory-path",
             "source_library/reviews/review/component_inventory.json",
+            "--rule-claim-links-path",
+            "source_library/derived/source-set-1/rule_claim_links_sidecar/unit/0.1.0/rule_claim_links.jsonl",
             "--docling-timeout-seconds",
             "0",
         ]
@@ -475,6 +482,9 @@ def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch
     assert captured["reuse_package_cache"] is True
     assert captured["docling_timeout_seconds"] is None
     assert captured["package_path"] == Path("package")
+    assert captured["rule_claim_links_path"] == Path(
+        "source_library/derived/source-set-1/rule_claim_links_sidecar/unit/0.1.0/rule_claim_links.jsonl"
+    )
     assert captured["component_inventory_path"] == Path(
         "source_library/reviews/review/component_inventory.json"
     )

@@ -173,7 +173,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-case-promote \
   --removal-condition "remove only after a superseding case exists"
 ```
 
-Focused review and extraction helpers:
+Focused review, extraction, and sidecar adoption helpers:
 
 ```bash
 PYTHONPATH=src python -m usfs_r1_ea_sources source-record-identity-gate \

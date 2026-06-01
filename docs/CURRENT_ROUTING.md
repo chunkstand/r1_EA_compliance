@@ -8,13 +8,13 @@ Use this short route before opening append-only docs.
 - Latest resolved source-set graph-KB slice: phase-gated operational graph query surface after f70
   canonical semantic graph direct-eval strengthening; exact counts live in
   `docs/CURRENT_SYSTEM_STATE.md`.
-- Latest resolved extraction/chunking/retrieval accuracy slice: sidecar rule-claim link
-  preview/eval after graph/claim canonical adoption and promotion preflight hardening; exact
-  paths and live-smoke counts live in `docs/CURRENT_SYSTEM_STATE.md`.
+- Latest resolved extraction/chunking/retrieval accuracy slice: sidecar compliance review adoption
+  after sidecar rule-claim link preview/eval; exact paths and smoke counts live in
+  `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
 - Active implementation slice: none. Open a new bounded packet before hosted query service/API
-  expansion, model-judge work, hosted scoring, compliance/phase-eval sidecar adoption,
-  reviewer package sidecar adoption, knowledge-graph sidecar adoption, or oversized-owner reduction.
+  expansion, model-judge work, hosted scoring, phase-eval sidecar adoption, reviewer package
+  sidecar adoption, knowledge-graph sidecar adoption, or oversized-owner reduction.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
@@ -26,10 +26,9 @@ Use this short route before opening append-only docs.
 - ECID is historical replay evidence, not a current promotion route; keep it out of governed forest-specific example routing.
 - Architecture route: `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` and `config/architecture_large_file_inventory_v1.json` own the oversized-owner backlog.
 - Extraction/chunking route: sidecar chunk, retrieval eval, downstream graph/claim preview,
-  graph/claim promotion-readiness eval, graph/claim canonical adoption, and rule-link preview/eval are closed
-  locally; promotion now fails closed on missing/unreadable eval artifacts and invalid sidecar input
-  declarations. Compliance, phase-eval, reviewer package, and knowledge-graph sidecar
-  adoption require new bounded packets.
+  graph/claim promotion-readiness eval, graph/claim canonical adoption, rule-link preview/eval, and
+  compliance review adoption are closed locally. Phase-eval, reviewer package, and knowledge-graph
+  sidecar adoption require new bounded packets.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 
 ## Deep Reads

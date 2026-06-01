@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 import tempfile
 import unittest
 
+from usfs_r1_ea_sources.claim_extraction import build_claim_extraction
 from usfs_r1_ea_sources.compliance_review_eval import _case_requires_generated_rule_pack
 from usfs_r1_ea_sources.compliance_review_eval import _case_allows_generated_rule_pack_diagnostic
 from usfs_r1_ea_sources.compliance_review_eval import _effective_eval_case_expectations
@@ -17,6 +19,7 @@ from usfs_r1_ea_sources.compliance_review_eval import (
     _validate_compliance_review_eval_cases_against_rule_pack,
 )
 from usfs_r1_ea_sources.compliance_review_eval import run_compliance_review_eval
+from usfs_r1_ea_sources.rule_claim_binding import build_rule_claim_links
 
 from tests.support.compliance_review_fixtures import (
     _build_source_library,
@@ -111,6 +114,83 @@ class ComplianceReviewEvalTests(unittest.TestCase):
             self.assertTrue(Path(cases["unit-all-pass"]["compliance_matrix_path"]).exists())
             self.assertTrue(Path(cases["unit-all-pass"]["compliance_matrix_pdf_path"]).exists())
             self.assertEqual(result.summary["failure_category_counts"], {})
+
+    def test_compliance_review_eval_consumes_sidecar_rule_claim_links(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = "source-set-test"
+            _build_source_library(output_dir, source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            sidecar_claims = build_claim_extraction(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                claims_dir=output_dir / "derived" / source_set_id / "claims_sidecar",
+            )
+            sidecar_links = build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                claims_path=sidecar_claims.claims_path,
+                links_dir=(
+                    output_dir
+                    / "derived"
+                    / source_set_id
+                    / "rule_claim_links_sidecar"
+                    / "unit-nepa-ea"
+                    / "0.1.0"
+                ),
+                rule_pack_path=rule_pack_path,
+            )
+            eval_path = _write_compliance_eval_file(
+                Path(tmp),
+                [
+                    {
+                        "id": "unit-sidecar-all-pass",
+                        "package_text": (
+                            "Purpose and Need\n\nThe proposed action improves trail access "
+                            "and mitigation measures support a finding of no significant impact."
+                        ),
+                        "expected_statuses": {
+                            "purpose_need": "pass",
+                            "mitigation": "pass",
+                        },
+                        "expected_finding_status_counts": {"pass": 2},
+                        "expected_unsupported_finding_ids": [],
+                        "expected_source_claim_links": {
+                            "purpose_need": True,
+                            "mitigation": True,
+                        },
+                        "min_findings": 2,
+                    }
+                ],
+            )
+
+            result = run_compliance_review_eval(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                rule_pack_path=rule_pack_path,
+                rule_claim_links_path=sidecar_links.links_path,
+                eval_file=eval_path,
+                results_dir=Path(tmp) / "eval-results",
+            )
+
+            self.assertTrue(result.summary["passed"])
+            case = result.summary["cases"][0]
+            report = json.loads(Path(case["compliance_review_path"]).read_text(encoding="utf-8"))
+            self.assertEqual(
+                report["summary"]["rule_claim_links_path"],
+                str(sidecar_links.links_path),
+            )
+            self.assertFalse(report["summary"]["rule_claim_links_are_canonical"])
+            self.assertFalse(
+                (
+                    output_dir
+                    / "derived"
+                    / source_set_id
+                    / "rule_claim_links"
+                    / "unit-nepa-ea"
+                    / "0.1.0"
+                ).exists()
+            )
 
     def test_compliance_review_eval_rejects_bad_filters(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

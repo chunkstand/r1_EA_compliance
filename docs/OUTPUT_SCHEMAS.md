@@ -2328,6 +2328,11 @@ that forest-plan component evaluation is absent, stale, or not reviewer-ready.
 - reviewer-ready source claim artifacts and rule-claim bindings under
   `source_library/derived/<source_set_id>/claims/` and
   `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/`
+- optional explicit rule-claim links from `--rule-claim-links-path`, such as
+  `source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_links.jsonl`;
+  the command revalidates the sibling summary, validation, gap, and SQLite artifacts before using
+  those links and requires source-set, rule-pack ID/version/path, reviewer-ready status, and top-k
+  compatibility
 - the source-library retrieval index, normally
   `source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite`
 - the source-set forest-plan component inventory at
@@ -2411,6 +2416,8 @@ record ID to be safe, unique, covered by at least one rule, and covered only by 
 - rule count, baseline source-record count/list, evaluated baseline source-record list, finding
   count, claim-bearing finding count, finding status counts, and authority identification summary
 - unsupported finding IDs
+- rule-claim link paths, including actual link directory, canonical link directory, and whether the
+  consumed rule-link directory is canonical
 - `forest_plan_review`, with forest-plan resolver paths, scope status, reviewer-ready status, and
   component-evaluation artifact paths when applicable
 - `applicability_gate`, with generated-pack validation, applicability validation,
@@ -3565,6 +3572,10 @@ The `compliance-review-eval` command writes:
 
 The default eval file is `config/compliance_review_eval_seed.json`.
 
+When `--rule-claim-links-path` is supplied, the explicit link artifact is passed through to every
+case review. The link artifact must match the effective rule pack for that case, including generated
+rule packs when a case requires one.
+
 That file is now a `compliance-review-eval-v1` contract with:
 
 - `schema_version`
@@ -3996,6 +4007,8 @@ The `compliance-gold-eval` command reads:
 - a versioned compliance rule pack
 - a gold adjudication file, defaulting to `config/compliance_gold_eval_v1.json`
 - reviewer-ready source-library artifacts used by the underlying `compliance-review-eval` path
+- optional `--rule-claim-links-path`, which is passed through to the nested compliance-review eval
+  and must match the effective rule pack used by those reviews
 
 The gold adjudication file has schema version `compliance-gold-eval-v0` and records:
 
