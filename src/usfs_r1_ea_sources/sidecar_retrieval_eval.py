@@ -8,6 +8,7 @@ from typing import Any
 
 from .chunk_layers import build_chunk_layers
 from .retrieval_common import DEFAULT_INDEX_FILENAME
+from .retrieval_common import _ensure_noncanonical_sidecar_dir
 from .retrieval_common import _read_json
 from .retrieval_common import _source_set_id_from_catalog
 from .retrieval_common import _write_json
@@ -73,6 +74,22 @@ def run_chunk_sidecar_retrieval_eval(
         if results_dir is not None
         else derived_dir / "retrieval_sidecar_eval"
     )
+    _ensure_noncanonical_sidecar_dir(
+        requested_dir=chunks_v2_dir,
+        canonical_dir=derived_dir / "chunks",
+        label="chunks_v2_dir",
+    )
+    _ensure_noncanonical_sidecar_dir(
+        requested_dir=sidecar_index_dir,
+        canonical_dir=derived_dir / "retrieval",
+        label="sidecar_index_dir",
+    )
+    for canonical_name in ("chunks", "retrieval"):
+        _ensure_noncanonical_sidecar_dir(
+            requested_dir=results_dir,
+            canonical_dir=derived_dir / canonical_name,
+            label="results_dir",
+        )
     results_dir.mkdir(parents=True, exist_ok=True)
     output_path = results_dir / "chunk_sidecar_retrieval_eval_results.json"
 

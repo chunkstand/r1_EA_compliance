@@ -8,6 +8,7 @@ from typing import Any
 from .chunk_layers import build_chunk_layers
 from .claim_extraction import build_claim_extraction
 from .evidence_graph import build_evidence_graph
+from .retrieval_common import _ensure_noncanonical_sidecar_dir
 from .retrieval_common import _read_json
 from .retrieval_common import _source_set_id_from_catalog
 from .retrieval_common import _write_json
@@ -79,15 +80,13 @@ def run_chunk_sidecar_consumer_eval(
         if baseline_claim_summary_path is not None
         else derived_dir / "claims" / "summary.json"
     )
-    _ensure_sidecar_output_dir(
-        requested_dir=graph_dir,
-        canonical_dir=derived_dir / "evidence_graph",
-        label="graph_dir",
-    )
-    _ensure_sidecar_output_dir(
-        requested_dir=claims_dir,
-        canonical_dir=derived_dir / "claims",
-        label="claims_dir",
+    _ensure_consumer_eval_sidecar_paths(
+        derived_dir=derived_dir,
+        chunks_v2_dir=chunks_v2_dir,
+        sidecar_index_dir=sidecar_index_dir,
+        results_dir=results_dir,
+        graph_dir=graph_dir,
+        claims_dir=claims_dir,
     )
     results_dir.mkdir(parents=True, exist_ok=True)
     output_path = results_dir / "chunk_sidecar_consumer_eval_results.json"
@@ -218,14 +217,36 @@ def _ensure_sidecar_chunks(
     return _read_json(summary_path)
 
 
-def _ensure_sidecar_output_dir(
+def _ensure_consumer_eval_sidecar_paths(
     *,
-    requested_dir: Path,
-    canonical_dir: Path,
-    label: str,
+    derived_dir: Path,
+    chunks_v2_dir: Path,
+    sidecar_index_dir: Path,
+    results_dir: Path,
+    graph_dir: Path,
+    claims_dir: Path,
 ) -> None:
-    if requested_dir.resolve() == canonical_dir.resolve():
-        raise ValueError(f"{label} must not point at canonical output directory: {canonical_dir}")
+    _ensure_noncanonical_sidecar_dir(
+        requested_dir=chunks_v2_dir,
+        canonical_dir=derived_dir / "chunks",
+        label="chunks_v2_dir",
+    )
+    _ensure_noncanonical_sidecar_dir(
+        requested_dir=sidecar_index_dir,
+        canonical_dir=derived_dir / "retrieval",
+        label="sidecar_index_dir",
+    )
+    for label, requested_dir in (
+        ("results_dir", results_dir),
+        ("graph_dir", graph_dir),
+        ("claims_dir", claims_dir),
+    ):
+        for canonical_name in ("chunks", "retrieval", "evidence_graph", "claims"):
+            _ensure_noncanonical_sidecar_dir(
+                requested_dir=requested_dir,
+                canonical_dir=derived_dir / canonical_name,
+                label=label,
+            )
 
 
 def _read_optional_json(path: Path) -> dict[str, Any] | None:

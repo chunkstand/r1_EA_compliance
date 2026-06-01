@@ -5139,6 +5139,9 @@ by default. The result schema version is `chunk-sidecar-retrieval-eval-results-v
   pass status, atomic/structural/parent-window eval case coverage, baseline eval completion, and
   sidecar-not-worse-than-baseline metrics
 
+The command refuses sidecar chunk, sidecar retrieval, or result directories that point at or inside
+canonical `chunks/` or `retrieval/` output directories.
+
 `chunk-sidecar-consumer-eval` writes
 `source_library/derived/<source_set_id>/consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json`
 by default. The result schema version is `chunk-sidecar-consumer-eval-results-v1` and records:
@@ -5154,8 +5157,10 @@ by default. The result schema version is `chunk-sidecar-consumer-eval-results-v1
   validation, sidecar claim validation, baseline summary validation, and sidecar-not-worse
   graph/claim metrics
 
-The command refuses canonical `evidence_graph/` and `claims/` output directories. It is a
-promotion-readiness gate only; it does not make `chunks_v2` the canonical graph or claim input.
+The command refuses sidecar chunk, sidecar retrieval, result, graph preview, or claim preview
+directories that point at or inside canonical `chunks/`, `retrieval/`, `evidence_graph/`, or
+`claims/` output directories. It is a promotion-readiness gate only; it does not make `chunks_v2`
+the canonical graph or claim input.
 
 ## Source Claim Graph Outputs
 

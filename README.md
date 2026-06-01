@@ -188,9 +188,8 @@ PYTHONPATH=src python -m usfs_r1_ea_sources chunk-quality-audit \
 PYTHONPATH=src python -m usfs_r1_ea_sources chunk-layer-build \
   --output-dir source_library \
   --source-set-id <source-set-id>
-PYTHONPATH=src python -m usfs_r1_ea_sources chunk-sidecar-retrieval-eval \
-  --output-dir source_library \
-  --source-set-id <source-set-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources chunk-sidecar-retrieval-eval --output-dir source_library --source-set-id <source-set-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources chunk-sidecar-consumer-eval --output-dir source_library --source-set-id <source-set-id>
 ```
 
 ## Development

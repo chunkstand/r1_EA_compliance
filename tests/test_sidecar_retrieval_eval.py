@@ -105,6 +105,37 @@ class ChunkSidecarRetrievalEvalTests(unittest.TestCase):
                 result.output_path.with_name("baseline").joinpath("retrieval_eval_results.json").exists()
             )
 
+    def test_sidecar_retrieval_eval_rejects_canonical_output_dirs(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            derived_dir = output_dir / "derived" / source_set_id
+
+            with self.assertRaisesRegex(ValueError, "chunks_v2_dir must not point"):
+                run_chunk_sidecar_retrieval_eval(
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    chunks_v2_dir=derived_dir / "chunks",
+                )
+            with self.assertRaisesRegex(ValueError, "sidecar_index_dir must not point"):
+                run_chunk_sidecar_retrieval_eval(
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    sidecar_index_dir=derived_dir / "retrieval",
+                )
+            with self.assertRaisesRegex(ValueError, "results_dir must not point"):
+                run_chunk_sidecar_retrieval_eval(
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    results_dir=derived_dir / "chunks" / "sidecar_eval",
+                )
+            with self.assertRaisesRegex(ValueError, "results_dir must not point"):
+                run_chunk_sidecar_retrieval_eval(
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    results_dir=derived_dir / "retrieval" / "sidecar_eval",
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

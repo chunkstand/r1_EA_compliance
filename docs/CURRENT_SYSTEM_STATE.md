@@ -28,7 +28,9 @@ Latest implementation update on 2026-06-01 UTC:
   `consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json`.
 - contract effect:
   this is a promotion-readiness gate for graph and claim consumers. It refuses
-  canonical `evidence_graph/` and `claims/` output directories and does not make
+  sidecar chunk, sidecar retrieval, result, graph preview, or claim preview
+  directories that point at or inside canonical `chunks/`, `retrieval/`,
+  `evidence_graph/`, or `claims/` output directories and does not make
   `chunks_v2` the active graph or claim spine.
 - architecture closeout:
   `src/usfs_r1_ea_sources/sidecar_consumer_eval.py` owns the sidecar eval

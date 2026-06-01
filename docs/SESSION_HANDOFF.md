@@ -34,7 +34,8 @@ history below.
   locally on branch `codex/extraction-chunking-retrieval-accuracy`. It adds
   `chunk-sidecar-consumer-eval`, an opt-in promotion-readiness gate that builds
   sidecar graph and claim previews, compares their metrics against baseline
-  graph/claim summaries, and refuses canonical graph/claim output directories.
+  graph/claim summaries, and refuses sidecar chunk, retrieval, result, graph,
+  or claim paths that point at or inside canonical derived output directories.
 - active extraction/chunking/retrieval accuracy slice:
   none. Future promotion of `chunks_v2` into canonical graph, claim,
   rule-link, compliance review, or phase-eval artifacts should open a new
@@ -150,8 +151,11 @@ history below.
   `consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json`. A bounded
   live smoke under `/tmp/usfs-r1-sidecar-consumer-eval.0SK6sj/` passed with no
   failed checks, `36` graph nodes, `95` graph edges, `14` claims, `60` claim
-  nodes, and `108` claim edges. No canonical graph, claim, rule-link, review,
-  compliance, phase-eval, or knowledge-graph rebuild was performed.
+  nodes, and `108` claim edges. The sidecar eval path guards now refuse
+  sidecar chunk, retrieval, result, graph, or claim paths inside canonical
+  `chunks/`, `retrieval/`, `evidence_graph/`, or `claims/` directories. No
+  canonical graph, claim, rule-link, review, compliance, phase-eval, or
+  knowledge-graph rebuild was performed.
 
   operational graph-KB query surface: the first local query/API-contract slice
   is closed locally. `src/usfs_r1_ea_sources/knowledge_graph_query.py` and

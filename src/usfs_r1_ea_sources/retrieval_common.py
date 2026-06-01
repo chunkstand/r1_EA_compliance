@@ -90,6 +90,20 @@ def default_index_path(output_dir: Path, source_set_id: str | None = None) -> Pa
     return derived_source_dir / "retrieval" / DEFAULT_INDEX_FILENAME
 
 
+def _ensure_noncanonical_sidecar_dir(
+    *,
+    requested_dir: Path,
+    canonical_dir: Path,
+    label: str,
+) -> None:
+    requested = Path(requested_dir).resolve()
+    canonical = Path(canonical_dir).resolve()
+    if requested == canonical or canonical in requested.parents:
+        raise ValueError(
+            f"{label} must not point at or inside canonical output directory: {canonical_dir}"
+        )
+
+
 def _source_set_id_from_catalog(output_dir: Path) -> str:
     manifest_path = output_dir / "catalog" / "source_set_manifest.json"
     if not manifest_path.exists():

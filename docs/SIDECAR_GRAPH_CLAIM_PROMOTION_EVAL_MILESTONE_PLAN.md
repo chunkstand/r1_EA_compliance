@@ -68,8 +68,9 @@ Intent lock: this packet creates a promotion-readiness gate only, not promotion 
 
 ## Risk And Weak-Point Prevention
 
-- Weak point: accidental canonical mutation. Prevention: the runtime rejects canonical graph/claim
-  output directories. Fail threshold: a test or smoke writes canonical sidecar eval output.
+- Weak point: accidental canonical mutation. Prevention: the runtime rejects sidecar chunk,
+  retrieval, result, graph, or claim paths that point at or inside canonical derived output
+  directories. Fail threshold: a test or smoke writes canonical sidecar eval output.
 - Weak point: weak comparison semantics. Prevention: compare graph coverage rates, claim coverage
   rates, dangling graph counts, and claim count against baseline summaries. Fail threshold: missing
   baseline summaries or worse sidecar metrics.
@@ -105,10 +106,12 @@ Milestone 1: Sidecar graph/claim promotion-readiness eval
 ## Acceptance Criteria
 
 - `chunk-sidecar-consumer-eval` builds or reuses `chunks_v2`, builds sidecar retrieval, graph, and
-  claim previews, and writes `chunk_sidecar_consumer_eval_results.json`.
+  claim previews, and writes `chunk_sidecar_consumer_eval_results.json` outside canonical derived
+  output directories.
 - The result records baseline graph/claim summaries, sidecar graph/claim summaries, metric
   comparisons, and fail-closed checks.
-- The command rejects canonical graph/claim output directories.
+- The command rejects sidecar chunk, retrieval, result, graph, and claim paths that point at or
+  inside canonical `chunks/`, `retrieval/`, `evidence_graph/`, or `claims/` directories.
 - Focused tests prove both the passing comparison path and canonical-dir refusal path.
 - Architecture contract covers the new module, command, and artifact owner.
 - Docs and handoff state that canonical graph/claim promotion remains future work.
@@ -147,6 +150,9 @@ Status: resolved locally.
   source module above the 20 fan-out gate.
 - Live smoke artifact path:
   `/tmp/usfs-r1-sidecar-consumer-eval.0SK6sj/consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json`.
+- Gap closeout:
+  sidecar retrieval and consumer eval commands now reject sidecar chunk, retrieval, result, graph,
+  or claim paths inside canonical derived output directories, with focused regression coverage.
 - Docs freshness check: whitespace check and closeout parity sweep passed.
 - Commit identifier: the Git commit containing this closeout record.
 - Residual risk: canonical graph/claim promotion, rule-link/compliance adoption, phase-eval
