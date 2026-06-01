@@ -28,4 +28,6 @@ Use this short route before opening append-only docs.
 - Reviewer replay history: `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`.
 - Architecture: `docs/ARCHITECTURE.md`, `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`.
 - Context graph and extraction accuracy briefs: `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md`, `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`, `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_IMPROVEMENT_BRIEF.md`.
+- Cross-expert repo evaluation:
+  `docs/EXPERT_PERSPECTIVE_REPO_EVALUATION_2026_06_01.md`.
 - Agent entrypoint: `docs/AGENT_START_HERE.md`.

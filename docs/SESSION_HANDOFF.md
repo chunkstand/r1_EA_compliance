@@ -29,6 +29,13 @@ history below.
   graphs for agent logs, evals, traces, state checkpoints, and human review;
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
+- recent cross-expert repo evaluation:
+  `docs/EXPERT_PERSPECTIVE_REPO_EVALUATION_2026_06_01.md` applies Ryan
+  Lopopolo, Steve Yegge, Armin Ronacher, Nate B. Jones, and Nicolas Figay
+  lenses to this repo. It recommends future bounded packets for an
+  agent-readable operator surface, repo intelligence index, product trust and
+  agent-run analytics, semantic backbone/cartography, and a durable local
+  workflow ledger. It is non-active research, not a route change.
 - latest merge state:
   the retrieval worktree branch `codex/extraction-chunking-retrieval-accuracy`
   is merged into `main` with the current-main observability/eval context graph
