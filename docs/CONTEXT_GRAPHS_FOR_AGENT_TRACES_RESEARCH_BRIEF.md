@@ -2,9 +2,10 @@
 
 Date: 2026-05-31
 
-Status: Research addendum. This is not an active route change and does not
-supersede `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, or
-`docs/SESSION_HANDOFF.md`.
+Status: Research addendum. The first local implementation slice is now tracked
+in `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`; this brief remains
+background research and does not supersede `docs/CURRENT_ROUTING.md`,
+`docs/CURRENT_SYSTEM_STATE.md`, or `docs/SESSION_HANDOFF.md`.
 
 ## Purpose
 

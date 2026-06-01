@@ -109,6 +109,14 @@ def run_eval_trace_case_promote(**kwargs):
     )
 
 
+def run_eval_context_graph_build(**kwargs):
+    return _module_attr("eval_context_graph", "run_eval_context_graph_build")(**kwargs)
+
+
+def run_eval_context_graph_eval(**kwargs):
+    return _module_attr("eval_context_graph", "run_eval_context_graph_eval")(**kwargs)
+
+
 def run_extraction_fidelity_eval(**kwargs):
     return _module_attr("extraction_fidelity_eval", "run_extraction_fidelity_eval")(**kwargs)
 
@@ -173,6 +181,8 @@ EVAL_COMMANDS = {
     "applicability-eval",
     "applicability-gold-eval",
     "draft-generation-eval",
+    "eval-context-graph-build",
+    "eval-context-graph-eval",
     "eval-trace-case-promote",
     "eval-trace-export",
     "eval-trace-inventory",
@@ -252,6 +262,33 @@ COMMAND_SPECS = (
             _arg("--eval-file", default=DEFAULT_DRAFT_GENERATION_EVAL_PATH, type=Path),
             _arg("--config", default=DEFAULT_DRAFT_GENERATION_CONFIG_PATH, type=Path),
             _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
+        name="eval-context-graph-build",
+        help="Build a generated observability/eval context graph from the local eval-trace store.",
+        arguments=(
+            _arg("--sqlite-path", required=True, type=Path),
+            _arg("--graph-json-path", required=True, type=Path),
+            _arg("--summary-path", type=Path),
+            _arg(
+                "--contract-path",
+                default=Path("config/context_graph_contract_v1.json"),
+                type=Path,
+            ),
+        ),
+    ),
+    EvalCommandSpec(
+        name="eval-context-graph-eval",
+        help="Run deterministic graph evals over a generated observability/eval context graph.",
+        arguments=(
+            _arg("--graph-json-path", required=True, type=Path),
+            _arg("--summary-path", type=Path),
+            _arg(
+                "--contract-path",
+                default=Path("config/context_graph_contract_v1.json"),
+                type=Path,
+            ),
         ),
     ),
     EvalCommandSpec(
@@ -515,6 +552,23 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 results_dir=args.results_dir,
             ),
             success_key="passed",
+        ),
+        "eval-context-graph-build": EvalCommandHandler(
+            run=lambda args: run_eval_context_graph_build(
+                sqlite_path=args.sqlite_path,
+                graph_json_path=args.graph_json_path,
+                summary_path=args.summary_path,
+                contract_path=args.contract_path,
+            ),
+            success_key="command_succeeded",
+        ),
+        "eval-context-graph-eval": EvalCommandHandler(
+            run=lambda args: run_eval_context_graph_eval(
+                graph_json_path=args.graph_json_path,
+                summary_path=args.summary_path,
+                contract_path=args.contract_path,
+            ),
+            success_key="command_succeeded",
         ),
         "eval-trace-inventory": EvalCommandHandler(
             run=lambda args: run_eval_trace_inventory(

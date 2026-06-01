@@ -14,6 +14,10 @@ Owner surfaces:
 - Inventory helper: `src/usfs_r1_ea_sources/eval_trace_inventory.py`
 - Store helper: `src/usfs_r1_ea_sources/eval_trace_store.py`
 - Export helper: `src/usfs_r1_ea_sources/eval_trace_export.py`
+- Generated observability/eval context graph helper:
+  `src/usfs_r1_ea_sources/eval_context_graph.py`
+- Generated observability/eval context graph contract helper:
+  `src/usfs_r1_ea_sources/eval_context_graph_contract.py`
 - Gate helper: `src/usfs_r1_ea_sources/eval_trace_gate.py`
 - Case promotion helper: `src/usfs_r1_ea_sources/eval_trace_case_promote.py`
 - Default case file: `config/eval_trace_cases/system_eval_trace_cases_v1.json`
@@ -21,6 +25,7 @@ Owner surfaces:
 - Inventory tests: `tests/test_eval_trace_inventory.py`
 - Store tests: `tests/test_eval_trace_store.py`
 - Export tests: `tests/test_eval_trace_export.py`
+- Context graph tests: `tests/test_eval_context_graph.py`
 - Case promotion tests: `tests/test_eval_trace_case_promote.py`
 - Implementation plan:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md`
@@ -187,6 +192,26 @@ ref, artifact path, artifact hashes, contract ID/version, local-source-of-record
 truth, or redaction policy. The West Reservoir f70 seed export on 2026-05-29
 passed with `18` traces, `36` OpenInference-shaped spans, `0` missing tables,
 and `0` missing provenance fields.
+
+## Generated Observability/Eval Context Graph
+
+The first context-graph slice is implemented as a derived local graph over the
+eval-trace SQLite store. `eval-context-graph-build` reads
+`system_eval_runs`, `system_eval_cases`, `system_eval_case_results`,
+`system_eval_scores`, `trace_runs`, and `trace_spans`, then writes a
+deterministic graph JSON artifact with eval, trace, span, score, artifact,
+source-set, review, and failure-class nodes. It preserves the local source of
+record policy and does not create source knowledge-graph facts.
+
+`eval-context-graph-eval` runs deterministic graph evals over that artifact:
+required node/edge kinds, edge resolution, trace-to-result-to-score paths,
+artifact provenance, source-KG exclusion, and local export policy. This makes
+graph-derived evals the next layer over the normalized store without changing
+phase or promotion ratchets.
+
+The contract and behavior are owned by
+`docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` and
+`config/context_graph_contract_v1.json`.
 
 ## Gate And Ratchet Contract
 

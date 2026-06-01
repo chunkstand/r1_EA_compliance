@@ -29,6 +29,12 @@ history below.
   graphs for agent logs, evals, traces, state checkpoints, and human review;
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
+- latest resolved observability/eval context graph slice:
+  `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` Milestone 0. The
+  repo now has a tracked context-graph contract, `eval-context-graph-build`,
+  and `eval-context-graph-eval` over the local eval-trace SQLite store. The
+  slice is generated-artifact-only and does not add phase/promotion ratchets,
+  hosted exports, Neo4j as a source of record, or source knowledge-graph facts.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
@@ -101,6 +107,21 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  first-class observability/eval context graph: the first generated graph layer
+  over `system_eval_trace.sqlite` is implemented locally. The owner surfaces
+  are `config/context_graph_contract_v1.json`,
+  `src/usfs_r1_ea_sources/eval_context_graph.py`,
+  `src/usfs_r1_ea_sources/eval_context_graph_contract.py`, and
+  `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`. The build command
+  materializes eval, trace, span, score, artifact, source-set, review, and
+  failure-class nodes plus deterministic edges for containment, evaluation,
+  scoring, artifact use/production, derivation, and targets. The eval command
+  verifies required node/edge coverage, edge resolution, trace-result-score
+  paths, artifact provenance, source-KG exclusion, and local source-of-record
+  policy. Reserved future nodes include log events, span events, state
+  checkpoints, tool invocations, model invocations, prompt versions, dataset
+  examples, and human labels.
+
   operational graph-KB query surface: the first local query/API-contract slice
   is closed locally. `src/usfs_r1_ea_sources/knowledge_graph_query.py` and
   `src/usfs_r1_ea_sources/knowledge_graph_query_eval.py` are owned by the

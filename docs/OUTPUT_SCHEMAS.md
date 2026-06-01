@@ -4557,6 +4557,104 @@ OpenInference-shaped spans, `0` missing tables, and `0` missing provenance
 fields. Milestone 4 now enables phase/promotion gate integration for explicitly
 ratcheted scopes; Milestone 5 adds the trace-to-case promotion surface below.
 
+## First-Class Generated Observability/Eval Context Graph
+
+Tracked contract: `config/context_graph_contract_v1.json`
+
+Commands:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-context-graph-build \
+  --sqlite-path source_library/evaluations/eval_trace/system_eval_trace.sqlite \
+  --graph-json-path source_library/evaluations/eval_context_graph/eval_context_graph.json \
+  --summary-path source_library/evaluations/eval_context_graph/eval_context_graph_build_summary.json
+
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-context-graph-eval \
+  --graph-json-path source_library/evaluations/eval_context_graph/eval_context_graph.json \
+  --summary-path source_library/evaluations/eval_context_graph/eval_context_graph_eval_summary.json
+```
+
+`eval-context-graph-build` reads only the local
+`system-eval-trace-store-v1` SQLite store and writes a generated graph JSON
+artifact. It does not mutate catalog, extraction, retrieval, review,
+compliance, or promotion artifacts.
+
+Graph schema version: `eval-context-graph-v1`
+
+Generated graph path:
+`source_library/evaluations/eval_context_graph/eval_context_graph.json`
+
+Required graph fields:
+
+- `schema_version`
+- `contract_id`
+- `contract_version`
+- `store_schema_version`
+- `source`
+- `graph_policy`
+- `reserved_node_kinds_not_materialized`
+- `node_counts`
+- `edge_counts`
+- `nodes`
+- `edges`
+
+Each node has `id`, `kind`, `stable_ref`, `properties`, and `source_hash`.
+The first materialized node kinds are `artifact`, `eval_case`, `eval_result`,
+`eval_run`, `review`, `score`, `source_set`, `span`, `trace`, and
+`failure_class` when stored failure reasons exist. Reserved future node kinds
+include `log_event`, `span_event`, `state_checkpoint`, `tool_invocation`,
+`model_invocation`, `prompt_version`, `dataset_example`, and `human_label`.
+
+Each edge has `id`, `kind`, `from_node_id`, `to_node_id`, and `properties`.
+The first materialized edge kinds are `CONTAINS`, `DERIVED_FROM`,
+`EVALUATED_BY`, `FAILED_BECAUSE` when stored failure reasons exist,
+`PRODUCED_ARTIFACT`, `SCORED_AS`, `TARGETS`, and `USED_ARTIFACT`.
+
+Build summary schema version: `eval-context-graph-build-summary-v1`
+
+Generated build summary path:
+`source_library/evaluations/eval_context_graph/eval_context_graph_build_summary.json`
+
+Required build summary fields:
+
+- `passed`
+- `command_succeeded`
+- `missing_table_count`
+- `read_error_count`
+- `row_counts`
+- `node_counts`
+- `edge_counts`
+- `node_count`
+- `edge_count`
+- `reserved_node_kinds_not_materialized`
+- `validation_checks`
+
+`passed=false` when the store is missing, required rows are empty, required
+node or edge kinds are absent, an edge points to a missing node, trace/result/
+score paths are missing, artifact provenance is absent, source knowledge-graph
+node kinds appear, or the local source-of-record policy is weakened.
+
+Graph eval summary schema version: `eval-context-graph-eval-summary-v1`
+
+Generated graph eval summary path:
+`source_library/evaluations/eval_context_graph/eval_context_graph_eval_summary.json`
+
+Required graph eval summary fields:
+
+- `passed`
+- `command_succeeded`
+- `node_counts`
+- `edge_counts`
+- `node_count`
+- `edge_count`
+- `validation_checks`
+
+The graph eval runs directly over the generated graph artifact. Its first
+checks ensure required node and edge kinds are present, all edges resolve,
+every eval result has a trace-to-result edge and result-to-score edge, artifact
+nodes keep refs or hashes, source knowledge-graph nodes remain excluded, and
+the graph policy remains local-only.
+
 ## First-Class Eval Trace Case Promotion
 
 Command:

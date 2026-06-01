@@ -1,0 +1,81 @@
+{
+  "schema_version": "eval-context-graph-contract-v1",
+  "contract_id": "first-class-generated-observability-eval-context-graph",
+  "version": "0.1.0",
+  "status": "active",
+  "purpose": "Generated local graph over eval runs, traces, spans, artifacts, scores, and deterministic graph evals. This is not a source knowledge graph.",
+  "source_store": {
+    "schema_version": "system-eval-trace-store-v1",
+    "canonical_tables": [
+      "system_eval_runs",
+      "system_eval_cases",
+      "system_eval_case_results",
+      "system_eval_scores",
+      "trace_runs",
+      "trace_spans"
+    ]
+  },
+  "required_node_kinds": [
+    "artifact",
+    "eval_case",
+    "eval_result",
+    "eval_run",
+    "score",
+    "source_set",
+    "span",
+    "trace"
+  ],
+  "reserved_node_kinds": [
+    "dataset_example",
+    "human_label",
+    "log_event",
+    "model_invocation",
+    "prompt_version",
+    "span_event",
+    "state_checkpoint",
+    "tool_invocation"
+  ],
+  "prohibited_node_kinds": [
+    "authority_fact",
+    "claim_fact",
+    "domain_entity",
+    "regulatory_fact",
+    "source_fact"
+  ],
+  "required_edge_kinds": [
+    "CONTAINS",
+    "DERIVED_FROM",
+    "EVALUATED_BY",
+    "PRODUCED_ARTIFACT",
+    "SCORED_AS",
+    "TARGETS",
+    "USED_ARTIFACT"
+  ],
+  "reserved_edge_kinds": [
+    "CHECKPOINT_AFTER",
+    "CHECKPOINT_BEFORE",
+    "EMITTED",
+    "FAILED_BECAUSE",
+    "FOLLOWS",
+    "FORKED_FROM",
+    "LINKS_TO",
+    "REPLAYED_FROM",
+    "REVIEWED_BY"
+  ],
+  "graph_policy": {
+    "local_source_of_record": true,
+    "generated_from_eval_trace_store": true,
+    "source_knowledge_graph_excluded": true,
+    "external_export_approved": false,
+    "redaction_policy": "local_unredacted_no_external_export"
+  },
+  "graph_eval_checks": [
+    "required_node_kinds_present",
+    "required_edge_kinds_present",
+    "edges_resolve_to_nodes",
+    "trace_result_score_paths_present",
+    "artifact_provenance_present",
+    "source_knowledge_graph_nodes_excluded",
+    "local_source_of_record_policy"
+  ]
+}
