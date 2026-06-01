@@ -5139,6 +5139,24 @@ by default. The result schema version is `chunk-sidecar-retrieval-eval-results-v
   pass status, atomic/structural/parent-window eval case coverage, baseline eval completion, and
   sidecar-not-worse-than-baseline metrics
 
+`chunk-sidecar-consumer-eval` writes
+`source_library/derived/<source_set_id>/consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json`
+by default. The result schema version is `chunk-sidecar-consumer-eval-results-v1` and records:
+
+- sidecar chunk summary, sidecar retrieval index, sidecar graph preview, and sidecar claim preview
+  paths
+- baseline graph and claim summary paths
+- graph metric comparisons for source-artifact coverage, evidence coverage, chunk-topic coverage,
+  dangling edges, isolated nodes, source documents, and raw artifacts
+- claim metric comparisons for claim evidence coverage, topic coverage, authority coverage, entity
+  coverage, dangling edges, and claim count
+- fail-closed checks for sidecar chunk validation, sidecar retrieval index validation, sidecar graph
+  validation, sidecar claim validation, baseline summary validation, and sidecar-not-worse
+  graph/claim metrics
+
+The command refuses canonical `evidence_graph/` and `claims/` output directories. It is a
+promotion-readiness gate only; it does not make `chunks_v2` the canonical graph or claim input.
+
 ## Source Claim Graph Outputs
 
 Path: `source_library/derived/<source_set_id>/claims/`

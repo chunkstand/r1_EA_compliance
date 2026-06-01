@@ -8,13 +8,13 @@ Use this short route before opening append-only docs.
 - Latest resolved source-set graph-KB slice: phase-gated operational graph query surface after f70
   canonical semantic graph direct-eval strengthening; exact counts live in
   `docs/CURRENT_SYSTEM_STATE.md`.
-- Latest resolved extraction/chunking/retrieval accuracy slice: sidecar downstream consumer
-  preview after sidecar retrieval eval promotion; exact paths and live-smoke counts live in
+- Latest resolved extraction/chunking/retrieval accuracy slice: sidecar graph/claim promotion eval
+  after downstream consumer preview; exact paths and live-smoke counts live in
   `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
 - Active implementation slice: none. Open a new bounded packet before hosted query service/API
-  expansion, model-judge work, hosted scoring, sidecar graph/claim promotion, or oversized-owner
-  reduction.
+  expansion, model-judge work, hosted scoring, canonical sidecar graph/claim adoption,
+  rule-link/compliance/phase-eval sidecar adoption, or oversized-owner reduction.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
@@ -25,9 +25,9 @@ Use this short route before opening append-only docs.
 - Runtime constraint: forest-specific examples fail closed unless runtime forest-plan resolution matches the governed forest.
 - ECID is historical replay evidence, not a current promotion route; keep it out of governed forest-specific example routing.
 - Architecture route: `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` and `config/architecture_large_file_inventory_v1.json` own the oversized-owner backlog.
-- Extraction/chunking route: sidecar chunk, retrieval eval, and downstream graph/claim preview
-  packets are closed locally; rule-link, compliance, phase-eval, and canonical promotion require a
-  new bounded packet.
+- Extraction/chunking route: sidecar chunk, retrieval eval, downstream graph/claim preview, and
+  graph/claim promotion-readiness eval packets are closed locally; canonical promotion, rule-link,
+  compliance, and phase-eval adoption require a new bounded packet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 
 ## Deep Reads

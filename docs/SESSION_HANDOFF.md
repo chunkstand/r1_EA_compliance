@@ -30,11 +30,11 @@ history below.
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
 - latest resolved extraction/chunking/retrieval accuracy slice:
-  `docs/SIDECAR_DOWNSTREAM_CONSUMER_READINESS_MILESTONE_PLAN.md` is resolved
+  `docs/SIDECAR_GRAPH_CLAIM_PROMOTION_EVAL_MILESTONE_PLAN.md` is resolved
   locally on branch `codex/extraction-chunking-retrieval-accuracy`. It adds
-  explicit sidecar chunk/retrieval inputs and isolated output directories for
-  `evidence-graph-build` and `claim-extract`, after the resolved
-  `chunk-sidecar-retrieval-eval` promotion-readiness gate.
+  `chunk-sidecar-consumer-eval`, an opt-in promotion-readiness gate that builds
+  sidecar graph and claim previews, compares their metrics against baseline
+  graph/claim summaries, and refuses canonical graph/claim output directories.
 - active extraction/chunking/retrieval accuracy slice:
   none. Future promotion of `chunks_v2` into canonical graph, claim,
   rule-link, compliance review, or phase-eval artifacts should open a new
@@ -54,7 +54,7 @@ history below.
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
   extraction-fidelity eval source-owner reduction after the architecture
-  control-plane gap closeout. The current probe reports `510` code files, `17` code files above `800`,
+  control-plane gap closeout. The current probe reports `513` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
   `config/architecture_large_file_inventory_v1.json` owns the exact `9`
@@ -116,8 +116,9 @@ history below.
   packet from
   `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_RESEARCH_BRIEF.md` and
   `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_IMPROVEMENT_BRIEF.md` is closed
-  locally on the isolated branch, and the sidecar retrieval eval promotion plus
-  sidecar downstream consumer preview packets are now also closed locally.
+  locally on the isolated branch, and the sidecar retrieval eval promotion,
+  sidecar downstream consumer preview, and sidecar graph/claim promotion eval
+  packets are now also closed locally.
   `chunk-quality-audit` writes per-source
   parser/layout/boundary risk diagnostics, and `chunk-layer-build` writes
   opt-in `chunks_v2` atomic chunks, structural chunks, parent context windows,
@@ -143,8 +144,14 @@ history below.
   graph, and claim validations passed, producing `36` graph nodes, `95` graph
   edges, `14` claims, `60` claim nodes, and `108` claim edges. Reviewer
   readiness remained false by design because the smoke used a partial diagnostic
-  subset. No canonical graph, claim, rule-link, review, compliance, phase-eval,
-  or knowledge-graph rebuild was performed.
+  subset. `chunk-sidecar-consumer-eval` now builds or reuses `chunks_v2`, builds
+  sidecar retrieval, writes isolated graph/claim previews, compares graph and
+  claim metrics to baseline summaries, and writes
+  `consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json`. A bounded
+  live smoke under `/tmp/usfs-r1-sidecar-consumer-eval.0SK6sj/` passed with no
+  failed checks, `36` graph nodes, `95` graph edges, `14` claims, `60` claim
+  nodes, and `108` claim edges. No canonical graph, claim, rule-link, review,
+  compliance, phase-eval, or knowledge-graph rebuild was performed.
 
   operational graph-KB query surface: the first local query/API-contract slice
   is closed locally. `src/usfs_r1_ea_sources/knowledge_graph_query.py` and

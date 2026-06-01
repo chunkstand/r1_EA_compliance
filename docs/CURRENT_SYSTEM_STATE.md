@@ -15,6 +15,41 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Graph Claim Promotion Eval Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the fourth extraction/chunking/retrieval accuracy packet is closed locally on
+  isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `chunk-sidecar-consumer-eval` now builds or reuses `chunks_v2`, builds a
+  sidecar retrieval index, writes isolated sidecar graph and claim previews,
+  compares their metrics to existing baseline graph/claim summaries, and writes
+  `consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json`.
+- contract effect:
+  this is a promotion-readiness gate for graph and claim consumers. It refuses
+  canonical `evidence_graph/` and `claims/` output directories and does not make
+  `chunks_v2` the active graph or claim spine.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/sidecar_consumer_eval.py` owns the sidecar eval
+  runtime, while `src/usfs_r1_ea_sources/cli_sidecar_eval.py` keeps command
+  argument adaptation out of the already-large derived CLI dispatcher.
+  `docs/architecture_contract.toml` owns the `sidecar_eval` layer, command, and
+  result artifact. The live architecture probe reports `513` code files, `17`
+  code files above `800`, no Python or JS/TS import cycles, and no source
+  module above the `20`-import fan-out gate.
+- live smoke:
+  the ignored f70 corpus in the main checkout was read without mutating
+  production derived outputs. A `/tmp` source-library shell selected `12` real
+  `FED-001` chunks and wrote the sidecar eval under
+  `/tmp/usfs-r1-sidecar-consumer-eval.0SK6sj/`. The eval passed with no failed
+  checks, graph preview `36` nodes and `95` edges, and claim preview `14`
+  claims, `60` nodes, and `108` edges.
+- boundary:
+  partial live-smoke reviewer readiness remains false by design. Canonical
+  graph/claim promotion, rule-link adoption, compliance adoption, phase-eval
+  binding, and reviewer package adoption remain future bounded packets.
+
 ## Sidecar Downstream Consumer Preview Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
@@ -34,7 +69,7 @@ Latest implementation update on 2026-06-01 UTC:
 - architecture closeout:
   `docs/architecture_contract.toml` owns explicit `evidence_graph_sidecar/`
   and `claims_sidecar/` artifact patterns under the existing graph and claim
-  layers. The live architecture probe for this branch reports `510` code
+  layers. The live architecture probe for this branch reports `513` code
   files, `17` code files above `800`, no Python or JS/TS import cycles, and no
   source module above the `20`-import fan-out gate.
 - live smoke:
@@ -67,7 +102,7 @@ Latest implementation update on 2026-06-01 UTC:
   identity from index metadata for those sidecar paths. The sidecar chunk-layer
   validator now fails closed on duplicate atomic chunk IDs.
 - architecture closeout:
-  the live architecture probe for this branch reports `510` code files, `17`
+  the live architecture probe for this branch reports `513` code files, `17`
   code files above `800`, no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate. `README.md` remains within the
   `220`-line route-surface budget.

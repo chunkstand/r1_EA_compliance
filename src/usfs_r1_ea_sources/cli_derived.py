@@ -604,6 +604,13 @@ def _run_chunk_sidecar_retrieval_eval(args: argparse.Namespace):
     )
 
 
+def _run_chunk_sidecar_consumer_eval(args: argparse.Namespace):
+    return _module_attr(
+        "cli_sidecar_eval",
+        "run_chunk_sidecar_consumer_eval_command",
+    )(args)
+
+
 def _run_evidence_graph_build(args: argparse.Namespace):
     return build_evidence_graph(
         output_dir=args.output_dir,
@@ -763,6 +770,7 @@ COMMAND_HANDLERS = {
         _run_chunk_sidecar_retrieval_eval,
         "passed",
     ),
+    "chunk-sidecar-consumer-eval": _result_handler(_run_chunk_sidecar_consumer_eval, "passed"),
     "evidence-graph-build": _result_handler(
         _run_evidence_graph_build,
         "validation_passed",
