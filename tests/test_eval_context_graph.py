@@ -92,6 +92,9 @@ def test_context_graph_build_writes_generated_graph_from_eval_trace_store(
     assert summary["edge_counts"]["EMITTED"] == 2
     assert summary["edge_counts"]["EVALUATED_BY"] > 0
     assert summary["edge_counts"]["SCORED_AS"] == 18
+    assert summary["source_set_ids"] == ["source-set-a"]
+    assert summary["review_ids"] == ["review-a"]
+    assert summary["contract"]["sha256"]
     assert json.loads(summary_path.read_text(encoding="utf-8")) == summary
 
     graph = json.loads(graph_path.read_text(encoding="utf-8"))
@@ -137,6 +140,9 @@ def test_context_graph_eval_passes_on_generated_graph(tmp_path: Path) -> None:
     assert _checks_by_name(summary["validation_checks"])[
         "command_event_nodes_joined"
     ]["passed"]
+    assert summary["source_set_ids"] == ["source-set-a"]
+    assert summary["review_ids"] == ["review-a"]
+    assert summary["contract"]["sha256"]
     assert json.loads(summary_path.read_text(encoding="utf-8")) == summary
 
 

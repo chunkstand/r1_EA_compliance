@@ -166,6 +166,8 @@ summary = "Source-set and review-scoped phase-eval orchestration, replay-context
 modules = [
   "phase_eval",
   "phase_eval_direct_eval",
+  "phase_eval_direct_eval_context_graph",
+  "phase_eval_direct_eval_graph_producers",
   "phase_eval_direct_eval_knowledge_graph",
   "phase_eval_direct_eval_review",
   "phase_eval_direct_eval_source_set",

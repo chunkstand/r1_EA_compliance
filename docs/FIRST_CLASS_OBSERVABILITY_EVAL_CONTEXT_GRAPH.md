@@ -4,8 +4,8 @@ Date: 2026-06-01
 
 Status: Milestone 0 contract, first generated graph builder and graph-eval
 commands, Milestone 1 trace-event materialization, Milestone 2 explicit
-event-log capture, and Milestone 3 canonical CLI command-event capture are
-implemented locally.
+event-log capture, Milestone 3 canonical CLI command-event capture, and
+Milestone 4 f70 source-set phase-eval ratchet are implemented locally.
 
 Owner surfaces:
 
@@ -15,10 +15,17 @@ Owner surfaces:
 - Event extraction helper: `src/usfs_r1_ea_sources/eval_context_graph_events.py`
 - Validation helper: `src/usfs_r1_ea_sources/eval_context_graph_validation.py`
 - Command event capture helper: `src/usfs_r1_ea_sources/observability_events.py`
+- Phase-eval ratchet helper:
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_context_graph.py`
+- Phase-eval graph producer dispatch:
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_graph_producers.py`
+- Phase-eval contract: `config/phase_eval_direct_eval_v1.json`
 - CLI commands: `eval-context-graph-build`, `eval-context-graph-eval`
 - Contract and behavior tests: `tests/test_eval_context_graph.py`
 - Command capture tests: `tests/test_observability_events.py`
 - CLI parser tests: `tests/test_eval_context_graph_cli.py`
+- Phase-eval ratchet tests: `tests/test_phase_eval_context_graph.py`,
+  `tests/test_phase_eval_direct_eval_contracts.py`, `tests/test_phase_eval.py`
 
 ## Purpose
 
@@ -116,6 +123,20 @@ invariants directly. The first graph eval checks:
 This is the first step toward adaptive learning: failures and regressions can
 be promoted from graph paths instead of only from flat result files.
 
+## Phase-Eval Ratchet
+
+`config/phase_eval_direct_eval_v1.json` now requires
+`source_library/evaluations/eval_context_graph/eval_context_graph_eval_summary.json`
+as the `observability_eval_context_graph` source-set phase for
+`source-set-f70ea11e04ae3d53`.
+
+The ratchet fails closed when the graph eval summary is missing, schema-invalid,
+identity-mismatched, failed, missing the expected source-set ID, missing event
+nodes, missing clean validation checks, or built against a stale context-graph
+contract hash. Passing status contributes one critical direct-eval phase to
+`evaluation_coverage`; it does not make the optional first-class eval-trace
+gate blocking for unrelated review IDs.
+
 ## Commands
 
 ```bash
@@ -150,6 +171,19 @@ connected by `EMITTED` edges to pass graph eval.
 The canonical command-event log is included automatically when present. Disable
 that automatic inclusion for isolated tests with `--no-observability-event-log`.
 
+After building and evaluating the graph, replay the f70 source-set ratchet with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
+  --output-dir source_library \
+  --source-set-id source-set-f70ea11e04ae3d53
+```
+
+The current local replay passes `23/23` phases with
+`observability_eval_context_graph="direct_eval_present"`,
+`critical_phase_count=10`, `direct_eval_ready_phase_count=10`, and
+`missing_direct_eval_phase_count=0`.
+
 ## Stop Conditions
 
 Stop and open a new packet if the next slice requires:
@@ -161,5 +195,5 @@ Stop and open a new packet if the next slice requires:
 - adding LLM-inferred causal/root-cause edges without deterministic scorer or
   human-label provenance;
 - mixing source knowledge-graph facts into observability/eval graph nodes;
-- ratcheting phase or promotion gates on context graph evals before an explicit
-  scope is approved.
+- adding promotion gates or additional ratcheted source-set/review scopes
+  without a new explicit scope.

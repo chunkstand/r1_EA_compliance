@@ -37,9 +37,11 @@ history below.
   repeated `--event-log-path` inputs. It also now captures canonical CLI
   command lifecycle events to
   `source_library/evaluations/observability_events/command_events.jsonl` and
-  auto-ingests that log into the context graph when present. The slice is
-  generated-artifact-only and does not add phase/promotion ratchets, hosted
-  exports, Neo4j as a source of record, or source knowledge-graph facts.
+  auto-ingests that log into the context graph when present. The f70 source-set
+  phase-eval now requires the graph eval as
+  `observability_eval_context_graph`. The slice is generated-artifact-only and
+  does not add promotion ratchets, hosted exports, Neo4j as a source of record,
+  or source knowledge-graph facts.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
@@ -161,8 +163,9 @@ history below.
   `12` cases with `5` positive report cases, `7` controlled negative cases,
   and `8` coverage categories. Source-set
   `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now requires
-  `canonical_semantic_graph` and, with the query-surface gate, passes `22/22`
-  phases with `critical_phase_count=9`, `direct_eval_ready_phase_count=9`,
+  `canonical_semantic_graph` and, with the query-surface and context-graph
+  gates, passes `23/23` phases with `critical_phase_count=10`,
+  `direct_eval_ready_phase_count=10`,
   `missing_direct_eval_phase_count=0`, and `reviewer_ready=true`. This closes
   the semantic graph direct-eval strengthening gap; hosted KB service/auth/UI
   work remains future graph-KB product work.
@@ -199,9 +202,10 @@ history below.
   `233` rule-claim links. `forest-plan-profile-eval` passes with
   `covered_profile_count=10`, `forest-plan-component-retrieval-eval` passes
   `6/6`, `claim-eval` passes `10/10`, `rule-claim-eval` passes `24/24`,
-  `semantic-graph-eval` passes `12/12`, and
-  source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes
-  `22/22` phases with all nine critical source-set phases direct-eval backed.
+  `semantic-graph-eval` passes `12/12`, context-graph eval passes over the
+  local eval-trace store, and source-set
+  `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes `23/23`
+  phases with all ten critical source-set phases direct-eval backed.
   This closes the f70 forest-plan graph readiness slice; broader
   source-currentness readiness blocker metadata remains represented separately
   in the knowledge graph.
@@ -250,7 +254,7 @@ history below.
   `profile_guidance_only_count=0`; `forest-plan-component-eval-coverage`
   passes with `covered_review_count=12/12`, `stale_identity_count=0`, and
   `unresolved_review_count=0`. After refreshing f70 rule-claim and compliance
-  direct eval artifacts, review `phase-eval` passes `28/28` phases with
+  direct eval artifacts, review `phase-eval` passes `32/32` phases with
   `reviewer_ready=true`, `blockers=[]`, `declared_review_contract=true`, and
   `contract_backed_promotion_ready=true`. `config/forest_specific_example_package_registry_v1.json`
   now routes `kootenai-nf` as `real_package_examples_available` with

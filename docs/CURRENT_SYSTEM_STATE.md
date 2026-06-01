@@ -21,8 +21,8 @@ Latest implementation update on 2026-06-01 UTC:
 
 - update:
   the generated observability/eval context graph now includes conditional
-  trace-event materialization, explicit local event-log capture, and canonical
-  CLI command-event capture.
+  trace-event materialization, explicit local event-log capture, canonical CLI
+  command-event capture, and a fail-closed f70 source-set phase-eval ratchet.
   `eval-context-graph-build` reads the local `system_eval_trace.sqlite` store,
   optional repeated `--event-log-path` JSON/JSONL files, and the canonical
   command-event log when present, then writes a deterministic graph JSON
@@ -51,9 +51,10 @@ Latest implementation update on 2026-06-01 UTC:
   `EMITTED` edges from spans or explicit event-source nodes and event-like
   source rows materialize without parse errors. The new command-event graph
   eval verifies captured command events keep command, phase, invocation,
-  payload-hash, and incoming `EMITTED` provenance. These evals do not yet
-  ratchet phase or promotion gates, infer root causes, export to Neo4j, or
-  capture raw prompt/source body content.
+  payload-hash, and incoming `EMITTED` provenance. Source-set `phase-eval` now
+  requires this graph eval as `observability_eval_context_graph` for
+  `source-set-f70ea11e04ae3d53`. The evals do not infer root causes, export to
+  Neo4j, capture raw prompt/source body content, or add promotion ratchets.
 - live smoke:
   building from the current local
   `source_library/evaluations/eval_trace/system_eval_trace.sqlite` store to
@@ -72,12 +73,19 @@ Latest implementation update on 2026-06-01 UTC:
   nodes, `5,200` edges, `1` explicit `event_source` node, `2` `log_event`
   nodes, `4,966` total event nodes, `3` event sources, and `4,966` `EMITTED`
   edges; graph eval over that artifact also passed.
-  A third smoke with
-  `USFS_R1_OBSERVABILITY_EVENT_LOG=/tmp/usfs-r1-canonical-command-events.jsonl`
-  captured command lifecycle rows, auto-ingested that canonical command log,
-  and passed graph eval with `5,096` nodes, `5,201` edges, `1`
-  `event_source` node, `3` `log_event` command nodes, `4,967` total event
-  nodes, and `command_event_nodes_joined=true`.
+  The current local generated artifact build over
+  `source_library/evaluations/eval_trace/system_eval_trace.sqlite` plus the
+  canonical command-event log passed with `5,102` nodes, `5,207` edges, `18`
+  eval runs, `18` traces, `18` spans, `18` eval results, `18` scores, `3`
+  event sources, and `4,973` event nodes. Graph eval passed with
+  `source_set_ids=["source-set-f70ea11e04ae3d53"]`,
+  `event_nodes_have_emitted_edges=true`,
+  `command_event_nodes_joined=true`, and no prohibited source-KG nodes.
+  Source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now
+  passes `23/23` phases with `critical_phase_count=10`,
+  `direct_eval_ready_phase_count=10`,
+  `observability_eval_context_graph="direct_eval_present"`, and
+  `missing_direct_eval_phase_count=0`.
 
 ## Operational Graph-KB Query Surface Resolved Locally
 
@@ -108,8 +116,8 @@ Latest implementation update on 2026-06-01 UTC:
   now requires `knowledge_graph_query_surface` for the active f70 source set,
   so source-set `phase-eval` fails closed if the query eval is missing, stale,
   identity-mismatched, failed, or reports freshness warnings. The current
-  source-set replay passes `22/22` phases with `critical_phase_count=9`,
-  `direct_eval_ready_phase_count=9`, and
+  source-set replay passes `23/23` phases with `critical_phase_count=10`,
+  `direct_eval_ready_phase_count=10`, and
   `knowledge_graph_query_surface="direct_eval_present"`.
 - architecture effect:
   the new query implementation is split across
@@ -148,8 +156,8 @@ Latest implementation update on 2026-06-01 UTC:
 - phase-eval integration:
   `config/phase_eval_direct_eval_v1.json` now requires
   `canonical_semantic_graph` for the active f70 source set. Source-set
-  `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now passes `22/22`
-  phases with `critical_phase_count=9`, `direct_eval_ready_phase_count=9`,
+  `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now passes `23/23`
+  phases with `critical_phase_count=10`, `direct_eval_ready_phase_count=10`,
   `missing_direct_eval_phase_count=0`, `threshold_failed_phase_count=0`, and
   `reviewer_ready=true`.
 - boundary:
@@ -245,9 +253,9 @@ Latest implementation update on 2026-05-31 UTC:
   `wrong_forest_component_rate=0.0`, and `hard_negative_zero_match_rate=1.0`.
   `semantic-graph-eval` passes `12/12` cases with `7` controlled negatives.
   Source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes
-  `22/22` phases with `reviewer_ready=true`,
+  `23/23` phases with `reviewer_ready=true`,
   `identity_mismatch_phase_count=0`, `missing_direct_eval_phase_count=0`, and
-  all nine critical source-set phases direct-eval backed.
+  all ten critical source-set phases direct-eval backed.
 - boundary:
   this closes the f70 forest-plan graph readiness and downstream graph-artifact
   freshness slice. It does not convert broader source-currentness metadata into
@@ -346,7 +354,7 @@ Latest implementation update on 2026-05-31 UTC:
   `5f8755aa64e2f2da87c5369789033a2f2045e48300cab272d2e465724cbac89e`.
   Refreshed f70 `compliance-review-eval` passes `5/5` cases with
   `source_set_id="source-set-f70ea11e04ae3d53"` and all direct eval metrics
-  at `1.0`. Review `phase-eval` now passes `28/28` phases with
+  at `1.0`. Review `phase-eval` now passes `32/32` phases with
   `reviewer_ready=true`, `blockers=[]`, `declared_review_contract=true`, and
   `contract_backed_promotion_ready=true`.
 

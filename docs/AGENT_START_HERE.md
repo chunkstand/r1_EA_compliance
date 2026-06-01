@@ -68,8 +68,8 @@ The planner:
   reviewer-ready slots, component coverage is green at `12/12` reviews, and
   registry aggregate eval is green at `11` reviewer-ready examples across `10`
   governed forests with `profile_guidance_only_count=0`. After refreshing the
-  f70 rule-claim and compliance direct eval artifacts, review `phase-eval`
-  passes `28/28` phases with `reviewer_ready=true`, `blockers=[]`,
+  f70 rule-claim, compliance, and context-graph direct eval artifacts, review `phase-eval`
+  passes `32/32` phases with `reviewer_ready=true`, `blockers=[]`,
   `declared_review_contract=true`, and
   `contract_backed_promotion_ready=true`.
   Keep Trojan Defense parallel to `Document_Register_Master`; use it only as

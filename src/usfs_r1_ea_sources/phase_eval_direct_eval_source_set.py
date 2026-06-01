@@ -20,7 +20,7 @@ from .phase_eval_direct_eval_support import _read_json
 from .phase_eval_direct_eval_support import _read_json_if_exists
 from .phase_eval_direct_eval_support import _resolve_repo_path
 from .phase_eval_direct_eval_support import _string_list
-from .phase_eval_direct_eval_knowledge_graph import knowledge_graph_query_phase_status
+from .phase_eval_direct_eval_graph_producers import graph_direct_eval_phase_status
 from .rule_claim_binding import default_rule_claim_links_dir
 
 
@@ -151,18 +151,17 @@ def _source_set_phase_status(
             expected_contract_id=str(spec.get("expected_contract_id") or ""),
             contract_path_value=spec.get("contract_path"),
         )
-    if producer == "knowledge_graph_query_evaluation":
-        return knowledge_graph_query_phase_status(
-            phase_name=phase_name,
-            coverage_class=coverage_class,
-            lane_id=str(spec["lane_id"]),
-            source_set_id=source_set_id,
-            output_dir=output_dir,
-            results_path_value=spec.get("results_path"),
-            results_filename=str(spec.get("results_filename") or ""),
-            expected_contract_id=str(spec.get("expected_contract_id") or ""),
-            contract_path_value=spec.get("contract_path"),
-        )
+    graph_status = graph_direct_eval_phase_status(
+        producer=producer,
+        phase_name=phase_name,
+        coverage_class=coverage_class,
+        lane_id=str(spec["lane_id"]),
+        source_set_id=source_set_id,
+        output_dir=output_dir,
+        spec=spec,
+    )
+    if graph_status is not None:
+        return graph_status
     raise ValueError(f"Unsupported phase-eval direct-eval producer: {producer}")
 
 

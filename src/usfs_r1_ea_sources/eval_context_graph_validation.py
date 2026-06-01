@@ -145,6 +145,15 @@ def graph_file_checks(graph_json_path: Path, graph: dict[str, Any]) -> list[dict
     ]
 
 
+def target_ids(graph: dict[str, Any], kind: str) -> list[str]:
+    target_ids = {
+        str(_dict(node.get("properties")).get("target_id"))
+        for node in _list_of_dicts(graph.get("nodes"))
+        if node.get("kind") == kind and _dict(node.get("properties")).get("target_id")
+    }
+    return sorted(target_ids)
+
+
 def _trace_result_score_path_failures(
     nodes: list[dict[str, Any]],
     edges: list[dict[str, Any]],

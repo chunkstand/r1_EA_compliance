@@ -63,6 +63,7 @@ def build_source_set_phases(
     component_retrieval_direct_eval: dict | None,
     semantic_graph_direct_eval: dict | None,
     knowledge_graph_query_direct_eval: dict | None,
+    eval_context_graph_direct_eval: dict | None,
 ) -> list[dict]:
     phases = [
         _phase(
@@ -283,6 +284,18 @@ def build_source_set_phases(
                     },
                 )
             )
+    if eval_context_graph_direct_eval is not None:
+        phases.append(
+            _phase(
+                "observability_eval_context_graph",
+                passed=True,
+                reviewer_ready=True,
+                details={
+                    "results_path": eval_context_graph_direct_eval.get("summary_path"),
+                    "expected_source_set_id": source_set_id,
+                },
+            )
+        )
     if component_retrieval_direct_eval is not None:
         phases.append(
             _phase(

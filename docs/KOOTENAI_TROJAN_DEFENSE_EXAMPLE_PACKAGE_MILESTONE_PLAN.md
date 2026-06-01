@@ -1,7 +1,7 @@
 # Kootenai Trojan Defense Example Package Milestone Plan
 
 Date: 2026-05-31
-Status: Resolved locally through governed primary-example promotion and direct-eval gap closure; review `phase-eval` passes `28/28` phases with `reviewer_ready=true` and `blockers=[]`.
+Status: Resolved locally through governed primary-example promotion, direct-eval gap closure, and the shared f70 observability/eval context-graph ratchet; review `phase-eval` passes `32/32` phases with `reviewer_ready=true` and `blockers=[]`.
 Plan class: implementation
 High-risk implementation: yes
 Owner context: child packet under `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`
@@ -32,9 +32,10 @@ Current evidence:
 - `compliance-review` passes with reviewer-ready matrix/PDF artifacts and `47` findings: `28` pass, `18` uncertain, and `1` gap.
 - V1 eval passes with `contract_status="reviewer_ready"`; component eval passes `53/53` cases with `8` applicable standards.
 - Aggregate gates pass with `real-package-review-coverage-eval` at `covered_slot_count=11`, `reviewer_ready_slot_count=11`, `distinct_forest_count=10`; `forest-plan-component-eval-coverage` at `covered_review_count=12/12`, `distinct_forest_count=10`; and `forest-specific-example-package-eval` at `review_example_count=11`, `reviewer_ready_example_count=11`, `distinct_governed_example_forest_count=10`, `profile_guidance_only_count=0`.
-- Refreshed f70 base `rule-claim-link`/`rule-claim-eval` and f70
-  `compliance-review-eval` direct eval artifacts close the inherited
-  direct-eval gap. Review `phase-eval` now passes `28/28` phases with
+- Refreshed f70 base `rule-claim-link`/`rule-claim-eval`, f70
+  `compliance-review-eval`, and f70 `observability_eval_context_graph` direct
+  eval artifacts close the inherited direct-eval gap. Review `phase-eval` now
+  passes `32/32` phases with
   `reviewer_ready=true`, `blockers=[]`, `declared_review_contract=true`, and
   `contract_backed_promotion_ready=true`.
 
@@ -123,7 +124,7 @@ this packet to generalize Trojan Defense as non-Kootenai Region 1 guidance.
   `source_set_id="source-set-f70ea11e04ae3d53"` with all direct eval metrics at
   `1.0`.
 - `phase-eval` readback: Kootenai review scope is contract-backed and
-  present, and review `phase-eval` passes `28/28` phases with
+  present, and review `phase-eval` passes `32/32` phases with
   `reviewer_ready=true`, `blockers=[]`, `identity_mismatch_phase_count=0`, and
   `missing_direct_eval_phase_count=0`.
 
@@ -162,10 +163,10 @@ git diff --check
   component coverage, and registry eval.
 - Aggregate route outcome: all `10` Region 1 forests now have governed real
   package examples; `profile_guidance_only_count=0`.
-- Direct-eval route outcome: review `phase-eval` passes `28/28` phases with
+- Direct-eval route outcome: review `phase-eval` passes `32/32` phases with
   `reviewer_ready=true`, `blockers=[]`, `declared_review_contract=true`, and
-  `contract_backed_promotion_ready=true` after the f70 rule-claim and
-  compliance direct-eval refresh.
+  `contract_backed_promotion_ready=true` after the f70 rule-claim, compliance,
+  and observability/eval context-graph direct-eval refresh.
 
 ## Stop Conditions
 

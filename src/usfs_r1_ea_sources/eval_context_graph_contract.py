@@ -6,6 +6,7 @@ import json
 
 from .eval_trace_inventory import REPO_ROOT
 from .eval_trace_store import STORE_SCHEMA_VERSION
+from .records import sha256_file
 
 
 DEFAULT_CONTEXT_GRAPH_CONTRACT_PATH = Path("config/context_graph_contract_v1.json")
@@ -43,6 +44,15 @@ def load_eval_context_graph_contract(
     if failed:
         raise ValueError(f"invalid eval context graph contract: {', '.join(failed)}")
     return contract
+
+
+def context_graph_contract_summary(
+    contract_path: Path = DEFAULT_CONTEXT_GRAPH_CONTRACT_PATH,
+    *,
+    repo_root: Path = REPO_ROOT,
+) -> dict[str, str]:
+    path = _resolve_path(contract_path, repo_root)
+    return {"path": _display_path(path, repo_root), "sha256": sha256_file(path)}
 
 
 def validate_eval_context_graph_contract(contract: dict[str, Any]) -> list[dict[str, Any]]:
@@ -123,3 +133,10 @@ def _list_of_strings(value: object) -> list[str]:
 
 def _resolve_path(path: Path, repo_root: Path) -> Path:
     return path if path.is_absolute() else repo_root / path
+
+
+def _display_path(path: Path, repo_root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(repo_root))
+    except ValueError:
+        return str(path)

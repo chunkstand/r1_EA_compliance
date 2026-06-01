@@ -4655,6 +4655,9 @@ Required build summary fields:
 - `event_node_count`
 - `node_count`
 - `edge_count`
+- `source_set_ids`
+- `review_ids`
+- `contract`
 - `reserved_node_kinds_not_materialized`
 - `validation_checks`
 
@@ -4680,6 +4683,9 @@ Required graph eval summary fields:
 - `event_node_count`
 - `node_count`
 - `edge_count`
+- `source_set_ids`
+- `review_ids`
+- `contract`
 - `validation_checks`
 
 The graph eval runs directly over the generated graph artifact. Its first
@@ -4690,6 +4696,12 @@ sources, event-like source artifact rows are materialized without parse errors,
 canonical command events are graph-joined with command, phase, invocation, and
 payload-hash provenance, source knowledge-graph nodes remain excluded, and the
 graph policy remains local-only.
+
+`config/phase_eval_direct_eval_v1.json` requires the graph eval summary as the
+`observability_eval_context_graph` phase for
+`source-set-f70ea11e04ae3d53`. That direct-eval gate checks the summary schema,
+graph schema, context-graph contract hash, source-set identity, graph eval
+checks, command success, and a non-zero event-node count.
 
 ## First-Class Eval Trace Case Promotion
 

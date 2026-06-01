@@ -72,6 +72,18 @@
       "results_filename": "knowledge_graph_query_eval_results.json"
     },
     {
+      "contract_path": "context_graph_contract_v1.json",
+      "coverage_class": "direct_eval_required",
+      "expected_contract_id": "first-class-generated-observability-eval-context-graph",
+      "lane_id": "observability_eval_context_graph",
+      "phase_name": "observability_eval_context_graph",
+      "producer": "eval_context_graph_evaluation",
+      "required_source_set_ids": [
+        "source-set-f70ea11e04ae3d53"
+      ],
+      "results_path": "evaluations/eval_context_graph/eval_context_graph_eval_summary.json"
+    },
+    {
       "coverage_class": "direct_eval_required",
       "expected_contract_id": "region1-forest-plan-component-retrieval-eval",
       "lane_id": "forest_plan_component_retrieval_eval",
@@ -96,5 +108,5 @@
     }
   ],
   "upstream_results_path": "evaluations/upstream/upstream_evaluation_results.json",
-  "version": "1.3.0"
+  "version": "1.4.0"
 }

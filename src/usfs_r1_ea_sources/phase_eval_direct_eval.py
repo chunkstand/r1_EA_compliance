@@ -343,6 +343,12 @@ def _validate_contract(payload: dict[str, Any]) -> None:
                 f"semantic graph direct-eval phase {phase_name!r} requires "
                 "results_path or results_filename"
             )
+        if producer == "eval_context_graph_evaluation" and not str(
+            spec.get("results_path") or ""
+        ).strip():
+            raise ValueError(
+                f"context graph direct-eval phase {phase_name!r} requires results_path"
+            )
         if spec.get("required_source_set_ids") is not None and not required_source_set_ids:
             raise ValueError(
                 f"phase-eval direct-eval phase {phase_name!r} has an empty "

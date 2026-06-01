@@ -43,6 +43,7 @@ REVIEW_COVERAGE_CLASSES = {
 }
 SOURCE_SET_PHASE_PRODUCERS = {
     "downstream_direct_evaluation",
+    "eval_context_graph_evaluation",
     "extraction_fidelity_evaluation",
     "forest_plan_component_retrieval_evaluation",
     "forest_plan_profile_evaluation",

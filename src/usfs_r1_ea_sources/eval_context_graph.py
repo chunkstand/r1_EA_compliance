@@ -10,11 +10,13 @@ import sqlite3
 from .eval_context_graph_contract import DEFAULT_CONTEXT_GRAPH_CONTRACT_PATH
 from .eval_context_graph_contract import JSON_COLUMNS
 from .eval_context_graph_contract import TABLE_PRIMARY_KEYS
+from .eval_context_graph_contract import context_graph_contract_summary
 from .eval_context_graph_contract import load_eval_context_graph_contract
 from .eval_context_graph_events import context_graph_events_for_artifact
 from .eval_context_graph_validation import graph_checks
 from .eval_context_graph_validation import graph_file_checks
 from .eval_context_graph_validation import store_checks
+from .eval_context_graph_validation import target_ids
 from .eval_trace_inventory import REPO_ROOT
 from .eval_trace_store import STORE_SCHEMA_VERSION
 from .observability_events import resolve_observability_event_log_path
@@ -100,6 +102,7 @@ def run_eval_context_graph_build(
         "store_schema_version": STORE_SCHEMA_VERSION,
         "contract_id": contract["contract_id"],
         "contract_version": contract["version"],
+        "contract": context_graph_contract_summary(contract_path, repo_root=repo_root),
         "sqlite_path": _display_path(sqlite_path, repo_root),
         "graph_json_path": _display_path(graph_json_path, repo_root),
         "passed": passed,
@@ -118,6 +121,8 @@ def run_eval_context_graph_build(
         "event_node_count": _event_node_count(graph),
         "node_count": len(graph["nodes"]),
         "edge_count": len(graph["edges"]),
+        "source_set_ids": target_ids(graph, "source_set"),
+        "review_ids": target_ids(graph, "review"),
         "reserved_node_kinds_not_materialized": contract.get("reserved_node_kinds", []),
         "validation_checks": validation_checks,
     }
@@ -149,6 +154,7 @@ def run_eval_context_graph_eval(
         "graph_schema_version": graph.get("schema_version"),
         "contract_id": contract["contract_id"],
         "contract_version": contract["version"],
+        "contract": context_graph_contract_summary(contract_path, repo_root=repo_root),
         "graph_json_path": _display_path(graph_json_path, repo_root),
         "passed": passed,
         "command_succeeded": passed,
@@ -158,6 +164,8 @@ def run_eval_context_graph_eval(
         "event_node_count": _event_node_count(graph),
         "node_count": len(_list_of_dicts(graph.get("nodes"))),
         "edge_count": len(_list_of_dicts(graph.get("edges"))),
+        "source_set_ids": target_ids(graph, "source_set"),
+        "review_ids": target_ids(graph, "review"),
         "validation_checks": validation_checks,
     }
     if summary_path is not None:
