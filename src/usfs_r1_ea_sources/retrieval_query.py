@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from contextlib import closing
+import json
 from pathlib import Path
+import re
 import sqlite3
 
 from .records import aliased_source_record_ids
@@ -56,13 +58,15 @@ def query_retrieval_index(
     phrases = _query_phrases(query)
     with closing(sqlite3.connect(index_path)) as connection:
         connection.row_factory = sqlite3.Row
-        rows = _load_candidate_rows(
+        rows, retrieval_mode, fts_candidate_count = _load_candidate_rows(
             connection,
+            terms=terms,
             document_role=document_role,
             support_document_role=support_document_role,
             authority_level=authority_level,
             source_record_ids=source_record_filter_ids,
             host=host,
+            limit=max(limit * 50, 250),
         )
     term_weights = _query_term_weights(terms, phrases)
 
@@ -102,6 +106,9 @@ def query_retrieval_index(
         "query": query,
         "filters": {key: value for key, value in filters.items() if value is not None},
         "limit": limit,
+        "retrieval_mode": retrieval_mode,
+        "candidate_count": len(rows),
+        "fts_candidate_count": fts_candidate_count,
         "hit_count": len(results),
         "results": results,
     }
@@ -110,12 +117,27 @@ def query_retrieval_index(
 def _load_candidate_rows(
     connection: sqlite3.Connection,
     *,
+    terms: list[str],
     document_role: str | None,
     support_document_role: str | None,
     authority_level: str | None,
     source_record_ids: list[str] | None,
     host: str | None,
-) -> list[sqlite3.Row]:
+    limit: int,
+) -> tuple[list[sqlite3.Row], str, int]:
+    if terms and _fts_table_available(connection):
+        rows = _load_fts_candidate_rows(
+            connection,
+            terms=terms,
+            document_role=document_role,
+            support_document_role=support_document_role,
+            authority_level=authority_level,
+            source_record_ids=source_record_ids,
+            host=host,
+            limit=limit,
+        )
+        if rows:
+            return rows, "fts_first_stage", len(rows)
     query = "SELECT * FROM chunks WHERE 1 = 1"
     params: list[object] = []
     if document_role:
@@ -135,7 +157,69 @@ def _load_candidate_rows(
         query += " AND host = ?"
         params.append(host)
     query += " ORDER BY source_record_id, chunk_index"
-    return list(connection.execute(query, params))
+    rows = list(connection.execute(query, params))
+    return rows, "row_scan", 0
+
+
+def _load_fts_candidate_rows(
+    connection: sqlite3.Connection,
+    *,
+    terms: list[str],
+    document_role: str | None,
+    support_document_role: str | None,
+    authority_level: str | None,
+    source_record_ids: list[str] | None,
+    host: str | None,
+    limit: int,
+) -> list[sqlite3.Row]:
+    fts_query = _fts_query(terms)
+    if not fts_query:
+        return []
+    query = """
+        SELECT c.*, bm25(chunks_fts) AS fts_bm25
+        FROM chunks_fts
+        JOIN chunks c ON c.rowid = chunks_fts.rowid
+        WHERE chunks_fts MATCH ?
+    """
+    params: list[object] = [fts_query]
+    if document_role:
+        query += " AND c.document_role = ?"
+        params.append(document_role)
+    if support_document_role:
+        query += " AND c.support_document_role = ?"
+        params.append(support_document_role)
+    if authority_level:
+        query += " AND c.authority_level = ?"
+        params.append(authority_level)
+    if source_record_ids:
+        placeholders = ", ".join("?" for _ in source_record_ids)
+        query += f" AND c.source_record_id IN ({placeholders})"
+        params.extend(source_record_ids)
+    if host:
+        query += " AND c.host = ?"
+        params.append(host)
+    query += " ORDER BY bm25(chunks_fts), c.source_record_id, c.chunk_index LIMIT ?"
+    params.append(limit)
+    try:
+        return list(connection.execute(query, params))
+    except sqlite3.OperationalError:
+        return []
+
+
+def _fts_table_available(connection: sqlite3.Connection) -> bool:
+    row = connection.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'chunks_fts'"
+    ).fetchone()
+    return row is not None
+
+
+def _fts_query(terms: list[str]) -> str:
+    tokens = []
+    for term in dict.fromkeys(terms):
+        cleaned = re.sub(r"[^A-Za-z0-9_]", "", term)
+        if cleaned:
+            tokens.append(f"{cleaned}*")
+    return " OR ".join(tokens)
 
 
 def _normalized_filter_ids(
@@ -191,6 +275,11 @@ def _result_from_row(
         "support_document_role": _row_value(row, "support_document_role"),
         "authority_level": row["authority_level"],
         "citation_label": row["citation_label"],
+        "chunk_layer": _row_value(row, "chunk_layer", "baseline_text_chunk_v1"),
+        "parent_chunk_id": _row_value(row, "parent_chunk_id"),
+        "parent_window_id": _row_value(row, "parent_window_id"),
+        "structure_type": _row_value(row, "structure_type", "text_span"),
+        "component_type": _row_value(row, "component_type"),
         "review_topics": topics,
         "evidence_span": span,
         "provenance": {
@@ -207,8 +296,15 @@ def _result_from_row(
             "char_start": row["char_start"],
             "char_end": row["char_end"],
             "page": row["page"],
+            "page_range": _json_or_none(_row_value(row, "page_range_json")),
             "section": row["section"],
             "heading": row["heading"],
+            "chunk_layer": _row_value(row, "chunk_layer", "baseline_text_chunk_v1"),
+            "parent_chunk_id": _row_value(row, "parent_chunk_id"),
+            "parent_window_id": _row_value(row, "parent_window_id"),
+            "structure_type": _row_value(row, "structure_type", "text_span"),
+            "component_type": _row_value(row, "component_type"),
+            "contextual_index_sha256": _row_value(row, "contextual_index_sha256"),
             "content_sha256": row["content_sha256"],
         },
     }
@@ -219,6 +315,15 @@ def _row_value(row: sqlite3.Row, key: str, default: object | None = None) -> obj
         return row[key]
     except (IndexError, KeyError):
         return default
+
+
+def _json_or_none(value: object | None) -> object | None:
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        return json.loads(value)
+    except json.JSONDecodeError:
+        return None
 
 
 def _evidence_span(text: str, terms: list[str], source_chunk_start: int) -> dict:
@@ -316,6 +421,7 @@ def _score_row(
     document_role = str(row["document_role"] or "").replace("_", " ")
     support_document_role = str(_row_value(row, "support_document_role") or "").replace("_", " ")
     authority_level = str(row["authority_level"] or "").replace("_", " ")
+    contextual_text = str(_row_value(row, "contextual_index_text") or "")
     topic_text = " ".join(topics)
     metadata_text = " ".join(
         [
@@ -338,6 +444,7 @@ def _score_row(
         text=" ".join([document_role, support_document_role, authority_level]),
         term_weights=term_weights,
     )
+    score += 0.2 * _term_hit_fraction(terms, text=contextual_text, term_weights=term_weights)
     score += 0.65 * _term_cluster_score(terms, text=text)
     score += 0.35 * _term_cluster_score(terms, text=title)
     score += 0.2 * _term_cluster_score(terms, text=heading)
@@ -360,6 +467,9 @@ def _score_row(
         score += 0.1
     if review_topic and _topic_matches(review_topic, topics):
         score += 0.2
+    fts_bm25 = _row_value(row, "fts_bm25")
+    if isinstance(fts_bm25, (float, int)):
+        score += min(0.3, 1.0 / (1.0 + abs(float(fts_bm25))))
     return score
 
 

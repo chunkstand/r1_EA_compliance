@@ -4037,9 +4037,14 @@ The `extract-build` command writes:
 - `extracted_text/<source_record_id>_<artifact_sha256_prefix>.txt`
 - `docling_json/<artifact_sha256_prefix>.json` when Docling produced document JSON
 - `chunks/chunks.jsonl`
+- `chunks_v2/atomic_chunks.jsonl` when `chunk-layer-build` is run
+- `chunks_v2/structural_chunks.jsonl` when `chunk-layer-build` is run
+- `chunks_v2/parent_context_windows.jsonl` when `chunk-layer-build` is run
+- `chunks_v2/summary.json` when `chunk-layer-build` is run
 - `diagnostics/extraction_manifest.jsonl`
 - `diagnostics/extraction_validation.json`
 - `diagnostics/extraction_accuracy_audit.json` when `extraction-accuracy-audit` is run
+- `diagnostics/chunk_quality_audit.json` when `chunk-quality-audit` is run
 - `diagnostics/summary.json`
 
 The command replaces the derived directory for the selected `source_set_id` on each non-reuse run
@@ -4298,6 +4303,45 @@ The audit summary also records:
 - `knowledge_base_admitted_source_record_ids`
 - `knowledge_base_blocked_source_record_ids`
 - `per_source_failures`
+
+`chunk-quality-audit` writes `diagnostics/chunk_quality_audit.json` with schema version
+`chunk-quality-audit-v1`. It is a read-only diagnostic over existing chunk/extraction outputs and
+does not replace `chunks/chunks.jsonl`. The report includes:
+
+- `source_set_id`, source chunk path, extraction manifest/validation/summary paths, and optional
+  `chunks_v2_summary_path`
+- aggregate counts for sources, chunks, parser routes, structure markers, and chunk/parent-window
+  sidecar coverage
+- per-source metrics including chunk count, character coverage, average and maximum chunk token
+  estimates, parser names, page/section/heading coverage, and sidecar coverage
+- risk bucket counts and per-source risk buckets such as fallback-parser dominance, OCR/scanned
+  source routes, heading context gaps, table rows without structure, structural markers, split
+  numbered requirements, and missing parent context windows
+- checks for chunk presence, unique chunk IDs, required provenance, valid content hashes, and valid
+  baseline extraction validation
+- `passed`, which is true when the input chunks and required validation checks pass; risk buckets are
+  diagnostic signals, not automatic failures
+
+`chunk-layer-build` writes sidecar chunk layers under `chunks_v2/` without mutating the baseline
+chunk spine. `atomic_chunks.jsonl` contains retrieval-ready atomic records with:
+
+- stable `chunk_id`, `chunk_layer="atomic_text_chunk_v2"`, `parent_chunk_id`, and
+  `parent_window_id`
+- source-set, source-record, artifact hash/path, citation label, URL, parser, page, section,
+  heading, and source-text provenance copied from the baseline chunk
+- exact source offsets, `token_count`, `structure_type`, optional `component_type`, `content_sha256`,
+  deterministic `contextual_index_text`, and `contextual_index_sha256`
+
+`structural_chunks.jsonl` contains extracted structure-bearing sidecar records for numbered,
+legal-section, table-row, definition, forest-plan standard/guideline, desired-condition, and
+objective markers. These records preserve the atomic chunk ID and the same citation, source-offset,
+content-hash, and contextual-index fields as atomic chunks.
+
+`parent_context_windows.jsonl` contains parent windows with `window_id`, source identity, citation
+label, source offsets, token estimate, child chunk IDs, page range, heading/section context, and
+content hash. `summary.json` has schema version `chunk-layers-v1` and records source chunk path,
+sidecar paths, atomic/structural/window counts, structure-type counts, parent-window coverage, and
+`validation_passed`.
 
 ## First-Class Eval Trace Contract
 
@@ -4962,6 +5006,9 @@ The `retrieval-build` command writes:
 `retrieval-build` reads:
 
 - `source_library/derived/<source_set_id>/chunks/chunks.jsonl`
+  or a compatible sidecar chunk path such as
+  `source_library/derived/<source_set_id>/chunks_v2/atomic_chunks.jsonl` when `--chunks-path` is
+  supplied
 - `source_library/derived/<source_set_id>/diagnostics/extraction_validation.json`
 - `source_library/derived/<source_set_id>/diagnostics/extraction_manifest.jsonl`
 - `source_library/derived/<source_set_id>/diagnostics/summary.json`
@@ -4994,14 +5041,20 @@ diagnostic index can be built with `--allow-partial-extraction`, but that summar
 
 - `metadata`: index schema, source-set ID, source chunk path, catalog path, creation timestamp
 - `chunks`: chunk text, reviewer metadata, review topics, citation labels, artifact provenance,
-  parser provenance, offsets, and content hashes
+  parser provenance, offsets, content hashes, optional sidecar layer fields, page ranges, structural
+  type metadata, and deterministic contextual index text
 - `chunks_fts`: optional SQLite FTS5 table for lexical retrieval support when the local SQLite
-  build provides FTS5
+  build provides FTS5. When available, FTS indexes raw chunk text plus `contextual_index_text`
+  without adding contextual prefixes to returned evidence spans.
 
 `retrieval-query` prints JSON with:
 
 - `query`
 - applied reviewer filters
+- `retrieval_mode`, either `fts_first_stage` when FTS/BM25 supplied candidate rows or `row_scan`
+  when SQLite FTS is unavailable or produces no candidates
+- `candidate_count`
+- `fts_candidate_count`
 - `hit_count`
 - ranked `results`
 
@@ -5016,6 +5069,11 @@ Each result includes:
 - `support_document_role`
 - `authority_level`
 - `citation_label`
+- `chunk_layer`
+- `parent_chunk_id`
+- `parent_window_id`
+- `structure_type`
+- `component_type`
 - `review_topics`
 - `evidence_span`
 - `provenance`
@@ -5023,7 +5081,7 @@ Each result includes:
 The `evidence_span` includes the returned text and both chunk-local and extracted-text character
 offsets. `provenance` includes source-set ID, artifact SHA256/path, original/effective/final URLs,
 parser name/version, extraction timestamp, source text path, page/section/heading when available,
-and chunk content hash.
+page range when available, sidecar layer fields, `contextual_index_sha256`, and chunk content hash.
 
 The default eval file `config/retrieval_eval_seed.json` is a `retrieval-eval-v1` contract with:
 
@@ -5045,12 +5103,18 @@ Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrap
 - gate checks for case pass/fail, coverage requirements, and metric thresholds
 - metrics including pass rate, source hit rate, expected-term hit rate, citation coverage rate,
   unsupported-answer rate, zero-result rate, hard-negative pass rate, `false_positive_rate`,
-  `missing_required_source_rate`, `recall_at_k`, `mrr`, and `ndcg_at_k`
-- per-case query, filters, expectations, failure reasons, missing expected source IDs, missing
-  expected terms, top source IDs, and top evidence results
+  `missing_required_source_rate`, `recall_at_k`, `atomic_chunk_recall_at_k`,
+  `structure_hit_rate`, `parent_window_coverage_rate`, `citation_correctness_rate`, `mrr`, and
+  `ndcg_at_k`
+- per-case query, filters, expectations, failure reasons, missing expected source IDs, optional
+  missing expected chunk IDs, structure types, citation labels, missing expected terms, top source
+  IDs, and top evidence results
 
 Cases may declare `expect_no_hits: true` for deterministic negative checks. Those cases pass only
-when retrieval returns zero hits and do not require provenance-bearing results.
+when retrieval returns zero hits and do not require provenance-bearing results. Cases may also
+declare optional `expected_chunk_ids`, `expected_structure_types`, `expected_citation_labels`, and
+`require_parent_window` fields for atomic/structural retrieval checks. These fields are optional and
+leave legacy source-level eval cases compatible.
 
 ## Source Claim Graph Outputs
 

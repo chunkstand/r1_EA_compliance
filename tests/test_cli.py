@@ -244,6 +244,36 @@ def test_source_register_queue_audit_parser_accepts_ledger_inputs() -> None:
     assert args.sheet_contract == Path("config/source_register_sheet_contract_v1.json")
 
 
+def test_chunk_accuracy_parser_accepts_audit_and_sidecar_commands() -> None:
+    audit_args = build_parser().parse_args(
+        [
+            "chunk-quality-audit",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-path",
+            "chunks.jsonl",
+        ]
+    )
+    layer_args = build_parser().parse_args(
+        [
+            "chunk-layer-build",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--atomic-max-tokens",
+            "256",
+        ]
+    )
+
+    assert audit_args.command == "chunk-quality-audit"
+    assert audit_args.chunks_path == Path("chunks.jsonl")
+    assert layer_args.command == "chunk-layer-build"
+    assert layer_args.atomic_max_tokens == 256
+
+
 def test_batch_download_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     args = build_parser().parse_args(
         [

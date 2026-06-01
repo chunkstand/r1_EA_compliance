@@ -12,6 +12,7 @@ from usfs_r1_ea_sources.retrieval import build_retrieval_index
 from usfs_r1_ea_sources.retrieval import query_retrieval_index
 from usfs_r1_ea_sources.retrieval_query import _contains_term
 from usfs_r1_ea_sources.retrieval_query import _tokenize
+from usfs_r1_ea_sources.chunk_layers import build_chunk_layers
 
 from tests.support.retrieval_fixtures import _chunk
 from tests.support.retrieval_fixtures import _write_catalog_sqlite
@@ -230,6 +231,52 @@ class RetrievalTests(unittest.TestCase):
 
             self.assertEqual(query["results"][0]["source_record_id"], "FED-003")
             self.assertIn("project or activity", query["results"][0]["evidence_span"]["text"].lower())
+
+    def test_retrieval_query_uses_contextual_fts_over_sidecar_chunks(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1PLAN-001"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-001",
+                        title="Forest Plan",
+                        document_role="forest_plan",
+                        authority_level="forest_plan",
+                        citation_label="R1PLAN-001 | Forest Plan | artifact abc123",
+                        text="Desired condition DC-01 Watersheds are resilient.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1PLAN-001": ["Forest plan direction"]})
+            layers = build_chunk_layers(output_dir=output_dir, source_set_id=source_set_id)
+            result = build_retrieval_index(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks_path=layers.atomic_chunks_path,
+            )
+
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="watersheds resilient desired condition",
+            )
+
+            self.assertEqual(query["retrieval_mode"], "fts_first_stage")
+            self.assertGreater(query["fts_candidate_count"], 0)
+            hit = query["results"][0]
+            self.assertEqual(hit["source_record_id"], "R1PLAN-001")
+            self.assertEqual(hit["chunk_layer"], "atomic_text_chunk_v2")
+            self.assertEqual(hit["structure_type"], "desired_condition")
+            self.assertTrue(hit["parent_window_id"])
+            self.assertNotIn("source_record_id:", hit["evidence_span"]["text"])
 
     def test_retrieval_query_weights_rare_terms_over_generic_nepa_overlap(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

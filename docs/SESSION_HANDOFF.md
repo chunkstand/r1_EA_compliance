@@ -29,6 +29,18 @@ history below.
   graphs for agent logs, evals, traces, state checkpoints, and human review;
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
+- latest resolved extraction/chunking/retrieval accuracy slice:
+  `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_IMPLEMENTATION_MILESTONE_PLAN.md`
+  is resolved locally on branch
+  `codex/extraction-chunking-retrieval-accuracy`. It adds
+  `chunk-quality-audit`, `chunk-layer-build`, sidecar `chunks_v2` artifacts,
+  contextual FTS/BM25 retrieval fields, and optional atomic/structural retrieval
+  eval expectations without replacing the baseline chunk spine or rebuilding
+  graph/review artifacts.
+- active extraction/chunking/retrieval accuracy slice:
+  none. Future promotion of `chunks_v2` into graph, claim, rule-link, or
+  compliance review artifacts should open a new bounded packet with direct eval
+  thresholds over the sidecar layer.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
@@ -101,6 +113,24 @@ history below.
 - aligned-runtime predecessor packet:
   `docs/LOLO_TYLERS_KITCHEN_ALIGNED_RUNTIME_REBASELINE_BLOCKER_MILESTONE_PLAN.md`
 - current checkpoint:
+  extraction/chunking/retrieval accuracy sidecar: the first implementation
+  packet from
+  `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_RESEARCH_BRIEF.md` and
+  `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_IMPROVEMENT_BRIEF.md` is closed
+  locally on the isolated branch. `chunk-quality-audit` writes per-source
+  parser/layout/boundary risk diagnostics, and `chunk-layer-build` writes
+  opt-in `chunks_v2` atomic chunks, structural chunks, parent context windows,
+  and a summary. Retrieval indexes now store deterministic contextual index
+  text and sidecar metadata when supplied; retrieval query uses FTS5/BM25 as a
+  first-stage candidate source when available; retrieval eval can score
+  expected chunk IDs, structure types, citation labels, and parent-window
+  presence. Live f70 smoke read the ignored main-checkout corpus without
+  mutating production derived outputs: audit passed over `113830` chunks and
+  `719` sources, and sidecar build wrote temporary `/tmp` outputs with
+  `296442` atomic chunks, `116004` structural chunks, `19117` parent windows,
+  and `validation_passed=true`. No graph, claim, rule-link, review, or
+  knowledge-graph rebuild was performed.
+
   operational graph-KB query surface: the first local query/API-contract slice
   is closed locally. `src/usfs_r1_ea_sources/knowledge_graph_query.py` and
   `src/usfs_r1_ea_sources/knowledge_graph_query_eval.py` are owned by the

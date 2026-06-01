@@ -139,6 +139,28 @@ def build_derived_command_specs(
             ),
         ),
         DerivedCommandSpec(
+            name="chunk-quality-audit",
+            help="Report chunk boundary, parser, layout, and parent-context risk by source.",
+            arguments=(
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg("--chunks-path", type=Path),
+                _arg("--output-path", type=Path),
+            ),
+        ),
+        DerivedCommandSpec(
+            name="chunk-layer-build",
+            help="Build sidecar atomic, structural, and parent context chunk layers.",
+            arguments=(
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg("--chunks-path", type=Path),
+                _arg("--chunks-v2-dir", type=Path),
+                _arg("--atomic-max-tokens", type=int, default=600),
+                _arg("--parent-window-max-tokens", type=int, default=1500),
+            ),
+        ),
+        DerivedCommandSpec(
             name="source-register-proving-slice",
             help="Run the Phase 1.5 mixed proving slice over the canonical source register.",
             arguments=(

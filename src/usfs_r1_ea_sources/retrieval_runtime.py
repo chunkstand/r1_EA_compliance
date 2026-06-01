@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import Counter
 from contextlib import closing
+import hashlib
 import json
 from pathlib import Path
 import sqlite3
@@ -9,6 +10,7 @@ import sqlite3
 from .catalog_surface import catalog_source_record_ids as read_catalog_source_record_ids
 from .catalog_surface import catalog_source_set_id as read_catalog_source_set_id
 from .catalog_surface import resolve_catalog_dir_for_source_set
+from .chunk_layers import contextual_index_text
 from .extraction_admission import matched_verified_extraction_contracts
 from .retrieval_common import (
     DEFAULT_INDEX_FILENAME,
@@ -244,12 +246,15 @@ def _write_sqlite_index(
             if fts_enabled:
                 connection.execute(
                     """
-                    INSERT INTO chunks_fts(rowid, text, title, heading, citation_label)
-                    VALUES (?, ?, ?, ?, ?)
+                    INSERT INTO chunks_fts(
+                      rowid, text, contextual_index_text, title, heading, citation_label
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?)
                     """,
                     (
                         rowid,
                         chunk.get("text") or "",
+                        chunk.get("contextual_index_text") or "",
                         chunk.get("title") or "",
                         chunk.get("heading") or "",
                         chunk.get("citation_label") or "",
@@ -293,6 +298,14 @@ def _create_index_schema(connection: sqlite3.Connection) -> None:
           page INTEGER,
           section TEXT,
           heading TEXT,
+          chunk_layer TEXT,
+          parent_chunk_id TEXT,
+          parent_window_id TEXT,
+          page_range_json TEXT NOT NULL,
+          structure_type TEXT,
+          component_type TEXT,
+          contextual_index_text TEXT NOT NULL,
+          contextual_index_sha256 TEXT,
           content_sha256 TEXT NOT NULL,
           review_topics_json TEXT NOT NULL,
           text TEXT NOT NULL
@@ -314,6 +327,7 @@ def _create_fts_table(connection: sqlite3.Connection) -> bool:
             """
             CREATE VIRTUAL TABLE chunks_fts USING fts5(
               text,
+              contextual_index_text,
               title,
               heading,
               citation_label,
@@ -336,6 +350,8 @@ def _insert_metadata(connection: sqlite3.Connection, metadata: dict) -> None:
 
 
 def _insert_chunk(connection: sqlite3.Connection, chunk: dict) -> int:
+    contextual_text = str(chunk.get("contextual_index_text") or contextual_index_text(chunk))
+    contextual_sha256 = chunk.get("contextual_index_sha256") or _sha256(contextual_text)
     cursor = connection.execute(
         """
         INSERT INTO chunks (
@@ -343,8 +359,10 @@ def _insert_chunk(connection: sqlite3.Connection, chunk: dict) -> int:
           support_document_role, authority_level, host, expected_parser, artifact_sha256, artifact_path,
           citation_label, original_url, effective_url, final_url, parser_name,
           parser_version, extracted_at, source_text_path, char_start, char_end, page,
-          section, heading, content_sha256, review_topics_json, text
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          section, heading, chunk_layer, parent_chunk_id, parent_window_id, page_range_json,
+          structure_type, component_type, contextual_index_text, contextual_index_sha256,
+          content_sha256, review_topics_json, text
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             chunk["chunk_id"],
@@ -372,6 +390,14 @@ def _insert_chunk(connection: sqlite3.Connection, chunk: dict) -> int:
             chunk.get("page"),
             chunk.get("section"),
             chunk.get("heading"),
+            chunk.get("chunk_layer") or "baseline_text_chunk_v1",
+            chunk.get("parent_chunk_id"),
+            chunk.get("parent_window_id"),
+            json.dumps(chunk.get("page_range"), sort_keys=True),
+            chunk.get("structure_type") or "text_span",
+            chunk.get("component_type"),
+            contextual_text,
+            contextual_sha256,
             chunk["content_sha256"],
             json.dumps(chunk.get("review_topics", []), sort_keys=True),
             chunk["text"],
@@ -453,4 +479,16 @@ def _chunk_with_catalog_context(
             support_document_roles_by_source.get(str(merged.get("source_record_id") or ""))
             or merged.get("document_role")
         )
+    merged.setdefault("chunk_layer", "baseline_text_chunk_v1")
+    merged.setdefault("structure_type", "text_span")
+    merged["contextual_index_text"] = merged.get("contextual_index_text") or contextual_index_text(
+        merged
+    )
+    merged["contextual_index_sha256"] = merged.get("contextual_index_sha256") or _sha256(
+        str(merged["contextual_index_text"])
+    )
     return merged
+
+
+def _sha256(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()

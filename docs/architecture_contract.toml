@@ -53,6 +53,8 @@ allowed_import_layers = ["foundation", "capture", "catalog"]
 name = "extraction"
 summary = "Artifact extraction, extraction accuracy, and extraction-derived text surfaces."
 modules = [
+  "chunk_layers",
+  "chunk_quality_audit",
   "extract",
   "extract_chunking",
   "extract_common",
@@ -527,7 +529,11 @@ paths = [
 owner_layer = "extraction"
 paths = [
   "source_library/derived/<source_set_id>/diagnostics/extraction_manifest.jsonl",
+  "source_library/derived/<source_set_id>/diagnostics/chunk_quality_audit.json",
   "source_library/derived/<source_set_id>/chunks/chunks.jsonl",
+  "source_library/derived/<source_set_id>/chunks_v2/atomic_chunks.jsonl",
+  "source_library/derived/<source_set_id>/chunks_v2/structural_chunks.jsonl",
+  "source_library/derived/<source_set_id>/chunks_v2/parent_context_windows.jsonl",
 ]
 
 [[artifacts]]
@@ -754,6 +760,8 @@ commands = [
   "reuse-inventory",
   "forest-plan-source-delta-readiness",
   "extraction-accuracy-audit",
+  "chunk-quality-audit",
+  "chunk-layer-build",
   "retrieval-build",
   "retrieval-query",
   "retrieval-eval",

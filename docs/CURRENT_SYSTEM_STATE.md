@@ -15,6 +15,49 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Extraction Chunking Retrieval Accuracy Sidecar Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the first extraction/chunking/retrieval accuracy implementation packet is
+  closed locally on isolated branch
+  `codex/extraction-chunking-retrieval-accuracy`. New commands
+  `chunk-quality-audit` and `chunk-layer-build` add deterministic diagnostic
+  and sidecar chunk-layer surfaces without replacing the baseline
+  `chunks/chunks.jsonl` spine or rebuilding graph, claim, rule-link, review, or
+  knowledge-graph artifacts.
+- sidecar contract:
+  `chunk-quality-audit` writes
+  `source_library/derived/<source_set_id>/diagnostics/chunk_quality_audit.json`
+  with per-source parser/layout/boundary risk buckets and pass/fail input
+  checks. `chunk-layer-build` writes `chunks_v2/atomic_chunks.jsonl`,
+  `chunks_v2/structural_chunks.jsonl`,
+  `chunks_v2/parent_context_windows.jsonl`, and `chunks_v2/summary.json`.
+  Sidecar records preserve source-record identity, artifact hash, citation
+  label, parser route, source offsets, parent windows, structure type, content
+  hashes, and deterministic contextual index text.
+- retrieval and eval effect:
+  `retrieval-build` can consume compatible sidecar chunk paths and now stores
+  contextual index text plus optional sidecar metadata in the SQLite index.
+  `retrieval-query` uses FTS5/BM25 as first-stage candidate generation when
+  available and reports `retrieval_mode`, `candidate_count`, and
+  `fts_candidate_count`; returned evidence spans still come from source text,
+  not contextual prefixes. `retrieval-eval` can now score optional
+  `expected_chunk_ids`, `expected_structure_types`,
+  `expected_citation_labels`, and `require_parent_window` expectations.
+- live smoke:
+  the ignored f70 corpus in the main checkout was read without writing derived
+  production outputs. `chunk-quality-audit` passed over `113830` baseline chunks
+  and `719` sources, reporting diagnostic risk buckets rather than validation
+  failures. `chunk-layer-build` wrote temporary `/tmp` sidecars with `296442`
+  atomic chunks, `116004` structural chunks, `19117` parent context windows,
+  and `validation_passed=true`.
+- boundary:
+  this is an opt-in measurement and retrieval-quality surface. It does not
+  promote `chunks_v2` as the active graph spine, does not declare a new f70
+  graph rebuild, and does not alter the separate context-graph checkout work.
+
 ## Operational Graph-KB Query Surface Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

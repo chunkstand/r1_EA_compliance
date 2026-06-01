@@ -8,6 +8,7 @@ import unittest
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 from usfs_r1_ea_sources.retrieval import run_retrieval_eval
 from usfs_r1_ea_sources.retrieval_eval_runtime import _missing_expected_terms
+from usfs_r1_ea_sources.chunk_layers import build_chunk_layers
 
 from tests.support.retrieval_fixtures import _chunk
 from tests.support.retrieval_fixtures import _write_catalog_sqlite
@@ -65,6 +66,68 @@ class RetrievalEvalTests(unittest.TestCase):
             self.assertEqual(eval_result.summary["metrics"]["pass_rate"], 1.0)
             self.assertEqual(eval_result.summary["metrics"]["unsupported_answer_rate"], 0.0)
             self.assertTrue(eval_result.output_path.exists())
+
+    def test_retrieval_eval_scores_atomic_structural_and_parent_expectations(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1PLAN-001"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-001",
+                        title="Forest Plan",
+                        document_role="forest_plan",
+                        authority_level="forest_plan",
+                        citation_label="R1PLAN-001 | Forest Plan | artifact abc123",
+                        text="Desired condition DC-01 Watersheds are resilient.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1PLAN-001": ["Forest plan direction"]})
+            layers = build_chunk_layers(output_dir=output_dir, source_set_id=source_set_id)
+            atomic_chunk = json.loads(layers.atomic_chunks_path.read_text().splitlines()[0])
+            result = build_retrieval_index(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks_path=layers.atomic_chunks_path,
+            )
+            eval_file = output_dir / "eval.json"
+            eval_file.write_text(
+                json.dumps(
+                    [
+                        {
+                            "id": "desired-condition",
+                            "query": "watersheds resilient desired condition",
+                            "expected_source_record_ids": ["R1PLAN-001"],
+                            "expected_chunk_ids": [atomic_chunk["chunk_id"]],
+                            "expected_structure_types": ["desired_condition"],
+                            "expected_citation_labels": ["R1PLAN-001"],
+                            "require_parent_window": True,
+                        }
+                    ],
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            eval_result = run_retrieval_eval(index_path=result.sqlite_path, eval_file=eval_file)
+
+            self.assertTrue(eval_result.summary["passed"])
+            self.assertEqual(eval_result.summary["atomic_chunk_case_count"], 1)
+            self.assertEqual(eval_result.summary["structural_case_count"], 1)
+            self.assertEqual(eval_result.summary["parent_window_case_count"], 1)
+            self.assertEqual(eval_result.summary["metrics"]["atomic_chunk_recall_at_k"], 1.0)
+            self.assertEqual(eval_result.summary["metrics"]["structure_hit_rate"], 1.0)
+            self.assertEqual(eval_result.summary["metrics"]["parent_window_coverage_rate"], 1.0)
+            self.assertEqual(eval_result.summary["metrics"]["citation_correctness_rate"], 1.0)
 
     def test_retrieval_eval_supports_expected_zero_hit_cases(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
