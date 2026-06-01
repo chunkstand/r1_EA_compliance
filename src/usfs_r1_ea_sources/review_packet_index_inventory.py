@@ -92,6 +92,7 @@ def _build_row_inventory(
     artifacts: dict[str, _Artifact],
     render_manifest: dict[str, Any],
     render_manifest_path: Path,
+    sidecar_lineage: dict[str, Any],
 ) -> dict[str, Any]:
     matrix = _dict(artifacts["compliance_matrix"].payload)
     applicable_authorities = _dict_list(
@@ -201,10 +202,14 @@ def _build_row_inventory(
                     "applicable_standard_component_ids": sorted(standard_component_ids),
                 }
             ),
+            "sidecar_rule_claim_links_used": bool(
+                sidecar_lineage.get("sidecar_rule_claim_links_used")
+            ),
         },
         "artifact_paths": {
             key: str(artifact.path) for key, artifact in sorted(artifacts.items())
         },
+        "sidecar_rule_claim_lineage": sidecar_lineage,
         "authority_row_sets": {
             key: sorted(values) for key, values in sorted(source_sets.items())
         },
@@ -235,6 +240,7 @@ def _build_packet_index(
     inventory: dict[str, Any],
     render_manifest: dict[str, Any],
     paths: _OutputPaths,
+    sidecar_lineage: dict[str, Any],
 ) -> dict[str, Any]:
     decision_support = _dict(artifacts["decision_support_report"].payload)
     final_qa = _dict(artifacts["final_qa_report"].payload)
@@ -262,6 +268,7 @@ def _build_packet_index(
         },
         "row_inventory_summary": inventory["summary"],
         "render_manifest_summary": render_manifest["summary"],
+        "sidecar_rule_claim_lineage": sidecar_lineage,
         "applicable_authority_rows": inventory["applicable_authority_rows"],
         "land_exchange_rows": inventory["land_exchange_rows"],
         "non_applicable_authority_boundary": {

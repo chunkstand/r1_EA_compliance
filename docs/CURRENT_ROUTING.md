@@ -8,13 +8,13 @@ Use this short route before opening append-only docs.
 - Latest resolved source-set graph-KB slice: phase-gated operational graph query surface after f70
   canonical semantic graph direct-eval strengthening; exact counts live in
   `docs/CURRENT_SYSTEM_STATE.md`.
-- Latest resolved extraction/chunking/retrieval accuracy slice: sidecar phase-eval adoption after
-  sidecar compliance review adoption; exact paths and smoke counts live in
+- Latest resolved extraction/chunking/retrieval accuracy slice: sidecar reviewer package adoption
+  after sidecar phase-eval adoption; exact paths and smoke counts live in
   `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
 - Active implementation slice: none. Open a new bounded packet before hosted query service/API
-  expansion, model-judge work, hosted scoring, reviewer package sidecar adoption, knowledge-graph
-  sidecar adoption, or oversized-owner reduction.
+  expansion, model-judge work, hosted scoring, knowledge-graph sidecar adoption, or oversized-owner
+  reduction.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
@@ -27,8 +27,8 @@ Use this short route before opening append-only docs.
 - Architecture route: `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` and `config/architecture_large_file_inventory_v1.json` own the oversized-owner backlog.
 - Extraction/chunking route: sidecar chunk, retrieval eval, downstream graph/claim preview,
   graph/claim promotion-readiness eval, graph/claim canonical adoption, rule-link preview/eval,
-  compliance review adoption, and phase-eval adoption are closed locally. Reviewer package and
-  knowledge-graph sidecar adoption require new bounded packets.
+  compliance review adoption, phase-eval adoption, and reviewer package adoption are closed
+  locally. Knowledge-graph sidecar adoption requires a new bounded packet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 
 ## Deep Reads

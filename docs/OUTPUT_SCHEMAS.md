@@ -2818,6 +2818,14 @@ boundary rows, Forest Plan component rows, and applicable Forest Plan standard r
 East Crazies review it validates `37` applicable authority rows, `340` non-applicable boundary
 rows, `79` Forest Plan component rows, and `12` applicable standards.
 
+When the compliance review used noncanonical sidecar rule-claim links,
+`review_packet_row_inventory.json` records `sidecar_rule_claim_lineage`. This lineage includes the
+compliance review rule-link path, phase-eval selected rule-link path, selected direct-eval path,
+direct-eval summary path, canonical link directory, actual link directory, sidecar/canonical status,
+phase-eval path-check failures, per-check status, and failed lineage checks. Missing
+`phase_eval_results.json` remains acceptable for canonical packets that do not use sidecar rule
+links.
+
 `compliance_matrix_render_manifest.json` has schema version
 `compliance-matrix-render-manifest-v1`. It records one rendered-row entry per compliance matrix
 authority row and per Forest Plan matrix row, including row class, row order, section, table ID,
@@ -2830,14 +2838,19 @@ boundary, artifact inventory, row-inventory summary, render-manifest summary, ap
 rows, a dedicated `land_exchange_rows` subset, non-applicable authority boundary, Forest Plan
 component rows, applicable standards, implementation confirmations, residual risks, and replay
 commands. It includes selectors to decision-support and final-QA rows but does not make root-level
-`East_Crazies_*` drafts canonical.
+`East_Crazies_*` drafts canonical. It also carries the same `sidecar_rule_claim_lineage` object as
+the row inventory when sidecar rule links are part of the review evidence.
 
 `review_packet_index_validation.json` has schema version `review-packet-index-validation-v1`. It
 fails closed on missing or unparsable required artifacts, missing applicable authority rows, missing
 matrix render rows, missing packet index rows, missing Forest Plan rows, missing non-applicable
 boundary evidence, missing first-class land-exchange packet rows, invalid packet PDF header, and
-non-canonical root draft dependencies. Review-
-scoped `phase-eval` includes a `review_packet_index` phase when this sidecar exists, and
+non-canonical root draft dependencies. For sidecar-backed compliance reviews, it also fails closed
+when compliance review and phase-eval select different rule-link paths, phase-eval is missing or
+does not include reviewer-ready rule-claim binding, phase-eval path checks fail, sidecar direct-eval
+evidence is missing or mismatched, or selected sidecar paths do not exist. Review-scoped
+`phase-eval` includes a `review_packet_index` phase when this sidecar exists; that phase reports
+`sidecar_rule_claim_links_used` and `sidecar_rule_claim_lineage_failed_check_count`. The
 `config/promotion_suite_v1.json` requires the row inventory, render manifest, packet index JSON/PDF,
 and validation sidecar for current East Crazies promotion.
 

@@ -22,6 +22,8 @@ from .review_packet_index_inventory import _build_packet_index
 from .review_packet_index_inventory import _build_render_manifest
 from .review_packet_index_inventory import _build_row_inventory
 from .review_packet_index_inventory import _land_exchange_rows_present
+from .review_packet_index_sidecar import build_sidecar_lineage
+from .review_packet_index_sidecar import sidecar_lineage_validation_checks
 
 
 _DOWNSTREAM_AUTHORITY_ROW_MIRROR_CHECKS = {
@@ -41,6 +43,7 @@ def run_review_packet_index(
     index_dir = Path(results_dir) if results_dir is not None else review_dir / "review_packet_index"
     paths = _output_paths(index_dir)
     artifacts = _load_artifacts(review_dir=review_dir)
+    sidecar_lineage = build_sidecar_lineage(artifacts)
 
     compliance_matrix = _dict(artifacts["compliance_matrix"].payload)
     compliance_markdown = artifacts["compliance_matrix_markdown"].text
@@ -55,6 +58,7 @@ def run_review_packet_index(
         artifacts=artifacts,
         render_manifest=render_manifest,
         render_manifest_path=paths.render_manifest_path,
+        sidecar_lineage=sidecar_lineage,
     )
     packet_index = _build_packet_index(
         review_id=review_id,
@@ -63,6 +67,7 @@ def run_review_packet_index(
         inventory=inventory,
         render_manifest=render_manifest,
         paths=paths,
+        sidecar_lineage=sidecar_lineage,
     )
 
     index_dir.mkdir(parents=True, exist_ok=True)
@@ -128,17 +133,23 @@ def _validate_packet(
 ) -> dict[str, Any]:
     checks: list[dict[str, Any]] = []
     for artifact in artifacts.values():
+        artifact_passed = (
+            artifact.exists and artifact.parse_ok
+            if artifact.required
+            else (not artifact.exists or artifact.parse_ok)
+        )
         _add_check(
             checks,
             name=f"{artifact.key}_exists_and_parses",
-            passed=artifact.exists and artifact.parse_ok,
+            passed=artifact_passed,
             category=(
                 "missing_required_artifact"
-                if not artifact.exists
+                if artifact.required and not artifact.exists
                 else "unparseable_required_artifact"
             ),
             details={"path": str(artifact.path), "error": artifact.error},
         )
+    checks.extend(sidecar_lineage_validation_checks(_dict(inventory.get("sidecar_rule_claim_lineage"))))
     authority_sets = {
         key: set(values) for key, values in _dict(inventory.get("authority_row_sets")).items()
     }
@@ -302,6 +313,14 @@ def _validate_packet(
             "forest_plan_row_count"
         ],
         "row_set_sha256": inventory["summary"]["row_set_sha256"],
+        "sidecar_rule_claim_links_used": bool(
+            _dict(inventory.get("sidecar_rule_claim_lineage")).get(
+                "sidecar_rule_claim_links_used"
+            )
+        ),
+        "sidecar_rule_claim_lineage_failed_check_count": len(
+            _dict(inventory.get("sidecar_rule_claim_lineage")).get("failed_checks", [])
+        ),
         "failure_category_counts": dict(sorted(failure_categories.items())),
         "failed_check_count": sum(1 for check in checks if not check["passed"]),
         "check_count": len(checks),

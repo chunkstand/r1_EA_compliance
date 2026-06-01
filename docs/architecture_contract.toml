@@ -366,6 +366,7 @@ modules = [
   "review_packet_index_common",
   "review_packet_index_inventory",
   "review_packet_index_outputs",
+  "review_packet_index_sidecar",
 ]
 allowed_import_layers = [
   "foundation",

@@ -30,6 +30,19 @@ history below.
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
 - latest resolved extraction/chunking/retrieval accuracy slice:
+  `docs/SIDECAR_REVIEW_PACKET_ADOPTION_MILESTONE_PLAN.md` is resolved locally
+  on branch `codex/extraction-chunking-retrieval-accuracy`. It makes
+  `review-packet-index` load optional review-scoped `phase_eval_results.json`
+  and records sidecar rule-claim lineage from compliance review through
+  phase-eval. Row inventory, packet index, and validation outputs now expose
+  the compliance review rule-link path, phase-eval selected rule-link path,
+  selected eval path, direct-eval summary path, canonical link directory,
+  actual link directory, sidecar/canonical status, phase-eval path checks, and
+  failed lineage checks. Validation fails closed when sidecar compliance review
+  and phase-eval paths mismatch, phase-eval is missing or not reviewer-ready,
+  path checks fail, direct-eval evidence is missing or mismatched, or selected
+  sidecar paths do not exist.
+- predecessor extraction/chunking/retrieval accuracy slice:
   `docs/SIDECAR_PHASE_EVAL_ADOPTION_MILESTONE_PLAN.md` is resolved locally on
   branch `codex/extraction-chunking-retrieval-accuracy`. It adds
   `--rule-claim-links-path` to `phase-eval` and makes review-scoped phase eval
@@ -85,10 +98,10 @@ history below.
   graph/claim summaries, and refuses sidecar chunk, retrieval, result, graph,
   or claim paths that point at or inside canonical derived output directories.
 - active extraction/chunking/retrieval accuracy slice:
-  none. Future sidecar adoption for reviewer packages or knowledge-graph
-  artifacts should open new bounded packets with direct eval thresholds over
-  the adopted sidecar-backed graph, claim, rule-link, compliance, and
-  phase-eval layer plus consumer-specific contract updates.
+  none. Future sidecar adoption for knowledge-graph artifacts should open a new
+  bounded packet with direct eval thresholds over the adopted sidecar-backed
+  graph, claim, rule-link, compliance, phase-eval, and reviewer package layers
+  plus consumer-specific contract updates.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.

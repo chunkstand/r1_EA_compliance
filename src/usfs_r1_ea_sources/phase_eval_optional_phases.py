@@ -179,6 +179,13 @@ def _review_packet_index_phase(
                 "failure_category_counts",
                 {},
             ),
+            "sidecar_rule_claim_links_used": bool(
+                validation_summary.get("sidecar_rule_claim_links_used")
+            ),
+            "sidecar_rule_claim_lineage_failed_check_count": validation_summary.get(
+                "sidecar_rule_claim_lineage_failed_check_count",
+                0,
+            ),
             "self_reference_allowed": self_reference_allowed,
             **checks,
         },

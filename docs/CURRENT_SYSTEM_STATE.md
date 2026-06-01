@@ -15,6 +15,41 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Reviewer Package Adoption Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the ninth extraction/chunking/retrieval accuracy packet is closed locally on isolated branch
+  `codex/extraction-chunking-retrieval-accuracy`. `review-packet-index` now loads optional
+  review-scoped `phase_eval_results.json` and records sidecar rule-claim lineage from compliance
+  review through phase-eval.
+- contract effect:
+  sidecar-backed row inventory and packet index outputs include the compliance review rule-link
+  path, phase-eval selected rule-link path, selected direct-eval path, direct-eval summary path,
+  canonical link directory, actual link directory, sidecar/canonical status, phase-eval failed path
+  checks, per-check lineage status, and failed lineage checks. Canonical packet behavior remains
+  unchanged when no sidecar rule links are present.
+- validation effect:
+  `review_packet_index_validation.json` fails closed when sidecar compliance review and phase-eval
+  paths mismatch, when phase-eval is missing or lacks the rule-claim binding phase, when phase-eval
+  does not use the sidecar rule links, when path checks fail, when sidecar direct-eval evidence is
+  missing or mismatched, when the phase is not reviewer-ready, or when selected sidecar paths do not
+  exist.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/review_packet_index_sidecar.py` owns sidecar lineage extraction and
+  validation checks inside the existing project-planning layer. Review-packet boundary tests now
+  budget the new helper and sidecar test suite.
+- smoke:
+  fixture-backed CLI smoke under
+  `/var/folders/7x/dm39gsxj38z2p2xtn3hqlj2h0000gn/T/usfs-r1-sidecar-review-packet.gd2_t06m/`
+  ran `review-packet-index --review-id review-packet-sidecar-smoke`, recorded sidecar lineage in
+  row inventory and packet index outputs, and kept
+  `sidecar_rule_claim_lineage_failed_check_count=0`.
+- boundary:
+  no ignored production `source_library/` outputs were mutated. Knowledge-graph sidecar adoption
+  remains the future bounded packet.
+
 ## Sidecar Phase Eval Adoption Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
@@ -43,8 +78,9 @@ Latest implementation update on 2026-06-01 UTC:
   sidecar rule links, used sidecar `rule_claim_link_eval_results.json`, and kept
   `rule_claim_binding` passed and reviewer-ready.
 - boundary:
-  no ignored production `source_library/` outputs were mutated. Reviewer package and
-  knowledge-graph sidecar adoption remain future bounded packets.
+  no ignored production `source_library/` outputs were mutated. This predecessor packet left
+  reviewer package and knowledge-graph sidecar adoption as future bounded packets; the newer section
+  above records reviewer package closeout. Knowledge-graph sidecar adoption remains future work.
 
 ## Sidecar Compliance Review Adoption Resolved Locally
 

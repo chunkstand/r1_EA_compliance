@@ -8,6 +8,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPO_ROOT / "src" / "usfs_r1_ea_sources"
 SUITE_BUDGETS = {
     "tests/test_review_packet_index.py": 400,
+    "tests/test_review_packet_index_sidecar.py": 250,
     "tests/test_review_packet_index_test_boundary.py": 250,
 }
 SOURCE_FAMILY_BUDGETS = {
@@ -16,6 +17,7 @@ SOURCE_FAMILY_BUDGETS = {
     "src/usfs_r1_ea_sources/review_packet_index_common.py": 200,
     "src/usfs_r1_ea_sources/review_packet_index_inventory.py": 600,
     "src/usfs_r1_ea_sources/review_packet_index_outputs.py": 600,
+    "src/usfs_r1_ea_sources/review_packet_index_sidecar.py": 220,
 }
 SPLIT_SUITES = ("tests/test_review_packet_index.py",)
 ALLOWED_TOP_LEVEL_HELPERS = {
