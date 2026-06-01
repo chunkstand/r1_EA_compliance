@@ -1,11 +1,11 @@
 # Current Routing
-Date: 2026-05-31
+Date: 2026-06-01
 
 Use this short route before opening append-only docs.
 
 ## New Session Start
 - Read this file first, then `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
-- Latest resolved source-set graph-KB slice: operational graph query surface after f70
+- Latest resolved source-set graph-KB slice: phase-gated operational graph query surface after f70
   canonical semantic graph direct-eval strengthening; exact counts live in
   `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
@@ -16,7 +16,7 @@ Use this short route before opening append-only docs.
 
 ## Active Route
 - Graph-KB status: f70 forest-plan graph readiness, canonical semantic graph direct eval, and
-  the local operational query/eval surface are green; use the current-state doc for counts and residual boundaries.
+  the local operational query/eval phase gate are green; use the current-state doc for counts and residual boundaries.
 - Runtime constraint: forest-specific examples fail closed unless runtime forest-plan resolution matches the governed forest.
 - ECID is historical replay evidence, not a current promotion route; keep it out of governed forest-specific example routing.
 - Architecture route: `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` and `config/architecture_large_file_inventory_v1.json` own the oversized-owner backlog.

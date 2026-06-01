@@ -1,6 +1,6 @@
 {
   "version": "architecture-large-file-inventory-v1",
-  "as_of": "2026-05-31",
+  "as_of": "2026-06-01",
   "reviewable_line_threshold": 800,
   "probe_command": "python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20",
   "plan_path": "docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md",
@@ -190,7 +190,7 @@
       "files": [
         {
           "path": "tests/test_phase_eval_direct_eval_contracts.py",
-          "line_count": 992
+          "line_count": 1136
         }
       ]
     },
@@ -205,7 +205,7 @@
       "files": [
         {
           "path": "src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py",
-          "line_count": 1044
+          "line_count": 1057
         }
       ]
     },

@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-05-31
+Date: 2026-06-01
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
@@ -43,7 +43,7 @@ history below.
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
   extraction-fidelity eval source-owner reduction after the architecture
-  control-plane gap closeout. The current probe reports `502` code files, `17` code files above `800`,
+  control-plane gap closeout. The current probe reports `503` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
   `config/architecture_large_file_inventory_v1.json` owns the exact `9`
@@ -110,8 +110,11 @@ history below.
   currentness metadata, readiness blockers, compact neighborhood edges, and
   freshness warnings for stale graph inputs. Live f70 query eval passes `9`
   cases with `2` hard negatives, `7` query types, no failed cases, and
-  `freshness_warning_case_count=0`. A hosted HTTP service/auth/UI query
-  workflow remains future product work.
+  `freshness_warning_case_count=0`; source-set `phase-eval` now requires this
+  `knowledge_graph_query_surface` direct-eval artifact and fails closed on
+  missing, stale, identity-mismatched, failed, or freshness-warning-bearing
+  query eval output. A hosted HTTP service/auth/UI query workflow remains
+  future product work.
 
   semantic graph direct-eval strengthening: `semantic-graph-eval` is now the
   aggregate direct-eval owner for `canonical_semantic_graph`, backed by
@@ -120,27 +123,27 @@ history below.
   `12` cases with `5` positive report cases, `7` controlled negative cases,
   and `8` coverage categories. Source-set
   `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now requires
-  `canonical_semantic_graph` and passes `21/21` phases with
-  `critical_phase_count=8`, `direct_eval_ready_phase_count=8`,
+  `canonical_semantic_graph` and, with the query-surface gate, passes `22/22`
+  phases with `critical_phase_count=9`, `direct_eval_ready_phase_count=9`,
   `missing_direct_eval_phase_count=0`, and `reviewer_ready=true`. This closes
-  the semantic graph direct-eval strengthening gap; the operational KB query/API
-  surface remains future graph-KB product work.
+  the semantic graph direct-eval strengthening gap; hosted KB service/auth/UI
+  work remains future graph-KB product work.
 
   extraction-fidelity eval owner reduction: the first source-owner oversized
   reduction slice is closed locally. `extraction_fidelity_eval.py` remains the
   public facade and output-schema assembler at `716` lines, while
   `extraction_fidelity_eval_runtime.py` owns temporary extraction runs,
   per-case execution, metric checks, and runtime helpers at `442` lines. The
-  live probe reports `502` code files, `17` code files above `800`, no Python or JS/TS cycles,
+  live probe reports `503` code files, `17` code files above `800`, no Python or JS/TS cycles,
   and no local module above the `20`-import fan-out gate.
   The live inventory now records `9` source owners and `8` test owners.
   Local closeout commit: `dca87e8` (`Split extraction fidelity eval runtime`).
 
   architecture control-plane closeout: the architecture quality gate now
-  matches the live 2026-05-31 probe and fails closed on inventory drift.
+  matches the live 2026-06-01 probe and fails closed on inventory drift.
   `config/architecture_large_file_inventory_v1.json` records `17` code files
   above `800` as `9` source owners and `8` test owners. The probe command
-  reports `502` code files, no Python or JS/TS cycles, and no local module
+  reports `503` code files, no Python or JS/TS cycles, and no local module
   above the `20`-import fan-out gate. `README.md` and
   `docs/CURRENT_ROUTING.md` are compact route surfaces again; volatile live
   counts stay in `docs/CURRENT_SYSTEM_STATE.md` and this handoff.
@@ -160,7 +163,7 @@ history below.
   `6/6`, `claim-eval` passes `10/10`, `rule-claim-eval` passes `24/24`,
   `semantic-graph-eval` passes `12/12`, and
   source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes
-  `21/21` phases with all eight critical source-set phases direct-eval backed.
+  `22/22` phases with all nine critical source-set phases direct-eval backed.
   This closes the f70 forest-plan graph readiness slice; broader
   source-currentness readiness blocker metadata remains represented separately
   in the knowledge graph.

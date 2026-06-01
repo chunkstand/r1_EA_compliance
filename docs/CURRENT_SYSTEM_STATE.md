@@ -17,7 +17,7 @@ For a fresh session start before this append-only state log, read
 
 ## Operational Graph-KB Query Surface Resolved Locally
 
-Latest implementation update on 2026-05-31 UTC:
+Latest implementation update on 2026-06-01 UTC:
 
 - update:
   the first operational graph-KB query surface is closed locally. New commands
@@ -40,15 +40,24 @@ Latest implementation update on 2026-05-31 UTC:
   The f70 replay passes `9` cases with `2` hard negatives, `7` covered query
   types (`citation`, `edge_type`, `forest_unit`, `node_id`, `node_type`,
   `readiness_blocker`, and `source_record`), no failed cases, and
-  `freshness_warning_case_count=0`.
+  `freshness_warning_case_count=0`. `config/phase_eval_direct_eval_v1.json`
+  now requires `knowledge_graph_query_surface` for the active f70 source set,
+  so source-set `phase-eval` fails closed if the query eval is missing, stale,
+  identity-mismatched, failed, or reports freshness warnings. The current
+  source-set replay passes `22/22` phases with `critical_phase_count=9`,
+  `direct_eval_ready_phase_count=9`, and
+  `knowledge_graph_query_surface="direct_eval_present"`.
 - architecture effect:
   the new query implementation is split across
-  `src/usfs_r1_ea_sources/knowledge_graph_query.py` (`693` lines) and
-  `src/usfs_r1_ea_sources/knowledge_graph_query_eval.py` (`356` lines), both
-  owned by the existing `knowledge_graph` architecture layer. The fresh
-  architecture probe reports `502` code files, `17` code files above `800`,
-  no Python or JS/TS import cycles, and no source module above the `20`-import
-  fan-out gate.
+  `src/usfs_r1_ea_sources/knowledge_graph_query.py` (`695` lines) and
+  `src/usfs_r1_ea_sources/knowledge_graph_query_eval.py` (`363` lines), both
+  owned by the existing `knowledge_graph` architecture layer. The source-set
+  readiness binding is isolated in
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_knowledge_graph.py`
+  (`205` lines), keeping the oversized source-set phase gate from absorbing a
+  full evaluator. The fresh architecture probe reports `503` code files, `17`
+  code files above `800`, no Python or JS/TS import cycles, and no source
+  module above the `20`-import fan-out gate.
 - boundary:
   this closes the local operational query/API-contract slice for the graph-KB.
   A hosted HTTP service, authentication, or UI query workflow remains future
@@ -56,7 +65,7 @@ Latest implementation update on 2026-05-31 UTC:
 
 ## Semantic Graph Direct-Eval Strengthening Resolved Locally
 
-Latest implementation update on 2026-05-31 UTC:
+Latest implementation update on 2026-06-01 UTC:
 
 - update:
   `canonical_semantic_graph` now has a first-class aggregate direct-eval owner.
@@ -75,14 +84,13 @@ Latest implementation update on 2026-05-31 UTC:
 - phase-eval integration:
   `config/phase_eval_direct_eval_v1.json` now requires
   `canonical_semantic_graph` for the active f70 source set. Source-set
-  `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now passes `21/21`
-  phases with `critical_phase_count=8`, `direct_eval_ready_phase_count=8`,
+  `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now passes `22/22`
+  phases with `critical_phase_count=9`, `direct_eval_ready_phase_count=9`,
   `missing_direct_eval_phase_count=0`, `threshold_failed_phase_count=0`, and
   `reviewer_ready=true`.
 - boundary:
   this closes the semantic graph direct-eval strengthening gap. It does not add
-  the separate operational KB query/API surface; that remains future graph-KB
-  product work.
+  hosted KB service/auth/UI work; that remains future graph-KB product work.
 
 ## Extraction Fidelity Eval Owner Reduction Resolved Locally
 
@@ -96,7 +104,7 @@ Latest implementation update on 2026-05-31 UTC:
   extraction runs, per-case execution, metric checks, and runtime helpers.
 - architecture effect:
   `extraction_fidelity_eval.py` is now `716` lines and the new runtime owner is
-  `442` lines. The architecture probe reports `502` code files, `17` code files above `800`,
+  `442` lines. The architecture probe reports `503` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source module
   above the `20`-import fan-out gate. The live inventory now records `9`
   source owners and `8` test owners.
@@ -110,7 +118,7 @@ Latest implementation update on 2026-05-31 UTC:
 
 ## Architecture Control-Plane Gap Closeout Resolved Locally
 
-Latest implementation update on 2026-05-31 UTC:
+Latest implementation update on 2026-06-01 UTC:
 
 - update:
   the architecture quality gate is rebaselined to the live probe instead of
@@ -118,11 +126,11 @@ Latest implementation update on 2026-05-31 UTC:
   records `17` code files above `800`, grouped as `9` source owners and `8`
   test owners, with exact path and line-count assertions in
   `tests/test_architecture_quality.py`. Later graph-KB slices added under-800
-  source and test modules; the current probe therefore reports `502` code
+  source and test modules; the current probe therefore reports `503` code
   files while the oversized-owner count remains `17`.
 - probe result:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `502` code files, `17` code files above `800`, no Python or JS/TS
+  reports `503` code files, `17` code files above `800`, no Python or JS/TS
   import cycles, and no source module above the `20`-import fan-out gate.
 - route-doc control:
   `README.md` and `docs/CURRENT_ROUTING.md` are compact, non-volatile route
@@ -173,9 +181,9 @@ Latest implementation update on 2026-05-31 UTC:
   `wrong_forest_component_rate=0.0`, and `hard_negative_zero_match_rate=1.0`.
   `semantic-graph-eval` passes `12/12` cases with `7` controlled negatives.
   Source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes
-  `21/21` phases with `reviewer_ready=true`,
+  `22/22` phases with `reviewer_ready=true`,
   `identity_mismatch_phase_count=0`, `missing_direct_eval_phase_count=0`, and
-  all eight critical source-set phases direct-eval backed.
+  all nine critical source-set phases direct-eval backed.
 - boundary:
   this closes the f70 forest-plan graph readiness and downstream graph-artifact
   freshness slice. It does not convert broader source-currentness metadata into

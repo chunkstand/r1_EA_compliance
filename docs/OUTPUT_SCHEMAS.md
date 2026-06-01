@@ -1539,6 +1539,11 @@ cases, records positive and hard-negative outcomes, enforces required query
 type coverage, and writes case-level expected/actual node IDs, node types, edge
 types, citation labels, freshness-warning counts, and contract checks. The
 current f70 contract covers `9` cases, `2` hard negatives, and `7` query types.
+`config/phase_eval_direct_eval_v1.json` requires the same artifact as the
+`knowledge_graph_query_surface` source-set phase. Source-set `phase-eval` must
+report that phase as `direct_eval_present`; missing output, source-set identity
+mismatch, failed cases, failed contract checks, or any query freshness warning
+are required direct-eval failures.
 
 Example query:
 

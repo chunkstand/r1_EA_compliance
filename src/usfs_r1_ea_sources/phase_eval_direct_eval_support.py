@@ -30,6 +30,9 @@ FOREST_PLAN_COMPONENT_RETRIEVAL_EVAL_RESULTS_SCHEMA_VERSION = (
     "forest-plan-component-retrieval-eval-results-v1"
 )
 SEMANTIC_GRAPH_EVAL_RESULTS_SCHEMA_VERSION = "semantic-graph-eval-results-v1"
+KNOWLEDGE_GRAPH_QUERY_EVAL_RESULTS_SCHEMA_VERSION = (
+    "knowledge-graph-query-eval-results-v1"
+)
 EXTRACTION_FIDELITY_EVAL_RESULTS_SCHEMA_VERSION = (
     "extraction-fidelity-eval-results-v0"
 )
@@ -43,6 +46,7 @@ SOURCE_SET_PHASE_PRODUCERS = {
     "extraction_fidelity_evaluation",
     "forest_plan_component_retrieval_evaluation",
     "forest_plan_profile_evaluation",
+    "knowledge_graph_query_evaluation",
     "phase_eval",
     "semantic_graph_direct_evaluation",
     "upstream_evaluation",

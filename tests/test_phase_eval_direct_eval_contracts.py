@@ -66,6 +66,21 @@ def test_committed_phase_eval_direct_eval_contract_tracks_required_phases() -> N
     assert source_set_phases["canonical_semantic_graph"]["required_source_set_ids"] == [
         FULL_CANONICAL_SOURCE_SET_ID
     ]
+    assert source_set_phases["knowledge_graph_query_surface"]["lane_id"] == (
+        "knowledge_graph_query_surface"
+    )
+    assert source_set_phases["knowledge_graph_query_surface"]["producer"] == (
+        "knowledge_graph_query_evaluation"
+    )
+    assert source_set_phases["knowledge_graph_query_surface"]["contract_path"] == (
+        "knowledge_graph_query_eval_v1.json"
+    )
+    assert source_set_phases["knowledge_graph_query_surface"]["results_filename"] == (
+        "knowledge_graph_query_eval_results.json"
+    )
+    assert source_set_phases["knowledge_graph_query_surface"]["required_source_set_ids"] == [
+        FULL_CANONICAL_SOURCE_SET_ID
+    ]
     assert source_set_phases["forest_plan_component_retrieval"]["lane_id"] == (
         "forest_plan_component_retrieval_eval"
     )
@@ -102,6 +117,7 @@ def test_phase_eval_direct_eval_marks_missing_required_summary() -> None:
     graph = summary["source_set_phase_statuses"]["nepa_3d_source_set_graph"]
     component_retrieval = summary["source_set_phase_statuses"]["forest_plan_component_retrieval"]
     semantic_graph = summary["source_set_phase_statuses"]["canonical_semantic_graph"]
+    query_surface = summary["source_set_phase_statuses"]["knowledge_graph_query_surface"]
 
     assert extraction["status"] == "direct_eval_missing"
     assert extraction["failure_reasons"] == ["missing_required_direct_eval"]
@@ -111,6 +127,8 @@ def test_phase_eval_direct_eval_marks_missing_required_summary() -> None:
     assert graph["failure_reasons"] == ["missing_required_direct_eval"]
     assert semantic_graph["status"] == "direct_eval_missing"
     assert semantic_graph["failure_reasons"] == ["missing_required_direct_eval"]
+    assert query_surface["status"] == "direct_eval_missing"
+    assert query_surface["failure_reasons"] == ["missing_required_direct_eval"]
     assert component_retrieval["status"] == "direct_eval_missing"
     assert component_retrieval["failure_reasons"] == ["missing_required_direct_eval"]
 
@@ -251,6 +269,80 @@ def test_phase_eval_direct_eval_rejects_semantic_graph_eval_threshold_failures()
     assert semantic_graph["status"] == "direct_eval_failed"
     assert semantic_graph["failure_reasons"] == ["direct_eval_threshold_failed"]
     assert semantic_graph["threshold_failures"]
+
+
+def test_phase_eval_direct_eval_accepts_knowledge_graph_query_eval() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        result_path = (
+            output_dir
+            / "derived"
+            / FULL_CANONICAL_SOURCE_SET_ID
+            / "knowledge_graph"
+            / "knowledge_graph_query_eval_results.json"
+        )
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        result_path.write_text(
+            json.dumps(
+                _knowledge_graph_query_eval_payload(
+                    source_set_id=FULL_CANONICAL_SOURCE_SET_ID
+                ),
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+        )
+
+    query_surface = summary["source_set_phase_statuses"]["knowledge_graph_query_surface"]
+    assert query_surface["status"] == "direct_eval_present"
+    assert query_surface["case_count"] == 9
+    assert query_surface["hard_negative_case_count"] == 2
+    assert query_surface["details"]["query_type_count"] == 7
+    assert query_surface["details"]["freshness_warning_case_count"] == 0
+
+
+def test_phase_eval_direct_eval_rejects_knowledge_graph_query_freshness_warnings() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        result_path = (
+            output_dir
+            / "derived"
+            / FULL_CANONICAL_SOURCE_SET_ID
+            / "knowledge_graph"
+            / "knowledge_graph_query_eval_results.json"
+        )
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        result_path.write_text(
+            json.dumps(
+                _knowledge_graph_query_eval_payload(
+                    source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+                    freshness_warning_case_count=1,
+                ),
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+        )
+
+    query_surface = summary["source_set_phase_statuses"]["knowledge_graph_query_surface"]
+    assert query_surface["status"] == "direct_eval_failed"
+    assert query_surface["failure_reasons"] == ["direct_eval_threshold_failed"]
+    assert query_surface["threshold_failures"] == [
+        {
+            "metric": "freshness_warning_case_count",
+            "reason": "freshness_warnings_present",
+            "actual": 1,
+            "expected_maximum": 0,
+        }
+    ]
 
 
 def test_phase_eval_direct_eval_rejects_identity_mismatch() -> None:
@@ -908,6 +1000,58 @@ def _semantic_graph_eval_payload(
             "hard_negative_case_count": 7,
             "failed_positive_case_ids": failed_positive_case_ids,
             "failed_negative_case_ids": failed_negative_case_ids,
+        },
+    }
+
+
+def _knowledge_graph_query_eval_payload(
+    *,
+    source_set_id: str,
+    passed: bool = True,
+    freshness_warning_case_count: int = 0,
+    failed_case_ids: list[str] | None = None,
+) -> dict:
+    failed_case_ids = failed_case_ids or []
+    return {
+        "schema_version": "knowledge-graph-query-eval-results-v1",
+        "eval_id": "knowledge-graph-query-eval-v1",
+        "contract_id": "knowledge-graph-query-eval-v1",
+        "contract_version": "1.0.0",
+        "source_set_id": source_set_id,
+        "passed": passed,
+        "case_count": 9,
+        "hard_negative_case_count": 2,
+        "query_type_count": 7,
+        "query_types": [
+            "citation",
+            "edge_type",
+            "forest_unit",
+            "node_id",
+            "node_type",
+            "readiness_blocker",
+            "source_record",
+        ],
+        "freshness_warning_case_count": freshness_warning_case_count,
+        "contract": {
+            "sha256": hashlib.sha256(
+                (REPO_ROOT / "config" / "knowledge_graph_query_eval_v1.json").read_bytes()
+            ).hexdigest()
+        },
+        "contract_checks": [
+            {
+                "name": "knowledge_graph_query_eval_cases_pass",
+                "passed": passed,
+            }
+        ],
+        "summary": {
+            "passed": passed,
+            "source_set_id": source_set_id,
+            "case_count": 9,
+            "hard_negative_case_count": 2,
+            "query_type_count": 7,
+            "failed_case_ids": failed_case_ids,
+            "failed_contract_check_names": [] if passed else ["knowledge_graph_query_eval_cases_pass"],
+            "freshness_warning_case_count": freshness_warning_case_count,
         },
     }
 

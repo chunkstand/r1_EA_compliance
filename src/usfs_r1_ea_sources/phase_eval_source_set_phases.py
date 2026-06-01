@@ -62,6 +62,7 @@ def build_source_set_phases(
     semantic_graph_reports: dict[str, tuple[dict | None, Path]],
     component_retrieval_direct_eval: dict | None,
     semantic_graph_direct_eval: dict | None,
+    knowledge_graph_query_direct_eval: dict | None,
 ) -> list[dict]:
     phases = [
         _phase(
@@ -266,6 +267,18 @@ def build_source_set_phases(
                     reviewer_ready=True,
                     details={
                         "results_path": semantic_graph_direct_eval.get("summary_path"),
+                        "expected_source_set_id": source_set_id,
+                    },
+                )
+            )
+        if knowledge_graph_query_direct_eval is not None:
+            phases.append(
+                _phase(
+                    "knowledge_graph_query_surface",
+                    passed=True,
+                    reviewer_ready=True,
+                    details={
+                        "results_path": knowledge_graph_query_direct_eval.get("summary_path"),
                         "expected_source_set_id": source_set_id,
                     },
                 )

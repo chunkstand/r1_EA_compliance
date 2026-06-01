@@ -460,6 +460,9 @@ def run_phase_aligned_eval(
     semantic_graph_direct_eval = direct_eval_coverage["source_set_phase_statuses"].get(
         "canonical_semantic_graph"
     )
+    knowledge_graph_query_direct_eval = direct_eval_coverage["source_set_phase_statuses"].get(
+        "knowledge_graph_query_surface"
+    )
     phases = build_source_set_phases(
         output_dir=output_dir,
         source_set_id=source_set_id,
@@ -541,6 +544,7 @@ def run_phase_aligned_eval(
         },
         component_retrieval_direct_eval=component_retrieval_direct_eval,
         semantic_graph_direct_eval=semantic_graph_direct_eval,
+        knowledge_graph_query_direct_eval=knowledge_graph_query_direct_eval,
     )
     phases.extend(
         build_review_scoped_phases(
