@@ -278,6 +278,50 @@ class RetrievalTests(unittest.TestCase):
             self.assertTrue(hit["parent_window_id"])
             self.assertNotIn("source_record_id:", hit["evidence_span"]["text"])
 
+    def test_build_retrieval_index_can_use_noncanonical_index_dir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1PLAN-001"],
+            )
+            _write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-001",
+                        title="Forest Plan",
+                        document_role="forest_plan",
+                        authority_level="forest_plan",
+                        citation_label="R1PLAN-001 | Forest Plan | artifact abc123",
+                        text="Desired condition DC-01 Watersheds are resilient.",
+                    )
+                ],
+            )
+            _write_catalog_sqlite(output_dir, {"R1PLAN-001": ["Forest plan direction"]})
+            index_dir = output_dir / "alt-indexes" / "retrieval_sidecar"
+
+            result = build_retrieval_index(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                index_dir=index_dir,
+            )
+            query = query_retrieval_index(
+                index_path=result.sqlite_path,
+                query="watersheds resilient",
+            )
+
+            self.assertEqual(result.index_dir, index_dir)
+            self.assertEqual(result.sqlite_path, index_dir / "evidence_index.sqlite")
+            self.assertEqual(query["hit_count"], 1)
+            self.assertFalse(
+                (output_dir / "derived" / source_set_id / "retrieval" / "evidence_index.sqlite").exists()
+            )
+
     def test_retrieval_query_weights_rare_terms_over_generic_nepa_overlap(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

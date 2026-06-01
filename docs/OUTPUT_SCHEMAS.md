@@ -4343,6 +4343,12 @@ content hash. `summary.json` has schema version `chunk-layers-v1` and records so
 sidecar paths, atomic/structural/window counts, structure-type counts, parent-window coverage, and
 `validation_passed`.
 
+`chunk-sidecar-retrieval-eval` is the opt-in promotion-readiness gate for these sidecar chunks. It
+builds or reuses `chunks_v2/`, builds a sidecar retrieval index over `atomic_chunks.jsonl`, compares
+the same retrieval eval contract against the sidecar index and the baseline retrieval index, and
+writes `retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json`. It does not make
+`chunks_v2` the active graph, claim, rule-link, compliance, or review chunk spine.
+
 ## First-Class Eval Trace Contract
 
 Tracked contract: `config/eval_trace_inventory_contract_v1.json`
@@ -5003,6 +5009,10 @@ The `retrieval-build` command writes:
 - `retrieval_validation.json`
 - `summary.json`
 
+When `--index-dir` is supplied, `retrieval-build` writes the same files to that explicit directory
+instead of the canonical `retrieval/` directory. This is used by sidecar gates such as
+`retrieval_sidecar/` and does not create or replace the canonical retrieval index.
+
 `retrieval-build` reads:
 
 - `source_library/derived/<source_set_id>/chunks/chunks.jsonl`
@@ -5115,6 +5125,19 @@ when retrieval returns zero hits and do not require provenance-bearing results. 
 declare optional `expected_chunk_ids`, `expected_structure_types`, `expected_citation_labels`, and
 `require_parent_window` fields for atomic/structural retrieval checks. These fields are optional and
 leave legacy source-level eval cases compatible.
+
+`chunk-sidecar-retrieval-eval` writes
+`source_library/derived/<source_set_id>/retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json`
+by default. The result schema version is `chunk-sidecar-retrieval-eval-results-v1` and records:
+
+- sidecar chunk summary path, sidecar retrieval index path, sidecar eval path, baseline index path,
+  and baseline eval path
+- sidecar and baseline metric summaries
+- metric comparisons for pass rate, recall, atomic chunk recall, structure hit rate, parent-window
+  coverage, citation correctness, MRR, and NDCG
+- fail-closed checks for sidecar chunk validation, sidecar retrieval index validation, sidecar eval
+  pass status, atomic/structural/parent-window eval case coverage, baseline eval completion, and
+  sidecar-not-worse-than-baseline metrics
 
 ## Source Claim Graph Outputs
 

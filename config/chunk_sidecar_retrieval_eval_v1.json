@@ -1,0 +1,118 @@
+{
+  "schema_version": "retrieval-eval-v1",
+  "eval_id": "chunk-sidecar-retrieval-eval-v1",
+  "coverage_requirements": {
+    "case_count": 4,
+    "hard_negative_case_count": 1,
+    "multi_source_case_count": 0
+  },
+  "metric_thresholds": {
+    "case_count": {
+      "min": 4
+    },
+    "atomic_chunk_recall_at_k": {
+      "min": 1.0
+    },
+    "structure_hit_rate": {
+      "min": 1.0
+    },
+    "parent_window_coverage_rate": {
+      "min": 1.0
+    },
+    "citation_correctness_rate": {
+      "min": 1.0
+    },
+    "hard_negative_pass_rate": {
+      "min": 1.0
+    },
+    "false_positive_rate": {
+      "max": 0.0
+    }
+  },
+  "cases": [
+    {
+      "id": "nepa-title-legal-section",
+      "query": "42 USC national environmental policy",
+      "expected_source_record_ids": [
+        "FED-001"
+      ],
+      "expected_chunk_ids": [
+        "chunk:e62cf96ed0cd390cb0a44b9529831841"
+      ],
+      "expected_structure_types": [
+        "legal_section"
+      ],
+      "expected_citation_labels": [
+        "FED-001"
+      ],
+      "expected_terms": [
+        "42 USC",
+        "national environmental policy"
+      ],
+      "filters": {
+        "source_record_id": "FED-001"
+      },
+      "require_parent_window": true,
+      "top_k": 10
+    },
+    {
+      "id": "planning-rule-desired-condition",
+      "query": "desired condition social economic ecological characteristics plan area",
+      "expected_source_record_ids": [
+        "FED-003"
+      ],
+      "expected_chunk_ids": [
+        "chunk:2e0d6fc7a404ea583cb56f14af1c2fb4"
+      ],
+      "expected_structure_types": [
+        "desired_condition"
+      ],
+      "expected_citation_labels": [
+        "FED-003"
+      ],
+      "expected_terms": [
+        "desired condition",
+        "plan area"
+      ],
+      "filters": {
+        "source_record_id": "FED-003"
+      },
+      "require_parent_window": true,
+      "top_k": 10
+    },
+    {
+      "id": "clean-water-act-toxic-pollutants-table-row",
+      "query": "toxic pollutants table 1 Committee Print Numbered 95-30",
+      "expected_source_record_ids": [
+        "FED-022"
+      ],
+      "expected_chunk_ids": [
+        "chunk:a06139a26c518c9018b3f93549fdbb80"
+      ],
+      "expected_structure_types": [
+        "table_row"
+      ],
+      "expected_citation_labels": [
+        "FED-022"
+      ],
+      "expected_terms": [
+        "toxic pollutants",
+        "table 1"
+      ],
+      "filters": {
+        "source_record_id": "FED-022"
+      },
+      "require_parent_window": true,
+      "top_k": 10
+    },
+    {
+      "id": "missing-sidecar-source-hard-negative",
+      "query": "missing sidecar structural evidence impossible phrase",
+      "expect_no_hits": true,
+      "hard_negative": true,
+      "filters": {
+        "source_record_id": "R1EA-NOT-A-SOURCE"
+      }
+    }
+  ]
+}

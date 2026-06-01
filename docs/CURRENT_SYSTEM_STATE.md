@@ -15,6 +15,43 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Retrieval Eval Promotion Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the second extraction/chunking/retrieval accuracy packet is closed locally on
+  isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `chunk-sidecar-retrieval-eval` now builds or reuses `chunks_v2`, writes a
+  noncanonical sidecar retrieval index, runs the same eval contract against
+  sidecar and baseline retrieval indexes, and writes
+  `retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json`.
+- contract effect:
+  `retrieval-build --index-dir` can write a retrieval index outside the
+  canonical `retrieval/` directory, and retrieval eval can infer source-set
+  identity from index metadata for those sidecar paths. The sidecar chunk-layer
+  validator now fails closed on duplicate atomic chunk IDs.
+- architecture closeout:
+  the live architecture probe for this branch reports `509` code files, `17`
+  code files above `800`, no Python or JS/TS import cycles, and no source
+  module above the `20`-import fan-out gate. `README.md` remains within the
+  `220`-line route-surface budget.
+- live smoke:
+  the ignored f70 corpus in the main checkout was read without mutating tracked
+  or production derived outputs. Temporary `/tmp` sidecars rebuilt `296442`
+  atomic chunks, `116004` structural chunks, and `19117` parent context
+  windows with `validation_passed=true`. The sidecar eval passed with
+  `pass_rate=1.0`, `atomic_chunk_recall_at_k=1.0`,
+  `structure_hit_rate=1.0`, `parent_window_coverage_rate=1.0`, and
+  `citation_correctness_rate=1.0`. The baseline comparison completed and
+  failed the sidecar-specific atomic/structure/parent checks with
+  `pass_rate=0.25`.
+- boundary:
+  this is a promotion-readiness eval gate only. It does not replace baseline
+  `chunks/chunks.jsonl`, does not make `chunks_v2` the active graph or claim
+  spine, and does not rebuild graph, claim, rule-link, review, compliance, or
+  knowledge-graph artifacts.
+
 ## Extraction Chunking Retrieval Accuracy Sidecar Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
@@ -98,7 +135,7 @@ Latest implementation update on 2026-06-01 UTC:
   readiness binding is isolated in
   `src/usfs_r1_ea_sources/phase_eval_direct_eval_knowledge_graph.py`
   (`205` lines), keeping the oversized source-set phase gate from absorbing a
-  full evaluator. The fresh architecture probe reports `503` code files, `17`
+  full evaluator. The fresh architecture probe reports `509` code files, `17`
   code files above `800`, no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
 - boundary:
@@ -147,7 +184,7 @@ Latest implementation update on 2026-05-31 UTC:
   extraction runs, per-case execution, metric checks, and runtime helpers.
 - architecture effect:
   `extraction_fidelity_eval.py` is now `716` lines and the new runtime owner is
-  `442` lines. The architecture probe reports `503` code files, `17` code files above `800`,
+  `442` lines. The architecture probe reports `509` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source module
   above the `20`-import fan-out gate. The live inventory now records `9`
   source owners and `8` test owners.
@@ -169,11 +206,11 @@ Latest implementation update on 2026-06-01 UTC:
   records `17` code files above `800`, grouped as `9` source owners and `8`
   test owners, with exact path and line-count assertions in
   `tests/test_architecture_quality.py`. Later graph-KB slices added under-800
-  source and test modules; the current probe therefore reports `503` code
+  source and test modules; the current probe therefore reports `509` code
   files while the oversized-owner count remains `17`.
 - probe result:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `503` code files, `17` code files above `800`, no Python or JS/TS
+  reports `509` code files, `17` code files above `800`, no Python or JS/TS
   import cycles, and no source module above the `20`-import fan-out gate.
 - route-doc control:
   `README.md` and `docs/CURRENT_ROUTING.md` are compact, non-volatile route

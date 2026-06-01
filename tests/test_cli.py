@@ -274,6 +274,37 @@ def test_chunk_accuracy_parser_accepts_audit_and_sidecar_commands() -> None:
     assert layer_args.atomic_max_tokens == 256
 
 
+def test_chunk_sidecar_retrieval_eval_parser_accepts_comparison_paths() -> None:
+    args = build_parser().parse_args(
+        [
+            "chunk-sidecar-retrieval-eval",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-v2-dir",
+            "chunks_v2",
+            "--sidecar-index-dir",
+            "retrieval_sidecar",
+            "--baseline-index-path",
+            "retrieval/evidence_index.sqlite",
+            "--results-dir",
+            "retrieval_sidecar_eval",
+            "--top-k",
+            "10",
+            "--rebuild-sidecar",
+        ]
+    )
+
+    assert args.command == "chunk-sidecar-retrieval-eval"
+    assert args.chunks_v2_dir == Path("chunks_v2")
+    assert args.sidecar_index_dir == Path("retrieval_sidecar")
+    assert args.baseline_index_path == Path("retrieval/evidence_index.sqlite")
+    assert args.results_dir == Path("retrieval_sidecar_eval")
+    assert args.top_k == 10
+    assert args.rebuild_sidecar is True
+
+
 def test_batch_download_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     args = build_parser().parse_args(
         [

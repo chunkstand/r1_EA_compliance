@@ -44,6 +44,7 @@ class DerivedCommandDefaults:
     knowledge_graph_query_eval_path: Path
     source_register_proving_slice_manifest_path: Path
     source_partition_contract_path: Path
+    chunk_sidecar_retrieval_eval_path: Path
 
 
 def build_derived_command_specs(
@@ -304,6 +305,7 @@ def build_derived_command_specs(
                 _output_dir_arg(),
                 _arg("--source-set-id"),
                 _arg("--chunks-path", type=Path),
+                _arg("--index-dir", type=Path),
                 _arg("--catalog-dir", type=Path),
                 _arg("--catalog-sqlite-path", type=Path),
                 _arg("--allow-failed-extraction", action="store_true"),
@@ -338,6 +340,25 @@ def build_derived_command_specs(
                 _arg("--eval-file", default=Path("config/retrieval_eval_seed.json"), type=Path),
                 _arg("--top-k", type=int, default=5),
                 _arg("--results-dir", type=Path),
+            ),
+        ),
+        DerivedCommandSpec(
+            name="chunk-sidecar-retrieval-eval",
+            help="Compare sidecar atomic chunk retrieval against the baseline retrieval index.",
+            arguments=(
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg(
+                    "--eval-file",
+                    default=defaults.chunk_sidecar_retrieval_eval_path,
+                    type=Path,
+                ),
+                _arg("--chunks-v2-dir", type=Path),
+                _arg("--sidecar-index-dir", type=Path),
+                _arg("--baseline-index-path", type=Path),
+                _arg("--results-dir", type=Path),
+                _arg("--top-k", type=int, default=5),
+                _arg("--rebuild-sidecar", action="store_true"),
             ),
         ),
         DerivedCommandSpec(

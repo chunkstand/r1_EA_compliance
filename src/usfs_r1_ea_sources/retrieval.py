@@ -14,6 +14,7 @@ from .retrieval_eval_runtime import run_retrieval_eval
 from .retrieval_query import query_retrieval_index
 from .retrieval_runtime import _write_sqlite_index
 from .retrieval_runtime import build_retrieval_index
+from .sidecar_retrieval_eval import run_chunk_sidecar_retrieval_eval
 
 
 __all__ = [
@@ -30,5 +31,6 @@ __all__ = [
     "build_retrieval_index",
     "default_index_path",
     "query_retrieval_index",
+    "run_chunk_sidecar_retrieval_eval",
     "run_retrieval_eval",
 ]

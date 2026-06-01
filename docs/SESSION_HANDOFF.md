@@ -30,17 +30,17 @@ history below.
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
 - latest resolved extraction/chunking/retrieval accuracy slice:
-  `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_IMPLEMENTATION_MILESTONE_PLAN.md`
-  is resolved locally on branch
-  `codex/extraction-chunking-retrieval-accuracy`. It adds
-  `chunk-quality-audit`, `chunk-layer-build`, sidecar `chunks_v2` artifacts,
-  contextual FTS/BM25 retrieval fields, and optional atomic/structural retrieval
-  eval expectations without replacing the baseline chunk spine or rebuilding
-  graph/review artifacts.
+  `docs/SIDECAR_RETRIEVAL_EVAL_PROMOTION_MILESTONE_PLAN.md` is resolved
+  locally on branch `codex/extraction-chunking-retrieval-accuracy`. It adds
+  `chunk-sidecar-retrieval-eval`, explicit sidecar retrieval index placement
+  through `retrieval-build --index-dir`, and a comparison artifact that proves
+  atomic chunk recall, structure hit rate, parent-window coverage, citation
+  correctness, and sidecar-not-worse-than-baseline metrics before any downstream
+  promotion.
 - active extraction/chunking/retrieval accuracy slice:
   none. Future promotion of `chunks_v2` into graph, claim, rule-link, or
   compliance review artifacts should open a new bounded packet with direct eval
-  thresholds over the sidecar layer.
+  thresholds over the sidecar layer and consumer-specific contract updates.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
@@ -55,7 +55,7 @@ history below.
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
   extraction-fidelity eval source-owner reduction after the architecture
-  control-plane gap closeout. The current probe reports `503` code files, `17` code files above `800`,
+  control-plane gap closeout. The current probe reports `509` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
   `config/architecture_large_file_inventory_v1.json` owns the exact `9`
@@ -117,19 +117,26 @@ history below.
   packet from
   `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_RESEARCH_BRIEF.md` and
   `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_IMPROVEMENT_BRIEF.md` is closed
-  locally on the isolated branch. `chunk-quality-audit` writes per-source
+  locally on the isolated branch, and the next sidecar retrieval eval promotion
+  packet is now also closed locally. `chunk-quality-audit` writes per-source
   parser/layout/boundary risk diagnostics, and `chunk-layer-build` writes
   opt-in `chunks_v2` atomic chunks, structural chunks, parent context windows,
-  and a summary. Retrieval indexes now store deterministic contextual index
-  text and sidecar metadata when supplied; retrieval query uses FTS5/BM25 as a
+  and a summary. Retrieval indexes store deterministic contextual index text
+  and sidecar metadata when supplied; retrieval query uses FTS5/BM25 as a
   first-stage candidate source when available; retrieval eval can score
   expected chunk IDs, structure types, citation labels, and parent-window
-  presence. Live f70 smoke read the ignored main-checkout corpus without
-  mutating production derived outputs: audit passed over `113830` chunks and
-  `719` sources, and sidecar build wrote temporary `/tmp` outputs with
-  `296442` atomic chunks, `116004` structural chunks, `19117` parent windows,
-  and `validation_passed=true`. No graph, claim, rule-link, review, or
-  knowledge-graph rebuild was performed.
+  presence. `chunk-sidecar-retrieval-eval` now builds or reuses `chunks_v2`,
+  builds a noncanonical sidecar retrieval index through `--index-dir`, compares
+  sidecar and baseline eval results, and writes
+  `retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json`. Live f70
+  smoke read the ignored main-checkout corpus without mutating production
+  derived outputs: sidecar build wrote temporary `/tmp` outputs with `296442`
+  atomic chunks, `116004` structural chunks, `19117` parent windows, and
+  `validation_passed=true`; sidecar eval passed with `pass_rate=1.0`,
+  `atomic_chunk_recall_at_k=1.0`, `structure_hit_rate=1.0`,
+  `parent_window_coverage_rate=1.0`, and `citation_correctness_rate=1.0`,
+  while baseline comparison completed at `pass_rate=0.25`. No graph, claim,
+  rule-link, review, compliance, or knowledge-graph rebuild was performed.
 
   operational graph-KB query surface: the first local query/API-contract slice
   is closed locally. `src/usfs_r1_ea_sources/knowledge_graph_query.py` and
@@ -164,7 +171,7 @@ history below.
   public facade and output-schema assembler at `716` lines, while
   `extraction_fidelity_eval_runtime.py` owns temporary extraction runs,
   per-case execution, metric checks, and runtime helpers at `442` lines. The
-  live probe reports `503` code files, `17` code files above `800`, no Python or JS/TS cycles,
+  live probe reports `509` code files, `17` code files above `800`, no Python or JS/TS cycles,
   and no local module above the `20`-import fan-out gate.
   The live inventory now records `9` source owners and `8` test owners.
   Local closeout commit: `dca87e8` (`Split extraction fidelity eval runtime`).
@@ -173,7 +180,7 @@ history below.
   matches the live 2026-06-01 probe and fails closed on inventory drift.
   `config/architecture_large_file_inventory_v1.json` records `17` code files
   above `800` as `9` source owners and `8` test owners. The probe command
-  reports `503` code files, no Python or JS/TS cycles, and no local module
+  reports `509` code files, no Python or JS/TS cycles, and no local module
   above the `20`-import fan-out gate. `README.md` and
   `docs/CURRENT_ROUTING.md` are compact route surfaces again; volatile live
   counts stay in `docs/CURRENT_SYSTEM_STATE.md` and this handoff.

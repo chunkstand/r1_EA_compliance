@@ -1,16 +1,12 @@
 # USFS Region 1 EA Sources
 
-Local v1 NEPA Environmental Assessment reviewer-engine foundation for USDA
-Forest Service Region 1 source material.
+Local v1 NEPA Environmental Assessment reviewer-engine foundation for USDA Forest Service Region 1
+source material. The workbook is the source-of-truth input; the system captures workbook-defined
+source rows into an auditable `source_library/` and builds deterministic extraction, retrieval,
+evidence-graph, claim, rule-binding, and EA-review artifacts on top of that corpus.
 
-The workbook is the source-of-truth input for the knowledge base. The system
-captures workbook-defined source rows into a local, auditable `source_library/`
-and builds deterministic extraction, retrieval, evidence-graph, claim,
-rule-binding, and EA-review artifacts on top of that corpus.
-
-This repository is not a generic scraper or ad hoc document folder. Preserve
-workbook row identity, artifact provenance, citation labels, validation gates,
-and rebuildable derived layers.
+This is not a generic scraper or ad hoc document folder. Preserve workbook row identity, artifact
+provenance, citation labels, validation gates, and rebuildable derived layers.
 
 ## Start Here
 
@@ -35,9 +31,7 @@ They are intentionally not duplicated here.
 - `source_library/` is the local evidence store and is intentionally ignored by
   git unless the repo policy changes explicitly
 - Reviewer logic reads catalog surfaces, not raw artifact filenames:
-  - `source_library/catalog/review_sources.sqlite`
-  - `source_library/catalog/source_catalog.jsonl`
-  - `source_library/catalog/source_set_manifest.json`
+  `review_sources.sqlite`, `source_catalog.jsonl`, and `source_set_manifest.json`
 - The repo-root catalog is the named current source-set surface. Its tracked
   pointer is `config/current_source_set_v1.json`; historical catalog gates must
   live under `source_library/runs/` and must not keep `source_library/catalog/`
@@ -45,12 +39,9 @@ They are intentionally not duplicated here.
 - Raw artifacts are source bytes plus provenance; extraction, retrieval,
   evidence graph, claims, rule-claim links, and review outputs are rebuildable
   derived layers
-- Forest-specific example packages stay parallel to `Document_Register_Master`.
-  Runtime forest-plan scope is mandatory: registry applicability alone cannot
-  make a package usable for a non-matching forest. Current governed examples,
-  aggregate gate counts, and residual boundaries are owned by
-  `docs/CURRENT_SYSTEM_STATE.md` and `docs/SESSION_HANDOFF.md`, with packet
-  routes in `docs/CURRENT_ROUTING.md`.
+- Forest-specific example packages stay parallel to `Document_Register_Master`. Runtime
+  forest-plan scope is mandatory; current governed examples, aggregate gate counts, and residual
+  boundaries are owned by current-state/handoff docs, with routes in `docs/CURRENT_ROUTING.md`.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 
@@ -195,6 +186,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources chunk-quality-audit \
   --output-dir source_library \
   --source-set-id <source-set-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources chunk-layer-build \
+  --output-dir source_library \
+  --source-set-id <source-set-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources chunk-sidecar-retrieval-eval \
   --output-dir source_library \
   --source-set-id <source-set-id>
 ```

@@ -193,6 +193,7 @@ def _base_sidecar_record(
         str(chunk.get("source_set_id") or ""),
         str(chunk.get("source_record_id") or ""),
         str(chunk.get("artifact_sha256") or ""),
+        str(chunk.get("chunk_id") or ""),
         str(source_start),
         str(source_end),
         content_sha256,
@@ -406,6 +407,9 @@ def _sidecar_validation_passed(
     parent_windows: list[dict[str, Any]],
 ) -> bool:
     if not atomic_chunks:
+        return False
+    chunk_ids = [str(chunk.get("chunk_id") or "") for chunk in atomic_chunks]
+    if len(set(chunk_ids)) != len(chunk_ids):
         return False
     parent_ids = {window["window_id"] for window in parent_windows}
     return all(

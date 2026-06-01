@@ -41,6 +41,7 @@ def build_retrieval_index(
     source_set_id: str | None = None,
     chunks_path: Path | None = None,
     catalog_sqlite_path: Path | None = None,
+    index_dir: Path | None = None,
     allow_failed_extraction: bool = False,
     allow_partial_extraction: bool = False,
 ) -> RetrievalIndexBuildResult:
@@ -52,7 +53,7 @@ def build_retrieval_index(
 
         source_set_id = _source_set_id_from_catalog(output_dir)
     derived_source_dir = source_derived_dir(output_dir / "derived", source_set_id)
-    index_dir = derived_source_dir / "retrieval"
+    index_dir = Path(index_dir) if index_dir is not None else derived_source_dir / "retrieval"
     index_dir.mkdir(parents=True, exist_ok=True)
 
     chunks_path = chunks_path or derived_source_dir / "chunks" / "chunks.jsonl"

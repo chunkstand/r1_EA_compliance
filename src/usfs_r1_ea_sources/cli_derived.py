@@ -107,6 +107,10 @@ DEFAULT_SOURCE_PARTITION_CONTRACT_PATH = _module_attr(
     "source_partitions",
     "DEFAULT_SOURCE_PARTITION_CONTRACT_PATH",
 )
+DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH = _module_attr(
+    "sidecar_retrieval_eval",
+    "DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH",
+)
 
 
 def run_authority_ontology_validate(**kwargs):
@@ -245,6 +249,13 @@ def run_knowledge_graph_query_eval(**kwargs):
     return _module_attr("knowledge_graph_query_eval", "run_knowledge_graph_query_eval")(**kwargs)
 
 
+def run_chunk_sidecar_retrieval_eval(**kwargs):
+    return _module_attr(
+        "sidecar_retrieval_eval",
+        "run_chunk_sidecar_retrieval_eval",
+    )(**kwargs)
+
+
 def build_source_register_proving_slice(**kwargs):
     return _module_attr(
         "source_register_proving",
@@ -278,6 +289,7 @@ DERIVED_COMMANDS = {
     "retrieval-build",
     "retrieval-query",
     "retrieval-eval",
+    "chunk-sidecar-retrieval-eval",
     "evidence-graph-build",
     "nepa-knowledge-graph-export",
     "knowledge-graph-query",
@@ -318,6 +330,7 @@ COMMAND_SPECS = build_derived_command_specs(
             DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH
         ),
         source_partition_contract_path=DEFAULT_SOURCE_PARTITION_CONTRACT_PATH,
+        chunk_sidecar_retrieval_eval_path=DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH,
     )
 )
 
@@ -544,6 +557,7 @@ def _run_retrieval_build(args: argparse.Namespace):
         output_dir=args.output_dir,
         source_set_id=args.source_set_id,
         chunks_path=args.chunks_path,
+        index_dir=args.index_dir,
         catalog_sqlite_path=catalog_sqlite_path,
         allow_failed_extraction=args.allow_failed_extraction,
         allow_partial_extraction=args.allow_partial_extraction,
@@ -573,6 +587,20 @@ def _run_retrieval_eval(args: argparse.Namespace):
         eval_file=args.eval_file,
         top_k=args.top_k,
         output_dir=args.results_dir,
+    )
+
+
+def _run_chunk_sidecar_retrieval_eval(args: argparse.Namespace):
+    return run_chunk_sidecar_retrieval_eval(
+        output_dir=args.output_dir,
+        source_set_id=args.source_set_id,
+        eval_file=args.eval_file,
+        chunks_v2_dir=args.chunks_v2_dir,
+        sidecar_index_dir=args.sidecar_index_dir,
+        baseline_index_path=args.baseline_index_path,
+        results_dir=args.results_dir,
+        top_k=args.top_k,
+        rebuild_sidecar=args.rebuild_sidecar,
     )
 
 
@@ -724,6 +752,10 @@ COMMAND_HANDLERS = {
     "retrieval-build": _result_handler(_run_retrieval_build, "validation_passed"),
     "retrieval-query": _summary_handler(_run_retrieval_query, "hit_count"),
     "retrieval-eval": _result_handler(_run_retrieval_eval, "passed"),
+    "chunk-sidecar-retrieval-eval": _result_handler(
+        _run_chunk_sidecar_retrieval_eval,
+        "passed",
+    ),
     "evidence-graph-build": _result_handler(
         _run_evidence_graph_build,
         "validation_passed",
