@@ -9,9 +9,8 @@ Use this short route before opening append-only docs.
   canonical semantic graph direct-eval strengthening; exact counts live in
   `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: extraction-fidelity source-owner reduction after architecture control-plane gap closeout; inventory and route-doc caps are current.
-- Latest resolved observability/eval graph slice: first-class generated context
-  graph contract, builder, and graph-eval commands over the eval-trace SQLite
-  store. Exact command contracts are in
+- Latest resolved observability/eval graph slice: context-graph contract,
+  builder/eval commands, and conditional trace-event materialization. Details:
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
 - Active implementation slice: none. Open a new bounded packet before hosted query service/API expansion, model-judge work, hosted scoring, context-graph phase ratchets, or oversized-owner reduction.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
@@ -26,8 +25,10 @@ Use this short route before opening append-only docs.
 - Architecture route: `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` and `config/architecture_large_file_inventory_v1.json` own the oversized-owner backlog.
 - Observability/eval graph route:
   `eval-context-graph-build` and `eval-context-graph-eval` are local,
-  generated-artifact-only commands over `system_eval_trace.sqlite`; they do not
-  replace source evidence graphs or add phase/promotion ratchets yet.
+  generated-artifact-only commands over `system_eval_trace.sqlite`; trace/log
+  JSONL rows become conditional event nodes with `EMITTED` span edges. The
+  route does not replace source evidence graphs or add phase/promotion
+  ratchets yet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 
 ## Deep Reads

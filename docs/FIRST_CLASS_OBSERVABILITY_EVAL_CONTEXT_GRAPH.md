@@ -2,14 +2,16 @@
 
 Date: 2026-06-01
 
-Status: Milestone 0 contract plus first generated graph builder and graph-eval
-commands are implemented locally.
+Status: Milestone 0 contract, first generated graph builder and graph-eval
+commands, and Milestone 1 trace-event materialization are implemented locally.
 
 Owner surfaces:
 
 - Contract config: `config/context_graph_contract_v1.json`
 - Build/eval helper: `src/usfs_r1_ea_sources/eval_context_graph.py`
 - Contract helper: `src/usfs_r1_ea_sources/eval_context_graph_contract.py`
+- Event extraction helper: `src/usfs_r1_ea_sources/eval_context_graph_events.py`
+- Validation helper: `src/usfs_r1_ea_sources/eval_context_graph_validation.py`
 - CLI commands: `eval-context-graph-build`, `eval-context-graph-eval`
 - Contract and behavior tests: `tests/test_eval_context_graph.py`
 - CLI parser tests: `tests/test_cli_eval.py`
@@ -50,6 +52,7 @@ The builder materializes these node kinds:
 - `score`
 - `source_set`
 - `span`
+- `span_event` for rows from event-like trace artifacts
 - `trace`
 - `failure_class` when a stored failure reason exists
 
@@ -57,6 +60,7 @@ The first edge set includes:
 
 - `CONTAINS`
 - `DERIVED_FROM`
+- `EMITTED` from spans to materialized event rows
 - `EVALUATED_BY`
 - `FAILED_BECAUSE` when a stored failure reason exists
 - `PRODUCED_ARTIFACT`
@@ -64,10 +68,17 @@ The first edge set includes:
 - `TARGETS`
 - `USED_ARTIFACT`
 
-Reserved future node kinds include `log_event`, `span_event`,
-`state_checkpoint`, `tool_invocation`, `model_invocation`, `prompt_version`,
-`dataset_example`, and `human_label`. They are contract-visible now but not
-materialized until upstream capture tables or artifacts exist.
+`span_event` and `log_event` are conditional node kinds. They materialize only
+when the store points at event-like JSON/JSONL artifacts such as trace or log
+files. Current trace-event extraction records event ID, event name, timestamp,
+payload hash, payload keys, source-set/review IDs, trace IDs, candidate IDs,
+query type, selected status, and compact counts for diagnostics/results. It
+does not copy raw source text or prompt/body payloads into graph properties.
+
+Reserved future node kinds include `state_checkpoint`, `tool_invocation`,
+`model_invocation`, `prompt_version`, `dataset_example`, and `human_label`.
+They are contract-visible now but not materialized until upstream capture
+tables or artifacts exist.
 
 ## Graph Evals
 
@@ -79,6 +90,8 @@ invariants directly. The first graph eval checks:
 - all edges resolve to existing nodes;
 - every eval result has a trace-to-result edge and a result-to-score edge;
 - artifact nodes retain artifact refs or hash provenance;
+- event nodes have incoming `EMITTED` edges from spans;
+- event-like source artifact rows are materialized without parse errors;
 - source knowledge-graph node kinds are absent;
 - the graph remains local source-of-record and not approved for external export.
 

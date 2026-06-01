@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-context-graph-contract-v1",
   "contract_id": "first-class-generated-observability-eval-context-graph",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "status": "active",
   "purpose": "Generated local graph over eval runs, traces, spans, artifacts, scores, and deterministic graph evals. This is not a source knowledge graph.",
   "source_store": {
@@ -25,13 +25,15 @@
     "span",
     "trace"
   ],
+  "conditional_node_kinds": [
+    "log_event",
+    "span_event"
+  ],
   "reserved_node_kinds": [
     "dataset_example",
     "human_label",
-    "log_event",
     "model_invocation",
     "prompt_version",
-    "span_event",
     "state_checkpoint",
     "tool_invocation"
   ],
@@ -51,10 +53,12 @@
     "TARGETS",
     "USED_ARTIFACT"
   ],
+  "conditional_edge_kinds": [
+    "EMITTED"
+  ],
   "reserved_edge_kinds": [
     "CHECKPOINT_AFTER",
     "CHECKPOINT_BEFORE",
-    "EMITTED",
     "FAILED_BECAUSE",
     "FOLLOWS",
     "FORKED_FROM",
@@ -73,6 +77,8 @@
     "required_node_kinds_present",
     "required_edge_kinds_present",
     "edges_resolve_to_nodes",
+    "event_nodes_emitted_by_spans",
+    "event_source_rows_materialized",
     "trace_result_score_paths_present",
     "artifact_provenance_present",
     "source_knowledge_graph_nodes_excluded",

@@ -11,6 +11,10 @@ from .eval_context_graph_contract import DEFAULT_CONTEXT_GRAPH_CONTRACT_PATH
 from .eval_context_graph_contract import JSON_COLUMNS
 from .eval_context_graph_contract import TABLE_PRIMARY_KEYS
 from .eval_context_graph_contract import load_eval_context_graph_contract
+from .eval_context_graph_events import context_graph_events_for_artifact
+from .eval_context_graph_validation import graph_checks
+from .eval_context_graph_validation import graph_file_checks
+from .eval_context_graph_validation import store_checks
 from .eval_trace_inventory import REPO_ROOT
 from .eval_trace_store import STORE_SCHEMA_VERSION
 from .records import sha256_file
@@ -55,9 +59,11 @@ def run_eval_context_graph_build(
     contract = load_eval_context_graph_contract(contract_path, repo_root=repo_root)
     store = _read_store(sqlite_path)
     graph = _build_graph(store, sqlite_path=sqlite_path, contract=contract, repo_root=repo_root)
-    store_checks = _store_checks(store)
-    graph_checks = _graph_checks(graph, contract)
-    validation_checks = store_checks + graph_checks
+    validation_checks = store_checks(store) + graph_checks(
+        graph,
+        contract,
+        graph_schema_version=CONTEXT_GRAPH_SCHEMA_VERSION,
+    )
     passed = all(check["passed"] for check in validation_checks)
 
     if passed:
@@ -78,6 +84,8 @@ def run_eval_context_graph_build(
         "row_counts": graph["source"]["row_counts"],
         "node_counts": graph["node_counts"],
         "edge_counts": graph["edge_counts"],
+        "event_source_count": len(graph.get("event_sources", [])),
+        "event_node_count": _event_node_count(graph),
         "node_count": len(graph["nodes"]),
         "edge_count": len(graph["edges"]),
         "reserved_node_kinds_not_materialized": contract.get("reserved_node_kinds", []),
@@ -100,9 +108,10 @@ def run_eval_context_graph_eval(
     summary_path = _resolve_path(summary_path, repo_root) if summary_path is not None else None
     contract = load_eval_context_graph_contract(contract_path, repo_root=repo_root)
     graph = _read_graph(graph_json_path)
-    validation_checks = _graph_file_checks(graph_json_path, graph) + _graph_checks(
+    validation_checks = graph_file_checks(graph_json_path, graph) + graph_checks(
         graph,
         contract,
+        graph_schema_version=CONTEXT_GRAPH_SCHEMA_VERSION,
     )
     passed = all(check["passed"] for check in validation_checks)
     summary = {
@@ -115,6 +124,8 @@ def run_eval_context_graph_eval(
         "command_succeeded": passed,
         "node_counts": graph.get("node_counts", {}),
         "edge_counts": graph.get("edge_counts", {}),
+        "event_source_count": len(_list_of_dicts(graph.get("event_sources"))),
+        "event_node_count": _event_node_count(graph),
         "node_count": len(_list_of_dicts(graph.get("nodes"))),
         "edge_count": len(_list_of_dicts(graph.get("edges"))),
         "validation_checks": validation_checks,
@@ -178,6 +189,7 @@ def _build_graph(
     edges: dict[str, dict[str, Any]] = {}
     row_nodes: dict[tuple[str, str], str] = {}
     artifact_nodes: dict[str, str] = {}
+    event_source_summaries: dict[str, dict[str, Any]] = {}
     target_nodes: dict[tuple[str, str], str] = {}
 
     def add_node(
@@ -437,6 +449,14 @@ def _build_graph(
                     to_node_id=artifact_node,
                     properties={"source_relation": "span_source_ref"},
                 )
+            _add_event_nodes(
+                artifact_ref=_string(span.get("source_ref_id")),
+                span_node=span_node,
+                add_node=add_node,
+                add_edge=add_edge,
+                event_source_summaries=event_source_summaries,
+                repo_root=repo_root,
+            )
         _add_failure_edge(
             _dict(span.get("attributes")).get("failure_reason"),
             from_node_id=span_node,
@@ -459,6 +479,10 @@ def _build_graph(
             "missing_tables": store["missing_tables"],
             "read_errors": store["read_errors"],
         },
+        "event_sources": sorted(
+            event_source_summaries.values(),
+            key=lambda source: str(source.get("artifact_ref")),
+        ),
         "graph_policy": contract["graph_policy"],
         "reserved_node_kinds_not_materialized": contract.get(
             "reserved_node_kinds",
@@ -513,202 +537,35 @@ def _add_failure_edge(
     )
 
 
-def _store_checks(store: dict[str, Any]) -> list[dict[str, Any]]:
-    row_counts = {table: len(rows) for table, rows in store["tables"].items()}
-    return [
-        {
-            "name": "required_store_tables_present",
-            "passed": not store["missing_tables"],
-            "missing_tables": store["missing_tables"],
-        },
-        {
-            "name": "store_readable",
-            "passed": not store["read_errors"],
-            "read_errors": store["read_errors"],
-        },
-        {
-            "name": "store_rows_present",
-            "passed": all(count > 0 for count in row_counts.values()),
-            "row_counts": row_counts,
-        },
-    ]
-
-
-def _graph_checks(graph: dict[str, Any], contract: dict[str, Any]) -> list[dict[str, Any]]:
-    nodes = _list_of_dicts(graph.get("nodes"))
-    edges = _list_of_dicts(graph.get("edges"))
-    node_ids = {str(node.get("id")) for node in nodes}
-    node_counts = _dict(graph.get("node_counts"))
-    edge_counts = _dict(graph.get("edge_counts"))
-    required_node_kinds = set(_list_of_strings(contract.get("required_node_kinds")))
-    required_edge_kinds = set(_list_of_strings(contract.get("required_edge_kinds")))
-    prohibited_node_kinds = set(_list_of_strings(contract.get("prohibited_node_kinds")))
-    missing_node_kinds = sorted(
-        kind for kind in required_node_kinds if int(node_counts.get(kind, 0)) == 0
-    )
-    missing_edge_kinds = sorted(
-        kind for kind in required_edge_kinds if int(edge_counts.get(kind, 0)) == 0
-    )
-    unresolved_edges = [
-        {
-            "edge_id": str(edge.get("id")),
-            "from_node_id": str(edge.get("from_node_id")),
-            "to_node_id": str(edge.get("to_node_id")),
-        }
-        for edge in edges
-        if edge.get("from_node_id") not in node_ids or edge.get("to_node_id") not in node_ids
-    ]
-    prohibited_nodes = [
-        {"node_id": str(node.get("id")), "kind": str(node.get("kind"))}
-        for node in nodes
-        if node.get("kind") in prohibited_node_kinds
-    ]
-    path_failures = _trace_result_score_path_failures(nodes, edges)
-    artifact_failures = _artifact_provenance_failures(nodes)
-    graph_policy = _dict(graph.get("graph_policy"))
-    return [
-        {
-            "name": "graph_schema_version",
-            "passed": graph.get("schema_version") == CONTEXT_GRAPH_SCHEMA_VERSION,
-            "actual": graph.get("schema_version"),
-        },
-        {
-            "name": "required_node_kinds_present",
-            "passed": not missing_node_kinds,
-            "missing_node_kinds": missing_node_kinds,
-        },
-        {
-            "name": "required_edge_kinds_present",
-            "passed": not missing_edge_kinds,
-            "missing_edge_kinds": missing_edge_kinds,
-        },
-        {
-            "name": "edges_resolve_to_nodes",
-            "passed": not unresolved_edges,
-            "unresolved_edges": unresolved_edges[:20],
-            "unresolved_edge_count": len(unresolved_edges),
-        },
-        {
-            "name": "trace_result_score_paths_present",
-            "passed": not path_failures,
-            "failure_count": len(path_failures),
-            "failures": path_failures[:20],
-        },
-        {
-            "name": "artifact_provenance_present",
-            "passed": not artifact_failures,
-            "failure_count": len(artifact_failures),
-            "failures": artifact_failures[:20],
-        },
-        {
-            "name": "source_knowledge_graph_nodes_excluded",
-            "passed": not prohibited_nodes
-            and bool(graph_policy.get("source_knowledge_graph_excluded")),
-            "prohibited_node_count": len(prohibited_nodes),
-            "prohibited_nodes": prohibited_nodes[:20],
-        },
-        {
-            "name": "local_source_of_record_policy",
-            "passed": bool(graph_policy.get("local_source_of_record"))
-            and not bool(graph_policy.get("external_export_approved")),
-            "graph_policy": graph_policy,
-        },
-    ]
-
-
-def _graph_file_checks(graph_json_path: Path, graph: dict[str, Any]) -> list[dict[str, Any]]:
-    return [
-        {
-            "name": "graph_file_exists",
-            "passed": graph_json_path.exists(),
-            "path": str(graph_json_path),
-        },
-        {
-            "name": "graph_file_is_object",
-            "passed": bool(graph),
-        },
-    ]
-
-
-def _trace_result_score_path_failures(
-    nodes: list[dict[str, Any]],
-    edges: list[dict[str, Any]],
-) -> list[dict[str, str]]:
-    node_by_id = {str(node.get("id")): node for node in nodes}
-    trace_node_by_trace_id = {
-        str(_dict(node.get("properties")).get("trace_id")): str(node.get("id"))
-        for node in nodes
-        if node.get("kind") == "trace"
-    }
-    scores_by_result_node = {
-        str(edge.get("from_node_id"))
-        for edge in edges
-        if edge.get("kind") == "SCORED_AS"
-    }
-    evaluated_result_by_trace_node = {
-        (str(edge.get("from_node_id")), str(edge.get("to_node_id")))
-        for edge in edges
-        if edge.get("kind") == "EVALUATED_BY"
-        and node_by_id.get(str(edge.get("from_node_id")), {}).get("kind") == "trace"
-    }
-    failures: list[dict[str, str]] = []
-    for node in nodes:
-        if node.get("kind") != "eval_result":
-            continue
-        properties = _dict(node.get("properties"))
-        result_node_id = str(node.get("id"))
-        trace_id = _string(properties.get("trace_id"))
-        trace_node_id = trace_node_by_trace_id.get(trace_id or "")
-        if trace_node_id is None:
-            failures.append(
-                {
-                    "eval_result_node_id": result_node_id,
-                    "reason": "missing_trace_node",
-                }
-            )
-            continue
-        if (trace_node_id, result_node_id) not in evaluated_result_by_trace_node:
-            failures.append(
-                {
-                    "eval_result_node_id": result_node_id,
-                    "reason": "missing_trace_to_result_edge",
-                }
-            )
-        if result_node_id not in scores_by_result_node:
-            failures.append(
-                {
-                    "eval_result_node_id": result_node_id,
-                    "reason": "missing_result_to_score_edge",
-                }
-            )
-    return failures
-
-
-def _artifact_provenance_failures(nodes: list[dict[str, Any]]) -> list[dict[str, str]]:
-    failures: list[dict[str, str]] = []
-    for node in nodes:
-        if node.get("kind") != "artifact":
-            continue
-        properties = _dict(node.get("properties"))
-        if not any(
-            properties.get(key)
-            for key in (
-                "artifact_ref",
-                "path",
-                "origin_artifact_sha256",
-                "artifact_sha256",
-                "current_artifact_sha256",
-                "input_hash",
-                "output_hash",
-            )
-        ):
-            failures.append(
-                {
-                    "node_id": str(node.get("id")),
-                    "reason": "missing_artifact_ref_or_hash",
-                }
-            )
-    return failures
+def _add_event_nodes(
+    *,
+    artifact_ref: str | None,
+    span_node: str,
+    add_node: Any,
+    add_edge: Any,
+    event_source_summaries: dict[str, dict[str, Any]],
+    repo_root: Path,
+) -> None:
+    batch = context_graph_events_for_artifact(artifact_ref, repo_root=repo_root)
+    if batch.summary is not None:
+        event_source_summaries[str(batch.summary["artifact_ref"])] = batch.summary
+    for event in batch.events:
+        event_node = add_node(
+            kind=event["kind"],
+            stable_ref=event["stable_ref"],
+            properties=event["properties"],
+            source_hash=event["source_hash"],
+        )
+        add_edge(
+            kind="EMITTED",
+            from_node_id=span_node,
+            to_node_id=event_node,
+            properties={
+                "source_relation": "span_emitted_event",
+                "artifact_ref": artifact_ref,
+                "line_number": event["properties"].get("line_number"),
+            },
+        )
 
 
 def _read_graph(graph_json_path: Path) -> dict[str, Any]:
@@ -727,6 +584,11 @@ def _kind_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
         kind = str(row.get("kind"))
         counts[kind] = counts.get(kind, 0) + 1
     return dict(sorted(counts.items()))
+
+
+def _event_node_count(graph: dict[str, Any]) -> int:
+    node_counts = _dict(graph.get("node_counts"))
+    return int(node_counts.get("log_event", 0)) + int(node_counts.get("span_event", 0))
 
 
 def _merge_properties(

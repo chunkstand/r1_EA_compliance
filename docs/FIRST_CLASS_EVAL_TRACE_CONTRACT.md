@@ -18,6 +18,10 @@ Owner surfaces:
   `src/usfs_r1_ea_sources/eval_context_graph.py`
 - Generated observability/eval context graph contract helper:
   `src/usfs_r1_ea_sources/eval_context_graph_contract.py`
+- Generated observability/eval context graph event helper:
+  `src/usfs_r1_ea_sources/eval_context_graph_events.py`
+- Generated observability/eval context graph validation helper:
+  `src/usfs_r1_ea_sources/eval_context_graph_validation.py`
 - Gate helper: `src/usfs_r1_ea_sources/eval_trace_gate.py`
 - Case promotion helper: `src/usfs_r1_ea_sources/eval_trace_case_promote.py`
 - Default case file: `config/eval_trace_cases/system_eval_trace_cases_v1.json`
@@ -203,11 +207,17 @@ deterministic graph JSON artifact with eval, trace, span, score, artifact,
 source-set, review, and failure-class nodes. It preserves the local source of
 record policy and does not create source knowledge-graph facts.
 
+The second context-graph slice materializes event-like trace/log JSONL rows as
+conditional `span_event` or `log_event` nodes and links them from the owning
+span with `EMITTED` edges. Event properties keep compact provenance and payload
+hashes rather than raw source text or prompt/body payloads.
+
 `eval-context-graph-eval` runs deterministic graph evals over that artifact:
 required node/edge kinds, edge resolution, trace-to-result-to-score paths,
-artifact provenance, source-KG exclusion, and local export policy. This makes
-graph-derived evals the next layer over the normalized store without changing
-phase or promotion ratchets.
+artifact provenance, event-emission integrity, event-source row materialization,
+source-KG exclusion, and local export policy. This makes graph-derived evals
+the next layer over the normalized store without changing phase or promotion
+ratchets.
 
 The contract and behavior are owned by
 `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` and

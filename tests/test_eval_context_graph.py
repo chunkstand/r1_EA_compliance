@@ -36,7 +36,11 @@ def test_committed_context_graph_contract_preserves_eval_trace_boundary() -> Non
     assert contract["schema_version"] == "eval-context-graph-contract-v1"
     assert contract["source_store"]["schema_version"] == "system-eval-trace-store-v1"
     assert "trace" in contract["required_node_kinds"]
-    assert "log_event" in contract["reserved_node_kinds"]
+    assert "span_event" in contract["conditional_node_kinds"]
+    assert "log_event" in contract["conditional_node_kinds"]
+    assert "EMITTED" in contract["conditional_edge_kinds"]
+    assert "span_event" not in contract["reserved_node_kinds"]
+    assert "log_event" not in contract["reserved_node_kinds"]
     assert "source_fact" in contract["prohibited_node_kinds"]
     assert contract["graph_policy"]["source_knowledge_graph_excluded"] is True
     assert contract["graph_policy"]["external_export_approved"] is False
@@ -76,8 +80,12 @@ def test_context_graph_build_writes_generated_graph_from_eval_trace_store(
     assert summary["node_counts"]["span"] == 18
     assert summary["node_counts"]["eval_result"] == 18
     assert summary["node_counts"]["score"] == 18
+    assert summary["node_counts"]["span_event"] == 2
+    assert summary["event_node_count"] == 2
+    assert summary["event_source_count"] == 2
     assert summary["node_counts"]["artifact"] > 0
     assert summary["edge_counts"]["CONTAINS"] > 0
+    assert summary["edge_counts"]["EMITTED"] == 2
     assert summary["edge_counts"]["EVALUATED_BY"] > 0
     assert summary["edge_counts"]["SCORED_AS"] == 18
     assert json.loads(summary_path.read_text(encoding="utf-8")) == summary
@@ -86,7 +94,12 @@ def test_context_graph_build_writes_generated_graph_from_eval_trace_store(
     assert graph["schema_version"] == CONTEXT_GRAPH_SCHEMA_VERSION
     assert graph["graph_policy"]["local_source_of_record"] is True
     assert graph["graph_policy"]["source_knowledge_graph_excluded"] is True
-    assert "log_event" in graph["reserved_node_kinds_not_materialized"]
+    assert "state_checkpoint" in graph["reserved_node_kinds_not_materialized"]
+    assert "span_event" not in graph["reserved_node_kinds_not_materialized"]
+    assert all(
+        source["row_count"] == source["materialized_event_count"]
+        for source in graph["event_sources"]
+    )
     assert {node["kind"] for node in graph["nodes"]}.isdisjoint(
         {"authority_fact", "claim_fact", "domain_entity", "source_fact"}
     )
@@ -110,6 +123,12 @@ def test_context_graph_eval_passes_on_generated_graph(tmp_path: Path) -> None:
     assert summary["command_succeeded"] is True
     assert _checks_by_name(summary["validation_checks"])[
         "trace_result_score_paths_present"
+    ]["passed"]
+    assert _checks_by_name(summary["validation_checks"])[
+        "event_nodes_emitted_by_spans"
+    ]["passed"]
+    assert _checks_by_name(summary["validation_checks"])[
+        "event_source_rows_materialized"
     ]["passed"]
     assert json.loads(summary_path.read_text(encoding="utf-8")) == summary
 
@@ -137,6 +156,30 @@ def test_context_graph_eval_fails_when_result_score_edge_is_missing(
     assert not checks["required_edge_kinds_present"]["passed"]
     assert not checks["trace_result_score_paths_present"]["passed"]
     assert checks["trace_result_score_paths_present"]["failure_count"] == 18
+
+
+def test_context_graph_eval_fails_when_event_emitted_edge_is_missing(
+    tmp_path: Path,
+) -> None:
+    graph_path = _write_context_graph(tmp_path)
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    graph["edges"] = [edge for edge in graph["edges"] if edge["kind"] != "EMITTED"]
+    graph["edge_counts"]["EMITTED"] = 0
+    graph_path.write_text(
+        json.dumps(graph, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    summary = run_eval_context_graph_eval(
+        graph_json_path=graph_path,
+        contract_path=CONTRACT_PATH,
+        repo_root=tmp_path,
+    ).summary
+
+    checks = _checks_by_name(summary["validation_checks"])
+    assert summary["passed"] is False
+    assert not checks["event_nodes_emitted_by_spans"]["passed"]
+    assert checks["event_nodes_emitted_by_spans"]["failure_count"] == 2
 
 
 def test_context_graph_build_reports_missing_store_without_writing_graph(
