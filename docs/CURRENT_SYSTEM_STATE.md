@@ -15,6 +15,26 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Claim Extraction Eval Support Source Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next source-owner oversized reduction slice is closed locally.
+  `src/usfs_r1_ea_sources/claim_extraction_eval.py` remains the public
+  claim-eval orchestration facade at `326` lines. The new
+  `src/usfs_r1_ea_sources/claim_extraction_eval_support.py` owns query,
+  scoring, readiness, path, and eval-contract helper logic at `668` lines.
+- architecture effect:
+  the architecture probe reports `536` code files, `14` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `8` source owners and `6` test
+  owners.
+- boundary:
+  this is a facade-preserving source split. It does not change claim-eval
+  output fields, eval contract behavior, generated artifact paths, or local
+  corpus state.
+
 ## Forest-Plan Resolver Scope Readiness Test Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

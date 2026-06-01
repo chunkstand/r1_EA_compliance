@@ -137,11 +137,11 @@ history below.
   hosted service/API, auth, UI query workflow, or broader graph-KB product work
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
-  forest-plan resolver scope readiness test-owner split after the applicability
-  authority-family template split. The current probe reports `535` code files,
-  `15` code files above `800`, no Python or JS/TS import cycles, and no source
-  module above the `20`-import fan-out gate.
-  `config/architecture_large_file_inventory_v1.json` owns the exact `9`
+  claim extraction eval support source-owner split after the forest-plan
+  resolver scope readiness test-owner split. The current probe reports `536`
+  code files, `14` code files above `800`, no Python or JS/TS import cycles,
+  and no source module above the `20`-import fan-out gate.
+  `config/architecture_large_file_inventory_v1.json` owns the exact `8`
   source-owner and `6` test-owner backlog; `README.md` and
   `docs/CURRENT_ROUTING.md` remain compact route surfaces.
 - active architecture implementation slice:
