@@ -15,6 +15,27 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Extraction Runtime Reuse Source Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next source-owner oversized reduction slice is closed locally.
+  `src/usfs_r1_ea_sources/extract_runtime.py` remains the extraction build
+  orchestration facade at `565` lines. The new
+  `src/usfs_r1_ea_sources/extract_runtime_reuse.py` owns extracted payload
+  record/chunk assembly, current-output reuse, reuse-inventory reuse, and
+  payload-cache helper logic at `301` lines.
+- architecture effect:
+  the architecture probe reports `543` code files, `7` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `4` source owners and `3` test
+  owners.
+- boundary:
+  this is a facade-preserving source split. It does not change extraction
+  output schemas, parser behavior, generated artifact paths, or local corpus
+  state.
+
 ## Forest-Plan Profile Context Test Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

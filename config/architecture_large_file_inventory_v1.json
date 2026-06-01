@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "source-extract-runtime-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 10,
-      "required_tests": [
-        "tests/test_extract.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/extract_runtime.py",
-          "line_count": 852
-        }
-      ]
-    },
-    {
       "name": "source-rule-claim-binding-eval-owner",
       "owner_kind": "source",
       "follow_on_priority": 11,

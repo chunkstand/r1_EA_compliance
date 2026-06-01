@@ -63,6 +63,7 @@ modules = [
   "extract_markup_support",
   "extract_pdf_support",
   "extract_runtime",
+  "extract_runtime_reuse",
   "extract_validation",
   "extraction_accuracy",
   "extraction_admission",
