@@ -40,6 +40,10 @@ def build_evidence_graph(
     output_dir: Path,
     source_set_id: str | None = None,
     catalog_dir: Path | None = None,
+    chunks_path: Path | None = None,
+    retrieval_validation_path: Path | None = None,
+    retrieval_summary_path: Path | None = None,
+    graph_dir: Path | None = None,
     allow_partial_retrieval: bool = False,
 ) -> EvidenceGraphBuildResult:
     """Build the v1 document evidence graph from extracted chunks and retrieval metadata."""
@@ -48,7 +52,7 @@ def build_evidence_graph(
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
     derived_source_dir = source_derived_dir(output_dir / "derived", source_set_id)
-    graph_dir = derived_source_dir / "evidence_graph"
+    graph_dir = Path(graph_dir) if graph_dir is not None else derived_source_dir / "evidence_graph"
     graph_dir.mkdir(parents=True, exist_ok=True)
     catalog_dir = resolve_catalog_dir_for_source_set(
         output_dir=output_dir,
@@ -56,13 +60,25 @@ def build_evidence_graph(
         catalog_dir=catalog_dir,
     )
 
-    chunks_path = derived_source_dir / "chunks" / "chunks.jsonl"
+    chunks_path = (
+        Path(chunks_path)
+        if chunks_path is not None
+        else derived_source_dir / "chunks" / "chunks.jsonl"
+    )
     catalog_sqlite_path = catalog_dir / "review_sources.sqlite"
     catalog_validation_path = catalog_dir / "catalog_validation.json"
     extraction_validation_path = derived_source_dir / "diagnostics" / "extraction_validation.json"
     extraction_summary_path = derived_source_dir / "diagnostics" / "summary.json"
-    retrieval_validation_path = derived_source_dir / "retrieval" / "retrieval_validation.json"
-    retrieval_summary_path = derived_source_dir / "retrieval" / "summary.json"
+    retrieval_validation_path = (
+        Path(retrieval_validation_path)
+        if retrieval_validation_path is not None
+        else derived_source_dir / "retrieval" / "retrieval_validation.json"
+    )
+    retrieval_summary_path = (
+        Path(retrieval_summary_path)
+        if retrieval_summary_path is not None
+        else derived_source_dir / "retrieval" / "summary.json"
+    )
 
     nodes_path = graph_dir / "document_graph_nodes.jsonl"
     edges_path = graph_dir / "document_graph_edges.jsonl"

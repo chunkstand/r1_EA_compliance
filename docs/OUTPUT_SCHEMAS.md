@@ -5143,6 +5143,12 @@ by default. The result schema version is `chunk-sidecar-retrieval-eval-results-v
 
 Path: `source_library/derived/<source_set_id>/claims/`
 
+Sidecar preview path: `claim-extract --claims-dir <path>` can write the same artifacts to an
+isolated directory such as `source_library/derived/<source_set_id>/claims_sidecar/`. Use
+`--chunks-path`, `--retrieval-validation-path`, and `--retrieval-summary-path` together when the
+preview consumes sidecar chunk and retrieval artifacts. Without those arguments, `claim-extract`
+keeps the canonical `chunks/`, `retrieval/`, and `claims/` paths.
+
 The `claim-extract` command writes:
 
 - `claims.jsonl`
@@ -5162,6 +5168,10 @@ The `claim-extract` command writes:
 - `source_library/derived/<source_set_id>/retrieval/retrieval_validation.json`
 - `source_library/derived/<source_set_id>/retrieval/summary.json`
 - `source_library/catalog/review_sources.sqlite`
+
+For sidecar previews, the chunk path and retrieval validation/summary paths above are replaced by
+the explicit CLI arguments. Catalog, extraction diagnostics, and source-set identity checks remain
+rooted in the source library for the requested source set.
 
 `claims.jsonl` contains exact source-text claim spans. Each claim includes:
 
@@ -5372,6 +5382,12 @@ Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrap
 
 Path: `source_library/derived/<source_set_id>/evidence_graph/`
 
+Sidecar preview path: `evidence-graph-build --graph-dir <path>` can write the same artifacts to an
+isolated directory such as `source_library/derived/<source_set_id>/evidence_graph_sidecar/`. Use
+`--chunks-path`, `--retrieval-validation-path`, and `--retrieval-summary-path` together when the
+preview consumes sidecar chunk and retrieval artifacts. Without those arguments,
+`evidence-graph-build` keeps the canonical `chunks/`, `retrieval/`, and `evidence_graph/` paths.
+
 The `evidence-graph-build` command writes:
 
 - `document_graph_nodes.jsonl`
@@ -5390,6 +5406,10 @@ The `evidence-graph-build` command writes:
 - `source_library/derived/<source_set_id>/retrieval/summary.json`
 - `source_library/catalog/catalog_validation.json`
 - `source_library/catalog/review_sources.sqlite`
+
+For sidecar previews, the chunk path and retrieval validation/summary paths above are replaced by
+the explicit CLI arguments. Catalog, extraction diagnostics, and source-set identity checks remain
+rooted in the source library for the requested source set.
 
 Graph node types:
 

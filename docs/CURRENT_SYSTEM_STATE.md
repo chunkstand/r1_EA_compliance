@@ -15,6 +15,41 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Downstream Consumer Preview Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the third extraction/chunking/retrieval accuracy packet is closed locally on
+  isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `evidence-graph-build` now accepts explicit sidecar `--chunks-path`,
+  `--retrieval-validation-path`, `--retrieval-summary-path`, and `--graph-dir`
+  arguments. `claim-extract` accepts the same sidecar chunk/retrieval inputs
+  plus `--claims-dir`.
+- contract effect:
+  graph and claim builders can consume validated sidecar chunks and sidecar
+  retrieval indexes without writing canonical `evidence_graph/` or `claims/`
+  artifacts. Default command behavior still uses canonical `chunks/`,
+  `retrieval/`, `evidence_graph/`, and `claims/` paths.
+- architecture closeout:
+  `docs/architecture_contract.toml` owns explicit `evidence_graph_sidecar/`
+  and `claims_sidecar/` artifact patterns under the existing graph and claim
+  layers. The live architecture probe for this branch reports `510` code
+  files, `17` code files above `800`, no Python or JS/TS import cycles, and no
+  source module above the `20`-import fan-out gate.
+- live smoke:
+  the ignored f70 corpus in the main checkout was read without mutating
+  production derived outputs. A `/tmp` source-library shell copied f70 catalog
+  metadata, selected `12` real `FED-001` sidecar atomic chunks, and wrote
+  sidecar retrieval, graph, and claim previews under
+  `/tmp/usfs-r1-sidecar-consumer.PnUBBe/`. Retrieval validation passed for
+  `12` chunks; graph validation passed with `36` nodes and `95` edges; claim
+  validation passed with `14` claims, `60` nodes, and `108` edges.
+- boundary:
+  this is a downstream preview path only. Partial live-smoke reviewer readiness
+  remains false by design, and no canonical graph, claim, rule-link, review,
+  compliance, phase-eval, or knowledge-graph promotion was performed.
+
 ## Sidecar Retrieval Eval Promotion Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
@@ -32,7 +67,7 @@ Latest implementation update on 2026-06-01 UTC:
   identity from index metadata for those sidecar paths. The sidecar chunk-layer
   validator now fails closed on duplicate atomic chunk IDs.
 - architecture closeout:
-  the live architecture probe for this branch reports `509` code files, `17`
+  the live architecture probe for this branch reports `510` code files, `17`
   code files above `800`, no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate. `README.md` remains within the
   `220`-line route-surface budget.

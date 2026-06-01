@@ -573,6 +573,10 @@ paths = [
   "source_library/derived/<source_set_id>/evidence_graph/document_graph_nodes.jsonl",
   "source_library/derived/<source_set_id>/evidence_graph/document_graph_edges.jsonl",
   "source_library/derived/<source_set_id>/evidence_graph/evidence_graph.sqlite",
+  "source_library/derived/<source_set_id>/evidence_graph_sidecar/document_graph_nodes.jsonl",
+  "source_library/derived/<source_set_id>/evidence_graph_sidecar/document_graph_edges.jsonl",
+  "source_library/derived/<source_set_id>/evidence_graph_sidecar/evidence_graph.sqlite",
+  "source_library/derived/<source_set_id>/evidence_graph_sidecar/evidence_graph_validation.json",
 ]
 
 [[artifacts]]
@@ -619,6 +623,9 @@ owner_layer = "claims"
 paths = [
   "source_library/derived/<source_set_id>/claims/claims.jsonl",
   "source_library/derived/<source_set_id>/claims/claim_graph.sqlite",
+  "source_library/derived/<source_set_id>/claims_sidecar/claims.jsonl",
+  "source_library/derived/<source_set_id>/claims_sidecar/claim_graph.sqlite",
+  "source_library/derived/<source_set_id>/claims_sidecar/claim_validation.json",
   "source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_links.jsonl",
 ]
 

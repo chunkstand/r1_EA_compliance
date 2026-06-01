@@ -68,6 +68,9 @@ def build_claim_extraction(
     source_set_id: str | None = None,
     chunks_path: Path | None = None,
     catalog_sqlite_path: Path | None = None,
+    retrieval_validation_path: Path | None = None,
+    retrieval_summary_path: Path | None = None,
+    claims_dir: Path | None = None,
     allow_partial_retrieval: bool = False,
 ) -> ClaimExtractionResult:
     """Build deterministic source-text claim and entity artifacts from extracted chunks."""
@@ -76,7 +79,7 @@ def build_claim_extraction(
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
     derived_source_dir = source_derived_dir(output_dir / "derived", source_set_id)
-    claims_dir = derived_source_dir / "claims"
+    claims_dir = Path(claims_dir) if claims_dir is not None else derived_source_dir / "claims"
     claims_dir.mkdir(parents=True, exist_ok=True)
 
     chunks_path = chunks_path or derived_source_dir / "chunks" / "chunks.jsonl"
@@ -87,8 +90,16 @@ def build_claim_extraction(
     catalog_sqlite_path = catalog_sqlite_path or resolved_catalog_dir / "review_sources.sqlite"
     extraction_validation_path = derived_source_dir / "diagnostics" / "extraction_validation.json"
     extraction_summary_path = derived_source_dir / "diagnostics" / "summary.json"
-    retrieval_validation_path = derived_source_dir / "retrieval" / "retrieval_validation.json"
-    retrieval_summary_path = derived_source_dir / "retrieval" / "summary.json"
+    retrieval_validation_path = (
+        Path(retrieval_validation_path)
+        if retrieval_validation_path is not None
+        else derived_source_dir / "retrieval" / "retrieval_validation.json"
+    )
+    retrieval_summary_path = (
+        Path(retrieval_summary_path)
+        if retrieval_summary_path is not None
+        else derived_source_dir / "retrieval" / "summary.json"
+    )
     claims_path = claims_dir / "claims.jsonl"
     entities_path = claims_dir / "entities.jsonl"
     nodes_path = claims_dir / "claim_graph_nodes.jsonl"

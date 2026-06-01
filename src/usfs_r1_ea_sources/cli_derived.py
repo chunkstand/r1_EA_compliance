@@ -609,6 +609,10 @@ def _run_evidence_graph_build(args: argparse.Namespace):
         output_dir=args.output_dir,
         source_set_id=args.source_set_id,
         catalog_dir=args.catalog_dir,
+        chunks_path=args.chunks_path,
+        retrieval_validation_path=args.retrieval_validation_path,
+        retrieval_summary_path=args.retrieval_summary_path,
+        graph_dir=args.graph_dir,
         allow_partial_retrieval=args.allow_partial_retrieval,
     )
 
@@ -675,6 +679,9 @@ def _run_claim_extract(args: argparse.Namespace):
         source_set_id=args.source_set_id,
         chunks_path=args.chunks_path,
         catalog_sqlite_path=args.catalog_sqlite_path,
+        retrieval_validation_path=args.retrieval_validation_path,
+        retrieval_summary_path=args.retrieval_summary_path,
+        claims_dir=args.claims_dir,
         allow_partial_retrieval=args.allow_partial_retrieval,
     )
 

@@ -305,6 +305,58 @@ def test_chunk_sidecar_retrieval_eval_parser_accepts_comparison_paths() -> None:
     assert args.rebuild_sidecar is True
 
 
+def test_graph_and_claim_parsers_accept_sidecar_consumer_paths() -> None:
+    graph_args = build_parser().parse_args(
+        [
+            "evidence-graph-build",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-path",
+            "chunks_v2/atomic_chunks.jsonl",
+            "--retrieval-validation-path",
+            "retrieval_sidecar/retrieval_validation.json",
+            "--retrieval-summary-path",
+            "retrieval_sidecar/summary.json",
+            "--graph-dir",
+            "evidence_graph_sidecar",
+        ]
+    )
+    claim_args = build_parser().parse_args(
+        [
+            "claim-extract",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-path",
+            "chunks_v2/atomic_chunks.jsonl",
+            "--retrieval-validation-path",
+            "retrieval_sidecar/retrieval_validation.json",
+            "--retrieval-summary-path",
+            "retrieval_sidecar/summary.json",
+            "--claims-dir",
+            "claims_sidecar",
+        ]
+    )
+
+    assert graph_args.command == "evidence-graph-build"
+    assert graph_args.chunks_path == Path("chunks_v2/atomic_chunks.jsonl")
+    assert graph_args.retrieval_validation_path == Path(
+        "retrieval_sidecar/retrieval_validation.json"
+    )
+    assert graph_args.retrieval_summary_path == Path("retrieval_sidecar/summary.json")
+    assert graph_args.graph_dir == Path("evidence_graph_sidecar")
+    assert claim_args.command == "claim-extract"
+    assert claim_args.chunks_path == Path("chunks_v2/atomic_chunks.jsonl")
+    assert claim_args.retrieval_validation_path == Path(
+        "retrieval_sidecar/retrieval_validation.json"
+    )
+    assert claim_args.retrieval_summary_path == Path("retrieval_sidecar/summary.json")
+    assert claim_args.claims_dir == Path("claims_sidecar")
+
+
 def test_batch_download_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     args = build_parser().parse_args(
         [
