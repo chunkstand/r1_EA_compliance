@@ -30,6 +30,15 @@ history below.
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
 - latest resolved extraction/chunking/retrieval accuracy slice:
+  `docs/SIDECAR_GRAPH_CLAIM_CANONICAL_ADOPTION_MILESTONE_PLAN.md` is resolved
+  locally on branch `codex/extraction-chunking-retrieval-accuracy`. It adds
+  `chunk-sidecar-consumer-promote`, an opt-in command that reads a passed
+  non-partial `chunk-sidecar-consumer-eval` result and rebuilds canonical
+  `evidence_graph/` and `claims/` outputs from sidecar chunks and sidecar
+  retrieval metadata. Dry-run is default; canonical mutation requires
+  `--apply`, and replacing existing canonical graph/claim directories requires
+  `--replace-canonical`.
+- predecessor extraction/chunking/retrieval accuracy slice:
   `docs/SIDECAR_GRAPH_CLAIM_PROMOTION_EVAL_MILESTONE_PLAN.md` is resolved
   locally on branch `codex/extraction-chunking-retrieval-accuracy`. It adds
   `chunk-sidecar-consumer-eval`, an opt-in promotion-readiness gate that builds
@@ -37,10 +46,10 @@ history below.
   graph/claim summaries, and refuses sidecar chunk, retrieval, result, graph,
   or claim paths that point at or inside canonical derived output directories.
 - active extraction/chunking/retrieval accuracy slice:
-  none. Future promotion of `chunks_v2` into canonical graph, claim,
-  rule-link, compliance review, or phase-eval artifacts should open a new
-  bounded packet with direct eval thresholds over the sidecar layer and
-  consumer-specific contract updates.
+  none. Future sidecar adoption for rule-link, compliance review, phase-eval,
+  reviewer packages, or knowledge-graph artifacts should open new bounded
+  packets with direct eval thresholds over the adopted sidecar-backed graph and
+  claim layer plus consumer-specific contract updates.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
@@ -118,8 +127,8 @@ history below.
   `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_RESEARCH_BRIEF.md` and
   `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_IMPROVEMENT_BRIEF.md` is closed
   locally on the isolated branch, and the sidecar retrieval eval promotion,
-  sidecar downstream consumer preview, and sidecar graph/claim promotion eval
-  packets are now also closed locally.
+  sidecar downstream consumer preview, sidecar graph/claim promotion eval, and
+  sidecar graph/claim canonical adoption packets are now also closed locally.
   `chunk-quality-audit` writes per-source
   parser/layout/boundary risk diagnostics, and `chunk-layer-build` writes
   opt-in `chunks_v2` atomic chunks, structural chunks, parent context windows,
@@ -153,9 +162,19 @@ history below.
   failed checks, `36` graph nodes, `95` graph edges, `14` claims, `60` claim
   nodes, and `108` claim edges. The sidecar eval path guards now refuse
   sidecar chunk, retrieval, result, graph, or claim paths inside canonical
-  `chunks/`, `retrieval/`, `evidence_graph/`, or `claims/` directories. No
-  canonical graph, claim, rule-link, review, compliance, phase-eval, or
-  knowledge-graph rebuild was performed.
+  `chunks/`, `retrieval/`, `evidence_graph/`, or `claims/` directories.
+  `chunk-sidecar-consumer-promote` now provides the explicit canonical
+  graph/claim adoption step: dry-run reports readiness without mutation, apply
+  mode requires `--apply --replace-canonical` when existing canonical graph and
+  claim dirs are present, and promotion requires a passed non-partial sidecar
+  consumer eval plus reviewer-ready sidecar retrieval, graph, and claims. A
+  fixture-backed temp smoke under
+  `/tmp/usfs-r1-sidecar-consumer-promote.rQ06OT/` ran the CLI apply path and
+  produced a passing promotion result with reviewer-ready canonical graph and
+  claim summaries rebuilt from `chunks_v2/atomic_chunks.jsonl` and
+  `retrieval_sidecar/summary.json`. No ignored production `source_library/`
+  outputs were mutated, and rule-link, review, compliance, phase-eval, or
+  knowledge-graph sidecar adoption remains future work.
 
   operational graph-KB query surface: the first local query/API-contract slice
   is closed locally. `src/usfs_r1_ea_sources/knowledge_graph_query.py` and

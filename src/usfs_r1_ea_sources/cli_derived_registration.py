@@ -380,6 +380,18 @@ def build_derived_command_specs(
             ),
         ),
         DerivedCommandSpec(
+            name="chunk-sidecar-consumer-promote",
+            help="Promote gated sidecar graph and claim previews into canonical dirs.",
+            arguments=(
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg("--consumer-eval-results-path", type=Path),
+                _arg("--results-dir", type=Path),
+                _arg("--apply", action="store_true"),
+                _arg("--replace-canonical", action="store_true"),
+            ),
+        ),
+        DerivedCommandSpec(
             name="evidence-graph-build",
             help="Build a document evidence graph from extracted chunks and retrieval metadata.",
             arguments=(

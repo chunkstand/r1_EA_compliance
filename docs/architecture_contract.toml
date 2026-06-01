@@ -85,7 +85,7 @@ allowed_import_layers = ["foundation", "extraction", "retrieval"]
 [[layers]]
 name = "sidecar_eval"
 summary = "Opt-in sidecar promotion-readiness eval orchestration over chunk, retrieval, graph, and claim previews."
-modules = ["sidecar_consumer_eval"]
+modules = ["sidecar_consumer_eval", "sidecar_consumer_promotion"]
 allowed_import_layers = [
   "foundation",
   "extraction",
@@ -566,6 +566,7 @@ paths = [
 owner_layer = "sidecar_eval"
 paths = [
   "source_library/derived/<source_set_id>/consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json",
+  "source_library/derived/<source_set_id>/consumer_sidecar_promotion/chunk_sidecar_consumer_promotion_results.json",
 ]
 
 [[artifacts]]
@@ -799,6 +800,7 @@ commands = [
   "retrieval-eval",
   "chunk-sidecar-retrieval-eval",
   "chunk-sidecar-consumer-eval",
+  "chunk-sidecar-consumer-promote",
 ]
 
 [[command_groups]]

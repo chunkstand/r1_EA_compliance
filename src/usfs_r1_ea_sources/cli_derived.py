@@ -604,11 +604,12 @@ def _run_chunk_sidecar_retrieval_eval(args: argparse.Namespace):
     )
 
 
-def _run_chunk_sidecar_consumer_eval(args: argparse.Namespace):
-    return _module_attr(
-        "cli_sidecar_eval",
-        "run_chunk_sidecar_consumer_eval_command",
-    )(args)
+def _run_chunk_sidecar_consumer_command(args: argparse.Namespace):
+    command = {
+        "chunk-sidecar-consumer-eval": "run_chunk_sidecar_consumer_eval_command",
+        "chunk-sidecar-consumer-promote": "run_chunk_sidecar_consumer_promotion_command",
+    }[args.command]
+    return _module_attr("cli_sidecar_eval", command)(args)
 
 
 def _run_evidence_graph_build(args: argparse.Namespace):
@@ -766,11 +767,9 @@ COMMAND_HANDLERS = {
     "retrieval-build": _result_handler(_run_retrieval_build, "validation_passed"),
     "retrieval-query": _summary_handler(_run_retrieval_query, "hit_count"),
     "retrieval-eval": _result_handler(_run_retrieval_eval, "passed"),
-    "chunk-sidecar-retrieval-eval": _result_handler(
-        _run_chunk_sidecar_retrieval_eval,
-        "passed",
-    ),
-    "chunk-sidecar-consumer-eval": _result_handler(_run_chunk_sidecar_consumer_eval, "passed"),
+    "chunk-sidecar-retrieval-eval": _result_handler(_run_chunk_sidecar_retrieval_eval, "passed"),
+    "chunk-sidecar-consumer-eval": _result_handler(_run_chunk_sidecar_consumer_command, "passed"),
+    "chunk-sidecar-consumer-promote": _result_handler(_run_chunk_sidecar_consumer_command, "passed"),
     "evidence-graph-build": _result_handler(
         _run_evidence_graph_build,
         "validation_passed",

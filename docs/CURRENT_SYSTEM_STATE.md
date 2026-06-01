@@ -15,6 +15,42 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Graph Claim Canonical Adoption Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the fifth extraction/chunking/retrieval accuracy packet is closed locally on
+  isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `chunk-sidecar-consumer-promote` now reads a passed
+  `chunk-sidecar-consumer-eval` result and can rebuild canonical
+  `evidence_graph/` and `claims/` outputs from sidecar chunks and sidecar
+  retrieval metadata.
+- contract effect:
+  the command is a dry-run readiness gate by default. Canonical mutation
+  requires `--apply`, and replacing existing canonical graph/claim directories
+  requires `--replace-canonical`. Promotion requires a passed, non-partial
+  consumer eval plus reviewer-ready sidecar retrieval, graph, and claims.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/sidecar_consumer_promotion.py` owns adoption
+  preflight, apply, backup, and result summaries inside the sidecar eval layer.
+  `cli_derived.py` remains under the 800-line gate at `797` lines by routing
+  sidecar consumer commands through `cli_sidecar_eval.py`. The live
+  architecture probe reports `515` code files, `17` code files above `800`, no
+  Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate.
+- smoke:
+  fixture-backed temp smoke under
+  `/tmp/usfs-r1-sidecar-consumer-promote.rQ06OT/` ran the CLI apply path with
+  `--apply --replace-canonical`; the promotion result passed, applied backups,
+  rebuilt canonical graph and claims from `chunks_v2/atomic_chunks.jsonl` and
+  `retrieval_sidecar/summary.json`, and reported reviewer-ready canonical
+  graph and claim summaries.
+- boundary:
+  no ignored production `source_library/` outputs were mutated. Rule-link,
+  compliance, phase-eval, reviewer package, and knowledge-graph sidecar
+  adoption remain future bounded packets.
+
 ## Sidecar Graph Claim Promotion Eval Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

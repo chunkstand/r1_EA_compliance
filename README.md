@@ -190,6 +190,7 @@ PYTHONPATH=src python -m usfs_r1_ea_sources chunk-layer-build \
   --source-set-id <source-set-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources chunk-sidecar-retrieval-eval --output-dir source_library --source-set-id <source-set-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources chunk-sidecar-consumer-eval --output-dir source_library --source-set-id <source-set-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources chunk-sidecar-consumer-promote --output-dir source_library --source-set-id <source-set-id>
 ```
 
 ## Development
