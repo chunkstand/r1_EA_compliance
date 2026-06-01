@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "test-forest-plan-resolver-scope-owner",
-      "owner_kind": "test",
-      "follow_on_priority": 2,
-      "required_tests": [
-        "tests/test_forest_plan_resolver_scope.py"
-      ],
-      "files": [
-        {
-          "path": "tests/test_forest_plan_resolver_scope.py",
-          "line_count": 1035
-        }
-      ]
-    },
-    {
       "name": "source-claim-extraction-eval-owner",
       "owner_kind": "source",
       "follow_on_priority": 3,

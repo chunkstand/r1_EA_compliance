@@ -15,6 +15,25 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Forest-Plan Resolver Scope Readiness Test Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the second test-owner oversized reduction slice is closed locally.
+  `tests/test_forest_plan_resolver_scope.py` keeps scope, location,
+  geographic-area, and ambiguous/out-of-scope package tests at `629` lines.
+  `tests/test_forest_plan_resolver_scope_readiness.py` now owns required-source
+  readiness and supporting-plan evidence route tests at `429` lines.
+- architecture effect:
+  the architecture probe reports `535` code files, `15` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `9` source owners and `6` test
+  owners.
+- boundary:
+  this is a behavior-preserving test-owner split. It does not change forest
+  plan resolver behavior, generated artifacts, or local corpus state.
+
 ## Applicability Authority-Family Template Test Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

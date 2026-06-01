@@ -4,7 +4,7 @@ Date: 2026-05-26
 
 Status: resolved locally 2026-05-26 and refreshed locally 2026-06-01; architecture governance
 matches live repo truth again, `docs/CURRENT_ROUTING.md` is back under its short-route cap, and
-the current `16` oversized files are explicitly inventoried as follow-on debt
+the current `15` oversized files are explicitly inventoried as follow-on debt
 
 Owner context: This is a narrow child packet opened after a read-only architecture audit found
 that the repo's live architecture-governance surfaces no longer match current code size, current
@@ -29,10 +29,13 @@ under-`800` closeout is being used as live truth after the repo moved on.
 
 - Fresh architecture probe:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `534` code files, `16` code files above `800` lines, no Python or JS/TS import cycles,
+  reports `535` code files, `15` code files above `800` lines, no Python or JS/TS import cycles,
   and no source module above the `20`-import fan-out gate.
-- `config/architecture_large_file_inventory_v1.json` records the exact `16`-file live backlog as
-  `9` source-owner families and `7` test-owner families.
+- `config/architecture_large_file_inventory_v1.json` records the exact `15`-file live backlog as
+  `9` source-owner families and `6` test-owner families.
+- `tests/test_forest_plan_resolver_scope.py` is resolved as an oversized test owner:
+  the scope/location suite is `629` lines, and readiness/supporting-evidence route cases now live
+  in `tests/test_forest_plan_resolver_scope_readiness.py` at `429` lines.
 - `tests/test_applicability_authority_family_templates.py` is resolved as an oversized test owner:
   the base candidate contract file is `699` lines, and current-source addition cases now live in
   `tests/test_applicability_authority_family_template_current_sources.py` at `720` lines.
