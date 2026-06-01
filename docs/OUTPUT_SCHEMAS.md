@@ -5549,7 +5549,19 @@ canonical owner for these readiness summaries is `phase_eval.py`; the source-set
 the `evidence_graph/` directory only to preserve the established artifact path. It evaluates
 catalog capture, extraction, upstream direct-eval coverage, retrieval, evidence graph, claim
 extraction, and rule-claim binding as separate phases and records phase blockers so downstream
-compliance review cannot hide an upstream failure. When
+compliance review cannot hide an upstream failure. `phase-eval --rule-claim-links-path
+<rule_claim_links.jsonl>` can explicitly select a noncanonical sidecar rule-link artifact. For
+review-scoped runs without an explicit path, phase eval also follows a noncanonical
+`rule_claim_links_path` recorded in the compliance review summary. In both cases, the
+`rule_claim_binding` phase reads sibling `summary.json`, `rule_claim_link_validation.json`, and
+`rule_claim_link_eval_results.json` artifacts from the selected link directory. Its details include
+`explicit_rule_claim_links_path`, `selected_rule_claim_links_path`,
+`selected_rule_claim_eval_path`, `compliance_review_rule_claim_links_path`,
+`rule_claim_links_are_canonical`, `uses_sidecar_rule_claim_links`, `canonical_links_dir`,
+`links_dir`, and `failed_path_checks`. Failed path checks make the phase non-ready. When sidecar
+rule links are selected, the phase's direct-eval status is computed from the selected sidecar
+`rule_claim_link_eval_results.json` and validates eval ID, source-set ID, and contract SHA against
+the committed downstream direct-eval manifest. When
 `source_library/evaluations/upstream/upstream_evaluation_results.json` exists, phase eval also
 includes an `upstream_evaluation` phase sourced from that summary. The upstream phase fails closed
 when the results file is missing, when its schema or source path is unreadable, or when the summary

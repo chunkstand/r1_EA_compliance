@@ -187,6 +187,7 @@ modules = [
   "phase_eval_direct_eval_support",
   "phase_eval_optional_phases",
   "phase_eval_review_phases",
+  "phase_eval_sidecar",
   "phase_eval_source_set_phases",
   "phase_eval_support",
   "replay_context",

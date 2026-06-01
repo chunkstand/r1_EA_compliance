@@ -46,6 +46,7 @@ def build_source_set_phases(
     rule_claim_validation_path: Path,
     rule_claim_summary: dict | None,
     rule_claim_summary_path: Path,
+    rule_claim_path_context: dict | None,
     downstream_direct_eval_manifest: dict | None,
     downstream_direct_eval_manifest_path: Path,
     downstream_lane_results: dict[str, dict[str, object]],
@@ -64,6 +65,16 @@ def build_source_set_phases(
     semantic_graph_direct_eval: dict | None,
     knowledge_graph_query_direct_eval: dict | None,
 ) -> list[dict]:
+    rule_claim_path_context = rule_claim_path_context or {}
+    rule_claim_path_checks_passed = not rule_claim_path_context.get("failed_path_checks")
+    rule_claim_passed = (
+        bool(rule_claim_validation and rule_claim_validation.get("passed"))
+        and rule_claim_path_checks_passed
+    )
+    rule_claim_reviewer_ready = (
+        bool(rule_claim_summary and rule_claim_summary.get("reviewer_ready"))
+        and rule_claim_path_checks_passed
+    )
     phases = [
         _phase(
             "catalog_capture",
@@ -175,8 +186,8 @@ def build_source_set_phases(
         ),
         _phase(
             "rule_claim_binding",
-            passed=bool(rule_claim_validation and rule_claim_validation.get("passed")),
-            reviewer_ready=bool(rule_claim_summary and rule_claim_summary.get("reviewer_ready")),
+            passed=rule_claim_passed,
+            reviewer_ready=rule_claim_reviewer_ready,
             details={
                 "validation_path": str(rule_claim_validation_path),
                 "summary_path": str(rule_claim_summary_path),
@@ -198,6 +209,7 @@ def build_source_set_phases(
                     "rules_without_links",
                     [],
                 ),
+                **rule_claim_path_context,
             },
         ),
         _downstream_direct_evaluation_phase(

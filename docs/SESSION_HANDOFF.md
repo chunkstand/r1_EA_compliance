@@ -30,6 +30,19 @@ history below.
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
 - latest resolved extraction/chunking/retrieval accuracy slice:
+  `docs/SIDECAR_PHASE_EVAL_ADOPTION_MILESTONE_PLAN.md` is resolved locally on
+  branch `codex/extraction-chunking-retrieval-accuracy`. It adds
+  `--rule-claim-links-path` to `phase-eval` and makes review-scoped phase eval
+  auto-follow noncanonical sidecar rule-link paths recorded by compliance
+  review. The `rule_claim_binding` phase now reports selected, explicit, and
+  compliance-review rule-link paths; selected direct-eval path; canonical link
+  directory; actual link directory; sidecar/canonical status; and failed path
+  checks. When sidecar rule links are selected, direct-eval coverage for
+  `rule_claim_binding` is read from the sibling sidecar
+  `rule_claim_link_eval_results.json` and validates eval ID, source set, and
+  contract SHA. Explicit sidecar paths fail closed when they conflict with the
+  compliance review's recorded path.
+- predecessor extraction/chunking/retrieval accuracy slice:
   `docs/SIDECAR_COMPLIANCE_REVIEW_ADOPTION_MILESTONE_PLAN.md` is resolved
   locally on branch `codex/extraction-chunking-retrieval-accuracy`. It adds
   `--rule-claim-links-path` to `compliance-review`, `compliance-review-eval`,
@@ -72,10 +85,10 @@ history below.
   graph/claim summaries, and refuses sidecar chunk, retrieval, result, graph,
   or claim paths that point at or inside canonical derived output directories.
 - active extraction/chunking/retrieval accuracy slice:
-  none. Future sidecar adoption for phase-eval, reviewer packages, or
-  knowledge-graph artifacts should open new bounded packets with direct eval
-  thresholds over the adopted sidecar-backed graph, claim, rule-link, and
-  compliance layer plus consumer-specific contract updates.
+  none. Future sidecar adoption for reviewer packages or knowledge-graph
+  artifacts should open new bounded packets with direct eval thresholds over
+  the adopted sidecar-backed graph, claim, rule-link, compliance, and
+  phase-eval layer plus consumer-specific contract updates.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.
@@ -207,9 +220,14 @@ history below.
   `rule-claim-eval` now provide sidecar rule-link preview/eval, and
   `compliance-review --rule-claim-links-path` plus the compliance review eval
   wrappers can consume validated sidecar rule links without rebuilding
-  canonical `rule_claim_links/`. No ignored production `source_library/`
-  outputs were mutated. Phase-eval, reviewer package, and knowledge-graph
-  sidecar adoption remain future work.
+  canonical `rule_claim_links/`. `phase-eval --rule-claim-links-path` can now
+  explicitly select sidecar rule links, and review-scoped phase eval
+  auto-follows noncanonical compliance review rule-link paths. The
+  `rule_claim_binding` phase reports sidecar/canonical path context, fails
+  closed on path conflicts, and reads direct-eval status from sidecar
+  `rule_claim_link_eval_results.json` when sidecar links are selected. No
+  ignored production `source_library/` outputs were mutated. Reviewer package
+  and knowledge-graph sidecar adoption remain future work.
 
   operational graph-KB query surface: the first local query/API-contract slice
   is closed locally. `src/usfs_r1_ea_sources/knowledge_graph_query.py` and

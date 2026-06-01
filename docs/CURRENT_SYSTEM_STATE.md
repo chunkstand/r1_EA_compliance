@@ -15,6 +15,37 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Phase Eval Adoption Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the eighth extraction/chunking/retrieval accuracy packet is closed locally on isolated branch
+  `codex/extraction-chunking-retrieval-accuracy`. `phase-eval` now accepts
+  `--rule-claim-links-path` and, for review-scoped runs, automatically follows a noncanonical
+  `rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_links.jsonl` path recorded by
+  sidecar-backed compliance review.
+- contract effect:
+  when phase-eval selects sidecar rule links, the `rule_claim_binding` phase reads the sibling
+  `summary.json`, `rule_claim_link_validation.json`, and `rule_claim_link_eval_results.json`.
+  Phase details report selected, explicit, and compliance-review rule-link paths; selected direct
+  eval path; canonical link directory; actual link directory; sidecar/canonical status; and
+  `failed_path_checks`. Explicit sidecar paths fail closed when they conflict with the selected
+  summary path or the compliance review's recorded rule-link path.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/phase_eval_sidecar.py` owns sidecar path context and the rule-claim
+  direct-eval override inside the existing phase-eval layer. Focused test suites now keep the
+  phase-eval and compliance-review core test owners under their architecture line-budget gates.
+- smoke:
+  fixture-backed CLI smoke under
+  `/tmp/usfs-r1-sidecar-phase-eval.ghnuzz4a/` ran
+  `phase-eval --review-id phase-sidecar-smoke` after a sidecar-backed compliance review, selected
+  sidecar rule links, used sidecar `rule_claim_link_eval_results.json`, and kept
+  `rule_claim_binding` passed and reviewer-ready.
+- boundary:
+  no ignored production `source_library/` outputs were mutated. Reviewer package and
+  knowledge-graph sidecar adoption remain future bounded packets.
+
 ## Sidecar Compliance Review Adoption Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
@@ -50,9 +81,9 @@ Latest implementation update on 2026-06-01 UTC:
   `rule_claim_links_are_canonical=false`, and did not create canonical
   rule-claim outputs.
 - boundary:
-  no ignored production `source_library/` outputs were mutated. Phase-eval,
-  reviewer package, and knowledge-graph sidecar adoption remain future bounded
-  packets.
+  no ignored production `source_library/` outputs were mutated. This predecessor packet left
+  phase-eval as the next adoption slice; the newer section above records phase-eval closeout.
+  Reviewer package and knowledge-graph sidecar adoption remain future bounded packets.
 
 ## Sidecar Rule Claim Link Readiness Resolved Locally
 
