@@ -86,10 +86,24 @@ history below.
   structure, and parent-window coverage, while sidecar `pass_rate=1.0`,
   `atomic_chunk_recall_at_k=1.0`, `structure_hit_rate=1.0`, and
   `parent_window_coverage_rate=1.0`.
+- latest resolved sidecar consumer/eval slice:
+  `chunk-sidecar-consumer-eval` now builds noncanonical evidence-graph and
+  claim previews from `chunks_v2/atomic_chunks.jsonl` and sidecar retrieval,
+  compares them against baseline graph and claim summaries, and refuses to
+  pass if tracked consumer metrics regress. Graph and claim builders now accept
+  explicit sidecar chunk/retrieval/output paths while retaining their canonical
+  defaults. The live f70 smoke wrote graph, claim, retrieval, and result
+  outputs to `/tmp`; sidecar chunks/retrieval, graph, and claims all validated,
+  and graph metrics were not worse than baseline. The gate correctly failed
+  promotion on claim metrics: sidecar claims produced `142,748` claims versus
+  baseline `143,255`, and `claim_entity_coverage_rate=0.479054` versus
+  baseline `0.494231`.
 - active extraction/chunking/retrieval accuracy slice:
-  none. The next bounded packet should decide whether and how to promote
-  sidecar retrieval into graph, claim, reviewer, or compliance consumers; do
-  not replace the baseline chunk spine without a separate promotion gate.
+  none. The next bounded packet should explain and resolve the sidecar
+  claim-count/entity-coverage regression, or explicitly choose a narrower
+  graph-only promotion gate. Do not replace the baseline chunk spine or make
+  `chunks_v2`/`retrieval_sidecar` canonical for claim, reviewer, compliance, or
+  phase-eval consumers without a separate promotion gate.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.

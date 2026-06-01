@@ -2,11 +2,13 @@
 
 Date: 2026-06-01
 
-Status: First three bounded packets implemented locally. The read-only
-`chunk-quality-audit` gate, generated sidecar `chunk-layer-build` command, and
-sidecar-aware `chunk-sidecar-retrieval-eval` command are now routed in
+Status: First four bounded packets implemented locally. The read-only
+`chunk-quality-audit` gate, generated sidecar `chunk-layer-build` command,
+sidecar-aware `chunk-sidecar-retrieval-eval` command, and fail-closed
+`chunk-sidecar-consumer-eval` preview gate are now routed in
 `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
-`docs/SESSION_HANDOFF.md`; downstream consumer promotion remains future work.
+`docs/SESSION_HANDOFF.md`; downstream consumer promotion remains future work
+because the full f70 claim comparison currently blocks promotion.
 
 ## Implementation Status
 
@@ -35,16 +37,27 @@ sidecar-aware `chunk-sidecar-retrieval-eval` command are now routed in
   `parent_window_coverage_rate=1.0`; the baseline comparison completed and
   exposed the intended gap with baseline `pass_rate=0.25` and zero
   atomic/structure/parent-window coverage.
+- closed:
+  `chunk-sidecar-consumer-eval` builds sidecar evidence-graph and claim
+  previews from atomic chunks and sidecar retrieval, writes only noncanonical
+  outputs, and compares graph/claim metrics against baseline summaries. The
+  full f70 smoke validated sidecar chunks, retrieval, graph, and claims; graph
+  metrics were not worse than baseline. The gate failed closed on claim
+  promotion because sidecar claims produced `142,748` claims versus baseline
+  `143,255`, and sidecar `claim_entity_coverage_rate=0.479054` versus baseline
+  `0.494231`.
 - live smoke:
   the active source set produced `113,830` audited chunks across `719` sources,
   passed required provenance/offset/source-identity checks, and reported the
   expected `parent_context_missing` risk for every source when the default
   `chunks_v2` sidecar summary was absent.
 - still open:
-  downstream promotion gates for graph, claim, reviewer, compliance, and
-  phase-eval consumers; broader sidecar eval coverage across parser-risk
-  strata; and optional FTS/BM25 first-stage scoring or reranker experiments
-  after deterministic sidecar gains remain measurable.
+  explaining and resolving the sidecar claim-count/entity-coverage regression;
+  deciding whether a narrower graph-only promotion gate is acceptable; broader
+  sidecar eval coverage across parser-risk strata; downstream promotion gates
+  for claim, reviewer, compliance, and phase-eval consumers; and optional
+  FTS/BM25 first-stage scoring or reranker experiments after deterministic
+  sidecar gains remain measurable.
 
 ## Grounded Repo Snapshot
 
@@ -175,6 +188,9 @@ Upgrade retrieval in steps:
 - closed first sidecar step: index `chunks_v2/atomic_chunks.jsonl` into a
   noncanonical retrieval sidecar and compare exact atomic/structure/parent
   eval metrics against baseline retrieval;
+- closed first consumer-preview step: build noncanonical graph and claim
+  previews from sidecar retrieval, compare them against baseline summaries, and
+  fail closed on tracked graph/claim regressions;
 - use SQLite FTS5/BM25 as a real first-stage lexical retriever instead of only
   as a persisted side table;
 - index both raw text and `contextual_index_text_v1`;
@@ -233,16 +249,17 @@ Extend direct evals beyond current source-level retrieval:
 ## Suggested Next Bounded Packet
 
 Status: closed by `chunk-quality-audit`; the follow-on sidecar layer is closed
-by `chunk-layer-build`, and the first sidecar retrieval/eval packet is closed
-by `chunk-sidecar-retrieval-eval`.
+by `chunk-layer-build`; the first sidecar retrieval/eval packet is closed by
+`chunk-sidecar-retrieval-eval`; and the first sidecar graph/claim consumer
+preview gate is closed by `chunk-sidecar-consumer-eval`.
 
 Open a new implementation packet before changing any downstream consumer to use
-`chunks_v2` or `retrieval_sidecar`.
+`chunks_v2` or `retrieval_sidecar` canonically.
 
 Goal:
-promote sidecar retrieval to one narrow downstream consumer behind a fail-closed
-comparison gate, or expand the tracked sidecar eval cases across parser-risk
-strata before promotion.
+explain and resolve the f70 sidecar claim-count/entity-coverage regression, or
+explicitly scope a graph-only promotion gate while leaving claim, review, and
+compliance consumers on the baseline chunk spine.
 
 Non-goals:
 no full corpus regeneration, no network download, no graph rebuild, no
@@ -251,7 +268,10 @@ embedding provider dependency, no unguarded replacement of `chunks.jsonl`.
 Owner surfaces:
 
 - `src/usfs_r1_ea_sources/sidecar_retrieval_eval.py`
+- `src/usfs_r1_ea_sources/sidecar_consumer_eval.py`
 - `src/usfs_r1_ea_sources/retrieval_eval_runtime.py`
+- `src/usfs_r1_ea_sources/claim_extraction.py`
+- `src/usfs_r1_ea_sources/evidence_graph.py`
 - the selected downstream consumer if promotion is chosen
 - CLI registration
 - `docs/OUTPUT_SCHEMAS.md`

@@ -298,6 +298,49 @@ def test_chunk_sidecar_retrieval_eval_parser_accepts_sidecar_paths() -> None:
     assert args.rebuild_sidecar is True
 
 
+def test_chunk_sidecar_consumer_eval_parser_accepts_sidecar_paths() -> None:
+    args = build_parser().parse_args(
+        [
+            "chunk-sidecar-consumer-eval",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-v2-dir",
+            "/tmp/chunks-v2",
+            "--sidecar-index-dir",
+            "/tmp/retrieval-sidecar",
+            "--graph-dir",
+            "/tmp/graph-sidecar",
+            "--claims-dir",
+            "/tmp/claims-sidecar",
+            "--baseline-graph-summary-path",
+            "/tmp/baseline/evidence_graph/summary.json",
+            "--baseline-claim-summary-path",
+            "/tmp/baseline/claims/summary.json",
+            "--results-dir",
+            "/tmp/consumer-sidecar-eval",
+            "--rebuild-sidecar",
+            "--allow-partial-extraction",
+            "--allow-partial-retrieval",
+        ]
+    )
+
+    assert args.command == "chunk-sidecar-consumer-eval"
+    assert args.output_dir == Path("source_library")
+    assert args.source_set_id == "source-set-test"
+    assert args.chunks_v2_dir == Path("/tmp/chunks-v2")
+    assert args.sidecar_index_dir == Path("/tmp/retrieval-sidecar")
+    assert args.graph_dir == Path("/tmp/graph-sidecar")
+    assert args.claims_dir == Path("/tmp/claims-sidecar")
+    assert args.baseline_graph_summary_path == Path("/tmp/baseline/evidence_graph/summary.json")
+    assert args.baseline_claim_summary_path == Path("/tmp/baseline/claims/summary.json")
+    assert args.results_dir == Path("/tmp/consumer-sidecar-eval")
+    assert args.rebuild_sidecar is True
+    assert args.allow_partial_extraction is True
+    assert args.allow_partial_retrieval is True
+
+
 def test_retrieval_build_parser_accepts_archived_catalog_dir() -> None:
     args = build_parser().parse_args(
         [

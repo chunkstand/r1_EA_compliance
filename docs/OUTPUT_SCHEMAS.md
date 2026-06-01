@@ -5288,6 +5288,32 @@ contract is `config/chunk_sidecar_retrieval_eval_v1.json`. The sidecar result ha
   worse than baseline
 - `passed`, which is true only when all checks pass
 
+`chunk-sidecar-consumer-eval` writes
+`consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json` by default. The result has schema
+version `chunk-sidecar-consumer-eval-results-v1` and records:
+
+- source-set ID, output path, sidecar chunk path, sidecar retrieval index path, sidecar graph
+  summary path, sidecar claim summary path, and baseline graph/claim summary paths
+- `sidecar` summaries for chunks, retrieval, graph, and claims, including validation status,
+  reviewer-ready status where applicable, chunk count, claim count, node count, edge count, and
+  tracked metrics
+- `baseline` summaries for graph and claims, including validation status, reviewer-ready status,
+  chunk count, claim count, node count, edge count, and tracked metrics
+- metric comparisons for graph coverage and health metrics, where higher is better for source
+  artifact coverage, evidence coverage, chunk-topic coverage, source-document count, and
+  raw-artifact count, and lower is better for dangling or isolated graph counts
+- metric comparisons for claim coverage and health metrics, where higher is better for claim
+  evidence coverage, topic coverage, authority coverage, entity coverage, and claim count, and
+  lower is better for dangling claim-graph edges
+- checks for sidecar chunk validation, sidecar retrieval index validation, sidecar graph
+  validation, sidecar claim validation, baseline graph/claim summary validation, and sidecar graph
+  and claim metrics not being worse than baseline
+- `passed`, which is true only when all validation and comparison checks pass
+
+The command rejects sidecar chunk, retrieval, graph, claim, and result directories that point at or
+inside canonical `chunks/`, `retrieval/`, `evidence_graph/`, or `claims/` directories. It is a
+preview/eval gate, not a canonical promotion command.
+
 ## Source Claim Graph Outputs
 
 Path: `source_library/derived/<source_set_id>/claims/`

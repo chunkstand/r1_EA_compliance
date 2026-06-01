@@ -84,6 +84,21 @@ modules = [
 allowed_import_layers = ["foundation", "extraction", "retrieval"]
 
 [[layers]]
+name = "sidecar_consumer"
+summary = "Fail-closed sidecar promotion preview gates that build downstream consumers without mutating canonical artifacts."
+modules = [
+  "sidecar_consumer_eval",
+]
+allowed_import_layers = [
+  "foundation",
+  "extraction",
+  "retrieval",
+  "evidence_graph",
+  "claims",
+  "sidecar_consumer",
+]
+
+[[layers]]
 name = "claims"
 summary = "Source-claim extraction and rule-claim binding."
 modules = ["claim_extraction", "claim_extraction_eval", "claim_extraction_graph", "claim_extraction_runtime", "claim_extraction_validation", "rule_claim_binding", "rule_claim_binding_eval", "rule_claim_binding_runtime", "rule_claim_binding_validation"]
@@ -496,6 +511,7 @@ allowed_import_layers = [
   "review",
   "review_support",
   "evidence_graph",
+  "sidecar_consumer",
   "phase_eval",
   "knowledge_graph",
   "package_context",
@@ -555,6 +571,12 @@ paths = [
   "source_library/derived/<source_set_id>/retrieval_sidecar/retrieval_validation.json",
   "source_library/derived/<source_set_id>/retrieval_sidecar/summary.json",
   "source_library/derived/<source_set_id>/retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json",
+]
+
+[[artifacts]]
+owner_layer = "sidecar_consumer"
+paths = [
+  "source_library/derived/<source_set_id>/consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json",
 ]
 
 [[artifacts]]
@@ -781,6 +803,7 @@ commands = [
   "chunk-quality-audit",
   "chunk-layer-build",
   "chunk-sidecar-retrieval-eval",
+  "chunk-sidecar-consumer-eval",
   "retrieval-build",
   "retrieval-query",
   "retrieval-eval",

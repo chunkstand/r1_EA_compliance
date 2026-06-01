@@ -278,6 +278,7 @@ DERIVED_COMMANDS = {
     "chunk-quality-audit",
     "chunk-layer-build",
     "chunk-sidecar-retrieval-eval",
+    "chunk-sidecar-consumer-eval",
     "source-register-proving-slice",
     "authority-currentness",
     "authority-ontology-validate",
@@ -603,6 +604,14 @@ def _run_chunk_sidecar_retrieval_eval(args: argparse.Namespace):
     )
 
 
+def _run_chunk_sidecar_consumer_eval(args: argparse.Namespace):
+    kwargs = {key: value for key, value in vars(args).items() if key != "command"}
+    return _module_attr(
+        "sidecar_consumer_eval",
+        "run_chunk_sidecar_consumer_eval",
+    )(**kwargs)
+
+
 def _run_evidence_graph_build(args: argparse.Namespace):
     return build_evidence_graph(
         output_dir=args.output_dir,
@@ -753,6 +762,10 @@ COMMAND_HANDLERS = {
     "retrieval-eval": _result_handler(_run_retrieval_eval, "passed"),
     "chunk-sidecar-retrieval-eval": _result_handler(
         _run_chunk_sidecar_retrieval_eval,
+        "passed",
+    ),
+    "chunk-sidecar-consumer-eval": _result_handler(
+        _run_chunk_sidecar_consumer_eval,
         "passed",
     ),
     "evidence-graph-build": _result_handler(

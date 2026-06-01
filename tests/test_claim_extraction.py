@@ -509,6 +509,28 @@ def _write_upstream_evaluation_phase_outputs(output_dir: Path) -> None:
 
 
 def _write_downstream_direct_eval_phase_outputs(output_dir: Path, source_set_id: str) -> None:
+    extraction_fidelity_path = (
+        output_dir
+        / "evaluations"
+        / "extraction_fidelity"
+        / "extraction_fidelity_eval_results.json"
+    )
+    extraction_fidelity_path.parent.mkdir(parents=True, exist_ok=True)
+    extraction_fidelity_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "extraction-fidelity-eval-results-v0",
+                "passed": True,
+                "required_category_count": 12,
+                "case_count": 24,
+                "matched_case_count": 24,
+                "failed_case_ids": [],
+                "contract_checks": [],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
     contracts = {
         output_dir / "derived" / source_set_id / "retrieval" / "retrieval_eval_results.json": (
             Path("config/retrieval_eval_seed.json"),

@@ -15,6 +15,41 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Consumer Eval Gate Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  `chunk-sidecar-consumer-eval` is now the first downstream sidecar consumer
+  preview gate. It reuses or builds `chunks_v2/atomic_chunks.jsonl`, builds a
+  noncanonical sidecar retrieval index, builds evidence-graph and claim
+  previews from that sidecar into noncanonical directories, and compares their
+  metrics against baseline graph and claim summaries.
+- contract:
+  `docs/architecture_contract.toml` now owns the `sidecar_consumer` layer,
+  `src/usfs_r1_ea_sources/sidecar_consumer_eval.py`, the generated
+  `consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json` artifact,
+  and the public `chunk-sidecar-consumer-eval` command. Graph and claim
+  builders now accept explicit chunk, retrieval, and output paths while keeping
+  their canonical defaults unchanged.
+- live smoke:
+  running the command against `source-set-f70ea11e04ae3d53` with all sidecar
+  outputs redirected to `/tmp` executed the full gate and failed closed. The
+  sidecar chunk and retrieval inputs validated over `296,442` atomic chunks
+  across `719` sources. The sidecar evidence graph validated and remained
+  not worse than baseline on tracked graph metrics, with `649,695` nodes and
+  `2,134,201` edges. The sidecar claim layer also validated with `142,748`
+  claims, `398,509` nodes, and `947,964` edges, but the comparison gate
+  blocked promotion because baseline claims had `143,255` claims and
+  `claim_entity_coverage_rate=0.494231`, while sidecar claims had `142,748`
+  claims and `claim_entity_coverage_rate=0.479054`.
+- boundary:
+  this closes the generated preview/eval infrastructure, not promotion. A
+  future bounded packet must explain and resolve the sidecar claim-count/entity
+  coverage regression, or explicitly choose a narrower graph-only consumer
+  promotion gate before any canonical graph, claim, review, compliance, or
+  phase-eval consumer uses `chunks_v2` or `retrieval_sidecar`.
+
 ## Sidecar Retrieval Eval Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

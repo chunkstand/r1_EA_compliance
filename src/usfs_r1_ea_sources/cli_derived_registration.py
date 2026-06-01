@@ -361,6 +361,24 @@ def build_derived_command_specs(
             ),
         ),
         DerivedCommandSpec(
+            name="chunk-sidecar-consumer-eval",
+            help="Preview graph and claim consumers against the atomic chunk retrieval sidecar.",
+            arguments=(
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg("--chunks-v2-dir", type=Path),
+                _arg("--sidecar-index-dir", type=Path),
+                _arg("--graph-dir", type=Path),
+                _arg("--claims-dir", type=Path),
+                _arg("--baseline-graph-summary-path", type=Path),
+                _arg("--baseline-claim-summary-path", type=Path),
+                _arg("--results-dir", type=Path),
+                _arg("--rebuild-sidecar", action="store_true"),
+                _arg("--allow-partial-extraction", action="store_true"),
+                _arg("--allow-partial-retrieval", action="store_true"),
+            ),
+        ),
+        DerivedCommandSpec(
             name="evidence-graph-build",
             help="Build a document evidence graph from extracted chunks and retrieval metadata.",
             arguments=(
