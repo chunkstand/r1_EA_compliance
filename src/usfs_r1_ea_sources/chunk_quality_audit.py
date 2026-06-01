@@ -185,17 +185,30 @@ def _source_records(
     output_dir: Path,
 ) -> dict[str, list[dict[str, Any]]]:
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    source_text_size_cache: dict[str, int | None] = {}
     for chunk in chunks:
         normalized = dict(chunk)
-        normalized["_source_text_size"] = _source_text_size(chunk, output_dir=output_dir)
+        normalized["_source_text_size"] = _source_text_size(
+            chunk,
+            output_dir=output_dir,
+            cache=source_text_size_cache,
+        )
         grouped[str(chunk.get("source_record_id") or "")].append(normalized)
     return grouped
 
 
-def _source_text_size(chunk: dict[str, Any], *, output_dir: Path) -> int | None:
+def _source_text_size(
+    chunk: dict[str, Any],
+    *,
+    output_dir: Path,
+    cache: dict[str, int | None],
+) -> int | None:
     value = chunk.get("source_text_path")
     if not value:
         return None
+    cache_key = str(value)
+    if cache_key in cache:
+        return cache[cache_key]
     path = Path(str(value))
     candidates = (
         [path]
@@ -204,7 +217,9 @@ def _source_text_size(chunk: dict[str, Any], *, output_dir: Path) -> int | None:
     )
     for candidate in candidates:
         if candidate.exists():
-            return len(candidate.read_text(encoding="utf-8", errors="replace"))
+            cache[cache_key] = len(candidate.read_text(encoding="utf-8", errors="replace"))
+            return cache[cache_key]
+    cache[cache_key] = None
     return None
 
 

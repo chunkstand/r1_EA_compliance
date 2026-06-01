@@ -155,3 +155,47 @@ def test_chunk_quality_audit_reports_invalid_offsets_without_crashing() -> None:
         assert checks["chunk_offsets_valid"]["details"]["bad_offset_chunk_ids"] == [
             chunk["chunk_id"]
         ]
+
+
+def test_chunk_quality_audit_reads_each_source_text_path_once(monkeypatch) -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        source_set_id = "source-set-test"
+        first = _chunk(
+            source_set_id=source_set_id,
+            source_record_id="DOC-001",
+            title="NEPA Section",
+            document_role="law",
+            authority_level="federal",
+            citation_label="DOC-001 (abc123)",
+            text="42 U.S.C. 4332 requires environmental effects analysis.",
+        )
+        second = dict(first)
+        second.update(
+            {
+                "chunk_id": "chunk:DOC-001:1",
+                "chunk_index": 1,
+                "char_start": first["char_end"],
+                "char_end": first["char_end"] + 20,
+                "text": "Additional text span.",
+            }
+        )
+        _write_chunks(output_dir, source_set_id, [first, second])
+        source_text_path = output_dir / first["source_text_path"]
+        original_read_text = Path.read_text
+        source_text_read_count = 0
+
+        def counting_read_text(path: Path, *args, **kwargs):
+            nonlocal source_text_read_count
+            if path == source_text_path:
+                source_text_read_count += 1
+            return original_read_text(path, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "read_text", counting_read_text)
+
+        result = run_chunk_quality_audit(output_dir=output_dir, source_set_id=source_set_id)
+
+        assert source_text_read_count == 1
+        assert result.summary["sources"][0]["text_char_count"] == len(
+            source_text_path.read_text(encoding="utf-8")
+        )

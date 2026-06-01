@@ -56,7 +56,9 @@ history below.
   PDFs, `550` heading-context-missing, `253` table-row-unstructured, `538`
   structural-marker-present, `711` numbered-requirement/sentence-split risk,
   and `719` parent-context-missing because the sidecar chunk layer is not yet
-  present.
+  present. Closeout hardening keeps source text size lookup cached once per
+  `source_text_path` so the audit does not reread shared extracted text per
+  chunk.
 - active extraction/chunking/retrieval accuracy slice:
   none. The next bounded packet should build sidecar parent/atomic chunk
   layers and eval coverage, not replace the baseline chunk spine.

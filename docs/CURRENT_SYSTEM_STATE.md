@@ -32,6 +32,10 @@ Latest implementation update on 2026-06-01 UTC:
   `chunks_v2/summary.json` readback, per-source metrics, and risk buckets.
   `docs/architecture_contract.toml` owns the new extraction-layer module,
   generated artifact path, and CLI command registration.
+- architecture hardening:
+  source-text sizing is cached once per `source_text_path` during an audit run,
+  so the gate scales with unique source text files instead of rereading the
+  same extracted text for every chunk.
 - live smoke:
   running the command against
   `source-set-f70ea11e04ae3d53` with output redirected to `/tmp` passed required
