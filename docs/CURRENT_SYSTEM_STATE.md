@@ -119,7 +119,7 @@ Latest implementation update on 2026-06-01 UTC:
   readiness binding is isolated in
   `src/usfs_r1_ea_sources/phase_eval_direct_eval_knowledge_graph.py`
   (`205` lines), keeping the oversized source-set phase gate from absorbing a
-  full evaluator. The fresh architecture probe reports `503` code files, `17`
+  full evaluator. The fresh architecture probe reports `511` code files, `17`
   code files above `800`, no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
 - boundary:
@@ -168,7 +168,7 @@ Latest implementation update on 2026-05-31 UTC:
   extraction runs, per-case execution, metric checks, and runtime helpers.
 - architecture effect:
   `extraction_fidelity_eval.py` is now `716` lines and the new runtime owner is
-  `442` lines. The architecture probe reports `503` code files, `17` code files above `800`,
+  `442` lines. The architecture probe reports `511` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source module
   above the `20`-import fan-out gate. The live inventory now records `9`
   source owners and `8` test owners.
@@ -190,11 +190,11 @@ Latest implementation update on 2026-06-01 UTC:
   records `17` code files above `800`, grouped as `9` source owners and `8`
   test owners, with exact path and line-count assertions in
   `tests/test_architecture_quality.py`. Later graph-KB slices added under-800
-  source and test modules; the current probe therefore reports `503` code
+  source and test modules; the current probe therefore reports `511` code
   files while the oversized-owner count remains `17`.
 - probe result:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `503` code files, `17` code files above `800`, no Python or JS/TS
+  reports `511` code files, `17` code files above `800`, no Python or JS/TS
   import cycles, and no source module above the `20`-import fan-out gate.
 - route-doc control:
   `README.md` and `docs/CURRENT_ROUTING.md` are compact, non-volatile route

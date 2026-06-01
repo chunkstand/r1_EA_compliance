@@ -54,7 +54,7 @@ history below.
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
   extraction-fidelity eval source-owner reduction after the architecture
-  control-plane gap closeout. The current probe reports `503` code files, `17` code files above `800`,
+  control-plane gap closeout. The current probe reports `511` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
   `config/architecture_large_file_inventory_v1.json` owns the exact `9`
@@ -172,7 +172,7 @@ history below.
   public facade and output-schema assembler at `716` lines, while
   `extraction_fidelity_eval_runtime.py` owns temporary extraction runs,
   per-case execution, metric checks, and runtime helpers at `442` lines. The
-  live probe reports `503` code files, `17` code files above `800`, no Python or JS/TS cycles,
+  live probe reports `511` code files, `17` code files above `800`, no Python or JS/TS cycles,
   and no local module above the `20`-import fan-out gate.
   The live inventory now records `9` source owners and `8` test owners.
   Local closeout commit: `dca87e8` (`Split extraction fidelity eval runtime`).
@@ -181,7 +181,7 @@ history below.
   matches the live 2026-06-01 probe and fails closed on inventory drift.
   `config/architecture_large_file_inventory_v1.json` records `17` code files
   above `800` as `9` source owners and `8` test owners. The probe command
-  reports `503` code files, no Python or JS/TS cycles, and no local module
+  reports `511` code files, no Python or JS/TS cycles, and no local module
   above the `20`-import fan-out gate. `README.md` and
   `docs/CURRENT_ROUTING.md` are compact route surfaces again; volatile live
   counts stay in `docs/CURRENT_SYSTEM_STATE.md` and this handoff.
