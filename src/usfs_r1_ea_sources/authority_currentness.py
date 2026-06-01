@@ -8,12 +8,9 @@ import re
 from .catalog_surface import resolve_catalog_dir_for_source_set
 from .authority_currentness_projection import _project_source_register_currentness_inputs
 from .authority_currentness_validation import _summary, _validation
-from .records import aliased_source_record_ids
-from .records import sha256_file
-from .source_partitions import ACTIVE_REVIEW_CORPUS
-from .source_partitions import CURRENTNESS_SUPERSESSION_ARCHIVE
-from .source_partitions import DEFAULT_SOURCE_PARTITION_CONTRACT_PATH
-from .source_partitions import catalog_source_partition
+from .records import aliased_source_record_ids, sha256_file
+from .source_partitions import ACTIVE_REVIEW_CORPUS, CURRENTNESS_SUPERSESSION_ARCHIVE
+from .source_partitions import DEFAULT_SOURCE_PARTITION_CONTRACT_PATH, catalog_source_partition
 from .source_partitions import catalog_source_partition_record
 from .source_partitions import graph_relationships_for_family_source
 from .source_partitions import load_source_partition_contract
@@ -28,10 +25,7 @@ DEFAULT_SOURCE_REGISTER_CURRENTNESS_LINEAGE_PATH = Path(
     "config/source_register_currentness_lineage_v1.json"
 )
 SUCCESSFUL_SOURCE_STATUSES = {
-    "downloaded",
-    "downloaded_existing",
-    "duplicate_content",
-    "duplicate_url",
+    "downloaded", "downloaded_existing", "duplicate_content", "duplicate_url"
 }
 EXCLUDED_SOURCE_STATUSES = {"skipped_excluded"}
 FAILED_OR_UNVERIFIED_SOURCE_STATUSES = {

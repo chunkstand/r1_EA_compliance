@@ -15,6 +15,26 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Source Register Proving I/O Source Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next source-owner oversized reduction slice is closed locally.
+  `src/usfs_r1_ea_sources/source_register_proving.py` remains the proving
+  slice orchestration facade at `729` lines. The new
+  `src/usfs_r1_ea_sources/source_register_proving_io.py` owns synthetic
+  download-run, proving fetcher, latest-context, JSONL, and identity-normalizer
+  helper logic at `220` lines.
+- architecture effect:
+  the architecture probe reports `538` code files, `12` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `7` source owners and `5` test
+  owners.
+- boundary:
+  this is a facade-preserving source split. It does not change proving-slice
+  outputs, catalog behavior, generated artifact paths, or local corpus state.
+
 ## CLI Eval Parser Test Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

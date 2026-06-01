@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "source-source-register-proving-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 5,
-      "required_tests": [
-        "tests/test_source_register_proving.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/source_register_proving.py",
-          "line_count": 930
-        }
-      ]
-    },
-    {
       "name": "source-eval-trace-store-owner",
       "owner_kind": "source",
       "follow_on_priority": 6,

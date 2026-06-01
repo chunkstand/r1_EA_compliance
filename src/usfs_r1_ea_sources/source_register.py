@@ -335,9 +335,7 @@ def load_source_register_rows(
                 ea_system_applicability_status=_string_or_none(
                     raw_row.get("EA_System_Applicability_Status")
                 ),
-                criticality_determination=_string_or_none(
-                    raw_row.get("Criticality_Determination")
-                ),
+                criticality_determination=_string_or_none(raw_row.get("Criticality_Determination")),
                 applicability_scope=_string_or_none(raw_row.get("Applicability_Scope")),
                 ingest_action=_string_or_none(raw_row.get("Ingest_Action")),
                 authority_document_id=authority_document_id,
@@ -364,9 +362,7 @@ def load_source_register_rows(
     return rows
 
 
-def load_source_register_workbook_sources(
-    workbook_path: Path | str,
-) -> list[WorkbookSource]:
+def load_source_register_workbook_sources(workbook_path: Path | str) -> list[WorkbookSource]:
     return [row.to_workbook_source() for row in load_source_register_rows(workbook_path)]
 
 
@@ -623,9 +619,7 @@ def build_source_register_diff(
         == "Applicable - stale-source detector only"
     )
 
-    queue_reason_counts = Counter(
-        str(row.get("Queue_Reason") or "").strip() for row in queue_rows
-    )
+    queue_reason_counts = Counter(str(row.get("Queue_Reason") or "").strip() for row in queue_rows)
     applicability_counts = Counter(
         str(row.get("EA_System_Applicability_Status") or "").strip() for row in master_rows
     )
@@ -669,9 +663,7 @@ def _parse_sheet_table(sheet, spec: dict) -> dict[str, object]:
     data_start_row = int(spec.get("data_start_row") or (header_row + 1))
     stop_at_blank_row = bool(spec.get("stop_at_blank_row"))
 
-    header_cells = next(
-        sheet.iter_rows(min_row=header_row, max_row=header_row, values_only=True)
-    )
+    header_cells = next(sheet.iter_rows(min_row=header_row, max_row=header_row, values_only=True))
     headers = [str(value).strip() if value not in (None, "") else None for value in header_cells]
 
     rows = []

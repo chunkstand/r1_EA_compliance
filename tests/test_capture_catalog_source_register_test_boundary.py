@@ -26,6 +26,7 @@ SOURCE_FAMILY_BUDGETS = {
     "src/usfs_r1_ea_sources/source_register_validation.py": 500,
     "src/usfs_r1_ea_sources/source_register_proving.py": 780,
     "src/usfs_r1_ea_sources/source_register_proving_graph.py": 500,
+    "src/usfs_r1_ea_sources/source_register_proving_io.py": 260,
     "src/usfs_r1_ea_sources/download.py": 700,
     "src/usfs_r1_ea_sources/download_transport.py": 400,
     "src/usfs_r1_ea_sources/preflight.py": 450,

@@ -173,6 +173,7 @@ modules = [
   "reuse_inventory",
   "source_register_proving",
   "source_register_proving_graph",
+  "source_register_proving_io",
 ]
 allowed_import_layers = ["foundation", "capture", "catalog", "extraction", "review", "review_support"]
 
