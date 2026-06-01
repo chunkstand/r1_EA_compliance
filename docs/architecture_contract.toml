@@ -433,6 +433,7 @@ modules = [
   "eval_trace_gate",
   "eval_trace_inventory",
   "eval_trace_store",
+  "eval_trace_store_sqlite",
   "extraction_fidelity_eval",
   "extraction_fidelity_eval_runtime",
   "forest_plan_component_retrieval_eval",

@@ -15,6 +15,27 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Eval Trace Store SQLite Source Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next source-owner oversized reduction slice is closed locally.
+  `src/usfs_r1_ea_sources/eval_trace_store.py` remains the eval trace store
+  build facade at `733` lines. The new
+  `src/usfs_r1_ea_sources/eval_trace_store_sqlite.py` owns SQLite schema,
+  row replacement, row count, orphan count, and duplicate-ID helper logic at
+  `204` lines.
+- architecture effect:
+  the architecture probe reports `539` code files, `11` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `6` source owners and `5` test
+  owners.
+- boundary:
+  this is a facade-preserving source split. It does not change eval trace store
+  output schema, SQLite table contract, generated artifact paths, or local
+  corpus state.
+
 ## Source Register Proving I/O Source Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

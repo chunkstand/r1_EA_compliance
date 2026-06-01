@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "source-eval-trace-store-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 6,
-      "required_tests": [
-        "tests/test_eval_trace_store.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/eval_trace_store.py",
-          "line_count": 928
-        }
-      ]
-    },
-    {
       "name": "test-promotion-suite-full-canonical-owner",
       "owner_kind": "test",
       "follow_on_priority": 7,

@@ -137,11 +137,11 @@ history below.
   hosted service/API, auth, UI query workflow, or broader graph-KB product work
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
-  source-register proving I/O source-owner split after the CLI eval parser
-  test-owner split. The current probe reports `538` code files, `12` code files above `800`,
+  eval trace store SQLite source-owner split after the source-register proving
+  I/O split. The current probe reports `539` code files, `11` code files above `800`,
   no Python or JS/TS import cycles, and no source module above the `20`-import
   fan-out gate.
-  `config/architecture_large_file_inventory_v1.json` owns the exact `7`
+  `config/architecture_large_file_inventory_v1.json` owns the exact `6`
   source-owner and `5` test-owner backlog; `README.md` and
   `docs/CURRENT_ROUTING.md` remain compact route surfaces.
 - active architecture implementation slice:
