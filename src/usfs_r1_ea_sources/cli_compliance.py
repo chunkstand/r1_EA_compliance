@@ -78,6 +78,7 @@ def handle_compliance_command(
             rule_pack_path=args.rule_pack,
             source_set_id=args.source_set_id,
             index_path=args.index_path,
+            rule_claim_links_path=args.rule_claim_links_path,
             forest_unit_id=args.forest_unit_id,
             forest_plan_profiles_path=args.forest_plan_profiles_path,
             component_inventory_path=args.forest_plan_component_inventory_path,
@@ -102,6 +103,7 @@ def handle_compliance_command(
             rule_pack_path=args.rule_pack,
             source_set_id=args.source_set_id,
             index_path=args.index_path,
+            rule_claim_links_path=args.rule_claim_links_path,
             forest_unit_id=args.forest_unit_id,
             forest_plan_profiles_path=args.forest_plan_profiles_path,
             results_dir=args.results_dir,
@@ -122,6 +124,7 @@ def handle_compliance_command(
             rule_pack_path=args.rule_pack,
             source_set_id=args.source_set_id,
             index_path=args.index_path,
+            rule_claim_links_path=args.rule_claim_links_path,
             forest_unit_id=args.forest_unit_id,
             forest_plan_profiles_path=args.forest_plan_profiles_path,
             results_dir=args.results_dir,
@@ -155,6 +158,7 @@ def _add_compliance_review_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--output-dir", default=Path("source_library"), type=Path)
     parser.add_argument("--source-set-id")
     parser.add_argument("--index-path", type=Path)
+    parser.add_argument("--rule-claim-links-path", type=Path)
     parser.add_argument("--forest-unit-id", default=DEFAULT_FOREST_PLAN_PROFILE_ID)
     parser.add_argument(
         "--forest-plan-profiles-path",

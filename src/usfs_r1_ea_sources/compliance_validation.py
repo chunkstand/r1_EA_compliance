@@ -99,6 +99,12 @@ def validation_report(
                 "validation_passed": bool(rule_claim_validation.get("validation_passed")),
                 "links_path": rule_claim_validation.get("links_path"),
                 "validation_path": rule_claim_validation.get("validation_path"),
+                "links_dir": rule_claim_validation.get("links_dir"),
+                "canonical_links_dir": rule_claim_validation.get("canonical_links_dir"),
+                "links_dir_is_canonical": rule_claim_validation.get(
+                    "links_dir_is_canonical",
+                    True,
+                ),
                 "rule_count": rule_claim_validation.get("rule_count", 0),
                 "link_count": rule_claim_validation.get("link_count", 0),
                 "gap_count": rule_claim_validation.get("gap_count", 0),
@@ -254,6 +260,11 @@ def compliance_summary(
         "rule_claim_links_path": str(rule_claim_result.links_path),
         "rule_claim_validation_path": str(rule_claim_result.validation_path),
         "rule_claim_summary_path": str(rule_claim_result.summary_path),
+        "rule_claim_links_dir": str(rule_claim_result.links_dir),
+        "rule_claim_canonical_links_dir": rule_claim_result.summary.get("canonical_links_dir"),
+        "rule_claim_links_are_canonical": bool(
+            rule_claim_result.summary.get("links_dir_is_canonical", True)
+        ),
         "rule_claim_link_count": rule_claim_result.summary["link_count"],
         "rule_claim_gap_count": rule_claim_result.summary["gap_count"],
         "rule_claim_rules_without_links": rule_claim_result.summary["rules_without_links"],

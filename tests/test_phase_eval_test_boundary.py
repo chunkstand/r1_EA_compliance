@@ -9,6 +9,7 @@ CORE_SUITE = REPO_ROOT / "tests" / "test_phase_eval.py"
 SUITE_BUDGETS = {
     "tests/test_phase_eval.py": 750,
     "tests/test_phase_eval_review.py": 400,
+    "tests/test_phase_eval_source_set.py": 250,
     "tests/test_phase_eval_test_boundary.py": 250,
 }
 FORBIDDEN_CORE_IMPORTS = {
@@ -21,6 +22,7 @@ FORBIDDEN_CORE_IMPORTS = {
 SPLIT_SUITES = (
     "tests/test_phase_eval.py",
     "tests/test_phase_eval_review.py",
+    "tests/test_phase_eval_source_set.py",
 )
 SENTINEL_OWNERS = {
     "tests/test_phase_eval.py": {

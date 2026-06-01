@@ -39,12 +39,12 @@ class DerivedCommandDefaults:
     forest_plan_profiles_path: Path
     region1_forest_plan_readiness_path: Path
     rule_claim_eval_path: Path
-    chunk_sidecar_retrieval_eval_path: Path
     rule_pack_path: Path
     semantic_graph_eval_path: Path
     knowledge_graph_query_eval_path: Path
     source_register_proving_slice_manifest_path: Path
     source_partition_contract_path: Path
+    chunk_sidecar_retrieval_eval_path: Path
 
 
 def build_derived_command_specs(
@@ -305,6 +305,7 @@ def build_derived_command_specs(
                 _output_dir_arg(),
                 _arg("--source-set-id"),
                 _arg("--chunks-path", type=Path),
+                _arg("--index-dir", type=Path),
                 _arg("--catalog-dir", type=Path),
                 _arg("--catalog-sqlite-path", type=Path),
                 _arg("--allow-failed-extraction", action="store_true"),
@@ -343,7 +344,7 @@ def build_derived_command_specs(
         ),
         DerivedCommandSpec(
             name="chunk-sidecar-retrieval-eval",
-            help="Compare opt-in atomic chunk retrieval sidecar evals against baseline retrieval.",
+            help="Compare sidecar atomic chunk retrieval against the baseline retrieval index.",
             arguments=(
                 _output_dir_arg(),
                 _arg("--source-set-id"),
@@ -362,7 +363,7 @@ def build_derived_command_specs(
         ),
         DerivedCommandSpec(
             name="chunk-sidecar-consumer-eval",
-            help="Preview graph and claim consumers against the atomic chunk retrieval sidecar.",
+            help="Score sidecar graph and claim previews against canonical consumer summaries.",
             arguments=(
                 _output_dir_arg(),
                 _arg("--source-set-id"),
@@ -379,12 +380,28 @@ def build_derived_command_specs(
             ),
         ),
         DerivedCommandSpec(
+            name="chunk-sidecar-consumer-promote",
+            help="Promote gated sidecar graph and claim previews into canonical dirs.",
+            arguments=(
+                _output_dir_arg(),
+                _arg("--source-set-id"),
+                _arg("--consumer-eval-results-path", type=Path),
+                _arg("--results-dir", type=Path),
+                _arg("--apply", action="store_true"),
+                _arg("--replace-canonical", action="store_true"),
+            ),
+        ),
+        DerivedCommandSpec(
             name="evidence-graph-build",
             help="Build a document evidence graph from extracted chunks and retrieval metadata.",
             arguments=(
                 _output_dir_arg(),
                 _arg("--source-set-id"),
                 _arg("--catalog-dir", type=Path),
+                _arg("--chunks-path", type=Path),
+                _arg("--retrieval-validation-path", type=Path),
+                _arg("--retrieval-summary-path", type=Path),
+                _arg("--graph-dir", type=Path),
                 _arg("--allow-partial-retrieval", action="store_true"),
             ),
         ),
@@ -492,6 +509,9 @@ def build_derived_command_specs(
                 _arg("--source-set-id"),
                 _arg("--chunks-path", type=Path),
                 _arg("--catalog-sqlite-path", type=Path),
+                _arg("--retrieval-validation-path", type=Path),
+                _arg("--retrieval-summary-path", type=Path),
+                _arg("--claims-dir", type=Path),
                 _arg("--allow-partial-retrieval", action="store_true"),
             ),
         ),
@@ -514,6 +534,7 @@ def build_derived_command_specs(
                 _output_dir_arg(),
                 _arg("--source-set-id"),
                 _arg("--claims-path", type=Path),
+                _arg("--links-dir", type=Path),
                 _arg("--rule-pack", default=defaults.rule_pack_path, type=Path),
                 _arg("--top-k", type=int, default=5),
                 _arg("--allow-partial-claims", action="store_true"),

@@ -84,18 +84,16 @@ modules = [
 allowed_import_layers = ["foundation", "extraction", "retrieval"]
 
 [[layers]]
-name = "sidecar_consumer"
-summary = "Fail-closed sidecar promotion preview gates that build downstream consumers without mutating canonical artifacts."
-modules = [
-  "sidecar_consumer_eval",
-]
+name = "sidecar_eval"
+summary = "Opt-in sidecar promotion-readiness eval orchestration over chunk, retrieval, graph, and claim previews."
+modules = ["sidecar_consumer_eval", "sidecar_consumer_promotion"]
 allowed_import_layers = [
   "foundation",
   "extraction",
   "retrieval",
   "evidence_graph",
   "claims",
-  "sidecar_consumer",
+  "sidecar_eval",
 ]
 
 [[layers]]
@@ -192,6 +190,7 @@ modules = [
   "phase_eval_direct_eval_support",
   "phase_eval_optional_phases",
   "phase_eval_review_phases",
+  "phase_eval_sidecar",
   "phase_eval_source_set_phases",
   "phase_eval_support",
   "replay_context",
@@ -370,6 +369,7 @@ modules = [
   "review_packet_index_common",
   "review_packet_index_inventory",
   "review_packet_index_outputs",
+  "review_packet_index_sidecar",
 ]
 allowed_import_layers = [
   "foundation",
@@ -499,6 +499,7 @@ modules = [
   "cli_project_planning",
   "cli_review_packet",
   "cli_review",
+  "cli_sidecar_eval",
 ]
 allowed_import_layers = [
   "foundation",
@@ -511,9 +512,9 @@ allowed_import_layers = [
   "review",
   "review_support",
   "evidence_graph",
-  "sidecar_consumer",
   "phase_eval",
   "knowledge_graph",
+  "sidecar_eval",
   "package_context",
   "applicability",
   "compliance",
@@ -574,9 +575,10 @@ paths = [
 ]
 
 [[artifacts]]
-owner_layer = "sidecar_consumer"
+owner_layer = "sidecar_eval"
 paths = [
   "source_library/derived/<source_set_id>/consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json",
+  "source_library/derived/<source_set_id>/consumer_sidecar_promotion/chunk_sidecar_consumer_promotion_results.json",
 ]
 
 [[artifacts]]
@@ -605,6 +607,10 @@ paths = [
   "source_library/derived/<source_set_id>/evidence_graph/document_graph_nodes.jsonl",
   "source_library/derived/<source_set_id>/evidence_graph/document_graph_edges.jsonl",
   "source_library/derived/<source_set_id>/evidence_graph/evidence_graph.sqlite",
+  "source_library/derived/<source_set_id>/evidence_graph_sidecar/document_graph_nodes.jsonl",
+  "source_library/derived/<source_set_id>/evidence_graph_sidecar/document_graph_edges.jsonl",
+  "source_library/derived/<source_set_id>/evidence_graph_sidecar/evidence_graph.sqlite",
+  "source_library/derived/<source_set_id>/evidence_graph_sidecar/evidence_graph_validation.json",
 ]
 
 [[artifacts]]
@@ -651,7 +657,18 @@ owner_layer = "claims"
 paths = [
   "source_library/derived/<source_set_id>/claims/claims.jsonl",
   "source_library/derived/<source_set_id>/claims/claim_graph.sqlite",
+  "source_library/derived/<source_set_id>/claims_sidecar/claims.jsonl",
+  "source_library/derived/<source_set_id>/claims_sidecar/claim_graph.sqlite",
+  "source_library/derived/<source_set_id>/claims_sidecar/claim_validation.json",
   "source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_links.jsonl",
+  "source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_link_validation.json",
+  "source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_link_eval_results.json",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_links.jsonl",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_link_gaps.jsonl",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_links.sqlite",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_link_validation.json",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/summary.json",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_link_eval_results.json",
 ]
 
 [[artifacts]]
@@ -802,11 +819,12 @@ commands = [
   "extraction-accuracy-audit",
   "chunk-quality-audit",
   "chunk-layer-build",
-  "chunk-sidecar-retrieval-eval",
-  "chunk-sidecar-consumer-eval",
   "retrieval-build",
   "retrieval-query",
   "retrieval-eval",
+  "chunk-sidecar-retrieval-eval",
+  "chunk-sidecar-consumer-eval",
+  "chunk-sidecar-consumer-promote",
 ]
 
 [[command_groups]]

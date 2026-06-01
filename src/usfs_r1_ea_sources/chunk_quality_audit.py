@@ -8,11 +8,12 @@ from pathlib import Path
 import re
 from typing import Any
 
+from .chunk_layers import CHUNK_LAYER_SCHEMA_VERSION
+from .chunk_layers import detect_structure_type
 from .source_set_support import source_derived_dir
 
 
 CHUNK_QUALITY_AUDIT_SCHEMA_VERSION = "chunk-quality-audit-v1"
-CHUNK_LAYER_SCHEMA_VERSION = "chunk-layers-v1"
 LOW_DENSITY_CHARS_PER_PAGE = 800
 HEADING_MISSING_RATE_THRESHOLD = 0.75
 FALLBACK_PARSERS = {"pypdf_text_fallback"}
@@ -124,9 +125,7 @@ def _source_quality_record(
         "parser_counts": dict(parser_counts),
         "dominant_parser": parser_counts.most_common(1)[0][0] if parser_counts else None,
         "heading_missing_count": heading_missing_count,
-        "heading_missing_rate": round(heading_missing_count / chunk_count, 6)
-        if chunk_count
-        else 0.0,
+        "heading_missing_rate": round(heading_missing_count / chunk_count, 6) if chunk_count else 0.0,
         "structural_marker_chunk_count": structural_marker_count,
         "table_marker_chunk_count": table_marker_count,
         "boundary_split_risk_count": boundary_split_count,
@@ -185,48 +184,27 @@ def _source_records(
     output_dir: Path,
 ) -> dict[str, list[dict[str, Any]]]:
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    source_text_size_cache: dict[str, int | None] = {}
     for chunk in chunks:
         normalized = dict(chunk)
-        normalized["_source_text_size"] = _source_text_size(
-            chunk,
-            output_dir=output_dir,
-            cache=source_text_size_cache,
-        )
+        normalized["_source_text_size"] = _source_text_size(chunk, output_dir=output_dir)
         grouped[str(chunk.get("source_record_id") or "")].append(normalized)
     return grouped
 
 
-def _source_text_size(
-    chunk: dict[str, Any],
-    *,
-    output_dir: Path,
-    cache: dict[str, int | None],
-) -> int | None:
+def _source_text_size(chunk: dict[str, Any], *, output_dir: Path) -> int | None:
     value = chunk.get("source_text_path")
     if not value:
         return None
-    cache_key = str(value)
-    if cache_key in cache:
-        return cache[cache_key]
     path = Path(str(value))
-    candidates = (
-        [path]
-        if path.is_absolute()
-        else [path, output_dir / path, output_dir.parent / path]
-    )
+    candidates = [path] if path.is_absolute() else [path, output_dir / path, output_dir.parent / path]
     for candidate in candidates:
         if candidate.exists():
-            cache[cache_key] = len(candidate.read_text(encoding="utf-8", errors="replace"))
-            return cache[cache_key]
-    cache[cache_key] = None
+            return len(candidate.read_text(encoding="utf-8", errors="replace"))
     return None
 
 
 def _text_char_count(chunks: list[dict[str, Any]]) -> int:
-    source_sizes = [
-        chunk.get("_source_text_size") for chunk in chunks if chunk.get("_source_text_size")
-    ]
+    source_sizes = [chunk.get("_source_text_size") for chunk in chunks if chunk.get("_source_text_size")]
     if source_sizes:
         return int(max(source_sizes))
     return max((int(chunk.get("char_end") or 0) for chunk in chunks), default=0)
@@ -246,24 +224,7 @@ def _pages(chunks: list[dict[str, Any]]) -> list[int]:
 
 
 def _has_structural_marker(text: str) -> bool:
-    return _structure_type(text) != "text_span"
-
-
-def _structure_type(text: str) -> str:
-    normalized = " ".join(text.split())
-    if re.search(r"\b\d+\s+C\.F\.R\.|U\.S\.C\.|§\s*\d+", normalized, re.I):
-        return "legal_section"
-    if re.search(r"\bstandard\s+\w+|\bguideline\s+\w+", normalized, re.I):
-        return "forest_plan_component"
-    if re.search(r"\bdesired condition\b|\bobjective\b", normalized, re.I):
-        return "forest_plan_component"
-    if re.search(r"\bdefinition\b|\bmeans\b", normalized, re.I):
-        return "definition"
-    if re.search(r"^\(?[a-z0-9ivxlcdm]+\)|^\d+\.", normalized, re.I):
-        return "numbered_requirement"
-    if _has_table_marker(text):
-        return "table_row"
-    return "text_span"
+    return detect_structure_type(text) != "text_span"
 
 
 def _has_table_marker(text: str) -> bool:
@@ -319,7 +280,11 @@ def _checks(
         for index, chunk in enumerate(chunks)
         if required - set(chunk)
     ]
-    bad_offsets = _invalid_offset_chunk_ids(chunks)
+    bad_offsets = [
+        str(chunk.get("chunk_id") or f"index:{index}")
+        for index, chunk in enumerate(chunks)
+        if int(chunk.get("char_end") or 0) <= int(chunk.get("char_start") or 0)
+    ]
     return [
         {
             "name": "chunks_jsonl_exists",
@@ -355,25 +320,8 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
-        return []
-    return [
-        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
-    ]
-
-
-def _invalid_offset_chunk_ids(chunks: list[dict[str, Any]]) -> list[str]:
-    bad_offsets = []
-    for index, chunk in enumerate(chunks):
-        chunk_id = str(chunk.get("chunk_id") or f"index:{index}")
-        try:
-            char_start = int(chunk.get("char_start"))
-            char_end = int(chunk.get("char_end"))
-        except (TypeError, ValueError):
-            bad_offsets.append(chunk_id)
-            continue
-        if char_end <= char_start:
-            bad_offsets.append(chunk_id)
-    return bad_offsets
+        raise FileNotFoundError(f"Missing chunks JSONL: {path}")
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:

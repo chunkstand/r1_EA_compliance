@@ -97,6 +97,7 @@ def build_rule_claim_links(
     rule_pack_path: Path = DEFAULT_RULE_PACK_PATH,
     source_set_id: str | None = None,
     claims_path: Path | None = None,
+    links_dir: Path | None = None,
     top_k: int = DEFAULT_TOP_K,
     allow_partial_claims: bool = False,
 ) -> RuleClaimLinkResult:
@@ -124,11 +125,19 @@ def build_rule_claim_links(
         claims_path,
         require_reviewer_ready=not allow_partial_claims,
     )
-    links_dir = default_rule_claim_links_dir(
+    canonical_links_dir = default_rule_claim_links_dir(
         output_dir,
         source_set_id=source_set_id,
         rule_pack=rule_pack,
     )
+    custom_links_dir = links_dir is not None
+    links_dir = Path(links_dir) if links_dir is not None else canonical_links_dir
+    if custom_links_dir:
+        _ensure_custom_links_dir_noncanonical(
+            requested_dir=links_dir,
+            canonical_dir=canonical_links_dir,
+            label="links_dir",
+        )
     links_dir.mkdir(parents=True, exist_ok=True)
     links_path = links_dir / "rule_claim_links.jsonl"
     gaps_path = links_dir / "rule_claim_link_gaps.jsonl"
@@ -185,7 +194,10 @@ def build_rule_claim_links(
         "schema_version": RULE_CLAIM_LINK_SCHEMA_VERSION,
         "source_set_id": source_set_id,
         "created_at": created_at,
+        "output_dir": str(output_dir),
         "links_dir": str(links_dir),
+        "canonical_links_dir": str(canonical_links_dir),
+        "links_dir_is_canonical": links_dir.resolve() == canonical_links_dir.resolve(),
         "links_path": str(links_path),
         "gaps_path": str(gaps_path),
         "sqlite_path": str(sqlite_path),
@@ -463,6 +475,31 @@ def _output_dir_from_links_path(links_path: Path, *, source_set_id: str) -> Path
             "source_library/derived/<source_set_id>/rule_claim_links/<rule_pack>/<version>/."
         )
     return derived_dir.parent
+
+
+def _output_dir_from_link_summary(links_path: Path, summary: dict) -> Path:
+    output_dir = summary.get("output_dir")
+    if output_dir:
+        return Path(str(output_dir))
+    return _output_dir_from_links_path(
+        links_path,
+        source_set_id=str(summary.get("source_set_id") or ""),
+    )
+
+
+def _ensure_custom_links_dir_noncanonical(
+    *,
+    requested_dir: Path,
+    canonical_dir: Path,
+    label: str,
+) -> None:
+    requested = Path(requested_dir).resolve()
+    canonical = Path(canonical_dir).resolve()
+    if requested == canonical or canonical in requested.parents:
+        raise ValueError(
+            f"{label} must not point at or inside canonical rule-claim output directory: "
+            f"{canonical_dir}"
+        )
 
 
 def _failed_check_names(validation: dict) -> list[str]:

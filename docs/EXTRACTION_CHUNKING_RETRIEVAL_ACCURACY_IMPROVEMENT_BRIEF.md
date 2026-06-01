@@ -2,13 +2,15 @@
 
 Date: 2026-06-01
 
-Status: First four bounded packets implemented locally. The read-only
+Status: Retrieval worktree implementation merged to `main`. The read-only
 `chunk-quality-audit` gate, generated sidecar `chunk-layer-build` command,
-sidecar-aware `chunk-sidecar-retrieval-eval` command, and fail-closed
-`chunk-sidecar-consumer-eval` preview gate are now routed in
+sidecar-aware `chunk-sidecar-retrieval-eval` command, fail-closed
+`chunk-sidecar-consumer-eval` preview gate, opt-in graph/claim promotion
+command, sidecar rule-link preview/eval path, compliance-review adoption,
+phase-eval adoption, and reviewer-package lineage validation are now routed in
 `docs/CURRENT_ROUTING.md`, `docs/CURRENT_SYSTEM_STATE.md`, and
-`docs/SESSION_HANDOFF.md`; downstream consumer promotion remains future work
-because the full f70 claim comparison currently blocks promotion.
+`docs/SESSION_HANDOFF.md`. Production source-library sidecar promotion remains
+opt-in and gated; knowledge-graph sidecar adoption remains future work.
 
 ## Implementation Status
 
@@ -46,18 +48,35 @@ because the full f70 claim comparison currently blocks promotion.
   promotion because sidecar claims produced `142,748` claims versus baseline
   `143,255`, and sidecar `claim_entity_coverage_rate=0.479054` versus baseline
   `0.494231`.
+- closed:
+  `chunk-sidecar-consumer-promote` adds the explicit opt-in canonical
+  graph/claim adoption step. Dry-run is default; canonical mutation requires
+  `--apply`, and replacing existing canonical graph/claim directories requires
+  `--replace-canonical`. Promotion requires a passed, non-partial sidecar
+  consumer eval plus reviewer-ready sidecar retrieval, graph, and claim
+  summaries, and it writes failed promotion results instead of inferring paths
+  when required sidecar artifacts are missing or invalid.
+- closed:
+  sidecar downstream adoption now extends through rule-link preview/eval,
+  compliance review, phase-eval, and reviewer package lineage validation.
+  `rule-claim-link --links-dir` writes isolated
+  `rule_claim_links_sidecar/<rule_pack_id>/<version>/` artifacts, compliance
+  review can consume validated sidecar rule links, review-scoped phase eval can
+  follow those noncanonical links, and `review-packet-index` fails closed when
+  sidecar compliance review, phase-eval, direct-eval, or selected sidecar paths
+  are missing or inconsistent.
 - live smoke:
   the active source set produced `113,830` audited chunks across `719` sources,
   passed required provenance/offset/source-identity checks, and reported the
   expected `parent_context_missing` risk for every source when the default
   `chunks_v2` sidecar summary was absent.
 - still open:
-  explaining and resolving the sidecar claim-count/entity-coverage regression;
-  deciding whether a narrower graph-only promotion gate is acceptable; broader
-  sidecar eval coverage across parser-risk strata; downstream promotion gates
-  for claim, reviewer, compliance, and phase-eval consumers; and optional
-  FTS/BM25 first-stage scoring or reranker experiments after deterministic
-  sidecar gains remain measurable.
+  before any production canonical apply, rerun the merged sidecar consumer eval
+  on the target source set and require a passed non-partial result; add broader
+  sidecar eval coverage across parser-risk strata; open a separate
+  knowledge-graph sidecar adoption packet with direct eval thresholds over the
+  adopted sidecar-backed layers; and consider optional FTS/BM25 or reranker
+  experiments only after deterministic sidecar gains remain measurable.
 
 ## Grounded Repo Snapshot
 

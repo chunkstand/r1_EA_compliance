@@ -222,6 +222,113 @@ class RuleClaimBindingTests(unittest.TestCase):
             self.assertTrue(_check(validation, "claims_validation_passed")["passed"])
             self.assertFalse(_check(validation, "claims_are_reviewer_ready")["passed"])
 
+    def test_rule_claim_link_writes_sidecar_outputs_from_sidecar_claims(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _prepare_source_library(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-001",
+                        title="EA requirements",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="R1EA-001 | EA requirements | artifact abc123",
+                        text="An environmental assessment should describe the purpose and need.",
+                    )
+                ],
+            )
+            sidecar_claims_dir = output_dir / "derived" / source_set_id / "claims_sidecar"
+            sidecar_links_dir = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "rule_claim_links_sidecar"
+                / "unit-nepa-ea"
+                / "0.1.0"
+            )
+            claims = build_claim_extraction(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                claims_dir=sidecar_claims_dir,
+            )
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+
+            result = build_rule_claim_links(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                claims_path=claims.claims_path,
+                links_dir=sidecar_links_dir,
+                rule_pack_path=rule_pack_path,
+            )
+
+            canonical_links_dir = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "rule_claim_links"
+                / "unit-nepa-ea"
+                / "0.1.0"
+            )
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertFalse(result.summary["links_dir_is_canonical"])
+            self.assertEqual(Path(result.summary["claims_path"]), claims.claims_path)
+            self.assertEqual(result.links_dir, sidecar_links_dir)
+            self.assertTrue(result.links_path.exists())
+            self.assertFalse(canonical_links_dir.exists())
+
+            eval_file = _write_rule_claim_eval_file(output_dir)
+            eval_result = run_rule_claim_link_eval(
+                links_path=result.links_path,
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(eval_result.summary["passed"])
+            self.assertEqual(eval_result.summary["source_set_id"], source_set_id)
+            self.assertEqual(eval_result.output_path.parent, sidecar_links_dir)
+
+    def test_rule_claim_link_rejects_custom_links_dir_inside_canonical_outputs(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            _prepare_source_library(
+                output_dir,
+                source_set_id,
+                [
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1EA-001",
+                        title="EA requirements",
+                        document_role="regulation",
+                        authority_level="federal",
+                        citation_label="R1EA-001 | EA requirements | artifact abc123",
+                        text="An environmental assessment should describe the purpose and need.",
+                    )
+                ],
+            )
+            build_claim_extraction(output_dir=output_dir, source_set_id=source_set_id)
+            rule_pack_path = _write_rule_pack(Path(tmp), rule_ids=["purpose_need"])
+            canonical_links_dir = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "rule_claim_links"
+                / "unit-nepa-ea"
+                / "0.1.0"
+            )
+
+            with self.assertRaisesRegex(ValueError, "canonical rule-claim output directory"):
+                build_rule_claim_links(
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    links_dir=canonical_links_dir / "preview",
+                    rule_pack_path=rule_pack_path,
+                )
+
     def test_rule_claim_eval_scores_expected_rule_claim_links(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

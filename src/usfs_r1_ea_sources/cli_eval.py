@@ -433,6 +433,7 @@ COMMAND_SPECS = (
             _arg("--catalog-dir", type=Path),
             _arg("--review-id"),
             _arg("--review-dir", type=Path),
+            _arg("--rule-claim-links-path", type=Path),
         ),
     ),
     EvalCommandSpec(
@@ -680,6 +681,7 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 catalog_dir=args.catalog_dir,
                 review_id=args.review_id,
                 review_dir=args.review_dir,
+                rule_claim_links_path=args.rule_claim_links_path,
             ),
             success_key="reviewer_ready",
         ),

@@ -78,6 +78,7 @@ def _load_artifacts(*, review_dir: Path) -> dict[str, _Artifact]:
             "json",
             True,
         ),
+        "phase_eval": (review_dir / "phase_eval_results.json", "json", False),
     }
     return {
         key: _load_artifact(key=key, path=path, artifact_type=artifact_type, required=required)

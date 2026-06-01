@@ -7,6 +7,7 @@ import shutil
 import tempfile
 import unittest
 
+from usfs_r1_ea_sources.chunk_layers import build_chunk_layers
 from usfs_r1_ea_sources.evidence_graph import build_evidence_graph
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 
@@ -90,6 +91,71 @@ class EvidenceGraphTests(unittest.TestCase):
             self.assertIn("ReviewTopic", node_types)
             self.assertIn("CHUNK_HAS_EVIDENCE_SPAN", relationships)
             self.assertIn("EVIDENCE_TRACES_TO_ARTIFACT", relationships)
+
+    def test_evidence_graph_can_build_sidecar_preview_without_canonical_output(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            write_catalog_validation(output_dir, passed=True)
+            write_extraction_diagnostics(
+                output_dir,
+                source_set_id,
+                source_record_ids=["R1PLAN-001"],
+            )
+            write_chunks(
+                output_dir,
+                source_set_id,
+                [
+                    chunk(
+                        source_set_id=source_set_id,
+                        source_record_id="R1PLAN-001",
+                        title="Forest Plan",
+                        document_role="forest_plan",
+                        authority_level="forest_plan",
+                        citation_label="R1PLAN-001 | Forest Plan | artifact abc123",
+                        text="Desired condition DC-01 Watersheds are resilient.",
+                    )
+                ],
+            )
+            write_catalog_sqlite(output_dir, {"R1PLAN-001": ["Forest plan direction"]})
+            layers = build_chunk_layers(output_dir=output_dir, source_set_id=source_set_id)
+            sidecar_index = build_retrieval_index(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks_path=layers.atomic_chunks_path,
+                index_dir=output_dir / "sidecar" / "retrieval",
+            )
+            graph_dir = output_dir / "sidecar" / "evidence_graph"
+
+            result = build_evidence_graph(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks_path=layers.atomic_chunks_path,
+                retrieval_validation_path=sidecar_index.validation_path,
+                retrieval_summary_path=sidecar_index.summary_path,
+                graph_dir=graph_dir,
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.graph_dir, graph_dir)
+            self.assertEqual(result.summary["chunks_path"], str(layers.atomic_chunks_path))
+            self.assertEqual(
+                result.summary["retrieval_validation_path"],
+                str(sidecar_index.validation_path),
+            )
+            self.assertEqual(
+                result.summary["retrieval_summary_path"],
+                str(sidecar_index.summary_path),
+            )
+            self.assertFalse(
+                (
+                    output_dir
+                    / "derived"
+                    / source_set_id
+                    / "evidence_graph"
+                    / "document_graph_nodes.jsonl"
+                ).exists()
+            )
 
     def test_evidence_graph_rejects_partial_retrieval_by_default(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

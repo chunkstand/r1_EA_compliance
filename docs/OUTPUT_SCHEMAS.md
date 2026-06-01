@@ -2328,6 +2328,11 @@ that forest-plan component evaluation is absent, stale, or not reviewer-ready.
 - reviewer-ready source claim artifacts and rule-claim bindings under
   `source_library/derived/<source_set_id>/claims/` and
   `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/`
+- optional explicit rule-claim links from `--rule-claim-links-path`, such as
+  `source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_links.jsonl`;
+  the command revalidates the sibling summary, validation, gap, and SQLite artifacts before using
+  those links and requires source-set, rule-pack ID/version/path, reviewer-ready status, and top-k
+  compatibility
 - the source-library retrieval index, normally
   `source_library/derived/<source_set_id>/retrieval/evidence_index.sqlite`
 - the source-set forest-plan component inventory at
@@ -2411,6 +2416,8 @@ record ID to be safe, unique, covered by at least one rule, and covered only by 
 - rule count, baseline source-record count/list, evaluated baseline source-record list, finding
   count, claim-bearing finding count, finding status counts, and authority identification summary
 - unsupported finding IDs
+- rule-claim link paths, including actual link directory, canonical link directory, and whether the
+  consumed rule-link directory is canonical
 - `forest_plan_review`, with forest-plan resolver paths, scope status, reviewer-ready status, and
   component-evaluation artifact paths when applicable
 - `applicability_gate`, with generated-pack validation, applicability validation,
@@ -2811,6 +2818,14 @@ boundary rows, Forest Plan component rows, and applicable Forest Plan standard r
 East Crazies review it validates `37` applicable authority rows, `340` non-applicable boundary
 rows, `79` Forest Plan component rows, and `12` applicable standards.
 
+When the compliance review used noncanonical sidecar rule-claim links,
+`review_packet_row_inventory.json` records `sidecar_rule_claim_lineage`. This lineage includes the
+compliance review rule-link path, phase-eval selected rule-link path, selected direct-eval path,
+direct-eval summary path, canonical link directory, actual link directory, sidecar/canonical status,
+phase-eval path-check failures, per-check status, and failed lineage checks. Missing
+`phase_eval_results.json` remains acceptable for canonical packets that do not use sidecar rule
+links.
+
 `compliance_matrix_render_manifest.json` has schema version
 `compliance-matrix-render-manifest-v1`. It records one rendered-row entry per compliance matrix
 authority row and per Forest Plan matrix row, including row class, row order, section, table ID,
@@ -2823,14 +2838,19 @@ boundary, artifact inventory, row-inventory summary, render-manifest summary, ap
 rows, a dedicated `land_exchange_rows` subset, non-applicable authority boundary, Forest Plan
 component rows, applicable standards, implementation confirmations, residual risks, and replay
 commands. It includes selectors to decision-support and final-QA rows but does not make root-level
-`East_Crazies_*` drafts canonical.
+`East_Crazies_*` drafts canonical. It also carries the same `sidecar_rule_claim_lineage` object as
+the row inventory when sidecar rule links are part of the review evidence.
 
 `review_packet_index_validation.json` has schema version `review-packet-index-validation-v1`. It
 fails closed on missing or unparsable required artifacts, missing applicable authority rows, missing
 matrix render rows, missing packet index rows, missing Forest Plan rows, missing non-applicable
 boundary evidence, missing first-class land-exchange packet rows, invalid packet PDF header, and
-non-canonical root draft dependencies. Review-
-scoped `phase-eval` includes a `review_packet_index` phase when this sidecar exists, and
+non-canonical root draft dependencies. For sidecar-backed compliance reviews, it also fails closed
+when compliance review and phase-eval select different rule-link paths, phase-eval is missing or
+does not include reviewer-ready rule-claim binding, phase-eval path checks fail, sidecar direct-eval
+evidence is missing or mismatched, or selected sidecar paths do not exist. Review-scoped
+`phase-eval` includes a `review_packet_index` phase when this sidecar exists; that phase reports
+`sidecar_rule_claim_links_used` and `sidecar_rule_claim_lineage_failed_check_count`. The
 `config/promotion_suite_v1.json` requires the row inventory, render manifest, packet index JSON/PDF,
 and validation sidecar for current East Crazies promotion.
 
@@ -3565,6 +3585,10 @@ The `compliance-review-eval` command writes:
 
 The default eval file is `config/compliance_review_eval_seed.json`.
 
+When `--rule-claim-links-path` is supplied, the explicit link artifact is passed through to every
+case review. The link artifact must match the effective rule pack for that case, including generated
+rule packs when a case requires one.
+
 That file is now a `compliance-review-eval-v1` contract with:
 
 - `schema_version`
@@ -3996,6 +4020,8 @@ The `compliance-gold-eval` command reads:
 - a versioned compliance rule pack
 - a gold adjudication file, defaulting to `config/compliance_gold_eval_v1.json`
 - reviewer-ready source-library artifacts used by the underlying `compliance-review-eval` path
+- optional `--rule-claim-links-path`, which is passed through to the nested compliance-review eval
+  and must match the effective rule pack used by those reviews
 
 The gold adjudication file has schema version `compliance-gold-eval-v0` and records:
 
@@ -4037,14 +4063,14 @@ The `extract-build` command writes:
 - `extracted_text/<source_record_id>_<artifact_sha256_prefix>.txt`
 - `docling_json/<artifact_sha256_prefix>.json` when Docling produced document JSON
 - `chunks/chunks.jsonl`
-- `diagnostics/extraction_manifest.jsonl`
-- `diagnostics/extraction_validation.json`
-- `diagnostics/extraction_accuracy_audit.json` when `extraction-accuracy-audit` is run
-- `diagnostics/chunk_quality_audit.json` when `chunk-quality-audit` is run
 - `chunks_v2/atomic_chunks.jsonl` when `chunk-layer-build` is run
 - `chunks_v2/structural_chunks.jsonl` when `chunk-layer-build` is run
 - `chunks_v2/parent_context_windows.jsonl` when `chunk-layer-build` is run
 - `chunks_v2/summary.json` when `chunk-layer-build` is run
+- `diagnostics/extraction_manifest.jsonl`
+- `diagnostics/extraction_validation.json`
+- `diagnostics/extraction_accuracy_audit.json` when `extraction-accuracy-audit` is run
+- `diagnostics/chunk_quality_audit.json` when `chunk-quality-audit` is run
 - `diagnostics/summary.json`
 
 The command replaces the derived directory for the selected `source_set_id` on each non-reuse run
@@ -4304,26 +4330,28 @@ The audit summary also records:
 - `knowledge_base_blocked_source_record_ids`
 - `per_source_failures`
 
-`chunk-quality-audit` writes `diagnostics/chunk_quality_audit.json` with schema version
-`chunk-quality-audit-v1`. It is a read-only diagnostic over existing chunk outputs and does not
-replace `chunks/chunks.jsonl`, rebuild retrieval, or mutate graph/claim/review artifacts. The
-report includes:
+`chunk-quality-audit-v1`. It is a read-only diagnostic over existing chunk/extraction outputs and
+does not replace `chunks/chunks.jsonl`, rebuild retrieval, or mutate graph/claim/review artifacts.
+The report includes:
 
-- `source_set_id`, chunk input path, output path, aggregate `chunk_count`, `source_count`,
-  `parser_counts`, `risk_source_count`, and `risk_bucket_counts`
+- `source_set_id`, source chunk path, extraction manifest/validation/summary paths, output path, and
+  optional `chunks_v2_summary_path`
+- aggregate counts for sources, chunks, parser routes, structure markers, risk sources, risk
+  buckets, and chunk/parent-window sidecar coverage
 - optional `sidecar` readback for an existing `chunks_v2/summary.json`, including sidecar presence,
   validation status, atomic chunk count, structural chunk count, and parent context window count
-- deterministic checks for chunk JSONL presence, chunk loading, required chunk provenance fields,
-  valid source offsets, and source identity presence
 - per-source metrics: source record ID, title, citation label, document role, support document role,
   authority level, artifact hash/path, chunk count, page count, text character count,
-  chars-per-page, chunks-per-page, parser counts, dominant parser, heading missing rate,
-  structural marker count, table marker count, boundary split risk count, and `risk_buckets`
+  chars-per-page, chunks-per-page, token estimates, parser counts, dominant parser, page/section/
+  heading coverage, structural marker count, table marker count, boundary split risk count, sidecar
+  coverage, and `risk_buckets`
 - risk buckets such as `fallback_parser_dominated`, `ocr_or_scanned_source`, `low_density_pdf`,
   `heading_context_missing`, `table_row_unstructured`, `structural_marker_present`,
   `numbered_requirement_or_sentence_split`, and `parent_context_missing`
-- `passed`, which is true when required chunk/provenance/offset/source-identity checks pass; risk
-  buckets are diagnostic signals rather than automatic failures
+- checks for chunk presence, unique chunk IDs, required provenance, valid source offsets, valid
+  content hashes, source identity presence, and valid baseline extraction validation
+- `passed`, which is true when required chunk/provenance/offset/source-identity and validation checks
+  pass; risk buckets are diagnostic signals rather than automatic failures
 
 `chunk-layer-build` writes sidecar chunk layers under `chunks_v2/` without mutating the baseline
 chunk spine. `atomic_chunks.jsonl` contains retrieval-ready atomic records with:
@@ -4340,11 +4368,16 @@ legal-section, table-row, definition, forest-plan standard/guideline, desired-co
 objective markers. These records preserve the atomic chunk ID and the same citation, source-offset,
 content-hash, and contextual-index fields as atomic chunks.
 
-`parent_context_windows.jsonl` contains parent windows with `window_id`, source identity, citation
-label, source offsets, token estimate, child chunk IDs, page range, parser context, and content
-hash. `summary.json` has schema version `chunk-layers-v1` and records source chunk path, sidecar
-paths, atomic/structural/window counts, structure-type counts, parent-window coverage, validation
-checks, and `validation_passed`.
+label, source offsets, token estimate, child chunk IDs, page range, parser context, heading/section
+context, and content hash. `summary.json` has schema version `chunk-layers-v1` and records source
+chunk path, sidecar paths, atomic/structural/window counts, structure-type counts, parent-window
+coverage, validation checks, and `validation_passed`.
+
+`chunk-sidecar-retrieval-eval` is the opt-in promotion-readiness gate for these sidecar chunks. It
+builds or reuses `chunks_v2/`, builds a sidecar retrieval index over `atomic_chunks.jsonl`, compares
+the same retrieval eval contract against the sidecar index and the baseline retrieval index, and
+writes `retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json`. It does not make
+`chunks_v2` the active graph, claim, rule-link, compliance, or review chunk spine.
 
 ## First-Class Eval Trace Contract
 
@@ -5155,9 +5188,16 @@ The `retrieval-build` command writes:
 - `retrieval_validation.json`
 - `summary.json`
 
+When `--index-dir` is supplied, `retrieval-build` writes the same files to that explicit directory
+instead of the canonical `retrieval/` directory. This is used by sidecar gates such as
+`retrieval_sidecar/` and does not create or replace the canonical retrieval index.
+
 `retrieval-build` reads:
 
 - `source_library/derived/<source_set_id>/chunks/chunks.jsonl`
+  or a compatible sidecar chunk path such as
+  `source_library/derived/<source_set_id>/chunks_v2/atomic_chunks.jsonl` when `--chunks-path` is
+  supplied
 - `source_library/derived/<source_set_id>/diagnostics/extraction_validation.json`
 - `source_library/derived/<source_set_id>/diagnostics/extraction_manifest.jsonl`
 - `source_library/derived/<source_set_id>/diagnostics/summary.json`
@@ -5194,15 +5234,20 @@ replacing `retrieval/`.
 
 - `metadata`: index schema, source-set ID, source chunk path, catalog path, creation timestamp
 - `chunks`: chunk text, reviewer metadata, review topics, citation labels, artifact provenance,
-  parser provenance, offsets, optional sidecar chunk-layer fields, deterministic contextual index
-  text/hash fields, and content hashes
-- `chunks_fts`: optional SQLite FTS5 table over raw text, contextual index text, title, heading,
-  and citation label when the local SQLite build provides FTS5
+  parser provenance, offsets, optional sidecar chunk-layer fields, page ranges, structural type
+  metadata, deterministic contextual index text/hash fields, and content hashes
+- `chunks_fts`: optional SQLite FTS5 table for lexical retrieval support when the local SQLite
+  build provides FTS5. When available, FTS indexes raw chunk text plus `contextual_index_text`,
+  title, heading, and citation label without adding contextual prefixes to returned evidence spans.
 
 `retrieval-query` prints JSON with:
 
 - `query`
 - applied reviewer filters
+- `retrieval_mode`, either `fts_first_stage` when FTS/BM25 supplied candidate rows or `row_scan`
+  when SQLite FTS is unavailable or produces no candidates
+- `candidate_count`
+- `fts_candidate_count`
 - `hit_count`
 - ranked `results`
 
@@ -5268,55 +5313,79 @@ Cases may also declare sidecar-aware expectations:
   top source IDs, and top evidence results
 
 Cases may declare `expect_no_hits: true` for deterministic negative checks. Those cases pass only
-when retrieval returns zero hits and do not require provenance-bearing results.
+when retrieval returns zero hits and do not require provenance-bearing results. Cases may also
+declare optional `expected_chunk_ids`, `expected_structure_types`, `expected_citation_labels`, and
+`require_parent_window` fields for atomic/structural retrieval checks. These fields are optional and
+leave legacy source-level eval cases compatible.
 
 `chunk-sidecar-retrieval-eval` writes
-`retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json` by default. The tracked initial
-contract is `config/chunk_sidecar_retrieval_eval_v1.json`. The sidecar result has schema version
-`chunk-sidecar-retrieval-eval-results-v1` and records:
+`source_library/derived/<source_set_id>/retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json`
+by default. The result schema version is `chunk-sidecar-retrieval-eval-results-v1` and records:
 
-- source-set ID, eval file path/hash, top-k, sidecar chunk path, sidecar retrieval index path,
-  baseline retrieval index path, and sidecar/baseline eval result paths
-- `sidecar` summary with sidecar chunk count, source count, validation status, eval status,
-  metrics, and atomic/structural/parent-window case counts
-- optional `baseline` summary with baseline eval status, failed count, metrics, and sidecar-aware
-  case counts
-- metric comparisons for pass rate, source recall, atomic chunk recall, structure hit rate,
-  parent-window coverage, citation correctness, MRR, and nDCG
-- checks for sidecar chunk validation, sidecar retrieval index validation, sidecar eval pass/fail,
-  atomic/structural/parent case coverage, baseline eval completion, and sidecar metrics not being
-  worse than baseline
-- `passed`, which is true only when all checks pass
+- sidecar chunk summary path, sidecar retrieval index path, sidecar eval path, baseline index path,
+  and baseline eval path
+- sidecar and baseline metric summaries
+- metric comparisons for pass rate, recall, atomic chunk recall, structure hit rate, parent-window
+  coverage, citation correctness, MRR, and NDCG
+- fail-closed checks for sidecar chunk validation, sidecar retrieval index validation, sidecar eval
+  pass status, atomic/structural/parent-window eval case coverage, baseline eval completion, and
+  sidecar-not-worse-than-baseline metrics
+- `passed`, which is true only when all sidecar, baseline, coverage, and metric-comparison checks
+  pass
+
+The command refuses sidecar chunk, sidecar retrieval, or result directories that point at or inside
+canonical `chunks/` or `retrieval/` output directories.
 
 `chunk-sidecar-consumer-eval` writes
-`consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json` by default. The result has schema
-version `chunk-sidecar-consumer-eval-results-v1` and records:
+`source_library/derived/<source_set_id>/consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json`
+by default. The result schema version is `chunk-sidecar-consumer-eval-results-v1` and records:
 
-- source-set ID, output path, sidecar chunk path, sidecar retrieval index path, sidecar graph
-  summary path, sidecar claim summary path, and baseline graph/claim summary paths
-- `sidecar` summaries for chunks, retrieval, graph, and claims, including validation status,
-  reviewer-ready status where applicable, chunk count, claim count, node count, edge count, and
-  tracked metrics
-- `baseline` summaries for graph and claims, including validation status, reviewer-ready status,
-  chunk count, claim count, node count, edge count, and tracked metrics
-- metric comparisons for graph coverage and health metrics, where higher is better for source
-  artifact coverage, evidence coverage, chunk-topic coverage, source-document count, and
-  raw-artifact count, and lower is better for dangling or isolated graph counts
-- metric comparisons for claim coverage and health metrics, where higher is better for claim
-  evidence coverage, topic coverage, authority coverage, entity coverage, and claim count, and
-  lower is better for dangling claim-graph edges
-- checks for sidecar chunk validation, sidecar retrieval index validation, sidecar graph
-  validation, sidecar claim validation, baseline graph/claim summary validation, and sidecar graph
-  and claim metrics not being worse than baseline
+- sidecar chunk summary, sidecar retrieval index, sidecar graph preview, and sidecar claim preview
+  paths
+- baseline graph and claim summary paths
+- graph metric comparisons for source-artifact coverage, evidence coverage, chunk-topic coverage,
+  dangling edges, isolated nodes, source documents, and raw artifacts
+- claim metric comparisons for claim evidence coverage, topic coverage, authority coverage, entity
+  coverage, dangling edges, and claim count
+- fail-closed checks for sidecar chunk validation, sidecar retrieval index validation, sidecar graph
+  validation, sidecar claim validation, baseline summary validation, and sidecar-not-worse
+  graph/claim metrics
 - `passed`, which is true only when all validation and comparison checks pass
 
-The command rejects sidecar chunk, retrieval, graph, claim, and result directories that point at or
-inside canonical `chunks/`, `retrieval/`, `evidence_graph/`, or `claims/` directories. It is a
-preview/eval gate, not a canonical promotion command.
+The command refuses sidecar chunk, sidecar retrieval, result, graph preview, or claim preview
+directories that point at or inside canonical `chunks/`, `retrieval/`, `evidence_graph/`, or
+`claims/` output directories. It is a promotion-readiness gate only; it does not make `chunks_v2`
+the canonical graph or claim input.
+
+`chunk-sidecar-consumer-promote` writes
+`source_library/derived/<source_set_id>/consumer_sidecar_promotion/chunk_sidecar_consumer_promotion_results.json`
+by default. The result schema version is `chunk-sidecar-consumer-promotion-results-v1` and records:
+
+- the sidecar consumer eval result path, sidecar chunk/retrieval/graph/claim input paths, canonical
+  graph and claim directories, and optional backup directory
+- fail-closed checks for eval presence/readability/schema/source-set/pass status, non-partial eval
+  mode, sidecar retrieval/graph/claim reviewer readiness, required sidecar path declarations, sidecar
+  path existence and file/directory kind, noncanonical sidecar input locations, and canonical
+  replacement consent
+- `promotion_ready`, `applied`, and `passed` status fields
+
+By default the command is a dry-run readiness gate and does not mutate canonical outputs. Canonical
+graph/claim adoption requires `--apply`; replacing existing canonical graph/claim directories also
+requires `--replace-canonical`. The command rebuilds canonical graph and claim outputs from the
+passed sidecar chunks and sidecar retrieval summary. If the sidecar consumer-eval artifact is
+missing, unreadable, or missing required sidecar input declarations, the command writes a failed
+promotion result instead of inferring paths from the working directory. It does not promote
+rule-claim links, compliance review, phase-eval, reviewer packages, or knowledge-graph artifacts.
 
 ## Source Claim Graph Outputs
 
 Path: `source_library/derived/<source_set_id>/claims/`
+
+Sidecar preview path: `claim-extract --claims-dir <path>` can write the same artifacts to an
+isolated directory such as `source_library/derived/<source_set_id>/claims_sidecar/`. Use
+`--chunks-path`, `--retrieval-validation-path`, and `--retrieval-summary-path` together when the
+preview consumes sidecar chunk and retrieval artifacts. Without those arguments, `claim-extract`
+keeps the canonical `chunks/`, `retrieval/`, and `claims/` paths.
 
 The `claim-extract` command writes:
 
@@ -5337,6 +5406,10 @@ The `claim-extract` command writes:
 - `source_library/derived/<source_set_id>/retrieval/retrieval_validation.json`
 - `source_library/derived/<source_set_id>/retrieval/summary.json`
 - `source_library/catalog/review_sources.sqlite`
+
+For sidecar previews, the chunk path and retrieval validation/summary paths above are replaced by
+the explicit CLI arguments. Catalog, extraction diagnostics, and source-set identity checks remain
+rooted in the source library for the requested source set.
 
 `claims.jsonl` contains exact source-text claim spans. Each claim includes:
 
@@ -5455,6 +5528,14 @@ Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrap
 
 Path: `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/`
 
+Sidecar preview path: `rule-claim-link --links-dir <path>` can write the same artifacts to an
+isolated directory such as
+`source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/`. Use
+`--claims-path source_library/derived/<source_set_id>/claims_sidecar/claims.jsonl` when the preview
+consumes sidecar claim artifacts. Without those arguments, `rule-claim-link` keeps the canonical
+`claims/` and `rule_claim_links/` paths. The command rejects custom `--links-dir` values that point
+at or inside the canonical rule-claim output directory for the requested source set and rule pack.
+
 The `rule-claim-link` command writes:
 
 - `rule_claim_links.jsonl`
@@ -5469,6 +5550,9 @@ The `rule-claim-link` command writes:
 - the claim readiness artifacts beside that file
 - a versioned compliance rule pack, defaulting to
   `config/compliance_rule_pack_nepa_ea_v0.json`
+
+For sidecar previews, the source-claim path above is replaced by the explicit `--claims-path`.
+Claim readiness is still revalidated before link building.
 
 By default the command requires reviewer-ready claim artifacts. With `--allow-partial-claims`, it
 can reuse current claim artifacts when the only remaining upstream blockers are inherited
@@ -5514,8 +5598,9 @@ claim match. A rule is covered only when it has at least one validated link or o
 - SQLite counts match JSONL outputs
 
 `summary.json` includes source set, rule-pack identity, top-k, `allow_partial_claims`,
-`claims_validation_passed`, `claims_reviewer_ready`, rule count, claim count, link count, gap
-count, linked-rule count, gap-rule count, rules without links, links per rule, claim-type counts,
+`claims_validation_passed`, `claims_reviewer_ready`, canonical link directory, actual link
+directory, whether the output is canonical, rule count, claim count, link count, gap count,
+linked-rule count, gap-rule count, rules without links, links per rule, claim-type counts,
 source-record count, validation status, and `reviewer_ready`.
 
 The default eval file `config/rule_claim_link_eval_seed.json` is a `rule-claim-link-eval-v1`
@@ -5530,8 +5615,10 @@ contract with:
 Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrapped as a
 `legacy-rule-claim-link-eval-list-v0` contract at runtime.
 
-`rule-claim-eval` revalidates current rule-claim link artifacts before scoring cases. It writes
-`rule_claim_link_eval_results.json` by default beside the link file and records:
+`rule-claim-eval` revalidates current rule-claim link artifacts before scoring cases. For sidecar
+link paths, it reads the sibling `summary.json` to recover source-set and source-library root
+identity before revalidation. It writes `rule_claim_link_eval_results.json` by default beside the
+link file and records:
 
 - eval identity and paths, including `eval_id`, eval file path, output path, and top-k
 - case count, passed count, failed count, hard-negative case count, and multi-source case count
@@ -5546,6 +5633,12 @@ Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrap
 ## Document Evidence Graph Outputs
 
 Path: `source_library/derived/<source_set_id>/evidence_graph/`
+
+Sidecar preview path: `evidence-graph-build --graph-dir <path>` can write the same artifacts to an
+isolated directory such as `source_library/derived/<source_set_id>/evidence_graph_sidecar/`. Use
+`--chunks-path`, `--retrieval-validation-path`, and `--retrieval-summary-path` together when the
+preview consumes sidecar chunk and retrieval artifacts. Without those arguments,
+`evidence-graph-build` keeps the canonical `chunks/`, `retrieval/`, and `evidence_graph/` paths.
 
 The `evidence-graph-build` command writes:
 
@@ -5565,6 +5658,10 @@ The `evidence-graph-build` command writes:
 - `source_library/derived/<source_set_id>/retrieval/summary.json`
 - `source_library/catalog/catalog_validation.json`
 - `source_library/catalog/review_sources.sqlite`
+
+For sidecar previews, the chunk path and retrieval validation/summary paths above are replaced by
+the explicit CLI arguments. Catalog, extraction diagnostics, and source-set identity checks remain
+rooted in the source library for the requested source set.
 
 Graph node types:
 
@@ -5634,7 +5731,19 @@ canonical owner for these readiness summaries is `phase_eval.py`; the source-set
 the `evidence_graph/` directory only to preserve the established artifact path. It evaluates
 catalog capture, extraction, upstream direct-eval coverage, retrieval, evidence graph, claim
 extraction, and rule-claim binding as separate phases and records phase blockers so downstream
-compliance review cannot hide an upstream failure. When
+compliance review cannot hide an upstream failure. `phase-eval --rule-claim-links-path
+<rule_claim_links.jsonl>` can explicitly select a noncanonical sidecar rule-link artifact. For
+review-scoped runs without an explicit path, phase eval also follows a noncanonical
+`rule_claim_links_path` recorded in the compliance review summary. In both cases, the
+`rule_claim_binding` phase reads sibling `summary.json`, `rule_claim_link_validation.json`, and
+`rule_claim_link_eval_results.json` artifacts from the selected link directory. Its details include
+`explicit_rule_claim_links_path`, `selected_rule_claim_links_path`,
+`selected_rule_claim_eval_path`, `compliance_review_rule_claim_links_path`,
+`rule_claim_links_are_canonical`, `uses_sidecar_rule_claim_links`, `canonical_links_dir`,
+`links_dir`, and `failed_path_checks`. Failed path checks make the phase non-ready. When sidecar
+rule links are selected, the phase's direct-eval status is computed from the selected sidecar
+`rule_claim_link_eval_results.json` and validates eval ID, source-set ID, and contract SHA against
+the committed downstream direct-eval manifest. When
 `source_library/evaluations/upstream/upstream_evaluation_results.json` exists, phase eval also
 includes an `upstream_evaluation` phase sourced from that summary. The upstream phase fails closed
 when the results file is missing, when its schema or source path is unreadable, or when the summary

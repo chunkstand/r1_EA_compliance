@@ -52,7 +52,7 @@ def run_chunk_sidecar_retrieval_eval(
     top_k: int = 5,
     rebuild_sidecar: bool = False,
 ) -> ChunkSidecarRetrievalEvalResult:
-    """Build and evaluate an opt-in atomic-chunk retrieval sidecar."""
+    """Build/evaluate an opt-in sidecar retrieval index against baseline retrieval."""
 
     output_dir = Path(output_dir)
     source_set_id = source_set_id or _source_set_id_from_catalog(output_dir)
@@ -70,7 +70,9 @@ def run_chunk_sidecar_retrieval_eval(
         else derived_dir / "retrieval" / DEFAULT_INDEX_FILENAME
     )
     results_dir = (
-        Path(results_dir) if results_dir is not None else derived_dir / "retrieval_sidecar_eval"
+        Path(results_dir)
+        if results_dir is not None
+        else derived_dir / "retrieval_sidecar_eval"
     )
     _ensure_noncanonical_sidecar_dir(
         requested_dir=chunks_v2_dir,
@@ -304,8 +306,9 @@ def _checks(
         },
         {
             "name": "sidecar_metrics_not_worse_than_baseline",
-            "passed": bool(comparisons)
-            and all(comparison["sidecar_not_worse"] for comparison in comparisons),
+            "passed": bool(comparisons) and all(
+                comparison["sidecar_not_worse"] for comparison in comparisons
+            ),
             "details": {"comparisons": comparisons},
         },
     ]

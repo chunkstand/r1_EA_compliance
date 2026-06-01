@@ -28,6 +28,7 @@ SUPPORTED_RULE_CLAIM_EVAL_FILTERS = _RULE_CLAIM_BINDING.SUPPORTED_RULE_CLAIM_EVA
 validate_rule_claim_links = _RULE_CLAIM_BINDING.validate_rule_claim_links
 _failed_check_names = _RULE_CLAIM_BINDING._failed_check_names
 _output_dir_from_links_path = _RULE_CLAIM_BINDING._output_dir_from_links_path
+_output_dir_from_link_summary = _RULE_CLAIM_BINDING._output_dir_from_link_summary
 _rate = _RULE_CLAIM_BINDING._rate
 _read_json = _RULE_CLAIM_BINDING._read_json
 _read_jsonl = _RULE_CLAIM_BINDING._read_jsonl
@@ -348,10 +349,7 @@ def _load_validated_links_for_eval(links_path: Path) -> list[dict]:
             "Run rule-claim-link and resolve validation failures before rule-claim-eval."
         )
     current_validation = validate_rule_claim_links(
-        output_dir=_output_dir_from_links_path(
-            links_path,
-            source_set_id=str(summary.get("source_set_id") or ""),
-        ),
+        output_dir=_output_dir_from_link_summary(links_path, summary),
         source_set_id=str(summary.get("source_set_id") or ""),
         rule_pack_path=Path(str(summary.get("rule_pack_path") or "")),
         claims_path=Path(str(summary.get("claims_path") or "")),
@@ -525,6 +523,11 @@ def _validate_positive_eval_int(index: int, case: dict, key: str) -> None:
 
 
 def _source_set_id_from_links_path(links_path: Path) -> str:
+    summary_path = links_path.parent / "summary.json"
+    if summary_path.exists():
+        source_set_id = _read_json(summary_path).get("source_set_id")
+        if source_set_id:
+            return str(source_set_id)
     if links_path.parent.parent.parent.name != "rule_claim_links":
         raise ValueError(f"Rule-claim links path must live under rule_claim_links: {links_path}")
     return links_path.parent.parent.parent.parent.name

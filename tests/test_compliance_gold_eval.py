@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from usfs_r1_ea_sources.compliance_gold_eval import _effective_cases_for_rule_pack
 from usfs_r1_ea_sources.compliance_gold_eval import _gold_rule_pack_match_mode
@@ -61,6 +62,55 @@ class ComplianceGoldEvalTests(unittest.TestCase):
             self.assertFalse(gold_phase["reviewer_ready"])
             self.assertEqual(gold_phase["details"]["case_count"], 3)
             self.assertIn("gold_eval_not_promotion_ready", gold_phase["details"]["failed_checks"])
+
+    def test_compliance_gold_eval_passes_sidecar_rule_claim_links_to_review_eval(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            output_dir.mkdir()
+            rule_pack_path = _write_rule_pack(Path(tmp))
+            gold_path = _write_gold_eval_file(Path(tmp))
+            sidecar_links_path = (
+                output_dir
+                / "derived"
+                / "source-set-test"
+                / "rule_claim_links_sidecar"
+                / "unit-nepa-ea"
+                / "0.1.0"
+                / "rule_claim_links.jsonl"
+            )
+            captured = {}
+
+            def fake_review_eval(**kwargs):
+                captured.update(kwargs)
+                return type(
+                    "FakeReviewEval",
+                    (),
+                    {
+                        "summary": {
+                            "passed": True,
+                            "passed_count": 3,
+                            "source_set_ids": ["source-set-test"],
+                            "metrics": {},
+                            "failure_category_counts": {},
+                            "cases": [],
+                        }
+                    },
+                )()
+
+            with patch(
+                "usfs_r1_ea_sources.compliance_gold_eval.run_compliance_review_eval",
+                side_effect=fake_review_eval,
+            ):
+                result = run_compliance_gold_eval(
+                    output_dir=output_dir,
+                    source_set_id="source-set-test",
+                    rule_pack_path=rule_pack_path,
+                    gold_file=gold_path,
+                    rule_claim_links_path=sidecar_links_path,
+                )
+
+            self.assertTrue(result.summary["compliance_review_eval_passed"])
+            self.assertEqual(captured["rule_claim_links_path"], sidecar_links_path)
 
     def test_generated_base_gold_cases_merge_generated_status_overrides(self) -> None:
         gold = {

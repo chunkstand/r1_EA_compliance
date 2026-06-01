@@ -9,6 +9,7 @@ SOURCE_ROOT = REPO_ROOT / "src" / "usfs_r1_ea_sources"
 CORE_SUITE = REPO_ROOT / "tests" / "test_compliance_review.py"
 SUITE_BUDGETS = {
     "tests/test_compliance_review.py": 800,
+    "tests/test_compliance_review_sidecar.py": 300,
     "tests/test_compliance_review_forest_plan.py": 800,
     "tests/test_compliance_review_contracts.py": 800,
     "tests/test_compliance_review_eval.py": 800,

@@ -15,157 +15,66 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Sidecar Consumer Eval Gate Resolved Locally
+## Retrieval Worktree Merge Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
 
 - update:
-  `chunk-sidecar-consumer-eval` is now the first downstream sidecar consumer
-  preview gate. It reuses or builds `chunks_v2/atomic_chunks.jsonl`, builds a
-  noncanonical sidecar retrieval index, builds evidence-graph and claim
-  previews from that sidecar into noncanonical directories, and compares their
-  metrics against baseline graph and claim summaries.
-- contract:
-  `docs/architecture_contract.toml` now owns the `sidecar_consumer` layer,
-  `src/usfs_r1_ea_sources/sidecar_consumer_eval.py`, the generated
-  `consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json` artifact,
-  and the public `chunk-sidecar-consumer-eval` command. Graph and claim
-  builders now accept explicit chunk, retrieval, and output paths while keeping
-  their canonical defaults unchanged.
-- live smoke:
-  running the command against `source-set-f70ea11e04ae3d53` with all sidecar
-  outputs redirected to `/tmp` executed the full gate and failed closed. The
-  sidecar chunk and retrieval inputs validated over `296,442` atomic chunks
-  across `719` sources. The sidecar evidence graph validated and remained
-  not worse than baseline on tracked graph metrics, with `649,695` nodes and
-  `2,134,201` edges. The sidecar claim layer also validated with `142,748`
-  claims, `398,509` nodes, and `947,964` edges, but the comparison gate
-  blocked promotion because baseline claims had `143,255` claims and
-  `claim_entity_coverage_rate=0.494231`, while sidecar claims had `142,748`
-  claims and `claim_entity_coverage_rate=0.479054`.
+  the retrieval worktree branch `codex/extraction-chunking-retrieval-accuracy`
+  is merged into `main` with the current-main observability/eval context graph
+  work preserved. The merged route now includes sidecar chunking, retrieval
+  eval, graph/claim preview, graph/claim canonical adoption, sidecar rule-link
+  readiness, compliance review adoption, phase-eval adoption, reviewer package
+  lineage validation, and first-class generated observability/eval context
+  graph coverage.
 - boundary:
-  this closes the generated preview/eval infrastructure, not promotion. A
-  future bounded packet must explain and resolve the sidecar claim-count/entity
-  coverage regression, or explicitly choose a narrower graph-only consumer
-  promotion gate before any canonical graph, claim, review, compliance, or
-  phase-eval consumer uses `chunks_v2` or `retrieval_sidecar`.
+  no ignored production `source_library/` outputs are tracked by the merge.
+  Knowledge-graph sidecar adoption, hosted query/API work, model-judge work,
+  hosted scoring, and oversized-owner reduction remain future bounded packets.
 
-## Sidecar Retrieval Eval Resolved Locally
+## Sidecar Reviewer Package Adoption Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
 
 - update:
-  `chunk-sidecar-retrieval-eval` is now the first sidecar-aware retrieval/eval
-  implementation slice. It reuses or builds `chunks_v2/atomic_chunks.jsonl`,
-  builds an opt-in retrieval index under `retrieval_sidecar/`, runs retrieval
-  evals with atomic chunk, structure, citation, and parent-window expectations,
-  and compares sidecar metrics against the baseline retrieval index.
-- contract:
-  `config/chunk_sidecar_retrieval_eval_v1.json` is the tracked initial eval
-  contract. `docs/OUTPUT_SCHEMAS.md` documents
-  `chunk-sidecar-retrieval-eval-results-v1`, the new retrieval eval fields
-  `expected_chunk_ids`, `expected_structure_types`,
-  `expected_citation_labels`, and `require_parent_window`, and the new metrics
-  `atomic_chunk_recall_at_k`, `structure_hit_rate`,
-  `parent_window_coverage_rate`, and `citation_correctness_rate`.
-  `docs/architecture_contract.toml` owns the new retrieval-layer module,
-  sidecar retrieval artifact paths, and command registration.
-- live smoke:
-  running the command against `source-set-f70ea11e04ae3d53` with
-  `--chunks-v2-dir /tmp/usfs-r1-chunks-v2-next-slice`,
-  `--sidecar-index-dir /tmp/usfs-r1-retrieval-sidecar-next-slice`, and
-  `--results-dir /tmp/usfs-r1-retrieval-sidecar-eval-next-slice` passed. The
-  sidecar index covered `296,442` atomic chunks across `719` sources and the
-  sidecar eval passed `4/4` cases with `pass_rate=1.0`,
-  `atomic_chunk_recall_at_k=1.0`, `structure_hit_rate=1.0`,
-  `parent_window_coverage_rate=1.0`, and `citation_correctness_rate=1.0`.
-  The baseline comparison completed and intentionally showed the gap this
-  slice measures: baseline `pass_rate=0.25`,
-  `atomic_chunk_recall_at_k=0.0`, `structure_hit_rate=0.0`, and
-  `parent_window_coverage_rate=0.0`.
+  the ninth extraction/chunking/retrieval accuracy packet is closed locally on isolated branch
+  `codex/extraction-chunking-retrieval-accuracy`. `review-packet-index` now loads optional
+  review-scoped `phase_eval_results.json` and records sidecar rule-claim lineage from compliance
+  review through phase-eval.
+- contract effect:
+  sidecar-backed row inventory and packet index outputs include the compliance review rule-link
+  path, phase-eval selected rule-link path, selected direct-eval path, direct-eval summary path,
+  canonical link directory, actual link directory, sidecar/canonical status, phase-eval failed path
+  checks, per-check lineage status, and failed lineage checks. Canonical packet behavior remains
+  unchanged when no sidecar rule links are present.
+- validation effect:
+  `review_packet_index_validation.json` fails closed when sidecar compliance review and phase-eval
+  paths mismatch, when phase-eval is missing or lacks the rule-claim binding phase, when phase-eval
+  does not use the sidecar rule links, when path checks fail, when sidecar direct-eval evidence is
+  missing or mismatched, when the phase is not reviewer-ready, or when selected sidecar paths do not
+  exist.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/review_packet_index_sidecar.py` owns sidecar lineage extraction and
+  validation checks inside the existing project-planning layer. Review-packet boundary tests now
+  budget the new helper and sidecar test suite.
+- smoke:
+  fixture-backed CLI smoke under
+  `/var/folders/7x/dm39gsxj38z2p2xtn3hqlj2h0000gn/T/usfs-r1-sidecar-review-packet.gd2_t06m/`
+  ran `review-packet-index --review-id review-packet-sidecar-smoke`, recorded sidecar lineage in
+  row inventory and packet index outputs, and kept
+  `sidecar_rule_claim_lineage_failed_check_count=0`.
 - boundary:
-  this closes only sidecar retrieval indexing and eval coverage. Promotion of
-  `chunks_v2` or `retrieval_sidecar` into graph, claim, reviewer, compliance,
-  or phase-eval gates remains future bounded work.
-
-## Sidecar Chunk Layer Build Resolved Locally
-
-Latest implementation update on 2026-06-01 UTC:
-
-- update:
-  `chunk-layer-build` is now the first sidecar chunk-layer implementation slice.
-  It reads the existing source-set `chunks/chunks.jsonl` output and writes
-  `chunks_v2/atomic_chunks.jsonl`, `chunks_v2/structural_chunks.jsonl`,
-  `chunks_v2/parent_context_windows.jsonl`, and `chunks_v2/summary.json`
-  without replacing the baseline chunk spine or rebuilding retrieval, graph,
-  claim, rule, compliance, or review artifacts.
-- contract:
-  `docs/OUTPUT_SCHEMAS.md` documents schema version `chunk-layers-v1`, stable
-  atomic/structural/window identities, required provenance fields,
-  deterministic contextual index text hashes, validation checks, and sidecar
-  parent-window coverage. `docs/architecture_contract.toml` owns the new
-  extraction-layer module, generated sidecar artifact paths, and
-  `chunk-layer-build` command registration.
-- live smoke:
-  running the command against `source-set-f70ea11e04ae3d53` with
-  `--chunks-v2-dir /tmp/usfs-r1-chunks-v2-next-slice` passed validation over
-  `113,830` baseline chunks and produced `296,442` atomic chunks, `116,004`
-  structural chunks, and `19,117` parent context windows. Every atomic chunk
-  had a parent window. Structure counts were `180,438` text spans, `61,908`
-  numbered requirements, `10,347` table rows, `7,976` definitions, `7,821`
-  desired conditions, `7,326` legal sections, `7,009` forest-plan standards,
-  `6,855` forest-plan guidelines, and `6,762` objectives.
-- boundary:
-  this closes only the generated sidecar layer. The sidecar-aware retrieval
-  eval coverage is now closed separately above; downstream consumer promotion
-  remains future work.
-
-## Extraction Chunk Quality Audit Resolved Locally
-
-Latest implementation update on 2026-06-01 UTC:
-
-- update:
-  `chunk-quality-audit` is now the first audit-first implementation slice from
-  the extraction/chunking/retrieval accuracy brief. It reads the existing
-  source-set `chunks/chunks.jsonl` output, writes a generated diagnostic at
-  `source_library/derived/<source_set_id>/diagnostics/chunk_quality_audit.json`,
-  and leaves baseline chunks, retrieval, graph, claim, rule, compliance, and
-  review artifacts unchanged.
-- contract:
-  `docs/OUTPUT_SCHEMAS.md` documents schema version
-  `chunk-quality-audit-v1`, required checks, optional sidecar
-  `chunks_v2/summary.json` readback, per-source metrics, and risk buckets.
-  `docs/architecture_contract.toml` owns the new extraction-layer module,
-  generated artifact path, and CLI command registration.
-- architecture hardening:
-  source-text sizing is cached once per `source_text_path` during an audit run,
-  so the gate scales with unique source text files instead of rereading the
-  same extracted text for every chunk.
-- live smoke:
-  running the command against
-  `source-set-f70ea11e04ae3d53` with output redirected to `/tmp` passed required
-  chunk/provenance/offset/source-identity checks over `113,830` chunks and
-  `719` sources. It reported `719` risk-bearing sources with bucket counts:
-  `413` `fallback_parser_dominated`, `56` `ocr_or_scanned_source`, `4`
-  `low_density_pdf`, `550` `heading_context_missing`, `253`
-  `table_row_unstructured`, `538` `structural_marker_present`, `711`
-  `numbered_requirement_or_sentence_split`, and `719`
-  `parent_context_missing`. The sidecar chunk layer was absent, so
-  `sidecar.present=false` and `sidecar.validation_passed=false`.
-- boundary:
-  this closes only the read-only audit gate. The sidecar atomic/structural
-  chunk and parent-window build is now closed separately above; retrieval
-  scoring, sidecar eval coverage, and any replacement of the baseline chunk
-  spine remain future work.
+  no ignored production `source_library/` outputs were mutated. Knowledge-graph sidecar adoption
+  remains the future bounded packet.
 
 ## First-Class Observability/Eval Context Graph Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
 
 - update:
-  the generated observability/eval context graph now includes conditional
-  trace-event materialization, explicit local event-log capture, canonical CLI
-  command-event capture, and a fail-closed f70 source-set phase-eval ratchet.
+  the generated observability/eval context graph includes conditional trace-event
+  materialization, explicit local event-log capture, canonical CLI command-event
+  capture, and a fail-closed f70 source-set phase-eval ratchet.
   `eval-context-graph-build` reads the local `system_eval_trace.sqlite` store,
   optional repeated `--event-log-path` JSON/JSONL files, and the canonical
   command-event log when present, then writes a deterministic graph JSON
@@ -178,45 +87,15 @@ Latest implementation update on 2026-06-01 UTC:
   checks, and prohibited source-KG node kinds.
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` owns the route and
   stop conditions.
-- graph boundary:
-  the graph is derived from the first-class eval-trace store tables:
-  `system_eval_runs`, `system_eval_cases`, `system_eval_case_results`,
-  `system_eval_scores`, `trace_runs`, and `trace_spans`. It materializes eval,
-  trace, span, span-event, log-event, event-source, score, artifact,
-  source-set, review, and failure-class nodes, with edges such as `CONTAINS`,
-  `EMITTED`,
-  `EVALUATED_BY`, `SCORED_AS`, `PRODUCED_ARTIFACT`, `USED_ARTIFACT`,
-  `DERIVED_FROM`, and `TARGETS`.
 - eval boundary:
-  graph evals currently verify required node/edge coverage, edge resolution,
-  trace-to-result-to-score paths, artifact provenance, source-KG exclusion, and
-  local source-of-record policy. They also verify event nodes have incoming
-  `EMITTED` edges from spans or explicit event-source nodes and event-like
-  source rows materialize without parse errors. The new command-event graph
-  eval verifies captured command events keep command, phase, invocation,
-  payload-hash, and incoming `EMITTED` provenance. Source-set `phase-eval` now
-  requires this graph eval as `observability_eval_context_graph` for
-  `source-set-f70ea11e04ae3d53`. The evals do not infer root causes, export to
-  Neo4j, capture raw prompt/source body content, or add promotion ratchets.
+  graph evals verify required node/edge coverage, edge resolution,
+  trace-to-result-to-score paths, artifact provenance, source-KG exclusion,
+  local source-of-record policy, event emission, event materialization, and
+  command-event provenance. The graph is generated observability/eval evidence;
+  it does not infer root causes, export Neo4j as source of record, capture raw
+  prompt/source body content, or add promotion ratchets.
 - live smoke:
-  building from the current local
-  `source_library/evaluations/eval_trace/system_eval_trace.sqlite` store to
-  `/tmp/usfs-r1-eval-context-graph.json` passed with `5,092` nodes and
-  `5,198` edges over `18` eval runs, `18` traces, `18` spans, `18` eval
-  results, `18` scores, and `4,964` span events from `2` event source
-  artifacts. The event sources were
-  `applicability_retrieval_trace.jsonl` with `1,314` materialized rows and
-  `applicability_graph_trace.jsonl` with `3,650` materialized rows, both with
-  `0` parse errors. The graph eval over that artifact passed with no missing
-  required node kinds, missing required edge kinds, unresolved edges, missing
-  trace-result-score paths, artifact provenance failures, event-emission
-  failures, event materialization failures, or prohibited source-KG nodes.
-  A second smoke with
-  `--event-log-path /tmp/usfs-r1-explicit-event-log.jsonl` passed with `5,095`
-  nodes, `5,200` edges, `1` explicit `event_source` node, `2` `log_event`
-  nodes, `4,966` total event nodes, `3` event sources, and `4,966` `EMITTED`
-  edges; graph eval over that artifact also passed.
-  The current local generated artifact build over
+  the current local generated artifact build over
   `source_library/evaluations/eval_trace/system_eval_trace.sqlite` plus the
   canonical command-event log passed with `5,102` nodes, `5,207` edges, `18`
   eval runs, `18` traces, `18` spans, `18` eval results, `18` scores, `3`
@@ -224,11 +103,310 @@ Latest implementation update on 2026-06-01 UTC:
   `source_set_ids=["source-set-f70ea11e04ae3d53"]`,
   `event_nodes_have_emitted_edges=true`,
   `command_event_nodes_joined=true`, and no prohibited source-KG nodes.
-  Source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now
-  passes `23/23` phases with `critical_phase_count=10`,
-  `direct_eval_ready_phase_count=10`,
-  `observability_eval_context_graph="direct_eval_present"`, and
-  `missing_direct_eval_phase_count=0`.
+  Source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passed
+  `23/23` phases with
+  `observability_eval_context_graph="direct_eval_present"`.
+
+## Sidecar Phase Eval Adoption Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the eighth extraction/chunking/retrieval accuracy packet is closed locally on isolated branch
+  `codex/extraction-chunking-retrieval-accuracy`. `phase-eval` now accepts
+  `--rule-claim-links-path` and, for review-scoped runs, automatically follows a noncanonical
+  `rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_links.jsonl` path recorded by
+  sidecar-backed compliance review.
+- contract effect:
+  when phase-eval selects sidecar rule links, the `rule_claim_binding` phase reads the sibling
+  `summary.json`, `rule_claim_link_validation.json`, and `rule_claim_link_eval_results.json`.
+  Phase details report selected, explicit, and compliance-review rule-link paths; selected direct
+  eval path; canonical link directory; actual link directory; sidecar/canonical status; and
+  `failed_path_checks`. Explicit sidecar paths fail closed when they conflict with the selected
+  summary path or the compliance review's recorded rule-link path.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/phase_eval_sidecar.py` owns sidecar path context and the rule-claim
+  direct-eval override inside the existing phase-eval layer. Focused test suites now keep the
+  phase-eval and compliance-review core test owners under their architecture line-budget gates.
+- smoke:
+  fixture-backed CLI smoke under
+  `/tmp/usfs-r1-sidecar-phase-eval.ghnuzz4a/` ran
+  `phase-eval --review-id phase-sidecar-smoke` after a sidecar-backed compliance review, selected
+  sidecar rule links, used sidecar `rule_claim_link_eval_results.json`, and kept
+  `rule_claim_binding` passed and reviewer-ready.
+- boundary:
+  no ignored production `source_library/` outputs were mutated. This predecessor packet left
+  reviewer package and knowledge-graph sidecar adoption as future bounded packets; the newer section
+  above records reviewer package closeout. Knowledge-graph sidecar adoption remains future work.
+
+## Sidecar Compliance Review Adoption Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the seventh extraction/chunking/retrieval accuracy packet is closed locally
+  on isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `compliance-review`, `compliance-review-eval`, and `compliance-gold-eval`
+  now accept `--rule-claim-links-path`, so validated sidecar
+  `rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_links.jsonl`
+  artifacts can feed compliance findings without rebuilding canonical
+  `rule_claim_links/`.
+- contract effect:
+  explicit rule-link paths must include sibling `summary.json`,
+  `rule_claim_link_validation.json`, `rule_claim_link_gaps.jsonl`, and
+  `rule_claim_links.sqlite` artifacts. Compliance review checks source-set
+  identity when supplied, rule-pack ID/version/path, reviewer-ready status,
+  validation status, and top-k compatibility, then revalidates the current
+  links before use. Compliance summaries and validation details record the
+  actual link directory, canonical link directory, and whether the consumed
+  directory is canonical.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/compliance_review.py` owns explicit rule-link
+  loading, validation, and canonical fallback behavior. The compliance eval
+  wrappers pass the path through to the core review, and
+  `src/usfs_r1_ea_sources/compliance_validation.py` owns reviewer-visible
+  sidecar/canonical path reporting.
+- smoke:
+  fixture-backed CLI smoke under
+  `/tmp/usfs-r1-sidecar-compliance.04bi1me1/` ran
+  `compliance-review --rule-claim-links-path` against sidecar rule links,
+  produced reviewer-ready compliance output, reported
+  `rule_claim_links_are_canonical=false`, and did not create canonical
+  rule-claim outputs.
+- boundary:
+  no ignored production `source_library/` outputs were mutated. This predecessor packet left
+  phase-eval as the next adoption slice; the newer section above records phase-eval closeout.
+  Reviewer package and knowledge-graph sidecar adoption remain future bounded packets.
+
+## Sidecar Rule Claim Link Readiness Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the sixth extraction/chunking/retrieval accuracy packet is closed locally on
+  isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `rule-claim-link` now accepts `--links-dir` for isolated sidecar rule-link
+  previews, so `claims_sidecar/claims.jsonl` can feed noncanonical
+  `rule_claim_links_sidecar/<rule_pack_id>/<version>/` artifacts.
+- contract effect:
+  canonical `rule_claim_links/` remains the default. Custom link outputs are
+  rejected when they point at or inside the canonical rule-claim output
+  directory for the requested source set and rule pack. Sidecar link summaries
+  record both the canonical and actual link directories plus whether the output
+  is canonical. `rule-claim-eval` can now revalidate and score sidecar links by
+  reading the sibling sidecar summary.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/rule_claim_binding.py` owns sidecar link output
+  selection and canonical-dir refusal; `rule_claim_binding_eval.py` owns
+  sidecar eval path resolution; `claim_extraction_eval.py` keeps sidecar claim
+  eval inference limited to source-set-owned `claims_sidecar/` paths. The
+  generated artifact contract now lists sidecar rule-claim link artifacts.
+- smoke:
+  fixture-backed CLI smoke under `/tmp/usfs-r1-sidecar-rule-claim.1d_jiwfh/`
+  wrote sidecar claims, sidecar rule-claim links, and sidecar rule-claim eval
+  results with `EVAL_PASSED=True` and `CASES=1` without creating canonical
+  rule-claim outputs.
+- boundary:
+  no ignored production `source_library/` outputs were mutated. Compliance,
+  phase-eval, reviewer package, and knowledge-graph sidecar adoption remain
+  future bounded packets.
+
+## Sidecar Graph Claim Canonical Adoption Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the fifth extraction/chunking/retrieval accuracy packet is closed locally on
+  isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `chunk-sidecar-consumer-promote` now reads a passed
+  `chunk-sidecar-consumer-eval` result and can rebuild canonical
+  `evidence_graph/` and `claims/` outputs from sidecar chunks and sidecar
+  retrieval metadata.
+- contract effect:
+  the command is a dry-run readiness gate by default. Canonical mutation
+  requires `--apply`, and replacing existing canonical graph/claim directories
+  requires `--replace-canonical`. Promotion requires a passed, non-partial
+  consumer eval plus reviewer-ready sidecar retrieval, graph, and claims.
+  Gap-close hardening now writes a failed promotion result when the consumer
+  eval is missing or unreadable, when required sidecar path declarations are
+  absent, when sidecar input paths have the wrong file/directory kind, or when
+  sidecar inputs point at canonical consumer directories.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/sidecar_consumer_promotion.py` owns adoption
+  preflight, apply, backup, and result summaries inside the sidecar eval layer.
+  `cli_derived.py` remains under the 800-line gate at `797` lines by routing
+  sidecar consumer commands through `cli_sidecar_eval.py`. The live
+  architecture probe reports `515` code files, `17` code files above `800`, no
+  Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate.
+- smoke:
+  fixture-backed temp smoke under
+  `/tmp/usfs-r1-sidecar-consumer-promote.rQ06OT/` ran the CLI apply path with
+  `--apply --replace-canonical`; the promotion result passed, applied backups,
+  rebuilt canonical graph and claims from `chunks_v2/atomic_chunks.jsonl` and
+  `retrieval_sidecar/summary.json`, and reported reviewer-ready canonical
+  graph and claim summaries. Gap-close smoke under
+  `/tmp/usfs-r1-sidecar-promote-missing.s7ih_cd5` verified that a missing
+  consumer-eval artifact exits nonzero while writing a failed promotion result
+  with `consumer_eval_results_present`,
+  `consumer_eval_results_readable`, and `sidecar_required_paths_declared`
+  checks failed.
+- boundary:
+  no ignored production `source_library/` outputs were mutated. Rule-link,
+  compliance, phase-eval, reviewer package, and knowledge-graph sidecar
+  adoption remain future bounded packets.
+
+## Sidecar Graph Claim Promotion Eval Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the fourth extraction/chunking/retrieval accuracy packet is closed locally on
+  isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `chunk-sidecar-consumer-eval` now builds or reuses `chunks_v2`, builds a
+  sidecar retrieval index, writes isolated sidecar graph and claim previews,
+  compares their metrics to existing baseline graph/claim summaries, and writes
+  `consumer_sidecar_eval/chunk_sidecar_consumer_eval_results.json`.
+- contract effect:
+  this is a promotion-readiness gate for graph and claim consumers. It refuses
+  sidecar chunk, sidecar retrieval, result, graph preview, or claim preview
+  directories that point at or inside canonical `chunks/`, `retrieval/`,
+  `evidence_graph/`, or `claims/` output directories and does not make
+  `chunks_v2` the active graph or claim spine.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/sidecar_consumer_eval.py` owns the sidecar eval
+  runtime, while `src/usfs_r1_ea_sources/cli_sidecar_eval.py` keeps command
+  argument adaptation out of the already-large derived CLI dispatcher.
+  `docs/architecture_contract.toml` owns the `sidecar_eval` layer, command, and
+  result artifact. The live architecture probe reports `513` code files, `17`
+  code files above `800`, no Python or JS/TS import cycles, and no source
+  module above the `20`-import fan-out gate.
+- live smoke:
+  the ignored f70 corpus in the main checkout was read without mutating
+  production derived outputs. A `/tmp` source-library shell selected `12` real
+  `FED-001` chunks and wrote the sidecar eval under
+  `/tmp/usfs-r1-sidecar-consumer-eval.0SK6sj/`. The eval passed with no failed
+  checks, graph preview `36` nodes and `95` edges, and claim preview `14`
+  claims, `60` nodes, and `108` edges.
+- boundary:
+  partial live-smoke reviewer readiness remains false by design. Canonical
+  graph/claim promotion, rule-link adoption, compliance adoption, phase-eval
+  binding, and reviewer package adoption remain future bounded packets.
+
+## Sidecar Downstream Consumer Preview Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the third extraction/chunking/retrieval accuracy packet is closed locally on
+  isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `evidence-graph-build` now accepts explicit sidecar `--chunks-path`,
+  `--retrieval-validation-path`, `--retrieval-summary-path`, and `--graph-dir`
+  arguments. `claim-extract` accepts the same sidecar chunk/retrieval inputs
+  plus `--claims-dir`.
+- contract effect:
+  graph and claim builders can consume validated sidecar chunks and sidecar
+  retrieval indexes without writing canonical `evidence_graph/` or `claims/`
+  artifacts. Default command behavior still uses canonical `chunks/`,
+  `retrieval/`, `evidence_graph/`, and `claims/` paths.
+- architecture closeout:
+  `docs/architecture_contract.toml` owns explicit `evidence_graph_sidecar/`
+  and `claims_sidecar/` artifact patterns under the existing graph and claim
+  layers. The live architecture probe for this branch reports `513` code
+  files, `17` code files above `800`, no Python or JS/TS import cycles, and no
+  source module above the `20`-import fan-out gate.
+- live smoke:
+  the ignored f70 corpus in the main checkout was read without mutating
+  production derived outputs. A `/tmp` source-library shell copied f70 catalog
+  metadata, selected `12` real `FED-001` sidecar atomic chunks, and wrote
+  sidecar retrieval, graph, and claim previews under
+  `/tmp/usfs-r1-sidecar-consumer.PnUBBe/`. Retrieval validation passed for
+  `12` chunks; graph validation passed with `36` nodes and `95` edges; claim
+  validation passed with `14` claims, `60` nodes, and `108` edges.
+- boundary:
+  this is a downstream preview path only. Partial live-smoke reviewer readiness
+  remains false by design, and no canonical graph, claim, rule-link, review,
+  compliance, phase-eval, or knowledge-graph promotion was performed.
+
+## Sidecar Retrieval Eval Promotion Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the second extraction/chunking/retrieval accuracy packet is closed locally on
+  isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `chunk-sidecar-retrieval-eval` now builds or reuses `chunks_v2`, writes a
+  noncanonical sidecar retrieval index, runs the same eval contract against
+  sidecar and baseline retrieval indexes, and writes
+  `retrieval_sidecar_eval/chunk_sidecar_retrieval_eval_results.json`.
+- contract effect:
+  `retrieval-build --index-dir` can write a retrieval index outside the
+  canonical `retrieval/` directory, and retrieval eval can infer source-set
+  identity from index metadata for those sidecar paths. The sidecar chunk-layer
+  validator now fails closed on duplicate atomic chunk IDs.
+- architecture closeout:
+  the live architecture probe for this branch reports `513` code files, `17`
+  code files above `800`, no Python or JS/TS import cycles, and no source
+  module above the `20`-import fan-out gate. `README.md` remains within the
+  `220`-line route-surface budget.
+- live smoke:
+  the ignored f70 corpus in the main checkout was read without mutating tracked
+  or production derived outputs. Temporary `/tmp` sidecars rebuilt `296442`
+  atomic chunks, `116004` structural chunks, and `19117` parent context
+  windows with `validation_passed=true`. The sidecar eval passed with
+  `pass_rate=1.0`, `atomic_chunk_recall_at_k=1.0`,
+  `structure_hit_rate=1.0`, `parent_window_coverage_rate=1.0`, and
+  `citation_correctness_rate=1.0`. The baseline comparison completed and
+  failed the sidecar-specific atomic/structure/parent checks with
+  `pass_rate=0.25`.
+- boundary:
+  this is a promotion-readiness eval gate only. It does not replace baseline
+  `chunks/chunks.jsonl`, does not make `chunks_v2` the active graph or claim
+  spine, and does not rebuild graph, claim, rule-link, review, compliance, or
+  knowledge-graph artifacts.
+
+## Extraction Chunking Retrieval Accuracy Sidecar Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the first extraction/chunking/retrieval accuracy implementation packet is
+  closed locally on isolated branch
+  `codex/extraction-chunking-retrieval-accuracy`. New commands
+  `chunk-quality-audit` and `chunk-layer-build` add deterministic diagnostic
+  and sidecar chunk-layer surfaces without replacing the baseline
+  `chunks/chunks.jsonl` spine or rebuilding graph, claim, rule-link, review, or
+  knowledge-graph artifacts.
+- sidecar contract:
+  `chunk-quality-audit` writes
+  `source_library/derived/<source_set_id>/diagnostics/chunk_quality_audit.json`
+  with per-source parser/layout/boundary risk buckets and pass/fail input
+  checks. `chunk-layer-build` writes `chunks_v2/atomic_chunks.jsonl`,
+  `chunks_v2/structural_chunks.jsonl`,
+  `chunks_v2/parent_context_windows.jsonl`, and `chunks_v2/summary.json`.
+  Sidecar records preserve source-record identity, artifact hash, citation
+  label, parser route, source offsets, parent windows, structure type, content
+  hashes, and deterministic contextual index text.
+- retrieval and eval effect:
+  `retrieval-build` can consume compatible sidecar chunk paths and now stores
+  contextual index text plus optional sidecar metadata in the SQLite index.
+  `retrieval-query` uses FTS5/BM25 as first-stage candidate generation when
+  available and reports `retrieval_mode`, `candidate_count`, and
+  `fts_candidate_count`; returned evidence spans still come from source text,
+  not contextual prefixes. `retrieval-eval` can now score optional
+  `expected_chunk_ids`, `expected_structure_types`,
+  `expected_citation_labels`, and `require_parent_window` expectations.
+- live smoke:
+  the ignored f70 corpus in the main checkout was read without writing derived
+  production outputs. `chunk-quality-audit` passed over `113830` baseline chunks
+  and `719` sources, reporting diagnostic risk buckets rather than validation
+  failures. `chunk-layer-build` wrote temporary `/tmp` sidecars with `296442`
+  atomic chunks, `116004` structural chunks, `19117` parent context windows,
+  and `validation_passed=true`.
+- boundary:
+  this is an opt-in measurement and retrieval-quality surface. It does not
+  promote `chunks_v2` as the active graph spine, does not declare a new f70
+  graph rebuild, and does not alter the separate context-graph checkout work.
 
 ## Operational Graph-KB Query Surface Resolved Locally
 
@@ -259,8 +437,8 @@ Latest implementation update on 2026-06-01 UTC:
   now requires `knowledge_graph_query_surface` for the active f70 source set,
   so source-set `phase-eval` fails closed if the query eval is missing, stale,
   identity-mismatched, failed, or reports freshness warnings. The current
-  source-set replay passes `23/23` phases with `critical_phase_count=10`,
-  `direct_eval_ready_phase_count=10`, and
+  source-set replay passes `22/22` phases with `critical_phase_count=9`,
+  `direct_eval_ready_phase_count=9`, and
   `knowledge_graph_query_surface="direct_eval_present"`.
 - architecture effect:
   the new query implementation is split across
@@ -270,7 +448,7 @@ Latest implementation update on 2026-06-01 UTC:
   readiness binding is isolated in
   `src/usfs_r1_ea_sources/phase_eval_direct_eval_knowledge_graph.py`
   (`205` lines), keeping the oversized source-set phase gate from absorbing a
-  full evaluator. The fresh architecture probe reports `511` code files, `17`
+  full evaluator. The fresh architecture probe reports `509` code files, `17`
   code files above `800`, no Python or JS/TS import cycles, and no source
   module above the `20`-import fan-out gate.
 - boundary:
@@ -299,8 +477,8 @@ Latest implementation update on 2026-06-01 UTC:
 - phase-eval integration:
   `config/phase_eval_direct_eval_v1.json` now requires
   `canonical_semantic_graph` for the active f70 source set. Source-set
-  `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now passes `23/23`
-  phases with `critical_phase_count=10`, `direct_eval_ready_phase_count=10`,
+  `phase-eval --source-set-id source-set-f70ea11e04ae3d53` now passes `22/22`
+  phases with `critical_phase_count=9`, `direct_eval_ready_phase_count=9`,
   `missing_direct_eval_phase_count=0`, `threshold_failed_phase_count=0`, and
   `reviewer_ready=true`.
 - boundary:
@@ -319,7 +497,7 @@ Latest implementation update on 2026-05-31 UTC:
   extraction runs, per-case execution, metric checks, and runtime helpers.
 - architecture effect:
   `extraction_fidelity_eval.py` is now `716` lines and the new runtime owner is
-  `442` lines. The architecture probe reports `511` code files, `17` code files above `800`,
+  `442` lines. The architecture probe reports `509` code files, `17` code files above `800`,
   no Python or JS/TS import cycles, and no source module
   above the `20`-import fan-out gate. The live inventory now records `9`
   source owners and `8` test owners.
@@ -340,12 +518,12 @@ Latest implementation update on 2026-06-01 UTC:
   stale routing docs. `config/architecture_large_file_inventory_v1.json` now
   records `17` code files above `800`, grouped as `9` source owners and `8`
   test owners, with exact path and line-count assertions in
-  `tests/test_architecture_quality.py`. Later graph-KB and chunk-audit slices
-  added under-800 source and test modules; the current probe therefore reports
-  `518` code files while the oversized-owner count remains `17`.
+  `tests/test_architecture_quality.py`. Later graph-KB slices added under-800
+  source and test modules; the current probe therefore reports `509` code
+  files while the oversized-owner count remains `17`.
 - probe result:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `518` code files, `17` code files above `800`, no Python or JS/TS
+  reports `509` code files, `17` code files above `800`, no Python or JS/TS
   import cycles, and no source module above the `20`-import fan-out gate.
 - route-doc control:
   `README.md` and `docs/CURRENT_ROUTING.md` are compact, non-volatile route
@@ -396,9 +574,9 @@ Latest implementation update on 2026-05-31 UTC:
   `wrong_forest_component_rate=0.0`, and `hard_negative_zero_match_rate=1.0`.
   `semantic-graph-eval` passes `12/12` cases with `7` controlled negatives.
   Source-set `phase-eval --source-set-id source-set-f70ea11e04ae3d53` passes
-  `23/23` phases with `reviewer_ready=true`,
+  `22/22` phases with `reviewer_ready=true`,
   `identity_mismatch_phase_count=0`, `missing_direct_eval_phase_count=0`, and
-  all ten critical source-set phases direct-eval backed.
+  all nine critical source-set phases direct-eval backed.
 - boundary:
   this closes the f70 forest-plan graph readiness and downstream graph-artifact
   freshness slice. It does not convert broader source-currentness metadata into
@@ -497,7 +675,7 @@ Latest implementation update on 2026-05-31 UTC:
   `5f8755aa64e2f2da87c5369789033a2f2045e48300cab272d2e465724cbac89e`.
   Refreshed f70 `compliance-review-eval` passes `5/5` cases with
   `source_set_id="source-set-f70ea11e04ae3d53"` and all direct eval metrics
-  at `1.0`. Review `phase-eval` now passes `32/32` phases with
+  at `1.0`. Review `phase-eval` now passes `28/28` phases with
   `reviewer_ready=true`, `blockers=[]`, `declared_review_contract=true`, and
   `contract_backed_promotion_ready=true`.
 

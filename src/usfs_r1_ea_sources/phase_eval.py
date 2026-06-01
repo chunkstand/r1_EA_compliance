@@ -11,11 +11,16 @@ from .artifact_utils import _utc_now
 from .artifact_utils import _write_json
 from .catalog_surface import resolve_catalog_dir_for_source_set
 from .eval_trace_gate import build_eval_trace_gate_phase
+from .eval_trace_inventory import REPO_ROOT as EVAL_TRACE_REPO_ROOT
 from .phase_eval_direct_eval import apply_source_set_phase_direct_eval_gate
 from .phase_eval_direct_eval import build_evaluation_coverage_phase
 from .phase_eval_direct_eval import resolve_phase_eval_direct_eval_coverage
 from .phase_eval_direct_eval_source_set import _downstream_result_path
 from .phase_eval_review_phases import build_review_scoped_phases
+from .phase_eval_sidecar import rule_claim_path_context as _rule_claim_path_context
+from .phase_eval_sidecar import (
+    with_rule_claim_direct_eval_override as _with_rule_claim_direct_eval_override,
+)
 from .phase_eval_source_set_phases import build_source_set_phases
 from .phase_eval_source_set_phases import load_semantic_report
 from .replay_context import ReplayContextMismatchError
@@ -48,6 +53,7 @@ def run_phase_aligned_eval(
     catalog_dir: Path | None = None,
     review_id: str | None = None,
     review_dir: Path | None = None,
+    rule_claim_links_path: Path | None = None,
 ) -> PhaseEvalResult:
     """Evaluate capture, extraction, retrieval, graph, and optional compliance readiness."""
 
@@ -60,6 +66,9 @@ def run_phase_aligned_eval(
         review_dir = output_dir / "reviews" / review_id
     if review_dir is not None:
         review_dir = Path(review_dir)
+    explicit_rule_claim_links_path = (
+        Path(rule_claim_links_path) if rule_claim_links_path is not None else None
+    )
     resolved_review_id = review_id or (review_dir.name if review_dir is not None else None)
     if resolved_review_id is not None:
         replay_context_path = tracked_replay_context_path(output_dir, resolved_review_id)
@@ -157,6 +166,14 @@ def run_phase_aligned_eval(
                 rule_claim_summary_path.parent / "rule_claim_link_validation.json"
             )
             rule_claim_eval_path = rule_claim_summary_path.parent / "rule_claim_link_eval_results.json"
+    if explicit_rule_claim_links_path is not None:
+        rule_claim_summary_path = explicit_rule_claim_links_path.parent / "summary.json"
+        rule_claim_validation_path = (
+            explicit_rule_claim_links_path.parent / "rule_claim_link_validation.json"
+        )
+        rule_claim_eval_path = (
+            explicit_rule_claim_links_path.parent / "rule_claim_link_eval_results.json"
+        )
     review_phase_output_path = (
         review_dir / "phase_eval_results.json" if review_dir is not None else None
     )
@@ -383,23 +400,44 @@ def run_phase_aligned_eval(
         else None
     )
     compliance_summary_for_rule_claim = (compliance_review or {}).get("summary", {})
-    if compliance_summary_for_rule_claim.get("rule_claim_summary_path"):
+    if (
+        explicit_rule_claim_links_path is None
+        and compliance_summary_for_rule_claim.get("rule_claim_summary_path")
+    ):
         candidate_summary_path = Path(
             str(compliance_summary_for_rule_claim["rule_claim_summary_path"])
         )
         if candidate_summary_path.exists():
             rule_claim_summary_path = candidate_summary_path
-    if compliance_summary_for_rule_claim.get("rule_claim_validation_path"):
+    if (
+        explicit_rule_claim_links_path is None
+        and compliance_summary_for_rule_claim.get("rule_claim_validation_path")
+    ):
         candidate_validation_path = Path(
             str(compliance_summary_for_rule_claim["rule_claim_validation_path"])
         )
         if candidate_validation_path.exists():
             rule_claim_validation_path = candidate_validation_path
+    if (
+        explicit_rule_claim_links_path is None
+        and compliance_summary_for_rule_claim.get("rule_claim_links_path")
+        and not bool(compliance_summary_for_rule_claim.get("rule_claim_links_are_canonical", True))
+    ):
+        rule_claim_eval_path = (
+            Path(str(compliance_summary_for_rule_claim["rule_claim_links_path"])).parent
+            / "rule_claim_link_eval_results.json"
+        )
     rule_claim_validation = (
         _read_json(rule_claim_validation_path) if rule_claim_validation_path.exists() else None
     )
     rule_claim_summary = (
         _read_json(rule_claim_summary_path) if rule_claim_summary_path.exists() else None
+    )
+    rule_claim_path_context = _rule_claim_path_context(
+        explicit_links_path=explicit_rule_claim_links_path,
+        selected_eval_path=rule_claim_eval_path,
+        selected_summary=rule_claim_summary,
+        compliance_summary=compliance_summary_for_rule_claim,
     )
     compliance_coverage_path = rule_claim_summary_path.parent / "compliance_coverage_results.json"
     compliance_coverage = (
@@ -448,12 +486,24 @@ def run_phase_aligned_eval(
         ):
             compliance_gold_eval = None
 
+    rule_claim_direct_eval_override_required = bool(
+        rule_claim_path_context.get("uses_sidecar_rule_claim_links")
+        or explicit_rule_claim_links_path
+    )
     direct_eval_coverage = resolve_phase_eval_direct_eval_coverage(
         output_dir=output_dir,
         source_set_id=source_set_id,
         review_id=resolved_review_id,
         review_dir=review_dir,
     )
+    if rule_claim_direct_eval_override_required:
+        direct_eval_coverage = _with_rule_claim_direct_eval_override(
+            direct_eval_coverage=direct_eval_coverage,
+            downstream_manifest=downstream_direct_eval_manifest,
+            downstream_manifest_path=downstream_direct_eval_manifest_path,
+            result_path=rule_claim_eval_path,
+            source_set_id=source_set_id,
+        )
     component_retrieval_direct_eval = direct_eval_coverage["source_set_phase_statuses"].get(
         "forest_plan_component_retrieval"
     )
@@ -493,6 +543,7 @@ def run_phase_aligned_eval(
         rule_claim_validation_path=rule_claim_validation_path,
         rule_claim_summary=rule_claim_summary,
         rule_claim_summary_path=rule_claim_summary_path,
+        rule_claim_path_context=rule_claim_path_context,
         downstream_direct_eval_manifest=downstream_direct_eval_manifest,
         downstream_direct_eval_manifest_path=downstream_direct_eval_manifest_path,
         downstream_lane_results={
@@ -619,6 +670,7 @@ def run_phase_aligned_eval(
         output_dir=output_dir,
         source_set_id=source_set_id,
         review_id=resolved_review_id,
+        repo_root=_eval_trace_repo_root(output_dir),
     )
     if eval_trace_gate.phase is not None:
         phases.append(eval_trace_gate.phase)
@@ -672,3 +724,12 @@ def default_graph_dir(output_dir: Path, source_set_id: str | None = None) -> Pat
     if source_set_id is None:
         source_set_id = _source_set_id_from_catalog(output_dir)
     return source_derived_dir(output_dir / "derived", source_set_id) / "evidence_graph"
+
+
+def _eval_trace_repo_root(output_dir: Path) -> Path:
+    resolved = output_dir.resolve()
+    try:
+        resolved.relative_to(EVAL_TRACE_REPO_ROOT)
+    except ValueError:
+        return resolved.parent
+    return EVAL_TRACE_REPO_ROOT

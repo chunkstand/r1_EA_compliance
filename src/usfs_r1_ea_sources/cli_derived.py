@@ -90,10 +90,6 @@ DEFAULT_RULE_CLAIM_EVAL_PATH = _module_attr(
     "rule_claim_binding",
     "DEFAULT_RULE_CLAIM_EVAL_PATH",
 )
-DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH = _module_attr(
-    "sidecar_retrieval_eval",
-    "DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH",
-)
 DEFAULT_RULE_PACK_PATH = _module_attr("rule_packs", "DEFAULT_RULE_PACK_PATH")
 DEFAULT_SEMANTIC_GRAPH_EVAL_PATH = _module_attr(
     "semantic_graph_eval",
@@ -110,6 +106,10 @@ DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH = _module_attr(
 DEFAULT_SOURCE_PARTITION_CONTRACT_PATH = _module_attr(
     "source_partitions",
     "DEFAULT_SOURCE_PARTITION_CONTRACT_PATH",
+)
+DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH = _module_attr(
+    "sidecar_retrieval_eval",
+    "DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH",
 )
 
 
@@ -218,13 +218,6 @@ def run_retrieval_eval(**kwargs):
     return _module_attr("retrieval", "run_retrieval_eval")(**kwargs)
 
 
-def run_chunk_sidecar_retrieval_eval(**kwargs):
-    return _module_attr(
-        "sidecar_retrieval_eval",
-        "run_chunk_sidecar_retrieval_eval",
-    )(**kwargs)
-
-
 def build_reuse_inventory(**kwargs):
     return _module_attr("reuse_inventory", "build_reuse_inventory")(**kwargs)
 
@@ -256,6 +249,13 @@ def run_knowledge_graph_query_eval(**kwargs):
     return _module_attr("knowledge_graph_query_eval", "run_knowledge_graph_query_eval")(**kwargs)
 
 
+def run_chunk_sidecar_retrieval_eval(**kwargs):
+    return _module_attr(
+        "sidecar_retrieval_eval",
+        "run_chunk_sidecar_retrieval_eval",
+    )(**kwargs)
+
+
 def build_source_register_proving_slice(**kwargs):
     return _module_attr(
         "source_register_proving",
@@ -277,8 +277,6 @@ DERIVED_COMMANDS = {
     "extraction-accuracy-audit",
     "chunk-quality-audit",
     "chunk-layer-build",
-    "chunk-sidecar-retrieval-eval",
-    "chunk-sidecar-consumer-eval",
     "source-register-proving-slice",
     "authority-currentness",
     "authority-ontology-validate",
@@ -291,6 +289,9 @@ DERIVED_COMMANDS = {
     "retrieval-build",
     "retrieval-query",
     "retrieval-eval",
+    "chunk-sidecar-retrieval-eval",
+    "chunk-sidecar-consumer-eval",
+    "chunk-sidecar-consumer-promote",
     "evidence-graph-build",
     "nepa-knowledge-graph-export",
     "knowledge-graph-query",
@@ -324,7 +325,6 @@ COMMAND_SPECS = build_derived_command_specs(
         forest_plan_profiles_path=DEFAULT_FOREST_PLAN_PROFILES_PATH,
         region1_forest_plan_readiness_path=DEFAULT_REGION1_FOREST_PLAN_READINESS_PATH,
         rule_claim_eval_path=DEFAULT_RULE_CLAIM_EVAL_PATH,
-        chunk_sidecar_retrieval_eval_path=DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH,
         rule_pack_path=DEFAULT_RULE_PACK_PATH,
         semantic_graph_eval_path=DEFAULT_SEMANTIC_GRAPH_EVAL_PATH,
         knowledge_graph_query_eval_path=DEFAULT_KNOWLEDGE_GRAPH_QUERY_EVAL_PATH,
@@ -332,6 +332,7 @@ COMMAND_SPECS = build_derived_command_specs(
             DEFAULT_SOURCE_REGISTER_PROVING_SLICE_MANIFEST_PATH
         ),
         source_partition_contract_path=DEFAULT_SOURCE_PARTITION_CONTRACT_PATH,
+        chunk_sidecar_retrieval_eval_path=DEFAULT_CHUNK_SIDECAR_RETRIEVAL_EVAL_PATH,
     )
 )
 
@@ -558,6 +559,7 @@ def _run_retrieval_build(args: argparse.Namespace):
         output_dir=args.output_dir,
         source_set_id=args.source_set_id,
         chunks_path=args.chunks_path,
+        index_dir=args.index_dir,
         catalog_sqlite_path=catalog_sqlite_path,
         allow_failed_extraction=args.allow_failed_extraction,
         allow_partial_extraction=args.allow_partial_extraction,
@@ -604,12 +606,12 @@ def _run_chunk_sidecar_retrieval_eval(args: argparse.Namespace):
     )
 
 
-def _run_chunk_sidecar_consumer_eval(args: argparse.Namespace):
-    kwargs = {key: value for key, value in vars(args).items() if key != "command"}
-    return _module_attr(
-        "sidecar_consumer_eval",
-        "run_chunk_sidecar_consumer_eval",
-    )(**kwargs)
+def _run_chunk_sidecar_consumer_command(args: argparse.Namespace):
+    command = {
+        "chunk-sidecar-consumer-eval": "run_chunk_sidecar_consumer_eval_command",
+        "chunk-sidecar-consumer-promote": "run_chunk_sidecar_consumer_promotion_command",
+    }[args.command]
+    return _module_attr("cli_sidecar_eval", command)(args)
 
 
 def _run_evidence_graph_build(args: argparse.Namespace):
@@ -617,6 +619,10 @@ def _run_evidence_graph_build(args: argparse.Namespace):
         output_dir=args.output_dir,
         source_set_id=args.source_set_id,
         catalog_dir=args.catalog_dir,
+        chunks_path=args.chunks_path,
+        retrieval_validation_path=args.retrieval_validation_path,
+        retrieval_summary_path=args.retrieval_summary_path,
+        graph_dir=args.graph_dir,
         allow_partial_retrieval=args.allow_partial_retrieval,
     )
 
@@ -683,6 +689,9 @@ def _run_claim_extract(args: argparse.Namespace):
         source_set_id=args.source_set_id,
         chunks_path=args.chunks_path,
         catalog_sqlite_path=args.catalog_sqlite_path,
+        retrieval_validation_path=args.retrieval_validation_path,
+        retrieval_summary_path=args.retrieval_summary_path,
+        claims_dir=args.claims_dir,
         allow_partial_retrieval=args.allow_partial_retrieval,
     )
 
@@ -702,6 +711,7 @@ def _run_rule_claim_link(args: argparse.Namespace):
         output_dir=args.output_dir,
         source_set_id=args.source_set_id,
         claims_path=args.claims_path,
+        links_dir=args.links_dir,
         rule_pack_path=args.rule_pack,
         top_k=args.top_k,
         allow_partial_claims=args.allow_partial_claims,
@@ -760,14 +770,9 @@ COMMAND_HANDLERS = {
     "retrieval-build": _result_handler(_run_retrieval_build, "validation_passed"),
     "retrieval-query": _summary_handler(_run_retrieval_query, "hit_count"),
     "retrieval-eval": _result_handler(_run_retrieval_eval, "passed"),
-    "chunk-sidecar-retrieval-eval": _result_handler(
-        _run_chunk_sidecar_retrieval_eval,
-        "passed",
-    ),
-    "chunk-sidecar-consumer-eval": _result_handler(
-        _run_chunk_sidecar_consumer_eval,
-        "passed",
-    ),
+    "chunk-sidecar-retrieval-eval": _result_handler(_run_chunk_sidecar_retrieval_eval, "passed"),
+    "chunk-sidecar-consumer-eval": _result_handler(_run_chunk_sidecar_consumer_command, "passed"),
+    "chunk-sidecar-consumer-promote": _result_handler(_run_chunk_sidecar_consumer_command, "passed"),
     "evidence-graph-build": _result_handler(
         _run_evidence_graph_build,
         "validation_passed",

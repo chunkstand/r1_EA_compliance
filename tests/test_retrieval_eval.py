@@ -5,10 +5,10 @@ import json
 import tempfile
 import unittest
 
-from usfs_r1_ea_sources.chunk_layers import build_chunk_layers
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 from usfs_r1_ea_sources.retrieval import run_retrieval_eval
 from usfs_r1_ea_sources.retrieval_eval_runtime import _missing_expected_terms
+from usfs_r1_ea_sources.chunk_layers import build_chunk_layers
 
 from tests.support.retrieval_fixtures import _chunk
 from tests.support.retrieval_fixtures import _write_catalog_sqlite
@@ -67,7 +67,7 @@ class RetrievalEvalTests(unittest.TestCase):
             self.assertEqual(eval_result.summary["metrics"]["unsupported_answer_rate"], 0.0)
             self.assertTrue(eval_result.output_path.exists())
 
-    def test_retrieval_eval_scores_atomic_chunk_structure_parent_and_citation(self) -> None:
+    def test_retrieval_eval_scores_atomic_structural_and_parent_expectations(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             source_set_id = "source-set-test"

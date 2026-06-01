@@ -40,6 +40,8 @@ def test_compliance_review_parser_preserves_authority_gate_options() -> None:
             "compliance-review",
             "--package-path",
             "package",
+            "--rule-claim-links-path",
+            "source_library/derived/source-set-1/rule_claim_links_sidecar/unit/0.1.0/rule_claim_links.jsonl",
             "--allow-base-rule-pack-review",
             "--reuse-package-cache",
             "--docling-timeout-seconds",
@@ -51,6 +53,9 @@ def test_compliance_review_parser_preserves_authority_gate_options() -> None:
     assert args.allow_base_rule_pack_review is True
     assert args.reuse_package_cache is True
     assert args.docling_timeout_seconds == 0.0
+    assert args.rule_claim_links_path == Path(
+        "source_library/derived/source-set-1/rule_claim_links_sidecar/unit/0.1.0/rule_claim_links.jsonl"
+    )
     assert args.rule_pack == Path("config/compliance_rule_pack_nepa_ea_v0.json")
 
 
@@ -244,6 +249,160 @@ def test_source_register_queue_audit_parser_accepts_ledger_inputs() -> None:
     assert args.sheet_contract == Path("config/source_register_sheet_contract_v1.json")
 
 
+def test_chunk_accuracy_parser_accepts_audit_and_sidecar_commands() -> None:
+    audit_args = build_parser().parse_args(
+        [
+            "chunk-quality-audit",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-path",
+            "chunks.jsonl",
+        ]
+    )
+    layer_args = build_parser().parse_args(
+        [
+            "chunk-layer-build",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--atomic-max-tokens",
+            "256",
+        ]
+    )
+
+    assert audit_args.command == "chunk-quality-audit"
+    assert audit_args.chunks_path == Path("chunks.jsonl")
+    assert layer_args.command == "chunk-layer-build"
+    assert layer_args.atomic_max_tokens == 256
+
+
+def test_chunk_sidecar_retrieval_eval_parser_accepts_comparison_paths() -> None:
+    args = build_parser().parse_args(
+        [
+            "chunk-sidecar-retrieval-eval",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-v2-dir",
+            "chunks_v2",
+            "--sidecar-index-dir",
+            "retrieval_sidecar",
+            "--baseline-index-path",
+            "retrieval/evidence_index.sqlite",
+            "--results-dir",
+            "retrieval_sidecar_eval",
+            "--top-k",
+            "10",
+            "--rebuild-sidecar",
+        ]
+    )
+
+    assert args.command == "chunk-sidecar-retrieval-eval"
+    assert args.chunks_v2_dir == Path("chunks_v2")
+    assert args.sidecar_index_dir == Path("retrieval_sidecar")
+    assert args.baseline_index_path == Path("retrieval/evidence_index.sqlite")
+    assert args.results_dir == Path("retrieval_sidecar_eval")
+    assert args.top_k == 10
+    assert args.rebuild_sidecar is True
+
+
+def test_chunk_sidecar_consumer_eval_parser_accepts_preview_paths() -> None:
+    args = build_parser().parse_args(
+        [
+            "chunk-sidecar-consumer-eval",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-v2-dir",
+            "chunks_v2",
+            "--sidecar-index-dir",
+            "retrieval_sidecar",
+            "--graph-dir",
+            "consumer_eval/evidence_graph_sidecar",
+            "--claims-dir",
+            "consumer_eval/claims_sidecar",
+            "--baseline-graph-summary-path",
+            "evidence_graph/summary.json",
+            "--baseline-claim-summary-path",
+            "claims/summary.json",
+            "--results-dir",
+            "consumer_sidecar_eval",
+            "--rebuild-sidecar",
+            "--allow-partial-extraction",
+            "--allow-partial-retrieval",
+        ]
+    )
+
+    assert args.command == "chunk-sidecar-consumer-eval"
+    assert args.chunks_v2_dir == Path("chunks_v2")
+    assert args.sidecar_index_dir == Path("retrieval_sidecar")
+    assert args.graph_dir == Path("consumer_eval/evidence_graph_sidecar")
+    assert args.claims_dir == Path("consumer_eval/claims_sidecar")
+    assert args.baseline_graph_summary_path == Path("evidence_graph/summary.json")
+    assert args.baseline_claim_summary_path == Path("claims/summary.json")
+    assert args.results_dir == Path("consumer_sidecar_eval")
+    assert args.rebuild_sidecar is True
+    assert args.allow_partial_extraction is True
+    assert args.allow_partial_retrieval is True
+
+
+def test_graph_and_claim_parsers_accept_sidecar_consumer_paths() -> None:
+    graph_args = build_parser().parse_args(
+        [
+            "evidence-graph-build",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-path",
+            "chunks_v2/atomic_chunks.jsonl",
+            "--retrieval-validation-path",
+            "retrieval_sidecar/retrieval_validation.json",
+            "--retrieval-summary-path",
+            "retrieval_sidecar/summary.json",
+            "--graph-dir",
+            "evidence_graph_sidecar",
+        ]
+    )
+    claim_args = build_parser().parse_args(
+        [
+            "claim-extract",
+            "--output-dir",
+            "source_library",
+            "--source-set-id",
+            "source-set-test",
+            "--chunks-path",
+            "chunks_v2/atomic_chunks.jsonl",
+            "--retrieval-validation-path",
+            "retrieval_sidecar/retrieval_validation.json",
+            "--retrieval-summary-path",
+            "retrieval_sidecar/summary.json",
+            "--claims-dir",
+            "claims_sidecar",
+        ]
+    )
+
+    assert graph_args.command == "evidence-graph-build"
+    assert graph_args.chunks_path == Path("chunks_v2/atomic_chunks.jsonl")
+    assert graph_args.retrieval_validation_path == Path(
+        "retrieval_sidecar/retrieval_validation.json"
+    )
+    assert graph_args.retrieval_summary_path == Path("retrieval_sidecar/summary.json")
+    assert graph_args.graph_dir == Path("evidence_graph_sidecar")
+    assert claim_args.command == "claim-extract"
+    assert claim_args.chunks_path == Path("chunks_v2/atomic_chunks.jsonl")
+    assert claim_args.retrieval_validation_path == Path(
+        "retrieval_sidecar/retrieval_validation.json"
+    )
+    assert claim_args.retrieval_summary_path == Path("retrieval_sidecar/summary.json")
+    assert claim_args.claims_dir == Path("claims_sidecar")
+
+
 def test_batch_download_parser_accepts_r1_forest_plan_source_delta_register() -> None:
     args = build_parser().parse_args(
         [
@@ -309,6 +468,8 @@ def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch
             "--reuse-package-cache",
             "--forest-plan-component-inventory-path",
             "source_library/reviews/review/component_inventory.json",
+            "--rule-claim-links-path",
+            "source_library/derived/source-set-1/rule_claim_links_sidecar/unit/0.1.0/rule_claim_links.jsonl",
             "--docling-timeout-seconds",
             "0",
         ]
@@ -321,6 +482,9 @@ def test_compliance_review_handler_propagates_authority_gate_options(monkeypatch
     assert captured["reuse_package_cache"] is True
     assert captured["docling_timeout_seconds"] is None
     assert captured["package_path"] == Path("package")
+    assert captured["rule_claim_links_path"] == Path(
+        "source_library/derived/source-set-1/rule_claim_links_sidecar/unit/0.1.0/rule_claim_links.jsonl"
+    )
     assert captured["component_inventory_path"] == Path(
         "source_library/reviews/review/component_inventory.json"
     )

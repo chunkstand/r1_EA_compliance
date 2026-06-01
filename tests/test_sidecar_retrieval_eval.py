@@ -99,14 +99,10 @@ class ChunkSidecarRetrievalEvalTests(unittest.TestCase):
                 ).resolve(),
             )
             self.assertTrue(
-                result.output_path.with_name("sidecar")
-                .joinpath("retrieval_eval_results.json")
-                .exists()
+                result.output_path.with_name("sidecar").joinpath("retrieval_eval_results.json").exists()
             )
             self.assertTrue(
-                result.output_path.with_name("baseline")
-                .joinpath("retrieval_eval_results.json")
-                .exists()
+                result.output_path.with_name("baseline").joinpath("retrieval_eval_results.json").exists()
             )
 
     def test_sidecar_retrieval_eval_rejects_canonical_output_dirs(self) -> None:

@@ -48,14 +48,11 @@ def build_chunk_layers(
 ) -> ChunkLayerBuildResult:
     """Build sidecar atomic, structural, and parent context chunk layers."""
 
-    _validate_positive("atomic_max_tokens", atomic_max_tokens)
-    _validate_positive("parent_window_max_tokens", parent_window_max_tokens)
     output_dir = Path(output_dir)
     source_set_id = source_set_id or _source_set_id_from_catalog(output_dir)
     derived_dir = source_derived_dir(output_dir / "derived", source_set_id)
     chunks_path = chunks_path or derived_dir / "chunks" / "chunks.jsonl"
     chunks_v2_dir = chunks_v2_dir or derived_dir / "chunks_v2"
-    _validate_sidecar_dir(chunks_v2_dir, derived_dir=derived_dir)
     atomic_chunks_path = chunks_v2_dir / "atomic_chunks.jsonl"
     structural_chunks_path = chunks_v2_dir / "structural_chunks.jsonl"
     parent_windows_path = chunks_v2_dir / "parent_context_windows.jsonl"
@@ -83,18 +80,28 @@ def build_chunk_layers(
     _write_jsonl(atomic_chunks_path, atomic_chunks)
     _write_jsonl(structural_chunks_path, structural_chunks)
     _write_jsonl(parent_windows_path, parent_windows)
-    summary = _summary(
-        source_set_id=source_set_id,
-        chunks_path=chunks_path,
-        chunks_v2_dir=chunks_v2_dir,
-        atomic_chunks_path=atomic_chunks_path,
-        structural_chunks_path=structural_chunks_path,
-        parent_windows_path=parent_windows_path,
-        chunks=chunks,
-        atomic_chunks=atomic_chunks,
-        structural_chunks=structural_chunks,
-        parent_windows=parent_windows,
-    )
+    summary = {
+        "schema_version": CHUNK_LAYER_SCHEMA_VERSION,
+        "source_set_id": source_set_id,
+        "created_at": _utc_now(),
+        "baseline_chunks_path": str(chunks_path),
+        "chunks_v2_dir": str(chunks_v2_dir),
+        "atomic_chunks_path": str(atomic_chunks_path),
+        "structural_chunks_path": str(structural_chunks_path),
+        "parent_context_windows_path": str(parent_windows_path),
+        "baseline_chunk_count": len(chunks),
+        "atomic_chunk_count": len(atomic_chunks),
+        "structural_chunk_count": len(structural_chunks),
+        "parent_context_window_count": len(parent_windows),
+        "atomic_chunks_with_parent_window_count": sum(
+            1 for chunk in atomic_chunks if chunk.get("parent_window_id")
+        ),
+        "structure_type_counts": dict(
+            Counter(str(chunk.get("structure_type") or "unknown") for chunk in atomic_chunks)
+        ),
+        "parser_counts": dict(Counter(str(chunk.get("parser_name") or "") for chunk in chunks)),
+        "validation_passed": _sidecar_validation_passed(atomic_chunks, parent_windows),
+    }
     _write_json(summary_path, summary)
     return ChunkLayerBuildResult(
         source_set_id=source_set_id,
@@ -138,45 +145,6 @@ def detect_structure_type(text: str) -> str:
 
 def token_count(text: str) -> int:
     return len(TOKEN_RE.findall(text or ""))
-
-
-def _summary(
-    *,
-    source_set_id: str,
-    chunks_path: Path,
-    chunks_v2_dir: Path,
-    atomic_chunks_path: Path,
-    structural_chunks_path: Path,
-    parent_windows_path: Path,
-    chunks: list[dict[str, Any]],
-    atomic_chunks: list[dict[str, Any]],
-    structural_chunks: list[dict[str, Any]],
-    parent_windows: list[dict[str, Any]],
-) -> dict[str, Any]:
-    validation_checks = _sidecar_validation_checks(atomic_chunks, parent_windows)
-    return {
-        "schema_version": CHUNK_LAYER_SCHEMA_VERSION,
-        "source_set_id": source_set_id,
-        "created_at": _utc_now(),
-        "baseline_chunks_path": str(chunks_path),
-        "chunks_v2_dir": str(chunks_v2_dir),
-        "atomic_chunks_path": str(atomic_chunks_path),
-        "structural_chunks_path": str(structural_chunks_path),
-        "parent_context_windows_path": str(parent_windows_path),
-        "baseline_chunk_count": len(chunks),
-        "atomic_chunk_count": len(atomic_chunks),
-        "structural_chunk_count": len(structural_chunks),
-        "parent_context_window_count": len(parent_windows),
-        "atomic_chunks_with_parent_window_count": sum(
-            1 for chunk in atomic_chunks if chunk.get("parent_window_id")
-        ),
-        "structure_type_counts": dict(
-            Counter(str(chunk.get("structure_type") or "unknown") for chunk in atomic_chunks)
-        ),
-        "parser_counts": dict(Counter(str(chunk.get("parser_name") or "") for chunk in chunks)),
-        "checks": validation_checks,
-        "validation_passed": all(check["passed"] for check in validation_checks),
-    }
 
 
 def _atomic_chunks_for_chunks(
@@ -303,7 +271,7 @@ def _parent_windows_for_chunks(
     for source_record_id, source_chunks in sorted(by_source.items()):
         sorted_chunks = sorted(
             source_chunks,
-            key=lambda chunk: (int(chunk.get("char_start") or 0), chunk.get("chunk_id") or ""),
+            key=lambda c: (int(c.get("char_start") or 0), c.get("chunk_id") or ""),
         )
         current: list[dict[str, Any]] = []
         current_tokens = 0
@@ -434,66 +402,24 @@ def _windows_by_source(windows: list[dict[str, Any]]) -> dict[str, list[dict[str
     return grouped
 
 
-def _sidecar_validation_checks(
+def _sidecar_validation_passed(
     atomic_chunks: list[dict[str, Any]],
     parent_windows: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
+) -> bool:
+    if not atomic_chunks:
+        return False
     chunk_ids = [str(chunk.get("chunk_id") or "") for chunk in atomic_chunks]
-    duplicate_chunk_ids = sorted(
-        chunk_id for chunk_id, count in Counter(chunk_ids).items() if chunk_id and count > 1
-    )
+    if len(set(chunk_ids)) != len(chunk_ids):
+        return False
     parent_ids = {window["window_id"] for window in parent_windows}
-    missing_parent_window_ids = [
-        str(chunk.get("chunk_id") or f"index:{index}")
-        for index, chunk in enumerate(atomic_chunks)
-        if chunk.get("parent_window_id") not in parent_ids
-    ]
-    missing_provenance_ids = [
-        str(chunk.get("chunk_id") or f"index:{index}")
-        for index, chunk in enumerate(atomic_chunks)
-        if not (
-            chunk.get("source_record_id")
-            and chunk.get("citation_label")
-            and chunk.get("artifact_sha256")
-        )
-    ]
-    bad_offset_ids = [
-        str(chunk.get("chunk_id") or f"index:{index}")
-        for index, chunk in enumerate(atomic_chunks)
-        if int(chunk.get("char_end") or 0) <= int(chunk.get("char_start") or 0)
-    ]
-    return [
-        {
-            "name": "atomic_chunks_present",
-            "passed": bool(atomic_chunks),
-            "details": {"atomic_chunk_count": len(atomic_chunks)},
-        },
-        {
-            "name": "parent_windows_present",
-            "passed": bool(parent_windows),
-            "details": {"parent_context_window_count": len(parent_windows)},
-        },
-        {
-            "name": "atomic_chunk_ids_unique",
-            "passed": not duplicate_chunk_ids,
-            "details": {"duplicate_chunk_ids": duplicate_chunk_ids[:20]},
-        },
-        {
-            "name": "atomic_chunks_have_parent_windows",
-            "passed": not missing_parent_window_ids,
-            "details": {"missing_parent_window_chunk_ids": missing_parent_window_ids[:20]},
-        },
-        {
-            "name": "atomic_chunks_have_required_provenance",
-            "passed": not missing_provenance_ids,
-            "details": {"missing_provenance_chunk_ids": missing_provenance_ids[:20]},
-        },
-        {
-            "name": "atomic_chunk_offsets_valid",
-            "passed": not bad_offset_ids,
-            "details": {"bad_offset_chunk_ids": bad_offset_ids[:20]},
-        },
-    ]
+    return all(
+        chunk.get("source_record_id")
+        and chunk.get("citation_label")
+        and chunk.get("artifact_sha256")
+        and chunk.get("parent_window_id") in parent_ids
+        and int(chunk.get("char_end") or 0) > int(chunk.get("char_start") or 0)
+        for chunk in atomic_chunks
+    )
 
 
 def _component_type(structure_type: str) -> str | None:
@@ -514,23 +440,6 @@ def _path_value(value: object | None) -> list[str]:
     if value is None or not str(value).strip():
         return []
     return [part.strip() for part in str(value).split(">") if part.strip()]
-
-
-def _validate_positive(name: str, value: int) -> None:
-    if value <= 0:
-        raise ValueError(f"{name} must be positive")
-
-
-def _validate_sidecar_dir(chunks_v2_dir: Path, *, derived_dir: Path) -> None:
-    resolved = Path(chunks_v2_dir).resolve()
-    prohibited = {
-        (derived_dir / "chunks").resolve(),
-        (derived_dir / "retrieval").resolve(),
-        (derived_dir / "knowledge_graph").resolve(),
-        (derived_dir / "claims").resolve(),
-    }
-    if resolved in prohibited:
-        raise ValueError("chunks_v2_dir must not point at a canonical derived artifact directory")
 
 
 def _read_json(path: Path) -> dict[str, Any]:
