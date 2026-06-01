@@ -337,6 +337,7 @@ class ClaimExtractionTests(unittest.TestCase):
                 rule_pack_path=rule_pack_path,
             )
             _write_upstream_evaluation_phase_outputs(output_dir)
+            _write_extraction_fidelity_phase_outputs(output_dir)
             _write_downstream_direct_eval_phase_outputs(output_dir, source_set_id)
 
             result = run_phase_aligned_eval(output_dir=output_dir, source_set_id=source_set_id)
@@ -501,6 +502,31 @@ def _write_upstream_evaluation_phase_outputs(output_dir: Path) -> None:
                     {"lane_id": "extraction", "status": "direct_eval_present"},
                 ],
                 "failed_case_ids": [],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _write_extraction_fidelity_phase_outputs(output_dir: Path) -> None:
+    path = (
+        output_dir
+        / "evaluations"
+        / "extraction_fidelity"
+        / "extraction_fidelity_eval_results.json"
+    )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "extraction-fidelity-eval-results-v0",
+                "passed": True,
+                "required_category_count": 12,
+                "case_count": 24,
+                "matched_case_count": 24,
+                "failed_case_ids": [],
+                "contract_checks": [],
             },
             sort_keys=True,
         ),

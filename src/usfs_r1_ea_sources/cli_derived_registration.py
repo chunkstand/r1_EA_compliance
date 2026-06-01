@@ -534,6 +534,7 @@ def build_derived_command_specs(
                 _output_dir_arg(),
                 _arg("--source-set-id"),
                 _arg("--claims-path", type=Path),
+                _arg("--links-dir", type=Path),
                 _arg("--rule-pack", default=defaults.rule_pack_path, type=Path),
                 _arg("--top-k", type=int, default=5),
                 _arg("--allow-partial-claims", action="store_true"),

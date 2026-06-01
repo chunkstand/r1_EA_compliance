@@ -293,11 +293,16 @@ def test_rule_claim_link_parser_accepts_allow_partial_claims() -> None:
             "source_library",
             "--source-set-id",
             "source-set-4fb59e9eb43045cb",
+            "--links-dir",
+            "source_library/derived/source-set-4fb59e9eb43045cb/rule_claim_links_sidecar/unit/0.1.0",
             "--allow-partial-claims",
         ]
     )
 
     assert args.command == "rule-claim-link"
+    assert args.links_dir == Path(
+        "source_library/derived/source-set-4fb59e9eb43045cb/rule_claim_links_sidecar/unit/0.1.0"
+    )
     assert args.allow_partial_claims is True
 
 
@@ -373,6 +378,8 @@ def test_rule_claim_link_handler_propagates_allow_partial_claims(monkeypatch) ->
             "source_library",
             "--source-set-id",
             "source-set-1",
+            "--links-dir",
+            "rule-claim-sidecar",
             "--allow-partial-claims",
         ]
     )
@@ -382,6 +389,7 @@ def test_rule_claim_link_handler_propagates_allow_partial_claims(monkeypatch) ->
     assert result == 0
     assert captured["output_dir"] == Path("source_library")
     assert captured["source_set_id"] == "source-set-1"
+    assert captured["links_dir"] == Path("rule-claim-sidecar")
     assert captured["allow_partial_claims"] is True
 
 

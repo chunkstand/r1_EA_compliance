@@ -418,9 +418,14 @@ def _output_dir_from_claims_path(claims_path: Path, *, source_set_id: str) -> Pa
     claims_dir = claims_path.parent
     source_dir = claims_dir.parent
     derived_dir = source_dir.parent
-    if claims_dir.name != "claims" or source_dir.name != source_set_id or derived_dir.name != "derived":
+    if (
+        claims_dir.name not in {"claims", "claims_sidecar"}
+        or source_dir.name != source_set_id
+        or derived_dir.name != "derived"
+    ):
         raise ValueError(
-            "Claims path must be under source_library/derived/<source_set_id>/claims/."
+            "Claims path must be under source_library/derived/<source_set_id>/claims/ "
+            "or source_library/derived/<source_set_id>/claims_sidecar/."
         )
     return derived_dir.parent
 

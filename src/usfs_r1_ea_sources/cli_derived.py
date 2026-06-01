@@ -709,6 +709,7 @@ def _run_rule_claim_link(args: argparse.Namespace):
         output_dir=args.output_dir,
         source_set_id=args.source_set_id,
         claims_path=args.claims_path,
+        links_dir=args.links_dir,
         rule_pack_path=args.rule_pack,
         top_k=args.top_k,
         allow_partial_claims=args.allow_partial_claims,

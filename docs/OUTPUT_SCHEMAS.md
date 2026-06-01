@@ -5333,6 +5333,14 @@ Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrap
 
 Path: `source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/`
 
+Sidecar preview path: `rule-claim-link --links-dir <path>` can write the same artifacts to an
+isolated directory such as
+`source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/`. Use
+`--claims-path source_library/derived/<source_set_id>/claims_sidecar/claims.jsonl` when the preview
+consumes sidecar claim artifacts. Without those arguments, `rule-claim-link` keeps the canonical
+`claims/` and `rule_claim_links/` paths. The command rejects custom `--links-dir` values that point
+at or inside the canonical rule-claim output directory for the requested source set and rule pack.
+
 The `rule-claim-link` command writes:
 
 - `rule_claim_links.jsonl`
@@ -5347,6 +5355,9 @@ The `rule-claim-link` command writes:
 - the claim readiness artifacts beside that file
 - a versioned compliance rule pack, defaulting to
   `config/compliance_rule_pack_nepa_ea_v0.json`
+
+For sidecar previews, the source-claim path above is replaced by the explicit `--claims-path`.
+Claim readiness is still revalidated before link building.
 
 By default the command requires reviewer-ready claim artifacts. With `--allow-partial-claims`, it
 can reuse current claim artifacts when the only remaining upstream blockers are inherited
@@ -5392,8 +5403,9 @@ claim match. A rule is covered only when it has at least one validated link or o
 - SQLite counts match JSONL outputs
 
 `summary.json` includes source set, rule-pack identity, top-k, `allow_partial_claims`,
-`claims_validation_passed`, `claims_reviewer_ready`, rule count, claim count, link count, gap
-count, linked-rule count, gap-rule count, rules without links, links per rule, claim-type counts,
+`claims_validation_passed`, `claims_reviewer_ready`, canonical link directory, actual link
+directory, whether the output is canonical, rule count, claim count, link count, gap count,
+linked-rule count, gap-rule count, rules without links, links per rule, claim-type counts,
 source-record count, validation status, and `reviewer_ready`.
 
 The default eval file `config/rule_claim_link_eval_seed.json` is a `rule-claim-link-eval-v1`
@@ -5408,8 +5420,10 @@ contract with:
 Legacy bare JSON case lists are still accepted for ad hoc eval runs and are wrapped as a
 `legacy-rule-claim-link-eval-list-v0` contract at runtime.
 
-`rule-claim-eval` revalidates current rule-claim link artifacts before scoring cases. It writes
-`rule_claim_link_eval_results.json` by default beside the link file and records:
+`rule-claim-eval` revalidates current rule-claim link artifacts before scoring cases. For sidecar
+link paths, it reads the sibling `summary.json` to recover source-set and source-library root
+identity before revalidation. It writes `rule_claim_link_eval_results.json` by default beside the
+link file and records:
 
 - eval identity and paths, including `eval_id`, eval file path, output path, and top-k
 - case count, passed count, failed count, hard-negative case count, and multi-source case count

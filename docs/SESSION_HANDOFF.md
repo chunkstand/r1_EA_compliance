@@ -30,6 +30,15 @@ history below.
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active
   research, not a route change
 - latest resolved extraction/chunking/retrieval accuracy slice:
+  `docs/SIDECAR_RULE_CLAIM_LINK_READINESS_MILESTONE_PLAN.md` is resolved
+  locally on branch `codex/extraction-chunking-retrieval-accuracy`. It adds
+  `rule-claim-link --links-dir`, so sidecar claims can write isolated
+  `rule_claim_links_sidecar/<rule_pack_id>/<version>/` artifacts without
+  mutating canonical `rule_claim_links/`. Custom link outputs are rejected
+  when they point at or inside canonical rule-claim output directories, and
+  `rule-claim-eval` now uses sidecar link summaries to revalidate and score
+  sidecar link artifacts.
+- predecessor extraction/chunking/retrieval accuracy slice:
   `docs/SIDECAR_GRAPH_CLAIM_CANONICAL_ADOPTION_MILESTONE_PLAN.md` is resolved
   locally on branch `codex/extraction-chunking-retrieval-accuracy`. It adds
   `chunk-sidecar-consumer-promote`, an opt-in command that reads a passed
@@ -37,12 +46,10 @@ history below.
   `evidence_graph/` and `claims/` outputs from sidecar chunks and sidecar
   retrieval metadata. Dry-run is default; canonical mutation requires
   `--apply`, and replacing existing canonical graph/claim directories requires
-  `--replace-canonical`. Gap-close hardening now records failed promotion
-  results for missing or unreadable consumer-eval artifacts, missing sidecar
-  path declarations, sidecar file/directory kind mismatches, and sidecar inputs
-  that point at canonical consumer directories. Gap-close smoke verified the
-  missing-eval CLI path exits nonzero while writing the failed promotion result
-  artifact with the expected failed checks.
+  `--replace-canonical`. Gap-close hardening records failed promotion results
+  for missing or unreadable consumer-eval artifacts, missing sidecar path
+  declarations, sidecar file/directory kind mismatches, and sidecar inputs that
+  point at canonical consumer directories.
 - predecessor extraction/chunking/retrieval accuracy slice:
   `docs/SIDECAR_GRAPH_CLAIM_PROMOTION_EVAL_MILESTONE_PLAN.md` is resolved
   locally on branch `codex/extraction-chunking-retrieval-accuracy`. It adds
@@ -51,10 +58,10 @@ history below.
   graph/claim summaries, and refuses sidecar chunk, retrieval, result, graph,
   or claim paths that point at or inside canonical derived output directories.
 - active extraction/chunking/retrieval accuracy slice:
-  none. Future sidecar adoption for rule-link, compliance review, phase-eval,
-  reviewer packages, or knowledge-graph artifacts should open new bounded
-  packets with direct eval thresholds over the adopted sidecar-backed graph and
-  claim layer plus consumer-specific contract updates.
+  none. Future sidecar adoption for compliance review, phase-eval, reviewer
+  packages, or knowledge-graph artifacts should open new bounded packets with
+  direct eval thresholds over the adopted sidecar-backed graph, claim, and
+  rule-link layer plus consumer-specific contract updates.
 - latest resolved source-set graph-KB slice:
   operational graph-KB query surface after f70 canonical semantic graph
   direct-eval strengthening and Region 1 graph-KB rebind/regeneration.

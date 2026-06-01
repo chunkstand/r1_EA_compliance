@@ -15,6 +15,39 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Sidecar Rule Claim Link Readiness Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the sixth extraction/chunking/retrieval accuracy packet is closed locally on
+  isolated branch `codex/extraction-chunking-retrieval-accuracy`.
+  `rule-claim-link` now accepts `--links-dir` for isolated sidecar rule-link
+  previews, so `claims_sidecar/claims.jsonl` can feed noncanonical
+  `rule_claim_links_sidecar/<rule_pack_id>/<version>/` artifacts.
+- contract effect:
+  canonical `rule_claim_links/` remains the default. Custom link outputs are
+  rejected when they point at or inside the canonical rule-claim output
+  directory for the requested source set and rule pack. Sidecar link summaries
+  record both the canonical and actual link directories plus whether the output
+  is canonical. `rule-claim-eval` can now revalidate and score sidecar links by
+  reading the sibling sidecar summary.
+- architecture closeout:
+  `src/usfs_r1_ea_sources/rule_claim_binding.py` owns sidecar link output
+  selection and canonical-dir refusal; `rule_claim_binding_eval.py` owns
+  sidecar eval path resolution; `claim_extraction_eval.py` keeps sidecar claim
+  eval inference limited to source-set-owned `claims_sidecar/` paths. The
+  generated artifact contract now lists sidecar rule-claim link artifacts.
+- smoke:
+  fixture-backed CLI smoke under `/tmp/usfs-r1-sidecar-rule-claim.1d_jiwfh/`
+  wrote sidecar claims, sidecar rule-claim links, and sidecar rule-claim eval
+  results with `EVAL_PASSED=True` and `CASES=1` without creating canonical
+  rule-claim outputs.
+- boundary:
+  no ignored production `source_library/` outputs were mutated. Compliance,
+  phase-eval, reviewer package, and knowledge-graph sidecar adoption remain
+  future bounded packets.
+
 ## Sidecar Graph Claim Canonical Adoption Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

@@ -649,6 +649,14 @@ paths = [
   "source_library/derived/<source_set_id>/claims_sidecar/claim_graph.sqlite",
   "source_library/derived/<source_set_id>/claims_sidecar/claim_validation.json",
   "source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_links.jsonl",
+  "source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_link_validation.json",
+  "source_library/derived/<source_set_id>/rule_claim_links/<rule_pack_id>/<version>/rule_claim_link_eval_results.json",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_links.jsonl",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_link_gaps.jsonl",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_links.sqlite",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_link_validation.json",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/summary.json",
+  "source_library/derived/<source_set_id>/rule_claim_links_sidecar/<rule_pack_id>/<version>/rule_claim_link_eval_results.json",
 ]
 
 [[artifacts]]

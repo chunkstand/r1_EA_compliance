@@ -50,7 +50,7 @@
       "files": [
         {
           "path": "src/usfs_r1_ea_sources/claim_extraction_eval.py",
-          "line_count": 959
+          "line_count": 964
         }
       ]
     },
@@ -162,7 +162,7 @@
       "files": [
         {
           "path": "src/usfs_r1_ea_sources/rule_claim_binding_eval.py",
-          "line_count": 852
+          "line_count": 855
         }
       ]
     },
