@@ -15,6 +15,26 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Forest-Plan Profile Context Test Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next test-owner oversized reduction slice is closed locally.
+  `tests/test_forest_plan_profiles.py` keeps default/profile contract,
+  readiness coverage, and validation tests at `615` lines. The new
+  `tests/test_forest_plan_profile_contexts.py` owns forest-specific context
+  profile assertions at `256` lines.
+- architecture effect:
+  the architecture probe reports `542` code files, `8` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `5` source owners and `3` test
+  owners.
+- boundary:
+  this is a behavior-preserving test-owner split. It does not change forest
+  plan profile loading, resolver data, generated artifact paths, or local
+  corpus state.
+
 ## Decision-Support Input Validation Source Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

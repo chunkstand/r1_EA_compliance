@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "test-forest-plan-profiles-owner",
-      "owner_kind": "test",
-      "follow_on_priority": 9,
-      "required_tests": [
-        "tests/test_forest_plan_profiles.py"
-      ],
-      "files": [
-        {
-          "path": "tests/test_forest_plan_profiles.py",
-          "line_count": 860
-        }
-      ]
-    },
-    {
       "name": "source-extract-runtime-owner",
       "owner_kind": "source",
       "follow_on_priority": 10,
