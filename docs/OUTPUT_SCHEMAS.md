@@ -4575,9 +4575,11 @@ PYTHONPATH=src python -m usfs_r1_ea_sources eval-context-graph-eval \
 ```
 
 `eval-context-graph-build` reads only the local
-`system-eval-trace-store-v1` SQLite store and writes a generated graph JSON
-artifact. It does not mutate catalog, extraction, retrieval, review,
-compliance, or promotion artifacts.
+`system-eval-trace-store-v1` SQLite store and optional explicit local event/log
+files, then writes a generated graph JSON artifact. It does not mutate catalog,
+extraction, retrieval, review, compliance, or promotion artifacts.
+Use repeated `--event-log-path <json-or-jsonl>` arguments to attach standalone
+local event logs to the same graph.
 
 Graph schema version: `eval-context-graph-v1`
 
@@ -4602,17 +4604,18 @@ Required graph fields:
 Each node has `id`, `kind`, `stable_ref`, `properties`, and `source_hash`.
 The first materialized node kinds are `artifact`, `eval_case`, `eval_result`,
 `eval_run`, `review`, `score`, `source_set`, `span`, `trace`, `span_event`
-for event-like trace artifact rows, and `failure_class` when stored failure
-reasons exist. `log_event` is supported as a conditional node kind for future
-log artifacts. Reserved future node kinds include `state_checkpoint`,
-`tool_invocation`, `model_invocation`, `prompt_version`, `dataset_example`,
-and `human_label`.
+for event-like trace artifact rows, `event_source` for explicitly supplied
+local event/log files, `log_event` for log-like rows, and `failure_class` when
+stored failure reasons exist. Reserved future node kinds include
+`state_checkpoint`, `tool_invocation`, `model_invocation`, `prompt_version`,
+`dataset_example`, and `human_label`.
 
 `event_sources` records one source summary per event-like JSON/JSONL artifact
-read through a trace span. Each summary has schema version
-`eval-context-graph-event-source-v1` and records `artifact_ref`, `path`,
-`row_count`, `materialized_event_count`, `parse_error_count`, and
-`event_kinds`.
+read through a trace span or explicit `--event-log-path`. Each summary has
+schema version `eval-context-graph-event-source-v1` and records `artifact_ref`,
+`path`, `row_count`, `materialized_event_count`, `parse_error_count`, and
+`event_kinds`. Explicit event/log files also create an `event_source` node with
+the redaction policy `payload_hash_and_keys_only`.
 
 Each edge has `id`, `kind`, `from_node_id`, `to_node_id`, and `properties`.
 The first materialized edge kinds are `CONTAINS`, `DERIVED_FROM`,
@@ -4633,6 +4636,7 @@ Required build summary fields:
 - `row_counts`
 - `node_counts`
 - `edge_counts`
+- `event_log_path_count`
 - `event_source_count`
 - `event_node_count`
 - `node_count`
@@ -4643,8 +4647,9 @@ Required build summary fields:
 `passed=false` when the store is missing, required rows are empty, required
 node or edge kinds are absent, an edge points to a missing node, trace/result/
 score paths are missing, artifact provenance is absent, source knowledge-graph
-node kinds appear, event nodes are not emitted by spans, event source rows are
-not materialized cleanly, or the local source-of-record policy is weakened.
+node kinds appear, event nodes are not connected by incoming `EMITTED` edges,
+event source rows are not materialized cleanly, or the local source-of-record
+policy is weakened.
 
 Graph eval summary schema version: `eval-context-graph-eval-summary-v1`
 
@@ -4666,9 +4671,10 @@ Required graph eval summary fields:
 The graph eval runs directly over the generated graph artifact. Its first
 checks ensure required node and edge kinds are present, all edges resolve,
 every eval result has a trace-to-result edge and result-to-score edge, artifact
-nodes keep refs or hashes, event nodes are emitted by spans, event-like source
-artifact rows are materialized without parse errors, source knowledge-graph
-nodes remain excluded, and the graph policy remains local-only.
+nodes keep refs or hashes, event nodes are emitted by spans or explicit event
+sources, event-like source artifact rows are materialized without parse errors,
+source knowledge-graph nodes remain excluded, and the graph policy remains
+local-only.
 
 ## First-Class Eval Trace Case Promotion
 

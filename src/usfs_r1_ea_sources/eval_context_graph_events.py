@@ -31,9 +31,13 @@ def context_graph_events_for_artifact(
     artifact_ref: str | None,
     *,
     repo_root: Path,
+    require_event_marker: bool = True,
 ) -> ContextGraphEventBatch:
     path = _artifact_path(artifact_ref, repo_root)
-    if path is None or not _looks_like_event_artifact(path):
+    if path is None or not _looks_like_event_artifact(
+        path,
+        require_event_marker=require_event_marker,
+    ):
         return ContextGraphEventBatch(events=[], summary=None)
     rows, parse_error_count = _read_event_rows(path)
     events = [
@@ -148,9 +152,11 @@ def _artifact_path(artifact_ref: str | None, repo_root: Path) -> Path | None:
     return path if path.is_absolute() else repo_root / path
 
 
-def _looks_like_event_artifact(path: Path) -> bool:
+def _looks_like_event_artifact(path: Path, *, require_event_marker: bool = True) -> bool:
     if path.suffix not in {".json", ".jsonl"}:
         return False
+    if not require_event_marker:
+        return True
     tokens = {
         token
         for token in path.stem.lower().replace("-", "_").split("_")

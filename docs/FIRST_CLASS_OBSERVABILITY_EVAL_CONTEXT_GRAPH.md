@@ -3,7 +3,8 @@
 Date: 2026-06-01
 
 Status: Milestone 0 contract, first generated graph builder and graph-eval
-commands, and Milestone 1 trace-event materialization are implemented locally.
+commands, Milestone 1 trace-event materialization, and Milestone 2 explicit
+event-log capture are implemented locally.
 
 Owner surfaces:
 
@@ -52,7 +53,9 @@ The builder materializes these node kinds:
 - `score`
 - `source_set`
 - `span`
+- `event_source` for explicitly supplied local event/log artifacts
 - `span_event` for rows from event-like trace artifacts
+- `log_event` for rows from explicitly supplied local log/event artifacts
 - `trace`
 - `failure_class` when a stored failure reason exists
 
@@ -60,7 +63,7 @@ The first edge set includes:
 
 - `CONTAINS`
 - `DERIVED_FROM`
-- `EMITTED` from spans to materialized event rows
+- `EMITTED` from spans or explicit event sources to materialized event rows
 - `EVALUATED_BY`
 - `FAILED_BECAUSE` when a stored failure reason exists
 - `PRODUCED_ARTIFACT`
@@ -68,12 +71,14 @@ The first edge set includes:
 - `TARGETS`
 - `USED_ARTIFACT`
 
-`span_event` and `log_event` are conditional node kinds. They materialize only
-when the store points at event-like JSON/JSONL artifacts such as trace or log
-files. Current trace-event extraction records event ID, event name, timestamp,
-payload hash, payload keys, source-set/review IDs, trace IDs, candidate IDs,
-query type, selected status, and compact counts for diagnostics/results. It
-does not copy raw source text or prompt/body payloads into graph properties.
+`span_event`, `log_event`, and `event_source` are conditional node kinds. Span
+events materialize when the store points at event-like JSON/JSONL artifacts
+such as trace or log files. Explicit log events materialize when
+`eval-context-graph-build` receives one or more `--event-log-path` inputs.
+Current event extraction records event ID, event name, timestamp, payload hash,
+payload keys, source-set/review IDs, trace IDs, candidate IDs, query type,
+selected status, and compact counts for diagnostics/results. It does not copy
+raw source text or prompt/body payloads into graph properties.
 
 Reserved future node kinds include `state_checkpoint`, `tool_invocation`,
 `model_invocation`, `prompt_version`, `dataset_example`, and `human_label`.
@@ -90,7 +95,8 @@ invariants directly. The first graph eval checks:
 - all edges resolve to existing nodes;
 - every eval result has a trace-to-result edge and a result-to-score edge;
 - artifact nodes retain artifact refs or hash provenance;
-- event nodes have incoming `EMITTED` edges from spans;
+- event nodes have incoming `EMITTED` edges from spans or explicit event
+  sources;
 - event-like source artifact rows are materialized without parse errors;
 - source knowledge-graph node kinds are absent;
 - the graph remains local source-of-record and not approved for external export.
@@ -113,6 +119,21 @@ PYTHONPATH=src python -m usfs_r1_ea_sources eval-context-graph-eval \
 
 Both commands are generated-artifact-only. They do not mutate source-library
 catalog, extraction, retrieval, review, compliance, or promotion artifacts.
+
+Standalone local event logs can be attached with repeated `--event-log-path`
+arguments:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-context-graph-build \
+  --sqlite-path source_library/evaluations/eval_trace/system_eval_trace.sqlite \
+  --graph-json-path source_library/evaluations/eval_context_graph/eval_context_graph.json \
+  --summary-path source_library/evaluations/eval_context_graph/eval_context_graph_build_summary.json \
+  --event-log-path source_library/evaluations/operator_events/operator_events.jsonl
+```
+
+Each explicit path is represented by an `event_source` node. Rows from JSONL
+or JSON `events` arrays become `log_event` or `span_event` nodes and must be
+connected by `EMITTED` edges to pass graph eval.
 
 ## Stop Conditions
 

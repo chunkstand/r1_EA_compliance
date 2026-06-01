@@ -38,6 +38,7 @@ def test_committed_context_graph_contract_preserves_eval_trace_boundary() -> Non
     assert "trace" in contract["required_node_kinds"]
     assert "span_event" in contract["conditional_node_kinds"]
     assert "log_event" in contract["conditional_node_kinds"]
+    assert "event_source" in contract["conditional_node_kinds"]
     assert "EMITTED" in contract["conditional_edge_kinds"]
     assert "span_event" not in contract["reserved_node_kinds"]
     assert "log_event" not in contract["reserved_node_kinds"]
@@ -125,7 +126,7 @@ def test_context_graph_eval_passes_on_generated_graph(tmp_path: Path) -> None:
         "trace_result_score_paths_present"
     ]["passed"]
     assert _checks_by_name(summary["validation_checks"])[
-        "event_nodes_emitted_by_spans"
+        "event_nodes_have_emitted_edges"
     ]["passed"]
     assert _checks_by_name(summary["validation_checks"])[
         "event_source_rows_materialized"
@@ -178,8 +179,81 @@ def test_context_graph_eval_fails_when_event_emitted_edge_is_missing(
 
     checks = _checks_by_name(summary["validation_checks"])
     assert summary["passed"] is False
-    assert not checks["event_nodes_emitted_by_spans"]["passed"]
-    assert checks["event_nodes_emitted_by_spans"]["failure_count"] == 2
+    assert not checks["event_nodes_have_emitted_edges"]["passed"]
+    assert checks["event_nodes_have_emitted_edges"]["failure_count"] == 2
+
+
+def test_context_graph_build_materializes_explicit_event_log_paths(
+    tmp_path: Path,
+) -> None:
+    sqlite_path = _write_store(tmp_path)
+    event_log_path = tmp_path / "operator_runtime.jsonl"
+    event_log_path.write_text(
+        "\n".join(
+            json.dumps(row, sort_keys=True)
+            for row in (
+                {
+                    "event_id": "operator-start",
+                    "event_name": "operator.turn.start",
+                    "timestamp": "2026-06-01T00:00:00Z",
+                    "severity": "INFO",
+                    "body": "body is hashed, not copied into graph properties",
+                    "trace_id": "trace:manual",
+                },
+                {
+                    "event_id": "operator-tool",
+                    "event_name": "operator.tool.call",
+                    "timestamp": "2026-06-01T00:00:01Z",
+                    "severity": "INFO",
+                    "tool_name": "eval-context-graph-build",
+                },
+            )
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    graph_path = tmp_path / "eval_context_graph.json"
+
+    summary = run_eval_context_graph_build(
+        sqlite_path=sqlite_path,
+        graph_json_path=graph_path,
+        contract_path=CONTRACT_PATH,
+        repo_root=tmp_path,
+        event_log_paths=[event_log_path],
+    ).summary
+
+    assert summary["passed"] is True
+    assert summary["event_log_path_count"] == 1
+    assert summary["node_counts"]["event_source"] == 1
+    assert summary["node_counts"]["log_event"] == 2
+    assert summary["event_source_count"] == 3
+    assert summary["event_node_count"] == 4
+    assert summary["edge_counts"]["EMITTED"] == 4
+
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    assert graph["source"]["event_log_paths"] == ["operator_runtime.jsonl"]
+    explicit_sources = [
+        source
+        for source in graph["event_sources"]
+        if source["source_kind"] == "explicit_event_log_path"
+    ]
+    assert len(explicit_sources) == 1
+    assert explicit_sources[0]["row_count"] == 2
+    assert explicit_sources[0]["materialized_event_count"] == 2
+    assert explicit_sources[0]["parse_error_count"] == 0
+    assert explicit_sources[0]["event_kinds"] == ["log_event"]
+
+    log_nodes = [node for node in graph["nodes"] if node["kind"] == "log_event"]
+    assert {node["properties"]["event_name"] for node in log_nodes} == {
+        "operator.turn.start",
+        "operator.tool.call",
+    }
+    assert all("body" not in node["properties"] for node in log_nodes)
+    assert any(
+        edge["kind"] == "EMITTED"
+        and edge["properties"]["source_relation"] == "event_source_emitted_event"
+        for edge in graph["edges"]
+    )
 
 
 def test_context_graph_build_reports_missing_store_without_writing_graph(

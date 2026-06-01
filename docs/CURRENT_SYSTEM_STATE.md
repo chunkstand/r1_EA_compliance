@@ -21,31 +21,35 @@ Latest implementation update on 2026-06-01 UTC:
 
 - update:
   the generated observability/eval context graph now includes conditional
-  trace-event materialization. `eval-context-graph-build` reads the local
-  `system_eval_trace.sqlite` store and writes a deterministic graph JSON
-  artifact. `eval-context-graph-eval` runs deterministic graph evals over that
-  artifact.
+  trace-event materialization and explicit local event-log capture.
+  `eval-context-graph-build` reads the local `system_eval_trace.sqlite` store,
+  plus optional repeated `--event-log-path` JSON/JSONL files, and writes a
+  deterministic graph JSON artifact. `eval-context-graph-eval` runs
+  deterministic graph evals over that artifact.
 - contract:
   `config/context_graph_contract_v1.json` owns required node kinds, edge kinds,
   conditional event node/edge kinds, graph policy, reserved future
-  observability nodes, and prohibited source-KG node kinds.
+  observability nodes, explicit `event_source` support, and prohibited
+  source-KG node kinds.
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` owns the route and
   stop conditions.
 - graph boundary:
   the graph is derived from the first-class eval-trace store tables:
   `system_eval_runs`, `system_eval_cases`, `system_eval_case_results`,
   `system_eval_scores`, `trace_runs`, and `trace_spans`. It materializes eval,
-  trace, span, span-event, score, artifact, source-set, review, and
-  failure-class nodes, with edges such as `CONTAINS`, `EMITTED`,
+  trace, span, span-event, log-event, event-source, score, artifact,
+  source-set, review, and failure-class nodes, with edges such as `CONTAINS`,
+  `EMITTED`,
   `EVALUATED_BY`, `SCORED_AS`, `PRODUCED_ARTIFACT`, `USED_ARTIFACT`,
   `DERIVED_FROM`, and `TARGETS`.
 - eval boundary:
   graph evals currently verify required node/edge coverage, edge resolution,
   trace-to-result-to-score paths, artifact provenance, source-KG exclusion, and
   local source-of-record policy. They also verify event nodes have incoming
-  `EMITTED` span edges and event-like source rows materialize without parse
-  errors. They do not yet ratchet phase or promotion gates, infer root causes,
-  export to Neo4j, or capture raw prompt/source body content.
+  `EMITTED` edges from spans or explicit event-source nodes and event-like
+  source rows materialize without parse errors. They do not yet ratchet phase
+  or promotion gates, infer root causes, export to Neo4j, or capture raw
+  prompt/source body content.
 - live smoke:
   building from the current local
   `source_library/evaluations/eval_trace/system_eval_trace.sqlite` store to
@@ -59,6 +63,11 @@ Latest implementation update on 2026-06-01 UTC:
   required node kinds, missing required edge kinds, unresolved edges, missing
   trace-result-score paths, artifact provenance failures, event-emission
   failures, event materialization failures, or prohibited source-KG nodes.
+  A second smoke with
+  `--event-log-path /tmp/usfs-r1-explicit-event-log.jsonl` passed with `5,095`
+  nodes, `5,200` edges, `1` explicit `event_source` node, `2` `log_event`
+  nodes, `4,966` total event nodes, `3` event sources, and `4,966` `EMITTED`
+  edges; graph eval over that artifact also passed.
 
 ## Operational Graph-KB Query Surface Resolved Locally
 

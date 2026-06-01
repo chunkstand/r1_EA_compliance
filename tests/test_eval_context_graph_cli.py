@@ -15,6 +15,10 @@ def test_eval_context_graph_build_parser_accepts_graph_paths() -> None:
             "/tmp/usfs-r1-eval-context-graph.json",
             "--summary-path",
             "/tmp/usfs-r1-eval-context-graph-summary.json",
+            "--event-log-path",
+            "/tmp/usfs-r1-operator-events.jsonl",
+            "--event-log-path",
+            "/tmp/usfs-r1-runtime-events.json",
             "--contract-path",
             "config/context_graph_contract_v1.json",
         ]
@@ -24,6 +28,10 @@ def test_eval_context_graph_build_parser_accepts_graph_paths() -> None:
     assert args.sqlite_path == Path("/tmp/usfs-r1-system-eval-trace.sqlite")
     assert args.graph_json_path == Path("/tmp/usfs-r1-eval-context-graph.json")
     assert args.summary_path == Path("/tmp/usfs-r1-eval-context-graph-summary.json")
+    assert args.event_log_path == [
+        Path("/tmp/usfs-r1-operator-events.jsonl"),
+        Path("/tmp/usfs-r1-runtime-events.json"),
+    ]
     assert args.contract_path == Path("config/context_graph_contract_v1.json")
 
 

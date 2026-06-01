@@ -48,6 +48,7 @@ def run_eval_context_graph_build(
     sqlite_path: Path,
     graph_json_path: Path,
     summary_path: Path | None = None,
+    event_log_paths: list[Path] | None = None,
     contract_path: Path = DEFAULT_CONTEXT_GRAPH_CONTRACT_PATH,
     repo_root: Path = REPO_ROOT,
 ) -> EvalContextGraphBuildResult:
@@ -55,10 +56,19 @@ def run_eval_context_graph_build(
     sqlite_path = _resolve_path(sqlite_path, repo_root)
     graph_json_path = _resolve_path(graph_json_path, repo_root)
     summary_path = _resolve_path(summary_path, repo_root) if summary_path is not None else None
+    resolved_event_log_paths = [
+        _resolve_path(path, repo_root) for path in event_log_paths or []
+    ]
 
     contract = load_eval_context_graph_contract(contract_path, repo_root=repo_root)
     store = _read_store(sqlite_path)
-    graph = _build_graph(store, sqlite_path=sqlite_path, contract=contract, repo_root=repo_root)
+    graph = _build_graph(
+        store,
+        sqlite_path=sqlite_path,
+        event_log_paths=resolved_event_log_paths,
+        contract=contract,
+        repo_root=repo_root,
+    )
     validation_checks = store_checks(store) + graph_checks(
         graph,
         contract,
@@ -84,6 +94,7 @@ def run_eval_context_graph_build(
         "row_counts": graph["source"]["row_counts"],
         "node_counts": graph["node_counts"],
         "edge_counts": graph["edge_counts"],
+        "event_log_path_count": len(resolved_event_log_paths),
         "event_source_count": len(graph.get("event_sources", [])),
         "event_node_count": _event_node_count(graph),
         "node_count": len(graph["nodes"]),
@@ -181,6 +192,7 @@ def _build_graph(
     store: dict[str, Any],
     *,
     sqlite_path: Path,
+    event_log_paths: list[Path],
     contract: dict[str, Any],
     repo_root: Path,
 ) -> dict[str, Any]:
@@ -451,7 +463,10 @@ def _build_graph(
                 )
             _add_event_nodes(
                 artifact_ref=_string(span.get("source_ref_id")),
-                span_node=span_node,
+                emitter_node=span_node,
+                source_kind="span_source_ref",
+                source_relation="span_emitted_event",
+                require_event_marker=True,
                 add_node=add_node,
                 add_edge=add_edge,
                 event_source_summaries=event_source_summaries,
@@ -465,6 +480,24 @@ def _build_graph(
             source_relation="span_failure",
         )
 
+    for event_log_path in event_log_paths:
+        event_source_node = _add_event_source_node(
+            path=event_log_path,
+            add_node=add_node,
+            repo_root=repo_root,
+        )
+        _add_event_nodes(
+            artifact_ref=_display_path(event_log_path, repo_root),
+            emitter_node=event_source_node,
+            source_kind="explicit_event_log_path",
+            source_relation="event_source_emitted_event",
+            require_event_marker=False,
+            add_node=add_node,
+            add_edge=add_edge,
+            event_source_summaries=event_source_summaries,
+            repo_root=repo_root,
+        )
+
     sorted_nodes = sorted(nodes.values(), key=lambda node: node["id"])
     sorted_edges = sorted(edges.values(), key=lambda edge: edge["id"])
     return {
@@ -475,6 +508,9 @@ def _build_graph(
         "source": {
             "sqlite_path": _display_path(sqlite_path, repo_root),
             "sqlite_sha256": sha256_file(sqlite_path) if sqlite_path.exists() else None,
+            "event_log_paths": [
+                _display_path(path, repo_root) for path in event_log_paths
+            ],
             "row_counts": {table: len(rows) for table, rows in tables.items()},
             "missing_tables": store["missing_tables"],
             "read_errors": store["read_errors"],
@@ -540,15 +576,25 @@ def _add_failure_edge(
 def _add_event_nodes(
     *,
     artifact_ref: str | None,
-    span_node: str,
+    emitter_node: str,
+    source_kind: str,
+    source_relation: str,
+    require_event_marker: bool,
     add_node: Any,
     add_edge: Any,
     event_source_summaries: dict[str, dict[str, Any]],
     repo_root: Path,
 ) -> None:
-    batch = context_graph_events_for_artifact(artifact_ref, repo_root=repo_root)
+    batch = context_graph_events_for_artifact(
+        artifact_ref,
+        repo_root=repo_root,
+        require_event_marker=require_event_marker,
+    )
     if batch.summary is not None:
-        event_source_summaries[str(batch.summary["artifact_ref"])] = batch.summary
+        event_source_summaries[str(batch.summary["artifact_ref"])] = {
+            **batch.summary,
+            "source_kind": source_kind,
+        }
     for event in batch.events:
         event_node = add_node(
             kind=event["kind"],
@@ -558,14 +604,34 @@ def _add_event_nodes(
         )
         add_edge(
             kind="EMITTED",
-            from_node_id=span_node,
+            from_node_id=emitter_node,
             to_node_id=event_node,
             properties={
-                "source_relation": "span_emitted_event",
+                "source_relation": source_relation,
                 "artifact_ref": artifact_ref,
                 "line_number": event["properties"].get("line_number"),
             },
         )
+
+
+def _add_event_source_node(
+    *,
+    path: Path,
+    add_node: Any,
+    repo_root: Path,
+) -> str:
+    artifact_ref = _display_path(path, repo_root)
+    return add_node(
+        kind="event_source",
+        stable_ref=f"event_source:{artifact_ref}",
+        properties={
+            "artifact_ref": artifact_ref,
+            "path": artifact_ref,
+            "source_kind": "explicit_event_log_path",
+            "redaction_policy": "payload_hash_and_keys_only",
+        },
+        source_hash=sha256_file(path) if path.exists() else None,
+    )
 
 
 def _read_graph(graph_json_path: Path) -> dict[str, Any]:

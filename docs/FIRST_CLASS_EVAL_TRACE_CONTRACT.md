@@ -212,6 +212,12 @@ conditional `span_event` or `log_event` nodes and links them from the owning
 span with `EMITTED` edges. Event properties keep compact provenance and payload
 hashes rather than raw source text or prompt/body payloads.
 
+The third context-graph slice accepts repeated `--event-log-path` inputs for
+standalone local JSON/JSONL event logs. Each explicit file gets an
+`event_source` node; rows become conditional `log_event` or `span_event` nodes
+linked by `EMITTED` edges. Explicit event logs use the same payload-hash and
+payload-key redaction policy as trace-derived event rows.
+
 `eval-context-graph-eval` runs deterministic graph evals over that artifact:
 required node/edge kinds, edge resolution, trace-to-result-to-score paths,
 artifact provenance, event-emission integrity, event-source row materialization,

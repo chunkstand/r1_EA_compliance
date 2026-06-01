@@ -80,7 +80,7 @@ They are intentionally not duplicated here.
 - `config/forest_plan_component_inventory_seed.json`
 - `config/forest_plan_component_eval_coverage_v1.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
-- `config/project_sow_ea_handoff_rules_v1.json`
+- `config/project_sow_ea_handoff_rules_v1.json`; `config/context_graph_contract_v1.json`
 - `docs/schemas/document_request_v1.schema.json`
 - `docs/schemas/project_sow_intake_v0.schema.json`
 

@@ -98,7 +98,7 @@ def graph_checks(
             "failures": artifact_failures[:20],
         },
         {
-            "name": "event_nodes_emitted_by_spans",
+            "name": "event_nodes_have_emitted_edges",
             "passed": not event_failures,
             "failure_count": len(event_failures),
             "failures": event_failures[:20],
