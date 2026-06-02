@@ -15,6 +15,25 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Catalog Fixture-Backed Test Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the final test-owner oversized reduction slice is closed locally.
+  `tests/test_catalog.py` now keeps catalog behavior assertions at `647`
+  lines, and shared download/batch/catalog role fixture helpers live in
+  `tests/support/catalog_fixtures.py` at `187` lines.
+- architecture effect:
+  the architecture probe reports `547` code files, `2` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `2` source owners and `0` test
+  owners.
+- boundary:
+  this is a fixture-backed test-owner split. It does not change catalog build
+  behavior, generated artifact paths, source-set manifests, SQLite outputs, or
+  local corpus state.
+
 ## Phase Direct-Eval Forest-Plan Source Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

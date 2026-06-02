@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "test-catalog-owner",
-      "owner_kind": "test",
-      "follow_on_priority": 15,
-      "required_tests": [
-        "tests/test_catalog.py"
-      ],
-      "files": [
-        {
-          "path": "tests/test_catalog.py",
-          "line_count": 820
-        }
-      ]
-    },
-    {
       "name": "source-applicability-candidate-assembly-owner",
       "owner_kind": "source",
       "follow_on_priority": 16,
