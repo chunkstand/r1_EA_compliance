@@ -13,21 +13,6 @@
   },
   "families": [
     {
-      "name": "source-phase-eval-direct-eval-source-set-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 14,
-      "required_tests": [
-        "tests/test_phase_eval.py",
-        "tests/test_phase_eval_direct_eval_contracts.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py",
-          "line_count": 1056
-        }
-      ]
-    },
-    {
       "name": "test-catalog-owner",
       "owner_kind": "test",
       "follow_on_priority": 15,

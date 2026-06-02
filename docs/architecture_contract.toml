@@ -185,6 +185,7 @@ modules = [
   "phase_eval",
   "phase_eval_direct_eval",
   "phase_eval_direct_eval_context_graph",
+  "phase_eval_direct_eval_forest_plan",
   "phase_eval_direct_eval_graph_producers",
   "phase_eval_direct_eval_knowledge_graph",
   "phase_eval_direct_eval_review",

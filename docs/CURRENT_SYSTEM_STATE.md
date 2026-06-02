@@ -15,6 +15,27 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Phase Direct-Eval Forest-Plan Source Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next source-owner oversized reduction slice is closed locally.
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_source_set.py` remains the
+  source-set direct-eval dispatcher at `721` lines. The new
+  `src/usfs_r1_ea_sources/phase_eval_direct_eval_forest_plan.py` owns forest
+  plan profile and component retrieval status/threshold handling at `345`
+  lines.
+- architecture effect:
+  the architecture probe reports `546` code files, `3` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `2` source owners and `1` test
+  owner.
+- boundary:
+  this is a facade-preserving source split. It does not change direct-eval
+  phase status semantics, generated artifact paths, phase-eval outputs, or
+  local corpus state.
+
 ## Phase Direct-Eval Source-Set Contract Test Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
