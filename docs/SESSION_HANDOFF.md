@@ -103,6 +103,20 @@ history below.
   component-adjudication queue items. Tyler V1 passes with
   `forest_plan_passed=true` and `7/7` Forest Plan expectations; Tyler
   `phase-eval` passes `32/32` phases with `reviewer_ready=true`.
+- latest resolved Helena-Lewis-and-Clark Bonanza downstream replay:
+  HLC Bonanza now replays against the full Helena-Lewis-and-Clark authority
+  universe. Applicability validation passes with `52` applicable authorities,
+  `433` not applicable authorities, and `0` unresolved decisions after the
+  tracked three-item applicability adjudication. The generated rule pack has
+  `52` rules; compliance review is reviewer-ready with `52` findings (`36`
+  pass, `16` uncertain), `forest_plan_reviewer_ready=true`, and
+  `unsupported_finding_ids=[]`. The tracked component adjudication now records
+  the current zero-queue state. Compliance source-claim linking is hardened
+  generically for authority-family template aliases and generated Forest Plan
+  component findings from component inventory evidence. HLC V1 passes with
+  `broader_ea_passed=true`, `forest_plan_passed=true`, `27/27` conditional
+  expectations, and `8/8` Forest Plan expectations; HLC `phase-eval` passes
+  `32/32` phases with `reviewer_ready=true`.
 - latest resolved phase-eval direct-eval self-reference hardening:
   review-scoped phase-eval now defers a real-package coverage slot failure only
   when every slot failure reason is `phase_eval_*` and the slot's actual
@@ -113,15 +127,15 @@ history below.
 - current all-forest aggregate truth:
   `real-package-review-coverage-eval --manifest
   config/v1_real_package_review_coverage_v1.json` still exits red overall, but
-  Tyler's `lolo-tylers-kitchen-forest-specific` slot passes. Current counts are
-  `covered_slot_count=5`, `reviewer_ready_slot_count=5`,
-  `required_slot_count=11`, `missing_required_slot_count=6`,
+  Tyler's `lolo-tylers-kitchen-forest-specific` and HLC's
+  `hlc-bonanza-forest-specific` slots now pass. Current counts are
+  `covered_slot_count=6`, `reviewer_ready_slot_count=6`,
+  `required_slot_count=11`, `missing_required_slot_count=5`,
   `phase_eval_ready_slot_count=11/11`, `failed_phase_eval_count=0`, and
   decision identity `10/10`. The remaining failed required slots are
   Beaverhead-Deerlodge South Tobacco Roots, Bitterroot Front, Flathead West
-  Reservoir, Custer-Gallatin South Otter, Helena-Lewis-and-Clark Bonanza, and
-  Idaho Panhandle Lacy Lemoosh; all are currently `review_eval_failed` plus
-  `slot_contract_status_mismatch`.
+  Reservoir, Custer-Gallatin South Otter, and Idaho Panhandle Lacy Lemoosh; all
+  are currently `review_eval_failed` plus `slot_contract_status_mismatch`.
 - prior all-forest Forest Plan matrix contract hardening:
   reviewer-ready V1 Forest Plan contracts can no longer disable the Forest Plan
   compliance matrix gate. The real-package coverage eval passes `11`

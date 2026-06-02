@@ -45,23 +45,36 @@ Use this short route before opening append-only docs.
   still fail closed. Tyler's Kitchen now passes V1 with `forest_plan_passed=true`,
   passes `phase-eval` `32/32` with `reviewer_ready=true`, and the real-package
   coverage slot passes.
+- Latest Helena-Lewis-and-Clark Bonanza downstream replay: HLC Bonanza now
+  replays against the full Helena-Lewis-and-Clark authority universe with `485`
+  applicability candidates, `52` applicable authorities, `433` not applicable
+  authorities, and `0` unresolved decisions after the tracked three-item
+  applicability adjudication. The generated rule pack has `52` rules;
+  compliance review is reviewer-ready with `52` findings (`36` pass, `16`
+  uncertain), Forest Plan reviewer-ready true, and no unsupported finding IDs.
+  Generic compliance link resolution now attaches authority-family template
+  source-claim links to paired family/rule-template findings and synthesizes
+  source-claim evidence for generated Forest Plan component findings from the
+  active component inventory. HLC V1 passes with `forest_plan_passed=true`,
+  `27/27` conditional expectations, and `8/8` Forest Plan expectations; HLC
+  `phase-eval` passes `32/32`.
 - Latest all-forest phase/identity gate status: required forest-specific
   reviewer-ready slots still fail closed unless `phase_eval_results.json` and
   decision-document identity both pass for the same review/source-set identity.
   The phase subgate is now green at `phase_eval_ready_slot_count=11/11` with
   `failed_phase_eval_count=0`, and the identity subgate is green at `10/10`.
   The aggregate real-package coverage command remains red with
-  `reviewer_ready_slot_count=5`, `missing_required_slot_count=6`, and the six
+  `reviewer_ready_slot_count=6`, `missing_required_slot_count=5`, and the five
   remaining failed slots limited to `review_eval_failed` and
   `slot_contract_status_mismatch` for Beaverhead-Deerlodge, Bitterroot,
-  Flathead, Custer-Gallatin, Helena-Lewis-and-Clark, and Idaho Panhandle.
+  Flathead, Custer-Gallatin, and Idaho Panhandle.
 - Active implementation slice: selected-forest authority-universe coverage and
-  Tyler downstream replay are hardened; the broad all-forest reviewer-ready
+  the Tyler and HLC downstream replays are hardened; the broad all-forest reviewer-ready
   goal still requires downstream applicability/compliance/V1 replay for the
-  six residual forest-specific examples listed above. Open a new bounded packet
+  five residual forest-specific examples listed above. Open a new bounded packet
   before hosted query service/API expansion, model-judge work, hosted scoring,
   knowledge-graph sidecar adoption, or future architecture-cap changes.
-- Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
+- Latest resolved forest-specific example packet: `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
 

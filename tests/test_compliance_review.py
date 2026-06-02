@@ -4,6 +4,8 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
+from usfs_r1_ea_sources.compliance_review import _rule_claim_link_aliases
+from usfs_r1_ea_sources.compliance_review import _source_claim_links_for_finding
 from usfs_r1_ea_sources.compliance_review import run_compliance_review
 from usfs_r1_ea_sources.records import sha256_file
 from tests.support.compliance_review_fixtures import (
@@ -22,6 +24,100 @@ from tests.support.compliance_review_eval_fixtures import _assert_v1_land_exchan
 class ComplianceReviewTests(unittest.TestCase):
     def test_v1_land_exchange_rules_are_first_class_compliance_contract(self) -> None:
         _assert_v1_land_exchange_contract(self)
+
+    def test_source_claim_links_resolve_authority_family_template_alias(self) -> None:
+        rule_pack = {
+            "rules": [
+                {"id": "land_exchange_statutory_authorities"},
+                {
+                    "id": "land_exchange_statutory_authorities_authority_template",
+                    "authority_family_id": "land_exchange_statutory_authorities",
+                },
+            ]
+        }
+        aliases = _rule_claim_link_aliases(rule_pack)
+        links = _source_claim_links_for_finding(
+            finding={"id": "land_exchange_statutory_authorities"},
+            rule={"id": "land_exchange_statutory_authorities"},
+            rule_claim_links_by_rule={
+                "land_exchange_statutory_authorities_authority_template": [
+                    {
+                        "claim_id": "claim:land-exchange",
+                        "link_id": "rule_claim_link:land-exchange",
+                        "rule_id": "land_exchange_statutory_authorities_authority_template",
+                    }
+                ]
+            },
+            rule_claim_link_aliases=aliases,
+            limit=3,
+        )
+
+        self.assertEqual(len(links), 1)
+        self.assertEqual(links[0]["rule_id"], "land_exchange_statutory_authorities")
+        self.assertEqual(
+            links[0]["source_rule_id"],
+            "land_exchange_statutory_authorities_authority_template",
+        )
+
+    def test_source_claim_links_fallback_to_forest_plan_component_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            inventory_path = Path(tmp) / "component_inventory.json"
+            inventory_path.write_text(
+                json.dumps(
+                    {
+                        "components": [
+                            {
+                                "artifact_sha256": "artifact-sha",
+                                "citation_label": "FOR-018 (abc123)",
+                                "component_id": "FOR-018-FW-VEGT-DC-01",
+                                "component_text": (
+                                    "Desired Conditions (FW-VEGT-DC) 01 Vegetation occurs "
+                                    "across the landscape."
+                                ),
+                                "component_type": "desired_condition",
+                                "content_sha256": "content-sha",
+                                "provenance": {
+                                    "activity": {"source": "derived/source-set-test/FOR-018.txt"}
+                                },
+                                "source_chunk_ids": ["chunk:component-1"],
+                                "source_record_id": "FOR-018",
+                                "source_set_id": "source-set-test",
+                            }
+                        ]
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            rule = {
+                "id": "forest_plan_component_FOR-018-FW-VEGT-DC-01",
+                "authority_source_record_id": "FOR-018",
+                "requirement": "Address the applicable Forest Plan component.",
+                "source_filters": {"document_role": "forest_plan", "source_record_id": "FOR-018"},
+                "applicability": {
+                    "candidate_authority_type": "forest_plan_component",
+                    "forest_plan": {
+                        "component_id": "FOR-018-FW-VEGT-DC-01",
+                        "component_inventory_path": str(inventory_path),
+                    },
+                    "source_set_id": "source-set-test",
+                },
+            }
+
+            links = _source_claim_links_for_finding(
+                finding={"id": "forest_plan_component_FOR-018-FW-VEGT-DC-01"},
+                rule=rule,
+                rule_claim_links_by_rule={},
+                rule_claim_link_aliases={},
+                limit=3,
+            )
+
+        self.assertEqual(len(links), 1)
+        self.assertEqual(links[0]["rule_id"], "forest_plan_component_FOR-018-FW-VEGT-DC-01")
+        self.assertEqual(links[0]["claim_type"], "desired_condition")
+        self.assertEqual(links[0]["claim_text"], "Desired Conditions (FW-VEGT-DC) 01 Vegetation occurs across the landscape.")
+        self.assertEqual(links[0]["chunk_id"], "chunk:component-1")
+        self.assertEqual(links[0]["citation_label"], "FOR-018 (abc123)")
 
     def test_compliance_review_refuses_base_rule_pack_by_default(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

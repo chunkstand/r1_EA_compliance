@@ -172,6 +172,17 @@
       "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps forest_plan_component_FOR-018-FW-EMIN-OBJ-01 explicitly applicable."
     },
     {
+      "rule_id": "forest_plan_component_FOR-018-NONFORESTED-COVER-TYPES-CAN-39573389-DC-5",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "FOR-018"
+      ],
+      "expected_source_document_roles": [
+        "forest_plan"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps forest_plan_component_FOR-018-NONFORESTED-COVER-TYPES-CAN-39573389-DC-5 explicitly applicable through the component inventory."
+    },
+    {
       "rule_id": "forest_plan_component_FOR-018-FW-WSR-DC-01",
       "expected_applicability": "applicable",
       "expected_source_record_ids": [
@@ -225,6 +236,17 @@
         "law"
       ],
       "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps land_exchange_statutory_authorities_authority_template explicitly applicable."
+    },
+    {
+      "rule_id": "land_exchange_statutory_authorities",
+      "expected_applicability": "applicable",
+      "expected_source_record_ids": [
+        "R1EA-137"
+      ],
+      "expected_source_document_roles": [
+        "law"
+      ],
+      "classification_rationale": "Current Bonanza reviewer-ready HLC generated rule pack keeps land_exchange_statutory_authorities explicitly applicable; source-claim links resolve through the governed land-exchange source aliases."
     },
     {
       "rule_id": "mbta_migratory_birds",

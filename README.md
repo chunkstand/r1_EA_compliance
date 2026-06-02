@@ -46,7 +46,9 @@ They are intentionally not duplicated here.
   first-class inventory and package fact graph scope, with resolver package evidence promoted from
   `forest_plan_context.json`; reviewer-ready status fails closed on stale/missing inventory,
   unresolved applicable standards, or missing Forest Plan compliance matrix evidence for resolved
-  forest contexts.
+  forest contexts. Generated Forest Plan component findings can only satisfy compliance support
+  through component-inventory-backed authority evidence, not profile-stuffed terms or
+  forest-specific runtime branches.
 - Forest-specific reviewer-ready slots also fail closed unless forest-plan context summaries carry
   decision/admin title-page identity evidence for the governing forest or grassland, ranger
   district, county, state, and no competing title-page forest unit.

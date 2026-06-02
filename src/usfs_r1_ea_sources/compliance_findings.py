@@ -188,6 +188,7 @@ def _source_claim_evidence(link: dict) -> dict:
     return {
         "link_id": link["link_id"],
         "rule_id": link["rule_id"],
+        "source_rule_id": link.get("source_rule_id") or link["rule_id"],
         "claim_id": link["claim_id"],
         "claim_type": link["claim_type"],
         "claim_text": link["claim_text"],

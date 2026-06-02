@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from functools import lru_cache
 from pathlib import Path
+import hashlib
 import json
 import re
 
@@ -196,6 +198,7 @@ def run_compliance_review(
         )
     rule_claim_links = _read_jsonl(rule_claim_result.links_path)
     rule_claim_links_by_rule = links_by_rule(rule_claim_links, limit=source_top_k)
+    rule_claim_link_aliases = _rule_claim_link_aliases(rule_pack)
     authority_family_index = _authority_family_index(DEFAULT_AUTHORITY_FAMILY_INVENTORY_PATH)
 
     ea_result = run_ea_review(
@@ -239,7 +242,13 @@ def run_compliance_review(
             rule_pack=rule_pack,
             rule=rules_by_id[str(finding["id"])],
             finding=finding,
-            source_claim_links=rule_claim_links_by_rule.get(str(finding["id"]), []),
+            source_claim_links=_source_claim_links_for_finding(
+                finding=finding,
+                rule=rules_by_id[str(finding["id"])],
+                rule_claim_links_by_rule=rule_claim_links_by_rule,
+                rule_claim_link_aliases=rule_claim_link_aliases,
+                limit=source_top_k,
+            ),
             authority_family_index=authority_family_index,
         )
         for finding in ea_report["findings"]
@@ -423,6 +432,214 @@ def _prepare_outputs(
         finding_edges_path,
     ):
         path.unlink(missing_ok=True)
+
+
+def _source_claim_links_for_finding(
+    *,
+    finding: dict,
+    rule: dict,
+    rule_claim_links_by_rule: dict[str, list[dict]],
+    rule_claim_link_aliases: dict[str, list[str]],
+    limit: int,
+) -> list[dict]:
+    rule_id = str(finding["id"])
+    exact = rule_claim_links_by_rule.get(rule_id, [])
+    if exact:
+        return exact[:limit]
+    for alias_rule_id in rule_claim_link_aliases.get(rule_id, []):
+        aliased = rule_claim_links_by_rule.get(alias_rule_id, [])
+        if aliased:
+            return _retarget_source_claim_links(aliased[:limit], rule_id=rule_id)
+    component_link = _forest_plan_component_source_claim_link(rule=rule)
+    return [component_link] if component_link else []
+
+
+def _rule_claim_link_aliases(rule_pack: dict) -> dict[str, list[str]]:
+    aliases: dict[str, list[str]] = {}
+    for rule in rule_pack.get("rules", []):
+        rule_id = str(rule.get("id") or "").strip()
+        if not rule_id:
+            continue
+        for family_id in _rule_authority_family_ids(rule):
+            if family_id == rule_id:
+                continue
+            aliases.setdefault(family_id, [])
+            if rule_id not in aliases[family_id]:
+                aliases[family_id].append(rule_id)
+    return aliases
+
+
+def _rule_authority_family_ids(rule: dict) -> list[str]:
+    family_ids: list[str] = []
+    for value in (rule.get("authority_family_id"),):
+        if isinstance(value, str) and value.strip():
+            family_ids.append(value.strip())
+    values = rule.get("authority_family_ids")
+    if isinstance(values, list):
+        for value in values:
+            if isinstance(value, str) and value.strip():
+                family_ids.append(value.strip())
+    applicability = rule.get("applicability")
+    if isinstance(applicability, dict):
+        for value in (applicability.get("authority_family_id"),):
+            if isinstance(value, str) and value.strip():
+                family_ids.append(value.strip())
+        values = applicability.get("authority_family_ids")
+        if isinstance(values, list):
+            for value in values:
+                if isinstance(value, str) and value.strip():
+                    family_ids.append(value.strip())
+    return sorted(set(family_ids))
+
+
+def _retarget_source_claim_links(links: list[dict], *, rule_id: str) -> list[dict]:
+    retargeted = []
+    for link in links:
+        copied = dict(link)
+        copied["source_rule_id"] = str(link.get("rule_id") or "")
+        copied["rule_id"] = rule_id
+        retargeted.append(copied)
+    return retargeted
+
+
+def _forest_plan_component_source_claim_link(*, rule: dict) -> dict | None:
+    rule_id = str(rule.get("id") or "")
+    applicability = rule.get("applicability")
+    if not isinstance(applicability, dict):
+        return None
+    forest_plan = applicability.get("forest_plan")
+    if not isinstance(forest_plan, dict):
+        return None
+    if (
+        str(applicability.get("candidate_authority_type") or "") != "forest_plan_component"
+        and not rule_id.startswith("forest_plan_component_")
+    ):
+        return None
+    component_id = str(forest_plan.get("component_id") or "").strip()
+    source_record_id = str(
+        rule.get("authority_source_record_id")
+        or (rule.get("source_filters") or {}).get("source_record_id")
+        or ""
+    ).strip()
+    if not component_id or not source_record_id:
+        return None
+    component = _forest_plan_component_record(forest_plan=forest_plan, component_id=component_id)
+    component_text = str(
+        component.get("component_text")
+        or forest_plan.get("component_text")
+        or rule.get("requirement")
+        or rule.get("title")
+        or component_id
+    ).strip()
+    component_type = str(
+        component.get("component_type")
+        or forest_plan.get("component_type")
+        or "forest_plan_component"
+    ).strip()
+    source_chunk_id = _first_present_string(
+        component.get("source_chunk_ids") or forest_plan.get("source_chunk_ids")
+    )
+    digest = hashlib.sha256(
+        f"{rule_id}|{component_id}|{source_record_id}|{component_text}".encode("utf-8")
+    ).hexdigest()
+    citation_label = str(component.get("citation_label") or rule.get("source_citation") or "").strip()
+    if not citation_label:
+        citation_label = f"{source_record_id} forest plan component"
+    provenance = component.get("provenance") if isinstance(component.get("provenance"), dict) else {}
+    activity = provenance.get("activity") if isinstance(provenance.get("activity"), dict) else {}
+    return {
+        "artifact_path": str(component.get("artifact_path") or forest_plan.get("artifact_path") or ""),
+        "artifact_sha256": str(
+            component.get("artifact_sha256") or forest_plan.get("artifact_sha256") or ""
+        ),
+        "authority_level": "forest",
+        "chunk_char_end": None,
+        "chunk_char_start": None,
+        "chunk_content_sha256": str(
+            component.get("content_sha256") or forest_plan.get("content_sha256") or ""
+        ),
+        "chunk_id": source_chunk_id or f"component:{component_id}",
+        "citation_label": citation_label,
+        "claim_id": f"claim:forest-plan-component:{digest[:24]}",
+        "claim_text": component_text,
+        "claim_type": component_type,
+        "claim_validation_status": "valid",
+        "content_sha256": str(
+            component.get("content_sha256") or forest_plan.get("content_sha256") or digest
+        ),
+        "document_role": "forest_plan",
+        "effective_url": None,
+        "final_url": None,
+        "link_id": f"rule_claim_link:forest-plan-component:{digest[:24]}",
+        "matched_terms": _strings(
+            rule.get("package_terms")
+            or rule.get("applies_if_package_terms")
+            or [component_id, component_type]
+        ),
+        "original_url": None,
+        "parser_name": "forest_plan_component_inventory",
+        "parser_version": "forest-plan-component-inventory-v0",
+        "rank": 1,
+        "review_topics": [
+            "Forest Plan component inventory authority",
+        ],
+        "rule_id": rule_id,
+        "rule_pack_id": str(rule.get("rule_pack_id") or ""),
+        "rule_pack_version": str(rule.get("rule_pack_version") or ""),
+        "rule_query": str(rule.get("source_query") or component_text),
+        "rule_requirement": str(rule.get("requirement") or ""),
+        "rule_source_filters": rule.get("source_filters") or {},
+        "rule_title": str(rule.get("title") or ""),
+        "schema_version": "rule-claim-link-v0",
+        "score": 1.0,
+        "source_char_end": None,
+        "source_char_start": None,
+        "source_record_id": source_record_id,
+        "source_set_id": str(component.get("source_set_id") or applicability.get("source_set_id") or ""),
+        "source_text_path": str(activity.get("source") or forest_plan.get("component_inventory_path") or ""),
+        "title": "Forest Plan component inventory",
+        "validation_status": "valid",
+    }
+
+
+def _forest_plan_component_record(*, forest_plan: dict, component_id: str) -> dict:
+    inventory_path = str(forest_plan.get("component_inventory_path") or "").strip()
+    if not inventory_path:
+        return {}
+    return _forest_plan_component_records_by_id(inventory_path).get(component_id, {})
+
+
+@lru_cache(maxsize=16)
+def _forest_plan_component_records_by_id(inventory_path: str) -> dict[str, dict]:
+    path = Path(inventory_path)
+    if not path.exists():
+        return {}
+    payload = _read_json(path)
+    components = payload.get("components")
+    if not isinstance(components, list):
+        return {}
+    return {
+        str(component.get("component_id")): component
+        for component in components
+        if isinstance(component, dict) and str(component.get("component_id") or "").strip()
+    }
+
+
+def _first_present_string(value: object) -> str | None:
+    if isinstance(value, list):
+        for item in value:
+            if isinstance(item, str) and item.strip():
+                return item.strip()
+        return None
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    return None
+
+
+def _strings(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
 
 
 def _reusable_rule_claim_result(

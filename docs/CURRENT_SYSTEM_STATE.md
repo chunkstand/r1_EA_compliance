@@ -15,6 +15,66 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## HLC Bonanza Downstream Replay And Component-Claim Linking Hardened Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  Helena-Lewis-and-Clark Bonanza now replays from the full selected-forest
+  authority universe without HLC-specific runtime rules. Applicability uses
+  `485` candidates, including `419` Helena-Lewis-and-Clark Forest Plan
+  component candidates, and the tracked applicability adjudication now resolves
+  only the three current conflicts required by the HLC V1 contract.
+- applicability evidence:
+  `applicability-retrieve` passed with `485` candidates, `4365` retrieval
+  trace rows, and `12112` graph trace rows. `applicability-determine` produced
+  `49` applicable, `433` not-applicable, and `3` needs-adjudication decisions.
+  After applying the tracked three-item adjudication,
+  `applicability-validate` passes with `52` applicable authorities, `433` not
+  applicable authorities, and `0` unresolved decisions. The generated rule pack
+  has `52` rules.
+- Forest Plan and component evidence:
+  HLC Bonanza resolves `scope_status="helena_lewis_and_clark_nf"` with
+  decision/admin title-page identity for Helena-Lewis and Clark National
+  Forest, Belt Creek-White Sulphur Springs and White Sulphur Springs Ranger
+  Districts, Meagher County, Montana. Forest Plan component evaluation
+  considers `419` HLC components and `77` standards; the current component
+  adjudication queue is empty and the tracked component adjudication now
+  records the current zero-queue state instead of the stale `178`-item queue.
+- generic compliance link hardening:
+  compliance review now resolves source-claim links through generic
+  authority-family aliases when a family finding is paired with an
+  authority-template rule, and it builds a claim-link-shaped authority reference
+  from the active Forest Plan component inventory for generated Forest Plan
+  component findings that lack exact sidecar source-claim links. This makes the
+  Bonanza land-exchange rule-template finding and generated component finding
+  citation-bearing without a handwritten HLC branch.
+- compliance/V1/phase evidence:
+  `compliance-review` with the generated `52`-rule pack is reviewer-ready,
+  writes `52` findings (`36` pass, `16` uncertain), has
+  `forest_plan_reviewer_ready=true`, and reports `unsupported_finding_ids=[]`.
+  HLC V1 eval passes with `broader_ea_passed=true`,
+  `forest_plan_passed=true`, `27/27` conditional expectations, and `8/8`
+  Forest Plan expectations. HLC `phase-eval` passes `32/32` phases,
+  `reviewer_ready=true`, `contract_backed_promotion_ready=true`, and no
+  blockers.
+- aggregate boundary:
+  `real-package-review-coverage-eval --manifest
+  config/v1_real_package_review_coverage_v1.json` still exits red overall, but
+  HLC's `hlc-bonanza-forest-specific` slot now passes. Current aggregate counts
+  are `covered_slot_count=6`, `reviewer_ready_slot_count=6`,
+  `required_slot_count=11`, `missing_required_slot_count=5`,
+  `phase_eval_ready_slot_count=11/11`, `failed_phase_eval_count=0`, and
+  decision-document identity `10/10`. The remaining red slots are
+  Beaverhead-Deerlodge South Tobacco Roots, Bitterroot Front, Flathead West
+  Reservoir, Custer-Gallatin South Otter, and Idaho Panhandle Lacy Lemoosh, all
+  under `review_eval_failed` and `slot_contract_status_mismatch`.
+- boundary:
+  this closes the HLC Bonanza downstream replay and a generic component/source
+  claim-linking gap. It does not claim all-forest reviewer readiness; five
+  residual forest-specific examples still need downstream
+  applicability/compliance/V1 replay slices.
+
 ## Lolo Tyler's Kitchen Downstream Replay And Self-Reference Gate Hardened Locally
 
 Latest implementation update on 2026-06-02 UTC:
