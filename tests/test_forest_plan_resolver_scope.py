@@ -205,6 +205,122 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
             )
             self.assertEqual(title_page_location["state"], "Montana")
 
+    def test_package_detected_management_areas_resolve_against_selected_plan(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(
+                output_dir,
+                primary_plan_text=(
+                    "The Custer Gallatin selected Forest Plan contains first-class "
+                    "management area direction. MAI contains non-commercial forest "
+                    "direction. Management Area 9 establishes concentrated "
+                    "recreation management direction. Management Area 16 identifies suitable "
+                    "timber-production lands. Management Area 21 contains old-growth forest "
+                    "direction. Management Area 24 contains high visual sensitivity direction. "
+                    "Management Area 25 contains partial-retention visual quality direction. "
+                    "Management Area 18, Management Area 22, and Management Area 23 contain "
+                    "big-game winter range direction."
+                ),
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        (
+                            "The EA identifies Forest Plan Management Areas in the project: "
+                            "MA 1, Management Area 9 (MA-9), Management Area 16 (MA 16), "
+                            "MA 21, MA 24, and MA 25."
+                        ),
+                        "The project area does not fall within MAs 18, 22, or 23.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="package-detected-management-areas",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "custer_gallatin")
+            self.assertFalse(context["needs_reviewer_resolution"])
+            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertEqual(
+                _names(context["management_areas"]),
+                [
+                    "Management Area 1",
+                    "Management Area 9",
+                    "Management Area 16",
+                    "Management Area 21",
+                    "Management Area 24",
+                    "Management Area 25",
+                ],
+            )
+            for entry in context["management_areas"]:
+                self.assertEqual(
+                    entry["resolution_basis"],
+                    "ea_detected_management_area_with_plan_source_evidence",
+                )
+                self.assertTrue(entry["package_evidence"])
+                self.assertTrue(entry["plan_source_evidence"])
+                self.assertEqual(entry["source_record_id"], "R1PLAN-custer-gallatin-nf-02")
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            self.assertTrue(validation["passed"])
+            self.assertTrue(
+                _check(validation, "detected_management_areas_found_in_selected_plan")[
+                    "passed"
+                ]
+            )
+
+    def test_package_detected_management_area_missing_from_selected_plan_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(
+                output_dir,
+                primary_plan_text=(
+                    "The Custer Gallatin selected Forest Plan contains Management Area 9 "
+                    "direction, but not the package's unsupported management area."
+                ),
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "The EA identifies project work in Management Area 99.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="missing-management-area-plan-evidence",
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertTrue(context["needs_reviewer_resolution"])
+            self.assertEqual(context["management_areas"], [])
+            unresolved = [
+                item
+                for item in context["unresolved_mentions"]
+                if item["reason"] == "management_area_missing_plan_source_evidence"
+            ]
+            self.assertEqual(len(unresolved), 1)
+            self.assertEqual(unresolved[0]["name"], "Management Area 99")
+            self.assertEqual(unresolved[0]["source_record_id"], "R1PLAN-custer-gallatin-nf-02")
+            validation = json.loads(result.validation_path.read_text(encoding="utf-8"))
+            self.assertFalse(validation["passed"])
+            self.assertFalse(
+                _check(validation, "detected_management_areas_found_in_selected_plan")[
+                    "passed"
+                ]
+            )
+
     def test_profile_scope_ignores_project_external_other_forest_locations(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

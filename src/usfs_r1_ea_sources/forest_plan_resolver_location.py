@@ -134,6 +134,7 @@ def _is_negative_location_context(evidence: dict) -> bool:
         "project is not within this area",
         "is not in the project area",
         "is not within the project area",
+        "project area does not fall within",
         "not affected by the project",
         "not affected by this project",
         "does not apply to the project area",

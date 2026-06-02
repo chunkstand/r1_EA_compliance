@@ -119,6 +119,7 @@ def _build_custer_source_library(
     catalog_source_count: int | None = None,
     missing_source_ids: set[str] | None = None,
     weak_supporting_source_ids: set[str] | None = None,
+    primary_plan_text: str | None = None,
 ) -> str:
     source_set_id = "source-set-test"
     missing_source_ids = missing_source_ids or set()
@@ -135,6 +136,9 @@ def _build_custer_source_library(
             text=(
                 _WEAK_SOURCE_TEXT
                 if source_record_id in weak_supporting_source_ids
+                else primary_plan_text
+                if source_record_id == "R1PLAN-custer-gallatin-nf-02"
+                and primary_plan_text is not None
                 else text
             ),
         )

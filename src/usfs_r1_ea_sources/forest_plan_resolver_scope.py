@@ -12,13 +12,16 @@ from .forest_plan_resolver_mentions import _flatten_package_evidence
 from .forest_plan_resolver_mentions import _flatten_plan_source_evidence
 from .forest_plan_resolver_mentions import _mentions_for_aliases
 from .forest_plan_resolver_mentions import _mentions_for_entry
+from .forest_plan_resolver_mentions import _package_evidence
 from .forest_plan_resolver_mentions import _plan_source_evidence
+from .forest_plan_resolver_mentions import _query_plan_source_record_aliases
 from .forest_plan_resolver_mentions import _supporting_plan_evidence
 from .forest_plan_resolver_mentions import _unresolved_from_evidence
 from .forest_plan_resolver_models import FOREST_PLAN_CONTEXT_SCHEMA_VERSION
 from .forest_plan_resolver_models import GazetteerEntry
 from .forest_plan_resolver_models import ForestPlanResolverProfile
 from .forest_plan_resolver_models import _is_profile_scope
+from .forest_plan_resolver_models import _safe_id
 from .review_package_support import utc_now
 
 def _resolve_scope(
@@ -219,6 +222,18 @@ def _context_report(
             index_path=index_path,
             source_top_k=source_top_k,
         )
+        dynamic_management_areas, unresolved_management_area_mentions = (
+            _package_detected_management_areas(
+                package_chunks=package_chunks,
+                index_path=index_path,
+                source_top_k=source_top_k,
+                resolver_profile=resolver_profile,
+            )
+        )
+        management_areas = _merge_resolved_entries(
+            management_areas,
+            dynamic_management_areas,
+        )
         overlays = _resolved_entries(
             entries=resolver_profile.overlay_entries,
             package_chunks=package_chunks,
@@ -234,10 +249,12 @@ def _context_report(
     else:
         geographic_areas = []
         management_areas = []
+        unresolved_management_area_mentions = []
         overlays = []
         supporting_plan_evidence = []
 
     unresolved_mentions = list(scope["unresolved_mentions"])
+    unresolved_mentions.extend(unresolved_management_area_mentions)
     package_evidence = _flatten_package_evidence(
         [scope["forest_unit"]] if scope.get("forest_unit") else [],
         project_location_signals,
@@ -329,7 +346,339 @@ def _resolved_entries(
                 "resolution_status": "resolved" if (plan_evidence or not attach_plan_evidence) else "missing_plan_source_evidence",
             }
         )
-    return sorted(resolved, key=lambda item: (item["category"], item["name"]))
+    return sorted(resolved, key=_resolved_entry_sort_key)
+
+
+def _merge_resolved_entries(*groups: list[dict]) -> list[dict]:
+    merged_by_id = {}
+    for group in groups:
+        for entry in group:
+            entry_id = entry.get("entry_id")
+            if entry_id not in merged_by_id:
+                merged_by_id[entry_id] = dict(entry)
+                continue
+            merged_by_id[entry_id]["package_evidence"] = _dedupe_evidence(
+                [
+                    *merged_by_id[entry_id].get("package_evidence", []),
+                    *entry.get("package_evidence", []),
+                ]
+            )
+            merged_by_id[entry_id]["plan_source_evidence"] = _dedupe_plan_evidence(
+                [
+                    *merged_by_id[entry_id].get("plan_source_evidence", []),
+                    *entry.get("plan_source_evidence", []),
+                ]
+            )
+    return sorted(merged_by_id.values(), key=_resolved_entry_sort_key)
+
+
+def _resolved_entry_sort_key(item: dict) -> tuple[str, int, str, str]:
+    if item.get("category") == "management_area":
+        identifier = str(item.get("entry_id") or "").removeprefix("mgmt-ma-")
+        number, suffix = _management_area_sort_key(identifier)
+        if number < 9999:
+            return (str(item.get("category") or ""), number, suffix, str(item.get("name") or ""))
+    return (str(item.get("category") or ""), 9999, "", str(item.get("name") or ""))
+
+
+def _dedupe_plan_evidence(records: list[dict]) -> list[dict]:
+    seen = set()
+    deduped = []
+    for record in records:
+        span = record.get("evidence_span") if isinstance(record.get("evidence_span"), dict) else {}
+        key = (
+            record.get("source_record_id"),
+            record.get("chunk_id"),
+            span.get("source_char_start"),
+            span.get("source_char_end"),
+            span.get("text"),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(record)
+    return deduped
+
+
+_MANAGEMENT_AREA_REFERENCE_RE = re.compile(
+    r"\b(?P<prefix>Management\s+Areas?|MA(?:['’]s|s)?)\s*"
+    r"(?:\(\s*)?(?:MA\s*)?[-–—]?\s*"
+    r"(?P<identifier>\d{1,3}[A-Za-z]?)\b",
+    flags=re.IGNORECASE,
+)
+
+_MANAGEMENT_AREA_LIST_ITEM_RE = re.compile(
+    r"(?:,\s*|\band\s+|&\s*)(?:MA\s*[-–—]?\s*)?"
+    r"(?P<identifier>\d{1,3}[A-Za-z]?)\b",
+    flags=re.IGNORECASE,
+)
+
+
+def _package_detected_management_areas(
+    *,
+    package_chunks: list[dict],
+    index_path: Path | None,
+    source_top_k: int,
+    resolver_profile: ForestPlanResolverProfile,
+) -> tuple[list[dict], list[dict]]:
+    active_plan_source_record_id = resolver_profile.profile.active_plan_source_record_id
+    if not active_plan_source_record_id:
+        return [], []
+    package_evidence_by_identifier = _package_management_area_evidence_by_identifier(
+        package_chunks
+    )
+    plan_source_rows = (
+        _management_area_plan_source_rows(
+            index_path=index_path,
+            source_record_id=active_plan_source_record_id,
+        )
+        if index_path is not None
+        else []
+    )
+    resolved = []
+    unresolved = []
+    for identifier in sorted(package_evidence_by_identifier, key=_management_area_sort_key):
+        entry = _management_area_entry(
+            identifier=identifier,
+            source_record_id=active_plan_source_record_id,
+        )
+        package_evidence = [
+            evidence
+            for evidence in _dedupe_evidence(package_evidence_by_identifier[identifier])
+            if not _is_negative_location_context(evidence)
+        ][:5]
+        if not package_evidence:
+            continue
+        plan_evidence = _management_area_plan_evidence(
+            entry=entry,
+            plan_source_rows=plan_source_rows,
+            limit=source_top_k,
+        )
+        if plan_evidence:
+            resolved.append(
+                {
+                    "entry_id": entry.entry_id,
+                    "category": entry.category,
+                    "name": entry.name,
+                    "aliases": list(entry.aliases),
+                    "source_record_id": entry.source_record_id,
+                    "package_evidence": package_evidence,
+                    "plan_source_evidence": plan_evidence,
+                    "resolution_status": "resolved",
+                    "resolution_basis": "ea_detected_management_area_with_plan_source_evidence",
+                }
+            )
+            continue
+        unresolved.extend(
+            {
+                "category": "management_area",
+                "reason": "management_area_missing_plan_source_evidence",
+                "entry_id": entry.entry_id,
+                "name": entry.name,
+                "source_record_id": entry.source_record_id,
+                "package_evidence": evidence,
+            }
+            for evidence in package_evidence
+        )
+    return resolved, unresolved
+
+
+def _management_area_plan_source_rows(
+    *,
+    index_path: Path,
+    source_record_id: str,
+) -> list[dict]:
+    return _query_plan_source_record_aliases(
+        index_path=index_path,
+        query="",
+        limit=2000,
+        source_record_id=source_record_id,
+        document_role="forest_plan",
+    )
+
+
+def _management_area_plan_evidence(
+    *,
+    entry: GazetteerEntry,
+    plan_source_rows: list[dict],
+    limit: int,
+) -> list[dict]:
+    matched = [
+        row
+        for row in plan_source_rows
+        if any(
+            _term_found(str(row.get("evidence_span", {}).get("text") or ""), term)
+            for term in entry.terms
+        )
+    ]
+    return matched[:limit]
+
+
+def _package_management_area_evidence_by_identifier(
+    package_chunks: list[dict],
+) -> dict[str, list[dict]]:
+    evidence_by_identifier: dict[str, list[dict]] = {}
+    for chunk in package_chunks:
+        text = str(chunk.get("text") or "")
+        if "management area" not in text.lower() and "ma" not in text.lower():
+            continue
+        for match in _MANAGEMENT_AREA_REFERENCE_RE.finditer(text):
+            identifier = _normalize_management_area_identifier(match.group("identifier"))
+            if identifier is None:
+                continue
+            evidence_by_identifier.setdefault(identifier, []).append(
+                _management_area_package_evidence(
+                    chunk=chunk,
+                    text=text,
+                    identifier=identifier,
+                    match_start=match.start(),
+                    match_end=match.end(),
+                )
+            )
+            for list_identifier, list_start, list_end in _management_area_list_items(
+                text,
+                start=match.end(),
+            ):
+                evidence_by_identifier.setdefault(list_identifier, []).append(
+                    _management_area_package_evidence(
+                        chunk=chunk,
+                        text=text,
+                        identifier=list_identifier,
+                        match_start=list_start,
+                        match_end=list_end,
+                    )
+                )
+    return {
+        identifier: _dedupe_evidence(records)
+        for identifier, records in evidence_by_identifier.items()
+    }
+
+
+def _management_area_list_items(
+    text: str,
+    *,
+    start: int,
+) -> list[tuple[str, int, int]]:
+    end_candidates = [
+        index
+        for marker in (".", ";", "\n")
+        if (index := text.find(marker, start)) >= 0
+    ]
+    end = min(end_candidates) if end_candidates else min(len(text), start + 120)
+    tail = text[start:end]
+    if len(tail) > 120:
+        tail = tail[:120]
+    items = []
+    cursor = 0
+    while cursor < len(tail):
+        match = _MANAGEMENT_AREA_LIST_ITEM_RE.match(tail, cursor)
+        if match is None:
+            break
+        identifier = _normalize_management_area_identifier(match.group("identifier"))
+        if identifier is not None:
+            items.append((identifier, start + match.start(), start + match.end()))
+        cursor = match.end()
+    return items
+
+
+def _normalize_management_area_identifier(identifier: str) -> str | None:
+    match = re.fullmatch(r"0*(\d{1,3})([A-Za-z]?)", identifier.strip())
+    if match is None:
+        return None
+    number = int(match.group(1))
+    if number <= 0:
+        return None
+    suffix = match.group(2).lower()
+    return f"{number}{suffix}"
+
+
+def _management_area_entry(*, identifier: str, source_record_id: str) -> GazetteerEntry:
+    name = f"Management Area {identifier}"
+    upper_identifier = identifier.upper()
+    aliases = [
+        f"Management Areas {identifier}",
+        f"Management Area {upper_identifier}",
+        f"Management Areas {upper_identifier}",
+        f"MA {identifier}",
+        f"MA-{identifier}",
+        f"MA{identifier}",
+        f"MA's {identifier}",
+        f"MA’s {identifier}",
+        f"MA {upper_identifier}",
+        f"MA-{upper_identifier}",
+        f"MA{upper_identifier}",
+        f"MA's {upper_identifier}",
+        f"MA’s {upper_identifier}",
+    ]
+    if identifier.isdigit() and (roman_identifier := _roman_numeral(int(identifier))):
+        aliases.extend(
+            [
+                f"Management Area {roman_identifier}",
+                f"Management Areas {roman_identifier}",
+                f"MA {roman_identifier}",
+                f"MA-{roman_identifier}",
+                f"MA{roman_identifier}",
+            ]
+        )
+    return GazetteerEntry(
+        entry_id=f"mgmt-ma-{_safe_id(identifier)}",
+        category="management_area",
+        name=name,
+        aliases=tuple(dict.fromkeys(alias for alias in aliases if alias != name)),
+        source_record_id=source_record_id,
+    )
+
+
+def _roman_numeral(number: int) -> str | None:
+    if number <= 0 or number > 399:
+        return None
+    values = (
+        (100, "C"),
+        (90, "XC"),
+        (50, "L"),
+        (40, "XL"),
+        (10, "X"),
+        (9, "IX"),
+        (5, "V"),
+        (4, "IV"),
+        (1, "I"),
+    )
+    remaining = number
+    parts = []
+    for value, numeral in values:
+        while remaining >= value:
+            parts.append(numeral)
+            remaining -= value
+    return "".join(parts)
+
+
+def _management_area_package_evidence(
+    *,
+    chunk: dict,
+    text: str,
+    identifier: str,
+    match_start: int,
+    match_end: int,
+) -> dict:
+    entry = _management_area_entry(identifier=identifier, source_record_id="")
+    return _package_evidence(
+        chunk=chunk,
+        text=text,
+        category=entry.category,
+        entry_id=entry.entry_id,
+        name=entry.name,
+        matched_alias=text[match_start:match_end].strip(),
+        match_start=match_start,
+        match_end=match_end,
+    )
+
+
+def _management_area_sort_key(identifier: str) -> tuple[int, str]:
+    match = re.fullmatch(r"(\d{1,3})([a-z]?)", identifier)
+    if match is None:
+        return (9999, identifier)
+    return (int(match.group(1)), match.group(2))
+
 
 def _profile_district_location_mentions(
     package_chunks: list[dict],

@@ -538,6 +538,15 @@ resolution without re-extracting the package files.
   bibliography, reference, coordination, comparison, or otherwise non-project-location evidence
 - resolved geographic areas
 - resolved management areas
+  - management areas are first-class plan-context entries. The resolver includes profile-declared
+    management-area entries and EA-detected management-area identifiers such as `MA-9`,
+    `MA 16`, or `Management Area 24` only when the selected profile's active Forest Plan source
+    record contains matching source-library plan evidence.
+  - EA-detected management areas use the `ea_detected_management_area_with_plan_source_evidence`
+    resolution basis and carry both package evidence and selected Forest Plan evidence. If package
+    evidence identifies a management area but the selected active Forest Plan source record does not
+    contain matching plan evidence, the mention is emitted as unresolved with reason
+    `management_area_missing_plan_source_evidence`.
 - resolved overlays
 - `supporting_plan_evidence`: triggered ROD, FEIS, designated-area/allocation, ESA Biological
   Assessment, and Biological Opinion evidence routes
@@ -581,6 +590,7 @@ reference-list district mentions remain visible in `background_location_mentions
 - required profile source records being indexed
 - plan-context entries carrying package evidence
 - plan-context entries carrying source-library plan evidence
+- EA-detected management areas being found in the selected active Forest Plan source record
 - triggered supporting plan-evidence routes carrying trigger evidence and source-library evidence
 
 Supporting plan routes are trigger-gated. Broad EA section labels such as `purpose and need` or

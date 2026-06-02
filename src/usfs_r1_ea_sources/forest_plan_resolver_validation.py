@@ -25,6 +25,7 @@ def _validation_report(
         ),
         _check_custer_scope_has_resolved_area(context, resolver_profile=resolver_profile),
         _check_resolved_entries_have_plan_source_evidence(context),
+        _check_detected_management_areas_found_in_plan(context),
         _check_triggered_supporting_plan_evidence_has_source_evidence(context),
     ]
     return {
@@ -148,6 +149,26 @@ def _check_resolved_entries_have_plan_source_evidence(context: dict) -> dict:
         "passed": not failures,
         "details": {"failures": failures},
     }
+
+
+def _check_detected_management_areas_found_in_plan(context: dict) -> dict:
+    failures = [
+        {
+            "entry_id": item.get("entry_id"),
+            "name": item.get("name"),
+            "source_record_id": item.get("source_record_id"),
+            "package_evidence": item.get("package_evidence"),
+        }
+        for item in context.get("unresolved_mentions", [])
+        if item.get("category") == "management_area"
+        and item.get("reason") == "management_area_missing_plan_source_evidence"
+    ]
+    return {
+        "name": "detected_management_areas_found_in_selected_plan",
+        "passed": not failures,
+        "details": {"failures": failures},
+    }
+
 
 def _check_triggered_supporting_plan_evidence_has_source_evidence(context: dict) -> dict:
     failures = []
