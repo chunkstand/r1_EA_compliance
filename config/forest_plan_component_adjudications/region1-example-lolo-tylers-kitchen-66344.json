@@ -2,7 +2,7 @@
   "schema_version": "forest-plan-component-adjudication-v0",
   "adjudication_id": "region1-example-lolo-tylers-kitchen-66344-component-adjudication",
   "title": "Forest Plan Component Adjudication",
-  "created_at": "2026-05-27T13:14:00Z",
+  "created_at": "2026-06-02T07:58:29Z",
   "review_id": "region1-example-lolo-tylers-kitchen-66344",
   "source_set_id": "source-set-f70ea11e04ae3d53",
   "component_findings_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_component_findings.json",
@@ -13,8 +13,8 @@
     "adjudicated_by": [
       "codex"
     ],
-    "adjudicated_at": "2026-05-24T18:58:00Z",
-    "notes": "Tyler's Kitchen closes the lone Lolo component queue item as a scope false positive rather than a real EA omission."
+    "adjudicated_at": "2026-06-02T07:58:29Z",
+    "notes": "Current Tyler's Kitchen full-Lolo component replay has no open forest-plan component reviewer-resolution queue items."
   },
   "allowed_dispositions": [
     "applicability_false_positive",
@@ -35,51 +35,20 @@
   ],
   "summary": {
     "schema_version": "forest-plan-component-adjudication-template-summary-v0",
-    "created_at": "2026-05-27T13:14:00Z",
+    "created_at": "2026-06-02T07:58:29Z",
     "review_id": "region1-example-lolo-tylers-kitchen-66344",
     "source_set_id": "source-set-f70ea11e04ae3d53",
     "review_dir": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344",
     "component_findings_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_component_findings.json",
     "reviewer_resolution_queue_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/forest_plan_reviewer_resolution_queue.json",
-    "queue_item_count": 1,
-    "template_item_count": 1,
+    "queue_item_count": 0,
+    "template_item_count": 0,
     "pending_item_count": 0,
-    "queue_reason_counts": {
-      "missing_package_evidence": 1
-    },
-    "component_type_counts": {
-      "standard": 1
-    },
+    "queue_reason_counts": {},
+    "component_type_counts": {},
     "output_path": "config/forest_plan_component_adjudications/region1-example-lolo-tylers-kitchen-66344.json",
     "markdown_path": "/tmp/region1-example-lolo-tylers-kitchen-66344-component-adjudication.md",
-    "instructions": "Tracked replay adjudication for the single Tyler's Kitchen Lolo component queue item."
+    "instructions": "Tracked replay adjudication for the current Tyler's Kitchen full-Lolo component replay; no queue items require adjudication."
   },
-  "items": [
-    {
-      "item_id": "FPS-298-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21-missing_package_evidence",
-      "finding_id": "FPS-298-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21-finding",
-      "component_id": "FPS-298-SPECIAL-PRESCRIPTIONS-THESE-AREAS-DEVELOPED-INTERDISCIPLINARY-TEAMS-INCLUDE-WILDLIFE-BIOLOGIST-HARVEST-METHODS-C1E37570-STD-21",
-      "disposition": "applicability_false_positive",
-      "expected_current": {
-        "applicability_status": "needs_reviewer_resolution",
-        "compliance_status": "needs_reviewer_resolution",
-        "finding_status": "needs_reviewer_resolution",
-        "queue_reason": "missing_package_evidence"
-      },
-      "component_source_ref": {
-        "source_record_id": "FPS-298"
-      },
-      "plan_source_evidence_refs": [
-        {
-          "source_record_id": "FPS-298"
-        }
-      ],
-      "adjudicated_at": "2026-05-24T18:58:00Z",
-      "adjudicated_by": [
-        "codex"
-      ],
-      "source_type": "package_scope_review",
-      "rationale": "The queued Lolo standard is an unscoped legacy prescription with no matched management-area, overlay, or package evidence binding in the Tyler's Kitchen review artifacts. Treating it as applicable would overstate project scope, so this queue item closes as an applicability false positive rather than a real EA omission."
-    }
-  ]
+  "items": []
 }

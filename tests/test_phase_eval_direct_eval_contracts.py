@@ -626,6 +626,123 @@ def test_phase_eval_direct_eval_accepts_slot_green_when_component_coverage_is_re
     assert component_summary["passed"] is True
 
 
+def test_phase_eval_direct_eval_defers_self_phase_gate_failure_for_tracked_review() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        review_dir = output_dir / "reviews" / "v1-cg-ecid-compliance-review"
+        review_dir.mkdir(parents=True, exist_ok=True)
+        (review_dir / "v1_ea_eval_results.json").write_text(
+            json.dumps(
+                _v1_ea_eval_payload(
+                    review_id="v1-cg-ecid-compliance-review",
+                    source_set_id=CURRENT_PROMOTION_SOURCE_SET_ID,
+                ),
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+        coverage_dir = output_dir / "reviews" / "real_package_review_coverage_eval"
+        coverage_dir.mkdir(parents=True, exist_ok=True)
+        coverage_payload = _real_package_review_coverage_payload(
+            review_id="v1-cg-ecid-compliance-review",
+        )
+        coverage_payload["slots"][0]["passed"] = False
+        coverage_payload["slots"][0]["failure_reasons"] = [
+            "phase_eval_blockers_present",
+            "phase_eval_failed",
+            "phase_eval_not_reviewer_ready",
+        ]
+        (coverage_dir / "real_package_review_coverage_eval_results.json").write_text(
+            json.dumps(coverage_payload, sort_keys=True),
+            encoding="utf-8",
+        )
+        component_eval_dir = output_dir / "evaluations" / "forest_plan_component_eval_coverage"
+        component_eval_dir.mkdir(parents=True, exist_ok=True)
+        (
+            component_eval_dir / "forest_plan_component_eval_coverage_results.json"
+        ).write_text(
+            json.dumps(
+                _forest_plan_component_eval_coverage_payload(
+                    review_id="v1-cg-ecid-compliance-review",
+                ),
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=CURRENT_PROMOTION_SOURCE_SET_ID,
+            review_id="v1-cg-ecid-compliance-review",
+            review_dir=review_dir,
+        )
+
+    review_scope = summary["review_scope"]
+    assert review_scope["status"] == "direct_eval_present"
+    assert review_scope["passed"] is True
+    real_package_summary = next(
+        item
+        for item in review_scope["summaries"]
+        if item["summary_id"] == "real_package_review_coverage"
+    )
+    assert real_package_summary["status"] == "direct_eval_present"
+    assert real_package_summary["passed"] is True
+    assert real_package_summary["details"]["self_phase_eval_gate_deferred"] is True
+
+
+def test_phase_eval_direct_eval_rejects_non_self_real_package_slot_failure() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        review_dir = output_dir / "reviews" / "v1-cg-ecid-compliance-review"
+        review_dir.mkdir(parents=True, exist_ok=True)
+        (review_dir / "v1_ea_eval_results.json").write_text(
+            json.dumps(
+                _v1_ea_eval_payload(
+                    review_id="v1-cg-ecid-compliance-review",
+                    source_set_id=CURRENT_PROMOTION_SOURCE_SET_ID,
+                ),
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+        coverage_dir = output_dir / "reviews" / "real_package_review_coverage_eval"
+        coverage_dir.mkdir(parents=True, exist_ok=True)
+        coverage_payload = _real_package_review_coverage_payload(
+            review_id="v1-cg-ecid-compliance-review",
+        )
+        coverage_payload["slots"][0]["passed"] = False
+        coverage_payload["slots"][0]["failure_reasons"] = ["package_authority_missing"]
+        (coverage_dir / "real_package_review_coverage_eval_results.json").write_text(
+            json.dumps(coverage_payload, sort_keys=True),
+            encoding="utf-8",
+        )
+        component_eval_dir = output_dir / "evaluations" / "forest_plan_component_eval_coverage"
+        component_eval_dir.mkdir(parents=True, exist_ok=True)
+        (
+            component_eval_dir / "forest_plan_component_eval_coverage_results.json"
+        ).write_text(
+            json.dumps(
+                _forest_plan_component_eval_coverage_payload(
+                    review_id="v1-cg-ecid-compliance-review",
+                ),
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=CURRENT_PROMOTION_SOURCE_SET_ID,
+            review_id="v1-cg-ecid-compliance-review",
+            review_dir=review_dir,
+        )
+
+    review_scope = summary["review_scope"]
+    assert review_scope["status"] == "direct_eval_failed"
+    assert review_scope["passed"] is False
+    assert review_scope["failure_reasons"] == ["direct_eval_threshold_failed"]
+
+
 def _forest_plan_profile_eval_payload(
     *,
     source_set_id: str,

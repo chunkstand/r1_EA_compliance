@@ -295,6 +295,18 @@ def _review_coverage_summary(
         summary["failure_reasons"] = ["direct_eval_identity_mismatch"]
         return summary
     if not bool(slot_result.get("passed")):
+        failure_reasons = _string_list(slot_result.get("failure_reasons"))
+        non_self_reasons = [
+            reason for reason in failure_reasons if not reason.startswith("phase_eval_")
+        ]
+        actual_contract_status = str(slot_result.get("actual_contract_status") or "").strip()
+        expected_contract_status = str(slot.get("expected_contract_status") or "").strip()
+        if not non_self_reasons and actual_contract_status == expected_contract_status:
+            summary["details"]["self_phase_eval_gate_deferred"] = True
+            summary["details"]["self_phase_eval_failure_reasons"] = failure_reasons
+            summary["status"] = "direct_eval_present"
+            summary["passed"] = True
+            return summary
         summary["status"] = "direct_eval_failed"
         summary["failure_reasons"] = ["direct_eval_threshold_failed"]
         return summary

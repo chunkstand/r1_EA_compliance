@@ -86,11 +86,42 @@ history below.
   Tyler's Kitchen `1004`, and Helena-Lewis-and-Clark `419`. Tyler's Kitchen
   now has `forest_unit_id="lolo-nf"`, `1070` total authority candidates, and
   `1004` Forest Plan component candidates; its `authority_universe` phase is
-  current, but its review `phase-eval` is red because downstream applicability
-  decisions and component adjudication are stale against the full Lolo
-  universe. The aggregate real-package gate is red with
-  `reviewer_ready_slot_count=4`, `phase_eval_ready_slot_count=10/11`, and
-  `failed_phase_eval_count=1`; identity remains green at `10/10`.
+  current. The stale downstream state from this slice is superseded by the
+  newer Tyler replay below.
+- latest resolved Lolo Tyler's Kitchen downstream replay:
+  Tyler's Kitchen downstream applicability and review artifacts now replay
+  against the full Lolo authority universe. Applicability validation passes
+  with `54` applicable authorities, `1016` not applicable authorities, and
+  `0` unresolved decisions after the tracked two-item applicability
+  adjudication. The generated rule pack has `54` rules; compliance review is
+  reviewer-ready with `54` findings (`35` pass, `19` uncertain). The Forest
+  Plan context carries `17` management areas and one overlay, with
+  decision/admin title-page identity for Lolo National Forest, Missoula Ranger
+  District, Granite and Missoula Counties, Montana. Forest Plan component
+  evaluation considers `1004` Lolo components and `492` standards; current
+  component decisions leave `0` applicable Forest Plan standards and `0`
+  component-adjudication queue items. Tyler V1 passes with
+  `forest_plan_passed=true` and `7/7` Forest Plan expectations; Tyler
+  `phase-eval` passes `32/32` phases with `reviewer_ready=true`.
+- latest resolved phase-eval direct-eval self-reference hardening:
+  review-scoped phase-eval now defers a real-package coverage slot failure only
+  when every slot failure reason is `phase_eval_*` and the slot's actual
+  contract status matches the expected contract status. Non-phase real-package
+  slot failures still fail closed. This breaks the Tyler phase-eval/coverage
+  refresh loop without weakening package-authority, decision-identity, or
+  contract-status gates.
+- current all-forest aggregate truth:
+  `real-package-review-coverage-eval --manifest
+  config/v1_real_package_review_coverage_v1.json` still exits red overall, but
+  Tyler's `lolo-tylers-kitchen-forest-specific` slot passes. Current counts are
+  `covered_slot_count=5`, `reviewer_ready_slot_count=5`,
+  `required_slot_count=11`, `missing_required_slot_count=6`,
+  `phase_eval_ready_slot_count=11/11`, `failed_phase_eval_count=0`, and
+  decision identity `10/10`. The remaining failed required slots are
+  Beaverhead-Deerlodge South Tobacco Roots, Bitterroot Front, Flathead West
+  Reservoir, Custer-Gallatin South Otter, Helena-Lewis-and-Clark Bonanza, and
+  Idaho Panhandle Lacy Lemoosh; all are currently `review_eval_failed` plus
+  `slot_contract_status_mismatch`.
 - prior all-forest Forest Plan matrix contract hardening:
   reviewer-ready V1 Forest Plan contracts can no longer disable the Forest Plan
   compliance matrix gate. The real-package coverage eval passes `11`
@@ -127,9 +158,10 @@ history below.
   `decision_document_identity_ready_slot_count=10`,
   `missing_decision_document_identity_count=0`, and
   `failed_decision_document_identity_count=0`. The aggregate coverage command
-  is red overall with `reviewer_ready_slot_count=4`,
-  `missing_required_slot_count=7`, `review_eval_failed=7`, and
-  `slot_contract_status_mismatch=7`; those are inherited Forest
+  is still red overall, but the current aggregate counts are superseded by the
+  Tyler downstream replay section above: `reviewer_ready_slot_count=5`,
+  `missing_required_slot_count=6`, `phase_eval_ready_slot_count=11/11`, and
+  decision identity `10/10`. The remaining failures are inherited Forest
   Plan/component/applicable-standard readiness gaps, not identity failures.
 - latest resolved observability/eval context graph slice:
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` Milestone 0. The

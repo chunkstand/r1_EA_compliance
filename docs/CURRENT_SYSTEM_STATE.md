@@ -15,6 +15,66 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Lolo Tyler's Kitchen Downstream Replay And Self-Reference Gate Hardened Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  after the full Lolo selected-forest authority universe was promoted for
+  Tyler's Kitchen, the downstream applicability and reviewer artifacts were
+  regenerated against `1070` authority candidates, including all `1004` Lolo
+  Forest Plan component candidates. The replay uses data-configured authority
+  universe and component inventory evidence, not handwritten Lolo runtime rules.
+- applicability evidence:
+  `applicability-retrieve` passed with `1070` candidates, `9630` retrieval
+  trace rows, and `26737` graph trace rows. `applicability-determine` produced
+  `52` applicable, `1016` not-applicable, and `2` needs-adjudication decisions;
+  the tracked Tyler applicability adjudication now contains only those two
+  current conflicts, and `applicability-validate` passes after adjudication
+  with `54` applicable, `1016` not-applicable, and `0` unresolved decisions.
+  The generated rule pack has `54` rules.
+- Forest Plan and management-area evidence:
+  `forest_plan_context_summary.json` resolves `scope_status="lolo_nf"` and
+  carries `17` management areas, one overlay, and decision/admin title-page
+  identity for Lolo National Forest, Missoula Ranger District, Granite and
+  Missoula Counties, Montana. Forest Plan component evaluation considers
+  `1004` Lolo components and `492` standards; after the current component
+  applicability filter, all `1004` component candidates are not applicable,
+  `0` Forest Plan standards are applicable, and the component-adjudication
+  queue is empty.
+- compliance/V1/phase evidence:
+  `compliance-review` with the generated `54`-rule pack is reviewer-ready,
+  writes `54` findings (`35` pass, `19` uncertain), and keeps the Forest Plan
+  component gate reviewer-ready with `0` component queue items. Tyler's V1 eval
+  passes with `forest_plan_passed=true`, `7` Forest Plan expectations matched,
+  and `0` failed rule expectations. Tyler `phase-eval` passes `32/32` phases,
+  `reviewer_ready=true`, `contract_backed_promotion_ready=true`, and no
+  blockers.
+- direct-eval self-reference hardening:
+  review-scoped phase-eval now treats a real-package coverage slot failure as
+  self-referential only when every slot failure reason is `phase_eval_*` and the
+  slot's actual contract status matches the expected contract status. This
+  breaks the Tyler phase-eval/real-package coverage refresh loop without
+  weakening package-authority, identity, contract-status, or other
+  non-phase slot failures.
+- aggregate boundary:
+  `real-package-review-coverage-eval --manifest
+  config/v1_real_package_review_coverage_v1.json` still exits red overall, but
+  Tyler's `lolo-tylers-kitchen-forest-specific` slot now passes. Current
+  aggregate counts are `covered_slot_count=5`, `reviewer_ready_slot_count=5`,
+  `required_slot_count=11`, `missing_required_slot_count=6`,
+  `phase_eval_ready_slot_count=11/11`, `failed_phase_eval_count=0`, and
+  decision-document identity `10/10`. The remaining red slots are
+  Beaverhead-Deerlodge South Tobacco Roots, Bitterroot Front, Flathead West
+  Reservoir, Custer-Gallatin South Otter, Helena-Lewis-and-Clark Bonanza, and
+  Idaho Panhandle Lacy Lemoosh, all under `review_eval_failed` and
+  `slot_contract_status_mismatch`.
+- boundary:
+  this closes the Lolo/Tyler stale-downstream blocker and the generic
+  self-reference direct-eval bug. It does not claim all-forest reviewer
+  readiness; the six residual forest-specific examples still need their
+  downstream applicability/compliance/V1 replay slices.
+
 ## All-Forest Forest Plan Authority Universe Coverage Hardened Locally
 
 Latest implementation update on 2026-06-02 UTC:
@@ -45,23 +105,17 @@ Latest implementation update on 2026-06-02 UTC:
   phase passes currentness with `candidate_count=1004`,
   `context_count=1004`, candidate forest IDs `["lolo-nf"]`, and no failed
   currentness checks.
-- remaining replay boundary:
-  Tyler's Kitchen `phase-eval` now exits red after the authority-universe
-  replay because downstream applicability decisions and component adjudication
-  are stale against the full Lolo candidate universe. The aggregate
-  `real-package-review-coverage-eval --manifest
-  config/v1_real_package_review_coverage_v1.json` remains red with
-  `reviewer_ready_slot_count=4`, `missing_required_slot_count=7`,
-  `phase_eval_required_slot_count=11`, `phase_eval_ready_slot_count=10`,
-  `failed_phase_eval_count=1`, identity still green at `10/10`, and failure
-  categories including `review_eval_failed=7`, `slot_contract_status_mismatch=7`,
-  and the Tyler phase-eval stale-downstream failures.
+- superseded replay boundary:
+  the Tyler stale-downstream state described by this authority-universe slice is
+  superseded by the newer Lolo Tyler downstream replay section above. The
+  current aggregate is still red, but Tyler is no longer one of the failed
+  slots and the phase-eval subgate is green at `11/11`.
 - boundary:
   this slice hardens and regenerates the authority-universe layer only. It does
-  not claim all-forest reviewer readiness; the residual examples still need
-  downstream applicability retrieval/determination/validation, generated rule
-  pack, component adjudication, compliance matrix, V1 eval, and phase-eval
-  replay before they can count as reviewer-ready.
+  not claim all-forest reviewer readiness; the remaining residual examples
+  still need downstream applicability retrieval/determination/validation,
+  generated rule pack, component adjudication, compliance matrix, V1 eval, and
+  phase-eval replay before they can count as reviewer-ready.
 
 ## All-Forest Decision-Document Identity Contract Hardened Locally
 
@@ -100,10 +154,12 @@ Latest implementation update on 2026-06-02 UTC:
   remains green with `phase_eval_required_slot_count=11` and
   `phase_eval_ready_slot_count=11`.
 - inherited red boundary:
-  the stricter aggregate coverage command currently exits red overall with
-  `reviewer_ready_slot_count=4`, `missing_required_slot_count=7`, and failure
-  categories `review_eval_failed=7` and `slot_contract_status_mismatch=7`.
-  Those failures are pre-existing forest-plan/component/applicable-standard
+  the stricter aggregate coverage command still exits red overall, but this
+  older identity-hardening snapshot is superseded by the leading Tyler
+  downstream replay section. Current aggregate counts are
+  `reviewer_ready_slot_count=5`, `missing_required_slot_count=6`,
+  `phase_eval_ready_slot_count=11/11`, and decision identity `10/10`; the
+  remaining failures are pre-existing forest-plan/component/applicable-standard
   readiness gaps, not identity-resolution failures.
 - boundary:
   this is an all-forest resolver/eval contract hardening slice. It does not

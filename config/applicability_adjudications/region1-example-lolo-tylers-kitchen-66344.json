@@ -1,11 +1,11 @@
 {
   "schema_version": "applicability-adjudication-template-v0",
   "adjudication_id": "region1-example-lolo-tylers-kitchen-66344-applicability-adjudication",
-  "created_at": "2026-05-27T13:05:37Z",
+  "created_at": "2026-06-02T07:52:25Z",
   "review_id": "region1-example-lolo-tylers-kitchen-66344",
   "source_set_id": "source-set-f70ea11e04ae3d53",
   "decisions_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_decisions.jsonl",
-  "applicability_decisions_sha256": "b3d74a8ad97846cf657d7edaa095a47f9d20ad6a086c654799c45e59501c64dd",
+  "applicability_decisions_sha256": "2fcc8fc056266cf6142f6ac6202015ca07f6542a9b9adc3c4aaa0852a94c8012",
   "allowed_final_statuses": [
     "applicable",
     "not_applicable"
@@ -28,17 +28,17 @@
   ],
   "summary": {
     "schema_version": "applicability-adjudication-template-summary-v0",
-    "created_at": "2026-05-27T13:05:37Z",
+    "created_at": "2026-06-02T07:52:25Z",
     "review_id": "region1-example-lolo-tylers-kitchen-66344",
     "source_set_id": "source-set-f70ea11e04ae3d53",
-    "decision_count": 396,
-    "adjudication_item_count": 4,
+    "decision_count": 1070,
+    "adjudication_item_count": 2,
     "pending_item_count": 0,
     "decisions_path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_decisions.jsonl",
-    "decisions_sha256": "b3d74a8ad97846cf657d7edaa095a47f9d20ad6a086c654799c45e59501c64dd",
+    "decisions_sha256": "2fcc8fc056266cf6142f6ac6202015ca07f6542a9b9adc3c4aaa0852a94c8012",
     "output_path": "config/applicability_adjudications/region1-example-lolo-tylers-kitchen-66344.json",
-    "markdown_path": "/tmp/applicability_adjudication_worklist.md",
-    "instructions": "Replayable adjudication for the four Tyler's Kitchen applicability conflicts after live source-set and package review."
+    "markdown_path": "/tmp/tylers-current-applicability-adjudication.worklist.md",
+    "instructions": "Replayable adjudication for the two current Tyler's Kitchen applicability conflicts after full Lolo authority-universe replay."
   },
   "items": [
     {
@@ -77,88 +77,6 @@
         "EA-PACKAGE-031 (ddcc91d5c270)",
         "EA-PACKAGE-051 (88b6e15699f5)",
         "R1PLAN-lolo-nf-01 (8572aa43ddae)"
-      ],
-      "reviewer_notes": ""
-    },
-    {
-      "item_id": "applicability-adjudication-item:7369fc2803dde6de",
-      "decision_id": "1d289c1929ed3b143a7bfbb4",
-      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
-      "authority_category": "law",
-      "authority_document_role": "law",
-      "current_status": "needs_adjudication",
-      "current_basis_type": "unresolved_evidence_conflict",
-      "expected_current": {
-        "basis_type": "unresolved_evidence_conflict",
-        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:species_supporting_sources_and_overlays:species_supporting_sources_and_overlays_authority_template",
-        "decision_id": "1d289c1929ed3b143a7bfbb4",
-        "status": "needs_adjudication"
-      },
-      "final_status": "applicable",
-      "disposition": "human_applicable",
-      "allowed_final_statuses": [
-        "applicable",
-        "not_applicable"
-      ],
-      "allowed_dispositions": [
-        "human_applicable",
-        "human_not_applicable",
-        "pending"
-      ],
-      "adjudicated_at": "2026-05-24T18:52:00Z",
-      "adjudicated_by": [
-        "codex"
-      ],
-      "source_type": "codex_artifact_review",
-      "rationale": "Applicable for review: the package contains lynx, grizzly, listed-species, habitat, biological-assessment, and biological-opinion context that squarely triggers species-supporting review. Species-specific `no effect` and `no habitat` statements narrow individual taxa or critical-habitat determinations and do not negate the broader species authority family.",
-      "supporting_citation_refs": [
-        "EA-PACKAGE-017 (74a936fc567f)",
-        "EA-PACKAGE-038 (4f718996a7ee)",
-        "EA-PACKAGE-050 (01073a1e6a36)",
-        "EA-PACKAGE-054 (4ddaae382862)",
-        "R1EA-064 (18c912e31fa3)",
-        "R1EA-068 (e9b76942b577)"
-      ],
-      "reviewer_notes": ""
-    },
-    {
-      "item_id": "applicability-adjudication-item:acfc081a3a904924",
-      "decision_id": "0a96c0822224cfcfaedfbfd3",
-      "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
-      "authority_category": "law",
-      "authority_document_role": "law",
-      "current_status": "needs_adjudication",
-      "current_basis_type": "unresolved_evidence_conflict",
-      "expected_current": {
-        "basis_type": "unresolved_evidence_conflict",
-        "candidate_authority_id": "authority-family-template:nepa-ea-authority-family-rule-templates-v1:0.1.0:vegetation_wildfire_forest_health_authorities:vegetation_wildfire_forest_health_authorities_authority_template",
-        "decision_id": "0a96c0822224cfcfaedfbfd3",
-        "status": "needs_adjudication"
-      },
-      "final_status": "applicable",
-      "disposition": "human_applicable",
-      "allowed_final_statuses": [
-        "applicable",
-        "not_applicable"
-      ],
-      "allowed_dispositions": [
-        "human_applicable",
-        "human_not_applicable",
-        "pending"
-      ],
-      "adjudicated_at": "2026-05-24T18:52:00Z",
-      "adjudicated_by": [
-        "codex"
-      ],
-      "source_type": "codex_artifact_review",
-      "rationale": "Applicable for review: Tyler's Kitchen is a fuels-reduction and forest-health project with vegetation treatments, prescribed fire, wildfire-risk analysis, and restoration actions. The `no vegetation treatment` and `no timber harvest` phrases are no-action or unsuitable-lands context and do not negate the governing proposed-action trigger for the vegetation and wildfire authority family.",
-      "supporting_citation_refs": [
-        "EA-PACKAGE-012 (e545809686b9)",
-        "EA-PACKAGE-015 (22dff39da065)",
-        "EA-PACKAGE-022 (b3c73f7c7585)",
-        "EA-PACKAGE-036 (3b2cda165d3e)",
-        "R1EA-056 (6fba4e682e0e)",
-        "R1EA-057 (38c600633e82)"
       ],
       "reviewer_notes": ""
     },
