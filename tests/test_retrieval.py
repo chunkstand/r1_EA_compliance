@@ -11,6 +11,7 @@ import unittest
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
 from usfs_r1_ea_sources.retrieval import query_retrieval_index
 from usfs_r1_ea_sources.retrieval_query import _contains_term
+from usfs_r1_ea_sources.retrieval_query import _fts_query
 from usfs_r1_ea_sources.retrieval_query import _tokenize
 
 from tests.support.retrieval_fixtures import _chunk
@@ -288,6 +289,14 @@ class RetrievalTests(unittest.TestCase):
             )
 
             self.assertEqual(query["results"][0]["source_record_id"], "FPS-068")
+
+    def test_fts_query_omits_short_common_terms_and_avoids_prefix_scan(self) -> None:
+        query = _fts_query(_tokenize("finding of no significant impact mitigation"))
+
+        self.assertEqual(query, "finding OR significant OR impact OR mitigation")
+        self.assertNotIn("of*", query)
+        self.assertNotIn("no*", query)
+        self.assertNotIn("*", query)
 
     def test_retrieval_query_centers_span_on_densest_query_term_cluster(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

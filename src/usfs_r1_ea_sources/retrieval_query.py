@@ -9,6 +9,22 @@ import sqlite3
 from .records import aliased_source_record_ids
 from .retrieval_common import STOPWORDS, TOKEN_RE, _json_list
 
+FTS_TERM_MIN_LENGTH = 3
+FTS_TERM_STOPWORDS = STOPWORDS | {
+    "as",
+    "at",
+    "be",
+    "by",
+    "if",
+    "in",
+    "is",
+    "no",
+    "of",
+    "on",
+    "or",
+    "to",
+}
+
 
 def query_retrieval_index(
     *,
@@ -217,9 +233,14 @@ def _fts_query(terms: list[str]) -> str:
     tokens = []
     for term in dict.fromkeys(terms):
         cleaned = re.sub(r"[^A-Za-z0-9_]", "", term)
-        if cleaned:
-            tokens.append(f"{cleaned}*")
+        if _fts_term_allowed(cleaned):
+            tokens.append(cleaned)
     return " OR ".join(tokens)
+
+
+def _fts_term_allowed(term: str) -> bool:
+    cleaned = term.strip().lower()
+    return len(cleaned) >= FTS_TERM_MIN_LENGTH and cleaned not in FTS_TERM_STOPWORDS
 
 
 def _normalized_filter_ids(
