@@ -11,20 +11,5 @@
     "closeout_commit": "a6c5459",
     "last_oversized_owner_family": "viewer"
   },
-  "families": [
-    {
-      "name": "source-eval-trace-inventory-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 17,
-      "required_tests": [
-        "tests/test_eval_trace_inventory.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/eval_trace_inventory.py",
-          "line_count": 806
-        }
-      ]
-    }
-  ]
+  "families": []
 }

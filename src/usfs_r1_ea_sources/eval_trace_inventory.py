@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 import json
 
 from .eval_trace_contract import DEFAULT_EVAL_TRACE_CONTRACT_PATH
 from .eval_trace_contract import load_eval_trace_contract
+from .eval_trace_inventory_models import ArtifactSpec as _ArtifactSpec
+from .eval_trace_inventory_models import EvalTraceInventoryResult
 from .records import sha256_file
 
 
@@ -14,20 +15,6 @@ INVENTORY_RESULT_SCHEMA_VERSION = "eval-trace-inventory-results-v1"
 INVENTORY_REPORT_SCHEMA_VERSION = "eval-trace-inventory-report-v1"
 DEFAULT_EVAL_TRACE_INVENTORY_RESULTS_DIR = Path("source_library/evaluations/eval_trace_inventory")
 REPO_ROOT = Path(__file__).resolve().parents[2]
-
-
-@dataclass(frozen=True)
-class EvalTraceInventoryResult:
-    summary: dict[str, Any]
-    report: str | None = None
-
-
-@dataclass(frozen=True)
-class _ArtifactSpec:
-    family_id: str
-    path: Path
-    required: bool = True
-    kind: str = "json"
 
 
 def run_eval_trace_inventory(

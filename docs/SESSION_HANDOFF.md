@@ -137,11 +137,11 @@ history below.
   hosted service/API, auth, UI query workflow, or broader graph-KB product work
   should be opened as a new bounded packet.
 - latest resolved architecture slice:
-  applicability fact-type support source-owner split after the catalog
-  fixture-backed test-owner split. The current probe reports `547` code files,
-  `1` code files above `800`, no Python or JS/TS import cycles, and no source
-  module above the `20`-import fan-out gate.
-  `config/architecture_large_file_inventory_v1.json` owns the exact `1`
+  eval trace inventory model source-owner split and zero-oversized closeout
+  after the applicability fact-type support source-owner split. The current
+  probe reports `548` code files, `0` code files above `800`, no Python or
+  JS/TS import cycles, and no source module above the `20`-import fan-out gate.
+  `config/architecture_large_file_inventory_v1.json` owns the empty `0`
   source-owner and `0` test-owner backlog; `README.md` and
   `docs/CURRENT_ROUTING.md` remain compact route surfaces.
 - active architecture implementation slice:

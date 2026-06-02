@@ -435,6 +435,7 @@ modules = [
   "eval_trace_export",
   "eval_trace_gate",
   "eval_trace_inventory",
+  "eval_trace_inventory_models",
   "eval_trace_store",
   "eval_trace_store_sqlite",
   "extraction_fidelity_eval",

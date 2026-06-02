@@ -15,6 +15,26 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Eval Trace Inventory Model Source Owner Split And Zero-Oversized Closeout Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the final source-owner oversized reduction slice is closed locally.
+  `src/usfs_r1_ea_sources/eval_trace_inventory.py` remains the eval trace
+  inventory runtime at `793` lines. The new
+  `src/usfs_r1_ea_sources/eval_trace_inventory_models.py` owns the inventory
+  result/spec dataclasses at `19` lines.
+- architecture effect:
+  the architecture probe reports `548` code files, `0` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `0` source owners and `0` test
+  owners.
+- boundary:
+  this is a model-owner source split and zero-oversized closeout. It does not
+  change eval trace inventory link checks, generated artifact paths, report
+  format, export readiness fields, or local corpus state.
+
 ## Applicability Fact-Type Support Source Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

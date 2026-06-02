@@ -7,9 +7,9 @@ Use this short route before opening append-only docs.
 - Read this file first, then `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved source-set graph-KB slice: phase-gated operational graph query surface after f70 canonical semantic graph direct-eval strengthening; exact counts live in `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved extraction/chunking/retrieval accuracy slice: sidecar reviewer package adoption after sidecar phase-eval adoption; exact paths, smoke counts, and sidecar promotion boundaries live in `docs/CURRENT_SYSTEM_STATE.md`.
-- Latest resolved architecture slice: applicability fact-type support split after the catalog fixture-backed test split; inventory and route-doc caps are current.
+- Latest resolved architecture slice: eval trace inventory model split after the applicability fact-type support split; zero files are now above the `800`-line architecture cap.
 - Latest resolved observability/eval graph slice: context-graph build/eval commands, trace-event materialization, explicit event-log capture, canonical CLI command-event capture, and f70 source-set phase-eval ratchet. Details: `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
-- Active implementation slice: none. Open a new bounded packet before hosted query service/API expansion, model-judge work, hosted scoring, knowledge-graph sidecar adoption, or oversized-owner reduction.
+- Active implementation slice: none. Open a new bounded packet before hosted query service/API expansion, model-judge work, hosted scoring, knowledge-graph sidecar adoption, or future architecture-cap changes.
 - Latest resolved forest-specific example packet: `docs/KOOTENAI_TROJAN_DEFENSE_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
