@@ -135,6 +135,7 @@ modules = [
   "forest_plan_components_inventory_build",
   "forest_plan_components_inventory_common",
   "forest_plan_components_inventory_detection",
+  "forest_plan_components_inventory_legacy",
   "forest_plan_components_inventory_quality",
   "forest_plan_components_models",
   "forest_plan_components_package_search",

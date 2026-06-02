@@ -182,7 +182,9 @@ class ForestPlanComponentInventoryBuildTests(unittest.TestCase):
             self.assertIn(f"{source_record_id}-AIR-QUALITY-STD-1", component_ids)
             self.assertIn(f"{source_record_id}-AIR-QUALITY-STD-2", component_ids)
 
-    def test_builds_inventory_from_period_number_components_and_standard_no(self) -> None:
+    def test_builds_inventory_from_period_number_components_and_skips_standard_no_reference(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             source_set_id = "source-set-test"
@@ -197,8 +199,11 @@ class ForestPlanComponentInventoryBuildTests(unittest.TestCase):
                         text=(
                             "Goal 1: Ensure sustainable ecosystems. Standard 2. Meet air "
                             "quality requirements. Guideline 7. Design stream crossings "
-                            "to pass flow and sediment. Standard No. 21. Special "
-                            "prescriptions protect riparian areas."
+                            "to pass flow and sediment. Wildlife and Fish Standards "
+                            "21. Wildlife features shall be protected during harvest. "
+                            "Timber harvest prescriptions will be applicable as defined "
+                            "in Forest Standard No. 21. Special prescriptions protect "
+                            "riparian areas."
                         ),
                     ),
                 ],
@@ -224,6 +229,72 @@ class ForestPlanComponentInventoryBuildTests(unittest.TestCase):
             self.assertTrue(any(component_id.endswith("-STD-2") for component_id in component_ids))
             self.assertTrue(any(component_id.endswith("-GL-7") for component_id in component_ids))
             self.assertTrue(any(component_id.endswith("-STD-21") for component_id in component_ids))
+            standard_21 = next(
+                component
+                for component in components
+                if component["component_id"].endswith("-STD-21")
+            )
+            self.assertIn("Wildlife features shall be protected", standard_21["component_text"])
+            self.assertNotIn("Special prescriptions protect", standard_21["component_text"])
+
+    def test_builds_legacy_management_area_numbered_direction_with_context(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-legacy-forest-02"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "III. Management Area Direction MANAGEMENT AREA 16 "
+                            "C. Standards 1. Timber harvest shall maintain soil "
+                            "productivity. 2. Roads will be closed after project "
+                            "completion."
+                        ),
+                    ),
+                    {
+                        **_chunk(
+                            source_set_id=source_set_id,
+                            source_record_id=source_record_id,
+                            text=(
+                                "Timber Practices: 3. Regeneration harvest may occur "
+                                "where needed to meet management objectives. D. Schedule "
+                                "of Management Practices Soil Inventory M Acres 1 0"
+                            ),
+                        ),
+                        "chunk_id": f"chunk:{source_record_id}:1",
+                        "chunk_index": 1,
+                    },
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="legacy-forest-nf",
+                plan_version="1986",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["standard_count"], 3)
+            coverage = json.loads(result.coverage_path.read_text(encoding="utf-8"))
+            self.assertEqual(coverage["detected_standard_count"], 3)
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="legacy-forest-nf",
+            )
+            self.assertEqual(len(components), 3)
+            for component in components:
+                self.assertEqual(component["component_type"], "standard")
+                self.assertIn("-MA-16-", component["component_id"])
+                self.assertEqual(component["management_area_ids"], ["mgmt-ma-16"])
+                self.assertIn("Management Area 16", component["section_heading"])
 
     def test_colon_number_table_of_contents_entries_are_suppressed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

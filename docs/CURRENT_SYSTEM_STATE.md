@@ -15,6 +15,37 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Forest-Plan Component Inventory All-R1 Legacy Direction Closeout Resolved Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  the forest-plan component inventory builder now treats legacy numbered
+  direction and management-area direction as first-class component inventory
+  data. Legacy context carries across ordered source chunks by
+  `source_record_id`; detected components can carry `legacy_parse_context`;
+  management-area IDs are derived from Forest Plan text such as
+  `Management Area 16`; and component IDs for non-coded legacy/colon
+  components include deterministic body scope where generic headings or
+  management-area-local numbering would otherwise collide.
+- all-R1 gate:
+  temp replay
+  `forest-plan-components-build --source-set-id source-set-f70ea11e04ae3d53
+  --manifest-path config/r1_forest_plan_component_inventory_build_manifest.json
+  --chunks-path source_library/derived/source-set-f70ea11e04ae3d53/chunks/chunks.jsonl`
+  passed with `profile_result_count=10`, `blocked_forest_unit_ids=[]`,
+  `component_count=5894`, `standard_count=1888`,
+  `component_source_accuracy_failure_count=0`, and
+  `profile_blocker_types_by_forest_unit={}`. Lolo contributes `1004`
+  components and `492` standards; target management areas visible in the EA
+  package are present in the Lolo plan inventory, including `mgmt-ma-9`,
+  `mgmt-ma-16`, `mgmt-ma-21`, `mgmt-ma-24`, and `mgmt-ma-25`.
+- boundary:
+  this closes the specific Lolo-thin/management-area inventory gap without
+  handwritten Lolo rules. The implementation is generic to Region 1 manifest
+  rows and keeps remaining inventory-quality issues as non-blocking warnings
+  unless promoted by the build coverage rules.
+
 ## Eval Trace Inventory Model Source Owner Split And Zero-Oversized Closeout Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

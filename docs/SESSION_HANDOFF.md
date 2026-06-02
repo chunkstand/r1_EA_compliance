@@ -40,6 +40,18 @@ history below.
   the retrieval worktree branch `codex/extraction-chunking-retrieval-accuracy`
   is merged into `main` with the current-main observability/eval context graph
   route preserved. Continue new implementation work from `main`.
+- latest resolved forest-plan component inventory slice:
+  all-R1 legacy direction and management-area inventory closeout. The generic
+  builder now carries legacy context across ordered chunks, derives
+  management-area IDs from Forest Plan text, body-scopes non-coded legacy/colon
+  component IDs when generic headings or management-area-local numbering would
+  collide, and includes legacy parse context in source-accuracy reparse keys.
+  Temp all-R1 replay against `source-set-f70ea11e04ae3d53` passed with
+  `profile_result_count=10`, `blocked_forest_unit_ids=[]`,
+  `component_count=5894`, `standard_count=1888`,
+  `component_source_accuracy_failure_count=0`, and no profile blockers. Lolo
+  now builds `1004` components and `492` standards, with `mgmt-ma-9`,
+  `mgmt-ma-16`, `mgmt-ma-21`, `mgmt-ma-24`, and `mgmt-ma-25` present.
 - latest resolved observability/eval context graph slice:
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` Milestone 0. The
   repo has a tracked context-graph contract, `eval-context-graph-build`,

@@ -644,12 +644,19 @@ The builder is deterministic and supports two execution modes:
 
 In either mode, the builder only consumes chunks whose `source_set_id` matches the requested source
 set, whose `source_record_id` is included in the selected build scope, and whose
-`document_role=forest_plan`. It extracts labeled plan components such as
+`document_role` is `forest_plan` or `forest_plan_support`. It extracts labeled plan components such as
 `Standards (BC-STD-CMBCA) 01 ...`, requires a numeric component number after the label, preserves
 source chunk IDs, hashes, citation labels, and provenance, and fails validation if generated
 component records are malformed. This avoids treating cross-reference labels such as `Guidelines
 (FW-GDL-VEGNF) See ...` or table captions as plan components, stops valid component text before
 those malformed labels, and records the suppressed label as an inventory-quality issue.
+
+Legacy numbered direction is parsed as inventory data rather than forest-specific runtime branching.
+The builder orders chunks by source record and location, carries legacy section context across chunk
+boundaries, derives management-area IDs from Forest Plan text such as `Management Area 16`, and
+body-scopes non-coded legacy/colon component IDs when generic headings or management-area-local
+numbering would otherwise collide. This keeps management-area standards first-class without adding
+handwritten forest-specific management-area terms.
 
 `component_inventory_build_coverage.json` has schema version
 `forest-plan-component-inventory-build-coverage-v0` and records selected chunk count, detected
@@ -699,6 +706,7 @@ component includes:
 - `source_chunk_ids`
 - `artifact_sha256`
 - `content_sha256`
+- optional `legacy_parse_context` for context-carried legacy components
 - `provenance` with non-empty `entity`, `activity`, and `agent` objects
 
 `forest_plan_component_findings.json` has schema version `forest-plan-component-findings-v0` and

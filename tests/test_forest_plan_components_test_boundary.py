@@ -16,12 +16,13 @@ SUITE_BUDGETS = {
 }
 SOURCE_FAMILY_BUDGETS = {
     "src/usfs_r1_ea_sources/forest_plan_components.py": 120,
-    "src/usfs_r1_ea_sources/forest_plan_components_common.py": 220,
+    "src/usfs_r1_ea_sources/forest_plan_components_common.py": 225,
     "src/usfs_r1_ea_sources/forest_plan_components_coverage.py": 500,
     "src/usfs_r1_ea_sources/forest_plan_components_determination.py": 650,
     "src/usfs_r1_ea_sources/forest_plan_components_inventory_build.py": 450,
     "src/usfs_r1_ea_sources/forest_plan_components_inventory_common.py": 180,
-    "src/usfs_r1_ea_sources/forest_plan_components_inventory_detection.py": 450,
+    "src/usfs_r1_ea_sources/forest_plan_components_inventory_detection.py": 460,
+    "src/usfs_r1_ea_sources/forest_plan_components_inventory_legacy.py": 320,
     "src/usfs_r1_ea_sources/forest_plan_components_inventory_quality.py": 750,
     "src/usfs_r1_ea_sources/forest_plan_components_models.py": 450,
     "src/usfs_r1_ea_sources/forest_plan_components_package_search.py": 650,

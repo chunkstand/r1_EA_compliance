@@ -6,6 +6,8 @@ from pathlib import Path
 
 from .forest_plan_components_common import _safe_identifier, _utc_now
 from .forest_plan_components_inventory_detection import _components_from_chunk
+from .forest_plan_components_inventory_legacy import legacy_component_matches
+from .forest_plan_components_inventory_legacy import ordered_legacy_chunks
 from .forest_plan_components_inventory_quality import _component_inventory_build_coverage, _merge_overlapping_component_records, _profile_context_terms
 from .forest_plan_components_models import FOREST_PLAN_COMPONENT_INVENTORY_SCHEMA_VERSION, ForestPlanComponentInventoryBuildResult, _ForestPlanInventoryProfileBuild
 from .forest_plan_components_runtime import _parse_component
@@ -280,7 +282,10 @@ def _build_components_for_forest(
 ) -> list[dict]:
     components = []
     profile_context = _profile_context_terms(forest_unit_id)
-    for chunk in chunks:
+    legacy_context_by_source_record_id: dict[str, dict] = {}
+    for chunk in ordered_legacy_chunks(chunks):
+        source_record_id = str(chunk.get("source_record_id") or "")
+        legacy_context = legacy_context_by_source_record_id.get(source_record_id, {})
         components.extend(
             _components_from_chunk(
                 chunk=chunk,
@@ -291,8 +296,17 @@ def _build_components_for_forest(
                 management_area_ids=management_area_ids or [],
                 overlay_ids=overlay_ids or [],
                 profile_context=profile_context,
+                legacy_context=legacy_context,
             )
         )
+        _, next_context = legacy_component_matches(
+            text=str(chunk.get("text") or ""),
+            fallback_heading=str(
+                chunk.get("heading") or chunk.get("title") or "Forest Plan Components"
+            ),
+            initial_context=legacy_context,
+        )
+        legacy_context_by_source_record_id[source_record_id] = next_context
     return _merge_overlapping_component_records(components)
 
 

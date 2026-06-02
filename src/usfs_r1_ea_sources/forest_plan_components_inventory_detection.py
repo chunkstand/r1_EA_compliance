@@ -5,6 +5,7 @@ import re
 
 from .forest_plan_components_common import _compact, _component_id, _component_provenance, _dedupe_preserve_order, _normalized_component_text, _package_evidence_terms_from_text, _resource_topics_from_terms, _safe_identifier
 from .forest_plan_components_inventory_common import _component_context_window, _component_type_from_label, _legacy_section_heading_for_match, _matching_profile_entry_ids, _section_heading_for_match, _suppress_tabular_component_label
+from .forest_plan_components_inventory_legacy import _is_legacy_cross_reference, legacy_component_matches, ordered_legacy_chunks
 from .forest_plan_components_models import CODED_COMPONENT_RE, COLON_COMPONENT_RE, COMPONENT_LABEL_RE, GENERIC_LEGACY_SECTION_CODES, LEGACY_SECTION_STOPWORDS, TERM_STOPWORDS, TOKEN_RE
 
 
@@ -18,11 +19,16 @@ def _components_from_chunk(
     management_area_ids: list[str],
     overlay_ids: list[str],
     profile_context: dict[str, tuple[object, ...]],
+    legacy_context: dict | None = None,
 ) -> list[dict]:
     text = str(chunk.get("text") or "")
     components = []
     fallback_heading = str(chunk.get("heading") or chunk.get("title") or "Forest Plan Components")
-    for match in _component_matches(text, fallback_heading=fallback_heading):
+    for match in _component_matches(
+        text,
+        fallback_heading=fallback_heading,
+        legacy_context=legacy_context,
+    ):
         label = match["label"]
         code = match["code"]
         number = match["number"]
@@ -74,6 +80,11 @@ def _components_from_chunk(
                 "management_area_ids": _dedupe_preserve_order(
                     [
                         *management_area_ids,
+                        *[
+                            str(entry_id)
+                            for entry_id in match.get("management_area_ids", [])
+                            if str(entry_id).strip()
+                        ],
                         *_matching_profile_entry_ids(
                             context_text,
                             profile_context.get("management_area_terms", ()),
@@ -99,12 +110,22 @@ def _components_from_chunk(
                     source_chunk_ids=source_chunk_ids,
                 ),
                 "package_evidence_terms": package_evidence_terms,
+                **(
+                    {"legacy_parse_context": dict(match["legacy_context"])}
+                    if isinstance(match.get("legacy_context"), dict)
+                    else {}
+                ),
             }
         )
     return components
 
 
-def _component_matches(text: str, *, fallback_heading: str) -> list[dict[str, object]]:
+def _component_matches(
+    text: str,
+    *,
+    fallback_heading: str,
+    legacy_context: dict | None = None,
+) -> list[dict[str, object]]:
     matches = []
     for regex in (COMPONENT_LABEL_RE, CODED_COMPONENT_RE, COLON_COMPONENT_RE):
         for match in regex.finditer(text):
@@ -115,6 +136,22 @@ def _component_matches(text: str, *, fallback_heading: str) -> list[dict[str, ob
             )
             if normalized is not None:
                 matches.append(normalized)
+    legacy_matches, _ = legacy_component_matches(
+        text=text,
+        fallback_heading=fallback_heading,
+        initial_context=legacy_context,
+    )
+    for match in legacy_matches:
+        code = _legacy_component_code(
+            section_heading=str(match["section_heading"]),
+            label=str(match["label"]),
+            component_body=str(match["text"]),
+            text=text,
+            start=int(match["start"]),
+            fallback_heading=fallback_heading,
+            prefer_body_code=False,
+        )
+        matches.append({**match, "code": code})
     matches.sort(key=lambda item: (int(item["start"]), -len(str(item["text"]))))
     deduped = []
     seen = set()
@@ -151,6 +188,16 @@ def _normalized_component_match(
             return None
     elif match.re is COLON_COMPONENT_RE:
         if _looks_like_component_table_of_contents(component_text):
+            return None
+        if _is_legacy_cross_reference(text=text, start=start, label=label):
+            return None
+        if label.strip().lower() in {
+            "desired conditions",
+            "goals",
+            "guidelines",
+            "objectives",
+            "standards",
+        }:
             return None
         section_heading = _legacy_section_heading_for_match(
             text=text,
@@ -245,8 +292,11 @@ def _legacy_component_code(
         component_body,
         max_parts=12 if prefer_body_code else 4,
     )
+    body_scoped = False
     if prefer_body_code and body_code:
         section_code = f"{body_code}-{_legacy_component_text_digest(component_body)}"
+    if not prefer_body_code and body_code and section_code.startswith("MA-"):
+        section_code = f"{section_code}-{body_code}-{_legacy_component_text_digest(component_body)}"
     if not prefer_body_code and section_code and (
         section_code == fallback_code
         or _legacy_section_code_is_generic(
@@ -255,12 +305,16 @@ def _legacy_component_code(
         )
     ):
         section_code = body_code
+        body_scoped = bool(body_code)
     if not section_code:
         goal_number = _legacy_parent_goal_number(text=text, start=start)
         if goal_number:
             section_code = f"GOAL-{goal_number}"
     if not section_code:
         section_code = body_code
+        body_scoped = bool(body_code)
+    if not prefer_body_code and body_scoped and section_code:
+        section_code = f"{section_code}-{_legacy_component_text_digest(component_body)}"
     abbreviation = _component_abbreviation_from_label(label)
     if section_code:
         return _safe_identifier(f"{section_code}-{abbreviation}").upper()
@@ -276,11 +330,15 @@ def _legacy_parent_goal_number(*, text: str, start: int) -> str:
 
 
 def _legacy_section_code(section_heading: str) -> str:
+    management_area_match = re.search(r"\bmanagement\s+area\s+(?P<identifier>\d{1,3}[A-Za-z]?)\b", section_heading, re.IGNORECASE)
+    management_area_code = f"MA-{_safe_identifier(management_area_match.group('identifier')).upper()}" if management_area_match else ""
     parts = [
         part.upper()
         for part in TOKEN_RE.findall(section_heading.lower())
-        if part not in LEGACY_SECTION_STOPWORDS
+        if part not in LEGACY_SECTION_STOPWORDS and part != "area"
     ]
+    if management_area_code:
+        return "-".join([management_area_code, *parts[:3]])
     return "-".join(parts[:4])
 
 
@@ -289,16 +347,22 @@ def _legacy_section_code_is_generic(*, section_code: str, section_heading: str) 
     code_tokens = [token for token in section_code.split("-") if token]
     if normalized_heading.startswith("chapter "):
         return True
+    if "land management plan" in normalized_heading:
+        return True
     if normalized_heading in {
+        "desired condition",
+        "desired conditions",
         "goal",
         "goals",
         "guideline",
         "guidelines",
+        "monitoring",
         "objective",
         "objectives",
         "objectives none",
         "standard",
         "standards",
+        "suitability",
     }:
         return True
     return len(code_tokens) == 1 and code_tokens[0] in GENERIC_LEGACY_SECTION_CODES
@@ -346,12 +410,19 @@ def _suppress_component_match(match: dict[str, object], component_body: str) -> 
 
 def _detected_component_labels(chunks: list[dict]) -> list[dict]:
     labels = []
-    for chunk in chunks:
+    legacy_context_by_source_record_id: dict[str, dict] = {}
+    for chunk in ordered_legacy_chunks(chunks):
         text = str(chunk.get("text") or "")
         fallback_heading = str(
             chunk.get("heading") or chunk.get("title") or "Forest Plan Components"
         )
-        for match in _component_matches(text, fallback_heading=fallback_heading):
+        source_record_id = str(chunk.get("source_record_id") or "")
+        legacy_context = legacy_context_by_source_record_id.get(source_record_id, {})
+        for match in _component_matches(
+            text,
+            fallback_heading=fallback_heading,
+            legacy_context=legacy_context,
+        ):
             if _suppress_component_match(match, match["text"]):
                 continue
             component_type = _component_type_from_label(match["label"])
@@ -378,4 +449,10 @@ def _detected_component_labels(chunks: list[dict]) -> list[dict]:
                     "section_heading": match["section_heading"],
                 }
             )
+        _, next_context = legacy_component_matches(
+            text=text,
+            fallback_heading=fallback_heading,
+            initial_context=legacy_context,
+        )
+        legacy_context_by_source_record_id[source_record_id] = next_context
     return labels

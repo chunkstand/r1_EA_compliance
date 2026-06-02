@@ -302,11 +302,19 @@ def _component_inventory_source_accuracy(*, chunks: list[dict], components: list
                 failure["component_content_sha256"] = str(
                     component.get("content_sha256") or ""
                 )
+            legacy_context = (
+                component.get("legacy_parse_context")
+                if isinstance(component.get("legacy_parse_context"), dict)
+                else None
+            )
             reparse_key = (
                 primary_chunk_id,
                 str(component.get("forest_unit_id") or ""),
                 str(component.get("plan_version") or ""),
                 str(component.get("source_set_id") or ""),
+                tuple(sorted((str(key), str(value)) for key, value in legacy_context.items()))
+                if legacy_context
+                else (),
             )
             reparsed_components = reparsed_by_key.get(reparse_key)
             if reparsed_components is None:
@@ -321,6 +329,7 @@ def _component_inventory_source_accuracy(*, chunks: list[dict], components: list
                     profile_context=_profile_context_terms(
                         str(component.get("forest_unit_id") or "")
                     ),
+                    legacy_context=legacy_context,
                 )
                 reparsed_by_key[reparse_key] = reparsed_components
             if not any(
