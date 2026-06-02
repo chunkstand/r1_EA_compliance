@@ -375,6 +375,102 @@ class PackageFactGraphTests(unittest.TestCase):
             self.assertIn("agency", missing_types)
             self.assertIn("permit", missing_types)
 
+    def test_forest_plan_context_scope_facts_are_first_class_package_facts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            review_id = "lolo-context-unit"
+            source_set_id = "source-set-unit"
+            artifact_sha256 = hashlib.sha256(review_id.encode("utf-8")).hexdigest()
+            scope_text = (
+                "The Decision Notice and FONSI identifies the project on the Lolo "
+                "National Forest. The EA evaluates MA 16 and MA 24 standards for "
+                "the project area."
+            )
+            _write_package_cache(
+                output_dir,
+                review_id,
+                chunks=[
+                    _chunk(
+                        review_id=review_id,
+                        artifact_sha256=artifact_sha256,
+                        index=0,
+                        section="Decision Notice",
+                        heading="Forest Plan Consistency",
+                        text=scope_text,
+                    )
+                ],
+            )
+            context_path = output_dir / "reviews" / review_id / "forest_plan_context.json"
+            _write_json(
+                context_path,
+                {
+                    "schema_version": "forest-plan-context-v0",
+                    "review_id": review_id,
+                    "source_set_id": source_set_id,
+                    "management_areas": [
+                        {
+                            "entry_id": "mgmt-ma-16",
+                            "name": "Management Area 16",
+                            "category": "management_area",
+                            "package_evidence": [
+                                _context_evidence(
+                                    entry_id="mgmt-ma-16",
+                                    matched_alias="MA 16",
+                                    scope_text=scope_text,
+                                    artifact_sha256=artifact_sha256,
+                                    review_id=review_id,
+                                )
+                            ],
+                        },
+                        {
+                            "entry_id": "mgmt-ma-24",
+                            "name": "Management Area 24",
+                            "category": "management_area",
+                            "package_evidence": [],
+                        },
+                    ],
+                },
+            )
+
+            result = build_package_fact_graph(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+            )
+
+            graph = json.loads(result.package_fact_graph_path.read_text(encoding="utf-8"))
+            context = json.loads(
+                result.package_applicability_context_path.read_text(encoding="utf-8")
+            )
+            context_nodes = [
+                node
+                for node in graph["nodes"]
+                if node.get("extraction_method")
+                == "forest-plan-context-package-fact-bridge-v0"
+                and node.get("node_type") == "management_area"
+            ]
+            self.assertEqual(len(context_nodes), 1)
+            self.assertEqual(context_nodes[0]["normalized_value"], "mgmt-ma-16")
+            self.assertEqual(context_nodes[0]["raw_value"], "MA 16")
+            self.assertEqual(
+                context_nodes[0]["source_metadata"]["source"],
+                "forest_plan_context",
+            )
+            self.assertTrue(context_nodes[0]["package_chunk_ids"])
+            self.assertTrue(context_nodes[0]["evidence_span_ids"])
+            self.assertEqual(context_nodes[0]["confidence_class"], "observed")
+            self.assertEqual(
+                graph["forest_plan_context_bridge"]["fact_type_counts"],
+                {"management_area": 1},
+            )
+            self.assertEqual(result.summary["forest_plan_context_fact_node_count"], 1)
+            management_area_values = {
+                fact["normalized_value"] for fact in context["management_areas"]
+            }
+            self.assertIn("mgmt-ma-16", management_area_values)
+            self.assertNotIn("mgmt-ma-24", management_area_values)
+
     def test_cli_writes_package_context_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -546,3 +642,52 @@ def _write_jsonl(path: Path, records: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     lines = [json.dumps(record, sort_keys=True) for record in records]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_json(path: Path, record: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _context_evidence(
+    *,
+    entry_id: str,
+    matched_alias: str,
+    scope_text: str,
+    artifact_sha256: str,
+    review_id: str,
+) -> dict:
+    start = scope_text.index(matched_alias)
+    end = start + len(matched_alias)
+    return {
+        "category": "management_area",
+        "chunk_id": "chunk-0",
+        "citation_label": "EA-PACKAGE-001",
+        "entry_id": entry_id,
+        "evidence_role": "project_location",
+        "evidence_span": {
+            "chunk_char_start": start,
+            "chunk_char_end": end,
+            "source_char_start": start,
+            "source_char_end": end,
+            "text": scope_text,
+        },
+        "matched_alias": matched_alias,
+        "name": entry_id,
+        "provenance": {
+            "artifact_path": "/tmp/East Crazy Inspiration Divide Land Exchange EA.pdf",
+            "artifact_sha256": artifact_sha256,
+            "char_start": 0,
+            "char_end": len(scope_text),
+            "content_sha256": hashlib.sha256(scope_text.encode("utf-8")).hexdigest(),
+            "extracted_at": "2026-05-03T00:00:00Z",
+            "heading": "Forest Plan Consistency",
+            "page": 1,
+            "parser_name": "unit-parser",
+            "parser_version": "1.0",
+            "section": "Decision Notice",
+            "source_text_path": f"/tmp/{review_id}.txt",
+        },
+        "source_record_id": "EA-PACKAGE-001",
+        "title": "Decision Notice and FONSI.pdf",
+    }

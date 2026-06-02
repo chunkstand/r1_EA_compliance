@@ -41,8 +41,9 @@ history below.
   is merged into `main` with the current-main observability/eval context graph
   route preserved. Continue new implementation work from `main`.
 - latest resolved forest-plan review/inventory slice:
-  all-R1 legacy direction and management-area inventory closeout plus
-  source-set inventory authority/applicability gate hardening. The generic builder now carries
+  all-R1 legacy direction and management-area inventory closeout,
+  source-set inventory authority/applicability gate hardening, and Forest Plan
+  context-derived first-class package facts. The generic builder now carries
   legacy context across ordered chunks, derives management-area IDs from Forest
   Plan text, body-scopes non-coded legacy/colon component IDs when generic
   headings or management-area-local numbering would otherwise collide, and
@@ -62,16 +63,19 @@ history below.
   evaluated `1004` Lolo components and `492` standards, and correctly failed
   reviewer-ready with `330` applicable standards, `101` applied standards, and
   `229` insufficient-evidence applicable-standard gaps. The North Seeley
-  applicability replay now carries the canonical source-set inventory through
-  the authority universe (`1070` candidates, `1004` Forest Plan components),
-  package fact graph (`81253` facts), retrieval trace (`9630` rows), graph
-  trace (`26750` rows), and deterministic decisions (`49` applicable, `1009`
-  not applicable, `12` needs adjudication). `phase-eval` now fails stale
+  applicability replay now carries the canonical source-set inventory and
+  resolver-scoped package facts through the authority universe (`1070`
+  candidates, `1004` Forest Plan components), package fact graph (`81383`
+  facts, including `65` Forest Plan context-derived package facts: `60`
+  management-area facts and `5` overlay facts), retrieval trace (`9630` rows),
+  graph trace (`26745` rows), and deterministic decisions (`56` applicable,
+  `1002` not applicable, `12` needs adjudication). `phase-eval` now fails stale
   Forest Plan authority universes against the current context inventory path
   and component count, and the compliance phase requires a Forest Plan matrix
-  for any resolved forest context; North Seeley now fails closed with
-  `forest_plan_matrix_required=true` and `330` expected applicable Forest Plan
-  standards until adjudication/compliance closes the remaining work.
+  for any resolved forest context; North Seeley now fails closed at
+  `applicability_validation`, `generated_rule_pack`, and `compliance_review`
+  with `forest_plan_matrix_required=true` and `330` expected applicable Forest
+  Plan standards until adjudication/compliance closes the remaining work.
 - latest resolved observability/eval context graph slice:
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` Milestone 0. The
   repo has a tracked context-graph contract, `eval-context-graph-build`,

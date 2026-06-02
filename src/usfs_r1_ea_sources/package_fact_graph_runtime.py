@@ -493,6 +493,10 @@ def _build_extraction_summary(
             for record in extraction["uncertainty_records"]
             if record.get("uncertainty_class") == "missing_package_fact_type"
         ),
+        "forest_plan_context_fact_node_count": (
+            extraction.get("forest_plan_context_bridge") or {}
+        ).get("fact_node_count", 0),
+        "forest_plan_context_bridge": extraction.get("forest_plan_context_bridge") or {},
     }
 
 

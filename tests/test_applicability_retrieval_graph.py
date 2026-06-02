@@ -31,6 +31,26 @@ def test_bounded_paths_respect_max_depth_and_avoid_cycles() -> None:
     ]
 
 
+def test_bounded_paths_can_stop_at_trace_limit() -> None:
+    adjacency = {
+        "candidate:1": [
+            ("package_fact", "package-fact:1"),
+            ("package_fact", "package-fact:2"),
+            ("package_fact", "package-fact:3"),
+        ]
+    }
+
+    paths = _bounded_paths(
+        start_node_id="candidate:1",
+        adjacency=adjacency,
+        max_depth=1,
+        allowed_relationships={"package_fact"},
+        max_path_count=2,
+    )
+
+    assert len(paths) == 2
+
+
 def test_candidate_trace_graph_seeds_selected_results_rule_claims_and_package_facts() -> None:
     candidate = {
         "candidate_authority_id": "rule-template:unit:ce_fanec",
@@ -111,3 +131,63 @@ def test_candidate_trace_graph_seeds_selected_results_rule_claims_and_package_fa
     assert trace_graph["adjacency"]["rule-claim-link:link-1"] == [
         ("source_claim", "source-claim:claim-1")
     ]
+
+
+def test_candidate_trace_graph_filters_package_facts_to_declared_scope_ids() -> None:
+    candidate = {
+        "candidate_authority_id": "forest-plan-component:unit",
+        "candidate_authority_type": "forest_plan_component",
+        "required_package_fact_types": ["management_area", "resource_topic"],
+        "positive_trigger_groups": [],
+        "negative_trigger_groups": [],
+        "forest_plan": {"management_area_ids": ["mgmt-ma-16"]},
+        "graph_expansion_contract": {
+            "relationship_types": ["package_fact", "management_area", "evidence_span"],
+            "neighbor_filters": {"management_area_ids": ["mgmt-ma-16"]},
+        },
+    }
+    package_fact_graph = {
+        "nodes": [
+            {
+                "node_id": "fact-ma-16",
+                "node_type": "management_area",
+                "normalized_value": "mgmt-ma-16",
+                "label": "Management Area 16",
+                "package_chunk_ids": ["chunk-1"],
+                "evidence_span_ids": ["span-16"],
+            },
+            {
+                "node_id": "fact-ma-24",
+                "node_type": "management_area",
+                "normalized_value": "mgmt-ma-24",
+                "label": "Management Area 24",
+                "package_chunk_ids": ["chunk-2"],
+                "evidence_span_ids": ["span-24"],
+            },
+            {
+                "node_id": "fact-resource",
+                "node_type": "resource_topic",
+                "normalized_value": "wildlife",
+                "label": "Wildlife",
+                "package_chunk_ids": ["chunk-3"],
+                "evidence_span_ids": ["span-resource"],
+            },
+        ]
+    }
+
+    trace_graph = _candidate_trace_graph(
+        candidate=candidate,
+        package_fact_graph=package_fact_graph,
+        graph_nodes=[],
+        graph_edges=[],
+        rule_claim_links=[],
+        source_claims=[],
+        retrieval_trace_rows=[],
+        allowed_relationships={"package_fact", "management_area", "evidence_span"},
+    )
+
+    start_edges = trace_graph["adjacency"]["candidate:forest-plan-component:unit"]
+    assert ("package_fact", "package-fact:fact-ma-16") in start_edges
+    assert ("management_area", "package-fact:fact-ma-16") in start_edges
+    assert ("package_fact", "package-fact:fact-ma-24") not in start_edges
+    assert ("package_fact", "package-fact:fact-resource") not in start_edges

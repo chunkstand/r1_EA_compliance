@@ -264,7 +264,12 @@ allowed_import_layers = [
 [[layers]]
 name = "package_context"
 summary = "Package fact graph context used by applicability."
-modules = ["package_fact_graph", "package_fact_graph_runtime", "package_fact_graph_terms"]
+modules = [
+  "package_fact_graph",
+  "package_fact_graph_context",
+  "package_fact_graph_runtime",
+  "package_fact_graph_terms",
+]
 allowed_import_layers = ["foundation", "review", "package_context"]
 
 [[layers]]

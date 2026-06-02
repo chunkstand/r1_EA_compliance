@@ -15,6 +15,55 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Forest-Plan Context Scope Facts And Applicability Replay Scaling Resolved Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  package fact graph builds now merge package-evidenced Forest Plan scope
+  entries from `forest_plan_context.json` into first-class package facts.
+  The bridge only emits `geography`, `management_area`, and `overlay` facts
+  when the resolver context already carries package evidence with chunk IDs,
+  citation labels, hashes, parser provenance, and evidence spans. This keeps
+  management areas as evidence-backed graph facts without adding forest-specific
+  profile terms or handwritten Lolo rules.
+- graph/retrieval scaling:
+  applicability graph traces now enforce the per-candidate path cap during
+  traversal, use declared Forest Plan neighbor filters for scoped
+  geography/management-area/overlay package fact neighbors, and cache bounded
+  package retrieval result windows instead of full scored package-node lists.
+  This keeps the all-forest North Seeley replay bounded on the 40k+ package
+  fact graph.
+- North Seeley replay evidence:
+  `applicability-context-build` now writes `65` Forest Plan context-derived
+  package facts for the North Seeley review: `60` management-area facts and
+  `5` overlay facts. The package fact graph now has `81383` facts, including
+  all `18` resolver management areas (`mgmt-ma-9`, `mgmt-ma-16`,
+  `mgmt-ma-21`, `mgmt-ma-24`, and `mgmt-ma-25` included) as first-class
+  package facts.
+- applicability replay evidence:
+  the rebuilt North Seeley applicability replay passed through
+  `package_fact_graph`, `applicability_retrieval_trace`, `applicability_graph_trace`,
+  and `applicability_determination`. Retrieval wrote `9630` retrieval rows and
+  `26745` graph rows. Determination now reports `56` applicable, `1002`
+  not-applicable, and `12` needs-adjudication candidates.
+- remaining fail-closed state:
+  `applicability_validation` still fails by design with `12` unresolved
+  candidates. The remaining Forest Plan component blockers are weak/speculative
+  trigger evidence and one missing `mgmt-ma-23` scope; the previous missing
+  package-scope evidence for the resolver-visible Lolo management areas is
+  closed. `phase-eval` is green through authority universe, package fact graph,
+  applicability retrieval/graph traces, and applicability determination, then
+  fails closed at `applicability_validation`, `generated_rule_pack`, and
+  `compliance_review` with `forest_plan_matrix_required=true` and `330`
+  expected applicable Forest Plan standards.
+- verification:
+  focused tests passed (`35 passed`), including package fact graph,
+  applicability retrieval/graph, applicability decision, phase-eval Forest
+  Plan gates, and the architecture contract. `ruff check src tests`,
+  `python -m compileall src`, and `git diff --check` passed. The live North
+  Seeley replay commands above passed or failed closed as expected.
+
 ## Forest-Plan Review Source-Set Inventory Authority And Applicability Gate Hardening Resolved Locally
 
 Latest implementation update on 2026-06-02 UTC:

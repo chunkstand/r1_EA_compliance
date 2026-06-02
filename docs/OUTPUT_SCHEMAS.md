@@ -1828,6 +1828,10 @@ facts used before applicability decisions are attempted. It includes:
   `package_chunks_sha256`, and `package_fact_graph_sha256`
 - package fact graph metadata: `package_fact_graph_id`, `created_at`, extraction method versions,
   source package path, and extraction summary
+- `forest_plan_context_bridge`, when `forest_plan_context.json` exists for the review, reports
+  whether context was loaded, the context path/schema version, context-derived fact counts, evidence
+  span counts, skipped evidence counts, and fact-type counts. Context-derived facts are emitted only
+  for resolver package-evidenced `geography`, `management_area`, and `overlay` entries.
 - `nodes`, where each node has `node_id`, `node_type`, `label`, normalized value fields,
   confidence class, structured `evidence_strength`, extraction method, package chunk IDs, section
   family, citation label, page label, character offsets, text hash, and evidence-span IDs

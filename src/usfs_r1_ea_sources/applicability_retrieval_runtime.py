@@ -314,6 +314,7 @@ def _package_results(
     score_context = _package_score_context(query_text=query_text, candidate=candidate)
     query_terms = list(score_context["query_terms"])
     cache_key = _package_results_cache_key(score_context)
+    result_window = max(top_k * 2, top_k)
     scored = package_results_cache.get(cache_key)
     if scored is None:
         scored = []
@@ -334,9 +335,10 @@ def _package_results(
                 str(item[1].get("node_id") or ""),
             )
         )
+        scored = scored[:result_window]
         package_results_cache[cache_key] = scored
     results = []
-    for index, (score, node) in enumerate(scored[: max(top_k * 2, top_k)], start=1):
+    for index, (score, node) in enumerate(scored, start=1):
         selected = index <= top_k
         results.append(
             {

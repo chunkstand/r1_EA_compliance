@@ -12,6 +12,10 @@ from typing import Any
 from .evidence_strength import evidence_strength_for_confidence
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_profiles import load_forest_plan_profiles
+from .package_fact_graph_context import (
+    FOREST_PLAN_CONTEXT_FACT_EXTRACTION_METHOD_VERSION,
+)
+from .package_fact_graph_context import merge_forest_plan_context_facts
 from .package_fact_graph_runtime import _build_extraction_summary
 from .package_fact_graph_runtime import _extract_package_facts
 from .package_fact_graph_terms import COMMON_PACKAGE_FACT_TYPES
@@ -84,6 +88,14 @@ def build_package_fact_graph(
         package_chunks=package_chunks,
         profiles=profiles,
     )
+    forest_plan_context_path = review_dir / "forest_plan_context.json"
+    forest_plan_context_bridge = merge_forest_plan_context_facts(
+        extraction=extraction,
+        package_chunks=package_chunks,
+        forest_plan_context_path=forest_plan_context_path,
+        review_id=review_id,
+        source_set_id=source_set_id,
+    )
     summary = _build_extraction_summary(
         package_manifest=package_manifest,
         package_chunks=package_chunks,
@@ -106,6 +118,9 @@ def build_package_fact_graph(
         "forest_plan_profiles_sha256": profiles_sha256,
         "extraction_method_versions": {
             "package_fact_extraction": PACKAGE_FACT_EXTRACTION_METHOD_VERSION,
+            "forest_plan_context_fact_extraction": (
+                FOREST_PLAN_CONTEXT_FACT_EXTRACTION_METHOD_VERSION
+            ),
             "forest_plan_profiles": profiles.schema_version,
         },
         "source_package": _source_package_metadata(
@@ -116,7 +131,9 @@ def build_package_fact_graph(
             "package_manifest_path": str(package_manifest_path),
             "package_chunks_path": str(package_chunks_path),
             "forest_plan_profiles_path": str(forest_plan_profiles_path),
+            "forest_plan_context_path": str(forest_plan_context_path),
         },
+        "forest_plan_context_bridge": forest_plan_context_bridge,
         "extraction_summary": summary,
         "nodes": extraction["nodes"],
         "edges": extraction["edges"],

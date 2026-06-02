@@ -54,6 +54,7 @@ def _graph_trace_rows_for_candidate(
         adjacency=trace_graph["adjacency"],
         max_depth=max_depth,
         allowed_relationships=allowed_relationships,
+        max_path_count=max_graph_paths_per_candidate + 1,
     )
     diagnostics = []
     if not paths:
@@ -88,6 +89,7 @@ def _graph_trace_rows_for_candidate(
                     "Graph expansion produced more paths than the configured trace limit."
                 ),
                 "path_count": len(paths),
+                "path_count_is_lower_bound": True,
                 "max_graph_paths_per_candidate": max_graph_paths_per_candidate,
             }
         )
@@ -363,18 +365,33 @@ def _matching_package_nodes(
     cached = package_match_cache.get(cache_key)
     if cached is not None:
         return cached
-    matches = [
-        node
-        for node in package_fact_graph.get("nodes") or []
-        if isinstance(node, dict)
-        and node.get("node_type") not in {"evidence_span", "package_section"}
-        and _package_node_matches_candidate(node, candidate)
-    ]
+    scoped_ids = _scoped_package_fact_ids(candidate)
+    if any(scoped_ids.values()):
+        matches = _scoped_package_nodes(
+            package_fact_graph=package_fact_graph,
+            scoped_ids=scoped_ids,
+        )
+    else:
+        matches = [
+            node
+            for node in package_fact_graph.get("nodes") or []
+            if isinstance(node, dict)
+            and node.get("node_type") not in {"evidence_span", "package_section"}
+            and _package_node_matches_graph_contract(node, candidate)
+        ]
     package_match_cache[cache_key] = matches
     return matches
 
 
 def _package_match_cache_key(candidate: dict[str, Any]) -> tuple:
+    scoped_ids = _scoped_package_fact_ids(candidate)
+    if any(scoped_ids.values()):
+        return (
+            "scoped",
+            tuple(sorted(scoped_ids["geography"])),
+            tuple(sorted(scoped_ids["management_area"])),
+            tuple(sorted(scoped_ids["overlay"])),
+        )
     package_filters = candidate.get("package_section_filters")
     if not isinstance(package_filters, dict):
         package_filters = {}
@@ -382,13 +399,128 @@ def _package_match_cache_key(candidate: dict[str, Any]) -> tuple:
         _strings(package_filters.get("package_terms"))
         + _strings(package_filters.get("package_section_terms"))
         + _strings(package_filters.get("package_evidence_terms"))
+        + _strings(package_filters.get("geographic_area_ids"))
+        + _strings(package_filters.get("management_area_ids"))
+        + _strings(package_filters.get("overlay_ids"))
         + _flatten_groups(candidate.get("positive_trigger_groups"))
         + _flatten_groups(candidate.get("negative_trigger_groups"))
     )
+    neighbor_filters = (candidate.get("graph_expansion_contract") or {}).get(
+        "neighbor_filters"
+    )
+    if not isinstance(neighbor_filters, dict):
+        neighbor_filters = {}
     return (
         tuple(sorted(_strings(candidate.get("required_package_fact_types")))),
         tuple(term.casefold() for term in terms),
+        tuple(sorted(_strings(neighbor_filters.get("geographic_area_ids")))),
+        tuple(sorted(_strings(neighbor_filters.get("management_area_ids")))),
+        tuple(sorted(_strings(neighbor_filters.get("overlay_ids")))),
     )
+
+
+def _package_node_matches_graph_contract(node: dict[str, Any], candidate: dict[str, Any]) -> bool:
+    scoped_ids = _scoped_package_fact_ids(candidate)
+    node_type = str(node.get("node_type") or "")
+    normalized_value = str(node.get("normalized_value") or "")
+    if node_type in scoped_ids:
+        expected_values = scoped_ids[node_type]
+        if expected_values:
+            return normalized_value in expected_values
+        if any(scoped_ids.values()):
+            return False
+    text = str(node.get("_applicability_search_text") or "").casefold()
+    if not text:
+        text = " ".join(
+            str(value or "")
+            for value in (
+                node.get("label"),
+                node.get("raw_value"),
+                node.get("normalized_value"),
+                node.get("fact_subtype"),
+                node.get("section_family"),
+                node.get("context_excerpt"),
+                node.get("matched_text"),
+            )
+        ).casefold()
+    terms = _graph_package_terms(candidate)
+    if terms:
+        return any(term in text for term in terms)
+    if any(scoped_ids.values()):
+        return False
+    return _package_node_matches_candidate(node, candidate)
+
+
+def _scoped_package_nodes(
+    *,
+    package_fact_graph: dict[str, Any],
+    scoped_ids: dict[str, set[str]],
+) -> list[dict[str, Any]]:
+    matches = []
+    for node in package_fact_graph.get("nodes") or []:
+        if not isinstance(node, dict):
+            continue
+        node_type = str(node.get("node_type") or "")
+        expected_values = scoped_ids.get(node_type) or set()
+        if not expected_values:
+            continue
+        if str(node.get("normalized_value") or "") in expected_values:
+            matches.append(node)
+    return sorted(
+        matches,
+        key=lambda node: (
+            str(node.get("node_type") or ""),
+            str(node.get("normalized_value") or ""),
+            str(node.get("node_id") or ""),
+        ),
+    )
+
+
+def _scoped_package_fact_ids(candidate: dict[str, Any]) -> dict[str, set[str]]:
+    neighbor_filters = (candidate.get("graph_expansion_contract") or {}).get(
+        "neighbor_filters"
+    )
+    if not isinstance(neighbor_filters, dict):
+        neighbor_filters = {}
+    package_filters = candidate.get("package_section_filters")
+    if not isinstance(package_filters, dict):
+        package_filters = {}
+    forest_plan = candidate.get("forest_plan")
+    if not isinstance(forest_plan, dict):
+        forest_plan = {}
+    return {
+        "geography": set(
+            _strings(neighbor_filters.get("geographic_area_ids"))
+            or _strings(package_filters.get("geographic_area_ids"))
+            or _strings(forest_plan.get("geographic_area_ids"))
+        ),
+        "management_area": set(
+            _strings(neighbor_filters.get("management_area_ids"))
+            or _strings(package_filters.get("management_area_ids"))
+            or _strings(forest_plan.get("management_area_ids"))
+        ),
+        "overlay": set(
+            _strings(neighbor_filters.get("overlay_ids"))
+            or _strings(package_filters.get("overlay_ids"))
+            or _strings(forest_plan.get("overlay_ids"))
+        ),
+    }
+
+
+def _graph_package_terms(candidate: dict[str, Any]) -> set[str]:
+    package_filters = candidate.get("package_section_filters")
+    if not isinstance(package_filters, dict):
+        package_filters = {}
+    terms = (
+        _strings(package_filters.get("package_terms"))
+        + _strings(package_filters.get("package_section_terms"))
+        + _strings(package_filters.get("package_evidence_terms"))
+        + _strings(package_filters.get("resource_topics"))
+        + _strings(package_filters.get("activity_tags"))
+        + _flatten_groups(candidate.get("positive_trigger_groups"))
+        + _flatten_groups(candidate.get("negative_trigger_groups"))
+    )
+    return {term.casefold() for term in terms if term.strip()}
 
 
 def _flatten_groups(value: object) -> list[str]:
@@ -481,7 +613,10 @@ def _bounded_paths(
     adjacency: dict[str, list[tuple[str, str]]],
     max_depth: int,
     allowed_relationships: set[str],
+    max_path_count: int | None = None,
 ) -> list[list[str]]:
+    if max_path_count is not None and max_path_count < 1:
+        raise ValueError("max_path_count must be at least 1")
     paths: list[list[str]] = []
     queue: deque[list[str]] = deque([[start_node_id]])
     while queue:
@@ -497,6 +632,8 @@ def _bounded_paths(
                 continue
             next_path = [*path, relationship, target]
             paths.append(next_path)
+            if max_path_count is not None and len(paths) >= max_path_count:
+                return sorted(paths, key=lambda path: (len(path), "|".join(path)))
             queue.append(next_path)
     return sorted(paths, key=lambda path: (len(path), "|".join(path)))
 
