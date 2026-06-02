@@ -15,6 +15,25 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Extraction Accuracy Fixture-Backed Test Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next test-owner oversized reduction slice is closed locally.
+  `tests/test_extraction_accuracy.py` now reuses the existing shared extraction
+  fixture surface in `tests/support/extract_fixtures.py` and is reduced to
+  `741` lines.
+- architecture effect:
+  the architecture probe reports `544` code files, `5` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `3` source owners and `2` test
+  owners.
+- boundary:
+  this is a fixture-backed test-owner split. It does not change extraction
+  accuracy audit behavior, extraction output schemas, generated artifact paths,
+  or local corpus state.
+
 ## Rule-Claim Binding Eval Support Source Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

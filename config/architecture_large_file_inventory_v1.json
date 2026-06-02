@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "test-extraction-accuracy-owner",
-      "owner_kind": "test",
-      "follow_on_priority": 12,
-      "required_tests": [
-        "tests/test_extraction_accuracy.py"
-      ],
-      "files": [
-        {
-          "path": "tests/test_extraction_accuracy.py",
-          "line_count": 847
-        }
-      ]
-    },
-    {
       "name": "test-phase-eval-direct-eval-contracts-owner",
       "owner_kind": "test",
       "follow_on_priority": 13,

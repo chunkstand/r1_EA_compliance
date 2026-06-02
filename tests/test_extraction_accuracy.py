@@ -1,41 +1,34 @@
 from __future__ import annotations
 
-from dataclasses import replace
 from pathlib import Path
-import hashlib
-import io
 import json
 import tempfile
 import unittest
-import zipfile
 
-from openpyxl import Workbook
+from tests.support.extract_fixtures import CANONICAL_WORKBOOK
+from tests.support.extract_fixtures import CONFIG
+from tests.support.extract_fixtures import WORKBOOK
+from tests.support.extract_fixtures import XLSX_CONTENT_TYPE
+from tests.support.extract_fixtures import _check
+from tests.support.extract_fixtures import _html_body
+from tests.support.extract_fixtures import _read_jsonl
+from tests.support.extract_fixtures import _write_download_run as _write_download_run_fixture
+from tests.support.extract_fixtures import (
+    _write_download_run_records as _write_download_run_records_fixture,
+)
+from tests.support.extract_fixtures import _xlsx_body
+from tests.support.extract_fixtures import _zip_with_metadata_body
+from tests.support.extract_fixtures import canonical_config
+from tests.support.extract_fixtures import legacy_config
 
 from usfs_r1_ea_sources.catalog import build_review_catalog
-from usfs_r1_ea_sources.config import LEGACY_WORKBOOK_LOADER_CONTRACT, load_config
 from usfs_r1_ea_sources.extract import build_extraction
 import usfs_r1_ea_sources.extraction_accuracy as extraction_accuracy_module
 from usfs_r1_ea_sources.extraction_accuracy import run_extraction_accuracy_audit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WORKBOOK = ROOT / "usfs_region1_ea_document_checklist_land_exchange_review_2026.xlsx"
-CANONICAL_WORKBOOK = ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
-CONFIG = ROOT / "config" / "downloader.toml"
 VERIFIED_ADMISSION_CONTRACT = ROOT / "config" / "verified_extraction_admission_contract.json"
-
-
-def legacy_config():
-    config = load_config(CONFIG)
-    return replace(
-        config,
-        workbook=replace(config.workbook, loader_contract=LEGACY_WORKBOOK_LOADER_CONTRACT),
-    )
-
-
-def canonical_config():
-    config = load_config(CONFIG)
-    return replace(config, workbook=replace(config.workbook, overrides_path=None))
 
 
 class ExtractionAccuracyAuditTests(unittest.TestCase):
@@ -589,9 +582,14 @@ class ExtractionAccuracyAuditTests(unittest.TestCase):
             _write_download_run(
                 output_dir,
                 source_record_id="R1-SCC-CGNF-005",
-                artifact_body=_xlsx_body(),
+                artifact_body=_xlsx_body(
+                    [
+                        ["Common Name", "Status"],
+                        ["Canada lynx", "Present"],
+                    ]
+                ),
                 suffix=".xlsx",
-                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                content_type=XLSX_CONTENT_TYPE,
             )
             build_review_catalog(
                 workbook_path=CANONICAL_WORKBOOK,
@@ -729,119 +727,15 @@ def _write_download_run(
     suffix: str = ".html",
     content_type: str = "text/html",
 ) -> None:
-    run_dir = output_dir / "runs" / "unit-download"
-    manifest_dir = output_dir / "manifests"
-    run_dir.mkdir(parents=True)
-    manifest_dir.mkdir(parents=True, exist_ok=True)
-    artifact = output_dir / "artifacts" / "raw" / f"unit-download-{source_record_id}{suffix}"
-    artifact.parent.mkdir(parents=True, exist_ok=True)
-    artifact.write_bytes(artifact_body)
-    record = {
-        "run_id": "unit-download",
-        "source_record_id": source_record_id,
-        "status": "downloaded",
-        "artifact_path": str(artifact),
-        "artifact_sha256": hashlib.sha256(artifact_body).hexdigest(),
-        "artifact_byte_size": len(artifact_body),
-        "content_type": content_type,
-        "fetch_timestamp": "2026-04-30T00:00:00Z",
-        "final_url": "https://example.test/final",
-    }
-    (manifest_dir / "download_unit-download.jsonl").write_text(
-        json.dumps(record, sort_keys=True) + "\n",
-        encoding="utf-8",
+    _write_download_run_fixture(
+        output_dir,
+        "unit-download",
+        source_record_id=source_record_id,
+        artifact_body=artifact_body,
+        content_type=content_type,
+        suffix=suffix,
     )
-    summary = {
-        "run_id": "unit-download",
-        "mode": "download",
-        "manifest_path": str(manifest_dir / "download_unit-download.jsonl"),
-        "filtered_rows": 1,
-        "status_counts": {"downloaded": 1},
-    }
-    (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
 
 
 def _write_download_run_records(output_dir: Path, *, records: list[dict]) -> None:
-    run_dir = output_dir / "runs" / "unit-download"
-    manifest_dir = output_dir / "manifests"
-    run_dir.mkdir(parents=True)
-    manifest_dir.mkdir(parents=True, exist_ok=True)
-    manifest_path = manifest_dir / "download_unit-download.jsonl"
-    serialized = []
-    for definition in records:
-        source_record_id = str(definition["source_record_id"])
-        suffix = str(definition.get("suffix") or ".html")
-        artifact = output_dir / "artifacts" / "raw" / f"unit-download-{source_record_id}{suffix}"
-        artifact.parent.mkdir(parents=True, exist_ok=True)
-        artifact_body = definition["artifact_body"]
-        artifact.write_bytes(artifact_body)
-        serialized.append(
-            {
-                "run_id": "unit-download",
-                "source_record_id": source_record_id,
-                "status": "downloaded",
-                "artifact_path": str(artifact),
-                "artifact_sha256": hashlib.sha256(artifact_body).hexdigest(),
-                "artifact_byte_size": len(artifact_body),
-                "content_type": str(definition.get("content_type") or "text/html"),
-                "fetch_timestamp": "2026-04-30T00:00:00Z",
-                "final_url": "https://example.test/final",
-            }
-        )
-    manifest_path.write_text(
-        "\n".join(json.dumps(record, sort_keys=True) for record in serialized) + "\n",
-        encoding="utf-8",
-    )
-    summary = {
-        "run_id": "unit-download",
-        "mode": "download",
-        "manifest_path": str(manifest_path),
-        "filtered_rows": len(serialized),
-        "status_counts": {"downloaded": len(serialized)},
-    }
-    (run_dir / "summary.json").write_text(json.dumps(summary, sort_keys=True), encoding="utf-8")
-
-
-def _html_body() -> bytes:
-    return (
-        b"<html><body><h1>National Environmental Policy Act</h1>"
-        b"<p>Agencies shall consider environmental impacts and alternatives.</p>"
-        b"<p>Evidence must remain traceable to the administrative record.</p></body></html>"
-    )
-
-
-def _read_jsonl(path: Path) -> list[dict]:
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
-
-
-def _zip_with_metadata_body() -> bytes:
-    buffer = io.BytesIO()
-    with zipfile.ZipFile(buffer, "w") as archive:
-        archive.writestr("GrizAnalysisUnits_LNF_10302023.shp", b"placeholder shapefile bytes")
-        archive.writestr(
-            "GrizAnalysisUnits_LNF_10302023.shp.xml",
-            (
-                "<metadata><idinfo><citation><citeinfo><title>Grizzly Bear Analysis Units"
-                "</title></citeinfo></citation></idinfo><dataqual><lineage><procstep>"
-                "<procdesc>Metadata describes the Flathead analysis unit coverage.</procdesc>"
-                "</procstep></lineage></dataqual></metadata>"
-            ),
-        )
-    return buffer.getvalue()
-
-
-def _xlsx_body() -> bytes:
-    workbook = Workbook()
-    sheet = workbook.active
-    sheet.title = "Species"
-    sheet["A1"] = "Common Name"
-    sheet["B1"] = "Status"
-    sheet["A2"] = "Canada lynx"
-    sheet["B2"] = "Present"
-    buffer = io.BytesIO()
-    workbook.save(buffer)
-    return buffer.getvalue()
-
-
-def _check(summary: dict, name: str) -> dict:
-    return next(check for check in summary["checks"] if check["name"] == name)
+    _write_download_run_records_fixture(output_dir, "unit-download", records)
