@@ -197,9 +197,10 @@ def _build_report(
             },
             "component_eval_passed": True,
             "reviewer_resolution_status": "resolved",
-            "applicable_standards": [
-                _forest_plan_standard_row(expected["required_fixture_rows"]["forest_plan_standard"])
-            ],
+            "applicable_standards": _forest_plan_standard_rows(
+                expected=expected,
+                counts=counts,
+            ),
         },
         "decision_support_qa": {
             "decision_support_manifest_status": _selector_value(
@@ -381,6 +382,19 @@ def _forest_plan_standard_row(row: Mapping[str, Any]) -> dict[str, Any]:
             }
         ],
     }
+
+
+def _forest_plan_standard_rows(
+    *,
+    expected: Mapping[str, Any],
+    counts: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    fixture_row = expected.get("required_fixture_rows", {}).get("forest_plan_standard")
+    if not isinstance(fixture_row, Mapping):
+        return []
+    if int(counts.get("applicable_standard_count") or 0) == 0:
+        return []
+    return [_forest_plan_standard_row(fixture_row)]
 
 
 def _finding_rows_from_matrix(

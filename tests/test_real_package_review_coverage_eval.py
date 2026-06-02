@@ -122,6 +122,61 @@ def test_real_package_review_coverage_eval_requires_reviewer_ready_phase_eval() 
         assert result.summary["failure_category_counts"]["phase_eval_missing"] == 1
 
 
+def test_real_package_review_coverage_eval_allows_phase_eval_outer_gate_self_reference() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        output_dir = root / "source_library"
+        manifest_path = _write_manifest(root)
+        phase_eval_path = (
+            output_dir
+            / "reviews"
+            / "v1-cg-ecid-compliance-review"
+            / "phase_eval_results.json"
+        )
+        phase_eval = json.loads(phase_eval_path.read_text(encoding="utf-8"))
+        phase_eval["passed"] = False
+        phase_eval["reviewer_ready"] = False
+        phase_eval["phase_count"] = 5
+        phase_eval["passed_phase_count"] = 2
+        phase_eval["reviewer_ready_phase_count"] = 2
+        phase_eval["blockers"] = [
+            {"phase": "evaluation_coverage", "reason": "phase_validation_failed"},
+            {"phase": "final_qa_certification_report", "reason": "phase_validation_failed"},
+            {"phase": "first_class_eval_trace", "reason": "eval_trace_store_stale"},
+        ]
+        phase_eval["phases"] = [
+            {"name": "catalog_capture", "passed": True, "reviewer_ready": True},
+            {"name": "v1_ea_eval", "passed": True, "reviewer_ready": True},
+            {"name": "evaluation_coverage", "passed": False, "reviewer_ready": False},
+            {
+                "name": "final_qa_certification_report",
+                "passed": False,
+                "reviewer_ready": False,
+            },
+            {"name": "first_class_eval_trace", "passed": False, "reviewer_ready": False},
+        ]
+        phase_eval_path.write_text(json.dumps(phase_eval, sort_keys=True), encoding="utf-8")
+
+        result = run_real_package_review_coverage_eval(
+            output_dir=output_dir,
+            manifest_path=manifest_path,
+        )
+
+        assert result.summary["passed"] is True
+        slot = next(
+            slot
+            for slot in result.summary["slots"]
+            if slot["slot_id"] == "east-crazies-current-promotion"
+        )
+        assert slot["phase_eval_gate"]["passed"] is True
+        assert slot["phase_eval_gate"]["self_reference_allowed"] is True
+        assert slot["phase_eval_gate"]["self_reference_phase_names"] == [
+            "evaluation_coverage",
+            "final_qa_certification_report",
+            "first_class_eval_trace",
+        ]
+
+
 def test_real_package_review_coverage_eval_requires_decision_document_identity() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)

@@ -40,7 +40,28 @@ LEGACY_NUMBERED_DIRECTIVE_RE = re.compile(
 )
 LEGACY_STOP_HEADING_RE = re.compile(
     r"\b(?:Schedule\s+of\s+Management\s+Practices|Monitoring\s+and\s+Evaluation\s+Requirements|"
-    r"Table\s+[0-9IVXLC.]+|TABLE\s+OF\s+CONTENTS)\b",
+    r"Table\s+[0-9IVXLC.]+|TABLE\s+OF\s+CONTENTS|List\s+of\s+(?:Tables|Figures|Maps|"
+    r"Abbreviations))\b",
+    re.IGNORECASE,
+)
+LEGACY_DESCRIPTIVE_TABLE_CONTEXT_RE = re.compile(
+    r"\b(?:Appendix\s+[A-Z]|Table\s+[A-Z]-[0-9]+|Factors\s+Description|"
+    r"Recommended\s+Wilderness\s+Area|Figure\s+[A-Z]-[0-9]+|Potential\s+Management\s+Approaches"
+    r"(?:\s+and\s+Possible\s+Actions)?)\b",
+    re.IGNORECASE,
+)
+LEGACY_NON_DIRECTIVE_BODY_PREFIX_RE = re.compile(
+    r"^\s*(?:Acres|Summarized\s+description|Brief\s+description|Current\s+uses\s+and\s+"
+    r"management|Description\s+of\s+(?:the\s+)?wilderness|Brief\s+summary|"
+    r"Potential\s+Management\s+Approaches(?:\s+and\s+Possible\s+Actions)?|"
+    r"Introduction\b|Chapter\s+[0-9]+|Appendix\s+[A-Z]|List\s+of\s+|"
+    r"(?:Table|Figure)\s+[A-Z0-9-]+|Current\s+and\s+desired\s+conditions\b|"
+    r"River\s+Segment\s+Preliminary\s+Classification\b|"
+    r"Geographic\s+Area\s+Site\s+Name\b|Suitabilitya?\s+of\s+management\s+areas\b|"
+    r"Use\s+or\s+Activity\b|General\s+overview\b|Refer\s+to\s+appendix\b|"
+    r"A\s+[0-9]{1,3}\s+year\s+old\s+forest\s+stand\b|"
+    r"[A-Z][A-Za-z-]+(?:\s+and\s+others)?\s+(?:stated|summarized|found|evaluated)\b)"
+    r"\b",
     re.IGNORECASE,
 )
 LEGACY_SECTION_TERMINATOR_RE = re.compile(
@@ -289,10 +310,13 @@ def _has_legacy_directive_body(*, label: str, body: str) -> bool:
 
 
 def _looks_like_legacy_table_context(*, text: str, start: int, body: str) -> bool:
-    prefix = text[max(0, start - 360) : start]
+    prefix = text[max(0, start - 720) : start]
+    leading_body = body[:220].lstrip()
     return bool(
         LEGACY_STOP_HEADING_RE.search(prefix)
         or LEGACY_STOP_HEADING_RE.match(body[:180].lstrip())
+        or LEGACY_DESCRIPTIVE_TABLE_CONTEXT_RE.search(prefix)
+        or LEGACY_NON_DIRECTIVE_BODY_PREFIX_RE.match(leading_body)
         or re.search(r"\.{5,}", body[:180])
     )
 

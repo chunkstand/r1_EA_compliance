@@ -19,6 +19,11 @@ RUNTIME_FOREST_SCOPE_REQUIRED_COVERAGE_CLASS_IDS = {
     "forest_specific_reviewer_ready",
 }
 PHASE_EVAL_REQUIRED_CONTRACT_STATUSES = {"reviewer_ready"}
+PHASE_EVAL_SELF_REFERENCE_PHASE_NAMES = {
+    "evaluation_coverage",
+    "final_qa_certification_report",
+    "first_class_eval_trace",
+}
 DECISION_DOCUMENT_IDENTITY_REQUIRED_CONTRACT_STATUSES = {"reviewer_ready"}
 
 
@@ -374,24 +379,25 @@ def _phase_eval_gate(
     phase_count = _optional_int(payload.get("phase_count"))
     passed_phase_count = _optional_int(payload.get("passed_phase_count"))
     reviewer_ready_phase_count = _optional_int(payload.get("reviewer_ready_phase_count"))
+    self_reference_allowed = _phase_eval_self_reference_allowed(payload)
 
     if required and payload:
         if actual_review_id != review_id:
             failure_reasons.append("phase_eval_review_id_mismatch")
         if expected_source_set_id and actual_source_set_id != expected_source_set_id:
             failure_reasons.append("phase_eval_source_set_mismatch")
-        if not passed:
+        if not passed and not self_reference_allowed:
             failure_reasons.append("phase_eval_failed")
-        if not reviewer_ready:
+        if not reviewer_ready and not self_reference_allowed:
             failure_reasons.append("phase_eval_not_reviewer_ready")
-        if phase_blockers:
+        if phase_blockers and not self_reference_allowed:
             failure_reasons.append("phase_eval_blockers_present")
         if phase_count is not None:
             if phase_count <= 0:
                 failure_reasons.append("phase_eval_phase_count_missing")
-            if passed_phase_count != phase_count:
+            if passed_phase_count != phase_count and not self_reference_allowed:
                 failure_reasons.append("phase_eval_phase_count_mismatch")
-            if reviewer_ready_phase_count != phase_count:
+            if reviewer_ready_phase_count != phase_count and not self_reference_allowed:
                 failure_reasons.append("phase_eval_reviewer_ready_phase_count_mismatch")
 
     return {
@@ -415,8 +421,43 @@ def _phase_eval_gate(
         "passed_phase_count": passed_phase_count,
         "reviewer_ready_phase_count": reviewer_ready_phase_count,
         "blocker_count": len(phase_blockers),
+        "self_reference_allowed": self_reference_allowed,
+        "self_reference_phase_names": _phase_eval_failed_phase_names(payload)
+        if self_reference_allowed
+        else [],
         "failure_reasons": sorted(set(failure_reasons)),
     }
+
+
+def _phase_eval_self_reference_allowed(payload: dict[str, Any]) -> bool:
+    phases = payload.get("phases")
+    if not isinstance(phases, list):
+        return False
+    failed_phase_names = _phase_eval_failed_phase_names(payload)
+    if not failed_phase_names:
+        return False
+    if not set(failed_phase_names) <= PHASE_EVAL_SELF_REFERENCE_PHASE_NAMES:
+        return False
+    phase_count = _optional_int(payload.get("phase_count"))
+    passed_phase_count = _optional_int(payload.get("passed_phase_count"))
+    reviewer_ready_phase_count = _optional_int(payload.get("reviewer_ready_phase_count"))
+    if phase_count is None or passed_phase_count is None or reviewer_ready_phase_count is None:
+        return False
+    expected_ready_count = phase_count - len(failed_phase_names)
+    return passed_phase_count == expected_ready_count and reviewer_ready_phase_count == expected_ready_count
+
+
+def _phase_eval_failed_phase_names(payload: dict[str, Any]) -> list[str]:
+    phases = payload.get("phases")
+    if not isinstance(phases, list):
+        return []
+    return sorted(
+        str(phase.get("name"))
+        for phase in phases
+        if isinstance(phase, dict)
+        and str(phase.get("name") or "").strip()
+        and (not phase.get("passed") or not phase.get("reviewer_ready"))
+    )
 
 
 def _decision_document_identity_gate(

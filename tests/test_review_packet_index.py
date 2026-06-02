@@ -86,6 +86,27 @@ def test_review_packet_index_exposes_land_exchange_rows_as_first_class_section()
         )
 
 
+def test_review_packet_index_allows_reviewer_ready_zero_applicable_standards() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp) / "source_library"
+        review_id = "review-1"
+        review_dir = output_dir / "reviews" / review_id
+        _write_minimal_review(review_dir, review_id=review_id)
+        _remove_applicable_forest_plan_standards(review_dir)
+
+        result = run_review_packet_index(output_dir=output_dir, review_id=review_id)
+
+        assert result.summary["passed"] is True
+        assert result.summary["applicable_standard_count"] == 0
+        assert result.summary["forest_plan_component_row_count"] == 0
+
+        validation = _read_json(result.validation_path)
+        check = _validation_check(validation, "applicable_forest_plan_standards_present")
+        assert check["passed"] is True
+        assert check["details"]["zero_applicable_standards_valid"] is True
+        assert validation["summary"]["failure_category_counts"] == {}
+
+
 def test_review_packet_index_allows_bootstrap_when_final_qa_drops_applicable_row() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         output_dir = Path(tmp) / "source_library"
@@ -271,6 +292,7 @@ def _write_minimal_review(review_dir: Path, *, review_id: str) -> None:
         review_dir / "forest_plan_applicable_standard_coverage.json",
         {
             "passed": True,
+            "applicable_standard_count": 1,
             "standards": [
                 {
                     "component_id": "component-1",
@@ -300,6 +322,67 @@ def _write_minimal_review(review_dir: Path, *, review_id: str) -> None:
             "source_set_id": "source-set-test",
             "finding_qa": {"findings": [{"rule_id": "purpose_need"}]},
             "residual_blockers_and_stop_conditions": {"blockers": []},
+        },
+    )
+
+
+def _remove_applicable_forest_plan_standards(review_dir: Path) -> None:
+    matrix_path = review_dir / "compliance_matrix.json"
+    matrix = _read_json(matrix_path)
+    matrix["forest_plan_compliance"]["summary"] = {
+        "row_count": 0,
+        "reviewer_ready": True,
+        "applicable_standard_row_count": 0,
+        "component_evaluation": {
+            "reviewer_ready": True,
+            "applicable_standard_count": 0,
+            "applied_standard_count": 0,
+            "component_count": 1,
+            "standard_count": 1,
+            "gap_count": 0,
+            "reviewer_resolution_count": 0,
+        },
+    }
+    matrix["forest_plan_compliance"]["rows"] = []
+    _write_json(matrix_path, matrix)
+
+    markdown_path = review_dir / "compliance_matrix.md"
+    markdown_path.write_text(
+        "\n".join(
+            [
+                "# Compliance Matrix",
+                "<!-- matrix-row:authority:purpose_need -->",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    _write_json(
+        review_dir / "forest_plan_component_findings.json",
+        {
+            "summary": {
+                "reviewer_ready": True,
+                "applicable_standard_count": 0,
+                "applied_standard_count": 0,
+                "gap_count": 0,
+                "reviewer_resolution_count": 0,
+            },
+            "findings": [
+                {
+                    "component_id": "component-1",
+                    "component_type": "standard",
+                    "applicability_status": "not_applicable",
+                    "compliance_status": "not_applicable",
+                    "finding_status": "not_applicable",
+                }
+            ],
+        },
+    )
+    _write_json(
+        review_dir / "forest_plan_applicable_standard_coverage.json",
+        {
+            "passed": True,
+            "applicable_standard_count": 0,
+            "standards": [],
         },
     )
 

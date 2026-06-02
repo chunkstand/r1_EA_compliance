@@ -106,6 +106,9 @@ def _build_row_inventory(
         _dict(_dict(artifacts["final_qa_report"].payload).get("finding_qa")).get("findings")
     )
     forest_matrix_rows = _dict_list(_dict(matrix.get("forest_plan_compliance")).get("rows"))
+    forest_plan_summary = _dict(_dict(matrix.get("forest_plan_compliance")).get("summary"))
+    forest_component_evaluation = _dict(forest_plan_summary.get("component_evaluation"))
+    forest_standard_coverage = _dict(artifacts["forest_plan_applicable_standard_coverage"].payload)
     forest_findings = _applicable_forest_plan_findings(
         _dict(artifacts["forest_plan_component_findings"].payload)
     )
@@ -194,6 +197,18 @@ def _build_row_inventory(
             "non_applicable_authority_count": len(non_applicable_rows),
             "forest_plan_component_row_count": len(forest_rows),
             "applicable_standard_count": len(standard_rows),
+            "forest_plan_reviewer_ready": bool(forest_plan_summary.get("reviewer_ready")),
+            "forest_plan_component_reviewer_ready": bool(
+                forest_component_evaluation.get("reviewer_ready")
+            ),
+            "forest_plan_expected_applicable_standard_count": int(
+                forest_component_evaluation.get("applicable_standard_count")
+                or forest_plan_summary.get("applicable_standard_row_count")
+                or 0
+            ),
+            "forest_plan_applicable_standard_coverage_passed": bool(
+                forest_standard_coverage.get("passed")
+            ),
             "search_coverage_certificate_count": len(certificates),
             "row_set_sha256": _sha256_json(
                 {

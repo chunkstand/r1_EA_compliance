@@ -72,6 +72,20 @@ history below.
   `compliance_matrix.json`, `compliance_matrix.md`, and
   `compliance_matrix.pdf`. North Seeley local `phase-eval` now passes `30/30`
   phases with the compliance phase reviewer-ready.
+- latest resolved all-forest Forest Plan reviewer-ready replay:
+  the governed all-forest goal is reviewer-ready EA review across every
+  required forest-specific slot, not a profile-term patch for any one forest.
+  Each review must resolve project authority from the decision/admin document,
+  bind the selected forest to the current Forest Plan component inventory,
+  treat management areas and Forest Plan components/standards as first-class
+  review objects, and fail closed unless V1, phase-eval,
+  decision-document identity, packet index, decision support, final QA,
+  aggregate coverage, and eval-trace gates all agree. The current f70 all-R1
+  component build passes for `10` profiles with `built_component_count=5096`,
+  `built_standard_count=1622`, zero blocking inventory quality issues, and
+  zero source-accuracy failures after legacy parser hardening removed
+  descriptive appendix/table/figure/glossary/citation prose from the standard
+  stream.
 - latest resolved all-forest Forest Plan authority-universe coverage hardening:
   review-scoped `applicability-authority-universe` now derives the selected
   forest from `forest_plan_context_summary.json` title-page forest identity and
@@ -128,18 +142,19 @@ history below.
   lettered ranges such as `management areas 5a through 5d`. Partial component
   applicability decision files no longer force every undecided selected-forest
   component into an unresolved queue.
-- current Flathead West Reservoir residual:
-  Flathead now resolves `scope_status="flathead_nf"` with title/admin evidence
-  for Flathead National Forest, Hungry Horse and Spotted Bear Ranger Districts,
+- current Flathead West Reservoir truth:
+  Flathead resolves `scope_status="flathead_nf"` with title/admin evidence for
+  Flathead National Forest, Hungry Horse and Spotted Bear Ranger Districts,
   Flathead County, Montana; Forest Plan context validation passes and reports
-  `10` management areas. Component evaluation considers `783` components and
-  `178` standards; it identifies `16` applicable standards, but only `1` is
-  supported/applied and `15` remain `insufficient_evidence` gaps. The current
-  component queue is `135` gap items, while the tracked adjudication covers the
-  older `48`-item queue. Flathead V1 is red with
-  `broader_ea_passed=true` and `forest_plan_passed=false` on
-  `forest_plan_component_gate_reviewer_ready`; Flathead phase-eval is red with
-  `29/36` phases passed/reviewer-ready.
+  `10` management areas. Component evaluation now considers `541` Flathead
+  components and `84` standards; all `541` components are evaluated
+  `not_applicable`, leaving `0` applicable Forest Plan standards, `0`
+  supported/applied standards, `0` gaps, and `0` component-adjudication queue
+  items. The zero-applicable-standard state is accepted only because component
+  eval, applicable-standard coverage, packet index, decision support, final QA,
+  and phase-eval all prove the same current state. Flathead phase-eval passes
+  `36/36` with `reviewer_ready=true`, `contract_backed_promotion_ready=true`,
+  and no blockers.
 - latest V1 Forest Plan matrix standard-count alignment:
   V1 now counts applicable standard rows from the Forest Plan compliance matrix
   as applicable Forest Plan standards, alongside component coverage/finding
@@ -170,16 +185,16 @@ history below.
   contract-status gates.
 - current all-forest aggregate truth:
   `real-package-review-coverage-eval --manifest
-  config/v1_real_package_review_coverage_v1.json` still exits red overall, but
-  Tyler's `lolo-tylers-kitchen-forest-specific`, HLC's
-  `hlc-bonanza-forest-specific`, Custer-Gallatin South Otter,
-  Beaverhead-Deerlodge South Tobacco Roots, Bitterroot Front, and IPNF Lacy
-  Lemoosh now pass. Current counts are `covered_slot_count=10`,
-  `reviewer_ready_slot_count=10`, `required_slot_count=11`,
-  `missing_required_slot_count=1`, `phase_eval_ready_slot_count=10/11`,
-  `failed_phase_eval_count=1`, and decision identity `10/10`. The remaining
-  failed required slot is Flathead West Reservoir, which still carries
-  phase-eval blockers because its Forest Plan component gate is open.
+  config/v1_real_package_review_coverage_v1.json` passes with
+  `required_slot_count=11`, `covered_slot_count=11`,
+  `reviewer_ready_slot_count=11`, `missing_required_slot_count=0`,
+  `phase_eval_ready_slot_count=11`, `failed_phase_eval_count=0`, decision
+  identity `10/10`, and `distinct_forest_count=10` across
+  Beaverhead-Deerlodge, Bitterroot, Custer-Gallatin, Dakota Prairie,
+  Flathead, Helena-Lewis-and-Clark, Idaho Panhandle, Kootenai, Lolo, and
+  Nez Perce-Clearwater. The eval-trace inventory and SQLite export are current
+  with `blocked_eval_run_count=0` and six trace-store row tables at `18` rows
+  each.
 - prior all-forest Forest Plan matrix contract hardening:
   reviewer-ready V1 Forest Plan contracts can no longer disable the Forest Plan
   compliance matrix gate. The real-package coverage eval passes `11`

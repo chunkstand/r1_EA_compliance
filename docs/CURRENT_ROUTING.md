@@ -9,8 +9,8 @@ Use this short route before opening append-only docs.
 - Latest resolved extraction/chunking/retrieval accuracy slice: sidecar reviewer package adoption after sidecar phase-eval adoption; exact paths, smoke counts, and sidecar promotion boundaries live in `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: eval trace inventory model split after the applicability fact-type support split; zero files are now above the `800`-line architecture cap.
 - Latest resolved observability/eval graph slice: context-graph build/eval commands, trace-event materialization, explicit event-log capture, canonical CLI command-event capture, and f70 source-set phase-eval ratchet. Details: `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
-- Latest resolved forest-plan review/inventory slice: all-R1 legacy direction and management-area inventory closeout, source-set inventory authority/applicability gate hardening, Forest Plan context-derived package facts, weak-trigger adjudication narrowing for Forest Plan components, broad authority-family positive-precedence arbitration, and review-scoped component-decision application for compliance matrices. The f70 manifest replay passed for 10/10 profiles with `component_count=5894`, `standard_count=1888`, zero duplicate IDs, and zero source-accuracy failures; `forest-plan-resolve` now requires the active source-set component inventory instead of silently falling back to the seed fixture; package fact graph builds promote resolver package-evidenced management areas and overlays from `forest_plan_context.json` into first-class package facts; stale applicability authority universes fail against the current Forest Plan context inventory path/count; weak-only positive Forest Plan component trigger evidence is diagnostic trigger-miss evidence instead of an adjudication blocker; review-scoped Forest Plan component applicability decisions narrow the component compliance gate when present. North Seeley now replays with `1070` authority candidates, `67` applicable authorities, `1003` not-applicable authorities, `0` unresolved applicability decisions, `16` applicable Forest Plan standards, a valid compliance matrix JSON/Markdown/PDF, and `phase-eval` `30/30` passing.
-- Latest all-forest Forest Plan authority-universe coverage hardening: review-scoped
+- Prior resolved forest-plan review/inventory slice: all-R1 legacy direction and management-area inventory closeout, source-set inventory authority/applicability gate hardening, Forest Plan context-derived package facts, weak-trigger adjudication narrowing for Forest Plan components, broad authority-family positive-precedence arbitration, and review-scoped component-decision application for compliance matrices. `forest-plan-resolve` now requires the active source-set component inventory instead of silently falling back to the seed fixture; package fact graph builds promote resolver package-evidenced management areas and overlays from `forest_plan_context.json` into first-class package facts; stale applicability authority universes fail against the current Forest Plan context inventory path/count; weak-only positive Forest Plan component trigger evidence is diagnostic trigger-miss evidence instead of an adjudication blocker; review-scoped Forest Plan component applicability decisions narrow the component compliance gate when present. North Seeley now replays with `1070` authority candidates, `67` applicable authorities, `1003` not-applicable authorities, `0` unresolved applicability decisions, `16` applicable Forest Plan standards, a valid compliance matrix JSON/Markdown/PDF, and `phase-eval` `30/30` passing.
+- Prior all-forest Forest Plan authority-universe coverage hardening: review-scoped
   `applicability-authority-universe` now derives the selected forest from
   `forest_plan_context_summary.json` title-page/scope evidence when the caller
   does not pass `--forest-unit-id`, and selected-forest builds include all
@@ -58,21 +58,16 @@ Use this short route before opening append-only docs.
   active component inventory. HLC V1 passes with `forest_plan_passed=true`,
   `27/27` conditional expectations, and `8/8` Forest Plan expectations; HLC
   `phase-eval` passes `32/32`.
-- Latest all-forest Forest Plan component-lane alignment: V1 Forest Plan
+- Prior all-forest Forest Plan component-lane alignment: V1 Forest Plan
   reviewer-ready checks now consult the current component-adjudication eval
   when `forest_plan_context_summary.json` is stale; phase-eval separates
   ordinary applicability authorities from first-class Forest Plan component
   candidates; management-area package detection no longer treats treatment-unit
   table rows as MAs and can match lettered plan ranges such as management areas
   `5a through 5d`; partial review-scoped component-decision files are not
-  treated as exhaustive for every selected-forest component. Flathead West
-  Reservoir now resolves title/admin identity and management-area plan evidence
-  correctly (`scope_status="flathead_nf"`, `10` management areas, Hungry Horse
-  and Spotted Bear Ranger Districts, Flathead County, Montana), but remains red
-  because the current component gate identifies `16` applicable Forest Plan
-  standards with only `1` supported/applied standard and `15` standards with
-  `insufficient_evidence` gaps. Its current component queue is `135` items
-  while the tracked adjudication covers the older `48`-item queue.
+  treated as exhaustive for every selected-forest component. The Flathead
+  red-state counts from this slice are superseded by the all-forest
+  reviewer-ready replay below.
 - Latest all-forest V1 matrix standard-count alignment: V1 Forest Plan
   applicable-standard expectations now count applicable standard rows from the
   Forest Plan compliance matrix in addition to component coverage artifacts.
@@ -92,26 +87,34 @@ Use this short route before opening append-only docs.
   items. Lacy Lemoosh V1 passes with `31/31` conditional expectations and
   `10/10` Forest Plan expectations; IPNF `phase-eval` passes `32/32` with
   `reviewer_ready=true`.
+- Latest all-forest Forest Plan reviewer-ready replay: legacy component parser
+  hardening removes descriptive appendix/table/figure/glossary/citation prose
+  from the standard stream, and the f70 all-R1 inventory build now passes for
+  10 profiles with `built_component_count=5096`, `built_standard_count=1622`,
+  zero blocking inventory quality issues, and zero source-accuracy failures.
+  Flathead West Reservoir resolves from title/admin evidence to Flathead
+  National Forest, Hungry Horse and Spotted Bear Ranger Districts, Flathead
+  County, Montana, with `management_area_count=10`. Component evaluation uses
+  `541` Flathead components and `84` standards; all `541` are evaluated not
+  applicable, yielding `0` applicable Forest Plan standards, `0` gaps, and a
+  zero-item component-adjudication queue. Zero Forest Plan matrix rows are
+  valid only because component eval, applicable-standard coverage, packet
+  index, and final QA all prove the zero-applicable-standard state.
 - Latest all-forest phase/identity gate status: required forest-specific
   reviewer-ready slots still fail closed unless `phase_eval_results.json` and
   decision-document identity both pass for the same review/source-set identity.
-  The identity subgate is green at `10/10`. After the IPNF full
-  authority-universe/component replay, the phase subgate is `10/11` with
-  `failed_phase_eval_count=1` because only Flathead phase-eval remains red on
-  the open Forest Plan component gate and stale downstream
-  authority/decision-support/QA/eval-trace artifacts.
-  The aggregate real-package coverage command remains red with
-  `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
-  `missing_required_slot_count=1`, and the sole remaining failed slot:
-  Flathead West Reservoir. IPNF, Beaverhead-Deerlodge South Tobacco Roots,
-  Bitterroot Front, and Custer-Gallatin South Otter now pass the aggregate
-  slots.
-- Active implementation slice: selected-forest authority-universe coverage and
-  the Tyler, HLC, Custer, BDNF, Bitterroot, and IPNF aggregate paths are
-  hardened; the broad all-forest reviewer-ready goal still requires Flathead
-  standard-gap/adjudication resolution. Open a new bounded packet before hosted
-  query service/API expansion, model-judge work, hosted scoring,
-  knowledge-graph sidecar adoption, or future architecture-cap changes.
+  Flathead phase-eval now passes `36/36` phases with `reviewer_ready=true`,
+  `contract_backed_promotion_ready=true`, and no blockers. The aggregate
+  real-package coverage command now passes with `required_slot_count=11`,
+  `covered_slot_count=11`, `reviewer_ready_slot_count=11`,
+  `missing_required_slot_count=0`, `phase_eval_ready_slot_count=11`,
+  `failed_phase_eval_count=0`, decision-document identity `10/10`, and
+  `distinct_forest_count=10`.
+- Active implementation slice: no active all-forest Forest Plan residual is
+  open in the governed manifest. Open a new bounded packet before adding new
+  EA packages, broadening the manifest, hosted query service/API expansion,
+  model-judge work, hosted scoring, knowledge-graph sidecar adoption, or
+  future architecture-cap changes.
 - Latest resolved forest-specific example packet: `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.

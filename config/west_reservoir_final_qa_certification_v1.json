@@ -63,7 +63,7 @@
       "required": true
     }
   ],
-  "as_of_date": "2026-05-28",
+  "as_of_date": "2026-06-02",
   "authority_evidence_policy": {
     "allow_single_evidence_statuses": [
       "gap",
@@ -155,7 +155,7 @@
       "source_selector": "review_boundary.baseline_source_record_count"
     },
     {
-      "expected": 146,
+      "expected": 607,
       "failure_category": "count_drift",
       "field": "candidate_authority_count",
       "source_selector": "applicability_partition.candidate_authority_count"
@@ -167,7 +167,7 @@
       "source_selector": "applicability_partition.applicable_authority_count"
     },
     {
-      "expected": 102,
+      "expected": 563,
       "failure_category": "count_drift",
       "field": "non_applicable_authority_count",
       "source_selector": "applicability_partition.non_applicable_authority_count"
@@ -227,43 +227,43 @@
       "source_selector": "finding_qa.compliance_matrix_authority_row_count"
     },
     {
-      "expected": 80,
+      "expected": 541,
       "failure_category": "count_drift",
       "field": "forest_plan_component_count",
       "source_selector": "forest_plan_qa.component_count"
     },
     {
-      "expected": 8,
+      "expected": 0,
       "failure_category": "count_drift",
       "field": "forest_plan_supported_component_count",
       "source_selector": "forest_plan_qa.supported_component_count"
     },
     {
-      "expected": 24,
+      "expected": 541,
       "failure_category": "count_drift",
       "field": "forest_plan_not_applicable_component_count",
       "source_selector": "forest_plan_qa.not_applicable_component_count"
     },
     {
-      "expected": 48,
+      "expected": 0,
       "failure_category": "count_drift",
       "field": "forest_plan_gap_count",
       "source_selector": "forest_plan_qa.gap_count"
     },
     {
-      "expected": 20,
+      "expected": 84,
       "failure_category": "count_drift",
       "field": "forest_plan_standard_count",
       "source_selector": "forest_plan_qa.standard_count"
     },
     {
-      "expected": 14,
+      "expected": 0,
       "failure_category": "count_drift",
       "field": "applicable_standard_count",
       "source_selector": "forest_plan_qa.applicable_standard_count"
     },
     {
-      "expected": 1,
+      "expected": 0,
       "failure_category": "count_drift",
       "field": "applied_standard_count",
       "source_selector": "forest_plan_qa.applied_standard_count"
@@ -275,13 +275,13 @@
       "source_selector": "forest_plan_qa.component_eval.case_count"
     },
     {
-      "expected": 31,
+      "expected": 35,
       "failure_category": "count_drift",
       "field": "phase_eval_phase_count",
       "source_selector": "gate_replay_summary.phase_eval.phase_count"
     },
     {
-      "expected": 31,
+      "expected": 35,
       "failure_category": "stale_artifact",
       "field": "phase_eval_passed_phase_count",
       "source_selector": "gate_replay_summary.phase_eval.passed_phase_count"
@@ -305,19 +305,19 @@
       "source_selector": "review_packet_index_qa.applicable_authority_count"
     },
     {
-      "expected": 102,
+      "expected": 563,
       "failure_category": "missing_non_applicable_boundary",
       "field": "review_packet_index_non_applicable_authority_count",
       "source_selector": "review_packet_index_qa.non_applicable_authority_count"
     },
     {
-      "expected": 56,
+      "expected": 0,
       "failure_category": "missing_forest_plan_row",
       "field": "review_packet_index_forest_plan_component_row_count",
       "source_selector": "review_packet_index_qa.forest_plan_component_row_count"
     },
     {
-      "expected": 14,
+      "expected": 0,
       "failure_category": "missing_forest_plan_row",
       "field": "review_packet_index_applicable_standard_count",
       "source_selector": "review_packet_index_qa.applicable_standard_count"
@@ -329,7 +329,7 @@
       "source_selector": "review_packet_index_qa.render_manifest_authority_row_count"
     },
     {
-      "expected": 56,
+      "expected": 0,
       "failure_category": "missing_matrix_render_row",
       "field": "review_packet_index_render_manifest_forest_plan_row_count",
       "source_selector": "review_packet_index_qa.render_manifest_forest_plan_row_count"

@@ -296,6 +296,185 @@ class ForestPlanComponentInventoryBuildTests(unittest.TestCase):
                 self.assertEqual(component["management_area_ids"], ["mgmt-ma-16"])
                 self.assertIn("Management Area 16", component["section_heading"])
 
+    def test_legacy_descriptive_appendix_tables_do_not_inherit_standard_context(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-flathead-nf-01"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Management Area Direction MANAGEMENT AREA 4b B. Standards "
+                            "1. Project activities shall protect recommended wilderness "
+                            "characteristics. Appendix G: Factors for Wilderness "
+                            "Recommendation Areas Table G-4. Jewel Basin Recommended "
+                            "Wilderness Area Factors Description 2. Summarized description "
+                            "of the recommended boundary Generally the western boundary "
+                            "follows the Swan Crest. 3. Brief description of the general "
+                            "geography, topography, and vegetation Existing vegetation "
+                            "includes Douglas-fir and western larch."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="flathead-nf",
+                plan_version="2018",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["standard_count"], 1)
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="flathead-nf",
+            )
+            self.assertEqual(len(components), 1)
+            self.assertIn("protect recommended wilderness", components[0]["component_text"])
+            self.assertNotIn("recommended boundary", components[0]["component_text"])
+
+    def test_legacy_potential_management_approaches_do_not_inherit_standard_context(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-flathead-nf-01"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Management Area Direction MANAGEMENT AREA 1b B. Standards "
+                            "1. Project activities shall maintain lynx habitat. "
+                            "Potential Management Approaches and Possible Actions "
+                            "100. Potential Management Approaches and Possible Actions "
+                            "Possible strategies for vegetation management activities may "
+                            "include thinning or prescribed burning."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="flathead-nf",
+                plan_version="2018",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["standard_count"], 1)
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="flathead-nf",
+            )
+            self.assertEqual(len(components), 1)
+            self.assertIn("maintain lynx habitat", components[0]["component_text"])
+            self.assertNotIn("Possible strategies", components[0]["component_text"])
+
+    def test_legacy_figure_captions_do_not_inherit_component_context(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-flathead-nf-01"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Management Area Direction MANAGEMENT AREA 1b B. Standards "
+                            "1. Project activities shall maintain lynx habitat. "
+                            "List of Figures Figure C-7. A 30 year old forest stand "
+                            "that had modified precommercial thinning 20 years after "
+                            "harvest, depicted about 10 years after thinning. Trees were "
+                            "thinned to an average of 300 trees per acre."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="flathead-nf",
+                plan_version="2018",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["standard_count"], 1)
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="flathead-nf",
+            )
+            self.assertEqual(len(components), 1)
+            self.assertIn("maintain lynx habitat", components[0]["component_text"])
+            self.assertNotIn("30 year old forest stand", components[0]["component_text"])
+
+    def test_legacy_citation_narrative_does_not_inherit_standard_context(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_set_id = "source-set-test"
+            source_record_id = "R1PLAN-flathead-nf-01"
+            chunks_path = _write_chunks(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                chunks=[
+                    _chunk(
+                        source_set_id=source_set_id,
+                        source_record_id=source_record_id,
+                        text=(
+                            "Management Area Direction MANAGEMENT AREA 1b B. Standards "
+                            "1. Project activities shall maintain lynx habitat. "
+                            "Examples of possible strategies associated with habitat "
+                            "restoration include patch cutting. 6. Bull stated that "
+                            "the highest numbers of trapped hares occurred in the patch "
+                            "cuts, similar to findings of other researchers."
+                        ),
+                    ),
+                ],
+            )
+
+            result = build_forest_plan_component_inventory(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                source_record_id=source_record_id,
+                forest_unit_id="flathead-nf",
+                plan_version="2018",
+                chunks_path=chunks_path,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            self.assertEqual(result.summary["standard_count"], 1)
+            components = load_forest_plan_component_inventory(
+                result.inventory_path,
+                forest_unit_id="flathead-nf",
+            )
+            self.assertEqual(len(components), 1)
+            self.assertIn("maintain lynx habitat", components[0]["component_text"])
+            self.assertNotIn("Bull stated", components[0]["component_text"])
+
     def test_colon_number_table_of_contents_entries_are_suppressed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

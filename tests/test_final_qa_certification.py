@@ -5,6 +5,7 @@ from pathlib import Path
 from usfs_r1_ea_sources.final_qa_certification_counts import (
     _current_promotion_suite_self_reference_allowed,
 )
+from usfs_r1_ea_sources.final_qa_certification_report import _forest_plan_standard_rows
 from usfs_r1_ea_sources.final_qa_certification_report import _source_library_pointer
 
 from tests.support.final_qa_certification_fixtures import _read_json
@@ -493,6 +494,15 @@ def test_minimal_report_fixture_keeps_citations_selectors_and_risk_boundaries() 
         "review_date",
         "reviewer_notes",
     }
+
+
+def test_final_qa_allows_reviewer_ready_zero_applicable_forest_plan_standards() -> None:
+    rows = _forest_plan_standard_rows(
+        expected={"required_fixture_rows": {}},
+        counts={"applicable_standard_count": 0},
+    )
+
+    assert rows == []
 
 
 def test_source_library_pointer_falls_back_to_claim_trace_when_direct_evidence_missing() -> None:

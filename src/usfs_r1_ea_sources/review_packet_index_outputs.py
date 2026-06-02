@@ -221,9 +221,29 @@ def _validate_packet(
     _add_check(
         checks,
         name="applicable_forest_plan_standards_present",
-        passed=inventory["summary"]["applicable_standard_count"] > 0,
+        passed=(
+            inventory["summary"]["applicable_standard_count"] > 0
+            or _zero_applicable_forest_plan_standards_valid(inventory)
+        ),
         category="missing_forest_plan_row",
-        details={"count": inventory["summary"]["applicable_standard_count"]},
+        details={
+            "count": inventory["summary"]["applicable_standard_count"],
+            "zero_applicable_standards_valid": _zero_applicable_forest_plan_standards_valid(
+                inventory
+            ),
+            "forest_plan_reviewer_ready": inventory["summary"].get(
+                "forest_plan_reviewer_ready"
+            ),
+            "forest_plan_component_reviewer_ready": inventory["summary"].get(
+                "forest_plan_component_reviewer_ready"
+            ),
+            "forest_plan_expected_applicable_standard_count": inventory["summary"].get(
+                "forest_plan_expected_applicable_standard_count"
+            ),
+            "forest_plan_applicable_standard_coverage_passed": inventory["summary"].get(
+                "forest_plan_applicable_standard_coverage_passed"
+            ),
+        },
     )
     _add_check(
         checks,
@@ -524,6 +544,17 @@ def _packet_index_markdown(packet_index: dict[str, Any]) -> str:
     for row in packet_index["residual_risk_register"]:
         lines.append(f"- `{row.get('risk_id')}`: {row.get('category')}")
     return "\n".join(lines) + "\n"
+
+
+def _zero_applicable_forest_plan_standards_valid(inventory: dict[str, Any]) -> bool:
+    summary = _dict(inventory.get("summary"))
+    return (
+        int(summary.get("applicable_standard_count") or 0) == 0
+        and int(summary.get("forest_plan_expected_applicable_standard_count") or 0) == 0
+        and bool(summary.get("forest_plan_reviewer_ready"))
+        and bool(summary.get("forest_plan_component_reviewer_ready"))
+        and bool(summary.get("forest_plan_applicable_standard_coverage_passed"))
+    )
 
 
 def _packet_index_pdf_lines(packet_index: dict[str, Any]) -> list[str]:

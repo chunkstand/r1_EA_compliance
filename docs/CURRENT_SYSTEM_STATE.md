@@ -15,6 +15,58 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## All-Forest Forest Plan Reviewer Readiness
+
+Latest implementation update on 2026-06-02 UTC:
+
+- goal:
+  every governed forest-specific EA review must resolve the project authority
+  from the decision/admin document, bind the selected forest to the current
+  Forest Plan component inventory, treat management areas and Forest Plan
+  components/standards as first-class review objects, and fail closed unless
+  V1, phase-eval, decision-document identity, packet index, decision support,
+  final QA, aggregate coverage, and eval-trace gates all agree.
+- parser and inventory evidence:
+  the f70 all-R1 Forest Plan component build now passes with
+  `built_component_count=5096`, `built_standard_count=1622`,
+  `profile_count=10`, `blocking_inventory_quality_issue_count=0`, and
+  `component_source_accuracy_failure_count=0`. Legacy parser hardening removes
+  descriptive appendix/table/figure/glossary/citation prose from the standard
+  stream instead of preserving false standards as review authority.
+- Flathead West Reservoir evidence:
+  the review resolves `scope_status="flathead_nf"` with title/admin evidence
+  for Flathead National Forest, Hungry Horse and Spotted Bear Ranger
+  Districts, Flathead County, Montana. The context summary reports
+  `management_area_count=10`, `reviewer_ready=true`, and no competing
+  title-page forest unit. Component evaluation uses the current selected
+  Flathead inventory with `component_count=541`, `standard_count=84`,
+  `not_applicable_count=541`, `applicable_standard_count=0`,
+  `applied_standard_count=0`, `gap_count=0`, `needs_reviewer_resolution_count=0`,
+  and `reviewer_ready=true`. The component adjudication queue is empty and the
+  adjudication eval is reviewer-ready.
+- zero-applicable-standard policy:
+  zero Forest Plan standard rows are accepted only when the component
+  evaluation, applicable-standard coverage, reviewer-ready context, review
+  packet index, and final QA prove that zero applicable standards are the
+  current evaluated result. A missing standard row by itself is not treated as
+  success.
+- downstream evidence:
+  Flathead phase-eval passes `36/36` phases with `reviewer_ready=true`,
+  `contract_backed_promotion_ready=true`, and no blockers. The aggregate
+  real-package coverage eval now passes with `required_slot_count=11`,
+  `covered_slot_count=11`, `reviewer_ready_slot_count=11`,
+  `missing_required_slot_count=0`, `phase_eval_ready_slot_count=11`,
+  `failed_phase_eval_count=0`, decision-document identity `10/10`, and
+  `distinct_forest_count=10` across the governed Region 1 forest roster.
+  Eval trace inventory and SQLite export are current; the trace-store summary
+  passes with `blocked_eval_run_count=0` and six row tables at `18` rows each.
+- boundary:
+  this closes the prior single Flathead residual without handwritten
+  Flathead/Lolo/LNF runtime rules. Future work should add new packages,
+  broaden the governed coverage manifest, or improve inventory/eval quality;
+  it should not continue treating the old Flathead standard-gap state as the
+  active all-forest blocker.
+
 ## Idaho Panhandle Replay And Single Flathead Residual
 
 Latest implementation update on 2026-06-02 UTC:

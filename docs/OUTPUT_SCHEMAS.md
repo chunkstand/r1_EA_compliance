@@ -3892,7 +3892,11 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
 - `phase_eval_gate`, which fails expected `reviewer_ready` slots unless
   `phase_eval_results.json` exists, matches the slot review ID and V1 eval source-set ID, has
   `passed=true`, has `reviewer_ready=true`, has no blockers, and reports complete
-  passed/reviewer-ready phase counts.
+  passed/reviewer-ready phase counts. Each slot's gate also records
+  `self_reference_allowed` and `self_reference_phase_names`; self-reference is
+  allowed only when the failed phase names are limited to outer aggregate
+  eval/reporting gates and the non-self-referential phase counts otherwise
+  prove readiness.
 - `decision_document_identity_gate`, which fails governed forest-specific reviewer-ready slots unless
   `forest_plan_context_summary.json.title_page_project_location` exists, matches the slot review ID
   and source-set ID, proves selected forest or grassland name, at least one ranger district, at

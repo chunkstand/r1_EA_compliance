@@ -1,91 +1,6 @@
 {
-  "applicable_standards": [
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-FW-STD-WTR-01",
-      "component_key": "FW-STD-WTR-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-FW-STD-RMZ-01",
-      "component_key": "FW-STD-RMZ-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-FW-STD-SOIL-01",
-      "component_key": "FW-STD-SOIL-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-FW-STD-WL-01",
-      "component_key": "FW-STD-WL-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-FW-STD-REC-01",
-      "component_key": "FW-STD-REC-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-FW-STD-IFS-01",
-      "component_key": "FW-STD-IFS-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-FW-STD-NST-01",
-      "component_key": "FW-STD-NST-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "complies",
-      "component_id": "FINAL-FLAT-001-FW-STD-TIMB-01",
-      "component_key": "FW-STD-TIMB-01",
-      "finding_status": "supported"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-FW-STD-OFP-01",
-      "component_key": "FW-STD-OFP-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-FW-STD-GR-01",
-      "component_key": "FW-STD-GR-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-FW-STD-CR-01",
-      "component_key": "FW-STD-CR-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-MA1a-STD-01",
-      "component_key": "MA1a-STD-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-MA1b-STD-01",
-      "component_key": "MA1b-STD-01",
-      "finding_status": "gap"
-    },
-    {
-      "compliance_status": "insufficient_evidence",
-      "component_id": "FINAL-FLAT-001-GA-SM-STD-01",
-      "component_key": "GA-SM-STD-01",
-      "finding_status": "gap"
-    }
-  ],
-  "as_of_date": "2026-05-28",
+  "applicable_standards": [],
+  "as_of_date": "2026-06-02",
   "expected_counts": {
     "applicable_authority_count": 44,
     "authority_finding_count": 44,
@@ -95,52 +10,52 @@
       "uncertain": 15
     },
     "authority_reviewer_resolution_pending_count": 0,
-    "candidate_authority_count": 146,
-    "forest_plan_applicable_standard_count": 14,
-    "forest_plan_applied_standard_count": 1,
-    "forest_plan_component_finding_count": 80,
-    "forest_plan_gap_count": 48,
-    "forest_plan_not_applicable_component_count": 24,
-    "forest_plan_reviewer_resolution_item_count": 48,
-    "forest_plan_standard_count": 20,
-    "forest_plan_supported_component_count": 8,
-    "litigation_risk_flag_count": 108,
+    "candidate_authority_count": 607,
+    "forest_plan_applicable_standard_count": 0,
+    "forest_plan_applied_standard_count": 0,
+    "forest_plan_component_finding_count": 541,
+    "forest_plan_gap_count": 0,
+    "forest_plan_not_applicable_component_count": 541,
+    "forest_plan_reviewer_resolution_item_count": 0,
+    "forest_plan_standard_count": 84,
+    "forest_plan_supported_component_count": 0,
+    "litigation_risk_flag_count": 567,
     "litigation_risk_legal_conclusion_count": 0,
-    "non_applicable_authority_count": 102,
-    "non_applicable_search_coverage_certificate_count": 105,
+    "non_applicable_authority_count": 563,
+    "non_applicable_search_coverage_certificate_count": 564,
     "package_chunk_count": 659,
     "package_file_count": 12,
     "review_packet_index_applicable_authority_count": 44,
-    "review_packet_index_applicable_standard_count": 14,
-    "review_packet_index_forest_plan_component_row_count": 56,
-    "review_packet_index_non_applicable_authority_count": 102,
+    "review_packet_index_applicable_standard_count": 0,
+    "review_packet_index_forest_plan_component_row_count": 0,
+    "review_packet_index_non_applicable_authority_count": 563,
     "review_packet_index_render_manifest_authority_row_count": 44,
-    "review_packet_index_render_manifest_forest_plan_row_count": 56,
+    "review_packet_index_render_manifest_forest_plan_row_count": 0,
     "review_packet_index_validation_failed_check_count": 0
   },
   "expected_output_dir": "source_library/reviews/west-reservoir-67436/decision_support/",
   "expected_report_schema_version": "ea-consistency-decision-support-report-v1",
   "fixture_id": "west-reservoir-decision-support-expected-summary",
   "input_hashes": {
-    "applicability_validation_sha256": "e8dc64e2cb354c0351d548552f3f3de5584f3302dbe810387c97dce62fe80aee",
-    "applicable_authorities_sha256": "0447aa90cf878b661f50f7a94eb0cc1804f946a2c3a81d76e0d515342455bd10",
-    "authority_reviewer_resolution_report_sha256": "a688de08f0967b620df0168dc567e8c5bd81f127c7b6359b76b575f22ee2fbf5",
-    "compliance_matrix_sha256": "cf6b1460d7d893e0b4b71f84ff8aecfa0003fcb998b8c1c0399523b51d633da9",
-    "compliance_review_sha256": "ced7a6f6d71b368e6ae3e07d737063c1b70eb5d7bc24a20fad51a3a11bd75fab",
-    "forest_plan_applicable_standard_coverage_sha256": "1d6ab268da4dd75a03ead4d610eee6c98ab007671c95ba3581e546827b3374e7",
+    "applicability_validation_sha256": "74e2613bc525726da2d85338526825d18f890bc12bb2349d3afe827ab05cb65b",
+    "applicable_authorities_sha256": "173c22554cd92cea33883726dd1f6a3234d1444799410f055334a2ec5ebdb700",
+    "authority_reviewer_resolution_report_sha256": "b70a6947a488a42d09933ab919bffa351c9212349dd311242f2bc365763d91c4",
+    "compliance_matrix_sha256": "be82c5ee0e02aaf9ae83ea53fa6bed80599ef2af83c31e261d208cccd4a90f6b",
+    "compliance_review_sha256": "7f4dea8035018c718679c09500d298a8742c83dde53dd3796c71e86ed8e9d0b6",
+    "forest_plan_applicable_standard_coverage_sha256": "041192054614433f84a961f0ffbe25ec51f86dca6775d6e2fd42aed883c36d52",
     "forest_plan_component_eval_results_sha256": "91f6abe42e21939926bfee830805e1bccb45bd636ac3db55613acce2286cef66",
-    "forest_plan_component_findings_sha256": "95e99102269ca5ff3c2bb076d2923c6a10a6ac7ab6abce87c93d34c668a54d54",
-    "forest_plan_context_summary_sha256": "b8a8ee9fc336cb4806e6a46fe79d1d838a4d86502ffcacf73e90ee8543160f43",
-    "generated_rule_pack_sha256": "944268a2326d3bce93eb16d15b825aa51d49057a19c9cc3fa1b3fc14d4c8ffde",
-    "generated_rule_pack_validation_sha256": "4add3fdb257d3eff1931eb7950811dbbe4a1fff24e3b3b96bea10a576d8ee5e3",
-    "litigation_risk_summary_sha256": "10ecf81cb1e54e2e5bfe733de22dae8112c2726fdb2d74170b8cf12222cbfb3d",
-    "non_applicable_authorities_sha256": "e05baa9c64964c05463047e7ffe1467ec0241369d4da9410d8a57971b68204d5",
-    "non_applicable_authority_appendix_markdown_sha256": "7a8c6a6df781c050ddc47bed3bea2ad56cc0792cae88dc8f84863994cf2b7a4d",
-    "non_applicable_authority_appendix_sha256": "7546006691b2d169052cf7f2bddf0d1056f452bc72407f5ba869d5dbf119c8e2",
+    "forest_plan_component_findings_sha256": "9b65416c2e1cc63361cff3e8a996406a9ef09f72243ee90a0fd2991d72d0c7e6",
+    "forest_plan_context_summary_sha256": "5ca32dc911a12a20d22dc500dce006a066776ea3cdbd118a78fb7c4c893775a7",
+    "generated_rule_pack_sha256": "cda30a9d0d89e6762fa6b3923894a10116f131fb823b9ea49cd2b95fbc376a9b",
+    "generated_rule_pack_validation_sha256": "1e6bc31a1c5896658fa0c06d8309a3d2f0921f6fe4ecb030980d526e540fddf8",
+    "litigation_risk_summary_sha256": "06adbfce51ca678f29ed051f3a1684457e2563672513454a704951441039c70d",
+    "non_applicable_authorities_sha256": "cd95f6b6edc1d843d467f82689aa45668a5816911257b68fcfe6bfe04fae436f",
+    "non_applicable_authority_appendix_markdown_sha256": "deb6804df4e7a08d1d7258527051071d96083055cd470f2115448840294f08ed",
+    "non_applicable_authority_appendix_sha256": "70dab56117f02b49f0fb5e509e4f5d0faae9a8bd2f5b1447c6afc5ef75039e14",
     "package_chunks_sha256": "1861dd7664bddbe108ad811a28020655e32070c97e86a2a6d4df75386e9a97e1",
     "package_manifest_sha256": "e01395466bf70cccd42e9d87fa81c46c2b45a761dc12ccfaec096aaecd911493",
     "plan_consistency_table_text_sha256": "79045b8f8285a61ddba53e9e88d2f6d5944aab9dbcadf55e7aa960e59065760b",
-    "search_coverage_certificates_sha256": "07c33cd206cf26777c95cf65b540f4756e2af4b887c486d04ac3a926d0eed498"
+    "search_coverage_certificates_sha256": "e81cf291387e63d9edb1d91e5684d570df99c778d70bcdc51542f87a18657263"
   },
   "manual_draft_policy": {
     "blocked_path_prefixes": [
@@ -245,26 +160,6 @@
         }
       ],
       "status": "pass"
-    },
-    "forest_plan_standard": {
-      "applicability_status": "applicable",
-      "compliance_status": "complies",
-      "component_id": "FINAL-FLAT-001-FW-STD-TIMB-01",
-      "component_key": "FW-STD-TIMB-01",
-      "component_type": "standard",
-      "determination": {
-        "review_section": "West Reservoir Final Environmental Assessment.pdf",
-        "source": "forest_plan_component_eval_contract"
-      },
-      "ea_package_citation": "EA-PACKAGE-011 (8156685c9137)",
-      "finding_status": "supported",
-      "forest_plan_citation": "FINAL-FLAT-001 (92d78498664e)",
-      "source_selectors": [
-        {
-          "artifact_path": "source_library/reviews/west-reservoir-67436/forest_plan_applicable_standard_coverage.json",
-          "selector": "standards[component_key=FW-STD-TIMB-01]"
-        }
-      ]
     },
     "non_applicable_authority": {
       "authority_category": "agency_policy",
