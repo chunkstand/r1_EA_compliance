@@ -10,6 +10,14 @@
     "typed_blocked_slot_count_min": 0
   },
   "id": "region1-real-package-review-coverage-v1",
+  "phase_eval_policy": {
+    "applies_to_expected_contract_statuses": [
+      "reviewer_ready"
+    ],
+    "mode": "fail_closed",
+    "required_runtime_signal": "source_library/reviews/<review_id>/phase_eval_results.json",
+    "rule": "Required reviewer-ready real-package slots must fail unless phase-eval exists, matches the review and source set, passes, reports reviewer_ready=true, and has no blockers."
+  },
   "required_coverage_class_ids": [
     "current_promotion_reviewer_ready",
     "forest_specific_reviewer_ready"

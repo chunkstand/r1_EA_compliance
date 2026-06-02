@@ -15,6 +15,34 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## All-Forest Phase-Eval Coverage Contract Hardening Resolved Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  `real-package-review-coverage-eval` now fails required reviewer-ready slots
+  unless the review has `phase_eval_results.json`, the phase-eval artifact
+  matches the slot review ID and V1 eval source-set ID, `passed=true`,
+  `reviewer_ready=true`, no blockers, and complete passed/reviewer-ready phase
+  counts. This makes the all-forest real-package gate prove phase-level
+  readiness instead of only V1 eval contract readiness.
+- manifest contract:
+  `config/v1_real_package_review_coverage_v1.json` now declares
+  `phase_eval_policy.mode=fail_closed` for expected `reviewer_ready` slots.
+  The policy points to
+  `source_library/reviews/<review_id>/phase_eval_results.json` as the required
+  runtime signal.
+- live all-forest evidence:
+  `real-package-review-coverage-eval --manifest
+  config/v1_real_package_review_coverage_v1.json` passed with
+  `covered_slot_count=11`, `reviewer_ready_slot_count=11`,
+  `distinct_forest_count=10`, `phase_eval_required_slot_count=11`,
+  `phase_eval_ready_slot_count=11`, `missing_phase_eval_count=0`,
+  `failed_phase_eval_count=0`, and no failure categories.
+- boundary:
+  this is an aggregate gate hardening slice. It does not regenerate individual
+  review packages or change per-review phase-eval logic.
+
 ## All-Forest Forest Plan Matrix Contract Hardening Resolved Locally
 
 Latest implementation update on 2026-06-02 UTC:

@@ -3841,6 +3841,8 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
 - `coverage_thresholds` for required slot count, required coverage-class count, distinct forest and
   package-style minima, reviewer-ready and typed-blocked minima, and missing-slot or
   missing-authority maxima
+- `phase_eval_policy` for the fail-closed phase-eval runtime signal required by expected
+  `reviewer_ready` slots
 - `slots`, each naming a slot ID, review ID, package label, coverage-class ID, forest identity,
   per-review V1 eval contract path, expected contract status, required flag, and exactly one
   package-authority declaration through either a replay-context file or a tracked intake package
@@ -3854,7 +3856,9 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
   `required_coverage_class_ids`, `covered_coverage_class_ids`, and `missing_coverage_class_ids`
 - `reviewer_ready_slot_count`, `typed_blocked_slot_count`, `distinct_forest_count`,
   `distinct_forest_ids`, `distinct_package_style_count`, and `distinct_package_style_tags`
-- `missing_required_slot_count`, `missing_package_authority_count`, and `threshold_failures`
+- `missing_required_slot_count`, `missing_package_authority_count`, `phase_eval_required_slot_count`,
+  `phase_eval_ready_slot_count`, `missing_phase_eval_count`, `failed_phase_eval_count`, and
+  `threshold_failures`
 - `slots`, each carrying the resolved review ID, expected and actual contract status, package-label
   and package-authority validation, ready-versus-blocked lane summary, package-style tags, blocker
   categories, the underlying V1 eval summary path, and
@@ -3862,6 +3866,10 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
   `forest_specific_reviewer_ready` slots fail closed unless that runtime gate
   proves the V1 eval's forest-plan `scope_status` identifies the same
   `forest_unit_id` declared by the slot.
+- `phase_eval_gate`, which fails expected `reviewer_ready` slots unless
+  `phase_eval_results.json` exists, matches the slot review ID and V1 eval source-set ID, has
+  `passed=true`, has `reviewer_ready=true`, has no blockers, and reports complete
+  passed/reviewer-ready phase counts.
 
 The current manifest has eleven required slots: East Crazies current promotion
 plus ten `forest_specific_reviewer_ready` examples across Beaverhead-Deerlodge,
@@ -3870,7 +3878,9 @@ Panhandle, Nez Perce-Clearwater, Dakota Prairie, and Kootenai. South Plateau is
 archived as historical evidence only. The current aggregate threshold floor is
 eleven slots, two active coverage classes, ten distinct forests, eighteen
 package styles, eleven reviewer-ready slots, zero typed-blocked slots, and
-zero package-authority gaps.
+zero package-authority gaps. The current phase-eval policy also requires all
+eleven reviewer-ready slots to have matching, passing, reviewer-ready phase-eval
+artifacts.
 
 ## Gold Coverage Eval Outputs
 

@@ -36,6 +36,10 @@ def test_real_package_review_coverage_eval_accepts_declared_reviewer_ready_and_t
         assert result.summary["distinct_forest_count"] == 2
         assert result.summary["distinct_package_style_count"] == 3
         assert result.summary["missing_package_authority_count"] == 0
+        assert result.summary["phase_eval_required_slot_count"] == 2
+        assert result.summary["phase_eval_ready_slot_count"] == 2
+        assert result.summary["missing_phase_eval_count"] == 0
+        assert result.summary["failed_phase_eval_count"] == 0
         assert result.summary["threshold_failures"] == []
 
 
@@ -86,6 +90,34 @@ def test_real_package_review_coverage_eval_blocks_forest_specific_without_runtim
         assert result.summary["failure_category_counts"]["runtime_forest_scope_missing"] == 1
 
 
+def test_real_package_review_coverage_eval_requires_reviewer_ready_phase_eval() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        output_dir = root / "source_library"
+        manifest_path = _write_manifest(
+            root,
+            missing_phase_eval_review_id="v1-cg-ecid-compliance-review",
+        )
+
+        result = run_real_package_review_coverage_eval(
+            output_dir=output_dir,
+            manifest_path=manifest_path,
+        )
+
+        assert result.summary["passed"] is False
+        assert result.summary["missing_phase_eval_count"] == 1
+        assert result.summary["failed_phase_eval_count"] == 1
+        slot = next(
+            slot
+            for slot in result.summary["slots"]
+            if slot["slot_id"] == "east-crazies-current-promotion"
+        )
+        assert slot["phase_eval_gate"]["required"] is True
+        assert slot["phase_eval_gate"]["passed"] is False
+        assert "phase_eval_missing" in slot["failure_reasons"]
+        assert result.summary["failure_category_counts"]["phase_eval_missing"] == 1
+
+
 def test_real_package_review_coverage_eval_rejects_missing_required_slot() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -124,6 +156,18 @@ def test_committed_real_package_review_coverage_manifest_archives_south_plateau_
             "Required current-promotion and forest-specific reviewer-ready slots "
             "must fail unless the V1 eval runtime forest-plan scope identifies the "
             "slot forest_unit_id as applicable."
+        ),
+    }
+    assert manifest["phase_eval_policy"] == {
+        "mode": "fail_closed",
+        "applies_to_expected_contract_statuses": [
+            "reviewer_ready",
+        ],
+        "required_runtime_signal": "source_library/reviews/<review_id>/phase_eval_results.json",
+        "rule": (
+            "Required reviewer-ready real-package slots must fail unless phase-eval "
+            "exists, matches the review and source set, passes, reports "
+            "reviewer_ready=true, and has no blockers."
         ),
     }
     assert [item["review_id"] for item in manifest["slots"]] == [
@@ -176,6 +220,7 @@ def _write_manifest(
     *,
     include_expansion_slot: bool = True,
     missing_ready_authority: bool = False,
+    missing_phase_eval_review_id: str | None = None,
 ) -> Path:
     results_dir = root / "results"
     authorities_dir = root / "authorities"
@@ -219,6 +264,7 @@ def _write_manifest(
     review_payloads = [
         {
             "review_id": "v1-cg-ecid-compliance-review",
+            "source_set_id": "source-set-east",
             "passed": True,
             "contract_status": "reviewer_ready",
             "forest_unit_id": "custer-gallatin-nf",
@@ -236,6 +282,7 @@ def _write_manifest(
         },
         {
             "review_id": "west-reservoir-67436",
+            "source_set_id": "source-set-west",
             "passed": True,
             "contract_status": "typed_blocked",
             "forest_unit_id": "flathead-nf",
@@ -251,6 +298,7 @@ def _write_manifest(
         review_payloads.append(
             {
                 "review_id": "region1-expansion-south-plateau-landscape-treatment",
+                "source_set_id": "source-set-south",
                 "passed": True,
                 "contract_status": "reviewer_ready",
                 "forest_unit_id": "custer-gallatin-nf",
@@ -267,6 +315,11 @@ def _write_manifest(
         path = results_dir / f"review-{index}.json"
         _write_json(path, payload)
         review_paths.append(path)
+        if (
+            payload["contract_status"] == "reviewer_ready"
+            and payload["review_id"] != missing_phase_eval_review_id
+        ):
+            _write_phase_eval(root, payload)
     slots = [
         {
             "slot_id": "east-crazies-current-promotion",
@@ -341,6 +394,16 @@ def _write_manifest(
                 "missing_required_slot_count_max": 0,
                 "missing_package_authority_count_max": 0,
             },
+            "phase_eval_policy": {
+                "mode": "fail_closed",
+                "applies_to_expected_contract_statuses": ["reviewer_ready"],
+                "required_runtime_signal": "source_library/reviews/<review_id>/phase_eval_results.json",
+                "rule": (
+                    "Required reviewer-ready real-package slots must fail unless phase-eval "
+                    "exists, matches the review and source set, passes, reports "
+                    "reviewer_ready=true, and has no blockers."
+                ),
+            },
             "slots": slots,
         },
     )
@@ -350,6 +413,27 @@ def _write_manifest(
 def _write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, sort_keys=True), encoding="utf-8")
+
+
+def _write_phase_eval(root: Path, review_payload: dict) -> None:
+    phase_count = 3
+    _write_json(
+        root
+        / "source_library"
+        / "reviews"
+        / review_payload["review_id"]
+        / "phase_eval_results.json",
+        {
+            "review_id": review_payload["review_id"],
+            "source_set_id": review_payload["source_set_id"],
+            "passed": True,
+            "reviewer_ready": True,
+            "phase_count": phase_count,
+            "passed_phase_count": phase_count,
+            "reviewer_ready_phase_count": phase_count,
+            "blockers": [],
+        },
+    )
 
 
 def _runtime_scope(

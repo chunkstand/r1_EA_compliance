@@ -83,6 +83,13 @@ history below.
   currentness now compares the Forest Plan context inventory path plus the
   authority-universe Forest Plan component candidate count, not the narrowed
   review-scoped finding count.
+- latest resolved all-forest phase-eval coverage hardening:
+  `real-package-review-coverage-eval` now fails expected reviewer-ready slots
+  unless the review's `phase_eval_results.json` exists, matches the review and
+  source-set identity, passes, reports `reviewer_ready=true`, has no blockers,
+  and has complete passed/reviewer-ready phase counts. The live gate passes
+  with `phase_eval_required_slot_count=11`, `phase_eval_ready_slot_count=11`,
+  `missing_phase_eval_count=0`, and `failed_phase_eval_count=0`.
 - latest resolved observability/eval context graph slice:
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` Milestone 0. The
   repo has a tracked context-graph contract, `eval-context-graph-build`,

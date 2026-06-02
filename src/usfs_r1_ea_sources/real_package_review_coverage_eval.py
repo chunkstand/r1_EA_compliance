@@ -18,6 +18,7 @@ RUNTIME_FOREST_SCOPE_REQUIRED_COVERAGE_CLASS_IDS = {
     "current_promotion_reviewer_ready",
     "forest_specific_reviewer_ready",
 }
+PHASE_EVAL_REQUIRED_CONTRACT_STATUSES = {"reviewer_ready"}
 
 
 @dataclass(frozen=True)
@@ -98,6 +99,20 @@ def run_real_package_review_coverage_eval(
     missing_package_authority_count = sum(
         1 for slot in required_slots if not slot["package_authority"]["passed"]
     )
+    phase_eval_required_slot_count = sum(
+        1 for slot in required_slots if slot["phase_eval_gate"]["required"]
+    )
+    phase_eval_ready_slot_count = sum(
+        1
+        for slot in required_slots
+        if slot["phase_eval_gate"]["required"] and slot["phase_eval_gate"]["passed"]
+    )
+    missing_phase_eval_count = sum(
+        1
+        for slot in required_slots
+        if "phase_eval_missing" in slot["phase_eval_gate"]["failure_reasons"]
+    )
+    failed_phase_eval_count = phase_eval_required_slot_count - phase_eval_ready_slot_count
     missing_required_slot_count = len(required_slots) - len(covered_slots)
     missing_coverage_class_ids = sorted(
         set(required_coverage_class_ids) - {slot["coverage_class_id"] for slot in covered_slots}
@@ -128,6 +143,7 @@ def run_real_package_review_coverage_eval(
         "output_path": str(output_path),
         "real_package_review_coverage_id": manifest.get("id"),
         "real_package_review_coverage_version": manifest.get("version"),
+        "phase_eval_policy": manifest.get("phase_eval_policy", {}),
         "passed": passed,
         "required_slot_count": len(required_slots),
         "covered_slot_count": len(covered_slots),
@@ -143,6 +159,10 @@ def run_real_package_review_coverage_eval(
         "distinct_package_style_tags": distinct_package_style_tags,
         "missing_required_slot_count": missing_required_slot_count,
         "missing_package_authority_count": missing_package_authority_count,
+        "phase_eval_required_slot_count": phase_eval_required_slot_count,
+        "phase_eval_ready_slot_count": phase_eval_ready_slot_count,
+        "missing_phase_eval_count": missing_phase_eval_count,
+        "failed_phase_eval_count": failed_phase_eval_count,
         "threshold_failures": threshold_failures,
         "failure_category_counts": dict(sorted(failure_category_counts.items())),
         "slots": slot_results,
@@ -197,6 +217,14 @@ def _slot_result(
     package_style_tags = _string_list(
         summary.get("package_style_tags") or slot.get("package_style_tags")
     )
+    phase_eval_gate = _phase_eval_gate(
+        slot=slot,
+        manifest_path=manifest_path,
+        output_dir=output_dir,
+        review_id=review_id,
+        expected_contract_status=expected_contract_status,
+        summary=summary,
+    )
     expected_blocker_categories = _string_list(
         contract_expectations.get("allowed_blocker_categories")
         or summary.get("allowed_blocker_categories")
@@ -220,6 +248,7 @@ def _slot_result(
     if not package_authority["passed"]:
         failure_reasons.append("missing_package_authority")
     failure_reasons.extend(runtime_forest_scope_gate["failure_reasons"])
+    failure_reasons.extend(phase_eval_gate["failure_reasons"])
     return {
         "slot_id": str(slot["slot_id"]),
         "label": str(slot["label"]),
@@ -240,6 +269,7 @@ def _slot_result(
         "forest_unit_id": forest_unit_id,
         "expected_forest_unit_id": expected_forest_unit_id,
         "runtime_forest_scope_gate": runtime_forest_scope_gate,
+        "phase_eval_gate": phase_eval_gate,
         "package_style_tags": package_style_tags,
         "failure_category_counts": summary.get("failure_category_counts", {}),
         "forest_plan_failure_category_counts": summary.get(
@@ -253,6 +283,92 @@ def _slot_result(
         "expected_blocker_categories": expected_blocker_categories,
         "actual_blocker_categories": actual_blocker_categories,
         "unexpected_blocker_categories": unexpected_blocker_categories,
+    }
+
+
+def _phase_eval_gate(
+    *,
+    slot: dict[str, Any],
+    manifest_path: Path,
+    output_dir: Path,
+    review_id: str,
+    expected_contract_status: str,
+    summary: dict[str, Any],
+) -> dict[str, Any]:
+    required = expected_contract_status in PHASE_EVAL_REQUIRED_CONTRACT_STATUSES
+    path_value = slot.get("phase_eval_results_path")
+    phase_eval_path = (
+        _resolve_repo_path(str(path_value), manifest_path)
+        if path_value
+        else output_dir / "reviews" / review_id / "phase_eval_results.json"
+    )
+    failure_reasons: list[str] = []
+    payload: dict[str, Any] = {}
+    path_exists = phase_eval_path.exists()
+
+    if path_exists:
+        try:
+            loaded = _read_json(phase_eval_path)
+            if isinstance(loaded, dict):
+                payload = loaded
+            else:
+                failure_reasons.append("phase_eval_invalid_json")
+        except (OSError, json.JSONDecodeError):
+            failure_reasons.append("phase_eval_invalid_json")
+    elif required:
+        failure_reasons.append("phase_eval_missing")
+
+    actual_review_id = str(payload.get("review_id") or "").strip()
+    actual_source_set_id = str(payload.get("source_set_id") or "").strip()
+    expected_source_set_id = str(summary.get("source_set_id") or "").strip()
+    phase_blockers = payload.get("blockers") if isinstance(payload.get("blockers"), list) else []
+    passed = bool(payload.get("passed"))
+    reviewer_ready = bool(payload.get("reviewer_ready"))
+    phase_count = _optional_int(payload.get("phase_count"))
+    passed_phase_count = _optional_int(payload.get("passed_phase_count"))
+    reviewer_ready_phase_count = _optional_int(payload.get("reviewer_ready_phase_count"))
+
+    if required and payload:
+        if actual_review_id != review_id:
+            failure_reasons.append("phase_eval_review_id_mismatch")
+        if expected_source_set_id and actual_source_set_id != expected_source_set_id:
+            failure_reasons.append("phase_eval_source_set_mismatch")
+        if not passed:
+            failure_reasons.append("phase_eval_failed")
+        if not reviewer_ready:
+            failure_reasons.append("phase_eval_not_reviewer_ready")
+        if phase_blockers:
+            failure_reasons.append("phase_eval_blockers_present")
+        if phase_count is not None:
+            if phase_count <= 0:
+                failure_reasons.append("phase_eval_phase_count_missing")
+            if passed_phase_count != phase_count:
+                failure_reasons.append("phase_eval_phase_count_mismatch")
+            if reviewer_ready_phase_count != phase_count:
+                failure_reasons.append("phase_eval_reviewer_ready_phase_count_mismatch")
+
+    return {
+        "required": required,
+        "passed": not failure_reasons,
+        "path": str(phase_eval_path),
+        "path_exists": path_exists,
+        "review_id": actual_review_id or None,
+        "expected_review_id": review_id,
+        "review_id_matches": (not required or actual_review_id == review_id),
+        "source_set_id": actual_source_set_id or None,
+        "expected_source_set_id": expected_source_set_id or None,
+        "source_set_matches": (
+            not required
+            or not expected_source_set_id
+            or actual_source_set_id == expected_source_set_id
+        ),
+        "phase_eval_passed": passed,
+        "reviewer_ready": reviewer_ready,
+        "phase_count": phase_count,
+        "passed_phase_count": passed_phase_count,
+        "reviewer_ready_phase_count": reviewer_ready_phase_count,
+        "blocker_count": len(phase_blockers),
+        "failure_reasons": sorted(set(failure_reasons)),
     }
 
 
@@ -586,6 +702,13 @@ def _int_dict(value: Any) -> dict[str, int]:
         except (TypeError, ValueError):
             continue
     return result
+
+
+def _optional_int(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _string_list(value: Any) -> list[str]:
