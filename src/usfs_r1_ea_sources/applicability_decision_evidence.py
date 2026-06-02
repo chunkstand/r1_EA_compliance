@@ -20,6 +20,7 @@ def trigger_match(
     package_chunks: list[dict[str, Any]],
     package_results: list[dict[str, Any]],
     include_negative_context: bool = False,
+    search_index: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if not groups:
         return {
@@ -30,11 +31,6 @@ def trigger_match(
             "requires_adjudication": False,
             "adjudication_notes": [],
         }
-    searchable_nodes = [
-        node
-        for node in package_nodes
-        if include_negative_context or node.get("confidence_class") != "negative_context"
-    ]
     matched_groups = []
     evidence_by_id: dict[str, dict[str, Any]] = {}
     adjudication_notes = []
@@ -43,10 +39,12 @@ def trigger_match(
         group_matched = False
         group_evidence_by_id: dict[str, dict[str, Any]] = {}
         weak_signal_reasons = []
-        for node in searchable_nodes:
-            node_text = _package_node_text(node)
-            if not all(term_in_text(term, node_text) for term in group):
-                continue
+        for node in _matching_package_nodes_for_group(
+            group=group,
+            package_nodes=package_nodes,
+            include_negative_context=include_negative_context,
+            search_index=search_index,
+        ):
             group_matched = True
             evidence = _package_evidence_span(node)
             evidence_by_id[evidence["evidence_id"]] = evidence
@@ -55,10 +53,11 @@ def trigger_match(
                 note = _weak_signal_note("package fact", node.get("node_id"), evidence)
                 adjudication_notes.append(note)
                 weak_signal_reasons.append(note)
-        for chunk in package_chunks:
-            chunk_text = str(chunk.get("text") or "")
-            if not all(term_in_text(term, chunk_text) for term in group):
-                continue
+        for chunk in _matching_package_chunks_for_group(
+            group=group,
+            package_chunks=package_chunks,
+            search_index=search_index,
+        ):
             group_matched = True
             evidence = _package_chunk_evidence_span(chunk, group)
             evidence_by_id[evidence["evidence_id"]] = evidence
@@ -242,6 +241,30 @@ def package_fact_nodes(package_fact_graph: dict[str, Any]) -> list[dict[str, Any
     ]
 
 
+def build_trigger_search_index(
+    *,
+    package_nodes: list[dict[str, Any]],
+    package_chunks: list[dict[str, Any]],
+) -> dict[str, Any]:
+    node_records = [
+        _search_record(node, _package_node_text(node))
+        for node in package_nodes
+        if isinstance(node, dict)
+    ]
+    chunk_records = [
+        _search_record(chunk, str(chunk.get("text") or ""))
+        for chunk in package_chunks
+        if isinstance(chunk, dict)
+    ]
+    return {
+        "node_records": node_records,
+        "chunk_records": chunk_records,
+        "node_token_index": _token_index(node_records),
+        "chunk_token_index": _token_index(chunk_records),
+        "match_cache": {},
+    }
+
+
 def present_package_values(package_nodes: list[dict[str, Any]]) -> dict[str, set[str]]:
     values: dict[str, set[str]] = defaultdict(set)
     for node in package_nodes:
@@ -278,6 +301,176 @@ def term_in_text(term: str, text: str) -> bool:
         )
     normalized_term = raw_term.lower()
     return normalized_term in text.lower()
+
+
+def _matching_package_nodes_for_group(
+    *,
+    group: list[str],
+    package_nodes: list[dict[str, Any]],
+    include_negative_context: bool,
+    search_index: dict[str, Any] | None,
+) -> list[dict[str, Any]]:
+    if not search_index:
+        return [
+            node
+            for node in package_nodes
+            if (include_negative_context or node.get("confidence_class") != "negative_context")
+            and _group_matches_text(group, _package_node_text(node))
+        ]
+    return [
+        record["item"]
+        for record in _matching_records_for_group(
+            search_index=search_index,
+            group=group,
+            record_key="node_records",
+            token_index_key="node_token_index",
+            include_negative_context=include_negative_context,
+        )
+    ]
+
+
+def _matching_package_chunks_for_group(
+    *,
+    group: list[str],
+    package_chunks: list[dict[str, Any]],
+    search_index: dict[str, Any] | None,
+) -> list[dict[str, Any]]:
+    if not search_index:
+        return [
+            chunk
+            for chunk in package_chunks
+            if _group_matches_text(group, str(chunk.get("text") or ""))
+        ]
+    return [
+        record["item"]
+        for record in _matching_records_for_group(
+            search_index=search_index,
+            group=group,
+            record_key="chunk_records",
+            token_index_key="chunk_token_index",
+            include_negative_context=True,
+        )
+    ]
+
+
+def _matching_records_for_group(
+    *,
+    search_index: dict[str, Any],
+    group: list[str],
+    record_key: str,
+    token_index_key: str,
+    include_negative_context: bool,
+) -> list[dict[str, Any]]:
+    normalized_group = _normalized_group(group)
+    cache_key = (
+        record_key,
+        include_negative_context,
+        normalized_group,
+    )
+    match_cache = search_index.setdefault("match_cache", {})
+    if cache_key in match_cache:
+        return match_cache[cache_key]
+    records = _candidate_records_for_group(
+        search_index=search_index,
+        group=normalized_group,
+        record_key=record_key,
+        token_index_key=token_index_key,
+    )
+    matches = [
+        record
+        for record in records
+        if (include_negative_context or record.get("confidence_class") != "negative_context")
+        and _group_matches_prepared_text(
+            normalized_group,
+            record.get("text") or "",
+            record.get("lower_text") or "",
+        )
+    ]
+    match_cache[cache_key] = matches
+    return matches
+
+
+def _candidate_records_for_group(
+    *,
+    search_index: dict[str, Any],
+    group: tuple[str, ...],
+    record_key: str,
+    token_index_key: str,
+) -> list[dict[str, Any]]:
+    anchor = _anchor_token_for_group(group, search_index.get(token_index_key) or {})
+    if not anchor:
+        return list(search_index.get(record_key) or [])
+    return list((search_index.get(token_index_key) or {}).get(anchor, []))
+
+
+def _anchor_token_for_group(
+    group: tuple[str, ...],
+    token_index: dict[str, list[dict[str, Any]]],
+) -> str | None:
+    tokens = sorted(
+        {
+            token
+            for term in group
+            for token in _tokens(term)
+            if token in token_index
+        },
+        key=lambda token: (len(token_index.get(token, [])), -len(token), token),
+    )
+    return tokens[0] if tokens else None
+
+
+def _group_matches_text(group: list[str], text: str) -> bool:
+    return _group_matches_prepared_text(_normalized_group(group), text, text.lower())
+
+
+def _group_matches_prepared_text(
+    group: tuple[str, ...],
+    text: str,
+    lower_text: str,
+) -> bool:
+    return all(_term_in_prepared_text(term, text, lower_text) for term in group)
+
+
+def _term_in_prepared_text(term: str, text: str, lower_text: str) -> bool:
+    raw_term = str(term or "").strip()
+    if not raw_term:
+        return False
+    if len(raw_term) <= 3 and raw_term.replace(".", "").isalnum():
+        return bool(
+            re.search(
+                rf"(?<![A-Za-z0-9]){re.escape(raw_term)}(?![A-Za-z0-9])",
+                text,
+                flags=re.IGNORECASE,
+            )
+        )
+    return raw_term.lower() in lower_text
+
+
+def _normalized_group(group: list[str]) -> tuple[str, ...]:
+    return tuple(str(term or "").strip() for term in group if str(term or "").strip())
+
+
+def _search_record(item: dict[str, Any], text: str) -> dict[str, Any]:
+    lower_text = text.lower()
+    return {
+        "item": item,
+        "text": text,
+        "lower_text": lower_text,
+        "confidence_class": item.get("confidence_class"),
+        "tokens": set(_tokens(lower_text)),
+    }
+
+
+def _token_index(records: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    index: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for record in records:
+        for token in record.get("tokens") or set():
+            index[token].append(record)
+    return dict(index)
+
+
+def _tokens(value: str) -> list[str]:
+    return re.findall(r"[a-z0-9][a-z0-9.-]*", value.lower())
 
 
 def _trigger_group_diagnostic(

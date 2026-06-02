@@ -17,8 +17,10 @@ from .applicability_decision_coverage import coverage_boundary as _coverage_boun
 from .applicability_decision_coverage import coverage_certificate as _coverage_certificate
 from .applicability_decision_coverage import records_by_candidate as _records_by_candidate
 from .applicability_decision_evidence import declared_source_library_evidence as _declared_source_library_evidence
+from .applicability_decision_evidence import build_trigger_search_index as _build_trigger_search_index
 from .applicability_decision_forest_plan import forest_plan_component_result as _forest_plan_component_result
 from .applicability_decision_evidence import package_fact_nodes as _package_fact_nodes
+from .applicability_decision_evidence import present_package_values as _present_package_values
 from .applicability_decision_evidence import retrieval_lineage as _retrieval_lineage
 from .applicability_decision_evidence import selected_package_results as _selected_package_results
 from .applicability_decision_evidence import source_evidence_available as _source_evidence_available
@@ -138,6 +140,11 @@ def build_applicability_decisions(
     retrieval_by_candidate = _records_by_candidate(retrieval_rows)
     graph_by_candidate = _records_by_candidate(graph_rows)
     package_nodes = _package_fact_nodes(package_fact_graph)
+    package_present_values = _present_package_values(package_nodes)
+    trigger_search_index = _build_trigger_search_index(
+        package_nodes=package_nodes,
+        package_chunks=package_chunks,
+    )
     decisions: list[dict[str, Any]] = []
     certificates: list[dict[str, Any]] = []
     for candidate in sorted(
@@ -162,6 +169,8 @@ def build_applicability_decisions(
             package_fact_graph=package_fact_graph,
             package_context=package_context,
             package_chunks=package_chunks,
+            package_present_values=package_present_values,
+            trigger_search_index=trigger_search_index,
             retrieval_rows=candidate_retrieval_rows,
             graph_rows=candidate_graph_rows,
             coverage_boundary=coverage_boundary,
@@ -349,6 +358,8 @@ def _decision_for_candidate(
     package_fact_graph: dict[str, Any],
     package_context: dict[str, Any],
     package_chunks: list[dict[str, Any]],
+    package_present_values: dict[str, set[str]],
+    trigger_search_index: dict[str, Any],
     retrieval_rows: list[dict[str, Any]],
     graph_rows: list[dict[str, Any]],
     coverage_boundary: dict[str, Any],
@@ -374,6 +385,7 @@ def _decision_for_candidate(
         package_nodes=package_nodes,
         package_chunks=package_chunks,
         package_results=package_results,
+        search_index=trigger_search_index,
     )
     negative_match = _trigger_match(
         groups=negative_groups,
@@ -381,6 +393,7 @@ def _decision_for_candidate(
         package_chunks=package_chunks,
         package_results=package_results,
         include_negative_context=True,
+        search_index=trigger_search_index,
     )
     source_available = _source_evidence_available(candidate) or bool(source_evidence)
     missing_evidence: list[str] = []
@@ -405,6 +418,7 @@ def _decision_for_candidate(
         component_result = _forest_plan_component_result(
             candidate=candidate,
             package_nodes=package_nodes,
+            present_values=package_present_values,
             positive_match=positive_match,
             negative_match=negative_match,
             coverage_boundary=coverage_boundary,

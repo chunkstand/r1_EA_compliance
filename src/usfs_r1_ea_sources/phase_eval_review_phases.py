@@ -15,6 +15,12 @@ from .ea_consistency_decision_support import (
 )
 from .final_qa_certification import VALIDATION_FILENAME as FINAL_QA_VALIDATION_FILENAME
 from .forest_plan_component_eval import FOREST_PLAN_COMPONENT_EVAL_RESULTS_SCHEMA_VERSION
+from .phase_eval_forest_plan_gates import (
+    forest_plan_matrix_required as _forest_plan_matrix_required,
+)
+from .phase_eval_forest_plan_gates import (
+    read_forest_plan_context_summary as _read_forest_plan_context_summary,
+)
 from .phase_eval_optional_phases import _applicability_arbitration_summary
 from .phase_eval_optional_phases import _applicability_phase_gates
 from .phase_eval_optional_phases import _decision_support_phase
@@ -106,6 +112,7 @@ def build_review_scoped_phases(
         applicability_artifacts.get("decisions") or []
     )
     phases = _applicability_phase_gates(
+        output_dir=output_dir,
         review_dir=review_dir,
         source_set_id=source_set_id,
         artifacts=applicability_artifacts,
@@ -264,18 +271,17 @@ def build_review_scoped_phases(
     matrix_rule_pack = (compliance_matrix or {}).get("rule_pack", {})
     matrix_forest_plan = (compliance_matrix or {}).get("forest_plan_compliance") or {}
     matrix_forest_plan_summary = matrix_forest_plan.get("summary", {})
+    forest_plan_context_summary = _read_forest_plan_context_summary(review_dir)
     forest_plan_summary = (
         matrix_summary.get("forest_plan_review")
         or compliance_summary.get("forest_plan_review")
+        or forest_plan_context_summary
         or {}
     )
     forest_plan_component_evaluation = forest_plan_summary.get("component_evaluation") or {}
-    forest_plan_matrix_required = bool(
-        forest_plan_summary.get("scope_status") == "custer_gallatin"
-        and (
-            forest_plan_summary.get("reviewer_ready")
-            or forest_plan_component_evaluation.get("reviewer_ready")
-        )
+    forest_plan_matrix_required = _forest_plan_matrix_required(
+        forest_plan_summary=forest_plan_summary,
+        component_evaluation=forest_plan_component_evaluation,
     )
     forest_plan_matrix_exists = bool(matrix_forest_plan)
     forest_plan_matrix_schema_matches = (

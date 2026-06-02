@@ -15,7 +15,7 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Forest-Plan Review Source-Set Inventory Authority Hardening Resolved Locally
+## Forest-Plan Review Source-Set Inventory Authority And Applicability Gate Hardening Resolved Locally
 
 Latest implementation update on 2026-06-02 UTC:
 
@@ -28,12 +28,22 @@ Latest implementation update on 2026-06-02 UTC:
   applicable review candidates rather than unresolved solely because they lack a
   management-area or geographic-area ID. Applicable-standard coverage now also
   fails when any standard remains `candidate` or `needs_reviewer_resolution`.
+  `phase-eval` now compares each review authority universe against the current
+  `forest_plan_context_summary.json` component inventory path and component
+  count, so stale review-local Forest Plan inventories fail the
+  `authority_universe` phase. The compliance phase derives Forest Plan matrix
+  requirements from the resolved Forest Plan context when compliance artifacts
+  are absent, and applies that requirement to any resolved forest scope, not
+  only Custer Gallatin.
 - package-search runtime:
   component evaluation skips package scans for components whose scoped
   geography, management area, or overlay cannot match the resolved package
   context, and package chunk lower-text/token sets are cached during a review
   process so full-inventory package scans do not repeatedly retokenize the EA
-  package.
+  package. Package fact extraction, applicability retrieval, graph trace
+  assembly, and deterministic applicability decisions now cache reusable
+  package/source search state so full source-set Forest Plan inventories can
+  replay without candidate-by-candidate full-artifact rescans.
 - North Seeley replay evidence:
   after rebuilding the local f70 all-R1 component inventory to
   `source_library/derived/source-set-f70ea11e04ae3d53/forest_plan_components/`,
@@ -52,13 +62,33 @@ Latest implementation update on 2026-06-02 UTC:
   and the review summary are not reviewer-ready. This is the intended state
   until the downstream applicability/compliance review path or reviewer
   adjudication resolves the remaining standards.
+- applicability replay evidence:
+  `applicability-authority-universe` rebuilt North Seeley with `1070`
+  candidates, including all `1004` Lolo Forest Plan components from
+  `source_library/derived/source-set-f70ea11e04ae3d53/forest_plan_components/component_inventory.json`.
+  `applicability-context-build` passed on the `3224`-chunk, `32`-file package
+  and wrote `81253` package facts. `applicability-retrieve` passed with `9630`
+  retrieval trace rows and `26750` graph trace rows. `applicability-determine`
+  completed with `49` applicable, `1009` not-applicable, and `12`
+  needs-adjudication authorities. `applicability-validate` failed closed with
+  `generated_rule_pack_ready=false`, and `applicability-generate-rule-pack`
+  refused to run because validation had not passed.
+- phase-eval result:
+  North Seeley `phase-eval` now reports `authority_universe`,
+  `package_fact_graph`, `applicability_retrieval_trace`,
+  `applicability_graph_trace`, and `applicability_determination` green. It
+  fails overall at `applicability_validation`, `generated_rule_pack`, and
+  `compliance_review`, with `forest_plan_matrix_required=true`,
+  `forest_plan_expected_applicable_standard_count=330`, and missing matrix rows
+  and PDF called out explicitly.
 - verification:
-  focused resolver/component/compliance tests passed (`61 passed`), the
-  architecture contract passed (`5 passed`), `ruff check src tests` passed, and
-  `git diff --check` passed. Review-level `phase-eval` for the ad hoc North
-  Seeley review failed overall as expected because downstream applicability and
-  compliance artifacts are not built; source-set forest-plan component
-  retrieval remains green.
+  focused forest-plan/applicability/phase tests passed (`42 passed`), the
+  architecture contract passed (`5 passed`), `ruff check src tests` passed,
+  `python -m compileall src` passed, and `git diff --check` passed. The live
+  North Seeley replay commands above passed or failed closed as expected;
+  review-level `phase-eval` exits nonzero by design because applicability
+  validation, generated rule pack, and compliance review remain blocked by
+  unresolved adjudication/matrix work.
 
 ## Forest-Plan Component Inventory All-R1 Legacy Direction Closeout Resolved Locally
 

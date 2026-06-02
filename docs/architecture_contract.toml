@@ -192,6 +192,7 @@ modules = [
   "phase_eval_direct_eval_review",
   "phase_eval_direct_eval_source_set",
   "phase_eval_direct_eval_support",
+  "phase_eval_forest_plan_gates",
   "phase_eval_optional_phases",
   "phase_eval_review_phases",
   "phase_eval_sidecar",

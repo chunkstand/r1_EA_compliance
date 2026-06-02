@@ -138,6 +138,19 @@ Already implemented:
   `needs_reviewer_resolution`, and forestwide standards with substantive topic/activity bindings are
   evaluated as applicable candidates rather than disappearing from the gate solely because they lack
   management-area or geographic-area IDs.
+- Review-scoped applicability now checks Forest Plan authority-universe currentness against the
+  resolved `forest_plan_context_summary.json` component inventory path and component count. A stale
+  review-local inventory, missing source-set inventory, or mismatched component count fails the
+  `authority_universe` phase before compliance review.
+- The compliance phase now requires Forest Plan matrix rows for any resolved forest context with
+  component inventory/applicable-standard evidence. This requirement is derived from the resolved
+  Forest Plan context even when compliance artifacts are absent, so a missing matrix JSON/PDF fails
+  closed instead of hiding the obligation behind an unbuilt compliance review.
+- North Seeley now replays the canonical Lolo inventory through authority-universe, package fact
+  graph, applicability retrieval/graph traces, and deterministic decisions without handwritten
+  Lolo rules. Its current expected fail-closed state is `330` applicable Forest Plan standards in
+  context, `12` applicability decisions needing adjudication, and a required but missing Forest Plan
+  compliance matrix until reviewer/compliance work closes those items.
 
 Remaining gaps:
 

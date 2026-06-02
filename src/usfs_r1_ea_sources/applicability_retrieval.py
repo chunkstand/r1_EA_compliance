@@ -9,11 +9,13 @@ import json
 import re
 from typing import Any
 
+from .applicability_retrieval_graph import _external_graph_index
 from .applicability_retrieval_graph import _graph_trace_rows_for_candidate
 from .applicability_retrieval_runtime import PACKAGE_QUERY_TYPES
 from .applicability_retrieval_runtime import QUERY_TYPES_WITH_SOURCE_INDEX
 from .applicability_retrieval_runtime import _execute_query_spec
 from .applicability_retrieval_runtime import _fused_trace_row
+from .applicability_retrieval_runtime import _prepare_package_fact_graph_search
 from .applicability_retrieval_runtime import _query_specs_for_candidate
 from .applicability_retrieval_runtime import _strings
 from .records import sha256_file
@@ -70,6 +72,7 @@ def build_applicability_retrieval_traces(
     )
     authority_universe = _read_required_json(authority_universe_path, "authority universe")
     package_fact_graph = _read_required_json(package_fact_graph_path, "package fact graph")
+    _prepare_package_fact_graph_search(package_fact_graph)
 
     if source_set_id is None:
         source_set_id = str(authority_universe.get("source_set_id") or "").strip()
@@ -99,6 +102,10 @@ def build_applicability_retrieval_traces(
     graph_edges_path = Path(graph_edges_path)
     graph_nodes = _read_jsonl_if_exists(graph_nodes_path)
     graph_edges = _read_jsonl_if_exists(graph_edges_path)
+    external_graph_index = _external_graph_index(
+        graph_nodes=graph_nodes,
+        graph_edges=graph_edges,
+    )
     rule_claim_links = _read_jsonl_if_exists(
         _optional_artifact_path(authority_universe, "rule_claim_links_path")
     )
@@ -121,6 +128,9 @@ def build_applicability_retrieval_traces(
         companion_path=graph_edges_path,
     )
     candidates = list(authority_universe.get("candidate_authorities") or [])
+    source_results_cache: dict[tuple, list[dict[str, Any]]] = {}
+    package_results_cache: dict[tuple, list[tuple[float, dict[str, Any]]]] = {}
+    package_match_cache: dict[tuple, list[dict[str, Any]]] = {}
 
     retrieval_rows: list[dict[str, Any]] = []
     graph_rows: list[dict[str, Any]] = []
@@ -139,8 +149,10 @@ def build_applicability_retrieval_traces(
                 query_index=index,
                 retrieval_index_path=retrieval_index_path,
                 searched_index_identity=searched_index_identity,
+                source_results_cache=source_results_cache,
                 package_fact_graph=package_fact_graph,
                 package_graph_identity=package_graph_identity,
+                package_results_cache=package_results_cache,
                 top_k=top_k,
                 created_at=created_at,
                 query_diagnostics=_query_diagnostics,
@@ -174,8 +186,10 @@ def build_applicability_retrieval_traces(
             evidence_graph_identity=evidence_graph_identity,
             graph_nodes=graph_nodes,
             graph_edges=graph_edges,
+            external_graph_index=external_graph_index,
             rule_claim_links=rule_claim_links,
             source_claims=source_claims,
+            package_match_cache=package_match_cache,
             max_graph_paths_per_candidate=max_graph_paths_per_candidate,
             created_at=created_at,
         )

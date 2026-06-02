@@ -27,6 +27,7 @@ def _extract_package_facts(
     seen_edge_ids: set[str] = set()
     term_specs = _base_term_specs()
     term_specs.extend(_profile_term_specs(profiles))
+    term_specs = _compiled_term_specs(term_specs)
 
     for chunk in package_chunks:
         section_node = _section_node_for_chunk(chunk)
@@ -40,64 +41,26 @@ def _extract_package_facts(
                 existing_chunk_ids.append(chunk_id)
 
         chunk_text = str(chunk.get("text") or "")
+        chunk_text_folded = chunk_text.casefold()
         for spec in term_specs:
-            for term in spec["terms"]:
-                for match in _find_term_matches(chunk_text, term):
-                    confidence_class = str(spec.get("confidence_class") or "observed")
-                    fact_subtype = str(spec.get("fact_subtype") or "")
-                    evidence_strength = classify_evidence_strength(
-                        text=chunk_text,
-                        start=match.start(),
-                        end=match.end(),
-                        matched_text=match.group(0),
-                        default_confidence_class=confidence_class,
-                        section_family=_section_family(chunk),
-                    )
-                    if spec["node_type"] in LOCATION_NODE_TYPES and _is_negative_location_match(
-                        chunk_text,
-                        match.start(),
-                        match.end(),
-                    ):
-                        evidence_strength = classify_evidence_strength(
-                            text=chunk_text,
-                            start=match.start(),
-                            end=match.end(),
-                            matched_text=match.group(0),
-                            section_family=_section_family(chunk),
-                            negative_context=True,
-                            negative_reason="negative_or_out_of_scope_location_context",
-                        )
-                        confidence_class = str(evidence_strength["confidence_class"])
-                        suppressed_location_facts.append(
-                            {
-                                "node_type": spec["node_type"],
-                                "fact_subtype": fact_subtype,
-                                "normalized_value": spec["normalized_value"],
-                                "label": spec["label"],
-                                "matched_text": match.group(0),
-                                "chunk_id": chunk.get("chunk_id"),
-                                "chunk_char_start": match.start(),
-                                "chunk_char_end": match.end(),
-                                "section_id": section_id,
-                                "reason": "negative_or_out_of_scope_location_context",
-                                "evidence_strength": evidence_strength,
-                            }
-                        )
-                    else:
-                        confidence_class = str(evidence_strength["confidence_class"])
-                    _add_fact_node(
+            for compiled_term in spec["compiled_terms"]:
+                if (
+                    compiled_term["anchor"]
+                    and compiled_term["anchor"] not in chunk_text_folded
+                ):
+                    continue
+                for match in compiled_term["pattern"].finditer(chunk_text):
+                    _record_term_match(
                         nodes=nodes,
                         edges=edges,
                         seen_node_ids=seen_node_ids,
                         seen_edge_ids=seen_edge_ids,
+                        suppressed_location_facts=suppressed_location_facts,
                         chunk=chunk,
                         section_id=section_id,
                         spec=spec,
-                        match_start=match.start(),
-                        match_end=match.end(),
-                        matched_text=match.group(0),
-                        confidence_class=confidence_class,
-                        evidence_strength=evidence_strength,
+                        chunk_text=chunk_text,
+                        match=match,
                     )
 
     nodes = [*section_nodes.values(), *nodes]
@@ -123,6 +86,112 @@ def _extract_package_facts(
             ),
         ),
     }
+
+
+def _record_term_match(
+    *,
+    nodes: list[dict[str, Any]],
+    edges: list[dict[str, Any]],
+    seen_node_ids: set[str],
+    seen_edge_ids: set[str],
+    suppressed_location_facts: list[dict[str, Any]],
+    chunk: dict[str, Any],
+    section_id: str,
+    spec: dict[str, Any],
+    chunk_text: str,
+    match: re.Match[str],
+) -> None:
+    confidence_class = str(spec.get("confidence_class") or "observed")
+    fact_subtype = str(spec.get("fact_subtype") or "")
+    evidence_strength = classify_evidence_strength(
+        text=chunk_text,
+        start=match.start(),
+        end=match.end(),
+        matched_text=match.group(0),
+        default_confidence_class=confidence_class,
+        section_family=_section_family(chunk),
+    )
+    if spec["node_type"] in LOCATION_NODE_TYPES and _is_negative_location_match(
+        chunk_text,
+        match.start(),
+        match.end(),
+    ):
+        evidence_strength = classify_evidence_strength(
+            text=chunk_text,
+            start=match.start(),
+            end=match.end(),
+            matched_text=match.group(0),
+            section_family=_section_family(chunk),
+            negative_context=True,
+            negative_reason="negative_or_out_of_scope_location_context",
+        )
+        confidence_class = str(evidence_strength["confidence_class"])
+        suppressed_location_facts.append(
+            {
+                "node_type": spec["node_type"],
+                "fact_subtype": fact_subtype,
+                "normalized_value": spec["normalized_value"],
+                "label": spec["label"],
+                "matched_text": match.group(0),
+                "chunk_id": chunk.get("chunk_id"),
+                "chunk_char_start": match.start(),
+                "chunk_char_end": match.end(),
+                "section_id": section_id,
+                "reason": "negative_or_out_of_scope_location_context",
+                "evidence_strength": evidence_strength,
+            }
+        )
+    else:
+        confidence_class = str(evidence_strength["confidence_class"])
+    _add_fact_node(
+        nodes=nodes,
+        edges=edges,
+        seen_node_ids=seen_node_ids,
+        seen_edge_ids=seen_edge_ids,
+        chunk=chunk,
+        section_id=section_id,
+        spec=spec,
+        match_start=match.start(),
+        match_end=match.end(),
+        matched_text=match.group(0),
+        confidence_class=confidence_class,
+        evidence_strength=evidence_strength,
+    )
+
+
+def _compiled_term_specs(term_specs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    compiled_specs = []
+    for spec in term_specs:
+        compiled_terms = [
+            _compiled_term(term)
+            for term in spec.get("terms") or []
+            if " ".join(str(term or "").split())
+        ]
+        if not compiled_terms:
+            continue
+        compiled_specs.append({**spec, "compiled_terms": tuple(compiled_terms)})
+    return compiled_specs
+
+
+def _compiled_term(term: str) -> dict[str, Any]:
+    normalized = " ".join(str(term or "").split())
+    return {
+        "term": normalized,
+        "anchor": _term_anchor(normalized),
+        "pattern": _term_pattern(normalized),
+    }
+
+
+def _term_anchor(term: str) -> str:
+    tokens = re.findall(r"[A-Za-z0-9]+", term.casefold())
+    if not tokens:
+        return ""
+    return max(tokens, key=len)
+
+
+def _term_pattern(term: str) -> re.Pattern[str]:
+    escaped = re.escape(term).replace(r"\ ", r"\s+")
+    return re.compile(rf"(?<![A-Za-z0-9]){escaped}(?![A-Za-z0-9])", re.IGNORECASE)
 
 
 def _add_fact_node(

@@ -111,8 +111,10 @@ def _execute_query_spec(
     query_index: int,
     retrieval_index_path,
     searched_index_identity: dict[str, Any],
+    source_results_cache: dict[tuple, list[dict[str, Any]]],
     package_fact_graph: dict[str, Any],
     package_graph_identity: dict[str, Any],
+    package_results_cache: dict[tuple, list[tuple[float, dict[str, Any]]]],
     top_k: int,
     created_at: str,
     query_diagnostics: Any,
@@ -139,6 +141,7 @@ def _execute_query_spec(
             query_type=query_type,
             candidate=candidate,
             package_fact_graph=package_fact_graph,
+            package_results_cache=package_results_cache,
             top_k=top_k,
         )
         searched_identity = package_graph_identity
@@ -149,6 +152,7 @@ def _execute_query_spec(
             query_type=query_type,
             query_spec=query_spec,
             retrieval_index_path=retrieval_index_path,
+            source_results_cache=source_results_cache,
             top_k=top_k,
         )
         searched_identity = searched_index_identity
@@ -197,6 +201,7 @@ def _source_results(
     query_type: str,
     query_spec: dict[str, Any],
     retrieval_index_path,
+    source_results_cache: dict[tuple, list[dict[str, Any]]],
     top_k: int,
 ) -> list[dict[str, Any]]:
     if not retrieval_index_path.exists():
@@ -212,15 +217,29 @@ def _source_results(
     query_for_index = query_text
     if query_type in {"metadata_filter", "source_role", "citation"}:
         query_for_index = ""
-    result = query_retrieval_index(
-        index_path=retrieval_index_path,
-        query=query_for_index,
-        limit=max(top_k * 2, top_k),
-        document_role=document_role,
-        authority_level=authority_level,
-        source_record_id=source_record_id,
-        citation=citation,
+    limit = max(top_k * 2, top_k)
+    cache_key = (
+        str(retrieval_index_path),
+        query_for_index,
+        limit,
+        document_role,
+        authority_level,
+        source_record_id,
+        citation,
     )
+    hits = source_results_cache.get(cache_key)
+    if hits is None:
+        result = query_retrieval_index(
+            index_path=retrieval_index_path,
+            query=query_for_index,
+            limit=limit,
+            document_role=document_role,
+            authority_level=authority_level,
+            source_record_id=source_record_id,
+            citation=citation,
+        )
+        hits = list(result["results"])
+        source_results_cache[cache_key] = hits
     query_terms = _tokenize(query_text)
     return [
         _source_result_row(
@@ -231,7 +250,7 @@ def _source_results(
             query_terms=query_terms,
             top_k=top_k,
         )
-        for index, hit in enumerate(result["results"], start=1)
+        for index, hit in enumerate(hits, start=1)
     ]
 
 
@@ -289,34 +308,33 @@ def _package_results(
     query_type: str,
     candidate: dict[str, Any],
     package_fact_graph: dict[str, Any],
+    package_results_cache: dict[tuple, list[tuple[float, dict[str, Any]]]],
     top_k: int,
 ) -> list[dict[str, Any]]:
-    query_terms = _tokenize(query_text)
-    package_filters = _package_filters(candidate)
-    required_types = set(_strings(candidate.get("required_package_fact_types")))
-    scored: list[tuple[float, dict[str, Any]]] = []
-    for node in package_fact_graph.get("nodes") or []:
-        if not isinstance(node, dict):
-            continue
-        node_type = str(node.get("node_type") or "")
-        if node_type == "evidence_span":
-            continue
-        score = _score_package_node(
-            node=node,
-            query_terms=query_terms,
-            required_types=required_types,
-            package_filters=package_filters,
+    score_context = _package_score_context(query_text=query_text, candidate=candidate)
+    query_terms = list(score_context["query_terms"])
+    cache_key = _package_results_cache_key(score_context)
+    scored = package_results_cache.get(cache_key)
+    if scored is None:
+        scored = []
+        for node in package_fact_graph.get("nodes") or []:
+            if not isinstance(node, dict):
+                continue
+            node_type = str(node.get("node_type") or "")
+            if node_type == "evidence_span":
+                continue
+            score = _score_package_node(node=node, score_context=score_context)
+            if score <= 0:
+                continue
+            scored.append((score, node))
+        scored.sort(
+            key=lambda item: (
+                -item[0],
+                str(item[1].get("node_type") or ""),
+                str(item[1].get("node_id") or ""),
+            )
         )
-        if score <= 0:
-            continue
-        scored.append((score, node))
-    scored.sort(
-        key=lambda item: (
-            -item[0],
-            str(item[1].get("node_type") or ""),
-            str(item[1].get("node_id") or ""),
-        )
-    )
+        package_results_cache[cache_key] = scored
     results = []
     for index, (score, node) in enumerate(scored[: max(top_k * 2, top_k)], start=1):
         selected = index <= top_k
@@ -491,42 +509,75 @@ def _fused_trace_row(
 def _score_package_node(
     *,
     node: dict[str, Any],
-    query_terms: list[str],
-    required_types: set[str],
-    package_filters: dict[str, Any],
+    score_context: dict[str, Any],
 ) -> float:
-    text = _package_node_text(node).lower()
+    text = str(node.get("_applicability_search_text") or _package_node_text(node).casefold())
     score = 0.0
-    if node.get("node_type") in required_types:
+    if node.get("node_type") in score_context["required_types"]:
         score += 2.0
-    for term in query_terms:
-        if term.lower() in text:
+    for term in score_context["query_terms"]:
+        if term in text:
             score += 1.0
-    section_families = set(_strings(package_filters.get("preferred_section_families")))
-    if section_families and node.get("section_family") in section_families:
+    if (
+        score_context["section_families"]
+        and node.get("section_family") in score_context["section_families"]
+    ):
         score += 1.5
-    filter_terms = (
-        _strings(package_filters.get("package_section_terms"))
-        + _strings(package_filters.get("package_terms"))
-        + _strings(package_filters.get("package_evidence_terms"))
-        + _strings(package_filters.get("resource_topics"))
-        + _strings(package_filters.get("activity_tags"))
-        + _strings(package_filters.get("geographic_area_ids"))
-        + _strings(package_filters.get("management_area_ids"))
-        + _strings(package_filters.get("overlay_ids"))
-    )
-    for term in filter_terms:
-        if term.lower() in text:
+    for term in score_context["filter_terms"]:
+        if term in text:
             score += 1.0
-    if node.get("node_type") == "package_section" and not query_terms and not filter_terms:
+    if (
+        node.get("node_type") == "package_section"
+        and not score_context["query_terms"]
+        and not score_context["filter_terms"]
+    ):
         score += 0.1
     return score
+
+
+def _prepare_package_fact_graph_search(package_fact_graph: dict[str, Any]) -> None:
+    for node in package_fact_graph.get("nodes") or []:
+        if isinstance(node, dict) and node.get("node_type") != "evidence_span":
+            node["_applicability_search_text"] = _package_node_text(node).casefold()
+
+
+def _package_score_context(*, query_text: str, candidate: dict[str, Any]) -> dict[str, Any]:
+    package_filters = _package_filters(candidate)
+    return {
+        "query_terms": tuple(term.casefold() for term in _tokenize(query_text)),
+        "required_types": frozenset(_strings(candidate.get("required_package_fact_types"))),
+        "section_families": frozenset(
+            _strings(package_filters.get("preferred_section_families"))
+        ),
+        "filter_terms": tuple(
+            term.casefold()
+            for term in (
+                _strings(package_filters.get("package_section_terms"))
+                + _strings(package_filters.get("package_terms"))
+                + _strings(package_filters.get("package_evidence_terms"))
+                + _strings(package_filters.get("resource_topics"))
+                + _strings(package_filters.get("activity_tags"))
+                + _strings(package_filters.get("geographic_area_ids"))
+                + _strings(package_filters.get("management_area_ids"))
+                + _strings(package_filters.get("overlay_ids"))
+            )
+        ),
+    }
+
+
+def _package_results_cache_key(score_context: dict[str, Any]) -> tuple:
+    return (
+        tuple(score_context["query_terms"]),
+        tuple(sorted(score_context["required_types"])),
+        tuple(sorted(score_context["section_families"])),
+        tuple(score_context["filter_terms"]),
+    )
 
 
 def _package_node_matches_candidate(node: dict[str, Any], candidate: dict[str, Any]) -> bool:
     if node.get("node_type") in set(_strings(candidate.get("required_package_fact_types"))):
         return True
-    text = _package_node_text(node).lower()
+    text = str(node.get("_applicability_search_text") or _package_node_text(node).casefold())
     terms = (
         _strings(_package_filters(candidate).get("package_terms"))
         + _strings(_package_filters(candidate).get("package_section_terms"))
@@ -534,7 +585,7 @@ def _package_node_matches_candidate(node: dict[str, Any], candidate: dict[str, A
         + _flatten_groups(candidate.get("positive_trigger_groups"))
         + _flatten_groups(candidate.get("negative_trigger_groups"))
     )
-    return any(term.lower() in text for term in terms)
+    return any(term.casefold() in text for term in terms)
 
 
 def _package_node_text(node: dict[str, Any]) -> str:

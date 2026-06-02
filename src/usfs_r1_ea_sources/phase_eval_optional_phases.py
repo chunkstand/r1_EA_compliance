@@ -5,9 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .artifact_utils import _dict
-from .artifact_utils import _dict_list
-from .artifact_utils import _read_json_if_exists
+from .artifact_utils import _dict, _dict_list, _read_json_if_exists
 from .ea_consistency_decision_support import DEFAULT_CONFIG_PATH as DECISION_SUPPORT_CONFIG_PATH
 from .ea_consistency_decision_support import (
     DEFAULT_EXPECTED_SUMMARY_PATH as DECISION_SUPPORT_EXPECTED_SUMMARY_PATH,
@@ -24,6 +22,7 @@ from .final_qa_certification import PDF_FILENAME as FINAL_QA_PDF_FILENAME
 from .final_qa_certification import REPORT_FILENAME as FINAL_QA_REPORT_FILENAME
 from .final_qa_certification import VALIDATION_FILENAME as FINAL_QA_VALIDATION_FILENAME
 from .final_qa_certification import validate_final_qa_certification_report
+from .phase_eval_forest_plan_gates import forest_plan_authority_universe_currentness
 from .phase_eval_support import _applicability_validation_hash_gaps
 from .phase_eval_support import _authority_partition_ids
 from .phase_eval_support import _candidate_authority_ids
@@ -547,6 +546,7 @@ def _applicability_arbitration_summary(decisions: list[dict]) -> dict:
 
 def _applicability_phase_gates(
     *,
+    output_dir: Path,
     review_dir: Path,
     source_set_id: str,
     artifacts: dict,
@@ -601,11 +601,17 @@ def _applicability_phase_gates(
         else {}
     )
     validation_hash_gaps = _applicability_validation_hash_gaps(applicability_validation)
+    forest_plan_currentness = forest_plan_authority_universe_currentness(
+        output_dir=output_dir,
+        review_dir=review_dir,
+        authority_universe=authority_universe,
+    )
     authority_ready = (
         bool(authority_universe)
         and authority_universe.get("schema_version") == "authority-universe-snapshot-v0"
         and authority_universe.get("source_set_id") == source_set_id
         and bool((authority_universe.get("validation") or {}).get("passed"))
+        and bool(forest_plan_currentness["passed"])
     )
     package_ready = (
         bool(package_fact_graph)
@@ -672,6 +678,7 @@ def _applicability_phase_gates(
                     (authority_universe.get("validation") or {}).get("passed")
                 ),
                 "candidate_authority_count": len(candidate_ids),
+                **forest_plan_currentness["details"],
             },
         ),
         _phase(

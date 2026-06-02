@@ -14,9 +14,11 @@ def forest_plan_component_result(
     positive_match: dict[str, Any],
     negative_match: dict[str, Any],
     coverage_boundary: dict[str, Any],
+    present_values: dict[str, set[str]] | None = None,
 ) -> dict[str, Any]:
     required_values = _required_package_values(candidate)
-    present_values = present_package_values(package_nodes)
+    if present_values is None:
+        present_values = present_package_values(package_nodes)
     missing = [
         f"{fact_type}:{value}"
         for fact_type, values in required_values.items()

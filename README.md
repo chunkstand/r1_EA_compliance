@@ -42,6 +42,10 @@ They are intentionally not duplicated here.
 - Forest-specific example packages stay parallel to `Document_Register_Master`. Runtime
   forest-plan scope is mandatory; current governed examples, aggregate gate counts, and residual
   boundaries are owned by current-state/handoff docs, with routes in `docs/CURRENT_ROUTING.md`.
+- Forest Plan review uses active source-set component inventories as authority. Management areas are
+  first-class scope, and reviewer-ready status fails closed on stale/missing inventory, unresolved
+  applicable standards, or missing Forest Plan compliance matrix evidence for resolved forest
+  contexts.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

@@ -24,8 +24,10 @@ def _graph_trace_rows_for_candidate(
     evidence_graph_identity: dict[str, Any],
     graph_nodes: list[dict[str, Any]],
     graph_edges: list[dict[str, Any]],
+    external_graph_index: dict[str, Any] | None,
     rule_claim_links: list[dict[str, Any]],
     source_claims: list[dict[str, Any]],
+    package_match_cache: dict[tuple, list[dict[str, Any]]],
     max_graph_paths_per_candidate: int,
     created_at: str,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -40,9 +42,11 @@ def _graph_trace_rows_for_candidate(
         package_fact_graph=package_fact_graph,
         graph_nodes=graph_nodes,
         graph_edges=graph_edges,
+        external_graph_index=external_graph_index,
         rule_claim_links=rule_claim_links,
         source_claims=source_claims,
         retrieval_trace_rows=retrieval_trace_rows,
+        package_match_cache=package_match_cache,
         allowed_relationships=allowed_relationships,
     )
     paths = _bounded_paths(
@@ -134,6 +138,8 @@ def _candidate_trace_graph(
     source_claims: list[dict[str, Any]],
     retrieval_trace_rows: list[dict[str, Any]],
     allowed_relationships: set[str],
+    package_match_cache: dict[tuple, list[dict[str, Any]]] | None = None,
+    external_graph_index: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     candidate_id = str(candidate.get("candidate_authority_id") or "")
     start_node_id = f"candidate:{candidate_id}"
@@ -196,11 +202,11 @@ def _candidate_trace_graph(
             )
             add_edge(start_node_id, "package_fact", node_id)
 
-    for node in package_fact_graph.get("nodes") or []:
-        if not isinstance(node, dict) or node.get("node_type") in {"evidence_span", "package_section"}:
-            continue
-        if not _package_node_matches_candidate(node, candidate):
-            continue
+    for node in _matching_package_nodes(
+        package_fact_graph=package_fact_graph,
+        candidate=candidate,
+        package_match_cache=package_match_cache if package_match_cache is not None else {},
+    ):
         node_id = f"package-fact:{node.get('node_id')}"
         add_node(
             node_id,
@@ -305,10 +311,96 @@ def _candidate_trace_graph(
         adjacency=adjacency,
         graph_nodes=graph_nodes,
         graph_edges=graph_edges,
+        external_graph_index=external_graph_index,
         allowed_relationships=allowed_relationships,
         candidate_source_record_ids=set(_strings(candidate.get("source_record_ids"))),
     )
     return {"nodes": nodes, "adjacency": adjacency}
+
+
+def _external_graph_index(
+    *,
+    graph_nodes: list[dict[str, Any]],
+    graph_edges: list[dict[str, Any]],
+) -> dict[str, Any]:
+    nodes_by_id: dict[str, dict[str, Any]] = {}
+    node_ids_by_source_record_id: dict[str, set[str]] = defaultdict(set)
+    edges_by_source_node_id: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    for node in graph_nodes:
+        if not isinstance(node, dict):
+            continue
+        node_id = str(node.get("node_id") or "")
+        if not node_id:
+            continue
+        nodes_by_id[node_id] = node
+        source_ids = set(_strings(node.get("source_record_id"))) | set(
+            _strings(node.get("source_record_ids"))
+        )
+        for source_record_id in source_ids:
+            node_ids_by_source_record_id[source_record_id].add(node_id)
+    for edge in graph_edges:
+        if not isinstance(edge, dict):
+            continue
+        relationship = str(edge.get("relationship_type") or edge.get("edge_type") or "")
+        source = str(edge.get("from_node_id") or edge.get("source_node_id") or "")
+        target = str(edge.get("to_node_id") or edge.get("target_node_id") or "")
+        if source and relationship and target:
+            edges_by_source_node_id[source].append((relationship, target))
+    return {
+        "nodes_by_id": nodes_by_id,
+        "node_ids_by_source_record_id": node_ids_by_source_record_id,
+        "edges_by_source_node_id": edges_by_source_node_id,
+    }
+
+
+def _matching_package_nodes(
+    *,
+    package_fact_graph: dict[str, Any],
+    candidate: dict[str, Any],
+    package_match_cache: dict[tuple, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    cache_key = _package_match_cache_key(candidate)
+    cached = package_match_cache.get(cache_key)
+    if cached is not None:
+        return cached
+    matches = [
+        node
+        for node in package_fact_graph.get("nodes") or []
+        if isinstance(node, dict)
+        and node.get("node_type") not in {"evidence_span", "package_section"}
+        and _package_node_matches_candidate(node, candidate)
+    ]
+    package_match_cache[cache_key] = matches
+    return matches
+
+
+def _package_match_cache_key(candidate: dict[str, Any]) -> tuple:
+    package_filters = candidate.get("package_section_filters")
+    if not isinstance(package_filters, dict):
+        package_filters = {}
+    terms = (
+        _strings(package_filters.get("package_terms"))
+        + _strings(package_filters.get("package_section_terms"))
+        + _strings(package_filters.get("package_evidence_terms"))
+        + _flatten_groups(candidate.get("positive_trigger_groups"))
+        + _flatten_groups(candidate.get("negative_trigger_groups"))
+    )
+    return (
+        tuple(sorted(_strings(candidate.get("required_package_fact_types")))),
+        tuple(term.casefold() for term in terms),
+    )
+
+
+def _flatten_groups(value: object) -> list[str]:
+    terms: list[str] = []
+    if not isinstance(value, list):
+        return terms
+    for group in value:
+        if isinstance(group, list):
+            terms.extend(_strings(group))
+        else:
+            terms.extend(_strings(group))
+    return terms
 
 
 def _merge_external_graph(
@@ -317,10 +409,20 @@ def _merge_external_graph(
     adjacency: dict[str, list[tuple[str, str]]],
     graph_nodes: list[dict[str, Any]],
     graph_edges: list[dict[str, Any]],
+    external_graph_index: dict[str, Any] | None,
     allowed_relationships: set[str],
     candidate_source_record_ids: set[str],
 ) -> None:
     if not graph_nodes or not graph_edges or not candidate_source_record_ids:
+        return
+    if external_graph_index:
+        _merge_external_graph_from_index(
+            nodes=nodes,
+            adjacency=adjacency,
+            external_graph_index=external_graph_index,
+            allowed_relationships=allowed_relationships,
+            candidate_source_record_ids=candidate_source_record_ids,
+        )
         return
     allowed_node_ids = set(nodes)
     for node in graph_nodes:
@@ -340,6 +442,37 @@ def _merge_external_graph(
         if source in allowed_node_ids and target:
             adjacency[source].append((relationship, target))
             nodes.setdefault(target, {"node_id": target, "node_type": "external_graph_node"})
+
+
+def _merge_external_graph_from_index(
+    *,
+    nodes: dict[str, dict[str, Any]],
+    adjacency: dict[str, list[tuple[str, str]]],
+    external_graph_index: dict[str, Any],
+    allowed_relationships: set[str],
+    candidate_source_record_ids: set[str],
+) -> None:
+    nodes_by_id = external_graph_index.get("nodes_by_id") or {}
+    node_ids_by_source_record_id = (
+        external_graph_index.get("node_ids_by_source_record_id") or {}
+    )
+    edges_by_source_node_id = external_graph_index.get("edges_by_source_node_id") or {}
+    allowed_node_ids = set(nodes)
+    for source_record_id in candidate_source_record_ids:
+        for node_id in node_ids_by_source_record_id.get(source_record_id, set()):
+            allowed_node_ids.add(node_id)
+            node = nodes_by_id.get(node_id)
+            if isinstance(node, dict):
+                nodes.setdefault(node_id, node)
+    for source in sorted(allowed_node_ids):
+        for relationship, target in edges_by_source_node_id.get(source, []):
+            if relationship not in allowed_relationships:
+                continue
+            adjacency[source].append((relationship, target))
+            if target in nodes_by_id:
+                nodes.setdefault(target, nodes_by_id[target])
+            else:
+                nodes.setdefault(target, {"node_id": target, "node_type": "external_graph_node"})
 
 
 def _bounded_paths(
