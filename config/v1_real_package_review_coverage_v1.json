@@ -18,6 +18,17 @@
     "required_runtime_signal": "source_library/reviews/<review_id>/phase_eval_results.json",
     "rule": "Required reviewer-ready real-package slots must fail unless phase-eval exists, matches the review and source set, passes, reports reviewer_ready=true, and has no blockers."
   },
+  "decision_document_identity_policy": {
+    "applies_to_coverage_class_ids": [
+      "forest_specific_reviewer_ready"
+    ],
+    "applies_to_expected_contract_statuses": [
+      "reviewer_ready"
+    ],
+    "mode": "fail_closed",
+    "required_runtime_signal": "source_library/reviews/<review_id>/forest_plan_context_summary.json.title_page_project_location",
+    "rule": "Required reviewer-ready forest-specific slots must fail unless the forest-plan resolver summary carries title-page administrative location evidence for the selected forest or grassland, ranger district, county, state, and no competing title-page forest unit."
+  },
   "required_coverage_class_ids": [
     "current_promotion_reviewer_ready",
     "forest_specific_reviewer_ready"

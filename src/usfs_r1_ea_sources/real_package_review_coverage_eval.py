@@ -19,6 +19,7 @@ RUNTIME_FOREST_SCOPE_REQUIRED_COVERAGE_CLASS_IDS = {
     "forest_specific_reviewer_ready",
 }
 PHASE_EVAL_REQUIRED_CONTRACT_STATUSES = {"reviewer_ready"}
+DECISION_DOCUMENT_IDENTITY_REQUIRED_CONTRACT_STATUSES = {"reviewer_ready"}
 
 
 @dataclass(frozen=True)
@@ -66,6 +67,10 @@ def run_real_package_review_coverage_eval(
             slot=slot,
             manifest_path=manifest_path,
             output_dir=output_dir,
+            decision_document_identity_policy=manifest.get(
+                "decision_document_identity_policy",
+                {},
+            ),
             run_v1_ea_review_eval=run_v1_ea_review_eval,
         )
         for slot in manifest.get("slots", [])
@@ -113,6 +118,24 @@ def run_real_package_review_coverage_eval(
         if "phase_eval_missing" in slot["phase_eval_gate"]["failure_reasons"]
     )
     failed_phase_eval_count = phase_eval_required_slot_count - phase_eval_ready_slot_count
+    decision_identity_required_slot_count = sum(
+        1 for slot in required_slots if slot["decision_document_identity_gate"]["required"]
+    )
+    decision_identity_ready_slot_count = sum(
+        1
+        for slot in required_slots
+        if slot["decision_document_identity_gate"]["required"]
+        and slot["decision_document_identity_gate"]["passed"]
+    )
+    missing_decision_identity_count = sum(
+        1
+        for slot in required_slots
+        if "decision_document_identity_missing"
+        in slot["decision_document_identity_gate"]["failure_reasons"]
+    )
+    failed_decision_identity_count = (
+        decision_identity_required_slot_count - decision_identity_ready_slot_count
+    )
     missing_required_slot_count = len(required_slots) - len(covered_slots)
     missing_coverage_class_ids = sorted(
         set(required_coverage_class_ids) - {slot["coverage_class_id"] for slot in covered_slots}
@@ -144,6 +167,10 @@ def run_real_package_review_coverage_eval(
         "real_package_review_coverage_id": manifest.get("id"),
         "real_package_review_coverage_version": manifest.get("version"),
         "phase_eval_policy": manifest.get("phase_eval_policy", {}),
+        "decision_document_identity_policy": manifest.get(
+            "decision_document_identity_policy",
+            {},
+        ),
         "passed": passed,
         "required_slot_count": len(required_slots),
         "covered_slot_count": len(covered_slots),
@@ -163,6 +190,12 @@ def run_real_package_review_coverage_eval(
         "phase_eval_ready_slot_count": phase_eval_ready_slot_count,
         "missing_phase_eval_count": missing_phase_eval_count,
         "failed_phase_eval_count": failed_phase_eval_count,
+        "decision_document_identity_required_slot_count": (
+            decision_identity_required_slot_count
+        ),
+        "decision_document_identity_ready_slot_count": decision_identity_ready_slot_count,
+        "missing_decision_document_identity_count": missing_decision_identity_count,
+        "failed_decision_document_identity_count": failed_decision_identity_count,
         "threshold_failures": threshold_failures,
         "failure_category_counts": dict(sorted(failure_category_counts.items())),
         "slots": slot_results,
@@ -182,6 +215,7 @@ def _slot_result(
     slot: dict[str, Any],
     manifest_path: Path,
     output_dir: Path,
+    decision_document_identity_policy: Any,
     run_v1_ea_review_eval: Any,
 ) -> dict[str, Any]:
     review_id = str(slot["review_id"]).strip()
@@ -225,6 +259,17 @@ def _slot_result(
         expected_contract_status=expected_contract_status,
         summary=summary,
     )
+    decision_document_identity_gate = _decision_document_identity_gate(
+        slot=slot,
+        manifest_path=manifest_path,
+        output_dir=output_dir,
+        review_id=review_id,
+        coverage_class_id=coverage_class_id,
+        expected_contract_status=expected_contract_status,
+        expected_forest_unit_id=expected_forest_unit_id,
+        expected_source_set_id=str(summary.get("source_set_id") or "").strip(),
+        policy=decision_document_identity_policy,
+    )
     expected_blocker_categories = _string_list(
         contract_expectations.get("allowed_blocker_categories")
         or summary.get("allowed_blocker_categories")
@@ -249,6 +294,7 @@ def _slot_result(
         failure_reasons.append("missing_package_authority")
     failure_reasons.extend(runtime_forest_scope_gate["failure_reasons"])
     failure_reasons.extend(phase_eval_gate["failure_reasons"])
+    failure_reasons.extend(decision_document_identity_gate["failure_reasons"])
     return {
         "slot_id": str(slot["slot_id"]),
         "label": str(slot["label"]),
@@ -270,6 +316,7 @@ def _slot_result(
         "expected_forest_unit_id": expected_forest_unit_id,
         "runtime_forest_scope_gate": runtime_forest_scope_gate,
         "phase_eval_gate": phase_eval_gate,
+        "decision_document_identity_gate": decision_document_identity_gate,
         "package_style_tags": package_style_tags,
         "failure_category_counts": summary.get("failure_category_counts", {}),
         "forest_plan_failure_category_counts": summary.get(
@@ -368,6 +415,123 @@ def _phase_eval_gate(
         "passed_phase_count": passed_phase_count,
         "reviewer_ready_phase_count": reviewer_ready_phase_count,
         "blocker_count": len(phase_blockers),
+        "failure_reasons": sorted(set(failure_reasons)),
+    }
+
+
+def _decision_document_identity_gate(
+    *,
+    slot: dict[str, Any],
+    manifest_path: Path,
+    output_dir: Path,
+    review_id: str,
+    coverage_class_id: str,
+    expected_contract_status: str,
+    expected_forest_unit_id: str,
+    expected_source_set_id: str,
+    policy: Any,
+) -> dict[str, Any]:
+    if not isinstance(policy, dict):
+        policy = {}
+    mode = str(policy.get("mode") or "").strip()
+    applies_to_statuses = set(
+        _string_list(policy.get("applies_to_expected_contract_statuses"))
+        or sorted(DECISION_DOCUMENT_IDENTITY_REQUIRED_CONTRACT_STATUSES)
+    )
+    applies_to_coverage_class_ids = set(
+        _string_list(policy.get("applies_to_coverage_class_ids"))
+    )
+    required = (
+        mode == "fail_closed"
+        and expected_contract_status in applies_to_statuses
+        and (
+            not applies_to_coverage_class_ids
+            or coverage_class_id in applies_to_coverage_class_ids
+        )
+    )
+    path_value = slot.get("forest_plan_context_summary_path")
+    summary_path = (
+        _resolve_manifest_repo_path(str(path_value), manifest_path)
+        if path_value
+        else output_dir / "reviews" / review_id / "forest_plan_context_summary.json"
+    )
+    failure_reasons: list[str] = []
+    payload: dict[str, Any] = {}
+    path_exists = summary_path.exists()
+
+    if path_exists:
+        try:
+            loaded = _read_json(summary_path)
+            if isinstance(loaded, dict):
+                payload = loaded
+            else:
+                failure_reasons.append("decision_document_identity_invalid_json")
+        except (OSError, json.JSONDecodeError):
+            failure_reasons.append("decision_document_identity_invalid_json")
+    elif required:
+        failure_reasons.append("decision_document_identity_missing")
+
+    actual_review_id = str(payload.get("review_id") or "").strip()
+    actual_source_set_id = str(payload.get("source_set_id") or "").strip()
+    location = (
+        payload.get("title_page_project_location")
+        if isinstance(payload.get("title_page_project_location"), dict)
+        else {}
+    )
+    evidence_refs = (
+        location.get("evidence_refs") if isinstance(location.get("evidence_refs"), list) else []
+    )
+    forest_unit_name = str(location.get("forest_unit_name") or "").strip()
+    ranger_district_count = _optional_int(location.get("ranger_district_count")) or 0
+    county_count = _optional_int(location.get("county_count")) or 0
+    state = str(location.get("state") or "").strip()
+    other_forest_unit_count = _optional_int(location.get("other_forest_unit_count")) or 0
+
+    if required and payload:
+        if actual_review_id != review_id:
+            failure_reasons.append("decision_document_context_review_id_mismatch")
+        if expected_source_set_id and actual_source_set_id != expected_source_set_id:
+            failure_reasons.append("decision_document_context_source_set_mismatch")
+        if not bool(location.get("present")):
+            failure_reasons.append("decision_document_identity_missing")
+        if not forest_unit_name or not bool(location.get("forest_unit_resolved")):
+            failure_reasons.append("decision_document_forest_unit_missing")
+        if ranger_district_count <= 0:
+            failure_reasons.append("decision_document_ranger_district_missing")
+        if county_count <= 0:
+            failure_reasons.append("decision_document_county_missing")
+        if not state:
+            failure_reasons.append("decision_document_state_missing")
+        if other_forest_unit_count > 0:
+            failure_reasons.append("decision_document_other_forest_unit_present")
+        if not evidence_refs:
+            failure_reasons.append("decision_document_identity_evidence_missing")
+
+    return {
+        "required": required,
+        "passed": not failure_reasons,
+        "path": str(summary_path),
+        "path_exists": path_exists,
+        "review_id": actual_review_id or None,
+        "expected_review_id": review_id,
+        "review_id_matches": (not required or actual_review_id == review_id),
+        "source_set_id": actual_source_set_id or None,
+        "expected_source_set_id": expected_source_set_id or None,
+        "source_set_matches": (
+            not required
+            or not expected_source_set_id
+            or actual_source_set_id == expected_source_set_id
+        ),
+        "expected_forest_unit_id": expected_forest_unit_id or None,
+        "forest_unit_name": forest_unit_name or None,
+        "ranger_district_names": _string_list(location.get("ranger_district_names")),
+        "ranger_district_count": ranger_district_count,
+        "counties": _string_list(location.get("counties")),
+        "county_count": county_count,
+        "state": state or None,
+        "other_forest_unit_names": _string_list(location.get("other_forest_unit_names")),
+        "other_forest_unit_count": other_forest_unit_count,
+        "evidence_ref_count": len(evidence_refs),
         "failure_reasons": sorted(set(failure_reasons)),
     }
 
@@ -685,6 +849,15 @@ def _load_summary(path: Path) -> dict[str, Any]:
 def _resolve_repo_path(value: str, manifest_path: Path) -> Path:
     path = Path(value)
     return path if path.is_absolute() else (manifest_path.parent / path).resolve()
+
+
+def _resolve_manifest_repo_path(value: str, manifest_path: Path) -> Path:
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    manifest_dir = manifest_path.resolve().parent
+    repo_root = manifest_dir.parent if manifest_dir.name == "config" else manifest_dir
+    return (repo_root / path).resolve()
 
 
 def _resolve_context_path(config_path: Path, value: Path) -> Path:

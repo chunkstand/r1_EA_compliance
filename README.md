@@ -47,6 +47,9 @@ They are intentionally not duplicated here.
   `forest_plan_context.json`; reviewer-ready status fails closed on stale/missing inventory,
   unresolved applicable standards, or missing Forest Plan compliance matrix evidence for resolved
   forest contexts.
+- Forest-specific reviewer-ready slots also fail closed unless forest-plan context summaries carry
+  decision/admin title-page identity evidence for the governing forest or grassland, ranger
+  district, county, state, and no competing title-page forest unit.
 - For the canonical workbook contract and downloader constraints, use
   `DOWNLOADER_RULES.md` together with `docs/CURRENT_SYSTEM_STATE.md`
 

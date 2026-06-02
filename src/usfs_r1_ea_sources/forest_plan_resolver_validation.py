@@ -236,6 +236,7 @@ def _summary(
         "package_file_count": len(package_manifest),
         "package_failed_count": len(failed_package_records),
         "package_chunk_count": len(package_chunks),
+        "title_page_project_location": _title_page_project_location_summary(context),
         "title_page_project_location_present": bool(
             context.get("title_page_project_location")
         ),
@@ -266,6 +267,97 @@ def _summary(
             component_gate_ready
         )
     return summary
+
+
+def _title_page_project_location_summary(context: dict) -> dict:
+    location = context.get("title_page_project_location")
+    if not isinstance(location, dict):
+        return {
+            "present": False,
+            "resolution_basis": None,
+            "forest_unit_name": None,
+            "forest_unit_resolved": False,
+            "ranger_district_names": [],
+            "ranger_district_count": 0,
+            "counties": [],
+            "county_count": 0,
+            "state": None,
+            "other_forest_unit_names": [],
+            "other_forest_unit_count": 0,
+            "evidence_refs": [],
+        }
+
+    forest_unit = location.get("forest_unit") if isinstance(location.get("forest_unit"), dict) else {}
+    ranger_districts = [
+        item for item in location.get("ranger_districts", []) if isinstance(item, dict)
+    ]
+    other_forest_units = [
+        item for item in location.get("other_forest_units", []) if isinstance(item, dict)
+    ]
+    evidence_records = []
+    evidence_records.extend(forest_unit.get("package_evidence") or [])
+    for district in ranger_districts:
+        evidence_records.extend(district.get("package_evidence") or [])
+    county_evidence = location.get("county_state_evidence")
+    if isinstance(county_evidence, dict):
+        evidence_records.append(county_evidence)
+
+    counties = [str(item) for item in location.get("counties", []) if str(item).strip()]
+    state = str(location.get("state") or "").strip() or None
+    return {
+        "present": True,
+        "resolution_basis": location.get("resolution_basis"),
+        "forest_unit_name": forest_unit.get("name"),
+        "forest_unit_resolved": bool(forest_unit.get("name")),
+        "ranger_district_names": sorted(
+            str(item.get("name")) for item in ranger_districts if str(item.get("name") or "")
+        ),
+        "ranger_district_count": len(ranger_districts),
+        "counties": sorted(counties),
+        "county_count": len(counties),
+        "state": state,
+        "other_forest_unit_names": sorted(
+            str(item.get("name"))
+            for item in other_forest_units
+            if str(item.get("name") or "")
+        ),
+        "other_forest_unit_count": len(other_forest_units),
+        "evidence_refs": _title_page_evidence_refs(evidence_records),
+    }
+
+
+def _title_page_evidence_refs(records: list[dict]) -> list[dict]:
+    refs_by_key = {}
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        provenance = record.get("provenance") if isinstance(record.get("provenance"), dict) else {}
+        ref = {
+            "source_record_id": record.get("source_record_id"),
+            "citation_label": record.get("citation_label"),
+            "chunk_id": record.get("chunk_id"),
+            "title": record.get("title"),
+            "page": provenance.get("page"),
+            "artifact_path": provenance.get("artifact_path"),
+            "artifact_sha256": provenance.get("artifact_sha256"),
+            "resolution_basis": record.get("resolution_basis"),
+        }
+        key = (
+            ref["source_record_id"],
+            ref["citation_label"],
+            ref["chunk_id"],
+            ref["title"],
+            ref["page"],
+        )
+        refs_by_key.setdefault(key, ref)
+    return sorted(
+        refs_by_key.values(),
+        key=lambda ref: (
+            str(ref.get("source_record_id") or ""),
+            str(ref.get("citation_label") or ""),
+            str(ref.get("chunk_id") or ""),
+        ),
+    )
 
 def _component_adjudication_readiness(
     *,

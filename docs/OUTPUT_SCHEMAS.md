@@ -527,10 +527,12 @@ resolution without re-extracting the package files.
 - `scope_status`: `custer_gallatin`, `not_custer_gallatin`, or `ambiguous`
 - forest unit and ranger district signals from the selected profile
 - profile source records used by the resolver
-- `title_page_project_location`: authoritative administrative-location evidence extracted from a
-  Decision Notice/FONSI title page when present, including selected forest unit, selected-profile
-  ranger districts when configured, title-page ranger districts parsed from the decision document,
-  counties, state, and package evidence offsets
+- `title_page_project_location`: authoritative administrative-location evidence extracted from
+  decision/admin title-page evidence when present. Recognized title-page bases include Decision
+  Notice/FONSI, draft Decision Notice/FONSI, FONSI-only, Determination of NEPA Adequacy, Record of
+  Decision, proposed action, and administrative title pages. The object includes selected forest or
+  grassland unit, competing title-page forest units, title-page ranger districts parsed from the
+  document, counties, state, resolution basis, and package evidence offsets.
 - project location signals found in the EA package; when a Decision Notice/FONSI title page provides
   ranger district evidence, that title-page evidence is authoritative over profile district mentions
   elsewhere in the package
@@ -572,10 +574,11 @@ filtered before geographic, management-area, or overlay resolution. If an entry 
 package-location evidence, table-only or incidental mentions are suppressed unless the package also
 contains affirmative project-location evidence for that entry.
 
-When a Decision Notice/FONSI title page identifies the selected forest-plan profile, that title-page
+When decision/admin title-page evidence identifies the selected forest-plan profile, that
 administrative location is treated as decisive selected-profile scope evidence. Other forest units
 mentioned later in response-to-comments, comparisons, examples, or references remain visible as
-background mentions unless another forest unit also appears on the title page.
+background mentions unless another forest unit also appears on a title-page administrative-location
+surface.
 
 Ranger-district evidence can support a selected forest-plan profile only when the district belongs
 to that selected profile and the package evidence is classified as `project_location`; district
@@ -602,7 +605,11 @@ plan records.
 `forest_plan_context_summary.json` has schema version `forest-plan-context-summary-v0` and includes
 the context, validation, and package-cache paths; scope status; resolved area counts; unresolved
 mention count; supporting plan-evidence route count; `title_page_project_location_present`;
-`needs_reviewer_resolution`; retrieval readiness; and `reviewer_ready`. For packages resolved to the selected forest-plan profile, it also
+structured `title_page_project_location` summary; `needs_reviewer_resolution`; retrieval readiness;
+and `reviewer_ready`. The structured title-page project-location summary records `present`,
+`resolution_basis`, `forest_unit_name`, `forest_unit_resolved`, `ranger_district_names`,
+`ranger_district_count`, `counties`, `county_count`, `state`, `other_forest_unit_names`,
+`other_forest_unit_count`, and citation-bearing `evidence_refs`. For packages resolved to the selected forest-plan profile, it also
 includes a `component_evaluation` summary with component counts, finding status counts,
 standard counts, compliance-status counts, all-applicable-standards coverage, reviewer-resolution
 counts, provenance-complete counts, validation status, and component-evaluator reviewer readiness.
@@ -3843,6 +3850,8 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
   missing-authority maxima
 - `phase_eval_policy` for the fail-closed phase-eval runtime signal required by expected
   `reviewer_ready` slots
+- `decision_document_identity_policy` for the fail-closed forest-plan context summary signal
+  required by governed forest-specific reviewer-ready slots
 - `slots`, each naming a slot ID, review ID, package label, coverage-class ID, forest identity,
   per-review V1 eval contract path, expected contract status, required flag, and exactly one
   package-authority declaration through either a replay-context file or a tracked intake package
@@ -3859,6 +3868,10 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
 - `missing_required_slot_count`, `missing_package_authority_count`, `phase_eval_required_slot_count`,
   `phase_eval_ready_slot_count`, `missing_phase_eval_count`, `failed_phase_eval_count`, and
   `threshold_failures`
+- `decision_document_identity_required_slot_count`,
+  `decision_document_identity_ready_slot_count`,
+  `missing_decision_document_identity_count`, and
+  `failed_decision_document_identity_count`
 - `slots`, each carrying the resolved review ID, expected and actual contract status, package-label
   and package-authority validation, ready-versus-blocked lane summary, package-style tags, blocker
   categories, the underlying V1 eval summary path, and
@@ -3870,6 +3883,10 @@ The manifest has schema version `real-package-review-coverage-v1` and records:
   `phase_eval_results.json` exists, matches the slot review ID and V1 eval source-set ID, has
   `passed=true`, has `reviewer_ready=true`, has no blockers, and reports complete
   passed/reviewer-ready phase counts.
+- `decision_document_identity_gate`, which fails governed forest-specific reviewer-ready slots unless
+  `forest_plan_context_summary.json.title_page_project_location` exists, matches the slot review ID
+  and source-set ID, proves selected forest or grassland name, at least one ranger district, at
+  least one county, state, no competing title-page forest unit, and citation-bearing evidence refs.
 
 The current manifest has eleven required slots: East Crazies current promotion
 plus ten `forest_specific_reviewer_ready` examples across Beaverhead-Deerlodge,
@@ -3881,6 +3898,10 @@ package styles, eleven reviewer-ready slots, zero typed-blocked slots, and
 zero package-authority gaps. The current phase-eval policy also requires all
 eleven reviewer-ready slots to have matching, passing, reviewer-ready phase-eval
 artifacts.
+The current decision-document identity policy applies to the ten
+`forest_specific_reviewer_ready` slots and requires the structured
+`title_page_project_location` summary to pass before a slot can count as
+covered.
 
 ## Gold Coverage Eval Outputs
 

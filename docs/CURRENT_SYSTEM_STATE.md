@@ -15,6 +15,54 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## All-Forest Decision-Document Identity Contract Hardened Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  the forest-plan resolver now extracts authoritative administrative identity
+  from decision/admin title-page evidence across all configured Region 1 forest
+  profiles instead of relying on profile-stuffed ranger-district terms. The
+  parser recognizes Decision Notice/FONSI, draft Decision Notice/FONSI,
+  FONSI-only, Determination of NEPA Adequacy, Record of Decision, proposed
+  action, and administrative title-page evidence; accepts forest-name
+  space/hyphen variants; parses two-letter state abbreviations; splits plural
+  ranger-district phrases; and rejects district/role text that is not county
+  evidence.
+- summary contract:
+  `forest_plan_context_summary.json` now carries a structured
+  `title_page_project_location` object with selected forest/grassland name,
+  ranger-district names/count, counties/count, state, competing title-page
+  forest count, and citation-bearing evidence refs.
+- aggregate gate:
+  `config/v1_real_package_review_coverage_v1.json` now declares
+  `decision_document_identity_policy.mode=fail_closed` for
+  `forest_specific_reviewer_ready` slots. The real-package coverage eval fails
+  a required forest-specific slot unless the resolver summary proves selected
+  forest/grassland, ranger district, county, state, no competing title-page
+  forest unit, review/source-set identity, and evidence refs.
+- live identity evidence:
+  after refreshing the generated forest-plan context summaries from cached
+  package chunks, `real-package-review-coverage-eval --manifest
+  config/v1_real_package_review_coverage_v1.json` reported
+  `decision_document_identity_required_slot_count=10`,
+  `decision_document_identity_ready_slot_count=10`,
+  `missing_decision_document_identity_count=0`, and
+  `failed_decision_document_identity_count=0`. The phase-eval subgate also
+  remains green with `phase_eval_required_slot_count=11` and
+  `phase_eval_ready_slot_count=11`.
+- inherited red boundary:
+  the stricter aggregate coverage command currently exits red overall with
+  `reviewer_ready_slot_count=4`, `missing_required_slot_count=7`, and failure
+  categories `review_eval_failed=7` and `slot_contract_status_mismatch=7`.
+  Those failures are pre-existing forest-plan/component/applicable-standard
+  readiness gaps, not identity-resolution failures.
+- boundary:
+  this is an all-forest resolver/eval contract hardening slice. It does not
+  add forest-specific handwritten rules, perform network ingest, regenerate
+  full component outputs, or close the remaining all-forest component and
+  applicable-standard readiness gaps.
+
 ## All-Forest Phase-Eval Coverage Contract Hardening Resolved Locally
 
 Latest implementation update on 2026-06-02 UTC:

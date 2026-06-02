@@ -205,6 +205,120 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
             )
             self.assertEqual(title_page_location["state"], "Montana")
 
+    def test_proposed_action_title_page_resolves_plural_districts_and_state_abbreviation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                forest_unit_names=["Profile National Forest"],
+            )
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "West Reservoir: Proposed Action\n"
+                    "The West Reservoir Project is located within the Hungry Horse "
+                    "and Spotted Bear Ranger Districts of the Profile National Forest. "
+                    "The project area is within Flathead County, MT."
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="proposed-action-title-page-admin-location",
+                profiles_path=profiles_path,
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            title_page_location = context["title_page_project_location"]
+            self.assertEqual(title_page_location["forest_unit"]["name"], "Profile National Forest")
+            self.assertEqual(
+                _names(title_page_location["ranger_districts"]),
+                ["Hungry Horse Ranger District", "Spotted Bear Ranger District"],
+            )
+            self.assertEqual(title_page_location["counties"], ["Flathead County"])
+            self.assertEqual(title_page_location["state"], "Montana")
+
+    def test_title_page_county_parser_does_not_treat_district_as_county(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                forest_unit_names=["Profile National Forest"],
+            )
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "Environmental Assessment and Finding of No Significant Impact "
+                    "Profile National Forest, Ashland Ranger District, Powder River "
+                    "and Rosebud Counties, Montana"
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="title-page-county-list",
+                profiles_path=profiles_path,
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            title_page_location = context["title_page_project_location"]
+            self.assertEqual(
+                _names(title_page_location["ranger_districts"]),
+                ["Ashland Ranger District"],
+            )
+            self.assertEqual(
+                title_page_location["counties"],
+                ["Powder River County", "Rosebud County"],
+            )
+            self.assertEqual(title_page_location["state"], "Montana")
+
+    def test_title_page_forest_name_matching_accepts_hyphen_and_space_variants(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                forest_unit_names=["Profile Perce-Clearwater National Forests"],
+            )
+            package_path = _write_package(
+                Path(tmp),
+                (
+                    "Dead Laundry Draft Decision Notice and Finding of No Significant Impact "
+                    "U.S. Forest Service Profile-Perce Clearwater National Forests: "
+                    "North Fork Ranger District April 2023 Clearwater County, Idaho"
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="hyphen-variant-title-page",
+                profiles_path=profiles_path,
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            title_page_location = context["title_page_project_location"]
+            self.assertEqual(
+                title_page_location["forest_unit"]["name"],
+                "Profile Perce-Clearwater National Forests",
+            )
+            self.assertEqual(
+                _names(title_page_location["ranger_districts"]),
+                ["North Fork Ranger District"],
+            )
+            self.assertEqual(title_page_location["counties"], ["Clearwater County"])
+            self.assertEqual(title_page_location["state"], "Idaho")
+
     def test_package_detected_management_areas_resolve_against_selected_plan(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

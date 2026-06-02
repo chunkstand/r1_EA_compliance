@@ -90,6 +90,28 @@ history below.
   and has complete passed/reviewer-ready phase counts. The live gate passes
   with `phase_eval_required_slot_count=11`, `phase_eval_ready_slot_count=11`,
   `missing_phase_eval_count=0`, and `failed_phase_eval_count=0`.
+- latest resolved all-forest decision-document identity hardening:
+  `forest-plan-resolve` now extracts selected forest/grassland, ranger
+  district, county, and state from decision/admin title-page evidence without
+  stuffing missing ranger-district terms into forest profiles. The parser
+  recognizes Decision Notice/FONSI, draft Decision Notice/FONSI, FONSI-only,
+  Determination of NEPA Adequacy, Record of Decision, proposed action, and
+  administrative title-page evidence; handles forest-name hyphen/space
+  variants and state abbreviations; splits plural ranger-district phrases; and
+  filters district/role text out of county extraction. `forest_plan_context_summary.json`
+  now carries structured `title_page_project_location` evidence refs. The
+  real-package coverage manifest now has a fail-closed
+  `decision_document_identity_policy` for forest-specific reviewer-ready slots.
+  After refreshing generated summaries from cached package chunks, the
+  identity subgate is green with
+  `decision_document_identity_required_slot_count=10`,
+  `decision_document_identity_ready_slot_count=10`,
+  `missing_decision_document_identity_count=0`, and
+  `failed_decision_document_identity_count=0`. The aggregate coverage command
+  is red overall with `reviewer_ready_slot_count=4`,
+  `missing_required_slot_count=7`, `review_eval_failed=7`, and
+  `slot_contract_status_mismatch=7`; those are inherited Forest
+  Plan/component/applicable-standard readiness gaps, not identity failures.
 - latest resolved observability/eval context graph slice:
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` Milestone 0. The
   repo has a tracked context-graph contract, `eval-context-graph-build`,

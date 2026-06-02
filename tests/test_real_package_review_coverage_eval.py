@@ -40,6 +40,10 @@ def test_real_package_review_coverage_eval_accepts_declared_reviewer_ready_and_t
         assert result.summary["phase_eval_ready_slot_count"] == 2
         assert result.summary["missing_phase_eval_count"] == 0
         assert result.summary["failed_phase_eval_count"] == 0
+        assert result.summary["decision_document_identity_required_slot_count"] == 2
+        assert result.summary["decision_document_identity_ready_slot_count"] == 2
+        assert result.summary["missing_decision_document_identity_count"] == 0
+        assert result.summary["failed_decision_document_identity_count"] == 0
         assert result.summary["threshold_failures"] == []
 
 
@@ -118,6 +122,37 @@ def test_real_package_review_coverage_eval_requires_reviewer_ready_phase_eval() 
         assert result.summary["failure_category_counts"]["phase_eval_missing"] == 1
 
 
+def test_real_package_review_coverage_eval_requires_decision_document_identity() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        output_dir = root / "source_library"
+        manifest_path = _write_manifest(
+            root,
+            missing_decision_identity_review_id="v1-cg-ecid-compliance-review",
+        )
+
+        result = run_real_package_review_coverage_eval(
+            output_dir=output_dir,
+            manifest_path=manifest_path,
+        )
+
+        assert result.summary["passed"] is False
+        assert result.summary["missing_decision_document_identity_count"] == 1
+        assert result.summary["failed_decision_document_identity_count"] == 1
+        slot = next(
+            slot
+            for slot in result.summary["slots"]
+            if slot["slot_id"] == "east-crazies-current-promotion"
+        )
+        assert slot["decision_document_identity_gate"]["required"] is True
+        assert slot["decision_document_identity_gate"]["passed"] is False
+        assert "decision_document_identity_missing" in slot["failure_reasons"]
+        assert (
+            result.summary["failure_category_counts"]["decision_document_identity_missing"]
+            == 1
+        )
+
+
 def test_real_package_review_coverage_eval_rejects_missing_required_slot() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
@@ -168,6 +203,25 @@ def test_committed_real_package_review_coverage_manifest_archives_south_plateau_
             "Required reviewer-ready real-package slots must fail unless phase-eval "
             "exists, matches the review and source set, passes, reports "
             "reviewer_ready=true, and has no blockers."
+        ),
+    }
+    assert manifest["decision_document_identity_policy"] == {
+        "mode": "fail_closed",
+        "applies_to_coverage_class_ids": [
+            "forest_specific_reviewer_ready",
+        ],
+        "applies_to_expected_contract_statuses": [
+            "reviewer_ready",
+        ],
+        "required_runtime_signal": (
+            "source_library/reviews/<review_id>/forest_plan_context_summary.json."
+            "title_page_project_location"
+        ),
+        "rule": (
+            "Required reviewer-ready forest-specific slots must fail unless the "
+            "forest-plan resolver summary carries title-page administrative "
+            "location evidence for the selected forest or grassland, ranger "
+            "district, county, state, and no competing title-page forest unit."
         ),
     }
     assert [item["review_id"] for item in manifest["slots"]] == [
@@ -221,6 +275,7 @@ def _write_manifest(
     include_expansion_slot: bool = True,
     missing_ready_authority: bool = False,
     missing_phase_eval_review_id: str | None = None,
+    missing_decision_identity_review_id: str | None = None,
 ) -> Path:
     results_dir = root / "results"
     authorities_dir = root / "authorities"
@@ -320,6 +375,11 @@ def _write_manifest(
             and payload["review_id"] != missing_phase_eval_review_id
         ):
             _write_phase_eval(root, payload)
+        if (
+            payload["contract_status"] == "reviewer_ready"
+            and payload["review_id"] != missing_decision_identity_review_id
+        ):
+            _write_forest_context_summary(root, payload)
     slots = [
         {
             "slot_id": "east-crazies-current-promotion",
@@ -404,6 +464,23 @@ def _write_manifest(
                     "reviewer_ready=true, and has no blockers."
                 ),
             },
+            "decision_document_identity_policy": {
+                "mode": "fail_closed",
+                "applies_to_coverage_class_ids": [
+                    "current_promotion_reviewer_ready",
+                    "expansion_reviewer_ready",
+                ],
+                "applies_to_expected_contract_statuses": ["reviewer_ready"],
+                "required_runtime_signal": (
+                    "source_library/reviews/<review_id>/forest_plan_context_summary.json."
+                    "title_page_project_location"
+                ),
+                "rule": (
+                    "Required reviewer-ready all-forest slots must fail unless the "
+                    "forest-plan resolver summary carries title-page administrative "
+                    "location evidence."
+                ),
+            },
             "slots": slots,
         },
     )
@@ -432,6 +509,49 @@ def _write_phase_eval(root: Path, review_payload: dict) -> None:
             "passed_phase_count": phase_count,
             "reviewer_ready_phase_count": phase_count,
             "blockers": [],
+        },
+    )
+
+
+def _write_forest_context_summary(root: Path, review_payload: dict) -> None:
+    review_id = review_payload["review_id"]
+    runtime_scope = review_payload.get("runtime_forest_scope")
+    scope_status = (
+        runtime_scope.get("actual_scope_status")
+        if isinstance(runtime_scope, dict)
+        else "custer_gallatin"
+    )
+    _write_json(
+        root / "source_library" / "reviews" / review_id / "forest_plan_context_summary.json",
+        {
+            "review_id": review_id,
+            "source_set_id": review_payload["source_set_id"],
+            "scope_status": scope_status,
+            "title_page_project_location": {
+                "present": True,
+                "resolution_basis": "decision_notice_fonsi_title_page",
+                "forest_unit_name": review_payload["forest_unit_id"],
+                "forest_unit_resolved": True,
+                "ranger_district_names": ["Example Ranger District"],
+                "ranger_district_count": 1,
+                "counties": ["Example County"],
+                "county_count": 1,
+                "state": "Montana",
+                "other_forest_unit_names": [],
+                "other_forest_unit_count": 0,
+                "evidence_refs": [
+                    {
+                        "source_record_id": "EA-PACKAGE-001",
+                        "citation_label": "EA-PACKAGE-001",
+                        "chunk_id": "chunk:example",
+                        "title": "Decision Notice and FONSI",
+                        "page": 1,
+                        "artifact_path": "/tmp/example.pdf",
+                        "artifact_sha256": "sha",
+                        "resolution_basis": "decision_notice_fonsi_title_page",
+                    }
+                ],
+            },
         },
     )
 

@@ -749,12 +749,73 @@ US_STATE_NAMES = (
     "Wyoming",
 )
 
+US_STATE_ABBREVIATIONS = {
+    "AL": "Alabama",
+    "AK": "Alaska",
+    "AZ": "Arizona",
+    "AR": "Arkansas",
+    "CA": "California",
+    "CO": "Colorado",
+    "CT": "Connecticut",
+    "DE": "Delaware",
+    "FL": "Florida",
+    "GA": "Georgia",
+    "HI": "Hawaii",
+    "ID": "Idaho",
+    "IL": "Illinois",
+    "IN": "Indiana",
+    "IA": "Iowa",
+    "KS": "Kansas",
+    "KY": "Kentucky",
+    "LA": "Louisiana",
+    "ME": "Maine",
+    "MD": "Maryland",
+    "MA": "Massachusetts",
+    "MI": "Michigan",
+    "MN": "Minnesota",
+    "MS": "Mississippi",
+    "MO": "Missouri",
+    "MT": "Montana",
+    "NE": "Nebraska",
+    "NV": "Nevada",
+    "NH": "New Hampshire",
+    "NJ": "New Jersey",
+    "NM": "New Mexico",
+    "NY": "New York",
+    "NC": "North Carolina",
+    "ND": "North Dakota",
+    "OH": "Ohio",
+    "OK": "Oklahoma",
+    "OR": "Oregon",
+    "PA": "Pennsylvania",
+    "RI": "Rhode Island",
+    "SC": "South Carolina",
+    "SD": "South Dakota",
+    "TN": "Tennessee",
+    "TX": "Texas",
+    "UT": "Utah",
+    "VT": "Vermont",
+    "VA": "Virginia",
+    "WA": "Washington",
+    "WV": "West Virginia",
+    "WI": "Wisconsin",
+    "WY": "Wyoming",
+}
+
+_COUNTY_NAME_PATTERN = r"[A-Z][A-Za-z.'-]*(?:\s+[A-Z][A-Za-z.'-]*)*"
+_STATE_PATTERN = "|".join(
+    re.escape(state)
+    for state in (
+        *US_STATE_NAMES,
+        *US_STATE_ABBREVIATIONS.keys(),
+    )
+)
 _COUNTY_STATE_RE = re.compile(
-    r"(?P<counties>"
-    r"[A-Z][A-Za-z.'-]*(?:\s+[A-Z][A-Za-z.'-]*)*"
-    r"(?:\s+(?:and|&)\s+[A-Z][A-Za-z.'-]*(?:\s+[A-Z][A-Za-z.'-]*)*)*"
+    rf"(?P<counties>{_COUNTY_NAME_PATTERN}"
+    rf"(?:\s*,\s*{_COUNTY_NAME_PATTERN})*"
+    rf"(?:\s*,?\s+(?:and|&)\s+{_COUNTY_NAME_PATTERN})?"
     r")\s+Count(?:y|ies),\s+"
-    rf"(?P<state>{'|'.join(re.escape(state) for state in US_STATE_NAMES)})\b"
+    rf"(?P<state>{_STATE_PATTERN})\b"
 )
 
 
@@ -763,11 +824,22 @@ def _title_page_project_location(
     *,
     resolver_profile: ForestPlanResolverProfile,
 ) -> dict | None:
-    title_chunks = [
+    decision_title_chunks = [
         _title_page_location_chunk(chunk)
         for chunk in package_chunks
-        if _is_decision_notice_title_page_chunk(chunk)
+        if _is_decision_document_title_page_chunk(chunk, resolver_profile=resolver_profile)
     ]
+    administrative_title_chunks = [
+        _title_page_location_chunk(chunk)
+        for chunk in package_chunks
+        if _is_administrative_location_title_page_chunk(
+            chunk,
+            resolver_profile=resolver_profile,
+        )
+    ]
+    title_chunks = _dedupe_title_chunks(
+        [*decision_title_chunks, *administrative_title_chunks]
+    )
     if not title_chunks:
         return None
 
@@ -781,6 +853,13 @@ def _title_page_project_location(
             limit=None,
         )
     ]
+    selected_forest_evidence.extend(
+        _title_page_forest_unit_evidence(
+            title_chunks,
+            name=resolver_profile.profile.forest_unit_names[0],
+            aliases=resolver_profile.profile.forest_unit_names,
+        )
+    )
     other_forest_evidence = []
     for unit in resolver_profile.known_other_forest_units:
         other_forest_evidence.extend(
@@ -791,6 +870,13 @@ def _title_page_project_location(
                 category="forest_unit",
                 aliases=unit.names,
                 limit=None,
+            )
+        )
+        other_forest_evidence.extend(
+            _title_page_forest_unit_evidence(
+                title_chunks,
+                name=unit.names[0],
+                aliases=unit.names,
             )
         )
     ranger_districts = _title_page_ranger_districts(
@@ -805,9 +891,15 @@ def _title_page_project_location(
     if not selected_forest_evidence and not other_forest_evidence and not ranger_districts:
         if county_state is None:
             return None
+    resolution_basis = _title_page_project_location_basis(
+        selected_forest_evidence=selected_forest_evidence,
+        ranger_districts=ranger_districts,
+        county_state=county_state,
+        title_chunks=title_chunks,
+    )
 
     return {
-        "resolution_basis": "decision_notice_fonsi_title_page",
+        "resolution_basis": resolution_basis,
         "forest_unit": (
             {
                 "name": resolver_profile.profile.forest_unit_names[0],
@@ -847,6 +939,29 @@ def _title_page_selected_forest_evidence(
     return list(forest_unit.get("package_evidence") or [])
 
 
+def _title_page_project_location_basis(
+    *,
+    selected_forest_evidence: list[dict],
+    ranger_districts: list[dict],
+    county_state: dict | None,
+    title_chunks: list[dict],
+) -> str:
+    evidence_records = list(selected_forest_evidence)
+    for district in ranger_districts:
+        evidence_records.extend(district.get("package_evidence") or [])
+    if isinstance(county_state, dict) and isinstance(county_state.get("evidence"), dict):
+        evidence_records.append(county_state["evidence"])
+    for record in evidence_records:
+        basis = str(record.get("resolution_basis") or "").strip()
+        if basis:
+            return basis
+    for chunk in title_chunks:
+        basis = str(chunk.get("title_page_resolution_basis") or "").strip()
+        if basis:
+            return basis
+    return "administrative_title_page"
+
+
 def _title_page_other_forest_names(title_page_project_location: dict | None) -> set[str]:
     if not title_page_project_location:
         return set()
@@ -883,11 +998,16 @@ def _project_location_signals(
     )
 
 
-def _is_decision_notice_title_page_chunk(chunk: dict) -> bool:
+def _is_decision_document_title_page_chunk(
+    chunk: dict,
+    *,
+    resolver_profile: ForestPlanResolverProfile,
+) -> bool:
     text = str(chunk.get("text") or "")
     if not text:
         return False
     title = str(chunk.get("title") or "")
+    prefix = _title_page_prefix(title=title, text=text)
     lowered = f"{title}\n{text[:1600]}".lower()
     is_first_page = int(chunk.get("page") or 1) == 1
     is_first_chunk = (
@@ -895,11 +1015,97 @@ def _is_decision_notice_title_page_chunk(chunk: dict) -> bool:
         or int(chunk.get("char_start") or 0) == 0
     )
     has_decision_title = (
-        "decision notice" in lowered
-        and ("finding of no significant impact" in lowered or "fonsi" in lowered)
+        (
+            "decision notice" in lowered
+            and ("finding of no significant impact" in lowered or "fonsi" in lowered)
+        )
+        or "finding of no significant impact" in lowered
+        or "fonsi" in lowered
+        or "determination of nepa adequacy" in lowered
+        or "record of decision" in lowered
+        or "draft decision notice" in lowered
+        or _title_prefix_contains(prefix, "proposed action")
     )
-    has_admin_unit = "ranger district" in lowered and "national forest" in lowered
+    profile_unit_present = any(
+        _flexible_term_found(lowered, str(name or ""))
+        for name in resolver_profile.profile.forest_unit_names
+    )
+    has_forest_or_grassland = (
+        profile_unit_present
+        or "national forest" in lowered
+        or "national grassland" in lowered
+        or "grasslands" in lowered
+    )
+    has_admin_unit = has_forest_or_grassland and (
+        "ranger district" in lowered or not _title_prefix_contains(prefix, "proposed action")
+    )
     return is_first_page and is_first_chunk and has_decision_title and has_admin_unit
+
+
+def _is_administrative_location_title_page_chunk(
+    chunk: dict,
+    *,
+    resolver_profile: ForestPlanResolverProfile,
+) -> bool:
+    text = str(chunk.get("text") or "")
+    if not text:
+        return False
+    title = str(chunk.get("title") or "")
+    prefix = _title_page_prefix(title=title, text=text)
+    lowered = f"{title}\n{text[:900]}".lower()
+    is_first_page = int(chunk.get("page") or 1) == 1
+    is_first_chunk = (
+        int(chunk.get("chunk_index") or 0) == 0
+        or int(chunk.get("char_start") or 0) == 0
+    )
+    if not is_first_page or not is_first_chunk:
+        return False
+    if "ranger district" not in lowered:
+        return False
+    if not any(
+        _flexible_term_found(lowered, str(name or ""))
+        for name in resolver_profile.profile.forest_unit_names
+    ):
+        return False
+    return any(
+        marker in prefix
+        for marker in (
+            "environmental assessment",
+            "effects analysis",
+            "analysis report",
+            "specialist report",
+            "proposed action",
+            "biological assessment",
+            "biological evaluation",
+            "prepared by",
+            "for:",
+        )
+    )
+
+
+def _dedupe_title_chunks(chunks: list[dict]) -> list[dict]:
+    seen = set()
+    deduped = []
+    for chunk in chunks:
+        key = (
+            chunk.get("chunk_id"),
+            chunk.get("source_record_id"),
+            chunk.get("title"),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(chunk)
+    return deduped
+
+
+def _title_page_prefix(*, title: str, text: str) -> str:
+    first_line = str(text or "").splitlines()[0] if text else ""
+    return f"{title}\n{first_line}\n{text[:240]}".lower()
+
+
+def _title_prefix_contains(prefix: str, marker: str) -> bool:
+    return marker.lower() in prefix.lower()
 
 
 def _title_page_location_chunk(chunk: dict) -> dict:
@@ -908,7 +1114,27 @@ def _title_page_location_chunk(chunk: dict) -> dict:
     title_block = _title_page_location_text(text)
     location_chunk["text"] = title_block
     location_chunk["char_end"] = int(chunk.get("char_start") or 0) + len(title_block)
+    location_chunk["title_page_resolution_basis"] = _title_page_resolution_basis(
+        f"{chunk.get('title') or ''}\n{text[:1600]}"
+    )
     return location_chunk
+
+
+def _title_page_resolution_basis(text: str) -> str:
+    lowered = text.lower()
+    if "decision notice" in lowered and (
+        "finding of no significant impact" in lowered or "fonsi" in lowered
+    ):
+        return "decision_notice_fonsi_title_page"
+    if "determination of nepa adequacy" in lowered:
+        return "determination_of_nepa_adequacy_title_page"
+    if "record of decision" in lowered:
+        return "record_of_decision_title_page"
+    if "draft decision notice" in lowered:
+        return "draft_decision_notice_title_page"
+    if "proposed action" in lowered:
+        return "proposed_action_title_page"
+    return "administrative_title_page"
 
 
 def _title_page_location_text(text: str) -> str:
@@ -926,7 +1152,11 @@ def _mark_title_page_project_location(evidence: dict) -> dict:
     marked = dict(evidence)
     marked["evidence_role"] = "project_location"
     marked["title_page_project_location"] = True
-    marked["resolution_basis"] = "decision_notice_fonsi_title_page"
+    marked["resolution_basis"] = _title_page_resolution_basis(
+        str(evidence.get("title") or "")
+        + "\n"
+        + str(evidence.get("evidence_span", {}).get("text") or "")
+    )
     return marked
 
 
@@ -937,23 +1167,29 @@ def _title_page_county_state(
 ) -> dict | None:
     for chunk in title_chunks:
         text = str(chunk.get("text") or "")
+        search_windows: list[tuple[int, int]] = []
         for forest_unit_name in forest_unit_names:
-            if not _term_found(text, forest_unit_name):
+            if not _flexible_term_found(text, forest_unit_name):
                 continue
             forest_match = re.search(
-                re.escape(forest_unit_name).replace(r"\ ", r"\s+"),
+                _flexible_unit_pattern(forest_unit_name),
                 text,
                 flags=re.IGNORECASE,
             )
             if forest_match is None:
                 continue
             window_start = forest_match.end()
-            window = text[window_start : window_start + 260]
+            search_windows.append((window_start, min(len(text), window_start + 320)))
+        search_windows.append((0, min(len(text), 900)))
+        for window_start, window_end in search_windows:
+            window = text[window_start:window_end]
             match = _COUNTY_STATE_RE.search(window)
             if match is None:
                 continue
             counties = _normalize_counties(match.group("counties"))
-            state = match.group("state")
+            if not counties:
+                continue
+            state = _normalize_state_name(match.group("state"))
             span_start = window_start + match.start()
             span_end = window_start + match.end()
             return {
@@ -984,32 +1220,36 @@ def _title_page_ranger_districts(
                 forest_unit_name=forest_unit_name,
             ):
                 name = _normalize_ranger_district_name(match.group("district"))
+                if not _is_valid_ranger_district_name(name):
+                    continue
+                expanded_names = _expand_ranger_district_names(name)
                 span_start = match.start("district")
                 span_end = match.end("district")
                 name_start = match.group("district").lower().rfind(name.lower())
                 if name_start >= 0:
                     span_start += name_start
                     span_end = span_start + len(name)
-                evidence = _title_page_named_location_evidence(
-                    chunk=chunk,
-                    category="district",
-                    entry_id=_title_page_entry_id("district", name),
-                    name=name,
-                    span_start=span_start,
-                    span_end=span_end,
-                )
-                districts.append(
-                    {
-                        "entry_id": evidence["entry_id"],
-                        "category": "district",
-                        "name": name,
-                        "aliases": [],
-                        "source_record_id": None,
-                        "package_evidence": [evidence],
-                        "plan_source_evidence": [],
-                        "resolution_status": "resolved",
-                    }
-                )
+                for expanded_name in expanded_names:
+                    evidence = _title_page_named_location_evidence(
+                        chunk=chunk,
+                        category="district",
+                        entry_id=_title_page_entry_id("district", expanded_name),
+                        name=expanded_name,
+                        span_start=span_start,
+                        span_end=span_end,
+                    )
+                    districts.append(
+                        {
+                            "entry_id": evidence["entry_id"],
+                            "category": "district",
+                            "name": expanded_name,
+                            "aliases": [],
+                            "source_record_id": None,
+                            "package_evidence": [evidence],
+                            "plan_source_evidence": [],
+                            "resolution_status": "resolved",
+                        }
+                    )
     deduped = {}
     for district in districts:
         key = district["name"].lower()
@@ -1030,16 +1270,32 @@ def _title_page_ranger_district_matches(
     *,
     forest_unit_name: str,
 ) -> list[re.Match[str]]:
-    forest_pattern = re.escape(forest_unit_name).replace(r"\ ", r"\s+")
-    pattern = re.compile(
+    forest_pattern = _flexible_unit_pattern(forest_unit_name)
+    district_pattern = (
         r"(?P<district>"
-        r"[A-Z][A-Za-z0-9&.'/-]*(?:\s+[A-Z][A-Za-z0-9&.'/-]*){0,6}"
+        r"[A-Z][A-Za-z0-9&.'’/-]*(?:\s+[A-Z][A-Za-z0-9&.'’/-]*){0,7}"
         r"\s+Ranger\s+Districts?"
-        r")\s+"
+        r")"
+    )
+    before_forest_pattern = re.compile(
+        district_pattern
+        +
+        r"\s*(?:of\s+(?:the\s+)?|for\s+|[-,:]\s*)?"
         rf"{forest_pattern}\b",
         flags=re.IGNORECASE,
     )
-    return list(pattern.finditer(text))
+    after_forest_pattern = re.compile(
+        rf"{forest_pattern}\b\s*(?:[-,:]\s*)?"
+        r"(?P<district>"
+        r"[A-Z][A-Za-z0-9&.'’/-]*(?:\s+[A-Z][A-Za-z0-9&.'’/-]*){0,7}"
+        r"\s+Ranger\s+Districts?"
+        r")",
+        flags=re.IGNORECASE,
+    )
+    return [
+        *before_forest_pattern.finditer(text),
+        *after_forest_pattern.finditer(text),
+    ]
 
 
 def _normalize_ranger_district_name(name: str) -> str:
@@ -1048,13 +1304,106 @@ def _normalize_ranger_district_name(name: str) -> str:
         "finding of no significant impact",
         "fonsi",
         "decision notice",
+        "determination of nepa adequacy",
+        "draft decision notice",
+        "environmental assessment",
+        "proposed action",
+        "usda forest service",
+        "forest service",
+        "wildlife biologist",
+        "district wildlife biologist",
+        "effects analysis report",
+        "effects analysis",
+        "fisheries analysis",
+        "carbon evaluation",
+        "analysis",
+        "evaluation",
+        "analysis report",
+        "specialist report",
+        "heritage program manager",
+        "program manager",
+        "archaeologist",
+        "report",
+        "project",
     ):
         marker_index = normalized.lower().rfind(marker)
         if marker_index >= 0:
             normalized = normalized[marker_index + len(marker) :].strip(" -:;")
+    for prefix in (
+        "is located within the ",
+        "located within the ",
+        "within the ",
+        "is located on the ",
+        "located on the ",
+        "on the ",
+        "the ",
+    ):
+        if normalized.lower().startswith(prefix):
+            normalized = normalized[len(prefix) :].strip(" -:;")
+            break
     if normalized.lower().startswith("and "):
         normalized = normalized[4:].strip(" -:;")
+    normalized = re.sub(r"\bSt\s+(?=[A-Z])", "St. ", normalized)
+    normalized = " ".join(normalized.split())
     return normalized
+
+
+def _is_valid_ranger_district_name(name: str) -> bool:
+    lowered = name.lower()
+    if not lowered.endswith(("ranger district", "ranger districts")):
+        return False
+    if any(
+        term in lowered
+        for term in (
+            "national forest",
+            "national grassland",
+            "forest service",
+            "department of agriculture",
+            "archaeologist",
+            "program manager",
+            "ranger district.",
+            ". the ",
+        )
+    ):
+        return False
+    return True
+
+
+def _expand_ranger_district_names(name: str) -> list[str]:
+    plural_match = re.fullmatch(
+        r"(?P<prefix>.+?)\s+Ranger\s+Districts",
+        name,
+        flags=re.IGNORECASE,
+    )
+    if plural_match is None:
+        return [name]
+    prefix = plural_match.group("prefix").strip(" ,")
+    if not re.search(r"\b(?:and|&)\b|,", prefix, flags=re.IGNORECASE):
+        return [name]
+    parts = [
+        part.strip(" ,")
+        for part in re.split(r"\s*(?:,|\band\b|&)\s*", prefix, flags=re.IGNORECASE)
+        if part.strip(" ,")
+    ]
+    if len(parts) <= 1:
+        return [name]
+    return [f"{part} Ranger District" for part in parts]
+
+
+_INVALID_COUNTY_NAME_TERMS = (
+    "ranger district",
+    "national forest",
+    "national grassland",
+    "grasslands",
+    "project",
+    "forest service",
+    "usda",
+    "department",
+    "environmental",
+    "assessment",
+    "fonsi",
+    "decision",
+)
 
 
 def _normalize_counties(raw_counties: str) -> list[str]:
@@ -1063,7 +1412,20 @@ def _normalize_counties(raw_counties: str) -> list[str]:
         for name in re.split(r"\s+(?:and|&)\s+|,\s*", raw_counties)
         if name.strip(" ,")
     ]
-    return [name if name.endswith(" County") else f"{name} County" for name in names]
+    normalized = []
+    for name in names:
+        if name.lower().startswith("and "):
+            name = name[4:].strip(" ,")
+        lowered = name.lower()
+        if any(term in lowered for term in _INVALID_COUNTY_NAME_TERMS):
+            continue
+        normalized.append(name if name.endswith(" County") else f"{name} County")
+    return normalized
+
+
+def _normalize_state_name(raw_state: str) -> str:
+    state = str(raw_state or "").strip()
+    return US_STATE_ABBREVIATIONS.get(state.upper(), state)
 
 
 def _title_page_admin_evidence(
@@ -1088,7 +1450,10 @@ def _title_page_admin_evidence(
         "title": chunk.get("title"),
         "evidence_role": "project_location",
         "title_page_project_location": True,
-        "resolution_basis": "decision_notice_fonsi_title_page",
+        "resolution_basis": chunk.get(
+            "title_page_resolution_basis",
+            "decision_notice_fonsi_title_page",
+        ),
         "evidence_span": {
             "text": span_text,
             "chunk_char_start": span_start,
@@ -1136,7 +1501,10 @@ def _title_page_named_location_evidence(
         "title": chunk.get("title"),
         "evidence_role": "project_location",
         "title_page_project_location": True,
-        "resolution_basis": "decision_notice_fonsi_title_page",
+        "resolution_basis": chunk.get(
+            "title_page_resolution_basis",
+            "decision_notice_fonsi_title_page",
+        ),
         "evidence_span": {
             "text": span_text,
             "chunk_char_start": span_start,
@@ -1164,6 +1532,49 @@ def _title_page_named_location_evidence(
 def _title_page_entry_id(prefix: str, name: str) -> str:
     slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
     return f"title-page-{prefix}-{slug}"
+
+
+def _title_page_forest_unit_evidence(
+    title_chunks: list[dict],
+    *,
+    name: str,
+    aliases: tuple[str, ...],
+) -> list[dict]:
+    evidence = []
+    for chunk in title_chunks:
+        text = str(chunk.get("text") or "")
+        for alias in aliases:
+            pattern = re.compile(_flexible_unit_pattern(alias), flags=re.IGNORECASE)
+            for match in pattern.finditer(text):
+                evidence.append(
+                    _mark_title_page_project_location(
+                        _package_evidence(
+                            chunk=chunk,
+                            text=text,
+                            category="forest_unit",
+                            entry_id=_title_page_entry_id("forest", name),
+                            name=name,
+                            matched_alias=text[match.start() : match.end()],
+                            match_start=match.start(),
+                            match_end=match.end(),
+                        )
+                    )
+                )
+    return _dedupe_evidence(evidence)
+
+
+def _flexible_term_found(text: str, term: str) -> bool:
+    if not term:
+        return False
+    return bool(re.search(_flexible_unit_pattern(term), text, flags=re.IGNORECASE))
+
+
+def _flexible_unit_pattern(term: str) -> str:
+    tokens = re.findall(r"[A-Za-z0-9]+", term)
+    if not tokens:
+        return r"a\A"
+    separator = r"(?:\s+|\s*[-–—]\s*)+"
+    return separator.join(re.escape(token) for token in tokens)
 
 
 def _is_scope_decisive_mention(evidence: dict) -> bool:
