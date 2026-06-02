@@ -378,6 +378,7 @@ def _authority_family_rule_template_metadata(
             if isinstance(template.get("source_filters"), dict)
             else {}
         ),
+        "trigger_arbitration": _template_trigger_arbitration(template),
         "evidence_expectation": template.get("evidence_expectation"),
     }
 
@@ -409,9 +410,15 @@ def _authority_family_applicability_contract(*, template: dict) -> dict:
             if isinstance(template.get("source_filters"), dict)
             else {}
         ),
+        "trigger_arbitration": _template_trigger_arbitration(template),
         "source_evidence_requirements": strings(template.get("source_evidence_requirements")),
         "evidence_expectation": template.get("evidence_expectation"),
     }
+
+
+def _template_trigger_arbitration(template: dict) -> dict | None:
+    arbitration = template.get("trigger_arbitration")
+    return arbitration if isinstance(arbitration, dict) else None
 
 
 def _authority_family_source_evidence_availability(

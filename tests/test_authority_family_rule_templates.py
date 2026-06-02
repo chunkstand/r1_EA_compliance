@@ -69,6 +69,18 @@ def test_authority_family_templates_have_milestone_3_contracts() -> None:
                 "duplicate_content",
                 "duplicate_url",
             }
+    precedence_policy_families = {
+        template["authority_family_id"]
+        for template in template_rows
+        if (template.get("trigger_arbitration") or {}).get(
+            "positive_negative_conflict_policy"
+        )
+        == "positive_precedence"
+    }
+    assert precedence_policy_families == {
+        "species_supporting_sources_and_overlays",
+        "vegetation_wildfire_forest_health_authorities",
+    }
 
 
 def test_authority_family_template_coverage_maps_every_template() -> None:

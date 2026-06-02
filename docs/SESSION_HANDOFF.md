@@ -42,46 +42,36 @@ history below.
   route preserved. Continue new implementation work from `main`.
 - latest resolved forest-plan review/inventory slice:
   all-R1 legacy direction and management-area inventory closeout,
-  source-set inventory authority/applicability gate hardening, and Forest Plan
-  context-derived first-class package facts. The generic builder now carries
-  legacy context across ordered chunks, derives management-area IDs from Forest
-  Plan text, body-scopes non-coded legacy/colon component IDs when generic
-  headings or management-area-local numbering would otherwise collide, and
-  includes legacy parse context in source-accuracy reparse keys. The local f70
-  all-R1 replay against `source-set-f70ea11e04ae3d53` passed with
-  `profile_result_count=10`, `blocked_forest_unit_ids=[]`,
-  `component_count=5894`, `standard_count=1888`,
-  `component_source_accuracy_failure_count=0`, and no profile blockers. Lolo
-  now builds `1004` components and `492` standards, with `mgmt-ma-9`,
-  `mgmt-ma-16`, `mgmt-ma-21`, `mgmt-ma-24`, and `mgmt-ma-25` present.
-  `forest-plan-resolve` now requires the active source-set inventory instead
-  of silently falling back to the seed fixture, treats topic/activity-bound
-  forestwide standards as applicable candidates, and fails reviewer-ready when
-  any applicable or unresolved standard is not applied. The North Seeley replay
-  resolved title-page authority to Lolo National Forest, Seeley Lake Ranger
-  District, Missoula and Powell Counties, Montana, found `18` management areas,
-  evaluated `1004` Lolo components and `492` standards, and correctly failed
-  reviewer-ready with `330` applicable standards, `101` applied standards, and
-  `229` insufficient-evidence applicable-standard gaps. The North Seeley
-  applicability replay now carries the canonical source-set inventory and
-  resolver-scoped package facts through the authority universe (`1070`
-  candidates, `1004` Forest Plan components), package fact graph (`81383`
-  facts, including `65` Forest Plan context-derived package facts: `60`
-  management-area facts and `5` overlay facts), retrieval trace (`9630` rows),
-  graph trace (`26745` rows), and deterministic decisions. Weak-only positive
-  Forest Plan component trigger evidence is now diagnostic trigger-miss
-  evidence instead of an adjudication blocker, while strong component triggers
-  and explicit negative scope evidence keep their existing deterministic
-  behavior. North Seeley deterministic decisions now report `65` applicable,
-  `1003` not applicable, and `2` needs adjudication; all `1004` Lolo Forest
-  Plan component candidates are final (`16` applicable, `988` not applicable).
-  `phase-eval` now fails stale Forest Plan authority universes against the
-  current context inventory path and component count, and the compliance phase
-  requires a Forest Plan matrix for any resolved forest context; North Seeley
-  now fails closed at `applicability_validation`, `generated_rule_pack`, and
-  `compliance_review` with `forest_plan_matrix_required=true` and `330`
-  expected applicable Forest Plan standards until the remaining two
-  authority-family conflicts and compliance matrix work close.
+  source-set inventory authority/applicability gate hardening, Forest Plan
+  context-derived first-class package facts, weak-trigger adjudication
+  narrowing for Forest Plan components, authority-family positive-precedence
+  arbitration, and review-scoped component-decision application in compliance
+  review. The generic builder now carries legacy context across ordered chunks,
+  derives management-area IDs from Forest Plan text, body-scopes non-coded
+  legacy/colon component IDs when generic headings or management-area-local
+  numbering would otherwise collide, and includes legacy parse context in
+  source-accuracy reparse keys. The local f70 all-R1 replay against
+  `source-set-f70ea11e04ae3d53` passed with `profile_result_count=10`,
+  `blocked_forest_unit_ids=[]`, `component_count=5894`,
+  `standard_count=1888`, `component_source_accuracy_failure_count=0`, and no
+  profile blockers. Lolo now builds `1004` components and `492` standards,
+  with `mgmt-ma-9`, `mgmt-ma-16`, `mgmt-ma-21`, `mgmt-ma-24`, and
+  `mgmt-ma-25` present. The North Seeley replay resolved title-page authority
+  to Lolo National Forest, Seeley Lake Ranger District, Missoula and Powell
+  Counties, Montana, found `18` management areas, and carries resolver-scoped
+  package facts through the authority universe (`1070` candidates, `1004`
+  Forest Plan components), package fact graph (`81383` facts, including `65`
+  Forest Plan context-derived package facts), retrieval trace (`9630` rows),
+  graph trace (`26745` rows), deterministic decisions, generated rule pack,
+  compliance matrix, and phase gate. North Seeley deterministic applicability
+  now reports `67` applicable, `1003` not applicable, and `0` unresolved
+  authorities; all `1004` Lolo Forest Plan component candidates are final
+  (`16` applicable, `988` not applicable). Compliance review consumes those
+  component decisions to narrow the Forest Plan standard gate to `16`
+  applicable standards, applies all `16`, and writes valid
+  `compliance_matrix.json`, `compliance_matrix.md`, and
+  `compliance_matrix.pdf`. North Seeley local `phase-eval` now passes `30/30`
+  phases with the compliance phase reviewer-ready.
 - latest resolved observability/eval context graph slice:
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` Milestone 0. The
   repo has a tracked context-graph contract, `eval-context-graph-build`,

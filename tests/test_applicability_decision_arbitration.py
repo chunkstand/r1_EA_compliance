@@ -71,6 +71,34 @@ class ApplicabilityDecisionArbitrationTests(unittest.TestCase):
         self.assertEqual(arbitration["decisive_trigger_groups"], [["road"]])
         self.assertIn("negative scope note", arbitration["arbitration_notes"])
 
+    def test_arbitrate_trigger_matches_supports_positive_precedence_policy(self) -> None:
+        arbitration = arbitrate_trigger_matches(
+            candidate={
+                "trigger_arbitration_contract": {
+                    "minimum_strong_trigger_groups": 1,
+                    "positive_negative_conflict_policy": "positive_precedence",
+                }
+            },
+            positive_match={
+                "matched": True,
+                "adjudication_notes": [],
+                "trigger_group_results": [_group_result("road", observed=1)],
+            },
+            negative_match={
+                "matched": True,
+                "adjudication_notes": ["negative scope note"],
+            },
+            coverage_boundary={"coverage_sufficient": True},
+        )
+
+        self.assertTrue(arbitration["positive_trigger_sufficient"])
+        self.assertFalse(arbitration["requires_adjudication"])
+        self.assertEqual(arbitration["arbitration_status"], "strong_positive_decisive")
+        self.assertEqual(
+            arbitration["contract"]["positive_negative_conflict_policy"],
+            "positive_precedence",
+        )
+
     def test_arbitration_summary_reports_decision_effect_and_notes(self) -> None:
         summary = arbitration_summary(
             status="needs_adjudication",
@@ -113,6 +141,46 @@ class ApplicabilityDecisionArbitrationTests(unittest.TestCase):
         self.assertEqual(summary["source_evidence_ids"], ["SRC-1", "SRC-2"])
         self.assertIn("weak trail signal", summary["arbitration_notes"])
         self.assertIn("contract requires strong road evidence", summary["arbitration_notes"])
+
+    def test_arbitration_summary_reports_positive_precedence_effect(self) -> None:
+        summary = arbitration_summary(
+            status="applicable",
+            basis_type="positive_package_trigger",
+            predicate_name="trigger_arbitration",
+            positive_match={
+                "matched": True,
+                "adjudication_notes": [],
+                "trigger_group_results": [_group_result("road", observed=1)],
+            },
+            negative_match={
+                "matched": True,
+                "requires_adjudication": False,
+                "adjudication_notes": [],
+                "trigger_group_results": [_group_result("not part of project", observed=1)],
+            },
+            trigger_arbitration={
+                "arbitration_status": "strong_positive_decisive",
+                "requires_adjudication": False,
+                "decisive_trigger_groups": [["road"]],
+                "weak_auxiliary_trigger_groups": [],
+                "weak_only_trigger_groups": [],
+                "missing_required_trigger_groups": [],
+                "minimum_strong_trigger_groups": 1,
+                "arbitration_rationale": "Positive trigger evidence takes precedence.",
+                "arbitration_notes": [],
+                "contract": {"positive_negative_conflict_policy": "positive_precedence"},
+            },
+            source_evidence=[],
+            selected_retrieval_result_ids=[],
+            retrieval_trace_ids=[],
+            graph_path_ids=[],
+        )
+
+        self.assertEqual(
+            summary["decision_effect"],
+            "positive_precedence_over_negative_trigger",
+        )
+        self.assertFalse(summary["requires_adjudication"])
 
     def test_missing_trigger_groups_and_not_evaluated_contract_are_traceable(self) -> None:
         self.assertEqual(

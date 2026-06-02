@@ -15,6 +15,54 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Forest-Plan Applicability And Compliance Matrix Replay Resolved Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  the two broad authority-family templates that were still failing North
+  Seeley applicability (`species_supporting_sources_and_overlays` and
+  `vegetation_wildfire_forest_health_authorities`) now declare an explicit
+  positive-precedence trigger arbitration contract. The authority-family
+  universe builder carries that contract into candidates, applicability
+  decisions record the resulting decision effect, and validation accepts the
+  resolved positive/negative evidence only when the stored contract proves the
+  positive-precedence policy.
+- Forest Plan compliance update:
+  Forest Plan component evaluation now consumes review-scoped Forest Plan
+  component applicability decisions when they exist. Resolver context still
+  provides the governing forest, management-area, overlay, and package-search
+  basis, but a generated applicability run is the authoritative narrowing layer
+  for which component standards enter the compliance matrix. This prevents
+  broad management-area or topic scope from inflating applicable-standard
+  counts after the applicability pipeline already decided each component.
+- North Seeley replay evidence:
+  `applicability-authority-universe` rebuilt the Lolo review with `1070`
+  candidates, including all `1004` Lolo Forest Plan component candidates.
+  `applicability-determine` now reports `67` applicable authorities, `1003`
+  not-applicable authorities, and `0` unresolved/needs-adjudication
+  authorities. `applicability-validate` passed, and
+  `applicability-generate-rule-pack` produced a validated generated rule pack
+  with `67` rules.
+- compliance evidence:
+  `compliance-review` now loads the `1004` Forest Plan component decisions and
+  narrows the Forest Plan component evaluation to `16` applicable standards and
+  `988` not-applicable components. All `16` applicable standards are applied;
+  the Forest Plan component gate is reviewer-ready; and the compliance matrix
+  JSON, Markdown, and PDF are present and valid.
+- phase-eval result:
+  North Seeley `phase-eval --review-id
+  region1-example-lolo-north-seeley-wui-highway-83-64580` now passes `30/30`
+  phases. The compliance phase reports
+  `forest_plan_expected_applicable_standard_count=16`,
+  `forest_plan_matrix_applicable_standard_row_count=16`, valid matrix schema,
+  valid PDF header, `validation_passed=true`, and `reviewer_ready=true`.
+- boundary:
+  this is a local real-package North Seeley review proof, not a hosted service
+  route or a declared contract-backed promotion. The review remains
+  `not_required_for_ad_hoc_review` for review-direct-eval coverage, while all
+  required source-set/direct-eval phases in the local phase gate are green.
+
 ## Forest-Plan Weak Trigger Adjudication Narrowing Resolved Locally
 
 Latest implementation update on 2026-06-02 UTC:

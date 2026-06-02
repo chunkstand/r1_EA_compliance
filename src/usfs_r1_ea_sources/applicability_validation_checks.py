@@ -532,7 +532,10 @@ def check_contradictory_package_evidence(decisions: list[dict[str, Any]]) -> dic
         has_negative = bool(decision.get("negative_evidence_spans"))
         has_contradiction_notes = bool(decision.get("contradiction_notes"))
         has_adjudication = bool(decision.get("human_adjudication_refs"))
-        if (has_contradiction_notes or (has_positive and has_negative)) and not has_adjudication:
+        resolved_by_arbitration = _resolved_by_positive_precedence(decision)
+        if (
+            has_contradiction_notes or (has_positive and has_negative)
+        ) and not has_adjudication and not resolved_by_arbitration:
             failures.append(
                 failure(
                     "contradictory_package_evidence",
@@ -551,6 +554,17 @@ def check_contradictory_package_evidence(decisions: list[dict[str, Any]]) -> dic
         not failures,
         failures,
         {"failure_count": len(failures)},
+    )
+
+
+def _resolved_by_positive_precedence(decision: dict[str, Any]) -> bool:
+    summary = decision.get("arbitration_summary")
+    if not isinstance(summary, dict):
+        return False
+    return (
+        summary.get("decision_effect") == "positive_precedence_over_negative_trigger"
+        and ((summary.get("contract") or {}).get("positive_negative_conflict_policy"))
+        == "positive_precedence"
     )
 
 

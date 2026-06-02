@@ -424,6 +424,39 @@ class ApplicabilityDecisionTests(unittest.TestCase):
                 "blocked_by_positive_negative_conflict",
             )
 
+    def test_trigger_arbitration_positive_precedence_resolves_negative_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source_set_id = "source-set-unit"
+            candidate = _positive_negative_conflict_candidate(source_set_id)
+            candidate["trigger_arbitration_contract"] = {
+                "minimum_strong_trigger_groups": 1,
+                "positive_negative_conflict_policy": "positive_precedence",
+            }
+            fixture = _write_decision_fixture(
+                Path(tmp),
+                extra_candidates=[candidate],
+            )
+
+            result = build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            decisions = {
+                row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
+            }
+            decision = decisions["rule-template:unit-pack:0.1.0:positive_negative_conflict"]
+            self.assertEqual(decision["status"], "applicable")
+            self.assertEqual(decision["basis_type"], "positive_package_trigger")
+            self.assertTrue(decision["package_evidence_spans"])
+            self.assertTrue(decision["negative_evidence_spans"])
+            self.assertEqual(decision["contradiction_notes"], [])
+            self.assertEqual(
+                decision["arbitration_summary"]["decision_effect"],
+                "positive_precedence_over_negative_trigger",
+            )
+
     def test_uses_declared_source_evidence_when_source_retrieval_has_no_selected_hits(
         self,
     ) -> None:

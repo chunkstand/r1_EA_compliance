@@ -12,6 +12,9 @@ from usfs_r1_ea_sources.applicability_validation import validate_applicability_r
 from usfs_r1_ea_sources.applicability_validation import (
     write_applicability_adjudication_template,
 )
+from usfs_r1_ea_sources.applicability_validation_checks import (
+    check_contradictory_package_evidence,
+)
 from usfs_r1_ea_sources.cli import main
 
 from tests.support.applicability_decision_fixtures import _build_adjudicated_applicability_dir
@@ -25,6 +28,26 @@ from tests.support.applicability_decision_support import _write_jsonl
 
 
 class ApplicabilityValidationTests(unittest.TestCase):
+    def test_positive_precedence_contract_satisfies_contradictory_evidence_gate(self) -> None:
+        decision = {
+            "candidate_authority_id": "candidate-positive-precedence",
+            "status": "applicable",
+            "package_evidence_spans": [{"evidence_id": "positive"}],
+            "negative_evidence_spans": [{"evidence_id": "negative"}],
+            "contradiction_notes": [],
+            "human_adjudication_refs": [],
+            "arbitration_summary": {
+                "decision_effect": "positive_precedence_over_negative_trigger",
+                "contract": {
+                    "positive_negative_conflict_policy": "positive_precedence",
+                },
+            },
+        }
+
+        result = check_contradictory_package_evidence([decision])
+
+        self.assertTrue(result["passed"])
+
     def test_validation_fails_closed_until_adjudication_resolves_open_decisions(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             fixture = _write_decision_fixture(Path(tmp))

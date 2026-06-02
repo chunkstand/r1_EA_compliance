@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 import json
 from pathlib import Path
 
@@ -42,6 +43,10 @@ def run_forest_plan_component_evaluation(
         component_inventory_path,
         forest_unit_id=forest_unit_id,
     )
+    component_applicability_decisions = _load_component_applicability_decisions(
+        review_dir / "applicability" / "applicability_decisions.jsonl",
+        source_set_id=source_set_id,
+    )
     findings = [
         _component_finding(
             review_id=review_id,
@@ -52,6 +57,7 @@ def run_forest_plan_component_evaluation(
             index_path=index_path,
             package_top_k=package_top_k,
             source_top_k=source_top_k,
+            component_applicability_decisions=component_applicability_decisions,
         )
         for component in components
     ]
@@ -96,12 +102,16 @@ def run_forest_plan_component_evaluation(
         inventory_coverage=inventory_coverage,
         standard_coverage=standard_coverage,
     )
+    summary["applicability_decision_filter"] = _component_applicability_decision_summary(
+        component_applicability_decisions
+    )
     report = {
         "schema_version": FOREST_PLAN_COMPONENT_FINDINGS_SCHEMA_VERSION,
         "created_at": _utc_now(),
         "review_id": review_id,
         "source_set_id": source_set_id,
         "component_inventory_path": str(component_inventory_path),
+        "applicability_decision_filter": summary["applicability_decision_filter"],
         "summary": summary,
         "validation": validation,
         "component_inventory_coverage": inventory_coverage,
@@ -240,10 +250,28 @@ def _component_finding(
     index_path: Path | None,
     package_top_k: int,
     source_top_k: int,
+    component_applicability_decisions: dict[str, dict] | None,
 ) -> dict:
     source_set_matches = bool(source_set_id and component["source_set_id"] == source_set_id)
     context_match = _context_matches_component(context, component)
-    should_search_package = context_match or bool(context.get("needs_reviewer_resolution"))
+    applicability_decision = (
+        component_applicability_decisions.get(component["component_id"])
+        if component_applicability_decisions is not None
+        else None
+    )
+    decision_status = (
+        str(applicability_decision.get("status") or "")
+        if isinstance(applicability_decision, dict)
+        else None
+    )
+    decision_filter_active = component_applicability_decisions is not None
+    should_search_package = (
+        decision_status == "applicable"
+        or (
+            not decision_filter_active
+            and (context_match or bool(context.get("needs_reviewer_resolution")))
+        )
+    )
     if should_search_package:
         package_search = _component_package_search(
             component=component,
@@ -267,6 +295,15 @@ def _component_finding(
             package_search["results"],
             limit=package_top_k,
         )
+    if (
+        not package_evidence
+        and decision_status == "applicable"
+        and isinstance(applicability_decision, dict)
+    ):
+        package_evidence = _component_decision_package_evidence(
+            applicability_decision,
+            limit=package_top_k,
+        )
     plan_source_evidence = []
     should_bind_plan_source = (
         context_match
@@ -288,6 +325,30 @@ def _component_finding(
         applicability_status = "not_applicable"
         finding_status = "not_applicable"
         rationale = "The EA package explicitly marks this plan component not applicable."
+    elif decision_filter_active and applicability_decision is None:
+        applicability_status = "needs_reviewer_resolution"
+        finding_status = "needs_reviewer_resolution"
+        rationale = "The review-scoped applicability run did not decide this Forest Plan component."
+    elif decision_filter_active and decision_status == "not_applicable":
+        applicability_status = "not_applicable"
+        finding_status = "not_applicable"
+        rationale = _component_decision_rationale(
+            applicability_decision,
+            fallback=(
+                "The review-scoped applicability decision marks this Forest Plan component "
+                "not applicable."
+            ),
+        )
+    elif decision_filter_active and decision_status not in {"applicable", "not_applicable"}:
+        applicability_status = "needs_reviewer_resolution"
+        finding_status = "needs_reviewer_resolution"
+        rationale = _component_decision_rationale(
+            applicability_decision,
+            fallback=(
+                "The review-scoped applicability decision did not reach a final applicable "
+                "or not-applicable status for this Forest Plan component."
+            ),
+        )
     elif context.get("needs_reviewer_resolution"):
         applicability_status = "needs_reviewer_resolution"
         finding_status = "needs_reviewer_resolution"
@@ -366,6 +427,7 @@ def _component_finding(
                 if package_determination
                 else None
             ),
+            "applicability_decision": _component_decision_basis(applicability_decision),
         },
         "plan_source_evidence": plan_source_evidence,
         "package_evidence": package_evidence,
@@ -398,6 +460,122 @@ def _requires_reviewer_resolution_without_scope_binding(
         and not has_topic_or_activity_binding
         and package_determination is None
     )
+
+
+def _load_component_applicability_decisions(
+    path: Path,
+    *,
+    source_set_id: str | None,
+) -> dict[str, dict] | None:
+    if not path.exists():
+        return None
+    decisions: dict[str, dict] = {}
+    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid applicability decision JSONL at line {line_number}.") from exc
+        if not isinstance(row, dict):
+            continue
+        if row.get("candidate_authority_type") != "forest_plan_component":
+            continue
+        if source_set_id and row.get("source_set_id") and row.get("source_set_id") != source_set_id:
+            continue
+        component_id = _component_id_from_applicability_decision(row)
+        if component_id:
+            decisions[component_id] = row
+    return decisions or None
+
+
+def _component_id_from_applicability_decision(decision: dict) -> str | None:
+    rule_template = decision.get("rule_template")
+    if isinstance(rule_template, dict):
+        for field in ("component_id", "rule_id"):
+            value = str(rule_template.get(field) or "").strip()
+            if value:
+                return value
+    candidate_id = str(decision.get("candidate_authority_id") or "").strip()
+    if candidate_id.startswith("forest-plan-component:") and ":" in candidate_id:
+        return candidate_id.rsplit(":", 1)[-1]
+    return None
+
+
+def _component_applicability_decision_summary(
+    decisions: dict[str, dict] | None,
+) -> dict:
+    if decisions is None:
+        return {"active": False, "decision_count": 0, "status_counts": {}}
+    return {
+        "active": True,
+        "decision_count": len(decisions),
+        "status_counts": dict(Counter(str(row.get("status") or "") for row in decisions.values())),
+    }
+
+
+def _component_decision_basis(decision: dict | None) -> dict | None:
+    if not isinstance(decision, dict):
+        return None
+    return {
+        "candidate_authority_id": decision.get("candidate_authority_id"),
+        "decision_id": decision.get("decision_id"),
+        "status": decision.get("status"),
+        "basis_type": decision.get("basis_type"),
+        "rationale": _component_decision_rationale(decision, fallback=None),
+    }
+
+
+def _component_decision_rationale(decision: dict | None, *, fallback: str | None) -> str:
+    if isinstance(decision, dict):
+        for container_name in ("applicability_basis", "non_applicability_basis"):
+            container = decision.get(container_name)
+            if isinstance(container, dict):
+                value = str(container.get("rationale") or "").strip()
+                if value:
+                    return value
+        value = str(decision.get("rationale") or "").strip()
+        if value:
+            return value
+    return fallback or ""
+
+
+def _component_decision_package_evidence(decision: dict, *, limit: int) -> list[dict]:
+    evidence = []
+    for span in decision.get("package_evidence_spans") or []:
+        if not isinstance(span, dict):
+            continue
+        evidence.append(
+            {
+                "rank": len(evidence) + 1,
+                "score": 1.0,
+                "source_record_id": span.get("source_record_id"),
+                "title": span.get("title"),
+                "citation_label": span.get("citation_label"),
+                "review_section": span.get("review_section"),
+                "determination_source": "applicability_decision",
+                "applicability_decision_id": decision.get("decision_id"),
+                "candidate_authority_id": decision.get("candidate_authority_id"),
+                "chunk_id": span.get("source_chunk_id") or span.get("package_chunk_id"),
+                "evidence_span": {
+                    "text": span.get("text_excerpt") or span.get("text") or "",
+                    "chunk_char_start": span.get("chunk_char_start"),
+                    "chunk_char_end": span.get("chunk_char_end"),
+                    "source_char_start": span.get("source_char_start"),
+                    "source_char_end": span.get("source_char_end"),
+                },
+                "provenance": {
+                    "artifact_sha256": span.get("artifact_sha256"),
+                    "content_sha256": span.get("content_sha256"),
+                    "source_record_id": span.get("source_record_id"),
+                    "parser_name": "applicability_decision",
+                    "parser_version": "applicability-decisions-v0",
+                },
+            }
+        )
+        if len(evidence) >= limit:
+            break
+    return evidence
 
 
 def _skipped_component_package_search(*, reason: str) -> dict:

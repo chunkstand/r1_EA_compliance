@@ -254,6 +254,72 @@ class ForestPlanResolverCoreTests(unittest.TestCase):
             validation = report["validation"]
             self.assertFalse(_check(validation, "all_applicable_standards_applied")["passed"])
 
+    def test_component_applicability_decisions_narrow_standard_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            inventory_path = _write_component_inventory(Path(tmp), source_set_id=source_set_id)
+            review_id = "cg-component-applicability-filter"
+            _write_component_applicability_decisions(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                decisions={
+                    "cg-test-cmbca-dc-01": "applicable",
+                    "cg-test-cmbca-std-01": "not_applicable",
+                    "cg-test-cmbca-suit-01": "not_applicable",
+                },
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        "The EA says quiet nonmotorized recreation opportunities predominate.",
+                        "No new permanent or temporary roads are proposed.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id=review_id,
+                component_inventory_path=inventory_path,
+            )
+
+            component_summary = result.summary["component_evaluation"]
+            self.assertTrue(component_summary["applicability_decision_filter"]["active"])
+            self.assertEqual(
+                component_summary["applicability_decision_filter"]["status_counts"],
+                {"applicable": 1, "not_applicable": 2},
+            )
+            self.assertEqual(component_summary["applicable_standard_count"], 0)
+            self.assertEqual(component_summary["applied_standard_count"], 0)
+            self.assertTrue(component_summary["applicable_standard_coverage_passed"])
+            self.assertTrue(component_summary["reviewer_ready"])
+
+            report = json.loads(result.component_findings_path.read_text(encoding="utf-8"))
+            findings = {finding["component_id"]: finding for finding in report["findings"]}
+            standard = findings["cg-test-cmbca-std-01"]
+            self.assertEqual(standard["applicability_status"], "not_applicable")
+            self.assertEqual(standard["finding_status"], "not_applicable")
+            self.assertEqual(standard["compliance_status"], "not_applicable")
+            self.assertEqual(
+                standard["applicability_basis"]["applicability_decision"]["status"],
+                "not_applicable",
+            )
+
+            standard_coverage = json.loads(
+                result.applicable_standard_coverage_path.read_text(encoding="utf-8")
+            )
+            self.assertTrue(standard_coverage["passed"])
+            self.assertEqual(standard_coverage["applicable_standard_count"], 0)
+            self.assertEqual(standard_coverage["standards"][0]["plan_source_evidence_count"], 1)
+
     def test_unscoped_standard_without_package_evidence_blocks_reviewer_ready(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -576,3 +642,41 @@ def _write_unscoped_standard_inventory(path: Path, *, source_set_id: str) -> Pat
     }
     inventory_path.write_text(json.dumps(inventory, indent=2), encoding="utf-8")
     return inventory_path
+
+
+def _write_component_applicability_decisions(
+    *,
+    output_dir: Path,
+    review_id: str,
+    source_set_id: str,
+    decisions: dict[str, str],
+) -> Path:
+    decisions_path = (
+        output_dir / "reviews" / review_id / "applicability" / "applicability_decisions.jsonl"
+    )
+    decisions_path.parent.mkdir(parents=True, exist_ok=True)
+    rows = []
+    for component_id, status in decisions.items():
+        basis_key = (
+            "applicability_basis" if status == "applicable" else "non_applicability_basis"
+        )
+        rows.append(
+            {
+                "schema_version": "applicability-decisions-v0",
+                "source_set_id": source_set_id,
+                "candidate_authority_type": "forest_plan_component",
+                "candidate_authority_id": f"forest-plan-component:test:{component_id}",
+                "decision_id": f"decision:{component_id}",
+                "status": status,
+                "basis_type": "unit_component_decision",
+                basis_key: {
+                    "rationale": f"Unit applicability fixture marks {component_id} {status}."
+                },
+                "rule_template": {"component_id": component_id},
+            }
+        )
+    decisions_path.write_text(
+        "\n".join(json.dumps(row, sort_keys=True) for row in rows) + "\n",
+        encoding="utf-8",
+    )
+    return decisions_path

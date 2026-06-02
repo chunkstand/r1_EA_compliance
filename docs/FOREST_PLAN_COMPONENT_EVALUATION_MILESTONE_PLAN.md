@@ -147,24 +147,30 @@ Already implemented:
   Forest Plan context even when compliance artifacts are absent, so a missing matrix JSON/PDF fails
   closed instead of hiding the obligation behind an unbuilt compliance review.
 - North Seeley now replays the canonical Lolo inventory through authority-universe, package fact
-  graph, applicability retrieval/graph traces, and deterministic decisions without handwritten
-  Lolo rules. Weak-only positive Forest Plan component trigger evidence is diagnostic trigger-miss
-  evidence rather than an adjudication blocker when search coverage is sufficient. Its current
-  expected fail-closed state is `330` applicable Forest Plan standards in context, `2`
-  authority-family applicability decisions needing adjudication, and a required but missing Forest
-  Plan compliance matrix until reviewer/compliance work closes those items.
+  graph, applicability retrieval/graph traces, deterministic decisions, generated rule pack,
+  compliance review, and phase-eval without handwritten Lolo rules. Weak-only positive Forest Plan
+  component trigger evidence is diagnostic trigger-miss evidence rather than an adjudication blocker
+  when search coverage is sufficient. Data-configured positive-precedence arbitration closes the
+  two broad authority-family conflicts that previously remained unresolved. Compliance review now
+  consumes review-scoped Forest Plan component applicability decisions as the authoritative
+  narrowing layer for the standard gate: the current local North Seeley replay has `67` applicable
+  authorities, `1003` not-applicable authorities, `0` unresolved/needs-adjudication authorities,
+  `16` applicable Forest Plan standards, all `16` applied, valid matrix JSON/Markdown/PDF outputs,
+  and `phase-eval` passing `30/30` phases.
 
 Remaining gaps:
 
-- No complete real-package V1 proving review has been run and adjudicated through the updated
-  `compliance-review` path.
+- The North Seeley real-package replay has proven the updated `compliance-review` path locally.
+  The remaining promotion gap is to replay the same generic inventory, applicability, and compliance
+  gates across additional governed forest packages before claiming all-forest coverage.
 - No standalone component retrieval precision/recall eval artifact exists yet.
 - Component-level graph artifacts are not yet emitted as a separate component graph; the compliance
   finding graph currently links the review to forest-plan review/component-evaluation artifacts.
 - The compliance-status model remains V0 standard support/gap classification and should be expanded
   only after real-package failures show the next needed categories.
-- The current generated inventory covers the active Custer Gallatin LMP source record; future plan
-  amendments or other forest plans still require their own generated inventories and coverage.
+- The current all-R1 generated inventory covers the active f70 forest-plan source set, but future
+  plan amendments or source-set changes still require regenerated inventories, currentness checks,
+  and package-specific applicability/compliance replay.
 
 ## Definition Of Complete NFMA Forest Plan Review
 

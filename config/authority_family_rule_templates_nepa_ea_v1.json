@@ -2293,6 +2293,10 @@
         "no consultation required",
         "no effect"
       ],
+      "trigger_arbitration": {
+        "minimum_strong_trigger_groups": 1,
+        "positive_negative_conflict_policy": "positive_precedence"
+      },
       "source_query": "Species source-support records, sensitive species pages, and lynx/LMP support Endangered Species Act, 16 U.S.C. chapter 35",
       "source_filters": {
         "source_record_id": "R1EA-064",
@@ -2559,6 +2563,10 @@
         "no wildfire action",
         "no restoration"
       ],
+      "trigger_arbitration": {
+        "minimum_strong_trigger_groups": 1,
+        "positive_negative_conflict_policy": "positive_precedence"
+      },
       "source_query": "Vegetation, fuels, wildfire, forest-health, and emergency-action authorities Healthy Forests Restoration Act and related forest management authorities, 16 U.S.C. chapter 84",
       "source_filters": {
         "source_record_id": "R1EA-056",

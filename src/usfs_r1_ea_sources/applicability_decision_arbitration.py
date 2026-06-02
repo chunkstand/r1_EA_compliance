@@ -226,6 +226,7 @@ def arbitration_summary(
         "basis_type": basis_type,
         "predicate_name": predicate_name,
         "arbitration_status": trigger_arbitration.get("arbitration_status"),
+        "contract": trigger_arbitration.get("contract") or {},
         "decisive_trigger_groups": trigger_arbitration.get("decisive_trigger_groups") or [],
         "weak_auxiliary_trigger_groups": (
             trigger_arbitration.get("weak_auxiliary_trigger_groups") or []
@@ -338,6 +339,16 @@ def _arbitration_decision_effect(
         return "blocked_by_weak_positive_trigger"
     if status == "needs_adjudication" and negative_match.get("requires_adjudication"):
         return "blocked_by_weak_negative_trigger"
+    if (
+        status == "applicable"
+        and positive_match.get("matched")
+        and negative_match.get("matched")
+        and (trigger_arbitration.get("contract") or {}).get(
+            "positive_negative_conflict_policy"
+        )
+        == "positive_precedence"
+    ):
+        return "positive_precedence_over_negative_trigger"
     if (
         status == "applicable"
         and arbitration_status == "strong_positive_with_weak_auxiliary"

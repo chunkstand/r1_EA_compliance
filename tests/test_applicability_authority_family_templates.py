@@ -41,6 +41,10 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
                             "document_role": "law",
                             "source_record_id": "R1EA-CWA",
                         },
+                        "trigger_arbitration": {
+                            "minimum_strong_trigger_groups": 1,
+                            "positive_negative_conflict_policy": "positive_precedence",
+                        },
                         "source_evidence_requirements": ["catalog-confirmed source"],
                         "evidence_expectation": "Source-backed wetlands evidence is required.",
                         "dependency_contract": {
@@ -85,6 +89,18 @@ class AuthorityFamilyTemplateCandidateTests(unittest.TestCase):
         self.assertEqual(
             candidate["graph_expansion_contract"]["neighbor_filters"]["superseded_by_family_ids"],
             ["clean_water_replacement"],
+        )
+        self.assertEqual(
+            candidate["rule_template"]["trigger_arbitration"][
+                "positive_negative_conflict_policy"
+            ],
+            "positive_precedence",
+        )
+        self.assertEqual(
+            candidate["deterministic_applicability_test_contract"]["trigger_arbitration"][
+                "positive_negative_conflict_policy"
+            ],
+            "positive_precedence",
         )
         self.assertEqual(
             {
