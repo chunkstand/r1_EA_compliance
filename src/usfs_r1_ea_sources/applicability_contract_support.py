@@ -3,6 +3,26 @@ from __future__ import annotations
 from .records import aliased_source_record_ids
 
 
+BASE_RULE_PACKAGE_FACT_TYPES = (
+    "action",
+    "agency",
+    "decision_posture",
+    "nepa_level",
+    "package_section",
+    "evidence_span",
+)
+FOREST_PLAN_PACKAGE_FACT_TYPES = (
+    "action",
+    "agency",
+    "geography",
+    "management_area",
+    "overlay",
+    "resource_topic",
+    "package_section",
+    "evidence_span",
+)
+
+
 def authority_document_role(rule_or_template: dict, catalog_record: dict | None) -> str | None:
     source_filters = (
         rule_or_template.get("source_filters")
@@ -132,3 +152,23 @@ def catalog_resolved_source_record_ids(
             continue
         resolved.append(source_record_id)
     return dedupe_strings(resolved)
+
+
+def rule_required_package_fact_types(rule: dict) -> list[str]:
+    fact_types = set(BASE_RULE_PACKAGE_FACT_TYPES)
+    if rule.get("applicability_mode") == "conditional":
+        fact_types.add("resource_topic")
+    if rule.get("authority_category") == "forest_plan":
+        fact_types.update({"geography", "management_area", "overlay"})
+    return sorted(fact_types)
+
+
+def component_required_package_fact_types(component: dict) -> list[str]:
+    fact_types = set(FOREST_PLAN_PACKAGE_FACT_TYPES)
+    if not component.get("geographic_area_ids"):
+        fact_types.discard("geography")
+    if not component.get("management_area_ids"):
+        fact_types.discard("management_area")
+    if not component.get("overlay_ids"):
+        fact_types.discard("overlay")
+    return sorted(fact_types)

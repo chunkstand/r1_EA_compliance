@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "source-applicability-candidate-assembly-owner",
-      "owner_kind": "source",
-      "follow_on_priority": 16,
-      "required_tests": [
-        "tests/test_applicability_candidate_assembly.py"
-      ],
-      "files": [
-        {
-          "path": "src/usfs_r1_ea_sources/applicability_candidate_assembly.py",
-          "line_count": 814
-        }
-      ]
-    },
-    {
       "name": "source-eval-trace-inventory-owner",
       "owner_kind": "source",
       "follow_on_priority": 17,

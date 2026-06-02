@@ -15,6 +15,26 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Applicability Fact-Type Support Source Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next source-owner oversized reduction slice is closed locally.
+  `src/usfs_r1_ea_sources/applicability_candidate_assembly.py` remains the
+  candidate assembly owner at `778` lines, and shared rule/component package
+  fact-type helpers now live in
+  `src/usfs_r1_ea_sources/applicability_contract_support.py` at `174` lines.
+- architecture effect:
+  the architecture probe reports `547` code files, `1` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `1` source owner and `0` test
+  owners.
+- boundary:
+  this is a support-helper source split. It does not change applicability
+  candidate shape, retrieval/graph contracts, generated artifact paths, or
+  local corpus state.
+
 ## Catalog Fixture-Backed Test Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:

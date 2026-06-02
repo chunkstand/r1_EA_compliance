@@ -16,7 +16,7 @@ CODE_ROOTS = (
 )
 CODE_GLOBS = ("*.py", "*.js")
 MAX_REVIEWABLE_LINES = 800
-MAX_ALLOWED_OVERSIZED_FILES = 2
+MAX_ALLOWED_OVERSIZED_FILES = 1
 MAX_ALLOWED_FAN_OUT = 20
 MAX_README_LINES = 220
 ALLOWED_HIGH_FAN_OUT_MODULES: set[str] = set()
@@ -86,7 +86,7 @@ def test_large_file_inventory_matches_follow_on_queue() -> None:
             assert actual_line_count > MAX_REVIEWABLE_LINES, path
 
     assert families
-    assert owner_counts == {"source": 2, "test": 0}
+    assert owner_counts == {"source": 1, "test": 0}
     assert expected_count == MAX_ALLOWED_OVERSIZED_FILES
     assert _oversized_code_paths() == expected_paths
 

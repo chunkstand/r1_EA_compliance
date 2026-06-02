@@ -6,7 +6,9 @@ from pathlib import Path
 from .applicability_contract_support import authority_document_role
 from .applicability_contract_support import baseline_source_record_ids
 from .applicability_contract_support import catalog_resolved_source_record_ids
+from .applicability_contract_support import component_required_package_fact_types
 from .applicability_contract_support import rule_source_record_id
+from .applicability_contract_support import rule_required_package_fact_types
 from .applicability_contract_support import source_record_summary
 from .applicability_contract_support import string_groups
 from .applicability_contract_support import strings
@@ -15,24 +17,6 @@ from .forest_plan_profiles import ForestPlanProfileCollection
 
 
 FOREST_PLAN_COMPONENT_AUTHORITY_FAMILY_ID = "nfma_forest_planning_project_consistency"
-BASE_RULE_PACKAGE_FACT_TYPES = (
-    "action",
-    "agency",
-    "decision_posture",
-    "nepa_level",
-    "package_section",
-    "evidence_span",
-)
-FOREST_PLAN_PACKAGE_FACT_TYPES = (
-    "action",
-    "agency",
-    "geography",
-    "management_area",
-    "overlay",
-    "resource_topic",
-    "package_section",
-    "evidence_span",
-)
 RULE_GRAPH_RELATIONSHIP_TYPES = (
     "source_record",
     "authority_category",
@@ -90,7 +74,7 @@ def rule_template_candidates(
         package_section_filters = _rule_package_section_filters(rule)
         positive_trigger_groups = _rule_positive_trigger_groups(rule)
         negative_trigger_groups = _rule_negative_trigger_groups(rule)
-        required_package_fact_types = _rule_required_package_fact_types(rule)
+        required_package_fact_types = rule_required_package_fact_types(rule)
         candidates.append(
             {
                 "candidate_authority_id": (
@@ -198,7 +182,7 @@ def forest_plan_component_candidates(
         package_section_filters = _component_package_section_filters(component)
         positive_trigger_groups = _component_positive_trigger_groups(component)
         negative_trigger_groups = _component_negative_trigger_groups()
-        required_package_fact_types = _component_required_package_fact_types(component)
+        required_package_fact_types = component_required_package_fact_types(component)
         candidates.append(
             {
                 "candidate_authority_id": (
@@ -408,26 +392,6 @@ def _component_source_evidence_availability(
         "source_chunk_count": len(source_chunk_ids),
         "source_status": str((catalog_record or {}).get("source_status") or "") or None,
     }
-
-
-def _rule_required_package_fact_types(rule: dict) -> list[str]:
-    fact_types = set(BASE_RULE_PACKAGE_FACT_TYPES)
-    if rule.get("applicability_mode") == "conditional":
-        fact_types.add("resource_topic")
-    if rule.get("authority_category") == "forest_plan":
-        fact_types.update({"geography", "management_area", "overlay"})
-    return sorted(fact_types)
-
-
-def _component_required_package_fact_types(component: dict) -> list[str]:
-    fact_types = set(FOREST_PLAN_PACKAGE_FACT_TYPES)
-    if not component.get("geographic_area_ids"):
-        fact_types.discard("geography")
-    if not component.get("management_area_ids"):
-        fact_types.discard("management_area")
-    if not component.get("overlay_ids"):
-        fact_types.discard("overlay")
-    return sorted(fact_types)
 
 
 def _rule_applicability_contract(
@@ -804,7 +768,7 @@ def _component_search_coverage_requirements(
         {
             **base,
             "coverage_class": "forest_plan_scope_miss",
-            "required_package_fact_types": _component_required_package_fact_types(component),
+            "required_package_fact_types": component_required_package_fact_types(component),
         },
         {
             **base,
