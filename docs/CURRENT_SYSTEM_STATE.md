@@ -15,6 +15,48 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Idaho Panhandle Replay And Single Flathead Residual
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  Idaho Panhandle Lacy Lemoosh now replays against the current selected-forest
+  Forest Plan authority universe without handwritten forest rules. Weak
+  background-only land-exchange positives are treated as trigger misses, and
+  phase-eval generated-rule-pack readiness compares generated rules against the
+  full applicable partition, including first-class Forest Plan component
+  rules.
+- IPNF applicability evidence:
+  the authority universe now has `590` candidates, including all `524` Idaho
+  Panhandle Forest Plan component candidates. Applicability validation passes
+  with `54` applicable authorities, `536` not applicable authorities, and `0`
+  unresolved decisions. The generated rule pack has `54` rules.
+- IPNF Forest Plan evidence:
+  Forest Plan context resolves Idaho Panhandle National Forests, St. Joe Ranger
+  District, Benewah and Latah Counties, Idaho. Component evaluation considers
+  `524` components and `110` standards; current component decisions leave `2`
+  applicable supported components, `522` not-applicable components, `0`
+  applicable Forest Plan standards, and `0` component-adjudication queue items.
+- IPNF V1/phase evidence:
+  Lacy Lemoosh V1 passes with `broader_ea_passed=true`,
+  `forest_plan_passed=true`, `31/31` conditional expectations, and `10/10`
+  Forest Plan expectations. IPNF `phase-eval` passes `32/32` phases with
+  `reviewer_ready=true`, `contract_backed_promotion_ready=true`, and no
+  blockers.
+- aggregate evidence:
+  the current real-package coverage command still exits red overall, but IPNF
+  now passes its forest-specific reviewer-ready slot. Current counts are
+  `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
+  `required_slot_count=11`, `missing_required_slot_count=1`,
+  `phase_eval_ready_slot_count=10/11`, `failed_phase_eval_count=1`, and
+  decision-document identity `10/10`.
+- boundary:
+  this closes the IPNF full authority-universe/component replay residual and
+  moves the all-forest aggregate from `9/11` to `10/11`. It does not claim
+  all-forest reviewer readiness. The remaining failed required slot is
+  Flathead West Reservoir, where `16` applicable Forest Plan standards include
+  `15` standards still recorded as `insufficient_evidence` gaps.
+
 ## V1 Forest Plan Matrix Standard Counts And IPNF Residual
 
 Latest implementation update on 2026-06-02 UTC:

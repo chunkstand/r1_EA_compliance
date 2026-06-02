@@ -309,6 +309,7 @@ def _component_finding(
         context_match
         or component["component_type"] == "standard"
         or package_determination is not None
+        or decision_status == "applicable"
     )
     if source_set_matches and should_bind_plan_source and index_path is not None:
         plan_source_evidence = _component_plan_source_evidence(
@@ -343,6 +344,21 @@ def _component_finding(
             fallback=(
                 "The review-scoped applicability decision did not reach a final applicable "
                 "or not-applicable status for this Forest Plan component."
+            ),
+        )
+    elif (
+        decision_filter_active
+        and decision_status == "applicable"
+        and plan_source_evidence
+        and package_evidence
+    ):
+        applicability_status = "applicable"
+        finding_status = "supported"
+        rationale = _component_decision_rationale(
+            applicability_decision,
+            fallback=(
+                "The review-scoped applicability decision marks this Forest Plan "
+                "component applicable and provides package evidence."
             ),
         )
     elif context.get("needs_reviewer_resolution"):

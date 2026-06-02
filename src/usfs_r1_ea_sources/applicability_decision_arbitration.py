@@ -124,6 +124,13 @@ def arbitrate_trigger_matches(
             "Negative or out-of-scope trigger evidence was found without sufficient "
             "positive evidence."
         )
+    elif positive_match.get("matched") and _background_only_positive_match(positive_results):
+        arbitration_status = "weak_background_positive_only"
+        rationale = (
+            "Only weak background, negated, or out-of-scope positive trigger evidence "
+            "was found."
+        )
+        notes = sorted(set(notes + [rationale]))
     elif positive_match.get("matched"):
         requires_adjudication = True
         arbitration_status = (
@@ -276,6 +283,26 @@ def strong_evidence_count(group_result: dict[str, Any]) -> int:
         for confidence_class, count in counts.items()
         if confidence_class not in {"weak_signal", "negative_context"}
     )
+
+
+def _background_only_positive_match(trigger_group_results: list[dict[str, Any]]) -> bool:
+    matched_results = [result for result in trigger_group_results if result.get("matched")]
+    if not matched_results:
+        return False
+    for result in matched_results:
+        if strong_evidence_count(result) > 0:
+            return False
+        class_counts = result.get("evidence_strength_class_counts") or {}
+        observed_classes = {
+            str(strength_class)
+            for strength_class, count in class_counts.items()
+            if int(count or 0) > 0
+        }
+        if not observed_classes:
+            return False
+        if not observed_classes.issubset({"background", "negative_context"}):
+            return False
+    return True
 
 
 def _trigger_arbitration_contract(candidate: dict[str, Any]) -> dict[str, Any]:

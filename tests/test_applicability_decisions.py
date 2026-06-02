@@ -16,6 +16,7 @@ from tests.support.applicability_decision_fixtures import (
 from tests.support.applicability_decision_fixtures import (
     _roads_access_arbitration_candidate,
 )
+from tests.support.applicability_decision_fixtures import _rule_candidate
 from tests.support.applicability_decision_fixtures import _write_decision_fixture
 from tests.support.applicability_decision_support import _read_jsonl
 from tests.support.applicability_decision_support import _write_json
@@ -279,6 +280,55 @@ class ApplicabilityDecisionTests(unittest.TestCase):
 
             report_text = result.report_path.read_text(encoding="utf-8")
             self.assertIn("Arbitration: `blocked_by_weak_positive_trigger`", report_text)
+
+    def test_background_only_positive_trigger_is_not_applicable_with_coverage(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source_set_id = "source-set-unit"
+            background_candidate = _rule_candidate(
+                source_set_id=source_set_id,
+                rule_id="background_only_scope",
+                source_record_id="R1EA-SCOPE",
+                authority_category="regulation",
+                applicability_mode="conditional",
+                source_query="background only scope authority",
+                package_query="Sioux Geographic Area",
+                positive_trigger_groups=[["Sioux Geographic Area"]],
+            )
+            fixture = _write_decision_fixture(
+                Path(tmp),
+                extra_candidates=[background_candidate],
+            )
+
+            result = build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            decisions = {
+                row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
+            }
+            decision = decisions["rule-template:unit-pack:0.1.0:background_only_scope"]
+            self.assertEqual(decision["status"], "not_applicable")
+            self.assertEqual(decision["basis_type"], "absent_trigger_evidence")
+            self.assertEqual(decision["predicate_name"], "background_trigger_miss")
+            self.assertEqual(
+                decision["arbitration_status"],
+                "weak_background_positive_only",
+            )
+            self.assertFalse(decision["package_evidence_spans"])
+            self.assertTrue(decision["explicit_trigger_miss_evidence"])
+            self.assertEqual(
+                decision["arbitration_summary"]["decision_effect"],
+                "trigger_absence_decisive",
+            )
+            non_applicable = json.loads(
+                result.non_applicable_authorities_path.read_text(encoding="utf-8")
+            )
+            self.assertIn(
+                "rule-template:unit-pack:0.1.0:background_only_scope",
+                {row["candidate_authority_id"] for row in non_applicable["authorities"]},
+            )
 
     def test_trigger_arbitration_accepts_strong_triggers_with_weak_auxiliary_evidence(
         self,

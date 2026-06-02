@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 import json
 import tempfile
@@ -130,6 +131,100 @@ class PhaseEvalForestPlanGateTests(unittest.TestCase):
                 1,
             )
             self.assertTrue(determination_phase["details"]["all_candidates_decided"])
+
+    def test_generated_rule_pack_matches_full_applicable_component_partition(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            review_dir = output_dir / "reviews" / "unit-review"
+            applicability_dir = review_dir / "applicability"
+            applicability_dir.mkdir(parents=True, exist_ok=True)
+            source_set_id = "source-set-test"
+            ordinary_candidate_id = "rule-template:test:purpose_need"
+            component_candidate_id = "forest-plan-component:test:std-01"
+            authority_universe = {
+                "schema_version": "authority-universe-snapshot-v0",
+                "source_set_id": source_set_id,
+                "validation": {"passed": True},
+                "candidate_authorities": [
+                    {
+                        "candidate_authority_id": ordinary_candidate_id,
+                        "candidate_authority_type": "rule_template",
+                    },
+                    {
+                        "candidate_authority_id": component_candidate_id,
+                        "candidate_authority_type": "forest_plan_component",
+                    },
+                ],
+            }
+            generated_rule_pack = {
+                "source_set_id": source_set_id,
+                "rules": [
+                    {"candidate_authority_id": ordinary_candidate_id},
+                    {"candidate_authority_id": component_candidate_id},
+                ],
+            }
+            generated_rule_pack_path = applicability_dir / "generated_rule_pack.json"
+            generated_rule_pack_path.write_text(
+                json.dumps(generated_rule_pack, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            generated_rule_pack_sha256 = hashlib.sha256(
+                generated_rule_pack_path.read_bytes()
+            ).hexdigest()
+
+            artifacts = _minimal_applicability_artifacts(authority_universe)
+            artifacts["paths"]["generated_rule_pack"] = generated_rule_pack_path
+            artifacts["applicable_authorities"] = {
+                "authorities": [
+                    {"candidate_authority_id": ordinary_candidate_id},
+                    {
+                        "candidate_authority_id": component_candidate_id,
+                        "candidate_authority_type": "forest_plan_component",
+                    },
+                ]
+            }
+            artifacts["non_applicable_authorities"] = {"authorities": []}
+            artifacts["decisions"] = [
+                {
+                    "candidate_authority_id": ordinary_candidate_id,
+                    "candidate_authority_type": "rule_template",
+                    "status": "applicable",
+                },
+                {
+                    "candidate_authority_id": component_candidate_id,
+                    "candidate_authority_type": "forest_plan_component",
+                    "status": "applicable",
+                },
+            ]
+            artifacts["generated_rule_pack"] = generated_rule_pack
+            artifacts["generated_rule_pack_validation"] = {
+                "passed": True,
+                "summary": {
+                    "generated_rule_pack_ready": True,
+                    "expected_generated_rule_pack_sha256": generated_rule_pack_sha256,
+                },
+            }
+
+            phases = _applicability_phase_gates(
+                output_dir=output_dir,
+                review_dir=review_dir,
+                source_set_id=source_set_id,
+                artifacts=artifacts,
+                arbitration_summary={},
+            )
+
+            generated_phase = _phase_from_list(phases, "generated_rule_pack")
+            self.assertTrue(generated_phase["passed"])
+            self.assertTrue(generated_phase["reviewer_ready"])
+            self.assertEqual(generated_phase["details"]["generated_rule_count"], 2)
+            self.assertEqual(generated_phase["details"]["applicable_authority_count"], 2)
+            self.assertEqual(
+                generated_phase["details"]["ordinary_applicable_authority_count"],
+                1,
+            )
+            self.assertTrue(
+                generated_phase["details"]["generated_rules_match_applicable_authorities"]
+            )
 
     def test_authority_universe_fails_when_forest_plan_inventory_is_stale(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

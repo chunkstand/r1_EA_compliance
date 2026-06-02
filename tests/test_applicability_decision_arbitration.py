@@ -71,6 +71,30 @@ class ApplicabilityDecisionArbitrationTests(unittest.TestCase):
         self.assertEqual(arbitration["decisive_trigger_groups"], [["road"]])
         self.assertIn("negative scope note", arbitration["arbitration_notes"])
 
+    def test_arbitrate_trigger_matches_treats_background_only_positive_as_trigger_miss(
+        self,
+    ) -> None:
+        arbitration = arbitrate_trigger_matches(
+            candidate={},
+            positive_match={
+                "matched": True,
+                "adjudication_notes": ["background signal retained"],
+                "trigger_group_results": [
+                    _group_result("land exchange", background=3),
+                ],
+            },
+            negative_match={"matched": False, "adjudication_notes": []},
+            coverage_boundary={"coverage_sufficient": True},
+        )
+
+        self.assertFalse(arbitration["positive_trigger_sufficient"])
+        self.assertFalse(arbitration["requires_adjudication"])
+        self.assertEqual(
+            arbitration["arbitration_status"],
+            "weak_background_positive_only",
+        )
+        self.assertIn("background signal retained", arbitration["arbitration_notes"])
+
     def test_arbitrate_trigger_matches_supports_positive_precedence_policy(self) -> None:
         arbitration = arbitrate_trigger_matches(
             candidate={
@@ -221,16 +245,25 @@ def _group_result(
     observed: int = 0,
     weak: int = 0,
     negative_context: int = 0,
+    background: int = 0,
 ) -> dict:
     counts = {}
+    class_counts = {}
     if observed:
         counts["observed"] = observed
+        class_counts["observed"] = observed
     if weak:
         counts["weak_signal"] = weak
+        class_counts["weak_signal"] = weak
     if negative_context:
         counts["negative_context"] = negative_context
+        class_counts["negative_context"] = negative_context
+    if background:
+        counts["weak_signal"] = counts.get("weak_signal", 0) + background
+        class_counts["background"] = background
     return {
         "trigger_group": [trigger_term],
         "matched": True,
         "evidence_strength_counts": counts,
+        "evidence_strength_class_counts": class_counts,
     }

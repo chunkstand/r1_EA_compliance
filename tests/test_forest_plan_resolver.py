@@ -16,6 +16,7 @@ from tests.support.forest_plan_resolver_custer_fixtures import (
     _build_custer_source_library,
     _write_component_inventory,
 )
+from usfs_r1_ea_sources.forest_plan_components_runtime import _component_finding
 from usfs_r1_ea_sources.forest_plan_resolver import run_forest_plan_resolver
 
 
@@ -319,6 +320,52 @@ class ForestPlanResolverCoreTests(unittest.TestCase):
             self.assertTrue(standard_coverage["passed"])
             self.assertEqual(standard_coverage["applicable_standard_count"], 0)
             self.assertEqual(standard_coverage["standards"][0]["plan_source_evidence_count"], 1)
+
+    def test_applicable_component_decision_can_support_context_flagged_component(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source_set_id = "source-set-unit"
+            inventory_path = _write_component_inventory(Path(tmp), source_set_id=source_set_id)
+            inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+            component = inventory["components"][0]
+
+            finding = _component_finding(
+                review_id="component-decision-context-flag",
+                component=component,
+                context={"needs_reviewer_resolution": True},
+                package_chunks=[],
+                source_set_id=source_set_id,
+                index_path=Path(tmp) / "unused.sqlite",
+                package_top_k=3,
+                source_top_k=3,
+                component_applicability_decisions={
+                    component["component_id"]: {
+                        "candidate_authority_id": "forest-plan-component:test:cg-test-cmbca-dc-01",
+                        "decision_id": "decision:cg-test-cmbca-dc-01",
+                        "status": "applicable",
+                        "basis_type": "forest_plan_component",
+                        "applicability_basis": {
+                            "rationale": "Current component applicability decision is applicable."
+                        },
+                        "package_evidence_spans": [
+                            {
+                                "citation_label": "EA-PACKAGE-001",
+                                "source_record_id": "EA-PACKAGE-001",
+                                "package_chunk_id": "chunk:package-1",
+                                "text": "The EA addresses quiet nonmotorized recreation.",
+                            }
+                        ],
+                    }
+                },
+            )
+
+            self.assertEqual(finding["applicability_status"], "applicable")
+            self.assertEqual(finding["finding_status"], "supported")
+            self.assertEqual(finding["reviewer_resolution_items"], [])
+            self.assertEqual(
+                finding["package_evidence"][0]["determination_source"],
+                "applicability_decision",
+            )
+            self.assertEqual(finding["plan_source_evidence"][0]["source_record_id"], component["source_record_id"])
 
     def test_partial_component_applicability_decisions_are_not_exhaustive(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

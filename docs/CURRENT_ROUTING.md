@@ -79,33 +79,39 @@ Use this short route before opening append-only docs.
   This keeps the V1 gate aligned with the reviewer-facing evaluated matrix when
   independent component coverage summaries are stale. Beaverhead-Deerlodge
   South Tobacco Roots now passes V1 with `89/89` applicable standards counted;
-  Bitterroot Front now passes V1 with `3/3` applicable standards counted.
-  Idaho Panhandle Lacy Lemoosh was refreshed from cached package chunks and now
-  has the canonical root Forest Plan artifacts present, but remains red because
-  its authority universe still carries `52` Forest Plan component candidates
-  while the current selected-forest context evaluates `524` IPNF components and
-  leaves `473` component-resolution items.
+  Bitterroot Front now passes V1 with `3/3` applicable standards counted. The
+  newer IPNF replay below supersedes the prior IPNF residual from this slice.
+- Latest Idaho Panhandle Lacy Lemoosh downstream replay: IPNF now replays
+  against the current selected-forest authority universe with `590` candidates,
+  including `524` Idaho Panhandle Forest Plan components. Applicability
+  validation passes with `54` applicable authorities, `536` not applicable
+  authorities, and `0` unresolved decisions; the generated rule pack has `54`
+  rules. Forest Plan component evaluation considers `524` components and `110`
+  standards, with `2` supported applicable components, `522` not-applicable
+  components, `0` applicable Forest Plan standards, and `0` component queue
+  items. Lacy Lemoosh V1 passes with `31/31` conditional expectations and
+  `10/10` Forest Plan expectations; IPNF `phase-eval` passes `32/32` with
+  `reviewer_ready=true`.
 - Latest all-forest phase/identity gate status: required forest-specific
   reviewer-ready slots still fail closed unless `phase_eval_results.json` and
   decision-document identity both pass for the same review/source-set identity.
-  The identity subgate is green at `10/10`. After the BDNF/Bitterroot V1 fix
-  and IPNF artifact refresh, the phase subgate is `9/11` with
-  `failed_phase_eval_count=2` because Flathead and IPNF phase-eval are
-  intentionally red on open Forest Plan component gates and stale downstream
+  The identity subgate is green at `10/10`. After the IPNF full
+  authority-universe/component replay, the phase subgate is `10/11` with
+  `failed_phase_eval_count=1` because only Flathead phase-eval remains red on
+  the open Forest Plan component gate and stale downstream
   authority/decision-support/QA/eval-trace artifacts.
   The aggregate real-package coverage command remains red with
-  `reviewer_ready_slot_count=9`, `missing_required_slot_count=2`, and the two
-  remaining failed slots: Flathead West Reservoir and Idaho Panhandle Lacy
-  Lemoosh. Beaverhead-Deerlodge South Tobacco Roots, Bitterroot Front, and
-  Custer-Gallatin South Otter now pass the aggregate slots.
+  `covered_slot_count=10`, `reviewer_ready_slot_count=10`,
+  `missing_required_slot_count=1`, and the sole remaining failed slot:
+  Flathead West Reservoir. IPNF, Beaverhead-Deerlodge South Tobacco Roots,
+  Bitterroot Front, and Custer-Gallatin South Otter now pass the aggregate
+  slots.
 - Active implementation slice: selected-forest authority-universe coverage and
-  the Tyler, HLC, Custer, BDNF, and Bitterroot aggregate paths are hardened;
-  the broad all-forest reviewer-ready goal still requires Flathead
-  standard-gap/adjudication resolution and IPNF full authority-universe/
-  component-decision replay against the `524`-component selected-forest
-  context. Open a new bounded packet before hosted query service/API expansion,
-  model-judge work, hosted scoring, knowledge-graph sidecar adoption, or future
-  architecture-cap changes.
+  the Tyler, HLC, Custer, BDNF, Bitterroot, and IPNF aggregate paths are
+  hardened; the broad all-forest reviewer-ready goal still requires Flathead
+  standard-gap/adjudication resolution. Open a new bounded packet before hosted
+  query service/API expansion, model-judge work, hosted scoring,
+  knowledge-graph sidecar adoption, or future architecture-cap changes.
 - Latest resolved forest-specific example packet: `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.

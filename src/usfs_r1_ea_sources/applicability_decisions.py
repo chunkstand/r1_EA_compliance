@@ -517,6 +517,23 @@ def _decision_for_candidate(
                 status = "unresolved"
                 confidence = "low"
                 missing_evidence.append("sufficient search coverage for negative trigger")
+        elif (
+            trigger_arbitration["arbitration_status"] == "weak_background_positive_only"
+            and coverage_boundary["coverage_sufficient"]
+        ):
+            status = "not_applicable"
+            basis_type = "absent_trigger_evidence"
+            predicate_name = "background_trigger_miss"
+            confidence = "deterministic_medium"
+            basis = {
+                "rationale": (
+                    "Matched trigger terms occurred only in weak background, negated, "
+                    "or out-of-scope context within the recorded search boundary."
+                ),
+                "missing_trigger_groups": positive_groups,
+                "weak_trigger_groups": trigger_arbitration["weak_only_trigger_groups"],
+            }
+            reviewer_notes.extend(trigger_arbitration["arbitration_notes"])
         elif positive_match["matched"]:
             predicate_name = "positive_package_trigger"
             basis_type = "unresolved_evidence_conflict"

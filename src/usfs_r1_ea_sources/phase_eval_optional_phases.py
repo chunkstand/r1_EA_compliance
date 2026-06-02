@@ -681,7 +681,7 @@ def _applicability_phase_gates(
         and generated_rule_pack.get("source_set_id") == source_set_id
         and bool(generated_validation.get("passed"))
         and generated_summary.get("generated_rule_pack_ready") is True
-        and generated_candidate_ids == applicable_ids
+        and generated_candidate_ids == all_applicable_ids
         and _file_hash_matches(
             paths["generated_rule_pack"],
             generated_summary.get("expected_generated_rule_pack_sha256")
@@ -826,9 +826,10 @@ def _applicability_phase_gates(
                     "generated_rule_pack_ready"
                 ),
                 "generated_rule_count": len(generated_rules),
-                "applicable_authority_count": len(applicable_ids),
+                "applicable_authority_count": len(all_applicable_ids),
+                "ordinary_applicable_authority_count": len(applicable_ids),
                 "generated_rules_match_applicable_authorities": generated_candidate_ids
-                == applicable_ids,
+                == all_applicable_ids,
                 "generated_rule_pack_hash_matches": _file_hash_matches(
                     paths["generated_rule_pack"],
                     generated_summary.get("expected_generated_rule_pack_sha256")
