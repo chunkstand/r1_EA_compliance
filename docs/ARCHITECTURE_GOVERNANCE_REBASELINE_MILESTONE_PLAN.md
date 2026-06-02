@@ -4,7 +4,7 @@ Date: 2026-05-26
 
 Status: resolved locally 2026-05-26 and refreshed locally 2026-06-01; architecture governance
 matches live repo truth again, `docs/CURRENT_ROUTING.md` is back under its short-route cap, and
-the current `5` oversized files are explicitly inventoried as follow-on debt
+the current `4` oversized files are explicitly inventoried as follow-on debt
 
 Owner context: This is a narrow child packet opened after a read-only architecture audit found
 that the repo's live architecture-governance surfaces no longer match current code size, current
@@ -29,10 +29,15 @@ under-`800` closeout is being used as live truth after the repo moved on.
 
 - Fresh architecture probe:
   `python /Users/chunkstand/.codex/skills/code-architecture-governance/scripts/architecture_probe.py --format markdown --max-file-lines 800 --max-fan-out 20 --fail-on-cycles`
-  reports `544` code files, `5` code files above `800` lines, no Python or JS/TS import cycles,
+  reports `545` code files, `4` code files above `800` lines, no Python or JS/TS import cycles,
   and no source module above the `20`-import fan-out gate.
-- `config/architecture_large_file_inventory_v1.json` records the exact `5`-file live backlog as
-  `3` source-owner families and `2` test-owner families.
+- `config/architecture_large_file_inventory_v1.json` records the exact `4`-file live backlog as
+  `3` source-owner families and `1` test-owner family.
+- `tests/test_phase_eval_direct_eval_contracts.py` is resolved as an oversized test owner:
+  contract shape, retrieval, profile/component, rule-claim, and review-scope cases remain in the
+  original file at `785` lines, and extraction fidelity, canonical semantic graph, and
+  knowledge-graph query source-set direct-eval cases now live in
+  `tests/test_phase_eval_direct_eval_source_set_contracts.py` at `366` lines.
 - `tests/test_extraction_accuracy.py` is resolved as an oversized test owner:
   the audit behavior tests now reuse `tests/support/extract_fixtures.py` for shared workbook paths,
   config builders, download-run writers, JSONL reading, and body builders; the test file is now

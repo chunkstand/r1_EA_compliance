@@ -13,20 +13,6 @@
   },
   "families": [
     {
-      "name": "test-phase-eval-direct-eval-contracts-owner",
-      "owner_kind": "test",
-      "follow_on_priority": 13,
-      "required_tests": [
-        "tests/test_phase_eval_direct_eval_contracts.py"
-      ],
-      "files": [
-        {
-          "path": "tests/test_phase_eval_direct_eval_contracts.py",
-          "line_count": 1136
-        }
-      ]
-    },
-    {
       "name": "source-phase-eval-direct-eval-source-set-owner",
       "owner_kind": "source",
       "follow_on_priority": 14,

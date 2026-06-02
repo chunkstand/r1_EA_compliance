@@ -15,6 +15,28 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Phase Direct-Eval Source-Set Contract Test Owner Split Resolved Locally
+
+Latest implementation update on 2026-06-01 UTC:
+
+- update:
+  the next test-owner oversized reduction slice is closed locally.
+  `tests/test_phase_eval_direct_eval_contracts.py` now keeps the contract
+  shape, retrieval, profile/component, rule-claim, and review-scope cases at
+  `785` lines. The new
+  `tests/test_phase_eval_direct_eval_source_set_contracts.py` owns extraction
+  fidelity, canonical semantic graph, and knowledge-graph query direct-eval
+  source-set cases at `366` lines.
+- architecture effect:
+  the architecture probe reports `545` code files, `4` code files above `800`,
+  no Python or JS/TS import cycles, and no source module above the `20`-import
+  fan-out gate. The live inventory now records `3` source owners and `1` test
+  owner.
+- boundary:
+  this is a behavior-preserving test-owner split. It does not change
+  direct-eval contract semantics, generated artifact paths, phase-eval outputs,
+  or local corpus state.
+
 ## Extraction Accuracy Fixture-Backed Test Owner Split Resolved Locally
 
 Latest implementation update on 2026-06-01 UTC:
