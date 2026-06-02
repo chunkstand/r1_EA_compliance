@@ -126,6 +126,18 @@ Already implemented:
   artifacts, adds structured compliance status to findings, and fails reviewer-ready when an
   applicable standard lacks plan-source evidence, EA package evidence, or a resolved compliance
   status.
+- The Region 1 manifest-based component inventory now builds all current legacy forest-plan
+  profiles for `source-set-f70ea11e04ae3d53`, including management-area direction as first-class
+  component scope. The latest local all-R1 build reports `5894` components and `1888` standards;
+  Lolo contributes `1004` components and `492` standards, with the North Seeley management areas
+  represented in the plan inventory.
+- Selected-profile source-set reviews now require the active source-set component inventory path or
+  an explicit inventory override. They do not silently fall back to the seed inventory when the
+  source-set inventory is missing.
+- Applicable-standard coverage now fails when any standard remains `candidate` or
+  `needs_reviewer_resolution`, and forestwide standards with substantive topic/activity bindings are
+  evaluated as applicable candidates rather than disappearing from the gate solely because they lack
+  management-area or geographic-area IDs.
 
 Remaining gaps:
 

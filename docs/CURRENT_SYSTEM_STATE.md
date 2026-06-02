@@ -15,6 +15,51 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Forest-Plan Review Source-Set Inventory Authority Hardening Resolved Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  `forest-plan-resolve` now fails closed for selected-profile source-set
+  reviews when the active
+  `source_library/derived/<source_set_id>/forest_plan_components/component_inventory.json`
+  artifact is missing, instead of silently falling back to the seed inventory.
+  Forestwide standards with substantive topic/activity evidence are treated as
+  applicable review candidates rather than unresolved solely because they lack a
+  management-area or geographic-area ID. Applicable-standard coverage now also
+  fails when any standard remains `candidate` or `needs_reviewer_resolution`.
+- package-search runtime:
+  component evaluation skips package scans for components whose scoped
+  geography, management area, or overlay cannot match the resolved package
+  context, and package chunk lower-text/token sets are cached during a review
+  process so full-inventory package scans do not repeatedly retokenize the EA
+  package.
+- North Seeley replay evidence:
+  after rebuilding the local f70 all-R1 component inventory to
+  `source_library/derived/source-set-f70ea11e04ae3d53/forest_plan_components/`,
+  `forest-plan-resolve --review-id
+  region1-example-lolo-north-seeley-wui-highway-83-64580 --forest-unit-id
+  lolo-nf --reuse-package-cache` resolved the Decision Notice/FONSI title page
+  to `Lolo National Forest`, `Seeley Lake Ranger District`, `Missoula County`,
+  `Powell County`, and `Montana`. The package context reports `18` management
+  areas, including `mgmt-ma-9`, `mgmt-ma-16`, `mgmt-ma-21`, `mgmt-ma-24`, and
+  `mgmt-ma-25`.
+- fail-closed result:
+  the full Lolo component evaluation used `1004` Lolo components and `492`
+  standards from the source-set inventory. It found `330` applicable standards
+  and `101` applied standards; `229` applicable standards remain
+  insufficient-evidence gaps, so `forest_plan_applicable_standard_coverage`
+  and the review summary are not reviewer-ready. This is the intended state
+  until the downstream applicability/compliance review path or reviewer
+  adjudication resolves the remaining standards.
+- verification:
+  focused resolver/component/compliance tests passed (`61 passed`), the
+  architecture contract passed (`5 passed`), `ruff check src tests` passed, and
+  `git diff --check` passed. Review-level `phase-eval` for the ad hoc North
+  Seeley review failed overall as expected because downstream applicability and
+  compliance artifacts are not built; source-set forest-plan component
+  retrieval remains green.
+
 ## Forest-Plan Component Inventory All-R1 Legacy Direction Closeout Resolved Locally
 
 Latest implementation update on 2026-06-02 UTC:

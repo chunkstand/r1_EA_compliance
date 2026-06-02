@@ -243,15 +243,22 @@ def _component_finding(
 ) -> dict:
     source_set_matches = bool(source_set_id and component["source_set_id"] == source_set_id)
     context_match = _context_matches_component(context, component)
-    package_search = _component_package_search(
-        component=component,
-        package_chunks=package_chunks,
-        limit=package_top_k,
-    )
-    package_determination = _component_package_determination(
-        component=component,
-        package_chunks=package_chunks,
-    )
+    should_search_package = context_match or bool(context.get("needs_reviewer_resolution"))
+    if should_search_package:
+        package_search = _component_package_search(
+            component=component,
+            package_chunks=package_chunks,
+            limit=package_top_k,
+        )
+        package_determination = _component_package_determination(
+            component=component,
+            package_chunks=package_chunks,
+        )
+    else:
+        package_search = _skipped_component_package_search(
+            reason="component_context_not_matched",
+        )
+        package_determination = None
     if package_determination and package_determination.get("component_applies") == "no":
         package_evidence = [package_determination]
     else:
@@ -378,13 +385,33 @@ def _requires_reviewer_resolution_without_scope_binding(
     component: dict,
     package_determination: dict | None,
 ) -> bool:
+    has_topic_or_activity_binding = bool(
+        component.get("resource_topics")
+        or component.get("activity_tags")
+        or component.get("package_evidence_terms")
+    )
     return (
         component["component_type"] == "standard"
         and not component.get("geographic_area_ids")
         and not component.get("management_area_ids")
         and not component.get("overlay_ids")
+        and not has_topic_or_activity_binding
         and package_determination is None
     )
+
+
+def _skipped_component_package_search(*, reason: str) -> dict:
+    return {
+        "query": "",
+        "required_terms": [],
+        "section_families": [],
+        "raw_hit_count": 0,
+        "rejected_count": 0,
+        "hit_count": 0,
+        "results": [],
+        "skipped": True,
+        "skipped_reason": reason,
+    }
 
 
 def _compliance_status(*, component: dict, finding_status: str) -> str:

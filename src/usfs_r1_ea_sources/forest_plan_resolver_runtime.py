@@ -258,6 +258,11 @@ def _resolve_component_inventory_path(
         )
         if source_set_inventory_path.exists():
             return source_set_inventory_path
+        raise FileNotFoundError(
+            "Missing source-set forest-plan component inventory: "
+            f"{source_set_inventory_path}. Run forest-plan-components-build for "
+            "the active source set or pass --forest-plan-component-inventory-path."
+        )
     return DEFAULT_FOREST_PLAN_COMPONENT_INVENTORY_PATH
 
 def _default_review_id(package_path: Path) -> str:

@@ -159,6 +159,11 @@ def _applicable_standard_coverage(
     unapplied_applicable_standard_ids = [
         row["component_id"] for row in applicable_rows if not row["standard_applied"]
     ]
+    unresolved_standard_applicability_ids = [
+        row["component_id"]
+        for row in rows
+        if row["applicability_status"] in {"candidate", "needs_reviewer_resolution"}
+    ]
     invalid_status_ids = [
         row["component_id"]
         for row in rows
@@ -189,6 +194,11 @@ def _applicable_standard_coverage(
             "details": {"component_ids": standards_missing_plan_source_ids},
         },
         {
+            "name": "standard_applicability_resolved",
+            "passed": not unresolved_standard_applicability_ids,
+            "details": {"component_ids": unresolved_standard_applicability_ids},
+        },
+        {
             "name": "applicable_standards_have_package_and_plan_evidence",
             "passed": not unapplied_applicable_standard_ids,
             "details": {"component_ids": unapplied_applicable_standard_ids},
@@ -196,7 +206,7 @@ def _applicable_standard_coverage(
     ]
     all_applicable_standards_applied = all(
         row["standard_applied"] for row in applicable_rows
-    )
+    ) and not unresolved_standard_applicability_ids
     return {
         "schema_version": FOREST_PLAN_APPLICABLE_STANDARD_COVERAGE_SCHEMA_VERSION,
         "created_at": _utc_now(),

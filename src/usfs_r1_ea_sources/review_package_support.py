@@ -24,6 +24,10 @@ from .records import sha256_file
 
 SUPPORTED_PACKAGE_SUFFIXES = {".pdf", ".html", ".htm", ".xml", ".docx", ".txt", ".md"}
 TOKEN_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9'-]{1,}")
+_PACKAGE_CHUNK_SEARCH_CACHE: dict[
+    tuple[int, int, str, str],
+    list[tuple[dict[str, Any], str, set[str]]],
+] = {}
 STOPWORDS = {
     "about",
     "also",
@@ -248,10 +252,11 @@ def search_package_chunks(
         for group in (preferred_term_groups or [])
     ]
     scored = []
-    for chunk in chunks:
-        score, matched_terms, preferred_matches = _score_package_chunk(
-            chunk,
-            terms,
+    for chunk, lower, token_set in _prepared_package_chunks(chunks):
+        score, matched_terms, preferred_matches = _score_prepared_package_chunk(
+            lower_text=lower,
+            token_set=token_set,
+            terms=terms,
             evidence_terms=evidence_terms,
             evidence_term_groups=evidence_term_groups,
             preferred_terms=section_terms,
@@ -467,18 +472,65 @@ def _score_package_chunk(
     text = " ".join([str(chunk.get("title") or ""), str(chunk.get("heading") or ""), chunk["text"]])
     lower = text.lower()
     token_set = set(_tokenize(text))
+    return _score_prepared_package_chunk(
+        lower_text=lower,
+        token_set=token_set,
+        terms=terms,
+        evidence_terms=evidence_terms,
+        evidence_term_groups=evidence_term_groups,
+        preferred_terms=preferred_terms,
+        preferred_term_groups=preferred_term_groups,
+    )
+
+
+def _prepared_package_chunks(
+    chunks: list[dict[str, Any]],
+) -> list[tuple[dict[str, Any], str, set[str]]]:
+    if not chunks:
+        return []
+    key = (
+        id(chunks),
+        len(chunks),
+        str(chunks[0].get("chunk_id") or ""),
+        str(chunks[-1].get("chunk_id") or ""),
+    )
+    cached = _PACKAGE_CHUNK_SEARCH_CACHE.get(key)
+    if cached is not None:
+        return cached
+    prepared = []
+    for chunk in chunks:
+        text = " ".join(
+            [str(chunk.get("title") or ""), str(chunk.get("heading") or ""), chunk["text"]]
+        )
+        prepared.append((chunk, text.lower(), set(_tokenize(text))))
+    if len(_PACKAGE_CHUNK_SEARCH_CACHE) >= 8:
+        _PACKAGE_CHUNK_SEARCH_CACHE.clear()
+    _PACKAGE_CHUNK_SEARCH_CACHE[key] = prepared
+    return prepared
+
+
+def _score_prepared_package_chunk(
+    *,
+    lower_text: str,
+    token_set: set[str],
+    terms: list[str],
+    evidence_terms: list[str] | None = None,
+    evidence_term_groups: list[list[str]] | None = None,
+    preferred_terms: list[str] | None = None,
+    preferred_term_groups: list[list[str]] | None = None,
+) -> tuple[float, list[str], list[str]]:
     group_matches: list[str] = []
     if evidence_term_groups:
         for group in evidence_term_groups:
-            matched_group_terms = _matched_terms(lower, token_set, group)
+            matched_group_terms = _matched_terms(lower_text, token_set, group)
             if not matched_group_terms:
                 return 0.0, [], []
             group_matches.extend(matched_group_terms)
-    elif evidence_terms and not _matches_any_term(lower, token_set, evidence_terms):
+    elif evidence_terms and not _matches_any_term(lower_text, token_set, evidence_terms):
         return 0.0, [], []
     matched = []
     for term in terms:
-        if _matches_term(lower, token_set, term):
+        if _matches_term(lower_text, token_set, term):
             matched.append(term)
     if not matched:
         return 0.0, [], []
@@ -489,7 +541,7 @@ def _score_package_chunk(
     if evidence_term_groups:
         score += len(evidence_term_groups) * 0.3
     preferred_matches = _preferred_package_matches(
-        lower_text=lower,
+        lower_text=lower_text,
         token_set=token_set,
         preferred_terms=preferred_terms or [],
         preferred_term_groups=preferred_term_groups or [],

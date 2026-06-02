@@ -84,6 +84,40 @@ class ForestPlanResolverCoreTests(unittest.TestCase):
                 self.assertTrue(entry["package_evidence"])
                 self.assertTrue(entry["plan_source_evidence"])
 
+    def test_source_set_review_requires_source_set_component_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            inventory_path = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "forest_plan_components"
+                / "component_inventory.json"
+            )
+            inventory_path.unlink()
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                    ]
+                ),
+            )
+
+            with self.assertRaisesRegex(
+                FileNotFoundError,
+                "Missing source-set forest-plan component inventory",
+            ):
+                run_forest_plan_resolver(
+                    package_path=package_path,
+                    output_dir=output_dir,
+                    source_set_id=source_set_id,
+                    review_id="cg-missing-source-set-components",
+                )
+
     def test_component_inventory_path_writes_evidence_backed_findings_and_queue(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
@@ -220,7 +254,7 @@ class ForestPlanResolverCoreTests(unittest.TestCase):
             validation = report["validation"]
             self.assertFalse(_check(validation, "all_applicable_standards_applied")["passed"])
 
-    def test_unscoped_standard_without_package_evidence_stays_reviewer_resolution_only(self) -> None:
+    def test_unscoped_standard_without_package_evidence_blocks_reviewer_ready(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
             source_set_id = _build_custer_source_library(output_dir)
@@ -248,21 +282,21 @@ class ForestPlanResolverCoreTests(unittest.TestCase):
             )
 
             component_summary = result.summary["component_evaluation"]
-            self.assertTrue(component_summary["validation_passed"])
-            self.assertTrue(component_summary["reviewer_ready"])
-            self.assertEqual(
-                component_summary["finding_status_counts"],
-                {"needs_reviewer_resolution": 1},
-            )
-            self.assertEqual(component_summary["applicable_standard_count"], 0)
+            self.assertFalse(component_summary["validation_passed"])
+            self.assertFalse(component_summary["reviewer_ready"])
+            self.assertEqual(component_summary["finding_status_counts"], {"gap": 1})
+            self.assertEqual(component_summary["applicable_standard_count"], 1)
             self.assertEqual(component_summary["applied_standard_count"], 0)
-            self.assertTrue(result.summary["reviewer_ready"])
+            self.assertFalse(component_summary["all_applicable_standards_applied"])
+            self.assertFalse(result.summary["reviewer_ready"])
 
             report = json.loads(result.component_findings_path.read_text(encoding="utf-8"))
             finding = report["findings"][0]
-            self.assertEqual(finding["applicability_status"], "needs_reviewer_resolution")
-            self.assertEqual(finding["finding_status"], "needs_reviewer_resolution")
-            self.assertEqual(finding["compliance_status"], "needs_reviewer_resolution")
+            self.assertEqual(finding["applicability_status"], "applicable")
+            self.assertEqual(finding["finding_status"], "gap")
+            self.assertEqual(finding["compliance_status"], "insufficient_evidence")
+            validation = report["validation"]
+            self.assertFalse(_check(validation, "all_applicable_standards_applied")["passed"])
 
             queue = json.loads(
                 result.component_reviewer_resolution_queue_path.read_text(encoding="utf-8")

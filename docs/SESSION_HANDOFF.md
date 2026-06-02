@@ -40,18 +40,28 @@ history below.
   the retrieval worktree branch `codex/extraction-chunking-retrieval-accuracy`
   is merged into `main` with the current-main observability/eval context graph
   route preserved. Continue new implementation work from `main`.
-- latest resolved forest-plan component inventory slice:
-  all-R1 legacy direction and management-area inventory closeout. The generic
-  builder now carries legacy context across ordered chunks, derives
-  management-area IDs from Forest Plan text, body-scopes non-coded legacy/colon
-  component IDs when generic headings or management-area-local numbering would
-  collide, and includes legacy parse context in source-accuracy reparse keys.
-  Temp all-R1 replay against `source-set-f70ea11e04ae3d53` passed with
+- latest resolved forest-plan review/inventory slice:
+  all-R1 legacy direction and management-area inventory closeout plus
+  source-set inventory authority hardening. The generic builder now carries
+  legacy context across ordered chunks, derives management-area IDs from Forest
+  Plan text, body-scopes non-coded legacy/colon component IDs when generic
+  headings or management-area-local numbering would otherwise collide, and
+  includes legacy parse context in source-accuracy reparse keys. The local f70
+  all-R1 replay against `source-set-f70ea11e04ae3d53` passed with
   `profile_result_count=10`, `blocked_forest_unit_ids=[]`,
   `component_count=5894`, `standard_count=1888`,
   `component_source_accuracy_failure_count=0`, and no profile blockers. Lolo
   now builds `1004` components and `492` standards, with `mgmt-ma-9`,
   `mgmt-ma-16`, `mgmt-ma-21`, `mgmt-ma-24`, and `mgmt-ma-25` present.
+  `forest-plan-resolve` now requires the active source-set inventory instead
+  of silently falling back to the seed fixture, treats topic/activity-bound
+  forestwide standards as applicable candidates, and fails reviewer-ready when
+  any applicable or unresolved standard is not applied. The North Seeley replay
+  resolved title-page authority to Lolo National Forest, Seeley Lake Ranger
+  District, Missoula and Powell Counties, Montana, found `18` management areas,
+  evaluated `1004` Lolo components and `492` standards, and correctly failed
+  reviewer-ready with `330` applicable standards, `101` applied standards, and
+  `229` insufficient-evidence applicable-standard gaps.
 - latest resolved observability/eval context graph slice:
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` Milestone 0. The
   repo has a tracked context-graph contract, `eval-context-graph-build`,
