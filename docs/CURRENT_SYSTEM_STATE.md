@@ -15,6 +15,62 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## All-Forest Forest Plan Component Lane Alignment And Flathead Residual
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  generic Forest Plan/component lane handling is hardened without adding
+  handwritten LNF or Flathead runtime rules. V1 Forest Plan reviewer-ready
+  checks now accept the current component-adjudication eval only when that eval
+  has no failed checks, no pending adjudication, and no real-EA omissions,
+  even if `forest_plan_context_summary.json` still carries a stale
+  component-adjudication summary. Phase-eval now separates ordinary
+  applicability authorities from first-class Forest Plan component candidates
+  and partition rows, so component inventory rows are not mistaken for missing
+  ordinary applicability decisions.
+- management-area and component-decision evidence:
+  management-area package extraction no longer treats treatment-unit table rows
+  like `Management Area 48 24 ...` as MA references, and selected-plan evidence
+  can satisfy lettered ranges such as `management areas 5a through 5d`.
+  Review-scoped component applicability decision files are no longer treated as
+  exhaustive for every selected-forest component; undecided components fall back
+  to normal package/context evidence instead of being forced into an unresolved
+  queue solely because a partial decision file exists.
+- Flathead West Reservoir evidence:
+  the latest local replay resolves `scope_status="flathead_nf"` with
+  title/admin identity evidence for Flathead National Forest, Hungry Horse and
+  Spotted Bear Ranger Districts, Flathead County, Montana. Forest Plan context
+  validation now passes, and the context summary reports `10` management areas.
+  Component evaluation considers `783` Flathead components and `178` standards:
+  `138` components are applicable, `645` are not applicable, `16` standards are
+  applicable, `1` standard is supported/applied, and `15` applicable standards
+  remain `insufficient_evidence` gaps. The current component queue is `135`
+  gap items; the tracked component adjudication still covers the older
+  `48`-item queue, so the component-adjudication phase fails on queue drift.
+- V1/phase/aggregate evidence:
+  Flathead V1 currently exits red with `broader_ea_passed=true` and
+  `forest_plan_passed=false` because `compliance_validation_passed` fails only
+  on `forest_plan_component_gate_reviewer_ready`. Flathead `phase-eval` exits
+  red with `29/36` phases passed/reviewer-ready; blockers are downstream of the
+  open component gate (`compliance_review`,
+  `forest_plan_component_adjudication`, stale decision-support/packet/final-QA
+  artifacts, evaluation coverage, and eval-trace freshness). The current
+  aggregate real-package coverage command exits red with
+  `covered_slot_count=7`, `reviewer_ready_slot_count=7`,
+  `required_slot_count=11`, `missing_required_slot_count=4`,
+  `phase_eval_ready_slot_count=10/11`, `failed_phase_eval_count=1`, and
+  decision-document identity `10/10`. Remaining failed required slots are
+  Beaverhead-Deerlodge South Tobacco Roots, Bitterroot Front, Flathead West
+  Reservoir, and Idaho Panhandle Lacy Lemoosh.
+- boundary:
+  this closes generic component-lane alignment issues found while replaying
+  Flathead, and it moves Custer-Gallatin South Otter out of the aggregate
+  failed-slot set through the generic V1 adjudication-ready path. It does not
+  claim all-forest reviewer readiness. The next bounded work needs to decide
+  the standard-gap/adjudication semantics for Flathead and continue the
+  Beaverhead-Deerlodge, Bitterroot, and Idaho Panhandle V1 residuals.
+
 ## HLC Bonanza Downstream Replay And Component-Claim Linking Hardened Locally
 
 Latest implementation update on 2026-06-02 UTC:

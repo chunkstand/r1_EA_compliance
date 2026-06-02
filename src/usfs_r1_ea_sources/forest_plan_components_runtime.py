@@ -264,7 +264,7 @@ def _component_finding(
         if isinstance(applicability_decision, dict)
         else None
     )
-    decision_filter_active = component_applicability_decisions is not None
+    decision_filter_active = isinstance(applicability_decision, dict)
     should_search_package = (
         decision_status == "applicable"
         or (
@@ -325,10 +325,6 @@ def _component_finding(
         applicability_status = "not_applicable"
         finding_status = "not_applicable"
         rationale = "The EA package explicitly marks this plan component not applicable."
-    elif decision_filter_active and applicability_decision is None:
-        applicability_status = "needs_reviewer_resolution"
-        finding_status = "needs_reviewer_resolution"
-        rationale = "The review-scoped applicability run did not decide this Forest Plan component."
     elif decision_filter_active and decision_status == "not_applicable":
         applicability_status = "not_applicable"
         finding_status = "not_applicable"

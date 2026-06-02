@@ -320,6 +320,61 @@ class ForestPlanResolverCoreTests(unittest.TestCase):
             self.assertEqual(standard_coverage["applicable_standard_count"], 0)
             self.assertEqual(standard_coverage["standards"][0]["plan_source_evidence_count"], 1)
 
+    def test_partial_component_applicability_decisions_are_not_exhaustive(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            inventory_path = _write_component_inventory(Path(tmp), source_set_id=source_set_id)
+            review_id = "cg-partial-component-applicability"
+            _write_component_applicability_decisions(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                decisions={"cg-test-cmbca-std-01": "not_applicable"},
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        "The proposed action is on the Custer Gallatin National Forest.",
+                        "It is in the Bridger, Bangtail, and Crazy Mountains Geographic Area.",
+                        "The action is within the Crazy Mountains Backcountry Area.",
+                        "The EA says quiet nonmotorized recreation opportunities predominate.",
+                        "No motorized transport is proposed in the backcountry area.",
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id=review_id,
+                component_inventory_path=inventory_path,
+            )
+
+            component_summary = result.summary["component_evaluation"]
+            self.assertTrue(component_summary["applicability_decision_filter"]["active"])
+            self.assertEqual(
+                component_summary["applicability_decision_filter"]["status_counts"],
+                {"not_applicable": 1},
+            )
+            self.assertEqual(component_summary["needs_reviewer_resolution_count"], 0)
+            report = json.loads(result.component_findings_path.read_text(encoding="utf-8"))
+            findings = {finding["component_id"]: finding for finding in report["findings"]}
+            self.assertEqual(
+                findings["cg-test-cmbca-dc-01"]["applicability_status"],
+                "applicable",
+            )
+            self.assertEqual(
+                findings["cg-test-cmbca-suit-01"]["applicability_status"],
+                "applicable",
+            )
+            self.assertEqual(
+                findings["cg-test-cmbca-std-01"]["applicability_status"],
+                "not_applicable",
+            )
+
     def test_unscoped_standard_without_package_evidence_blocks_reviewer_ready(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

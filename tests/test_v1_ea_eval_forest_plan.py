@@ -210,6 +210,132 @@ class V1EAReviewEvalForestPlanTests(unittest.TestCase):
             self.assertTrue(forest_lane["component_adjudication_reviewer_ready"])
             self.assertEqual(forest_lane["failed_check_names"], [])
 
+    def test_v1_eval_accepts_current_adjudication_ready_when_context_summary_is_stale(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            summary = _read_json(review_dir / "forest_plan_context_summary.json")
+            summary["reviewer_ready"] = False
+            summary["component_evaluation"] = {
+                "reviewer_ready": False,
+                "all_applicable_standards_applied": True,
+            }
+            summary["component_adjudication"] = {
+                "reviewer_ready": False,
+                "pending_adjudication_count": 0,
+                "real_ea_omission_count": 0,
+                "failed_checks": ["queue_item_count_mismatch"],
+            }
+            _write_json(review_dir / "forest_plan_context_summary.json", summary)
+            _write_json(
+                review_dir / "forest_plan_component_adjudication_eval.json",
+                {
+                    "schema_version": "forest-plan-component-adjudication-eval-v0",
+                    "summary": {
+                        "passed": True,
+                        "pending_adjudication_count": 0,
+                        "real_ea_omission_count": 0,
+                        "system_miss_count": 2,
+                        "failure_category_counts": {},
+                    },
+                    "item_results": [
+                        {
+                            "component_id": "component-dc",
+                            "component_type": "desired_condition",
+                            "disposition": "applicability_false_positive",
+                            "adjudication_outcome": "system_miss",
+                        },
+                        {
+                            "component_id": "component-standard",
+                            "component_type": "standard",
+                            "disposition": "evidence_linking_miss",
+                            "adjudication_outcome": "system_miss",
+                        },
+                    ],
+                },
+            )
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            payload = _read_json(result.output_path)
+            reviewer_ready = next(
+                item
+                for item in payload["forest_plan_results"]
+                if item["expectation_id"] == "reviewer_ready"
+            )
+            self.assertTrue(reviewer_ready["passed"])
+            self.assertTrue(reviewer_ready["actual"])
+            self.assertTrue(
+                result.summary["eval_lanes"]["forest_plan"][
+                    "component_adjudication_reviewer_ready"
+                ]
+            )
+
+    def test_v1_eval_rejects_current_adjudication_real_ea_omission(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            summary = _read_json(review_dir / "forest_plan_context_summary.json")
+            summary["reviewer_ready"] = False
+            summary["component_evaluation"] = {
+                "reviewer_ready": False,
+                "all_applicable_standards_applied": True,
+            }
+            _write_json(review_dir / "forest_plan_context_summary.json", summary)
+            _write_json(
+                review_dir / "forest_plan_component_adjudication_eval.json",
+                {
+                    "schema_version": "forest-plan-component-adjudication-eval-v0",
+                    "summary": {
+                        "passed": True,
+                        "pending_adjudication_count": 0,
+                        "real_ea_omission_count": 1,
+                        "system_miss_count": 0,
+                        "failure_category_counts": {},
+                    },
+                    "item_results": [
+                        {
+                            "component_id": "component-standard",
+                            "component_type": "standard",
+                            "disposition": "project_record_omission",
+                            "adjudication_outcome": "real_ea_omission",
+                        }
+                    ],
+                },
+            )
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertFalse(result.summary["passed"])
+            self.assertFalse(result.summary["forest_plan_passed"])
+            self.assertEqual(
+                result.summary["forest_plan_failure_category_counts"],
+                {"forest_plan_reviewer_not_ready": 1},
+            )
+            payload = _read_json(result.output_path)
+            reviewer_ready = next(
+                item
+                for item in payload["forest_plan_results"]
+                if item["expectation_id"] == "reviewer_ready"
+            )
+            self.assertFalse(reviewer_ready["passed"])
+            self.assertFalse(reviewer_ready["actual"])
+
     def test_v1_eval_fails_open_standard_resolution_queue(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

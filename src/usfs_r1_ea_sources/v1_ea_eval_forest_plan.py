@@ -155,7 +155,7 @@ def _evaluate_forest_plan(
             failure_category="applicable_standard_not_evaluated",
         )
     if expectations.get("require_reviewer_ready"):
-        actual_ready = bool(summary.get("reviewer_ready"))
+        actual_ready = _forest_plan_reviewer_ready(summary=summary, artifacts=artifacts)
         add_result(
             expectation_id="reviewer_ready",
             expected=True,
@@ -224,10 +224,7 @@ def _forest_plan_rule_bridge_index(
     context = artifacts.get("forest_plan_context")
     if not isinstance(summary, dict) or not isinstance(context, dict):
         return {}
-    if not (
-        summary.get("reviewer_ready")
-        or _nested_get(summary, ["component_evaluation", "reviewer_ready"])
-    ):
+    if not _forest_plan_reviewer_ready(summary=summary, artifacts=artifacts):
         return {}
     forest_source_ids = _forest_source_record_ids(summary, context)
     if not forest_source_ids:
@@ -492,6 +489,45 @@ def _pending_standard_reviewer_resolution_count(artifacts: dict[str, Any]) -> in
     )
 
 
+def _forest_plan_reviewer_ready(
+    *,
+    summary: dict[str, Any],
+    artifacts: dict[str, Any],
+) -> bool:
+    if summary.get("reviewer_ready") is True:
+        return True
+    component_evaluation = _nested_get(summary, ["component_evaluation"])
+    if isinstance(component_evaluation, dict) and component_evaluation.get("reviewer_ready") is True:
+        return True
+    return _component_adjudication_reviewer_ready(
+        _forest_plan_component_adjudication_summary(artifacts)
+    )
+
+
+def _component_adjudication_reviewer_ready(summary: dict[str, Any]) -> bool:
+    if not summary:
+        return False
+    failed_checks = summary.get("failed_checks")
+    if isinstance(failed_checks, list) and failed_checks:
+        return False
+    failure_category_counts = summary.get("failure_category_counts")
+    if isinstance(failure_category_counts, dict) and any(
+        int(count or 0) > 0 for count in failure_category_counts.values()
+    ):
+        return False
+    pending_count = _int_or_none(summary.get("pending_adjudication_count"))
+    real_ea_omission_count = _int_or_none(summary.get("real_ea_omission_count"))
+    if pending_count is not None and pending_count > 0:
+        return False
+    if real_ea_omission_count is not None and real_ea_omission_count > 0:
+        return False
+    if summary.get("reviewer_ready") is True:
+        return True
+    if summary.get("passed") is True:
+        return pending_count == 0 and real_ea_omission_count == 0
+    return False
+
+
 def _forest_plan_component_adjudication_summary(artifacts: dict[str, Any]) -> dict[str, Any]:
     summary = _nested_get(artifacts["forest_plan_context_summary"], ["component_adjudication"])
     context_summary = summary if isinstance(summary, dict) else {}
@@ -499,8 +535,35 @@ def _forest_plan_component_adjudication_summary(artifacts: dict[str, Any]) -> di
     if isinstance(report, dict):
         report_summary = report.get("summary")
         if isinstance(report_summary, dict):
-            return {**context_summary, **report_summary}
+            merged = {**context_summary, **_normalized_adjudication_report_summary(report_summary)}
+            if "reviewer_ready" not in report_summary:
+                merged["reviewer_ready"] = _component_adjudication_reviewer_ready(merged)
+            return merged
     return context_summary
+
+
+def _normalized_adjudication_report_summary(summary: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(summary)
+    if "failed_checks" not in normalized:
+        checks = normalized.get("checks")
+        if isinstance(checks, list):
+            normalized["failed_checks"] = [
+                str(check.get("name") or "")
+                for check in checks
+                if isinstance(check, dict) and not bool(check.get("passed"))
+            ]
+        elif normalized.get("passed") is True:
+            normalized["failed_checks"] = []
+    return normalized
+
+
+def _int_or_none(value: Any) -> int | None:
+    if value is None:
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _forest_plan_component_adjudication_item_results(

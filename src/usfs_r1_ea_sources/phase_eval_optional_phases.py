@@ -560,27 +560,51 @@ def _applicability_phase_gates(
     graph_rows = artifacts["graph_rows"]
     trace_diagnostics = artifacts["trace_diagnostics"]
     decisions = artifacts["decisions"]
+    applicability_decisions = [
+        decision
+        for decision in decisions
+        if isinstance(decision, dict) and not _is_forest_plan_component_candidate(decision)
+    ]
+    forest_plan_component_decision_count = len(decisions) - len(applicability_decisions)
     applicable = artifacts["applicable_authorities"]
     non_applicable = artifacts["non_applicable_authorities"]
     coverage = artifacts["search_coverage_certificates"]
     applicability_validation = artifacts["applicability_validation"]
     generated_rule_pack = artifacts["generated_rule_pack"]
     generated_validation = artifacts["generated_rule_pack_validation"]
-    candidate_ids = _candidate_authority_ids(authority_universe)
+    all_candidate_ids = _candidate_authority_ids(authority_universe)
+    candidate_ids = _candidate_authority_ids(
+        authority_universe,
+        include_forest_plan_components=False,
+    )
+    forest_plan_component_candidate_count = len(all_candidate_ids) - len(candidate_ids)
     decision_ids = {
         str(row.get("candidate_authority_id") or "")
-        for row in decisions
+        for row in applicability_decisions
         if isinstance(row, dict) and row.get("candidate_authority_id")
     }
-    applicable_ids = _authority_partition_ids(applicable)
-    non_applicable_ids = _authority_partition_ids(non_applicable)
+    all_applicable_ids = _authority_partition_ids(applicable)
+    all_non_applicable_ids = _authority_partition_ids(non_applicable)
+    applicable_ids = _authority_partition_ids(
+        applicable,
+        include_forest_plan_components=False,
+    )
+    non_applicable_ids = _authority_partition_ids(
+        non_applicable,
+        include_forest_plan_components=False,
+    )
+    forest_plan_component_partition_count = (
+        len(all_applicable_ids) + len(all_non_applicable_ids)
+        - len(applicable_ids)
+        - len(non_applicable_ids)
+    )
     coverage_ids = {
         str(row.get("coverage_certificate_id") or row.get("certificate_id") or "")
         for row in coverage.get("certificates") or []
         if isinstance(row, dict)
     }
     non_applicable_coverage_gaps = _non_applicable_coverage_gaps(
-        non_applicable,
+        _ordinary_authority_partition(non_applicable),
         coverage_ids,
     )
     generated_rules = (
@@ -664,6 +688,7 @@ def _applicability_phase_gates(
             or generated_summary.get("generated_rule_pack_sha256"),
         )
     )
+    arbitration_summary = _applicability_arbitration_summary(applicability_decisions)
     return [
         _phase(
             "authority_universe",
@@ -677,7 +702,11 @@ def _applicability_phase_gates(
                 "validation_passed": bool(
                     (authority_universe.get("validation") or {}).get("passed")
                 ),
-                "candidate_authority_count": len(candidate_ids),
+                "candidate_authority_count": len(all_candidate_ids),
+                "applicability_candidate_authority_count": len(candidate_ids),
+                "forest_plan_component_candidate_count": (
+                    forest_plan_component_candidate_count
+                ),
                 **forest_plan_currentness["details"],
             },
         ),
@@ -746,11 +775,22 @@ def _applicability_phase_gates(
                 "search_coverage_certificates_path": _path_string(
                     paths["search_coverage_certificates"]
                 ),
-                "decision_count": len(decisions),
-                "candidate_authority_count": len(candidate_ids),
+                "decision_count": len(applicability_decisions),
+                "raw_decision_count": len(decisions),
+                "ignored_forest_plan_component_decision_count": (
+                    forest_plan_component_decision_count
+                ),
+                "candidate_authority_count": len(all_candidate_ids),
+                "applicability_candidate_authority_count": len(candidate_ids),
+                "forest_plan_component_candidate_count": (
+                    forest_plan_component_candidate_count
+                ),
                 "all_candidates_decided": candidate_ids == decision_ids,
                 "applicable_authority_count": len(applicable_ids),
                 "non_applicable_authority_count": len(non_applicable_ids),
+                "ignored_forest_plan_component_partition_count": (
+                    forest_plan_component_partition_count
+                ),
                 "arbitration_summary": arbitration_summary,
                 "non_applicable_coverage_gaps": non_applicable_coverage_gaps,
             },
@@ -797,3 +837,26 @@ def _applicability_phase_gates(
             },
         ),
     ]
+
+
+def _is_forest_plan_component_candidate(candidate: dict[str, Any]) -> bool:
+    candidate_id = str(candidate.get("candidate_authority_id") or "")
+    return (
+        candidate.get("candidate_authority_type") == "forest_plan_component"
+        or candidate_id.startswith("forest-plan-component:")
+    )
+
+
+def _ordinary_authority_partition(payload: dict[str, Any]) -> dict[str, Any]:
+    authorities = payload.get("authorities") if isinstance(payload, dict) else []
+    if not isinstance(authorities, list):
+        return {**payload, "authorities": []}
+    return {
+        **payload,
+        "authorities": [
+            authority
+            for authority in authorities
+            if isinstance(authority, dict)
+            and not _is_forest_plan_component_candidate(authority)
+        ],
+    }

@@ -58,22 +58,40 @@ Use this short route before opening append-only docs.
   active component inventory. HLC V1 passes with `forest_plan_passed=true`,
   `27/27` conditional expectations, and `8/8` Forest Plan expectations; HLC
   `phase-eval` passes `32/32`.
+- Latest all-forest Forest Plan component-lane alignment: V1 Forest Plan
+  reviewer-ready checks now consult the current component-adjudication eval
+  when `forest_plan_context_summary.json` is stale; phase-eval separates
+  ordinary applicability authorities from first-class Forest Plan component
+  candidates; management-area package detection no longer treats treatment-unit
+  table rows as MAs and can match lettered plan ranges such as management areas
+  `5a through 5d`; partial review-scoped component-decision files are not
+  treated as exhaustive for every selected-forest component. Flathead West
+  Reservoir now resolves title/admin identity and management-area plan evidence
+  correctly (`scope_status="flathead_nf"`, `10` management areas, Hungry Horse
+  and Spotted Bear Ranger Districts, Flathead County, Montana), but remains red
+  because the current component gate identifies `16` applicable Forest Plan
+  standards with only `1` supported/applied standard and `15` standards with
+  `insufficient_evidence` gaps. Its current component queue is `135` items
+  while the tracked adjudication covers the older `48`-item queue.
 - Latest all-forest phase/identity gate status: required forest-specific
   reviewer-ready slots still fail closed unless `phase_eval_results.json` and
   decision-document identity both pass for the same review/source-set identity.
-  The phase subgate is now green at `phase_eval_ready_slot_count=11/11` with
-  `failed_phase_eval_count=0`, and the identity subgate is green at `10/10`.
+  The identity subgate is green at `10/10`. After the Flathead component
+  refresh, the phase subgate is `10/11` with `failed_phase_eval_count=1`
+  because Flathead phase-eval is intentionally red on the open Forest Plan
+  component gate and stale downstream decision-support/QA/eval-trace artifacts.
   The aggregate real-package coverage command remains red with
-  `reviewer_ready_slot_count=6`, `missing_required_slot_count=5`, and the five
-  remaining failed slots limited to `review_eval_failed` and
-  `slot_contract_status_mismatch` for Beaverhead-Deerlodge, Bitterroot,
-  Flathead, Custer-Gallatin, and Idaho Panhandle.
+  `reviewer_ready_slot_count=7`, `missing_required_slot_count=4`, and the four
+  remaining failed slots: Beaverhead-Deerlodge South Tobacco Roots, Bitterroot
+  Front, Flathead West Reservoir, and Idaho Panhandle Lacy Lemoosh.
+  Custer-Gallatin South Otter now passes the aggregate slot.
 - Active implementation slice: selected-forest authority-universe coverage and
-  the Tyler and HLC downstream replays are hardened; the broad all-forest reviewer-ready
-  goal still requires downstream applicability/compliance/V1 replay for the
-  five residual forest-specific examples listed above. Open a new bounded packet
-  before hosted query service/API expansion, model-judge work, hosted scoring,
-  knowledge-graph sidecar adoption, or future architecture-cap changes.
+  the Tyler, HLC, and Custer aggregate paths are hardened; the broad all-forest
+  reviewer-ready goal still requires Flathead standard-gap/adjudication
+  resolution plus downstream V1 fixes for Beaverhead-Deerlodge, Bitterroot, and
+  Idaho Panhandle. Open a new bounded packet before hosted query service/API
+  expansion, model-judge work, hosted scoring, knowledge-graph sidecar
+  adoption, or future architecture-cap changes.
 - Latest resolved forest-specific example packet: `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.

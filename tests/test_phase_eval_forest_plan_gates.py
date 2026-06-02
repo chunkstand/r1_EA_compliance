@@ -50,6 +50,87 @@ def _minimal_applicability_artifacts(authority_universe: dict) -> dict:
 
 
 class PhaseEvalForestPlanGateTests(unittest.TestCase):
+    def test_applicability_determination_excludes_forest_plan_component_candidates(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            review_dir = output_dir / "reviews" / "unit-review"
+            review_dir.mkdir(parents=True, exist_ok=True)
+            authority_universe = {
+                "schema_version": "authority-universe-snapshot-v0",
+                "source_set_id": "source-set-test",
+                "validation": {"passed": True},
+                "candidate_authorities": [
+                    {
+                        "candidate_authority_id": "rule-template:test:purpose_need",
+                        "candidate_authority_type": "rule_template",
+                    },
+                    {
+                        "candidate_authority_id": "forest-plan-component:test:std-01",
+                    },
+                ],
+            }
+            artifacts = _minimal_applicability_artifacts(authority_universe)
+            artifacts["decisions"] = [
+                {
+                    "candidate_authority_id": "rule-template:test:purpose_need",
+                    "candidate_authority_type": "rule_template",
+                    "status": "applicable",
+                },
+                {
+                    "candidate_authority_id": "forest-plan-component:test:std-01",
+                    "status": "not_applicable",
+                }
+            ]
+            artifacts["applicable_authorities"] = {
+                "authorities": [
+                    {"candidate_authority_id": "rule-template:test:purpose_need"}
+                ]
+            }
+            artifacts["non_applicable_authorities"] = {
+                "authorities": [
+                    {
+                        "candidate_authority_id": "forest-plan-component:test:std-01",
+                    }
+                ]
+            }
+
+            phases = _applicability_phase_gates(
+                output_dir=output_dir,
+                review_dir=review_dir,
+                source_set_id="source-set-test",
+                artifacts=artifacts,
+                arbitration_summary={},
+            )
+
+            determination_phase = _phase_from_list(phases, "applicability_determination")
+            self.assertTrue(determination_phase["passed"])
+            self.assertEqual(determination_phase["details"]["decision_count"], 1)
+            self.assertEqual(determination_phase["details"]["raw_decision_count"], 2)
+            self.assertEqual(
+                determination_phase["details"][
+                    "ignored_forest_plan_component_decision_count"
+                ],
+                1,
+            )
+            self.assertEqual(
+                determination_phase["details"][
+                    "ignored_forest_plan_component_partition_count"
+                ],
+                1,
+            )
+            self.assertEqual(determination_phase["details"]["candidate_authority_count"], 2)
+            self.assertEqual(
+                determination_phase["details"]["applicability_candidate_authority_count"],
+                1,
+            )
+            self.assertEqual(
+                determination_phase["details"]["forest_plan_component_candidate_count"],
+                1,
+            )
+            self.assertTrue(determination_phase["details"]["all_candidates_decided"])
+
     def test_authority_universe_fails_when_forest_plan_inventory_is_stale(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"

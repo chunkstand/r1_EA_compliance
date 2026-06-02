@@ -84,20 +84,50 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _candidate_authority_ids(payload: dict) -> set[str]:
+def _candidate_authority_ids(
+    payload: dict,
+    *,
+    include_forest_plan_components: bool = True,
+) -> set[str]:
     return {
         str(candidate.get("candidate_authority_id") or "")
         for candidate in payload.get("candidate_authorities") or []
-        if isinstance(candidate, dict) and candidate.get("candidate_authority_id")
+        if (
+            isinstance(candidate, dict)
+            and candidate.get("candidate_authority_id")
+            and (
+                include_forest_plan_components
+                or not _is_forest_plan_component_authority(candidate)
+            )
+        )
     }
 
 
-def _authority_partition_ids(payload: dict) -> set[str]:
+def _authority_partition_ids(
+    payload: dict,
+    *,
+    include_forest_plan_components: bool = True,
+) -> set[str]:
     return {
         str(authority.get("candidate_authority_id") or "")
         for authority in payload.get("authorities") or []
-        if isinstance(authority, dict) and authority.get("candidate_authority_id")
+        if (
+            isinstance(authority, dict)
+            and authority.get("candidate_authority_id")
+            and (
+                include_forest_plan_components
+                or not _is_forest_plan_component_authority(authority)
+            )
+        )
     }
+
+
+def _is_forest_plan_component_authority(authority: dict) -> bool:
+    authority_id = str(authority.get("candidate_authority_id") or "")
+    return (
+        authority.get("candidate_authority_type") == "forest_plan_component"
+        or authority_id.startswith("forest-plan-component:")
+    )
 
 
 def _generated_rule_candidate_id(rule: dict) -> str:

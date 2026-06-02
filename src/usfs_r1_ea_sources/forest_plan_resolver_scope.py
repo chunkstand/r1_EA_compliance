@@ -408,7 +408,7 @@ _MANAGEMENT_AREA_REFERENCE_RE = re.compile(
 )
 
 _MANAGEMENT_AREA_LIST_ITEM_RE = re.compile(
-    r"(?:,\s*|\band\s+|&\s*)(?:MA\s*[-–—]?\s*)?"
+    r"\s*(?:,\s*|\band\s+|&\s*)(?:MA\s*[-–—]?\s*)?"
     r"(?P<identifier>\d{1,3}[A-Za-z]?)\b",
     flags=re.IGNORECASE,
 )
@@ -510,8 +510,38 @@ def _management_area_plan_evidence(
             _term_found(str(row.get("evidence_span", {}).get("text") or ""), term)
             for term in entry.terms
         )
+        or _management_area_identifier_in_plan_text(
+            str(row.get("evidence_span", {}).get("text") or ""),
+            entry.entry_id,
+        )
     ]
     return matched[:limit]
+
+
+def _management_area_identifier_in_plan_text(text: str, entry_id: str) -> bool:
+    identifier = entry_id.removeprefix("mgmt-ma-")
+    match = re.fullmatch(r"(?P<number>\d{1,3})(?P<suffix>[a-z]?)", identifier)
+    if match is None or not match.group("suffix"):
+        return False
+    number = int(match.group("number"))
+    suffix = match.group("suffix")
+    for range_match in re.finditer(
+        r"\bmanagement\s+areas?\s+"
+        r"(?P<start_number>\d{1,3})(?P<start_suffix>[a-z])\s+"
+        r"(?:through|to|[-–—])\s+"
+        r"(?P<end_number>\d{1,3})(?P<end_suffix>[a-z])\b",
+        text,
+        flags=re.IGNORECASE,
+    ):
+        start_number = int(range_match.group("start_number"))
+        end_number = int(range_match.group("end_number"))
+        if start_number != number or end_number != number:
+            continue
+        start_suffix = range_match.group("start_suffix").lower()
+        end_suffix = range_match.group("end_suffix").lower()
+        if start_suffix <= suffix <= end_suffix:
+            return True
+    return False
 
 
 def _package_management_area_evidence_by_identifier(
@@ -523,6 +553,8 @@ def _package_management_area_evidence_by_identifier(
         if "management area" not in text.lower() and "ma" not in text.lower():
             continue
         for match in _MANAGEMENT_AREA_REFERENCE_RE.finditer(text):
+            if _is_management_area_table_header_match(text, match):
+                continue
             identifier = _normalize_management_area_identifier(match.group("identifier"))
             if identifier is None:
                 continue
@@ -552,6 +584,21 @@ def _package_management_area_evidence_by_identifier(
         identifier: _dedupe_evidence(records)
         for identifier, records in evidence_by_identifier.items()
     }
+
+
+def _is_management_area_table_header_match(text: str, match: re.Match[str]) -> bool:
+    prefix = str(match.group("prefix") or "").lower()
+    if not prefix.startswith("management area"):
+        return False
+    before = text[max(0, match.start() - 90) : match.start()].lower()
+    after = text[match.end() : match.end() + 80]
+    header_terms_present = (
+        "unit" in before
+        and "acres" in before
+        and ("prescription" in before or "treatment method" in before)
+    )
+    row_value_after_identifier = re.match(r"\s+\d+\s+\S+", after) is not None
+    return header_terms_present and row_value_after_identifier
 
 
 def _management_area_list_items(

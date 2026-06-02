@@ -14,9 +14,62 @@ from tests.support.forest_plan_resolver_common import (
 from tests.support.forest_plan_resolver_custer_fixtures import _build_custer_source_library
 from usfs_r1_ea_sources.forest_plan_resolver import run_forest_plan_resolver
 from usfs_r1_ea_sources.forest_plan_resolver_location import _location_evidence_role
+from usfs_r1_ea_sources.forest_plan_resolver_scope import (
+    _management_area_entry,
+    _management_area_plan_evidence,
+    _package_management_area_evidence_by_identifier,
+)
 
 
 class ForestPlanResolverScopeTests(unittest.TestCase):
+    def test_management_area_detection_does_not_treat_treatment_unit_rows_as_mas(
+        self,
+    ) -> None:
+        evidence = _package_management_area_evidence_by_identifier(
+            [
+                {
+                    "chunk_id": "chunk-table",
+                    "text": (
+                        "The inventoried roadless areas where treatments are proposed are "
+                        "management areas 1b, 2b, 5b, 5c and 6a. Table 6. Proposed "
+                        "vegetation treatments Unit Acres Prescription Treatment Method "
+                        "Management Area 48 24 Seed Tree Tractor 6b 107 1 Understory "
+                        "Removal Hand 7."
+                    ),
+                }
+            ]
+        )
+
+        self.assertEqual(sorted(evidence), ["1b", "2b", "5b", "5c", "6a"])
+        self.assertNotIn("48", evidence)
+        self.assertNotIn("107", evidence)
+
+    def test_management_area_plan_evidence_accepts_lettered_area_ranges(self) -> None:
+        rows = [
+            {
+                "chunk_id": "chunk-range",
+                "evidence_span": {
+                    "text": (
+                        "In all backcountry areas (management areas 5a through 5d), "
+                        "mechanized transport is suitable."
+                    )
+                },
+            }
+        ]
+
+        entry = _management_area_entry(
+            identifier="5b",
+            source_record_id="R1PLAN-test",
+        )
+
+        evidence = _management_area_plan_evidence(
+            entry=entry,
+            plan_source_rows=rows,
+            limit=3,
+        )
+
+        self.assertEqual([row["chunk_id"] for row in evidence], ["chunk-range"])
+
     def test_other_configured_profiles_are_out_of_scope_for_selected_profile(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             profiles_path = Path(tmp) / "profiles.json"
