@@ -81,6 +81,54 @@ class V1EAReviewEvalForestPlanTests(unittest.TestCase):
                 },
             )
 
+    def test_v1_eval_counts_applicable_standard_rows_from_compliance_matrix(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            review_dir = root / "source_library" / "reviews" / "v1-unit"
+            _write_positive_review(review_dir)
+            matrix = _read_json(review_dir / "compliance_matrix.json")
+            matrix["forest_plan_compliance"]["summary"]["row_count"] = 2
+            matrix["forest_plan_compliance"]["summary"]["applicable_standard_row_count"] = 2
+            matrix["forest_plan_compliance"]["rows"].append(
+                {
+                    "row_id": "forest-plan-matrix:v1-unit:cg-lmp-2022-cmbca-std-02",
+                    "component_id": "cg-lmp-2022-cmbca-std-02",
+                    "component_type": "standard",
+                    "applicability_status": "applicable",
+                    "compliance_status": "insufficient_evidence",
+                    "finding_status": "gap",
+                }
+            )
+            _write_json(review_dir / "compliance_matrix.json", matrix)
+            standard_coverage = _read_json(
+                review_dir / "forest_plan_applicable_standard_coverage.json"
+            )
+            standard_coverage["standards"] = standard_coverage["standards"][:1]
+            _write_json(
+                review_dir / "forest_plan_applicable_standard_coverage.json",
+                standard_coverage,
+            )
+            eval_file = _write_eval_contract(root, review_id="v1-unit")
+            contract = _read_json(eval_file)
+            contract["forest_plan"]["min_applicable_standard_count"] = 2
+            _write_json(eval_file, contract)
+
+            result = run_v1_ea_review_eval(
+                output_dir=root / "source_library",
+                review_id="v1-unit",
+                eval_file=eval_file,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            payload = _read_json(result.output_path)
+            min_standard = next(
+                item
+                for item in payload["forest_plan_results"]
+                if item["expectation_id"] == "min_applicable_standard_count"
+            )
+            self.assertEqual(min_standard["actual"], 2)
+            self.assertTrue(min_standard["passed"])
+
     def test_v1_eval_tracks_standard_resolution_queue_separately(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

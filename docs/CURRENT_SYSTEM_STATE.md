@@ -15,6 +15,56 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## V1 Forest Plan Matrix Standard Counts And IPNF Residual
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  V1 Forest Plan applicable-standard expectations now count applicable standard
+  rows from the Forest Plan compliance matrix, in addition to the component
+  coverage and finding artifacts. This keeps the V1 reviewer-ready contract
+  aligned with the reviewer-facing evaluated Forest Plan matrix when standalone
+  component coverage artifacts are stale or narrower than the current matrix.
+- Beaverhead-Deerlodge/Bitterroot evidence:
+  Beaverhead-Deerlodge South Tobacco Roots V1 now passes with
+  `actual_overall_passed=true`, `contract_status="reviewer_ready"`,
+  `broader_ea_passed=true`, `forest_plan_passed=true`, and
+  `89/89` applicable standards counted from the Forest Plan matrix. Bitterroot
+  Front V1 now passes with `actual_overall_passed=true`,
+  `contract_status="reviewer_ready"`, `broader_ea_passed=true`,
+  `forest_plan_passed=true`, and `3/3` applicable standards counted.
+- IPNF evidence:
+  rerunning Idaho Panhandle Lacy Lemoosh compliance review from cached package
+  chunks regenerated the canonical root Forest Plan artifacts that were missing
+  from V1. IPNF V1 no longer fails on missing Forest Plan context/component
+  artifacts or expected source/component IDs; all `10` Forest Plan expectations
+  pass. It remains red because `compliance_validation_passed` fails on
+  `forest_plan_component_gate_reviewer_ready`.
+- IPNF residual:
+  the refreshed IPNF component evaluation uses the current selected-forest
+  context with `524` components and `110` standards. The review-scoped
+  authority universe and component decisions are stale at `52` Forest Plan
+  component candidates, so phase-eval fails authority-universe currentness
+  (`forest_plan_component_inventory_path_mismatch`,
+  `forest_plan_component_context_count_mismatch`) and leaves `473`
+  component-resolution items, including `102` standard items. The tracked
+  component adjudication covers the older `36`-item queue, so the
+  adjudication phase now fails on queue drift.
+- aggregate evidence:
+  the current real-package coverage command exits red with
+  `covered_slot_count=9`, `reviewer_ready_slot_count=9`,
+  `required_slot_count=11`, `missing_required_slot_count=2`,
+  `phase_eval_ready_slot_count=9/11`, `failed_phase_eval_count=2`, and
+  decision-document identity `10/10`. Remaining failed slots are Flathead West
+  Reservoir and Idaho Panhandle Lacy Lemoosh. Beaverhead-Deerlodge South
+  Tobacco Roots and Bitterroot Front now pass their aggregate slots.
+- boundary:
+  this closes the generic V1 matrix standard-count mismatch and advances the
+  all-forest aggregate from `7/11` to `9/11`. It does not claim all-forest
+  reviewer readiness. Remaining work is Flathead standard-gap/adjudication
+  resolution and IPNF full authority-universe/component-decision replay against
+  the current `524`-component selected-forest context.
+
 ## All-Forest Forest Plan Component Lane Alignment And Flathead Residual
 
 Latest implementation update on 2026-06-02 UTC:

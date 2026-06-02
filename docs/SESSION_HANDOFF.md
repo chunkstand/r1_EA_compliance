@@ -140,6 +140,24 @@ history below.
   `broader_ea_passed=true` and `forest_plan_passed=false` on
   `forest_plan_component_gate_reviewer_ready`; Flathead phase-eval is red with
   `29/36` phases passed/reviewer-ready.
+- latest V1 Forest Plan matrix standard-count alignment:
+  V1 now counts applicable standard rows from the Forest Plan compliance matrix
+  as applicable Forest Plan standards, alongside component coverage/finding
+  artifacts. This fixed the stale-source mismatch for Beaverhead-Deerlodge
+  South Tobacco Roots and Bitterroot Front: BDNF now passes V1 with `89/89`
+  applicable standards counted, and Bitterroot now passes V1 with `3/3`
+  applicable standards counted.
+- current Idaho Panhandle Lacy Lemoosh residual:
+  rerunning IPNF compliance review from cached package chunks regenerated the
+  root Forest Plan artifacts missing from V1, and all `10` V1 Forest Plan
+  expectations now pass. IPNF remains red because compliance validation fails
+  `forest_plan_component_gate_reviewer_ready`: the current selected-forest
+  context evaluates `524` IPNF components and `110` standards, but the
+  review-scoped authority universe still has only `52` Forest Plan component
+  candidates. Phase-eval now fails authority-universe currentness and the
+  component-adjudication phase because the current queue has `473` component
+  items, including `102` standard items, while the tracked adjudication covers
+  the older `36`-item queue.
 - latest resolved phase-eval direct-eval self-reference hardening:
   review-scoped phase-eval now defers a real-package coverage slot failure only
   when every slot failure reason is `phase_eval_*` and the slot's actual
@@ -151,16 +169,14 @@ history below.
   `real-package-review-coverage-eval --manifest
   config/v1_real_package_review_coverage_v1.json` still exits red overall, but
   Tyler's `lolo-tylers-kitchen-forest-specific`, HLC's
-  `hlc-bonanza-forest-specific`, and Custer-Gallatin South Otter now pass.
-  Current counts are `covered_slot_count=7`, `reviewer_ready_slot_count=7`,
-  `required_slot_count=11`, `missing_required_slot_count=4`,
-  `phase_eval_ready_slot_count=10/11`, `failed_phase_eval_count=1`, and
-  decision identity `10/10`. The remaining failed required slots are
-  Beaverhead-Deerlodge South Tobacco Roots, Bitterroot Front, Flathead West
-  Reservoir, and Idaho Panhandle Lacy Lemoosh. Beaverhead-Deerlodge,
-  Bitterroot, and Idaho Panhandle are currently `review_eval_failed` plus
-  `slot_contract_status_mismatch`; Flathead also carries phase-eval blockers
-  because its Forest Plan component gate is still open.
+  `hlc-bonanza-forest-specific`, Custer-Gallatin South Otter,
+  Beaverhead-Deerlodge South Tobacco Roots, and Bitterroot Front now pass.
+  Current counts are `covered_slot_count=9`, `reviewer_ready_slot_count=9`,
+  `required_slot_count=11`, `missing_required_slot_count=2`,
+  `phase_eval_ready_slot_count=9/11`, `failed_phase_eval_count=2`, and
+  decision identity `10/10`. The remaining failed required slots are Flathead
+  West Reservoir and Idaho Panhandle Lacy Lemoosh; both carry phase-eval
+  blockers because their Forest Plan component gates are still open.
 - prior all-forest Forest Plan matrix contract hardening:
   reviewer-ready V1 Forest Plan contracts can no longer disable the Forest Plan
   compliance matrix gate. The real-package coverage eval passes `11`

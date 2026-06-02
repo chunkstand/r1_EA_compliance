@@ -31,7 +31,11 @@ def _evaluate_forest_plan(
             {"component_id", "standard_id", "entry_id"},
         )
     }
-    applicable_standard_ids = _applicable_standard_ids(standard_coverage, component_findings)
+    applicable_standard_ids = _applicable_standard_ids(
+        standard_coverage,
+        component_findings,
+        compliance_matrix,
+    )
     pending_reviewer_resolution_count = _pending_reviewer_resolution_count(artifacts)
     pending_standard_reviewer_resolution_count = _pending_standard_reviewer_resolution_count(
         artifacts
@@ -382,6 +386,7 @@ def _forest_source_record_ids(summary: dict[str, Any], context: dict[str, Any]) 
 def _applicable_standard_ids(
     standard_coverage: dict[str, Any],
     component_findings: dict[str, Any],
+    compliance_matrix: dict[str, Any],
 ) -> set[str]:
     values: set[str] = set()
     rows = standard_coverage.get("standards") or standard_coverage.get("rows") or []
@@ -403,6 +408,16 @@ def _applicable_standard_ids(
             for key in ("standard_id", "component_id", "entry_id"):
                 if finding.get(key):
                     values.add(normalize_forest_plan_component_identifier(finding[key]))
+    section = compliance_matrix.get("forest_plan_compliance") or {}
+    for row in section.get("rows") or []:
+        if not isinstance(row, dict):
+            continue
+        applicable = row.get("applicability_status") == "applicable"
+        is_standard = row.get("component_type") == "standard" or row.get("standard_id")
+        if applicable and is_standard:
+            for key in ("standard_id", "component_id", "entry_id"):
+                if row.get(key):
+                    values.add(normalize_forest_plan_component_identifier(row[key]))
     return values
 
 
