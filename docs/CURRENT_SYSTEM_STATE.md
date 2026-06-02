@@ -15,6 +15,54 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## All-Forest Forest Plan Authority Universe Coverage Hardened Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  review-scoped `applicability-authority-universe` now derives the selected
+  forest from `forest_plan_context_summary.json` title-page forest identity and
+  `scope_status` when the caller does not pass `--forest-unit-id`. When a
+  selected forest profile is available, Forest Plan component candidates are
+  assembled from all component-inventory rows for that forest unit, not only
+  from one active Forest Plan source-record ID. This keeps management areas,
+  overlays, and standards in the inventory as first-class data instead of
+  profile-stuffed or forest-specific runtime rules.
+- phase-eval currentness:
+  the review-scoped `authority_universe` phase now fails closed unless Forest
+  Plan component candidates match the Forest Plan context inventory path,
+  snapshot component count, context component count, and selected forest
+  identity. The phase reports separate snapshot-count, context-count, and
+  forest-identity detail fields so stale or wrong-forest artifacts are visible.
+- live replay evidence:
+  authority-universe replays on the residual forest-specific examples with
+  context component evaluations selected the resolved forest and full context
+  component count: Beaverhead-Deerlodge `273`, Bitterroot `1063`, Flathead
+  `783`, Custer-Gallatin `542`, Lolo Tyler's Kitchen `1004`, and
+  Helena-Lewis-and-Clark `419`. Tyler's Kitchen now writes an authority
+  universe with `forest_unit_id="lolo-nf"`, `candidate_authority_count=1070`,
+  and `forest_plan_component_candidate_count=1004`; its `authority_universe`
+  phase passes currentness with `candidate_count=1004`,
+  `context_count=1004`, candidate forest IDs `["lolo-nf"]`, and no failed
+  currentness checks.
+- remaining replay boundary:
+  Tyler's Kitchen `phase-eval` now exits red after the authority-universe
+  replay because downstream applicability decisions and component adjudication
+  are stale against the full Lolo candidate universe. The aggregate
+  `real-package-review-coverage-eval --manifest
+  config/v1_real_package_review_coverage_v1.json` remains red with
+  `reviewer_ready_slot_count=4`, `missing_required_slot_count=7`,
+  `phase_eval_required_slot_count=11`, `phase_eval_ready_slot_count=10`,
+  `failed_phase_eval_count=1`, identity still green at `10/10`, and failure
+  categories including `review_eval_failed=7`, `slot_contract_status_mismatch=7`,
+  and the Tyler phase-eval stale-downstream failures.
+- boundary:
+  this slice hardens and regenerates the authority-universe layer only. It does
+  not claim all-forest reviewer readiness; the residual examples still need
+  downstream applicability retrieval/determination/validation, generated rule
+  pack, component adjudication, compliance matrix, V1 eval, and phase-eval
+  replay before they can count as reviewer-ready.
+
 ## All-Forest Decision-Document Identity Contract Hardened Locally
 
 Latest implementation update on 2026-06-02 UTC:

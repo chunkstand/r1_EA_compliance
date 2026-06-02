@@ -13,6 +13,7 @@ from tests.support.applicability_authority_universe_fixtures import (
     _write_catalog,
     _write_component_inventory,
     _write_extraction_manifest,
+    _write_json,
     _write_region1_component_inventory,
     _write_rule_claim_links,
     _write_rule_pack,
@@ -398,6 +399,90 @@ class AuthorityUniverseSnapshotTests(unittest.TestCase):
                     for candidate in snapshot["candidate_authorities"]
                     for source_record_id in candidate["source_record_ids"]
                 },
+            )
+
+    def test_snapshot_scopes_region_wide_inventory_from_resolved_review_context(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            source_set_id = "source-set-test"
+            review_id = "flathead-context-unit"
+            rule_pack_path = _write_rule_pack(root)
+            _write_catalog(
+                output_dir,
+                source_set_id,
+                [
+                    _catalog_record(source_set_id, "R1EA-BASE", "law", "law"),
+                    _catalog_record(source_set_id, "R1EA-COND", "regulation", "regulation"),
+                    _catalog_record(
+                        source_set_id,
+                        "R1PLAN-custer-gallatin-nf-02",
+                        "forest_plan",
+                        "forest_plan",
+                    ),
+                    _catalog_record(
+                        source_set_id,
+                        "R1PLAN-flathead-nf-02",
+                        "forest_plan",
+                        "forest_plan",
+                    ),
+                ],
+            )
+            _write_rule_claim_links(output_dir, source_set_id, rule_pack_path)
+            component_inventory_path = _write_region1_component_inventory(
+                output_dir,
+                source_set_id,
+            )
+            review_dir = output_dir / "reviews" / review_id
+            review_dir.mkdir(parents=True, exist_ok=True)
+            _write_json(
+                review_dir / "forest_plan_context_summary.json",
+                {
+                    "schema_version": "forest-plan-context-summary-v0",
+                    "review_id": review_id,
+                    "source_set_id": source_set_id,
+                    "scope_status": "flathead_nf",
+                    "title_page_project_location": {
+                        "forest_unit_name": "Flathead National Forest"
+                    },
+                    "component_evaluation": {
+                        "component_count": 1,
+                        "component_inventory_path": str(component_inventory_path),
+                    },
+                },
+            )
+
+            result = build_authority_universe_snapshot(
+                output_dir=output_dir,
+                review_id=review_id,
+                source_set_id=source_set_id,
+                base_rule_pack_path=rule_pack_path,
+                authority_family_templates_path=None,
+                forest_plan_component_inventory_path=component_inventory_path,
+            )
+
+            self.assertTrue(result.summary["validation_passed"])
+            self.assertEqual(result.summary["forest_unit_id"], "flathead-nf")
+            self.assertEqual(result.summary["rule_template_candidate_count"], 2)
+            self.assertEqual(result.summary["forest_plan_component_candidate_count"], 1)
+
+            snapshot = json.loads(result.snapshot_path.read_text(encoding="utf-8"))
+            self.assertEqual(snapshot["forest_unit_id"], "flathead-nf")
+            self.assertEqual(
+                snapshot["review_scope"]["removed_forest_plan_rule_ids"],
+                ["custer_gallatin_lmp_2022"],
+            )
+            component_candidates = [
+                candidate
+                for candidate in snapshot["candidate_authorities"]
+                if candidate["candidate_authority_type"] == "forest_plan_component"
+            ]
+            self.assertEqual(len(component_candidates), 1)
+            self.assertEqual(
+                component_candidates[0]["forest_plan"]["forest_unit_id"],
+                "flathead-nf",
             )
 
     def test_snapshot_includes_authority_family_rule_template_candidates(self) -> None:

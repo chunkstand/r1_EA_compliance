@@ -1799,6 +1799,16 @@ EA package + source library + authority universe
 - forest-plan component inventory hash when Forest Plan candidates are present
 - candidate authority records
 
+For review-scoped runs, a missing `--forest-unit-id` may be filled from the
+review's `forest_plan_context_summary.json` when title-page forest identity or
+`scope_status` resolves to exactly one configured Forest Plan profile. When a
+selected forest is resolved, `forest_plan_component` candidates cover all
+component-inventory rows for that `forest_unit_id`; candidate discovery is not
+narrowed to one active Forest Plan source-record ID. The snapshot `summary`
+therefore records `forest_unit_id`, `review_scope`, and
+`forest_plan_component_candidate_count` for the full resolved Forest Plan
+component universe.
+
 Each candidate authority record includes:
 
 - `candidate_authority_id`
@@ -5798,7 +5808,26 @@ canonical owner for these readiness summaries is `phase_eval.py`; the source-set
 the `evidence_graph/` directory only to preserve the established artifact path. It evaluates
 catalog capture, extraction, upstream direct-eval coverage, retrieval, evidence graph, claim
 extraction, and rule-claim binding as separate phases and records phase blockers so downstream
-compliance review cannot hide an upstream failure. `phase-eval --rule-claim-links-path
+compliance review cannot hide an upstream failure. In review-scoped runs with
+Forest Plan context, the `authority_universe` phase also records
+`forest_plan_authority_universe_currentness_required`,
+`authority_universe_forest_plan_inventory_path`,
+`expected_forest_plan_component_inventory_path`,
+`forest_plan_component_inventory_path_matches_context`,
+`forest_plan_component_candidate_count`,
+`snapshot_forest_plan_component_count`,
+`forest_plan_context_component_count`,
+`forest_plan_component_snapshot_count_matches`,
+`forest_plan_component_context_count_matches`,
+`forest_plan_context_scope_status`,
+`forest_plan_context_forest_unit_name`,
+`expected_forest_plan_forest_unit_ids`,
+`forest_plan_component_candidate_forest_unit_ids`,
+`forest_plan_component_forest_unit_matches_context`, and
+`failed_forest_plan_currentness_checks`. Stale, partial, or wrong-forest
+Forest Plan authority universes fail closed before downstream applicability or
+compliance phases can count as reviewer-ready.
+`phase-eval --rule-claim-links-path
 <rule_claim_links.jsonl>` can explicitly select a noncanonical sidecar rule-link artifact. For
 review-scoped runs without an explicit path, phase eval also follows a noncanonical
 `rule_claim_links_path` recorded in the compliance review summary. In both cases, the

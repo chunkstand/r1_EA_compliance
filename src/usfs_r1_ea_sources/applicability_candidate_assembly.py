@@ -162,6 +162,7 @@ def forest_plan_component_candidates(
     component_inventory_sha256: str | None,
     catalog_by_source_id: dict[str, dict],
     allowed_forest_plan_source_record_ids: Collection[str] | None = None,
+    selected_forest_unit_id: str | None = None,
 ) -> list[dict]:
     inventory_id = str(component_inventory.get("inventory_id") or "")
     candidates = []
@@ -170,6 +171,7 @@ def forest_plan_component_candidates(
         profiles=profiles,
         component_inventory=component_inventory,
         allowed_forest_plan_source_record_ids=allowed_forest_plan_source_record_ids,
+        selected_forest_unit_id=selected_forest_unit_id,
     ):
         component_id = str(component.get("component_id") or "")
         source_record_id = str(
@@ -269,6 +271,7 @@ def selected_forest_plan_inventory_components(
     profiles: ForestPlanProfileCollection,
     component_inventory: dict | None,
     allowed_forest_plan_source_record_ids: Collection[str] | None = None,
+    selected_forest_unit_id: str | None = None,
 ) -> list[tuple[ForestPlanProfile, dict]]:
     if not isinstance(component_inventory, dict):
         return []
@@ -282,10 +285,17 @@ def selected_forest_plan_inventory_components(
         for source_record_id in allowed_forest_plan_source_record_ids or ()
         if str(source_record_id).strip()
     }
+    selected_forest_unit_id = str(selected_forest_unit_id or "").strip()
     inventory_profile = _inventory_profile(profiles, component_inventory)
     if inventory_profile is not None:
         if (
+            selected_forest_unit_id
+            and inventory_profile.forest_unit_id != selected_forest_unit_id
+        ):
+            return []
+        if (
             allowed_source_ids
+            and not selected_forest_unit_id
             and inventory_profile.active_plan_source_record_id not in allowed_source_ids
         ):
             return []
@@ -294,7 +304,7 @@ def selected_forest_plan_inventory_components(
             for component in components
             if isinstance(component, dict)
         ]
-    if not allowed_source_ids:
+    if not allowed_source_ids and not selected_forest_unit_id:
         return []
     selected: list[tuple[ForestPlanProfile, dict]] = []
     for component in components:
@@ -303,11 +313,14 @@ def selected_forest_plan_inventory_components(
         profile = _component_profile(profiles, component)
         if profile is None:
             continue
+        if selected_forest_unit_id and profile.forest_unit_id != selected_forest_unit_id:
+            continue
         source_record_id = str(
             component.get("source_record_id") or profile.active_plan_source_record_id
         ).strip()
         if (
-            source_record_id not in allowed_source_ids
+            not selected_forest_unit_id
+            and source_record_id not in allowed_source_ids
             and profile.active_plan_source_record_id not in allowed_source_ids
         ):
             continue

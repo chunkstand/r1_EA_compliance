@@ -21,6 +21,7 @@ def authority_universe_validation(
     component_inventory: dict | None,
     authority_family_templates: dict | None,
     forest_plan_required_source_record_ids: set[str] | None = None,
+    forest_plan_required_forest_unit_id: str | None = None,
 ) -> dict:
     checks = [
         {
@@ -54,6 +55,7 @@ def authority_universe_validation(
             profiles=profiles,
             component_inventory=component_inventory,
             forest_plan_required_source_record_ids=forest_plan_required_source_record_ids,
+            forest_plan_required_forest_unit_id=forest_plan_required_forest_unit_id,
         ),
     ]
     return {
@@ -443,7 +445,11 @@ def _check_forest_plan_component_candidates(
     profiles: ForestPlanProfileCollection,
     component_inventory: dict | None,
     forest_plan_required_source_record_ids: set[str] | None = None,
+    forest_plan_required_forest_unit_id: str | None = None,
 ) -> dict:
+    forest_plan_required_forest_unit_id = str(
+        forest_plan_required_forest_unit_id or ""
+    ).strip()
     forest_plan_rule_source_ids = forest_plan_required_source_record_ids or {
         rule_source_record_id(rule)
         for rule in rule_pack.get("rules", [])
@@ -475,12 +481,14 @@ def _check_forest_plan_component_candidates(
         profiles=profiles,
         component_inventory=component_inventory,
         allowed_forest_plan_source_record_ids=required_profile_source_ids,
+        selected_forest_unit_id=forest_plan_required_forest_unit_id,
     )
     component_candidates = [
         candidate
         for candidate in candidate_authorities
         if candidate.get("candidate_authority_type") == "forest_plan_component"
     ]
+    required = bool(forest_plan_required_forest_unit_id or required_profile_source_ids)
     passed = (not required and not component_candidates) or (
         bool(selected_component_records)
         and len(component_candidates) == len(selected_component_records)
@@ -490,6 +498,7 @@ def _check_forest_plan_component_candidates(
         "passed": passed,
         "details": {
             "required": required,
+            "required_forest_unit_id": forest_plan_required_forest_unit_id or None,
             "forest_plan_rule_source_record_ids": sorted(
                 source_id for source_id in forest_plan_rule_source_ids if source_id
             ),

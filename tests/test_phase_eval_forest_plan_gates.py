@@ -95,6 +95,10 @@ class PhaseEvalForestPlanGateTests(unittest.TestCase):
                     {
                         "candidate_authority_id": "forest-plan-component:stale:1",
                         "candidate_authority_type": "forest_plan_component",
+                        "forest_plan": {
+                            "forest_unit_id": "lolo-nf",
+                            "forest_unit_names": ["Lolo National Forest"],
+                        },
                     }
                 ],
             }
@@ -118,11 +122,11 @@ class PhaseEvalForestPlanGateTests(unittest.TestCase):
                 authority_phase["details"]["failed_forest_plan_currentness_checks"],
                 [
                     "forest_plan_component_inventory_path_mismatch",
-                    "forest_plan_component_candidate_count_mismatch",
+                    "forest_plan_component_context_count_mismatch",
                 ],
             )
 
-    def test_authority_universe_uses_snapshot_candidate_count_not_review_finding_count(
+    def test_authority_universe_passes_when_candidates_cover_context_inventory(
         self,
     ) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -147,8 +151,11 @@ class PhaseEvalForestPlanGateTests(unittest.TestCase):
                         "review_id": review_id,
                         "source_set_id": source_set_id,
                         "scope_status": "lolo_nf",
+                        "title_page_project_location": {
+                            "forest_unit_name": "Lolo National Forest",
+                        },
                         "component_evaluation": {
-                            "component_count": 1,
+                            "component_count": 2,
                             "component_inventory_path": str(canonical_inventory_path),
                         },
                     },
@@ -168,10 +175,18 @@ class PhaseEvalForestPlanGateTests(unittest.TestCase):
                     {
                         "candidate_authority_id": "forest-plan-component:test:1",
                         "candidate_authority_type": "forest_plan_component",
+                        "forest_plan": {
+                            "forest_unit_id": "lolo-nf",
+                            "forest_unit_names": ["Lolo National Forest"],
+                        },
                     },
                     {
                         "candidate_authority_id": "forest-plan-component:test:2",
                         "candidate_authority_type": "forest_plan_component",
+                        "forest_plan": {
+                            "forest_unit_id": "lolo-nf",
+                            "forest_unit_names": ["Lolo National Forest"],
+                        },
                     },
                 ],
             }
@@ -187,10 +202,156 @@ class PhaseEvalForestPlanGateTests(unittest.TestCase):
             self.assertTrue(authority_phase["passed"])
             self.assertTrue(authority_phase["reviewer_ready"])
             self.assertEqual(
-                authority_phase["details"]["forest_plan_context_component_count"], 1
+                authority_phase["details"]["forest_plan_context_component_count"], 2
             )
             self.assertEqual(
                 authority_phase["details"]["expected_forest_plan_component_count"], 2
+            )
+
+    def test_authority_universe_fails_when_candidates_do_not_cover_context_inventory(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            review_id = "lolo-review"
+            source_set_id = "source-set-test"
+            review_dir = output_dir / "reviews" / review_id
+            review_dir.mkdir(parents=True, exist_ok=True)
+            canonical_inventory_path = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "forest_plan_components"
+                / "component_inventory.json"
+            )
+            canonical_inventory_path.parent.mkdir(parents=True, exist_ok=True)
+            canonical_inventory_path.write_text('{"components": [{}, {}]}', encoding="utf-8")
+            (review_dir / "forest_plan_context_summary.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "forest-plan-context-summary-v0",
+                        "review_id": review_id,
+                        "source_set_id": source_set_id,
+                        "scope_status": "lolo_nf",
+                        "title_page_project_location": {
+                            "forest_unit_name": "Lolo National Forest",
+                        },
+                        "component_evaluation": {
+                            "component_count": 2,
+                            "component_inventory_path": str(canonical_inventory_path),
+                        },
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            authority_universe = {
+                "schema_version": "authority-universe-snapshot-v0",
+                "source_set_id": source_set_id,
+                "validation": {"passed": True},
+                "summary": {"forest_plan_component_candidate_count": 1},
+                "artifact_paths": {
+                    "forest_plan_component_inventory_path": str(canonical_inventory_path)
+                },
+                "candidate_authorities": [
+                    {
+                        "candidate_authority_id": "forest-plan-component:test:1",
+                        "candidate_authority_type": "forest_plan_component",
+                        "forest_plan": {
+                            "forest_unit_id": "lolo-nf",
+                            "forest_unit_names": ["Lolo National Forest"],
+                        },
+                    },
+                ],
+            }
+            phases = _applicability_phase_gates(
+                output_dir=output_dir,
+                review_dir=review_dir,
+                source_set_id=source_set_id,
+                artifacts=_minimal_applicability_artifacts(authority_universe),
+                arbitration_summary={},
+            )
+
+            authority_phase = _phase_from_list(phases, "authority_universe")
+            self.assertFalse(authority_phase["passed"])
+            self.assertEqual(
+                authority_phase["details"]["failed_forest_plan_currentness_checks"],
+                ["forest_plan_component_context_count_mismatch"],
+            )
+
+    def test_authority_universe_fails_when_component_candidates_are_wrong_forest(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            review_id = "lolo-review"
+            source_set_id = "source-set-test"
+            review_dir = output_dir / "reviews" / review_id
+            review_dir.mkdir(parents=True, exist_ok=True)
+            canonical_inventory_path = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "forest_plan_components"
+                / "component_inventory.json"
+            )
+            canonical_inventory_path.parent.mkdir(parents=True, exist_ok=True)
+            canonical_inventory_path.write_text('{"components": [{}]}', encoding="utf-8")
+            (review_dir / "forest_plan_context_summary.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "forest-plan-context-summary-v0",
+                        "review_id": review_id,
+                        "source_set_id": source_set_id,
+                        "scope_status": "lolo_nf",
+                        "title_page_project_location": {
+                            "forest_unit_name": "Lolo National Forest",
+                        },
+                        "component_evaluation": {
+                            "component_count": 1,
+                            "component_inventory_path": str(canonical_inventory_path),
+                        },
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            authority_universe = {
+                "schema_version": "authority-universe-snapshot-v0",
+                "source_set_id": source_set_id,
+                "validation": {"passed": True},
+                "summary": {"forest_plan_component_candidate_count": 1},
+                "artifact_paths": {
+                    "forest_plan_component_inventory_path": str(canonical_inventory_path)
+                },
+                "candidate_authorities": [
+                    {
+                        "candidate_authority_id": "forest-plan-component:test:1",
+                        "candidate_authority_type": "forest_plan_component",
+                        "forest_plan": {
+                            "forest_unit_id": "custer-gallatin-nf",
+                            "forest_unit_names": ["Custer Gallatin National Forest"],
+                        },
+                    },
+                ],
+            }
+            phases = _applicability_phase_gates(
+                output_dir=output_dir,
+                review_dir=review_dir,
+                source_set_id=source_set_id,
+                artifacts=_minimal_applicability_artifacts(authority_universe),
+                arbitration_summary={},
+            )
+
+            authority_phase = _phase_from_list(phases, "authority_universe")
+            self.assertFalse(authority_phase["passed"])
+            self.assertEqual(
+                authority_phase["details"]["failed_forest_plan_currentness_checks"],
+                ["forest_plan_component_forest_unit_mismatch"],
+            )
+            self.assertEqual(
+                authority_phase["details"]["forest_plan_component_candidate_forest_unit_ids"],
+                ["custer-gallatin-nf"],
             )
 
     def test_compliance_phase_requires_forest_plan_matrix_for_non_custer_forests(

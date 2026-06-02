@@ -72,7 +72,26 @@ history below.
   `compliance_matrix.json`, `compliance_matrix.md`, and
   `compliance_matrix.pdf`. North Seeley local `phase-eval` now passes `30/30`
   phases with the compliance phase reviewer-ready.
-- latest resolved all-forest Forest Plan matrix contract hardening:
+- latest resolved all-forest Forest Plan authority-universe coverage hardening:
+  review-scoped `applicability-authority-universe` now derives the selected
+  forest from `forest_plan_context_summary.json` title-page forest identity and
+  `scope_status` when no `--forest-unit-id` is supplied. Selected-forest
+  authority universes include every component-inventory row for that forest
+  instead of filtering to a single active Forest Plan source-record ID.
+  Phase-eval currentness now checks the Forest Plan context inventory path,
+  snapshot candidate count, context component count, and candidate forest
+  identity. Live authority-universe replays selected full component universes
+  for the six residual examples with context inventories: Beaverhead-Deerlodge
+  `273`, Bitterroot `1063`, Flathead `783`, Custer-Gallatin `542`, Lolo
+  Tyler's Kitchen `1004`, and Helena-Lewis-and-Clark `419`. Tyler's Kitchen
+  now has `forest_unit_id="lolo-nf"`, `1070` total authority candidates, and
+  `1004` Forest Plan component candidates; its `authority_universe` phase is
+  current, but its review `phase-eval` is red because downstream applicability
+  decisions and component adjudication are stale against the full Lolo
+  universe. The aggregate real-package gate is red with
+  `reviewer_ready_slot_count=4`, `phase_eval_ready_slot_count=10/11`, and
+  `failed_phase_eval_count=1`; identity remains green at `10/10`.
+- prior all-forest Forest Plan matrix contract hardening:
   reviewer-ready V1 Forest Plan contracts can no longer disable the Forest Plan
   compliance matrix gate. The real-package coverage eval passes `11`
   reviewer-ready slots across `10` forest IDs, and component-eval coverage

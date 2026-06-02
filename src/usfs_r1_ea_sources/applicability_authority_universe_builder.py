@@ -21,6 +21,7 @@ from .applicability_contract_support import strings as _strings
 from .claim_extraction import default_claims_path
 from .forest_plan_profiles import DEFAULT_FOREST_PLAN_PROFILES_PATH
 from .forest_plan_profiles import ForestPlanProfile
+from .forest_plan_profiles import ForestPlanProfileCollection
 from .forest_plan_profiles import load_forest_plan_profiles
 from .records import aliased_source_record_ids
 from .records import sha256_file
@@ -95,6 +96,11 @@ def build_authority_universe_snapshot(
     forest_plan_profiles_path = Path(forest_plan_profiles_path)
     profiles = load_forest_plan_profiles(forest_plan_profiles_path)
     profiles_sha256 = sha256_file(forest_plan_profiles_path)
+    forest_unit_id = forest_unit_id or _forest_unit_id_from_review_context(
+        output_dir=output_dir,
+        review_id=review_id,
+        profiles=profiles,
+    )
     forest_plan_profile = _review_forest_plan_profile(
         profiles=profiles,
         forest_unit_id=forest_unit_id,
@@ -174,6 +180,9 @@ def build_authority_universe_snapshot(
         component_inventory_sha256=component_inventory_sha256,
         catalog_by_source_id=catalog_by_source_id,
         allowed_forest_plan_source_record_ids=forest_plan_rule_source_ids,
+        selected_forest_unit_id=(
+            forest_plan_profile.forest_unit_id if forest_plan_profile else None
+        ),
     )
     candidate_authorities = sorted(
         [*rule_candidates, *authority_family_candidates, *component_candidates],
@@ -216,6 +225,9 @@ def build_authority_universe_snapshot(
         component_inventory=component_inventory,
         authority_family_templates=authority_family_templates,
         forest_plan_required_source_record_ids=forest_plan_rule_source_ids,
+        forest_plan_required_forest_unit_id=(
+            forest_plan_profile.forest_unit_id if forest_plan_profile else None
+        ),
     )
     summary = authority_universe_summary(
         authority_universe_id=authority_universe_id,
@@ -314,6 +326,90 @@ def _review_forest_plan_profile(
         return None
     _validate_safe_segment(value, "forest_unit_id")
     return profiles.get(value)
+
+
+def _forest_unit_id_from_review_context(
+    *,
+    output_dir: Path,
+    review_id: str,
+    profiles: ForestPlanProfileCollection,
+) -> str | None:
+    summary = _read_json_if_exists(
+        output_dir / "reviews" / review_id / "forest_plan_context_summary.json"
+    )
+    if not isinstance(summary, dict):
+        return None
+    title_page_location = (
+        summary.get("title_page_project_location")
+        if isinstance(summary.get("title_page_project_location"), dict)
+        else {}
+    )
+    title_forest_name = str(title_page_location.get("forest_unit_name") or "").strip()
+    title_matches = _matching_profile_ids_for_forest_name(
+        profiles=profiles,
+        forest_name=title_forest_name,
+    )
+    scope_matches = _matching_profile_ids_for_scope_status(
+        profiles=profiles,
+        scope_status=str(summary.get("scope_status") or "").strip(),
+    )
+    if title_matches and scope_matches:
+        overlap = sorted(set(title_matches) & set(scope_matches))
+        return overlap[0] if len(overlap) == 1 else None
+    if len(title_matches) == 1:
+        return title_matches[0]
+    if len(scope_matches) == 1:
+        return scope_matches[0]
+    return None
+
+
+def _matching_profile_ids_for_forest_name(
+    *,
+    profiles: ForestPlanProfileCollection,
+    forest_name: str,
+) -> list[str]:
+    normalized = _normalized_context_text(forest_name)
+    if not normalized:
+        return []
+    matches = []
+    for profile in profiles.profiles:
+        if normalized in {
+            _normalized_context_text(name)
+            for name in profile.forest_unit_names
+            if str(name or "").strip()
+        }:
+            matches.append(profile.forest_unit_id)
+    return sorted(matches)
+
+
+def _matching_profile_ids_for_scope_status(
+    *,
+    profiles: ForestPlanProfileCollection,
+    scope_status: str,
+) -> list[str]:
+    normalized_scope = str(scope_status or "").strip()
+    if not normalized_scope:
+        return []
+    matches = [
+        profile.forest_unit_id
+        for profile in profiles.profiles
+        if normalized_scope in _scope_status_variants_for_profile(profile)
+    ]
+    return sorted(matches)
+
+
+def _scope_status_variants_for_profile(profile: ForestPlanProfile) -> set[str]:
+    status = re.sub(r"[^A-Za-z0-9_.-]+", "-", profile.forest_unit_id).strip("-")
+    underscored = status.replace("-", "_")
+    variants = {underscored}
+    for suffix in ("_nf", "_nfs"):
+        if underscored.endswith(suffix):
+            variants.add(underscored[: -len(suffix)])
+    return {variant for variant in variants if variant}
+
+
+def _normalized_context_text(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
 def _scope_base_rule_pack_for_forest_unit(
