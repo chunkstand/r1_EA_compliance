@@ -2554,6 +2554,14 @@
           "category": "district",
           "name": "Missoula Ranger District",
           "aliases": []
+        },
+        {
+          "entry_id": "district-seeley-lake",
+          "category": "district",
+          "name": "Seeley Lake Ranger District",
+          "aliases": [
+            "Seeley Lake District"
+          ]
         }
       ],
       "geographic_area_terms": [],

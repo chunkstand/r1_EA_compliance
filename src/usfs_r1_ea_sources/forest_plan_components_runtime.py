@@ -384,8 +384,6 @@ def _requires_reviewer_resolution_without_scope_binding(
         and not component.get("management_area_ids")
         and not component.get("overlay_ids")
         and package_determination is None
-        and not component.get("resource_topics")
-        and not component.get("activity_tags")
     )
 
 

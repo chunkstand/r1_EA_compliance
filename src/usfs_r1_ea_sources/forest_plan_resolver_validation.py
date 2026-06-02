@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from .forest_plan_identity_reconciliation import aliased_region1_forest_plan_source_record_ids
+from .forest_plan_resolver_models import DEFAULT_FOREST_PLAN_PROFILE_ID
 from .forest_plan_resolver_models import _is_profile_scope
 from .forest_plan_resolver_models import ForestPlanResolverProfile
 from .review_package_support import indexed_source_record_counts
@@ -73,7 +74,10 @@ def _check_custer_scope_has_resolved_area(
     *,
     resolver_profile: ForestPlanResolverProfile,
 ) -> dict:
-    if not _is_profile_scope(context, resolver_profile):
+    if (
+        resolver_profile.profile.forest_unit_id != DEFAULT_FOREST_PLAN_PROFILE_ID
+        or not _is_profile_scope(context, resolver_profile)
+    ):
         return {
             "name": "custer_scope_has_resolved_area",
             "passed": True,
@@ -211,6 +215,9 @@ def _summary(
         "package_file_count": len(package_manifest),
         "package_failed_count": len(failed_package_records),
         "package_chunk_count": len(package_chunks),
+        "title_page_project_location_present": bool(
+            context.get("title_page_project_location")
+        ),
         "project_location_signal_count": len(context["project_location_signals"]),
         "geographic_area_count": len(context["geographic_areas"]),
         "management_area_count": len(context["management_areas"]),

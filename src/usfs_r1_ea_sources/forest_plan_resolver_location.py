@@ -22,6 +22,8 @@ def _is_case_sensitive_alias(alias: str) -> bool:
 
 
 def _location_evidence_role(evidence: dict) -> str:
+    if _has_decision_notice_title_page_context(evidence):
+        return "project_location"
     if _is_negative_location_context(evidence):
         return "negative_location"
     decision_text = _location_context_text(evidence)
@@ -375,6 +377,27 @@ def _scope_decision_text(evidence: dict) -> str:
         provenance.get("artifact_path"),
     ]
     return " ".join(str(part) for part in parts if part).lower()
+
+
+def _has_decision_notice_title_page_context(evidence: dict) -> bool:
+    provenance = evidence.get("provenance") or {}
+    try:
+        page = int(provenance.get("page") or 1)
+    except (TypeError, ValueError):
+        page = 1
+    try:
+        char_start = int(provenance.get("char_start") or 0)
+    except (TypeError, ValueError):
+        char_start = 0
+    if page != 1 or char_start != 0:
+        return False
+    text = _scope_decision_text(evidence)
+    return (
+        "decision notice" in text
+        and ("finding of no significant impact" in text or "fonsi" in text)
+        and "ranger district" in text
+        and "national forest" in text
+    )
 
 def _is_plan_consistency_table_evidence(evidence: dict) -> bool:
     return "plan consistency table" in _scope_decision_text(evidence)

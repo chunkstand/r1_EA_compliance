@@ -527,6 +527,9 @@ resolution without re-extracting the package files.
 - `scope_status`: `custer_gallatin`, `not_custer_gallatin`, or `ambiguous`
 - forest unit and ranger district signals from the selected profile
 - profile source records used by the resolver
+- `title_page_project_location`: authoritative administrative-location evidence extracted from a
+  Decision Notice/FONSI title page when present, including selected forest unit, selected-profile
+  ranger districts, counties, state, and package evidence offsets
 - project location signals found in the EA package
 - `background_location_mentions`: district or forest-unit mentions classified as background,
   bibliography, reference, coordination, comparison, or otherwise non-project-location evidence
@@ -557,6 +560,11 @@ filtered before geographic, management-area, or overlay resolution. If an entry 
 package-location evidence, table-only or incidental mentions are suppressed unless the package also
 contains affirmative project-location evidence for that entry.
 
+When a Decision Notice/FONSI title page identifies the selected forest-plan profile, that title-page
+administrative location is treated as decisive selected-profile scope evidence. Other forest units
+mentioned later in response-to-comments, comparisons, examples, or references remain visible as
+background mentions unless another forest unit also appears on the title page.
+
 Ranger-district evidence can support a selected forest-plan profile only when the district belongs
 to that selected profile and the package evidence is classified as `project_location`; district
 terms from another configured profile do not resolve the selected profile. Bibliographic and
@@ -580,8 +588,8 @@ plan records.
 
 `forest_plan_context_summary.json` has schema version `forest-plan-context-summary-v0` and includes
 the context, validation, and package-cache paths; scope status; resolved area counts; unresolved
-mention count; supporting plan-evidence route count; `needs_reviewer_resolution`; retrieval
-readiness; and `reviewer_ready`. For packages resolved to the selected forest-plan profile, it also
+mention count; supporting plan-evidence route count; `title_page_project_location_present`;
+`needs_reviewer_resolution`; retrieval readiness; and `reviewer_ready`. For packages resolved to the selected forest-plan profile, it also
 includes a `component_evaluation` summary with component counts, finding status counts,
 standard counts, compliance-status counts, all-applicable-standards coverage, reviewer-resolution
 counts, provenance-complete counts, validation status, and component-evaluator reviewer readiness.

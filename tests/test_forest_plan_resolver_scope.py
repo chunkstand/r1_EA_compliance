@@ -117,6 +117,101 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
             )
             self.assertTrue(result.summary["reviewer_ready"])
 
+    def test_decision_notice_title_page_location_overrides_comment_response_examples(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            source_set_id = _build_custer_source_library(output_dir)
+            profiles_path = Path(tmp) / "profiles.json"
+            _write_resolver_profile_config(
+                profiles_path,
+                forest_unit_names=["Lolo National Forest"],
+            )
+            profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+            profiles["known_other_forest_units"] = [
+                unit
+                for unit in profiles["known_other_forest_units"]
+                if unit["forest_unit_id"] != "lolo-nf"
+            ]
+            profiles["profiles"] = [
+                profile
+                for profile in profiles["profiles"]
+                if profile["forest_unit_id"] != "lolo-nf"
+            ]
+            profiles["profiles"][0]["ambiguous_unit_terms"] = ["Lolo"]
+            profiles["profiles"][0]["ranger_district_terms"] = [
+                {
+                    "entry_id": "district-seeley-lake",
+                    "category": "district",
+                    "name": "Seeley Lake Ranger District",
+                    "aliases": ["Seeley Lake District"],
+                }
+            ]
+            profiles_path.write_text(
+                json.dumps(profiles, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+            package_path = _write_package(
+                Path(tmp),
+                "\n".join(
+                    [
+                        (
+                            "North Seeley Wildland Urban Interface - Highway 83 Project "
+                            "Decision Notice and Finding of No Significant Impact "
+                            "Seeley Lake Ranger District Lolo National Forest "
+                            "Missoula and Powell County, Montana July 2025"
+                        ),
+                        (
+                            "The project area is in the Bridger, Bangtail, and Crazy Mountains "
+                            "Geographic Area."
+                        ),
+                        (
+                            "The Forest Service did not adequately show that the Round Star "
+                            "project complies with the law. The Round Star project is located "
+                            "on the Flathead National Forest."
+                        ),
+                        (
+                            "The Eastside Assessment is used on the Helena-Lewis and Clark "
+                            "National Forest, not the Lolo National Forest."
+                        ),
+                    ]
+                ),
+            )
+
+            result = run_forest_plan_resolver(
+                package_path=package_path,
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id="dn-title-page-profile-location",
+                profiles_path=profiles_path,
+            )
+
+            context = json.loads(result.context_path.read_text(encoding="utf-8"))
+            self.assertEqual(context["scope_status"], "custer_gallatin")
+            self.assertEqual(context["forest_unit"]["name"], "Lolo National Forest")
+            self.assertEqual(
+                context["forest_unit"]["resolution_basis"],
+                "decision_notice_fonsi_title_page",
+            )
+            self.assertNotIn(
+                "multiple_forest_units_mentioned",
+                [item["reason"] for item in context["unresolved_mentions"]],
+            )
+            self.assertEqual(
+                _names(context["project_location_signals"]),
+                ["Seeley Lake Ranger District"],
+            )
+            title_page_location = context["title_page_project_location"]
+            self.assertEqual(title_page_location["forest_unit"]["name"], "Lolo National Forest")
+            self.assertEqual(
+                _names(title_page_location["ranger_districts"]),
+                ["Seeley Lake Ranger District"],
+            )
+            self.assertEqual(
+                title_page_location["counties"],
+                ["Missoula County", "Powell County"],
+            )
+            self.assertEqual(title_page_location["state"], "Montana")
+
     def test_profile_scope_ignores_project_external_other_forest_locations(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
