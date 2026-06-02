@@ -185,6 +185,15 @@ def _validate_contract(contract: dict[str, Any]) -> None:
     forest_unit_id = contract.get("forest_unit_id")
     if forest_unit_id is not None and not str(forest_unit_id).strip():
         raise ValueError("forest_unit_id must be a non-empty string when provided")
+    forest_plan = contract.get("forest_plan")
+    if isinstance(forest_plan, dict) and (
+        forest_plan.get("require_reviewer_ready") is True
+        and forest_plan.get("require_matrix_forest_plan_compliance") is False
+    ):
+        raise ValueError(
+            "reviewer-ready forest_plan contracts must not disable "
+            "require_matrix_forest_plan_compliance"
+        )
     package_style_tags = contract.get("package_style_tags")
     if package_style_tags is not None and (
         not isinstance(package_style_tags, list)

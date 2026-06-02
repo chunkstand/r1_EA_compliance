@@ -15,9 +15,91 @@ from tests.support.v1_ea_eval_fixtures import _write_json
 from tests.support.v1_ea_eval_fixtures import _write_jsonl
 from tests.support.v1_ea_eval_fixtures import _write_positive_review
 from usfs_r1_ea_sources.v1_ea_eval import run_v1_ea_review_eval
+from usfs_r1_ea_sources.v1_ea_eval_forest_plan import _evaluate_forest_plan
+from usfs_r1_ea_sources.v1_ea_eval_support import _validate_contract
 
 
 class V1EAReviewEvalTests(unittest.TestCase):
+    def test_forest_plan_matrix_requirement_allows_zero_applicable_standard_rows(self) -> None:
+        artifacts = {
+            "forest_plan_context_summary": {
+                "scope_status": "lolo_nf",
+                "reviewer_ready": True,
+                "component_evaluation": {
+                    "all_applicable_standards_applied": True,
+                    "applicable_standard_count": 0,
+                },
+            },
+            "forest_plan_context": {
+                "required_source_record_ids": ["FPS-298"],
+                "source_record_readiness": {
+                    "required_source_record_ids": ["FPS-298"],
+                    "ready": True,
+                },
+            },
+            "forest_plan_component_findings": {
+                "summary": {
+                    "all_applicable_standards_applied": True,
+                    "applicable_standard_count": 0,
+                },
+                "findings": [],
+            },
+            "forest_plan_applicable_standard_coverage": {"standards": []},
+            "forest_plan_reviewer_resolution_queue": {"summary": {"item_count": 0}},
+            "forest_plan_component_adjudication_eval": {},
+            "compliance_matrix": {
+                "forest_plan_compliance": {
+                    "schema_version": "forest-plan-compliance-matrix-v0",
+                    "summary": {
+                        "row_count": 0,
+                        "applicable_standard_row_count": 0,
+                        "load_errors": [],
+                    },
+                    "rows": [],
+                },
+            },
+        }
+
+        results = _evaluate_forest_plan(
+            expectations={
+                "expected_scope_status": "lolo_nf",
+                "required_source_record_ids": ["FPS-298"],
+                "require_all_applicable_standards_applied": True,
+                "require_matrix_forest_plan_compliance": True,
+                "require_reviewer_ready": True,
+                "max_reviewer_resolution_items": 0,
+                "max_standard_reviewer_resolution_items": 0,
+            },
+            artifacts=artifacts,
+        )
+
+        matrix = next(
+            result
+            for result in results
+            if result["expectation_id"] == "forest_plan_compliance_matrix"
+        )
+        self.assertTrue(matrix["passed"])
+        self.assertEqual(matrix["expected"]["min_rows"], 0)
+        self.assertTrue(matrix["actual"]["section_present"])
+
+    def test_reviewer_ready_forest_plan_contract_cannot_disable_matrix_requirement(
+        self,
+    ) -> None:
+        contract = {
+            "schema_version": "v1-ea-real-review-eval-contract-v0",
+            "eval_id": "unit-v1",
+            "forest_plan": {
+                "require_reviewer_ready": True,
+                "require_matrix_forest_plan_compliance": False,
+            },
+        }
+
+        with self.assertRaisesRegex(
+            ValueError,
+            "reviewer-ready forest_plan contracts must not disable",
+        ):
+            _validate_contract(contract)
+
     def test_v1_eval_scores_sections_sources_conditionals_and_forest_plan(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

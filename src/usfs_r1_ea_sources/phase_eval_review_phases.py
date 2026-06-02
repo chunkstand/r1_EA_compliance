@@ -284,16 +284,22 @@ def build_review_scoped_phases(
         component_evaluation=forest_plan_component_evaluation,
     )
     forest_plan_matrix_exists = bool(matrix_forest_plan)
+    expected_standard_count = int(
+        forest_plan_component_evaluation.get("applicable_standard_count") or 0
+    )
     forest_plan_matrix_schema_matches = (
         not forest_plan_matrix_required
         or matrix_forest_plan.get("schema_version") == "forest-plan-compliance-matrix-v0"
     )
     forest_plan_matrix_rows_visible = (
         not forest_plan_matrix_required
-        or int(matrix_forest_plan_summary.get("row_count") or 0) > 0
-    )
-    expected_standard_count = int(
-        forest_plan_component_evaluation.get("applicable_standard_count") or 0
+        or (
+            forest_plan_matrix_exists
+            and (
+                expected_standard_count == 0
+                or int(matrix_forest_plan_summary.get("row_count") or 0) > 0
+            )
+        )
     )
     forest_plan_matrix_standards_visible = (
         not forest_plan_matrix_required

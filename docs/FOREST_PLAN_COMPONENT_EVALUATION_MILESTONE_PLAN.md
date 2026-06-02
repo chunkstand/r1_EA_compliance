@@ -139,13 +139,22 @@ Already implemented:
   evaluated as applicable candidates rather than disappearing from the gate solely because they lack
   management-area or geographic-area IDs.
 - Review-scoped applicability now checks Forest Plan authority-universe currentness against the
-  resolved `forest_plan_context_summary.json` component inventory path and component count. A stale
-  review-local inventory, missing source-set inventory, or mismatched component count fails the
-  `authority_universe` phase before compliance review.
-- The compliance phase now requires Forest Plan matrix rows for any resolved forest context with
-  component inventory/applicable-standard evidence. This requirement is derived from the resolved
-  Forest Plan context even when compliance artifacts are absent, so a missing matrix JSON/PDF fails
-  closed instead of hiding the obligation behind an unbuilt compliance review.
+  resolved `forest_plan_context_summary.json` component inventory path and the authority-universe
+  Forest Plan component candidate count. A stale review-local inventory, missing source-set
+  inventory, or mismatched authority-universe candidate count fails the `authority_universe` phase
+  before compliance review; the narrowed review-scoped component finding count is tracked
+  separately.
+- The compliance phase now requires a Forest Plan compliance matrix section and valid matrix PDF for
+  any resolved forest context with component inventory/applicable-standard evidence. This
+  requirement is derived from the resolved Forest Plan context even when compliance artifacts are
+  absent, so a missing matrix JSON/PDF fails closed instead of hiding the obligation behind an
+  unbuilt compliance review. Matrix rows are required when the component evaluation expects
+  applicable standards; zero Forest Plan rows are valid only when the expected applicable-standard
+  count is zero and the matrix section is present with no load errors.
+- Reviewer-ready V1 Forest Plan contracts cannot disable
+  `require_matrix_forest_plan_compliance`. The manifest-covered all-forest review gate currently
+  passes `11` reviewer-ready real-package slots across `10` forest IDs, and the component-eval
+  coverage gate passes `12` required reviews across `10` forest IDs.
 - North Seeley now replays the canonical Lolo inventory through authority-universe, package fact
   graph, applicability retrieval/graph traces, deterministic decisions, generated rule pack,
   compliance review, and phase-eval without handwritten Lolo rules. Weak-only positive Forest Plan
@@ -160,9 +169,10 @@ Already implemented:
 
 Remaining gaps:
 
-- The North Seeley real-package replay has proven the updated `compliance-review` path locally.
-  The remaining promotion gap is to replay the same generic inventory, applicability, and compliance
-  gates across additional governed forest packages before claiming all-forest coverage.
+- The manifest-covered all-forest review and component-eval coverage gates are green locally.
+  Future forests or packages must be added through governed per-review contracts and rerun through
+  the same generic inventory, applicability, compliance, V1, and phase-eval gates before being
+  claimed as covered.
 - No standalone component retrieval precision/recall eval artifact exists yet.
 - Component-level graph artifacts are not yet emitted as a separate component graph; the compliance
   finding graph currently links the review to forest-plan review/component-evaluation artifacts.

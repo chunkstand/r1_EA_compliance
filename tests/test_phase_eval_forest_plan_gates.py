@@ -122,6 +122,77 @@ class PhaseEvalForestPlanGateTests(unittest.TestCase):
                 ],
             )
 
+    def test_authority_universe_uses_snapshot_candidate_count_not_review_finding_count(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            review_id = "lolo-review"
+            source_set_id = "source-set-test"
+            review_dir = output_dir / "reviews" / review_id
+            review_dir.mkdir(parents=True, exist_ok=True)
+            canonical_inventory_path = (
+                output_dir
+                / "derived"
+                / source_set_id
+                / "forest_plan_components"
+                / "component_inventory.json"
+            )
+            canonical_inventory_path.parent.mkdir(parents=True, exist_ok=True)
+            canonical_inventory_path.write_text('{"components": [{}, {}]}', encoding="utf-8")
+            (review_dir / "forest_plan_context_summary.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "forest-plan-context-summary-v0",
+                        "review_id": review_id,
+                        "source_set_id": source_set_id,
+                        "scope_status": "lolo_nf",
+                        "component_evaluation": {
+                            "component_count": 1,
+                            "component_inventory_path": str(canonical_inventory_path),
+                        },
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            authority_universe = {
+                "schema_version": "authority-universe-snapshot-v0",
+                "source_set_id": source_set_id,
+                "validation": {"passed": True},
+                "summary": {"forest_plan_component_candidate_count": 2},
+                "artifact_paths": {
+                    "forest_plan_component_inventory_path": str(canonical_inventory_path)
+                },
+                "candidate_authorities": [
+                    {
+                        "candidate_authority_id": "forest-plan-component:test:1",
+                        "candidate_authority_type": "forest_plan_component",
+                    },
+                    {
+                        "candidate_authority_id": "forest-plan-component:test:2",
+                        "candidate_authority_type": "forest_plan_component",
+                    },
+                ],
+            }
+            phases = _applicability_phase_gates(
+                output_dir=output_dir,
+                review_dir=review_dir,
+                source_set_id=source_set_id,
+                artifacts=_minimal_applicability_artifacts(authority_universe),
+                arbitration_summary={},
+            )
+
+            authority_phase = _phase_from_list(phases, "authority_universe")
+            self.assertTrue(authority_phase["passed"])
+            self.assertTrue(authority_phase["reviewer_ready"])
+            self.assertEqual(
+                authority_phase["details"]["forest_plan_context_component_count"], 1
+            )
+            self.assertEqual(
+                authority_phase["details"]["expected_forest_plan_component_count"], 2
+            )
+
     def test_compliance_phase_requires_forest_plan_matrix_for_non_custer_forests(
         self,
     ) -> None:
@@ -186,6 +257,81 @@ class PhaseEvalForestPlanGateTests(unittest.TestCase):
             self.assertIn(
                 "forest_plan_matrix_schema_matches",
                 compliance_phase["details"]["failed_artifact_checks"],
+            )
+
+    def test_compliance_phase_allows_forest_plan_matrix_with_zero_expected_standards(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            review_id = "lolo-review"
+            source_set_id = "source-set-test"
+            review_dir = output_dir / "reviews" / review_id
+            review_dir.mkdir(parents=True, exist_ok=True)
+            pdf_path = review_dir / "compliance_matrix.pdf"
+            pdf_path.write_bytes(b"%PDF-1.4\n% unit fixture\n")
+            forest_plan_review = {
+                "scope_status": "lolo_nf",
+                "reviewer_ready": True,
+                "component_evaluation": {
+                    "component_count": 1,
+                    "applicable_standard_count": 0,
+                },
+            }
+            compliance_review = {
+                "summary": {
+                    "review_id": review_id,
+                    "source_set_id": source_set_id,
+                    "rule_pack_id": "generated",
+                    "rule_pack_version": "1.0",
+                    "finding_count": 1,
+                    "finding_status_counts": {"complies": 1},
+                    "reviewer_ready": True,
+                    "forest_plan_review": forest_plan_review,
+                }
+            }
+            compliance_matrix = {
+                "schema_version": "compliance-matrix-v0",
+                "review_id": review_id,
+                "source_set_id": source_set_id,
+                "rule_pack": {"rule_pack_id": "generated", "version": "1.0"},
+                "summary": {
+                    "row_count": 1,
+                    "status_counts": {"complies": 1},
+                    "forest_plan_review": forest_plan_review,
+                },
+                "rows": [{"rule_id": "generated-rule", "status": "complies"}],
+                "forest_plan_compliance": {
+                    "schema_version": "forest-plan-compliance-matrix-v0",
+                    "summary": {
+                        "row_count": 0,
+                        "applicable_standard_row_count": 0,
+                        "load_errors": [],
+                    },
+                    "rows": [],
+                },
+            }
+
+            phases = _review_phases(
+                output_dir=output_dir,
+                source_set_id=source_set_id,
+                review_id=review_id,
+                review_dir=review_dir,
+                compliance_validation={"passed": True, "checks": []},
+                compliance_review=compliance_review,
+                compliance_matrix=compliance_matrix,
+                compliance_matrix_pdf_path=pdf_path,
+            )
+
+            compliance_phase = _phase_from_list(phases, "compliance_review")
+            self.assertTrue(compliance_phase["passed"])
+            self.assertTrue(compliance_phase["details"]["forest_plan_matrix_required"])
+            self.assertEqual(
+                compliance_phase["details"]["forest_plan_expected_applicable_standard_count"],
+                0,
+            )
+            self.assertTrue(
+                compliance_phase["details"]["forest_plan_matrix_rows_visible"]
             )
 
     def test_compliance_phase_requires_forest_plan_matrix_from_context_summary(

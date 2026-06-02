@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-06-01
+Date: 2026-06-02
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
@@ -72,6 +72,17 @@ history below.
   `compliance_matrix.json`, `compliance_matrix.md`, and
   `compliance_matrix.pdf`. North Seeley local `phase-eval` now passes `30/30`
   phases with the compliance phase reviewer-ready.
+- latest resolved all-forest Forest Plan matrix contract hardening:
+  reviewer-ready V1 Forest Plan contracts can no longer disable the Forest Plan
+  compliance matrix gate. The real-package coverage eval passes `11`
+  reviewer-ready slots across `10` forest IDs, and component-eval coverage
+  passes `12` required reviews across `10` forest IDs. Tyler's Kitchen now
+  passes V1 and `phase-eval` with matrix checking enabled; its Forest Plan
+  matrix section is required, while zero matrix rows are valid because the
+  component eval expects zero applicable standards. Phase-eval authority
+  currentness now compares the Forest Plan context inventory path plus the
+  authority-universe Forest Plan component candidate count, not the narrowed
+  review-scoped finding count.
 - latest resolved observability/eval context graph slice:
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` Milestone 0. The
   repo has a tracked context-graph contract, `eval-context-graph-build`,

@@ -348,7 +348,6 @@
     "max_reviewer_resolution_items": 0,
     "max_standard_reviewer_resolution_items": 0,
     "require_all_applicable_standards_applied": true,
-    "require_matrix_forest_plan_compliance": false,
     "require_reviewer_ready": true,
     "required_source_record_ids": [
       "FPS-298",

@@ -190,14 +190,19 @@ def _evaluate_forest_plan(
             or _nested_get(summary, ["component_evaluation", "applicable_standard_count"])
             or len(expected_standards)
         )
-        matrix_visible = matrix_details["row_count"] > 0 and (
-            expected_standard_count == 0
-            or matrix_details["applicable_standard_row_count"] >= expected_standard_count
+        matrix_visible = (
+            matrix_details["section_present"]
+            and not matrix_details["load_errors"]
+            and (
+                expected_standard_count == 0
+                or matrix_details["applicable_standard_row_count"] >= expected_standard_count
+            )
         )
         add_result(
             expectation_id="forest_plan_compliance_matrix",
             expected={
-                "min_rows": 1,
+                "section_present": True,
+                "min_rows": 0 if expected_standard_count == 0 else 1,
                 "applicable_standard_row_count": expected_standard_count,
             },
             actual=matrix_details,

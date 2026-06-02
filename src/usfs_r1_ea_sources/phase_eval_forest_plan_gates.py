@@ -24,9 +24,15 @@ def forest_plan_authority_universe_currentness(
     summary_path = review_dir / "forest_plan_context_summary.json"
     forest_plan_summary = _read_json_if_exists(summary_path)
     component_evaluation = _dict((forest_plan_summary or {}).get("component_evaluation"))
-    expected_component_count = _safe_int(component_evaluation.get("component_count"))
     expected_inventory_path = str(component_evaluation.get("component_inventory_path") or "")
-    currentness_required = bool(expected_component_count or expected_inventory_path)
+    authority_summary = _dict(authority_universe.get("summary"))
+    expected_candidate_count = _safe_int(
+        authority_summary.get("forest_plan_component_candidate_count")
+    )
+    context_component_count = _safe_int(component_evaluation.get("component_count"))
+    if not expected_candidate_count:
+        expected_candidate_count = context_component_count
+    currentness_required = bool(expected_candidate_count or expected_inventory_path)
     component_candidates = [
         candidate
         for candidate in authority_universe.get("candidate_authorities") or []
@@ -36,9 +42,7 @@ def forest_plan_authority_universe_currentness(
     artifact_paths = _dict(authority_universe.get("artifact_paths"))
     actual_inventory_path = str(
         artifact_paths.get("forest_plan_component_inventory_path")
-        or _dict(authority_universe.get("summary")).get(
-            "forest_plan_component_inventory_path"
-        )
+        or authority_summary.get("forest_plan_component_inventory_path")
         or ""
     )
     actual_component_count = len(component_candidates)
@@ -51,7 +55,7 @@ def forest_plan_authority_universe_currentness(
         )
     )
     count_matches = (
-        not currentness_required or actual_component_count == expected_component_count
+        not currentness_required or actual_component_count == expected_candidate_count
     )
     failed_checks = []
     if not path_matches:
@@ -69,7 +73,8 @@ def forest_plan_authority_universe_currentness(
             ),
             "forest_plan_component_inventory_path_matches_context": path_matches,
             "forest_plan_component_candidate_count": actual_component_count,
-            "expected_forest_plan_component_count": expected_component_count,
+            "expected_forest_plan_component_count": expected_candidate_count,
+            "forest_plan_context_component_count": context_component_count,
             "forest_plan_component_candidate_count_matches_context": count_matches,
             "failed_forest_plan_currentness_checks": failed_checks,
         },

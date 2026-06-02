@@ -15,6 +15,49 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## All-Forest Forest Plan Matrix Contract Hardening Resolved Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  reviewer-ready V1 Forest Plan contracts can no longer disable
+  `require_matrix_forest_plan_compliance`. The Lolo Tyler's Kitchen contract no
+  longer carries that waiver, and V1 contract validation now rejects the
+  combination of `require_reviewer_ready=true` with
+  `require_matrix_forest_plan_compliance=false`.
+- matrix semantics:
+  resolved Forest Plan reviews must expose the `forest_plan_compliance`
+  section in `compliance_matrix.json` and a valid matrix PDF. Matrix rows are
+  required when the component evaluation expects applicable standards; zero
+  Forest Plan rows are valid only when the expected applicable-standard count is
+  zero and the Forest Plan matrix section is still present with no load errors.
+  The V1 EA eval and `phase-eval` gates now apply the same rule.
+- authority-universe currentness:
+  `phase-eval` no longer compares the review-scoped Forest Plan component
+  finding count to the authority-universe component candidate count. It checks
+  the current inventory path against `forest_plan_context_summary.json`, and
+  checks the authority-universe Forest Plan component candidates against the
+  authority-universe snapshot candidate count. This keeps stale inventory
+  protection without confusing a narrowed review result with the full candidate
+  universe.
+- all-forest coverage evidence:
+  `real-package-review-coverage-eval --manifest
+  config/v1_real_package_review_coverage_v1.json` passed with `11`
+  reviewer-ready slots across `10` forest IDs and no failure categories.
+  `forest-plan-component-eval-coverage --manifest
+  config/forest_plan_component_eval_coverage_v1.json` passed with `12`
+  required review component evals across `10` forest IDs, no missing contracts,
+  no missing results, no stale identities, and no unresolved reviews.
+- Tyler's Kitchen evidence:
+  `v1-ea-eval --review-id region1-example-lolo-tylers-kitchen-66344` passed
+  with `forest_plan_passed=true`, `forest_plan_expectation_match_rate=1.0`,
+  `contract_status=reviewer_ready`, and the matrix requirement enabled.
+  `phase-eval --review-id region1-example-lolo-tylers-kitchen-66344` now
+  passes `32/32` phases with no blockers and `reviewer_ready=true`.
+- boundary:
+  this hardens the generic all-forest review/eval contract. It does not ingest
+  a new package, change hosted service routing, or add forest-specific rules.
+
 ## Forest-Plan Applicability And Compliance Matrix Replay Resolved Locally
 
 Latest implementation update on 2026-06-02 UTC:

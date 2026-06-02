@@ -2525,7 +2525,10 @@ contains a separate Forest Plan Compliance table. Its rows are derived from
 records component ID/type, applicability status, compliance status, finding status, EA-package
 evidence, Forest Plan source evidence, plan-consistency determination text, rationale, and reviewer
 resolution count. This keeps Forest Plan component compliance visible without mixing component rows
-into the NEPA/generated-rule compliance table.
+into the NEPA/generated-rule compliance table. For resolved Forest Plan reviews, the section is
+required even when no applicable standards are expected. In that case `rows` may be empty only when
+the component evaluation reports zero expected applicable standards and the section has no load
+errors; when applicable standards are expected, the matrix must include rows for those standards.
 
 `compliance_matrix.md` is a human-readable rendering for reviewer and demo use. It starts with a
 Responsible Official Readout and an Accuracy Audit table that express reviewer gates, row counts,
