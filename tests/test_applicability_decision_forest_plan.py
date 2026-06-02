@@ -42,7 +42,7 @@ class ApplicabilityDecisionForestPlanTests(unittest.TestCase):
             [["outside project area"]],
         )
 
-    def test_forest_plan_component_result_requires_adjudication_for_weak_trigger(self) -> None:
+    def test_forest_plan_component_result_records_weak_trigger_as_not_applicable(self) -> None:
         result = forest_plan_component_result(
             candidate=_candidate(),
             package_nodes=_matching_package_nodes(),
@@ -56,9 +56,43 @@ class ApplicabilityDecisionForestPlanTests(unittest.TestCase):
             coverage_boundary={"coverage_sufficient": True},
         )
 
-        self.assertEqual(result["status"], "needs_adjudication")
-        self.assertEqual(result["basis_type"], "unresolved_evidence_conflict")
-        self.assertEqual(result["contradiction_notes"], ["weak package signal"])
+        self.assertEqual(result["status"], "not_applicable")
+        self.assertEqual(result["basis_type"], "forest_plan_component")
+        self.assertEqual(result["contradiction_notes"], [])
+        self.assertEqual(
+            result["basis"]["weak_trigger_groups"],
+            [["Crazy Mountains Backcountry Area"]],
+        )
+        self.assertEqual(
+            result["basis"]["missing_trigger_groups"],
+            [["Crazy Mountains Backcountry Area"]],
+        )
+        self.assertEqual(result["basis"]["weak_trigger_notes"], ["weak package signal"])
+
+    def test_forest_plan_component_result_keeps_strong_trigger_with_weak_auxiliary(self) -> None:
+        result = forest_plan_component_result(
+            candidate=_candidate(),
+            package_nodes=_matching_package_nodes(),
+            positive_match=_match(
+                matched=True,
+                matched_groups=[
+                    ["Crazy Mountains Backcountry Area"],
+                    ["Inventoried Roadless Area"],
+                ],
+                requires_adjudication=True,
+                adjudication_notes=["weak auxiliary signal"],
+            ),
+            negative_match=_match(matched=False),
+            coverage_boundary={"coverage_sufficient": True},
+            trigger_arbitration={
+                "positive_trigger_sufficient": True,
+                "arbitration_status": "strong_positive_with_weak_auxiliary",
+            },
+        )
+
+        self.assertEqual(result["status"], "applicable")
+        self.assertEqual(result["basis_type"], "forest_plan_component")
+        self.assertEqual(result["contradiction_notes"], [])
 
     def test_forest_plan_component_result_records_scope_miss_with_insufficient_coverage(self) -> None:
         result = forest_plan_component_result(

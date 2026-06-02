@@ -148,9 +148,11 @@ Already implemented:
   closed instead of hiding the obligation behind an unbuilt compliance review.
 - North Seeley now replays the canonical Lolo inventory through authority-universe, package fact
   graph, applicability retrieval/graph traces, and deterministic decisions without handwritten
-  Lolo rules. Its current expected fail-closed state is `330` applicable Forest Plan standards in
-  context, `12` applicability decisions needing adjudication, and a required but missing Forest Plan
-  compliance matrix until reviewer/compliance work closes those items.
+  Lolo rules. Weak-only positive Forest Plan component trigger evidence is diagnostic trigger-miss
+  evidence rather than an adjudication blocker when search coverage is sufficient. Its current
+  expected fail-closed state is `330` applicable Forest Plan standards in context, `2`
+  authority-family applicability decisions needing adjudication, and a required but missing Forest
+  Plan compliance matrix until reviewer/compliance work closes those items.
 
 Remaining gaps:
 

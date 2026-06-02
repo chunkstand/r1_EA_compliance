@@ -498,6 +498,56 @@ class ApplicabilityDecisionTests(unittest.TestCase):
             self.assertFalse(component["package_evidence_spans"])
             self.assertTrue(component["negative_evidence_spans"])
 
+    def test_forest_plan_weak_positive_trigger_is_not_applicable_with_scope_context(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = _write_decision_fixture(Path(tmp))
+            authority_universe_path = (
+                fixture["output_dir"]
+                / "reviews"
+                / fixture["review_id"]
+                / "applicability"
+                / "authority_universe_snapshot.json"
+            )
+            authority_universe = json.loads(
+                authority_universe_path.read_text(encoding="utf-8")
+            )
+            for candidate in authority_universe["candidate_authorities"]:
+                if (
+                    candidate["candidate_authority_id"]
+                    == "forest-plan-component:unit-inventory:STD-FP-01"
+                ):
+                    candidate["positive_trigger_groups"] = [["if needed"]]
+                    candidate["package_section_filters"]["package_evidence_terms"] = [
+                        "if needed"
+                    ]
+                    candidate["retrieval_contract"]["package_queries"] = ["if needed"]
+            _write_json(authority_universe_path, authority_universe)
+
+            result = build_applicability_decisions(
+                output_dir=fixture["output_dir"],
+                review_id=fixture["review_id"],
+                source_set_id=fixture["source_set_id"],
+            )
+
+            decisions = {
+                row["candidate_authority_id"]: row for row in _read_jsonl(result.decisions_path)
+            }
+            component = decisions["forest-plan-component:unit-inventory:STD-FP-01"]
+            self.assertEqual(component["status"], "not_applicable")
+            self.assertEqual(component["basis_type"], "forest_plan_component")
+            self.assertEqual(component["arbitration_status"], "weak_positive_only")
+            self.assertEqual(component["contradiction_notes"], [])
+            self.assertEqual(component["package_evidence_spans"], [])
+            self.assertTrue(component["explicit_trigger_miss_evidence"])
+            self.assertEqual(
+                component["explicit_trigger_miss_evidence"][0]["missing_trigger_groups"],
+                [["if needed"]],
+            )
+            self.assertEqual(component["basis"]["weak_trigger_groups"], [["if needed"]])
+            self.assertFalse(component["arbitration_summary"]["requires_adjudication"])
+
     def test_cli_writes_decision_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             fixture = _write_decision_fixture(Path(tmp))

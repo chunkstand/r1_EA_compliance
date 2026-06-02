@@ -415,6 +415,18 @@ def _decision_for_candidate(
             "source_evidence_availability": candidate.get("source_evidence_availability") or {},
         }
     elif candidate.get("candidate_authority_type") == "forest_plan_component":
+        if positive_groups or negative_groups:
+            trigger_arbitration = _arbitrate_trigger_matches(
+                candidate=candidate,
+                positive_match=positive_match,
+                negative_match=negative_match,
+                coverage_boundary=coverage_boundary,
+            )
+        else:
+            trigger_arbitration = _trigger_arbitration_not_evaluated(
+                "Forest Plan component has no trigger groups; profile/component scope predicate decides applicability.",
+                arbitration_status="component_scope_only",
+            )
         component_result = _forest_plan_component_result(
             candidate=candidate,
             package_nodes=package_nodes,
@@ -422,6 +434,7 @@ def _decision_for_candidate(
             positive_match=positive_match,
             negative_match=negative_match,
             coverage_boundary=coverage_boundary,
+            trigger_arbitration=trigger_arbitration,
         )
         status = component_result["status"]
         basis_type = component_result["basis_type"]
@@ -430,9 +443,6 @@ def _decision_for_candidate(
         contradiction_notes.extend(component_result["contradiction_notes"])
         confidence = component_result["confidence"]
         predicate_name = "forest_plan_component"
-        trigger_arbitration = _trigger_arbitration_not_evaluated(
-            "Forest Plan components use the profile/component predicate."
-        )
     else:
         mode = str(
             (candidate.get("rule_template") or {}).get("applicability_mode")

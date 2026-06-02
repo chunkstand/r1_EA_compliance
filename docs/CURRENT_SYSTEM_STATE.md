@@ -15,6 +15,45 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Forest-Plan Weak Trigger Adjudication Narrowing Resolved Locally
+
+Latest implementation update on 2026-06-02 UTC:
+
+- update:
+  deterministic Forest Plan component applicability now evaluates component
+  trigger strength with the shared trigger-arbitration telemetry while keeping
+  the Forest Plan scope predicate authoritative for geography, management-area,
+  and overlay applicability. Weak-only positive component trigger matches are
+  recorded as diagnostic trigger-miss evidence when search coverage is
+  sufficient; they no longer create `needs_adjudication` blockers or
+  contradiction notes. Strong positive component triggers with weak auxiliary
+  evidence still apply, and explicit negative component scope evidence keeps
+  its existing not-applicable precedence.
+- North Seeley replay evidence:
+  after rerunning `applicability-determine`, all `1004` Lolo Forest Plan
+  component candidates are final: `16` applicable and `988` not-applicable.
+  Overall deterministic decisions now report `65` applicable, `1003`
+  not-applicable, and `2` needs-adjudication authorities. The remaining
+  needs-adjudication authorities are both authority-family positive/negative
+  conflicts (`species_supporting_sources_and_overlays` and
+  `vegetation_wildfire_forest_health_authorities`), not Forest Plan component
+  scope failures.
+- phase-eval result:
+  North Seeley `phase-eval` remains intentionally fail-closed at
+  `applicability_validation`, `generated_rule_pack`, and `compliance_review`.
+  The applicability validation failures are now limited to the two unresolved
+  authority-family conflicts. The Forest Plan matrix remains required with
+  `forest_plan_expected_applicable_standard_count=330`; `generated_rule_pack`
+  and `compliance_review` remain blocked until applicability adjudication and
+  compliance matrix generation are closed.
+- verification:
+  focused applicability/Forest Plan tests passed (`42 passed`), including
+  applicability decisions, validation, retrieval graph, package fact graph,
+  phase-eval Forest Plan gates, and the architecture contract. `ruff check src
+  tests`, `python -m compileall src`, and `git diff --check` passed. Live
+  North Seeley replay commands passed through determination and failed closed
+  at validation/phase-eval with the residual blockers above.
+
 ## Forest-Plan Context Scope Facts And Applicability Replay Scaling Resolved Locally
 
 Latest implementation update on 2026-06-02 UTC:
@@ -45,20 +84,20 @@ Latest implementation update on 2026-06-02 UTC:
   the rebuilt North Seeley applicability replay passed through
   `package_fact_graph`, `applicability_retrieval_trace`, `applicability_graph_trace`,
   and `applicability_determination`. Retrieval wrote `9630` retrieval rows and
-  `26745` graph rows. Determination now reports `56` applicable, `1002`
-  not-applicable, and `12` needs-adjudication candidates.
+  `26745` graph rows. Determination now reports `65` applicable, `1003`
+  not-applicable, and `2` needs-adjudication candidates.
 - remaining fail-closed state:
-  `applicability_validation` still fails by design with `12` unresolved
-  candidates. The remaining Forest Plan component blockers are weak/speculative
-  trigger evidence and one missing `mgmt-ma-23` scope; the previous missing
-  package-scope evidence for the resolver-visible Lolo management areas is
-  closed. `phase-eval` is green through authority universe, package fact graph,
+  `applicability_validation` still fails by design with `2` unresolved
+  authority-family conflicts. The previous weak/speculative Forest Plan
+  component blockers and the missing `mgmt-ma-23` component-scope blocker are
+  closed as adjudication blockers; all Forest Plan component decisions are now
+  final. `phase-eval` is green through authority universe, package fact graph,
   applicability retrieval/graph traces, and applicability determination, then
   fails closed at `applicability_validation`, `generated_rule_pack`, and
   `compliance_review` with `forest_plan_matrix_required=true` and `330`
   expected applicable Forest Plan standards.
 - verification:
-  focused tests passed (`35 passed`), including package fact graph,
+  focused tests passed (`42 passed`), including package fact graph,
   applicability retrieval/graph, applicability decision, phase-eval Forest
   Plan gates, and the architecture contract. `ruff check src tests`,
   `python -m compileall src`, and `git diff --check` passed. The live North

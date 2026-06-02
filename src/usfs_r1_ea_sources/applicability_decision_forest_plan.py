@@ -15,6 +15,7 @@ def forest_plan_component_result(
     negative_match: dict[str, Any],
     coverage_boundary: dict[str, Any],
     present_values: dict[str, set[str]] | None = None,
+    trigger_arbitration: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     required_values = _required_package_values(candidate)
     if present_values is None:
@@ -25,8 +26,13 @@ def forest_plan_component_result(
         for value in values
         if value not in present_values.get(fact_type, set())
     ]
-    trigger_required = bool(trigger_groups(candidate.get("positive_trigger_groups")))
-    trigger_matched = positive_match["matched"] if trigger_required else True
+    positive_groups = trigger_groups(candidate.get("positive_trigger_groups"))
+    trigger_required = bool(positive_groups)
+    positive_trigger_sufficient = _positive_trigger_sufficient(
+        positive_match=positive_match,
+        trigger_arbitration=trigger_arbitration,
+    )
+    trigger_matched = positive_trigger_sufficient if trigger_required else True
 
     if negative_match["requires_adjudication"]:
         return {
@@ -70,17 +76,34 @@ def forest_plan_component_result(
             "confidence": "low",
         }
 
-    if positive_match["requires_adjudication"]:
+    if positive_match["requires_adjudication"] and not positive_trigger_sufficient:
+        basis = {
+            "rationale": (
+                "Only weak Forest Plan component trigger evidence was found; weak "
+                "trigger evidence is diagnostic and does not make the component applicable."
+            ),
+            "matched_package_values": required_values if not missing else {},
+            "missing_package_values": missing,
+            "weak_trigger_groups": positive_match["matched_groups"],
+            "missing_trigger_groups": positive_groups,
+            "weak_trigger_notes": positive_match["adjudication_notes"],
+        }
+        if coverage_boundary["coverage_sufficient"]:
+            return {
+                "status": "not_applicable",
+                "basis_type": "forest_plan_component",
+                "basis": basis,
+                "missing_evidence": missing,
+                "contradiction_notes": [],
+                "confidence": "deterministic_medium",
+            }
         return {
-            "status": "needs_adjudication",
-            "basis_type": "unresolved_evidence_conflict",
-            "basis": {
-                "rationale": "Forest Plan component trigger evidence is weak or conflicting.",
-                "matched_trigger_groups": positive_match["matched_groups"],
-            },
-            "missing_evidence": missing,
-            "contradiction_notes": positive_match["adjudication_notes"],
-            "confidence": "needs_adjudication",
+            "status": "unresolved",
+            "basis_type": "forest_plan_profile_resolution",
+            "basis": basis,
+            "missing_evidence": [*missing, "sufficient forest-plan search coverage"],
+            "contradiction_notes": [],
+            "confidence": "low",
         }
 
     if not missing and trigger_matched:
@@ -128,3 +151,13 @@ def _required_package_values(candidate: dict[str, Any]) -> dict[str, list[str]]:
         "management_area": strings(forest_plan.get("management_area_ids")),
         "overlay": strings(forest_plan.get("overlay_ids")),
     }
+
+
+def _positive_trigger_sufficient(
+    *,
+    positive_match: dict[str, Any],
+    trigger_arbitration: dict[str, Any] | None,
+) -> bool:
+    if trigger_arbitration:
+        return bool(trigger_arbitration.get("positive_trigger_sufficient"))
+    return bool(positive_match["matched"] and not positive_match["requires_adjudication"])

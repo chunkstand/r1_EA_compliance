@@ -68,14 +68,20 @@ history below.
   candidates, `1004` Forest Plan components), package fact graph (`81383`
   facts, including `65` Forest Plan context-derived package facts: `60`
   management-area facts and `5` overlay facts), retrieval trace (`9630` rows),
-  graph trace (`26745` rows), and deterministic decisions (`56` applicable,
-  `1002` not applicable, `12` needs adjudication). `phase-eval` now fails stale
-  Forest Plan authority universes against the current context inventory path
-  and component count, and the compliance phase requires a Forest Plan matrix
-  for any resolved forest context; North Seeley now fails closed at
-  `applicability_validation`, `generated_rule_pack`, and `compliance_review`
-  with `forest_plan_matrix_required=true` and `330` expected applicable Forest
-  Plan standards until adjudication/compliance closes the remaining work.
+  graph trace (`26745` rows), and deterministic decisions. Weak-only positive
+  Forest Plan component trigger evidence is now diagnostic trigger-miss
+  evidence instead of an adjudication blocker, while strong component triggers
+  and explicit negative scope evidence keep their existing deterministic
+  behavior. North Seeley deterministic decisions now report `65` applicable,
+  `1003` not applicable, and `2` needs adjudication; all `1004` Lolo Forest
+  Plan component candidates are final (`16` applicable, `988` not applicable).
+  `phase-eval` now fails stale Forest Plan authority universes against the
+  current context inventory path and component count, and the compliance phase
+  requires a Forest Plan matrix for any resolved forest context; North Seeley
+  now fails closed at `applicability_validation`, `generated_rule_pack`, and
+  `compliance_review` with `forest_plan_matrix_required=true` and `330`
+  expected applicable Forest Plan standards until the remaining two
+  authority-family conflicts and compliance matrix work close.
 - latest resolved observability/eval context graph slice:
   `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md` Milestone 0. The
   repo has a tracked context-graph contract, `eval-context-graph-build`,

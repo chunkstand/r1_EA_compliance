@@ -202,7 +202,10 @@ def arbitration_summary(
     retrieval_trace_ids: list[str],
     graph_path_ids: list[str],
 ) -> dict[str, Any]:
-    requires_adjudication = bool(trigger_arbitration.get("requires_adjudication"))
+    requires_adjudication = (
+        status == "needs_adjudication"
+        and bool(trigger_arbitration.get("requires_adjudication"))
+    )
     notes = sorted(
         set(
             strings(trigger_arbitration.get("arbitration_notes"))
