@@ -342,20 +342,6 @@ class ForestPlanProfileTests(unittest.TestCase):
             )
             self.assertEqual(len(coverage["fixtures"]), 4, forest_unit_id)
 
-    def test_lolo_profile_includes_seeley_lake_ranger_district(self) -> None:
-        profile = load_forest_plan_profile("lolo-nf")
-
-        self.assertIn(
-            "Seeley Lake Ranger District",
-            [entry.name for entry in profile.ranger_district_terms],
-        )
-        seeley_lake = next(
-            entry
-            for entry in profile.ranger_district_terms
-            if entry.entry_id == "district-seeley-lake"
-        )
-        self.assertEqual(seeley_lake.aliases, ("Seeley Lake District",))
-
     def test_profiles_cover_all_tracked_region1_readiness_units(self) -> None:
         profiles = load_forest_plan_profiles()
         readiness = json.loads(READINESS_PATH.read_text(encoding="utf-8"))

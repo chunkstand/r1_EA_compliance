@@ -117,7 +117,7 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
             )
             self.assertTrue(result.summary["reviewer_ready"])
 
-    def test_decision_notice_title_page_location_overrides_comment_response_examples(self) -> None:
+    def test_decision_notice_title_page_location_does_not_require_profile_district(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "source_library"
             source_set_id = _build_custer_source_library(output_dir)
@@ -138,14 +138,7 @@ class ForestPlanResolverScopeTests(unittest.TestCase):
                 if profile["forest_unit_id"] != "lolo-nf"
             ]
             profiles["profiles"][0]["ambiguous_unit_terms"] = ["Lolo"]
-            profiles["profiles"][0]["ranger_district_terms"] = [
-                {
-                    "entry_id": "district-seeley-lake",
-                    "category": "district",
-                    "name": "Seeley Lake Ranger District",
-                    "aliases": ["Seeley Lake District"],
-                }
-            ]
+            profiles["profiles"][0]["ranger_district_terms"] = []
             profiles_path.write_text(
                 json.dumps(profiles, indent=2, sort_keys=True),
                 encoding="utf-8",

@@ -195,12 +195,16 @@ def _context_report(
         if _is_profile_scope(scope, resolver_profile)
         else []
     )
-    project_location_signals = _resolved_entries(
+    profile_project_location_signals = _resolved_entries(
         entries=resolver_profile.ranger_district_entries,
         package_chunks=package_chunks,
         index_path=index_path,
         source_top_k=source_top_k,
         attach_plan_evidence=False,
+    )
+    project_location_signals = _project_location_signals(
+        profile_project_location_signals,
+        title_page_project_location=scope.get("title_page_project_location"),
     )
     if _is_profile_scope(scope, resolver_profile):
         geographic_areas = _resolved_entries(
@@ -440,24 +444,10 @@ def _title_page_project_location(
                 limit=None,
             )
         )
-    ranger_districts = []
-    for entry in resolver_profile.ranger_district_entries:
-        evidence = [
-            _mark_title_page_project_location(item)
-            for item in _mentions_for_entry(title_chunks, entry)
-        ]
-        if evidence:
-            ranger_districts.append(
-                {
-                    "entry_id": entry.entry_id,
-                    "category": entry.category,
-                    "name": entry.name,
-                    "aliases": list(entry.aliases),
-                    "source_record_id": entry.source_record_id,
-                    "package_evidence": _dedupe_evidence(evidence),
-                    "resolution_status": "resolved",
-                }
-            )
+    ranger_districts = _title_page_ranger_districts(
+        title_chunks,
+        forest_unit_names=resolver_profile.profile.forest_unit_names,
+    )
 
     county_state = _title_page_county_state(
         title_chunks,
@@ -526,6 +516,21 @@ def _prioritize_title_page_evidence(records: list[dict]) -> list[dict]:
             str(item.get("chunk_id") or ""),
             int(item.get("evidence_span", {}).get("source_char_start") or 0),
         ),
+    )
+
+
+def _project_location_signals(
+    profile_project_location_signals: list[dict],
+    *,
+    title_page_project_location: dict | None,
+) -> list[dict]:
+    if isinstance(title_page_project_location, dict):
+        title_page_signals = list(title_page_project_location.get("ranger_districts") or [])
+        if title_page_signals:
+            return sorted(title_page_signals, key=lambda item: (item["category"], item["name"]))
+    return sorted(
+        profile_project_location_signals,
+        key=lambda item: (item["category"], item["name"]),
     )
 
 
@@ -616,6 +621,93 @@ def _title_page_county_state(
     return None
 
 
+def _title_page_ranger_districts(
+    title_chunks: list[dict],
+    *,
+    forest_unit_names: tuple[str, ...],
+) -> list[dict]:
+    districts = []
+    for chunk in title_chunks:
+        text = str(chunk.get("text") or "")
+        for forest_unit_name in forest_unit_names:
+            for match in _title_page_ranger_district_matches(
+                text,
+                forest_unit_name=forest_unit_name,
+            ):
+                name = _normalize_ranger_district_name(match.group("district"))
+                span_start = match.start("district")
+                span_end = match.end("district")
+                name_start = match.group("district").lower().rfind(name.lower())
+                if name_start >= 0:
+                    span_start += name_start
+                    span_end = span_start + len(name)
+                evidence = _title_page_named_location_evidence(
+                    chunk=chunk,
+                    category="district",
+                    entry_id=_title_page_entry_id("district", name),
+                    name=name,
+                    span_start=span_start,
+                    span_end=span_end,
+                )
+                districts.append(
+                    {
+                        "entry_id": evidence["entry_id"],
+                        "category": "district",
+                        "name": name,
+                        "aliases": [],
+                        "source_record_id": None,
+                        "package_evidence": [evidence],
+                        "plan_source_evidence": [],
+                        "resolution_status": "resolved",
+                    }
+                )
+    deduped = {}
+    for district in districts:
+        key = district["name"].lower()
+        if key not in deduped:
+            deduped[key] = district
+            continue
+        deduped[key]["package_evidence"] = _dedupe_evidence(
+            [
+                *deduped[key].get("package_evidence", []),
+                *district.get("package_evidence", []),
+            ]
+        )
+    return sorted(deduped.values(), key=lambda item: item["name"])
+
+
+def _title_page_ranger_district_matches(
+    text: str,
+    *,
+    forest_unit_name: str,
+) -> list[re.Match[str]]:
+    forest_pattern = re.escape(forest_unit_name).replace(r"\ ", r"\s+")
+    pattern = re.compile(
+        r"(?P<district>"
+        r"[A-Z][A-Za-z0-9&.'/-]*(?:\s+[A-Z][A-Za-z0-9&.'/-]*){0,6}"
+        r"\s+Ranger\s+Districts?"
+        r")\s+"
+        rf"{forest_pattern}\b",
+        flags=re.IGNORECASE,
+    )
+    return list(pattern.finditer(text))
+
+
+def _normalize_ranger_district_name(name: str) -> str:
+    normalized = " ".join(name.split()).strip(" -:;")
+    for marker in (
+        "finding of no significant impact",
+        "fonsi",
+        "decision notice",
+    ):
+        marker_index = normalized.lower().rfind(marker)
+        if marker_index >= 0:
+            normalized = normalized[marker_index + len(marker) :].strip(" -:;")
+    if normalized.lower().startswith("and "):
+        normalized = normalized[4:].strip(" -:;")
+    return normalized
+
+
 def _normalize_counties(raw_counties: str) -> list[str]:
     names = [
         name.strip(" ,")
@@ -670,6 +762,59 @@ def _title_page_admin_evidence(
             "content_sha256": chunk.get("content_sha256"),
         },
     }
+
+
+def _title_page_named_location_evidence(
+    *,
+    chunk: dict,
+    category: str,
+    entry_id: str,
+    name: str,
+    span_start: int,
+    span_end: int,
+) -> dict:
+    text = str(chunk.get("text") or "")
+    span_text = text[span_start:span_end].strip()
+    source_chunk_start = int(chunk.get("char_start") or 0)
+    return {
+        "category": category,
+        "entry_id": entry_id,
+        "name": name,
+        "matched_alias": span_text,
+        "citation_label": chunk.get("citation_label"),
+        "chunk_id": chunk.get("chunk_id"),
+        "source_record_id": chunk.get("source_record_id"),
+        "title": chunk.get("title"),
+        "evidence_role": "project_location",
+        "title_page_project_location": True,
+        "resolution_basis": "decision_notice_fonsi_title_page",
+        "evidence_span": {
+            "text": span_text,
+            "chunk_char_start": span_start,
+            "chunk_char_end": span_end,
+            "source_char_start": source_chunk_start + span_start,
+            "source_char_end": source_chunk_start + span_end,
+        },
+        "provenance": {
+            "artifact_sha256": chunk.get("artifact_sha256"),
+            "artifact_path": chunk.get("artifact_path"),
+            "parser_name": chunk.get("parser_name"),
+            "parser_version": chunk.get("parser_version"),
+            "extracted_at": chunk.get("extracted_at"),
+            "source_text_path": chunk.get("source_text_path"),
+            "char_start": chunk.get("char_start"),
+            "char_end": chunk.get("char_end"),
+            "page": chunk.get("page"),
+            "section": chunk.get("section"),
+            "heading": chunk.get("heading"),
+            "content_sha256": chunk.get("content_sha256"),
+        },
+    }
+
+
+def _title_page_entry_id(prefix: str, name: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    return f"title-page-{prefix}-{slug}"
 
 
 def _is_scope_decisive_mention(evidence: dict) -> bool:

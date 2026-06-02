@@ -529,8 +529,11 @@ resolution without re-extracting the package files.
 - profile source records used by the resolver
 - `title_page_project_location`: authoritative administrative-location evidence extracted from a
   Decision Notice/FONSI title page when present, including selected forest unit, selected-profile
-  ranger districts, counties, state, and package evidence offsets
-- project location signals found in the EA package
+  ranger districts when configured, title-page ranger districts parsed from the decision document,
+  counties, state, and package evidence offsets
+- project location signals found in the EA package; when a Decision Notice/FONSI title page provides
+  ranger district evidence, that title-page evidence is authoritative over profile district mentions
+  elsewhere in the package
 - `background_location_mentions`: district or forest-unit mentions classified as background,
   bibliography, reference, coordination, comparison, or otherwise non-project-location evidence
 - resolved geographic areas
