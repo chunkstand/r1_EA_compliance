@@ -43,10 +43,14 @@ history below.
   `source_set_id="source-set-f70ea11e04ae3d53"`. It requires the first-class
   applicability eval summary and fails closed on missing, stale, mismatched, or
   below-threshold summaries while leaving unrelated reviews non-blocking. The
-  local ignored `source_library` applicability eval artifact has not been
-  regenerated in this slice and still reflects the older 9-case
-  `source-set-ba8d0feae79501b8` summary without the new contract identity or
-  failure-intake artifact.
+  live ignored `source_library` applicability eval artifact has now been
+  regenerated for f70: `10/10` cases passed, all blocking metric groups passed,
+  `trajectory_process_quality` remains the only expected non-blocking gap, and
+  `3` replayable failure-intake cases were written. The West Reservoir/f70
+  phase-eval ratchet consumed the summary with
+  `applicability_validation=direct_eval_present`, `36/36` phases passed,
+  `critical_phase_count=11`, `direct_eval_ready_phase_count=11`, and
+  `blockers=[]`.
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then read
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` for the
@@ -60,11 +64,11 @@ history below.
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` Milestone 0
   plus the applicability summary-contract, Forest Plan subgate fixture, and
   replayable failure-intake artifact slices, plus Milestone 3 scoped
-  applicability phase-eval ratchet
+  applicability phase-eval ratchet and live f70/West Reservoir proof
 - active packet:
   no active implementation slice is open. The next bounded packet should be
-  explicit: regenerate scoped live applicability proof artifacts, add
-  trajectory/process quality, add promotion ratchets, or widen all-step evals.
+  explicit: add trajectory/process quality, add promotion ratchets, or widen
+  all-step evals.
 - recent research addendum:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current Braintrust/Phoenix/LangSmith/Langfuse/MLflow/OpenAI,

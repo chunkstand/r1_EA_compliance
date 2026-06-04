@@ -1,7 +1,7 @@
 # First-Class System Evaluation Improvement Milestone Plan
 
 Date: 2026-06-04
-Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; Milestone 2 reduced; Milestone 3 implemented
+Status: Milestone 3 live-proven
 Plan class: implementation
 High-risk implementation: yes
 Owner context: repo-native goal for extending first-class evaluations across the USFS R1 EA
@@ -180,7 +180,10 @@ Outcome label: resolved.
 Closeout note: implemented for `west-reservoir-67436` on `source-set-f70ea11e04ae3d53`. The new
 producer checks schema, contract, scorer, identity, hashes, blocking groups, allowed gaps, and
 failure-intake hash. Tests prove fail-closed and unrelated-review behavior. No promotion gate,
-global ratchet, live regeneration, gate-graph consumption, or model judge was added.
+global ratchet, gate-graph consumption, or model judge was added.
+
+Live proof note: f70 `applicability-eval` passes `10/10`; West Reservoir/f70 `phase-eval`
+passes `36/36` with `applicability_validation=direct_eval_present` and `blockers=[]`.
 
 ### Milestone 4 - All-Step Evaluation Expansion
 
@@ -228,11 +231,10 @@ the verified milestone slice. Do not stage ignored `source_library/` outputs.
 ## Closeout Outcome Record
 
 Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; Milestone 2
-failure-intake artifact slice reduced; Milestone 3 scoped phase-eval ratchet implemented for
-`west-reservoir-67436` on `source-set-f70ea11e04ae3d53`. Schema, coverage, routing, current-state,
-and handoff docs must stay fresh with each committed slice.
-- Residual risk after closeout: trace promotion, trajectory scoring, live f70 proof, promotion
-  gates, and all-step expansion remain future packets.
+failure-intake artifact slice reduced; Milestone 3 scoped phase-eval ratchet implemented and
+live-proven for `west-reservoir-67436` on `source-set-f70ea11e04ae3d53`.
+- Residual risk after closeout: trace promotion, trajectory scoring, promotion gates, and all-step
+  expansion remain future packets.
 
 ## Stop Conditions
 

@@ -24,16 +24,17 @@ implemented summary-contract and Forest Plan component/subgate fixture slices. A
 2 failure-intake artifact slice now writes replayable applicability failure-intake cases.
 Milestone 3 implements the first scoped phase-eval applicability ratchet for
 `review_id=west-reservoir-67436` and `source_set_id=source-set-f70ea11e04ae3d53`.
-Promotion gates, live `source_library` proof artifacts, trajectory/process scoring, and
-model-judge scoring are unchanged.
+The live f70 applicability eval proof and West Reservoir phase-eval replay are now green.
+Promotion gates, trajectory/process scoring, and model-judge scoring are unchanged.
 
 First scoped applicability ratchet target: `review_id=west-reservoir-67436` with
 `source_set_id=source-set-f70ea11e04ae3d53`. The ratchet is active in
 `phase-eval-direct-eval-v1` and fails closed on missing, stale, source-set-mismatched,
 schema-invalid, or below-threshold applicability summaries while skipping unrelated reviews.
-Widening is blocked until the selected scope proves source-set/review identity, artifact hashes,
-trace hashes, per-family metrics, hard negatives, generated-rule-pack fidelity, gate-graph
-consistency, and case-promotion replay without blocking unrelated reviews or source sets.
+The selected scope proves source-set/review identity, artifact hashes, per-family metrics, hard
+negatives, generated-rule-pack fidelity, gate-graph consistency, and failure-intake replay without
+blocking unrelated reviews or source sets. Widening is still blocked on trajectory/process scoring
+and explicit promotion-gate design.
 
 ### All-Step Evaluation Coverage Map
 
