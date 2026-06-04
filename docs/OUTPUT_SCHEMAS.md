@@ -2360,7 +2360,9 @@ is supplied. The result schema is `applicability-eval-results-v0` and records:
   trajectory/process quality
 - convenience scorer summaries for `hard_negative_results`, `per_family_scores`,
   `trace_quality_scores`, `graph_path_scores`, `rule_pack_fidelity_scores`,
-  `gate_graph_consistency_scores`, and `failure_intake_candidates`
+  `gate_graph_consistency_scores`, `failure_intake_summary`, `failure_intake_cases_path`,
+  `failure_intake_cases_sha256`, `failure_intake_cases_file_sha256`, and
+  `failure_intake_candidates`
 - one case summary per fixture, including review ID, source set ID, artifact paths, actual and
   expected statuses, applicable/non-applicable/generated rule IDs, package fact types, source-record
   and document-role alignment status, package-section alignment status, graph path/non-path status,
@@ -2385,6 +2387,19 @@ generated-rule-pack validation.
 Fixture cases may also declare explicit `candidate_authorities` for non-template candidates such
 as Forest Plan components; those records are included in the eval authority universe and source
 index without changing production catalog or inventory discovery.
+
+`applicability-eval` also writes
+`source_library/reviews/applicability_eval/applicability_failure_intake_cases.json` with schema
+`applicability-failure-intake-cases-v0`. It records failed, unresolved, and
+needs-adjudication cases from the same eval run. Each case has schema
+`applicability-failure-intake-case-v0` and preserves source case/review/source-set/profile
+identity, pass/adjudication state, actual and expected statuses, failure reasons and category
+counts, assertion contract, deterministic scorer metadata, source artifact refs with hashes,
+retrieval trace IDs, graph path IDs, source record IDs, citation labels, owner surface, risk level,
+lifecycle review/removal conditions, human-label placeholders, and tags. The artifact summary
+records validation status, replayable candidate counts, failed and adjudication-needed counts,
+source artifact ref counts, failure-category counts, `failure_intake_cases_sha256`, and the
+byte-level file hash in the top-level eval summary as `failure_intake_cases_file_sha256`.
 The eval fails when expected applicability statuses or partitions drift, non-applicable authorities
 lack coverage certificates, expected retrieval or graph traces are missing, expected graph non-paths
 are violated, package facts are not found, source-record/document-role/package-section alignment

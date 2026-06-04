@@ -220,10 +220,63 @@ class ApplicabilityEvalTests(unittest.TestCase):
                 ],
                 1,
             )
+            self.assertEqual(
+                metric_groups["adjudication_failure_intake"]["status"],
+                "direct_eval_present",
+            )
+            self.assertTrue(metric_groups["adjudication_failure_intake"]["blocking"])
+            self.assertTrue(metric_groups["adjudication_failure_intake"]["passed"])
+            self.assertEqual(
+                metric_groups["adjudication_failure_intake"]["metrics"][
+                    "failure_intake_candidate_count"
+                ],
+                3,
+            )
+            self.assertEqual(
+                metric_groups["adjudication_failure_intake"]["metrics"][
+                    "replayable_case_count"
+                ],
+                3,
+            )
             self.assertIn(
                 "trajectory_process_quality",
                 result.summary["non_blocking_gap_group_ids"],
             )
+            self.assertEqual(
+                result.summary["non_blocking_gap_group_ids"],
+                ["trajectory_process_quality"],
+            )
+            failure_intake_path = Path(result.summary["failure_intake_cases_path"])
+            self.assertTrue(failure_intake_path.exists())
+            failure_intake = json.loads(failure_intake_path.read_text(encoding="utf-8"))
+            self.assertEqual(
+                failure_intake["schema_version"],
+                "applicability-failure-intake-cases-v0",
+            )
+            self.assertEqual(failure_intake["summary"]["failure_intake_candidate_count"], 3)
+            self.assertEqual(
+                failure_intake["summary"]["failure_intake_cases_sha256"],
+                result.summary["failure_intake_cases_sha256"],
+            )
+            self.assertEqual(
+                result.summary["failure_intake_summary"]["failure_intake_cases_file_sha256"],
+                result.summary["failure_intake_cases_file_sha256"],
+            )
+            for intake_case in failure_intake["cases"]:
+                self.assertEqual(
+                    intake_case["schema_version"],
+                    "applicability-failure-intake-case-v0",
+                )
+                self.assertEqual(intake_case["owner_surface"], "applicability_eval")
+                self.assertTrue(intake_case["assertion_contract"]["assertions"])
+                self.assertTrue(intake_case["source_trace"]["source_artifact_refs"])
+                self.assertTrue(
+                    all(
+                        ref["artifact_ref"] and ref["sha256"]
+                        for ref in intake_case["source_trace"]["source_artifact_refs"]
+                    )
+                )
+                self.assertTrue(intake_case["source_trace"]["retrieval_trace_ids"])
             arbitration = result.summary["arbitration_summary"]
             self.assertGreaterEqual(
                 arbitration["applicable_with_weak_auxiliary_count"],
@@ -581,6 +634,17 @@ class ApplicabilityEvalTests(unittest.TestCase):
             )
 
             self.assertFalse(result.summary["passed"])
+            self.assertTrue(
+                result.summary["metric_groups"]["adjudication_failure_intake"]["passed"]
+            )
+            self.assertEqual(
+                result.summary["failure_intake_summary"]["failed_case_count"],
+                1,
+            )
+            self.assertEqual(
+                result.summary["failure_intake_summary"]["failure_intake_candidate_count"],
+                1,
+            )
             self.assertEqual(
                 result.summary["failure_category_counts"],
                 {"applicability_status_mismatch": 1},
@@ -596,6 +660,17 @@ class ApplicabilityEvalTests(unittest.TestCase):
                     }
                 ],
             )
+            failure_intake = json.loads(
+                Path(result.summary["failure_intake_cases_path"]).read_text(
+                    encoding="utf-8",
+                )
+            )
+            [intake_case] = failure_intake["cases"]
+            self.assertEqual(
+                intake_case["failure_category_counts"],
+                {"applicability_status_mismatch": 1},
+            )
+            self.assertEqual(intake_case["risk_level"], "high")
 
     def test_applicability_eval_fails_when_non_applicable_artifact_is_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

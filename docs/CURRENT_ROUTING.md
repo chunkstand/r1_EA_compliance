@@ -12,15 +12,19 @@ Use this short route before opening append-only docs.
 - Latest resolved first-class system-evaluation improvement slice:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`
   Milestone 0 is implemented locally as a docs-only coverage goal and gap
-  register, and the Milestone 1 summary-contract plus Forest Plan subgate
-  fixture slices are implemented in `applicability-eval`. The eval output now
+  register, the Milestone 1 summary-contract plus Forest Plan subgate fixture
+  slices are implemented, and the reduced Milestone 2 failure-intake artifact
+  slice is implemented in `applicability-eval`. The eval output now
   records
   `contract_id="applicability-direct-eval-summary-v1"`, `scorer_version`,
   source artifact hashes, required metric groups, blocking/non-blocking gap
   groups, hard-negative summaries, trace/graph/rule-pack scores, failure-intake
   candidates, opt-in gate-graph contradiction checks, and one required Forest
-  Plan component/subgate case. No phase-eval applicability ratchet or promotion
-  gate is active yet; replayable failure intake remains the next residual.
+  Plan component/subgate case, and it writes
+  `applicability_failure_intake_cases.json` with replayable failed,
+  unresolved, or needs-adjudication cases. No phase-eval applicability ratchet
+  or promotion gate is active yet; the scoped ratchet remains the next
+  residual.
 - Research addendum for that packet:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current agent/RAG/graph evaluation practice and maps it to local
@@ -130,11 +134,11 @@ Use this short route before opening append-only docs.
 - Active implementation slice: no active all-forest Forest Plan residual is
   open in the governed manifest. The proposed next bounded packet is
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`
-  Milestone 1, which must harden the applicability direct-eval contract and
-  emit summary metrics that eval-trace inventory and phase-eval can consume.
+  Milestone 3, which must add the first scoped applicability phase-eval
+  ratchet now that summary metrics, Forest Plan subgate coverage, and
+  replayable failure-intake cases exist.
   The first scoped applicability ratchet target is `west-reservoir-67436` on
-  `source-set-f70ea11e04ae3d53`, but the ratchet itself is not active until
-  Milestones 1 and 2 prove replayable summary metrics and failure intake. Open
+  `source-set-f70ea11e04ae3d53`, but the ratchet itself is not active yet. Open
   a separate bounded packet before adding new EA packages, broadening the
   manifest, hosted query service/API expansion, model-judge work, hosted
   scoring, knowledge-graph sidecar adoption, or future architecture-cap changes.
@@ -154,11 +158,10 @@ Use this short route before opening append-only docs.
 - System-evaluation improvement route:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` owns the
   staged goal for evaluating every pipeline step. Milestone 0 is closed
-  docs-only. Applicability is the first critical implementation lane; Milestone
-  1 must measure authority-universe coverage, retrieval/graph trace quality,
-  decision partition fidelity, generated-rule-pack fidelity, gate-graph
-  consistency, Forest Plan subgate behavior, hard negatives, and failure intake
-  before any wider ratchet.
+  docs-only. Applicability is the first critical implementation lane; the
+  direct-eval summary, Forest Plan subgate, and failure-intake artifact slices
+  are implemented. The next active residual is the first scoped phase-eval
+  ratchet before any wider gate expansion.
 - Extraction/chunking route: sidecar chunk, retrieval eval, graph/claim preview and canonical adoption, rule-link preview/eval, compliance review adoption, phase-eval adoption, and reviewer package adoption are closed locally. Knowledge-graph sidecar adoption requires a new bounded packet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 

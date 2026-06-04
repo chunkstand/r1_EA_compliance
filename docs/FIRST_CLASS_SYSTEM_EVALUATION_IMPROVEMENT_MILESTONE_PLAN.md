@@ -1,7 +1,7 @@
 # First-Class System Evaluation Improvement Milestone Plan
 
 Date: 2026-06-04
-Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; failure-intake residuals next
+Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; Milestone 2 failure-intake artifact slice reduced; scoped ratchet next
 Plan class: implementation
 High-risk implementation: yes
 Owner context: repo-native goal for extending first-class evaluations across the USFS R1 EA
@@ -9,10 +9,9 @@ reviewer-engine pipeline, with applicability evaluation as the first critical im
 
 ## Purpose And Current Evidence
 
-The repo already has a first-class eval/trace substrate, direct-eval-aware phase-eval, an
-observability/eval context graph, and an evaluation coverage register. Those surfaces make eval
-state inspectable, but they do not yet prove that every pipeline boundary has a strong improvement
-loop, nor do they make applicability quality visible enough to guide systematic improvement.
+The repo already has first-class eval/trace, direct-eval-aware phase-eval, an observability/eval
+context graph, and a coverage register. Those surfaces are inspectable, but they do not yet prove
+that every pipeline boundary has a strong improvement loop.
 
 Applicability is the critical decision boundary between source/retrieval evidence and downstream
 rule-pack, compliance, Forest Plan, V1, and promotion readiness. A weak applicability decision can
@@ -21,18 +20,9 @@ Forest Plan branch. The next improvement goal is therefore not a generic graph-p
 is a staged system-evaluation program that measures every step and starts by strengthening
 applicability as its own evaluated subsystem.
 
-Current evidence:
-
-- `docs/EVALUATION_COVERAGE_REGISTER.md` tracks structural validation and direct-eval coverage by
-  subsystem, including meta-eval, upstream, semantic graph, retrieval, compliance, forest-plan, V1,
-  gold, and promotion lanes.
-- `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md` defines the local eval/trace substrate, SQLite store,
-  canonical/OpenInference export, ratchet scope policy, and trace-to-case promotion.
-- `config/phase_eval_direct_eval_v1.json` makes source-set phases consume direct-eval artifacts,
-  but applicability is not yet a source-set direct-eval phase with its own granular improvement
-  metrics.
-- `docs/CURRENT_SYSTEM_STATE.md` records that applicability-gate-graph now emits a review-scoped
-  NEPA EA Graph of Gates, but compliance-review does not yet consume that graph.
+Current evidence: the coverage register tracks subsystem status; the eval-trace contract owns
+local trace storage/export and trace-to-case promotion; phase-eval already consumes direct-eval
+artifacts; applicability has a review-scoped Gate Graph, but no active scoped phase-eval ratchet.
 
 ## Goal, Non-Goals, And Scope
 
@@ -96,20 +86,10 @@ graph publication system.
 - Evaluation coverage truth:
   `docs/EVALUATION_COVERAGE_REGISTER.md`, `docs/OUTPUT_SCHEMAS.md`,
   `docs/CURRENT_ROUTING.md`, `docs/SESSION_HANDOFF.md`.
-- Existing first-class substrate:
-  `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md`,
-  `config/eval_trace_inventory_contract_v1.json`,
-  `config/eval_trace_cases/system_eval_trace_cases_v1.json`,
-  eval-trace implementation modules.
-- Applicability implementation and eval owners:
-  `src/usfs_r1_ea_sources/applicability_*`,
-  `src/usfs_r1_ea_sources/applicability_eval.py`,
-  `config/applicability_gold_eval_v1.json`,
-  `config/applicability_gate_graph_nepa_ea_v1.json`.
-- Phase and promotion consumers:
-  `config/phase_eval_direct_eval_v1.json`,
-  phase-eval implementation modules,
-  `config/promotion_suite_v1.json`.
+- Existing first-class substrate: eval-trace contract/config/cases and eval-trace modules.
+- Applicability implementation and eval owners: applicability modules, eval seed/gold files, and
+  gate-graph config.
+- Phase and promotion consumers: phase-eval direct-eval config/modules and promotion suite config.
 - Tests:
   focused applicability eval tests, phase-eval direct-eval tests, eval-trace case-promotion tests,
   and architecture-contract tests.
@@ -154,10 +134,9 @@ Outcome label: reduced.
   partition, generated rule pack, gate graph, Forest Plan subgate, and adjudication/failure intake.
 - Record the first scoped applicability ratchet target and the stop conditions for widening it.
 
-Closeout note: implemented docs-only in `docs/EVALUATION_COVERAGE_REGISTER.md`. The register states
-the eval goal, maps pipeline steps, adds applicability gaps, and names `west-reservoir-67436` on
-`source-set-f70ea11e04ae3d53` as the first scoped target after Milestones 1-2. No runtime gate,
-source-library artifact, hosted scorer, or model judge changed.
+Closeout note: implemented docs-only in the coverage register. It maps pipeline steps,
+applicability gaps, and the first scoped target. No runtime gate, live artifact, hosted scorer, or
+model judge changed.
 
 ### Milestone 1 - Applicability Direct-Eval Contract Hardening
 
@@ -170,6 +149,10 @@ Outcome label: reduced.
 - Add focused tests proving missing categories, wrong source-set/review identity, stale trace
   hashes, wrong generated-rule partitions, and gate-graph contradictions fail closed.
 
+Closeout note: summary-contract and Forest Plan subgate slices are implemented. The seed replay now
+emits direct-eval identity, metric groups, trace/graph/rule-pack/gate scores, hard negatives, and
+Forest Plan subgate metrics. The only non-blocking gap is trajectory/process quality.
+
 ### Milestone 2 - Applicability Failure Intake And Trace-To-Case Promotion
 
 Outcome label: resolved.
@@ -179,6 +162,11 @@ Outcome label: resolved.
   review condition, and removal condition.
 - Add replay tests for at least one promoted failure from retrieval evidence, one from decision
   partition drift, and one from generated rule-pack drift.
+
+Closeout note: reduced by the failure-intake artifact slice. The eval now writes replayable failed,
+unresolved, and needs-adjudication cases with artifact hashes, lineage, assertions, scorer metadata,
+owner/risk/lifecycle fields, and human-label placeholders. Full trace-to-case promotion and scoped
+phase-eval ratchet widening remain separate packets.
 
 ### Milestone 3 - Scoped Applicability Phase-Eval Ratchet
 
@@ -202,7 +190,6 @@ Outcome label: reduced.
 ## Verification Gates
 
 - `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --new-plan docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md --strict`
-- For docs-only Milestone 0: `git diff --check`.
 - For applicability implementation milestones:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py tests/test_eval_trace_case_promote.py tests/test_architecture_contract.py`
 - For source changes: `PYTHONPATH=src uv run --extra dev ruff check src tests` and
@@ -235,14 +222,11 @@ the verified milestone slice. Do not stage ignored `source_library/` outputs.
 
 ## Closeout Outcome Record
 
-Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; failure-intake
-residuals pending.
-
-- Milestone 0 closeout command summary: plan lint and diff whitespace checks passed.
-- Applicability closeout summary: tests/lint passed; one Forest Plan component/gate-graph case is
-  now covered. Failure intake and scoped ratchet remain pending.
-- Docs and handoff freshness: schema, coverage, routing, current-state, and handoff docs updated.
-- Commit identifier: this commit.
+Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; Milestone 2
+failure-intake artifact slice reduced. Next bounded packet: trace-to-case replay depth or the
+scoped applicability phase-eval ratchet for `west-reservoir-67436` on
+`source-set-f70ea11e04ae3d53`. Schema, coverage, routing, current-state, and handoff docs must stay
+fresh with each committed slice.
 - Residual risk after closeout: replayable failure intake, selected-review summaries, and the
   scoped phase-eval ratchet remain Milestones 1-3.
 

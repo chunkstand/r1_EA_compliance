@@ -7,6 +7,7 @@ import json
 from .applicability_eval_authority_universe import _selected_authority_family_templates
 from .applicability_eval_authority_universe import _selected_rules
 from .applicability_eval_authority_universe import _write_authority_universe
+from .applicability_eval_failure_intake import write_applicability_failure_intake_cases
 from .applicability_eval_fixture_runtime import _case_package_path
 from .applicability_eval_fixture_runtime import _case_source_chunks
 from .applicability_eval_fixture_runtime import _write_package_cache
@@ -17,7 +18,6 @@ from .applicability_eval_summary import _aggregate_arbitration_summary
 from .applicability_eval_summary import _applicability_eval_metric_groups
 from .applicability_eval_summary import _authority_family_template_coverage
 from .applicability_eval_summary import _failure_category_counts
-from .applicability_eval_summary import _failure_intake_candidates
 from .applicability_eval_summary import _hard_negative_results
 from .applicability_eval_summary import _metric_group_contract_summary
 from .applicability_eval_support import DEFAULT_APPLICABILITY_EVAL_PATH
@@ -135,6 +135,12 @@ def run_applicability_eval(
             "generated_rule_pack_matches_applicability",
         ),
     }
+    failure_intake_result = write_applicability_failure_intake_cases(
+        eval_output_dir=eval_output_dir,
+        eval_payload=eval_payload,
+        eval_file=eval_file,
+        case_results=case_results,
+    )
     authority_family_template_coverage = _authority_family_template_coverage(
         eval_payload=eval_payload,
         template_set=authority_family_template_set,
@@ -148,6 +154,7 @@ def run_applicability_eval(
         authority_family_template_coverage=authority_family_template_coverage,
         arbitration_summary=arbitration_summary,
         failure_category_counts=failure_category_counts,
+        failure_intake_summary=failure_intake_result["summary"],
     )
     metric_group_contract_summary = _metric_group_contract_summary(metric_groups)
     source_artifact_refs = _source_artifact_refs(
@@ -205,7 +212,11 @@ def run_applicability_eval(
         "arbitration_summary": arbitration_summary,
         "failure_category_counts": failure_category_counts,
         "hard_negative_results": _hard_negative_results(case_results),
-        "failure_intake_candidates": _failure_intake_candidates(case_results),
+        "failure_intake_cases_path": str(failure_intake_result["path"]),
+        "failure_intake_cases_sha256": failure_intake_result["sha256"],
+        "failure_intake_cases_file_sha256": failure_intake_result["file_sha256"],
+        "failure_intake_summary": failure_intake_result["summary"],
+        "failure_intake_candidates": failure_intake_result["payload"]["cases"],
         "per_family_scores": authority_family_template_coverage,
         "trace_quality_scores": metric_groups["retrieval_trace_quality"],
         "graph_path_scores": metric_groups["graph_trace_quality"],

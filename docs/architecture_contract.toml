@@ -427,6 +427,7 @@ summary = "Applicability and V1 EA promotion/evaluation commands."
 modules = [
   "applicability_eval",
   "applicability_eval_authority_universe",
+  "applicability_eval_failure_intake",
   "applicability_eval_fixture_runtime",
   "applicability_eval_gold",
   "applicability_eval_runtime",

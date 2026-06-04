@@ -9682,6 +9682,16 @@ Latest closeout on 2026-05-18 after implementation commit `15d117a`:
   no baseline source records to omit the empty baseline-source field instead of
   failing validation. The ignored live `source_library` applicability-eval
   artifact was not regenerated as proof in these code slices.
+- As of the reduced Milestone 2 failure-intake artifact slice, new
+  `applicability-eval` runs also write
+  `source_library/reviews/applicability_eval/applicability_failure_intake_cases.json`.
+  The default seed still passes `10/10` cases; the generated intake artifact
+  records `3` replayable unresolved or needs-adjudication cases, validates
+  owner/risk/lifecycle metadata, assertion contracts, hashed source artifact
+  refs, and trace or source lineage, and leaves only
+  `trajectory_process_quality` as a non-blocking metric-group gap. The ignored
+  live `source_library` applicability-eval artifact was not regenerated as
+  proof for this code slice.
 - The Phase 6 live reviewer verification is still routed through the active
   East Crazies reviewer-ready lane rather than the canonical proving slice
   `source-set-9dcf819bc4cca486`. That proving slice still carries governed

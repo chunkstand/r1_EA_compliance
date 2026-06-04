@@ -29,9 +29,9 @@ def _applicability_eval_metric_groups(
     authority_family_template_coverage: dict[str, Any],
     arbitration_summary: dict[str, Any],
     failure_category_counts: dict[str, int],
+    failure_intake_summary: dict[str, Any],
 ) -> dict[str, dict[str, Any]]:
     hard_negative_results = _hard_negative_results(case_results)
-    failure_intake_candidates = _failure_intake_candidates(case_results)
     gate_graph_required_results = [
         case for case in case_results if case.get("gate_graph_required")
     ]
@@ -311,21 +311,32 @@ def _applicability_eval_metric_groups(
             "forest-plan component case is present",
         ),
         "adjudication_failure_intake": _metric_group(
-            status="direct_eval_strengthening_planned",
-            blocking=False,
-            passed=not failure_intake_candidates,
+            status="direct_eval_present",
+            blocking=True,
+            passed=bool(failure_intake_summary.get("validation_passed")),
             metrics={
-                "failure_intake_candidate_count": len(failure_intake_candidates),
-                "failed_case_count": sum(1 for case in case_results if not case.get("passed")),
-                "needs_adjudication_case_count": sum(
-                    1 for case in case_results if _case_needs_adjudication(case)
+                "failure_intake_candidate_count": failure_intake_summary.get(
+                    "failure_intake_candidate_count",
+                    0,
+                ),
+                "replayable_case_count": failure_intake_summary.get(
+                    "replayable_case_count",
+                    0,
+                ),
+                "failed_case_count": failure_intake_summary.get("failed_case_count", 0),
+                "needs_adjudication_case_count": failure_intake_summary.get(
+                    "needs_adjudication_case_count",
+                    0,
                 ),
                 "adjudicated_rule_count": sum(
                     len(_strings(case.get("adjudicated_rule_ids"))) for case in case_results
                 ),
+                "source_artifact_ref_count": failure_intake_summary.get(
+                    "source_artifact_ref_count",
+                    0,
+                ),
             },
-            failure_categories=failure_category_counts,
-            gap="failure promotion is routed to Milestone 2 trace-to-case intake",
+            failure_categories=failure_intake_summary.get("failure_category_counts") or {},
         ),
         "trajectory_process_quality": _metric_group(
             status="direct_eval_missing",
@@ -415,30 +426,6 @@ def _hard_negative_results(case_results: list[dict[str, Any]]) -> list[dict[str,
             }
         )
     return results
-
-
-def _failure_intake_candidates(case_results: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    candidates = []
-    for case in case_results:
-        if case.get("passed") and not _case_needs_adjudication(case):
-            continue
-        candidates.append(
-            {
-                "case_id": case.get("id"),
-                "review_id": case.get("review_id"),
-                "source_set_id": case.get("source_set_id"),
-                "passed": bool(case.get("passed")),
-                "needs_adjudication": _case_needs_adjudication(case),
-                "failure_reasons": case.get("failure_reasons") or [],
-                "failure_category_counts": case.get("failure_category_counts") or {},
-            }
-        )
-    return candidates
-
-
-def _case_needs_adjudication(case: dict[str, Any]) -> bool:
-    statuses = set((case.get("actual_statuses") or {}).values())
-    return "needs_adjudication" in statuses or "unresolved" in statuses
 
 
 def _group_failure_categories(
