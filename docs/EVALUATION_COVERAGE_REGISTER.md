@@ -12,12 +12,12 @@ Status meanings:
 
 ## System Evaluation Goal And Gap Register
 
-Goal: make evaluations the system's improvement loop, not just a release checklist. Every pipeline
-stage must expose structural validation, a direct-eval owner or explicit gap, task-specific
-improvement metrics, replayable artifacts, and a failure-intake route into durable cases or
-adjudication. Applicability is the first hardening lane because it decides which authorities,
-Forest Plan branches, generated rules, compliance findings, V1 checks, and promotion gates are
-allowed to proceed.
+Goal: make evaluations the system's improvement control plane, not just a release checklist. Every
+pipeline stage must expose structural validation, a direct-eval owner or explicit gap,
+task-specific metrics, replayable artifacts, and a failure-intake route. Widening requires identity,
+freshness, replayability, scoped proof, and stop-condition compliance. Applicability is first
+because it decides which authorities, Forest Plan branches, generated rules, compliance findings,
+V1 checks, and promotion gates may proceed.
 
 Milestone 0 status: implemented as a docs-only coverage goal and gap register. Milestone 1 has
 implemented summary-contract and Forest Plan component/subgate fixture slices. A reduced Milestone

@@ -4,21 +4,21 @@ Date: 2026-06-04
 Status: Milestone 3 trajectory scoring implemented
 Plan class: implementation
 High-risk implementation: yes
-Owner context: repo-native goal for extending first-class evaluations across the USFS R1 EA
-reviewer-engine pipeline, with applicability evaluation as the first critical improvement lane.
+Owner context: repo-native goal for making evaluations the improvement control plane for the USFS
+R1 EA reviewer-engine pipeline, with applicability as the first ratcheted subsystem.
 
 ## Purpose And Current Evidence
 
-The repo already has first-class eval/trace, direct-eval-aware phase-eval, an observability/eval
-context graph, and a coverage register. Those surfaces are inspectable, but they do not yet prove
-that every pipeline boundary has a strong improvement loop.
+Broader goal: make each material pipeline change pass through artifact lineage, deterministic
+direct eval, failure intake, scoped ratchet, and current-state/handoff truth.
 
-Applicability is the critical decision boundary between source/retrieval evidence and downstream
-rule-pack, compliance, Forest Plan, V1, and promotion readiness. A weak applicability decision can
-hide relevant authority, create false compliance obligations, or route a package into the wrong
-Forest Plan branch. The next improvement goal is therefore not a generic graph-publication gate. It
-is a staged system-evaluation program that measures every step and starts by strengthening
-applicability as its own evaluated subsystem.
+The repo already has first-class eval/trace, direct-eval-aware phase-eval, an observability/eval
+context graph, and a coverage register. Applicability has the first scoped ratchet; later-stage
+gates still need the same pattern.
+
+Applicability is the critical boundary between source evidence and downstream rule packs,
+compliance, Forest Plan, V1, and promotion readiness. The goal is not graph publication; it is a
+staged eval program that measures every step, starting with applicability.
 
 Current evidence: the coverage register tracks subsystem status; eval-trace owns local
 storage/export and trace-to-case promotion; phase-eval consumes direct-eval artifacts; and the
@@ -26,14 +26,13 @@ first scoped applicability ratchet is active for West Reservoir on the f70 sourc
 
 ## Goal, Non-Goals, And Scope
 
-Goal: implement a staged first-class system-evaluation improvement program that measures each
-pipeline step, starts with applicability evaluation hardening, and turns failures into durable
-cases, traces, and scoped phase or promotion gates.
+Goal: turn each pipeline boundary into a measured loop, starting with applicability, and widen only
+after scoped evidence proves identity, freshness, replayability, and non-regression.
 
 Completion means:
 
-- every pipeline stage has a named structural owner, direct-eval owner or explicit gap status,
-  improvement metrics, generated artifacts, and failure-intake route;
+- every pipeline stage has an owner, direct-eval or explicit gap, metrics, artifacts, and failure
+  intake;
 - applicability evaluation reports authority-universe coverage, retrieval/graph trace quality,
   decision partition fidelity, generated rule-pack fidelity, gate-graph consistency, Forest Plan
   subgate behavior, and hard-negative false-positive controls;
@@ -41,8 +40,7 @@ Completion means:
   source-record, citation, artifact-hash, trace, and scorer provenance;
 - phase-eval can fail closed for one explicit scoped applicability ratchet before any wider gate
   expansion; and
-- docs and handoff explain which system steps are evaluated, which remain planned, and what gate
-  proves improvement.
+- docs and handoff explain evaluated steps, planned gaps, and proving gates.
 
 Non-goals:
 
@@ -58,28 +56,29 @@ Scope:
 
 - Applicability owner surfaces, eval contracts, fixtures, generated summaries, traces, and
   phase-eval integration.
-- Evaluation coverage register rows and gap statuses for every pipeline step.
-- Eval-trace case promotion for applicability failures and later stage failures.
-- One scoped ratchet over an existing governed review/source-set before broader rollout.
+- Coverage-register status for every pipeline step.
+- Eval-trace case promotion for applicability and later-stage failures.
+- One scoped ratchet before broader rollout.
 
 ## Intent Hierarchy
 
+North-star intent: evals are the system's learning loop. A change is valuable only when replayable
+evidence shows a review boundary became more reliable, observable, or governable.
+
 Invariant: source-set, review, workbook row, source-record, citation, artifact hash, trace hash,
-and scorer contract identity must remain visible through every eval and promoted case.
+and scorer contract identity stay visible through every eval, case, ratchet, and promotion claim.
 
-Optimization target: improve applicability quality by measuring decision correctness, not by adding
-hidden NEPA or Forest Service heuristics.
+Optimization target: maximize replayable signal per slice: deterministic metrics, hard negatives,
+failure cases, and scoped gates before breadth or UI/product expansion.
 
-Acceptable tradeoffs: first milestones may add deterministic fixture and manifest coverage before
-full live replay, provided they leave current live readiness unchanged.
+Acceptable tradeoffs: add fixture or manifest coverage before full live replay when it preserves
+current readiness and names the live-proof gate needed before widening.
 
-Explicit non-negotiables: applicability direct eval must include hard negatives, unresolved or
-adjudication-needed decisions, Forest Plan component/subgate cases, and generated-rule-pack
-partition checks.
+Explicit non-negotiables: no hidden domain heuristics, no global ratchets, no uncalibrated model
+judges, no stale generated artifacts as proof, and no weakened tests or gates.
 
-Intent lock: this plan advances evaluation and improvement loops for the existing reviewer-engine
-pipeline. It does not open hosted scoring, model-judge scoring, new package promotion, or a new
-graph publication system.
+Intent lock: this advances eval-governed improvement of the existing reviewer-engine. It does not
+open hosted scoring, broad promotion, compliance gate-graph consumption, or graph publication.
 
 ## Owner Surfaces And Placement
 
@@ -176,10 +175,8 @@ Outcome label: resolved.
   eval summaries and remains non-blocking for unrelated scopes.
 - Update promotion consumers only if the selected governed scope already participates in promotion.
 
-Closeout note: implemented for `west-reservoir-67436` on `source-set-f70ea11e04ae3d53`. The new
-producer checks schema, contract, scorer, identity, hashes, blocking groups, allowed gaps, and
-failure-intake hash. Tests prove fail-closed and unrelated-review behavior. No promotion gate,
-global ratchet, gate-graph consumption, or model judge was added.
+Closeout note: implemented for `west-reservoir-67436` on `source-set-f70ea11e04ae3d53`. Tests
+prove fail-closed and unrelated-review behavior. No promotion gate or global ratchet was added.
 
 Live proof note: f70 `applicability-eval` passes `10/10`; West Reservoir/f70 `phase-eval`
 passes `36/36` with `applicability_validation=direct_eval_present` and `blockers=[]`.
@@ -240,10 +237,14 @@ live-proven, and trajectory-scored for `west-reservoir-67436` on
 
 ## Stop Conditions
 
-- Stop if applicability cannot be evaluated without weakening existing validation or compliance
-  gates.
-- Stop if a proposed scorer would replace deterministic checks with an uncalibrated model judge.
-- Stop if the first applicability ratchet would block unrelated scopes.
-- Stop if failures cannot be replayed from durable artifacts and hashes.
-- Stop if the work expands into compliance-review gate-graph consumption or package promotion before
-  applicability measurement is itself proven.
+- Stop if a slice cannot preserve source-set/review/workbook/citation/artifact-hash identity.
+- Stop if the proposed evaluator weakens, deletes, skips, xfails, or narrows an existing gate.
+- Stop if the proof depends on stale ignored `source_library/` outputs or broad regeneration that
+  was not scoped in the packet.
+- Stop if a scorer substitutes an uncalibrated model judge for deterministic or human-label-backed
+  checks.
+- Stop if a ratchet would block unrelated reviews/source sets or widen without scoped green proof.
+- Stop if failures cannot become replayable cases with owner, risk, assertion, source refs, hashes,
+  and removal conditions.
+- Stop if the work expands into promotion, hosted scoring, package intake, compliance-review
+  gate-graph consumption, or graph publication before the current packet's eval gate is green.

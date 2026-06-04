@@ -22,8 +22,11 @@ history below.
   new structural artifact; compliance-review does not consume it yet.
 - latest resolved system-evaluation improvement slice:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` is the
-  repo-native goal for evaluating every pipeline step, with applicability
-  direct-eval hardening first. Milestone 0 is implemented locally as a docs-only
+  repo-native goal for making evals the reviewer-engine improvement control
+  plane, with applicability direct-eval hardening first. It now names broader
+  intent and stop conditions: preserve identity, freshness, replayability,
+  failure intake, scoped proof, and gate strength before widening. Milestone 0
+  is implemented locally as a docs-only
   coverage goal and gap register. `docs/EVALUATION_COVERAGE_REGISTER.md` now
   records the system eval goal, all-step direct-eval status, metrics, artifacts,
   failure-intake routes, applicability sub-step gaps, and the first scoped
@@ -45,7 +48,7 @@ history below.
   applicability eval summary and fails closed on missing, stale, mismatched, or
   below-threshold summaries while leaving unrelated reviews non-blocking. The
   live ignored `source_library` applicability eval artifact has now been
-  has now been regenerated for f70: `10/10` cases passed, all blocking metric
+  regenerated for f70: `10/10` cases passed, all blocking metric
   groups passed, `non_blocking_gap_group_ids=[]`,
   `trajectory_process_quality.passed=true`, zero invalid transitions, and `3`
   replayable failure-intake cases. The West Reservoir/f70 phase-eval ratchet

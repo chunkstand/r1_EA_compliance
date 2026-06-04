@@ -165,12 +165,14 @@ Use this short route before opening append-only docs.
 - Observability/eval graph route: `eval-context-graph-build` and `eval-context-graph-eval` are local generated-artifact-only commands over `system_eval_trace.sqlite`; the f70 phase-eval requires `observability_eval_context_graph`; promotion ratchets remain future work.
 - System-evaluation improvement route:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` owns the
-  staged goal for evaluating every pipeline step. Milestone 0 is closed
+  staged goal for making evals the reviewer-engine improvement control plane:
+  every wider gate must preserve identity, freshness, replayability, failure
+  intake, scoped proof, and stop-condition compliance. Milestone 0 is closed
   docs-only. Applicability is the first critical implementation lane; the
-  direct-eval summary, Forest Plan subgate, and failure-intake artifact slices
-  are implemented. Trajectory/process scoring is implemented in the scoped
-  applicability ratchet. Wider gates, promotion ratchets, and model judges
-  remain future bounded packets.
+  direct-eval summary, Forest Plan subgate, failure-intake, and
+  trajectory/process scoring slices are implemented in the scoped ratchet.
+  Wider gates, promotion ratchets, and model judges remain future bounded
+  packets.
 - Extraction/chunking route: sidecar chunk, retrieval eval, graph/claim preview and canonical adoption, rule-link preview/eval, compliance review adoption, phase-eval adoption, and reviewer package adoption are closed locally. Knowledge-graph sidecar adoption requires a new bounded packet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 
