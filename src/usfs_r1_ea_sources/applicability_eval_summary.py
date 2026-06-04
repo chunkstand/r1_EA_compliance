@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from typing import Any
 
+from .applicability_eval_trajectory import trajectory_process_metric_group
 from .applicability_eval_support import _case_list
 from .applicability_eval_support import _case_rate
 from .applicability_eval_support import _source_chunk_specs
@@ -338,17 +339,7 @@ def _applicability_eval_metric_groups(
             },
             failure_categories=failure_intake_summary.get("failure_category_counts") or {},
         ),
-        "trajectory_process_quality": _metric_group(
-            status="direct_eval_missing",
-            blocking=False,
-            passed=False,
-            metrics={
-                "trajectory_case_count": 0,
-                "command_sequence_eval_present": False,
-            },
-            failure_categories={},
-            gap="deterministic trajectory/process scoring is routed after summary metrics exist",
-        ),
+        "trajectory_process_quality": trajectory_process_metric_group(case_results),
     }
 
 

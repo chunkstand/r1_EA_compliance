@@ -28,6 +28,7 @@ REQUIRED_BLOCKING_METRIC_GROUP_IDS = {
     "generated_rule_pack_fidelity",
     "graph_trace_quality",
     "retrieval_trace_quality",
+    "trajectory_process_quality",
 }
 
 

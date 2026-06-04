@@ -121,7 +121,7 @@ def test_committed_phase_eval_direct_eval_contract_tracks_required_phases() -> N
     )
     assert source_set_phases["applicability_validation"][
         "expected_non_blocking_gap_group_ids"
-    ] == ["trajectory_process_quality"]
+    ] == []
     assert source_set_phases["claim_extraction"]["lane_id"] == "claim_eval"
     assert source_set_phases["rule_claim_binding"]["lane_id"] == "rule_claim_eval"
     assert source_set_phases["evidence_graph"]["coverage_class"] == "validation_only_allowed"
@@ -277,6 +277,40 @@ def test_phase_eval_direct_eval_rejects_applicability_eval_threshold_failures() 
     assert applicability["status"] == "direct_eval_failed"
     assert applicability["failure_reasons"] == ["direct_eval_threshold_failed"]
     assert applicability["threshold_failures"]
+
+
+def test_phase_eval_direct_eval_rejects_applicability_eval_with_trajectory_gap() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        result_path = _write_applicability_eval(
+            output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+        )
+        payload = json.loads(result_path.read_text(encoding="utf-8"))
+        payload["metric_groups"]["trajectory_process_quality"]["status"] = (
+            "direct_eval_missing"
+        )
+        payload["metric_groups"]["trajectory_process_quality"]["blocking"] = False
+        payload["metric_groups"]["trajectory_process_quality"]["passed"] = False
+        payload["non_blocking_gap_group_ids"] = ["trajectory_process_quality"]
+        result_path.write_text(
+            json.dumps(payload, sort_keys=True),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+            review_id=WEST_RESERVOIR_REVIEW_ID,
+        )
+
+    applicability = summary["source_set_phase_statuses"]["applicability_validation"]
+    assert applicability["status"] == "direct_eval_failed"
+    assert applicability["failure_reasons"] == ["direct_eval_threshold_failed"]
+    assert any(
+        failure["reason"] == "unexpected_non_blocking_gap_groups"
+        for failure in applicability["threshold_failures"]
+    )
 
 
 def test_phase_eval_direct_eval_rejects_identity_mismatch() -> None:

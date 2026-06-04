@@ -435,6 +435,7 @@ modules = [
   "applicability_eval_scoring",
   "applicability_eval_summary",
   "applicability_eval_support",
+  "applicability_eval_trajectory",
   "draft_generation_eval",
   "eval_context_graph",
   "eval_context_graph_contract",

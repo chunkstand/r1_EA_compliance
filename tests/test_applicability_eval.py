@@ -238,14 +238,31 @@ class ApplicabilityEvalTests(unittest.TestCase):
                 ],
                 3,
             )
-            self.assertIn(
-                "trajectory_process_quality",
-                result.summary["non_blocking_gap_group_ids"],
+            self.assertEqual(
+                metric_groups["trajectory_process_quality"]["status"],
+                "direct_eval_present",
+            )
+            self.assertTrue(metric_groups["trajectory_process_quality"]["blocking"])
+            self.assertTrue(metric_groups["trajectory_process_quality"]["passed"])
+            self.assertEqual(
+                metric_groups["trajectory_process_quality"]["metrics"][
+                    "trajectory_case_count"
+                ],
+                10,
             )
             self.assertEqual(
-                result.summary["non_blocking_gap_group_ids"],
-                ["trajectory_process_quality"],
+                metric_groups["trajectory_process_quality"]["metrics"][
+                    "invalid_transition_count"
+                ],
+                0,
             )
+            self.assertEqual(
+                metric_groups["trajectory_process_quality"]["metrics"][
+                    "no_evidence_decision_gap_count"
+                ],
+                0,
+            )
+            self.assertEqual(result.summary["non_blocking_gap_group_ids"], [])
             failure_intake_path = Path(result.summary["failure_intake_cases_path"])
             self.assertTrue(failure_intake_path.exists())
             failure_intake = json.loads(failure_intake_path.read_text(encoding="utf-8"))
@@ -671,6 +688,66 @@ class ApplicabilityEvalTests(unittest.TestCase):
                 {"applicability_status_mismatch": 1},
             )
             self.assertEqual(intake_case["risk_level"], "high")
+
+    def test_applicability_eval_flags_trajectory_no_evidence_decision(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp) / "source_library"
+            eval_result = run_applicability_eval(
+                output_dir=output_dir,
+                eval_file=EVAL_SEED,
+                base_rule_pack_path=RULE_PACK,
+            )
+            case_summary = _case(
+                eval_result.summary,
+                "seed-expanded-authority-positive",
+            )
+            decisions_path = (
+                Path(case_summary["applicability_dir"]) / "applicability_decisions.jsonl"
+            )
+            decisions = [
+                json.loads(line)
+                for line in decisions_path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            target = next(
+                decision
+                for decision in decisions
+                if decision.get("basis_type") != "mandatory_baseline"
+            )
+            target["package_evidence_spans"] = []
+            target["negative_evidence_spans"] = []
+            target["explicit_trigger_miss_evidence"] = []
+            target["source_library_evidence_spans"] = []
+            target["search_coverage_certificate_ids"] = []
+            target["selected_retrieval_result_ids"] = []
+            target["selected_graph_path_ids"] = []
+            target["source_record_ids"] = []
+            target["retrieval_trace_ids"] = []
+            target["graph_path_ids"] = []
+            target["arbitration_summary"]["retrieval_trace_ids"] = []
+            target["arbitration_summary"]["graph_path_ids"] = []
+            decisions_path.write_text(
+                "".join(json.dumps(row, sort_keys=True) + "\n" for row in decisions),
+                encoding="utf-8",
+            )
+
+            rescored = _rescore_case(
+                eval_file=EVAL_SEED,
+                eval_summary=eval_result.summary,
+                case_id="seed-expanded-authority-positive",
+            )
+
+            self.assertFalse(rescored["trajectory_process_quality_passed"])
+            self.assertEqual(
+                rescored["trajectory_process_quality"]["no_evidence_decision_gap_count"],
+                1,
+            )
+            self.assertEqual(
+                rescored["failure_category_counts"][
+                    "trajectory_process_quality_mismatch"
+                ],
+                1,
+            )
 
     def test_applicability_eval_fails_when_non_applicable_artifact_is_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

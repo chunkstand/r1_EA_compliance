@@ -31,9 +31,10 @@ history below.
   `applicability-eval` emits a first-class summary contract with
   `contract_id`, `contract_hash`, `scorer_version`, source artifact hashes,
   required metric groups, blocking/non-blocking gap groups, hard-negative
-  summaries, trace/graph/rule-pack scores, failure-intake candidates, and
-  opt-in gate-graph contradiction checks, and the default seed now includes a
-  required Forest Plan component/subgate case. The reduced failure-intake slice
+  summaries, trace/graph/rule-pack scores, trajectory/process quality scores,
+  failure-intake candidates, and opt-in gate-graph contradiction checks, and
+  the default seed now includes a required Forest Plan component/subgate case.
+  The reduced failure-intake slice
   now writes `applicability_failure_intake_cases.json` with replayable failed,
   unresolved, or needs-adjudication cases, source artifact refs and hashes,
   trace/source lineage, assertion contracts, deterministic scorer metadata,
@@ -44,10 +45,11 @@ history below.
   applicability eval summary and fails closed on missing, stale, mismatched, or
   below-threshold summaries while leaving unrelated reviews non-blocking. The
   live ignored `source_library` applicability eval artifact has now been
-  regenerated for f70: `10/10` cases passed, all blocking metric groups passed,
-  `trajectory_process_quality` remains the only expected non-blocking gap, and
-  `3` replayable failure-intake cases were written. The West Reservoir/f70
-  phase-eval ratchet consumed the summary with
+  has now been regenerated for f70: `10/10` cases passed, all blocking metric
+  groups passed, `non_blocking_gap_group_ids=[]`,
+  `trajectory_process_quality.passed=true`, zero invalid transitions, and `3`
+  replayable failure-intake cases. The West Reservoir/f70 phase-eval ratchet
+  consumed the summary with
   `applicability_validation=direct_eval_present`, `36/36` phases passed,
   `critical_phase_count=11`, `direct_eval_ready_phase_count=11`, and
   `blockers=[]`.
@@ -67,8 +69,7 @@ history below.
   applicability phase-eval ratchet and live f70/West Reservoir proof
 - active packet:
   no active implementation slice is open. The next bounded packet should be
-  explicit: add trajectory/process quality, add promotion ratchets, or widen
-  all-step evals.
+  explicit: add promotion ratchets or widen all-step evals.
 - recent research addendum:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current Braintrust/Phoenix/LangSmith/Langfuse/MLflow/OpenAI,

@@ -1,7 +1,7 @@
 # First-Class System Evaluation Improvement Milestone Plan
 
 Date: 2026-06-04
-Status: Milestone 3 live-proven
+Status: Milestone 3 trajectory scoring implemented
 Plan class: implementation
 High-risk implementation: yes
 Owner context: repo-native goal for extending first-class evaluations across the USFS R1 EA
@@ -149,9 +149,8 @@ Outcome label: reduced.
 - Add focused tests proving missing categories, wrong source-set/review identity, stale trace
   hashes, wrong generated-rule partitions, and gate-graph contradictions fail closed.
 
-Closeout note: summary-contract and Forest Plan subgate slices are implemented. The seed replay now
-emits direct-eval identity, metric groups, trace/graph/rule-pack/gate scores, hard negatives, and
-Forest Plan subgate metrics. The only non-blocking gap is trajectory/process quality.
+Closeout note: summary-contract, Forest Plan subgate, and trajectory/process scoring slices are
+implemented in the scoped ratchet.
 
 ### Milestone 2 - Applicability Failure Intake And Trace-To-Case Promotion
 
@@ -184,6 +183,8 @@ global ratchet, gate-graph consumption, or model judge was added.
 
 Live proof note: f70 `applicability-eval` passes `10/10`; West Reservoir/f70 `phase-eval`
 passes `36/36` with `applicability_validation=direct_eval_present` and `blockers=[]`.
+
+Trajectory note: the ratchet now requires `trajectory_process_quality` with no expected gaps.
 
 ### Milestone 4 - All-Step Evaluation Expansion
 
@@ -231,10 +232,11 @@ the verified milestone slice. Do not stage ignored `source_library/` outputs.
 ## Closeout Outcome Record
 
 Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; Milestone 2
-failure-intake artifact slice reduced; Milestone 3 scoped phase-eval ratchet implemented and
-live-proven for `west-reservoir-67436` on `source-set-f70ea11e04ae3d53`.
-- Residual risk after closeout: trace promotion, trajectory scoring, promotion gates, and all-step
-  expansion remain future packets.
+failure-intake artifact slice reduced; Milestone 3 scoped phase-eval ratchet implemented,
+live-proven, and trajectory-scored for `west-reservoir-67436` on
+`source-set-f70ea11e04ae3d53`.
+- Residual risk after closeout: trace promotion, promotion gates, and all-step expansion remain
+  future packets.
 
 ## Stop Conditions
 

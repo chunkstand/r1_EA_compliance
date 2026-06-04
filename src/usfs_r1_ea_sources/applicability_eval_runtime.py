@@ -222,6 +222,7 @@ def run_applicability_eval(
         "graph_path_scores": metric_groups["graph_trace_quality"],
         "rule_pack_fidelity_scores": metric_groups["generated_rule_pack_fidelity"],
         "gate_graph_consistency_scores": metric_groups["gate_graph_consistency"],
+        "trajectory_process_quality_scores": metric_groups["trajectory_process_quality"],
         "cases": case_results,
         "case_results": case_results,
     }

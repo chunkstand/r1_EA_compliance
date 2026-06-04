@@ -25,16 +25,17 @@ implemented summary-contract and Forest Plan component/subgate fixture slices. A
 Milestone 3 implements the first scoped phase-eval applicability ratchet for
 `review_id=west-reservoir-67436` and `source_set_id=source-set-f70ea11e04ae3d53`.
 The live f70 applicability eval proof and West Reservoir phase-eval replay are now green.
-Promotion gates, trajectory/process scoring, and model-judge scoring are unchanged.
+Trajectory/process scoring is implemented for that scoped ratchet. Promotion gates and
+model-judge scoring are unchanged.
 
 First scoped applicability ratchet target: `review_id=west-reservoir-67436` with
 `source_set_id=source-set-f70ea11e04ae3d53`. The ratchet is active in
 `phase-eval-direct-eval-v1` and fails closed on missing, stale, source-set-mismatched,
 schema-invalid, or below-threshold applicability summaries while skipping unrelated reviews.
 The selected scope proves source-set/review identity, artifact hashes, per-family metrics, hard
-negatives, generated-rule-pack fidelity, gate-graph consistency, and failure-intake replay without
-blocking unrelated reviews or source sets. Widening is still blocked on trajectory/process scoring
-and explicit promotion-gate design.
+negatives, generated-rule-pack fidelity, gate-graph consistency, trajectory/process quality, and
+failure-intake replay without blocking unrelated reviews or source sets. Widening is still blocked
+on explicit promotion-gate design.
 
 ### All-Step Evaluation Coverage Map
 
@@ -69,7 +70,7 @@ and explicit promotion-gate design.
 | `gate_graph_consistency` | `applicability-gate-graph`; `config/applicability_gate_graph_nepa_ea_v1.json` | NEPA EA gate graph overlay for one review | `direct_eval_present` | parent/child open-closed-blocked consistency; NFMA branch propagation; contradiction detection; contract hash identity | gate-graph consistency case | `applicability-eval` includes an `expected_gate_graph_required` fixture and fails closed on stale hashes, identity drift, validation failure, or candidate-gate contradiction. |
 | `forest_plan_subgate_behavior` | Forest Plan component inventory/eval/adjudication; applicability Forest Plan candidate/decision helpers | selected Forest Plan branch and component candidates | `direct_eval_present` | selected forest identity; active plan/component inventory binding; management-area scope; standard/guideline/component subgate correctness; zero-applicable-standard proof | Forest Plan applicability/adjudication case | The seed now includes one Custer Gallatin management-area component case that opens a Forest Plan instance gate and component gate; widening still requires full selected-scope inventory identity. |
 | `adjudication_failure_intake` | `applicability_failure_intake_cases.json`; `applicability-adjudication-*`; `eval-trace-case-promote`; `config/applicability_adjudications/` | unresolved, needs-adjudication, or failed applicability case | `direct_eval_present` | replayable adjudication completeness; owner/risk/assertion fields; source refs; citation/artifact/trace hashes; review/removal conditions; human-label placeholder | generated failure-intake case, tracked adjudication file, or eval-trace promoted case | Failures cannot satisfy a ratchet unless the generated case artifact passes owner/risk/assertion, source-ref hash, trace/source-lineage, and lifecycle checks. |
-| `trajectory_process_quality` | eval-trace store/export; observability/eval context graph; applicability command sequence artifacts | command/artifact/decision trajectory for one review | `direct_eval_missing` | required-step order; invalid transition count; retry without new evidence; no-evidence decision correctness; first bad step; error propagation class | planned trajectory case promoted from context graph path | Current scoped ratchet allows this only as the expected non-blocking gap; no model judge may substitute for missing deterministic trajectory checks. |
+| `trajectory_process_quality` | `src/usfs_r1_ea_sources/applicability_eval_trajectory.py`; applicability command sequence artifacts | command/artifact/decision trajectory for one applicability eval case | `direct_eval_present` | required-step order; invalid transition count; retry without new evidence; no-evidence decision correctness; first bad step; error propagation class | applicability eval failure-intake case or later eval-trace promoted case | Current scoped ratchet requires this as a blocking metric group with no expected non-blocking gap; no model judge may substitute for deterministic trajectory checks. |
 
 ## Meta-Eval Contract Lanes
 

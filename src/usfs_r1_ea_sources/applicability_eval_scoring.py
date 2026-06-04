@@ -4,6 +4,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from .applicability_eval_trajectory import score_case_trajectory
 from .applicability_eval_support import _read_json_if_exists
 from .applicability_eval_support import _read_jsonl_if_exists
 from .applicability_eval_support import _string_list_mapping
@@ -328,6 +329,18 @@ def _score_case(
                 "gate_graph_consistency_matches": not gate_graph_decision_mismatches,
             }
         )
+    trajectory_process_quality = score_case_trajectory(
+        review_dir=review_dir,
+        retrieval_index_path=retrieval_index_path,
+        artifacts=artifacts,
+        validation_summary=validation_summary,
+        generated_summary=generated_summary,
+        generated_error=generated_error,
+        expected_generated_ready=expected_generated_ready,
+    )
+    result_flags["trajectory_process_quality_matches"] = bool(
+        trajectory_process_quality.get("passed")
+    )
     failure_reasons = [name for name, passed in result_flags.items() if not passed]
     failure_taxonomy = _failure_taxonomy(
         result_flags=result_flags,
@@ -348,6 +361,7 @@ def _score_case(
             "validation_passed": gate_graph_validation.get("passed"),
             "graph_validation_passed": gate_graph.get("validation", {}).get("passed"),
         },
+        trajectory_process_quality=trajectory_process_quality,
         generated_error=generated_error,
     )
     return {
@@ -445,6 +459,8 @@ def _score_case(
         "non_applicable_coverage_gaps": non_applicable_coverage_gaps,
         "generated_error": generated_error,
         "generated_rule_pack_ready": generated_validation_passed,
+        "trajectory_process_quality": trajectory_process_quality,
+        "trajectory_process_quality_passed": trajectory_process_quality.get("passed"),
         "validation_passed": bool(validation_summary.get("passed")),
         **result_flags,
         "failure_reasons": failure_reasons,
@@ -912,6 +928,7 @@ def _failure_taxonomy(
     gate_graph_input_hash_gaps: list[dict[str, Any]],
     gate_graph_identity: dict[str, Any],
     gate_graph_validation: dict[str, Any],
+    trajectory_process_quality: dict[str, Any],
     generated_error: str | None,
 ) -> list[dict[str, Any]]:
     taxonomy = []
@@ -944,6 +961,7 @@ def _failure_taxonomy(
             "gate_graph_identity_matches": "gate_graph_identity_mismatch",
             "gate_graph_input_hashes_match": "gate_graph_stale_artifact",
             "gate_graph_consistency_matches": "gate_graph_consistency_mismatch",
+            "trajectory_process_quality_matches": "trajectory_process_quality_mismatch",
         }.get(name, "applicability_eval_mismatch")
         details: dict[str, Any] = {}
         if name == "expected_statuses_match":
@@ -958,6 +976,8 @@ def _failure_taxonomy(
             details["identity"] = gate_graph_identity
         if name == "gate_graph_validation_passed":
             details["validation"] = gate_graph_validation
+        if name == "trajectory_process_quality_matches":
+            details["trajectory_process_quality"] = trajectory_process_quality
         if generated_error:
             details["generated_error"] = generated_error
         taxonomy.append({"check": name, "category": category, "details": details})

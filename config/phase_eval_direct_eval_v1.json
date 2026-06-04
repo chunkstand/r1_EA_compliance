@@ -97,9 +97,7 @@
     {
       "coverage_class": "direct_eval_required",
       "expected_contract_id": "applicability-direct-eval-summary-v1",
-      "expected_non_blocking_gap_group_ids": [
-        "trajectory_process_quality"
-      ],
+      "expected_non_blocking_gap_group_ids": [],
       "expected_scorer_version": "applicability-direct-eval-scorer-v1",
       "lane_id": "applicability_eval",
       "phase_name": "applicability_validation",

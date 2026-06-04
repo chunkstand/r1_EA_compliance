@@ -20,17 +20,18 @@ Use this short route before opening append-only docs.
   `contract_id="applicability-direct-eval-summary-v1"`, `scorer_version`,
   source artifact hashes, required metric groups, blocking/non-blocking gap
   groups, hard-negative summaries, trace/graph/rule-pack scores, failure-intake
-  candidates, opt-in gate-graph contradiction checks, and one required Forest
-  Plan component/subgate case, and it writes
+  candidates, trajectory/process quality scores, opt-in gate-graph contradiction
+  checks, and one required Forest Plan component/subgate case, and it writes
   `applicability_failure_intake_cases.json` with replayable failed,
   unresolved, or needs-adjudication cases. Phase-eval now requires that
   summary for only the named West Reservoir/f70 scope and fails closed on
   missing, stale, mismatched, or below-threshold summaries while unrelated
   reviews remain non-blocking. The live ignored `source_library` applicability
   eval artifact has now been regenerated for f70: `10/10` cases passed, all
-  blocking metric groups passed, `trajectory_process_quality` remains the only
-  expected non-blocking gap, and `3` replayable failure-intake cases were
-  written. The live West Reservoir/f70 phase-eval consumes that summary with
+  blocking metric groups passed, `non_blocking_gap_group_ids=[]`,
+  `trajectory_process_quality.passed=true`, zero invalid transitions, and `3`
+  replayable failure-intake cases. The live West Reservoir/f70 phase-eval
+  consumes that summary with
   `applicability_validation=direct_eval_present`, `36/36` phases passed,
   `critical_phase_count=11`, `direct_eval_ready_phase_count=11`, and
   `blockers=[]`.
@@ -146,10 +147,9 @@ Use this short route before opening append-only docs.
   Milestone 3 plus live proof, which adds and proves the first scoped
   applicability phase-eval ratchet for `west-reservoir-67436` on
   `source-set-f70ea11e04ae3d53`. Open a separate bounded packet before adding
-  trajectory/process scoring, promotion gates, new EA packages, manifest
-  broadening, hosted query service/API expansion, model-judge work, hosted
-  scoring, knowledge-graph sidecar adoption, or future architecture-cap
-  changes.
+  promotion gates, new EA packages, manifest broadening, hosted query
+  service/API expansion, model-judge work, hosted scoring, knowledge-graph
+  sidecar adoption, or future architecture-cap changes.
 - Latest resolved forest-specific example packet: `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
@@ -168,10 +168,9 @@ Use this short route before opening append-only docs.
   staged goal for evaluating every pipeline step. Milestone 0 is closed
   docs-only. Applicability is the first critical implementation lane; the
   direct-eval summary, Forest Plan subgate, and failure-intake artifact slices
-  are implemented. The first scoped phase-eval ratchet is implemented and
-  live-proven only for `west-reservoir-67436` on
-  `source-set-f70ea11e04ae3d53`; trajectory/process scoring, wider gates,
-  promotion ratchets, and model judges remain future bounded packets.
+  are implemented. Trajectory/process scoring is implemented in the scoped
+  applicability ratchet. Wider gates, promotion ratchets, and model judges
+  remain future bounded packets.
 - Extraction/chunking route: sidecar chunk, retrieval eval, graph/claim preview and canonical adoption, rule-link preview/eval, compliance review adoption, phase-eval adoption, and reviewer package adoption are closed locally. Knowledge-graph sidecar adoption requires a new bounded packet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 

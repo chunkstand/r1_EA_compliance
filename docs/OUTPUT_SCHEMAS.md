@@ -2361,7 +2361,8 @@ is supplied. The result schema is `applicability-eval-results-v0` and records:
 - convenience scorer summaries for `hard_negative_results`, `per_family_scores`,
   `trace_quality_scores`, `graph_path_scores`, `rule_pack_fidelity_scores`,
   `gate_graph_consistency_scores`, `failure_intake_summary`, `failure_intake_cases_path`,
-  `failure_intake_cases_sha256`, `failure_intake_cases_file_sha256`, and
+  `failure_intake_cases_sha256`, `failure_intake_cases_file_sha256`,
+  `trajectory_process_quality_scores`, and
   `failure_intake_candidates`
 - one case summary per fixture, including review ID, source set ID, artifact paths, actual and
   expected statuses, applicable/non-applicable/generated rule IDs, package fact types, source-record
@@ -2411,14 +2412,17 @@ review/source-set identity, stale input hashes, invalid structure, or candidate 
 contradict the applicability decision ledger. The default seed now includes one required
 gate-graph/Forest Plan component case, so `gate_graph_consistency` and
 `forest_plan_subgate_behavior` are blocking direct-eval-present metric groups. Trace-to-case
-failure intake and trajectory/process scoring remain explicit non-blocking Milestone 1/2 gaps.
+failure intake remains a future strengthening packet; trajectory/process scoring is now a blocking
+direct-eval-present metric group that checks required artifact-step completion, invalid transitions,
+retry-without-new-evidence signals, no-evidence decisions, first bad step, and generated-pack error
+propagation.
 
 The committed `phase-eval-direct-eval-v1` contract consumes this summary as the direct-eval owner
 for the review-scoped `applicability_validation` phase only when
 `review_id=west-reservoir-67436` and `source_set_id=source-set-f70ea11e04ae3d53`. That ratchet
 requires the schema, `contract_id`, `scorer_version`, exact source-set ID, current eval/rule-pack/
 authority-template hashes, all blocking metric groups green, the expected
-`trajectory_process_quality` non-blocking gap, and a matching
+empty non-blocking gap list, and a matching
 `applicability_failure_intake_cases.json` hash. It fails closed on missing, stale, mismatched,
 schema-invalid, or below-threshold summaries and is skipped for unrelated reviews.
 

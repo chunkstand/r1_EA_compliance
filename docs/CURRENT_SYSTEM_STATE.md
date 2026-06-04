@@ -33,9 +33,10 @@ Latest implementation update on 2026-06-04 UTC:
   `applicability-direct-eval-summary-v1`, scorer
   `applicability-direct-eval-scorer-v1`, the exact f70 source-set ID, current
   eval/rule-pack/authority-template hashes, all blocking metric groups green,
-  the expected non-blocking `trajectory_process_quality` gap, and a replayable
-  failure-intake artifact hash. Missing summaries, stale hashes, source-set
-  mismatches, schema drift, and failed blocking metrics fail the
+  no non-blocking metric-group gaps, a green `trajectory_process_quality`
+  metric group, and a replayable failure-intake artifact hash. Missing
+  summaries, stale hashes, source-set mismatches, schema drift, failed blocking
+  metrics, and stale trajectory-gap summaries fail the
   `applicability_validation` phase and aggregate `evaluation_coverage`.
 - scoped boundary:
   unrelated review IDs and non-f70 source sets remain non-blocking. This slice
@@ -44,14 +45,16 @@ Latest implementation update on 2026-06-04 UTC:
   regeneration as proof.
 - live generated-artifact state:
   the ignored local `source_library` applicability eval result has now been
-  regenerated for `source-set-f70ea11e04ae3d53`. It records schema
+  regenerated after this trajectory/process scoring slice. It records schema
   `applicability-eval-results-v0`, contract
   `applicability-direct-eval-summary-v1`, scorer
   `applicability-direct-eval-scorer-v1`, `case_count=10`, `passed=true`,
-  `blocking_metric_groups_passed=true`, non-blocking gap IDs
-  `["trajectory_process_quality"]`, and `3` replayable failure-intake cases at
+  `blocking_metric_groups_passed=true`, `non_blocking_gap_group_ids=[]`,
+  `trajectory_process_quality.passed=true`, `invalid_transition_count=0`,
+  `no_evidence_decision_gap_count=0`, `retry_without_new_evidence_count=0`,
+  and `3` replayable failure-intake cases at
   `source_library/reviews/applicability_eval/applicability_failure_intake_cases.json`.
-  The live West Reservoir/f70 `phase-eval` now passes `36/36` phases with
+  The West Reservoir/f70 `phase-eval` passes `36/36` phases with
   `reviewer_ready=true`, `contract_backed_promotion_ready=true`,
   `critical_phase_count=11`, `direct_eval_ready_phase_count=11`,
   `applicability_validation=direct_eval_present`, and `blockers=[]`.
