@@ -1,6 +1,6 @@
 # Session Handoff
 
-Date: 2026-06-02
+Date: 2026-06-04
 
 Note: this handoff is append-only. For the forest-plan inventory lane, the most recent section for
 that lane supersedes older sections below when they disagree.
@@ -20,12 +20,14 @@ history below.
   Review overlays can add authority-universe candidates and applicability
   decisions so child gates open only when the parent is applicable. This is a
   new structural artifact; compliance-review does not consume it yet.
-- proposed next system-evaluation improvement packet:
+- latest resolved system-evaluation improvement slice:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` is the
-  new repo-native goal for evaluating every pipeline step, with applicability
-  direct-eval hardening first. It is a proposed implementation route, not a
-  runtime behavior change. Milestone 0 must update the coverage register and
-  applicability gap truth before code changes or broader ratchets.
+  repo-native goal for evaluating every pipeline step, with applicability
+  direct-eval hardening first. Milestone 0 is implemented locally as a docs-only
+  coverage goal and gap register. `docs/EVALUATION_COVERAGE_REGISTER.md` now
+  records the system eval goal, all-step direct-eval status, metrics, artifacts,
+  failure-intake routes, applicability sub-step gaps, and the first scoped
+  applicability ratchet target. This is not a runtime behavior change.
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then read
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` for the
@@ -36,13 +38,15 @@ history below.
   `config/eval_trace_inventory_contract_v1.json` for the resolved contract;
   use Milestones 0-5 as the resolved first-class eval trace baseline
 - latest resolved packet:
-  `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 5
+  `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` Milestone 0
 - active packet:
-  proposed docs-first packet
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` Milestone
-  0. No new first-class eval trace implementation slice, applicability ratchet,
-  model-judge work, or hosted scoring work is active until that packet is
-  implemented and verified.
+  1. The next implementation must harden applicability direct-eval contracts,
+  summary metrics, and focused failure modes before any phase-eval ratchet. The
+  first scoped ratchet target is `review_id="west-reservoir-67436"` with
+  `source_set_id="source-set-f70ea11e04ae3d53"`, but that ratchet is not active
+  until Milestones 1 and 2 prove replayable applicability summary metrics and
+  failure intake.
 - recent research addendum:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current Braintrust/Phoenix/LangSmith/Langfuse/MLflow/OpenAI,

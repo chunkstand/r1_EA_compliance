@@ -1,7 +1,7 @@
 # First-Class System Evaluation Improvement Milestone Plan
 
 Date: 2026-06-04
-Status: Proposed
+Status: Milestone 0 implemented; Milestone 1 next
 Plan class: implementation
 High-risk implementation: yes
 Owner context: repo-native goal for extending first-class evaluations across the USFS R1 EA
@@ -154,6 +154,11 @@ Outcome label: reduced.
   partition, generated rule pack, gate graph, Forest Plan subgate, and adjudication/failure intake.
 - Record the first scoped applicability ratchet target and the stop conditions for widening it.
 
+Closeout note: implemented docs-only in `docs/EVALUATION_COVERAGE_REGISTER.md`. The register states
+the eval goal, maps pipeline steps, adds applicability gaps, and names `west-reservoir-67436` on
+`source-set-f70ea11e04ae3d53` as the first scoped target after Milestones 1-2. No runtime gate,
+source-library artifact, hosted scorer, or model judge changed.
+
 ### Milestone 1 - Applicability Direct-Eval Contract Hardening
 
 Outcome label: resolved.
@@ -230,13 +235,16 @@ the verified milestone slice. Do not stage ignored `source_library/` outputs.
 
 ## Closeout Outcome Record
 
-Status: not started.
+Status: Milestone 0 implemented; Milestone 1 remains pending.
 
-- Milestone 0 closeout command summary: pending.
+- Milestone 0 closeout command summary: plan lint and diff whitespace checks passed.
 - Applicability implementation closeout command summary: pending.
-- Docs and handoff freshness: pending.
-- Commit identifier: pending.
-- Residual risk after closeout: pending.
+- Docs and handoff freshness: `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/CURRENT_ROUTING.md`, and `docs/SESSION_HANDOFF.md` updated for the docs-only Milestone 0
+  route; runtime state docs unchanged because no behavior or generated evidence changed.
+- Commit identifier: this commit.
+- Residual risk after closeout: Milestone 0 is reduced, not resolved. Applicability summary
+  metrics, tests, replay cases, and scoped phase-eval ratchet remain Milestones 1-3.
 
 ## Stop Conditions
 

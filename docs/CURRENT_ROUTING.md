@@ -1,5 +1,5 @@
 # Current Routing
-Date: 2026-06-02
+Date: 2026-06-04
 
 Use this short route before opening append-only docs.
 
@@ -9,12 +9,14 @@ Use this short route before opening append-only docs.
 - Latest resolved extraction/chunking/retrieval accuracy slice: sidecar reviewer package adoption after sidecar phase-eval adoption; exact paths, smoke counts, and sidecar promotion boundaries live in `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: eval trace inventory model split after the applicability fact-type support split; zero files are now above the `800`-line architecture cap.
 - Latest resolved observability/eval graph slice: context-graph build/eval commands, trace-event materialization, explicit event-log capture, canonical CLI command-event capture, and f70 source-set phase-eval ratchet. Details: `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
-- Proposed first-class system-evaluation improvement packet:
-  `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`. This is
-  the next evaluation-improvement goal, not an implemented runtime gate. It
-  starts with applicability direct-eval hardening because applicability governs
-  downstream generated rules, compliance, Forest Plan routing, V1, and
-  promotion readiness.
+- Latest resolved first-class system-evaluation improvement slice:
+  `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`
+  Milestone 0 is implemented locally as a docs-only coverage goal and gap
+  register. `docs/EVALUATION_COVERAGE_REGISTER.md` now states the eval goal,
+  maps every pipeline step to direct-eval status, metrics, artifacts, and
+  failure-intake route, and makes applicability the first hardening lane because
+  it governs generated rules, compliance, Forest Plan routing, V1, and promotion
+  readiness. This is not a runtime gate.
 - Research addendum for that packet:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current agent/RAG/graph evaluation practice and maps it to local
@@ -124,11 +126,14 @@ Use this short route before opening append-only docs.
 - Active implementation slice: no active all-forest Forest Plan residual is
   open in the governed manifest. The proposed next bounded packet is
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`
-  Milestone 0, which must turn the all-step evaluation goal into coverage
-  register and applicability-gap truth before code changes. Open a separate
-  bounded packet before adding new EA packages, broadening the manifest, hosted
-  query service/API expansion, model-judge work, hosted scoring,
-  knowledge-graph sidecar adoption, or future architecture-cap changes.
+  Milestone 1, which must harden the applicability direct-eval contract and
+  emit summary metrics that eval-trace inventory and phase-eval can consume.
+  The first scoped applicability ratchet target is `west-reservoir-67436` on
+  `source-set-f70ea11e04ae3d53`, but the ratchet itself is not active until
+  Milestones 1 and 2 prove replayable summary metrics and failure intake. Open
+  a separate bounded packet before adding new EA packages, broadening the
+  manifest, hosted query service/API expansion, model-judge work, hosted
+  scoring, knowledge-graph sidecar adoption, or future architecture-cap changes.
 - Latest resolved forest-specific example packet: `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
@@ -144,11 +149,12 @@ Use this short route before opening append-only docs.
 - Observability/eval graph route: `eval-context-graph-build` and `eval-context-graph-eval` are local generated-artifact-only commands over `system_eval_trace.sqlite`; the f70 phase-eval requires `observability_eval_context_graph`; promotion ratchets remain future work.
 - System-evaluation improvement route:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` owns the
-  proposed staged goal for evaluating every pipeline step. Applicability is the
-  first critical lane; future implementation must measure authority-universe
-  coverage, retrieval/graph trace quality, decision partition fidelity,
-  generated-rule-pack fidelity, gate-graph consistency, Forest Plan subgate
-  behavior, and failure intake before any wider ratchet.
+  staged goal for evaluating every pipeline step. Milestone 0 is closed
+  docs-only. Applicability is the first critical implementation lane; Milestone
+  1 must measure authority-universe coverage, retrieval/graph trace quality,
+  decision partition fidelity, generated-rule-pack fidelity, gate-graph
+  consistency, Forest Plan subgate behavior, hard negatives, and failure intake
+  before any wider ratchet.
 - Extraction/chunking route: sidecar chunk, retrieval eval, graph/claim preview and canonical adoption, rule-link preview/eval, compliance review adoption, phase-eval adoption, and reviewer package adoption are closed locally. Knowledge-graph sidecar adoption requires a new bounded packet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 
