@@ -1,0 +1,287 @@
+{
+  "schema_version": "applicability-gate-graph-contract-v1",
+  "contract_id": "applicability-gate-graph-nepa-ea-v1",
+  "status": "runtime_contract_v1",
+  "as_of_date": "2026-06-04",
+  "root_gate_id": "gate:nepa_ea_review",
+  "authority_inventory_path": "config/authority_universe_families_nepa_ea_v1.json",
+  "expansion_semantics": {
+    "root_gate": "A tracked EA package opens the NEPA EA review root.",
+    "folder_rule": "A gate opens child gates only when the gate is applicable, always-open for the EA package, or adjudicated open.",
+    "closed_parent_rule": "A child gate under a closed parent remains closed unless contrary child-level trigger evidence creates needs_adjudication.",
+    "currentness_rule": "Superseded, reserved, or rescinded authorities can remain lineage/currentness gates but cannot open current review children without a current implementing authority path.",
+    "compliance_boundary": "Compliance review consumes validated applicable gates and generated rules; it does not decide gate applicability."
+  },
+  "structural_gates": [
+    {
+      "gate_id": "gate:nepa_ea_review",
+      "gate_type": "review_root_gate",
+      "label": "NEPA EA Review",
+      "parent_gate_id": null,
+      "activation_rule": "always_open_for_ea_package",
+      "applicability_basis": "The reviewed package is an Environmental Assessment package."
+    },
+    {
+      "gate_id": "gate:nepa_threshold",
+      "gate_type": "process_gate",
+      "label": "NEPA threshold and agency action",
+      "parent_gate_id": "gate:nepa_ea_review",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "The root NEPA EA package gate is open."
+    },
+    {
+      "gate_id": "gate:nepa_class_of_action",
+      "gate_type": "process_gate",
+      "label": "Class of action and EA path",
+      "parent_gate_id": "gate:nepa_threshold",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "The action remains in the NEPA review path and is evaluated as an EA/FONSI path unless an EIS gate opens."
+    },
+    {
+      "gate_id": "gate:nepa_ea_content",
+      "gate_type": "process_gate",
+      "label": "EA content, effects, alternatives, and FONSI support",
+      "parent_gate_id": "gate:nepa_class_of_action",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "The package is in the EA path."
+    },
+    {
+      "gate_id": "gate:nepa_other_environmental_reviews",
+      "gate_type": "authority_group_gate",
+      "label": "Other environmental reviews integrated into NEPA",
+      "parent_gate_id": "gate:nepa_ea_content",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "The EA path must evaluate other applicable laws, regulations, policies, permits, and consultations."
+    },
+    {
+      "gate_id": "gate:forest_service_program_authorities",
+      "gate_type": "authority_group_gate",
+      "label": "Forest Service program and action authorities",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "Forest Service EA packages may trigger program-specific laws, policies, permits, and use authorizations."
+    },
+    {
+      "gate_id": "gate:nfma_forest_unit",
+      "gate_type": "scope_gate",
+      "label": "NFMA forest unit scope",
+      "parent_gate_id": "gate:authority_family:nfma_forest_planning_project_consistency",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "Forest Plan subgates open only after NFMA/project-consistency applicability is supported."
+    },
+    {
+      "gate_id": "gate:nfma_active_forest_plan",
+      "gate_type": "forest_plan_gate",
+      "label": "Active Forest Plan",
+      "parent_gate_id": "gate:nfma_forest_unit",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "The selected Forest Service unit has an active land management plan."
+    },
+    {
+      "gate_id": "gate:nfma_forest_plan_components",
+      "gate_type": "forest_plan_component_group_gate",
+      "label": "Forest Plan components",
+      "parent_gate_id": "gate:nfma_active_forest_plan",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "The active Forest Plan opens component-level standards, guidelines, desired conditions, suitability, and management-area scopes."
+    },
+    {
+      "gate_id": "gate:nfma_management_area_scope",
+      "gate_type": "scope_gate",
+      "label": "Management area, geographic area, and overlay scope",
+      "parent_gate_id": "gate:nfma_forest_plan_components",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "Forest Plan component applicability depends on management area, geographic area, and overlay facts."
+    },
+    {
+      "gate_id": "gate:nfma_standards",
+      "gate_type": "forest_plan_component_type_gate",
+      "label": "Forest Plan standards",
+      "parent_gate_id": "gate:nfma_forest_plan_components",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "Applicable standards become generated review rules when supported."
+    },
+    {
+      "gate_id": "gate:nfma_guidelines",
+      "gate_type": "forest_plan_component_type_gate",
+      "label": "Forest Plan guidelines",
+      "parent_gate_id": "gate:nfma_forest_plan_components",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "Applicable guidelines remain component-level consistency gates."
+    },
+    {
+      "gate_id": "gate:nfma_desired_conditions",
+      "gate_type": "forest_plan_component_type_gate",
+      "label": "Forest Plan desired conditions",
+      "parent_gate_id": "gate:nfma_forest_plan_components",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "Desired conditions open as context-bearing plan component gates when package scope matches."
+    },
+    {
+      "gate_id": "gate:nfma_suitability",
+      "gate_type": "forest_plan_component_type_gate",
+      "label": "Forest Plan suitability and management direction",
+      "parent_gate_id": "gate:nfma_forest_plan_components",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "Suitability and management direction gates open only when the selected plan and project scope support them."
+    },
+    {
+      "gate_id": "gate:nfma_compliance_matrix",
+      "gate_type": "review_output_gate",
+      "label": "Forest Plan compliance matrix",
+      "parent_gate_id": "gate:nfma_forest_plan_components",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "Applicable Forest Plan component gates feed the reviewer-facing Forest Plan compliance matrix."
+    },
+    {
+      "gate_id": "gate:administrative_record_and_review",
+      "gate_type": "authority_group_gate",
+      "label": "Administrative review, decision record, and APA posture",
+      "parent_gate_id": "gate:nepa_ea_review",
+      "activation_rule": "open_when_parent_applicable",
+      "applicability_basis": "The EA review must produce a reasoned, record-backed decision surface."
+    }
+  ],
+  "authority_family_gate_placements": [
+    {
+      "authority_family_id": "administrative_review_final_agency_action",
+      "parent_gate_id": "gate:administrative_record_and_review"
+    },
+    {
+      "authority_family_id": "clean_air_act_conformity_air_quality",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "clean_water_act_wotus_permits",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "cultural_resource_protection_and_state_shpo_sources",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "eagle_efh_and_special_wildlife_sources",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "environmental_justice_civil_rights",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "esa_section7_species_consultation",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "floodplain_management_eo11988",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "forest_service_directives_notice_comment",
+      "parent_gate_id": "gate:administrative_record_and_review"
+    },
+    {
+      "authority_family_id": "forest_service_nepa_36cfr_220_reserved_superseded",
+      "parent_gate_id": "gate:nepa_threshold"
+    },
+    {
+      "authority_family_id": "forest_service_nepa_current_policy_directives",
+      "parent_gate_id": "gate:nepa_threshold"
+    },
+    {
+      "authority_family_id": "forest_service_planning_handbook_amendments",
+      "parent_gate_id": "gate:nfma_active_forest_plan"
+    },
+    {
+      "authority_family_id": "grassland_bankhead_jones_authorities",
+      "parent_gate_id": "gate:forest_service_program_authorities"
+    },
+    {
+      "authority_family_id": "hazardous_materials_site_condition",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "invasive_pesticide_soils_farmland_drinking_water",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "land_exchange_fs_policy_and_project_references",
+      "parent_gate_id": "gate:forest_service_program_authorities"
+    },
+    {
+      "authority_family_id": "land_exchange_regulatory_requirements",
+      "parent_gate_id": "gate:forest_service_program_authorities"
+    },
+    {
+      "authority_family_id": "land_exchange_statutory_authorities",
+      "parent_gate_id": "gate:forest_service_program_authorities"
+    },
+    {
+      "authority_family_id": "migratory_bird_authorities",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "minerals_energy_authorities",
+      "parent_gate_id": "gate:forest_service_program_authorities"
+    },
+    {
+      "authority_family_id": "nepa_core_statute",
+      "parent_gate_id": "gate:nepa_threshold"
+    },
+    {
+      "authority_family_id": "nepa_judicial_review_doctrine",
+      "parent_gate_id": "gate:administrative_record_and_review"
+    },
+    {
+      "authority_family_id": "nepa_tiering_ce_sponsor_documents",
+      "parent_gate_id": "gate:nepa_class_of_action"
+    },
+    {
+      "authority_family_id": "nfma_forest_planning_project_consistency",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "nhpa_section106_shpo_consultation",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "organic_multiple_use_foundation",
+      "parent_gate_id": "gate:forest_service_program_authorities"
+    },
+    {
+      "authority_family_id": "region1_forest_plan_source_records",
+      "parent_gate_id": "gate:nfma_active_forest_plan"
+    },
+    {
+      "authority_family_id": "roadless_rule_authorities",
+      "parent_gate_id": "gate:forest_service_program_authorities"
+    },
+    {
+      "authority_family_id": "roads_access_special_use_action_authorities",
+      "parent_gate_id": "gate:forest_service_program_authorities"
+    },
+    {
+      "authority_family_id": "species_supporting_sources_and_overlays",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "tribal_consultation_trust_sacred_sites",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "usda_nepa_procedures_7cfr_part_1b",
+      "parent_gate_id": "gate:nepa_threshold"
+    },
+    {
+      "authority_family_id": "vegetation_wildfire_forest_health_authorities",
+      "parent_gate_id": "gate:forest_service_program_authorities"
+    },
+    {
+      "authority_family_id": "wetlands_protection_eo11990",
+      "parent_gate_id": "gate:nepa_other_environmental_reviews"
+    },
+    {
+      "authority_family_id": "wilderness_wsr_trails_designated_areas",
+      "parent_gate_id": "gate:forest_service_program_authorities"
+    }
+  ]
+}

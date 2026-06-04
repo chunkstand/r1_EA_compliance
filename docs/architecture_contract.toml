@@ -290,6 +290,7 @@ modules = [
   "applicability_decision_forest_plan",
   "applicability_decision_outputs",
   "applicability_decisions",
+  "applicability_gate_graph",
   "applicability_retrieval",
   "applicability_retrieval_graph",
   "applicability_retrieval_runtime",

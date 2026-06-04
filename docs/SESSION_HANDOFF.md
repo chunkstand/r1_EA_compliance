@@ -12,6 +12,14 @@ For a short current route before this append-only log, start with `docs/CURRENT_
 Use this section to begin a new thread without rereading the older append-only
 history below.
 
+- latest local NEPA Gate Graph slice:
+  `config/applicability_gate_graph_nepa_ea_v1.json` and
+  `applicability-gate-graph` now provide the initial NEPA EA Graph of Gates.
+  The graph places every known authority family under the NEPA hierarchy and
+  nests Forest Plan subgates under the NFMA/project-consistency family gate.
+  Review overlays can add authority-universe candidates and applicability
+  decisions so child gates open only when the parent is applicable. This is a
+  new structural artifact; compliance-review does not consume it yet.
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then read
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` for the active

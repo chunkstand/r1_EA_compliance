@@ -15,6 +15,30 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## NEPA Applicability Gate Graph
+
+Latest implementation update on 2026-06-04 UTC:
+
+- update:
+  `config/applicability_gate_graph_nepa_ea_v1.json` is the first runtime
+  contract for the NEPA EA Graph of Gates. It places every authority family
+  from `config/authority_universe_families_nepa_ea_v1.json` under a NEPA EA
+  gate hierarchy and makes the NFMA branch explicit: forest unit, active Forest
+  Plan, Forest Plan components, management-area scope, standards, guidelines,
+  desired conditions, suitability, and the Forest Plan compliance matrix sit
+  under the NFMA/project-consistency gate.
+- runtime:
+  `applicability-gate-graph` writes
+  `source_library/reviews/<review_id>/applicability/applicability_gate_graph.json`
+  plus summary and validation artifacts. The graph can overlay review-specific
+  authority-universe candidates and applicability decisions so parent gates
+  open only when applicable, close when not applicable, and block on unresolved
+  or adjudication-needed decisions.
+- boundary:
+  this slice creates the structural and review-overlay graph artifact but does
+  not yet make compliance-review consume the gate graph. Compliance still
+  consumes the validated generated rule pack and existing applicability gates.
+
 ## All-Forest Forest Plan Reviewer Readiness
 
 Latest implementation update on 2026-06-02 UTC:

@@ -4,7 +4,9 @@ from pathlib import Path
 import argparse
 
 from .applicability import DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH
+from .applicability import DEFAULT_APPLICABILITY_GATE_GRAPH_CONTRACT_PATH
 from .applicability import build_authority_universe_snapshot
+from .applicability import build_applicability_gate_graph
 from .applicability_decisions import build_applicability_decisions
 from .applicability_retrieval import build_applicability_retrieval_traces
 from .applicability_rule_pack import generate_applicability_rule_pack
@@ -23,6 +25,7 @@ from .rule_packs import DEFAULT_RULE_PACK_PATH
 
 APPLICABILITY_COMMANDS = {
     "applicability-authority-universe",
+    "applicability-gate-graph",
     "applicability-context-build",
     "applicability-retrieve",
     "applicability-determine",
@@ -68,6 +71,21 @@ def register_applicability_commands(subparsers: argparse._SubParsersAction) -> N
     authority_universe.add_argument("--forest-unit-id")
     authority_universe.add_argument("--claims-path", type=Path)
     authority_universe.add_argument("--rule-claim-links-path", type=Path)
+
+    gate_graph = subparsers.add_parser(
+        "applicability-gate-graph",
+        help="Build the NEPA applicability Graph of Gates from the authority hierarchy.",
+    )
+    _add_review_source_args(gate_graph)
+    gate_graph.add_argument(
+        "--gate-graph-contract",
+        default=DEFAULT_APPLICABILITY_GATE_GRAPH_CONTRACT_PATH,
+        type=Path,
+    )
+    gate_graph.add_argument("--authority-inventory-path", type=Path)
+    gate_graph.add_argument("--authority-universe-path", type=Path)
+    gate_graph.add_argument("--decisions-path", type=Path)
+    gate_graph.add_argument("--output-path", type=Path)
 
     context = subparsers.add_parser(
         "applicability-context-build",
@@ -194,6 +212,20 @@ def handle_applicability_command(
         )
         print_summary(result.summary)
         return 0 if result.summary["validation_passed"] else 1
+
+    if args.command == "applicability-gate-graph":
+        result = build_applicability_gate_graph(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            source_set_id=args.source_set_id,
+            gate_graph_contract_path=args.gate_graph_contract,
+            authority_inventory_path=args.authority_inventory_path,
+            authority_universe_path=args.authority_universe_path,
+            decisions_path=args.decisions_path,
+            output_path=args.output_path,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
 
     if args.command == "applicability-context-build":
         from .package_fact_graph import build_package_fact_graph

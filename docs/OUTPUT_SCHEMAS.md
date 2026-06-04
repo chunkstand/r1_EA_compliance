@@ -1712,6 +1712,9 @@ rules only.
 Required artifacts:
 
 - `authority_universe_snapshot.json`
+- `applicability_gate_graph.json`
+- `applicability_gate_graph_summary.json`
+- `applicability_gate_graph_validation.json`
 - `package_fact_graph.json`
 - `package_applicability_context.json`
 - `package_fact_graph_validation.json`
@@ -1761,6 +1764,7 @@ The target review sequence is:
 
 ```text
 EA package + source library + authority universe
+  -> NEPA applicability gate graph
   -> package fact graph
   -> per-authority hybrid retrieval
   -> graph expansion and dependency tracing
@@ -1772,6 +1776,52 @@ EA package + source library + authority universe
   -> generated review rule pack
   -> compliance review
 ```
+
+`applicability_gate_graph.json` has schema version `applicability-gate-graph-v1`
+and is written by:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gate-graph \
+  --output-dir source_library \
+  --review-id <review-id>
+```
+
+The graph contract is `config/applicability_gate_graph_nepa_ea_v1.json`. It
+projects the source-backed authority-family inventory into a NEPA EA folder-like
+hierarchy where each node is an applicability gate. The root `NEPA EA Review`
+gate is open for a tracked EA package. Authority-family gates open only when
+review-scoped applicability decisions support an applicable candidate, close
+when all mapped candidates are not applicable, and block on unresolved or
+adjudication-needed decisions. Superseded or reserved authority families remain
+visible as currentness-only gates.
+
+The NFMA branch is explicit. `nfma_forest_planning_project_consistency` opens
+Forest Unit, Active Forest Plan, Forest Plan component, management-area,
+standard, guideline, desired-condition, suitability, and Forest Plan compliance
+matrix subgates only when the NFMA gate is applicable. When an
+`authority_universe_snapshot.json` is present, review-specific Forest Plan
+component candidates are added as subgates under the selected active Forest Plan
+instance.
+
+The artifact includes:
+
+- `schema_version`, `graph_id`, `created_at`, `review_id`, `source_set_id`,
+  `contract_id`, and `root_gate_id`;
+- `expansion_semantics` copied from the gate-graph contract;
+- hashed input records for the gate contract, authority inventory, authority
+  universe, and applicability decisions;
+- `nodes` with `gate_id`, `gate_type`, `label`, `parent_gate_id`,
+  `gate_status`, `activation_state`, `child_activation_rule`,
+  `applicability_basis`, optional `authority_family_id`, optional
+  `candidate_authority_id`, provenance, and metadata;
+- `edges` with `parent_gate_id`, `child_gate_id`, `edge_type`, `opens_when`,
+  and provenance;
+- `summary` counts for node types, gate statuses, activation states, authority
+  families, candidate authorities, Forest Plan component gates, and validation
+  failures;
+- `validation` checks proving the root opens, parent/child edges resolve,
+  every authority-family inventory row is placed once, Forest Plan subgates are
+  under the NFMA family gate, and no child is open under a closed parent.
 
 `authority_universe_snapshot.json` has schema version `authority-universe-snapshot-v0` and includes:
 

@@ -334,3 +334,46 @@ class ApplicabilityAuthorityUniverseCliTests(unittest.TestCase):
                         "custer-gallatin-nf",
                     ]
                 )
+
+    def test_cli_writes_applicability_gate_graph(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            review_id = "gate-graph-cli"
+            applicability_dir = output_dir / "reviews" / review_id / "applicability"
+            applicability_dir.mkdir(parents=True)
+            authority_universe_path = applicability_dir / "authority_universe_snapshot.json"
+            authority_universe_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "authority-universe-snapshot-v0",
+                        "review_id": review_id,
+                        "source_set_id": "source-set-gate-cli",
+                        "candidate_authorities": [],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+
+            exit_code = main(
+                [
+                    "applicability-gate-graph",
+                    "--output-dir",
+                    str(output_dir),
+                    "--review-id",
+                    review_id,
+                    "--authority-universe-path",
+                    str(authority_universe_path),
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            graph_path = applicability_dir / "applicability_gate_graph.json"
+            graph = json.loads(graph_path.read_text(encoding="utf-8"))
+            self.assertTrue(graph["validation"]["passed"])
+            self.assertEqual(graph["root_gate_id"], "gate:nepa_ea_review")
+            self.assertEqual(
+                graph["summary"]["authority_family_gate_count"],
+                graph["summary"]["inventory_authority_family_count"],
+            )

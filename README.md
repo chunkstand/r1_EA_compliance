@@ -80,6 +80,7 @@ They are intentionally not duplicated here.
 - `config/forest_plan_profiles.json`
 - `config/forest_plan_component_inventory_seed.json`
 - `config/forest_plan_component_eval_coverage_v1.json`
+- `config/applicability_gate_graph_nepa_ea_v1.json`
 - `config/compliance_rule_pack_nepa_ea_v0.json`
 - `config/project_sow_ea_handoff_rules_v1.json`; `config/context_graph_contract_v1.json`
 - `docs/schemas/document_request_v1.schema.json`
@@ -115,7 +116,9 @@ The normal layer order is:
 3. Build extraction and chunk artifacts.
 4. Build retrieval and evidence-graph layers.
 5. Build claim and rule-binding layers.
-6. Run review, compliance, and evaluation commands against catalog-backed
+6. Build the review-scoped NEPA applicability Gate Graph when applicability
+   hierarchy or Forest Plan subgate visibility is needed.
+7. Run review, compliance, and evaluation commands against catalog-backed
    surfaces.
 
 For document-generation work, use `document-plan` first and route through
@@ -148,6 +151,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources extract-build \
   --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources document-plan --request /tmp/document_request.json --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
+  --output-dir source_library \
+  --review-id <review-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gate-graph \
   --output-dir source_library \
   --review-id <review-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources semantic-graph-eval --output-dir source_library --source-set-id <source-set-id>
