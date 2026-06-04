@@ -12,11 +12,13 @@ Use this short route before opening append-only docs.
 - Latest resolved first-class system-evaluation improvement slice:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`
   Milestone 0 is implemented locally as a docs-only coverage goal and gap
-  register. `docs/EVALUATION_COVERAGE_REGISTER.md` now states the eval goal,
-  maps every pipeline step to direct-eval status, metrics, artifacts, and
-  failure-intake route, and makes applicability the first hardening lane because
-  it governs generated rules, compliance, Forest Plan routing, V1, and promotion
-  readiness. This is not a runtime gate.
+  register, and the first Milestone 1 summary-contract slice is implemented in
+  `applicability-eval`. The eval output now records
+  `contract_id="applicability-direct-eval-summary-v1"`, `scorer_version`,
+  source artifact hashes, required metric groups, blocking/non-blocking gap
+  groups, hard-negative summaries, trace/graph/rule-pack scores, failure-intake
+  candidates, and opt-in gate-graph contradiction checks. No phase-eval
+  applicability ratchet or promotion gate is active yet.
 - Research addendum for that packet:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current agent/RAG/graph evaluation practice and maps it to local

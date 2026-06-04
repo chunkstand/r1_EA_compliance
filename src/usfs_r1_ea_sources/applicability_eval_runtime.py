@@ -14,10 +14,16 @@ from .applicability_eval_fixture_runtime import _write_source_index
 from .applicability_eval_scoring import _read_case_artifacts
 from .applicability_eval_scoring import _score_case
 from .applicability_eval_summary import _aggregate_arbitration_summary
+from .applicability_eval_summary import _applicability_eval_metric_groups
 from .applicability_eval_summary import _authority_family_template_coverage
 from .applicability_eval_summary import _failure_category_counts
+from .applicability_eval_summary import _failure_intake_candidates
+from .applicability_eval_summary import _hard_negative_results
+from .applicability_eval_summary import _metric_group_contract_summary
 from .applicability_eval_support import DEFAULT_APPLICABILITY_EVAL_PATH
+from .applicability_eval_support import APPLICABILITY_EVAL_CONTRACT_ID
 from .applicability_eval_support import APPLICABILITY_EVAL_RESULT_SCHEMA_VERSION
+from .applicability_eval_support import APPLICABILITY_EVAL_SCORER_VERSION
 from .applicability_eval_support import APPLICABILITY_EVAL_SCHEMA_VERSION
 from .applicability_eval_support import ApplicabilityEvalResult
 from .applicability_eval_support import _case_list
@@ -25,11 +31,13 @@ from .applicability_eval_support import _case_rate
 from .applicability_eval_support import _load_authority_family_template_set
 from .applicability_eval_support import _load_eval_payload
 from .applicability_eval_support import _source_chunk_specs
+from .applicability_eval_support import _stable_sha256
 from .applicability_eval_support import _strings
 from .applicability_eval_support import _utc_now
 from .applicability_eval_support import _validate_safe_segment
 from .applicability_eval_support import _write_json
 from .applicability import DEFAULT_AUTHORITY_FAMILY_TEMPLATES_PATH
+from .applicability_gate_graph import build_applicability_gate_graph
 from .applicability_decisions import build_applicability_decisions
 from .applicability_retrieval import build_applicability_retrieval_traces
 from .applicability_rule_pack import generate_applicability_rule_pack
@@ -37,6 +45,7 @@ from .applicability_validation import apply_applicability_adjudication
 from .applicability_validation import validate_applicability_run
 from .applicability_validation import write_applicability_adjudication_template
 from .package_fact_graph import build_package_fact_graph
+from .records import sha256_file
 from .rule_packs import DEFAULT_RULE_PACK_PATH
 from .rule_packs import load_rule_pack
 
@@ -95,14 +104,81 @@ def run_applicability_eval(
     source_set_ids = sorted(
         {str(case["source_set_id"]) for case in case_results if case.get("source_set_id")}
     )
+    review_ids = sorted(
+        {str(case["review_id"]) for case in case_results if case.get("review_id")}
+    )
+    metrics = {
+        "pass_rate": passed_count / case_count if case_count else 0.0,
+        "status_match_rate": _case_rate(case_results, "expected_statuses_match"),
+        "arbitration_status_match_rate": _case_rate(
+            case_results,
+            "arbitration_status_alignment_matches",
+        ),
+        "arbitration_decision_effect_match_rate": _case_rate(
+            case_results,
+            "arbitration_decision_effect_alignment_matches",
+        ),
+        "applicable_partition_match_rate": _case_rate(
+            case_results,
+            "expected_applicable_authorities_match",
+        ),
+        "non_applicable_partition_match_rate": _case_rate(
+            case_results,
+            "expected_non_applicable_authorities_match",
+        ),
+        "coverage_certificate_rate": _case_rate(
+            case_results,
+            "non_applicable_coverage_supported",
+        ),
+        "generated_rule_pack_match_rate": _case_rate(
+            case_results,
+            "generated_rule_pack_matches_applicability",
+        ),
+    }
+    authority_family_template_coverage = _authority_family_template_coverage(
+        eval_payload=eval_payload,
+        template_set=authority_family_template_set,
+        case_results=case_results,
+    )
+    arbitration_summary = _aggregate_arbitration_summary(case_results)
+    failure_category_counts = _failure_category_counts(case_results)
+    metric_groups = _applicability_eval_metric_groups(
+        case_results=case_results,
+        metrics=metrics,
+        authority_family_template_coverage=authority_family_template_coverage,
+        arbitration_summary=arbitration_summary,
+        failure_category_counts=failure_category_counts,
+    )
+    metric_group_contract_summary = _metric_group_contract_summary(metric_groups)
+    source_artifact_refs = _source_artifact_refs(
+        eval_file=eval_file,
+        base_rule_pack_path=base_rule_pack_path,
+        authority_family_templates_path=authority_family_templates_path,
+    )
+    source_artifact_hashes = _source_artifact_hashes(source_artifact_refs)
+    contract_hash = _stable_sha256(
+        {
+            "contract_id": APPLICABILITY_EVAL_CONTRACT_ID,
+            "scorer_version": APPLICABILITY_EVAL_SCORER_VERSION,
+            "eval_id": eval_payload.get("id"),
+            "eval_version": eval_payload.get("version"),
+            "source_artifact_hashes": source_artifact_hashes,
+            "metric_group_ids": metric_group_contract_summary["required_metric_group_ids"],
+        }
+    )
     summary = {
         "schema_version": APPLICABILITY_EVAL_RESULT_SCHEMA_VERSION,
+        "contract_id": APPLICABILITY_EVAL_CONTRACT_ID,
+        "contract_hash": contract_hash,
+        "scorer_version": APPLICABILITY_EVAL_SCORER_VERSION,
         "created_at": _utc_now(),
         "eval_file": str(eval_file),
         "eval_id": eval_payload.get("id"),
         "eval_version": eval_payload.get("version"),
         "output_dir": str(eval_output_dir),
         "output_path": str(output_path),
+        "source_artifact_refs": source_artifact_refs,
+        "source_artifact_hashes": source_artifact_hashes,
         "base_rule_pack_path": str(base_rule_pack_path),
         "base_rule_pack_id": base_rule_pack.get("rule_pack_id"),
         "base_rule_pack_version": base_rule_pack.get("version"),
@@ -113,6 +189,8 @@ def run_applicability_eval(
         ),
         "source_set_id": source_set_id or (source_set_ids[0] if len(source_set_ids) == 1 else None),
         "source_set_ids": source_set_ids,
+        "review_id": review_ids[0] if len(review_ids) == 1 else None,
+        "review_ids": review_ids,
         "case_count": case_count,
         "passed_count": passed_count,
         "failed_count": case_count - passed_count,
@@ -120,42 +198,21 @@ def run_applicability_eval(
         "generated_rule_pack_ready_case_count": sum(
             1 for case in case_results if case.get("generated_rule_pack_ready")
         ),
-        "metrics": {
-            "pass_rate": passed_count / case_count if case_count else 0.0,
-            "status_match_rate": _case_rate(case_results, "expected_statuses_match"),
-            "arbitration_status_match_rate": _case_rate(
-                case_results,
-                "arbitration_status_alignment_matches",
-            ),
-            "arbitration_decision_effect_match_rate": _case_rate(
-                case_results,
-                "arbitration_decision_effect_alignment_matches",
-            ),
-            "applicable_partition_match_rate": _case_rate(
-                case_results,
-                "expected_applicable_authorities_match",
-            ),
-            "non_applicable_partition_match_rate": _case_rate(
-                case_results,
-                "expected_non_applicable_authorities_match",
-            ),
-            "coverage_certificate_rate": _case_rate(
-                case_results,
-                "non_applicable_coverage_supported",
-            ),
-            "generated_rule_pack_match_rate": _case_rate(
-                case_results,
-                "generated_rule_pack_matches_applicability",
-            ),
-        },
-        "authority_family_template_coverage": _authority_family_template_coverage(
-            eval_payload=eval_payload,
-            template_set=authority_family_template_set,
-            case_results=case_results,
-        ),
-        "arbitration_summary": _aggregate_arbitration_summary(case_results),
-        "failure_category_counts": _failure_category_counts(case_results),
+        "metrics": metrics,
+        "metric_groups": metric_groups,
+        **metric_group_contract_summary,
+        "authority_family_template_coverage": authority_family_template_coverage,
+        "arbitration_summary": arbitration_summary,
+        "failure_category_counts": failure_category_counts,
+        "hard_negative_results": _hard_negative_results(case_results),
+        "failure_intake_candidates": _failure_intake_candidates(case_results),
+        "per_family_scores": authority_family_template_coverage,
+        "trace_quality_scores": metric_groups["retrieval_trace_quality"],
+        "graph_path_scores": metric_groups["graph_trace_quality"],
+        "rule_pack_fidelity_scores": metric_groups["generated_rule_pack_fidelity"],
+        "gate_graph_consistency_scores": metric_groups["gate_graph_consistency"],
         "cases": case_results,
+        "case_results": case_results,
     }
     _write_json(output_path, summary)
     return ApplicabilityEvalResult(
@@ -255,6 +312,11 @@ def _run_eval_case(
         source_set_id=case_source_set_id,
         case=case,
     )
+    build_applicability_gate_graph(
+        output_dir=output_dir,
+        review_id=review_id,
+        source_set_id=case_source_set_id,
+    )
     validation_result = validate_applicability_run(
         output_dir=output_dir,
         review_id=review_id,
@@ -293,6 +355,33 @@ def _run_eval_case(
         generated_error=generated_error,
         artifacts=artifacts,
     )
+
+
+def _source_artifact_refs(
+    *,
+    eval_file: Path,
+    base_rule_pack_path: Path,
+    authority_family_templates_path: Path | None,
+) -> dict[str, str | None]:
+    return {
+        "eval_file": str(eval_file),
+        "base_rule_pack_path": str(base_rule_pack_path),
+        "authority_family_templates_path": (
+            str(authority_family_templates_path)
+            if authority_family_templates_path
+            else None
+        ),
+    }
+
+
+def _source_artifact_hashes(
+    refs: dict[str, str | None],
+) -> dict[str, str | None]:
+    hashes: dict[str, str | None] = {}
+    for key, value in refs.items():
+        path = Path(value) if value else None
+        hashes[key] = sha256_file(path) if path and path.exists() else None
+    return hashes
 
 
 def _apply_case_adjudication_if_requested(

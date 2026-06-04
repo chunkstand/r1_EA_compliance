@@ -39,6 +39,15 @@ def _read_case_artifacts(applicability_dir: Path) -> dict[str, Any]:
         "search_coverage_certificates": _read_json_if_exists(
             applicability_dir / "search_coverage_certificates.json"
         ),
+        "applicability_gate_graph": _read_json_if_exists(
+            applicability_dir / "applicability_gate_graph.json"
+        ),
+        "applicability_gate_graph_summary": _read_json_if_exists(
+            applicability_dir / "applicability_gate_graph_summary.json"
+        ),
+        "applicability_gate_graph_validation": _read_json_if_exists(
+            applicability_dir / "applicability_gate_graph_validation.json"
+        ),
         "generated_rule_pack": _read_json_if_exists(
             applicability_dir / "generated_rule_pack.json"
         ),
@@ -77,6 +86,9 @@ def _score_case(
     applicable = artifacts["applicable_authorities"]
     non_applicable = artifacts["non_applicable_authorities"]
     coverage = artifacts["search_coverage_certificates"]
+    gate_graph = artifacts["applicability_gate_graph"]
+    gate_graph_summary = artifacts["applicability_gate_graph_summary"]
+    gate_graph_validation = artifacts["applicability_gate_graph_validation"]
     generated_validation_summary = (
         generated_validation.get("summary")
         if isinstance(generated_validation.get("summary"), dict)
@@ -221,6 +233,23 @@ def _score_case(
         generated_count_matches = len(generated_rule_ids) == int(expected_generated_count)
     else:
         generated_count_matches = generated_rule_ids == applicable_rule_ids
+    gate_graph_decision_mismatches = _gate_graph_decision_mismatches(
+        decisions=decisions,
+        gate_graph=gate_graph,
+    )
+    gate_graph_input_hash_gaps = _gate_graph_input_hash_gaps(gate_graph)
+    gate_graph_identity_matches = (
+        str(gate_graph.get("review_id") or "") == review_id
+        and str(gate_graph.get("source_set_id") or "") == source_set_id
+        and str(gate_graph_summary.get("contract_id") or "")
+        == str(gate_graph.get("contract_id") or "")
+    )
+    gate_graph_validation_passed = (
+        bool(gate_graph_validation.get("passed"))
+        and bool(gate_graph_summary.get("passed"))
+        and bool(gate_graph.get("validation", {}).get("passed"))
+    )
+    gate_graph_required = bool(case.get("expected_gate_graph_required"))
     result_flags = {
         "validation_passed_matches": bool(validation_summary.get("passed"))
         == bool(case.get("expected_validation_passed", True)),
@@ -290,11 +319,35 @@ def _score_case(
             generated_rule_pack_hash_matches_validation
         ),
     }
+    if gate_graph_required:
+        result_flags.update(
+            {
+                "gate_graph_validation_passed": gate_graph_validation_passed,
+                "gate_graph_identity_matches": gate_graph_identity_matches,
+                "gate_graph_input_hashes_match": not gate_graph_input_hash_gaps,
+                "gate_graph_consistency_matches": not gate_graph_decision_mismatches,
+            }
+        )
     failure_reasons = [name for name, passed in result_flags.items() if not passed]
     failure_taxonomy = _failure_taxonomy(
         result_flags=result_flags,
         status_mismatches=status_mismatches,
         non_applicable_coverage_gaps=non_applicable_coverage_gaps,
+        gate_graph_decision_mismatches=gate_graph_decision_mismatches,
+        gate_graph_input_hash_gaps=gate_graph_input_hash_gaps,
+        gate_graph_identity={
+            "expected_review_id": review_id,
+            "actual_review_id": gate_graph.get("review_id"),
+            "expected_source_set_id": source_set_id,
+            "actual_source_set_id": gate_graph.get("source_set_id"),
+            "summary_contract_id": gate_graph_summary.get("contract_id"),
+            "graph_contract_id": gate_graph.get("contract_id"),
+        },
+        gate_graph_validation={
+            "summary_passed": gate_graph_summary.get("passed"),
+            "validation_passed": gate_graph_validation.get("passed"),
+            "graph_validation_passed": gate_graph.get("validation", {}).get("passed"),
+        },
         generated_error=generated_error,
     )
     return {
@@ -321,6 +374,15 @@ def _score_case(
         "applicability_validation_path": str(
             review_dir / "applicability" / "applicability_validation.json"
         ),
+        "gate_graph_path": str(
+            review_dir / "applicability" / "applicability_gate_graph.json"
+        ),
+        "gate_graph_summary_path": str(
+            review_dir / "applicability" / "applicability_gate_graph_summary.json"
+        ),
+        "gate_graph_validation_path": str(
+            review_dir / "applicability" / "applicability_gate_graph_validation.json"
+        ),
         "generated_rule_pack_path": str(
             review_dir / "applicability" / "generated_rule_pack.json"
         ),
@@ -328,6 +390,26 @@ def _score_case(
             artifacts["authority_universe"].get("candidate_authorities") or []
         ),
         "decision_count": len(decisions),
+        "retrieval_trace_row_count": len(retrieval_rows),
+        "graph_trace_row_count": len(graph_rows),
+        "gate_graph_contract_id": gate_graph.get("contract_id"),
+        "gate_graph_node_count": gate_graph_summary.get("node_count", 0),
+        "gate_graph_edge_count": gate_graph_summary.get("edge_count", 0),
+        "forest_plan_component_gate_count": gate_graph_summary.get(
+            "forest_plan_component_gate_count",
+            0,
+        ),
+        "forest_plan_instance_gate_count": gate_graph_summary.get(
+            "forest_plan_instance_gate_count",
+            0,
+        ),
+        "gate_graph_decision_mismatches": gate_graph_decision_mismatches,
+        "gate_graph_input_hash_gaps": gate_graph_input_hash_gaps,
+        "gate_graph_required": gate_graph_required,
+        "gate_graph_validation_passed": gate_graph_validation_passed,
+        "gate_graph_identity_matches": gate_graph_identity_matches,
+        "gate_graph_input_hashes_match": not gate_graph_input_hash_gaps,
+        "gate_graph_consistency_matches": not gate_graph_decision_mismatches,
         "actual_statuses": actual_statuses,
         "expected_statuses": expected_statuses,
         "status_mismatches": status_mismatches,
@@ -627,6 +709,100 @@ def _rule_id_from_candidate_id(candidate_id: str) -> str:
     return candidate_id.rsplit(":", 1)[-1] if candidate_id else ""
 
 
+def _gate_graph_decision_mismatches(
+    *,
+    decisions: list[dict[str, Any]],
+    gate_graph: dict[str, Any],
+) -> list[dict[str, Any]]:
+    nodes_by_candidate_id = {
+        str(node.get("candidate_authority_id")): node
+        for node in _dict_list(gate_graph.get("nodes"))
+        if node.get("candidate_authority_id")
+    }
+    mismatches = []
+    for decision in decisions:
+        candidate_id = str(decision.get("candidate_authority_id") or "")
+        if not candidate_id:
+            continue
+        node = nodes_by_candidate_id.get(candidate_id)
+        expected_status, expected_activation = _expected_gate_state_for_decision(
+            decision,
+        )
+        if not node:
+            mismatches.append(
+                {
+                    "candidate_authority_id": candidate_id,
+                    "expected_gate_status": expected_status,
+                    "expected_activation_state": expected_activation,
+                    "actual_gate_status": None,
+                    "actual_activation_state": None,
+                }
+            )
+            continue
+        actual_status = str(node.get("gate_status") or "")
+        actual_activation = str(node.get("activation_state") or "")
+        if actual_status == expected_status and actual_activation == expected_activation:
+            continue
+        mismatches.append(
+            {
+                "candidate_authority_id": candidate_id,
+                "expected_gate_status": expected_status,
+                "expected_activation_state": expected_activation,
+                "actual_gate_status": actual_status,
+                "actual_activation_state": actual_activation,
+                "gate_id": node.get("gate_id"),
+            }
+        )
+    return mismatches
+
+
+def _gate_graph_input_hash_gaps(gate_graph: dict[str, Any]) -> list[dict[str, Any]]:
+    gaps = []
+    for record in _dict_list(gate_graph.get("inputs")):
+        name = str(record.get("name") or "")
+        path_value = str(record.get("path") or "")
+        expected_sha256 = str(record.get("sha256") or "")
+        if not name or not path_value or not expected_sha256:
+            gaps.append(
+                {
+                    "name": name or None,
+                    "path": path_value or None,
+                    "expected_sha256": expected_sha256 or None,
+                    "actual_sha256": None,
+                    "reason": "missing_input_hash_record",
+                }
+            )
+            continue
+        path = Path(path_value)
+        actual_sha256 = sha256_file(path) if path.exists() else None
+        if actual_sha256 != expected_sha256:
+            gaps.append(
+                {
+                    "name": name,
+                    "path": path_value,
+                    "expected_sha256": expected_sha256,
+                    "actual_sha256": actual_sha256,
+                    "reason": "input_hash_mismatch" if actual_sha256 else "missing_input",
+                }
+            )
+    return gaps
+
+
+def _expected_gate_state_for_decision(decision: dict[str, Any]) -> tuple[str, str]:
+    status = str(decision.get("status") or decision.get("applicability_status") or "")
+    if status == "applicable":
+        return "applicable", "open"
+    if status == "not_applicable":
+        return "not_applicable", "closed"
+    if status in {"unresolved", "needs_adjudication"}:
+        return status, "blocked"
+    return "candidate", "pending"
+
+
+def _dict_list(value: object) -> list[dict[str, Any]]:
+    return [item for item in value or [] if isinstance(item, dict)]
+
+
 def _coverage_certificate_ids(payload: dict[str, Any]) -> set[str]:
     return {
         str(
@@ -659,6 +835,11 @@ def _required_artifact_gaps(
         "applicable_authorities": artifacts["applicable_authorities"],
         "non_applicable_authorities": artifacts["non_applicable_authorities"],
         "search_coverage_certificates": artifacts["search_coverage_certificates"],
+        "applicability_gate_graph": artifacts["applicability_gate_graph"],
+        "applicability_gate_graph_summary": artifacts["applicability_gate_graph_summary"],
+        "applicability_gate_graph_validation": artifacts[
+            "applicability_gate_graph_validation"
+        ],
     }
     if generated_rule_pack_required:
         required["generated_rule_pack"] = artifacts["generated_rule_pack"]
@@ -727,6 +908,10 @@ def _failure_taxonomy(
     result_flags: dict[str, bool],
     status_mismatches: list[dict[str, Any]],
     non_applicable_coverage_gaps: list[dict[str, Any]],
+    gate_graph_decision_mismatches: list[dict[str, Any]],
+    gate_graph_input_hash_gaps: list[dict[str, Any]],
+    gate_graph_identity: dict[str, Any],
+    gate_graph_validation: dict[str, Any],
     generated_error: str | None,
 ) -> list[dict[str, Any]]:
     taxonomy = []
@@ -755,12 +940,24 @@ def _failure_taxonomy(
             ),
             "generated_rule_pack_ready_matches": "generated_rule_pack_not_ready",
             "validation_passed_matches": "applicability_validation_mismatch",
+            "gate_graph_validation_passed": "gate_graph_validation_mismatch",
+            "gate_graph_identity_matches": "gate_graph_identity_mismatch",
+            "gate_graph_input_hashes_match": "gate_graph_stale_artifact",
+            "gate_graph_consistency_matches": "gate_graph_consistency_mismatch",
         }.get(name, "applicability_eval_mismatch")
         details: dict[str, Any] = {}
         if name == "expected_statuses_match":
             details["status_mismatches"] = status_mismatches
         if name == "non_applicable_coverage_supported":
             details["coverage_gaps"] = non_applicable_coverage_gaps
+        if name == "gate_graph_consistency_matches":
+            details["decision_mismatches"] = gate_graph_decision_mismatches
+        if name == "gate_graph_input_hashes_match":
+            details["input_hash_gaps"] = gate_graph_input_hash_gaps
+        if name == "gate_graph_identity_matches":
+            details["identity"] = gate_graph_identity
+        if name == "gate_graph_validation_passed":
+            details["validation"] = gate_graph_validation
         if generated_error:
             details["generated_error"] = generated_error
         taxonomy.append({"check": name, "category": category, "details": details})

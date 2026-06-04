@@ -9669,6 +9669,16 @@ Latest closeout on 2026-05-18 after implementation commit `15d117a`:
   across positive and negative fixtures, and arbitration coverage still green
   for positive/negative conflict, weak-positive-only, and template-specific
   sufficiency cases.
+- As of the first-class system-evaluation Milestone 1 summary-contract slice,
+  new `applicability-eval` runs emit
+  `contract_id="applicability-direct-eval-summary-v1"`, `contract_hash`,
+  `scorer_version`, source artifact hashes, `metric_groups`,
+  `blocking_metric_groups_passed`, hard-negative summaries, trace/graph/rule-pack
+  scorer summaries, failure-intake candidates, and opt-in gate-graph
+  contradiction checks. This slice corrected the
+  `seed-arbitration-no-action-background-only` fixture into an explicit
+  hard-negative false-positive control. The ignored live `source_library`
+  applicability-eval artifact was not regenerated as proof in this code slice.
 - The Phase 6 live reviewer verification is still routed through the active
   East Crazies reviewer-ready lane rather than the canonical proving slice
   `source-set-9dcf819bc4cca486`. That proving slice still carries governed

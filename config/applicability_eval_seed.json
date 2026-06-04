@@ -451,19 +451,19 @@
         "roads_access_special_use_action_authorities_authority_template"
       ],
       "package_text": "Purpose and Need\n\nThe Forest Service evaluates alternatives for a proposed authorization.\n\nNo Action Alternative\n\nThe no action alternative would keep an existing road and trail unchanged.",
-      "expected_validation_passed": false,
+      "expected_validation_passed": true,
       "expected_generated_rule_pack_ready": false,
       "expected_statuses": {
-        "roads_access_special_use_action_authorities_authority_template": "needs_adjudication"
+        "roads_access_special_use_action_authorities_authority_template": "not_applicable"
       },
       "expected_basis_types_by_rule_id": {
-        "roads_access_special_use_action_authorities_authority_template": "unresolved_evidence_conflict"
+        "roads_access_special_use_action_authorities_authority_template": "absent_trigger_evidence"
       },
       "expected_arbitration_statuses_by_rule_id": {
-        "roads_access_special_use_action_authorities_authority_template": "weak_positive_only"
+        "roads_access_special_use_action_authorities_authority_template": "weak_background_positive_only"
       },
       "expected_arbitration_decision_effects_by_rule_id": {
-        "roads_access_special_use_action_authorities_authority_template": "blocked_by_weak_positive_trigger"
+        "roads_access_special_use_action_authorities_authority_template": "trigger_absence_decisive"
       },
       "expected_generated_rule_count": 0,
       "expected_retrieval_rule_ids": [

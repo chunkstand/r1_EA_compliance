@@ -2345,17 +2345,30 @@ matrix evaluates compliance findings only for generated applicable rules.
 `source_library/reviews/applicability_eval/applicability_eval_results.json` unless `--results-dir`
 is supplied. The result schema is `applicability-eval-results-v0` and records:
 
+- first-class direct-eval summary identity: `contract_id`, `contract_hash`,
+  `scorer_version`, `source_artifact_refs`, and `source_artifact_hashes`
 - eval ID, eval version, eval file, base rule-pack path, base rule-pack ID/version, source set IDs,
-  output path, authority-family template config path when loaded, and created timestamp
+  review IDs, output path, authority-family template config path when loaded, and created timestamp
 - case count, passed/failed counts, generated-rule-pack-ready case count, aggregate metrics, and
   failure-category counts
+- `metric_groups`, `required_metric_group_ids`, `missing_metric_group_ids`,
+  `metric_group_contract_passed`, `blocking_metric_group_ids`,
+  `blocking_metric_group_failures`, `blocking_metric_groups_passed`, and
+  `non_blocking_gap_group_ids`; metric groups cover authority-universe coverage,
+  retrieval trace quality, graph trace quality, decision partition fidelity, generated-rule-pack
+  fidelity, gate-graph consistency, Forest Plan subgate behavior, adjudication/failure intake, and
+  trajectory/process quality
+- convenience scorer summaries for `hard_negative_results`, `per_family_scores`,
+  `trace_quality_scores`, `graph_path_scores`, `rule_pack_fidelity_scores`,
+  `gate_graph_consistency_scores`, and `failure_intake_candidates`
 - one case summary per fixture, including review ID, source set ID, artifact paths, actual and
   expected statuses, applicable/non-applicable/generated rule IDs, package fact types, source-record
   and document-role alignment status, package-section alignment status, graph path/non-path status,
   basis-type alignment status, expected and actual arbitration statuses, expected and actual
   arbitration decision effects, per-case arbitration summary counts, authority-family IDs by rule
   ID, adjudicated rule IDs, required artifact gaps, coverage gaps, generated-rule-pack readiness,
-  generated-pack hash and coverage mismatch status, and failure taxonomy
+  generated-pack hash and coverage mismatch status, gate-graph paths, gate-graph contract identity,
+  gate-graph decision/input-hash mismatch details, and failure taxonomy
 - `arbitration_summary`, which aggregates arbitration status/effect counts and the readiness
   buckets for applicable-with-weak-auxiliary, weak-only needs-adjudication,
   insufficient-strong-trigger needs-adjudication, and positive/negative conflict
@@ -2367,13 +2380,19 @@ is supplied. The result schema is `applicability-eval-results-v0` and records:
 Each eval case materializes a review directory under
 `source_library/reviews/applicability-eval-<case_id>/` and runs the same applicability artifact
 sequence used by the reviewer path: authority universe, package fact graph, applicability
-retrieval/graph traces, deterministic decisions, validation, and generated-rule-pack validation.
+retrieval/graph traces, deterministic decisions, gate-graph overlay, validation, and
+generated-rule-pack validation.
 The eval fails when expected applicability statuses or partitions drift, non-applicable authorities
 lack coverage certificates, expected retrieval or graph traces are missing, expected graph non-paths
 are violated, package facts are not found, source-record/document-role/package-section alignment
 fails, expected arbitration statuses or decision effects drift, negative/no-trigger evidence is
 absent, required applicability artifacts are missing, the generated rule-pack hash differs from
-validation, or generated rule-pack rules do not match validated applicable authorities.
+validation, or generated rule-pack rules do not match validated applicable authorities. Cases that
+set `expected_gate_graph_required=true` also fail closed when the generated gate graph has the wrong
+review/source-set identity, stale input hashes, invalid structure, or candidate gate states that
+contradict the applicability decision ledger. The default seed emits gate-graph metrics but keeps
+Forest Plan component/subgate scoring and trace-to-case failure intake as explicit non-blocking
+Milestone 1/2 gaps until scoped fixtures are added.
 
 `applicability-gold-eval` writes
 `source_library/reviews/applicability_gold_eval/applicability_gold_eval_results.json` unless

@@ -1,7 +1,7 @@
 # First-Class System Evaluation Improvement Milestone Plan
 
 Date: 2026-06-04
-Status: Milestone 0 implemented; Milestone 1 next
+Status: Milestone 0 implemented; Milestone 1 summary-contract slice implemented; Milestone 1 residuals next
 Plan class: implementation
 High-risk implementation: yes
 Owner context: repo-native goal for extending first-class evaluations across the USFS R1 EA
@@ -235,16 +235,15 @@ the verified milestone slice. Do not stage ignored `source_library/` outputs.
 
 ## Closeout Outcome Record
 
-Status: Milestone 0 implemented; Milestone 1 remains pending.
+Status: Milestone 0 implemented; Milestone 1 summary-contract slice implemented; residuals pending.
 
 - Milestone 0 closeout command summary: plan lint and diff whitespace checks passed.
-- Applicability implementation closeout command summary: pending.
-- Docs and handoff freshness: `docs/EVALUATION_COVERAGE_REGISTER.md`,
-  `docs/CURRENT_ROUTING.md`, and `docs/SESSION_HANDOFF.md` updated for the docs-only Milestone 0
-  route; runtime state docs unchanged because no behavior or generated evidence changed.
+- Applicability implementation closeout command summary: focused tests and lint passed for the
+  summary-contract slice; residual gates remain pending.
+- Docs and handoff freshness: schema, coverage, routing, current-state, and handoff docs updated.
 - Commit identifier: this commit.
-- Residual risk after closeout: Milestone 0 is reduced, not resolved. Applicability summary
-  metrics, tests, replay cases, and scoped phase-eval ratchet remain Milestones 1-3.
+- Residual risk after closeout: Forest Plan subgates, failure intake, selected-review summaries,
+  and the scoped phase-eval ratchet remain Milestones 1-3.
 
 ## Stop Conditions
 

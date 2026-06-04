@@ -11,6 +11,8 @@ import re
 
 APPLICABILITY_EVAL_SCHEMA_VERSION = "applicability-eval-v0"
 APPLICABILITY_EVAL_RESULT_SCHEMA_VERSION = "applicability-eval-results-v0"
+APPLICABILITY_EVAL_CONTRACT_ID = "applicability-direct-eval-summary-v1"
+APPLICABILITY_EVAL_SCORER_VERSION = "applicability-direct-eval-scorer-v1"
 APPLICABILITY_GOLD_EVAL_SCHEMA_VERSION = "applicability-gold-eval-v0"
 APPLICABILITY_GOLD_EVAL_RESULT_SCHEMA_VERSION = "applicability-gold-eval-results-v0"
 DEFAULT_APPLICABILITY_EVAL_PATH = Path("config/applicability_eval_seed.json")

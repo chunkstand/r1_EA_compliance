@@ -27,7 +27,13 @@ history below.
   coverage goal and gap register. `docs/EVALUATION_COVERAGE_REGISTER.md` now
   records the system eval goal, all-step direct-eval status, metrics, artifacts,
   failure-intake routes, applicability sub-step gaps, and the first scoped
-  applicability ratchet target. This is not a runtime behavior change.
+  applicability ratchet target. The first Milestone 1 runtime slice is also
+  implemented: `applicability-eval` emits a first-class summary contract with
+  `contract_id`, `contract_hash`, `scorer_version`, source artifact hashes,
+  required metric groups, blocking/non-blocking gap groups, hard-negative
+  summaries, trace/graph/rule-pack scores, failure-intake candidates, and
+  opt-in gate-graph contradiction checks. No phase-eval applicability ratchet or
+  promotion gate is active yet.
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then read
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` for the
@@ -39,11 +45,13 @@ history below.
   use Milestones 0-5 as the resolved first-class eval trace baseline
 - latest resolved packet:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` Milestone 0
+  plus the first Milestone 1 applicability summary-contract hardening slice
 - active packet:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` Milestone
-  1. The next implementation must harden applicability direct-eval contracts,
-  summary metrics, and focused failure modes before any phase-eval ratchet. The
-  first scoped ratchet target is `review_id="west-reservoir-67436"` with
+  1 residuals. The next implementation must add scoped Forest Plan
+  component/subgate fixture coverage and replayable failure intake before any
+  phase-eval ratchet. The first scoped ratchet target is
+  `review_id="west-reservoir-67436"` with
   `source_set_id="source-set-f70ea11e04ae3d53"`, but that ratchet is not active
   until Milestones 1 and 2 prove replayable applicability summary metrics and
   failure intake.

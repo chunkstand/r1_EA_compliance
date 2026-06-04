@@ -103,7 +103,19 @@ class ApplicabilityEvalTests(unittest.TestCase):
             no_action["expected_arbitration_decision_effects_by_rule_id"],
             {
                 "roads_access_special_use_action_authorities_authority_template": (
-                    "blocked_by_weak_positive_trigger"
+                    "trigger_absence_decisive"
+                )
+            },
+        )
+        self.assertEqual(
+            no_action["expected_statuses"],
+            {"roads_access_special_use_action_authorities_authority_template": "not_applicable"},
+        )
+        self.assertEqual(
+            no_action["expected_arbitration_statuses_by_rule_id"],
+            {
+                "roads_access_special_use_action_authorities_authority_template": (
+                    "weak_background_positive_only"
                 )
             },
         )
@@ -131,8 +143,43 @@ class ApplicabilityEvalTests(unittest.TestCase):
             )
 
             self.assertTrue(result.summary["passed"])
+            self.assertEqual(
+                result.summary["contract_id"],
+                "applicability-direct-eval-summary-v1",
+            )
+            self.assertEqual(
+                result.summary["scorer_version"],
+                "applicability-direct-eval-scorer-v1",
+            )
+            self.assertTrue(result.summary["metric_group_contract_passed"])
+            self.assertEqual(result.summary["missing_metric_group_ids"], [])
+            self.assertTrue(result.summary["blocking_metric_groups_passed"])
+            self.assertEqual(
+                sorted(result.summary["metric_groups"]),
+                sorted(result.summary["required_metric_group_ids"]),
+            )
             self.assertEqual(result.summary["case_count"], 9)
             self.assertEqual(result.summary["generated_rule_pack_ready_case_count"], 2)
+            self.assertEqual(len(result.summary["case_results"]), 9)
+            metric_groups = result.summary["metric_groups"]
+            self.assertEqual(
+                metric_groups["gate_graph_consistency"]["status"],
+                "direct_eval_strengthening_planned",
+            )
+            self.assertEqual(
+                metric_groups["gate_graph_consistency"]["metrics"][
+                    "gate_graph_observed_case_count"
+                ],
+                9,
+            )
+            self.assertIn(
+                "forest_plan_subgate_behavior",
+                result.summary["non_blocking_gap_group_ids"],
+            )
+            self.assertIn(
+                "trajectory_process_quality",
+                result.summary["non_blocking_gap_group_ids"],
+            )
             arbitration = result.summary["arbitration_summary"]
             self.assertGreaterEqual(
                 arbitration["applicable_with_weak_auxiliary_count"],
@@ -140,7 +187,7 @@ class ApplicabilityEvalTests(unittest.TestCase):
             )
             self.assertGreaterEqual(
                 arbitration["weak_positive_only_needs_adjudication_count"],
-                2,
+                1,
             )
             self.assertGreaterEqual(
                 arbitration["positive_negative_conflict_needs_adjudication_count"],
@@ -207,7 +254,7 @@ class ApplicabilityEvalTests(unittest.TestCase):
                 no_action["arbitration_statuses_by_rule_id"],
                 {
                     "roads_access_special_use_action_authorities_authority_template": (
-                        "weak_positive_only"
+                        "weak_background_positive_only"
                     )
                 },
             )
@@ -228,11 +275,66 @@ class ApplicabilityEvalTests(unittest.TestCase):
                 mixed["actual_statuses"]["usda_nepa_ce_fanec_7cfr_1b3"],
                 "not_applicable",
             )
+            self.assertFalse(mixed["gate_graph_required"])
+            self.assertTrue(mixed["gate_graph_consistency_matches"])
+            self.assertTrue(Path(mixed["gate_graph_path"]).exists())
             self.assertEqual(
                 mixed["generated_rule_ids"],
                 ["esa_section_7", "nepa_statute_chapter_55"],
             )
             self.assertTrue(mixed["non_applicable_coverage_supported"])
+
+    def test_applicability_eval_gate_graph_required_case_fails_on_contradiction(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output_dir = root / "source_library"
+            eval_path = root / "gate-graph-required-eval.json"
+            payload = json.loads(EVAL_SEED.read_text(encoding="utf-8"))
+            payload = copy.deepcopy(payload)
+            payload["cases"] = [payload["cases"][0]]
+            payload["cases"][0]["expected_gate_graph_required"] = True
+            eval_path.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
+
+            result = run_applicability_eval(
+                output_dir=output_dir,
+                eval_file=eval_path,
+                base_rule_pack_path=RULE_PACK,
+            )
+
+            self.assertTrue(result.summary["passed"])
+            graph_group = result.summary["metric_groups"]["gate_graph_consistency"]
+            self.assertEqual(graph_group["status"], "direct_eval_present")
+            self.assertTrue(graph_group["blocking"])
+            self.assertTrue(graph_group["passed"])
+            case_summary = result.summary["cases"][0]
+            graph_path = Path(case_summary["gate_graph_path"])
+            graph = json.loads(graph_path.read_text(encoding="utf-8"))
+            for node in graph["nodes"]:
+                if str(node.get("candidate_authority_id") or "").endswith(":esa_section_7"):
+                    node["gate_status"] = "not_applicable"
+                    node["activation_state"] = "closed"
+                    break
+            else:
+                raise AssertionError("Missing ESA gate node")
+            graph_path.write_text(
+                json.dumps(graph, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+            rescored = _rescore_case(
+                eval_file=eval_path,
+                eval_summary=result.summary,
+                case_id="seed-mixed-applicability",
+            )
+
+            self.assertFalse(rescored["passed"])
+            self.assertFalse(rescored["gate_graph_consistency_matches"])
+            self.assertEqual(
+                rescored["failure_category_counts"]["gate_graph_consistency_mismatch"],
+                1,
+            )
 
     def test_applicability_eval_ignores_stale_generated_pack_when_case_becomes_unresolved(
         self,
