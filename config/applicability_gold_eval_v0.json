@@ -305,7 +305,7 @@
         }
       },
       "expected_validation_passed": true,
-      "expected_generated_rule_pack_ready": false,
+      "expected_generated_rule_pack_ready": true,
       "expected_statuses": {
         "clean_water_act_wotus_permits_authority_template": "applicable"
       },

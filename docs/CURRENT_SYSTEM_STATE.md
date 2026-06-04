@@ -9662,23 +9662,26 @@ Latest closeout on 2026-05-18 after implementation commit `15d117a`:
   with `authority_explanation_artifact_rate=1.0`,
   `authority_path_classification_rate=1.0`, and
   `authority_trace_coverage_rate=1.0`.
-- `applicability-eval` remains green on the same live reviewer-ready source
-  set at
-  `source_library/reviews/applicability_eval/applicability_eval_results.json`
-  with `9/9` cases passing, all `19` high-priority authority families covered
-  across positive and negative fixtures, and arbitration coverage still green
-  for positive/negative conflict, weak-positive-only, and template-specific
-  sufficiency cases.
+- New `applicability-eval` seed runs now pass `10/10` cases, cover all `19`
+  high-priority authority families across positive and negative fixtures, keep
+  arbitration coverage green for positive/negative conflict, weak-positive-only,
+  and template-specific sufficiency cases, and include one required Custer
+  Gallatin Forest Plan management-area component case with one active-plan gate
+  and one component gate.
 - As of the first-class system-evaluation Milestone 1 summary-contract slice,
   new `applicability-eval` runs emit
   `contract_id="applicability-direct-eval-summary-v1"`, `contract_hash`,
   `scorer_version`, source artifact hashes, `metric_groups`,
   `blocking_metric_groups_passed`, hard-negative summaries, trace/graph/rule-pack
   scorer summaries, failure-intake candidates, and opt-in gate-graph
-  contradiction checks. This slice corrected the
+  contradiction checks. Follow-on Milestone 1 Forest Plan subgate coverage also
+  makes `gate_graph_consistency` and `forest_plan_subgate_behavior` blocking
+  direct-eval-present metric groups. This slice corrected the
   `seed-arbitration-no-action-background-only` fixture into an explicit
-  hard-negative false-positive control. The ignored live `source_library`
-  applicability-eval artifact was not regenerated as proof in this code slice.
+  hard-negative false-positive control and later allowed generated packs with
+  no baseline source records to omit the empty baseline-source field instead of
+  failing validation. The ignored live `source_library` applicability-eval
+  artifact was not regenerated as proof in these code slices.
 - The Phase 6 live reviewer verification is still routed through the active
   East Crazies reviewer-ready lane rather than the canonical proving slice
   `source-set-9dcf819bc4cca486`. That proving slice still carries governed

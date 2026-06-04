@@ -282,6 +282,7 @@ def _run_eval_case(
         applicability_dir=applicability_dir,
         review_id=review_id,
         source_set_id=case_source_set_id,
+        case=case,
         base_rule_pack_path=base_rule_pack_path,
         base_rule_pack=base_rule_pack,
         rules=selected_rules,

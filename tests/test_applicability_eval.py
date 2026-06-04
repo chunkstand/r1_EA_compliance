@@ -66,6 +66,10 @@ class ApplicabilityEvalTests(unittest.TestCase):
             EVAL_SEED,
             "seed-arbitration-template-specific-sufficiency",
         )
+        forest_plan_component = _case_payload(
+            EVAL_SEED,
+            "seed-forest-plan-component-subgate-applicable",
+        )
         self.assertEqual(sorted(positive["candidate_authority_family_rule_ids"]), template_rule_ids)
         self.assertEqual(sorted(negative["candidate_authority_family_rule_ids"]), template_rule_ids)
         self.assertEqual(positive["expected_status_for_candidate_authority_family_rule_ids"], "applicable")
@@ -127,6 +131,24 @@ class ApplicabilityEvalTests(unittest.TestCase):
             ]["minimum_strong_trigger_groups"],
             2,
         )
+        self.assertEqual(forest_plan_component["profile"], "forest_plan_component")
+        self.assertTrue(forest_plan_component["expected_gate_graph_required"])
+        self.assertEqual(
+            forest_plan_component["expected_statuses"],
+            {"forest_plan_component_STD-FP-1": "applicable"},
+        )
+        self.assertEqual(
+            forest_plan_component["candidate_authorities"][0][
+                "candidate_authority_type"
+            ],
+            "forest_plan_component",
+        )
+        self.assertEqual(
+            forest_plan_component["candidate_authorities"][0]["forest_plan"][
+                "management_area_ids"
+            ],
+            ["mgmt-chalk-buttes-bca"],
+        )
         self.assertTrue(
             (EVAL_SEED.parent / positive["package_path"]).exists(),
             positive["package_path"],
@@ -158,23 +180,45 @@ class ApplicabilityEvalTests(unittest.TestCase):
                 sorted(result.summary["metric_groups"]),
                 sorted(result.summary["required_metric_group_ids"]),
             )
-            self.assertEqual(result.summary["case_count"], 9)
-            self.assertEqual(result.summary["generated_rule_pack_ready_case_count"], 2)
-            self.assertEqual(len(result.summary["case_results"]), 9)
+            self.assertEqual(result.summary["case_count"], 10)
+            self.assertEqual(result.summary["generated_rule_pack_ready_case_count"], 5)
+            self.assertEqual(len(result.summary["case_results"]), 10)
             metric_groups = result.summary["metric_groups"]
             self.assertEqual(
                 metric_groups["gate_graph_consistency"]["status"],
-                "direct_eval_strengthening_planned",
+                "direct_eval_present",
+            )
+            self.assertTrue(metric_groups["gate_graph_consistency"]["blocking"])
+            self.assertTrue(metric_groups["gate_graph_consistency"]["passed"])
+            self.assertEqual(
+                metric_groups["gate_graph_consistency"]["metrics"][
+                    "gate_graph_required_case_count"
+                ],
+                1,
             )
             self.assertEqual(
                 metric_groups["gate_graph_consistency"]["metrics"][
                     "gate_graph_observed_case_count"
                 ],
-                9,
+                10,
             )
-            self.assertIn(
-                "forest_plan_subgate_behavior",
-                result.summary["non_blocking_gap_group_ids"],
+            self.assertEqual(
+                metric_groups["forest_plan_subgate_behavior"]["status"],
+                "direct_eval_present",
+            )
+            self.assertTrue(metric_groups["forest_plan_subgate_behavior"]["blocking"])
+            self.assertTrue(metric_groups["forest_plan_subgate_behavior"]["passed"])
+            self.assertEqual(
+                metric_groups["forest_plan_subgate_behavior"]["metrics"][
+                    "forest_plan_component_case_count"
+                ],
+                1,
+            )
+            self.assertEqual(
+                metric_groups["forest_plan_subgate_behavior"]["metrics"][
+                    "forest_plan_component_gate_count"
+                ],
+                1,
             )
             self.assertIn(
                 "trajectory_process_quality",
@@ -283,6 +327,30 @@ class ApplicabilityEvalTests(unittest.TestCase):
                 ["esa_section_7", "nepa_statute_chapter_55"],
             )
             self.assertTrue(mixed["non_applicable_coverage_supported"])
+            forest_plan_component = _case(
+                result.summary,
+                "seed-forest-plan-component-subgate-applicable",
+            )
+            self.assertEqual(
+                forest_plan_component["actual_statuses"],
+                {"forest_plan_component_STD-FP-1": "applicable"},
+            )
+            self.assertEqual(
+                forest_plan_component["basis_types_by_rule_id"],
+                {"forest_plan_component_STD-FP-1": "forest_plan_component"},
+            )
+            self.assertEqual(
+                forest_plan_component["arbitration_statuses_by_rule_id"],
+                {"forest_plan_component_STD-FP-1": "strong_positive_decisive"},
+            )
+            self.assertEqual(
+                forest_plan_component["generated_rule_ids"],
+                ["forest_plan_component_STD-FP-1"],
+            )
+            self.assertTrue(forest_plan_component["gate_graph_required"])
+            self.assertTrue(forest_plan_component["gate_graph_consistency_matches"])
+            self.assertEqual(forest_plan_component["forest_plan_component_gate_count"], 1)
+            self.assertEqual(forest_plan_component["forest_plan_instance_gate_count"], 1)
 
     def test_applicability_eval_gate_graph_required_case_fails_on_contradiction(
         self,

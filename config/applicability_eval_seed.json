@@ -209,7 +209,7 @@
       ],
       "package_path": "fixtures/applicability/region1-land-exchange-expanded-authority.txt",
       "expected_validation_passed": true,
-      "expected_generated_rule_pack_ready": false,
+      "expected_generated_rule_pack_ready": true,
       "expected_status_for_candidate_authority_family_rule_ids": "applicable",
       "expected_generated_rule_count": 19,
       "expected_retrieval_rule_ids": [
@@ -385,7 +385,7 @@
       ],
       "package_text": "Purpose and Need\n\nThe Forest Service proposes to reconstruct an existing NFS road and authorize access to the exchange parcel.\n\nNo Action Alternative\n\nUnder the no action alternative, grazing would not change.",
       "expected_validation_passed": true,
-      "expected_generated_rule_pack_ready": false,
+      "expected_generated_rule_pack_ready": true,
       "expected_statuses": {
         "roads_access_special_use_action_authorities_authority_template": "applicable"
       },
@@ -522,6 +522,215 @@
       "expected_graph_rule_ids": [
         "roads_access_special_use_action_authorities_authority_template"
       ]
+    },
+    {
+      "id": "seed-forest-plan-component-subgate-applicable",
+      "profile": "forest_plan_component",
+      "coverage_tags": [
+        "forest_plan_consistency",
+        "forest_plan_component_subgate"
+      ],
+      "candidate_rule_ids": [],
+      "candidate_authority_family_rule_ids": [],
+      "candidate_authorities": [
+        {
+          "candidate_authority_id": "forest-plan-component:applicability-eval:custer-gallatin:forest_plan_component_STD-FP-1",
+          "candidate_authority_type": "forest_plan_component",
+          "authority_family_id": "nfma_forest_planning_project_consistency",
+          "authority_family_ids": [
+            "nfma_forest_planning_project_consistency"
+          ],
+          "authority_category": "forest_plan",
+          "authority_document_role": "forest_plan",
+          "source_record_ids": [
+            "R1PLAN-eval-cg-001"
+          ],
+          "source_records": [
+            {
+              "source_record_id": "R1PLAN-eval-cg-001",
+              "title": "Custer Gallatin Forest Plan management area standards fixture",
+              "document_role": "forest_plan",
+              "citation_label": "R1PLAN-eval-cg-001 | Custer Gallatin Forest Plan",
+              "text": "The Custer Gallatin Forest Plan includes Standard STD-FP-1 for the Chalk Buttes Backcountry Area."
+            }
+          ],
+          "required_package_fact_types": [
+            "management_area"
+          ],
+          "positive_trigger_groups": [
+            [
+              "Chalk Buttes Backcountry Area"
+            ]
+          ],
+          "negative_trigger_groups": [],
+          "source_role_filters": {
+            "source_record_ids": [
+              "R1PLAN-eval-cg-001"
+            ],
+            "document_roles": [
+              "forest_plan"
+            ],
+            "authority_categories": [
+              "forest_plan"
+            ]
+          },
+          "package_section_filters": {
+            "package_query": "Chalk Buttes Backcountry Area",
+            "package_terms": [
+              "Chalk Buttes Backcountry Area"
+            ],
+            "package_evidence_terms": [
+              "Chalk Buttes Backcountry Area"
+            ],
+            "management_area_ids": [
+              "mgmt-chalk-buttes-bca"
+            ]
+          },
+          "required_source_evidence": {
+            "source_record_ids": [
+              "R1PLAN-eval-cg-001"
+            ],
+            "document_roles": [
+              "forest_plan"
+            ],
+            "requires_catalog_record": true,
+            "requires_artifact_sha256": true,
+            "requires_source_record": true,
+            "requires_source_claim_linkage": false
+          },
+          "retrieval_contract": {
+            "contract_type": "forest_plan_component_retrieval",
+            "query_plan_id": "retrieval-plan:forest-plan-component:STD-FP-1",
+            "required_query_types": [
+              "package_section",
+              "graph_seed"
+            ],
+            "source_queries": [
+              "STD-FP-1 Chalk Buttes Backcountry Area"
+            ],
+            "package_queries": [
+              "Chalk Buttes Backcountry Area"
+            ],
+            "fused_ranking_strategy": "reciprocal_rank_fusion",
+            "requires_selected_and_rejected_results": true,
+            "searched_index_hash_required": false
+          },
+          "graph_expansion_contract": {
+            "contract_type": "forest_plan_component_graph_expansion",
+            "start_node_types": [
+              "forest_plan_component",
+              "source_record",
+              "package_fact"
+            ],
+            "relationship_types": [
+              "authority_category",
+              "component_inventory",
+              "evidence_span",
+              "forest_plan_profile",
+              "management_area",
+              "package_fact",
+              "source_record"
+            ],
+            "max_depth": 2,
+            "requires_path_trace": true,
+            "neighbor_filters": {
+              "management_area_ids": [
+                "mgmt-chalk-buttes-bca"
+              ],
+              "source_record_ids": [
+                "R1PLAN-eval-cg-001"
+              ]
+            }
+          },
+          "dependency_contract": {
+            "dependency_family_ids": [],
+            "dependency_rule_ids": [],
+            "exception_rule_ids": [],
+            "supersedes_rule_ids": []
+          },
+          "search_coverage_requirements": [
+            {
+              "coverage_class": "forest_plan_component_positive_scope",
+              "required_query_types": [
+                "package_section",
+                "graph_seed"
+              ],
+              "required_artifacts": [
+                "package_fact_graph",
+                "applicability_retrieval_trace",
+                "applicability_graph_trace"
+              ],
+              "requires_searched_index_hash": false
+            }
+          ],
+          "forest_plan": {
+            "forest_unit_id": "custer-gallatin-nf",
+            "forest_unit_names": [
+              "Custer Gallatin National Forest"
+            ],
+            "active_plan_source_record_id": "R1PLAN-eval-cg-001",
+            "component_inventory_id": "applicability-eval-forest-plan-fixture",
+            "component_inventory_path": "config/applicability_eval_seed.json",
+            "component_inventory_sha256": "fixture",
+            "component_id": "STD-FP-1",
+            "component_type": "standard",
+            "section_heading": "Chalk Buttes Backcountry Area standard",
+            "management_area_ids": [
+              "mgmt-chalk-buttes-bca"
+            ],
+            "geographic_area_ids": [],
+            "overlay_ids": []
+          },
+          "source_evidence_availability": {
+            "available": true,
+            "catalog_record_present": true,
+            "artifact_sha256_present": true,
+            "source_claim_link_count": 0,
+            "rule_claim_gap_count": 0
+          }
+        }
+      ],
+      "package_text": "Purpose and Need\n\nThe USDA Forest Service prepares an environmental assessment for a proposed action on the Custer Gallatin National Forest.\n\nAffected Environment\n\nThe action area includes the Chalk Buttes Backcountry Area.\n\nEnvironmental Consequences\n\nThe review must address the applicable Custer Gallatin Forest Plan management-area standard for the Chalk Buttes Backcountry Area.",
+      "expected_validation_passed": true,
+      "expected_generated_rule_pack_ready": true,
+      "expected_gate_graph_required": true,
+      "expected_statuses": {
+        "forest_plan_component_STD-FP-1": "applicable"
+      },
+      "expected_applicable_rule_ids": [
+        "forest_plan_component_STD-FP-1"
+      ],
+      "expected_generated_rule_ids": [
+        "forest_plan_component_STD-FP-1"
+      ],
+      "expected_generated_rule_count": 1,
+      "expected_package_fact_types": [
+        "agency",
+        "management_area",
+        "nepa_level"
+      ],
+      "expected_retrieval_rule_ids": [
+        "forest_plan_component_STD-FP-1"
+      ],
+      "expected_graph_rule_ids": [
+        "forest_plan_component_STD-FP-1"
+      ],
+      "expected_source_record_ids_by_rule_id": {
+        "forest_plan_component_STD-FP-1": [
+          "R1PLAN-eval-cg-001"
+        ]
+      },
+      "expected_document_roles_by_rule_id": {
+        "forest_plan_component_STD-FP-1": [
+          "forest_plan"
+        ]
+      },
+      "expected_basis_types_by_rule_id": {
+        "forest_plan_component_STD-FP-1": "forest_plan_component"
+      },
+      "expected_arbitration_statuses_by_rule_id": {
+        "forest_plan_component_STD-FP-1": "strong_positive_decisive"
+      }
     }
   ],
   "high_priority_authority_family_ids": [

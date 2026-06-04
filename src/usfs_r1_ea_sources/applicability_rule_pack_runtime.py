@@ -109,7 +109,7 @@ def _generated_rule_pack(
             and str(rule.get("authority_source_record_id") or "").strip()
         }
     )
-    return {
+    payload = {
         "schema_version": GENERATED_RULE_PACK_SCHEMA_VERSION,
         "rule_pack_id": generated_rule_pack_id,
         "version": generated_version,
@@ -146,10 +146,12 @@ def _generated_rule_pack(
         "review_id": review_id,
         "applicable_authority_count": len(_authority_ids(applicable_authorities)),
         "non_applicable_authority_count": len(_authority_ids(non_applicable_authorities)),
-        "baseline_source_record_ids": baseline_source_record_ids,
         "artifact_hashes": artifact_hashes,
         "rules": rules,
     }
+    if baseline_source_record_ids:
+        payload["baseline_source_record_ids"] = baseline_source_record_ids
+    return payload
 
 
 def _rule_applicability_metadata(

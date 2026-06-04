@@ -1,7 +1,7 @@
 # First-Class System Evaluation Improvement Milestone Plan
 
 Date: 2026-06-04
-Status: Milestone 0 implemented; Milestone 1 summary-contract slice implemented; Milestone 1 residuals next
+Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; failure-intake residuals next
 Plan class: implementation
 High-risk implementation: yes
 Owner context: repo-native goal for extending first-class evaluations across the USFS R1 EA
@@ -161,7 +161,7 @@ source-library artifact, hosted scorer, or model judge changed.
 
 ### Milestone 1 - Applicability Direct-Eval Contract Hardening
 
-Outcome label: resolved.
+Outcome label: reduced.
 
 - Add or extend applicability eval contract coverage for authority-family floors, hard negatives,
   Forest Plan component/subgate cases, unresolved/adjudication-needed cases, generated-rule-pack
@@ -235,15 +235,16 @@ the verified milestone slice. Do not stage ignored `source_library/` outputs.
 
 ## Closeout Outcome Record
 
-Status: Milestone 0 implemented; Milestone 1 summary-contract slice implemented; residuals pending.
+Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; failure-intake
+residuals pending.
 
 - Milestone 0 closeout command summary: plan lint and diff whitespace checks passed.
-- Applicability implementation closeout command summary: focused tests and lint passed for the
-  summary-contract slice; residual gates remain pending.
+- Applicability closeout summary: tests/lint passed; one Forest Plan component/gate-graph case is
+  now covered. Failure intake and scoped ratchet remain pending.
 - Docs and handoff freshness: schema, coverage, routing, current-state, and handoff docs updated.
 - Commit identifier: this commit.
-- Residual risk after closeout: Forest Plan subgates, failure intake, selected-review summaries,
-  and the scoped phase-eval ratchet remain Milestones 1-3.
+- Residual risk after closeout: replayable failure intake, selected-review summaries, and the
+  scoped phase-eval ratchet remain Milestones 1-3.
 
 ## Stop Conditions
 

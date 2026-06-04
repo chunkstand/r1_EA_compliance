@@ -2382,6 +2382,9 @@ Each eval case materializes a review directory under
 sequence used by the reviewer path: authority universe, package fact graph, applicability
 retrieval/graph traces, deterministic decisions, gate-graph overlay, validation, and
 generated-rule-pack validation.
+Fixture cases may also declare explicit `candidate_authorities` for non-template candidates such
+as Forest Plan components; those records are included in the eval authority universe and source
+index without changing production catalog or inventory discovery.
 The eval fails when expected applicability statuses or partitions drift, non-applicable authorities
 lack coverage certificates, expected retrieval or graph traces are missing, expected graph non-paths
 are violated, package facts are not found, source-record/document-role/package-section alignment
@@ -2390,9 +2393,10 @@ absent, required applicability artifacts are missing, the generated rule-pack ha
 validation, or generated rule-pack rules do not match validated applicable authorities. Cases that
 set `expected_gate_graph_required=true` also fail closed when the generated gate graph has the wrong
 review/source-set identity, stale input hashes, invalid structure, or candidate gate states that
-contradict the applicability decision ledger. The default seed emits gate-graph metrics but keeps
-Forest Plan component/subgate scoring and trace-to-case failure intake as explicit non-blocking
-Milestone 1/2 gaps until scoped fixtures are added.
+contradict the applicability decision ledger. The default seed now includes one required
+gate-graph/Forest Plan component case, so `gate_graph_consistency` and
+`forest_plan_subgate_behavior` are blocking direct-eval-present metric groups. Trace-to-case
+failure intake and trajectory/process scoring remain explicit non-blocking Milestone 1/2 gaps.
 
 `applicability-gold-eval` writes
 `source_library/reviews/applicability_gold_eval/applicability_gold_eval_results.json` unless

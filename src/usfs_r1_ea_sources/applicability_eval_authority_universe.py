@@ -20,6 +20,7 @@ def _write_authority_universe(
     applicability_dir: Path,
     review_id: str,
     source_set_id: str,
+    case: dict[str, Any],
     base_rule_pack_path: Path,
     base_rule_pack: dict[str, Any],
     rules: list[dict[str, Any]],
@@ -42,7 +43,11 @@ def _write_authority_universe(
         )
         for template in authority_family_templates
     ]
-    candidates = [*rule_candidates, *authority_family_candidates]
+    explicit_candidates = _explicit_candidate_authorities(
+        case=case,
+        source_set_id=source_set_id,
+    )
+    candidates = [*rule_candidates, *authority_family_candidates, *explicit_candidates]
     without_hash = {
         "schema_version": "authority-universe-snapshot-v0",
         "created_at": _utc_now(),
@@ -56,6 +61,7 @@ def _write_authority_universe(
                 "source_set_id": source_set_id,
                 "rules": _rule_ids(rules),
                 "authority_family_rule_ids": _template_rule_ids(authority_family_templates),
+                "explicit_candidate_authorities": explicit_candidates,
             }
         ),
         "source_claims_sha256": None,
@@ -89,16 +95,105 @@ def _write_authority_universe(
             "authority_family_rule_template_candidate_count": len(
                 authority_family_candidates
             ),
-            "candidate_type_counts": {
-                "rule_template": len(rule_candidates),
-                "authority_family_rule_template": len(authority_family_candidates),
-            },
+            "explicit_candidate_authority_count": len(explicit_candidates),
+            "candidate_type_counts": _candidate_type_counts(candidates),
             "validation_passed": True,
         },
     }
     path = applicability_dir / "authority_universe_snapshot.json"
     _write_json(path, payload)
     return path
+
+
+def _explicit_candidate_authorities(
+    *,
+    case: dict[str, Any],
+    source_set_id: str,
+) -> list[dict[str, Any]]:
+    candidates = [
+        item
+        for item in case.get("candidate_authorities") or []
+        if isinstance(item, dict)
+    ]
+    candidates.extend(
+        item
+        for item in case.get("extra_candidate_authorities") or []
+        if isinstance(item, dict)
+    )
+    explicit = []
+    for candidate in candidates:
+        candidate_id = str(candidate.get("candidate_authority_id") or "").strip()
+        if not candidate_id:
+            raise ValueError("Explicit applicability eval candidates need candidate_authority_id")
+        normalized = {**candidate, "source_set_id": candidate.get("source_set_id") or source_set_id}
+        source_record_ids = _dedupe(
+            [
+                *_strings(normalized.get("source_record_ids")),
+                *[
+                    str(record.get("source_record_id") or "")
+                    for record in normalized.get("source_records") or []
+                    if isinstance(record, dict)
+                ],
+            ]
+        )
+        normalized["source_record_ids"] = source_record_ids
+        authority_family_ids = _dedupe(
+            [
+                *_strings(normalized.get("authority_family_ids")),
+                *_strings([normalized.get("authority_family_id")]),
+            ]
+        )
+        if authority_family_ids:
+            normalized["authority_family_ids"] = authority_family_ids
+            normalized.setdefault("authority_family_id", authority_family_ids[0])
+        if source_record_ids and not normalized.get("source_records"):
+            document_role = str(
+                normalized.get("authority_document_role")
+                or normalized.get("authority_category")
+                or "source"
+            )
+            normalized["source_records"] = [
+                {
+                    "source_record_id": source_record_id,
+                    "title": source_record_id,
+                    "document_role": document_role,
+                    "citation_label": f"{source_record_id} | {source_record_id}",
+                }
+                for source_record_id in source_record_ids
+            ]
+        if source_record_ids and not isinstance(normalized.get("source_role_filters"), dict):
+            normalized["source_role_filters"] = {
+                "source_record_ids": source_record_ids,
+                "document_roles": _strings([normalized.get("authority_document_role")]),
+                "authority_categories": _strings([normalized.get("authority_category")]),
+            }
+        if source_record_ids and not isinstance(normalized.get("required_source_evidence"), dict):
+            normalized["required_source_evidence"] = {
+                "source_record_ids": source_record_ids,
+                "requires_catalog_record": True,
+                "requires_artifact_sha256": True,
+                "requires_source_record": True,
+                "requires_source_claim_linkage": False,
+            }
+        if not isinstance(normalized.get("source_evidence_availability"), dict):
+            normalized["source_evidence_availability"] = {
+                "available": bool(source_record_ids),
+                "catalog_record_present": bool(source_record_ids),
+                "artifact_sha256_present": bool(source_record_ids),
+                "source_claim_link_count": 0,
+                "rule_claim_gap_count": 0,
+            }
+        explicit.append(normalized)
+    explicit.sort(key=lambda item: str(item.get("candidate_authority_id") or ""))
+    return explicit
+
+
+def _candidate_type_counts(candidates: list[dict[str, Any]]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for candidate in candidates:
+        candidate_type = str(candidate.get("candidate_authority_type") or "unknown")
+        counts[candidate_type] = counts.get(candidate_type, 0) + 1
+    return dict(sorted(counts.items()))
 
 
 def _candidate_from_rule(

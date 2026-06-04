@@ -181,7 +181,97 @@ def _case_source_chunks(
                 text=text,
             )
         )
+    for candidate in _explicit_candidate_authorities(case):
+        for source_record_id in _candidate_source_record_ids(candidate):
+            if source_record_id in emitted_source_record_ids:
+                continue
+            emitted_source_record_ids.add(source_record_id)
+            spec = by_source.get(source_record_id, {})
+            source_record = _candidate_source_record(candidate, source_record_id)
+            role = str(
+                spec.get("document_role")
+                or source_record.get("document_role")
+                or candidate.get("authority_document_role")
+                or candidate.get("authority_category")
+                or "source"
+            )
+            title = str(
+                spec.get("title")
+                or source_record.get("title")
+                or candidate.get("title")
+                or source_record_id
+            )
+            text = str(
+                spec.get("text")
+                or source_record.get("text")
+                or _candidate_source_query(candidate)
+                or candidate.get("requirement")
+                or title
+            )
+            chunks.append(
+                _source_chunk(
+                    source_set_id=source_set_id,
+                    source_record_id=source_record_id,
+                    document_role=role,
+                    title=title,
+                    text=text,
+                )
+            )
     return chunks
+
+
+def _explicit_candidate_authorities(case: dict[str, Any]) -> list[dict[str, Any]]:
+    candidates = [
+        item
+        for item in case.get("candidate_authorities") or []
+        if isinstance(item, dict)
+    ]
+    candidates.extend(
+        item
+        for item in case.get("extra_candidate_authorities") or []
+        if isinstance(item, dict)
+    )
+    return candidates
+
+
+def _candidate_source_query(candidate: dict[str, Any]) -> str:
+    value = candidate.get("source_query")
+    if value:
+        return str(value)
+    contract = candidate.get("retrieval_contract")
+    if not isinstance(contract, dict):
+        return ""
+    return (_strings(contract.get("source_queries")) or [""])[0]
+
+
+def _candidate_source_record(
+    candidate: dict[str, Any],
+    source_record_id: str,
+) -> dict[str, Any]:
+    for record in candidate.get("source_records") or []:
+        if (
+            isinstance(record, dict)
+            and str(record.get("source_record_id") or "") == source_record_id
+        ):
+            return record
+    return {}
+
+
+def _candidate_source_record_ids(candidate: dict[str, Any]) -> list[str]:
+    values = [*_strings(candidate.get("source_record_ids"))]
+    values.extend(
+        str(record.get("source_record_id") or "")
+        for record in candidate.get("source_records") or []
+        if isinstance(record, dict)
+    )
+    seen = set()
+    result = []
+    for value in values:
+        if not value or value in seen:
+            continue
+        seen.add(value)
+        result.append(value)
+    return result
 
 
 def _source_chunk(
