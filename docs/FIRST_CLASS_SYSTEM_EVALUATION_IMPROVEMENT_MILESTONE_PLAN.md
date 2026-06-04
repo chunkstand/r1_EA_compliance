@@ -1,7 +1,7 @@
 # First-Class System Evaluation Improvement Milestone Plan
 
 Date: 2026-06-04
-Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; Milestone 2 failure-intake artifact slice reduced; scoped ratchet next
+Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; Milestone 2 reduced; Milestone 3 implemented
 Plan class: implementation
 High-risk implementation: yes
 Owner context: repo-native goal for extending first-class evaluations across the USFS R1 EA
@@ -20,9 +20,9 @@ Forest Plan branch. The next improvement goal is therefore not a generic graph-p
 is a staged system-evaluation program that measures every step and starts by strengthening
 applicability as its own evaluated subsystem.
 
-Current evidence: the coverage register tracks subsystem status; the eval-trace contract owns
-local trace storage/export and trace-to-case promotion; phase-eval already consumes direct-eval
-artifacts; applicability has a review-scoped Gate Graph, but no active scoped phase-eval ratchet.
+Current evidence: the coverage register tracks subsystem status; eval-trace owns local
+storage/export and trace-to-case promotion; phase-eval consumes direct-eval artifacts; and the
+first scoped applicability ratchet is active for West Reservoir on the f70 source set.
 
 ## Goal, Non-Goals, And Scope
 
@@ -120,7 +120,7 @@ equivalent or stronger. Any approved temporary weakening must be recorded in
 | Generated rule pack drifts from applicability partition | generated-rule-pack validation and phase-eval | Compare applicable partition, generated rules, omitted rules, and unexpected rules | Missing or extra generated rule passes |
 | Gate graph becomes structural-only decoration | applicability gate graph and gate-graph eval | Eval parent/child open/closed/blocked consistency against decisions | Gate state contradicts applicability decisions |
 | Failures stay as logs instead of learning cases | eval-trace case promotion and applicability case files | Promote selected failures with source refs, hashes, assertion, owner, risk, review/removal conditions | Failed case cannot be replayed from tracked artifacts |
-| Global ratchet blocks unrelated work | `phase_eval_direct_eval_v1.json`, `eval_trace_gate.py` | One explicit scoped ratchet first; no wildcard scopes | Missing scoped proof or wildcard ratchet |
+| Global ratchet blocks unrelated work | `phase_eval_direct_eval_v1.json`, `eval_trace_gate.py` | One scoped ratchet first; no wildcard scopes | Missing scoped proof or wildcard ratchet |
 
 ## Milestone Sequence
 
@@ -177,6 +177,11 @@ Outcome label: resolved.
   eval summaries and remains non-blocking for unrelated scopes.
 - Update promotion consumers only if the selected governed scope already participates in promotion.
 
+Closeout note: implemented for `west-reservoir-67436` on `source-set-f70ea11e04ae3d53`. The new
+producer checks schema, contract, scorer, identity, hashes, blocking groups, allowed gaps, and
+failure-intake hash. Tests prove fail-closed and unrelated-review behavior. No promotion gate,
+global ratchet, live regeneration, gate-graph consumption, or model judge was added.
+
 ### Milestone 4 - All-Step Evaluation Expansion
 
 Outcome label: reduced.
@@ -223,12 +228,11 @@ the verified milestone slice. Do not stage ignored `source_library/` outputs.
 ## Closeout Outcome Record
 
 Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; Milestone 2
-failure-intake artifact slice reduced. Next bounded packet: trace-to-case replay depth or the
-scoped applicability phase-eval ratchet for `west-reservoir-67436` on
-`source-set-f70ea11e04ae3d53`. Schema, coverage, routing, current-state, and handoff docs must stay
-fresh with each committed slice.
-- Residual risk after closeout: replayable failure intake, selected-review summaries, and the
-  scoped phase-eval ratchet remain Milestones 1-3.
+failure-intake artifact slice reduced; Milestone 3 scoped phase-eval ratchet implemented for
+`west-reservoir-67436` on `source-set-f70ea11e04ae3d53`. Schema, coverage, routing, current-state,
+and handoff docs must stay fresh with each committed slice.
+- Residual risk after closeout: trace promotion, trajectory scoring, live f70 proof, promotion
+  gates, and all-step expansion remain future packets.
 
 ## Stop Conditions
 

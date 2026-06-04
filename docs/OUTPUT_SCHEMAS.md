@@ -2413,6 +2413,15 @@ gate-graph/Forest Plan component case, so `gate_graph_consistency` and
 `forest_plan_subgate_behavior` are blocking direct-eval-present metric groups. Trace-to-case
 failure intake and trajectory/process scoring remain explicit non-blocking Milestone 1/2 gaps.
 
+The committed `phase-eval-direct-eval-v1` contract consumes this summary as the direct-eval owner
+for the review-scoped `applicability_validation` phase only when
+`review_id=west-reservoir-67436` and `source_set_id=source-set-f70ea11e04ae3d53`. That ratchet
+requires the schema, `contract_id`, `scorer_version`, exact source-set ID, current eval/rule-pack/
+authority-template hashes, all blocking metric groups green, the expected
+`trajectory_process_quality` non-blocking gap, and a matching
+`applicability_failure_intake_cases.json` hash. It fails closed on missing, stale, mismatched,
+schema-invalid, or below-threshold summaries and is skipped for unrelated reviews.
+
 `applicability-gold-eval` writes
 `source_library/reviews/applicability_gold_eval/applicability_gold_eval_results.json` unless
 `--results-dir` is supplied. The result schema is `applicability-gold-eval-results-v0` and records
@@ -5960,6 +5969,16 @@ versus actual source-set binding, expected active-source-set binding, covered fo
 required forest-unit IDs, retrieval metrics, failure-category counts, and failed contract checks.
 Missing, stale, source-set-mismatched, schema-invalid, or below-floor component retrieval summaries
 now fail both `forest_plan_component_retrieval` and the aggregate `evaluation_coverage` phase.
+When the committed `phase-eval-direct-eval-v1` contract names
+`source_library/reviews/applicability_eval/applicability_eval_results.json` as the direct-eval
+owner for `applicability_validation`, that review-scoped applicability phase also records the
+applicability eval contract ID, scorer version, expected versus actual source-set binding, case
+count, hard-negative result count, blocking metric group status, non-blocking gap IDs,
+failure-intake summary, and source-artifact hash failures. The first configured scope is
+`review_id=west-reservoir-67436` with `source_set_id=source-set-f70ea11e04ae3d53`; other review IDs
+do not receive this direct-eval gate. Missing, stale, source-set-mismatched, schema-invalid, or
+below-threshold applicability summaries fail both `applicability_validation` and aggregate
+`evaluation_coverage` for that scope.
 For tracked declared-review runs, the same committed direct-eval contract now also names
 `config/forest_plan_component_eval_coverage_v1.json` plus
 `source_library/evaluations/forest_plan_component_eval_coverage/forest_plan_component_eval_coverage_results.json`

@@ -61,6 +61,7 @@ def resolve_phase_eval_direct_eval_coverage(
         contract=contract,
         output_dir=output_dir,
         source_set_id=source_set_id,
+        review_id=review_id,
         upstream_results_path=upstream_results_path,
         upstream_results=upstream_results,
         downstream_manifest_path=downstream_manifest_path,

@@ -5,6 +5,7 @@ import hashlib
 import json
 import tempfile
 
+from usfs_r1_ea_sources.applicability_eval import run_applicability_eval
 from usfs_r1_ea_sources.phase_eval_direct_eval import load_phase_eval_direct_eval_contract
 from usfs_r1_ea_sources.phase_eval_direct_eval import resolve_phase_eval_direct_eval_coverage
 
@@ -12,7 +13,10 @@ from usfs_r1_ea_sources.phase_eval_direct_eval import resolve_phase_eval_direct_
 FULL_CANONICAL_SOURCE_SET_ID = "source-set-f70ea11e04ae3d53"
 CURRENT_PROMOTION_SOURCE_SET_ID = "source-set-f70ea11e04ae3d53"
 NON_FULL_CANONICAL_SOURCE_SET_ID = "source-set-non-full-canonical"
+WEST_RESERVOIR_REVIEW_ID = "west-reservoir-67436"
 REPO_ROOT = Path(__file__).resolve().parents[1]
+APPLICABILITY_EVAL_SEED = REPO_ROOT / "config" / "applicability_eval_seed.json"
+APPLICABILITY_RULE_PACK = REPO_ROOT / "config" / "compliance_rule_pack_nepa_ea_v0.json"
 
 
 def test_committed_phase_eval_direct_eval_contract_tracks_required_phases() -> None:
@@ -94,6 +98,30 @@ def test_committed_phase_eval_direct_eval_contract_tracks_required_phases() -> N
     assert source_set_phases["forest_plan_component_retrieval"]["required_source_set_ids"] == [
         FULL_CANONICAL_SOURCE_SET_ID
     ]
+    assert source_set_phases["applicability_validation"]["lane_id"] == (
+        "applicability_eval"
+    )
+    assert source_set_phases["applicability_validation"]["producer"] == (
+        "applicability_direct_evaluation"
+    )
+    assert source_set_phases["applicability_validation"]["results_path"] == (
+        "reviews/applicability_eval/applicability_eval_results.json"
+    )
+    assert source_set_phases["applicability_validation"]["required_source_set_ids"] == [
+        FULL_CANONICAL_SOURCE_SET_ID
+    ]
+    assert source_set_phases["applicability_validation"]["required_review_ids"] == [
+        WEST_RESERVOIR_REVIEW_ID
+    ]
+    assert source_set_phases["applicability_validation"]["expected_contract_id"] == (
+        "applicability-direct-eval-summary-v1"
+    )
+    assert source_set_phases["applicability_validation"]["expected_scorer_version"] == (
+        "applicability-direct-eval-scorer-v1"
+    )
+    assert source_set_phases["applicability_validation"][
+        "expected_non_blocking_gap_group_ids"
+    ] == ["trajectory_process_quality"]
     assert source_set_phases["claim_extraction"]["lane_id"] == "claim_eval"
     assert source_set_phases["rule_claim_binding"]["lane_id"] == "rule_claim_eval"
     assert source_set_phases["evidence_graph"]["coverage_class"] == "validation_only_allowed"
@@ -119,6 +147,7 @@ def test_phase_eval_direct_eval_marks_missing_required_summary() -> None:
     semantic_graph = summary["source_set_phase_statuses"]["canonical_semantic_graph"]
     query_surface = summary["source_set_phase_statuses"]["knowledge_graph_query_surface"]
 
+    assert "applicability_validation" not in summary["source_set_phase_statuses"]
     assert extraction["status"] == "direct_eval_missing"
     assert extraction["failure_reasons"] == ["missing_required_direct_eval"]
     assert retrieval["status"] == "direct_eval_missing"
@@ -131,6 +160,123 @@ def test_phase_eval_direct_eval_marks_missing_required_summary() -> None:
     assert query_surface["failure_reasons"] == ["missing_required_direct_eval"]
     assert component_retrieval["status"] == "direct_eval_missing"
     assert component_retrieval["failure_reasons"] == ["missing_required_direct_eval"]
+
+
+def test_phase_eval_direct_eval_marks_missing_scoped_applicability_summary() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=Path(tmp),
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+            review_id=WEST_RESERVOIR_REVIEW_ID,
+        )
+
+    applicability = summary["source_set_phase_statuses"]["applicability_validation"]
+    assert applicability["status"] == "direct_eval_missing"
+    assert applicability["failure_reasons"] == ["missing_required_direct_eval"]
+    assert applicability["details"]["expected_source_set_id"] == FULL_CANONICAL_SOURCE_SET_ID
+
+
+def test_phase_eval_direct_eval_skips_scoped_applicability_for_other_reviews() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=Path(tmp),
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+            review_id="other-review",
+        )
+
+    assert "applicability_validation" not in summary["source_set_phase_statuses"]
+
+
+def test_phase_eval_direct_eval_accepts_applicability_eval_for_tracked_review() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        _write_applicability_eval(output_dir, source_set_id=FULL_CANONICAL_SOURCE_SET_ID)
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+            review_id=WEST_RESERVOIR_REVIEW_ID,
+        )
+
+    applicability = summary["source_set_phase_statuses"]["applicability_validation"]
+    assert applicability["status"] == "direct_eval_present"
+    assert applicability["direct_eval_present"] is True
+    assert applicability["direct_eval_passed"] is True
+    assert applicability["case_count"] == 10
+    assert applicability["hard_negative_case_count"] == 2
+    assert applicability["details"]["failure_intake_summary"]["validation_passed"] is True
+    assert (
+        applicability["details"]["failure_intake_summary"]["replayable_case_count"]
+        == 3
+    )
+
+
+def test_phase_eval_direct_eval_rejects_applicability_eval_source_set_mismatch() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        _write_applicability_eval(output_dir, source_set_id="source-set-other")
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+            review_id=WEST_RESERVOIR_REVIEW_ID,
+        )
+
+    applicability = summary["source_set_phase_statuses"]["applicability_validation"]
+    assert applicability["status"] == "direct_eval_identity_mismatch"
+    assert applicability["failure_reasons"] == ["direct_eval_identity_mismatch"]
+
+
+def test_phase_eval_direct_eval_rejects_applicability_eval_stale_source_hash() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        result_path = _write_applicability_eval(
+            output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+        )
+        payload = json.loads(result_path.read_text(encoding="utf-8"))
+        payload["source_artifact_hashes"]["eval_file"] = "stale-hash"
+        result_path.write_text(
+            json.dumps(payload, sort_keys=True),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+            review_id=WEST_RESERVOIR_REVIEW_ID,
+        )
+
+    applicability = summary["source_set_phase_statuses"]["applicability_validation"]
+    assert applicability["status"] == "direct_eval_identity_mismatch"
+    assert applicability["failure_reasons"] == ["direct_eval_identity_mismatch"]
+    assert applicability["details"]["source_artifact_hash_failures"]
+
+
+def test_phase_eval_direct_eval_rejects_applicability_eval_threshold_failures() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        output_dir = Path(tmp)
+        result_path = _write_applicability_eval(
+            output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+        )
+        payload = json.loads(result_path.read_text(encoding="utf-8"))
+        payload["metric_groups"]["gate_graph_consistency"]["passed"] = False
+        result_path.write_text(
+            json.dumps(payload, sort_keys=True),
+            encoding="utf-8",
+        )
+
+        summary = resolve_phase_eval_direct_eval_coverage(
+            output_dir=output_dir,
+            source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+            review_id=WEST_RESERVOIR_REVIEW_ID,
+        )
+
+    applicability = summary["source_set_phase_statuses"]["applicability_validation"]
+    assert applicability["status"] == "direct_eval_failed"
+    assert applicability["failure_reasons"] == ["direct_eval_threshold_failed"]
+    assert applicability["threshold_failures"]
 
 
 def test_phase_eval_direct_eval_rejects_identity_mismatch() -> None:
@@ -741,6 +887,16 @@ def test_phase_eval_direct_eval_rejects_non_self_real_package_slot_failure() -> 
     assert review_scope["status"] == "direct_eval_failed"
     assert review_scope["passed"] is False
     assert review_scope["failure_reasons"] == ["direct_eval_threshold_failed"]
+
+
+def _write_applicability_eval(output_dir: Path, *, source_set_id: str) -> Path:
+    result = run_applicability_eval(
+        output_dir=output_dir,
+        eval_file=APPLICABILITY_EVAL_SEED,
+        base_rule_pack_path=APPLICABILITY_RULE_PACK,
+        source_set_id=source_set_id,
+    )
+    return result.output_path
 
 
 def _forest_plan_profile_eval_payload(

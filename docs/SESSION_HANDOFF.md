@@ -37,8 +37,16 @@ history below.
   now writes `applicability_failure_intake_cases.json` with replayable failed,
   unresolved, or needs-adjudication cases, source artifact refs and hashes,
   trace/source lineage, assertion contracts, deterministic scorer metadata,
-  owner/risk/lifecycle fields, and human-label placeholders. No phase-eval
-  applicability ratchet or promotion gate is active yet.
+  owner/risk/lifecycle fields, and human-label placeholders. The scoped
+  phase-eval applicability ratchet is now active only for
+  `review_id="west-reservoir-67436"` with
+  `source_set_id="source-set-f70ea11e04ae3d53"`. It requires the first-class
+  applicability eval summary and fails closed on missing, stale, mismatched, or
+  below-threshold summaries while leaving unrelated reviews non-blocking. The
+  local ignored `source_library` applicability eval artifact has not been
+  regenerated in this slice and still reflects the older 9-case
+  `source-set-ba8d0feae79501b8` summary without the new contract identity or
+  failure-intake artifact.
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then read
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` for the
@@ -51,13 +59,12 @@ history below.
 - latest resolved packet:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` Milestone 0
   plus the applicability summary-contract, Forest Plan subgate fixture, and
-  replayable failure-intake artifact slices
+  replayable failure-intake artifact slices, plus Milestone 3 scoped
+  applicability phase-eval ratchet
 - active packet:
-  `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` Milestone
-  3 scoped applicability phase-eval ratchet. The first scoped ratchet target is
-  `review_id="west-reservoir-67436"` with
-  `source_set_id="source-set-f70ea11e04ae3d53"`, but that ratchet is not active
-  yet.
+  no active implementation slice is open. The next bounded packet should be
+  explicit: regenerate scoped live applicability proof artifacts, add
+  trajectory/process quality, add promotion ratchets, or widen all-step evals.
 - recent research addendum:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current Braintrust/Phoenix/LangSmith/Langfuse/MLflow/OpenAI,

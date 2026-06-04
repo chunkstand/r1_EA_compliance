@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 import hashlib
 
+from .phase_eval_direct_eval_applicability import applicability_direct_eval_phase_status
 from .phase_eval_direct_eval_forest_plan import _forest_plan_component_retrieval_phase_status
 from .phase_eval_direct_eval_forest_plan import _forest_plan_profile_phase_status
 from .phase_eval_direct_eval_support import DOWNSTREAM_DIRECT_EVAL_MANIFEST_SCHEMA_VERSION
@@ -31,6 +32,7 @@ def resolve_source_set_phase_statuses(
     contract: dict[str, Any],
     output_dir: Path,
     source_set_id: str,
+    review_id: str | None,
     upstream_results_path: Path,
     upstream_results: dict[str, Any] | None,
     downstream_manifest_path: Path,
@@ -38,7 +40,11 @@ def resolve_source_set_phase_statuses(
 ) -> dict[str, dict[str, Any]]:
     phase_statuses: dict[str, dict[str, Any]] = {}
     for spec in contract.get("source_set_phases", []):
-        if not _source_set_phase_applies(spec=spec, source_set_id=source_set_id):
+        if not _source_set_phase_applies(
+            spec=spec,
+            source_set_id=source_set_id,
+            review_id=review_id,
+        ):
             continue
         phase_statuses[str(spec["phase_name"])] = _source_set_phase_status(
             spec=spec,
@@ -56,9 +62,13 @@ def _source_set_phase_applies(
     *,
     spec: dict[str, Any],
     source_set_id: str,
+    review_id: str | None,
 ) -> bool:
     required_source_set_ids = _string_list(spec.get("required_source_set_ids"))
-    return not required_source_set_ids or source_set_id in required_source_set_ids
+    required_review_ids = _string_list(spec.get("required_review_ids"))
+    source_set_applies = not required_source_set_ids or source_set_id in required_source_set_ids
+    review_applies = not required_review_ids or review_id in required_review_ids
+    return source_set_applies and review_applies
 
 
 def _source_set_phase_status(
@@ -137,6 +147,20 @@ def _source_set_phase_status(
             results_path_value=spec.get("results_path"),
             expected_contract_id=str(spec.get("expected_contract_id") or ""),
             required_source_set_ids=_string_list(spec.get("required_source_set_ids")),
+        )
+    if producer == "applicability_direct_evaluation":
+        return applicability_direct_eval_phase_status(
+            phase_name=phase_name,
+            coverage_class=coverage_class,
+            lane_id=str(spec["lane_id"]),
+            source_set_id=source_set_id,
+            output_dir=output_dir,
+            results_path_value=spec.get("results_path"),
+            expected_contract_id=str(spec.get("expected_contract_id") or ""),
+            expected_scorer_version=str(spec.get("expected_scorer_version") or ""),
+            expected_non_blocking_gap_group_ids=_string_list(
+                spec.get("expected_non_blocking_gap_group_ids")
+            ),
         )
     if producer == "semantic_graph_direct_evaluation":
         return _semantic_graph_phase_status(

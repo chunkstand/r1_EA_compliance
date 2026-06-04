@@ -42,6 +42,7 @@ REVIEW_COVERAGE_CLASSES = {
     "not_required_for_ad_hoc_review",
 }
 SOURCE_SET_PHASE_PRODUCERS = {
+    "applicability_direct_evaluation",
     "downstream_direct_evaluation",
     "eval_context_graph_evaluation",
     "extraction_fidelity_evaluation",

@@ -96,6 +96,24 @@
     },
     {
       "coverage_class": "direct_eval_required",
+      "expected_contract_id": "applicability-direct-eval-summary-v1",
+      "expected_non_blocking_gap_group_ids": [
+        "trajectory_process_quality"
+      ],
+      "expected_scorer_version": "applicability-direct-eval-scorer-v1",
+      "lane_id": "applicability_eval",
+      "phase_name": "applicability_validation",
+      "producer": "applicability_direct_evaluation",
+      "required_review_ids": [
+        "west-reservoir-67436"
+      ],
+      "required_source_set_ids": [
+        "source-set-f70ea11e04ae3d53"
+      ],
+      "results_path": "reviews/applicability_eval/applicability_eval_results.json"
+    },
+    {
+      "coverage_class": "direct_eval_required",
       "lane_id": "claim_eval",
       "phase_name": "claim_extraction",
       "producer": "downstream_direct_evaluation"

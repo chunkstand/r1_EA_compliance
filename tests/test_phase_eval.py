@@ -7,6 +7,7 @@ import shutil
 import tempfile
 import unittest
 
+from usfs_r1_ea_sources.applicability_eval import run_applicability_eval
 from usfs_r1_ea_sources.evidence_graph import build_evidence_graph
 from usfs_r1_ea_sources.phase_eval import run_phase_aligned_eval
 from usfs_r1_ea_sources.retrieval import build_retrieval_index
@@ -31,6 +32,9 @@ from tests.support.phase_eval_fixtures import write_jsonl
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_WORKBOOK = REPO_ROOT / "usfs_region1_ea_source_register_FINAL_INGEST_READY_2026.xlsx"
 FULL_CANONICAL_SOURCE_SET_ID = "source-set-f70ea11e04ae3d53"
+WEST_RESERVOIR_REVIEW_ID = "west-reservoir-67436"
+APPLICABILITY_EVAL_SEED = REPO_ROOT / "config" / "applicability_eval_seed.json"
+APPLICABILITY_RULE_PACK = REPO_ROOT / "config" / "compliance_rule_pack_nepa_ea_v0.json"
 
 
 class PhaseEvalTests(unittest.TestCase):
@@ -599,6 +603,71 @@ class PhaseEvalTests(unittest.TestCase):
                 ],
             )
 
+    def test_phase_eval_requires_scoped_applicability_eval_for_west_reservoir(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            _write_minimal_applicability_validation(
+                output_dir=output_dir,
+                review_id=WEST_RESERVOIR_REVIEW_ID,
+                source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+            )
+
+            missing_result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+                review_id=WEST_RESERVOIR_REVIEW_ID,
+            )
+
+            validation_phase = phase(missing_result.summary, "applicability_validation")
+            self.assertFalse(validation_phase["passed"])
+            self.assertFalse(validation_phase["reviewer_ready"])
+            self.assertEqual(
+                validation_phase["details"]["direct_eval_status"],
+                "direct_eval_missing",
+            )
+            self.assertIn(
+                "missing_required_direct_eval",
+                validation_phase["failure_reasons"],
+            )
+            self.assertIn("proxy_only_coverage", validation_phase["failure_reasons"])
+
+            run_applicability_eval(
+                output_dir=output_dir,
+                eval_file=APPLICABILITY_EVAL_SEED,
+                base_rule_pack_path=APPLICABILITY_RULE_PACK,
+                source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+            )
+
+            ready_result = run_phase_aligned_eval(
+                output_dir=output_dir,
+                source_set_id=FULL_CANONICAL_SOURCE_SET_ID,
+                review_id=WEST_RESERVOIR_REVIEW_ID,
+            )
+
+            validation_phase = phase(ready_result.summary, "applicability_validation")
+            self.assertTrue(validation_phase["passed"])
+            self.assertTrue(validation_phase["reviewer_ready"])
+            self.assertEqual(
+                validation_phase["details"]["direct_eval_status"],
+                "direct_eval_present",
+            )
+            self.assertEqual(
+                validation_phase["details"]["direct_eval_case_count"],
+                10,
+            )
+            self.assertEqual(
+                validation_phase["details"]["direct_eval_hard_negative_case_count"],
+                2,
+            )
+            self.assertEqual(
+                validation_phase["details"]["direct_eval_details"][
+                    "failure_intake_summary"
+                ]["replayable_case_count"],
+                3,
+            )
+
     def test_phase_eval_includes_canonical_contract_currentness_and_extraction_accuracy(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -703,6 +772,31 @@ class PhaseEvalTests(unittest.TestCase):
                 extraction_accuracy_phase["details"]["knowledge_base_admitted_source_record_count"],
                 1,
             )
+
+def _write_minimal_applicability_validation(
+    *,
+    output_dir: Path,
+    review_id: str,
+    source_set_id: str,
+) -> Path:
+    path = output_dir / "reviews" / review_id / "applicability" / "applicability_validation.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "applicability-validation-v0",
+                "review_id": review_id,
+                "source_set_id": source_set_id,
+                "passed": True,
+                "checks": [],
+                "artifact_paths": {},
+                "hashes": {},
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    return path
 
 
 if __name__ == "__main__":

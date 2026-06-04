@@ -184,6 +184,7 @@ name = "phase_eval"
 summary = "Source-set and review-scoped phase-eval orchestration, replay-context resolution, and direct-eval-aware readiness assembly."
 modules = [
   "phase_eval",
+  "phase_eval_direct_eval_applicability",
   "phase_eval_direct_eval",
   "phase_eval_direct_eval_context_graph",
   "phase_eval_direct_eval_forest_plan",
