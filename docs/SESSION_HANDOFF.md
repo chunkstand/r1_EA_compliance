@@ -44,6 +44,12 @@ history below.
   model-judge work, or hosted scoring work is active until that packet is
   implemented and verified.
 - recent research addendum:
+  `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
+  summarizes current Braintrust/Phoenix/LangSmith/Langfuse/MLflow/OpenAI,
+  RAG, GraphRAG, and agent-benchmark evaluation patterns and maps them to the
+  local applicability-first system-evaluation plan. It is non-active research,
+  not a runtime route change.
+- prior research addendum:
   `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md` covers context
   graphs for agent logs, evals, traces, state checkpoints, and human review;
   it now includes a 2026 Neo4j/adjacent expert map and remains non-active

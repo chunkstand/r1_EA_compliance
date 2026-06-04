@@ -15,6 +15,11 @@ Use this short route before opening append-only docs.
   starts with applicability direct-eval hardening because applicability governs
   downstream generated rules, compliance, Forest Plan routing, V1, and
   promotion readiness.
+- Research addendum for that packet:
+  `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
+  summarizes current agent/RAG/graph evaluation practice and maps it to local
+  applicability, trace, graph, case-promotion, scorer-calibration, and scoped
+  gate work. It is background research, not an active runtime route.
 - Prior resolved forest-plan review/inventory slice: all-R1 legacy direction and management-area inventory closeout, source-set inventory authority/applicability gate hardening, Forest Plan context-derived package facts, weak-trigger adjudication narrowing for Forest Plan components, broad authority-family positive-precedence arbitration, and review-scoped component-decision application for compliance matrices. `forest-plan-resolve` now requires the active source-set component inventory instead of silently falling back to the seed fixture; package fact graph builds promote resolver package-evidenced management areas and overlays from `forest_plan_context.json` into first-class package facts; stale applicability authority universes fail against the current Forest Plan context inventory path/count; weak-only positive Forest Plan component trigger evidence is diagnostic trigger-miss evidence instead of an adjudication blocker; review-scoped Forest Plan component applicability decisions narrow the component compliance gate when present. North Seeley now replays with `1070` authority candidates, `67` applicable authorities, `1003` not-applicable authorities, `0` unresolved applicability decisions, `16` applicable Forest Plan standards, a valid compliance matrix JSON/Markdown/PDF, and `phase-eval` `30/30` passing.
 - Prior all-forest Forest Plan authority-universe coverage hardening: review-scoped
   `applicability-authority-universe` now derives the selected forest from
@@ -151,7 +156,11 @@ Use this short route before opening append-only docs.
 - Current state and handoff: `docs/CURRENT_SYSTEM_STATE.md`, `docs/SESSION_HANDOFF.md`.
 - Reviewer replay history: `docs/REAL_PACKAGE_REVIEW_REPLAY_REPAIR_MILESTONE_PLAN.md`.
 - Architecture: `docs/ARCHITECTURE.md`, `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md`.
-- Context graph and extraction accuracy briefs: `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md`, `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`, `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_IMPROVEMENT_BRIEF.md`.
+- Context graph, system-eval, and extraction accuracy briefs:
+  `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md`,
+  `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`,
+  `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`,
+  `docs/EXTRACTION_CHUNKING_RETRIEVAL_ACCURACY_IMPROVEMENT_BRIEF.md`.
 - Cross-expert repo evaluation:
   `docs/EXPERT_PERSPECTIVE_REPO_EVALUATION_2026_06_01.md`.
 - Agent entrypoint: `docs/AGENT_START_HERE.md`.
