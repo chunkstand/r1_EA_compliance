@@ -20,8 +20,16 @@ history below.
   Review overlays can add authority-universe candidates and applicability
   decisions so child gates open only when the parent is applicable. This is a
   new structural artifact; compliance-review does not consume it yet.
+- proposed next system-evaluation improvement packet:
+  `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` is the
+  new repo-native goal for evaluating every pipeline step, with applicability
+  direct-eval hardening first. It is a proposed implementation route, not a
+  runtime behavior change. Milestone 0 must update the coverage register and
+  applicability gap truth before code changes or broader ratchets.
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then read
+  `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` for the
+  proposed next eval-improvement packet; then read
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` for the active
   first-class eval trace packet history; open
   `docs/FIRST_CLASS_EVAL_TRACE_CONTRACT.md` and
@@ -30,8 +38,11 @@ history below.
 - latest resolved packet:
   `docs/FIRST_CLASS_EVAL_TRACE_IMPLEMENTATION_MILESTONE_PLAN.md` Milestone 5
 - active packet:
-  no active first-class eval trace implementation slice; future model-judge or
-  hosted scoring work requires a new approved milestone
+  proposed docs-first packet
+  `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` Milestone
+  0. No new first-class eval trace implementation slice, applicability ratchet,
+  model-judge work, or hosted scoring work is active until that packet is
+  implemented and verified.
 - recent research addendum:
   `docs/CONTEXT_GRAPHS_FOR_AGENT_TRACES_RESEARCH_BRIEF.md` covers context
   graphs for agent logs, evals, traces, state checkpoints, and human review;

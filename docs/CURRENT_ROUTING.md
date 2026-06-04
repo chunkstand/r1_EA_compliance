@@ -9,6 +9,12 @@ Use this short route before opening append-only docs.
 - Latest resolved extraction/chunking/retrieval accuracy slice: sidecar reviewer package adoption after sidecar phase-eval adoption; exact paths, smoke counts, and sidecar promotion boundaries live in `docs/CURRENT_SYSTEM_STATE.md`.
 - Latest resolved architecture slice: eval trace inventory model split after the applicability fact-type support split; zero files are now above the `800`-line architecture cap.
 - Latest resolved observability/eval graph slice: context-graph build/eval commands, trace-event materialization, explicit event-log capture, canonical CLI command-event capture, and f70 source-set phase-eval ratchet. Details: `docs/FIRST_CLASS_OBSERVABILITY_EVAL_CONTEXT_GRAPH.md`.
+- Proposed first-class system-evaluation improvement packet:
+  `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`. This is
+  the next evaluation-improvement goal, not an implemented runtime gate. It
+  starts with applicability direct-eval hardening because applicability governs
+  downstream generated rules, compliance, Forest Plan routing, V1, and
+  promotion readiness.
 - Prior resolved forest-plan review/inventory slice: all-R1 legacy direction and management-area inventory closeout, source-set inventory authority/applicability gate hardening, Forest Plan context-derived package facts, weak-trigger adjudication narrowing for Forest Plan components, broad authority-family positive-precedence arbitration, and review-scoped component-decision application for compliance matrices. `forest-plan-resolve` now requires the active source-set component inventory instead of silently falling back to the seed fixture; package fact graph builds promote resolver package-evidenced management areas and overlays from `forest_plan_context.json` into first-class package facts; stale applicability authority universes fail against the current Forest Plan context inventory path/count; weak-only positive Forest Plan component trigger evidence is diagnostic trigger-miss evidence instead of an adjudication blocker; review-scoped Forest Plan component applicability decisions narrow the component compliance gate when present. North Seeley now replays with `1070` authority candidates, `67` applicable authorities, `1003` not-applicable authorities, `0` unresolved applicability decisions, `16` applicable Forest Plan standards, a valid compliance matrix JSON/Markdown/PDF, and `phase-eval` `30/30` passing.
 - Prior all-forest Forest Plan authority-universe coverage hardening: review-scoped
   `applicability-authority-universe` now derives the selected forest from
@@ -111,10 +117,13 @@ Use this short route before opening append-only docs.
   `failed_phase_eval_count=0`, decision-document identity `10/10`, and
   `distinct_forest_count=10`.
 - Active implementation slice: no active all-forest Forest Plan residual is
-  open in the governed manifest. Open a new bounded packet before adding new
-  EA packages, broadening the manifest, hosted query service/API expansion,
-  model-judge work, hosted scoring, knowledge-graph sidecar adoption, or
-  future architecture-cap changes.
+  open in the governed manifest. The proposed next bounded packet is
+  `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`
+  Milestone 0, which must turn the all-step evaluation goal into coverage
+  register and applicability-gap truth before code changes. Open a separate
+  bounded packet before adding new EA packages, broadening the manifest, hosted
+  query service/API expansion, model-judge work, hosted scoring,
+  knowledge-graph sidecar adoption, or future architecture-cap changes.
 - Latest resolved forest-specific example packet: `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
 - Continuing forest-specific lane owner: `docs/FOREST_SPECIFIC_EXAMPLE_PACKAGE_BOUNDARY_MILESTONE_PLAN.md`.
@@ -128,6 +137,13 @@ Use this short route before opening append-only docs.
 - ECID is historical replay evidence, not a current promotion route; keep it out of governed forest-specific example routing.
 - Architecture route: `docs/ARCHITECTURE_GOVERNANCE_REBASELINE_MILESTONE_PLAN.md` and `config/architecture_large_file_inventory_v1.json` own the oversized-owner backlog.
 - Observability/eval graph route: `eval-context-graph-build` and `eval-context-graph-eval` are local generated-artifact-only commands over `system_eval_trace.sqlite`; the f70 phase-eval requires `observability_eval_context_graph`; promotion ratchets remain future work.
+- System-evaluation improvement route:
+  `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` owns the
+  proposed staged goal for evaluating every pipeline step. Applicability is the
+  first critical lane; future implementation must measure authority-universe
+  coverage, retrieval/graph trace quality, decision partition fidelity,
+  generated-rule-pack fidelity, gate-graph consistency, Forest Plan subgate
+  behavior, and failure intake before any wider ratchet.
 - Extraction/chunking route: sidecar chunk, retrieval eval, graph/claim preview and canonical adoption, rule-link preview/eval, compliance review adoption, phase-eval adoption, and reviewer package adoption are closed locally. Knowledge-graph sidecar adoption requires a new bounded packet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 
