@@ -11,6 +11,7 @@ from usfs_r1_ea_sources import cli_capture
 from usfs_r1_ea_sources import cli_compliance
 from usfs_r1_ea_sources import cli_decision_support
 from usfs_r1_ea_sources import cli_document_planning
+from usfs_r1_ea_sources import cli_eval
 from usfs_r1_ea_sources import cli_final_qa
 from usfs_r1_ea_sources import cli_review_packet
 from usfs_r1_ea_sources.cli import build_parser
@@ -906,6 +907,54 @@ def test_document_plan_handler_propagates_options(monkeypatch) -> None:
     assert captured["results_dir"] == Path("source_library/document_plans/request-1")
     assert captured["lane_registry_path"] == Path("config/document_lanes_v1.json")
     assert captured["request_schema_path"] == Path("docs/schemas/document_request_v1.schema.json")
+
+
+def test_graph_gate_review_quality_eval_parser_accepts_manifest_options() -> None:
+    args = build_parser().parse_args(
+        [
+            "graph-gate-review-quality-eval",
+            "--manifest",
+            "config/graph_gate_review_quality_eval_v1.json",
+            "--output-dir",
+            "source_library",
+            "--results-dir",
+            "tmp/results",
+        ]
+    )
+
+    assert args.command == "graph-gate-review-quality-eval"
+    assert args.manifest == Path("config/graph_gate_review_quality_eval_v1.json")
+    assert args.output_dir == Path("source_library")
+    assert args.results_dir == Path("tmp/results")
+
+
+def test_graph_gate_review_quality_eval_handler_propagates_options(
+    monkeypatch,
+) -> None:
+    captured = {}
+
+    def fake_runner(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"command_succeeded": True})
+
+    monkeypatch.setattr(
+        cli_eval,
+        "run_graph_gate_review_quality_eval",
+        fake_runner,
+    )
+    args = SimpleNamespace(
+        command="graph-gate-review-quality-eval",
+        output_dir=Path("source_library"),
+        manifest=Path("config/graph_gate_review_quality_eval_v1.json"),
+        results_dir=Path("tmp/results"),
+    )
+
+    result = cli_eval.handle_eval_command(args, argparse.ArgumentParser())
+
+    assert result == 0
+    assert captured["output_dir"] == Path("source_library")
+    assert captured["manifest_path"] == Path("config/graph_gate_review_quality_eval_v1.json")
+    assert captured["results_dir"] == Path("tmp/results")
 
 
 def _registered_commands(parser: argparse.ArgumentParser) -> set[str]:

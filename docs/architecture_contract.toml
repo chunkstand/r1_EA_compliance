@@ -458,6 +458,7 @@ modules = [
   "forest_specific_example_package_eval",
   "forest_plan_profile_eval",
   "gold_coverage_eval",
+  "graph_gate_review_quality_eval",
   "incremental_graph_refresh_eval",
   "promotion_suite",
   "promotion_suite_artifacts",
@@ -779,6 +780,7 @@ paths = [
 [[artifacts]]
 owner_layer = "eval"
 paths = [
+  "source_library/evaluations/graph_gate_review_quality/graph_gate_review_quality_results.json",
   "source_library/evaluations/eval_trace_inventory/eval_trace_inventory_results.json",
   "source_library/evaluations/eval_trace_inventory/eval_trace_inventory_report.md",
   "source_library/evaluations/eval_trace/system_eval_trace.sqlite",
@@ -946,6 +948,7 @@ commands = [
   "forest-plan-profile-eval",
   "forest-specific-example-package-eval",
   "gold-coverage-eval",
+  "graph-gate-review-quality-eval",
   "upstream-eval",
   "phase-eval",
   "real-package-review-coverage-eval",

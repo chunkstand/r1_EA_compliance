@@ -45,6 +45,17 @@ scoped gate design for each target stage. NEPA graph-gate runtime consumption is
 blocked on the paired control/treatment review-quality experiment defined in
 `docs/GRAPH_GATE_REVIEW_QUALITY_EXPERIMENT_MILESTONE_PLAN.md`.
 
+Graph-gate review-quality hypothesis-test status: implemented harness,
+experiment blocked pending preregistered cases. Owner surfaces:
+`config/graph_gate_review_quality_eval_v1.json`,
+`src/usfs_r1_ea_sources/graph_gate_review_quality_eval.py`,
+`graph-gate-review-quality-eval`, and
+`source_library/evaluations/graph_gate_review_quality/graph_gate_review_quality_results.json`.
+The default smoke result is `command_succeeded=true`, `experiment_status=experiment_blocked`,
+`hypothesis_supported=false`, `case_count=0`, and threshold failures for `min_case_count` and
+`min_positive_delta_case_count`. This lane is the stop-condition gate before any runtime
+compliance-review or phase-eval graph-gate consumption.
+
 ### All-Step Evaluation Coverage Map
 
 | Pipeline step | Current owner surfaces | Eval unit | Direct Eval Status | Improvement metrics to own | Generated artifacts | Failure intake route | Gate or widening stop condition |

@@ -1,5 +1,5 @@
 # Current Routing
-Date: 2026-06-04
+Date: 2026-06-04 local / 2026-06-05 UTC
 
 Use this short route before opening append-only docs.
 
@@ -60,11 +60,15 @@ Use this short route before opening append-only docs.
   scorer contracts, lifecycle fields, human-label placeholders, and reserved
   LLM-judge metadata. `promotion-suite` now requires that validation summary
   as a current suite baseline result.
-- Proposed next graph-gate quality slice:
+- Latest graph-gate quality hypothesis-test harness:
   `docs/GRAPH_GATE_REVIEW_QUALITY_EXPERIMENT_MILESTONE_PLAN.md`
-  defines the scientific-method control/treatment experiment required before
-  claiming that NEPA graph gates improve EA review quality or widening runtime
-  compliance/phase-eval graph-gate consumption.
+  now routes to `graph-gate-review-quality-eval` and
+  `config/graph_gate_review_quality_eval_v1.json`. The harness is implemented
+  and verified, but the committed default manifest intentionally has zero cases;
+  the temp smoke result is `experiment_blocked` and
+  `hypothesis_supported=false`. The next packet is preregistering frozen
+  control/treatment cases, not runtime compliance/phase-eval graph-gate
+  consumption.
 - Prior resolved forest-plan review/inventory slice: all-R1 legacy direction and management-area inventory closeout, source-set inventory authority/applicability gate hardening, Forest Plan context-derived package facts, weak-trigger adjudication narrowing for Forest Plan components, broad authority-family positive-precedence arbitration, and review-scoped component-decision application for compliance matrices. `forest-plan-resolve` now requires the active source-set component inventory instead of silently falling back to the seed fixture; package fact graph builds promote resolver package-evidenced management areas and overlays from `forest_plan_context.json` into first-class package facts; stale applicability authority universes fail against the current Forest Plan context inventory path/count; weak-only positive Forest Plan component trigger evidence is diagnostic trigger-miss evidence instead of an adjudication blocker; review-scoped Forest Plan component applicability decisions narrow the component compliance gate when present. North Seeley now replays with `1070` authority candidates, `67` applicable authorities, `1003` not-applicable authorities, `0` unresolved applicability decisions, `16` applicable Forest Plan standards, a valid compliance matrix JSON/Markdown/PDF, and `phase-eval` `30/30` passing.
 - Prior all-forest Forest Plan authority-universe coverage hardening: review-scoped
   `applicability-authority-universe` now derives the selected forest from
@@ -200,7 +204,8 @@ Use this short route before opening append-only docs.
   validation are the first all-step expansion lanes. Wider promotion ratchets
   and model judges remain future bounded packets. Graph-gate runtime
   consumption must wait for the paired review-quality experiment in
-  `docs/GRAPH_GATE_REVIEW_QUALITY_EXPERIMENT_MILESTONE_PLAN.md`.
+  `docs/GRAPH_GATE_REVIEW_QUALITY_EXPERIMENT_MILESTONE_PLAN.md`; the current
+  harness smoke is blocked only because no cases are preregistered yet.
 - Extraction/chunking route: sidecar chunk, retrieval eval, graph/claim preview and canonical adoption, rule-link preview/eval, compliance review adoption, phase-eval adoption, and reviewer package adoption are closed locally. Knowledge-graph sidecar adoption requires a new bounded packet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 

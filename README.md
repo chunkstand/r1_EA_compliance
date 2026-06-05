@@ -156,6 +156,9 @@ PYTHONPATH=src python -m usfs_r1_ea_sources phase-eval \
 PYTHONPATH=src python -m usfs_r1_ea_sources applicability-gate-graph \
   --output-dir source_library \
   --review-id <review-id>
+PYTHONPATH=src python -m usfs_r1_ea_sources graph-gate-review-quality-eval \
+  --manifest config/graph_gate_review_quality_eval_v1.json \
+  --output-dir source_library
 PYTHONPATH=src python -m usfs_r1_ea_sources semantic-graph-eval --output-dir source_library --source-set-id <source-set-id>
 PYTHONPATH=src python -m usfs_r1_ea_sources knowledge-graph-query FED-001 --output-dir source_library --source-set-id <source-set-id> --query-type source_record
 ```

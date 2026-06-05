@@ -15,6 +15,33 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## Graph-Gate Review-Quality Hypothesis-Test Harness
+
+Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
+
+- update:
+  the graph-gate review-quality experiment now has a manifest-driven
+  deterministic harness. `config/graph_gate_review_quality_eval_v1.json`
+  declares the goal intent, stop condition, H1/H0, manifest-owned quality
+  dimensions, threshold policy, and an intentionally empty case list. The CLI
+  command is `graph-gate-review-quality-eval`; the tracked implementation lives
+  in `src/usfs_r1_ea_sources/graph_gate_review_quality_eval.py`.
+- contract:
+  the result artifact schema is `graph-gate-review-quality-results-v1` at
+  `source_library/evaluations/graph_gate_review_quality/graph_gate_review_quality_results.json`.
+  `command_succeeded` only means the manifest was read, scored, and written.
+  The scientific result is recorded separately as `experiment_status` and
+  `hypothesis_supported`.
+- live generated-artifact state:
+  the implementation smoke ran against a temp output directory, not the ignored
+  production `source_library`. It returned `command_succeeded=true`,
+  `experiment_status=experiment_blocked`, `hypothesis_supported=false`,
+  `case_count=0`, `critical_regression_count=0`, `net_quality_delta=0`, and
+  threshold failures for `min_case_count` and `min_positive_delta_case_count`.
+  This proves the harness and stop condition, not the hypothesis. Runtime
+  compliance-review and phase-eval graph-gate consumption remain future work
+  until a preregistered control/treatment experiment supports the hypothesis.
+
 ## System Evaluation Trace-To-Case Promotion Gate
 
 Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:

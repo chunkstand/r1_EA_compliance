@@ -4113,6 +4113,48 @@ therefore requires four tracked review contracts, at least three distinct
 forests, at least four package styles, at least three reviewer-ready tracked
 reviews, and at least one typed-blocked tracked review.
 
+## Graph-Gate Review-Quality Eval Outputs
+
+Default manifest: `config/graph_gate_review_quality_eval_v1.json`
+
+Default path:
+`source_library/evaluations/graph_gate_review_quality/`
+
+The `graph-gate-review-quality-eval` command writes:
+
+- `graph_gate_review_quality_results.json`
+
+The preregistration manifest has schema version
+`graph-gate-review-quality-eval-v1` and records:
+
+- goal intent and stop condition for the hypothesis test
+- null and alternative hypotheses
+- manifest-owned threshold policy
+- manifest-owned quality dimensions, including metric direction and whether a
+  regression is critical
+- experiment cases with control and treatment observations, optional frozen
+  input hashes, artifact references, review IDs, source-set IDs, and case roles
+
+`graph_gate_review_quality_results.json` has schema version
+`graph-gate-review-quality-results-v1` and records:
+
+- top-level `command_succeeded`, `experiment_status`, and
+  `hypothesis_supported`; command success only means the manifest was read,
+  scored, and written, while `hypothesis_supported` is the measured test result
+- manifest identity, intent, stop condition, hypothesis, output paths, threshold
+  policy, contract checks, and quality dimensions
+- aggregate case counts, complete/blocked case counts, positive-delta case
+  count, critical-regression count, net quality delta, threshold failures, and
+  failure-category counts
+- per-case frozen input checks, declared artifact references, dimension-level
+  control/treatment values, quality deltas, improvement/regression flags, and
+  failure reasons
+
+The committed default manifest intentionally declares no cases. A default run
+therefore writes a command-complete but `experiment_blocked` result with
+`hypothesis_supported=false` until a later experiment packet preregisters frozen
+cases and thresholds.
+
 ## Promotion Suite Outputs
 
 Default manifest: `config/promotion_suite_v1.json`

@@ -65,6 +65,10 @@ DEFAULT_FOREST_SPECIFIC_EXAMPLE_PACKAGE_REGISTRY_PATH = _module_attr(
 DEFAULT_GOLD_COVERAGE_MANIFEST_PATH = _module_attr(
     "gold_coverage_eval", "DEFAULT_GOLD_COVERAGE_MANIFEST_PATH"
 )
+DEFAULT_GRAPH_GATE_REVIEW_QUALITY_EVAL_MANIFEST_PATH = _module_attr(
+    "graph_gate_review_quality_eval",
+    "DEFAULT_GRAPH_GATE_REVIEW_QUALITY_EVAL_MANIFEST_PATH",
+)
 DEFAULT_PROMOTION_SUITE_PATH = _module_attr(
     "promotion_suite", "DEFAULT_PROMOTION_SUITE_PATH"
 )
@@ -179,6 +183,13 @@ def run_gold_coverage_eval(**kwargs):
     return _module_attr("gold_coverage_eval", "run_gold_coverage_eval")(**kwargs)
 
 
+def run_graph_gate_review_quality_eval(**kwargs):
+    return _module_attr(
+        "graph_gate_review_quality_eval",
+        "run_graph_gate_review_quality_eval",
+    )(**kwargs)
+
+
 def run_promotion_suite(**kwargs):
     return _module_attr("promotion_suite", "run_promotion_suite")(**kwargs)
 
@@ -204,6 +215,7 @@ EVAL_COMMANDS = {
     "real-package-review-coverage-eval",
     "forest-specific-example-package-eval",
     "gold-coverage-eval",
+    "graph-gate-review-quality-eval",
     "promotion-suite",
 }
 
@@ -529,6 +541,22 @@ COMMAND_SPECS = (
         ),
     ),
     EvalCommandSpec(
+        name="graph-gate-review-quality-eval",
+        help=(
+            "Run the manifest-owned graph-gate review-quality hypothesis test "
+            "without adopting graph gates into runtime review."
+        ),
+        arguments=(
+            _arg("--output-dir", default=DEFAULT_OUTPUT_DIR, type=Path),
+            _arg(
+                "--manifest",
+                default=DEFAULT_GRAPH_GATE_REVIEW_QUALITY_EVAL_MANIFEST_PATH,
+                type=Path,
+            ),
+            _arg("--results-dir", type=Path),
+        ),
+    ),
+    EvalCommandSpec(
         name="promotion-suite",
         help="Check manifest-declared promotion evidence and write an aggregate readiness report.",
         arguments=(
@@ -761,6 +789,14 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 results_dir=args.results_dir,
             ),
             success_key="passed",
+        ),
+        "graph-gate-review-quality-eval": EvalCommandHandler(
+            run=lambda args: run_graph_gate_review_quality_eval(
+                output_dir=args.output_dir,
+                manifest_path=args.manifest,
+                results_dir=args.results_dir,
+            ),
+            success_key="command_succeeded",
         ),
         "promotion-suite": EvalCommandHandler(
             run=lambda args: run_promotion_suite(

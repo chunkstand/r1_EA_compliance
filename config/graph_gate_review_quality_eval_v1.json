@@ -1,0 +1,44 @@
+{
+  "schema_version": "graph-gate-review-quality-eval-v1",
+  "contract_id": "graph-gate-review-quality-hypothesis-test",
+  "version": "0.1.0",
+  "intent": "Test whether NEPA graph gates improve EA review quality without hardcoding the final case mix, metric set, or success thresholds into the evaluator.",
+  "stop_condition": "Stop and record a blocked or null result if support for the hypothesis would require post-hoc threshold tuning, runtime compliance/phase-eval graph-gate adoption, new applicability or legal conclusions, hidden case-family heuristics, or production source_library mutation.",
+  "hypothesis": {
+    "h1": "Graph-gated review produces measurably higher quality review outputs than the same review path without graph-gate evidence.",
+    "h0": "Graph-gated review does not produce a measurable review-quality improvement over the same review path without graph-gate evidence."
+  },
+  "threshold_policy": {
+    "min_case_count": 1,
+    "min_positive_delta_case_count": 1,
+    "max_critical_regression_count": 0,
+    "max_case_contract_failure_count": 0
+  },
+  "quality_dimensions": [
+    {
+      "metric_id": "citation_gap_count",
+      "label": "Citation gap count",
+      "direction": "lower_is_better",
+      "critical": true
+    },
+    {
+      "metric_id": "unsupported_pass_count",
+      "label": "Unsupported pass count",
+      "direction": "lower_is_better",
+      "critical": true
+    },
+    {
+      "metric_id": "actionable_issue_count",
+      "label": "Actionable issue count",
+      "direction": "higher_is_better",
+      "critical": false
+    },
+    {
+      "metric_id": "reviewer_traceability_score",
+      "label": "Reviewer traceability score",
+      "direction": "higher_is_better",
+      "critical": false
+    }
+  ],
+  "cases": []
+}

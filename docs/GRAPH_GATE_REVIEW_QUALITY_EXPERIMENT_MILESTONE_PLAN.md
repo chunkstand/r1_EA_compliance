@@ -1,7 +1,7 @@
 # Graph Gate Review Quality Experiment Milestone Plan
 
 Date: 2026-06-04
-Status: Proposed
+Status: Harness implemented; preregistered case proof pending
 Plan class: implementation
 High-risk implementation: yes
 Owner context: scientific-method proof for whether NEPA applicability gate-graph enforcement improves
@@ -18,11 +18,20 @@ That evidence does not yet prove the causal claim that graph-gate enforcement pr
 quality EA review. The missing step is a pre-registered paired experiment that compares the current
 review path against a graph-gated treatment path on the same frozen inputs.
 
-## Goal, Hypothesis, Non-Goals, And Scope
+## Goal, Intent, Stop Condition, Non-Goals, And Scope
 
-Goal: implement a deterministic graph-gate review-quality experiment that can support or reject the
-hypothesis that NEPA graph gates improve review quality before compliance-review or phase-eval
-runtime consumption is widened.
+Goal: implement an experiment harness that can test whether NEPA graph gates improve EA review
+quality without deciding the final case mix, metric set, or thresholds in code.
+
+Intent: make the hypothesis falsifiable while preserving scientific freedom. Each experiment run
+must pre-register its own cases, quality dimensions, thresholds, and frozen inputs in a manifest;
+the evaluator should enforce that contract and report the measured result, not hardcode what the
+test must discover.
+
+Stop condition: stop the implementation or the experiment when a credible proof would require
+post-hoc threshold tuning, runtime compliance/phase-eval graph-gate adoption, new applicability
+decisions, new legal conclusions, hidden domain heuristics, or mutation of production
+`source_library/` outside the scoped eval command.
 
 Hypothesis:
 
@@ -32,18 +41,12 @@ Hypothesis:
 - H0: graph-gate enforcement does not improve review quality, or it introduces any critical
   regression.
 
-Completion means:
-
-- `config/graph_gate_review_quality_eval_v1.json` pre-registers cases, frozen inputs, control and
-  treatment definitions, metrics, thresholds, and stop conditions.
-- `graph-gate-review-quality-eval` writes
-  `source_library/evaluations/graph_gate_review_quality/graph_gate_review_quality_results.json`
-  with paired control/treatment results, metric deltas, failed thresholds, and
-  `hypothesis_supported`.
-- The experiment includes both live/readback cases and controlled graph-gate mutation cases so a
-  quality gain can be observed without weakening existing reviewer-ready artifacts.
-- The result can only set `hypothesis_supported=true` when all critical regressions are zero and the
-  treatment shows a positive quality delta on at least one pre-registered graph-gate defect class.
+Completion means the manifest pre-registers intent, stop conditions, cases, frozen inputs, quality
+dimensions, and thresholds; `graph-gate-review-quality-eval` writes paired control/treatment
+results, metric deltas, failed thresholds, and `hypothesis_supported`; and the scorer can accept
+live/readback, controlled mutation, exploratory, or later reviewer-labeled cases without code
+changes. `hypothesis_supported=true` requires zero critical regressions and a positive
+manifest-declared quality delta.
 
 Non-goals:
 
@@ -60,24 +63,24 @@ Scope:
 
 - Add a manifest-driven graph-gate review-quality eval command and result schema.
 - Score paired control/treatment review quality using deterministic metrics.
-- Add controlled defect cases for closed-branch leakage, blocked-branch progression, stale graph
-  identity, and Forest Plan subgate propagation.
+- Allow controlled defect cases, live no-regression cases, and future reviewer-labeled cases through
+  the same manifest contract.
 - Add focused tests, CLI registration, output-schema docs, current-state/routing/handoff updates,
   and architecture ownership if a new module is added.
 
 ## Intent Hierarchy
 
 - North-star intent: prove feature value through falsifiable evidence before widening runtime gates.
-- Invariant: every paired comparison preserves source-set, review, package, source-record, citation,
-  artifact hash, graph hash, and scorer contract identity.
-- Optimization target: measure reviewer-quality deltas, not graph publication or structural graph
+- Invariant: preserve source-set, review, package, source-record, citation, artifact hash, graph hash, and
+  scorer-contract identity for each paired comparison.
+- Optimization target: measure reviewer-quality deltas, not graph publication or structural
   completeness alone.
-- Acceptable tradeoffs: controlled mutation cases may prove defect detection when current live
-  reviewer-ready cases are already green; live cases still must prove zero regression.
-- Explicit non-negotiables: no post-hoc thresholds, no model-judge substitution, no hidden
-  applicability decisions, no global ratchets, and no weakening existing eval or compliance gates.
-- Intent lock: this packet implements the hypothesis test only. Runtime compliance/phase-eval
-  graph-gate consumption becomes a later packet only after this experiment supports the hypothesis.
+- Acceptable tradeoffs: controlled mutation cases may run when live reviewer-ready cases are green; live cases still
+  must prove zero regression.
+- Explicit non-negotiables: no post-hoc thresholds, model judges, hidden applicability decisions,
+  global ratchets, or test weakening.
+- Intent lock: runtime compliance/phase-eval graph-gate consumption becomes a later packet only after this
+  experiment supports the hypothesis.
 
 ## Owner Surfaces And Placement
 
@@ -100,42 +103,22 @@ Placement rules:
 - The result artifact is the truth surface for the hypothesis; docs may summarize it but must not
   replace it.
 
-## Experimental Design
+## Experimental Design Contract
 
-Pre-register each case with:
+Pre-register each case with `case_id`, review/source-set identity, frozen package/artifact and graph
+paths, control observations, treatment observations, and any readbacks needed to score the declared
+quality dimensions.
 
-- `case_id`, `review_id`, `source_set_id`, package/artifact paths, graph paths, and expected
-  quality-defect class.
-- Control path: current generated-rule-pack/compliance/phase-eval behavior without graph-gate
-  enforcement.
-- Treatment path: the same inputs evaluated with graph-gate enforcement semantics applied to
-  generated rules, compliance findings, and phase readiness.
-- Required readbacks: applicability decision partition, gate graph validation, generated rule pack,
-  compliance matrix, authority explanation paths, citation/source support, and phase-eval result
-  when available.
+The evaluator must not hardcode a mandatory case family. The manifest should be free to include:
 
-Minimum case mix:
+- live reviewer-ready no-regression cases;
+- controlled defect cases for graph-gate failure modes;
+- exploratory cases that identify weak measurement surfaces; and
+- later reviewer-labeled cases once human labels exist.
 
-- One live reviewer-ready no-regression case where all current quality metrics must be preserved.
-- One closed-branch leakage mutation where control permits or fails to catch a rule/finding from a
-  closed graph branch and treatment catches it.
-- One blocked-branch progression mutation where unresolved or needs-adjudication gate state would
-  incorrectly proceed without enforcement.
-- One Forest Plan subgate mutation covering selected forest, active plan, management area, or
-  component/standard propagation.
-- One stale or identity-mismatched graph mutation.
-
-Primary metrics:
-
-- `closed_branch_leak_count`
-- `blocked_branch_progression_count`
-- `missing_open_branch_rule_count`
-- `unsupported_compliance_finding_count`
-- `forest_plan_subgate_error_count`
-- `stale_or_identity_mismatched_graph_count`
-- `citation_support_regression_count`
-- `critical_regression_count`
-- `net_quality_delta`
+Candidate dimensions include closed-branch leakage, blocked-branch progression, missing open-branch
+rules, unsupported findings, Forest Plan subgate errors, stale/identity-mismatched graph use,
+citation regression, critical regressions, and net quality delta.
 
 ## Weak-Point Prevention
 
@@ -143,7 +126,7 @@ Primary metrics:
 | --- | --- | --- | --- |
 | Experiment proves only graph validity, not review quality | eval manifest and result schema | Require control/treatment quality metrics over generated rules, compliance findings, citations, and phase readiness | Result lacks paired review-quality deltas |
 | Treatment wins by changing non-graph variables | scorer module and tests | Freeze source-set, review, package, applicability decisions, generated-rule inputs, and graph hashes per case | Any paired comparison changes an unapproved input |
-| Mutation cases become artificial and irrelevant | manifest and docs | Include at least one live/readback no-regression case and map each mutation to a real graph-gate failure mode | No live case or no defect-class mapping |
+| Code constrains the scientific test too early | manifest and scorer | Keep case families, quality dimensions, and thresholds manifest-owned | Scorer hardcodes a mandatory defect family or West Reservoir-only proof |
 | False positive improvement claim | result schema | `hypothesis_supported=true` requires zero critical regressions and positive delta in at least one pre-registered defect class | Positive claim with zero measurable defect reduction |
 | Graph gate hides missing evidence | scorer and compliance readbacks | Citation/source support cannot regress; unsupported findings stay critical | Any citation support regression or unsupported treatment finding |
 | Runtime adoption sneaks into experiment | routing docs and tests | Keep compliance-review/phase-eval runtime blockers out of scope until result is green | Runtime gate consumption lands in this packet |
@@ -156,16 +139,17 @@ phase-eval, compliance, graph, or architecture tests to make the experiment pass
 ### Milestone 1 - Pre-Registered Experiment Contract
 
 - Add `config/graph_gate_review_quality_eval_v1.json` with H1/H0, cases, frozen artifact refs,
-  metrics, thresholds, and failure categories.
-- Add schema docs for the result artifact and the meaning of `hypothesis_supported`.
+  intent, stop conditions, quality dimensions, optional candidate cases, and threshold policy.
+- Add schema docs for the result artifact, `command_succeeded`, and `hypothesis_supported`.
 - Outcome label: reduced when the manifest validates and plan/docs make the hypothesis falsifiable.
 
 ### Milestone 2 - Paired Quality Scorer
 
 - Add `graph-gate-review-quality-eval` and the scorer module.
-- Compare control and treatment on frozen case inputs without mutating production artifacts.
-- Write deterministic results with per-case metric deltas, aggregate deltas, failed thresholds,
-  source artifact hashes, and failure-intake candidates for failed cases.
+- Compare control and treatment on manifest-declared frozen case inputs without mutating production
+  artifacts.
+- Write deterministic results with per-case metric deltas, aggregate deltas, failed thresholds, and
+  source artifact hashes.
 - Outcome label: reduced when focused tests prove positive, null, regression, and stale-artifact
   paths.
 
@@ -190,16 +174,16 @@ phase-eval, compliance, graph, or architecture tests to make the experiment pass
 
 ## Acceptance Criteria
 
-- The manifest pre-registers H1, H0, frozen inputs, case mix, metrics, thresholds, and stop
-  conditions before the scorer result is used as proof.
-- The result artifact records control and treatment outputs for every case, with paired metric
-  deltas and artifact hashes.
+- The manifest pre-registers H1, H0, intent, stop conditions, frozen inputs, quality dimensions,
+  and threshold policy before the scorer result is used as proof.
+- The result artifact records control/treatment observations, paired metric deltas, and artifact
+  hashes for every case.
 - `hypothesis_supported=true` is impossible unless treatment has zero critical regressions, no
   citation-support regression, no missing open-branch rule regression, and positive quality delta in
   at least one pre-registered graph-gate defect class.
-- Tests prove the evaluator fails closed for stale graph identity, closed-branch leakage,
-  blocked-branch progression, unsupported treatment findings, and a no-improvement null result.
-- Live/readback cases prove graph-gate treatment does not degrade existing reviewer-ready outputs.
+- Tests prove positive, null, critical-regression, stale-artifact, and CLI/architecture paths.
+- Live/readback or controlled cases can be added without scorer-code changes when the manifest
+  declares their quality dimensions and threshold policy.
 - Docs and handoff state the measured outcome and the correct next route without claiming runtime
   graph-gate consumption prematurely.
 
@@ -213,22 +197,18 @@ opening runtime graph-gate consumption.
 
 ## Stop Conditions
 
-- Stop if the manifest cannot define a paired control/treatment comparison with identical frozen
-  source-set, review, package, applicability, and graph inputs except for graph-gate enforcement.
-- Stop if no live/readback case and no controlled mutation case can show a measurable graph-gate
-  defect delta.
-- Stop if treatment requires new applicability decisions, new legal conclusions, or hidden domain
-  heuristics instead of enforcing existing graph/decision artifacts.
-- Stop if proving the hypothesis requires model-judge scoring, hosted scoring, or uncalibrated
-  human-label substitution.
-- Stop if any treatment case loses a known applicable authority, adds an unsupported finding,
-  drops citation/source support, or weakens a Forest Plan reviewer-ready gate.
-- Stop if runtime compliance-review or phase-eval graph-gate consumption becomes necessary before
-  the experiment result is green; open a separate packet after the experiment.
-- Stop if passing requires broad corpus regeneration, destructive cleanup, or mutation of ignored
-  production `source_library/` outside the scoped eval command.
-- Stop if any existing applicability, phase-eval, compliance, graph, or architecture gate must be
-  weakened to make the experiment pass.
+- Stop if a paired comparison cannot keep source-set, review, package, applicability, graph, and
+  scorer inputs frozen except for graph-gate treatment.
+- Stop if no live/readback or controlled mutation case can show a measurable graph-gate defect
+  delta.
+- Stop if treatment requires new applicability decisions, legal conclusions, hidden heuristics,
+  model-judge scoring, hosted scoring, or uncalibrated labels.
+- Stop if any treatment case loses applicable authority, adds an unsupported finding, drops
+  citation/source support, or weakens a Forest Plan reviewer-ready gate.
+- Stop if runtime compliance-review or phase-eval graph-gate consumption is needed before a green
+  experiment result; open a later packet instead.
+- Stop if passing requires broad corpus regeneration, destructive cleanup, production
+  `source_library/` mutation outside the eval command, or weakened existing gates.
 - Stop before push or PR creation unless explicitly requested.
 
 ## Commit Closeout
@@ -240,12 +220,16 @@ scorer, and routing/doc closeout as separate atomic milestones rather than one a
 
 ## Closeout Outcome Record
 
-Status: not started.
+Status: harness implemented; scientific proof pending preregistered cases.
 
-- Result artifact: not generated.
-- Hypothesis result: not evaluated.
-- Verification result: not run.
-- Commit identifier: not committed.
+- Result artifact: temp smoke generated
+  `/tmp/usfs-r1-graph-gate-quality-smoke/source_library/evaluations/graph_gate_review_quality/graph_gate_review_quality_results.json`.
+- Hypothesis result: `experiment_blocked`, `hypothesis_supported=false`, `case_count=0`,
+  `critical_regression_count=0`, `net_quality_delta=0`, and threshold failures for
+  `min_case_count` and `min_positive_delta_case_count`.
+- Verification result: focused tests, Ruff, compileall, whitespace diff check, strict plan lint,
+  and temp CLI smoke passed.
+- Commit identifier: see the milestone commit in git history after closeout.
 
 ## Residual Risks And Next Routing
 
