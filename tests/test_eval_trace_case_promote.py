@@ -8,9 +8,52 @@ from tests.test_eval_trace_export import _write_store
 from usfs_r1_ea_sources.eval_trace_case_promote import (
     CASE_FILE_SCHEMA_VERSION,
     CASE_SCHEMA_VERSION,
+    DEFAULT_EVAL_TRACE_CASE_FILE_PATH,
     SUMMARY_SCHEMA_VERSION,
     run_eval_trace_case_promote,
+    validate_eval_trace_case_file,
 )
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+TRACKED_CASE_FILE = REPO_ROOT / DEFAULT_EVAL_TRACE_CASE_FILE_PATH
+
+
+def test_committed_case_file_contains_promoted_west_reservoir_trace_case() -> None:
+    payload = json.loads(TRACKED_CASE_FILE.read_text(encoding="utf-8"))
+
+    assert payload["schema_version"] == CASE_FILE_SCHEMA_VERSION
+    cases = {case["case_id"]: case for case in payload["cases"]}
+    case = cases["west-reservoir-applicability-retrieval-trace-case-001"]
+
+    assert case["schema_version"] == CASE_SCHEMA_VERSION
+    assert case["owner_surface"] == "applicability_eval"
+    assert case["risk_level"] == "high"
+    assert case["source_trace"]["sqlite_path"] == (
+        "source_library/evaluations/eval_trace/system_eval_trace.sqlite"
+    )
+    assert case["source_trace"]["trace_id"] == "524a4a9ad3229869b77fc39d"
+    assert case["source_trace"]["span_id"] == "24737cdb71be82ed8bc0a0d3"
+    assert case["source_trace"]["trace_kind"] == "applicability_retrieval"
+    assert case["source_trace"]["span_kind"] == "retrieve"
+    assert case["source_trace"]["source_artifact_refs"]
+    assert all(ref["sha256"] for ref in case["source_trace"]["source_artifact_refs"])
+    assert "source-set-f70ea11e04ae3d53" in {
+        ref["source_ref_id"] for ref in case["source_trace"]["source_artifact_refs"]
+    }
+    assert case["human_label"]["status"] == "unlabeled"
+    assert case["assertion_contract"]["llm_judge"]["status"] == "reserved_deferred"
+
+
+def test_committed_case_file_validation_passes() -> None:
+    summary = validate_eval_trace_case_file(case_file=TRACKED_CASE_FILE).summary
+
+    assert summary["schema_version"] == "eval-trace-case-file-validation-summary-v1"
+    assert summary["passed"] is True
+    assert summary["command_succeeded"] is True
+    assert summary["case_count"] >= 1
+    assert summary["failure_reasons"] == []
+    assert summary["case_failures"] == []
 
 
 def test_case_promote_writes_versioned_case_with_required_contracts(
@@ -59,6 +102,7 @@ def test_case_promote_writes_versioned_case_with_required_contracts(
     assert case["source_trace"]["span_id"] == span_id
     assert case["source_trace"]["source_artifact_refs"]
     assert all(ref["sha256"] for ref in case["source_trace"]["source_artifact_refs"])
+    assert case["source_trace"]["sqlite_path"] == str(sqlite_path.relative_to(tmp_path))
     assert case["human_label"] == {
         "labeler": None,
         "labels": [],
@@ -90,6 +134,64 @@ def test_case_promote_writes_versioned_case_with_required_contracts(
         "requires_approved_milestone": True,
         "status": "reserved_deferred",
     }
+
+
+def test_case_file_validation_fails_closed_for_empty_default_contract(
+    tmp_path: Path,
+) -> None:
+    case_file = tmp_path / "cases.json"
+    case_file.write_text(
+        json.dumps(
+            {
+                "schema_version": CASE_FILE_SCHEMA_VERSION,
+                "case_file_id": "empty",
+                "case_file_version": "1.0.0",
+                "cases": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    summary = validate_eval_trace_case_file(case_file=case_file, repo_root=tmp_path).summary
+
+    assert summary["passed"] is False
+    assert summary["failure_reasons"] == ["case_count_present"]
+    assert summary["case_count"] == 0
+
+
+def test_case_file_validation_rejects_absolute_sqlite_paths(tmp_path: Path) -> None:
+    sqlite_path = _write_store(tmp_path)
+    trace_id, span_id = _source_backed_span(sqlite_path)
+    case_file = tmp_path / "cases.json"
+    result = run_eval_trace_case_promote(
+        sqlite_path=sqlite_path,
+        case_file=case_file,
+        trace_id=trace_id,
+        span_id=span_id,
+        case_id="absolute-path-case",
+        owner="eval_trace_case_promote",
+        risk_level="medium",
+        tags=["first-class-eval-trace"],
+        assertions=["trace stays linked to source artifacts"],
+        review_condition="review when trace contract changes",
+        removal_condition="remove when superseded",
+        repo_root=tmp_path,
+    )
+    assert result.summary["passed"] is True
+    payload = json.loads(case_file.read_text(encoding="utf-8"))
+    payload["cases"][0]["source_trace"]["sqlite_path"] = str(sqlite_path)
+    case_file.write_text(json.dumps(payload), encoding="utf-8")
+
+    summary = validate_eval_trace_case_file(case_file=case_file, repo_root=tmp_path).summary
+
+    assert summary["passed"] is False
+    assert summary["failure_reasons"] == ["promoted_cases_valid"]
+    assert summary["case_failures"] == [
+        {
+            "case_id": "absolute-path-case",
+            "failure_reasons": ["sqlite_path_relative"],
+        }
+    ]
 
 
 def test_case_promote_fails_closed_without_required_metadata(tmp_path: Path) -> None:

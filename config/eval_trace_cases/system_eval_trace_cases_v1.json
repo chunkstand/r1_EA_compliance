@@ -1,6 +1,409 @@
 {
   "case_file_id": "system_eval_trace_cases_v1",
   "case_file_version": "1.0.0",
-  "cases": [],
+  "cases": [
+    {
+      "assertion_contract": {
+        "assertions": [
+          "applicability retrieval trace keeps source artifact refs and hashes for replay",
+          "retrieval evidence remains bound to the west-reservoir/f70 scoped ratchet"
+        ],
+        "deterministic_scorers": [
+          {
+            "inputs": [
+              "query",
+              "retrieved_source_artifact_refs",
+              "citation_labels"
+            ],
+            "required": true,
+            "score_kind": "retrieval",
+            "score_name": "retrieval",
+            "source_artifact_refs": [
+              {
+                "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+                "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+                "source_ref_id": null,
+                "source_ref_kind": null
+              },
+              {
+                "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+                "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+                "source_ref_id": "source-set-f70ea11e04ae3d53",
+                "source_ref_kind": "origin_artifact"
+              },
+              {
+                "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+                "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+                "source_ref_id": "artifact_link_integrity",
+                "source_ref_kind": "score_evidence"
+              }
+            ],
+            "status": "contract_defined",
+            "store_score_names": [
+              "artifact_link_integrity"
+            ]
+          },
+          {
+            "inputs": [
+              "answer",
+              "cited_source_spans",
+              "source_artifact_hashes"
+            ],
+            "required": true,
+            "score_kind": "groundedness",
+            "score_name": "groundedness_cited_source_spans",
+            "source_artifact_refs": [
+              {
+                "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+                "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+                "source_ref_id": null,
+                "source_ref_kind": null
+              },
+              {
+                "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+                "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+                "source_ref_id": "source-set-f70ea11e04ae3d53",
+                "source_ref_kind": "origin_artifact"
+              },
+              {
+                "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+                "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+                "source_ref_id": "artifact_link_integrity",
+                "source_ref_kind": "score_evidence"
+              }
+            ],
+            "status": "contract_defined"
+          },
+          {
+            "inputs": [
+              "trace_id",
+              "span_id",
+              "parent_span_id",
+              "artifact_hashes"
+            ],
+            "required": true,
+            "score_kind": "trace_integrity",
+            "score_name": "trace_integrity",
+            "source_artifact_refs": [
+              {
+                "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+                "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+                "source_ref_id": null,
+                "source_ref_kind": null
+              },
+              {
+                "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+                "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+                "source_ref_id": "source-set-f70ea11e04ae3d53",
+                "source_ref_kind": "origin_artifact"
+              },
+              {
+                "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+                "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+                "source_ref_id": "artifact_link_integrity",
+                "source_ref_kind": "score_evidence"
+              }
+            ],
+            "status": "contract_defined"
+          },
+          {
+            "required": false,
+            "score_kind": "latency_placeholder",
+            "score_name": "latency",
+            "status": "placeholder_contract",
+            "units": "milliseconds"
+          },
+          {
+            "required": false,
+            "score_kind": "cost_placeholder",
+            "score_name": "cost",
+            "status": "placeholder_contract",
+            "units": "usd"
+          }
+        ],
+        "expected_output": "source-backed applicability retrieval trace remains replayable from local eval-trace SQLite",
+        "llm_judge": {
+          "required_before_enablement": [
+            "model_identity",
+            "prompt_hash",
+            "rubric_hash",
+            "temperature",
+            "calibration_examples",
+            "precision_recall_against_human_labels"
+          ],
+          "requires_approved_milestone": true,
+          "status": "reserved_deferred"
+        }
+      },
+      "case_id": "west-reservoir-applicability-retrieval-trace-case-001",
+      "case_version": "1.0.0",
+      "created_at": "2026-06-05T03:53:29.752269Z",
+      "human_label": {
+        "labeler": null,
+        "labels": [],
+        "note": null,
+        "reviewed_at": null,
+        "status": "unlabeled"
+      },
+      "lifecycle": {
+        "removal_condition": "remove only after a superseding adjudicated applicability trace case exists",
+        "review_condition": "review when applicability retrieval trace schema or source-set identity changes"
+      },
+      "owner_surface": "applicability_eval",
+      "risk_level": "high",
+      "schema_version": "eval-trace-promoted-case-v1",
+      "source_trace": {
+        "citation_labels": [
+          "EA-PACKAGE-001 (7036dcfd2bd4)",
+          "EA-PACKAGE-002 (369bd3273074)",
+          "EA-PACKAGE-003 (d775509dbe2d)",
+          "EA-PACKAGE-004 (98bdd4d254b5)",
+          "EA-PACKAGE-005 (a857fe7b7252)",
+          "EA-PACKAGE-006 (1424ddc8d9e8)",
+          "EA-PACKAGE-007 (d12402b52ef8)",
+          "EA-PACKAGE-008 (b46b326e7f87)",
+          "EA-PACKAGE-009 (6bd16c36cc20)",
+          "EA-PACKAGE-010 (2ddba0bcfe05)",
+          "EA-PACKAGE-011 (8156685c9137)",
+          "EA-PACKAGE-012 (b46d23e87710)"
+        ],
+        "eval_case_id": "88f43696bf842fc1c409f37c",
+        "eval_case_name": null,
+        "eval_case_result_id": "905d20c31d787aef118ee21c",
+        "eval_name": "applicability_trace",
+        "eval_run_id": "3cb8ca87adcd09c9fd95a323",
+        "score_names": [
+          "artifact_link_integrity"
+        ],
+        "source_artifact_refs": [
+          {
+            "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+            "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+            "source_ref_id": null,
+            "source_ref_kind": null
+          },
+          {
+            "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+            "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+            "source_ref_id": "source-set-f70ea11e04ae3d53",
+            "source_ref_kind": "origin_artifact"
+          },
+          {
+            "artifact_ref": "source_library/reviews/west-reservoir-67436/applicability/applicability_retrieval_trace.jsonl",
+            "sha256": "09b063b50113b28e90e818a44adfc0b7908e4d8a4fbcedf664a22fb18ed8e37a",
+            "source_ref_id": "artifact_link_integrity",
+            "source_ref_kind": "score_evidence"
+          }
+        ],
+        "source_record_ids": [
+          "FED-001",
+          "FED-002",
+          "FED-003",
+          "FED-004",
+          "FED-005",
+          "FED-006",
+          "FED-007",
+          "FED-008",
+          "FED-009",
+          "FED-010",
+          "FED-011",
+          "FED-012",
+          "FED-013",
+          "FED-014",
+          "FED-015",
+          "FED-016",
+          "FED-017",
+          "FED-020",
+          "FED-021",
+          "FED-022",
+          "FED-023",
+          "FED-024",
+          "FED-025",
+          "FED-026",
+          "FED-027",
+          "FED-028",
+          "FED-029",
+          "FED-030",
+          "FED-031",
+          "FED-032",
+          "FED-035",
+          "FED-036",
+          "FED-037",
+          "FED-038",
+          "FED-039",
+          "FED-040",
+          "FED-042",
+          "FED-043",
+          "FED-044",
+          "FED-045",
+          "FED-046",
+          "FED-047",
+          "FED-048",
+          "FED-049",
+          "FED-050",
+          "FED-051",
+          "FED-052",
+          "FED-053",
+          "FED-054",
+          "FED-055",
+          "FED-056",
+          "FED-057",
+          "FED-058",
+          "FED-059",
+          "FED-060",
+          "FED-061",
+          "FED-062",
+          "FED-063",
+          "FED-064",
+          "FED-065",
+          "FED-066",
+          "FED-067",
+          "FED-068",
+          "FED-069",
+          "FED-070",
+          "FED-071",
+          "FED-072",
+          "FED-073",
+          "FED-074",
+          "FED-075",
+          "FED-076",
+          "FED-077",
+          "FED-078",
+          "FED-079",
+          "FED-080",
+          "FED-081",
+          "FED-082",
+          "FED-083",
+          "FED-084",
+          "FED-085",
+          "FED-086",
+          "FED-087",
+          "FINAL-FLAT-001",
+          "FPS-073",
+          "FPS-074",
+          "LEX-FED-001",
+          "LEX-FED-002",
+          "LEX-FED-003",
+          "LEX-FED-004",
+          "LEX-FED-005",
+          "LEX-FED-006",
+          "LEX-FED-007",
+          "LEX-FED-008",
+          "LEX-FED-010",
+          "LEX-FED-011",
+          "LEX-FED-012",
+          "LEX-USFS-002",
+          "LEX-USFS-003",
+          "LEX-USFS-004",
+          "LEX-USFS-006",
+          "LEX-USFS-007",
+          "LEX-USFS-012",
+          "LEX-USFS-013",
+          "LEX-USFS-014",
+          "LEX-USFS-015",
+          "R1-003",
+          "R1-004",
+          "R1-006",
+          "R1-008",
+          "R1-021",
+          "R1EA-001",
+          "R1EA-002",
+          "R1EA-003",
+          "R1EA-004",
+          "R1EA-005",
+          "R1EA-006",
+          "R1EA-007",
+          "R1EA-008",
+          "R1EA-009",
+          "R1EA-010",
+          "R1EA-011",
+          "R1EA-012",
+          "R1EA-013",
+          "R1EA-014",
+          "R1EA-015",
+          "R1EA-016",
+          "R1EA-017",
+          "R1EA-018",
+          "R1EA-019",
+          "R1EA-020",
+          "R1EA-021",
+          "R1EA-022",
+          "R1EA-023",
+          "R1EA-024",
+          "R1EA-025",
+          "R1EA-026",
+          "R1EA-027",
+          "R1EA-028",
+          "R1EA-029",
+          "R1EA-031",
+          "R1EA-032",
+          "R1EA-033",
+          "R1EA-034",
+          "R1EA-035",
+          "R1EA-036",
+          "R1EA-037",
+          "R1EA-041",
+          "R1EA-047",
+          "R1EA-049",
+          "R1EA-056",
+          "R1EA-064",
+          "R1EA-065",
+          "R1EA-066",
+          "R1EA-067",
+          "R1EA-070",
+          "R1EA-071",
+          "R1EA-072",
+          "R1EA-081",
+          "R1EA-082",
+          "R1EA-092",
+          "R1EA-094",
+          "R1EA-096",
+          "R1EA-097",
+          "R1EA-103",
+          "R1EA-104",
+          "R1EA-107",
+          "R1EA-112",
+          "R1EA-119",
+          "R1EA-124",
+          "R1EA-137",
+          "R1EA-146",
+          "R1EA-150",
+          "STP-026",
+          "STP-027",
+          "STP-028",
+          "STP-029",
+          "STP-031",
+          "STP-032",
+          "STP-033",
+          "STP-034",
+          "STP-035",
+          "USDA-001",
+          "USDA-002",
+          "USDA-003",
+          "USDA-004",
+          "USDA-005",
+          "USDA-006",
+          "USDA-007",
+          "USDA-008",
+          "USFS-001",
+          "USFS-004",
+          "USFS-008",
+          "USFS-027",
+          "USFS-035"
+        ],
+        "span_id": "24737cdb71be82ed8bc0a0d3",
+        "span_kind": "retrieve",
+        "span_name": "applicability_trace",
+        "sqlite_path": "source_library/evaluations/eval_trace/system_eval_trace.sqlite",
+        "trace_id": "524a4a9ad3229869b77fc39d",
+        "trace_kind": "applicability_retrieval"
+      },
+      "tags": [
+        "first-class-system-evaluation",
+        "applicability-retrieval",
+        "west-reservoir"
+      ]
+    }
+  ],
   "schema_version": "eval-trace-case-file-v1"
 }

@@ -182,6 +182,21 @@ def test_eval_trace_case_promote_parser_accepts_promotion_contract() -> None:
     assert args.human_label_status == "unlabeled"
 
 
+def test_eval_trace_case_file_validate_parser_accepts_case_file() -> None:
+    args = build_parser().parse_args(
+        [
+            "eval-trace-case-file-validate",
+            "--case-file",
+            "config/eval_trace_cases/system_eval_trace_cases_v1.json",
+            "--allow-empty",
+        ]
+    )
+
+    assert args.command == "eval-trace-case-file-validate"
+    assert args.case_file == Path("config/eval_trace_cases/system_eval_trace_cases_v1.json")
+    assert args.require_cases is False
+
+
 def test_upstream_eval_parser_accepts_manifest_and_results_dir() -> None:
     args = build_parser().parse_args(
         [
@@ -351,5 +366,4 @@ def test_forest_specific_example_package_eval_parser_accepts_manifest_and_result
     assert args.manifest == Path("config/forest_specific_example_package_registry_v1.json")
     assert args.output_dir == Path("source_library")
     assert args.results_dir == Path("source_library/reviews/forest_specific_example_package_eval")
-
 

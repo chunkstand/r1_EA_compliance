@@ -935,6 +935,7 @@ commands = [
   "draft-generation-eval",
   "eval-context-graph-build",
   "eval-context-graph-eval",
+  "eval-trace-case-file-validate",
   "eval-trace-case-promote",
   "eval-trace-export",
   "eval-trace-inventory",

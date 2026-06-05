@@ -680,15 +680,17 @@ Commit closeout:
 
 ### Milestone 5: Trace-To-Case Promotion And Feedback Loop
 
-Status: Resolved locally on 2026-05-29. The `eval-trace-case-promote` command
-now promotes selected trace/span rows from the local SQLite store into the
-tracked `config/eval_trace_cases/system_eval_trace_cases_v1.json` case-file
-schema. The command requires source artifact refs and hashes, owner/risk/tags,
-an assertion or expected-output contract, review/removal conditions, and fails
-closed on duplicate case IDs unless `--replace` is supplied. Deterministic
-scorer contracts, human-label metadata, and explicit deferred `llm_judge`
-metadata are present; uncalibrated model-judge scoring remains blocked and
-tracked in `docs/TECH_DEBT_REGISTER.md`.
+Status: Resolved locally on 2026-05-29; tracked case-file validation added on
+2026-06-04 local / 2026-06-05 UTC. The `eval-trace-case-promote` command
+promotes selected trace/span rows from the local SQLite store into the tracked
+`config/eval_trace_cases/system_eval_trace_cases_v1.json` case-file schema.
+The tracked file now contains
+`west-reservoir-applicability-retrieval-trace-case-001`, and
+`eval-trace-case-file-validate` fails closed when the case file is empty by
+default or promoted cases lack source refs/hashes, repo-relative SQLite source,
+deterministic scorer contracts, lifecycle fields, human-label metadata, or
+reserved `llm_judge` metadata. Uncalibrated model-judge scoring remains
+blocked and tracked in `docs/TECH_DEBT_REGISTER.md`.
 
 Verified closeout on 2026-05-29:
 
@@ -698,6 +700,7 @@ Verified closeout on 2026-05-29:
   `python -m usfs_r1_ea_sources --help` passed.
 - A local `eval-trace-case-promote` smoke run against
   `source_library/evaluations/eval_trace/system_eval_trace.sqlite` passed.
+- A tracked `eval-trace-case-file-validate` run now passes with `case_count=1`.
 
 Outcome label: resolved for local feedback-loop mechanics; reduced for any
 future model-judge or hosted online-scoring integration.

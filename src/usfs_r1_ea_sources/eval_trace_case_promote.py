@@ -15,16 +15,89 @@ from .eval_trace_inventory import REPO_ROOT
 CASE_FILE_SCHEMA_VERSION = "eval-trace-case-file-v1"
 CASE_SCHEMA_VERSION = "eval-trace-promoted-case-v1"
 SUMMARY_SCHEMA_VERSION = "eval-trace-case-promote-summary-v1"
+CASE_FILE_VALIDATION_SUMMARY_SCHEMA_VERSION = (
+    "eval-trace-case-file-validation-summary-v1"
+)
 DEFAULT_EVAL_TRACE_CASE_FILE_PATH = Path(
     "config/eval_trace_cases/system_eval_trace_cases_v1.json"
 )
 RISK_LEVELS = frozenset({"low", "medium", "high", "critical"})
 HUMAN_LABEL_STATUSES = frozenset({"unlabeled", "labeled", "reviewed", "rejected"})
+REQUIRED_DETERMINISTIC_SCORERS = frozenset(
+    {"retrieval", "groundedness_cited_source_spans", "trace_integrity"}
+)
 
 
 @dataclass(frozen=True)
 class EvalTraceCasePromoteResult:
     summary: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class EvalTraceCaseFileValidationResult:
+    summary: dict[str, Any]
+
+
+def validate_eval_trace_case_file(
+    *,
+    case_file: str | Path = DEFAULT_EVAL_TRACE_CASE_FILE_PATH,
+    require_cases: bool = True,
+    repo_root: Path = REPO_ROOT,
+) -> EvalTraceCaseFileValidationResult:
+    resolved_case_file = _resolve_path(case_file, repo_root=repo_root)
+    failure_reasons: list[str] = []
+    checks: dict[str, bool] = {}
+
+    _require_bool(checks, failure_reasons, "case_file_exists", resolved_case_file.exists())
+    payload: dict[str, Any] = {}
+    if resolved_case_file.exists():
+        try:
+            payload = json.loads(resolved_case_file.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            failure_reasons.append("case_file_parses")
+    checks["case_file_parses"] = bool(payload)
+    checks["case_file_schema_version"] = (
+        payload.get("schema_version") == CASE_FILE_SCHEMA_VERSION
+    )
+    if not checks["case_file_schema_version"]:
+        failure_reasons.append("case_file_schema_version")
+    cases = payload.get("cases")
+    checks["cases_is_list"] = isinstance(cases, list)
+    if not checks["cases_is_list"]:
+        failure_reasons.append("cases_is_list")
+        cases = []
+    checks["case_count_present"] = not require_cases or bool(cases)
+    if not checks["case_count_present"]:
+        failure_reasons.append("case_count_present")
+
+    case_failures: list[dict[str, Any]] = []
+    for case in cases:
+        if not isinstance(case, dict):
+            case_failures.append({"case_id": None, "failure_reasons": ["case_is_object"]})
+            continue
+        failures = _promoted_case_failure_reasons(case)
+        if failures:
+            case_failures.append(
+                {
+                    "case_id": _clean(case.get("case_id")),
+                    "failure_reasons": failures,
+                }
+            )
+    checks["promoted_cases_valid"] = not case_failures
+    if case_failures:
+        failure_reasons.append("promoted_cases_valid")
+
+    summary = {
+        "schema_version": CASE_FILE_VALIDATION_SUMMARY_SCHEMA_VERSION,
+        "passed": not failure_reasons,
+        "command_succeeded": not failure_reasons,
+        "case_file_path": _display_path(resolved_case_file, repo_root=repo_root),
+        "case_count": len(cases),
+        "failure_reasons": failure_reasons,
+        "validation_checks": checks,
+        "case_failures": case_failures,
+    }
+    return EvalTraceCaseFileValidationResult(summary=summary)
 
 
 def run_eval_trace_case_promote(
@@ -147,6 +220,7 @@ def run_eval_trace_case_promote(
                 selected=selected,
                 source_refs=source_refs,
                 sqlite_path=resolved_sqlite_path,
+                repo_root=repo_root,
                 owner=owner or "",
                 risk_level=risk_level or "",
                 tags=normalized_tags,
@@ -304,6 +378,7 @@ def _build_case(
     selected: dict[str, Any],
     source_refs: list[dict[str, Any]],
     sqlite_path: Path,
+    repo_root: Path,
     owner: str,
     risk_level: str,
     tags: list[str],
@@ -344,7 +419,7 @@ def _build_case(
         "case_version": "1.0.0",
         "created_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "source_trace": {
-            "sqlite_path": str(sqlite_path),
+            "sqlite_path": _display_path(sqlite_path, repo_root=repo_root),
             "trace_id": trace.get("trace_id"),
             "span_id": span.get("span_id"),
             "trace_kind": trace.get("trace_kind"),
@@ -520,6 +595,63 @@ def _read_case_file(path: Path) -> tuple[dict[str, Any], list[str]]:
     if not isinstance(cases, list):
         return {}, ["case_file_cases_not_list"]
     return payload, []
+
+
+def _promoted_case_failure_reasons(case: dict[str, Any]) -> list[str]:
+    failures: list[str] = []
+    source_trace = _json_value(case.get("source_trace"))
+    assertion_contract = _json_value(case.get("assertion_contract"))
+    lifecycle = _json_value(case.get("lifecycle"))
+    human_label = _json_value(case.get("human_label"))
+    source_refs = _json_list(source_trace.get("source_artifact_refs"))
+    deterministic_scorers = _json_list(assertion_contract.get("deterministic_scorers"))
+    scorer_names = {
+        str(scorer.get("score_name"))
+        for scorer in deterministic_scorers
+        if isinstance(scorer, dict) and scorer.get("score_name")
+    }
+    llm_judge = _json_value(assertion_contract.get("llm_judge"))
+    sqlite_path = _clean(source_trace.get("sqlite_path"))
+    if case.get("schema_version") != CASE_SCHEMA_VERSION:
+        failures.append("case_schema_version")
+    if not _clean(case.get("case_id")):
+        failures.append("case_id_present")
+    if not _clean(source_trace.get("trace_id")):
+        failures.append("trace_id_present")
+    if sqlite_path and Path(sqlite_path).is_absolute():
+        failures.append("sqlite_path_relative")
+    if not source_refs:
+        failures.append("source_artifact_refs_present")
+    if any(
+        not isinstance(ref, dict) or not _clean(ref.get("artifact_ref")) or not _clean(ref.get("sha256"))
+        for ref in source_refs
+    ):
+        failures.append("source_artifact_refs_have_hashes")
+    if not _clean(case.get("owner_surface")):
+        failures.append("owner_surface_present")
+    if _clean(case.get("risk_level")) not in RISK_LEVELS:
+        failures.append("risk_level_allowed")
+    if not _json_list(case.get("tags")):
+        failures.append("tags_present")
+    if not (
+        _json_list(assertion_contract.get("assertions"))
+        or _clean(assertion_contract.get("expected_output"))
+    ):
+        failures.append("assertion_contract_present")
+    missing_scorers = REQUIRED_DETERMINISTIC_SCORERS - scorer_names
+    if missing_scorers:
+        failures.append("required_deterministic_scorers_present")
+    if llm_judge.get("status") != "reserved_deferred":
+        failures.append("llm_judge_reserved")
+    if llm_judge.get("requires_approved_milestone") is not True:
+        failures.append("llm_judge_requires_approved_milestone")
+    if not _clean(lifecycle.get("review_condition")):
+        failures.append("review_condition_present")
+    if not _clean(lifecycle.get("removal_condition")):
+        failures.append("removal_condition_present")
+    if human_label.get("status") not in HUMAN_LABEL_STATUSES:
+        failures.append("human_label_status_allowed")
+    return sorted(set(failures))
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:

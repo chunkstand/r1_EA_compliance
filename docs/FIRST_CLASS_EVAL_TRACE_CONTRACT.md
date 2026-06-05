@@ -142,6 +142,12 @@ trace or span into a versioned eval case file. The default tracked file is
 `config/eval_trace_cases/system_eval_trace_cases_v1.json`, with schema version
 `eval-trace-case-file-v1`.
 
+`eval-trace-case-file-validate` validates that tracked file. By default it
+requires at least one promoted case and fails closed on schema drift, missing
+source artifact refs or hashes, absolute SQLite source paths, missing ownership
+or lifecycle fields, missing deterministic scorer contracts, invalid human-label
+status, or premature `llm_judge` enablement.
+
 Promoted cases use schema version `eval-trace-promoted-case-v1`. Each case
 must preserve the selected trace ID, optional span ID, eval run/case/result
 IDs, source artifact refs, source artifact hashes, source-record IDs and
@@ -158,6 +164,11 @@ status, labeler, labels, note, and reviewed timestamp. The summary schema
 version is `eval-trace-case-promote-summary-v1` and records `passed`,
 `command_succeeded`, selected IDs, case count, replacement state, failure
 reasons, and validation checks.
+
+The current tracked case is
+`west-reservoir-applicability-retrieval-trace-case-001`, promoted from
+West Reservoir/f70 applicability retrieval trace `524a4a9ad3229869b77fc39d`
+and span `24737cdb71be82ed8bc0a0d3`.
 
 ## Scorer Contract
 

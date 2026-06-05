@@ -71,6 +71,14 @@ history below.
   graph summary expectation is repaired to the current all-forest signal:
   `region1_forest_plan_graph_ready_profile_count>=10` and
   `region1_forest_plan_blocked_profile_count=0`.
+  The trace-to-case feedback-loop slice now tracks
+  `west-reservoir-applicability-retrieval-trace-case-001` in
+  `config/eval_trace_cases/system_eval_trace_cases_v1.json`, promoted from
+  West Reservoir/f70 applicability retrieval trace `524a4a9ad3229869b77fc39d`
+  and span `24737cdb71be82ed8bc0a0d3`. `eval-trace-case-file-validate`
+  requires the case file to be non-empty by default and to preserve source refs
+  and hashes, repo-relative SQLite source, deterministic scorer contracts,
+  lifecycle fields, human-label placeholders, and reserved LLM-judge metadata.
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then read
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` for the
@@ -84,12 +92,12 @@ history below.
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` Milestone 0
   plus the applicability summary-contract, Forest Plan subgate fixture, and
   replayable failure-intake artifact slices, plus Milestone 3 scoped
-  applicability phase-eval ratchet and Milestone 4 current-promotion Final QA,
-  review-packet, and decision-support direct-eval gate live proof
+  applicability phase-eval ratchet, Milestone 4 current-promotion Final QA,
+  review-packet, and decision-support direct-eval gate live proof, and the
+  tracked trace-to-case case-file validation slice
 - active packet:
   no active implementation slice is open. The next bounded packet should be
-  explicit: trace-to-case promotion, broader promotion ratchets, or another
-  all-step eval expansion.
+  explicit: broader promotion ratchets or another all-step eval expansion.
 - recent research addendum:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current Braintrust/Phoenix/LangSmith/Langfuse/MLflow/OpenAI,

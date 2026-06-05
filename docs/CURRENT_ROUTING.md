@@ -50,6 +50,15 @@ Use this short route before opening append-only docs.
   summarizes current agent/RAG/graph evaluation practice and maps it to local
   applicability, trace, graph, case-promotion, scorer-calibration, and scoped
   gate work. It is background research, not an active runtime route.
+- Latest trace-to-case promotion slice:
+  `config/eval_trace_cases/system_eval_trace_cases_v1.json` now contains
+  `west-reservoir-applicability-retrieval-trace-case-001`, promoted from
+  West Reservoir/f70 applicability retrieval trace `524a4a9ad3229869b77fc39d`
+  and span `24737cdb71be82ed8bc0a0d3`. `eval-trace-case-file-validate`
+  requires the tracked case file to be non-empty by default and to preserve
+  source artifact refs and hashes, repo-relative SQLite source, deterministic
+  scorer contracts, lifecycle fields, human-label placeholders, and reserved
+  LLM-judge metadata.
 - Prior resolved forest-plan review/inventory slice: all-R1 legacy direction and management-area inventory closeout, source-set inventory authority/applicability gate hardening, Forest Plan context-derived package facts, weak-trigger adjudication narrowing for Forest Plan components, broad authority-family positive-precedence arbitration, and review-scoped component-decision application for compliance matrices. `forest-plan-resolve` now requires the active source-set component inventory instead of silently falling back to the seed fixture; package fact graph builds promote resolver package-evidenced management areas and overlays from `forest_plan_context.json` into first-class package facts; stale applicability authority universes fail against the current Forest Plan context inventory path/count; weak-only positive Forest Plan component trigger evidence is diagnostic trigger-miss evidence instead of an adjudication blocker; review-scoped Forest Plan component applicability decisions narrow the component compliance gate when present. North Seeley now replays with `1070` authority candidates, `67` applicable authorities, `1003` not-applicable authorities, `0` unresolved applicability decisions, `16` applicable Forest Plan standards, a valid compliance matrix JSON/Markdown/PDF, and `phase-eval` `30/30` passing.
 - Prior all-forest Forest Plan authority-universe coverage hardening: review-scoped
   `applicability-authority-universe` now derives the selected forest from
@@ -154,11 +163,11 @@ Use this short route before opening append-only docs.
 - Active implementation slice: no active all-forest Forest Plan residual is
   open in the governed manifest. The latest bounded packet is
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`
-  Milestone 4 Final QA, review-packet, and decision-support direct-eval slices
-  plus live proof. Open a separate bounded packet before adding trace-to-case
-  promotion, broader promotion ratchets, new EA packages, manifest broadening,
-  hosted query service/API expansion, model-judge work, hosted scoring,
-  knowledge-graph sidecar adoption, or future architecture-cap
+  Milestone 4 Final QA, review-packet, decision-support direct-eval, and
+  trace-to-case case-file validation slices plus live proof. Open a separate
+  bounded packet before adding broader promotion ratchets, new EA packages,
+  manifest broadening, hosted query service/API expansion, model-judge work,
+  hosted scoring, knowledge-graph sidecar adoption, or future architecture-cap
   changes.
 - Latest resolved forest-specific example packet: `docs/HLC_BONANZA_EXAMPLE_PACKAGE_MILESTONE_PLAN.md`.
 - Latest resolved West Reservoir packet: `docs/WEST_RESERVOIR_REVIEWER_READINESS_MILESTONE_PLAN.md` Milestone 4.
@@ -181,10 +190,9 @@ Use this short route before opening append-only docs.
   docs-only. Applicability is the first critical implementation lane; the
   direct-eval summary, Forest Plan subgate, failure-intake, and
   trajectory/process scoring slices are implemented in the scoped ratchet.
-  Final QA, review packet, and decision support are the first all-step
-  expansion lanes with current-promotion direct-eval summaries and
-  promotion-suite gates. Wider promotion ratchets and model judges remain
-  future bounded packets.
+  Final QA, review packet, decision support, and trace-to-case case-file
+  validation are the first all-step expansion lanes. Wider promotion ratchets
+  and model judges remain future bounded packets.
 - Extraction/chunking route: sidecar chunk, retrieval eval, graph/claim preview and canonical adoption, rule-link preview/eval, compliance review adoption, phase-eval adoption, and reviewer package adoption are closed locally. Knowledge-graph sidecar adoption requires a new bounded packet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 

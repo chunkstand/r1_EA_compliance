@@ -15,6 +15,28 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## System Evaluation Trace-To-Case Promotion Gate
+
+Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
+
+- update:
+  the first tracked trace-to-case feedback-loop case is promoted into
+  `config/eval_trace_cases/system_eval_trace_cases_v1.json`. The new
+  `eval-trace-case-file-validate` command validates the tracked case file and fails closed when it
+  is missing, empty by default, schema-invalid, or carries non-replayable promoted cases.
+- contract:
+  `west-reservoir-applicability-retrieval-trace-case-001` preserves West Reservoir/f70
+  applicability retrieval trace `524a4a9ad3229869b77fc39d`, span
+  `24737cdb71be82ed8bc0a0d3`, repo-relative SQLite source
+  `source_library/evaluations/eval_trace/system_eval_trace.sqlite`, source artifact refs and
+  hashes, source-record IDs, citation labels, deterministic scorer contracts, lifecycle conditions,
+  human-label placeholders, and reserved/deferred `llm_judge` metadata.
+- live generated-artifact state:
+  the source case was promoted from the local SQLite store with
+  `eval-trace-case-promote` and validated with `eval-trace-case-file-validate`; the validation
+  summary reports `passed=true`, `case_count=1`, and `failure_reasons=[]`. This does not enable
+  model judges, hosted scoring, global ratchets, or new promotion-suite fail-closed scopes.
+
 ## System Evaluation Decision-Support Direct-Eval Gate
 
 Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:

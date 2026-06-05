@@ -16,11 +16,10 @@ The repo already has eval/trace storage, direct-eval-aware phase-eval, an observ
 graph, and a coverage register. Applicability has the first scoped ratchet; later-stage gates need
 the same pattern. The goal is staged measurement, not graph publication.
 
-Current evidence: the coverage register tracks subsystem status; eval-trace owns local
-storage/export and trace-to-case promotion; phase-eval consumes direct-eval artifacts; the first
-scoped applicability ratchet is active for West Reservoir/f70; and Milestone 4 now adds
-current-promotion Final QA, review-packet, and decision-support direct-eval summaries plus
-promotion-suite gates for East Crazies/f70.
+Current evidence: coverage register tracks subsystem status; eval-trace owns storage/export,
+tracked case promotion, and case-file validation; phase-eval consumes direct-eval artifacts; the
+first scoped applicability ratchet is active for West Reservoir/f70; and Milestone 4 adds Final QA,
+review-packet, and decision-support direct eval plus promotion gates for East Crazies/f70.
 
 ## Goal, Non-Goals, And Scope
 
@@ -148,7 +147,8 @@ Outcome label: resolved.
   partition drift, and one from generated rule-pack drift.
 
 Closeout note: reduced by failure-intake artifacts with hashes, lineage, assertions, scorer
-metadata, lifecycle fields, and human-label placeholders. Trace-to-case promotion remains separate.
+metadata, lifecycle fields, and human-label placeholders. Trace-to-case promotion now has one
+tracked West Reservoir/f70 retrieval case plus case-file validation.
 
 ### Milestone 3 - Scoped Applicability Phase-Eval Ratchet
 
@@ -213,17 +213,18 @@ Milestone 0 must update this plan, `docs/EVALUATION_COVERAGE_REGISTER.md`,
 Behavior-changing milestones must also update `docs/OUTPUT_SCHEMAS.md`,
 `docs/CURRENT_SYSTEM_STATE.md`, architecture contracts, and tests that enforce new owners.
 
-Commit closeout policy: a milestone is not complete until implementation or docs, focused
-verification, required docs/handoff updates, and one local atomic commit have all landed. Stage only
+Commit closeout policy: a milestone is not complete until implementation/docs, focused
+verification, docs/handoff updates, and one local atomic commit have landed. Stage only
 the verified milestone slice. Do not stage ignored `source_library/` outputs.
 
 ## Closeout Outcome Record
 
 Status: Milestones 0 and 3 are implemented; Milestone 1 summary/subgate and Milestone 2
-failure-intake slices are reduced; Milestone 4 now has current-promotion Final QA, review-packet,
-and decision-support direct eval plus promotion-suite consumption.
-- Residual risk after closeout: trace promotion, broader promotion ratchets, and remaining all-step
-  expansion remain future packets.
+failure-intake slices are reduced; trace-to-case promotion has a tracked case-file gate; Milestone 4
+now has current-promotion Final QA, review-packet, and decision-support direct eval plus
+promotion-suite consumption.
+- Residual risk after closeout: broader promotion ratchets and remaining all-step expansion remain
+  future packets.
 
 ## Stop Conditions
 

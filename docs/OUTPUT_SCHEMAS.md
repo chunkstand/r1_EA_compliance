@@ -5047,8 +5047,20 @@ source artifact refs and hashes and the caller supplies ownership, risk, tags,
 an assertion or expected output contract, and lifecycle conditions. Duplicate
 case IDs fail unless `--replace` is supplied.
 
+Validate the tracked case file with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources eval-trace-case-file-validate \
+  --case-file config/eval_trace_cases/system_eval_trace_cases_v1.json
+```
+
 Default tracked case file:
 `config/eval_trace_cases/system_eval_trace_cases_v1.json`
+
+Current tracked case: `west-reservoir-applicability-retrieval-trace-case-001`
+promotes West Reservoir/f70 applicability retrieval trace
+`524a4a9ad3229869b77fc39d`, span `24737cdb71be82ed8bc0a0d3`, with
+repo-relative SQLite source `source_library/evaluations/eval_trace/system_eval_trace.sqlite`.
 
 Case-file schema version: `eval-trace-case-file-v1`
 
@@ -5103,6 +5115,24 @@ Required summary fields:
 - `wrote_case`
 - `failure_reasons`
 - `validation_checks`
+
+Case-file validation summary schema version:
+`eval-trace-case-file-validation-summary-v1`
+
+Required validation summary fields:
+
+- `passed`
+- `command_succeeded`
+- `case_file_path`
+- `case_count`
+- `failure_reasons`
+- `validation_checks`
+- `case_failures`
+
+Validation fails closed when the case file is missing, unparsable, empty by default, schema-invalid,
+or contains promoted cases without source artifact refs and hashes, repo-relative SQLite source,
+owner/risk/tags, assertion or expected-output contract, required deterministic scorer contracts,
+reserved/deferred LLM-judge metadata, lifecycle conditions, or valid human-label status.
 
 ## First-Class Eval Trace Gate
 

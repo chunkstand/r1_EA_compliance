@@ -109,6 +109,12 @@ def run_eval_trace_case_promote(**kwargs):
     )
 
 
+def validate_eval_trace_case_file(**kwargs):
+    return _module_attr("eval_trace_case_promote", "validate_eval_trace_case_file")(
+        **kwargs
+    )
+
+
 def run_eval_context_graph_build(**kwargs):
     return _module_attr("eval_context_graph", "run_eval_context_graph_build")(**kwargs)
 
@@ -361,6 +367,19 @@ COMMAND_SPECS = (
             ),
             _arg("--human-labeler"),
             _arg("--human-label-note"),
+        ),
+    ),
+    EvalCommandSpec(
+        name="eval-trace-case-file-validate",
+        help="Validate the tracked first-class eval trace case file.",
+        arguments=(
+            _arg("--case-file", default=DEFAULT_EVAL_TRACE_CASE_FILE_PATH, type=Path),
+            _arg(
+                "--allow-empty",
+                action="store_false",
+                dest="require_cases",
+                help="Allow a valid case-file schema with zero promoted cases.",
+            ),
         ),
     ),
     EvalCommandSpec(
@@ -631,6 +650,13 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
                 human_label_status=args.human_label_status,
                 human_labeler=args.human_labeler,
                 human_label_note=args.human_label_note,
+            ),
+            success_key="command_succeeded",
+        ),
+        "eval-trace-case-file-validate": EvalCommandHandler(
+            run=lambda args: validate_eval_trace_case_file(
+                case_file=args.case_file,
+                require_cases=args.require_cases,
             ),
             success_key="command_succeeded",
         ),
