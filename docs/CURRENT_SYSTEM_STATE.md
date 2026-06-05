@@ -44,6 +44,43 @@ Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
   artifact-derived review-quality hypothesis only; runtime compliance-review
   and phase-eval graph-gate consumption remain a future scoped packet.
 
+## Mud Creek Fresh-EA Graph-Gate Probe
+
+Latest probe update on 2026-06-05:
+
+- update:
+  the user-supplied Pinyon/Box folder
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226071402`
+  resolves to `Mud Creek Vegetation Management Project (55744)`, a Bitterroot
+  National Forest EA on the West Fork Ranger District. The full Box root is
+  broad, including a multi-GB project-file archive, so the probe downloaded the
+  direct Final EA PDFs and final decision documents only.
+- live generated-artifact state:
+  ignored local intake under
+  `source_library/reviews/_intake/region1-example-bitterroot-mud-creek-55744/`
+  has `11` PDFs, `19,952,998` bytes, and `0` download failures. `ea-review`
+  passes with `11/11` files extracted, `1,167` package chunks, `5` pass
+  findings, `unsupported_finding_ids=[]`, and `reviewer_ready=true`.
+  `forest-plan-resolve` resolves `scope_status="bitterroot_nf"` with `10`
+  management areas but is not reviewer-ready because `880` Bitterroot Forest
+  Plan component findings need reviewer resolution.
+- graph-gate result:
+  the applicability universe has `946` candidates: `47` base rules, `19`
+  authority-family templates, and `880` Forest Plan component candidates.
+  Applicability determination yields `59` applicable, `886` not applicable, and
+  `1` needs-adjudication authority:
+  `minerals_energy_authorities_authority_template`. Applicability validation
+  fails closed, generated-rule-pack creation refuses to run, and phase-eval
+  fails `27/30` with blockers in `applicability_validation`,
+  `generated_rule_pack`, and `compliance_review`.
+- lesson:
+  this is not a fourth completed full-review quality case. It is a stronger
+  fresh-EA stop-condition result: `applicability-gate-graph` validates
+  structurally with `998` nodes, `997` edges, `0` failed graph checks, `2`
+  blocked gates, and `1` pending gate, preserving the unresolved state instead
+  of producing a false green. Metrics are recorded in
+  `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`.
+
 ## System Evaluation Trace-To-Case Promotion Gate
 
 Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:

@@ -34,6 +34,26 @@ history below.
   `threshold_failures=[]`. The result supports artifact-derived review-quality
   improvement from graph-gate evidence and traceability only; runtime
   compliance/phase-eval graph-gate consumption remains a later packet.
+- Mud Creek fresh-EA graph-gate probe:
+  the user-supplied Box root
+  `https://usfs-public.app.box.com/v/PinyonPublic/folder/158226071402`
+  resolves to `Mud Creek Vegetation Management Project (55744)`, Bitterroot
+  National Forest, West Fork Ranger District. The full Box root is too broad
+  for first-pass review intake, so the local ignored probe downloaded only the
+  direct Final EA PDFs and final decision documents under
+  `source_library/reviews/_intake/region1-example-bitterroot-mud-creek-55744/`.
+  `ea-review` passed on `11/11` files with `1,167` package chunks and no
+  unsupported findings. The fresh-EA pipeline then failed closed before rule
+  pack generation: `applicability_validation` found `59` applicable, `886` not
+  applicable, and `1` needs-adjudication authority
+  (`minerals_energy_authorities_authority_template`). `applicability-gate-graph`
+  validated structurally with `998` nodes, `997` edges, `0` failed graph
+  checks, `2` blocked gates, and `1` pending gate; phase-eval failed `27/30`
+  on applicability, generated-rule-pack, and compliance-review blockers. This
+  is not a fourth completed full-review case. It is evidence that graph gates
+  preserve fresh unresolved review states and prevent false-green downstream
+  review. Metrics are in
+  `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`.
 - latest resolved system-evaluation improvement slice:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` is the
   repo-native goal for making evals the reviewer-engine improvement control
