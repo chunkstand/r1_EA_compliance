@@ -64,7 +64,8 @@ history below.
   `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`. Future improvement or
   regression claims must follow
   `docs/EA_REVIEW_SCIENTIFIC_METHOD_RUN_PROTOCOL.md`: one intervention variable
-  per run, with every required trace surfaced.
+  per run, with every required trace surfaced, and no runtime hardcoding for
+  named proving EAs.
 - latest resolved system-evaluation improvement slice:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` is the
   repo-native goal for making evals the reviewer-engine improvement control

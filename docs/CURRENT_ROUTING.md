@@ -78,6 +78,8 @@ Use this short route before opening append-only docs.
   improvement/regression claims. One measured run may change only one
   intervention variable, and every run must surface the required trace bundle.
   Multi-variable replays are engineering evidence, not causal hypothesis proof.
+  The protocol also makes scalability a hard invariant: runtime changes must be
+  generic to any Region 1 EA and cannot hardcode named proving examples.
 - Latest fresh-EA graph-gate probe:
   Mud Creek Vegetation Management Project `55744` is recorded as a fresh
   Bitterroot probe in

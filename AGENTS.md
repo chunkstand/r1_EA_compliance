@@ -114,6 +114,24 @@ not stage it unless the user explicitly changes the repository policy.
 - Compliance findings must remain citation-bearing and evidence-backed. Do not introduce trusted
   model-generated legal conclusions beyond deterministic evidence and eval gates.
 
+## Scalability And No EA-Specific Hardcoding
+
+The reviewer engine must scale to any USDA Forest Service Region 1 EA. Runtime code must not branch
+on a specific EA title, project ID, review ID, forest example, or package name. Named EAs such as
+West Reservoir, Tyler's Kitchen, HLC Bonanza, and Mud Creek may appear in docs, configs, replay
+contexts, eval manifests, generated artifacts, and tests as evidence fixtures, but not as hidden
+runtime special cases.
+
+When a proving EA exposes a failure, fix the general mechanism: workbook/catalog identity, package
+extraction, selected/proposed action scoping, Forest Plan evidence, authority-family data, retrieval,
+graph expansion, arbitration, validation, generated rule packs, or compliance matrix contracts.
+Do not add project-specific `if review_id == ...`, title checks, project-number checks, forest-slot
+shortcuts, or one-off lexical branches to make one EA pass.
+
+If generic behavior needs an EA-derived example, keep it data-driven and visible through a config,
+manifest, replay context, adjudication file, or eval fixture with tests proving it remains reusable
+outside that one EA.
+
 ## Bitter Lesson Principles
 
 This repo follows the main lesson from Rich Sutton's "The Bitter Lesson": over time, general

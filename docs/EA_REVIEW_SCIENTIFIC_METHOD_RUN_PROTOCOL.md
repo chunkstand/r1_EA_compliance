@@ -35,6 +35,33 @@ engineering evidence, but it cannot be used as a clean causal hypothesis test.
 Docs must label it `multi_factor_engineering_replay`, not
 `hypothesis_supported`.
 
+## Scalability Rule
+
+Every intervention must be designed for any Region 1 EA, not for the proving
+EA that exposed the failure. Runtime code must not hardcode a review ID,
+project ID, EA title, package name, or forest-specific example slot. Named EAs
+may appear in docs, manifests, replay contexts, adjudication files, and tests
+only as transparent evidence fixtures.
+
+Allowed:
+
+- generic extraction, retrieval, graph, arbitration, validation, and reporting
+  changes;
+- data-driven authority-family, Forest Plan, rule-pack, eval, replay, and
+  adjudication configs;
+- tests that use named EAs as fixtures to prove reusable behavior.
+
+Forbidden:
+
+- runtime branches keyed to one review ID, project title, project number,
+  package path, or example slot;
+- hidden lexical rules added only because one EA used a phrase;
+- claims that a specific EA replay proves general readiness without a generic
+  mechanism and regression traces.
+
+If a clean run requires EA-specific runtime logic, stop at
+`ea_specific_hardcoding_required`; do not claim improvement.
+
 ## Required Run Record
 
 Every measured run must record:
@@ -45,6 +72,8 @@ Every measured run must record:
 - exact commit SHA
 - intervention variable
 - intervention description
+- generic mechanism changed
+- named proving EA, if any
 - baseline artifact refs and hashes
 - treatment artifact refs and hashes
 - stop condition
@@ -89,6 +118,7 @@ Stop before applying another change when:
 
 - the current run lacks any required trace artifact;
 - the intervention changed more than one variable;
+- the intervention requires EA-specific runtime logic;
 - source-set, review, package, or authority-universe identity drifted without
   preregistration;
 - a trace hash does not match the artifact it is supposed to represent;

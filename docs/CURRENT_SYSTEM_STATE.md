@@ -95,7 +95,8 @@ Latest probe update on 2026-06-05:
   for this ad hoc Mud Creek packet. Future review-quality improvement claims
   must follow `docs/EA_REVIEW_SCIENTIFIC_METHOD_RUN_PROTOCOL.md`: one
   intervention variable per run and the required trace bundle surfaced for
-  every run. Metrics are recorded in
+  every run. The same protocol now requires generic Region 1 behavior and
+  forbids runtime hardcoding for named proving EAs. Metrics are recorded in
   `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`.
 
 ## System Evaluation Trace-To-Case Promotion Gate
