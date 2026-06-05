@@ -1,7 +1,7 @@
 # First-Class System Evaluation Improvement Milestone Plan
 
 Date: 2026-06-04
-Status: Milestone 4 Final QA direct-eval slice implemented
+Status: Milestone 4 Final QA and review-packet direct-eval slices implemented
 Plan class: implementation
 High-risk implementation: yes
 Owner context: repo-native goal for making evaluations the improvement control plane for the USFS
@@ -18,9 +18,9 @@ the same pattern. The goal is staged measurement, not graph publication.
 
 Current evidence: the coverage register tracks subsystem status; eval-trace owns local
 storage/export and trace-to-case promotion; phase-eval consumes direct-eval artifacts; the first
-scoped applicability ratchet is active for West Reservoir on the f70 source set; and the first
-all-step expansion slice now adds a current-promotion Final QA direct-eval summary plus
-promotion-suite gate for East Crazies/f70.
+scoped applicability ratchet is active for West Reservoir on the f70 source set; and Milestone 4 now
+adds current-promotion Final QA and review-packet direct-eval summaries plus promotion-suite gates
+for East Crazies/f70.
 
 ## Goal, Non-Goals, And Scope
 
@@ -177,24 +177,22 @@ Outcome label: reduced.
 - Keep each expansion as a separate bounded packet with its own owner surfaces, metrics, fixtures,
   phase-eval or promotion gates, docs, and commit closeout.
 
-Closeout note: the first Milestone 4 slice adds `final-qa-direct-eval` for the East Crazies/f70
-Final QA packet. It writes direct-eval results plus failure-intake cases, scores five metric groups,
-and is required by current-promotion `promotion-suite`. Live replay is green with no blocking gaps,
-zero failure-intake cases, and current-promotion `33/33`.
+Closeout note: Milestone 4 now has current-promotion `final-qa-direct-eval` and
+`review-packet-direct-eval` slices for East Crazies/f70. They write direct-eval results plus
+failure-intake cases, score five and six metric groups respectively, and are required by
+`promotion-suite`. Live replay is green with no blocking gaps, zero failure-intake cases, and
+current-promotion `34/34`.
 
 ## Verification Gates
 
 - `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --new-plan docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md --strict`
 - For applicability implementation milestones:
   `PYTHONPATH=src uv run --extra dev pytest tests/test_applicability_eval.py tests/test_phase_eval_direct_eval_contracts.py tests/test_phase_eval.py tests/test_eval_trace_case_promote.py tests/test_architecture_contract.py`
-- For source changes: `PYTHONPATH=src uv run --extra dev ruff check src tests` and
-  `PYTHONPATH=src python -m compileall src`.
+- For source changes: run the repo's focused pytest, ruff, and compileall gates from `AGENTS.md`.
 - For any live readiness claim: run the scoped applicability gold, gate-graph, and phase-eval
   commands named by that milestone.
-- For Final QA all-step expansion:
-  `PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
-  `PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-direct-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
-  and `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library`.
+- For Final QA and review-packet all-step expansion: run the direct-eval and promotion-suite
+  commands listed in `docs/OUTPUT_SCHEMAS.md`.
 
 ## Acceptance Criteria
 
@@ -224,11 +222,10 @@ the verified milestone slice. Do not stage ignored `source_library/` outputs.
 Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; Milestone 2
 failure-intake artifact slice reduced; Milestone 3 scoped phase-eval ratchet implemented,
 live-proven, and trajectory-scored for `west-reservoir-67436` on
-`source-set-f70ea11e04ae3d53`; Milestone 4 has its first all-step expansion slice implemented for
-current-promotion Final QA direct eval and promotion-suite consumption.
-- Residual risk after closeout: review-packet and decision-support direct-eval strengthening,
-  trace promotion, broader promotion ratchets, and remaining all-step expansion remain future
-  packets.
+`source-set-f70ea11e04ae3d53`; Milestone 4 has current-promotion Final QA and review-packet direct
+eval plus promotion-suite consumption.
+- Residual risk after closeout: decision-support direct-eval strengthening, trace promotion,
+  broader promotion ratchets, and remaining all-step expansion remain future packets.
 
 ## Stop Conditions
 

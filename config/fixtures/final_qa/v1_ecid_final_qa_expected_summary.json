@@ -1,7 +1,7 @@
 {
   "schema_version": "east-crazies-final-qa-expected-summary-v1",
   "fixture_id": "v1-ecid-final-qa-expected-summary",
-  "as_of_date": "2026-06-04",
+  "as_of_date": "2026-06-05",
   "review_id": "v1-cg-ecid-compliance-review",
   "source_set_id": "source-set-f70ea11e04ae3d53",
   "expected_report_schema_version": "east-crazies-final-qa-certification-report-v1",
@@ -54,8 +54,8 @@
     "forest_plan_component_eval_case_count": 35,
     "phase_eval_phase_count": 32,
     "phase_eval_passed_phase_count": 32,
-    "promotion_suite_required_current_result_count": 28,
-    "promotion_suite_passed_required_current_result_count": 28,
+    "promotion_suite_required_current_result_count": 29,
+    "promotion_suite_passed_required_current_result_count": 29,
     "review_packet_index_applicable_authority_count": 55,
     "review_packet_index_non_applicable_authority_count": 341,
     "review_packet_index_forest_plan_component_row_count": 79,
@@ -86,7 +86,7 @@
     "forest_plan_context_summary_sha256": "3e4e0967ecca088b4e8b0a56baf0176a149fd0bd77cb9a525c2805084c3503b8",
     "forest_plan_component_eval_results_sha256": "f9e53de9282cf7010431b51e5dcdd7090732d65696ef7478522e895b93657124",
     "phase_eval_results_sha256": "724560a45a221fa6c975dd71c7accece4c52ccd50d238a1f7854d880fc9b5770",
-    "promotion_suite_results_sha256": "6e24cd7de7f8f6724819213db512772e98e806379c971552821d1ae81ec05ab5",
+    "promotion_suite_results_sha256": "0ba6760ca515bcec776f4cef21bd8ff1e7896e5fff7ff8f424c5f0640eebba30",
     "v1_ea_eval_results_sha256": "69959dfa4fc40a839c09d7ef3a25f288bf722d37c5b579a4aa94fe24fb537659"
   },
   "required_fixture_rows": {

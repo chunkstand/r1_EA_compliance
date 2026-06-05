@@ -769,6 +769,40 @@ def test_review_packet_index_handler_propagates_report_options(monkeypatch) -> N
     assert captured["results_dir"] == Path("review-packet-output")
 
 
+def test_review_packet_direct_eval_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_review_packet_direct_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_review_packet,
+        "run_review_packet_direct_eval",
+        fake_run_review_packet_direct_eval,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "review-packet-direct-eval",
+            "--output-dir",
+            "library",
+            "--review-id",
+            "review-1",
+            "--results-dir",
+            "review-packet-output",
+        ]
+    )
+
+    result = cli_review_packet.handle_review_packet_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["review_id"] == "review-1"
+    assert captured["results_dir"] == Path("review-packet-output")
+
+
 def test_document_plan_parser_accepts_paths() -> None:
     args = build_parser().parse_args(
         [

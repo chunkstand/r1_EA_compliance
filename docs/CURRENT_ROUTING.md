@@ -34,15 +34,16 @@ Use this short route before opening append-only docs.
   consumes that summary with
   `applicability_validation=direct_eval_present`, `36/36` phases passed,
   `critical_phase_count=11`, `direct_eval_ready_phase_count=11`, and
-  `blockers=[]`. The first Milestone 4 all-step expansion slice is now
-  implemented for current-promotion Final QA: `final-qa-direct-eval` writes
-  `final_qa_direct_eval_results.json` and `final_qa_failure_intake_cases.json`
-  for `v1-cg-ecid-compliance-review` on f70, and `promotion-suite` requires
-  `final_qa_direct_eval` in the same-slot current Final QA family. Live proof:
-  Final QA validation passes `198/198`, Final QA direct eval passes with `5`
-  metric groups, `blocking_gap_group_ids=[]`, `failure_intake_case_count=0`,
-  and non-strict promotion-suite reports current-promotion `33/33` required
-  results passing with `current_promotion_ready=true`.
+  `blockers=[]`. Milestone 4 now has current-promotion direct-eval slices for
+  Final QA and review packet: `final-qa-direct-eval` and
+  `review-packet-direct-eval` write direct-eval summaries plus failure-intake
+  cases for `v1-cg-ecid-compliance-review` on f70, and `promotion-suite`
+  requires both same-slot summaries. Live proof: Final QA validation passes
+  `198/198`; Final QA direct eval passes with `5` metric groups; review-packet
+  direct eval passes with `6` metric groups; both have
+  `blocking_gap_group_ids=[]` and `failure_intake_case_count=0`; non-strict
+  promotion-suite reports current-promotion `34/34` required results passing
+  with `current_promotion_ready=true`.
 - Research addendum for that packet:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current agent/RAG/graph evaluation practice and maps it to local
@@ -152,9 +153,9 @@ Use this short route before opening append-only docs.
 - Active implementation slice: no active all-forest Forest Plan residual is
   open in the governed manifest. The latest bounded packet is
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`
-  Milestone 4 Final QA direct-eval slice plus live proof. Open a separate
-  bounded packet before adding review-packet direct eval, decision-support
-  direct eval, broader promotion ratchets, new EA packages, manifest
+  Milestone 4 Final QA and review-packet direct-eval slices plus live proof.
+  Open a separate bounded packet before adding decision-support direct eval,
+  broader promotion ratchets, new EA packages, manifest
   broadening, hosted query service/API expansion, model-judge work, hosted
   scoring, knowledge-graph sidecar adoption, or future architecture-cap
   changes.
@@ -179,9 +180,10 @@ Use this short route before opening append-only docs.
   docs-only. Applicability is the first critical implementation lane; the
   direct-eval summary, Forest Plan subgate, failure-intake, and
   trajectory/process scoring slices are implemented in the scoped ratchet.
-  Final QA is the first all-step expansion lane with a current-promotion
-  direct-eval summary and promotion-suite gate. Review-packet, decision-support,
-  wider promotion ratchets, and model judges remain future bounded packets.
+  Final QA and review packet are the first all-step expansion lanes with
+  current-promotion direct-eval summaries and promotion-suite gates.
+  Decision-support, wider promotion ratchets, and model judges remain future
+  bounded packets.
 - Extraction/chunking route: sidecar chunk, retrieval eval, graph/claim preview and canonical adoption, rule-link preview/eval, compliance review adoption, phase-eval adoption, and reviewer package adoption are closed locally. Knowledge-graph sidecar adoption requires a new bounded packet.
 - Real-package replay lineage remains historical unless a future command regresses a verified gate.
 

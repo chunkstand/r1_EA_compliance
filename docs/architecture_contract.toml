@@ -381,6 +381,7 @@ modules = [
   "review_packet_index",
   "review_packet_index_artifacts",
   "review_packet_index_common",
+  "review_packet_direct_eval",
   "review_packet_index_inventory",
   "review_packet_index_outputs",
   "review_packet_index_sidecar",
@@ -747,6 +748,8 @@ paths = [
   "source_library/reviews/<review_id>/review_packet_index/review_packet_index.md",
   "source_library/reviews/<review_id>/review_packet_index/review_packet_index.pdf",
   "source_library/reviews/<review_id>/review_packet_index/review_packet_index_validation.json",
+  "source_library/reviews/<review_id>/review_packet_index/review_packet_direct_eval_results.json",
+  "source_library/reviews/<review_id>/review_packet_index/review_packet_failure_intake_cases.json",
 ]
 
 [[artifacts]]
@@ -899,6 +902,7 @@ commands = [
   "final-qa-certification",
   "final-qa-direct-eval",
   "review-packet-index",
+  "review-packet-direct-eval",
 ]
 
 [[command_groups]]

@@ -2954,6 +2954,10 @@ Generate it with:
 PYTHONPATH=src python -m usfs_r1_ea_sources review-packet-index \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review
+
+PYTHONPATH=src python -m usfs_r1_ea_sources review-packet-direct-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
 ```
 
 Generated files:
@@ -2965,11 +2969,13 @@ Generated files:
 - `review_packet_index.md`
 - `review_packet_index.pdf`
 - `review_packet_index_validation.json`
+- `review_packet_direct_eval_results.json`
+- `review_packet_failure_intake_cases.json`
 
 `review_packet_row_inventory.json` has schema version `review-packet-row-inventory-v1`. It records
 the row universe, artifact paths, row-set comparisons, applicable authority rows, non-applicable
 boundary rows, Forest Plan component rows, and applicable Forest Plan standard rows. For the current
-East Crazies review it validates `37` applicable authority rows, `340` non-applicable boundary
+East Crazies review it validates `55` applicable authority rows, `341` non-applicable boundary
 rows, `79` Forest Plan component rows, and `12` applicable standards.
 
 When the compliance review used noncanonical sidecar rule-claim links,
@@ -2984,7 +2990,7 @@ links.
 `compliance-matrix-render-manifest-v1`. It records one rendered-row entry per compliance matrix
 authority row and per Forest Plan matrix row, including row class, row order, section, table ID,
 JSON selector, Markdown marker, row identity, source record IDs, status, applicability status, and
-row hash. The current manifest validates `37` authority and `79` Forest Plan rendered rows and a
+row hash. The current manifest validates `55` authority and `79` Forest Plan rendered rows and a
 valid `%PDF-` compliance matrix PDF.
 
 `review_packet_index.json` has schema version `review-packet-index-v1`. It carries the reviewer
@@ -3006,7 +3012,15 @@ evidence is missing or mismatched, or selected sidecar paths do not exist. Revie
 `phase-eval` includes a `review_packet_index` phase when this sidecar exists; that phase reports
 `sidecar_rule_claim_links_used` and `sidecar_rule_claim_lineage_failed_check_count`. The
 `config/promotion_suite_v1.json` requires the row inventory, render manifest, packet index JSON/PDF,
-and validation sidecar for current East Crazies promotion.
+validation sidecar, and direct-eval summary for current East Crazies promotion.
+
+`review_packet_direct_eval_results.json` has schema version
+`review-packet-direct-eval-results-v1` and contract ID `review-packet-direct-eval-v1`. It scores
+identity/freshness, row-inventory completeness, render-manifest alignment, cross-artifact row
+alignment, validation-sidecar hash alignment, and reviewer-boundary preservation. The companion
+`review_packet_failure_intake_cases.json` has schema version
+`review-packet-failure-intake-cases-v1`; it is empty when the direct eval is green and carries
+replayable owner/risk/assertion/source-artifact cases when a metric group fails.
 
 ## Draft Generation Outputs
 
@@ -3196,8 +3210,8 @@ records replay status for applicability validation, generated rule-pack validati
 validation, compliance matrix, Forest Plan context, Forest Plan component eval, decision-support
 validation, review packet index validation, phase eval, V1 EA eval, and current-promotion suite.
 For the outer gates it records both baseline counts that exclude the final QA self-reference
-(`32/32` phase eval and `28/28` current-promotion results for this packet) and live integrated
-counts after gate integration (`33/33` phase eval and `33/33` current-promotion results).
+(`32/32` phase eval and `29/29` current-promotion results for this packet) and live integrated
+counts after gate integration (`33/33` phase eval and `34/34` current-promotion results).
 `artifact_freshness_ledger` records required artifact paths, schema versions where applicable,
 SHA-256 values, and selectors.
 
@@ -4105,6 +4119,9 @@ The manifest has schema version `promotion-suite-v1` and records:
 - suite-level results such as core phase-eval readiness, post-V1 applicability phase readiness,
   applicability seed/gold eval coverage, arbitration-summary checks, compliance-review eval, and
   compliance-gold eval
+- current-promotion review-packet direct-eval checks for
+  `review_packet_direct_eval_results.json`, including contract ID, direct-eval presence, zero
+  blocking groups, and zero failure-intake cases
 - current-promotion Final QA direct-eval checks for `final_qa_direct_eval_results.json`, including
   contract ID, direct-eval presence, zero blocking groups, and zero failure-intake cases
 - review-case results that may be marked `required_for_expansion` so expansion readiness depends on

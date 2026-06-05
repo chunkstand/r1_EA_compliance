@@ -36,6 +36,19 @@ def test_committed_promotion_suite_declares_slot_driven_current_contract() -> No
         for family in contract["artifact_families"]
         if family["id"] == "current_review_final_qa"
     )
+    review_packet_family = next(
+        family
+        for family in contract["artifact_families"]
+        if family["id"] == "current_review_packet_contract"
+    )
+    assert review_packet_family["review_result_ids"] == [
+        "review_packet_row_inventory",
+        "compliance_matrix_render_manifest",
+        "review_packet_index",
+        "review_packet_index_pdf",
+        "review_packet_index_validation",
+        "review_packet_direct_eval",
+    ]
     assert final_qa_family["review_result_ids"] == [
         "final_qa_certification_report",
         "final_qa_certification_manifest",
@@ -400,6 +413,31 @@ def test_committed_promotion_suite_defers_packet_local_counts_to_focused_owners(
         "review_packet_index_validation_forest_plan_components",
         "review_packet_index_validation_applicable_standards",
     }.isdisjoint(review_packet_validation_check_names)
+
+    review_packet_direct_eval = results["review_packet_direct_eval"]
+    assert review_packet_direct_eval["required_for_current_promotion"] is True
+    assert review_packet_direct_eval["path"] == (
+        "reviews/{review_id}/review_packet_index/review_packet_direct_eval_results.json"
+    )
+    direct_eval_checks = {check["name"]: check for check in review_packet_direct_eval["checks"]}
+    assert direct_eval_checks["review_packet_direct_eval_schema"]["equals"] == (
+        "review-packet-direct-eval-results-v1"
+    )
+    assert direct_eval_checks["review_packet_direct_eval_contract"]["equals"] == (
+        "review-packet-direct-eval-v1"
+    )
+    assert direct_eval_checks["review_packet_direct_eval_review_id"]["equals"] == (
+        "v1-cg-ecid-compliance-review"
+    )
+    assert direct_eval_checks["review_packet_direct_eval_source_set"]["equals"] == (
+        "source-set-f70ea11e04ae3d53"
+    )
+    assert direct_eval_checks["review_packet_direct_eval_present"]["equals"] is True
+    assert direct_eval_checks["review_packet_direct_eval_passed"]["equals"] is True
+    assert direct_eval_checks["review_packet_direct_eval_metric_group_count"]["min"] == 6
+    assert direct_eval_checks["review_packet_direct_eval_required_groups_present"]["equals"] == []
+    assert direct_eval_checks["review_packet_direct_eval_blocking_gaps"]["equals"] == []
+    assert direct_eval_checks["review_packet_direct_eval_failure_intake_empty"]["equals"] == 0
 
     provenance_check_names = {
         check["name"] for check in results["authority_family_provenance"]["checks"]

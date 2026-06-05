@@ -15,6 +15,40 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## System Evaluation Review Packet Direct-Eval Gate
+
+Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
+
+- update:
+  the second Milestone 4 all-step system-evaluation expansion slice is implemented for the
+  current-promotion review-packet contract. `review-packet-direct-eval` scores existing
+  `review_packet_index` artifacts and writes
+  `source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/review_packet_direct_eval_results.json`
+  plus
+  `source_library/reviews/v1-cg-ecid-compliance-review/review_packet_index/review_packet_failure_intake_cases.json`.
+  The tracked implementation lives in `src/usfs_r1_ea_sources/review_packet_direct_eval.py`.
+- contract:
+  `review_packet_direct_eval_results.json` carries schema
+  `review-packet-direct-eval-results-v1`, contract `review-packet-direct-eval-v1`, scorer
+  `review-packet-direct-eval-deterministic-v1`, the exact review/source-set identity, source
+  artifact hashes, and metric groups for identity/freshness, row-inventory completeness,
+  render-manifest alignment, cross-artifact row alignment, artifact hash alignment, and
+  reviewer-boundary preservation. Failed groups generate replayable failure-intake cases.
+- promotion consumption:
+  `config/promotion_suite_v1.json` now requires `review_packet_direct_eval` in the same-slot
+  `current_review_packet_contract` artifact family. The Final QA expected current-promotion
+  baseline is updated from `28/28` to `29/29` to account for this added non-Final-QA current result.
+- live generated-artifact state:
+  `review-packet-direct-eval` passes with `6` metric groups, `blocking_gap_group_ids=[]`, and
+  `failure_intake_case_count=0`; `final-qa-certification` still passes `198/198`; non-strict
+  `promotion-suite` reports `current_promotion_ready=true`, `promotion_ready=true`,
+  `required_current_result_count=34`, `passed_required_current_result_count=34`, and both
+  `current_review_packet_contract` and `current_review_final_qa` passing. Full-canonical and
+  expansion surfaces remain separate residuals:
+  `full_canonical_corpus_ready=false` with
+  `{"forest_plan_component_coverage_gap": 1, "stale_artifact": 2}`, and
+  `expansion_ready=false` with `{"historical_source_set_split": 1}`.
+
 ## System Evaluation Final QA Direct-Eval Gate
 
 Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
@@ -44,8 +78,8 @@ Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
 - live generated-artifact state:
   `final-qa-certification` passes `198/198`; `final-qa-direct-eval` passes with `5` metric groups,
   `blocking_gap_group_ids=[]`, and `failure_intake_case_count=0`; non-strict `promotion-suite`
-  reports `current_promotion_ready=true`, `promotion_ready=true`, `required_current_result_count=33`,
-  `passed_required_current_result_count=33`, and the `current_review_final_qa` family passing with
+  reports `current_promotion_ready=true`, `promotion_ready=true`, `required_current_result_count=34`,
+  `passed_required_current_result_count=34`, and the `current_review_final_qa` family passing with
   `final_qa_direct_eval` included. Full-canonical and expansion surfaces remain separate residuals:
   `full_canonical_corpus_ready=false` with
   `{"forest_plan_component_coverage_gap": 1, "stale_artifact": 2}`, and
