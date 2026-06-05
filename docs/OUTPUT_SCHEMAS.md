@@ -3154,6 +3154,8 @@ The generated artifact family includes:
 - `east_crazies_final_qa_certification.pdf`
 - `east_crazies_final_qa_certification_manifest.json`
 - `east_crazies_final_qa_certification_validation.json`
+- `final_qa_direct_eval_results.json`
+- `final_qa_failure_intake_cases.json`
 
 Generate or validate the packet with:
 
@@ -3166,6 +3168,10 @@ PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification \
   --output-dir source_library \
   --review-id v1-cg-ecid-compliance-review \
   --validate-only
+
+PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-direct-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
 ```
 
 `east_crazies_final_qa_certification.json` has schema version
@@ -3190,24 +3196,24 @@ records replay status for applicability validation, generated rule-pack validati
 validation, compliance matrix, Forest Plan context, Forest Plan component eval, decision-support
 validation, review packet index validation, phase eval, V1 EA eval, and current-promotion suite.
 For the outer gates it records both baseline counts that exclude the final QA self-reference
-(`25/25` phase eval and `28/28` current-promotion results for this packet) and live integrated
-counts after gate integration (`26/26` phase eval and `32/32` current-promotion results).
+(`32/32` phase eval and `28/28` current-promotion results for this packet) and live integrated
+counts after gate integration (`33/33` phase eval and `33/33` current-promotion results).
 `artifact_freshness_ledger` records required artifact paths, schema versions where applicable,
 SHA-256 values, and selectors.
 
-`applicability_partition` preserves the applicability boundary before compliance: `37` applicable
-authorities, `340` non-applicable authorities, `0` unresolved authorities, and search-coverage
-support for the non-applicable boundary. `finding_qa` records all `37` generated findings, finding
+`applicability_partition` preserves the applicability boundary before compliance: `55` applicable
+authorities, `341` non-applicable authorities, `0` unresolved authorities, and search-coverage
+support for the non-applicable boundary. `finding_qa` records all `55` generated findings, finding
 status counts, citation/source selectors, package-evidence selectors, per-finding package/source
-evidence pointers, trace IDs, the required first-class land-exchange row set, `162` generated-pack
+evidence pointers, trace IDs, the required first-class land-exchange row set, `268` generated-pack
 rule-claim links, and `0` rule-claim gaps. `forest_plan_qa`
 records Custer Gallatin context, `329` Forest Plan components, `58` standards, `12/12` applicable
 standards, component-eval status, limitations, and
 reviewer-resolution status. `decision_support_qa` records the existing decision-support validation
 result, PDF-header validity, residual-risk rows, implementation-confirmation rows, and
 legal-conclusion safeguards. `review_packet_index_qa` records packet validation status, row-set
-hash, `37` applicable authority rows, `340` non-applicable authority rows, `79` Forest Plan
-component rows, `12` applicable standards, `37` authority render-manifest rows, `79` Forest Plan
+hash, `55` applicable authority rows, `341` non-applicable authority rows, `79` Forest Plan
+component rows, `12` applicable standards, `55` authority render-manifest rows, `79` Forest Plan
 render-manifest rows, packet artifact paths, and legal-conclusion safeguards.
 
 `accepted_v1_risk_ledger` is required. It records
@@ -3238,10 +3244,19 @@ validation sidecar, and SHA-256 hashes for the non-circular JSON, Markdown, PDF,
 outputs. Sequence 3 makes this sidecar a required current-promotion artifact, verifies those
 sidecar hashes back against local files in `promotion-suite`, and adds an optional
 `final_qa_certification_report` phase to review-scoped `phase-eval` when the sidecar exists.
-In the 2026-05-08 row-completeness closeout state, `final-qa-certification --validate-only` reports
-`196/196` checks after adding review packet index, render-manifest, outer self-reference,
-freshness, and required-row checks around the sidecar. Outer gates use the sidecar plus output
-hashes to fail closed if a packet file is edited after validation.
+The current closeout state reports `198/198` checks for `final-qa-certification --validate-only`.
+Outer gates use the sidecar plus output hashes to fail closed if a packet file is edited after
+validation.
+
+`final_qa_direct_eval_results.json` has schema version `final-qa-direct-eval-results-v1` and
+contract ID `final-qa-direct-eval-v1`. It records review/source-set identity, scorer version,
+required metric groups, `blocking_gap_group_ids`, `failure_intake_case_count`, source artifact
+hashes, and metric groups for identity/freshness, machine gate replay, artifact hash alignment,
+review-packet/decision-support alignment, and human-boundary preservation. The companion
+`final_qa_failure_intake_cases.json` has schema version `final-qa-failure-intake-cases-v1`; it is
+empty when the direct eval is green and carries replayable owner/risk/assertion/source-artifact
+cases when a metric group fails. `promotion-suite` now requires `final_qa_direct_eval` in the
+same-slot current Final QA artifact family.
 
 `config/east_crazies_final_qa_certification_v1.json` has schema version
 `east-crazies-final-qa-certification-config-v1`. It owns section order, expected review/source-set
@@ -4090,6 +4105,8 @@ The manifest has schema version `promotion-suite-v1` and records:
 - suite-level results such as core phase-eval readiness, post-V1 applicability phase readiness,
   applicability seed/gold eval coverage, arbitration-summary checks, compliance-review eval, and
   compliance-gold eval
+- current-promotion Final QA direct-eval checks for `final_qa_direct_eval_results.json`, including
+  contract ID, direct-eval presence, zero blocking groups, and zero failure-intake cases
 - review-case results that may be marked `required_for_expansion` so expansion readiness depends on
   verified review artifacts, not only expansion-slot manifest text
 - expansion slots for additional real Region 1 EA packages, with acceptance signals and next actions

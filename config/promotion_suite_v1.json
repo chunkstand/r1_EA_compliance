@@ -88,7 +88,8 @@
           "final_qa_certification_report",
           "final_qa_certification_manifest",
           "final_qa_certification_pdf",
-          "final_qa_certification_validation"
+          "final_qa_certification_validation",
+          "final_qa_direct_eval"
         ],
         "slot_binding": "same_slot",
         "source_set_binding": "current_promotion_source_set",
@@ -581,6 +582,65 @@
                 "path_json_path": "output_files.manifest",
                 "sha256_json_path": "output_hashes.manifest_sha256"
               }
+            }
+          ]
+        },
+        {
+          "id": "final_qa_direct_eval",
+          "label": "East Crazies final QA direct evaluation",
+          "path": "reviews/{review_id}/final_qa/final_qa_direct_eval_results.json",
+          "required_for_current_promotion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "final_qa_direct_eval_schema",
+              "json_path": "schema_version",
+              "equals": "final-qa-direct-eval-results-v1"
+            },
+            {
+              "name": "final_qa_direct_eval_contract",
+              "json_path": "contract_id",
+              "equals": "final-qa-direct-eval-v1"
+            },
+            {
+              "name": "final_qa_direct_eval_review_id",
+              "json_path": "review_id",
+              "equals": "v1-cg-ecid-compliance-review"
+            },
+            {
+              "name": "final_qa_direct_eval_source_set",
+              "json_path": "source_set_id",
+              "equals": "source-set-f70ea11e04ae3d53"
+            },
+            {
+              "name": "final_qa_direct_eval_present",
+              "json_path": "direct_eval_present",
+              "equals": true
+            },
+            {
+              "name": "final_qa_direct_eval_passed",
+              "json_path": "passed",
+              "equals": true
+            },
+            {
+              "name": "final_qa_direct_eval_metric_group_count",
+              "json_path": "metric_group_count",
+              "min": 5
+            },
+            {
+              "name": "final_qa_direct_eval_required_groups_present",
+              "json_path": "required_metric_group_ids_present",
+              "equals": []
+            },
+            {
+              "name": "final_qa_direct_eval_blocking_gaps",
+              "json_path": "blocking_gap_group_ids",
+              "equals": []
+            },
+            {
+              "name": "final_qa_direct_eval_failure_intake_empty",
+              "json_path": "failure_intake_case_count",
+              "equals": 0
             }
           ]
         },
@@ -2183,9 +2243,15 @@
           "equals": 0
         },
         {
+          "name": "source_set_graph_region1_ready_profile_count",
+          "json_path": "region1_forest_plan_graph_ready_profile_count",
+          "min": 10,
+          "failure_category": "graph_region1_profile_gap"
+        },
+        {
           "name": "source_set_graph_region1_blocked_profile_count_matches",
           "json_path": "region1_forest_plan_blocked_profile_count",
-          "equals": 9,
+          "equals": 0,
           "failure_category": "graph_region1_profile_gap"
         }
       ]

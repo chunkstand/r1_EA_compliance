@@ -31,6 +31,18 @@ def test_committed_promotion_suite_declares_slot_driven_current_contract() -> No
         "current_review_final_qa",
         "current_review_supporting_outputs",
     }
+    final_qa_family = next(
+        family
+        for family in contract["artifact_families"]
+        if family["id"] == "current_review_final_qa"
+    )
+    assert final_qa_family["review_result_ids"] == [
+        "final_qa_certification_report",
+        "final_qa_certification_manifest",
+        "final_qa_certification_pdf",
+        "final_qa_certification_validation",
+        "final_qa_direct_eval",
+    ]
     reference_canary = contract["reference_canaries"][0]
     assert reference_canary["review_case_id"] == "v1-cg-ecid"
     assert reference_canary["required"] is True
@@ -225,6 +237,31 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
         "final_qa_validation_manifest_hash_matches_file"
     ]
 
+    final_qa_direct_eval = results["final_qa_direct_eval"]
+    assert final_qa_direct_eval["required_for_current_promotion"] is True
+    assert final_qa_direct_eval["path"] == (
+        "reviews/{review_id}/final_qa/final_qa_direct_eval_results.json"
+    )
+    direct_eval_checks = {check["name"]: check for check in final_qa_direct_eval["checks"]}
+    assert direct_eval_checks["final_qa_direct_eval_schema"]["equals"] == (
+        "final-qa-direct-eval-results-v1"
+    )
+    assert direct_eval_checks["final_qa_direct_eval_contract"]["equals"] == (
+        "final-qa-direct-eval-v1"
+    )
+    assert direct_eval_checks["final_qa_direct_eval_review_id"]["equals"] == (
+        "v1-cg-ecid-compliance-review"
+    )
+    assert direct_eval_checks["final_qa_direct_eval_source_set"]["equals"] == (
+        "source-set-f70ea11e04ae3d53"
+    )
+    assert direct_eval_checks["final_qa_direct_eval_present"]["equals"] is True
+    assert direct_eval_checks["final_qa_direct_eval_passed"]["equals"] is True
+    assert direct_eval_checks["final_qa_direct_eval_metric_group_count"]["min"] == 5
+    assert direct_eval_checks["final_qa_direct_eval_required_groups_present"]["equals"] == []
+    assert direct_eval_checks["final_qa_direct_eval_blocking_gaps"]["equals"] == []
+    assert direct_eval_checks["final_qa_direct_eval_failure_intake_empty"]["equals"] == 0
+
     provenance = results["authority_family_provenance"]
     assert provenance["required_for_current_promotion"] is True
     provenance_checks = {check["name"]: check for check in provenance["checks"]}
@@ -275,7 +312,8 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
     )
     assert summary_checks["source_set_graph_node_count"]["min"] == 1
     assert summary_checks["source_set_graph_validation_checks"]["min"] == 62
-    assert summary_checks["source_set_graph_region1_blocked_profile_count_matches"]["equals"] == 9
+    assert summary_checks["source_set_graph_region1_ready_profile_count"]["min"] == 10
+    assert summary_checks["source_set_graph_region1_blocked_profile_count_matches"]["equals"] == 0
 
     review_graph = results["nepa_3d_review_graph_validation"]
     assert review_graph["required_for_current_promotion"] is True

@@ -15,6 +15,42 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
+## System Evaluation Final QA Direct-Eval Gate
+
+Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
+
+- update:
+  the first Milestone 4 all-step system-evaluation expansion slice is implemented for the
+  current-promotion Final QA packet. `final-qa-direct-eval` writes
+  `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/final_qa_direct_eval_results.json`
+  and
+  `source_library/reviews/v1-cg-ecid-compliance-review/final_qa/final_qa_failure_intake_cases.json`.
+  The tracked implementation lives in `src/usfs_r1_ea_sources/final_qa_direct_eval.py` and the CLI
+  is registered as `final-qa-direct-eval`.
+- contract:
+  `final_qa_direct_eval_results.json` carries schema `final-qa-direct-eval-results-v1`, contract
+  `final-qa-direct-eval-v1`, scorer `final-qa-direct-eval-deterministic-v1`, the exact review ID
+  `v1-cg-ecid-compliance-review`, source set `source-set-f70ea11e04ae3d53`, source artifact hashes,
+  required metric groups for identity/freshness, machine gate replay, artifact hash alignment,
+  review-packet/decision-support alignment, and human-boundary preservation. Failed metric groups
+  generate replayable failure-intake cases with owner, risk, assertion, review/removal condition,
+  scorer version, and source artifact refs.
+- promotion consumption:
+  `config/promotion_suite_v1.json` now requires `final_qa_direct_eval` in the same-slot
+  `current_review_final_qa` artifact family. The same slice also repairs the current-promotion
+  source-set graph readiness expectation to the current all-forest signal:
+  `region1_forest_plan_graph_ready_profile_count>=10` and
+  `region1_forest_plan_blocked_profile_count=0`.
+- live generated-artifact state:
+  `final-qa-certification` passes `198/198`; `final-qa-direct-eval` passes with `5` metric groups,
+  `blocking_gap_group_ids=[]`, and `failure_intake_case_count=0`; non-strict `promotion-suite`
+  reports `current_promotion_ready=true`, `promotion_ready=true`, `required_current_result_count=33`,
+  `passed_required_current_result_count=33`, and the `current_review_final_qa` family passing with
+  `final_qa_direct_eval` included. Full-canonical and expansion surfaces remain separate residuals:
+  `full_canonical_corpus_ready=false` with
+  `{"forest_plan_component_coverage_gap": 1, "stale_artifact": 2}`, and
+  `expansion_ready=false` with `{"historical_source_set_split": 1}`.
+
 ## System Evaluation Applicability Ratchet
 
 Latest implementation update on 2026-06-04 UTC:

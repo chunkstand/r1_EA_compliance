@@ -1,7 +1,7 @@
 # First-Class System Evaluation Improvement Milestone Plan
 
 Date: 2026-06-04
-Status: Milestone 3 trajectory scoring implemented
+Status: Milestone 4 Final QA direct-eval slice implemented
 Plan class: implementation
 High-risk implementation: yes
 Owner context: repo-native goal for making evaluations the improvement control plane for the USFS
@@ -9,20 +9,18 @@ R1 EA reviewer-engine pipeline, with applicability as the first ratcheted subsys
 
 ## Purpose And Current Evidence
 
-Broader goal: make each material pipeline change pass through artifact lineage, deterministic
-direct eval, failure intake, scoped ratchet, and current-state/handoff truth.
+Broader goal: make each material pipeline change pass through artifact lineage, deterministic direct
+eval, failure intake, scoped ratchet, and current-state/handoff truth.
 
-The repo already has first-class eval/trace, direct-eval-aware phase-eval, an observability/eval
-context graph, and a coverage register. Applicability has the first scoped ratchet; later-stage
-gates still need the same pattern.
-
-Applicability is the critical boundary between source evidence and downstream rule packs,
-compliance, Forest Plan, V1, and promotion readiness. The goal is not graph publication; it is a
-staged eval program that measures every step, starting with applicability.
+The repo already has eval/trace storage, direct-eval-aware phase-eval, an observability/eval context
+graph, and a coverage register. Applicability has the first scoped ratchet; later-stage gates need
+the same pattern. The goal is staged measurement, not graph publication.
 
 Current evidence: the coverage register tracks subsystem status; eval-trace owns local
-storage/export and trace-to-case promotion; phase-eval consumes direct-eval artifacts; and the
-first scoped applicability ratchet is active for West Reservoir on the f70 source set.
+storage/export and trace-to-case promotion; phase-eval consumes direct-eval artifacts; the first
+scoped applicability ratchet is active for West Reservoir on the f70 source set; and the first
+all-step expansion slice now adds a current-promotion Final QA direct-eval summary plus
+promotion-suite gate for East Crazies/f70.
 
 ## Goal, Non-Goals, And Scope
 
@@ -31,16 +29,13 @@ after scoped evidence proves identity, freshness, replayability, and non-regress
 
 Completion means:
 
-- every pipeline stage has an owner, direct-eval or explicit gap, metrics, artifacts, and failure
-  intake;
-- applicability evaluation reports authority-universe coverage, retrieval/graph trace quality,
-  decision partition fidelity, generated rule-pack fidelity, gate-graph consistency, Forest Plan
-  subgate behavior, and hard-negative false-positive controls;
-- applicability failures can be promoted into tracked cases without losing source-set, review,
-  source-record, citation, artifact-hash, trace, and scorer provenance;
-- phase-eval can fail closed for one explicit scoped applicability ratchet before any wider gate
-  expansion; and
-- docs and handoff explain evaluated steps, planned gaps, and proving gates.
+- every pipeline stage has an owner, direct-eval or explicit gap, metrics, artifacts, and intake;
+- applicability reports coverage, retrieval/graph trace quality, partition fidelity, rule-pack
+  fidelity, gate-graph consistency, Forest Plan subgates, and hard negatives;
+- failures promote into tracked cases with source-set, review, source-record, citation, artifact,
+  trace, and scorer provenance;
+- phase-eval fails closed for one explicit scoped applicability ratchet before widening; and
+- docs/handoff explain evaluated steps, gaps, and proving gates.
 
 Non-goals:
 
@@ -54,44 +49,36 @@ Non-goals:
 
 Scope:
 
-- Applicability owner surfaces, eval contracts, fixtures, generated summaries, traces, and
-  phase-eval integration.
-- Coverage-register status for every pipeline step.
+- Applicability owner surfaces, contracts, fixtures, summaries, traces, and phase-eval integration.
+- Coverage-register status for every step.
 - Eval-trace case promotion for applicability and later-stage failures.
-- One scoped ratchet before broader rollout.
+- One scoped ratchet before rollout.
 
 ## Intent Hierarchy
 
-North-star intent: evals are the system's learning loop. A change is valuable only when replayable
-evidence shows a review boundary became more reliable, observable, or governable.
-
-Invariant: source-set, review, workbook row, source-record, citation, artifact hash, trace hash,
-and scorer contract identity stay visible through every eval, case, ratchet, and promotion claim.
-
-Optimization target: maximize replayable signal per slice: deterministic metrics, hard negatives,
-failure cases, and scoped gates before breadth or UI/product expansion.
-
-Acceptable tradeoffs: add fixture or manifest coverage before full live replay when it preserves
-current readiness and names the live-proof gate needed before widening.
-
-Explicit non-negotiables: no hidden domain heuristics, no global ratchets, no uncalibrated model
-judges, no stale generated artifacts as proof, and no weakened tests or gates.
-
-Intent lock: this advances eval-governed improvement of the existing reviewer-engine. It does not
-open hosted scoring, broad promotion, compliance gate-graph consumption, or graph publication.
+- North-star intent: evals are the system's learning loop; replayable evidence must show a review
+  boundary became more reliable, observable, or governable.
+- Invariant: source-set, review, workbook row, source-record, citation, artifact hash, trace hash,
+  and scorer contract identity stay visible through evals, cases, ratchets, and promotion claims.
+- Optimization target: deterministic metrics, hard negatives, failure cases, and scoped gates before
+  breadth or UI/product expansion.
+- Acceptable tradeoffs: fixture or manifest coverage may precede full live replay when it preserves
+  readiness and names the widening gate.
+- Explicit non-negotiables: no hidden heuristics, global ratchets, uncalibrated model judges, stale
+  generated proof, or weakened gates.
+- Intent lock: this advances eval-governed improvement of the reviewer-engine; it does not open
+  hosted scoring, broad promotion, compliance gate-graph consumption, or graph publication.
 
 ## Owner Surfaces And Placement
 
-- Evaluation coverage truth:
-  `docs/EVALUATION_COVERAGE_REGISTER.md`, `docs/OUTPUT_SCHEMAS.md`,
-  `docs/CURRENT_ROUTING.md`, `docs/SESSION_HANDOFF.md`.
+- Evaluation coverage truth: `docs/EVALUATION_COVERAGE_REGISTER.md`,
+  `docs/OUTPUT_SCHEMAS.md`, `docs/CURRENT_ROUTING.md`, `docs/SESSION_HANDOFF.md`.
 - Existing first-class substrate: eval-trace contract/config/cases and eval-trace modules.
 - Applicability implementation and eval owners: applicability modules, eval seed/gold files, and
   gate-graph config.
 - Phase and promotion consumers: phase-eval direct-eval config/modules and promotion suite config.
-- Tests:
-  focused applicability eval tests, phase-eval direct-eval tests, eval-trace case-promotion tests,
-  and architecture-contract tests.
+- Tests: focused applicability eval, phase-eval direct-eval, eval-trace case-promotion, and
+  architecture-contract tests.
 
 Placement rules:
 
@@ -114,9 +101,9 @@ equivalent or stronger. Any approved temporary weakening must be recorded in
 
 | Weak point | Owner surface | Prevention gate | Fail threshold |
 | --- | --- | --- | --- |
-| Applicability looks green from aggregate counts while critical authority families regress | `applicability_eval.py`, `config/applicability_gold_eval_v1.json` | Per-family slice floors, hard negatives, and prior-failure replay | Any critical family below floor or prior failure regresses |
-| Retrieval/graph traces are present but not quality-scored | applicability trace/eval helpers | Score trace coverage, selected evidence quality, no-evidence certificates, and graph-path support | Decision passes without scored supporting or negative trace evidence |
-| Generated rule pack drifts from applicability partition | generated-rule-pack validation and phase-eval | Compare applicable partition, generated rules, omitted rules, and unexpected rules | Missing or extra generated rule passes |
+| Applicability looks green while critical families regress | `applicability_eval.py`, `config/applicability_gold_eval_v1.json` | Per-family floors, hard negatives, prior-failure replay | Critical family below floor or prior failure regresses |
+| Retrieval/graph traces are present but unscored | applicability trace/eval helpers | Score coverage, evidence quality, no-evidence certificates, and graph support | Decision passes without scored positive or negative trace evidence |
+| Generated rule pack drifts from applicability partition | generated-rule-pack validation and phase-eval | Compare applicable, omitted, unexpected, and generated rules | Missing or extra generated rule passes |
 | Gate graph becomes structural-only decoration | applicability gate graph and gate-graph eval | Eval parent/child open/closed/blocked consistency against decisions | Gate state contradicts applicability decisions |
 | Failures stay as logs instead of learning cases | eval-trace case promotion and applicability case files | Promote selected failures with source refs, hashes, assertion, owner, risk, review/removal conditions | Failed case cannot be replayed from tracked artifacts |
 | Global ratchet blocks unrelated work | `phase_eval_direct_eval_v1.json`, `eval_trace_gate.py` | One scoped ratchet first; no wildcard scopes | Missing scoped proof or wildcard ratchet |
@@ -133,9 +120,8 @@ Outcome label: reduced.
   partition, generated rule pack, gate graph, Forest Plan subgate, and adjudication/failure intake.
 - Record the first scoped applicability ratchet target and the stop conditions for widening it.
 
-Closeout note: implemented docs-only in the coverage register. It maps pipeline steps,
-applicability gaps, and the first scoped target. No runtime gate, live artifact, hosted scorer, or
-model judge changed.
+Closeout note: docs-only coverage register update. No runtime gate, hosted scorer, or model judge
+changed.
 
 ### Milestone 1 - Applicability Direct-Eval Contract Hardening
 
@@ -161,10 +147,8 @@ Outcome label: resolved.
 - Add replay tests for at least one promoted failure from retrieval evidence, one from decision
   partition drift, and one from generated rule-pack drift.
 
-Closeout note: reduced by the failure-intake artifact slice. The eval now writes replayable failed,
-unresolved, and needs-adjudication cases with artifact hashes, lineage, assertions, scorer metadata,
-owner/risk/lifecycle fields, and human-label placeholders. Full trace-to-case promotion and scoped
-phase-eval ratchet widening remain separate packets.
+Closeout note: reduced by failure-intake artifacts with hashes, lineage, assertions, scorer
+metadata, lifecycle fields, and human-label placeholders. Trace-to-case promotion remains separate.
 
 ### Milestone 3 - Scoped Applicability Phase-Eval Ratchet
 
@@ -175,8 +159,8 @@ Outcome label: resolved.
   eval summaries and remains non-blocking for unrelated scopes.
 - Update promotion consumers only if the selected governed scope already participates in promotion.
 
-Closeout note: implemented for `west-reservoir-67436` on `source-set-f70ea11e04ae3d53`. Tests
-prove fail-closed and unrelated-review behavior. No promotion gate or global ratchet was added.
+Closeout note: implemented for `west-reservoir-67436` on `source-set-f70ea11e04ae3d53`; tests
+prove fail-closed and unrelated-review behavior. No global ratchet was added.
 
 Live proof note: f70 `applicability-eval` passes `10/10`; West Reservoir/f70 `phase-eval`
 passes `36/36` with `applicability_validation=direct_eval_present` and `blockers=[]`.
@@ -193,6 +177,11 @@ Outcome label: reduced.
 - Keep each expansion as a separate bounded packet with its own owner surfaces, metrics, fixtures,
   phase-eval or promotion gates, docs, and commit closeout.
 
+Closeout note: the first Milestone 4 slice adds `final-qa-direct-eval` for the East Crazies/f70
+Final QA packet. It writes direct-eval results plus failure-intake cases, scores five metric groups,
+and is required by current-promotion `promotion-suite`. Live replay is green with no blocking gaps,
+zero failure-intake cases, and current-promotion `33/33`.
+
 ## Verification Gates
 
 - `python /Users/chunkstand/.codex/skills/milestone-plan-writer/scripts/lint_milestone_plan.py --new-plan docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md --strict`
@@ -202,6 +191,10 @@ Outcome label: reduced.
   `PYTHONPATH=src python -m compileall src`.
 - For any live readiness claim: run the scoped applicability gold, gate-graph, and phase-eval
   commands named by that milestone.
+- For Final QA all-step expansion:
+  `PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-certification --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  `PYTHONPATH=src python -m usfs_r1_ea_sources final-qa-direct-eval --output-dir source_library --review-id v1-cg-ecid-compliance-review`,
+  and `PYTHONPATH=src python -m usfs_r1_ea_sources promotion-suite --output-dir source_library`.
 
 ## Acceptance Criteria
 
@@ -231,9 +224,11 @@ the verified milestone slice. Do not stage ignored `source_library/` outputs.
 Status: Milestone 0 implemented; Milestone 1 summary/subgate slices implemented; Milestone 2
 failure-intake artifact slice reduced; Milestone 3 scoped phase-eval ratchet implemented,
 live-proven, and trajectory-scored for `west-reservoir-67436` on
-`source-set-f70ea11e04ae3d53`.
-- Residual risk after closeout: trace promotion, promotion gates, and all-step expansion remain
-  future packets.
+`source-set-f70ea11e04ae3d53`; Milestone 4 has its first all-step expansion slice implemented for
+current-promotion Final QA direct eval and promotion-suite consumption.
+- Residual risk after closeout: review-packet and decision-support direct-eval strengthening,
+  trace promotion, broader promotion ratchets, and remaining all-step expansion remain future
+  packets.
 
 ## Stop Conditions
 

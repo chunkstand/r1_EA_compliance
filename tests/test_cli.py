@@ -693,6 +693,48 @@ def test_final_qa_handler_propagates_validate_only(monkeypatch) -> None:
     assert captured["results_dir"] == Path("final-qa-output")
 
 
+def test_final_qa_direct_eval_handler_propagates_options(monkeypatch) -> None:
+    captured = {}
+
+    def fake_run_final_qa_direct_eval(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(summary={"passed": True})
+
+    monkeypatch.setattr(
+        cli_final_qa,
+        "run_final_qa_direct_eval",
+        fake_run_final_qa_direct_eval,
+    )
+
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "final-qa-direct-eval",
+            "--output-dir",
+            "library",
+            "--review-id",
+            "review-1",
+            "--config",
+            "config/custom_final_qa.json",
+            "--expected-summary",
+            "config/custom_final_qa_expected_summary.json",
+            "--results-dir",
+            "final-qa-output",
+        ]
+    )
+
+    result = cli_final_qa.handle_final_qa_command(args, parser)
+
+    assert result == 0
+    assert captured["output_dir"] == Path("library")
+    assert captured["review_id"] == "review-1"
+    assert captured["config_path"] == Path("config/custom_final_qa.json")
+    assert captured["expected_summary_path"] == Path(
+        "config/custom_final_qa_expected_summary.json"
+    )
+    assert captured["results_dir"] == Path("final-qa-output")
+
+
 def test_review_packet_index_handler_propagates_report_options(monkeypatch) -> None:
     captured = {}
 

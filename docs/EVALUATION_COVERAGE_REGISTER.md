@@ -26,16 +26,20 @@ Milestone 3 implements the first scoped phase-eval applicability ratchet for
 `review_id=west-reservoir-67436` and `source_set_id=source-set-f70ea11e04ae3d53`.
 The live f70 applicability eval proof and West Reservoir phase-eval replay are now green.
 Trajectory/process scoring is implemented for that scoped ratchet. Promotion gates and
-model-judge scoring are unchanged.
+model-judge scoring are unchanged. The first Milestone 4 all-step expansion slice is also
+implemented for the current-promotion Final QA packet: `final-qa-direct-eval` writes a
+deterministic direct-eval summary and failure-intake artifact for
+`v1-cg-ecid-compliance-review` on `source-set-f70ea11e04ae3d53`, and `promotion-suite` now requires
+that summary in the existing same-slot Final QA artifact family.
 
 First scoped applicability ratchet target: `review_id=west-reservoir-67436` with
 `source_set_id=source-set-f70ea11e04ae3d53`. The ratchet is active in
 `phase-eval-direct-eval-v1` and fails closed on missing, stale, source-set-mismatched,
 schema-invalid, or below-threshold applicability summaries while skipping unrelated reviews.
-The selected scope proves source-set/review identity, artifact hashes, per-family metrics, hard
-negatives, generated-rule-pack fidelity, gate-graph consistency, trajectory/process quality, and
-failure-intake replay without blocking unrelated reviews or source sets. Widening is still blocked
-on explicit promotion-gate design.
+The selected applicability scope proves source-set/review identity, artifact hashes, per-family
+metrics, hard negatives, generated-rule-pack fidelity, gate-graph consistency, trajectory/process
+quality, and failure-intake replay without blocking unrelated reviews or source sets. Widening
+beyond Final QA remains blocked on separate promotion-gate design for each target stage.
 
 ### All-Step Evaluation Coverage Map
 
@@ -54,7 +58,7 @@ on explicit promotion-gate design.
 | `review_packet_index` | review packet index command and `config/promotion_suite_v1.json` artifact family | review packet sidecar for a governed review | `direct_eval_strengthening_planned` | row inventory completeness; matrix render lineage; sidecar rule-claim lineage; PDF validity; source-set/review identity | `review_packet_row_inventory.json`; `review_packet_index.json`; `review_packet_index.pdf`; validation summary | promotion-suite artifact family failure, later direct-eval case | Do not promote a review without packet row inventory, matrix render, PDF, and validation evidence for the same review/source set. |
 | `decision_support` | decision-support command/config and `config/promotion_suite_v1.json` artifact family | decision-support report for a governed review | `direct_eval_strengthening_planned` | authority-row alignment; legal-conclusion boundary; source/citation support; manifest/PDF validity; source-set/review identity | decision-support JSON, Markdown/PDF, manifest | promotion-suite artifact family failure, later direct-eval case | Do not treat decision support as legal advice or as a substitute for compliance evidence. |
 | `draft_document_generation` | `src/usfs_r1_ea_sources/draft_generation.py`; `src/usfs_r1_ea_sources/draft_generation_eval.py`; draft-generation configs | draft generation mutation case | `direct_eval_present` | unsupported legal conclusion rejection; missing citation rejection; stale authority rejection; contradictory evidence rejection; reviewer warning insertion | `draft_generation_eval_results.json`; draft validation/refusal/traceability artifacts | draft-generation eval case | Drafts remain reviewer-assistance artifacts and must preserve refusal/warning boundaries. |
-| `final_qa` | final QA command/config and `config/promotion_suite_v1.json` artifact family | final QA report for a governed review | `direct_eval_strengthening_planned` | machine replay; decision-support alignment; review-packet alignment; matrix row consistency; manifest/PDF hash checks | final QA report, manifest, PDF, validation summary | promotion-suite artifact family failure, later direct-eval case | Do not promote final QA without same-review/source-set artifact hash alignment. |
+| `final_qa` | `src/usfs_r1_ea_sources/final_qa_certification.py`; `src/usfs_r1_ea_sources/final_qa_direct_eval.py`; `config/east_crazies_final_qa_certification_v1.json`; `config/promotion_suite_v1.json` artifact family | current-promotion Final QA packet for `v1-cg-ecid-compliance-review` | `direct_eval_present` | machine replay; decision-support alignment; review-packet alignment; matrix row consistency; manifest/PDF hash checks; human-boundary preservation; failure-intake replay | final QA report, manifest, PDF, validation summary; `final_qa_direct_eval_results.json`; `final_qa_failure_intake_cases.json` | generated Final QA failure-intake case or promotion-suite artifact family failure | Current-promotion promotion-suite requires `final_qa_direct_eval` for the same review/source set; do not promote Final QA without a green direct-eval summary, zero blocking groups, and same-review/source-set artifact hash alignment. |
 | `promotion` | `config/promotion_suite_v1.json`; promotion-suite command | promotion contract result | `direct_eval_present` | current-promotion quorum; reviewer-ready slot evidence; package authority; artifact-family freshness; eval-trace gate | `promotion_suite_results.json` | promotion-suite failure case or eval-trace promoted case | Promotion ratchets may widen only after lower phase/direct-eval gates are stable and scoped. |
 | `eval_trace_and_context_graph` | first-class eval-trace contract; observability/eval context graph contract | eval/trace inventory, store/export, and context graph eval | `direct_eval_strengthening_planned` | provenance preservation; trace-to-case paths; event nodes; graph edge resolution; local source-of-record; scorer calibration readiness | `system_eval_trace.sqlite`; canonical/OpenInference export; context graph build/eval summaries | `eval-trace-case-promote` case | Hosted scoring, Neo4j export, and model judges remain non-gating until separate calibrated packets. |
 

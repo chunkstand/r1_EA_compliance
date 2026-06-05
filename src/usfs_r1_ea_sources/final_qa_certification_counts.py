@@ -15,6 +15,14 @@ _REVIEW_PACKET_SELF_REFERENCE_ALLOWED_CHECKS = {
     "final_qa_report_exists_and_parses",
 }
 
+_FINAL_QA_CURRENT_RESULT_IDS = {
+    "final_qa_certification_report",
+    "final_qa_certification_manifest",
+    "final_qa_certification_pdf",
+    "final_qa_certification_validation",
+    "final_qa_direct_eval",
+}
+
 
 def _phase_eval_counts_for_packet(phase_eval: Any) -> dict[str, int]:
     live_phase_count = _safe_int(_selector_value(phase_eval, "phase_count"))
@@ -359,7 +367,7 @@ def _promotion_suite_has_only_final_qa_outer_gates(
         expected_counts.get("promotion_suite_passed_required_current_result_count")
     )
     final_qa_counts = _final_qa_current_result_counts(data)
-    if final_qa_counts["required"] != 4:
+    if final_qa_counts["required"] < 4:
         return False
     return (
         _safe_int(data.get("required_current_result_count"))
@@ -414,7 +422,7 @@ def _final_qa_current_result_counts(data: Mapping[str, Any]) -> dict[str, int]:
             if not isinstance(result, Mapping):
                 continue
             result_id = str(result.get("id") or "")
-            if not result_id.startswith("final_qa_certification_"):
+            if result_id not in _FINAL_QA_CURRENT_RESULT_IDS:
                 continue
             if result.get("required_for_current_promotion"):
                 counts["required"] += 1

@@ -377,6 +377,7 @@ modules = [
   "final_qa_certification_report",
   "final_qa_certification_runtime",
   "final_qa_certification_validation",
+  "final_qa_direct_eval",
   "review_packet_index",
   "review_packet_index_artifacts",
   "review_packet_index_common",
@@ -737,6 +738,8 @@ paths = [
   "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification.pdf",
   "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification_manifest.json",
   "source_library/reviews/<review_id>/final_qa/east_crazies_final_qa_certification_validation.json",
+  "source_library/reviews/<review_id>/final_qa/final_qa_direct_eval_results.json",
+  "source_library/reviews/<review_id>/final_qa/final_qa_failure_intake_cases.json",
   "source_library/reviews/<review_id>/review_packet_index/review_packet_row_inventory.json",
   "source_library/reviews/<review_id>/review_packet_index/review_packet_row_inventory.md",
   "source_library/reviews/<review_id>/review_packet_index/compliance_matrix_render_manifest.json",
@@ -869,6 +872,7 @@ commands = [
   "applicability-adjudication-eval",
   "applicability-adjudication-apply",
   "applicability-generate-rule-pack",
+  "applicability-gate-graph",
 ]
 
 [[command_groups]]
@@ -889,7 +893,13 @@ commands = ["compliance-review", "compliance-review-eval", "compliance-gold-eval
 
 [[command_groups]]
 name = "decision_support"
-commands = ["draft-generate", "ea-consistency-document", "final-qa-certification", "review-packet-index"]
+commands = [
+  "draft-generate",
+  "ea-consistency-document",
+  "final-qa-certification",
+  "final-qa-direct-eval",
+  "review-packet-index",
+]
 
 [[command_groups]]
 name = "project_planning"
