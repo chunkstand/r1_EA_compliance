@@ -56,6 +56,7 @@ def run_graph_gate_review_quality_eval(
         _case_result(
             case=case,
             manifest_path=manifest_path,
+            output_dir=output_dir,
             global_dimensions=dimensions,
         )
         for case in cases
@@ -72,6 +73,13 @@ def run_graph_gate_review_quality_eval(
     )
     case_count = len(case_results)
     complete_case_count = sum(1 for case_result in case_results if case_result["complete"])
+    review_ids = sorted(
+        {
+            str(case_result.get("review_id") or "").strip()
+            for case_result in case_results
+            if str(case_result.get("review_id") or "").strip()
+        }
+    )
     positive_delta_case_count = sum(
         1 for case_result in case_results if case_result["has_positive_delta"]
     )
@@ -119,6 +127,8 @@ def run_graph_gate_review_quality_eval(
         "hypothesis_supported": hypothesis_supported,
         "case_count": case_count,
         "complete_case_count": complete_case_count,
+        "distinct_review_count": len(review_ids),
+        "review_ids": review_ids,
         "blocked_case_count": sum(
             1 for case_result in case_results if case_result["blocked"]
         ),
@@ -209,6 +219,7 @@ def _case_result(
     *,
     case: dict[str, Any],
     manifest_path: Path,
+    output_dir: Path,
     global_dimensions: dict[str, dict[str, Any]],
 ) -> dict[str, Any]:
     case_id = str(case.get("case_id") or "").strip()
@@ -228,8 +239,12 @@ def _case_result(
         if not frozen_input_check["passed"]:
             failure_reasons.append(str(frozen_input_check["reason"]))
 
-    control = _observation(case.get("control"), manifest_path=manifest_path)
-    treatment = _observation(case.get("treatment"), manifest_path=manifest_path)
+    control = _observation(
+        case.get("control"), manifest_path=manifest_path, output_dir=output_dir
+    )
+    treatment = _observation(
+        case.get("treatment"), manifest_path=manifest_path, output_dir=output_dir
+    )
     failure_reasons.extend(control["failure_reasons"])
     failure_reasons.extend(treatment["failure_reasons"])
 
@@ -273,6 +288,8 @@ def _case_result(
         "failure_reasons": sorted(set(failure_reasons)),
         "frozen_input_checks": frozen_input_checks,
         "artifact_refs": _string_list(case.get("artifact_refs")),
+        "control_observation": _compact_observation(control),
+        "treatment_observation": _compact_observation(treatment),
         "dimension_results": dimension_results,
     }
 
@@ -319,14 +336,26 @@ def _dimension_result(
     }
 
 
-def _observation(value: Any, *, manifest_path: Path) -> dict[str, Any]:
+def _observation(
+    value: Any, *, manifest_path: Path, output_dir: Path
+) -> dict[str, Any]:
     failures: list[str] = []
     observation = _dict(value)
+    if observation.get("type") == "full_review_artifact_metrics":
+        return _full_review_artifact_metrics(
+            observation=observation,
+            manifest_path=manifest_path,
+            output_dir=output_dir,
+        )
     path_value = observation.get("path")
     if path_value:
         path = _resolve_manifest_path(manifest_path=manifest_path, value=path_value)
         if not path.exists():
-            return {"metrics": {}, "failure_reasons": [f"observation_path_missing:{path}"]}
+            return {
+                "metrics": {},
+                "failure_reasons": [f"observation_path_missing:{path}"],
+                "evidence": {},
+            }
         loaded = _read_json(path)
         observation = _dict(loaded)
         if not observation:
@@ -341,7 +370,152 @@ def _observation(value: Any, *, manifest_path: Path) -> dict[str, Any]:
         }
     if not metrics:
         failures.append("observation_metrics_missing")
-    return {"metrics": metrics, "failure_reasons": failures}
+    return {"metrics": metrics, "failure_reasons": failures, "evidence": {}}
+
+
+def _full_review_artifact_metrics(
+    *, observation: dict[str, Any], manifest_path: Path, output_dir: Path
+) -> dict[str, Any]:
+    review_id = str(observation.get("review_id") or "").strip()
+    source_set_id = str(observation.get("source_set_id") or "").strip()
+    if not review_id:
+        return {
+            "metrics": {},
+            "failure_reasons": ["review_id_missing"],
+            "evidence": {},
+        }
+    review_dir = (
+        _resolve_manifest_path(manifest_path=manifest_path, value=observation["review_dir"])
+        if observation.get("review_dir")
+        else output_dir / "reviews" / review_id
+    )
+    require_graph_gate = (
+        bool(observation.get("require_graph_gate"))
+        or observation.get("graph_gate_mode") == "gated_treatment"
+    )
+    artifacts = _full_review_artifacts(review_dir, require_graph_gate=require_graph_gate)
+    loaded: dict[str, dict[str, Any]] = {}
+    failures: list[str] = []
+    evidence: dict[str, dict[str, Any]] = {}
+    for artifact_id, path in artifacts.items():
+        if not path.exists():
+            failures.append(f"artifact_missing:{artifact_id}")
+            continue
+        loaded[artifact_id] = _read_json(path)
+        evidence[artifact_id] = {"path": str(path), "sha256": sha256_file(path)}
+    identity_mismatch_count = _identity_mismatch_count(
+        loaded=loaded, review_id=review_id, source_set_id=source_set_id
+    )
+    if identity_mismatch_count:
+        failures.append("artifact_identity_mismatch")
+
+    phase = loaded.get("phase_eval", {})
+    v1_eval = _dict(loaded.get("v1_eval", {}).get("summary"))
+    compliance = _dict(loaded.get("compliance_review", {}).get("summary"))
+    matrix = _dict(loaded.get("compliance_matrix", {}).get("summary"))
+    app_validation = _dict(loaded.get("applicability_validation", {}).get("summary"))
+    rule_pack = _dict(loaded.get("generated_rule_pack_validation", {}).get("summary"))
+    gate_summary = loaded.get("gate_graph_summary", {})
+    gate_validation = loaded.get("gate_graph_validation", {})
+    gate_graph = loaded.get("gate_graph", {})
+
+    graph_ready = (
+        require_graph_gate
+        and bool(gate_summary.get("passed"))
+        and bool(gate_validation.get("passed"))
+        and bool(_dict(gate_graph.get("validation")).get("passed"))
+        and identity_mismatch_count == 0
+    )
+    ready_checks = [
+        bool(phase.get("passed")) and bool(phase.get("reviewer_ready")),
+        bool(v1_eval.get("passed")) or bool(v1_eval.get("actual_overall_passed")),
+        bool(compliance.get("reviewer_ready")) and bool(compliance.get("validation_passed")),
+        bool(matrix.get("reviewer_ready")) and bool(matrix.get("validated")),
+        bool(app_validation.get("passed")) and bool(app_validation.get("reviewer_ready")),
+        bool(rule_pack.get("passed")) or bool(rule_pack.get("generated_rule_pack_ready")),
+        graph_ready,
+    ]
+    failed_phase_count = max(
+        0, _int_value(phase.get("phase_count"), default=0)
+        - _int_value(phase.get("passed_phase_count"), default=0)
+    )
+    unsupported_findings = _string_list(compliance.get("unsupported_finding_ids"))
+    metrics = {
+        "citation_gap_count": _int_value(compliance.get("rule_claim_gap_count"), default=0)
+        + len(unsupported_findings),
+        "unsupported_gate_pass_count": 0 if graph_ready else 1,
+        "graph_gate_gap_count": 0 if graph_ready else 1,
+        "readiness_blocker_count": len(_dict_list(phase.get("blockers"))) + failed_phase_count,
+        "graph_gate_consistency_score": 1.0 if graph_ready else 0.0,
+        "reviewer_traceability_score": round(sum(ready_checks) / len(ready_checks), 6),
+        "full_review_artifact_count": len(evidence),
+        "gate_node_count": _int_value(gate_summary.get("node_count"), default=0),
+        "gate_edge_count": _int_value(gate_summary.get("edge_count"), default=0),
+        "gate_validation_failed_check_count": _int_value(
+            gate_summary.get("failed_check_count"), default=0
+        ),
+        "phase_count": _int_value(phase.get("phase_count"), default=0),
+        "passed_phase_count": _int_value(phase.get("passed_phase_count"), default=0),
+        "finding_count": _int_value(compliance.get("finding_count"), default=0),
+        "identity_mismatch_count": identity_mismatch_count,
+    }
+    return {
+        "metrics": metrics,
+        "failure_reasons": sorted(set(failures)),
+        "evidence": evidence,
+        "observation_type": "full_review_artifact_metrics",
+        "graph_gate_mode": observation.get("graph_gate_mode"),
+    }
+
+def _full_review_artifacts(review_dir: Path, *, require_graph_gate: bool) -> dict[str, Path]:
+    artifacts = {
+        "phase_eval": review_dir / "phase_eval_results.json",
+        "v1_eval": review_dir / "v1_ea_eval_results.json",
+        "compliance_review": review_dir / "compliance_review.json",
+        "compliance_matrix": review_dir / "compliance_matrix.json",
+        "compliance_validation": review_dir / "compliance_validation.json",
+        "applicability_validation": review_dir / "applicability" / "applicability_validation.json",
+        "generated_rule_pack_validation": review_dir
+        / "applicability"
+        / "generated_rule_pack_validation.json",
+    }
+    if require_graph_gate:
+        artifacts.update(
+            {
+                "gate_graph": review_dir / "applicability" / "applicability_gate_graph.json",
+                "gate_graph_summary": review_dir / "applicability" / "applicability_gate_graph_summary.json",
+                "gate_graph_validation": review_dir / "applicability" / "applicability_gate_graph_validation.json",
+            }
+        )
+    return artifacts
+
+
+def _identity_mismatch_count(
+    *, loaded: dict[str, dict[str, Any]], review_id: str, source_set_id: str
+) -> int:
+    mismatches = 0
+    for artifact in loaded.values():
+        actual_review_id = artifact.get("review_id") or _dict(artifact.get("summary")).get(
+            "review_id"
+        )
+        actual_source_set_id = artifact.get("source_set_id") or _dict(
+            artifact.get("summary")
+        ).get("source_set_id")
+        if actual_review_id and str(actual_review_id) != review_id:
+            mismatches += 1
+        if source_set_id and actual_source_set_id and str(actual_source_set_id) != source_set_id:
+            mismatches += 1
+    return mismatches
+
+
+def _compact_observation(observation: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "observation_type": observation.get("observation_type"),
+        "graph_gate_mode": observation.get("graph_gate_mode"),
+        "metrics": observation.get("metrics", {}),
+        "evidence": observation.get("evidence", {}),
+        "failure_reasons": observation.get("failure_reasons", []),
+    }
 
 
 def _frozen_input_checks(
@@ -388,6 +562,7 @@ def _threshold_failures(
 ) -> list[dict[str, Any]]:
     failures: list[dict[str, Any]] = []
     case_count = len(case_results)
+    complete_case_count = sum(1 for case_result in case_results if case_result["complete"])
     positive_delta_case_count = sum(
         1 for case_result in case_results if case_result["has_positive_delta"]
     )
@@ -407,6 +582,29 @@ def _threshold_failures(
         actual=case_count,
         default=1,
     )
+    if "min_complete_case_count" in thresholds:
+        _append_min_failure(
+            failures,
+            thresholds,
+            key="min_complete_case_count",
+            actual=complete_case_count,
+            default=case_count,
+        )
+    if "min_distinct_review_count" in thresholds:
+        distinct_review_count = len(
+            {
+                str(case_result.get("review_id") or "").strip()
+                for case_result in case_results
+                if str(case_result.get("review_id") or "").strip()
+            }
+        )
+        _append_min_failure(
+            failures,
+            thresholds,
+            key="min_distinct_review_count",
+            actual=distinct_review_count,
+            default=case_count,
+        )
     _append_min_failure(
         failures,
         thresholds,

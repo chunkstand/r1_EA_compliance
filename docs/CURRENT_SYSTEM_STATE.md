@@ -15,17 +15,17 @@ For a fresh session start before this append-only state log, read
 `docs/CURRENT_ROUTING.md` first and then the newest section at the top of
 `docs/SESSION_HANDOFF.md`.
 
-## Graph-Gate Review-Quality Hypothesis-Test Harness
+## Graph-Gate Review-Quality Three-Review Hypothesis Test
 
 Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
 
 - update:
-  the graph-gate review-quality experiment now has a manifest-driven
-  deterministic harness. `config/graph_gate_review_quality_eval_v1.json`
-  declares the goal intent, stop condition, H1/H0, manifest-owned quality
-  dimensions, threshold policy, and an intentionally empty case list. The CLI
-  command is `graph-gate-review-quality-eval`; the tracked implementation lives
-  in `src/usfs_r1_ea_sources/graph_gate_review_quality_eval.py`.
+  the graph-gate review-quality experiment has completed a three-full-review
+  artifact-derived run. `config/graph_gate_review_quality_eval_v1.json`
+  preregisters West Reservoir, Lolo Tyler's Kitchen, and HLC Bonanza as frozen
+  full-review cases. The evaluator now derives control/treatment metrics from
+  V1 eval, phase-eval, compliance review/matrix, applicability validation,
+  generated rule-pack validation, and graph-gate artifacts.
 - contract:
   the result artifact schema is `graph-gate-review-quality-results-v1` at
   `source_library/evaluations/graph_gate_review_quality/graph_gate_review_quality_results.json`.
@@ -33,14 +33,16 @@ Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
   The scientific result is recorded separately as `experiment_status` and
   `hypothesis_supported`.
 - live generated-artifact state:
-  the implementation smoke ran against a temp output directory, not the ignored
-  production `source_library`. It returned `command_succeeded=true`,
-  `experiment_status=experiment_blocked`, `hypothesis_supported=false`,
-  `case_count=0`, `critical_regression_count=0`, `net_quality_delta=0`, and
-  threshold failures for `min_case_count` and `min_positive_delta_case_count`.
-  This proves the harness and stop condition, not the hypothesis. Runtime
-  compliance-review and phase-eval graph-gate consumption remain future work
-  until a preregistered control/treatment experiment supports the hypothesis.
+  scoped `applicability-gate-graph` runs generated graph artifacts for the
+  three selected reviews, then `graph-gate-review-quality-eval` returned
+  `command_succeeded=true`, `experiment_status=hypothesis_supported`,
+  `hypothesis_supported=true`, `case_count=3`, `complete_case_count=3`,
+  `distinct_review_count=3`, `positive_delta_case_count=3`,
+  `critical_regression_count=0`, `net_quality_delta=9.428571`, and
+  `threshold_failures=[]`. The tracked metrics brief is
+  `docs/GRAPH_GATE_REVIEW_QUALITY_THREE_REVIEW_RESULTS.md`. This supports the
+  artifact-derived review-quality hypothesis only; runtime compliance-review
+  and phase-eval graph-gate consumption remain a future scoped packet.
 
 ## System Evaluation Trace-To-Case Promotion Gate
 

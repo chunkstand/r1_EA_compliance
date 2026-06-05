@@ -20,19 +20,20 @@ history below.
   Review overlays can add authority-universe candidates and applicability
   decisions so child gates open only when the parent is applicable. This is a
   new structural artifact; compliance-review does not consume it yet.
-- graph-gate quality experiment harness:
+- graph-gate quality experiment result:
   `docs/GRAPH_GATE_REVIEW_QUALITY_EXPERIMENT_MILESTONE_PLAN.md` now defines
   the pre-registered hypothesis test, and
   `graph-gate-review-quality-eval` implements the manifest-driven harness in
   `src/usfs_r1_ea_sources/graph_gate_review_quality_eval.py`. The default
-  manifest `config/graph_gate_review_quality_eval_v1.json` records intent,
-  stop condition, H1/H0, quality dimensions, and thresholds, but intentionally
-  has zero cases. A temp smoke run returned `command_succeeded=true`,
-  `experiment_status=experiment_blocked`, `hypothesis_supported=false`,
-  `case_count=0`, and threshold failures for `min_case_count` and
-  `min_positive_delta_case_count`. This is harness proof only; runtime
-  compliance/phase-eval graph-gate consumption waits for a later
-  preregistered control/treatment experiment with frozen cases.
+  manifest `config/graph_gate_review_quality_eval_v1.json` now preregisters
+  three frozen full-review cases: West Reservoir, Lolo Tyler's Kitchen, and
+  HLC Bonanza. The live run returned `command_succeeded=true`,
+  `experiment_status=hypothesis_supported`, `hypothesis_supported=true`,
+  `case_count=3`, `positive_delta_case_count=3`,
+  `critical_regression_count=0`, `net_quality_delta=9.428571`, and
+  `threshold_failures=[]`. The result supports artifact-derived review-quality
+  improvement from graph-gate evidence and traceability only; runtime
+  compliance/phase-eval graph-gate consumption remains a later packet.
 - latest resolved system-evaluation improvement slice:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` is the
   repo-native goal for making evals the reviewer-engine improvement control
@@ -111,10 +112,9 @@ history below.
   review-packet, and decision-support direct-eval gate live proof, and the
   tracked trace-to-case case-file validation/promotion-ratchet slice
 - active packet:
-  no runtime implementation slice is open. The next bounded packet is
-  preregistering frozen control/treatment cases for the graph-gate
-  review-quality experiment; do not route directly to runtime graph-gate
-  consumption until `hypothesis_supported=true`.
+  no runtime implementation slice is open. The graph-gate review-quality
+  hypothesis is supported for the three artifact-derived full-review cases;
+  runtime graph-gate consumption may be opened only as a new scoped packet.
 - recent research addendum:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current Braintrust/Phoenix/LangSmith/Langfuse/MLflow/OpenAI,

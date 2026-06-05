@@ -4144,16 +4144,19 @@ The preregistration manifest has schema version
 - manifest identity, intent, stop condition, hypothesis, output paths, threshold
   policy, contract checks, and quality dimensions
 - aggregate case counts, complete/blocked case counts, positive-delta case
-  count, critical-regression count, net quality delta, threshold failures, and
-  failure-category counts
-- per-case frozen input checks, declared artifact references, dimension-level
+  count, distinct review count, review IDs, critical-regression count, net
+  quality delta, threshold failures, and failure-category counts
+- per-case frozen input checks, declared artifact references, artifact-derived
+  control/treatment metrics and evidence hashes, dimension-level
   control/treatment values, quality deltas, improvement/regression flags, and
   failure reasons
 
-The committed default manifest intentionally declares no cases. A default run
-therefore writes a command-complete but `experiment_blocked` result with
-`hypothesis_supported=false` until a later experiment packet preregisters frozen
-cases and thresholds.
+The committed default manifest now preregisters three full EA review readback
+cases: West Reservoir, Lolo Tyler's Kitchen, and Helena-Lewis-and-Clark
+Bonanza. Each case compares an ungated full-review readback against the same
+frozen review with graph-gate evidence required. The default run is scoped to
+artifact-derived quality metrics; it does not make compliance-review or
+phase-eval consume graph gates as runtime blockers.
 
 ## Promotion Suite Outputs
 

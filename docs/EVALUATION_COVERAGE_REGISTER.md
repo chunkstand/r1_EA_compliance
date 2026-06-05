@@ -41,20 +41,22 @@ The selected applicability scope proves source-set/review identity, artifact has
 metrics, hard negatives, generated-rule-pack fidelity, gate-graph consistency, trajectory/process
 quality, and failure-intake replay without blocking unrelated reviews or source sets. Widening
 beyond current-promotion direct-eval and trace case-file validation remains blocked on a separate
-scoped gate design for each target stage. NEPA graph-gate runtime consumption is additionally
-blocked on the paired control/treatment review-quality experiment defined in
-`docs/GRAPH_GATE_REVIEW_QUALITY_EXPERIMENT_MILESTONE_PLAN.md`.
+scoped gate design for each target stage. NEPA graph-gate runtime consumption now has a supporting
+paired control/treatment review-quality result, but adoption still requires a separate scoped
+runtime packet.
 
-Graph-gate review-quality hypothesis-test status: implemented harness,
-experiment blocked pending preregistered cases. Owner surfaces:
+Graph-gate review-quality hypothesis-test status: three-review artifact-derived
+test supported the hypothesis. Owner surfaces:
 `config/graph_gate_review_quality_eval_v1.json`,
 `src/usfs_r1_ea_sources/graph_gate_review_quality_eval.py`,
 `graph-gate-review-quality-eval`, and
 `source_library/evaluations/graph_gate_review_quality/graph_gate_review_quality_results.json`.
-The default smoke result is `command_succeeded=true`, `experiment_status=experiment_blocked`,
-`hypothesis_supported=false`, `case_count=0`, and threshold failures for `min_case_count` and
-`min_positive_delta_case_count`. This lane is the stop-condition gate before any runtime
-compliance-review or phase-eval graph-gate consumption.
+The current result is `command_succeeded=true`, `experiment_status=hypothesis_supported`,
+`hypothesis_supported=true`, `case_count=3`, `complete_case_count=3`, `distinct_review_count=3`,
+`positive_delta_case_count=3`, `critical_regression_count=0`, `net_quality_delta=9.428571`, and
+`threshold_failures=[]`. Metrics are summarized in
+`docs/GRAPH_GATE_REVIEW_QUALITY_THREE_REVIEW_RESULTS.md`. Runtime compliance-review or phase-eval
+graph-gate consumption still requires a separate scoped packet.
 
 ### All-Step Evaluation Coverage Map
 

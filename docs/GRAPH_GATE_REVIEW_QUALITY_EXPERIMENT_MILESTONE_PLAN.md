@@ -1,7 +1,7 @@
 # Graph Gate Review Quality Experiment Milestone Plan
 
 Date: 2026-06-04
-Status: Harness implemented; preregistered case proof pending
+Status: Resolved; three-review artifact-derived hypothesis test supported
 Plan class: implementation
 High-risk implementation: yes
 Owner context: scientific-method proof for whether NEPA applicability gate-graph enforcement improves
@@ -28,10 +28,10 @@ must pre-register its own cases, quality dimensions, thresholds, and frozen inpu
 the evaluator should enforce that contract and report the measured result, not hardcode what the
 test must discover.
 
-Stop condition: stop the implementation or the experiment when a credible proof would require
-post-hoc threshold tuning, runtime compliance/phase-eval graph-gate adoption, new applicability
-decisions, new legal conclusions, hidden domain heuristics, or mutation of production
-`source_library/` outside the scoped eval command.
+Stop condition: stop when proof would require post-hoc threshold tuning, runtime
+compliance/phase-eval graph-gate adoption, new applicability or legal conclusions, hidden domain
+heuristics, non-frozen full-review inputs, or production `source_library/` mutation outside scoped
+gate-graph/eval commands.
 
 Hypothesis:
 
@@ -53,8 +53,8 @@ Non-goals:
 - Do not make compliance-review or phase-eval consume the graph gate as a runtime blocker in this
   packet.
 - Do not add a global ratchet, promotion gate, hosted scorer, model judge, or new EA package intake.
-- Do not mutate production ignored `source_library/` as the proof path; use read-only existing
-  artifacts plus temp or fixture-backed mutation outputs.
+- Do not mutate production ignored `source_library/` outside scoped gate-graph and eval artifact
+  generation for the selected cases.
 - Do not allow the graph gate to invent applicability decisions. It may only enforce consistency
   against the authority universe, applicability decisions, generated rule pack, and compliance
   outputs.
@@ -220,20 +220,20 @@ scorer, and routing/doc closeout as separate atomic milestones rather than one a
 
 ## Closeout Outcome Record
 
-Status: harness implemented; scientific proof pending preregistered cases.
+Status: resolved; three-review artifact-derived test supports H1.
 
-- Result artifact: temp smoke generated
-  `/tmp/usfs-r1-graph-gate-quality-smoke/source_library/evaluations/graph_gate_review_quality/graph_gate_review_quality_results.json`.
-- Hypothesis result: `experiment_blocked`, `hypothesis_supported=false`, `case_count=0`,
-  `critical_regression_count=0`, `net_quality_delta=0`, and threshold failures for
-  `min_case_count` and `min_positive_delta_case_count`.
-- Verification result: focused tests, Ruff, compileall, whitespace diff check, strict plan lint,
-  and temp CLI smoke passed.
+- Result artifact:
+  `source_library/evaluations/graph_gate_review_quality/graph_gate_review_quality_results.json`.
+- Tracked metrics brief:
+  `docs/GRAPH_GATE_REVIEW_QUALITY_THREE_REVIEW_RESULTS.md`.
+- Hypothesis result: `hypothesis_supported=true`, `case_count=3`, `complete_case_count=3`,
+  `distinct_review_count=3`, `positive_delta_case_count=3`, `critical_regression_count=0`,
+  `net_quality_delta=9.428571`, and `threshold_failures=[]`.
+- Verification result: focused tests, live eval command, Ruff, compileall, architecture-contract,
+  strict plan lint, and whitespace diff check passed.
 - Commit identifier: see the milestone commit in git history after closeout.
 
 ## Residual Risks And Next Routing
 
-If the experiment supports H1, the next bounded packet is compliance/phase-eval graph-gate runtime
-consumption. If H0 is not rejected, the next packet should inspect the failed or neutral defect
-classes and improve graph-gate evidence, case design, or applicability decision quality before
-runtime adoption.
+Next bounded packet: scoped compliance/phase-eval graph-gate runtime consumption. Residual risk:
+the supported result is artifact-derived and not a human-labeled legal-quality benchmark.

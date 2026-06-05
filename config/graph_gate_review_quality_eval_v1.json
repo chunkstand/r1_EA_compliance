@@ -1,35 +1,50 @@
 {
   "schema_version": "graph-gate-review-quality-eval-v1",
   "contract_id": "graph-gate-review-quality-hypothesis-test",
-  "version": "0.1.0",
-  "intent": "Test whether NEPA graph gates improve EA review quality without hardcoding the final case mix, metric set, or success thresholds into the evaluator.",
-  "stop_condition": "Stop and record a blocked or null result if support for the hypothesis would require post-hoc threshold tuning, runtime compliance/phase-eval graph-gate adoption, new applicability or legal conclusions, hidden case-family heuristics, or production source_library mutation.",
+  "version": "0.2.0",
+  "intent": "Test whether NEPA graph gates improve full EA review quality by adding deterministic gate evidence, consistency readback, and traceability without changing the underlying review, source-set, package, applicability, compliance, or phase-eval inputs.",
+  "stop_condition": "Stop and record a blocked or null result if support for the hypothesis would require post-hoc threshold tuning, runtime compliance/phase-eval graph-gate adoption, new applicability or legal conclusions, hidden case-family heuristics, non-frozen full-review inputs, or production source_library mutation outside scoped gate-graph/eval commands.",
   "hypothesis": {
-    "h1": "Graph-gated review produces measurably higher quality review outputs than the same review path without graph-gate evidence.",
-    "h0": "Graph-gated review does not produce a measurable review-quality improvement over the same review path without graph-gate evidence."
+    "h1": "Graph-gated full EA review produces measurably higher artifact-derived review quality than the same full review read back without graph-gate evidence.",
+    "h0": "Graph-gated full EA review does not produce a measurable artifact-derived review-quality improvement over the same full review read back without graph-gate evidence."
   },
   "threshold_policy": {
-    "min_case_count": 1,
-    "min_positive_delta_case_count": 1,
+    "min_case_count": 3,
+    "min_complete_case_count": 3,
+    "min_distinct_review_count": 3,
+    "min_positive_delta_case_count": 3,
     "max_critical_regression_count": 0,
-    "max_case_contract_failure_count": 0
+    "max_case_contract_failure_count": 0,
+    "min_net_quality_delta": 3.0
   },
   "quality_dimensions": [
     {
       "metric_id": "citation_gap_count",
-      "label": "Citation gap count",
+      "label": "Citation or rule-claim support gap count",
       "direction": "lower_is_better",
       "critical": true
     },
     {
-      "metric_id": "unsupported_pass_count",
-      "label": "Unsupported pass count",
+      "metric_id": "unsupported_gate_pass_count",
+      "label": "Reviewer-ready pass without graph-gate proof",
       "direction": "lower_is_better",
       "critical": true
     },
     {
-      "metric_id": "actionable_issue_count",
-      "label": "Actionable issue count",
+      "metric_id": "graph_gate_gap_count",
+      "label": "Missing or failed graph-gate readback",
+      "direction": "lower_is_better",
+      "critical": true
+    },
+    {
+      "metric_id": "readiness_blocker_count",
+      "label": "Phase or readiness blocker count",
+      "direction": "lower_is_better",
+      "critical": true
+    },
+    {
+      "metric_id": "graph_gate_consistency_score",
+      "label": "Graph-gate consistency score",
       "direction": "higher_is_better",
       "critical": false
     },
@@ -40,5 +55,120 @@
       "critical": false
     }
   ],
-  "cases": []
+  "cases": [
+    {
+      "case_id": "full-review-west-reservoir-67436",
+      "review_id": "west-reservoir-67436",
+      "source_set_id": "source-set-f70ea11e04ae3d53",
+      "case_role": "full_review_artifact_readback",
+      "artifact_refs": [
+        "source_library/reviews/west-reservoir-67436/phase_eval_results.json",
+        "source_library/reviews/west-reservoir-67436/v1_ea_eval_results.json",
+        "source_library/reviews/west-reservoir-67436/compliance_review.json",
+        "source_library/reviews/west-reservoir-67436/compliance_matrix.json",
+        "source_library/reviews/west-reservoir-67436/applicability/applicability_gate_graph_summary.json"
+      ],
+      "frozen_inputs": [
+        {"path": "source_library/reviews/west-reservoir-67436/phase_eval_results.json", "sha256": "b582ef9bd063e6ad37ce458ac8c9f33cb888925823c85bc99342e29d61ab3b54"},
+        {"path": "source_library/reviews/west-reservoir-67436/v1_ea_eval_results.json", "sha256": "f0aa1cfc47be85cfea0ee3b7dc6af82fa60a7783983468659e6596df391ccad5"},
+        {"path": "source_library/reviews/west-reservoir-67436/compliance_review.json", "sha256": "7f4dea8035018c718679c09500d298a8742c83dde53dd3796c71e86ed8e9d0b6"},
+        {"path": "source_library/reviews/west-reservoir-67436/compliance_matrix.json", "sha256": "be82c5ee0e02aaf9ae83ea53fa6bed80599ef2af83c31e261d208cccd4a90f6b"},
+        {"path": "source_library/reviews/west-reservoir-67436/compliance_validation.json", "sha256": "7ae7211e3961372ebb3c45ecffbfd20124bb5b92d1db55e7a89e04ff955a5c13"},
+        {"path": "source_library/reviews/west-reservoir-67436/applicability/applicability_validation.json", "sha256": "74e2613bc525726da2d85338526825d18f890bc12bb2349d3afe827ab05cb65b"},
+        {"path": "source_library/reviews/west-reservoir-67436/applicability/generated_rule_pack_validation.json", "sha256": "1e6bc31a1c5896658fa0c06d8309a3d2f0921f6fe4ecb030980d526e540fddf8"},
+        {"path": "source_library/reviews/west-reservoir-67436/applicability/applicability_gate_graph.json", "sha256": "8b7c6d057cf853bc5b9b2d98005eac8d0cc32edce0ae689bd1efe0c82131e0dc"},
+        {"path": "source_library/reviews/west-reservoir-67436/applicability/applicability_gate_graph_summary.json", "sha256": "3bcecefacd3ef3e724602f5fbd22a1d3c416dfda2f72e76ba097a477aa6e1ebf"},
+        {"path": "source_library/reviews/west-reservoir-67436/applicability/applicability_gate_graph_validation.json", "sha256": "736ed5d7dfa7a5e6be3e6e79b0c2b3999a5036f33a7e777809f2acb3f5e5c712"}
+      ],
+      "control": {
+        "type": "full_review_artifact_metrics",
+        "review_id": "west-reservoir-67436",
+        "source_set_id": "source-set-f70ea11e04ae3d53",
+        "graph_gate_mode": "ungated_control"
+      },
+      "treatment": {
+        "type": "full_review_artifact_metrics",
+        "review_id": "west-reservoir-67436",
+        "source_set_id": "source-set-f70ea11e04ae3d53",
+        "graph_gate_mode": "gated_treatment",
+        "require_graph_gate": true
+      }
+    },
+    {
+      "case_id": "full-review-lolo-tylers-kitchen-66344",
+      "review_id": "region1-example-lolo-tylers-kitchen-66344",
+      "source_set_id": "source-set-f70ea11e04ae3d53",
+      "case_role": "full_review_artifact_readback",
+      "artifact_refs": [
+        "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json",
+        "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/v1_ea_eval_results.json",
+        "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/compliance_review.json",
+        "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/compliance_matrix.json",
+        "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_gate_graph_summary.json"
+      ],
+      "frozen_inputs": [
+        {"path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/phase_eval_results.json", "sha256": "81ee3c7867d5b4e36993f8191de4f3b7b16b1d0e934f5a475f99256a80cfc2d6"},
+        {"path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/v1_ea_eval_results.json", "sha256": "e06eac263771d54729aee78f288a5800920739da44717e632f8c6125bb72442a"},
+        {"path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/compliance_review.json", "sha256": "74ff9ba06c8d0c80f5ed4731b86824b6053bef7aa547457c4f0e03b4233e5d74"},
+        {"path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/compliance_matrix.json", "sha256": "3c0572cf7b70c2856d0ca9d41ccd6091931249bcaa9d06dfb42b6cf126c1a07d"},
+        {"path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/compliance_validation.json", "sha256": "0ba84ac7762049efeb9d5f1b70c0d1215a6ecc88fb1cc4b44f07442bd85c6fed"},
+        {"path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_validation.json", "sha256": "2cf8cb20ce15ae96c51ca1f5e8b3c2224e5e087083e8306a85d8d3e771cc60c8"},
+        {"path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/generated_rule_pack_validation.json", "sha256": "6c329e638fe2024c3a493fcc923015a59ff562cc0092da44a3b7bf27a8a85aa1"},
+        {"path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_gate_graph.json", "sha256": "a3927899d8a5f31bccbe62f16d2fb64f33bc60be034a02de3fb25ce43f3105de"},
+        {"path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_gate_graph_summary.json", "sha256": "dc6bb15109200f69c737d5471ca81ceeb3d8e80a94f7cff185448c6dd504522e"},
+        {"path": "source_library/reviews/region1-example-lolo-tylers-kitchen-66344/applicability/applicability_gate_graph_validation.json", "sha256": "d1a6ce29b0f7c8f4b8c7ae35f74b5bbc60063d6dfba0034a6ace40df460d4749"}
+      ],
+      "control": {
+        "type": "full_review_artifact_metrics",
+        "review_id": "region1-example-lolo-tylers-kitchen-66344",
+        "source_set_id": "source-set-f70ea11e04ae3d53",
+        "graph_gate_mode": "ungated_control"
+      },
+      "treatment": {
+        "type": "full_review_artifact_metrics",
+        "review_id": "region1-example-lolo-tylers-kitchen-66344",
+        "source_set_id": "source-set-f70ea11e04ae3d53",
+        "graph_gate_mode": "gated_treatment",
+        "require_graph_gate": true
+      }
+    },
+    {
+      "case_id": "full-review-hlc-bonanza-66532",
+      "review_id": "region1-example-helena-lewis-and-clark-bonanza-66532",
+      "source_set_id": "source-set-f70ea11e04ae3d53",
+      "case_role": "full_review_artifact_readback",
+      "artifact_refs": [
+        "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/phase_eval_results.json",
+        "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/v1_ea_eval_results.json",
+        "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/compliance_review.json",
+        "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/compliance_matrix.json",
+        "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/applicability/applicability_gate_graph_summary.json"
+      ],
+      "frozen_inputs": [
+        {"path": "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/phase_eval_results.json", "sha256": "95d8197589612f2e86ba2d2a28d7f1443c1c1c21cdb738d4f3be81fb17e28e72"},
+        {"path": "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/v1_ea_eval_results.json", "sha256": "b83a3f961544a7180474786037c1d010f05d6fe373048fa26ddb653dff543454"},
+        {"path": "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/compliance_review.json", "sha256": "4b622a3a86dc8d3992f095fd3e94407d2bc90ef086c82cd1664300b9c0486b0e"},
+        {"path": "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/compliance_matrix.json", "sha256": "88045f1e48f21bf1e9c98cf9b35e5920186c4129f11af680266f512fb96cf9a9"},
+        {"path": "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/compliance_validation.json", "sha256": "9515ed47a34e6c0e5aa45f23dc1e61e22902245b4f566f4afa21bacc023ba84c"},
+        {"path": "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/applicability/applicability_validation.json", "sha256": "e105036ce99119d576539284e9abbc5b197a356692d711a323245386d4852ecc"},
+        {"path": "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/applicability/generated_rule_pack_validation.json", "sha256": "51e378b1af71c855cdb518ac06580f62b7a37563951d135420632dcb0c3ad25f"},
+        {"path": "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/applicability/applicability_gate_graph.json", "sha256": "5b05794cbbb4d38a3cf4e6374e3770db3d1514939d65b889a70159087993b489"},
+        {"path": "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/applicability/applicability_gate_graph_summary.json", "sha256": "52189fa846b211e9e2119961a5bdd1ba61521cedec80f102df38f073181f89a9"},
+        {"path": "source_library/reviews/region1-example-helena-lewis-and-clark-bonanza-66532/applicability/applicability_gate_graph_validation.json", "sha256": "7d96d3784c391ad96b8a0ace3032f958198a35be40835a739746b2a34f982fba"}
+      ],
+      "control": {
+        "type": "full_review_artifact_metrics",
+        "review_id": "region1-example-helena-lewis-and-clark-bonanza-66532",
+        "source_set_id": "source-set-f70ea11e04ae3d53",
+        "graph_gate_mode": "ungated_control"
+      },
+      "treatment": {
+        "type": "full_review_artifact_metrics",
+        "review_id": "region1-example-helena-lewis-and-clark-bonanza-66532",
+        "source_set_id": "source-set-f70ea11e04ae3d53",
+        "graph_gate_mode": "gated_treatment",
+        "require_graph_gate": true
+      }
+    }
+  ]
 }
