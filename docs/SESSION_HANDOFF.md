@@ -20,6 +20,14 @@ history below.
   Review overlays can add authority-universe candidates and applicability
   decisions so child gates open only when the parent is applicable. This is a
   new structural artifact; compliance-review does not consume it yet.
+- proposed graph-gate quality experiment:
+  `docs/GRAPH_GATE_REVIEW_QUALITY_EXPERIMENT_MILESTONE_PLAN.md` now defines
+  the pre-registered hypothesis test for whether graph-gate enforcement
+  improves EA review quality. The plan requires paired control/treatment cases,
+  frozen inputs, live no-regression readbacks, controlled mutation cases,
+  deterministic quality deltas, zero critical regressions, and explicit stop
+  conditions before runtime compliance/phase-eval graph-gate consumption can
+  be widened.
 - latest resolved system-evaluation improvement slice:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` is the
   repo-native goal for making evals the reviewer-engine improvement control
@@ -98,8 +106,9 @@ history below.
   review-packet, and decision-support direct-eval gate live proof, and the
   tracked trace-to-case case-file validation/promotion-ratchet slice
 - active packet:
-  no active implementation slice is open. The next bounded packet should be
-  explicit: another all-step eval expansion.
+  no runtime implementation slice is open. The next bounded packet is the
+  graph-gate review-quality experiment plan above if the goal is to prove the
+  graph gates improve review quality before runtime adoption.
 - recent research addendum:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current Braintrust/Phoenix/LangSmith/Langfuse/MLflow/OpenAI,

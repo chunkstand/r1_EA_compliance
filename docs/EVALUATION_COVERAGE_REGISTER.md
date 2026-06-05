@@ -41,7 +41,9 @@ The selected applicability scope proves source-set/review identity, artifact has
 metrics, hard negatives, generated-rule-pack fidelity, gate-graph consistency, trajectory/process
 quality, and failure-intake replay without blocking unrelated reviews or source sets. Widening
 beyond current-promotion direct-eval and trace case-file validation remains blocked on a separate
-scoped gate design for each target stage.
+scoped gate design for each target stage. NEPA graph-gate runtime consumption is additionally
+blocked on the paired control/treatment review-quality experiment defined in
+`docs/GRAPH_GATE_REVIEW_QUALITY_EXPERIMENT_MILESTONE_PLAN.md`.
 
 ### All-Step Evaluation Coverage Map
 
