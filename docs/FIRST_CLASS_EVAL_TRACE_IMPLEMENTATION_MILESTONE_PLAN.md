@@ -689,8 +689,9 @@ The tracked file now contains
 `eval-trace-case-file-validate` fails closed when the case file is empty by
 default or promoted cases lack source refs/hashes, repo-relative SQLite source,
 deterministic scorer contracts, lifecycle fields, human-label metadata, or
-reserved `llm_judge` metadata. Uncalibrated model-judge scoring remains
-blocked and tracked in `docs/TECH_DEBT_REGISTER.md`.
+reserved `llm_judge` metadata. `promotion-suite` now requires the generated
+case-file validation summary as a current suite baseline result. Uncalibrated
+model-judge scoring remains blocked and tracked in `docs/TECH_DEBT_REGISTER.md`.
 
 Verified closeout on 2026-05-29:
 
@@ -700,7 +701,8 @@ Verified closeout on 2026-05-29:
   `python -m usfs_r1_ea_sources --help` passed.
 - A local `eval-trace-case-promote` smoke run against
   `source_library/evaluations/eval_trace/system_eval_trace.sqlite` passed.
-- A tracked `eval-trace-case-file-validate` run now passes with `case_count=1`.
+- A tracked `eval-trace-case-file-validate` run now passes with `case_count=1`,
+  and `promotion-suite` passes current promotion `36/36`.
 
 Outcome label: resolved for local feedback-loop mechanics; reduced for any
 future model-judge or hosted online-scoring integration.

@@ -374,6 +374,7 @@ COMMAND_SPECS = (
         help="Validate the tracked first-class eval trace case file.",
         arguments=(
             _arg("--case-file", default=DEFAULT_EVAL_TRACE_CASE_FILE_PATH, type=Path),
+            _arg("--summary-path", type=Path),
             _arg(
                 "--allow-empty",
                 action="store_false",
@@ -656,6 +657,7 @@ def _command_handlers() -> dict[str, EvalCommandHandler]:
         "eval-trace-case-file-validate": EvalCommandHandler(
             run=lambda args: validate_eval_trace_case_file(
                 case_file=args.case_file,
+                summary_path=args.summary_path,
                 require_cases=args.require_cases,
             ),
             success_key="command_succeeded",

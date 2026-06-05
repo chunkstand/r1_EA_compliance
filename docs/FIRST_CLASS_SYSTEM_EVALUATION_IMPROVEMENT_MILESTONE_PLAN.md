@@ -181,7 +181,7 @@ Closeout note: Milestone 4 now has current-promotion `final-qa-direct-eval`,
 `review-packet-direct-eval`, and `ea-consistency-direct-eval` slices for East Crazies/f70. They
 write direct-eval results plus failure-intake cases, score five, six, and six metric groups, and
 are required by `promotion-suite`. Live replay is green with no blocking gaps, zero failure-intake
-cases, Final QA `198/198`, and current-promotion `35/35`.
+cases, Final QA `198/198`, and current-promotion `36/36`.
 
 ## Verification Gates
 
@@ -223,8 +223,7 @@ Status: Milestones 0 and 3 are implemented; Milestone 1 summary/subgate and Mile
 failure-intake slices are reduced; trace-to-case promotion has a tracked case-file gate; Milestone 4
 now has current-promotion Final QA, review-packet, and decision-support direct eval plus
 promotion-suite consumption.
-- Residual risk after closeout: broader promotion ratchets and remaining all-step expansion remain
-  future packets.
+- Residual risk after closeout: remaining all-step expansion remains future packets.
 
 ## Stop Conditions
 

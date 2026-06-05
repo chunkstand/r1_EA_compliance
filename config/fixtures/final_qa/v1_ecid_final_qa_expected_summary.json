@@ -54,8 +54,8 @@
     "forest_plan_component_eval_case_count": 35,
     "phase_eval_phase_count": 32,
     "phase_eval_passed_phase_count": 32,
-    "promotion_suite_required_current_result_count": 30,
-    "promotion_suite_passed_required_current_result_count": 30,
+    "promotion_suite_required_current_result_count": 31,
+    "promotion_suite_passed_required_current_result_count": 31,
     "review_packet_index_applicable_authority_count": 55,
     "review_packet_index_non_applicable_authority_count": 341,
     "review_packet_index_forest_plan_component_row_count": 79,
@@ -86,7 +86,7 @@
     "forest_plan_context_summary_sha256": "3e4e0967ecca088b4e8b0a56baf0176a149fd0bd77cb9a525c2805084c3503b8",
     "forest_plan_component_eval_results_sha256": "f9e53de9282cf7010431b51e5dcdd7090732d65696ef7478522e895b93657124",
     "phase_eval_results_sha256": "724560a45a221fa6c975dd71c7accece4c52ccd50d238a1f7854d880fc9b5770",
-    "promotion_suite_results_sha256": "cb3a269d1aa05c9cf29acbad429aa311a2836a6bcd47db752ca4843a398c6559",
+    "promotion_suite_results_sha256": "17f6cda6c7c328d971aca3717d19e17d524f6bd4abbdbd68057c6db705c22610",
     "v1_ea_eval_results_sha256": "69959dfa4fc40a839c09d7ef3a25f288bf722d37c5b579a4aa94fe24fb537659"
   },
   "required_fixture_rows": {

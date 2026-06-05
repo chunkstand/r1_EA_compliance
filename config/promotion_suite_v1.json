@@ -38,7 +38,8 @@
           "compliance_gold_eval",
           "applicability_eval_authority_family_coverage",
           "applicability_gold_eval_authority_family_adjudication",
-          "gold_coverage_eval"
+          "gold_coverage_eval",
+          "eval_trace_case_file_validation"
         ]
       },
       {
@@ -2302,6 +2303,45 @@
           "json_path": "applicability_arbitration_summary.decision_count",
           "min": 1,
           "failure_category": "applicability_miss"
+        }
+      ]
+    },
+    {
+      "id": "eval_trace_case_file_validation",
+      "label": "First-class eval trace case-file validation",
+      "path": "evaluations/eval_trace/eval_trace_case_file_validation.json",
+      "required_for_current_promotion": true,
+      "failure_category": "eval_trace_gate_failed",
+      "checks": [
+        {
+          "name": "eval_trace_case_file_validation_schema",
+          "json_path": "schema_version",
+          "equals": "eval-trace-case-file-validation-summary-v1"
+        },
+        {
+          "name": "eval_trace_case_file_validation_passed",
+          "json_path": "passed",
+          "equals": true
+        },
+        {
+          "name": "eval_trace_case_file_validation_case_count",
+          "json_path": "case_count",
+          "min": 1
+        },
+        {
+          "name": "eval_trace_case_file_validation_case_file",
+          "json_path": "case_file_path",
+          "equals": "config/eval_trace_cases/system_eval_trace_cases_v1.json"
+        },
+        {
+          "name": "eval_trace_case_file_validation_failures",
+          "json_path": "failure_reasons",
+          "equals": []
+        },
+        {
+          "name": "eval_trace_case_file_validation_case_failures",
+          "json_path": "case_failures",
+          "equals": []
         }
       ]
     },

@@ -36,6 +36,11 @@ def test_committed_promotion_suite_declares_slot_driven_current_contract() -> No
         for family in contract["artifact_families"]
         if family["id"] == "current_review_final_qa"
     )
+    suite_family = next(
+        family
+        for family in contract["artifact_families"]
+        if family["id"] == "current_suite_baseline"
+    )
     review_packet_family = next(
         family
         for family in contract["artifact_families"]
@@ -66,6 +71,17 @@ def test_committed_promotion_suite_declares_slot_driven_current_contract() -> No
         "final_qa_certification_pdf",
         "final_qa_certification_validation",
         "final_qa_direct_eval",
+    ]
+    assert suite_family["suite_result_ids"] == [
+        "phase_eval_core",
+        "nepa_3d_source_set_graph_validation",
+        "nepa_3d_source_set_graph_summary",
+        "compliance_review_eval",
+        "compliance_gold_eval",
+        "applicability_eval_authority_family_coverage",
+        "applicability_gold_eval_authority_family_adjudication",
+        "gold_coverage_eval",
+        "eval_trace_case_file_validation",
     ]
     reference_canary = contract["reference_canaries"][0]
     assert reference_canary["review_case_id"] == "v1-cg-ecid"
@@ -189,6 +205,23 @@ def test_committed_promotion_suite_requires_milestone_5_report_gates() -> None:
         "applicability-arbitration-summary-v0"
     )
     assert phase_checks["phase_eval_arbitration_decision_count"]["min"] == 1
+
+    trace_case_file = suite_results["eval_trace_case_file_validation"]
+    assert trace_case_file["required_for_current_promotion"] is True
+    assert trace_case_file["path"] == (
+        "evaluations/eval_trace/eval_trace_case_file_validation.json"
+    )
+    trace_case_checks = {check["name"]: check for check in trace_case_file["checks"]}
+    assert trace_case_checks["eval_trace_case_file_validation_schema"]["equals"] == (
+        "eval-trace-case-file-validation-summary-v1"
+    )
+    assert trace_case_checks["eval_trace_case_file_validation_passed"]["equals"] is True
+    assert trace_case_checks["eval_trace_case_file_validation_case_count"]["min"] == 1
+    assert trace_case_checks["eval_trace_case_file_validation_case_file"]["equals"] == (
+        "config/eval_trace_cases/system_eval_trace_cases_v1.json"
+    )
+    assert trace_case_checks["eval_trace_case_file_validation_failures"]["equals"] == []
+    assert trace_case_checks["eval_trace_case_file_validation_case_failures"]["equals"] == []
 
     decision_support = results["decision_support_report"]
     assert decision_support["required_for_current_promotion"] is True

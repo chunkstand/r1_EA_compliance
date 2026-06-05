@@ -41,10 +41,14 @@ class EvalTraceCaseFileValidationResult:
 def validate_eval_trace_case_file(
     *,
     case_file: str | Path = DEFAULT_EVAL_TRACE_CASE_FILE_PATH,
+    summary_path: str | Path | None = None,
     require_cases: bool = True,
     repo_root: Path = REPO_ROOT,
 ) -> EvalTraceCaseFileValidationResult:
     resolved_case_file = _resolve_path(case_file, repo_root=repo_root)
+    resolved_summary_path = (
+        _resolve_path(summary_path, repo_root=repo_root) if summary_path is not None else None
+    )
     failure_reasons: list[str] = []
     checks: dict[str, bool] = {}
 
@@ -92,11 +96,18 @@ def validate_eval_trace_case_file(
         "passed": not failure_reasons,
         "command_succeeded": not failure_reasons,
         "case_file_path": _display_path(resolved_case_file, repo_root=repo_root),
+        "summary_path": (
+            _display_path(resolved_summary_path, repo_root=repo_root)
+            if resolved_summary_path is not None
+            else None
+        ),
         "case_count": len(cases),
         "failure_reasons": failure_reasons,
         "validation_checks": checks,
         "case_failures": case_failures,
     }
+    if resolved_summary_path is not None:
+        _write_json(resolved_summary_path, summary)
     return EvalTraceCaseFileValidationResult(summary=summary)
 
 

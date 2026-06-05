@@ -66,7 +66,7 @@ history below.
   evals pass with `6` metric groups each; all have
   `blocking_gap_group_ids=[]` and `failure_intake_case_count=0`; non-strict
   `promotion-suite` reports `current_promotion_ready=true`,
-  `promotion_ready=true`, and current-promotion `35/35` required results
+  `promotion_ready=true`, and current-promotion `36/36` required results
   passing. The current-promotion
   graph summary expectation is repaired to the current all-forest signal:
   `region1_forest_plan_graph_ready_profile_count>=10` and
@@ -79,6 +79,8 @@ history below.
   requires the case file to be non-empty by default and to preserve source refs
   and hashes, repo-relative SQLite source, deterministic scorer contracts,
   lifecycle fields, human-label placeholders, and reserved LLM-judge metadata.
+  `promotion-suite` now requires that validation summary as a current suite
+  baseline result.
 - Start order:
   read `docs/CURRENT_ROUTING.md`, then this section, then read
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` for the
@@ -94,10 +96,10 @@ history below.
   replayable failure-intake artifact slices, plus Milestone 3 scoped
   applicability phase-eval ratchet, Milestone 4 current-promotion Final QA,
   review-packet, and decision-support direct-eval gate live proof, and the
-  tracked trace-to-case case-file validation slice
+  tracked trace-to-case case-file validation/promotion-ratchet slice
 - active packet:
   no active implementation slice is open. The next bounded packet should be
-  explicit: broader promotion ratchets or another all-step eval expansion.
+  explicit: another all-step eval expansion.
 - recent research addendum:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current Braintrust/Phoenix/LangSmith/Langfuse/MLflow/OpenAI,

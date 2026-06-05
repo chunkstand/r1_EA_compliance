@@ -56,6 +56,27 @@ def test_committed_case_file_validation_passes() -> None:
     assert summary["case_failures"] == []
 
 
+def test_case_file_validation_writes_summary_path(tmp_path: Path) -> None:
+    source_payload = json.loads(TRACKED_CASE_FILE.read_text(encoding="utf-8"))
+    case_file = tmp_path / "config/eval_trace_cases/system_eval_trace_cases_v1.json"
+    summary_path = tmp_path / "source_library/evaluations/eval_trace/case_file_validation.json"
+    case_file.parent.mkdir(parents=True)
+    case_file.write_text(json.dumps(source_payload), encoding="utf-8")
+
+    summary = validate_eval_trace_case_file(
+        case_file=case_file,
+        summary_path=summary_path,
+        repo_root=tmp_path,
+    ).summary
+
+    assert summary["passed"] is True
+    assert summary["summary_path"] == (
+        "source_library/evaluations/eval_trace/case_file_validation.json"
+    )
+    written = json.loads(summary_path.read_text(encoding="utf-8"))
+    assert written == summary
+
+
 def test_case_promote_writes_versioned_case_with_required_contracts(
     tmp_path: Path,
 ) -> None:

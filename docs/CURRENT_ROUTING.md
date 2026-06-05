@@ -43,7 +43,7 @@ Use this short route before opening append-only docs.
   Final QA direct eval passes with `5` metric groups; review-packet and
   decision-support direct evals pass with `6` metric groups each; all have
   `blocking_gap_group_ids=[]` and `failure_intake_case_count=0`; non-strict
-  promotion-suite reports current-promotion `35/35` required results passing
+  promotion-suite reports current-promotion `36/36` required results passing
   with `current_promotion_ready=true`.
 - Research addendum for that packet:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
@@ -58,7 +58,8 @@ Use this short route before opening append-only docs.
   requires the tracked case file to be non-empty by default and to preserve
   source artifact refs and hashes, repo-relative SQLite source, deterministic
   scorer contracts, lifecycle fields, human-label placeholders, and reserved
-  LLM-judge metadata.
+  LLM-judge metadata. `promotion-suite` now requires that validation summary
+  as a current suite baseline result.
 - Prior resolved forest-plan review/inventory slice: all-R1 legacy direction and management-area inventory closeout, source-set inventory authority/applicability gate hardening, Forest Plan context-derived package facts, weak-trigger adjudication narrowing for Forest Plan components, broad authority-family positive-precedence arbitration, and review-scoped component-decision application for compliance matrices. `forest-plan-resolve` now requires the active source-set component inventory instead of silently falling back to the seed fixture; package fact graph builds promote resolver package-evidenced management areas and overlays from `forest_plan_context.json` into first-class package facts; stale applicability authority universes fail against the current Forest Plan context inventory path/count; weak-only positive Forest Plan component trigger evidence is diagnostic trigger-miss evidence instead of an adjudication blocker; review-scoped Forest Plan component applicability decisions narrow the component compliance gate when present. North Seeley now replays with `1070` authority candidates, `67` applicable authorities, `1003` not-applicable authorities, `0` unresolved applicability decisions, `16` applicable Forest Plan standards, a valid compliance matrix JSON/Markdown/PDF, and `phase-eval` `30/30` passing.
 - Prior all-forest Forest Plan authority-universe coverage hardening: review-scoped
   `applicability-authority-universe` now derives the selected forest from
@@ -164,8 +165,8 @@ Use this short route before opening append-only docs.
   open in the governed manifest. The latest bounded packet is
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md`
   Milestone 4 Final QA, review-packet, decision-support direct-eval, and
-  trace-to-case case-file validation slices plus live proof. Open a separate
-  bounded packet before adding broader promotion ratchets, new EA packages,
+  trace-to-case case-file validation plus promotion-ratchet slices and live
+  proof. Open a separate bounded packet before adding new EA packages,
   manifest broadening, hosted query service/API expansion, model-judge work,
   hosted scoring, knowledge-graph sidecar adoption, or future architecture-cap
   changes.

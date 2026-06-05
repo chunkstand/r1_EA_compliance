@@ -34,8 +34,11 @@ Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
 - live generated-artifact state:
   the source case was promoted from the local SQLite store with
   `eval-trace-case-promote` and validated with `eval-trace-case-file-validate`; the validation
-  summary reports `passed=true`, `case_count=1`, and `failure_reasons=[]`. This does not enable
-  model judges, hosted scoring, global ratchets, or new promotion-suite fail-closed scopes.
+  summary reports `passed=true`, `case_count=1`, and `failure_reasons=[]`. Non-strict
+  `promotion-suite` now requires that summary and reports `current_promotion_ready=true`,
+  `promotion_ready=true`, `required_current_result_count=36`, and
+  `passed_required_current_result_count=36`. This does not enable model judges, hosted scoring, or
+  global ratchets.
 
 ## System Evaluation Decision-Support Direct-Eval Gate
 
@@ -61,14 +64,15 @@ Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
 - promotion consumption:
   `config/promotion_suite_v1.json` now requires `decision_support_direct_eval` in the same-slot
   `current_review_decision_support` artifact family. The Final QA expected current-promotion
-  baseline is updated from `29/29` to `30/30` to account for this added non-Final-QA current result.
+  baseline is updated from `29/29` to `30/30` for this slice and later to `31/31` after the
+  eval-trace case-file promotion ratchet.
 - live generated-artifact state:
   `ea-consistency-document` regenerates the report family green; `ea-consistency-direct-eval`
   passes with `6` metric groups, `blocking_gap_group_ids=[]`, and
   `failure_intake_case_count=0`; `final-qa-certification` passes `198/198`;
   `final-qa-direct-eval` passes with `5` metric groups; non-strict `promotion-suite` reports
-  `current_promotion_ready=true`, `promotion_ready=true`, `required_current_result_count=35`, and
-  `passed_required_current_result_count=35`. Full-canonical and expansion surfaces remain separate
+  `current_promotion_ready=true`, `promotion_ready=true`, `required_current_result_count=36`, and
+  `passed_required_current_result_count=36`. Full-canonical and expansion surfaces remain separate
   residuals: `full_canonical_corpus_ready=false` and `expansion_ready=false`.
 
 ## System Evaluation Review Packet Direct-Eval Gate
@@ -98,7 +102,7 @@ Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
   `review-packet-direct-eval` passes with `6` metric groups, `blocking_gap_group_ids=[]`, and
   `failure_intake_case_count=0`; `final-qa-certification` still passes `198/198`; non-strict
   `promotion-suite` reports `current_promotion_ready=true`, `promotion_ready=true`,
-  `required_current_result_count=35`, `passed_required_current_result_count=35`, and the
+  `required_current_result_count=36`, `passed_required_current_result_count=36`, and the
   `current_review_packet_contract`, `current_review_decision_support`, and
   `current_review_final_qa` families passing after the later decision-support direct-eval slice.
   Full-canonical and expansion surfaces remain separate residuals:
@@ -135,8 +139,8 @@ Latest implementation update on 2026-06-04 local / 2026-06-05 UTC:
 - live generated-artifact state:
   `final-qa-certification` passes `198/198`; `final-qa-direct-eval` passes with `5` metric groups,
   `blocking_gap_group_ids=[]`, and `failure_intake_case_count=0`; non-strict `promotion-suite`
-  reports `current_promotion_ready=true`, `promotion_ready=true`, `required_current_result_count=35`,
-  `passed_required_current_result_count=35`, and the `current_review_final_qa` family passing with
+  reports `current_promotion_ready=true`, `promotion_ready=true`, `required_current_result_count=36`,
+  `passed_required_current_result_count=36`, and the `current_review_final_qa` family passing with
   `final_qa_direct_eval` included after the later decision-support direct-eval slice. Full-canonical
   and expansion surfaces remain separate residuals:
   `full_canonical_corpus_ready=false` with

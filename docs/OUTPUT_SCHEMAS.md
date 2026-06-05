@@ -3231,8 +3231,8 @@ records replay status for applicability validation, generated rule-pack validati
 validation, compliance matrix, Forest Plan context, Forest Plan component eval, decision-support
 validation, review packet index validation, phase eval, V1 EA eval, and current-promotion suite.
 For the outer gates it records both baseline counts that exclude the final QA self-reference
-(`32/32` phase eval and `30/30` current-promotion results for this packet) and live integrated
-counts after gate integration (`33/33` phase eval and `35/35` current-promotion results).
+(`32/32` phase eval and `31/31` current-promotion results for this packet) and live integrated
+counts after gate integration (`33/33` phase eval and `36/36` current-promotion results).
 `artifact_freshness_ledger` records required artifact paths, schema versions where applicable,
 SHA-256 values, and selectors.
 
@@ -4148,6 +4148,9 @@ The manifest has schema version `promotion-suite-v1` and records:
   presence, zero blocking groups, and zero failure-intake cases
 - current-promotion Final QA direct-eval checks for `final_qa_direct_eval_results.json`, including
   contract ID, direct-eval presence, zero blocking groups, and zero failure-intake cases
+- current-promotion eval-trace case-file validation checks for
+  `evaluations/eval_trace/eval_trace_case_file_validation.json`, including a non-empty tracked
+  case file, zero validation failures, and zero promoted-case failures
 - review-case results that may be marked `required_for_expansion` so expansion readiness depends on
   verified review artifacts, not only expansion-slot manifest text
 - expansion slots for additional real Region 1 EA packages, with acceptance signals and next actions

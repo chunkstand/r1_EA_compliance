@@ -188,12 +188,17 @@ def test_eval_trace_case_file_validate_parser_accepts_case_file() -> None:
             "eval-trace-case-file-validate",
             "--case-file",
             "config/eval_trace_cases/system_eval_trace_cases_v1.json",
+            "--summary-path",
+            "source_library/evaluations/eval_trace/eval_trace_case_file_validation.json",
             "--allow-empty",
         ]
     )
 
     assert args.command == "eval-trace-case-file-validate"
     assert args.case_file == Path("config/eval_trace_cases/system_eval_trace_cases_v1.json")
+    assert args.summary_path == Path(
+        "source_library/evaluations/eval_trace/eval_trace_case_file_validation.json"
+    )
     assert args.require_cases is False
 
 
@@ -366,4 +371,3 @@ def test_forest_specific_example_package_eval_parser_accepts_manifest_and_result
     assert args.manifest == Path("config/forest_specific_example_package_registry_v1.json")
     assert args.output_dir == Path("source_library")
     assert args.results_dir == Path("source_library/reviews/forest_specific_example_package_eval")
-
