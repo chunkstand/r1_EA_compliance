@@ -2810,12 +2810,22 @@ PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-document \
   --validate-only
 ```
 
+Score the generated family as a direct eval with:
+
+```bash
+PYTHONPATH=src python -m usfs_r1_ea_sources ea-consistency-direct-eval \
+  --output-dir source_library \
+  --review-id v1-cg-ecid-compliance-review
+```
+
 The generated artifact family includes:
 
 - `ea_consistency_decision_support.json`
 - `ea_consistency_decision_support.md`
 - `ea_consistency_decision_support.pdf`
 - `ea_consistency_decision_support_manifest.json`
+- `ea_consistency_decision_support_direct_eval_results.json`
+- `ea_consistency_decision_support_failure_intake_cases.json`
 
 `ea_consistency_decision_support.json` has schema version
 `ea-consistency-decision-support-report-v1` and is the canonical report. Markdown and PDF renderings
@@ -2878,7 +2888,18 @@ configured East Crazies proving review. That phase revalidates current source-ar
 required report sections, applicable and non-applicable authority counts, Forest Plan component
 counts, applicable-standard counts, PDF validity, reviewer-ready source status, residual-risk
 boundaries, and manual-draft quarantine. The promotion suite also checks the report JSON, manifest,
-and PDF as required current-promotion artifacts for `v1-cg-ecid-compliance-review`.
+PDF, and direct-eval summary as required current-promotion artifacts for
+`v1-cg-ecid-compliance-review`.
+
+`ea_consistency_decision_support_direct_eval_results.json` has schema version
+`ea-consistency-decision-support-direct-eval-results-v1` and contract ID
+`ea-consistency-decision-support-direct-eval-v1`. It records review/source-set identity, scorer
+version, source artifact hashes, `blocking_gap_group_ids`, `failure_intake_case_count`, and metric
+groups for identity/freshness, source-artifact replay, authority/count alignment, evidence
+traceability, artifact-hash alignment, and supervisor-boundary preservation. The companion
+`ea_consistency_decision_support_failure_intake_cases.json` has schema version
+`ea-consistency-decision-support-failure-intake-cases-v1`; it is empty when the direct eval is green
+and carries replayable owner/risk/assertion/source-artifact cases when a metric group fails.
 
 `config/ea_consistency_decision_support_v1.json` has schema version
 `ea-consistency-decision-support-config-v1`. It owns synthesis-only labels, grouping, display order,
@@ -3210,8 +3231,8 @@ records replay status for applicability validation, generated rule-pack validati
 validation, compliance matrix, Forest Plan context, Forest Plan component eval, decision-support
 validation, review packet index validation, phase eval, V1 EA eval, and current-promotion suite.
 For the outer gates it records both baseline counts that exclude the final QA self-reference
-(`32/32` phase eval and `29/29` current-promotion results for this packet) and live integrated
-counts after gate integration (`33/33` phase eval and `34/34` current-promotion results).
+(`32/32` phase eval and `30/30` current-promotion results for this packet) and live integrated
+counts after gate integration (`33/33` phase eval and `35/35` current-promotion results).
 `artifact_freshness_ledger` records required artifact paths, schema versions where applicable,
 SHA-256 values, and selectors.
 
@@ -4122,6 +4143,9 @@ The manifest has schema version `promotion-suite-v1` and records:
 - current-promotion review-packet direct-eval checks for
   `review_packet_direct_eval_results.json`, including contract ID, direct-eval presence, zero
   blocking groups, and zero failure-intake cases
+- current-promotion decision-support direct-eval checks for
+  `ea_consistency_decision_support_direct_eval_results.json`, including contract ID, direct-eval
+  presence, zero blocking groups, and zero failure-intake cases
 - current-promotion Final QA direct-eval checks for `final_qa_direct_eval_results.json`, including
   contract ID, direct-eval presence, zero blocking groups, and zero failure-intake cases
 - review-case results that may be marked `required_for_expansion` so expansion readiness depends on

@@ -56,16 +56,18 @@ history below.
   `applicability_validation=direct_eval_present`, `36/36` phases passed,
   `critical_phase_count=11`, `direct_eval_ready_phase_count=11`, and
   `blockers=[]`. Milestone 4 now has current-promotion direct-eval slices for
-  Final QA and review packet: `final-qa-direct-eval` and
-  `review-packet-direct-eval` write direct-eval summaries plus failure-intake
-  cases for `v1-cg-ecid-compliance-review` on
-  `source-set-f70ea11e04ae3d53`, and `config/promotion_suite_v1.json` requires
-  both same-slot summaries. Live proof: Final QA validation passes `198/198`;
-  Final QA direct eval passes with `5` metric groups; review-packet direct eval
-  passes with `6` metric groups; both have `blocking_gap_group_ids=[]` and
-  `failure_intake_case_count=0`; non-strict `promotion-suite` reports
-  `current_promotion_ready=true`, `promotion_ready=true`, and
-  current-promotion `34/34` required results passing. The current-promotion
+  Final QA, review packet, and decision support: `final-qa-direct-eval`,
+  `review-packet-direct-eval`, and `ea-consistency-direct-eval` write
+  direct-eval summaries plus failure-intake cases for
+  `v1-cg-ecid-compliance-review` on `source-set-f70ea11e04ae3d53`, and
+  `config/promotion_suite_v1.json` requires all three same-slot summaries.
+  Live proof: Final QA validation passes `198/198`; Final QA direct eval
+  passes with `5` metric groups; review-packet and decision-support direct
+  evals pass with `6` metric groups each; all have
+  `blocking_gap_group_ids=[]` and `failure_intake_case_count=0`; non-strict
+  `promotion-suite` reports `current_promotion_ready=true`,
+  `promotion_ready=true`, and current-promotion `35/35` required results
+  passing. The current-promotion
   graph summary expectation is repaired to the current all-forest signal:
   `region1_forest_plan_graph_ready_profile_count>=10` and
   `region1_forest_plan_blocked_profile_count=0`.
@@ -82,12 +84,12 @@ history below.
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` Milestone 0
   plus the applicability summary-contract, Forest Plan subgate fixture, and
   replayable failure-intake artifact slices, plus Milestone 3 scoped
-  applicability phase-eval ratchet and Milestone 4 current-promotion Final QA
-  plus review-packet direct-eval gate live proof
+  applicability phase-eval ratchet and Milestone 4 current-promotion Final QA,
+  review-packet, and decision-support direct-eval gate live proof
 - active packet:
   no active implementation slice is open. The next bounded packet should be
-  explicit: add decision-support direct eval, broader promotion ratchets,
-  trace-to-case promotion, or another all-step eval expansion.
+  explicit: trace-to-case promotion, broader promotion ratchets, or another
+  all-step eval expansion.
 - recent research addendum:
   `docs/SYSTEM_EVALUATION_BEST_IN_CLASS_RESEARCH_BRIEF_2026_06_04.md`
   summarizes current Braintrust/Phoenix/LangSmith/Langfuse/MLflow/OpenAI,

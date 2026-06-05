@@ -8,11 +8,18 @@ from .draft_generation import DEFAULT_CONFIG_PATH as DEFAULT_DRAFT_GENERATION_CO
 from .draft_generation import run_draft_generate
 from .ea_consistency_decision_support import DEFAULT_CONFIG_PATH
 from .ea_consistency_decision_support import DEFAULT_EXPECTED_SUMMARY_PATH
+from .ea_consistency_decision_support import (
+    run_ea_consistency_decision_support_direct_eval,
+)
 from .ea_consistency_decision_support import run_ea_consistency_decision_support
 from .ea_consistency_decision_support import validate_ea_consistency_decision_support_report
 
 
-DECISION_SUPPORT_COMMANDS = {"draft-generate", "ea-consistency-document"}
+DECISION_SUPPORT_COMMANDS = {
+    "draft-generate",
+    "ea-consistency-document",
+    "ea-consistency-direct-eval",
+}
 
 
 def register_decision_support_commands(
@@ -36,6 +43,19 @@ def register_decision_support_commands(
         action="store_true",
         help="Validate the existing generated report family without rewriting it.",
     )
+    direct_eval = subparsers.add_parser(
+        "ea-consistency-direct-eval",
+        help="Score generated EA consistency decision-support artifacts as a direct eval.",
+    )
+    direct_eval.add_argument("--output-dir", default=Path("source_library"), type=Path)
+    direct_eval.add_argument("--review-id")
+    direct_eval.add_argument("--config", default=DEFAULT_CONFIG_PATH, type=Path)
+    direct_eval.add_argument(
+        "--expected-summary",
+        default=DEFAULT_EXPECTED_SUMMARY_PATH,
+        type=Path,
+    )
+    direct_eval.add_argument("--results-dir", type=Path)
 
     draft_generate = subparsers.add_parser(
         "draft-generate",
@@ -63,6 +83,17 @@ def handle_decision_support_command(
             print_summary(result.summary)
             return 0 if result.summary["passed"] else 1
         result = run_ea_consistency_decision_support(
+            output_dir=args.output_dir,
+            review_id=args.review_id,
+            config_path=args.config,
+            expected_summary_path=args.expected_summary,
+            results_dir=args.results_dir,
+        )
+        print_summary(result.summary)
+        return 0 if result.summary["passed"] else 1
+
+    if args.command == "ea-consistency-direct-eval":
+        result = run_ea_consistency_decision_support_direct_eval(
             output_dir=args.output_dir,
             review_id=args.review_id,
             config_path=args.config,

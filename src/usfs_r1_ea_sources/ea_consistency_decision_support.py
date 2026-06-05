@@ -8,6 +8,22 @@ from .ea_consistency_decision_support_models import GENERATOR_VERSION
 from .ea_consistency_decision_support_models import MANIFEST_SCHEMA_VERSION
 from .ea_consistency_decision_support_models import REPORT_SCHEMA_VERSION
 from .ea_consistency_decision_support_models import REVIEW_PACKET_ARTIFACT_KEYS
+from .ea_consistency_decision_support_direct_eval import (
+    DECISION_SUPPORT_DIRECT_EVAL_CONTRACT_ID,
+)
+from .ea_consistency_decision_support_direct_eval import DECISION_SUPPORT_DIRECT_EVAL_FILENAME
+from .ea_consistency_decision_support_direct_eval import (
+    DECISION_SUPPORT_DIRECT_EVAL_SCHEMA_VERSION,
+)
+from .ea_consistency_decision_support_direct_eval import (
+    DECISION_SUPPORT_FAILURE_INTAKE_FILENAME,
+)
+from .ea_consistency_decision_support_direct_eval import (
+    DECISION_SUPPORT_FAILURE_INTAKE_SCHEMA_VERSION,
+)
+from .ea_consistency_decision_support_direct_eval import (
+    run_ea_consistency_decision_support_direct_eval,
+)
 from .ea_consistency_decision_support_runtime import infer_decision_support_contract_paths
 from .ea_consistency_decision_support_runtime import run_ea_consistency_decision_support
 from .ea_consistency_decision_support_runtime import validate_ea_consistency_decision_support_report
@@ -16,6 +32,11 @@ from .ea_consistency_decision_support_runtime import validate_ea_consistency_dec
 __all__ = [
     'DEFAULT_CONFIG_PATH',
     'DEFAULT_EXPECTED_SUMMARY_PATH',
+    'DECISION_SUPPORT_DIRECT_EVAL_CONTRACT_ID',
+    'DECISION_SUPPORT_DIRECT_EVAL_FILENAME',
+    'DECISION_SUPPORT_DIRECT_EVAL_SCHEMA_VERSION',
+    'DECISION_SUPPORT_FAILURE_INTAKE_FILENAME',
+    'DECISION_SUPPORT_FAILURE_INTAKE_SCHEMA_VERSION',
     'EAConsistencyDecisionSupportResult',
     'EAConsistencyDecisionSupportValidationResult',
     'GENERATOR_VERSION',
@@ -23,6 +44,7 @@ __all__ = [
     'REPORT_SCHEMA_VERSION',
     'REVIEW_PACKET_ARTIFACT_KEYS',
     'infer_decision_support_contract_paths',
+    'run_ea_consistency_decision_support_direct_eval',
     'run_ea_consistency_decision_support',
     'validate_ea_consistency_decision_support_report',
 ]

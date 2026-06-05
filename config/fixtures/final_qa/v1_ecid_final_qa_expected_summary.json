@@ -54,8 +54,8 @@
     "forest_plan_component_eval_case_count": 35,
     "phase_eval_phase_count": 32,
     "phase_eval_passed_phase_count": 32,
-    "promotion_suite_required_current_result_count": 29,
-    "promotion_suite_passed_required_current_result_count": 29,
+    "promotion_suite_required_current_result_count": 30,
+    "promotion_suite_passed_required_current_result_count": 30,
     "review_packet_index_applicable_authority_count": 55,
     "review_packet_index_non_applicable_authority_count": 341,
     "review_packet_index_forest_plan_component_row_count": 79,
@@ -68,10 +68,10 @@
     "litigation_risk_legal_conclusion_count": 0
   },
   "input_hashes": {
-    "decision_support_report_sha256": "011486a4028c6643b8339b6376d0a018effb58bf8ef9351bae140c2f4ce23796",
+    "decision_support_report_sha256": "06f8c7aff88cc66b75136c5fe7869bdd716a7046ba10fc3be643b138ca15a2b9",
     "decision_support_markdown_sha256": "486780938a22825e788c0232feec3730c88a01c8e0e0c4b674952a225e744112",
     "decision_support_pdf_sha256": "65dba3624c26df97c2fec5c247fe8bf9e5469a9ca8079d665a15f9e2d52fee88",
-    "decision_support_manifest_sha256": "5d491038ce206dac184fabcb424d814bf88388a5f53660adbeefb0f32d4bd49d",
+    "decision_support_manifest_sha256": "d1b31641550adc1a8b14238e542d14181d776ecc43db20d0dae5ee730d31da61",
     "review_packet_row_inventory_sha256": "60aa9dc01186a1377221ac451e4f6c142901774503d0f9d51f7e50bf3ff5bd57",
     "compliance_matrix_render_manifest_sha256": "1af70754cffeea68cdd923106c76b78a9b155019d45c046f81134dcb22e52c5e",
     "review_packet_index_sha256": "c2f9f2465cd88cd223215e3ad762e89cf893ec0d4b4e7ccdbcee07f52c9ca40a",
@@ -86,7 +86,7 @@
     "forest_plan_context_summary_sha256": "3e4e0967ecca088b4e8b0a56baf0176a149fd0bd77cb9a525c2805084c3503b8",
     "forest_plan_component_eval_results_sha256": "f9e53de9282cf7010431b51e5dcdd7090732d65696ef7478522e895b93657124",
     "phase_eval_results_sha256": "724560a45a221fa6c975dd71c7accece4c52ccd50d238a1f7854d880fc9b5770",
-    "promotion_suite_results_sha256": "0ba6760ca515bcec776f4cef21bd8ff1e7896e5fff7ff8f424c5f0640eebba30",
+    "promotion_suite_results_sha256": "cb3a269d1aa05c9cf29acbad429aa311a2836a6bcd47db752ca4843a398c6559",
     "v1_ea_eval_results_sha256": "69959dfa4fc40a839c09d7ef3a25f288bf722d37c5b579a4aa94fe24fb537659"
   },
   "required_fixture_rows": {

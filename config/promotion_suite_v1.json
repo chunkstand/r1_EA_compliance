@@ -76,7 +76,8 @@
         "review_result_ids": [
           "decision_support_report",
           "decision_support_manifest",
-          "decision_support_pdf"
+          "decision_support_pdf",
+          "decision_support_direct_eval"
         ],
         "slot_binding": "same_slot",
         "source_set_binding": "current_promotion_source_set",
@@ -498,6 +499,65 @@
             {
               "name": "decision_support_pdf_header_valid",
               "starts_with": "%PDF-"
+            }
+          ]
+        },
+        {
+          "id": "decision_support_direct_eval",
+          "label": "EA consistency decision-support direct evaluation",
+          "path": "reviews/{review_id}/decision_support/ea_consistency_decision_support_direct_eval_results.json",
+          "required_for_current_promotion": true,
+          "failure_category": "stale_artifact",
+          "checks": [
+            {
+              "name": "decision_support_direct_eval_schema",
+              "json_path": "schema_version",
+              "equals": "ea-consistency-decision-support-direct-eval-results-v1"
+            },
+            {
+              "name": "decision_support_direct_eval_contract",
+              "json_path": "contract_id",
+              "equals": "ea-consistency-decision-support-direct-eval-v1"
+            },
+            {
+              "name": "decision_support_direct_eval_review_id",
+              "json_path": "review_id",
+              "equals": "v1-cg-ecid-compliance-review"
+            },
+            {
+              "name": "decision_support_direct_eval_source_set",
+              "json_path": "source_set_id",
+              "equals": "source-set-f70ea11e04ae3d53"
+            },
+            {
+              "name": "decision_support_direct_eval_present",
+              "json_path": "direct_eval_present",
+              "equals": true
+            },
+            {
+              "name": "decision_support_direct_eval_passed",
+              "json_path": "passed",
+              "equals": true
+            },
+            {
+              "name": "decision_support_direct_eval_metric_group_count",
+              "json_path": "metric_group_count",
+              "min": 6
+            },
+            {
+              "name": "decision_support_direct_eval_required_groups_present",
+              "json_path": "required_metric_group_ids_present",
+              "equals": []
+            },
+            {
+              "name": "decision_support_direct_eval_blocking_gaps",
+              "json_path": "blocking_gap_group_ids",
+              "equals": []
+            },
+            {
+              "name": "decision_support_direct_eval_failure_intake_empty",
+              "json_path": "failure_intake_case_count",
+              "equals": 0
             }
           ]
         },
