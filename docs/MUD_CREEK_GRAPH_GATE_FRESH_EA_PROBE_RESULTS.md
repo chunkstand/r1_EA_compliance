@@ -198,11 +198,14 @@ quality case. It now has two useful system findings:
 - The package review itself is extractable and reviewer-ready.
 - The initial graph-gate run correctly preserved a blocked applicability state
   instead of producing a false green.
-- The selected-action slice showed that the block was not a substantive
-  minerals/energy action. It was caused by broad package-context consumption:
-  the old minerals-energy template accepted bare `minerals` evidence, and the
-  selected alternative contains restoration language about exposing mineral
-  soil for seed germination.
+- The follow-up replay is a `multi_factor_engineering_replay`, not a clean
+  single-variable hypothesis test. It changed selected-action scoping and the
+  minerals-energy trigger template before the next run.
+- The replay indicates the blocked minerals-family state was tied to broad
+  package-context consumption and broad minerals trigger terms, not to a
+  confirmed selected-action minerals/energy action. The selected alternative
+  contains restoration language about exposing mineral soil for seed
+  germination.
 - `selected_action/selected_action.json` is now the package-action boundary for
   applicability. Package trigger search, retrieval, graph expansion, Forest
   Plan present-values, decisions, provenance, validation, and generated rule
@@ -219,8 +222,11 @@ quality case. It now has two useful system findings:
 What this adds beyond the three already-reviewed examples: the graph-gate system
 is not only a traceability/readback layer for green reviews. On a fresh EA it
 first preserved a blocked applicability state, then provided the evidence needed
-to tighten the applicability input boundary and replay the gate to green for
-applicability without silently masking downstream compliance work.
+to identify an applicability input-boundary problem and replay the gate to green
+for applicability without silently masking downstream compliance work. Under
+`docs/EA_REVIEW_SCIENTIFIC_METHOD_RUN_PROTOCOL.md`, the next scientific run must
+isolate selected-action scoping and minerals trigger-template tightening as
+separate intervention variables, with all traces surfaced for each run.
 
 ## Boundary
 
@@ -228,4 +234,6 @@ This result does not prove substantive legal correctness for Mud Creek and does
 not complete Mud Creek as a full fourth review case. The selected-action
 applicability and generated-rule-pack gates are reviewer-ready; compliance
 review and the compliance matrix remain ungenerated, and the Bitterroot Forest
-Plan component resolution queue remains outside this slice.
+Plan component resolution queue remains outside this slice. It also does not
+prove the selected-action intervention by itself, because the replay combined
+selected-action scoping with minerals trigger-template tightening.

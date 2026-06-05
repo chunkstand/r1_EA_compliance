@@ -120,12 +120,20 @@ Candidate dimensions include closed-branch leakage, blocked-branch progression, 
 rules, unsupported findings, Forest Plan subgate errors, stale/identity-mismatched graph use,
 citation regression, critical regressions, and net quality delta.
 
+## Single-Variable Run Discipline
+
+Follow-on EA review quality runs must follow
+`docs/EA_REVIEW_SCIENTIFIC_METHOD_RUN_PROTOCOL.md`: one intervention per run,
+complete trace bundle surfaced, and multi-variable replays labeled
+`multi_factor_engineering_replay`, not causal hypothesis support.
+
 ## Weak-Point Prevention
 
 | Weak point | Owner surface | Prevention gate | Fail threshold |
 | --- | --- | --- | --- |
 | Experiment proves only graph validity, not review quality | eval manifest and result schema | Require control/treatment quality metrics over generated rules, compliance findings, citations, and phase readiness | Result lacks paired review-quality deltas |
 | Treatment wins by changing non-graph variables | scorer module and tests | Freeze source-set, review, package, applicability decisions, generated-rule inputs, and graph hashes per case | Any paired comparison changes an unapproved input |
+| Multiple variables change before measurement | run protocol, manifest, docs | One intervention variable per run; trace bundle must identify commit, input hashes, and artifact hashes | Improvement claim after selected-action, trigger-template, retrieval, or graph changes are combined in one run |
 | Code constrains the scientific test too early | manifest and scorer | Keep case families, quality dimensions, and thresholds manifest-owned | Scorer hardcodes a mandatory defect family or West Reservoir-only proof |
 | False positive improvement claim | result schema | `hypothesis_supported=true` requires zero critical regressions and positive delta in at least one pre-registered defect class | Positive claim with zero measurable defect reduction |
 | Graph gate hides missing evidence | scorer and compliance readbacks | Citation/source support cannot regress; unsupported findings stay critical | Any citation support regression or unsupported treatment finding |

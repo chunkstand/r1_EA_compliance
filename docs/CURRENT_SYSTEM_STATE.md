@@ -83,14 +83,19 @@ Latest probe update on 2026-06-05:
   generated rules.
 - lesson:
   this is still not a fourth completed full-review quality case. It first
-  showed the graph gate preserving an unresolved applicability state, then
-  showed the selected-action artifact removing a false minerals/energy
-  applicability trigger caused by broad package context and mineral-soil
-  restoration language. The refreshed `applicability-gate-graph` validates
+  showed the graph gate preserving an unresolved applicability state. The
+  follow-up replay then fixed the engineering path, but it changed two
+  variables before the next run: selected-action scoping and the
+  minerals-energy trigger template. It must therefore be treated as a
+  `multi_factor_engineering_replay`, not a causal selected-action-only
+  hypothesis result. The refreshed `applicability-gate-graph` validates
   structurally with `998` nodes, `997` edges, `0` failed graph checks, and no
   blocked gates. `phase-eval` now passes `29/30`; the only blocker is
   `compliance_review` because no compliance review/matrix has been generated
-  for this ad hoc Mud Creek packet. Metrics are recorded in
+  for this ad hoc Mud Creek packet. Future review-quality improvement claims
+  must follow `docs/EA_REVIEW_SCIENTIFIC_METHOD_RUN_PROTOCOL.md`: one
+  intervention variable per run and the required trace bundle surfaced for
+  every run. Metrics are recorded in
   `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`.
 
 ## System Evaluation Trace-To-Case Promotion Gate

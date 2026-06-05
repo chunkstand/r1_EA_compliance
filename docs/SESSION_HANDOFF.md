@@ -57,9 +57,14 @@ history below.
   `applicability-gate-graph` validates structurally with `998` nodes, `997`
   edges, `0` failed graph checks, and no blocked gates. `phase-eval` now passes
   `29/30`; the only blocker is the missing compliance review/matrix for this
-  ad hoc packet. This is selected-action applicability proof, not a fourth
-  completed full-review case. Metrics are in
-  `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`.
+  ad hoc packet. This is a `multi_factor_engineering_replay`, not
+  selected-action-only proof and not a fourth completed full-review case,
+  because selected-action scoping and minerals trigger-template tightening were
+  both changed before the replay. Metrics are in
+  `docs/MUD_CREEK_GRAPH_GATE_FRESH_EA_PROBE_RESULTS.md`. Future improvement or
+  regression claims must follow
+  `docs/EA_REVIEW_SCIENTIFIC_METHOD_RUN_PROTOCOL.md`: one intervention variable
+  per run, with every required trace surfaced.
 - latest resolved system-evaluation improvement slice:
   `docs/FIRST_CLASS_SYSTEM_EVALUATION_IMPROVEMENT_MILESTONE_PLAN.md` is the
   repo-native goal for making evals the reviewer-engine improvement control

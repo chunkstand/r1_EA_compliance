@@ -4200,6 +4200,11 @@ frozen review with graph-gate evidence required. The default run is scoped to
 artifact-derived quality metrics; it does not make compliance-review or
 phase-eval consume graph gates as runtime blockers.
 
+Scientific-method EA review runs must also follow
+`docs/EA_REVIEW_SCIENTIFIC_METHOD_RUN_PROTOCOL.md`: one intervention variable
+per run, full trace bundle surfaced, and any multi-variable replay labeled as
+engineering evidence rather than causal hypothesis support.
+
 ## Promotion Suite Outputs
 
 Default manifest: `config/promotion_suite_v1.json`
